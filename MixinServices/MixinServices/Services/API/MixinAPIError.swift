@@ -30,7 +30,6 @@ public enum MixinAPIError: Error {
     case requiresReCaptcha
     case requiresUpdate
     case invalidPhoneNumber
-    case invalidInvitationCode
     case invalidPhoneVerificationCode
     case expiredPhoneVerificationCode
     case invalidQrCode
@@ -100,8 +99,6 @@ extension MixinAPIError {
             self = .requiresUpdate
         case (202, 20110):
             self = .invalidPhoneNumber
-        case (202, 20112):
-            self = .invalidInvitationCode
         case (202, 20113):
             self = .invalidPhoneVerificationCode
         case (202, 20114):

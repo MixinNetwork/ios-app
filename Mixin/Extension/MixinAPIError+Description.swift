@@ -5,13 +5,6 @@ extension MixinAPIError {
     
     var localizedDescription: String {
         switch self {
-        case .foundNilResult:
-            return R.string.localizable.error_internal("\(self)")
-            
-        case .prerequistesNotFulfilled:
-            return R.string.localizable.error_internal("\(self)")
-        case .invalidJSON:
-            return R.string.localizable.error_internal("\(self)")
         case let .httpTransport(error):
             if let underlying = (error.underlyingError as NSError?), underlying.domain == NSURLErrorDomain {
                 switch underlying.code {
@@ -60,8 +53,6 @@ extension MixinAPIError {
             return R.string.localizable.app_update_short_tips()
         case .invalidPhoneNumber:
             return R.string.localizable.error_invalid_phone_number()
-        case .invalidInvitationCode:
-            return R.string.localizable.error_invalid_invitation_code()
         case .invalidPhoneVerificationCode:
             return R.string.localizable.error_invalid_phone_verification_code()
         case .expiredPhoneVerificationCode:
@@ -100,9 +91,7 @@ extension MixinAPIError {
             return R.string.localizable.profile_shared_app_reach_limit()
         case .circleConversationReachLimit:
             return R.string.localizable.circle_conversation_add_reach_limit()
-        case .invalidConversationChecksum:
-            return R.string.localizable.error_invalid_conversation_checksum()
-            
+
         case .chainNotInSync:
             return R.string.localizable.error_blockchian_not_in_sync()
         case .malformedAddress:
@@ -122,6 +111,9 @@ extension MixinAPIError {
             return R.string.localizable.error_peer_closed()
         case .trackNotFound:
             return R.string.localizable.error_track_not_found()
+
+        default:
+            return R.string.localizable.error_internal("\(self)")
         }
     }
     

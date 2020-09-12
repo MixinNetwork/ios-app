@@ -1,19 +1,5 @@
 import Foundation
-import UserNotifications
-
-public enum NotificationActionIdentifier {
-    public static let reply = "reply"
-    public static let mute = "mute" // preserved
-}
-
-public enum NotificationCategoryIdentifier {
-    public static let message = "message"
-    public static let call = "call"
-}
-
-public enum NotificationRequestIdentifier {
-    public static let call = "call"
-}
+import MixinServices
 
 public extension UNNotificationSound {
     
@@ -25,7 +11,7 @@ public extension UNNotificationSound {
 public extension UNNotificationAction {
     
     static let reply = UNTextInputNotificationAction(identifier: NotificationActionIdentifier.reply,
-                                                     title: Localized.NOTIFICATION_REPLY,
+                                                     title: R.string.localizable.notification_reply(),
                                                      options: [])
     
 }

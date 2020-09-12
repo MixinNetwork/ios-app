@@ -77,15 +77,6 @@
 "search_result_prefix_phone" = "Phone Number: ";
 
 // Toast
-"toast_server_error" = "Server is under maintenance";
-"toast_api_error_forbidden" = "Access denied";
-"toast_api_error_no_connection" = "No network connection";
-"toast_api_error_network_connection_lost" = "The network connection was lost, please check your network and try again later";
-"toast_api_error_server_5xx" = "Mixin server encounters errors";
-"toast_api_error_server_data_error" = "Data parsing error";
-"toast_api_error_not_found" = "Not found";
-"toast_api_error_too_many_requests" = "Rate limit exceeded";
-"toast_api_error_unavailable_phone_number" = "This phone number is already associated with another account";
 "permission_denied_camera" = "Mixin doesn't have permission to use your camera. Please tap Setting to open system settings.";
 "permission_denied_microphone" = "Mixin doesn't have permission to use your microphone. Please tap Setting to open system settings.";
 "toast_copied" = "Copied";
@@ -98,7 +89,6 @@
 "toast_blocked" = "Blocked";
 "permission_denied_photo_library" = "Mixin doesn't have permission to use your photo library. Please tap Setting to open system settings.";
 "permission_denied_network" = "Mixin doesn't have permission to use wireless data. Please tap Setting to open system settings.";
-"toast_error" = "ERROR %@: %@";
 "biometry_suggestion" = " %@ is suggested.";
 "clock_skew_title" = "System time is unusual";
 "clock_skew_tips" = "Please continue to use again after correction. Settings > General > Date & Time > Turn on Set Automatically.";
@@ -158,7 +148,6 @@
 "init_signal" = "Initializing";
 "init_explain" = "Messages between users are protected with an end-to-end encryption";
 "toast_recaptcha_timed_out" = "Validation timed out";
-"toast_recaptcha_invalid" = "Recaptcha is invalid.";
 "desktop_login_confim" = "Confirm login to Mixin Messenger Desktop";
 "desktop_upgrade" = "Please upgrade Mixin Messenger Desktop to the latest version.";
 
@@ -367,7 +356,6 @@
 "group_call" = "Group Call";
 "group_call_tap_to_join" = "Tap to join";
 "group_call_selections_reach_limit" = "Group calling allows up to %@ participants to call each other";
-"group_call_room_full" = "Room is full";
 "group_call_bad_network" = "Connection is unstable";
 
 // Sticker
@@ -377,7 +365,6 @@
 "sticker_add_failed" = "Failed to add sticker";
 "sticker_remove_failed" = "Failed to delete stickers";
 "sticker_add_required" = "Requires stickers file size larger than 1KB and less than 800KB, width and height between 64 and 512 pixels.";
-"sticker_add_limit" = "Too many stickers.";
 
 // Camera
 "camera_save_photo_success" = "Photo saved.";
@@ -421,7 +408,6 @@
 "group_invite_hint" = "Anyone with Mixin can follow this link to join this group. Only share it with people you trust.";
 "group_join_fail_title" = "Couldn't Join Group";
 "group_join_fail_summary" = "This invite link doesn't match any Mixin groups.";
-"group_join_fail_full" = "The group chat is full.";
 "group_link_checking" = "Checking invite link";
 "group_remove_title" = "You have left the group";
 "group_menu_announcement" = "Edit Group Description";
@@ -479,7 +465,6 @@
 "wallet_withdrawal_asset" = "%@ Withdrawal";
 "wallet_withdrawal_pay_password" = "Withdraw with PIN";
 "wallet_withdrawal_reserve" = " %@ has a minimum %@ reserve requirement.";
-"wallet_blockchian_not_in_sync" = "Blockchain not in sync, please try again later.";
 "wallet_no_price" = "N/A";
 "wallet_pin_create_title" = "Set a 6 digit PIN to create your first digital wallet";
 "wallet_pin_confirm_title" = "Please confirm the 6 digit PIN and remember it";
@@ -508,7 +493,6 @@
 "wallet_pin_pay_interval_confirm" = "Confirm PIN to protect your settings security.";
 "wallet_pin_pay_interval_tips" = "For the security of your assets, you need to verify your PIN for the specified interval.";
 "wallet_currency" = "Currency";
-"withdrawal_amount_too_small" = "Withdraw amount too small";
 "withdrawal_minimum_amount" = "Minimum withdraw amount is %@ %@";
 "withdrawal_memo_format_incorrect" = "Withdrawal memo format incorrect";
 "transactions_filter_sort_by" = "Sort by";
@@ -562,7 +546,6 @@
 "address_new_title" = "New %@ Address";
 "address_edit_title" = "Edit %@ Address";
 "address_delete_title" = "Delete %@ Address";
-"address_format_error" = "Invalid address format.";
 "address_not_found" = "Address not found.";
 
 "asset_not_found" = "Asset not found.";
@@ -573,10 +556,6 @@
 "transfer_balance" = "Balance";
 "transfer_memo" = "Memo (optional)";
 "transfer_touch_id_reason" = "Use an existing fingerprint to make the payment";
-"transfer_error_balance_insufficient" = "Insufficient balance";
-"transfer_error_fee_insufficient" = "Insufficient transaction fee";
-"transfer_error_amount_too_small" = "Transfer amount too small";
-"transfer_error_pin_incorrect" = "PIN incorrect";
 "transfer_error_pin_incorrect_with_times" = "ERROR 20119: PIN incorrect. You still have %@ chances. Please wait for 24 hours to retry later.";
 "transfer_paid" = "This payment link has already been paid by someone, you can not make a duplicate payment.";
 "pay_transfer_title" = "Transfer to %@";
@@ -805,6 +784,23 @@
 "setting_appearance" = "Appearance";
 "setting_pin" = "PIN";
 
+// About
+"about_twitter" = "Follow us on Twitter";
+"about_facebook" = "Follow us on Facebook";
+"about_help" = "Help Center";
+"about_terms_of_service" = "Terms of Service";
+"about_privacy_policy" = "Privacy Policy";
+"about_logout_title" = "Do you want to log out?";
+"about_logout_message" = "All messages sent to you during the withdrawal will be discarded and can not be retrieved!";
+"about_app_upgrade" = "Version Update";
+
+"report_title"="Send the conversation log to developers?";
+"report_button"="Send to Developer";
+"report_share"="Share Log File";
+"report_copy_user_id"="Copy User Id";
+"report_copy_conversation_id"="Copy Conversation Id";
+"report_message"="Allow Manual Report Message";
+
 // Notifications
 "notification_reply" = "Reply";
 "notification_mute" = "Mute";
@@ -852,19 +848,51 @@
 "alert_key_group_location_message" = "%@ send a location";
 "alert_key_group_audio_invite_message" = "%@ invites you to a voice call";
 
-// About
-"about_twitter" = "Follow us on Twitter";
-"about_facebook" = "Follow us on Facebook";
-"about_help" = "Help Center";
-"about_terms_of_service" = "Terms of Service";
-"about_privacy_policy" = "Privacy Policy";
-"about_logout_title" = "Do you want to log out?";
-"about_logout_message" = "All messages sent to you during the withdrawal will be discarded and can not be retrieved!";
-"about_app_upgrade" = "Version Update";
-
-"report_title"="Send the conversation log to developers?";
-"report_button"="Send to Developer";
-"report_share"="Share Log File";
-"report_copy_user_id"="Copy User Id";
-"report_copy_conversation_id"="Copy Conversation Id";
-"report_message"="Allow Manual Report Message";
+// Error
+"error_forbidden" = "Access denied";
+"error_no_connection" = "No network connection";
+"error_network_connection_lost" = "The network connection was lost, please check your network and try again later";
+"error_server_5xx" = "Mixin server encounters errors";
+"error_server_data_error" = "Data parsing error";
+"error_not_found" = "Not found";
+"error_too_many_requests" = "Rate limit exceeded";
+"error_unavailable_phone_number" = "This phone number is already associated with another account";
+"error_connection_timeout" = "Network connection timeout";
+"error_operation_failed" = "The operation failed, please try again later";
+"error_two_parts" = "ERROR %@: %@";
+"error_internal" = "Internal error: %@";
+"error_invalid_request_body" = "Invalid request body";
+"error_unauthorized" = "Unauthorized";
+"error_invalid_request_data" = "Invalid request data";
+"error_failed_to_deliver_sms" = "Failed to deliver sms";
+"error_requires_recaptcha" = "Requires re captcha";
+"error_invalid_phone_number" = "Invalid phone number";
+"error_insufficient_identity_number" = "Insufficient identity number";
+"error_invalid_invitation_code" = "Invalid invitation code";
+"error_invalid_phone_verification_code" = "Invalid phone verification code";
+"error_expired_phone_verification_code" = "Expired phone verification code";
+"error_invalid_qr_code" = "Invalid QR-Code";
+"error_expired_authorization_code" = "Expired authorization code";
+"error_too_many_apps_created" = "Too many apps created";
+"error_transfer_is_already_paid" = "Transfer is already paid";
+"error_too_many_friends" = "Too many friends";
+"error_invalid_conversation_checksum" = "Invalid conversation checksum";
+"error_missing_private_key" = "Missing private key";
+"error_insufficient_pool" = "Insufficient pool";
+"error_invalid_parameters" = "Invalid parameters";
+"error_invalid_sdp" = "Invalid sdp";
+"error_invalid_candidate" = "Invalid candidate";
+"error_room_full" = "Room is full";
+"error_peer_not_found" = "Peer not found";
+"error_peer_closed" = "Peer closed";
+"error_track_not_found" = "Track not found";
+"error_group_full" = "The group chat is full.";
+"error_invalid_recaptcha" = "Recaptcha is invalid.";
+"error_insufficient_balance" = "Insufficient balance";
+"error_pin_incorrect" = "PIN incorrect";
+"error_fee_insufficient" = "Insufficient transaction fee";
+"error_transfer_amount_too_small" = "Transfer amount too small";
+"error_too_many_stickers" = "Too many stickers.";
+"error_withdrawal_amount_too_small" = "Withdraw amount too small";
+"error_blockchian_not_in_sync" = "Blockchain not in sync, please try again later.";
+"error_malformed_address" = "Invalid address format.";

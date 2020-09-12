@@ -77,15 +77,6 @@
 "search_result_prefix_phone" = "手机号码：";
 
 // Toast
-"toast_server_error" = "服务器正在维护中";
-"toast_api_error_forbidden" = "禁止访问";
-"toast_api_error_no_connection" = "无网络连接";
-"toast_api_error_network_connection_lost" = "网络连接超时，请检查网络稍后重试";
-"toast_api_error_server_data_error" = "数据解析错误";
-"toast_api_error_server_5xx" = "服务器出错";
-"toast_api_error_not_found" = "没有找到相应的信息";
-"toast_api_error_too_many_requests" = "请求太快啦";
-"toast_api_error_unavailable_phone_number" = "此手机号已被使用";
 "permission_denied_camera" = "Mixin 需要摄像头权限，请点击'设置'打开系统授权。";
 "permission_denied_microphone" = "Mixin 需要麦克风权限，请点击'设置'打开系统授权。";
 "toast_copied" = "已复制";
@@ -98,7 +89,6 @@
 "toast_blocked" = "已屏蔽";
 "permission_denied_photo_library" = "Mixin 需要相册权限，请点击'设置'打开系统授权。";
 "permission_denied_network" = "Mixin 需要无线数据权限，请点击'设置'打开系统授权。";
-"toast_error" = "错误 %@：%@";
 "biometry_suggestion" = "建议使用%@支付";
 "clock_skew_title" = "系统时间异常";
 "clock_skew_tips" = "请校正后再继续使用，设置 > 通用 > 日期与时间 > 自动设置。";
@@ -158,7 +148,6 @@
 "init_signal" = "正在初始化";
 "init_explain" = "用户之间的消息将受到端对端加密保护";
 "toast_recaptcha_timed_out" = "验证超时";
-"toast_recaptcha_invalid" = "验证失败";
 "desktop_login_confim" = "确认登录 Mixin Messenger 桌面端？";
 "desktop_upgrade" = "请升级 Mixin Messenger 桌面端至最新版！";
 
@@ -367,7 +356,6 @@
 "group_call" = "群通话";
 "group_call_tap_to_join" = "点击加入";
 "group_call_selections_reach_limit" = "支持最多%@人同时通话";
-"group_call_room_full" = "房间已满";
 "group_call_bad_network" = "当前通话网络状态不佳";
 
 // Sticker
@@ -377,7 +365,6 @@
 "sticker_add_failed" = "添加贴纸失败";
 "sticker_remove_failed" = "删除贴纸失败";
 "sticker_add_required" = "贴纸要求大于 1KB 且小于 800KB，宽高大于 64 像素且小于 512 像素。";
-"sticker_add_limit" = "贴纸数已达上限";
 
 // Camera
 "camera_save_photo_success" = "图片已成功保存在相册";
@@ -421,7 +408,6 @@
 "group_invite_hint" = "Mixin 使用者可使用此链接加入这个群组，请只跟你信任的人分享链接。";
 "group_join_fail_title" = "无法加入群组";
 "group_join_fail_summary" = "没有找到这个邀请链接相关的群组";
-"group_join_fail_full" = "群组成员人数已达上限";
 "group_link_checking" = "正在检查链接";
 "group_remove_title" = "你已离开了该群组";
 "group_menu_announcement" = "编辑群公告";
@@ -480,7 +466,6 @@
 "wallet_withdrawal_asset" = "%@ 提现";
 "wallet_withdrawal_pay_password" = "通过密码提现";
 "wallet_withdrawal_reserve" = " %@ 要求账号至少保留 %@。";
-"wallet_blockchian_not_in_sync" = "区块链同步异常，请稍后重试";
 "wallet_no_price" = "暂无价格";
 "wallet_pin_create_title" = "设置 6 位数字密码创建你的第一个数字钱包";
 "wallet_pin_confirm_title" = "确认 6 位数字密码并牢记它";
@@ -509,7 +494,6 @@
 "wallet_pin_pay_interval_confirm" = "确认钱包密码保护设置安全";
 "wallet_pin_pay_interval_tips" = "为了你的资产安全，距离上次输入密码的时间超过以上指定时间时，再次转账时仍然需要密码";
 "wallet_currency" = "货币";
-"withdrawal_amount_too_small" = "提现金额太少了";
 "withdrawal_minimum_amount" = "提现金额最小 %@ %@";
 "withdrawal_memo_format_incorrect" = "提现备注格式不正确";
 "transactions_filter_sort_by" = "顺序";
@@ -563,7 +547,6 @@
 "address_new_title" = "增加 %@ 地址";
 "address_edit_title" = "修改 %@ 地址";
 "address_delete_title" = "删除 %@ 地址";
-"address_format_error" = "地址格式错误";
 "address_not_found" = "找不到该地址";
 
 "asset_not_found" = "找不到该资产.";
@@ -574,10 +557,6 @@
 "transfer_balance" = "余额";
 "transfer_memo" = "备注 (可选)";
 "transfer_touch_id_reason" = "请验证指纹完成转账";
-"transfer_error_balance_insufficient" = "余额不足";
-"transfer_error_fee_insufficient" = "手续费不足";
-"transfer_error_amount_too_small" = "转账金额太小";
-"transfer_error_pin_incorrect" = "密码不正确";
 "transfer_error_pin_incorrect_with_times" = "错误 20119: 密码不正确。你还有 %@ 次机会尝试，使用完需等待 24 小时后再尝试。";
 "transfer_paid" = "此付款链接已由某人支付，您无法进行重复付款。";
 "pay_transfer_title" = "转账给%@";
@@ -806,7 +785,24 @@
 "setting_appearance" = "显示";
 "setting_pin" = "密码";
 
-// Notifications
+// About
+"about_twitter" = "关注我们的 Twitter";
+"about_facebook" = "关注我们的 Facebook";
+"about_help" = "帮助中心";
+"about_terms_of_service" = "隐私政策";
+"about_privacy_policy" = "服务条款";
+"about_logout_title" = "想要退出登录？";
+"about_logout_message" = "退出期间所有给你发的消息都将丢弃且无法找回（转账除外）!";
+"about_app_upgrade" = "版本更新";
+
+"report_title"="给开发人员发送聊天日志（不包含聊天内容）?";
+"report_button"="把日志发给开发者";
+"report_share"="分享日志文件";
+"report_copy_user_id"="复制用户 ID";
+"report_copy_conversation_id"="复制会话 ID";
+"report_message"="允许手动上报消息";
+
+// Notification
 "notification_reply" = "回复";
 "notification_mute" = "屏蔽";
 "notification_content_general" = "你收到了一条消息";
@@ -853,19 +849,51 @@
 "alert_key_group_location_message" = "%@发来一处位置";
 "alert_key_group_audio_invite_message" = "%@邀请你进行语音通话";
 
-// About
-"about_twitter" = "关注我们的 Twitter";
-"about_facebook" = "关注我们的 Facebook";
-"about_help" = "帮助中心";
-"about_terms_of_service" = "隐私政策";
-"about_privacy_policy" = "服务条款";
-"about_logout_title" = "想要退出登录？";
-"about_logout_message" = "退出期间所有给你发的消息都将丢弃且无法找回（转账除外）!";
-"about_app_upgrade" = "版本更新";
-
-"report_title"="给开发人员发送聊天日志（不包含聊天内容）?";
-"report_button"="把日志发给开发者";
-"report_share"="分享日志文件";
-"report_copy_user_id"="复制用户 ID";
-"report_copy_conversation_id"="复制会话 ID";
-"report_message"="允许手动上报消息";
+// Error
+"error_forbidden" = "禁止访问";
+"error_no_connection" = "无网络连接";
+"error_network_connection_lost" = "网络连接超时，请检查网络稍后重试";
+"error_server_data_error" = "数据解析错误";
+"error_server_5xx" = "服务器出错";
+"error_not_found" = "没有找到相应的信息";
+"error_too_many_requests" = "请求太快啦";
+"error_unavailable_phone_number" = "此手机号已被使用";
+"error_connection_timeout" = "网络连接超时";
+"error_operation_failed" = "操作失败，请稍后重试";
+"error_two_parts" = "错误 %@：%@";
+"error_internal" = "内部错误: %@";
+"error_invalid_request_body" = "无效的请求";
+"error_unauthorized" = "未授权";
+"error_invalid_request_data" = "无效的请求数据";
+"error_failed_to_deliver_sms" = "发送短信失败";
+"error_requires_recaptcha" = "需要验证码";
+"error_invalid_phone_number" = "无效的手机号码";
+"error_insufficient_identity_number" = "无效的用户ID";
+"error_invalid_invitation_code" = "无效的邀请码";
+"error_invalid_phone_verification_code" = "验证码错误";
+"error_expired_phone_verification_code" = "验证码已失效";
+"error_invalid_qr_code" = "无效的二维码";
+"error_expired_authorization_code" = "验证码已过期";
+"error_too_many_apps_created" = "已达到机器人上限";
+"error_transfer_is_already_paid" = "该交易已经支付";
+"error_too_many_friends" = "联系人数已达上限";
+"error_invalid_conversation_checksum" = "无效的对话校验和";
+"error_missing_private_key" = "无效的私钥";
+"error_insufficient_pool" = "Pool不足";
+"error_invalid_parameters" = "无效的参数";
+"error_invalid_sdp" = "无效的SDP";
+"error_invalid_candidate" = "无效的Candidate";
+"error_room_full" = "房间已满";
+"error_peer_not_found" = "Peer无效";
+"error_peer_closed" = "Peer已关闭";
+"error_track_not_found" = "Track无效";
+"error_group_full" = "群组成员人数已达上限";
+"error_invalid_recaptcha" = "验证失败";
+"error_insufficient_balance" = "余额不足";
+"error_pin_incorrect" = "密码不正确";
+"error_fee_insufficient" = "手续费不足";
+"error_transfer_amount_too_small" = "转账金额太小";
+"error_too_many_stickers" = "贴纸数已达上限";
+"error_withdrawal_amount_too_small" = "提现金额太少了";
+"error_blockchian_not_in_sync" = "区块链同步异常，请稍后重试";
+"error_malformed_address" = "地址格式错误";

@@ -24,8 +24,7 @@ Mixin Core Services.
   s.static_framework = true
 
   s.ios.vendored_frameworks = 'MixinServices/Goutils.framework'
-  s.resource_bundle = { "MixinServicesResource" => ["MixinServices/Localization/*.lproj/*.strings", "MixinServices/ApiKeys.plist"] }
-  s.source_files = 'MixinServices/Foundation/**/*', 'MixinServices/Services/**/*', 'MixinServices/Storage/**/*', 'MixinServices/Localization/Localized.swift'
+  s.source_files = 'MixinServices/Foundation/**/*', 'MixinServices/Services/**/*', 'MixinServices/Storage/**/*'
 
   s.dependency 'Bugsnag'
   s.dependency 'Alamofire'

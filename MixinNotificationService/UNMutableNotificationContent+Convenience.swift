@@ -1,5 +1,6 @@
 import Foundation
 import UserNotifications
+import MixinServices
 
 public extension UNMutableNotificationContent {
     
@@ -22,7 +23,7 @@ public extension UNMutableNotificationContent {
                                   isRepresentativeMessage: isRepresentativeMessage,
                                   message: message)
         } else {
-            body = Localized.NOTIFICATION_CONTENT_GENERAL
+            body = R.string.localizable.notification_content_general()
         }
         
         userInfo[UserInfoKey.conversationId] = conversation.conversationId
@@ -46,45 +47,45 @@ public extension UNMutableNotificationContent {
             }
         } else if message.category.hasSuffix("_IMAGE") {
             if conversationIsGroup || isRepresentativeMessage {
-                return Localized.ALERT_KEY_GROUP_IMAGE_MESSAGE(fullname: message.userFullName)
+                return R.string.localizable.alert_key_group_image_message(message.userFullName)
             } else {
-                return Localized.ALERT_KEY_CONTACT_IMAGE_MESSAGE
+                return R.string.localizable.alert_key_contact_image_message()
             }
         } else if message.category.hasSuffix("_VIDEO") {
             if conversationIsGroup || isRepresentativeMessage {
-                return Localized.ALERT_KEY_GROUP_VIDEO_MESSAGE(fullname: message.userFullName)
+                return R.string.localizable.alert_key_group_video_message(message.userFullName)
             } else {
-                return Localized.ALERT_KEY_CONTACT_VIDEO_MESSAGE
+                return R.string.localizable.alert_key_contact_video_message()
             }
         } else if message.category.hasSuffix("_LIVE") {
             if conversationIsGroup || isRepresentativeMessage {
-                return Localized.ALERT_KEY_GROUP_LIVE_MESSAGE(fullname: message.userFullName)
+                return R.string.localizable.alert_key_group_live_message(message.userFullName)
             } else {
-                return Localized.ALERT_KEY_CONTACT_LIVE_MESSAGE
+                return R.string.localizable.alert_key_contact_live_message()
             }
         } else if message.category.hasSuffix("_AUDIO") {
             if conversationIsGroup || isRepresentativeMessage {
-                return Localized.ALERT_KEY_GROUP_AUDIO_MESSAGE(fullname: message.userFullName)
+                return R.string.localizable.alert_key_group_audio_message(message.userFullName)
             } else {
-                return Localized.ALERT_KEY_CONTACT_AUDIO_MESSAGE
+                return R.string.localizable.alert_key_contact_audio_message()
             }
         } else if message.category.hasSuffix("_DATA") {
             if conversationIsGroup || isRepresentativeMessage {
-                return Localized.ALERT_KEY_GROUP_DATA_MESSAGE(fullname: message.userFullName)
+                return R.string.localizable.alert_key_group_data_message(message.userFullName)
             } else {
-                return Localized.ALERT_KEY_CONTACT_DATA_MESSAGE
+                return R.string.localizable.alert_key_contact_data_message()
             }
         } else if message.category.hasSuffix("_STICKER") {
             if conversationIsGroup || isRepresentativeMessage {
-                return Localized.ALERT_KEY_GROUP_STICKER_MESSAGE(fullname: message.userFullName)
+                return R.string.localizable.alert_key_group_sticker_message(message.userFullName)
             } else {
-                return Localized.ALERT_KEY_CONTACT_STICKER_MESSAGE
+                return R.string.localizable.alert_key_contact_sticker_message()
             }
         } else if message.category.hasSuffix("_CONTACT") {
             if conversationIsGroup || isRepresentativeMessage {
-                return Localized.ALERT_KEY_GROUP_CONTACT_MESSAGE(fullname: message.userFullName)
+                return R.string.localizable.alert_key_group_contact_message(message.userFullName)
             } else {
-                return Localized.ALERT_KEY_CONTACT_CONTACT_MESSAGE
+                return R.string.localizable.alert_key_contact_contact_message()
             }
         } else if message.category.hasSuffix("_POST") {
             if conversationIsGroup || isRepresentativeMessage {
@@ -94,33 +95,33 @@ public extension UNMutableNotificationContent {
             }
         } else if message.category.hasSuffix("_LOCATION") {
             if conversationIsGroup || isRepresentativeMessage {
-                return Localized.ALERT_KEY_GROUP_LOCATION_MESSAGE(fullname: message.userFullName)
+                return R.string.localizable.alert_key_group_location_message(message.userFullName)
             } else {
-                return Localized.ALERT_KEY_CONTACT_LOCATION_MESSAGE
+                return R.string.localizable.alert_key_contact_location_message()
             }
         } else if message.category.hasPrefix("KRAKEN_") {
-            return Localized.ALERT_KEY_GROUP_AUDIO_INVITE_MESSAGE(fullname: message.userFullName)
+            return R.string.localizable.alert_key_group_audio_invite_message(message.userFullName)
         } else if message.category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
             switch message.snapshotType {
             case SnapshotType.deposit.rawValue:
-                return Localized.NOTIFICATION_CONTENT_DEPOSIT
+                return R.string.localizable.notification_content_deposit()
             case SnapshotType.transfer.rawValue:
-                return Localized.ALERT_KEY_CONTACT_TRANSFER_MESSAGE
+                return R.string.localizable.alert_key_contact_transfer_message()
             case SnapshotType.withdrawal.rawValue:
-                return Localized.NOTIFICATION_CONTENT_WITHDRAWAL
+                return R.string.localizable.notification_content_withdrawal()
             case SnapshotType.fee.rawValue:
-                return Localized.NOTIFICATION_CONTENT_FEE
+                return R.string.localizable.notification_content_fee()
             case SnapshotType.rebate.rawValue:
-                return Localized.NOTIFICATION_CONTENT_REBATE
+                return R.string.localizable.notification_content_rebate()
             default:
-                return Localized.NOTIFICATION_CONTENT_GENERAL
+                return R.string.localizable.notification_content_general()
             }
         } else if message.category == MessageCategory.WEBRTC_AUDIO_OFFER.rawValue {
-            return Localized.ALERT_KEY_CONTACT_AUDIO_CALL_MESSAGE
+            return R.string.localizable.alert_key_contact_audio_call_message()
         } else if message.category == MessageCategory.WEBRTC_AUDIO_CANCEL.rawValue {
-            return Localized.ALERT_KEY_CONTACT_AUDIO_CALL_CANCELLED_MESSAGE
+            return R.string.localizable.alert_key_contact_audio_call_cancelled_message()
         } else {
-            return Localized.NOTIFICATION_CONTENT_GENERAL
+            return R.string.localizable.notification_content_general()
         }
     }
     

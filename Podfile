@@ -36,6 +36,7 @@ target 'MixinNotificationService' do
   use_frameworks!
   inhibit_all_warnings!
   
+  pod 'R.swift'
   mixin_services
 end
 

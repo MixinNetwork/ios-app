@@ -30,7 +30,7 @@ enum CallError: Error {
         case .microphonePermissionDenied:
             return R.string.localizable.call_no_microphone_permission()
         case .roomFull:
-            return R.string.localizable.group_call_room_full()
+            return R.string.localizable.error_room_full()
         case .clientDisconnected:
             return R.string.localizable.call_webrtc_disconnected()
         case .invalidPeerConnection(let error):

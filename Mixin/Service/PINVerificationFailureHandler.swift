@@ -32,7 +32,7 @@ enum PINVerificationFailureHandler {
                         completion(R.string.localizable.transfer_error_pin_incorrect_with_times("\(5 - errorCount)"))
                     }
                 case .failure:
-                    completion(R.string.localizable.transfer_error_pin_incorrect())
+                    completion(R.string.localizable.error_pin_incorrect())
                 }
             }
         default:

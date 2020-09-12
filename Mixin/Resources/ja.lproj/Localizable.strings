@@ -77,15 +77,6 @@
 "search_result_prefix_phone" = "電話番号: ";
 
 // Toast
-"toast_server_error" = "サーバーメンテナンス中";
-"toast_api_error_forbidden" = "アクセス拒否";
-"toast_api_error_no_connection" = "ネットワークに接続されていません";
-"toast_api_error_network_connection_lost" = "ネットワークが切断されました。確認してから再度接続してください";
-"toast_api_error_server_5xx" = "Mixinのサーバーにエラーが発生しています";
-"toast_api_error_server_data_error" = "データ解析エラー";
-"toast_api_error_not_found" = "見つかりませんでした";
-"toast_api_error_too_many_requests" = "アクセス回数が上限に達しました";
-"toast_api_error_unavailable_phone_number" = "この電話番号はすでに別のアカウントで使用されています";
 "permission_denied_camera" = "設定からカメラの使用をMixinへ許可してください";
 "permission_denied_microphone" = "設定からマイクの使用をMixinへ許可してください";
 "toast_copied" = "コピーしました";
@@ -98,7 +89,6 @@
 "toast_blocked" = "ブロックしました";
 "permission_denied_photo_library" = "設定から画像ライブラリの使用をMixinへ許可してください";
 "permission_denied_network" = "設定からワイヤレスデータの使用をMixinへ許可してください";
-"toast_error" = "エラー %@: %@";
 "biometry_suggestion" = "おすすめ %@";
 "clock_skew_title" = "システム時刻に問題があります";
 "clock_skew_tips" = "設定を変更してください。 設定 > 一般 > 日付と時刻 > 自動設定をオン";
@@ -158,7 +148,6 @@
 "init_signal" = "初期化しています...";
 "init_explain" = "ユーザー間のメッセージはエンドツーエンドの暗号化によって守られています";
 "toast_recaptcha_timed_out" = "認証時間切れ";
-"toast_recaptcha_invalid" = "リキャプチャが間違っています";
 "desktop_login_confim" = "デスクトップ版Mixinメッセンジャーからログインを確認してください";
 "desktop_upgrade" = "デスクトップ版Mixinメッセンジャーを最新のバージョンにしてください";
 
@@ -367,7 +356,6 @@
 "group_call" = "Group Call";
 "group_call_tap_to_join" = "Tap to join";
 "group_call_selections_reach_limit" = "Group calling allows up to %@ participants to call each other";
-"group_call_room_full" = "Room is full";
 "group_call_bad_network" = "Connection is unstable";
 
 // Sticker
@@ -377,7 +365,6 @@
 "sticker_add_failed" = "スタンプを追加できません";
 "sticker_remove_failed" = "スタンプを削除できません";
 "sticker_add_required" = "スタンプのサイズは1K以上800KB未満、 幅と高さは64から512ピクセルである必要があります";
-"sticker_add_limit" = "スタンプの数を減らしてください";
 
 // Camera
 "camera_save_photo_success" = "画像が保存されました";
@@ -421,7 +408,6 @@
 "group_invite_hint" = "Mixinユーザーはこのリンクからグループに参加できます。 知り合い以外と共有しないでください。";
 "group_join_fail_title" = "グループに参加できません";
 "group_join_fail_summary" = "この招待リンクのグループは存在しません";
-"group_join_fail_full" = "グループチャットが満員です";
 "group_link_checking" = "招待リンクを確認する";
 "group_remove_title" = "グループを退会しました";
 "group_menu_announcement" = "グループの説明を編集する";
@@ -479,7 +465,6 @@
 "wallet_withdrawal_asset" = "%@を出金";
 "wallet_withdrawal_pay_password" = "PINを使って出金";
 "wallet_withdrawal_reserve" = " %@は最低%@の残高が必要です。";
-"wallet_blockchian_not_in_sync" = "ブロックチェーンが同期していないため再度試してください";
 "wallet_no_price" = "なし";
 "wallet_pin_create_title" = "6桁のPINを作成してウォレットを作ってください";
 "wallet_pin_confirm_title" = "6桁のPINを確認して大切に保管してください";
@@ -508,7 +493,6 @@
 "wallet_pin_pay_interval_confirm" = "あなたの設定を保護するためにPINを確認してください";
 "wallet_pin_pay_interval_tips" = "資産保護のためPINを認証してください";
 "wallet_currency" = "通貨";
-"withdrawal_amount_too_small" = "出金額が少なすぎます";
 "withdrawal_minimum_amount" = "最低出金額は%@ %@です";
 "withdrawal_memo_format_incorrect" = "出金メモのフォーマットが間違っています";
 "transactions_filter_sort_by" = "ソート";
@@ -562,7 +546,6 @@
 "address_new_title" = "新規%@アドレス";
 "address_edit_title" = "%@のアドレスを編集";
 "address_delete_title" = "%@のアドレスを削除";
-"address_format_error" = "正しいアドレス形式で入力してください";
 "address_not_found" = "ウォレットアドレスが見つかりません";
 
 "asset_not_found" = "資産が見つかりません";
@@ -573,10 +556,6 @@
 "transfer_balance" = "残高";
 "transfer_memo" = "メモ (任意)";
 "transfer_touch_id_reason" = "指紋認証を使って支払いをしてください";
-"transfer_error_balance_insufficient" = "残高不足";
-"transfer_error_fee_insufficient" = "トランザクション手数料が不足しています";
-"transfer_error_amount_too_small" = "送金額を少なすぎます";
-"transfer_error_pin_incorrect" = "PINが間違っています";
 "transfer_error_pin_incorrect_with_times" = "エラー 20119: PINが間違っています。残り%@回入力できます。 24時間後にもう一度お試しください。";
 "transfer_paid" = "このリンクを使ってすでに支払いが行われているため別のリンクから支払いをしてください";
 "pay_transfer_title" = "%@へ送金";
@@ -805,53 +784,6 @@
 "setting_appearance" = "表示";
 "setting_pin" = "PIN";
 
-// Notifications
-"notification_reply" = "返信";
-"notification_mute" = "ミュート";
-"notification_content_general" = "新着メッセージがあります";
-"notification_content_photo" = "[画像]";
-"notification_content_transfer" = "[送金]";
-"notification_content_file" = "[ファイル]";
-"notification_content_sticker" = "[スタンプ]";
-"notification_content_contact" = "[連絡先]";
-"notification_content_deposit" = "[入金]";
-"notification_content_fee" = "[手数料]";
-"notification_content_withdrawal" = "[出金]";
-"notification_content_rebate" = "[払い戻し]";
-"notification_content_video" = "[動画]";
-"notification_content_live" = "[ライブ]";
-"notification_content_audio" = "[音声]";
-"notification_content_voice_call" = "[通話]";
-"notification_content_location" = "[位置情報]";
-
-"alert_key_contact_message" = "メッセージが届きました";
-"alert_key_contact_text_message" = "メッセージが届きました";
-"alert_key_contact_image_message" = "画像が届きました";
-"alert_key_contact_video_message" = "動画が届きました";
-"alert_key_contact_live_message" = "ライブ配信が届きました";
-"alert_key_contact_transfer_message" = "送金が届きました";
-"alert_key_contact_data_message" = "ファイルが届きました";
-"alert_key_contact_sticker_message" = "スタンプが届きました";
-"alert_key_contact_contact_message" = "連絡先が届きました";
-"alert_key_contact_audio_message" = "音声が届きました";
-"alert_key_contact_audio_call_message" = "通話に招待されました";
-"alert_key_contact_audio_call_cancelled_message" = "通話がキャンセルされました";
-"alert_key_contact_post_message" = "投稿が届きました";
-"alert_key_contact_location_message" = "位置情報が届きました";
-
-"alert_key_group_message" = "%@がメッセージを送信しました";
-"alert_key_group_text_message" = "%@がメッセージを送信しました";
-"alert_key_group_image_message" = "%@が画像を送信しました";
-"alert_key_group_video_message" = "%@が動画を送信しました";
-"alert_key_group_live_message" = "%@がライブ配信を送信しました";
-"alert_key_group_data_message" = "%@がファイルを送信しました";
-"alert_key_group_sticker_message" = "%@がスタンプを送信しました";
-"alert_key_group_contact_message" = "%@が連絡先を送信しました";
-"alert_key_group_audio_message" = "%@が音声を送信しました";
-"alert_key_group_post_message" = "%@が投稿を送信しました";
-"alert_key_group_location_message" = "%@が位置情報を送信しました";
-"alert_key_group_audio_invite_message" = "%@が通話に招待されました";
-
 // About
 "about_twitter" = "Twitterをフォロー";
 "about_facebook" = "Facebookをフォロー";
@@ -868,3 +800,100 @@
 "report_copy_user_id"="ユーザーIDをコピー";
 "report_copy_conversation_id"="会話IDをコピー";
 "report_message"="マニュアル報告を許可する";
+
+// Notification
+"notification_reply" = "返信";
+"notification_mute" = "消音";
+"notification_content_general" = "新しいメッセージがあります";
+"notification_content_photo" = "[写真]";
+"notification_content_transfer" = "[振込]";
+"notification_content_file" = "[ファイル]";
+"notification_content_sticker" = "[ステッカー]";
+"notification_content_contact" = "[連絡先]";
+"notification_content_deposit" = "[受取]";
+"notification_content_fee" = "[費用]";
+"notification_content_withdrawal" = "[出金]";
+"notification_content_rebate" = "[割引]";
+"notification_content_video" = "[ビデオ]";
+"notification_content_live" = "[生放送]";
+"notification_content_audio" = "[オーディオ]";
+"notification_content_voice_call" = "[音声電話]";
+"notification_content_location" = "[位置]";
+
+"alert_key_contact_message" = "あなたにメッセージを送る";
+"alert_key_contact_text_message" = "あなたにメッセージを送る";
+"alert_key_contact_image_message" = "あなたに写真を送る";
+"alert_key_contact_video_message" = "あなたにビデオを送る";
+"alert_key_contact_live_message" = "あなたに生放送を送る";
+"alert_key_contact_transfer_message" = "お振込みします";
+"alert_key_contact_data_message" = "あなたにファイルを送る";
+"alert_key_contact_sticker_message" = "あなたにステッカーを送る";
+"alert_key_contact_contact_message" = "あなたに連絡先を送る";
+"alert_key_contact_audio_message" = "あなたに音声を送る";
+"alert_key_contact_audio_call_message" = "音声通話に招待します";
+"alert_key_contact_audio_call_cancelled_message" = "voice call cancelled";
+"alert_key_contact_post_message" = "あなたに文章を送る";
+"alert_key_contact_location_message" = "あなたに位置を送る";
+
+"alert_key_group_message" = "%@ メッセージを送る";
+"alert_key_group_text_message" = "%@ メッセージを送る";
+"alert_key_group_image_message" = "%@ 写真を送る";
+"alert_key_group_video_message" = "%@ ビデオを送る";
+"alert_key_group_live_message" = "%@ 生放送を送る";
+"alert_key_group_data_message" = "%@ ファイルを送る";
+"alert_key_group_sticker_message" = "%@ ステッカーを送る";
+"alert_key_group_contact_message" = "%@ 連絡先を送る";
+"alert_key_group_audio_message" = "%@ 音声を送る";
+"alert_key_group_post_message" = "%@ に文章を送る";
+"alert_key_group_location_message" = "%@ に位置を送る";
+"alert_key_group_audio_invite_message" = "%@が通話に招待されました";
+
+// Error
+
+"error_forbidden" = "アクセス拒否";
+"error_no_connection" = "ネットワークに接続されていません";
+"error_network_connection_lost" = "ネットワークが切断されました。確認してから再度接続してください";
+"error_server_5xx" = "Mixinのサーバーにエラーが発生しています";
+"error_server_data_error" = "データ解析エラー";
+"error_not_found" = "見つかりませんでした";
+"error_too_many_requests" = "アクセス回数が上限に達しました";
+"error_unavailable_phone_number" = "この電話番号はすでに別のアカウントで使用されています";
+"error_connection_timeout" = "ネットワーク接続タイムアウト";
+"error_operation_failed" = "操作が失敗しました。しばらくしてからもう一度お試しください";
+"error_two_parts" = "エラー %@: %@";
+"error_internal" = "内部エラー: %@";
+"error_invalid_request_body" = "Invalid request body";
+"error_unauthorized" = "Unauthorized";
+"error_invalid_request_data" = "Invalid request data";
+"error_failed_to_deliver_sms" = "Failed to deliver sms";
+"error_requires_recaptcha" = "Requires re captcha";
+"error_invalid_phone_number" = "Invalid phone number";
+"error_insufficient_identity_number" = "Insufficient identity number";
+"error_invalid_invitation_code" = "Invalid invitation code";
+"error_invalid_phone_verification_code" = "Invalid phone verification code";
+"error_expired_phone_verification_code" = "Expired phone verification code";
+"error_invalid_qr_code" = "Invalid QR-Code";
+"error_expired_authorization_code" = "Expired authorization code";
+"error_too_many_apps_created" = "Too many apps created";
+"error_transfer_is_already_paid" = "Transfer is already paid";
+"error_too_many_friends" = "Too many friends";
+"error_invalid_conversation_checksum" = "Invalid conversation checksum";
+"error_missing_private_key" = "Missing private key";
+"error_insufficient_pool" = "Insufficient pool";
+"error_invalid_parameters" = "Invalid parameters";
+"error_invalid_sdp" = "Invalid sdp";
+"error_invalid_candidate" = "Invalid candidate";
+"error_room_full" = "Room is full";
+"error_peer_not_found" = "Peer not found";
+"error_peer_closed" = "Peer closed";
+"error_track_not_found" = "Track not found";
+"error_group_full" = "グループチャットが満員です";
+"error_invalid_recaptcha" = "リキャプチャが間違っています";
+"error_insufficient_balance" = "残高不足";
+"error_pin_incorrect" = "PINが間違っています";
+"error_fee_insufficient" = "トランザクション手数料が不足しています";
+"error_transfer_amount_too_small" = "送金額を少なすぎます";
+"error_too_many_stickers" = "スタンプの数を減らしてください";
+"error_withdrawal_amount_too_small" = "出金額が少なすぎます";
+"error_blockchian_not_in_sync" = "ブロックチェーンが同期していないため再度試してください";
+"error_malformed_address" = "正しいアドレス形式で入力してください";

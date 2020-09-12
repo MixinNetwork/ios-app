@@ -19,9 +19,7 @@ extension EdDSAMigration {
             AppGroupUserDefaults.Account.pinToken = nil
             AppGroupKeychain.sessionSecret = key.rfc8032Representation
             AppGroupKeychain.pinToken = pinToken
-            // TODO: Update account?
         case .failure(let error):
-            print(error)
             waitAndRetry()
         }
     }

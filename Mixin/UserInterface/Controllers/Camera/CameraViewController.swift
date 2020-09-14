@@ -283,8 +283,7 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
     }
     
     @objc func setFocus(_ recognizer: UITapGestureRecognizer) {
-        let device = videoDeviceInput.device
-        guard device.isFocusPointOfInterestSupported else {
+        guard let device = videoDeviceInput?.device, device.isFocusPointOfInterestSupported else {
             hideFocusIndicator()
             return
         }

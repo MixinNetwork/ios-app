@@ -10,12 +10,12 @@ class MultisigUsersWindow: BottomSheetView {
 
     var onDismiss: (() -> Void)?
     
-    func render(users: [UserResponse], isSender: Bool) {
+    func render(threshold: Int, users: [UserResponse], isSender: Bool) {
         self.users = users
         if isSender {
-            titleLabel.text = R.string.localizable.multisig_senders()
+            titleLabel.text = R.string.localizable.multisig_senders("\(threshold)", "\(users.count)")
         } else {
-            titleLabel.text = R.string.localizable.multisig_receivers()
+            titleLabel.text = R.string.localizable.multisig_receivers("\(threshold)", "\(users.count)")
         }
         prepareTableView()
         tableView.reloadData()

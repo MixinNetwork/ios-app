@@ -308,12 +308,15 @@ class PayWindow: BottomSheetView {
     }
 
     @IBAction func sendersAction(_ sender: Any) {
-        guard case let .multisig(_, senders, _) = pinAction! else {
+        guard case let .multisig(multisig, senders, _) = pinAction! else {
+            return
+        }
+        guard senders.count > 1 else {
             return
         }
 
         let window = MultisigUsersWindow.instance()
-        window.render(users: senders, isSender: true)
+        window.render(threshold: multisig.sendersThreshold, users: senders, isSender: true)
         let isKeyboardAppear = self.isKeyboardAppear
         window.onDismiss = {
             self.isMultisigUsersAppear = false
@@ -332,16 +335,24 @@ class PayWindow: BottomSheetView {
 
     @IBAction func receiversAction(_ sender: Any) {
         var users = [UserResponse]()
+        var threshold = 0
         switch pinAction! {
-        case let .multisig(_, _, receivers):
+        case let .multisig(multisig, _, receivers):
             users = receivers
-        case let .payment(_, receivers):
+            threshold = multisig.receiversThreshold
+        case let .payment(payment, receivers):
             users = receivers
+            threshold = payment.threshold
         default:
             return
         }
+
+        guard users.count > 1 else {
+            return
+        }
+
         let window = MultisigUsersWindow.instance()
-        window.render(users: users, isSender: false)
+        window.render(threshold: threshold, users: users, isSender: false)
         let isKeyboardAppear = self.isKeyboardAppear
         window.onDismiss = {
             self.isMultisigUsersAppear = false

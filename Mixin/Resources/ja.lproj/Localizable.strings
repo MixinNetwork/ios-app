@@ -580,8 +580,8 @@
 "multisig_use_touch" = "フェイスマルチシグを使用";
 "multisig_transaction" = "マルチシグトランザクション";
 "multisig_revoke_transaction" = "マルチシグトランザクションを取り消す";
-"multisig_senders" = "送金者";
-"multisig_receivers" = "受取者";
+"multisig_senders" = "送金者 (%@/%@)";
+"multisig_receivers" = "受取者 (%@/%@)";
 "multisig_state_signed" = "このマルチシグのリンクはすでに署名されています。";
 "multisig_state_unlocked" = "このマルチシグのリンクはすでに取り消されています。";
 

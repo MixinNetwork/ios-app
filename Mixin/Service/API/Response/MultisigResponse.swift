@@ -8,6 +8,8 @@ struct MultisigResponse: Codable {
     let userId: String
     let assetId: String
     let amount: String
+    let sendersThreshold: Int
+    let receiversThreshold: Int
     let senders: [String]
     let receivers: [String]
     let state: String
@@ -23,6 +25,8 @@ struct MultisigResponse: Codable {
         case userId = "user_id"
         case assetId = "asset_id"
         case amount
+        case sendersThreshold = "senders_threshold"
+        case receiversThreshold = "receivers_threshold"
         case senders
         case receivers
         case state

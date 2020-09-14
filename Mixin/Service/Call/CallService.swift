@@ -745,6 +745,9 @@ extension CallService {
                 pendingAnswerCalls[uuid] = call
                 pendingSDPs[uuid] = sdp
                 beginUnanswerCountDown(for: call)
+                DispatchQueue.main.async {
+                    UIApplication.homeContainerViewController?.galleryViewControllerIfLoaded?.pauseCurrentVideoPage()
+                }
                 callInterface.reportIncomingCall(call) { (error) in
                     if let error = error {
                         handle(error: error, username: user.fullName)
@@ -903,6 +906,9 @@ extension CallService {
             self.log("[CallService] reporting incoming group call invitation: \(call.debugDescription), members: \(members.map(\.fullName))")
             pendingAnswerCalls[uuid] = call
             beginUnanswerCountDown(for: call)
+            DispatchQueue.main.async {
+                UIApplication.homeContainerViewController?.galleryViewControllerIfLoaded?.pauseCurrentVideoPage()
+            }
             callInterface.reportIncomingCall(call) { (error) in
                 let invitationStatus: MessageStatus
                 defer {

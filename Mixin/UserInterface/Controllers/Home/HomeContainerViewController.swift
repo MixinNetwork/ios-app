@@ -12,6 +12,7 @@ class HomeContainerViewController: UIViewController {
     lazy var galleryViewController: GalleryViewController = {
         let controller = GalleryViewController()
         controller.delegate = self
+        galleryViewControllerIfLoaded = controller
         return controller
     }()
     
@@ -38,6 +39,7 @@ class HomeContainerViewController: UIViewController {
     }
     
     private(set) var isShowingGallery = false
+    private(set) var galleryViewControllerIfLoaded: GalleryViewController?
     
     private(set) weak var minimizedCallViewControllerIfLoaded: MinimizedCallViewController?
     

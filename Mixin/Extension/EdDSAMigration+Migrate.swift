@@ -29,13 +29,12 @@ extension EdDSAMigration {
                 return
             case .failure(.unauthorized):
                 return
+            case let .failure(error) where error.worthRetrying:
+                reporter.report(error: error)
+                Thread.sleep(forTimeInterval: 2)
             case let .failure(error):
                 reporter.report(error: error)
-                if error.worthRetrying {
-                    Thread.sleep(forTimeInterval: 2)
-                } else {
-                    return
-                }
+                return
             }
         } while true
     }

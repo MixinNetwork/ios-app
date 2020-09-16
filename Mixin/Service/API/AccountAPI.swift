@@ -118,28 +118,22 @@ final class AccountAPI: MixinAPI {
     }
     
     static func updatePin(old: String?, new: String, completion: @escaping (MixinAPI.Result<Account>) -> Void) {
-        DispatchQueue.global().async {
-            var param: [String: String] = [:]
-            if let old = old {
-                switch PINEncryptor.encrypt(pin: old) {
-                case .success(let encryptedOld):
-                    param["old_pin"] = encryptedOld
-                case .failure(let error):
-                    DispatchQueue.main.async {
-                        completion(.failure(.pinEncryption(error)))
-                    }
-                }
-            }
-            switch PINEncryptor.encrypt(pin: new) {
-            case .success(let encryptedNew):
-                param["pin"] = encryptedNew
+        var param: [String: String] = [:]
+        if let old = old {
+            switch PINEncryptor.encrypt(pin: old) {
+            case .success(let encryptedOld):
+                param["old_pin"] = encryptedOld
             case .failure(let error):
-                DispatchQueue.main.async {
-                    completion(.failure(.pinEncryption(error)))
-                }
+                completion(.failure(.pinEncryption(error)))
             }
-            request(method: .post, path: Path.updatePin, parameters: param, completion: completion)
         }
+        switch PINEncryptor.encrypt(pin: new) {
+        case .success(let encryptedNew):
+            param["pin"] = encryptedNew
+        case .failure(let error):
+            completion(.failure(.pinEncryption(error)))
+        }
+        request(method: .post, path: Path.updatePin, parameters: param, completion: completion)
     }
     
     static func logs(offset: String? = nil, category: String? = nil, limit: Int? = nil, completion: @escaping (MixinAPI.Result<[LogResponse]>) -> Void) {

@@ -12,19 +12,15 @@ enum PINEncryptor {
     }
     
     static func encrypt<Response>(pin: String, onFailure: @escaping (MixinAPI.Result<Response>) -> Void, onSuccess: @escaping (String) -> Void) {
-        DispatchQueue.global().async {
-            switch encrypt(pin: pin) {
-            case .success(let encrypted):
-                onSuccess(encrypted)
-            case .failure(let error):
-                DispatchQueue.main.async {
-                    onFailure(.failure(.pinEncryption(error)))
-                }
-            }
+        switch encrypt(pin: pin) {
+        case .success(let encrypted):
+            onSuccess(encrypted)
+        case .failure(let error):
+            onFailure(.failure(.pinEncryption(error)))
         }
     }
     
-    static func encrypt(pin: String) -> Swift.Result<String, Error> {
+    static func encrypt(pin: String) -> Result<String, Error> {
         guard let pinData = pin.data(using: .utf8) else {
             return .failure(.invalidPIN)
         }

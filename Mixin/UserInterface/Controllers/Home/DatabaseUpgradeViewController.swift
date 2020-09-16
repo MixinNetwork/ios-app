@@ -7,7 +7,6 @@ class DatabaseUpgradeViewController: UIViewController {
     class var needsUpgrade: Bool {
         !AppGroupUserDefaults.isDocumentsMigrated
             || AppGroupUserDefaults.User.needsUpgradeInMainApp
-            || EdDSAMigration.needsMigration
     }
     
     class func instance() -> DatabaseUpgradeViewController {
@@ -53,13 +52,12 @@ class DatabaseUpgradeViewController: UIViewController {
             if localVersion < 18 {
                 AppGroupUserDefaults.User.hasRecoverMedia = true
             }
+            if localVersion < 25 {
+                EdDSAMigration.migrate()
+            }
             
             AppGroupUserDefaults.User.needsRebuildDatabase = false
             AppGroupUserDefaults.User.localVersion = AppGroupUserDefaults.User.version
-            
-            if EdDSAMigration.needsMigration {
-                EdDSAMigration.migrate()
-            }
             
             let time = Date().timeIntervalSince(startTime)
             if time < 2 {

@@ -5,30 +5,39 @@ import MixinServices
 extension EdDSAMigration {
     
     static func migrate() {
-        assert(!Thread.isMainThread)
+        guard AppGroupKeychain.sessionSecret == nil || AppGroupKeychain.pinToken == nil else {
+            return
+        }
         let key = Ed25519PrivateKey()
         let sessionSecret = key.publicKey.rawRepresentation.base64EncodedString()
-        let result = AccountAPI.update(sessionSecret: sessionSecret)
-        switch result {
-        case .success(let response):
-            guard let remotePublicKey = Data(base64Encoded: response.pinToken), let pinToken = AgreementCalculator.agreement(fromPublicKeyData: remotePublicKey, privateKeyData: key.x25519Representation) else {
-                reporter.reportErrorToFirebase(MixinAPIError.invalidServerPinToken)
-                waitAndRetry()
+
+        repeat {
+            guard LoginManager.shared.isLoggedIn else {
                 return
             }
-            AppGroupUserDefaults.Account.sessionSecret = nil
-            AppGroupUserDefaults.Account.pinToken = nil
-            AppGroupKeychain.sessionSecret = key.rfc8032Representation
-            AppGroupKeychain.pinToken = pinToken
-        case .failure(let error):
-            reporter.reportErrorToFirebase(error)
-            waitAndRetry()
-        }
-    }
-    
-    private static func waitAndRetry() {
-        Thread.sleep(forTimeInterval: 2)
-        migrate()
+            let result = AccountAPI.update(sessionSecret: sessionSecret)
+            switch result {
+            case .success(let response):
+                guard let remotePublicKey = Data(base64Encoded: response.pinToken), let pinToken = AgreementCalculator.agreement(fromPublicKeyData: remotePublicKey, privateKeyData: key.x25519Representation) else {
+                    reporter.report(error: MixinAPIError.invalidServerPinToken)
+                    return
+                }
+                AppGroupUserDefaults.Account.sessionSecret = nil
+                AppGroupUserDefaults.Account.pinToken = nil
+                AppGroupKeychain.sessionSecret = key.rfc8032Representation
+                AppGroupKeychain.pinToken = pinToken
+                return
+            case .failure(.unauthorized):
+                return
+            case let .failure(error):
+                reporter.report(error: error)
+                if error.worthRetrying {
+                    Thread.sleep(forTimeInterval: 2)
+                } else {
+                    return
+                }
+            }
+        } while true
     }
     
 }

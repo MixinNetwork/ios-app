@@ -4,7 +4,7 @@ public class MixinDatabase: BaseDatabase {
     
     public static let shared = MixinDatabase()
     
-    private static let version: Int = 24
+    private static let version: Int = 25
     
     override public var database: Database! {
         get { _database }

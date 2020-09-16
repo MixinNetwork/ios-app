@@ -125,6 +125,7 @@ final class AccountAPI: MixinAPI {
                 param["old_pin"] = encryptedOld
             case .failure(let error):
                 completion(.failure(.pinEncryption(error)))
+                return
             }
         }
         switch PINEncryptor.encrypt(pin: new) {
@@ -132,6 +133,7 @@ final class AccountAPI: MixinAPI {
             param["pin"] = encryptedNew
         case .failure(let error):
             completion(.failure(.pinEncryption(error)))
+            return
         }
         request(method: .post, path: Path.updatePin, parameters: param, completion: completion)
     }

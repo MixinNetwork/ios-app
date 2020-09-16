@@ -29,6 +29,8 @@ extension EdDSAMigration {
                 return
             case .failure(.unauthorized):
                 return
+            case .failure(.forbidden):
+                return
             case let .failure(error) where error.worthRetrying:
                 reporter.report(error: error)
                 Thread.sleep(forTimeInterval: 2)

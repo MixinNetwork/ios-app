@@ -21,11 +21,16 @@ enum PINEncryptor {
     }
     
     static func encrypt(pin: String) -> Result<String, Error> {
+        let pinToken: Data
+        if let token = AppGroupKeychain.pinToken {
+            pinToken = token
+        } else if let encoded = AppGroupUserDefaults.Account.pinToken, let token = Data(base64Encoded: encoded) {
+            pinToken = token
+        } else {
+            return .failure(.missingPINToken)
+        }
         guard let pinData = pin.data(using: .utf8) else {
             return .failure(.invalidPIN)
-        }
-        guard let pinToken = AppGroupKeychain.pinToken else {
-            return .failure(.missingPINToken)
         }
         guard let iv = Data(withSecuredRandomBytesOfCount: kCCBlockSizeAES128) else {
             return .failure(.generateSecuredRandom)

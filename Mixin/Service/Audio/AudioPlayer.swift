@@ -69,7 +69,7 @@ class AudioPlayer {
         var status: OSStatus = noErr
         
         var audioQueue: AudioQueueRef!
-        status = AudioQueueNewOutput(&format, aqBufferCallback, unretainedSelf, nil, nil, 0, &audioQueue)
+        status = AudioQueueNewOutput(&format, aqBufferCallback, unretainedSelf, CFRunLoopGetMain(), CFRunLoopMode.commonModes.rawValue, 0, &audioQueue)
         guard status == noErr else {
             dispose()
             throw Error.newOutput
@@ -145,11 +145,11 @@ fileprivate func aqBufferCallback(inUserData: UnsafeMutableRawPointer?, inAq: Au
     }
     if let pcmData = try? player.reader.pcmData(withMaxLength: UInt(player.audioQueueBufferSize)), pcmData.count > 0 {
         inBuffer.pointee.mAudioDataByteSize = UInt32(pcmData.count)
-        pcmData.copyBytes(to: inBuffer.pointee.mAudioData.assumingMemoryBound(to: UInt8.self),
+        pcmData.copyBytes(to: inBuffer.pointee.mAudioData.assumingMemoryBound(to: Data.Element.self),
                           count: pcmData.count)
         AudioQueueEnqueueBuffer(player.audioQueue, inBuffer, 0, nil)
     } else {
+        AudioQueueStop(player.audioQueue, true)
         player.status = .didReachEnd
-        AudioQueueStop(player.audioQueue, false)
     }
 }

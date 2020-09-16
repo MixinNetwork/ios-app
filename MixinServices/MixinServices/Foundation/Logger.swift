@@ -10,8 +10,6 @@ public enum Logger {
 
     public static func write(errorMsg: String) {
         queue.async {
-            makeLogDirectoryIfNeeded()
-
             #if DEBUG
             print("===errorMsg:\(errorMsg)...")
             #endif
@@ -22,8 +20,6 @@ public enum Logger {
 
     public static func write(error: Error, userInfo: [String: Any]) {
         queue.async {
-            makeLogDirectoryIfNeeded()
-
             #if DEBUG
             print("===error:\(error)...\n\(userInfo)")
             #endif
@@ -37,12 +33,9 @@ public enum Logger {
 
     public static func write(error: Error, extra: String = "") {
         queue.async {
-            makeLogDirectoryIfNeeded()
-
             #if DEBUG
             print("===error:\(error)...\n\(extra)")
             #endif
-
             writeLog(filename: errorLog, log: "\n------------------------------------\n[Error]" + String(describing: error))
             if !extra.isEmpty {
                 writeLog(filename: errorLog, log: extra)
@@ -52,8 +45,6 @@ public enum Logger {
     
     public static func write(log: String, newSection: Bool = false) {
         queue.async {
-            makeLogDirectoryIfNeeded()
-
             if log.hasPrefix("[Call]") {
                 writeLog(filename: callLog, log: log, newSection: newSection)
             } else if log.hasPrefix("No sender key for:"), let conversationId = log.suffix(char: ":")?.substring(endChar: ":").trim() {
@@ -65,19 +56,19 @@ public enum Logger {
     }
     
     public static func write(conversationId: String, log: String, newSection: Bool = false) {
-        guard LoginManager.shared.isLoggedIn else {
-            return
-        }
-        guard !conversationId.isEmpty else {
-            write(log: log, newSection: newSection)
-            return
-        }
         queue.async {
-            writeLog(filename: conversationId, log: log, newSection: newSection)
+            if conversationId.isEmpty {
+                writeLog(filename: conversationId, log: log, newSection: newSection)
+            } else {
+                write(log: log, newSection: newSection)
+            }
         }
     }
 
     private static func writeLog(filename: String, log: String, newSection: Bool = false, appendTime: Bool = true) {
+        guard LoginManager.shared.isLoggedIn else {
+            return
+        }
         makeLogDirectoryIfNeeded()
         var log = "\(isAppExtension ? "[AppExtension]" : "")" + log
         if appendTime {
@@ -116,8 +107,9 @@ public enum Logger {
                 try log.write(toFile: path, atomically: true, encoding: .utf8)
             }
         } catch {
+            try? FileManager.default.removeItem(at: url)
             #if DEBUG
-            print("======FileManagerExtension...writeLog...error:\(error)")
+            print("======[Logger][\(filename)]...writeLog...error:\(error)")
             #endif
         }
     }

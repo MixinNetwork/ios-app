@@ -12,6 +12,7 @@ extension EdDSAMigration {
         switch result {
         case .success(let response):
             guard let remotePublicKey = Data(base64Encoded: response.pinToken), let pinToken = AgreementCalculator.agreement(fromPublicKeyData: remotePublicKey, privateKeyData: key.x25519Representation) else {
+                reporter.reportErrorToFirebase(MixinAPIError.invalidServerPinToken)
                 waitAndRetry()
                 return
             }
@@ -20,6 +21,7 @@ extension EdDSAMigration {
             AppGroupKeychain.sessionSecret = key.rfc8032Representation
             AppGroupKeychain.pinToken = pinToken
         case .failure(let error):
+            reporter.reportErrorToFirebase(error)
             waitAndRetry()
         }
     }

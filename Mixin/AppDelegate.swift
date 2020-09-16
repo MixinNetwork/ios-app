@@ -23,6 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FirebaseApp.configure()
         MixinService.callMessageCoordinator = CallService.shared
         reporterClass = CrashlyticalReporter.self
+        reporter.configure()
         AppGroupUserDefaults.migrateIfNeeded()
         updateSharedImageCacheConfig()
         _ = ReachabilityManger.shared

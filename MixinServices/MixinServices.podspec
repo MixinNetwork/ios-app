@@ -26,7 +26,7 @@ Mixin Core Services.
   s.ios.vendored_frameworks = 'MixinServices/Goutils.framework'
   s.source_files = 'MixinServices/Foundation/**/*', 'MixinServices/Services/**/*', 'MixinServices/Storage/**/*'
 
-  s.dependency 'Bugsnag'
+  s.dependency 'AppCenter'
   s.dependency 'Alamofire'
   s.dependency 'SDWebImage'
   s.dependency 'SDWebImageYYPlugin/YYImage'

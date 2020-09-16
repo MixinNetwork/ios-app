@@ -1,7 +1,14 @@
 PODS:
   - Alamofire (5.2.2)
   - AlignedCollectionViewFlowLayout (1.1.2)
-  - Bugsnag (6.1.3)
+  - AppCenter (3.3.3):
+    - AppCenter/Analytics (= 3.3.3)
+    - AppCenter/Crashes (= 3.3.3)
+  - AppCenter/Analytics (3.3.3):
+    - AppCenter/Core
+  - AppCenter/Core (3.3.3)
+  - AppCenter/Crashes (3.3.3):
+    - AppCenter/Core
   - DeviceGuru (6.0.5)
   - Firebase/Analytics (6.31.1):
     - Firebase/Core
@@ -110,7 +117,7 @@ PODS:
     - Maaku/CMark
   - MixinServices (0.1.0):
     - Alamofire
-    - Bugsnag
+    - AppCenter
     - DeviceGuru
     - GzipSwift
     - libsignal-protocol-c
@@ -225,7 +232,6 @@ SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
     - Alamofire
     - AlignedCollectionViewFlowLayout
-    - Bugsnag
     - DeviceGuru
     - Firebase
     - FirebaseABTesting
@@ -261,6 +267,8 @@ SPEC REPOS:
     - WCDBOptimizedSQLCipher
     - YYImage
     - Zip
+  trunk:
+    - AppCenter
 
 EXTERNAL SOURCES:
   Highlightr:
@@ -316,7 +324,7 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   Alamofire: 814429acc853c6c54ff123fc3d2ef66803823ce0
   AlignedCollectionViewFlowLayout: ee2ef451e741ec08f8e0967d828001e2f051c20a
-  Bugsnag: 62dc800fefb846ec607b8434183311d501204465
+  AppCenter: 987f1d24493e47580057911962d11df00e46e060
   DeviceGuru: 79cd775847d974b70e344009910b0e3d0b2ab088
   Firebase: 658370fa0181826a74b7cfca8d68c5856ca749ae
   FirebaseABTesting: 8a9d8df3acc2b43f4a22014ddf9f601bca6af699
@@ -338,7 +346,7 @@ SPEC CHECKSUMS:
   libsignal-protocol-c: 45940865809669a5913aacbd0801cec190150588
   lottie-ios: 0e760146411886f6104050c932a8e6964853267f
   Maaku: 0eb331f423453177018d0b483068bcc181e135b4
-  MixinServices: 8004b76b6072aa5dde05d43189451019e897fb04
+  MixinServices: 675673ce596f1dafb21a74a4f2dd05866cf1998a
   nanopb: 59317e09cf1f1a0af72f12af412d54edf52603fc
   PhoneNumberKit: df411d46177d1492da84e10b6c093846dd861452
   PINCache: 7cb9ae068c8f655717f7c644ef1dff9fd573e979

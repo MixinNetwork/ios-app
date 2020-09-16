@@ -1,5 +1,4 @@
 import UIKit
-import Bugsnag
 import DeviceCheck
 import MixinServices
 

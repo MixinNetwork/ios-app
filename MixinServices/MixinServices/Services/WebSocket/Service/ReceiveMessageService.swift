@@ -388,7 +388,7 @@ public class ReceiveMessageService: MixinService {
                     userInfo["ratchetSenderKeyStatus"] =  RatchetSenderKeyDAO.shared.getRatchetSenderKeyStatus(groupId: data.conversationId, senderId: data.userId, sessionId: data.sessionId) ?? ""
                 }
                 userInfo["createdAt"] = data.createdAt
-                reporter.reportErrorToFirebase(MixinServicesError.decryptMessage(userInfo))
+                reporter.report(error: MixinServicesError.decryptMessage(userInfo))
             }
             
             guard !MessageDAO.shared.isExist(messageId: data.messageId) else {

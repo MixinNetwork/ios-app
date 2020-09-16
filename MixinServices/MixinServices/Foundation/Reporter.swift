@@ -1,5 +1,7 @@
 import Foundation
-import Bugsnag
+import AppCenter
+import AppCenterAnalytics
+import AppCenterCrashes
 
 open class Reporter {
     
@@ -32,31 +34,53 @@ open class Reporter {
     
     public required init() {
     }
-    
+
+    open func configure() {
+        guard let path = Bundle.main.path(forResource: "Mixin-Keys", ofType: "plist"), let keys = NSDictionary(contentsOfFile: path) as? [String: Any], let key = keys["AppCenter"] as? String else {
+            return
+        }
+        
+        MSAppCenter.start(key, withServices: [MSAnalytics.self, MSCrashes.self])
+
+        if !isAppExtension {
+            guard MSCrashes.hasCrashedInLastSession(), let crashReport = MSCrashes.lastSessionCrashReport() else {
+                return
+            }
+            
+            Logger.write(errorMsg: "[\(crashReport.signal ?? "")][\(crashReport.exceptionName ?? "")][\(crashReport.exceptionReason ?? "")]")
+        }
+    }
+
     open func registerUserInformation() {
         guard let account = LoginManager.shared.account else {
             return
         }
-        Bugsnag.setUser(account.user_id, withEmail: account.identity_number, andName: account.full_name)
+        MSAppCenter.setUserId(account.user_id)
+
+        var properties = MSCustomProperties()
+        properties.setString(account.identity_number, forKey: "identity_number")
+        properties.setString(account.full_name, forKey: "full_name")
+        MSAppCenter.setCustomProperties(properties)
     }
     
     open func report(event: Event, userInfo: UserInfo? = nil) {
-        
+        if let userInfo = userInfo {
+            var properties = [String: String]()
+            userInfo.forEach { (key, value) in
+                properties[key] = "\(value)"
+            }
+            MSAnalytics.trackEvent(event.name, withProperties: properties)
+        } else {
+            MSAnalytics.trackEvent(event.name)
+        }
     }
 
     open func report(error: MixinAPIError) {
-        guard !error.isTransportTimedOut else {
-            return
-        }
-        Bugsnag.notifyError(error)
+
     }
 
     open func report(error: Error) {
-        Bugsnag.notifyError(error)
-    }
-    
-    open func reportErrorToFirebase(_ error: Error) {
-        
+
     }
     
 }

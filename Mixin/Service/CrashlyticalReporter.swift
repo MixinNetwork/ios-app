@@ -3,19 +3,8 @@ import FirebaseCore
 import FirebaseAnalytics
 import FirebaseCrashlytics
 import MixinServices
-import Bugsnag
 
 class CrashlyticalReporter: Reporter {
-
-    required init() {
-        super.init()
-
-        #if RELEASE
-        if let key = MixinKeys.bugsnag {
-            Bugsnag.start(withApiKey: key)
-        }
-        #endif
-    }
 
     override func registerUserInformation() {
         super.registerUserInformation()
@@ -33,11 +22,6 @@ class CrashlyticalReporter: Reporter {
     
     override func report(error: Error) {
         super.report(error: error)
-        Crashlytics.crashlytics().record(error: error)
-    }
-    
-    override func reportErrorToFirebase(_ error: Error) {
-        super.reportErrorToFirebase(error)
         Crashlytics.crashlytics().record(error: error)
     }
     

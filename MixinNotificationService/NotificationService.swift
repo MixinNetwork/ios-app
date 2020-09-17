@@ -8,6 +8,7 @@ final class NotificationService: UNNotificationServiceExtension {
     private var isExpired = false
     private var conversationId: String?
     private var messageId = ""
+    private static var isInitiatedReporter = false
 
     override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
         self.contentHandler = contentHandler
@@ -28,7 +29,7 @@ final class NotificationService: UNNotificationServiceExtension {
             return
         }
 
-        reporter.configure()
+        initReporter()
         _ = DarwinNotificationManager.shared
         _ = ReachabilityManger.shared
         MixinService.callMessageCoordinator = CallMessageSaver.shared
@@ -46,12 +47,21 @@ final class NotificationService: UNNotificationServiceExtension {
             }
         }
     }
-    
+
     override func serviceExtensionTimeWillExpire() {
         isExpired = true
         deliverRawContent(from: "serviceExtensionTimeWillExpire")
     }
-    
+
+    private func initReporter() {
+        guard !Self.isInitiatedReporter else {
+            return
+        }
+        Self.isInitiatedReporter = true
+        reporter.configure()
+        reporter.registerUserInformation()
+    }
+
     private func deliverNotification(with message: MessageItem) {
         guard message.status != MessageStatus.FAILED.rawValue else {
             deliverRawContent(from: "message status failed")

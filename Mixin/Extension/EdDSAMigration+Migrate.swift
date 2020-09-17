@@ -5,9 +5,6 @@ import MixinServices
 extension EdDSAMigration {
     
     static func migrate() {
-        guard AppGroupKeychain.sessionSecret == nil || AppGroupKeychain.pinToken == nil else {
-            return
-        }
         let key = Ed25519PrivateKey()
         let sessionSecret = key.publicKey.rawRepresentation.base64EncodedString()
 

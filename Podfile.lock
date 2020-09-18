@@ -1,40 +1,40 @@
 PODS:
   - Alamofire (5.2.2)
   - AlignedCollectionViewFlowLayout (1.1.2)
-  - AppCenter (3.3.3):
-    - AppCenter/Analytics (= 3.3.3)
-    - AppCenter/Crashes (= 3.3.3)
-  - AppCenter/Analytics (3.3.3):
+  - AppCenter (3.3.4):
+    - AppCenter/Analytics (= 3.3.4)
+    - AppCenter/Crashes (= 3.3.4)
+  - AppCenter/Analytics (3.3.4):
     - AppCenter/Core
-  - AppCenter/Core (3.3.3)
-  - AppCenter/Crashes (3.3.3):
+  - AppCenter/Core (3.3.4)
+  - AppCenter/Crashes (3.3.4):
     - AppCenter/Core
   - DeviceGuru (6.0.5)
-  - Firebase/Analytics (6.31.1):
+  - Firebase/Analytics (6.32.2):
     - Firebase/Core
-  - Firebase/Core (6.31.1):
+  - Firebase/Core (6.32.2):
     - Firebase/CoreOnly
-    - FirebaseAnalytics (= 6.8.0)
-  - Firebase/CoreOnly (6.31.1):
-    - FirebaseCore (= 6.10.1)
-  - Firebase/Crashlytics (6.31.1):
+    - FirebaseAnalytics (= 6.8.2)
+  - Firebase/CoreOnly (6.32.2):
+    - FirebaseCore (= 6.10.2)
+  - Firebase/Crashlytics (6.32.2):
     - Firebase/CoreOnly
-    - FirebaseCrashlytics (~> 4.5.0)
-  - Firebase/Performance (6.31.1):
+    - FirebaseCrashlytics (~> 4.6.0)
+  - Firebase/Performance (6.32.2):
     - Firebase/CoreOnly
     - FirebasePerformance (~> 3.3.0)
   - FirebaseABTesting (4.2.0):
     - FirebaseCore (~> 6.10)
-  - FirebaseAnalytics (6.8.0):
+  - FirebaseAnalytics (6.8.2):
     - FirebaseCore (~> 6.10)
     - FirebaseInstallations (~> 1.6)
-    - GoogleAppMeasurement (= 6.8.0)
+    - GoogleAppMeasurement (= 6.8.2)
     - GoogleUtilities/AppDelegateSwizzler (~> 6.7)
     - GoogleUtilities/MethodSwizzler (~> 6.7)
     - GoogleUtilities/Network (~> 6.7)
     - "GoogleUtilities/NSData+zlib (~> 6.7)"
     - nanopb (~> 1.30906.0)
-  - FirebaseCore (6.10.1):
+  - FirebaseCore (6.10.2):
     - FirebaseCoreDiagnostics (~> 1.6)
     - GoogleUtilities/Environment (~> 6.7)
     - GoogleUtilities/Logger (~> 6.7)
@@ -43,7 +43,7 @@ PODS:
     - GoogleUtilities/Environment (~> 6.7)
     - GoogleUtilities/Logger (~> 6.7)
     - nanopb (~> 1.30906.0)
-  - FirebaseCrashlytics (4.5.0):
+  - FirebaseCrashlytics (4.6.0):
     - FirebaseCore (~> 6.10)
     - FirebaseInstallations (~> 1.6)
     - GoogleDataTransport (~> 7.2)
@@ -72,7 +72,7 @@ PODS:
     - FirebaseInstallations (~> 1.6)
     - GoogleUtilities/Environment (~> 6.7)
     - "GoogleUtilities/NSData+zlib (~> 6.7)"
-  - GoogleAppMeasurement (6.8.0):
+  - GoogleAppMeasurement (6.8.2):
     - GoogleUtilities/AppDelegateSwizzler (~> 6.7)
     - GoogleUtilities/MethodSwizzler (~> 6.7)
     - GoogleUtilities/Network (~> 6.7)
@@ -140,31 +140,31 @@ PODS:
   - PhoneNumberKit/PhoneNumberKitCore (3.2.0)
   - PhoneNumberKit/UIKit (3.2.0):
     - PhoneNumberKit/PhoneNumberKitCore
-  - PINCache (3.0.1-beta.7):
-    - PINCache/Arc-exception-safe (= 3.0.1-beta.7)
-    - PINCache/Core (= 3.0.1-beta.7)
-  - PINCache/Arc-exception-safe (3.0.1-beta.7):
+  - PINCache (3.0.1):
+    - PINCache/Arc-exception-safe (= 3.0.1)
+    - PINCache/Core (= 3.0.1)
+  - PINCache/Arc-exception-safe (3.0.1):
     - PINCache/Core
-  - PINCache/Core (3.0.1-beta.7):
-    - PINOperation (~> 1.1.1)
-  - PINOperation (1.1.2)
-  - PINRemoteImage/Core (3.0.0-beta.14):
+  - PINCache/Core (3.0.1):
+    - PINOperation (~> 1.2.0)
+  - PINOperation (1.2)
+  - PINRemoteImage/Core (3.0.1):
     - PINOperation
-  - PINRemoteImage/iOS (3.0.0-beta.14):
+  - PINRemoteImage/iOS (3.0.1):
     - PINRemoteImage/Core
-  - PINRemoteImage/PINCache (3.0.0-beta.14):
-    - PINCache (= 3.0.1-beta.7)
+  - PINRemoteImage/PINCache (3.0.1):
+    - PINCache (~> 3.0.1)
     - PINRemoteImage/Core
   - PromisesObjC (1.2.10)
   - Protobuf (3.13.0)
   - R.swift (5.2.2):
     - R.swift.Library (~> 5.2.0)
   - R.swift.Library (5.2.0)
-  - RSKImageCropper (2.2.3)
-  - SDWebImage (5.8.4):
-    - SDWebImage/Core (= 5.8.4)
-  - SDWebImage/Core (5.8.4)
-  - SDWebImageYYPlugin/YYImage (0.5.0):
+  - RSKImageCropper (2.3.0)
+  - SDWebImage (5.9.1):
+    - SDWebImage/Core (= 5.9.1)
+  - SDWebImage/Core (5.9.1)
+  - SDWebImageYYPlugin/YYImage (0.6.0):
     - SDWebImage/Core (~> 5.7)
     - YYImage/Core
   - SnapKit (5.0.1)
@@ -172,25 +172,25 @@ PODS:
   - SQLiteRepairKit (1.2.2):
     - WCDBOptimizedSQLCipher (~> 1.2.0)
   - SwiftyMarkdown (1.1.0)
-  - Texture (2.8.1):
-    - Texture/AssetsLibrary (= 2.8.1)
-    - Texture/Core (= 2.8.1)
-    - Texture/MapKit (= 2.8.1)
-    - Texture/Photos (= 2.8.1)
-    - Texture/PINRemoteImage (= 2.8.1)
-    - Texture/Video (= 2.8.1)
-  - Texture/AssetsLibrary (2.8.1):
+  - Texture (3.0.0):
+    - Texture/AssetsLibrary (= 3.0.0)
+    - Texture/Core (= 3.0.0)
+    - Texture/MapKit (= 3.0.0)
+    - Texture/Photos (= 3.0.0)
+    - Texture/PINRemoteImage (= 3.0.0)
+    - Texture/Video (= 3.0.0)
+  - Texture/AssetsLibrary (3.0.0):
     - Texture/Core
-  - Texture/Core (2.8.1)
-  - Texture/MapKit (2.8.1):
+  - Texture/Core (3.0.0)
+  - Texture/MapKit (3.0.0):
     - Texture/Core
-  - Texture/Photos (2.8.1):
+  - Texture/Photos (3.0.0):
     - Texture/Core
-  - Texture/PINRemoteImage (2.8.1):
-    - PINRemoteImage/iOS (= 3.0.0-beta.14)
+  - Texture/PINRemoteImage (3.0.0):
+    - PINRemoteImage/iOS (~> 3.0.0)
     - PINRemoteImage/PINCache
     - Texture/Core
-  - Texture/Video (2.8.1):
+  - Texture/Video (3.0.0):
     - Texture/Core
   - TexturedMaaku (0.7.0):
     - TexturedMaaku/Core (= 0.7.0)
@@ -229,9 +229,10 @@ DEPENDENCIES:
   - WCDB.swift (from `https://github.com/MixinNetwork/wcdb.git`, branch `bugfix/fts`)
 
 SPEC REPOS:
-  https://github.com/CocoaPods/Specs.git:
+  trunk:
     - Alamofire
     - AlignedCollectionViewFlowLayout
+    - AppCenter
     - DeviceGuru
     - Firebase
     - FirebaseABTesting
@@ -267,8 +268,6 @@ SPEC REPOS:
     - WCDBOptimizedSQLCipher
     - YYImage
     - Zip
-  trunk:
-    - AppCenter
 
 EXTERNAL SOURCES:
   Highlightr:
@@ -300,10 +299,10 @@ CHECKOUT OPTIONS:
     :commit: 9b9fc465efecb7b3c039c8fedc66e4ae4f315ad9
     :git: https://github.com/wuyuehyang/Highlightr.git
   libsignal-protocol-c:
-    :commit: 1f83b6fc6d151e8c525b2296feb87e5555d9d611
+    :commit: 62b85b5b65d202272ce8013c1abc5798a5b26867
     :git: https://github.com/MixinNetwork/libsignal-protocol-c.git
   lottie-ios:
-    :commit: 415a2d1113eca4936ef17961798b5eccfd58e5b0
+    :commit: 44bda1253360b7ea5698f058f8483e42e26e65bd
     :git: https://github.com/airbnb/lottie-ios.git
   PhoneNumberKit:
     :commit: 26e182eaee775caf0e67c00449c44cda7e92d582
@@ -312,10 +311,10 @@ CHECKOUT OPTIONS:
     :commit: 805ebcc950d9b9be4dd95544aa48ba9a3d2f9d18
     :git: https://github.com/wuyuehyang/SwiftyMarkdown.git
   Texture:
-    :commit: 70f61e9d01eff930f3f8e2bf4146a1841821c79a
+    :commit: 32679feb84391cd1c4cc3a803fe9f4ca835917bc
     :git: https://github.com/TextureGroup/Texture.git
   TexturedMaaku:
-    :commit: ebd29bef5d75a0c0aa1706580b87a833ea32e344
+    :commit: a73def5253fcec7b49307001176592b4b431b65d
     :git: https://github.com/wuyuehyang/TexturedMaaku.git
   WCDB.swift:
     :commit: 18ee3d5d9596a269f149153fab2dea656bb04653
@@ -324,18 +323,18 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   Alamofire: 814429acc853c6c54ff123fc3d2ef66803823ce0
   AlignedCollectionViewFlowLayout: ee2ef451e741ec08f8e0967d828001e2f051c20a
-  AppCenter: 987f1d24493e47580057911962d11df00e46e060
+  AppCenter: 0487be185c038ed2ecc5ed38219af1dcd280af23
   DeviceGuru: 79cd775847d974b70e344009910b0e3d0b2ab088
-  Firebase: 658370fa0181826a74b7cfca8d68c5856ca749ae
+  Firebase: 47176280bfba198e531f909cfb1612dad216cb96
   FirebaseABTesting: 8a9d8df3acc2b43f4a22014ddf9f601bca6af699
-  FirebaseAnalytics: 0ca9aa2af7cc4dc92392b7a78bfc49feaa2eb60f
-  FirebaseCore: 6fb954e350af0885803d5aa49865d15d9a6b264c
+  FirebaseAnalytics: 3c2fee6a922023ccfda7af87e4e641bad1fc11ba
+  FirebaseCore: 1d697bb944bf2af5fc248f1a66e165c9dd88bf97
   FirebaseCoreDiagnostics: 7415bfb3883b3500c5a95c42b6ba66baae78f600
-  FirebaseCrashlytics: d2a350ec7fd4a332031b906b0802a7a73697630b
+  FirebaseCrashlytics: eea40d2a33f01b927b9f6f00ef305baa22a6a58e
   FirebaseInstallations: 466c7b4d1f58fe16707693091da253726a731ed2
   FirebasePerformance: 269607f1dcf37bb1f21e3b3ae0ab5b2691644c54
   FirebaseRemoteConfig: e40f9e084658210c4d9c341cfa9f6cab6ad4f67e
-  GoogleAppMeasurement: ecc30d0ab5b66d7d18e85ce1b8e2b345db60626d
+  GoogleAppMeasurement: 1a66f478c68ecd6c16ee63ee60c7c3a648e6b337
   GoogleDataTransport: e85fb700c9b027079ce182c3d08e12e0f9618bb4
   GoogleToolboxForMac: 800648f8b3127618c1b59c7f97684427630c5ea3
   GoogleUtilities: 7f2f5a07f888cdb145101d6042bc4422f57e70b3
@@ -343,27 +342,27 @@ SPEC CHECKSUMS:
   GzipSwift: 893f3e48e597a1a4f62fafcb6514220fcf8287fa
   Highlightr: c687b337a60af6e46a478b4376006168bb5bd7c5
   libcmark_gfm: cbf2fe0fd3983202f00b40d4742d82cd173ff7c3
-  libsignal-protocol-c: 45940865809669a5913aacbd0801cec190150588
+  libsignal-protocol-c: bf65792f9f777e7d54dfab84bba0379eba42044e
   lottie-ios: 0e760146411886f6104050c932a8e6964853267f
   Maaku: 0eb331f423453177018d0b483068bcc181e135b4
   MixinServices: 675673ce596f1dafb21a74a4f2dd05866cf1998a
   nanopb: 59317e09cf1f1a0af72f12af412d54edf52603fc
   PhoneNumberKit: df411d46177d1492da84e10b6c093846dd861452
-  PINCache: 7cb9ae068c8f655717f7c644ef1dff9fd573e979
-  PINOperation: 24b774353ca248fcf87d67b2d61eef42087c125a
-  PINRemoteImage: 81bbff853acc71c6de9e106e9e489a791b8bbb08
+  PINCache: ee3c4abadd09970a61cdda0cfc345e69a3d75b26
+  PINOperation: 3a967a927e7867e61976c6cc23e5770416449fbc
+  PINRemoteImage: 3b7cedb118c2d357f87e9eabc7c81ba0202cb236
   PromisesObjC: b14b1c6b68e306650688599de8a45e49fae81151
   Protobuf: 3dac39b34a08151c6d949560efe3f86134a3f748
   R.swift: 7c52cdc57a66840ffe6cbd8a823d732059d42a32
   R.swift.Library: 5ba4f1631300caf9a4d890186930da85d540769d
-  RSKImageCropper: a446db0e8444a036b34f3c43db01b2373baa4b2a
-  SDWebImage: cf6922231e95550934da2ada0f20f2becf2ceba9
-  SDWebImageYYPlugin: 6808c1a0e3f59feb604c1f492e02dddf51c83b10
+  RSKImageCropper: c337eacdcbed50e695e5153ff0c2b861b6ebfa84
+  SDWebImage: a990c053fff71e388a10f3357edb0be17929c9c5
+  SDWebImageYYPlugin: a0a9d1b51c6903757bd7c0978d9d39f1e6254624
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
   SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
   SQLiteRepairKit: 35aaae5a8838adb85f5b1eb4d796055be6060a4b
   SwiftyMarkdown: 033abc9dad9a37903f81aec5188cade436f40520
-  Texture: 95cfad2ed5e7f06c32e34278c39d386568481f73
+  Texture: 2f109e937850d94d1d07232041c9c7313ccddb81
   TexturedMaaku: e868edf580d7466afe381d5380dea6751e9d99ca
   WCDB.swift: 2e767b45d58cfca1b12e7e9ab6d65d357d5c85e7
   WCDBOptimizedSQLCipher: baf44493b0c7a3d49e97bc5b64a3856f6428ddd1

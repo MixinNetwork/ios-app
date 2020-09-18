@@ -25,10 +25,7 @@ extension EdDSAMigration {
                 AppGroupKeychain.sessionSecret = key.rfc8032Representation
                 AppGroupKeychain.pinToken = pinToken
                 return
-            case .failure(.unauthorized):
-                AppGroupKeychain.removeAllItems()
-                return
-            case .failure(.forbidden):
+            case .failure(.unauthorized), .failure(.forbidden):
                 AppGroupKeychain.removeAllItems()
                 return
             case let .failure(error) where error.worthRetrying:

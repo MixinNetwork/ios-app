@@ -24,8 +24,8 @@ class UrlWindow {
                 return checkApp(url: url, userId: userId)
             case let .transfer(id):
                 return checkTransferUrl(id, clearNavigationStack: clearNavigationStack)
-            case .send:
-                return checkSendUrl(url: url)
+            case let .send(context):
+                return checkSendUrl(context: context)
             case let .device(id, publicKey):
                 LoginConfirmWindow.instance(id: id, publicKey: publicKey).presentView()
                 return true
@@ -440,19 +440,50 @@ class UrlWindow {
         }
         return true
     }
-
-    class func checkSendUrl(url: URL) -> Bool {
-        let query = url.getKeyVals()
-        guard let text = query["text"], !text.isEmpty else {
-            return false
+    
+    class func checkSendUrl(context: ExternalSharingContext) -> Bool {
+        func presentSendingConfirmation() {
+            let vc = R.storyboard.chat.external_sharing_confirmation()!
+            vc.modalPresentationStyle = .custom
+            vc.transitioningDelegate = PopupPresentationManager.shared
+            UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
+            vc.load(context: context)
         }
-        
-        let vc = MessageReceiverViewController.instance(content: .text(text))
-        UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
-
+        switch context.content {
+        case .contact(let data):
+            let hud = Hud()
+            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+            DispatchQueue.global().async {
+                var user = UserDAO.shared.getUser(userId: data.userId)
+                switch UserAPI.showUser(userId: data.userId) {
+                case let .success(userItem):
+                    user = UserItem.createUser(from: userItem)
+                    UserDAO.shared.updateUsers(users: [userItem])
+                    DispatchQueue.main.async {
+                        hud.hide()
+                        presentSendingConfirmation()
+                    }
+                case let .failure(error):
+                    if user == nil {
+                        let text = error.localizedDescription(overridingNotFoundDescriptionWith: R.string.localizable.user_not_found())
+                        DispatchQueue.main.async {
+                            hud.set(style: .error, text: text)
+                            hud.scheduleAutoHidden()
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                            hud.hide()
+                            presentSendingConfirmation()
+                        }
+                    }
+                }
+            }
+        default:
+            presentSendingConfirmation()
+        }
         return true
     }
-
+    
 }
 
 extension UrlWindow {

@@ -5,6 +5,8 @@ enum MixinURL {
     static let scheme = "mixin"
     static let host = "mixin.one"
     
+    private typealias Host = Path
+    
     private struct Path {
         static let codes = "codes"
         static let pay = "pay"
@@ -18,7 +20,6 @@ enum MixinURL {
         static let apps = "apps"
         static let snapshots = "snapshots"
     }
-    private typealias Host = Path
     
     case codes(String)
     case users(String)
@@ -26,7 +27,7 @@ enum MixinURL {
     case snapshots
     case pay
     case transfer(String)
-    case send
+    case send(ExternalSharingContext)
     case device(id: String, publicKey: String)
     case unknown(URL)
     case withdrawal
@@ -47,8 +48,8 @@ enum MixinURL {
                 self = .apps(url.pathComponents[1])
             } else if url.host == Host.transfer && url.pathComponents.count == 2 {
                 self = .transfer(url.pathComponents[1])
-            } else if url.host == Host.send {
-                self = .send
+            } else if url.host == Host.send, let context = ExternalSharingContext(url: url) {
+                self = .send(context)
             } else if url.host == Host.device {
                 if url.pathComponents.count == 2, url.pathComponents[1] == Path.auth, let items = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems, let publicKey = items.first(where: { $0.name == "pub_key" })?.value, !publicKey.isEmpty {
                     if let id = items.first(where: { $0.name == "id" })?.value, !id.isEmpty {

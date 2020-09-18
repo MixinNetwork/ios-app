@@ -268,6 +268,7 @@ extension MessageReceiverViewController {
 extension MessageReceiverViewController {
     
     enum MessageContent {
+        case message(Message)
         case messages([MessageItem])
         case contact(String)
         case photo(UIImage)
@@ -278,6 +279,8 @@ extension MessageReceiverViewController {
     
     static func makeMessages(content: MessageContent, to conversationId: String) -> [Message] {
         switch content {
+        case .message(let message):
+            return [message]
         case .messages(let messages):
             let date = Date()
             let counter = Counter(value: -1)

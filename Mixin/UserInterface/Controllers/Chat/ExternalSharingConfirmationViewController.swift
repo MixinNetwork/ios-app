@@ -5,12 +5,14 @@ import MixinServices
 class ExternalSharingConfirmationViewController: UIViewController {
     
     @IBOutlet weak var backgroundView: UIView!
+    @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var previewWrapperView: UIView!
+    @IBOutlet weak var sendButton: RoundedButton!
     
     private lazy var imageView = UIImageView()
     private lazy var label = UILabel()
     
-    private var message: MessageItem?
+    private var message: Message?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,37 +24,60 @@ class ExternalSharingConfirmationViewController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
     
+    @IBAction func send(_ sender: Any) {
+        guard var message = message else {
+            return
+        }
+        message.createdAt = Date().toUTCString()
+        if message.conversationId.isEmpty {
+            dismiss(animated: true) {
+                let vc = MessageReceiverViewController.instance(content: .message(message))
+                UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
+            }
+        } else {
+            // TODO
+        }
+    }
+    
     func load(context: ExternalSharingContext) {
-        let item = MessageItem()
-        item.messageId = UUID().uuidString.lowercased()
-        item.userId = myUserId
+        var message = Message.createMessage(messageId: UUID().uuidString.lowercased(),
+                                            conversationId: context.conversationId ?? "",
+                                            userId: myUserId,
+                                            category: "",
+                                            status: MessageStatus.SENDING.rawValue,
+                                            createdAt: "")
         switch context.content {
         case .text(let text):
-            item.category = MessageCategory.SIGNAL_TEXT.rawValue
-            item.content = text
+            message.category = MessageCategory.SIGNAL_TEXT.rawValue
+            message.content = text
             loadPreview(forTextMessageWith: text)
         case .image(let url):
-            item.category = MessageCategory.SIGNAL_IMAGE.rawValue
+            message.category = MessageCategory.SIGNAL_IMAGE.rawValue
+            message.mediaStatus = MediaStatus.PENDING.rawValue
+            message.mediaUrl = url.absoluteString
             loadPreview(forImageWith: url)
         case .live(let data):
-            item.category = MessageCategory.SIGNAL_LIVE.rawValue
-            item.mediaUrl = data.url
-            item.mediaWidth = data.width
-            item.mediaHeight = data.height
-            item.thumbUrl = data.thumbUrl
+            message.category = MessageCategory.SIGNAL_LIVE.rawValue
+            message.mediaUrl = data.url
+            message.mediaWidth = data.width
+            message.mediaHeight = data.height
+            message.thumbUrl = data.thumbUrl
             loadPreview(for: data)
         case .contact(let data):
-            item.category = MessageCategory.SIGNAL_CONTACT.rawValue
-            item.sharedUserId = data.userId
+            message.category = MessageCategory.SIGNAL_CONTACT.rawValue
+            message.sharedUserId = data.userId
+            message.content = try! JSONEncoder.default.encode(data).base64EncodedString()
             loadPreview(forContactWith: data.userId)
         case .post(let text):
-            item.category = MessageCategory.SIGNAL_POST.rawValue
-            item.content = text
+            message.category = MessageCategory.SIGNAL_POST.rawValue
+            message.content = text
             loadPreview(forPostMessageWith: text)
         case .appCard(let data):
-            item.category = MessageCategory.APP_CARD.rawValue
+            message.category = MessageCategory.APP_CARD.rawValue
+            message.content = try! JSONEncoder.default.encode(data).base64EncodedString()
             loadPreview(for: data)
         }
+        self.message = message
     }
     
 }
@@ -75,6 +100,8 @@ extension ExternalSharingConfirmationViewController {
             let inset = UIEdgeInsets(top: -9, left: -10, bottom: -11, right: -17)
             make.edges.equalTo(label).inset(inset)
         }
+        
+        sendButton.isEnabled = true
     }
     
     private func loadPreview(forTextMessageWith text: String) {
@@ -84,7 +111,14 @@ extension ExternalSharingConfirmationViewController {
     
     private func loadPreview(forImageWith url: URL) {
         imageView.contentMode = .scaleAspectFit
-        imageView.sd_setImage(with: url, completed: nil)
+        imageView.sd_setImage(with: url) { [weak self] (image, _, _, _) in
+            guard let self = self, let image = image else {
+                return
+            }
+            self.message?.mediaWidth = Int(image.size.width)
+            self.message?.mediaHeight = Int(image.size.height)
+            self.sendButton.isEnabled = true
+        }
         previewWrapperView.addSubview(imageView)
         imageView.snp.makeEdgesEqualToSuperview()
     }
@@ -119,6 +153,8 @@ extension ExternalSharingConfirmationViewController {
         playButton.snp.makeConstraints { (make) in
             make.center.equalToSuperview()
         }
+  
+        sendButton.isEnabled = true
     }
     
     private func loadPreview(forContactWith userId: String) {
@@ -153,17 +189,18 @@ extension ExternalSharingConfirmationViewController {
             make.centerY.equalTo(avatarImageView)
         }
         
-        DispatchQueue.global().async { [weak avatarImageView, weak contentView] in
+        DispatchQueue.global().async { [weak avatarImageView, weak contentView, weak sendButton] in
             guard let user = UserDAO.shared.getUser(userId: userId) else {
                 return
             }
             DispatchQueue.main.async {
-                guard let avatarImageView = avatarImageView, let contentView = contentView else {
+                guard let contentView = contentView else {
                     return
                 }
-                avatarImageView.setImage(with: user)
+                avatarImageView?.setImage(with: user)
                 contentView.fullnameLabel.text = user.fullName
                 contentView.idLabel.text = user.identityNumber
+                sendButton?.isEnabled = true
             }
         }
     }
@@ -226,6 +263,8 @@ extension ExternalSharingConfirmationViewController {
         iconImageView.sd_setImage(with: appCardData.iconUrl, completed: nil)
         contentView.titleLabel.text = appCardData.title
         contentView.subtitleLabel.text = appCardData.description
+        
+        sendButton.isEnabled = true
     }
     
 }

@@ -76,13 +76,14 @@ class ConversationViewController: UIViewController {
     private var tapRecognizer: UITapGestureRecognizer!
     private var reportRecognizer: UILongPressGestureRecognizer!
     private var resizeInputRecognizer: ResizeInputWrapperGestureRecognizer!
-    private var fastReplyRecognizer: UITapGestureRecognizer!
     private var conversationInputViewController: ConversationInputViewController!
     private var previewDocumentController: UIDocumentInteractionController?
     private var previewDocumentMessageId: String?
     private var myInvitation: Message?
     private var isShowingKeyboard = false
     private var groupCallIndicatorCenterYConstraint: NSLayoutConstraint!
+    private var tapCount = 0
+    private var tapWorkItem: DispatchWorkItem?
     
     private(set) lazy var imagePickerController = ImagePickerController(initialCameraPosition: .rear, cropImageAfterPicked: false, parent: self, delegate: self)
     
@@ -231,13 +232,8 @@ class ConversationViewController: UIViewController {
         titleLabel.isUserInteractionEnabled = true
         titleLabel.addGestureRecognizer(reportRecognizer)
         
-        fastReplyRecognizer = UITapGestureRecognizer(target: self, action: #selector(fastReplyAction(_:)))
-        fastReplyRecognizer.numberOfTapsRequired = 2
-        tableView.addGestureRecognizer(fastReplyRecognizer)
-        
         tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapAction(_:)))
         tapRecognizer.delegate = self
-        tapRecognizer.require(toFail: fastReplyRecognizer)
         tableView.addGestureRecognizer(tapRecognizer)
         
         tableView.dataSource = self
@@ -718,25 +714,23 @@ class ConversationViewController: UIViewController {
                 let vc = LocationPreviewViewController(location: location)
                 let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.chat_menu_location())
                 navigationController?.pushViewController(container, animated: true)
+            } else if message.category.hasSuffix("_TEXT") && message.allowedActions.contains(.reply) {
+                tapCount += 1
+                self.tapWorkItem?.cancel()
+                let workItem = DispatchWorkItem {
+                    if self.tapCount > 1 {
+                        self.conversationInputViewController.quote = (viewModel.message, viewModel.thumbnail)
+                    }
+                    self.tapCount = 0
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: workItem)
+                self.tapWorkItem = workItem
             } else {
                 conversationInputViewController.dismiss()
             }
         } else {
             conversationInputViewController.dismiss()
         }
-    }
-    
-    @objc func fastReplyAction(_ recognizer: UIGestureRecognizer) {
-        guard let indexPath = tableView.indexPathForRow(at: recognizer.location(in: tableView)) else {
-            return
-        }
-        guard let viewModel = dataSource.viewModel(for: indexPath), viewModel.message.allowedActions.contains(.reply) else {
-            return
-        }
-        if let cell = tableView.cellForRow(at: indexPath) as? TextMessageCell, cell.contentLabel.canResponseTouch(at: recognizer.location(in: cell.contentLabel)) {
-            return
-        }
-        conversationInputViewController.quote = (viewModel.message, viewModel.thumbnail)
     }
     
     @objc func showReportMenuAction() {

@@ -76,6 +76,7 @@ class ConversationViewController: UIViewController {
     private var tapRecognizer: UITapGestureRecognizer!
     private var reportRecognizer: UILongPressGestureRecognizer!
     private var resizeInputRecognizer: ResizeInputWrapperGestureRecognizer!
+    private var fastReplyRecognizer: UITapGestureRecognizer!
     private var conversationInputViewController: ConversationInputViewController!
     private var previewDocumentController: UIDocumentInteractionController?
     private var previewDocumentMessageId: String?
@@ -230,9 +231,14 @@ class ConversationViewController: UIViewController {
         titleLabel.isUserInteractionEnabled = true
         titleLabel.addGestureRecognizer(reportRecognizer)
         
+        fastReplyRecognizer = UITapGestureRecognizer(target: self, action: #selector(fastReplyAction(_:)))
+        fastReplyRecognizer.numberOfTapsRequired = 2
+        tableView.addGestureRecognizer(fastReplyRecognizer)
+        
         tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapAction(_:)))
         tapRecognizer.delegate = self
         tableView.addGestureRecognizer(tapRecognizer)
+        
         tableView.dataSource = self
         tableView.delegate = self
         tableView.actionDelegate = self
@@ -717,6 +723,22 @@ class ConversationViewController: UIViewController {
         } else {
             conversationInputViewController.dismiss()
         }
+    }
+    
+    @objc func fastReplyAction(_ recognizer: UIGestureRecognizer) {
+        guard let indexPath = tableView.indexPathForRow(at: recognizer.location(in: tableView)) else {
+            return
+        }
+        guard let cell = tableView.cellForRow(at: indexPath) as? TextMessageCell else {
+            return
+        }
+        guard !cell.contentLabel.canResponseTouch(at: recognizer.location(in: cell.contentLabel)) else {
+            return
+        }
+        guard let viewModel = dataSource.viewModel(for: indexPath) else {
+            return
+        }
+        conversationInputViewController.quote = (viewModel.message, viewModel.thumbnail)
     }
     
     @objc func showReportMenuAction() {

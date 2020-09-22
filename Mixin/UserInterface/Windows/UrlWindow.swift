@@ -466,6 +466,7 @@ class UrlWindow {
                     return
                 }
                 DispatchQueue.main.async {
+                    hud.hide()
                     presentSendingConfirmation()
                 }
             }

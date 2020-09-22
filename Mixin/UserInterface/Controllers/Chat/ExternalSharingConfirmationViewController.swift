@@ -99,6 +99,7 @@ extension ExternalSharingConfirmationViewController {
     private func placePreviewViewsAsTextMessage() {
         label.setFont(scaledFor: .systemFont(ofSize: 16), adjustForContentSize: true)
         label.textColor = R.color.text()
+        label.numberOfLines = 10
         previewWrapperView.addSubview(label)
         label.snp.makeConstraints { (make) in
             make.center.equalToSuperview()

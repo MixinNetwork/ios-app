@@ -4,12 +4,31 @@ import MixinServices
 struct ExternalSharingContext {
     
     enum Content {
+        
         case text(String)
         case image(URL)
         case live(TransferLiveData)
         case contact(TransferContactData)
         case post(String)
         case appCard(AppCardData)
+        
+        var localizedCategory: String {
+            switch self {
+            case .text:
+                return R.string.localizable.chat_external_sharing_category_text()
+            case .image:
+                return R.string.localizable.chat_external_sharing_category_image()
+            case .live:
+                return R.string.localizable.chat_external_sharing_category_live()
+            case .contact:
+                return R.string.localizable.chat_external_sharing_category_contact()
+            case .post:
+                return R.string.localizable.chat_external_sharing_category_post()
+            case .appCard:
+                return R.string.localizable.chat_external_sharing_category_app_card()
+            }
+        }
+        
     }
     
     private struct TransferImageData: Decodable {

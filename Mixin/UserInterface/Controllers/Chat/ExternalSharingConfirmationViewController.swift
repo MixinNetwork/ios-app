@@ -56,14 +56,14 @@ class ExternalSharingConfirmationViewController: UIViewController {
         }
     }
     
-    func load(context: ExternalSharingContext) {
+    func load(sharingContext: ExternalSharingContext, webContext: MixinWebViewController.Context?) {
         var message = Message.createMessage(messageId: UUID().uuidString.lowercased(),
-                                            conversationId: context.conversationId ?? "",
+                                            conversationId: sharingContext.conversationId ?? "",
                                             userId: myUserId,
                                             category: "",
                                             status: MessageStatus.SENDING.rawValue,
                                             createdAt: "")
-        switch context.content {
+        switch sharingContext.content {
         case .text(let text):
             message.category = MessageCategory.SIGNAL_TEXT.rawValue
             message.content = text
@@ -95,6 +95,23 @@ class ExternalSharingConfirmationViewController: UIViewController {
             loadPreview(for: data)
         }
         self.message = message
+        
+        let localizedContentCategory = sharingContext.content.localizedCategory
+        if let context = webContext {
+            switch context.style {
+            case let .app(app, _):
+                let source = "\(app.name)(\(app.appNumber))"
+                titleLabel.text = R.string.localizable.chat_external_sharing_title_from_source(source, localizedContentCategory)
+            case .webPage:
+                if let source = context.initialUrl.host {
+                    titleLabel.text = R.string.localizable.chat_external_sharing_title_from_source(source, localizedContentCategory)
+                } else {
+                    titleLabel.text = R.string.localizable.chat_external_sharing_title_no_source(localizedContentCategory)
+                }
+            }
+        } else {
+            titleLabel.text = R.string.localizable.chat_external_sharing_title_no_source(localizedContentCategory)
+        }
     }
     
 }

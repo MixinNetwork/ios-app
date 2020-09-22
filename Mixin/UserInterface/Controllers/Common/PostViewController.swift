@@ -131,7 +131,7 @@ extension PostViewController {
     private class PostDocumentViewController: DocumentViewController {
         
         override func linkTapped(_ url: URL) {
-            if UrlWindow.checkUrl(url: url, fromWeb: true) {
+            if UrlWindow.checkUrl(url: url) {
                 return
             }
             guard let parent = parent else {

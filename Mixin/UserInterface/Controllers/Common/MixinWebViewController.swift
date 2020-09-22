@@ -118,7 +118,10 @@ class MixinWebViewController: WebViewController {
         switch context.style {
         case .webPage:
             loadNormalUrl()
-        case let .app(appId, title, isHomeUrl, iconUrl):
+        case let .app(app, isHomeUrl):
+            let appId = app.appId
+            let title = app.name
+            let iconUrl = URL(string: app.iconUrl)
             if isHomeUrl {
                 loadAppUrl(title: title, iconUrl: iconUrl)
             } else {
@@ -150,14 +153,14 @@ class MixinWebViewController: WebViewController {
     }
 
     override func contactDeveloperAction(_ sender: Any) {
-        guard case let .app(appId, _, _, _) = context.style else {
+        guard case let .app(app, _) = context.style else {
             return
         }
 
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         DispatchQueue.global().async { [weak self] in
-            guard let developerUserId = Self.syncUser(userId: appId, hud: hud)?.appCreatorId else {
+            guard let developerUserId = Self.syncUser(userId: app.appId, hud: hud)?.appCreatorId else {
                 return
             }
             guard let developUser = Self.syncUser(userId: developerUserId, hud: hud) else {
@@ -238,7 +241,7 @@ extension MixinWebViewController: WKNavigationDelegate {
             decisionHandler(.cancel)
             return
         }
-        if UrlWindow.checkUrl(url: url, fromWeb: true) || UrlWindow.checkPayUrl(url: url.absoluteString) {
+        if UrlWindow.checkUrl(url: url, webContext: context) || UrlWindow.checkPayUrl(url: url.absoluteString) {
             decisionHandler(.cancel)
             return
         } else if "file" == url.scheme {
@@ -335,9 +338,10 @@ extension MixinWebViewController {
     }
     
     private func aboutAction() {
-        guard case let .app(appId, _, _, _) = context.style else {
+        guard case let .app(app, _) = context.style else {
             return
         }
+        let appId = app.appId
         DispatchQueue.global().async {
             var userItem = UserDAO.shared.getUser(userId: appId)
             var updateUserFromRemoteAfterReloaded = true
@@ -365,11 +369,11 @@ extension MixinWebViewController {
     }
 
     private func shareAppCardAction(currentUrl: URL) {
-        guard case let .app(appId, appTitle, _, _) = context.style else {
+        guard case let .app(app, _) = context.style else {
             return
         }
-
-        var cardTitle = appTitle
+        let appId = app.appId
+        var cardTitle = app.name
         if let webTitle = webView.title, !webTitle.trim().isEmpty {
             cardTitle = webTitle.trim()
         }
@@ -439,7 +443,7 @@ extension MixinWebViewController {
         
         enum Style {
             case webPage
-            case app(appId: String, title: String, isHomeUrl: Bool, iconUrl: URL?)
+            case app(app: App, isHomeUrl: Bool)
         }
         
         let conversationId: String
@@ -473,7 +477,7 @@ extension MixinWebViewController {
         
         init(conversationId: String, app: App) {
             self.conversationId = conversationId
-            style = .app(appId: app.appId, title: app.name, isHomeUrl: true, iconUrl: URL(string: app.iconUrl))
+            style = .app(app: app, isHomeUrl: true)
             initialUrl = URL(string: app.homeUri) ?? .blank
             isImmersive = app.capabilities?.contains("IMMERSIVE") ?? false
         }
@@ -487,7 +491,7 @@ extension MixinWebViewController {
         
         init(conversationId: String, url: URL, app: App) {
             self.conversationId = conversationId
-            style = .app(appId: app.appId, title: app.name, isHomeUrl: false, iconUrl: URL(string: app.iconUrl))
+            style = .app(app: app, isHomeUrl: false)
             initialUrl = url
             isImmersive = app.capabilities?.contains("IMMERSIVE") ?? false
         }

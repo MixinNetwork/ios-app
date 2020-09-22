@@ -5,7 +5,7 @@ import MixinServices
 
 class UrlWindow {
     
-    class func checkUrl(url: URL, fromWeb: Bool = false, clearNavigationStack: Bool = true) -> Bool {
+    class func checkUrl(url: URL, webContext: MixinWebViewController.Context? = nil, clearNavigationStack: Bool = true) -> Bool {
         if let mixinURL = MixinURL(url: url) {
             switch mixinURL {
             case let .codes(code):
@@ -26,7 +26,7 @@ class UrlWindow {
                 return checkTransferUrl(id, clearNavigationStack: clearNavigationStack)
             case let .send(context):
                 if let context = context {
-                    return checkSendUrl(context: context)
+                    return checkSendUrl(sharingContext: context, webContext: webContext)
                 } else {
                     showAutoHiddenHud(style: .error, text: R.string.localizable.chat_external_sharing_invalid_context())
                     return true
@@ -446,15 +446,15 @@ class UrlWindow {
         return true
     }
     
-    class func checkSendUrl(context: ExternalSharingContext) -> Bool {
+    class func checkSendUrl(sharingContext: ExternalSharingContext, webContext: MixinWebViewController.Context?) -> Bool {
         func presentSendingConfirmation() {
             let vc = R.storyboard.chat.external_sharing_confirmation()!
             vc.modalPresentationStyle = .custom
             vc.transitioningDelegate = PopupPresentationManager.shared
             UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
-            vc.load(context: context)
+            vc.load(sharingContext: sharingContext, webContext: webContext)
         }
-        switch context.content {
+        switch sharingContext.content {
         case .contact(let data):
             let hud = Hud()
             hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)

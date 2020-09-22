@@ -125,6 +125,8 @@ extension ExternalSharingConfirmationViewController {
     
     private func loadPreview(forImageWith url: URL) {
         imageView.contentMode = .scaleAspectFit
+        imageView.layer.cornerRadius = previewWrapperView.layer.cornerRadius
+        imageView.clipsToBounds = true
         imageView.sd_setImage(with: url) { [weak self] (image, _, _, _) in
             guard let self = self, let image = image else {
                 return
@@ -134,7 +136,10 @@ extension ExternalSharingConfirmationViewController {
             self.sendButton.isEnabled = true
         }
         previewWrapperView.addSubview(imageView)
-        imageView.snp.makeEdgesEqualToSuperview()
+        imageView.snp.makeConstraints { (make) in
+            let inset = UIEdgeInsets(top: 2, left: 2, bottom: 2, right: 2)
+            make.edges.equalToSuperview().inset(inset)
+        }
     }
     
     private func loadPreview(for liveData: TransferLiveData) {

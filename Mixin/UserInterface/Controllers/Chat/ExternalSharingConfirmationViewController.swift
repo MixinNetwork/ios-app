@@ -179,15 +179,6 @@ extension ExternalSharingConfirmationViewController {
             make.leading.equalTo(imageView).offset(9)
         }
         
-        let playButton = ModernNetworkOperationButton(type: .custom)
-        playButton.style = .finished(showPlayIcon: true)
-        playButton.sizeToFit()
-        playButton.isUserInteractionEnabled = false
-        previewWrapperView.addSubview(playButton)
-        playButton.snp.makeConstraints { (make) in
-            make.center.equalToSuperview()
-        }
-  
         sendButton.isEnabled = true
     }
     

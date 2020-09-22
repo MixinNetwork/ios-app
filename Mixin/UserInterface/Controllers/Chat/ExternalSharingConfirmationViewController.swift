@@ -1,5 +1,6 @@
 import UIKit
 import SwiftyMarkdown
+import YYImage
 import MixinServices
 
 class ExternalSharingConfirmationViewController: UIViewController {
@@ -9,7 +10,7 @@ class ExternalSharingConfirmationViewController: UIViewController {
     @IBOutlet weak var previewWrapperView: UIView!
     @IBOutlet weak var sendButton: RoundedButton!
     
-    private lazy var imageView = UIImageView()
+    private lazy var imageView = YYAnimatedImageView()
     private lazy var label = UILabel()
     
     private var message: Message?

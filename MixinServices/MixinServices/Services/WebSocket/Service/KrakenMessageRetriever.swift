@@ -54,10 +54,12 @@ public class KrakenMessageRetriever {
         
         queue.async {
             do {
-                if let data = try WebSocketService.shared.respondedMessage(for: blazeMessage).blazeMessage?.toBlazeMessageData() {
+                let blazeMessage = try WebSocketService.shared.respondedMessage(for: blazeMessage).blazeMessage
+                if let data = blazeMessage?.toBlazeMessageData() {
                     completion?(.success(data))
                 } else {
-                    completion?(.failure(MixinServicesError.badKrakenBlazeMessage))
+                    let error: Error = blazeMessage?.error ?? MixinServicesError.badKrakenBlazeMessage
+                    completion?(.failure(error))
                 }
             } catch MixinAPIError.invalidConversationChecksum {
                 if let conversationId = blazeMessage.params?.conversationId {

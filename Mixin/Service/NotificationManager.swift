@@ -52,9 +52,9 @@ class NotificationManager: NSObject {
         UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
     }
     
-    func requestDeclinedGroupCallNotification(conversation: ConversationItem, messageId: String) {
+    func requestDeclinedGroupCallNotification(localizedName: String, messageId: String) {
         let content = UNMutableNotificationContent()
-        content.title = conversation.getConversationName()
+        content.title = localizedName
         content.body = R.string.localizable.group_call_declined_lack_microphone_permission()
         content.sound = .mixin
         content.categoryIdentifier = NotificationCategoryIdentifier.call

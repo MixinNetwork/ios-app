@@ -10,12 +10,12 @@ class Vibrator {
     private weak var timer: Timer?
     
     func start() {
-        performSynchronouslyOnMainThread {
-            guard !isVibrating else {
+        DispatchQueue.main.async {
+            guard !self.isVibrating else {
                 return
             }
-            backgroundTaskIdentifier = UIApplication.shared.beginBackgroundTask(expirationHandler: endBackgroundTask)
-            isVibrating = true
+            self.backgroundTaskIdentifier = UIApplication.shared.beginBackgroundTask(expirationHandler: self.endBackgroundTask)
+            self.isVibrating = true
             let timer = Timer(timeInterval: 1, repeats: true, block: { (_) in
                 AudioServicesPlaySystemSoundWithCompletion(kSystemSoundID_Vibrate, nil)
             })
@@ -26,13 +26,13 @@ class Vibrator {
     }
     
     func stop() {
-        performSynchronouslyOnMainThread {
-            guard isVibrating else {
+        DispatchQueue.main.async {
+            guard self.isVibrating else {
                 return
             }
-            endBackgroundTask()
-            timer?.invalidate()
-            isVibrating = false
+            self.endBackgroundTask()
+            self.timer?.invalidate()
+            self.isVibrating = false
         }
     }
     

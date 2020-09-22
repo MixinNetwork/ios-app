@@ -18,12 +18,7 @@ class CallService: NSObject {
     var isMuted = false {
         didSet {
             NotificationCenter.default.postOnMain(name: Self.mutenessDidChangeNotification)
-            if let audioTrack = rtcClient.audioTrack {
-                audioTrack.isEnabled = !isMuted
-                self.log("[CallService] isMuted: \(isMuted)")
-            } else {
-                self.log("[CallService] isMuted: \(isMuted), finds no audio track")
-            }
+            updateAudioTrackEnabling()
         }
     }
     
@@ -547,12 +542,6 @@ extension CallService {
         }
         updateCallKitAvailability()
         registerForPushKitNotificationsIfAvailable()
-        DispatchQueue.main.async {
-            if UIApplication.shared.applicationState == .background {
-                MixinService.isStopProcessMessages = true
-                WebSocketService.shared.disconnect()
-            }
-        }
     }
     
     func close(uuid: UUID) {
@@ -582,12 +571,6 @@ extension CallService {
             }
             updateCallKitAvailability()
             registerForPushKitNotificationsIfAvailable()
-            DispatchQueue.main.async {
-                if UIApplication.shared.applicationState == .background {
-                    MixinService.isStopProcessMessages = true
-                    WebSocketService.shared.disconnect()
-                }
-            }
         }
     }
     
@@ -762,6 +745,9 @@ extension CallService {
                 pendingAnswerCalls[uuid] = call
                 pendingSDPs[uuid] = sdp
                 beginUnanswerCountDown(for: call)
+                DispatchQueue.main.async {
+                    UIApplication.homeContainerViewController?.galleryViewControllerIfLoaded?.pauseCurrentVideoPage()
+                }
                 callInterface.reportIncomingCall(call) { (error) in
                     if let error = error {
                         handle(error: error, username: user.fullName)
@@ -920,8 +906,21 @@ extension CallService {
             self.log("[CallService] reporting incoming group call invitation: \(call.debugDescription), members: \(members.map(\.fullName))")
             pendingAnswerCalls[uuid] = call
             beginUnanswerCountDown(for: call)
+            DispatchQueue.main.async {
+                UIApplication.homeContainerViewController?.galleryViewControllerIfLoaded?.pauseCurrentVideoPage()
+            }
             callInterface.reportIncomingCall(call) { (error) in
+                let invitationStatus: MessageStatus
+                defer {
+                    let message = Message.createKrakenMessage(conversationId: data.conversationId,
+                                                              userId: data.userId,
+                                                              category: .KRAKEN_INVITE,
+                                                              status: invitationStatus.rawValue,
+                                                              createdAt: data.createdAt)
+                    MessageDAO.shared.insertMessage(message: message, messageSource: "CallService")
+                }
                 guard let error = error else {
+                    invitationStatus = .READ
                     return
                 }
                 self.log("[CallService] incoming call reporting error: \(error)")
@@ -932,14 +931,24 @@ extension CallService {
                 KrakenMessageRetriever.shared.request(declining, completion: nil)
                 self.log("[KrakenMessageRetriever] Request \(declining.debugDescription)")
                 self.close(uuid: uuid)
-                self.alert(error: error)
-                reporter.report(error: error)
+                switch error {
+                case CallError.microphonePermissionDenied:
+                    DispatchQueue.main.async {
+                        if UIApplication.shared.applicationState != .active {
+                            NotificationManager.shared.requestDeclinedGroupCallNotification(localizedName: call.localizedName,
+                                                                                            messageId: data.messageId)
+                        }
+                    }
+                    self.alert(error: error)
+                    invitationStatus = .READ
+                case CallError.busy:
+                    invitationStatus = .DELIVERED
+                default:
+                    self.alert(error: error)
+                    invitationStatus = .READ
+                    reporter.report(error: error)
+                }
             }
-            let message = Message.createKrakenMessage(conversationId: data.conversationId,
-                                                      userId: data.userId,
-                                                      category: .KRAKEN_INVITE,
-                                                      createdAt: data.createdAt)
-            MessageDAO.shared.insertMessage(message: message, messageSource: "CallService")
         }
     }
     
@@ -1071,13 +1080,13 @@ extension CallService: WebRTCClientDelegate {
         if call.connectedDate == nil {
             let date = Date()
             call.connectedDate = date
+            call.status = .connected
             if call.isOutgoing {
                 callInterface.reportOutgoingCall(uuid: call.uuid, connectedAtDate: date)
             } else {
-                callInterface.reportIncomingCall(uuid: call.uuid, connectedAtDate: date)
+                callInterface.reportIncomingCall(call, connectedAtDate: date)
             }
             AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
-            call.status = .connected
             if !isUsingCallKit {
                 RTCDispatcher.dispatchAsync(on: .typeAudioSession) {
                     RTCAudioSession.sharedInstance().isAudioEnabled = true
@@ -1331,9 +1340,9 @@ extension CallService {
     private func updateCallKitAvailability() {
         let usesCallKit = !isMainlandChina
             && AVAudioSession.sharedInstance().recordPermission == .granted
-        if usesCallKit {
+        if usesCallKit && !(callInterface is NativeCallInterface) {
             callInterface = nativeCallInterface
-        } else {
+        } else if !usesCallKit && !(callInterface is MixinCallInterface) {
             callInterface = MixinCallInterface(service: self)
         }
     }
@@ -1343,6 +1352,15 @@ extension CallService {
             return call
         } else {
             return pendingAnswerCalls[uuid]
+        }
+    }
+    
+    private func updateAudioTrackEnabling() {
+        if let audioTrack = rtcClient.audioTrack {
+            audioTrack.isEnabled = !isMuted
+            self.log("[CallService] isMuted: \(isMuted)")
+        } else {
+            self.log("[CallService] isMuted: \(isMuted), finds no audio track")
         }
     }
     
@@ -1392,23 +1410,28 @@ extension CallService {
     }
     
     private func beginAutoCancellingBackgroundTaskIfNotActive() {
-        guard UIApplication.shared.applicationState != .active else {
+        let application = UIApplication.shared
+        guard application.applicationState != .active else {
             return
         }
         var identifier: UIBackgroundTaskIdentifier = .invalid
         var cancelBackgroundTask: DispatchWorkItem!
         cancelBackgroundTask = DispatchWorkItem {
+            if application.applicationState != .active {
+                MixinService.isStopProcessMessages = true
+                WebSocketService.shared.disconnect()
+            }
             if identifier != .invalid {
-                UIApplication.shared.endBackgroundTask(identifier)
+                application.endBackgroundTask(identifier)
             }
             if let task = cancelBackgroundTask {
                 task.cancel()
             }
         }
-        identifier = UIApplication.shared.beginBackgroundTask {
+        identifier = application.beginBackgroundTask {
             cancelBackgroundTask.perform()
         }
-        let duration = max(10, min(29, UIApplication.shared.backgroundTimeRemaining - 1))
+        let duration = max(10, min(29, application.backgroundTimeRemaining - 1))
         DispatchQueue.main.asyncAfter(deadline: .now() + duration, execute: cancelBackgroundTask)
     }
     
@@ -1472,7 +1495,19 @@ extension CallService {
                     return
                 }
                 self.activeCall = nil
+                if let call = call as? GroupCall {
+                    self.groupCallUUIDs[call.conversationId] = nil
+                }
                 if let error = error as? CallError {
+                    DispatchQueue.main.async {
+                        guard let viewController = self.window?.rootViewController else {
+                            return
+                        }
+                        guard viewController is GroupCallConfirmationViewController else {
+                            return
+                        }
+                        self.dismissCallingInterface()
+                    }
                     self.alert(error: error)
                 } else {
                     showAutoHiddenHud(style: .error, text: R.string.localizable.chat_message_call_failed())
@@ -1633,6 +1668,9 @@ extension CallService {
                 self.restartCurrentGroupCall()
             }
         }
+        
+        // Disable audio track if muted since audio track is replaced with a new one
+        updateAudioTrackEnabling()
     }
     
     // Call this func for a new initiated call, or on ICE Connection reports failure
@@ -1687,7 +1725,7 @@ extension CallService {
                     self.log("[CallService] Got invalid peer connection \(code), try to restart")
                     self.restartCurrentGroupCall()
                 } else {
-                    self.log("[CallService] publish failed for invalid response")
+                    self.log("[CallService] publish failed for invalid response: \(error)")
                     self.failCurrentCall(sendFailedMessageToRemote: true, error: error)
                     self.callInterface.reportCall(uuid: call.uuid, endedByReason: .failed)
                     self.alert(error: error)

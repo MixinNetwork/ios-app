@@ -144,12 +144,18 @@ extension NativeCallInterface: CallInterface {
         provider.reportOutgoingCall(with: uuid, connectedAt: date)
     }
     
-    func reportIncomingCall(uuid: UUID, connectedAtDate date: Date) {
-        guard let action = pendingAnswerAction, action.callUUID == uuid else {
+    func reportIncomingCall(_ call: Call, connectedAtDate date: Date) {
+        guard let action = pendingAnswerAction, action.callUUID == call.uuid else {
             return
         }
         action.fulfill()
         pendingAnswerAction = nil
+        
+        if let call = call as? GroupCall {
+            let update = CXCallUpdate()
+            update.localizedCallerName = call.localizedName
+            provider.reportCall(with: call.uuid, updated: update)
+        }
     }
     
 }

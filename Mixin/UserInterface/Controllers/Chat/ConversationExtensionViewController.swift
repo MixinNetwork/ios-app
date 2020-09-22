@@ -113,6 +113,7 @@ extension ConversationExtensionViewController: UICollectionViewDelegate {
                 UIApplication.homeContainerViewController?.pipController?.pauseAction(self)
                 conversationViewController?.callOwnerUserIfPresent()
             case .groupCall:
+                UIApplication.homeContainerViewController?.pipController?.pauseAction(self)
                 conversationViewController?.startOrJoinGroupCall()
             case .location:
                 conversationViewController?.showLocationPicker()

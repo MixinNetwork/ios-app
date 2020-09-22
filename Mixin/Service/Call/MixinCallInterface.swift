@@ -8,10 +8,9 @@ import MixinServices
 class MixinCallInterface: NSObject {
     
     private let callObserver = CXCallObserver()
+    private let vibrator = Vibrator()
     
     private unowned let service: CallService
-    
-    private lazy var vibrator = Vibrator()
     
     private var pendingIncomingUuid: UUID?
     
@@ -19,6 +18,10 @@ class MixinCallInterface: NSObject {
         self.service = service
         super.init()
         self.callObserver.setDelegate(self, queue: service.queue)
+    }
+    
+    deinit {
+        vibrator.stop()
     }
     
 }
@@ -54,6 +57,9 @@ extension MixinCallInterface: CallInterface {
     
     func requestAnswerCall(uuid: UUID) {
         vibrator.stop()
+        DispatchQueue.main.async {
+            UIApplication.shared.isIdleTimerDisabled = false
+        }
         service.answerCall(uuid: uuid, completion: nil)
     }
     
@@ -63,6 +69,9 @@ extension MixinCallInterface: CallInterface {
             pendingIncomingUuid = nil
         }
         UNUserNotificationCenter.current().removeNotifications(withIdentifiers: [uuid.uuidString])
+        DispatchQueue.main.async {
+            UIApplication.shared.isIdleTimerDisabled = false
+        }
         service.endCall(uuid: uuid)
         completion(nil)
     }
@@ -112,6 +121,7 @@ extension MixinCallInterface: CallInterface {
                     }
                     call.status = .incoming
                     self.service.showCallingInterface(call: call)
+                    UIApplication.shared.isIdleTimerDisabled = true
                 }
                 self.pendingIncomingUuid = call.uuid
                 completion(nil)
@@ -124,6 +134,9 @@ extension MixinCallInterface: CallInterface {
         if uuid == pendingIncomingUuid {
             pendingIncomingUuid = nil
         }
+        DispatchQueue.main.async {
+            UIApplication.shared.isIdleTimerDisabled = false
+        }
         UNUserNotificationCenter.current().removeNotifications(withIdentifiers: [uuid.uuidString])
     }
     
@@ -131,14 +144,19 @@ extension MixinCallInterface: CallInterface {
         if uuid == pendingIncomingUuid {
             pendingIncomingUuid = nil
         }
+        DispatchQueue.main.async {
+            UIApplication.shared.isIdleTimerDisabled = false
+        }
     }
     
     func reportOutgoingCall(uuid: UUID, connectedAtDate date: Date) {
         
     }
     
-    func reportIncomingCall(uuid: UUID, connectedAtDate date: Date) {
-        
+    func reportIncomingCall(_ call: Call, connectedAtDate date: Date) {
+        DispatchQueue.main.async {
+            UIApplication.shared.isIdleTimerDisabled = false
+        }
     }
     
 }

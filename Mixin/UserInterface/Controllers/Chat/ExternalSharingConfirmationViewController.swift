@@ -57,44 +57,22 @@ class ExternalSharingConfirmationViewController: UIViewController {
     }
     
     func load(sharingContext: ExternalSharingContext, webContext: MixinWebViewController.Context?) {
-        var message = Message.createMessage(messageId: UUID().uuidString.lowercased(),
-                                            conversationId: sharingContext.conversationId ?? "",
-                                            userId: myUserId,
-                                            category: "",
-                                            status: MessageStatus.SENDING.rawValue,
-                                            createdAt: "")
         switch sharingContext.content {
         case .text(let text):
-            message.category = MessageCategory.SIGNAL_TEXT.rawValue
-            message.content = text
             loadPreview(forTextMessageWith: text)
         case .image(let url):
-            message.category = MessageCategory.SIGNAL_IMAGE.rawValue
-            message.mediaStatus = MediaStatus.PENDING.rawValue
-            message.mediaUrl = url.absoluteString
             loadPreview(forImageWith: url)
         case .live(let data):
-            message.category = MessageCategory.SIGNAL_LIVE.rawValue
-            message.mediaUrl = data.url
-            message.mediaWidth = data.width
-            message.mediaHeight = data.height
-            message.thumbUrl = data.thumbUrl
             loadPreview(for: data)
         case .contact(let data):
-            message.category = MessageCategory.SIGNAL_CONTACT.rawValue
-            message.sharedUserId = data.userId
-            message.content = try! JSONEncoder.default.encode(data).base64EncodedString()
             loadPreview(forContactWith: data.userId)
         case .post(let text):
-            message.category = MessageCategory.SIGNAL_POST.rawValue
-            message.content = text
             loadPreview(forPostMessageWith: text)
         case .appCard(let data):
-            message.category = MessageCategory.APP_CARD.rawValue
-            message.content = try! JSONEncoder.default.encode(data).base64EncodedString()
             loadPreview(for: data)
         }
-        self.message = message
+        
+        self.message = Message.createMessage(context: sharingContext)
         
         let localizedContentCategory = sharingContext.content.localizedCategory
         if let context = webContext {

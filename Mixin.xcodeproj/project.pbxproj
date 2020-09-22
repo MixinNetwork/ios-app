@@ -292,6 +292,7 @@
 		7B915F6A215F315A00A562C6 /* StickersCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B915F69215F315A00A562C6 /* StickersCollectionViewController.swift */; };
 		7B915F6C215F32A500A562C6 /* GiphyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B915F6B215F32A500A562C6 /* GiphyViewController.swift */; };
 		7B915F74215FB0C100A562C6 /* GiphySearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B915F73215FB0C100A562C6 /* GiphySearchViewController.swift */; };
+		7B91AB6A251A2BAC00879812 /* Message+ExternalSharing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B91AB69251A2BAC00879812 /* Message+ExternalSharing.swift */; };
 		7B92F8271FA1AE19000B838B /* CountDownButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B92F8261FA1AE19000B838B /* CountDownButton.swift */; };
 		7B92F82B1FA1BCD5000B838B /* StateResponsiveButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B92F82A1FA1BCD5000B838B /* StateResponsiveButton.swift */; };
 		7B93CAA5222963120053AE90 /* PhotoInputGridViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B93CAA4222963120053AE90 /* PhotoInputGridViewController.swift */; };
@@ -1149,6 +1150,7 @@
 		7B915F69215F315A00A562C6 /* StickersCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersCollectionViewController.swift; sourceTree = "<group>"; };
 		7B915F6B215F32A500A562C6 /* GiphyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GiphyViewController.swift; sourceTree = "<group>"; };
 		7B915F73215FB0C100A562C6 /* GiphySearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiphySearchViewController.swift; sourceTree = "<group>"; };
+		7B91AB69251A2BAC00879812 /* Message+ExternalSharing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Message+ExternalSharing.swift"; sourceTree = "<group>"; };
 		7B92F8261FA1AE19000B838B /* CountDownButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountDownButton.swift; sourceTree = "<group>"; };
 		7B92F82A1FA1BCD5000B838B /* StateResponsiveButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateResponsiveButton.swift; sourceTree = "<group>"; };
 		7B93CAA4222963120053AE90 /* PhotoInputGridViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoInputGridViewController.swift; sourceTree = "<group>"; };
@@ -1883,6 +1885,7 @@
 				7B082D17242CA19F00C5E163 /* MultipleSelectionIntent.swift */,
 				7BE6C7EB242DF07B00A0F2AE /* MessageAction.swift */,
 				7BA41A9224E123F50042ED03 /* MentionToken.swift */,
+				7B91AB69251A2BAC00879812 /* Message+ExternalSharing.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -3815,6 +3818,7 @@
 				E0BC7BB9238FAE0B00E3EF2C /* MyFavoriteAppProfileMenuItemView.swift in Sources */,
 				DF6068C720BECD3100C38C64 /* AssetSendViewController.swift in Sources */,
 				DFC0ECE423BB60DE0091E7AC /* VerificationResponse.swift in Sources */,
+				7B91AB6A251A2BAC00879812 /* Message+ExternalSharing.swift in Sources */,
 				7B11788C2293D53B000F934E /* BalanceInputAccessoryView.swift in Sources */,
 				E05DFA2E23B5D7EA00AB7ABD /* AppButtonView.swift in Sources */,
 				7B7B2BC51FB15B6A0002BED5 /* AvatarImageView.swift in Sources */,

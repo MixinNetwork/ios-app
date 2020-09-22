@@ -447,13 +447,21 @@ class UrlWindow {
     }
     
     class func checkSendUrl(sharingContext: ExternalSharingContext, webContext: MixinWebViewController.Context?) -> Bool {
+        
         func presentSendingConfirmation() {
-            let vc = R.storyboard.chat.external_sharing_confirmation()!
-            vc.modalPresentationStyle = .custom
-            vc.transitioningDelegate = PopupPresentationManager.shared
-            UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
-            vc.load(sharingContext: sharingContext, webContext: webContext)
+            if sharingContext.conversationId == nil {
+                let message = Message.createMessage(context: sharingContext)
+                let vc = MessageReceiverViewController.instance(content: .message(message))
+                UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
+            } else {
+                let vc = R.storyboard.chat.external_sharing_confirmation()!
+                vc.modalPresentationStyle = .custom
+                vc.transitioningDelegate = PopupPresentationManager.shared
+                UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
+                vc.load(sharingContext: sharingContext, webContext: webContext)
+            }
         }
+        
         switch sharingContext.content {
         case .contact(let data):
             let hud = Hud()

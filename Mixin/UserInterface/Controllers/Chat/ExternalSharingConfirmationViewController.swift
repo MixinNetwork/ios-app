@@ -140,7 +140,13 @@ extension ExternalSharingConfirmationViewController {
         imageView.layer.cornerRadius = 8
         imageView.clipsToBounds = true
         previewWrapperView.addSubview(imageView)
-        let ratio = CGFloat(liveData.width) / CGFloat(liveData.height)
+        
+        let ratio: CGFloat
+        if liveData.width < 1 || liveData.height < 1 {
+            ratio = 1
+        } else {
+            ratio = CGFloat(liveData.width) / CGFloat(liveData.height)
+        }
         imageView.snp.makeConstraints { (make) in
             make.center.equalToSuperview()
             make.width.equalTo(imageView.snp.height).multipliedBy(ratio)

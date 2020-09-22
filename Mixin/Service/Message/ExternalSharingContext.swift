@@ -79,7 +79,7 @@ struct ExternalSharingContext {
         default:
             return nil
         }
-        self.conversationId = items.first(where: { $0.name == "conversation_id" })?.value
+        self.conversationId = items.first(where: { $0.name == "conversation" })?.value
     }
     
     private static func decode<T>(base64Encoded string: String) -> T? where T : Decodable {

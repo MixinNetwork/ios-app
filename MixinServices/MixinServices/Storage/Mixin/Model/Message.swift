@@ -302,6 +302,17 @@ public enum MessageCategory: String, Decodable {
         .WEBRTC_AUDIO_DECLINE
     ]
     
+    public static let krakenCategories: Set<String> = {
+        let categories: [MessageCategory] = [
+            .KRAKEN_PUBLISH,
+            .KRAKEN_INVITE,
+            .KRAKEN_CANCEL,
+            .KRAKEN_DECLINE,
+            .KRAKEN_END
+        ]
+        return Set(categories.map(\.rawValue))
+    }()
+    
 }
 
 public enum MessageStatus: String, Codable {

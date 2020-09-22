@@ -49,8 +49,8 @@ extension SendMessageService {
                 ConversationDAO.shared.createConversation(conversation: ConversationResponse(conversationId: conversationId, userId: user.userId, avatarUrl: user.avatarUrl), targetStatus: .START)
             }
             if !message.category.hasPrefix("WEBRTC_") {
-                if let content = msg.content, ["_TEXT", "_POST"].contains(where: msg.category.hasSuffix), content.utf8.count > 64 * 1024 {
-                    msg.content = String(content.prefix(64 * 1024))
+                if let content = msg.content, ["_TEXT", "_POST"].contains(where: msg.category.hasSuffix), content.utf8.count > maxTextMessageContentLength {
+                    msg.content = String(content.prefix(maxTextMessageContentLength))
                 }
                 MessageDAO.shared.insertMessage(message: msg, messageSource: "")
             }

@@ -53,6 +53,8 @@
 		7B1ABB07211968D1009FAA6C /* StickersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1ABB05211968D1009FAA6C /* StickersViewController.swift */; };
 		7B1ABB0E21196B24009FAA6C /* TilingCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1ABB0D21196B24009FAA6C /* TilingCollectionViewFlowLayout.swift */; };
 		7B1AEB5C221D25F000256A18 /* SeparatorShadowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1AEB5B221D25F000256A18 /* SeparatorShadowView.swift */; };
+		7B1C8B992513265200F7A817 /* ExternalSharingPreviewWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1C8B982513265200F7A817 /* ExternalSharingPreviewWrapperView.swift */; };
+		7B1D61132512773F00BD6B15 /* ExternalSharingConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1D61122512773F00BD6B15 /* ExternalSharingConfirmationViewController.swift */; };
 		7B1D7BA51FBE944E00FDA52C /* ConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1D7BA41FBE944E00FDA52C /* ConversationViewController.swift */; };
 		7B1F5371219D3B90006D6983 /* RoundCornerSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1F5370219D3B90006D6983 /* RoundCornerSelectionView.swift */; };
 		7B21782122C4E70B00C08106 /* AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B21782022C4E70B00C08106 /* AudioPlayer.swift */; };
@@ -281,6 +283,7 @@
 		7B8BB592234F37D100991ACB /* SharedMediaAudioCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8BB591234F37D100991ACB /* SharedMediaAudioCell.swift */; };
 		7B8BFC8A1FDD77F9004E19DB /* UnknownMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8BFC891FDD77F9004E19DB /* UnknownMessageViewModel.swift */; };
 		7B8BFC8C1FDD7EC8004E19DB /* UnknownMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8BFC8B1FDD7EC8004E19DB /* UnknownMessageCell.swift */; };
+		7B8ECAE8250F6BE8006F0479 /* ExternalSharingContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8ECAE7250F6BE8006F0479 /* ExternalSharingContext.swift */; };
 		7B8ED47C21197F220039946B /* RecentStickersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8ED47B21197F220039946B /* RecentStickersViewController.swift */; };
 		7B8ED47E21197FF40039946B /* FavoriteStickersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8ED47D21197FF40039946B /* FavoriteStickersViewController.swift */; };
 		7B8ED48021198EC20039946B /* StickerInputModelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8ED47F21198EC20039946B /* StickerInputModelController.swift */; };
@@ -289,6 +292,7 @@
 		7B915F6A215F315A00A562C6 /* StickersCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B915F69215F315A00A562C6 /* StickersCollectionViewController.swift */; };
 		7B915F6C215F32A500A562C6 /* GiphyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B915F6B215F32A500A562C6 /* GiphyViewController.swift */; };
 		7B915F74215FB0C100A562C6 /* GiphySearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B915F73215FB0C100A562C6 /* GiphySearchViewController.swift */; };
+		7B91AB6A251A2BAC00879812 /* Message+ExternalSharing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B91AB69251A2BAC00879812 /* Message+ExternalSharing.swift */; };
 		7B92F8271FA1AE19000B838B /* CountDownButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B92F8261FA1AE19000B838B /* CountDownButton.swift */; };
 		7B92F82B1FA1BCD5000B838B /* StateResponsiveButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B92F82A1FA1BCD5000B838B /* StateResponsiveButton.swift */; };
 		7B93CAA5222963120053AE90 /* PhotoInputGridViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B93CAA4222963120053AE90 /* PhotoInputGridViewController.swift */; };
@@ -910,6 +914,8 @@
 		7B1ABB05211968D1009FAA6C /* StickersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersViewController.swift; sourceTree = "<group>"; };
 		7B1ABB0D21196B24009FAA6C /* TilingCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TilingCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
 		7B1AEB5B221D25F000256A18 /* SeparatorShadowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeparatorShadowView.swift; sourceTree = "<group>"; };
+		7B1C8B982513265200F7A817 /* ExternalSharingPreviewWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalSharingPreviewWrapperView.swift; sourceTree = "<group>"; };
+		7B1D61122512773F00BD6B15 /* ExternalSharingConfirmationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalSharingConfirmationViewController.swift; sourceTree = "<group>"; };
 		7B1D7BA41FBE944E00FDA52C /* ConversationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationViewController.swift; sourceTree = "<group>"; };
 		7B1F5370219D3B90006D6983 /* RoundCornerSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundCornerSelectionView.swift; sourceTree = "<group>"; };
 		7B21782022C4E70B00C08106 /* AudioPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayer.swift; sourceTree = "<group>"; };
@@ -1135,6 +1141,7 @@
 		7B8BB591234F37D100991ACB /* SharedMediaAudioCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedMediaAudioCell.swift; sourceTree = "<group>"; };
 		7B8BFC891FDD77F9004E19DB /* UnknownMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnknownMessageViewModel.swift; sourceTree = "<group>"; };
 		7B8BFC8B1FDD7EC8004E19DB /* UnknownMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnknownMessageCell.swift; sourceTree = "<group>"; };
+		7B8ECAE7250F6BE8006F0479 /* ExternalSharingContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalSharingContext.swift; sourceTree = "<group>"; };
 		7B8ED47B21197F220039946B /* RecentStickersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentStickersViewController.swift; sourceTree = "<group>"; };
 		7B8ED47D21197FF40039946B /* FavoriteStickersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteStickersViewController.swift; sourceTree = "<group>"; };
 		7B8ED47F21198EC20039946B /* StickerInputModelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerInputModelController.swift; sourceTree = "<group>"; };
@@ -1143,6 +1150,7 @@
 		7B915F69215F315A00A562C6 /* StickersCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersCollectionViewController.swift; sourceTree = "<group>"; };
 		7B915F6B215F32A500A562C6 /* GiphyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GiphyViewController.swift; sourceTree = "<group>"; };
 		7B915F73215FB0C100A562C6 /* GiphySearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiphySearchViewController.swift; sourceTree = "<group>"; };
+		7B91AB69251A2BAC00879812 /* Message+ExternalSharing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Message+ExternalSharing.swift"; sourceTree = "<group>"; };
 		7B92F8261FA1AE19000B838B /* CountDownButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountDownButton.swift; sourceTree = "<group>"; };
 		7B92F82A1FA1BCD5000B838B /* StateResponsiveButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateResponsiveButton.swift; sourceTree = "<group>"; };
 		7B93CAA4222963120053AE90 /* PhotoInputGridViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoInputGridViewController.swift; sourceTree = "<group>"; };
@@ -1877,6 +1885,7 @@
 				7B082D17242CA19F00C5E163 /* MultipleSelectionIntent.swift */,
 				7BE6C7EB242DF07B00A0F2AE /* MessageAction.swift */,
 				7BA41A9224E123F50042ED03 /* MentionToken.swift */,
+				7B91AB69251A2BAC00879812 /* Message+ExternalSharing.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -2316,6 +2325,7 @@
 				7BB5250224160F3D0060DAE1 /* LocationPreviewViewController.swift */,
 				7BF5EE4E2497A55700DDD9CC /* GroupCallMemberPickerViewController.swift */,
 				7BC3EBF62497507900E81FD8 /* GroupCallMemberPickerContentViewController.swift */,
+				7B1D61122512773F00BD6B15 /* ExternalSharingConfirmationViewController.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -2797,6 +2807,7 @@
 				7BFD3753249366E7006D758F /* GroupCallIndicatorView.xib */,
 				7BFD375524936763006D758F /* GroupCallIndicatorView.swift */,
 				7B3CDA6724FFF2D8003A3E80 /* AnimatedStickerView.swift */,
+				7B1C8B982513265200F7A817 /* ExternalSharingPreviewWrapperView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2859,6 +2870,7 @@
 				7BE6C995242DF47E00A0F2AE /* MessageItem+MessageAction.swift */,
 				DFAD89A0241B6D6400836EDD /* JobService.swift */,
 				7B9650B32487EBE000DE86B9 /* BackgroundMessagingService.swift */,
+				7B8ECAE7250F6BE8006F0479 /* ExternalSharingContext.swift */,
 			);
 			path = Message;
 			sourceTree = "<group>";
@@ -3465,7 +3477,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$SRCROOT/MixinNotificationService/R.generated.swift",
+				$SRCROOT/MixinNotificationService/R.generated.swift,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -3562,7 +3574,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$SRCROOT/MixinShare/R.generated.swift",
+				$SRCROOT/MixinShare/R.generated.swift,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -3582,7 +3594,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$SRCROOT/R.generated.swift",
+				$SRCROOT/R.generated.swift,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -3741,6 +3753,7 @@
 				7B3FD4EC241965AB00B58006 /* LocationViewController.swift in Sources */,
 				7BD97DD72179DDD600FAE490 /* IceServer.swift in Sources */,
 				7BB0F9152434B03300BEDA97 /* SelectedPeerCell.swift in Sources */,
+				7B1C8B992513265200F7A817 /* ExternalSharingPreviewWrapperView.swift in Sources */,
 				E081796A23C32ACA005FEEAC /* PostMessageCell.swift in Sources */,
 				DFD089E21FE4041400A7D815 /* AttachmentUploadJob.swift in Sources */,
 				7BC8503120CBA69B00A57B83 /* MXNOggOpusError.m in Sources */,
@@ -3805,6 +3818,7 @@
 				E0BC7BB9238FAE0B00E3EF2C /* MyFavoriteAppProfileMenuItemView.swift in Sources */,
 				DF6068C720BECD3100C38C64 /* AssetSendViewController.swift in Sources */,
 				DFC0ECE423BB60DE0091E7AC /* VerificationResponse.swift in Sources */,
+				7B91AB6A251A2BAC00879812 /* Message+ExternalSharing.swift in Sources */,
 				7B11788C2293D53B000F934E /* BalanceInputAccessoryView.swift in Sources */,
 				E05DFA2E23B5D7EA00AB7ABD /* AppButtonView.swift in Sources */,
 				7B7B2BC51FB15B6A0002BED5 /* AvatarImageView.swift in Sources */,
@@ -4092,6 +4106,7 @@
 				DFE1F9851FAB52CE00537D43 /* ContainerViewController.swift in Sources */,
 				7B0BE46421A59AE400B91A1E /* RefreshTopAssetsJob.swift in Sources */,
 				7BC1466F230D12B70060FE19 /* CurrencyCell.swift in Sources */,
+				7B1D61132512773F00BD6B15 /* ExternalSharingConfirmationViewController.swift in Sources */,
 				7B9D825422F1BFC40099381E /* LargeModernNetworkOperationButton.swift in Sources */,
 				DF5BF55F1FBB281E0092AFB8 /* AssetViewController.swift in Sources */,
 				7B8BB57E234DD18C00991ACB /* SharedMediaTableHeaderView.swift in Sources */,
@@ -4272,6 +4287,7 @@
 				DFE356B81FB4994200E0E3A8 /* SettingsViewController.swift in Sources */,
 				7BF9969520CA6F3800FD948F /* Waveform.swift in Sources */,
 				7BA1F8CD221FDABF00DBFCE2 /* RoundedButton.swift in Sources */,
+				7B8ECAE8250F6BE8006F0479 /* ExternalSharingContext.swift in Sources */,
 				7B6B07E824A88B7A001781F3 /* GroupCallMemberDataSource.swift in Sources */,
 				7BDC2DE222F315480098AB81 /* GalleryActivityIndicatorView.swift in Sources */,
 				7B082D18242CA19F00C5E163 /* MultipleSelectionIntent.swift in Sources */,

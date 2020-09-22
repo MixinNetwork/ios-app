@@ -5,7 +5,7 @@ import MixinServices
 
 class UrlWindow {
     
-    class func checkUrl(url: URL, fromWeb: Bool = false, clearNavigationStack: Bool = true) -> Bool {
+    class func checkUrl(url: URL, webContext: MixinWebViewController.Context? = nil, clearNavigationStack: Bool = true, ignoreUnsupportMixinSchema: Bool = true) -> Bool {
         if let mixinURL = MixinURL(url: url) {
             switch mixinURL {
             case let .codes(code):
@@ -24,8 +24,8 @@ class UrlWindow {
                 return checkApp(url: url, userId: userId)
             case let .transfer(id):
                 return checkTransferUrl(id, clearNavigationStack: clearNavigationStack)
-            case .send:
-                return checkSendUrl(url: url)
+            case let .send(context):
+                return checkSendUrl(sharingContext: context, webContext: webContext)
             case let .device(id, publicKey):
                 LoginConfirmWindow.instance(id: id, publicKey: publicKey).presentView()
                 return true
@@ -33,7 +33,7 @@ class UrlWindow {
                 UIApplication.currentActivity()?.alert(R.string.localizable.desktop_upgrade())
                 return true
             case .unknown:
-                return false
+                return ignoreUnsupportMixinSchema ? MixinURL.isMixinSchema(url: url) : false
             }
         } else if let url = MixinInternalURL(url: url) {
             switch url {
@@ -440,19 +440,90 @@ class UrlWindow {
         }
         return true
     }
-
-    class func checkSendUrl(url: URL) -> Bool {
-        let query = url.getKeyVals()
-        guard let text = query["text"], !text.isEmpty else {
-            return false
+    
+    class func checkSendUrl(sharingContext: ExternalSharingContext, webContext: MixinWebViewController.Context?) -> Bool {
+        var sharingContext = sharingContext
+        var message = Message.createMessage(context: sharingContext)
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        
+        func presentSendingConfirmation() {
+            guard let conversationId = sharingContext.conversationId, !conversationId.isEmpty, sharingContext.conversationId == UIApplication.currentConversationId() else {
+                hud.hideInMainThread()
+                let vc = MessageReceiverViewController.instance(content: .message(message))
+                UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
+                return
+            }
+            
+            DispatchQueue.global().async {
+                guard let conversation = ConversationDAO.shared.getConversation(conversationId: message.conversationId) else {
+                    hud.hideInMainThread()
+                    return
+                }
+                guard let (ownerUser, _) = syncUser(userId: conversation.ownerId, hud: hud) else {
+                    return
+                }
+                
+                DispatchQueue.main.async {
+                    hud.hide()
+                    let vc = R.storyboard.chat.external_sharing_confirmation()!
+                    vc.modalPresentationStyle = .custom
+                    vc.transitioningDelegate = PopupPresentationManager.shared
+                    UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
+                    vc.load(sharingContext: sharingContext, message: message, conversation: conversation, ownerUser: ownerUser, webContext: webContext)
+                }
+            }
         }
         
-        let vc = MessageReceiverViewController.instance(content: .text(text))
-        UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
-
+        switch sharingContext.content {
+        case .contact(let data):
+            DispatchQueue.global().async {
+                guard let (_, _) = syncUser(userId: data.userId, hud: hud) else {
+                    return
+                }
+                DispatchQueue.main.async {
+                    presentSendingConfirmation()
+                }
+            }
+        case .image(let imageURL):
+            AF.request(imageURL).responseData { (response) in
+                guard case let .success(data) = response.result, let image = UIImage(data: data) else {
+                    hud.hideInMainThread()
+                    return
+                }
+                let mimeType = response.response?.mimeType ?? "image/jpeg"
+                let pathExt = (FileManager.default.pathExtension(mimeType: mimeType) ?? "jpg").lowercased()
+                let fileUrl = AttachmentContainer.url(for: .photos, filename: message.messageId + "." + pathExt)
+                
+                DispatchQueue.global().async {
+                    do {
+                        try data.write(to: fileUrl)
+                    } catch {
+                        hud.hideInMainThread()
+                        return
+                    }
+                    message.thumbImage = image.base64Thumbnail()
+                    message.mediaMimeType = mimeType
+                    message.mediaWidth = Int(image.size.width)
+                    message.mediaHeight = Int(image.size.width)
+                    message.mediaSize = FileManager.default.fileSize(fileUrl.path)
+                    message.mediaUrl = fileUrl.lastPathComponent
+                    
+                    sharingContext.content = .image(fileUrl)
+                    
+                    DispatchQueue.main.async {
+                        presentSendingConfirmation()
+                    }
+                }
+            }
+        default:
+            DispatchQueue.main.async {
+                presentSendingConfirmation()
+            }
+        }
         return true
     }
-
+    
 }
 
 extension UrlWindow {

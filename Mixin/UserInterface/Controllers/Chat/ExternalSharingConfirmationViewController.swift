@@ -14,6 +14,7 @@ class ExternalSharingConfirmationViewController: UIViewController {
     private lazy var label = UILabel()
     
     private var message: Message?
+    private var sharingContext: ExternalSharingContext!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,17 +31,38 @@ class ExternalSharingConfirmationViewController: UIViewController {
             return
         }
         message.createdAt = Date().toUTCString()
-        if message.conversationId.isEmpty || message.conversationId != UIApplication.currentConversationId() {
-            dismiss(animated: true) {
-                let vc = MessageReceiverViewController.instance(content: .message(message))
-                UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
+        sendButton.isBusy = true
+        
+        let currentConversationId = UIApplication.currentConversationId()
+        
+        DispatchQueue.global().async { [weak self] in
+            if case let .image(media) = self?.sharingContext?.content {
+                let fileExtension = media.url.pathExtension.lowercased()
+                let filename = message.messageId + "." + fileExtension
+                let toUrl = AttachmentContainer.url(for: .photos, filename: filename)
+                do {
+                    try FileManager.default.copyItem(at: media.url, to: toUrl)
+                    message.mediaUrl = filename
+                } catch {
+                    showAutoHiddenHud(style: .error, text: Localized.CHAT_SEND_PHOTO_FAILED)
+                    DispatchQueue.main.async {
+                        self?.dismiss(animated: true, completion: nil)
+                    }
+                    return
+                }
             }
-        } else {
-            sendButton.isBusy = true
-            DispatchQueue.global().async {
+            
+            if message.conversationId.isEmpty || message.conversationId != currentConversationId {
+                DispatchQueue.main.async {
+                    self?.dismiss(animated: true) {
+                        let vc = MessageReceiverViewController.instance(content: .message(message))
+                        UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
+                    }
+                }
+            } else {
                 defer {
                     DispatchQueue.main.async {
-                        self.dismiss(animated: true, completion: nil)
+                        self?.dismiss(animated: true, completion: nil)
                     }
                 }
                 guard let conversation = ConversationDAO.shared.getConversation(conversationId: message.conversationId) else {
@@ -58,11 +80,12 @@ class ExternalSharingConfirmationViewController: UIViewController {
     }
     
     func load(sharingContext: ExternalSharingContext, webContext: MixinWebViewController.Context?) {
+        self.sharingContext = sharingContext
         switch sharingContext.content {
         case .text(let text):
             loadPreview(forTextMessageWith: text)
-        case .image(let url):
-            loadPreview(forImageWith: url)
+        case .image(let media):
+            loadPreview(forImageWith: media.url)
         case .live(let data):
             loadPreview(for: data)
         case .contact(let data):
@@ -127,19 +150,13 @@ extension ExternalSharingConfirmationViewController {
         imageView.contentMode = .scaleAspectFit
         imageView.layer.cornerRadius = previewWrapperView.layer.cornerRadius
         imageView.clipsToBounds = true
-        imageView.sd_setImage(with: url) { [weak self] (image, _, _, _) in
-            guard let self = self, let image = image else {
-                return
-            }
-            self.message?.mediaWidth = Int(image.size.width)
-            self.message?.mediaHeight = Int(image.size.height)
-            self.sendButton.isEnabled = true
-        }
+        imageView.sd_setImage(with: url)
         previewWrapperView.addSubview(imageView)
         imageView.snp.makeConstraints { (make) in
             let inset = UIEdgeInsets(top: 2, left: 2, bottom: 2, right: 2)
             make.edges.equalToSuperview().inset(inset)
         }
+        sendButton.isEnabled = true
     }
     
     private func loadPreview(for liveData: TransferLiveData) {

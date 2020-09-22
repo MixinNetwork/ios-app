@@ -14,10 +14,14 @@ extension Message {
         case .text(let text):
             message.category = MessageCategory.SIGNAL_TEXT.rawValue
             message.content = text
-        case .image(let url):
+        case .image(let media):
             message.category = MessageCategory.SIGNAL_IMAGE.rawValue
             message.mediaStatus = MediaStatus.PENDING.rawValue
-            message.mediaUrl = url.absoluteString
+            message.mediaUrl = media.url.absoluteString
+            message.mediaWidth = media.width
+            message.mediaHeight = media.height
+            message.mediaSize = media.size
+            message.thumbImage = media.thumbnail
         case .live(let data):
             message.category = MessageCategory.SIGNAL_LIVE.rawValue
             message.mediaUrl = data.url

@@ -442,7 +442,7 @@ class UrlWindow {
     }
     
     class func checkSendUrl(sharingContext: ExternalSharingContext, webContext: MixinWebViewController.Context?) -> Bool {
-        
+        var sharingContext = sharingContext
         func presentSendingConfirmation() {
             if sharingContext.conversationId == nil {
                 let message = Message.createMessage(context: sharingContext)
@@ -468,6 +468,40 @@ class UrlWindow {
                 DispatchQueue.main.async {
                     hud.hide()
                     presentSendingConfirmation()
+                }
+            }
+        case .image(let data):
+            let hud = Hud()
+            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+            let imageURL = data.url
+            AF.request(imageURL).responseData { (response) in
+                guard case let .success(data) = response.result, let image = UIImage(data: data) else {
+                    hud.hideInMainThread()
+                    return
+                }
+                let mimeType = response.response?.mimeType ?? "image/jpeg"
+                let pathExt = FileManager.default.pathExtension(mimeType: mimeType) ?? "jpg"
+                let tempUrl = URL.createTempUrl(fileExtension: pathExt.lowercased())
+                
+                DispatchQueue.global().async {
+                    do {
+                        try data.write(to: tempUrl)
+                    } catch {
+                        hud.hideInMainThread()
+                        return
+                    }
+                    
+                    let media = ExternalSharingContext.TransferImage(url: tempUrl)
+                    media.mimeType = mimeType
+                    media.size = FileManager.default.fileSize(tempUrl.path)
+                    media.width = Int(image.size.width)
+                    media.height = Int(image.size.height)
+                    media.thumbnail = image.base64Thumbnail()
+                    sharingContext.content = .image(media)
+                    DispatchQueue.main.async {
+                        hud.hide()
+                        presentSendingConfirmation()
+                    }
                 }
             }
         default:

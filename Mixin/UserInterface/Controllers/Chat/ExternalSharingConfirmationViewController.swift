@@ -29,13 +29,30 @@ class ExternalSharingConfirmationViewController: UIViewController {
             return
         }
         message.createdAt = Date().toUTCString()
-        if message.conversationId.isEmpty {
+        if message.conversationId.isEmpty || message.conversationId != UIApplication.currentConversationId() {
             dismiss(animated: true) {
                 let vc = MessageReceiverViewController.instance(content: .message(message))
                 UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
             }
         } else {
-            // TODO
+            sendButton.isBusy = true
+            DispatchQueue.global().async {
+                defer {
+                    DispatchQueue.main.async {
+                        self.dismiss(animated: true, completion: nil)
+                    }
+                }
+                guard let conversation = ConversationDAO.shared.getConversation(conversationId: message.conversationId) else {
+                    return
+                }
+                let user: UserItem?
+                if conversation.ownerId.isEmpty {
+                    user = nil
+                } else {
+                    user = UserDAO.shared.getUser(userId: conversation.ownerId)
+                }
+                SendMessageService.shared.sendMessage(message: message, ownerUser: user, isGroupMessage: conversation.isGroup())
+            }
         }
     }
     

@@ -2005,7 +2005,19 @@
                             <constraint firstItem="nGj-c3-NuH" firstAttribute="top" secondItem="sX6-JS-gG6" secondAttribute="bottom" id="duE-q9-8Jp"/>
                             <constraint firstItem="sX6-JS-gG6" firstAttribute="leading" secondItem="33Q-uH-QBh" secondAttribute="leading" id="kWy-xO-jDq"/>
                             <constraint firstItem="8TQ-dy-zKK" firstAttribute="leading" secondItem="33Q-uH-QBh" secondAttribute="leading" id="tjl-VL-gGl"/>
-                            <constraint firstItem="o5L-po-78o" firstAttribute="bottom" secondItem="OAO-qU-rEb" secondAttribute="bottom" constant="68" id="trM-kH-InT"/>
+                            <constraint firstItem="o5L-po-78o" firstAttribute="bottom" secondItem="OAO-qU-rEb" secondAttribute="bottom" constant="68" id="trM-kH-InT" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                                        <real key="value" value="20"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="inch4">
+                                        <real key="value" value="30"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="inch4_7">
+                                        <real key="value" value="30"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </constraint>
                         </constraints>
                     </view>
                     <connections>

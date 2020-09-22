@@ -258,6 +258,13 @@ extension ExternalSharingConfirmationViewController {
         label.numberOfLines = maxNumberOfLines
         label.attributedText = md.attributedString()
         placePreviewViewsAsTextMessage()
+        
+        let postSuperscript = UIImageView(image: R.image.conversation.ic_message_expand())
+        previewWrapperView.addSubview(postSuperscript)
+        postSuperscript.snp.makeConstraints { (make) in
+            make.top.equalTo(imageView).offset(5)
+            make.trailing.equalTo(imageView).offset(-13)
+        }
     }
     
     private func loadPreview(for appCardData: AppCardData) {

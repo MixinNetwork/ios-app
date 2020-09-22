@@ -7,29 +7,43 @@ class PostViewController: UIViewController {
     
     let contentView = UIView()
     let controlView = PageControlView()
-    let message: MessageItem
+    let message: Message
     
-    init(message: MessageItem) {
+    init(message: Message) {
         self.message = message
         super.init(nibName: nil, bundle: nil)
+    }
+    
+    convenience init(message: MessageItem) {
+        let message = Message.createMessage(message: message)
+        self.init(message: message)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    class func presentInstance(with message: Message, asChildOf parent: UIViewController) {
+        let vc = PostViewController(message: message)
+        present(vc, asChildOf: parent)
+    }
+    
     class func presentInstance(with message: MessageItem, asChildOf parent: UIViewController) {
         let vc = PostViewController(message: message)
-        vc.view.frame = parent.view.bounds
-        vc.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        parent.addChild(vc)
-        parent.view.addSubview(vc.view)
-        vc.didMove(toParent: parent)
+        present(vc, asChildOf: parent)
+    }
+    
+    private class func present(_ controller: PostViewController, asChildOf parent: UIViewController) {
+        controller.view.frame = parent.view.bounds
+        controller.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        parent.addChild(controller)
+        parent.view.addSubview(controller.view)
+        controller.didMove(toParent: parent)
         
-        vc.view.center.y = parent.view.bounds.height * 3 / 2
+        controller.view.center.y = parent.view.bounds.height * 3 / 2
         UIView.animate(withDuration: 0.5) {
             UIView.setAnimationCurve(.overdamped)
-            vc.view.center.y = parent.view.bounds.height / 2
+            controller.view.center.y = parent.view.bounds.height / 2
         }
         
         AppDelegate.current.mainWindow.endEditing(true)
@@ -42,20 +56,20 @@ class PostViewController: UIViewController {
         contentView.backgroundColor = .background
         contentView.clipsToBounds = true
         view.addSubview(contentView)
-        contentView.snp.makeConstraints { (make) in
-            make.top.leading.trailing.equalTo(view.safeAreaLayoutGuide)
-            make.bottom.equalToSuperview()
-        }
+        contentView.snp.makeEdgesEqualToSuperview()
         let recognizer = WebViewScreenEdgePanGestureRecognizer(target: self, action: #selector(screenEdgePanAction(_:)))
         recognizer.edges = [.left]
         contentView.addGestureRecognizer(recognizer)
         
-        if let document = try? Document(text: message.content) {
+        if let content = message.content, let document = try? Document(text: content) {
             let style = PostDocumentStyle()
             let controller = PostDocumentViewController(document: document, style: style)
             addChild(controller)
             contentView.addSubview(controller.view)
-            controller.view.snp.makeEdgesEqualToSuperview()
+            controller.view.snp.makeConstraints { (make) in
+                make.top.equalTo(contentView.safeAreaLayoutGuide.snp.top)
+                make.leading.trailing.bottom.equalToSuperview()
+            }
             controller.didMove(toParent: self)
         }
         
@@ -64,7 +78,7 @@ class PostViewController: UIViewController {
         controlView.dismissButton.addTarget(self, action: #selector(dismissPost), for: .touchUpInside)
         contentView.addSubview(controlView)
         controlView.snp.makeConstraints { (make) in
-            make.top.equalToSuperview()
+            make.top.equalTo(contentView.safeAreaLayoutGuide)
             make.trailing.equalToSuperview().offset(-10)
         }
     }
@@ -101,7 +115,7 @@ class PostViewController: UIViewController {
     @objc func showMoreMenu() {
         let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         controller.addAction(UIAlertAction(title: R.string.localizable.chat_message_menu_forward(), style: .default, handler: { (_) in
-            let vc = MessageReceiverViewController.instance(content: .messages([self.message]))
+            let vc = MessageReceiverViewController.instance(content: .message(self.message))
             self.navigationController?.pushViewController(vc, animated: true)
         }))
         controller.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))

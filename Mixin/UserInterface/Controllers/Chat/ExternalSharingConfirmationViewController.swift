@@ -272,6 +272,13 @@ extension ExternalSharingConfirmationViewController {
             make.top.equalTo(imageView).offset(5)
             make.trailing.equalTo(imageView).offset(-13)
         }
+        
+        let recognizer = UITapGestureRecognizer(target: self, action: #selector(presentPostPreview))
+        imageView.addGestureRecognizer(recognizer)
+        imageView.isUserInteractionEnabled = true
+        for view in [label, postSuperscript] {
+            view.isUserInteractionEnabled = false
+        }
     }
     
     private func loadPreview(for appCardData: AppCardData) {
@@ -313,6 +320,13 @@ extension ExternalSharingConfirmationViewController {
         contentView.subtitleLabel.text = appCardData.description
         
         sendButton.isEnabled = true
+    }
+    
+    @objc private func presentPostPreview() {
+        guard let message = message, message.category == MessageCategory.SIGNAL_POST.rawValue else {
+            return
+        }
+        PostViewController.presentInstance(with: message, asChildOf: self)
     }
     
 }

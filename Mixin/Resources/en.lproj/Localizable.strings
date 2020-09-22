@@ -316,6 +316,7 @@
 "chat_location_search_no_result" = "There were no results for \"%@\"\nTry a new search";
 "chat_number_of_selection" = "%@ Selected";
 "chat_warning_scam" = "Warning: Many users reported this account as a scam. Please be careful, especially if it asks you for money";
+"chat_external_sharing_invalid_context" = "Invalid sharing parameters";
 
 // Web
 "web_suspicious_link" = "Suspicious Link";

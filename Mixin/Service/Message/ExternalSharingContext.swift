@@ -26,6 +26,12 @@ struct ExternalSharingContext {
         guard let items = components.queryItems else {
             return nil
         }
+        if let text = items.first(where: { $0.name == "text" })?.value {
+            let clamped = String(text.prefix(maxTextMessageContentLength))
+            self.content = .text(clamped)
+            self.conversationId = nil
+            return
+        }
         guard let category = items.first(where: { $0.name == "category" })?.value else {
             return nil
         }
@@ -35,7 +41,8 @@ struct ExternalSharingContext {
         switch category {
         case "text":
             if let text = data.removingPercentEncoding?.base64Decoded(), !text.isEmpty {
-                self.content = .text(text)
+                let clamped = String(text.prefix(maxTextMessageContentLength))
+                self.content = .text(clamped)
             } else {
                 return nil
             }

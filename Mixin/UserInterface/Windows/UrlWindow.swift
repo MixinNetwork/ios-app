@@ -25,7 +25,12 @@ class UrlWindow {
             case let .transfer(id):
                 return checkTransferUrl(id, clearNavigationStack: clearNavigationStack)
             case let .send(context):
-                return checkSendUrl(context: context)
+                if let context = context {
+                    return checkSendUrl(context: context)
+                } else {
+                    showAutoHiddenHud(style: .error, text: R.string.localizable.chat_external_sharing_invalid_context())
+                    return true
+                }
             case let .device(id, publicKey):
                 LoginConfirmWindow.instance(id: id, publicKey: publicKey).presentView()
                 return true

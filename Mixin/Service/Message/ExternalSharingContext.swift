@@ -3,29 +3,10 @@ import MixinServices
 
 struct ExternalSharingContext {
     
-    public class TransferImage {
-        
-        public let url: URL
-        public var mimeType: String
-        public var width: Int
-        public var height: Int
-        public var size: Int64
-        public var thumbnail: String
-        
-        public init(url: URL) {
-            self.url = url
-            self.mimeType = ""
-            self.width = 0
-            self.height = 0
-            self.size = 0
-            self.thumbnail = ""
-        }
-    }
-    
     enum Content {
         
         case text(String)
-        case image(TransferImage)
+        case image(URL)
         case live(TransferLiveData)
         case contact(TransferContactData)
         case post(String)
@@ -86,7 +67,7 @@ struct ExternalSharingContext {
             }
         case "image":
             if let encoded = data.removingPercentEncoding, let data: TransferImageData = Self.decode(base64Encoded: encoded) {
-                self.content = .image(TransferImage(url: data.url))
+                self.content = .image(data.url)
             } else {
                 return nil
             }

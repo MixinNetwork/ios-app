@@ -13,8 +13,10 @@ class ExternalSharingConfirmationViewController: UIViewController {
     private lazy var imageView = YYAnimatedImageView()
     private lazy var label = UILabel()
     
-    private var message: Message?
     private var sharingContext: ExternalSharingContext!
+    private var message: Message!
+    private var conversation: ConversationItem!
+    private var ownerUser: UserItem?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,69 +25,32 @@ class ExternalSharingConfirmationViewController: UIViewController {
     }
     
     @IBAction func close(_ sender: Any) {
+        if let context = sharingContext, case let .image(photoUrl) = context.content {
+            try? FileManager.default.removeItem(at: photoUrl)
+        }
         dismiss(animated: true, completion: nil)
     }
     
     @IBAction func send(_ sender: Any) {
-        guard var message = message else {
+        guard var message = message, conversation != nil else {
             return
         }
         message.createdAt = Date().toUTCString()
-        sendButton.isBusy = true
-        
-        let currentConversationId = UIApplication.currentConversationId()
-        
-        DispatchQueue.global().async { [weak self] in
-            if case let .image(media) = self?.sharingContext?.content {
-                let fileExtension = media.url.pathExtension.lowercased()
-                let filename = message.messageId + "." + fileExtension
-                let toUrl = AttachmentContainer.url(for: .photos, filename: filename)
-                do {
-                    try FileManager.default.copyItem(at: media.url, to: toUrl)
-                    message.mediaUrl = filename
-                } catch {
-                    showAutoHiddenHud(style: .error, text: Localized.CHAT_SEND_PHOTO_FAILED)
-                    DispatchQueue.main.async {
-                        self?.dismiss(animated: true, completion: nil)
-                    }
-                    return
-                }
-            }
-            
-            if message.conversationId.isEmpty || message.conversationId != currentConversationId {
-                DispatchQueue.main.async {
-                    self?.dismiss(animated: true) {
-                        let vc = MessageReceiverViewController.instance(content: .message(message))
-                        UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
-                    }
-                }
-            } else {
-                defer {
-                    DispatchQueue.main.async {
-                        self?.dismiss(animated: true, completion: nil)
-                    }
-                }
-                guard let conversation = ConversationDAO.shared.getConversation(conversationId: message.conversationId) else {
-                    return
-                }
-                let user: UserItem?
-                if conversation.ownerId.isEmpty {
-                    user = nil
-                } else {
-                    user = UserDAO.shared.getUser(userId: conversation.ownerId)
-                }
-                SendMessageService.shared.sendMessage(message: message, ownerUser: user, isGroupMessage: conversation.isGroup())
-            }
-        }
+        SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: conversation.isGroup())
+        dismiss(animated: true, completion: nil)
     }
     
-    func load(sharingContext: ExternalSharingContext, webContext: MixinWebViewController.Context?) {
+    func load(sharingContext: ExternalSharingContext, message: Message, conversation: ConversationItem, ownerUser: UserItem?, webContext: MixinWebViewController.Context?) {
         self.sharingContext = sharingContext
+        self.message = message
+        self.conversation = conversation
+        self.ownerUser = ownerUser
+        
         switch sharingContext.content {
         case .text(let text):
             loadPreview(forTextMessageWith: text)
-        case .image(let media):
-            loadPreview(forImageWith: media.url)
+        case .image(let url):
+            loadPreview(forImageWith: url)
         case .live(let data):
             loadPreview(for: data)
         case .contact(let data):
@@ -95,8 +60,6 @@ class ExternalSharingConfirmationViewController: UIViewController {
         case .appCard(let data):
             loadPreview(for: data)
         }
-        
-        self.message = Message.createMessage(context: sharingContext)
         
         let localizedContentCategory = sharingContext.content.localizedCategory
         if let context = webContext {

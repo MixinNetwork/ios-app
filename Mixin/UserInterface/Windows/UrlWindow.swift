@@ -443,69 +443,83 @@ class UrlWindow {
     
     class func checkSendUrl(sharingContext: ExternalSharingContext, webContext: MixinWebViewController.Context?) -> Bool {
         var sharingContext = sharingContext
+        var message = Message.createMessage(context: sharingContext)
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        
         func presentSendingConfirmation() {
-            if sharingContext.conversationId == nil {
-                let message = Message.createMessage(context: sharingContext)
+            guard let conversationId = sharingContext.conversationId, !conversationId.isEmpty, sharingContext.conversationId == UIApplication.currentConversationId() else {
+                hud.hideInMainThread()
                 let vc = MessageReceiverViewController.instance(content: .message(message))
                 UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
-            } else {
-                let vc = R.storyboard.chat.external_sharing_confirmation()!
-                vc.modalPresentationStyle = .custom
-                vc.transitioningDelegate = PopupPresentationManager.shared
-                UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
-                vc.load(sharingContext: sharingContext, webContext: webContext)
+                return
+            }
+            
+            DispatchQueue.global().async {
+                guard let conversation = ConversationDAO.shared.getConversation(conversationId: message.conversationId) else {
+                    hud.hideInMainThread()
+                    return
+                }
+                guard let (ownerUser, _) = syncUser(userId: conversation.ownerId, hud: hud) else {
+                    return
+                }
+                
+                DispatchQueue.main.async {
+                    hud.hide()
+                    let vc = R.storyboard.chat.external_sharing_confirmation()!
+                    vc.modalPresentationStyle = .custom
+                    vc.transitioningDelegate = PopupPresentationManager.shared
+                    UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
+                    vc.load(sharingContext: sharingContext, message: message, conversation: conversation, ownerUser: ownerUser, webContext: webContext)
+                }
             }
         }
         
         switch sharingContext.content {
         case .contact(let data):
-            let hud = Hud()
-            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
             DispatchQueue.global().async {
                 guard let (_, _) = syncUser(userId: data.userId, hud: hud) else {
                     return
                 }
                 DispatchQueue.main.async {
-                    hud.hide()
                     presentSendingConfirmation()
                 }
             }
-        case .image(let data):
-            let hud = Hud()
-            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-            let imageURL = data.url
+        case .image(let imageURL):
             AF.request(imageURL).responseData { (response) in
                 guard case let .success(data) = response.result, let image = UIImage(data: data) else {
                     hud.hideInMainThread()
                     return
                 }
                 let mimeType = response.response?.mimeType ?? "image/jpeg"
-                let pathExt = FileManager.default.pathExtension(mimeType: mimeType) ?? "jpg"
-                let tempUrl = URL.createTempUrl(fileExtension: pathExt.lowercased())
+                let pathExt = (FileManager.default.pathExtension(mimeType: mimeType) ?? "jpg").lowercased()
+                let fileUrl = AttachmentContainer.url(for: .photos, filename: message.messageId + "." + pathExt)
                 
                 DispatchQueue.global().async {
                     do {
-                        try data.write(to: tempUrl)
+                        try data.write(to: fileUrl)
                     } catch {
                         hud.hideInMainThread()
                         return
                     }
+                    message.thumbImage = image.base64Thumbnail()
+                    message.mediaMimeType = mimeType
+                    message.mediaWidth = Int(image.size.width)
+                    message.mediaHeight = Int(image.size.width)
+                    message.mediaSize = FileManager.default.fileSize(fileUrl.path)
+                    message.mediaUrl = fileUrl.lastPathComponent
                     
-                    let media = ExternalSharingContext.TransferImage(url: tempUrl)
-                    media.mimeType = mimeType
-                    media.size = FileManager.default.fileSize(tempUrl.path)
-                    media.width = Int(image.size.width)
-                    media.height = Int(image.size.height)
-                    media.thumbnail = image.base64Thumbnail()
-                    sharingContext.content = .image(media)
+                    sharingContext.content = .image(fileUrl)
+                    
                     DispatchQueue.main.async {
-                        hud.hide()
                         presentSendingConfirmation()
                     }
                 }
             }
         default:
-            presentSendingConfirmation()
+            DispatchQueue.main.async {
+                presentSendingConfirmation()
+            }
         }
         return true
     }

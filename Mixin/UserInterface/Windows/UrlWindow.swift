@@ -462,28 +462,11 @@ class UrlWindow {
             let hud = Hud()
             hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
             DispatchQueue.global().async {
-                var user = UserDAO.shared.getUser(userId: data.userId)
-                switch UserAPI.showUser(userId: data.userId) {
-                case let .success(userItem):
-                    user = UserItem.createUser(from: userItem)
-                    UserDAO.shared.updateUsers(users: [userItem])
-                    DispatchQueue.main.async {
-                        hud.hide()
-                        presentSendingConfirmation()
-                    }
-                case let .failure(error):
-                    if user == nil {
-                        let text = error.localizedDescription(overridingNotFoundDescriptionWith: R.string.localizable.user_not_found())
-                        DispatchQueue.main.async {
-                            hud.set(style: .error, text: text)
-                            hud.scheduleAutoHidden()
-                        }
-                    } else {
-                        DispatchQueue.main.async {
-                            hud.hide()
-                            presentSendingConfirmation()
-                        }
-                    }
+                guard let (_, _) = syncUser(userId: data.userId, hud: hud) else {
+                    return
+                }
+                DispatchQueue.main.async {
+                    presentSendingConfirmation()
                 }
             }
         default:

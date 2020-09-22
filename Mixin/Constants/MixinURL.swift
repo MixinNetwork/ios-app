@@ -27,7 +27,7 @@ enum MixinURL {
     case snapshots
     case pay
     case transfer(String)
-    case send(ExternalSharingContext?)
+    case send(ExternalSharingContext)
     case device(id: String, publicKey: String)
     case unknown(URL)
     case withdrawal
@@ -48,8 +48,7 @@ enum MixinURL {
                 self = .apps(url.pathComponents[1])
             } else if url.host == Host.transfer && url.pathComponents.count == 2 {
                 self = .transfer(url.pathComponents[1])
-            } else if url.host == Host.send {
-                let context = ExternalSharingContext(url: url)
+            } else if url.host == Host.send, let context = ExternalSharingContext(url: url) {
                 self = .send(context)
             } else if url.host == Host.device {
                 if url.pathComponents.count == 2, url.pathComponents[1] == Path.auth, let items = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems, let publicKey = items.first(where: { $0.name == "pub_key" })?.value, !publicKey.isEmpty {
@@ -100,4 +99,7 @@ enum MixinURL {
         self.init(url: url)
     }
     
+    static func isMixinSchema(url: URL) -> Bool {
+        return url.scheme == MixinURL.scheme || url.host == MixinURL.host
+    }
 }

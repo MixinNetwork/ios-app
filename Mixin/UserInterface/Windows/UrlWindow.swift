@@ -5,7 +5,7 @@ import MixinServices
 
 class UrlWindow {
     
-    class func checkUrl(url: URL, webContext: MixinWebViewController.Context? = nil, clearNavigationStack: Bool = true) -> Bool {
+    class func checkUrl(url: URL, webContext: MixinWebViewController.Context? = nil, clearNavigationStack: Bool = true, ignoreUnsupportMixinSchema: Bool = true) -> Bool {
         if let mixinURL = MixinURL(url: url) {
             switch mixinURL {
             case let .codes(code):
@@ -25,12 +25,7 @@ class UrlWindow {
             case let .transfer(id):
                 return checkTransferUrl(id, clearNavigationStack: clearNavigationStack)
             case let .send(context):
-                if let context = context {
-                    return checkSendUrl(sharingContext: context, webContext: webContext)
-                } else {
-                    showAutoHiddenHud(style: .error, text: R.string.localizable.chat_external_sharing_invalid_context())
-                    return false
-                }
+                return checkSendUrl(sharingContext: context, webContext: webContext)
             case let .device(id, publicKey):
                 LoginConfirmWindow.instance(id: id, publicKey: publicKey).presentView()
                 return true
@@ -45,6 +40,8 @@ class UrlWindow {
             case let .identityNumber(number):
                 return checkUser(identityNumber: number)
             }
+        } else if ignoreUnsupportMixinSchema {
+            return MixinURL.isMixinSchema(url: url)
         } else {
             return false
         }

@@ -135,7 +135,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-        return LoginManager.shared.isLoggedIn && UrlWindow.checkUrl(url: url)
+        return LoginManager.shared.isLoggedIn && UrlWindow.checkUrl(url: url, ignoreUnsupportMixinSchema: false)
     }
     
     func applicationProtectedDataDidBecomeAvailable(_ application: UIApplication) {

@@ -316,7 +316,6 @@
 "chat_location_search_no_result" = "找不到“%@”\n换个名字试试吧";
 "chat_number_of_selection" = "选择了%@个消息";
 "chat_warning_scam" = "警告：此账号被大量用户举报，请谨防网络诈骗，注意个人财产安全";
-"chat_external_sharing_invalid_context" = "分享参数无效";
 "chat_external_sharing_title_from_source" = "你确定要发送来自%1$@的%2$@？";
 "chat_external_sharing_title_no_source" = "你确定要发送该%@？";
 "chat_external_sharing_category_text" = "信息";

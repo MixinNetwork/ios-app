@@ -29,7 +29,7 @@ class UrlWindow {
                     return checkSendUrl(sharingContext: context, webContext: webContext)
                 } else {
                     showAutoHiddenHud(style: .error, text: R.string.localizable.chat_external_sharing_invalid_context())
-                    return true
+                    return false
                 }
             case let .device(id, publicKey):
                 LoginConfirmWindow.instance(id: id, publicKey: publicKey).presentView()

@@ -24,6 +24,7 @@ extension Message {
             message.mediaWidth = data.width
             message.mediaHeight = data.height
             message.thumbUrl = data.thumbUrl
+            message.content = try! JSONEncoder.default.encode(data).base64EncodedString()
         case .contact(let data):
             message.category = MessageCategory.SIGNAL_CONTACT.rawValue
             message.sharedUserId = data.userId

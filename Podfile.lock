@@ -203,6 +203,8 @@ PODS:
     - SQLiteRepairKit (~> 1.2.0)
     - WCDBOptimizedSQLCipher (~> 1.2.0)
   - WCDBOptimizedSQLCipher (1.2.1)
+  - YYImage (1.0.4):
+    - YYImage/Core (= 1.0.4)
   - YYImage/Core (1.0.4)
   - YYImage/WebP (1.0.4):
     - YYImage/Core
@@ -227,6 +229,7 @@ DEPENDENCIES:
   - TexturedMaaku (from `https://github.com/wuyuehyang/TexturedMaaku.git`, branch `mixin`)
   - TexturedMaaku/SyntaxColors (from `https://github.com/wuyuehyang/TexturedMaaku.git`, branch `mixin`)
   - WCDB.swift (from `https://github.com/MixinNetwork/wcdb.git`, branch `bugfix/fts`)
+  - YYImage (from `https://github.com/wuyuehyang/YYImage.git`)
 
 SPEC REPOS:
   trunk:
@@ -266,7 +269,6 @@ SPEC REPOS:
     - SocketRocket
     - SQLiteRepairKit
     - WCDBOptimizedSQLCipher
-    - YYImage
     - Zip
 
 EXTERNAL SOURCES:
@@ -293,6 +295,8 @@ EXTERNAL SOURCES:
   WCDB.swift:
     :branch: bugfix/fts
     :git: https://github.com/MixinNetwork/wcdb.git
+  YYImage:
+    :git: https://github.com/wuyuehyang/YYImage.git
 
 CHECKOUT OPTIONS:
   Highlightr:
@@ -319,6 +323,9 @@ CHECKOUT OPTIONS:
   WCDB.swift:
     :commit: 18ee3d5d9596a269f149153fab2dea656bb04653
     :git: https://github.com/MixinNetwork/wcdb.git
+  YYImage:
+    :commit: 7acf346c746f6685f46c2fbc3edb1a05a12be827
+    :git: https://github.com/wuyuehyang/YYImage.git
 
 SPEC CHECKSUMS:
   Alamofire: 814429acc853c6c54ff123fc3d2ef66803823ce0
@@ -366,9 +373,9 @@ SPEC CHECKSUMS:
   TexturedMaaku: e868edf580d7466afe381d5380dea6751e9d99ca
   WCDB.swift: 2e767b45d58cfca1b12e7e9ab6d65d357d5c85e7
   WCDBOptimizedSQLCipher: baf44493b0c7a3d49e97bc5b64a3856f6428ddd1
-  YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
+  YYImage: 6db68da66f20d9f169ceb94dfb9947c3867b9665
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: 88789156323de2616bb881b344fb3ee1ca0a99b5
+PODFILE CHECKSUM: e915c9b55b8aced183af966b35876aabb9a1eae3
 
 COCOAPODS: 1.9.3

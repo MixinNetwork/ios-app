@@ -9,6 +9,7 @@ def mixin_services
   pod 'WCDB.swift', :git => 'https://github.com/MixinNetwork/wcdb.git', :branch => 'bugfix/fts'
   pod 'SwiftyMarkdown', :git => 'https://github.com/wuyuehyang/SwiftyMarkdown.git'
   pod 'lottie-ios', :git => 'https://github.com/airbnb/lottie-ios.git', :branch => 'lottie/objectiveC'
+  pod 'YYImage', :git => 'https://github.com/wuyuehyang/YYImage.git'
   pod 'MixinServices', :path => './MixinServices'
 end
 

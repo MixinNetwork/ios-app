@@ -66,6 +66,7 @@ class PhotoRepresentableMessageCell: ImageMessageCell {
         expandImageView.isHidden = true
         messageContentView.addSubview(expandImageView)
         maskingView.clipsToBounds = true
+        forwarderImageView.alpha = 0.9
         encryptedImageView.alpha = 0.9
         statusImageView.alpha = 0.9
     }

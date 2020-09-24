@@ -12,11 +12,13 @@ class DetailInfoMessageCell: MessageCell {
     let encryptedImageView = UIImageView(image: R.image.ic_message_encrypted())
     let timeLabel = UILabel()
     let statusImageView = UIImageView()
+    let forwarderImageView = UIImageView(image: R.image.conversation.ic_forwarder_bot())
     let identityIconImageView = UIImageView(image: R.image.ic_user_bot())
     let highlightAnimationDuration: TimeInterval = 0.2
     
     override func render(viewModel: MessageViewModel) {
         super.render(viewModel: viewModel)
+        forwarderImageView.tintColor = viewModel.trailingInfoColor
         encryptedImageView.tintColor = viewModel.trailingInfoColor
         timeLabel.textColor = viewModel.trailingInfoColor
         if let viewModel = viewModel as? DetailInfoMessageViewModel {
@@ -32,6 +34,8 @@ class DetailInfoMessageCell: MessageCell {
                 fullnameButton.isHidden = true
                 identityIconImageView.isHidden = true
             }
+            forwarderImageView.frame = viewModel.forwarderFrame
+            forwarderImageView.isHidden = !viewModel.style.contains(.forwardedByBot)
             encryptedImageView.frame = viewModel.encryptedIconFrame
             encryptedImageView.isHidden = !viewModel.isEncrypted
             timeLabel.frame = viewModel.timeFrame
@@ -59,15 +63,22 @@ class DetailInfoMessageCell: MessageCell {
         fullnameButton.titleLabel?.lineBreakMode = .byTruncatingTail
         fullnameButton.addTarget(self, action: #selector(fullnameAction(_:)), for: .touchUpInside)
         messageContentView.addSubview(fullnameButton)
+        
         statusImageView.contentMode = .left
         messageContentView.addSubview(statusImageView)
+        
+        forwarderImageView.alpha = 0.7
+        messageContentView.addSubview(forwarderImageView)
+        
         encryptedImageView.alpha = 0.7
         messageContentView.addSubview(encryptedImageView)
+        
         timeLabel.backgroundColor = .clear
         timeLabel.font = MessageFontSet.time.scaled
         timeLabel.adjustsFontForContentSizeCategory = true
         timeLabel.textAlignment = .right
         messageContentView.addSubview(timeLabel)
+        
         messageContentView.addSubview(identityIconImageView)
     }
     

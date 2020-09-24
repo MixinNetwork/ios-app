@@ -9,6 +9,7 @@ class PostMessageCell: TextMessageCell {
         messageContentView.addSubview(trailingInfoBackgroundView)
         super.prepare()
         messageContentView.addSubview(expandImageView)
+        forwarderImageView.alpha = 0.9
         encryptedImageView.alpha = 0.9
         statusImageView.alpha = 0.9
     }

@@ -21,7 +21,7 @@ class DetailInfoMessageViewModel: MessageViewModel {
     var statusTintColor: UIColor = .accessoryText
     var fullnameFrame = CGRect(x: 24, y: 1, width: 24, height: 23)
     var fullnameColor = UIColor.text
-    var encryptedIconFrame = CGRect(origin: .zero, size: R.image.ic_message_encrypted()!.size)
+    var encryptedIconFrame = CGRect.zero
     var timeFrame = CGRect(x: 0, y: 0, width: 0, height: 12)
     var statusFrame = CGRect.zero
     var identityIconFrame = CGRect(origin: .zero, size: DetailInfoMessageViewModel.identityIconSize)
@@ -52,7 +52,7 @@ class DetailInfoMessageViewModel: MessageViewModel {
     
     private let fullnameVerticalInset: CGFloat = 6
     private let minFullnameWidth: CGFloat = 16
-    private let minEncryptedIconLeftMargin: CGFloat = 8
+    private let minDetailInfoLeftMargin: CGFloat = 8
     private let statusHighlightTintColor = UIColor.theme
     
     override func layout(width: CGFloat, style: MessageViewModel.Style) {
@@ -108,13 +108,20 @@ class DetailInfoMessageViewModel: MessageViewModel {
     }
     
     func layoutEncryptedIconFrame() {
-        var x = timeFrame.origin.x - Self.encryptedIconRightMargin - encryptedIconFrame.size.width
-        let diff = x - minEncryptedIconLeftMargin
+        let size: CGSize
+        if isEncrypted {
+            size = R.image.ic_message_encrypted()!.size
+        } else {
+            size = .zero
+        }
+        var x = timeFrame.origin.x - Self.encryptedIconRightMargin - size.width
+        let diff = x - minDetailInfoLeftMargin
         if style.contains(.received) && isEncrypted && diff < 0 {
             x -= diff
             timeFrame.origin.x -= diff
         }
-        encryptedIconFrame.origin = CGPoint(x: x, y: timeFrame.origin.y + (timeFrame.height - encryptedIconFrame.height) / 2)
+        let origin = CGPoint(x: x, y: timeFrame.origin.y + (timeFrame.height - size.height) / 2)
+        encryptedIconFrame = CGRect(origin: origin, size: size)
     }
     
     private func updateStatusImageAndTintColor() {

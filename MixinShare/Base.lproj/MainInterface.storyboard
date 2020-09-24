@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="mpR-mw-HbN">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="mpR-mw-HbN">
     <device id="retina6_1" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -17,7 +17,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rq4-GG-Kfb">
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rq4-GG-Kfb">
                                 <rect key="frame" x="0.0" y="44" width="414" height="56"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vDt-2V-7MF">
@@ -43,7 +43,7 @@
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                     </view>
-                                    <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rIb-eD-fqO">
+                                    <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rIb-eD-fqO">
                                         <rect key="frame" x="334" y="19" width="80" height="18"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                         <inset key="contentEdgeInsets" minX="16" minY="0.0" maxX="16" maxY="0.0"/>
@@ -67,7 +67,7 @@
                                     <constraint firstItem="vDt-2V-7MF" firstAttribute="centerY" secondItem="Rq4-GG-Kfb" secondAttribute="centerY" id="yAZ-Q2-Dvv"/>
                                 </constraints>
                             </view>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="70" estimatedRowHeight="70" sectionHeaderHeight="36" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="ZfZ-Lr-drD">
+                            <tableView hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="70" estimatedRowHeight="70" sectionHeaderHeight="36" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="ZfZ-Lr-drD">
                                 <rect key="frame" x="0.0" y="100" width="414" height="762"/>
                                 <color key="backgroundColor" name="background"/>
                                 <prototypes>
@@ -129,7 +129,7 @@
                                             <rect key="frame" x="188.5" y="409.5" width="37" height="37"/>
                                         </activityIndicatorView>
                                         <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0%" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3SI-9v-cVl">
-                                            <rect key="frame" x="196" y="454.5" width="22" height="18"/>
+                                            <rect key="frame" x="195.5" y="454.5" width="23" height="18"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -145,7 +145,8 @@
                                 <blurEffect style="regular"/>
                             </visualEffectView>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="ai9-Mq-NWP"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="Rq4-GG-Kfb" firstAttribute="leading" secondItem="ai9-Mq-NWP" secondAttribute="leading" id="4NL-5e-RXR"/>
                             <constraint firstItem="ZfZ-Lr-drD" firstAttribute="leading" secondItem="ai9-Mq-NWP" secondAttribute="leading" id="8gR-BT-rmh"/>
@@ -159,13 +160,13 @@
                             <constraint firstItem="Rq4-GG-Kfb" firstAttribute="top" secondItem="ai9-Mq-NWP" secondAttribute="top" id="lPh-xL-D1v"/>
                             <constraint firstItem="ai9-Mq-NWP" firstAttribute="bottom" secondItem="ZfZ-Lr-drD" secondAttribute="bottom" id="lzq-7P-LyY"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="ai9-Mq-NWP"/>
                     </view>
                     <connections>
                         <outlet property="cancelButton" destination="rIb-eD-fqO" id="cgY-P3-xsv"/>
                         <outlet property="loadingView" destination="HA7-xa-bEL" id="cki-xu-Fav"/>
                         <outlet property="progressLabel" destination="3SI-9v-cVl" id="jQ8-RY-CaF"/>
                         <outlet property="searchTextField" destination="BaI-l9-VZZ" id="ZBD-VD-WCN"/>
+                        <outlet property="searchView" destination="Rq4-GG-Kfb" id="rhp-ts-SBr"/>
                         <outlet property="tableView" destination="ZfZ-Lr-drD" id="koT-pc-8kq"/>
                     </connections>
                 </viewController>
@@ -180,7 +181,7 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_input">
-            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.96100002527236938" green="0.96899998188018799" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

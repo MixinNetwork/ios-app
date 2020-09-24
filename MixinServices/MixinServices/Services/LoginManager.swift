@@ -1,4 +1,5 @@
 import Foundation
+import Intents
 
 public var myUserId: String {
     LoginManager.shared.account?.user_id ?? ""
@@ -96,6 +97,7 @@ public final class LoginManager {
             Logger.write(log: "[LoginManager][Logout]...from:\(from)")
             AppGroupUserDefaults.Account.serializedAccount = nil
             DispatchQueue.main.async {
+                INInteraction.deleteAll(completion: nil)
                 Keychain.shared.clearPIN()
                 WebSocketService.shared.disconnect()
                 AppGroupUserDefaults.Account.clearAll()

@@ -984,7 +984,20 @@ extension ConversationDataSource {
                 style.insert(.fullname)
             }
         }
+        if isMessageForwardedByBot(message) {
+            style.insert(.forwardedByBot)
+        }
         return style
+    }
+    
+    private func isMessageForwardedByBot(_ message: MessageItem) -> Bool {
+        if let ownerUser = ownerUser {
+            return ownerUser.isBot
+                && message.userId != me.user_id
+                && message.userId != ownerUser.userId
+        } else {
+            return false
+        }
     }
     
     private func style(forIndex index: Int, messages: [MessageItem]) -> MessageViewModel.Style {
@@ -1044,6 +1057,9 @@ extension ConversationDataSource {
                 }
                 if message.isRepresentativeMessage(conversation: conversation) && style.contains(.received) && previousViewModelIsFromDifferentUser {
                     style.insert(.fullname)
+                }
+                if isMessageForwardedByBot(message) {
+                    style.insert(.forwardedByBot)
                 }
                 DispatchQueue.main.sync {
                     guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {

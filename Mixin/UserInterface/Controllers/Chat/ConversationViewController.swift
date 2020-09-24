@@ -738,6 +738,9 @@ class ConversationViewController: UIViewController {
         guard let viewModel = dataSource.viewModel(for: indexPath) else {
             return
         }
+        guard viewModel.message.allowedActions.contains(.reply) else {
+            return
+        }
         conversationInputViewController.quote = (viewModel.message, viewModel.thumbnail)
     }
     

@@ -390,8 +390,8 @@ extension CallService {
 extension CallService {
     
     func startCall(uuid: UUID, handle: CXHandle, completion: ((Bool) -> Void)?) {
-        AudioManager.shared.pause()
         dispatch {
+            DispatchQueue.main.sync(execute: AudioManager.shared.pause)
             guard WebSocketService.shared.isConnected else {
                 self.activeCall = nil
                 self.alert(error: CallError.networkFailure)
@@ -740,12 +740,12 @@ extension CallService {
                     }
                 }
             } else {
-                AudioManager.shared.pause()
                 let call = PeerToPeerCall(uuid: uuid, isOutgoing: false, remoteUser: user)
                 pendingAnswerCalls[uuid] = call
                 pendingSDPs[uuid] = sdp
                 beginUnanswerCountDown(for: call)
                 DispatchQueue.main.async {
+                    AudioManager.shared.pause()
                     UIApplication.homeContainerViewController?.galleryViewControllerIfLoaded?.pauseCurrentVideoPage()
                 }
                 callInterface.reportIncomingCall(call) { (error) in
@@ -885,7 +885,6 @@ extension CallService {
                 self.log("[CallService] no conversation: \(data.conversationId)")
                 return
             }
-            AudioManager.shared.pause()
             guard var members = membersManager.members(inConversationWith: data.conversationId) else {
                 self.log("[CallService] failed to load members: \(data.conversationId)")
                 return
@@ -907,6 +906,7 @@ extension CallService {
             pendingAnswerCalls[uuid] = call
             beginUnanswerCountDown(for: call)
             DispatchQueue.main.async {
+                AudioManager.shared.pause()
                 UIApplication.homeContainerViewController?.galleryViewControllerIfLoaded?.pauseCurrentVideoPage()
             }
             callInterface.reportIncomingCall(call) { (error) in

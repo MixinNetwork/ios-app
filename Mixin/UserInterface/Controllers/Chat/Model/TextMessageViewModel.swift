@@ -203,10 +203,10 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
                 ? ImageSet.MessageStatus.size.width
                 : 0
             let forwarderIconWidth = style.contains(.forwardedByBot)
-                ? Self.forwarderIconRightMargin + forwarderFrame.width
+                ? Self.forwarderIconRightMargin + R.image.conversation.ic_forwarder_bot()!.size.width
                 : 0
             let encryptedIconWidth = isEncrypted
-                ? Self.encryptedIconRightMargin + encryptedIconFrame.width
+                ? Self.encryptedIconRightMargin + R.image.ic_message_encrypted()!.size.width
                 : 0
             let width = trailingInfoLeftMargin
                 + forwarderIconWidth

@@ -37,6 +37,7 @@ class ExternalSharingConfirmationViewController: UIViewController {
         }
         message.createdAt = Date().toUTCString()
         SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: conversation.isGroup())
+        showAutoHiddenHud(style: .notification, text: R.string.localizable.chat_message_sent())
         dismiss(animated: true, completion: nil)
     }
     

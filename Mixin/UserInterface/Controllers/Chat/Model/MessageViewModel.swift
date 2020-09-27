@@ -130,6 +130,7 @@ extension MessageViewModel {
         static let tail = Style(rawValue: 1 << 1)
         static let bottomSeparator = Style(rawValue: 1 << 2)
         static let fullname = Style(rawValue: 1 << 3)
+        static let forwardedByBot = Style(rawValue: 1 << 4)
     }
     
     struct Margin {

@@ -101,7 +101,10 @@ class AudioManager: NSObject {
                                selector: #selector(AudioManager.audioSessionMediaServicesWereReset(_:)),
                                name: AVAudioSession.mediaServicesWereResetNotification,
                                object: nil)
-            
+            center.addObserver(self,
+                               selector: #selector(AudioManager.pause),
+                               name: CallService.willStartCallNotification,
+                               object: nil)
             let path = AttachmentContainer.url(for: .audios, filename: mediaUrl).path
             
             DispatchQueue.main.sync {
@@ -124,7 +127,7 @@ class AudioManager: NSObject {
         }
     }
     
-    func pause() {
+    @objc func pause() {
         guard let playingMessage = playingMessage else {
             return
         }

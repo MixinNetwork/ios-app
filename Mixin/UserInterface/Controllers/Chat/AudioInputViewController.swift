@@ -53,9 +53,14 @@ class AudioInputViewController: UIViewController, ConversationInputAccessible {
     
     private lazy var longPressHintView = R.nib.recorderLongPressHintView(owner: nil)!
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         recordGestureRecognizer.delegate = self
+        NotificationCenter.default.addObserver(self, selector: #selector(cancelAction(_:)), name: CallService.willStartCallNotification, object: nil)
     }
     
     @IBAction func tapAction(_ sender: Any) {

@@ -263,13 +263,6 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         })
     }
     
-    func pauseCurrentVideoPage() {
-        guard let controller = currentItemViewController as? GalleryVideoItemViewController else {
-            return
-        }
-        controller.pauseAction(self)
-    }
-    
     @objc func panAction(_ recognizer: UIPanGestureRecognizer) {
         let translation = recognizer.translation(in: view)
         let progress = min(1, max(0, translation.y / (view.bounds.height / 3)))

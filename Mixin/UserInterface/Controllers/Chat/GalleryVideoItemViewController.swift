@@ -559,14 +559,19 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
             self?.updateVideoViewSize(with: item)
         }
         
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(playerItemDidReachEnd(_:)),
-                                               name: .AVPlayerItemDidPlayToEndTime,
-                                               object: item)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(playerItemFailedToPlayToEndTime(_:)),
-                                               name: .AVPlayerItemFailedToPlayToEndTime,
-                                               object: item)
+        let center = NotificationCenter.default
+        center.addObserver(self,
+                           selector: #selector(playerItemDidReachEnd(_:)),
+                           name: .AVPlayerItemDidPlayToEndTime,
+                           object: item)
+        center.addObserver(self,
+                           selector: #selector(playerItemFailedToPlayToEndTime(_:)),
+                           name: .AVPlayerItemFailedToPlayToEndTime,
+                           object: item)
+        center.addObserver(self,
+                           selector: #selector(pauseAction(_:)),
+                           name: CallService.willStartCallNotification,
+                           object: nil)
         
         timeControlObserver = player.observe(\.timeControlStatus, changeHandler: { [weak self] (player, _) in
             self?.updateControlView()

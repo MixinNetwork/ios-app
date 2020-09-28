@@ -1,4 +1,5 @@
-install! 'cocoapods'
+install! 'cocoapods',
+:generate_multiple_pod_projects => true
 
 platform :ios, '11.0'
 

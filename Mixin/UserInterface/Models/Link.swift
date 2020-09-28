@@ -7,7 +7,7 @@ class Link {
         let url: URL
     }
     
-    static let detector = MXNFastURLDetector()
+    static let detector = FastURLDetector()
     
     let hitFrame: CGRect
     let backgroundPath: UIBezierPath

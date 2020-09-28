@@ -736,7 +736,7 @@ extension ConversationDataSource {
                 message.mediaStatus = MediaStatus.PENDING.rawValue
                 SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
             }
-        } else if type == .SIGNAL_AUDIO, let value = value as? (tempUrl: URL, metadata: MXNAudioMetadata) {
+        } else if type == .SIGNAL_AUDIO, let value = value as? (tempUrl: URL, metadata: AudioMetadata) {
             queue.async {
                 guard FileManager.default.fileSize(value.tempUrl.path) > 0 else {
                     showAutoHiddenHud(style: .error, text: R.string.localizable.error_operation_failed())

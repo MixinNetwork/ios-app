@@ -1,6 +1,5 @@
-
-#import "MXNOggOpusWriter.h"
-#import "MXNOggOpusError.h"
+#import "MXMOggOpusWriter.h"
+#import "MXMOggOpusError.h"
 #import "opus.h"
 #import "ogg.h"
 #import "opus_multistream.h"
@@ -9,7 +8,7 @@
 static const int numberOfChannels = 1;
 static const int outputBitRate = 16 * 1024;
 
-@implementation MXNOggOpusWriter {
+@implementation MXMOggOpusWriter {
     NSString *_path;
     OggOpusEnc *_encoder;
     OggOpusComments *_comments;
@@ -18,7 +17,7 @@ static const int outputBitRate = 16 * 1024;
 + (instancetype)writerWithPath:(NSString *)path
                inputSampleRate:(int32_t)inputSampleRate
                          error:(NSError * _Nullable *)outError {
-    return [[MXNOggOpusWriter alloc] initWithPath:path
+    return [[MXMOggOpusWriter alloc] initWithPath:path
                                   inputSampleRate:inputSampleRate
                                             error:outError];
 }
@@ -33,8 +32,8 @@ static const int outputBitRate = 16 * 1024;
         _encoder = ope_encoder_create_file([path UTF8String], _comments, inputSampleRate, numberOfChannels, 0, &result);
         if (result != OPE_OK) {
             if (outError) {
-                *outError = [NSError errorWithDomain:MXNOggOpusErrorDomain
-                                                code:MXNOggOpusErrorCodeCreateEncoder
+                *outError = [NSError errorWithDomain:MXMOggOpusErrorDomain
+                                                code:MXMOggOpusErrorCodeCreateEncoder
                                             userInfo:@{@"ope_code" : @(result)}];
             }
             return nil;
@@ -42,8 +41,8 @@ static const int outputBitRate = 16 * 1024;
         result = ope_encoder_ctl(_encoder, OPUS_SET_BITRATE_REQUEST, outputBitRate);
         if (result != OPE_OK) {
             if (outError) {
-                *outError = [NSError errorWithDomain:MXNOggOpusErrorDomain
-                                                code:MXNOggOpusErrorCodeSetBitrate
+                *outError = [NSError errorWithDomain:MXMOggOpusErrorDomain
+                                                code:MXMOggOpusErrorCodeSetBitrate
                                             userInfo:@{@"ope_code" : @(result)}];
             }
             return nil;

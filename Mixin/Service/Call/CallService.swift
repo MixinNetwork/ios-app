@@ -9,6 +9,7 @@ class CallService: NSObject {
     static let shared = CallService()
     static let maxNumberOfKrakenRetries: UInt = 30
     static let mutenessDidChangeNotification = Notification.Name("one.mixin.messenger.CallService.MutenessDidChange")
+    static let willStartCallNotification = Notification.Name("one.mixin.messenger.CallService.WillStartCall")
     static let willActivateCallNotification = Notification.Name("one.mixin.messenger.CallService.WillActivateCall")
     static let willDeactivateCallNotification = Notification.Name("one.mixin.messenger.CallService.WillDeactivateCall")
     static let callUserInfoKey = "call"
@@ -390,8 +391,10 @@ extension CallService {
 extension CallService {
     
     func startCall(uuid: UUID, handle: CXHandle, completion: ((Bool) -> Void)?) {
-        AudioManager.shared.pause()
         dispatch {
+            DispatchQueue.main.sync {
+                NotificationCenter.default.post(name: Self.willStartCallNotification, object: self)
+            }
             guard WebSocketService.shared.isConnected else {
                 self.activeCall = nil
                 self.alert(error: CallError.networkFailure)
@@ -740,13 +743,12 @@ extension CallService {
                     }
                 }
             } else {
-                AudioManager.shared.pause()
                 let call = PeerToPeerCall(uuid: uuid, isOutgoing: false, remoteUser: user)
                 pendingAnswerCalls[uuid] = call
                 pendingSDPs[uuid] = sdp
                 beginUnanswerCountDown(for: call)
-                DispatchQueue.main.async {
-                    UIApplication.homeContainerViewController?.galleryViewControllerIfLoaded?.pauseCurrentVideoPage()
+                DispatchQueue.main.sync {
+                    NotificationCenter.default.post(name: Self.willStartCallNotification, object: self)
                 }
                 callInterface.reportIncomingCall(call) { (error) in
                     if let error = error {
@@ -885,7 +887,6 @@ extension CallService {
                 self.log("[CallService] no conversation: \(data.conversationId)")
                 return
             }
-            AudioManager.shared.pause()
             guard var members = membersManager.members(inConversationWith: data.conversationId) else {
                 self.log("[CallService] failed to load members: \(data.conversationId)")
                 return
@@ -905,10 +906,10 @@ extension CallService {
             groupCallUUIDs[conversation.conversationId] = uuid
             self.log("[CallService] reporting incoming group call invitation: \(call.debugDescription), members: \(members.map(\.fullName))")
             pendingAnswerCalls[uuid] = call
-            beginUnanswerCountDown(for: call)
-            DispatchQueue.main.async {
-                UIApplication.homeContainerViewController?.galleryViewControllerIfLoaded?.pauseCurrentVideoPage()
+            DispatchQueue.main.sync {
+                NotificationCenter.default.post(name: Self.willStartCallNotification, object: self)
             }
+            beginUnanswerCountDown(for: call)
             callInterface.reportIncomingCall(call) { (error) in
                 let invitationStatus: MessageStatus
                 defer {

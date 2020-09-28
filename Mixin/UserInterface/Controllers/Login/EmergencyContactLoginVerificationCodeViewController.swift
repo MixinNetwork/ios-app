@@ -1,4 +1,5 @@
 import UIKit
+import MixinCrypto
 import MixinServices
 
 class EmergencyContactLoginVerificationCodeViewController: LoginVerificationCodeViewController {
@@ -11,13 +12,14 @@ class EmergencyContactLoginVerificationCodeViewController: LoginVerificationCode
         resendButton.isHidden = true
     }
     
-    override func login(code: String, registrationId: Int, keyPair: KeyUtil.RSAKeyPair) {
-        EmergencyAPI.verifySession(id: context.verificationId, code: code, sessionSecret: keyPair.publicKey, registrationId: registrationId) { [weak self] (result) in
+    override func login(code: String, registrationId: Int, key: Ed25519PrivateKey) {
+        let sessionSecret = key.publicKey.rawRepresentation.base64EncodedString()
+        EmergencyAPI.verifySession(id: context.verificationId, code: code, sessionSecret: sessionSecret, registrationId: registrationId) { [weak self] (result) in
             if case .success = result {
                 HomeViewController.showChangePhoneNumberTips = true
             }
             DispatchQueue.global().async {
-                self?.handleLoginResult(result, privateKeyPem: keyPair.privateKeyPem)
+                self?.handleLoginResult(result, key: key)
             }
         }
     }

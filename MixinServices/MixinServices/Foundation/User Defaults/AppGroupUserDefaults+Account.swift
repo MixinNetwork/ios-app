@@ -19,9 +19,11 @@ extension AppGroupUserDefaults {
         @Default(namespace: .account, key: Key.account, defaultValue: nil)
         public static var serializedAccount: Data?
         
+        @available(*, deprecated, message: "Use only for migration")
         @Default(namespace: .account, key: Key.sessionSecret, defaultValue: nil)
         public static var sessionSecret: String?
         
+        @available(*, deprecated, message: "Use only for migration")
         @Default(namespace: .account, key: Key.pinToken, defaultValue: nil)
         public static var pinToken: String?
         

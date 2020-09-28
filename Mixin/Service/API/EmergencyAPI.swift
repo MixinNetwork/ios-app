@@ -24,7 +24,7 @@ final class EmergencyAPI: MixinAPI {
     }
     
     static func verifyContact(pin: String, id: String, code: String, completion: @escaping (MixinAPI.Result<Account>) -> Void) {
-        KeyUtil.aesEncrypt(pin: pin, completion: completion) { (encryptedPin) in
+        PINEncryptor.encrypt(pin: pin, onFailure: completion) { (encryptedPin) in
             let req = EmergencyRequest(phone: nil,
                                        identityNumber: nil,
                                        pin: encryptedPin,
@@ -62,14 +62,14 @@ final class EmergencyAPI: MixinAPI {
     }
     
     static func show(pin: String, completion: @escaping (MixinAPI.Result<User>) -> Void) {
-        KeyUtil.aesEncrypt(pin: pin, completion: completion) { (encryptedPin) in
+        PINEncryptor.encrypt(pin: pin, onFailure: completion) { (encryptedPin) in
             let param = ["pin": encryptedPin]
             request(method: .post, path: Path.show, parameters: param, completion: completion)
         }
     }
     
     static func delete(pin: String, completion: @escaping (MixinAPI.Result<Account>) -> Void) {
-        KeyUtil.aesEncrypt(pin: pin, completion: completion) { (encryptedPin) in
+        PINEncryptor.encrypt(pin: pin, onFailure: completion) { (encryptedPin) in
             let param = ["pin": encryptedPin]
             request(method: .post, path: Path.delete, parameters: param, completion: completion)
         }

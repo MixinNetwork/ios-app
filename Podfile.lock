@@ -9,6 +9,12 @@ PODS:
   - AppCenter/Core (3.3.4)
   - AppCenter/Crashes (3.3.4):
     - AppCenter/Core
+  - BoringSSL (10.0.6):
+    - BoringSSL/Implementation (= 10.0.6)
+    - BoringSSL/Interface (= 10.0.6)
+  - BoringSSL/Implementation (10.0.6):
+    - BoringSSL/Interface (= 10.0.6)
+  - BoringSSL/Interface (10.0.6)
   - DeviceGuru (6.0.5)
   - Firebase/Analytics (6.32.2):
     - Firebase/Core
@@ -115,6 +121,8 @@ PODS:
     - libcmark_gfm (~> 0.29.3)
   - Maaku/Core (0.9.2):
     - Maaku/CMark
+  - MixinCrypto (0.1.0):
+    - BoringSSL
   - MixinServices (0.1.0):
     - Alamofire
     - AppCenter
@@ -122,6 +130,7 @@ PODS:
     - GzipSwift
     - libsignal-protocol-c
     - lottie-ios
+    - MixinCrypto
     - SDWebImage
     - SDWebImageYYPlugin/YYImage
     - SocketRocket
@@ -219,6 +228,7 @@ DEPENDENCIES:
   - Highlightr (from `https://github.com/wuyuehyang/Highlightr.git`, branch `master`)
   - libsignal-protocol-c (from `https://github.com/MixinNetwork/libsignal-protocol-c.git`)
   - lottie-ios (from `https://github.com/airbnb/lottie-ios.git`, branch `lottie/objectiveC`)
+  - MixinCrypto (from `./MixinCrypto`)
   - MixinServices (from `./MixinServices`)
   - PhoneNumberKit (from `https://github.com/the0neyouseek/PhoneNumberKit`)
   - R.swift
@@ -236,6 +246,7 @@ SPEC REPOS:
     - Alamofire
     - AlignedCollectionViewFlowLayout
     - AppCenter
+    - BoringSSL
     - DeviceGuru
     - Firebase
     - FirebaseABTesting
@@ -280,6 +291,8 @@ EXTERNAL SOURCES:
   lottie-ios:
     :branch: lottie/objectiveC
     :git: https://github.com/airbnb/lottie-ios.git
+  MixinCrypto:
+    :path: "./MixinCrypto"
   MixinServices:
     :path: "./MixinServices"
   PhoneNumberKit:
@@ -331,6 +344,7 @@ SPEC CHECKSUMS:
   Alamofire: 814429acc853c6c54ff123fc3d2ef66803823ce0
   AlignedCollectionViewFlowLayout: ee2ef451e741ec08f8e0967d828001e2f051c20a
   AppCenter: 0487be185c038ed2ecc5ed38219af1dcd280af23
+  BoringSSL: e10f92a27043805c01071fe815a5cd98ae8212e7
   DeviceGuru: 79cd775847d974b70e344009910b0e3d0b2ab088
   Firebase: 47176280bfba198e531f909cfb1612dad216cb96
   FirebaseABTesting: 8a9d8df3acc2b43f4a22014ddf9f601bca6af699
@@ -352,7 +366,8 @@ SPEC CHECKSUMS:
   libsignal-protocol-c: bf65792f9f777e7d54dfab84bba0379eba42044e
   lottie-ios: 0e760146411886f6104050c932a8e6964853267f
   Maaku: 0eb331f423453177018d0b483068bcc181e135b4
-  MixinServices: 675673ce596f1dafb21a74a4f2dd05866cf1998a
+  MixinCrypto: cf40bd66cdb323598720ff227c9e55021e9b4843
+  MixinServices: a82fa93cf563e2b9dc92db9df2e53bcb5447547e
   nanopb: 59317e09cf1f1a0af72f12af412d54edf52603fc
   PhoneNumberKit: df411d46177d1492da84e10b6c093846dd861452
   PINCache: ee3c4abadd09970a61cdda0cfc345e69a3d75b26
@@ -376,6 +391,6 @@ SPEC CHECKSUMS:
   YYImage: 6db68da66f20d9f169ceb94dfb9947c3867b9665
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: 327069af645751647626582de8571631410cf2c5
+PODFILE CHECKSUM: 4fbeca50af8686671bf85a47a5f19b7f63f41757
 
 COCOAPODS: 1.9.3

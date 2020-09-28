@@ -1,4 +1,5 @@
 import UIKit
+import MixinCrypto
 import MixinServices
 
 class LoginVerificationCodeViewController: VerificationCodeViewController {
@@ -58,31 +59,36 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
     
     func login() {
         isBusy = true
-        guard let keyPair = KeyUtil.generateRSAKeyPair() else {
-            reporter.report(error: MixinError.generateRsaKeyPair)
-            isBusy = false
-            return
-        }
+        let key = Ed25519PrivateKey()
         let code = verificationCodeField.text
         let registrationId = Int(SignalProtocol.shared.getRegistrationId())
-        login(code: code, registrationId: registrationId, keyPair: keyPair)
+        login(code: code, registrationId: registrationId, key: key)
     }
     
-    func login(code: String, registrationId: Int, keyPair: KeyUtil.RSAKeyPair) {
-        let request = AccountRequest(code: code, registrationId: registrationId, pin: nil, sessionSecret: keyPair.publicKey)
+    func login(code: String, registrationId: Int, key: Ed25519PrivateKey) {
+        let sessionSecret = key.publicKey.rawRepresentation.base64EncodedString()
+        let request = AccountRequest(code: code,
+                                     registrationId: registrationId,
+                                     pin: nil,
+                                     sessionSecret: sessionSecret)
         AccountAPI.login(verificationId: context.verificationId, accountRequest: request, completion: { [weak self] (result) in
             DispatchQueue.global().async {
-                self?.handleLoginResult(result, privateKeyPem: keyPair.privateKeyPem)
+                self?.handleLoginResult(result, key: key)
             }
         })
     }
     
-    func handleLoginResult(_ result: MixinAPI.Result<Account>, privateKeyPem: String) {
+    func handleLoginResult(_ result: MixinAPI.Result<Account>, key: Ed25519PrivateKey) {
         switch result {
         case let .success(account):
-            let pinToken = KeyUtil.rsaDecrypt(pkString: privateKeyPem, sessionId: account.session_id, pinToken: account.pin_token)
-            AppGroupUserDefaults.Account.pinToken = pinToken
-            AppGroupUserDefaults.Account.sessionSecret = privateKeyPem
+            guard !account.pin_token.isEmpty, let remotePublicKey = Data(base64Encoded: account.pin_token), let pinToken = AgreementCalculator.agreement(fromPublicKeyData: remotePublicKey, privateKeyData: key.x25519Representation) else {
+                DispatchQueue.main.async {
+                    self.handleVerificationCodeError(.invalidServerPinToken)
+                }
+                return
+            }
+            AppGroupKeychain.sessionSecret = key.rfc8032Representation
+            AppGroupKeychain.pinToken = pinToken
             LoginManager.shared.setAccount(account, updateUserTable: false)
             if AppGroupUserDefaults.User.localVersion == AppGroupUserDefaults.User.uninitializedVersion {
                 AppGroupUserDefaults.migrateUserSpecificDefaults()

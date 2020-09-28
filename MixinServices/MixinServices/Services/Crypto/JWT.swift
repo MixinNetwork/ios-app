@@ -1,4 +1,5 @@
 import Foundation
+import MixinCrypto
 
 enum Jwt {
     
@@ -28,15 +29,15 @@ enum Jwt {
         return encoder
     }()
     
-    private static let header = "{\"alg\":\"RS512\",\"typ\":\"JWT\"}"
-    private static let base64EncodedHeader = header.data(using: .utf8)!.base64UrlEncodedString()
+    private static let rs512Header = #"{"alg":"RS512","typ":"JWT"}"#.data(using: .utf8)!.base64UrlEncodedString()
+    private static let edDSAHeader = #"{"alg":"EdDSA","typ":"JWT"}"#.data(using: .utf8)!.base64UrlEncodedString()
     
     static func signedToken(claims: Claims, privateKey: SecKey) throws -> String {
         guard SecKeyIsAlgorithmSupported(privateKey, .sign, .rsaSignatureMessagePKCS1v15SHA512) else {
             throw Error.signAlgorithmNotSupported
         }
         let base64EncodedClaims = try jsonEncoder.encode(claims).base64UrlEncodedString()
-        let headerAndPayload = base64EncodedHeader + "." + base64EncodedClaims
+        let headerAndPayload = rs512Header + "." + base64EncodedClaims
         guard let dataToSign = headerAndPayload.data(using: .utf8) else {
             throw Error.building
         }
@@ -46,6 +47,19 @@ enum Jwt {
             throw Error.sign(underlying: retained)
         }
         let base64EncodedSignature = (signature as Data).base64UrlEncodedString()
+        return headerAndPayload + "." + base64EncodedSignature
+    }
+    
+    static func signedToken(claims: Claims, key: Ed25519PrivateKey) throws -> String {
+        let base64EncodedClaims = try jsonEncoder.encode(claims).base64UrlEncodedString()
+        let headerAndPayload = edDSAHeader + "." + base64EncodedClaims
+        guard let dataToSign = headerAndPayload.data(using: .utf8) else {
+            throw Error.building
+        }
+        guard let signature = key.signature(for: dataToSign) else {
+            throw Error.sign(underlying: nil)
+        }
+        let base64EncodedSignature = signature.base64UrlEncodedString()
         return headerAndPayload + "." + base64EncodedSignature
     }
     

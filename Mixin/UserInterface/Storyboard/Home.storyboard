@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
@@ -63,7 +63,7 @@
                                                             <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="home_bulletin_description_notification"/>
                                                         </userDefinedRuntimeAttributes>
                                                     </label>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xnx-Rd-RD2" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xnx-Rd-RD2" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
                                                         <rect key="frame" x="126.5" y="80.5" width="94" height="37"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <inset key="contentEdgeInsets" minX="20" minY="10" maxX="20" maxY="10"/>
@@ -258,7 +258,7 @@
                                                     <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
                                                 </userDefinedRuntimeAttributes>
                                             </label>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mGh-0e-UXt">
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mGh-0e-UXt">
                                                 <rect key="frame" x="94.5" y="53.5" width="106" height="29"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <state key="normal" title="Start Messaging">
@@ -441,6 +441,7 @@
                                 </connections>
                             </containerView>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="5mk-Fk-SFN"/>
                         <color key="backgroundColor" name="background"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="uc0-po-iUR" secondAttribute="trailing" id="44Q-aU-MzI"/>
@@ -467,7 +468,6 @@
                             <constraint firstAttribute="bottom" secondItem="i5D-40-ldq" secondAttribute="bottom" id="w6d-O5-5g8"/>
                             <constraint firstItem="iHT-NY-1rS" firstAttribute="leading" secondItem="J91-yj-SMd" secondAttribute="leading" id="zmZ-I3-Ocs"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="5mk-Fk-SFN"/>
                     </view>
                     <navigationItem key="navigationItem" id="Zif-1j-Fve"/>
                     <connections>
@@ -618,6 +618,7 @@
                                 </prototypes>
                             </tableView>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="3KR-9K-hdW"/>
                         <color key="backgroundColor" name="background_secondary"/>
                         <constraints>
                             <constraint firstItem="iBG-MH-dDj" firstAttribute="top" secondItem="g21-4i-h25" secondAttribute="bottom" id="DG9-60-CB0"/>
@@ -635,7 +636,6 @@
                             <constraint firstAttribute="trailing" secondItem="xpQ-dJ-ucd" secondAttribute="trailing" id="viD-Dd-lmE"/>
                             <constraint firstItem="fJ7-r4-Szs" firstAttribute="top" secondItem="g21-4i-h25" secondAttribute="bottom" id="x7R-JE-u4H"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="3KR-9K-hdW"/>
                     </view>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="oNh-bA-9Hf">
@@ -762,6 +762,7 @@
                                 </connections>
                             </scrollView>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="uxD-WG-QhL"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="BN3-h1-eZm" secondAttribute="bottom" id="BCH-ye-zkM"/>
@@ -769,7 +770,6 @@
                             <constraint firstItem="BN3-h1-eZm" firstAttribute="leading" secondItem="9aE-T7-dUh" secondAttribute="leading" id="YeY-iR-MkI"/>
                             <constraint firstAttribute="trailing" secondItem="BN3-h1-eZm" secondAttribute="trailing" id="jgh-nN-JiK"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="uxD-WG-QhL"/>
                     </view>
                     <connections>
                         <outlet property="collectionLayout" destination="KuQ-f8-Jg6" id="jcb-k0-Htc"/>
@@ -809,6 +809,7 @@
                                 <color key="backgroundColor" name="background_secondary"/>
                             </tableView>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="FX8-Mi-s8s"/>
                         <color key="backgroundColor" name="background_secondary"/>
                         <constraints>
                             <constraint firstItem="f9w-7F-nR9" firstAttribute="top" secondItem="MG9-9S-t2v" secondAttribute="bottom" id="BRe-nz-TtS"/>
@@ -819,7 +820,6 @@
                             <constraint firstAttribute="bottom" secondItem="f9w-7F-nR9" secondAttribute="bottom" id="uhZ-Xm-Tiw"/>
                             <constraint firstItem="f9w-7F-nR9" firstAttribute="leading" secondItem="5Ch-oE-6AI" secondAttribute="leading" id="xjm-B6-0kD"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="FX8-Mi-s8s"/>
                     </view>
                     <connections>
                         <outlet property="tableView" destination="f9w-7F-nR9" id="ulp-fq-Qku"/>
@@ -873,6 +873,7 @@
                                 </userDefinedRuntimeAttributes>
                             </label>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="G5m-8U-XPN"/>
                         <color key="backgroundColor" name="background_secondary"/>
                         <constraints>
                             <constraint firstItem="CZJ-hH-T5C" firstAttribute="centerX" secondItem="G5m-8U-XPN" secondAttribute="centerX" id="2nj-ak-Snw"/>
@@ -902,7 +903,6 @@
                             <constraint firstItem="G5m-8U-XPN" firstAttribute="trailing" secondItem="YgL-nK-KrB" secondAttribute="trailing" constant="36" id="TbK-FS-eHn"/>
                             <constraint firstItem="G5m-8U-XPN" firstAttribute="trailing" secondItem="wZL-Va-cvk" secondAttribute="trailing" id="V5W-Jj-Gac"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="G5m-8U-XPN"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0qg-MT-HpR" sceneMemberID="firstResponder"/>
@@ -1078,6 +1078,7 @@
                                 </cells>
                             </collectionView>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="8Wk-87-Ngs"/>
                         <color key="backgroundColor" name="background"/>
                         <constraints>
                             <constraint firstItem="qIs-RA-yvT" firstAttribute="leading" secondItem="YeN-WV-fIc" secondAttribute="leading" id="3Ug-i9-K3F"/>
@@ -1090,7 +1091,6 @@
                             <constraint firstAttribute="trailing" secondItem="LDb-PZ-N3K" secondAttribute="trailing" id="taC-8M-V7k"/>
                             <constraint firstAttribute="trailing" secondItem="qIs-RA-yvT" secondAttribute="trailing" id="x4o-FZ-kIp"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="8Wk-87-Ngs"/>
                     </view>
                     <connections>
                         <outlet property="candidateCollectionLayout" destination="TuB-8c-Jea" id="jIU-Gm-i69"/>
@@ -1162,6 +1162,7 @@
                                 </subviews>
                             </stackView>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="ocm-7p-Och"/>
                         <color key="backgroundColor" name="background_secondary"/>
                         <constraints>
                             <constraint firstItem="OH0-Ix-HFF" firstAttribute="leading" secondItem="ocm-7p-Och" secondAttribute="leading" constant="36" id="6hF-NE-hwA"/>
@@ -1194,7 +1195,6 @@
                             <constraint firstItem="4dz-RN-RRL" firstAttribute="leading" secondItem="ocm-7p-Och" secondAttribute="leading" constant="36" id="lau-Hp-iK5"/>
                             <constraint firstItem="OH0-Ix-HFF" firstAttribute="top" secondItem="4dz-RN-RRL" secondAttribute="bottom" constant="30" id="x0x-yQ-SjY"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="ocm-7p-Och"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WlD-N5-bdH" sceneMemberID="firstResponder"/>
@@ -1222,12 +1222,12 @@
                                     <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
                                 </userDefinedRuntimeAttributes>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zaM-RW-vC7" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zaM-RW-vC7" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
                                 <rect key="frame" x="135.5" y="563" width="104" height="44"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                 <inset key="contentEdgeInsets" minX="20" minY="12" maxX="18" maxY="12"/>
                                 <state key="normal" title="Continue">
-                                    <color key="titleColor" name="theme"/>
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="action_continue"/>
@@ -1248,6 +1248,7 @@
                                 </userDefinedRuntimeAttributes>
                             </label>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="O9K-H9-6Uy"/>
                         <color key="backgroundColor" name="background_secondary"/>
                         <constraints>
                             <constraint firstItem="O9K-H9-6Uy" firstAttribute="trailing" secondItem="Tou-53-uta" secondAttribute="trailing" constant="50" id="8sK-NH-KGs"/>
@@ -1270,7 +1271,6 @@
                                 </userDefinedRuntimeAttributes>
                             </constraint>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="O9K-H9-6Uy"/>
                     </view>
                     <connections>
                         <outlet property="continueButton" destination="zaM-RW-vC7" id="FeE-DX-Ob4"/>
@@ -1302,7 +1302,7 @@
                                     <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
                                 </userDefinedRuntimeAttributes>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Iax-W3-8VY" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Iax-W3-8VY" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
                                 <rect key="frame" x="141.5" y="563" width="92" height="44"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                 <inset key="contentEdgeInsets" minX="20" minY="12" maxX="18" maxY="12"/>
@@ -1328,6 +1328,7 @@
                                 </userDefinedRuntimeAttributes>
                             </label>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="rsg-Ae-cWf"/>
                         <color key="backgroundColor" name="background_secondary"/>
                         <constraints>
                             <constraint firstItem="rsg-Ae-cWf" firstAttribute="trailing" secondItem="xyZ-Q7-nXW" secondAttribute="trailing" constant="36" id="9mk-E5-pCu"/>
@@ -1350,7 +1351,6 @@
                             <constraint firstItem="Iax-W3-8VY" firstAttribute="centerX" secondItem="rsg-Ae-cWf" secondAttribute="centerX" id="qrT-pC-IbO"/>
                             <constraint firstItem="xyZ-Q7-nXW" firstAttribute="leading" secondItem="rsg-Ae-cWf" secondAttribute="leading" constant="36" id="uH0-b9-kw5"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="rsg-Ae-cWf"/>
                     </view>
                     <connections>
                         <outlet property="tipsLabel" destination="xyZ-Q7-nXW" id="sf4-rH-4bB"/>
@@ -1371,7 +1371,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sUs-aI-gzW">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xRF-Rk-K9J">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xRF-Rk-K9J">
                                         <rect key="frame" x="303" y="0.0" width="72" height="44"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                         <inset key="contentEdgeInsets" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
@@ -1437,7 +1437,7 @@ chat history from icloud</string>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="UlL-mJ-MXf">
                                 <rect key="frame" x="20" y="563" width="335" height="44"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HAa-aR-8l8" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HAa-aR-8l8" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
                                         <rect key="frame" x="120.5" y="0.0" width="94" height="44"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                         <inset key="contentEdgeInsets" minX="20" minY="12" maxX="18" maxY="12"/>
@@ -1453,7 +1453,7 @@ chat history from icloud</string>
                                         </connections>
                                     </button>
                                     <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Restoring 10%" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TzW-ru-T74">
-                                        <rect key="frame" x="116" y="0.0" width="103.5" height="0.0"/>
+                                        <rect key="frame" x="115" y="0.0" width="105" height="0.0"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                         <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -1461,6 +1461,7 @@ chat history from icloud</string>
                                 </subviews>
                             </stackView>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="VtA-NB-BK7"/>
                         <color key="backgroundColor" name="background_secondary"/>
                         <constraints>
                             <constraint firstItem="sUs-aI-gzW" firstAttribute="leading" secondItem="C0N-w5-vaR" secondAttribute="leading" id="2gy-6p-YDe"/>
@@ -1486,7 +1487,6 @@ chat history from icloud</string>
                                 </userDefinedRuntimeAttributes>
                             </constraint>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="VtA-NB-BK7"/>
                     </view>
                     <connections>
                         <outlet property="progressLabel" destination="TzW-ru-T74" id="aEe-1u-xrh"/>
@@ -1587,6 +1587,7 @@ chat history from icloud</string>
                                 </constraints>
                             </view>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="3Nw-Sp-3SU"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="yM3-VU-f2k" firstAttribute="leading" secondItem="Q5p-Sv-cGn" secondAttribute="leading" id="8gE-sp-vLQ"/>
@@ -1598,7 +1599,6 @@ chat history from icloud</string>
                             <constraint firstAttribute="trailing" secondItem="x0w-h0-Art" secondAttribute="trailing" id="qBY-Dc-mu4"/>
                             <constraint firstItem="yM3-VU-f2k" firstAttribute="top" secondItem="Q5p-Sv-cGn" secondAttribute="top" id="xKh-41-gv5"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="3Nw-Sp-3SU"/>
                     </view>
                     <connections>
                         <outlet property="hideTableViewConstraint" destination="c5r-x2-dlH" id="3wG-l7-Bf5"/>

@@ -248,6 +248,7 @@
 "chat_message_recalled" = "このメッセージは削除されました";
 "chat_message_recalled_by_me" = "メッセージを削除しました";
 "chat_message_not_found" = "Message not found";
+"chat_message_sent" = "Message sent.";
 "chat_cell_title_encryption" = "この会話のメッセージはエンドツーエンドで暗号化されています。クリックして詳細を見る";
 "chat_cell_title_unknown_category" = "このメッセージはサポートされていません。アプリを最新版にアップデートしてください。";
 "chat_forward_title" = "転送";

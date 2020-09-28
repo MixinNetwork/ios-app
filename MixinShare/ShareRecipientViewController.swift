@@ -3,6 +3,7 @@ import Photos
 import MixinServices
 import Rswift
 import MobileCoreServices
+import Intents
 
 class ShareRecipientViewController: UIViewController {
 
@@ -11,6 +12,7 @@ class ShareRecipientViewController: UIViewController {
     @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var loadingView: UIView!
     @IBOutlet weak var progressLabel: UILabel!
+    @IBOutlet weak var searchView: UIView!
 
     private let queue = OperationQueue()
     private let initDataOperation = BlockOperation()
@@ -34,7 +36,16 @@ class ShareRecipientViewController: UIViewController {
             cancelShareAction()
             return
         }
+        
+        if #available(iOSApplicationExtension 13.0, *) {
+            if let messageIntent = extensionContext?.intent as? INSendMessageIntent, let conversationId = messageIntent.conversationIdentifier, !conversationId.isEmpty, let conversationItem = ConversationDAO.shared.getConversation(conversationId: conversationId), let conversation = RecipientSearchItem(conversation: conversationItem) {
+                shareAction(conversation: conversation, avatarImage: nil, fromIntent: true)
+                return
+            }
+        }
 
+        searchView.isHidden = false
+        tableView.isHidden = false
         cancelButton.setTitle(R.string.localizable.action_cancel(), for: .normal)
         searchTextField.placeholder = R.string.localizable.search_placeholder_contact()
 
@@ -167,7 +178,8 @@ extension ShareRecipientViewController: UITableViewDataSource, UITableViewDelega
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let conversation = isSearching ? searchResults[indexPath.row] : conversations[indexPath.section][indexPath.row]
-        shareAction(conversation: conversation)
+        let cell = tableView.cellForRow(at: indexPath) as! RecipientCell
+        shareAction(conversation: conversation, avatarImage: cell.avatarImageView.image ?? cell.avatarImageView.takeScreenshot())
     }
 
     private func sectionIsEmpty(_ section: Int) -> Bool {
@@ -178,11 +190,12 @@ extension ShareRecipientViewController: UITableViewDataSource, UITableViewDelega
 
 extension ShareRecipientViewController {
 
-    private func shareAction(conversation: RecipientSearchItem) {
-        guard let extensionItems = extensionContext?.inputItems as? [NSExtensionItem] else {
+    private func shareAction(conversation: RecipientSearchItem, avatarImage: UIImage?, fromIntent: Bool = false) {
+        guard let extensionItems = extensionContext?.inputItems as? [NSExtensionItem], extensionItems.count > 0 else {
             return
         }
 
+        let startTime = Date()
         view.endEditing(true)
         loadingView.isHidden = false
 
@@ -306,9 +319,23 @@ extension ShareRecipientViewController {
                 }
             }
         }
+        
+        if !fromIntent {
+            sendMessageIntent(conversation: conversation, avatarImage: avatarImage)
+        }
 
         dispatchGroup.notify(queue: .main) { [weak self] in
-            self?.extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
+            guard let self = self else {
+                return
+            }
+            let time = Date().timeIntervalSince(startTime)
+            if time < 1 {
+                DispatchQueue.main.asyncAfter(deadline: .now() + (2 - time), execute: {
+                    self.extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
+                })
+            } else {
+                self.extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
+            }
         }
     }
 
@@ -449,5 +476,45 @@ extension ShareRecipientViewController {
             AppGroupUserDefaults.User.hasRestoreUploadAttachment = true
         }
     }
+    
+}
 
+extension ShareRecipientViewController {
+    
+    private func sendMessageIntent(conversation: RecipientSearchItem, avatarImage: UIImage?) {
+        guard #available(iOSApplicationExtension 12.0, *) else {
+            return
+        }
+        let recipientHandle = INPersonHandle(value: conversation.conversationId, type: .unknown)
+        let recipient = INPerson(personHandle: recipientHandle, nameComponents: nil, displayName: conversation.name, image: nil, contactIdentifier: nil, customIdentifier: conversation.conversationId)
+        let messageIntent = INSendMessageIntent(recipients: [recipient],
+                                                    content: nil,
+                                                    speakableGroupName: INSpeakableString(spokenPhrase: conversation.name),
+                                                    conversationIdentifier: conversation.conversationId,
+                                                    serviceName: nil,
+                                                    sender: nil)
+        if let imageData = avatarImage?.pngData() {
+            messageIntent.setImage(INImage(imageData: imageData), forParameterNamed: \.speakableGroupName)
+        }
+        
+        let interaction = INInteraction(intent: messageIntent, response: nil)
+        interaction.direction = .outgoing
+        interaction.donate { (error) in
+            guard let err = error else {
+                return
+            }
+            Logger.write(error: err)
+        }
+    }
+}
+
+fileprivate extension UIView {
+    
+    func takeScreenshot() -> UIImage? {
+        UIGraphicsBeginImageContextWithOptions(self.bounds.size, false, UIScreen.main.scale)
+        drawHierarchy(in: self.bounds, afterScreenUpdates: true)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
+    }
 }

@@ -8,6 +8,7 @@ class DetailInfoMessageViewModel: MessageViewModel {
     static let identityIconLeftMargin: CGFloat = 4
     static let identityIconSize = R.image.ic_user_bot()!.size
     static let encryptedIconRightMargin: CGFloat = 4
+    static let forwarderIconRightMargin: CGFloat = 4
     
     class var bubbleImageSet: BubbleImageSet.Type {
         return GeneralBubbleImageSet.self
@@ -21,7 +22,8 @@ class DetailInfoMessageViewModel: MessageViewModel {
     var statusTintColor: UIColor = .accessoryText
     var fullnameFrame = CGRect(x: 24, y: 1, width: 24, height: 23)
     var fullnameColor = UIColor.text
-    var encryptedIconFrame = CGRect(origin: .zero, size: R.image.ic_message_encrypted()!.size)
+    var forwarderFrame = CGRect.zero
+    var encryptedIconFrame = CGRect.zero
     var timeFrame = CGRect(x: 0, y: 0, width: 0, height: 12)
     var statusFrame = CGRect.zero
     var identityIconFrame = CGRect(origin: .zero, size: DetailInfoMessageViewModel.identityIconSize)
@@ -52,7 +54,7 @@ class DetailInfoMessageViewModel: MessageViewModel {
     
     private let fullnameVerticalInset: CGFloat = 6
     private let minFullnameWidth: CGFloat = 16
-    private let minEncryptedIconLeftMargin: CGFloat = 8
+    private let minDetailInfoLeftMargin: CGFloat = 8
     private let statusHighlightTintColor = UIColor.theme
     
     override func layout(width: CGFloat, style: MessageViewModel.Style) {
@@ -100,6 +102,7 @@ class DetailInfoMessageViewModel: MessageViewModel {
             fullnameColor = UIColor.usernameColors[index]
         }
         layoutEncryptedIconFrame()
+        layoutForwarderIcon()
         statusFrame.origin = CGPoint(x: timeFrame.maxX + DetailInfoMessageViewModel.statusLeftMargin,
                                      y: timeFrame.origin.y + (timeFrame.height - statusFrame.height) / 2)
         fullnameFrame.size.width = max(minFullnameWidth, min(fullnameFrame.size.width, maxContentWidth))
@@ -108,13 +111,41 @@ class DetailInfoMessageViewModel: MessageViewModel {
     }
     
     func layoutEncryptedIconFrame() {
-        var x = timeFrame.origin.x - Self.encryptedIconRightMargin - encryptedIconFrame.size.width
-        let diff = x - minEncryptedIconLeftMargin
+        let size: CGSize
+        if isEncrypted {
+            size = R.image.ic_message_encrypted()!.size
+        } else {
+            size = .zero
+        }
+        let rightMargin: CGFloat = isEncrypted ? Self.encryptedIconRightMargin : 0
+        var x = timeFrame.origin.x - rightMargin - size.width
+        let diff = x - minDetailInfoLeftMargin
         if style.contains(.received) && isEncrypted && diff < 0 {
             x -= diff
             timeFrame.origin.x -= diff
         }
-        encryptedIconFrame.origin = CGPoint(x: x, y: timeFrame.origin.y + (timeFrame.height - encryptedIconFrame.height) / 2)
+        let origin = CGPoint(x: x, y: timeFrame.origin.y + (timeFrame.height - size.height) / 2)
+        encryptedIconFrame = CGRect(origin: origin, size: size)
+    }
+    
+    func layoutForwarderIcon() {
+        let isForwarded = style.contains(.forwardedByBot)
+        let size: CGSize
+        if isForwarded {
+            size = R.image.conversation.ic_forwarder_bot()!.size
+        } else {
+            size = .zero
+        }
+        let rightMargin: CGFloat = isForwarded ? Self.forwarderIconRightMargin : 0
+        var x = encryptedIconFrame.origin.x - rightMargin - size.width
+        let diff = x - minDetailInfoLeftMargin
+        if isForwarded && diff < 0 {
+            x -= diff
+            encryptedIconFrame.origin.x -= diff
+            timeFrame.origin.x -= diff
+        }
+        let origin = CGPoint(x: x, y: timeFrame.origin.y + (timeFrame.height - size.height) / 2)
+        forwarderFrame = CGRect(origin: origin, size: size)
     }
     
     private func updateStatusImageAndTintColor() {

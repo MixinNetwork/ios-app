@@ -505,7 +505,7 @@ class UrlWindow {
                     message.thumbImage = image.base64Thumbnail()
                     message.mediaMimeType = mimeType
                     message.mediaWidth = Int(image.size.width)
-                    message.mediaHeight = Int(image.size.width)
+                    message.mediaHeight = Int(image.size.height)
                     message.mediaSize = FileManager.default.fileSize(fileUrl.path)
                     message.mediaUrl = fileUrl.lastPathComponent
                     

@@ -236,7 +236,7 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
 
             let size = UIScreen.main.bounds.size
             let photoSettings = AVCapturePhotoSettings()
-            let previewPixelType = photoSettings.availablePreviewPhotoPixelFormatTypes.first!
+            let previewPixelType = photoSettings.__availablePreviewPhotoPixelFormatTypes.first!
             let previewFormat: [String : Any] = [kCVPixelBufferPixelFormatTypeKey as String: previewPixelType,
                                                  kCVPixelBufferWidthKey as String: Int(size.width),
                                                  kCVPixelBufferHeightKey as String: Int(size.height)]

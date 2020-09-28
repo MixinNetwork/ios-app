@@ -24,6 +24,16 @@ class UserHandleViewController: UITableViewController {
         tableHeaderView.frame.height
     }
     
+    private let initialVisibleCellsCount: CGFloat = {
+        if ScreenSize.current <= .inch4 {
+            return 1.5
+        } else if ScreenSize.current <= .inch4_7 {
+            return 2.5
+        } else {
+            return 3.5
+        }
+    }()
+    
     private var searchResults = [SearchResult]()
     private var keyword: String?
     private var onScrollingAnimationEnd: (() -> ())?
@@ -62,11 +72,12 @@ class UserHandleViewController: UITableViewController {
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        let contentHeight = min(CGFloat(searchResults.count), 3.5) * tableView.rowHeight
+        let contentHeight = min(CGFloat(searchResults.count), initialVisibleCellsCount) * tableView.rowHeight
             + UserHandleTableHeaderView.decorationHeight
-        let tableHeaderHeight = tableView.frame.height
+        var tableHeaderHeight = tableView.frame.height
             - contentHeight
             + tableHeaderPlaceholderHeight
+        tableHeaderHeight = max(0, tableHeaderHeight)
         if tableHeaderView.frame.height != tableHeaderHeight {
             tableHeaderView.frame.size.height = tableHeaderHeight
             tableView.tableHeaderView = tableHeaderView

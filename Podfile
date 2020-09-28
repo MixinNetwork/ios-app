@@ -1,6 +1,4 @@
-install! 'cocoapods',
-:generate_multiple_pod_projects => true,
-:incremental_installation => true
+install! 'cocoapods'
 
 platform :ios, '11.0'
 
@@ -50,3 +48,11 @@ target 'MixinShare' do
   mixin_services
 end
 
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '11.0'
+      config.build_settings.delete 'VALID_ARCHS'
+    end
+  end
+end

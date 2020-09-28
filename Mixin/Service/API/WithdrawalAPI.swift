@@ -32,7 +32,7 @@ final class WithdrawalAPI: MixinAPI {
     }
     
     static func save(address: AddressRequest, completion: @escaping (MixinAPI.Result<Address>) -> Void) {
-        KeyUtil.aesEncrypt(pin: address.pin, completion: completion) { (encryptedPin) in
+        PINEncryptor.encrypt(pin: address.pin, onFailure: completion) { (encryptedPin) in
             var address = address
             address.pin = encryptedPin
             self.request(method: .post,
@@ -43,7 +43,7 @@ final class WithdrawalAPI: MixinAPI {
     }
     
     static func withdrawal(withdrawal: WithdrawalRequest, completion: @escaping (MixinAPI.Result<Snapshot>) -> Void) {
-        KeyUtil.aesEncrypt(pin: withdrawal.pin, completion: completion) { (encryptedPin) in
+        PINEncryptor.encrypt(pin: withdrawal.pin, onFailure: completion) { (encryptedPin) in
             var withdrawal = withdrawal
             withdrawal.pin = encryptedPin
             self.request(method: .post,
@@ -54,7 +54,7 @@ final class WithdrawalAPI: MixinAPI {
     }
     
     static func delete(addressId: String, pin: String, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {
-        KeyUtil.aesEncrypt(pin: pin, completion: completion) { (encryptedPin) in
+        PINEncryptor.encrypt(pin: pin, onFailure: completion) { (encryptedPin) in
             self.request(method: .post,
                          path: Path.delete(addressId: addressId),
                          parameters: ["PIN": encryptedPin],

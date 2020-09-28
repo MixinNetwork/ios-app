@@ -13,6 +13,7 @@ final class AccountAPI: MixinAPI {
         static let preferences = "/me/preferences"
         
         static let session = "/session"
+        static let sessionSecret = "/session/secret"
         
         static let verifyPin = "/pin/verify"
         static let updatePin = "/pin/update"
@@ -61,7 +62,7 @@ final class AccountAPI: MixinAPI {
     
     static func changePhoneNumber(verificationId: String, accountRequest: AccountRequest, completion: @escaping (MixinAPI.Result<Account>) -> Void) {
         let pin = accountRequest.pin!
-        KeyUtil.aesEncrypt(pin: pin, completion: completion) { (encryptedPin) in
+        PINEncryptor.encrypt(pin: pin, onFailure: completion) { (encryptedPin) in
             var parameters = accountRequest
             parameters.pin = encryptedPin
             self.request(method: .post,
@@ -96,12 +97,19 @@ final class AccountAPI: MixinAPI {
         }
     }
     
+    static func update(sessionSecret: String) -> MixinAPI.Result<SessionSecretUpdateResponse> {
+        let param = ["session_secret": sessionSecret]
+        return request(method: .post,
+                       path: Path.sessionSecret,
+                       parameters: param)
+    }
+    
     static func preferences(preferenceRequest: UserPreferenceRequest, completion: @escaping (MixinAPI.Result<Account>) -> Void) {
         request(method: .post, path: Path.preferences, parameters: preferenceRequest, completion: completion)
     }
     
     static func verify(pin: String, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {
-        KeyUtil.aesEncrypt(pin: pin, completion: completion) { (encryptedPin) in
+        PINEncryptor.encrypt(pin: pin, onFailure: completion) { (encryptedPin) in
             self.request(method: .post,
                          path: Path.verifyPin,
                          parameters: ["pin": encryptedPin],
@@ -110,23 +118,23 @@ final class AccountAPI: MixinAPI {
     }
     
     static func updatePin(old: String?, new: String, completion: @escaping (MixinAPI.Result<Account>) -> Void) {
-        guard let pinToken = AppGroupUserDefaults.Account.pinToken else {
-            completion(.failure(.prerequistesNotFulfilled))
-            return
-        }
         var param: [String: String] = [:]
         if let old = old {
-            guard let encryptedOldPin = KeyUtil.aesEncrypt(pinToken: pinToken, pin: old) else {
-                completion(.failure(.prerequistesNotFulfilled))
+            switch PINEncryptor.encrypt(pin: old) {
+            case .success(let encryptedOld):
+                param["old_pin"] = encryptedOld
+            case .failure(let error):
+                completion(.failure(.pinEncryption(error)))
                 return
             }
-            param["old_pin"] = encryptedOldPin
         }
-        guard let encryptedNewPin = KeyUtil.aesEncrypt(pinToken: pinToken, pin: new) else {
-            completion(.failure(.prerequistesNotFulfilled))
+        switch PINEncryptor.encrypt(pin: new) {
+        case .success(let encryptedNew):
+            param["pin"] = encryptedNew
+        case .failure(let error):
+            completion(.failure(.pinEncryption(error)))
             return
         }
-        param["pin"] = encryptedNewPin
         request(method: .post, path: Path.updatePin, parameters: param, completion: completion)
     }
     

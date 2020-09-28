@@ -20,7 +20,7 @@ final class MultisigAPI: MixinAPI {
     }
     
     static func sign(requestId: String, pin: String, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {
-        KeyUtil.aesEncrypt(pin: pin, completion: completion) { (encryptedPin) in
+        PINEncryptor.encrypt(pin: pin, onFailure: completion) { (encryptedPin) in
             self.request(method: .post,
                          path: Path.sign(id: requestId),
                          parameters: ["pin": encryptedPin],
@@ -29,7 +29,7 @@ final class MultisigAPI: MixinAPI {
     }
     
     static func unlock(requestId: String, pin: String, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {
-        KeyUtil.aesEncrypt(pin: pin, completion: completion) { (encryptedPin) in
+        PINEncryptor.encrypt(pin: pin, onFailure: completion) { (encryptedPin) in
             self.request(method: .post,
                          path: Path.unlock(id: requestId),
                          parameters: ["pin": encryptedPin],

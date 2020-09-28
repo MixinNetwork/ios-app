@@ -20,15 +20,15 @@ final class PaymentAPI: MixinAPI {
     
     static func transactions(transactionRequest: RawTransactionRequest, pin: String, completion: @escaping (MixinAPI.Result<Snapshot>) -> Void) {
         var transactionRequest = transactionRequest
-        KeyUtil.aesEncrypt(pin: pin, completion: completion) { (encryptedPin) in
+        PINEncryptor.encrypt(pin: pin, onFailure: completion) { (encryptedPin) in
             transactionRequest.pin = encryptedPin
             request(method: .post, path: Path.transactions, parameters: transactionRequest, completion: completion)
         }
     }
     
     static func transfer(assetId: String, opponentId: String, amount: String, memo: String, pin: String, traceId: String, completion: @escaping (MixinAPI.Result<Snapshot>) -> Void) {
-        KeyUtil.aesEncrypt(pin: pin, completion: completion) { (encryptedPin) in
-            let param: [String : Any] = ["asset_id": assetId, "opponent_id": opponentId, "amount": amount, "memo": memo, "pin": encryptedPin, "trace_id": traceId]
+        PINEncryptor.encrypt(pin: pin, onFailure: completion) { (encryptedPin) in
+            let param = ["asset_id": assetId, "opponent_id": opponentId, "amount": amount, "memo": memo, "pin": encryptedPin, "trace_id": traceId]
             request(method: .post, path: Path.transfers, parameters: param, completion: completion)
         }
     }

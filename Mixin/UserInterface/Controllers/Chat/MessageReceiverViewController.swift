@@ -273,6 +273,7 @@ extension MessageReceiverViewController {
         case contact(String)
         case photo(UIImage)
         case text(String)
+        case post(String)
         case video(URL)
         case appCard(AppCardData)
     }
@@ -289,6 +290,8 @@ extension MessageReceiverViewController {
                 let createdAt = date.addingTimeInterval(interval).toUTCString()
                 return makeMessage(message: original, to: conversationId, createdAt: createdAt)
             })
+        case .post(let text):
+            return [makeMessage(post: text, to: conversationId)].compactMap({ $0 })
         case .contact(let userId):
             return [makeMessage(userId: userId, to: conversationId)].compactMap({ $0 })
         case .photo(let image):
@@ -431,6 +434,14 @@ extension MessageReceiverViewController {
                                             conversationId: conversationId,
                                             userId: myUserId)
         message.content = text
+        return message
+    }
+    
+    static func makeMessage(post: String, to conversationId: String) -> Message {
+        var message = Message.createMessage(category: MessageCategory.SIGNAL_POST.rawValue,
+                                            conversationId: conversationId,
+                                            userId: myUserId)
+        message.content = post
         return message
     }
     

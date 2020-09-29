@@ -23,7 +23,7 @@ class HomeNavigationController: UINavigationController {
     }
     
     private var activeWebViewController: WebViewController? {
-        return visibleViewController?.children
+        return viewControllers.last?.children
             .compactMap({ $0 as? WebViewController })
             .filter({ !$0.isBeingDismissedAsChild })
             .last

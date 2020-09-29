@@ -197,39 +197,27 @@ class MixinWebViewController: WebViewController {
     }
     
     override func moreAction(_ sender: Any) {
-        let currentUrl = webView.url ?? .blank
-        let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        
+        let sections: [[WebMoreMenuViewController.MenuItem]]
         switch context.style {
         case .app:
-            controller.addAction(UIAlertAction(title: R.string.localizable.action_share(), style: .default, handler: { (_) in
-                self.shareAppCardAction(currentUrl: currentUrl)
-            }))
-
-            controller.addAction(UIAlertAction(title: R.string.localizable.setting_about(), style: .default, handler: { (_) in
-                self.aboutAction()
-            }))
-            
-            controller.addAction(UIAlertAction(title: Localized.ACTION_REFRESH, style: .default, handler: { (_) in
-                self.reloadWebView()
-            }))
+            sections = [[.share], [.float], [.about, .refresh]]
         case .webPage:
-            controller.addAction(UIAlertAction(title: R.string.localizable.action_share(), style: .default, handler: { (_) in
-                self.shareUrlAction(currentUrl: currentUrl)
-            }))
-            controller.addAction(UIAlertAction(title: R.string.localizable.group_button_title_copy_link(), style: .default, handler: { (_) in
-                self.copyAction(currentUrl: currentUrl)
-            }))
-            controller.addAction(UIAlertAction(title: Localized.ACTION_REFRESH, style: .default, handler: { (_) in
-                self.reloadWebView()
-            }))
-            controller.addAction(UIAlertAction(title: Localized.ACTION_OPEN_SAFARI, style: .default, handler: { (_) in
-                UIApplication.shared.open(currentUrl, options: [:], completionHandler: nil)
-            }))
+            sections = [[.share], [.float], [.copyLink, .refresh, .openInSafari]]
         }
-        
-        controller.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
-        present(controller, animated: true, completion: nil)
+        let more = WebMoreMenuViewController(sections: sections)
+        more.overrideStatusBarStyle = preferredStatusBarStyle
+        more.titleView.titleLabel.text = titleLabel.text
+        switch context.style {
+        case let .app(app, _):
+            more.titleView.subtitleLabel.text = app.appNumber
+            more.titleView.imageView.isHidden = false
+            more.titleView.imageView.setImage(with: app.iconUrl, userId: app.appId, name: app.name)
+        case .webPage:
+            more.titleView.subtitleLabel.text = (context.initialUrl.host ?? "") + context.initialUrl.path
+            more.titleView.imageView.isHidden = true
+        }
+        more.delegate = self
+        present(more, animated: true, completion: nil)
     }
     
 }
@@ -321,6 +309,38 @@ extension MixinWebViewController: WKScriptMessageHandler {
         if message.name == HandlerName.reloadTheme {
             reloadTheme(webView: webView)
         }
+    }
+    
+}
+
+extension MixinWebViewController: WebMoreMenuControllerDelegate {
+    
+    func webMoreMenuViewController(_ controller: WebMoreMenuViewController, didSelect item: WebMoreMenuViewController.MenuItem) {
+        
+        func handle() {
+            let url = webView.url ?? .blank
+            switch item {
+            case .share:
+                switch context.style {
+                case .app:
+                    shareAppCardAction(currentUrl: url)
+                case .webPage:
+                    shareUrlAction(currentUrl: url)
+                }
+            case .float:
+                break
+            case .about:
+                aboutAction()
+            case .copyLink:
+                copyAction(currentUrl: url)
+            case .refresh:
+                reloadWebView()
+            case .openInSafari:
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            }
+        }
+        
+        controller.dismiss(animated: true, completion: handle)
     }
     
 }

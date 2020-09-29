@@ -47,6 +47,7 @@
 "action_try_again" = "Try Again";
 "action_change_amount" = "Change amount";
 "action_continue_withdrawal" = "Continue";
+"action_float" = "Floating";
 "menu_delete" = "Delete";
 "menu_edit" = "Edit";
 "menu_report" = "Report";

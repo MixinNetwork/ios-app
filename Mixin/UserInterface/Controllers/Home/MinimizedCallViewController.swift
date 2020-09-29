@@ -6,6 +6,8 @@ class MinimizedCallViewController: UIViewController {
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var statusLabel: UILabel!
     
+    @IBOutlet var panRecognizer: UIPanGestureRecognizer!
+    
     weak var call: Call? {
         didSet {
             updateLabel(status: call?.status)
@@ -57,6 +59,7 @@ class MinimizedCallViewController: UIViewController {
             view.center = view.center + recognizer.translation(in: nil)
             recognizer.setTranslation(.zero, in: nil)
         case .ended:
+            updateViewSize()
             stickViewToEdge(center: view.center, animated: true)
         default:
             break
@@ -73,8 +76,7 @@ class MinimizedCallViewController: UIViewController {
                               y: centerRestriction.minY)
     }
     
-    func stickViewToEdge(center: CGPoint, animated: Bool) {
-        updateViewSize()
+    private func stickViewToEdge(center: CGPoint, animated: Bool) {
         let newCenter: CGPoint = {
             let x = center.x > centerRestriction.midX ? centerRestriction.maxX : centerRestriction.minX
             let y = max(centerRestriction.minY, min(centerRestriction.maxY, center.y))
@@ -83,6 +85,13 @@ class MinimizedCallViewController: UIViewController {
         UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {
             self.view.center = newCenter
         }, completion: nil)
+    }
+    
+    private func stickViewToEdgeIfNotPanning(center: CGPoint, animated: Bool) {
+        guard ![.began, .changed, .ended].contains(panRecognizer.state) else {
+            return
+        }
+        stickViewToEdge(center: center, animated: animated)
     }
     
     @objc private func callStatusDidChange(_ notification: Notification) {
@@ -103,7 +112,8 @@ class MinimizedCallViewController: UIViewController {
         }
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (_) in
             self.statusLabel.text = CallService.shared.connectionDuration
-            self.stickViewToEdge(center: self.view.center, animated: true)
+            self.updateViewSize()
+            self.stickViewToEdgeIfNotPanning(center: self.view.center, animated: true)
         })
     }
     
@@ -113,7 +123,8 @@ class MinimizedCallViewController: UIViewController {
     
     private func updateLabel(status: Call.Status?) {
         defer {
-            stickViewToEdge(center: view.center, animated: true)
+            updateViewSize()
+            stickViewToEdgeIfNotPanning(center: view.center, animated: true)
         }
         guard let status = status else {
             endUpdatingDuration()

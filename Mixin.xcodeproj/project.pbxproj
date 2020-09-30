@@ -406,6 +406,7 @@
 		7BBB6F532451C9E7002798F2 /* BackupTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BBB6F522451C9E7002798F2 /* BackupTableHeaderView.xib */; };
 		7BBC6EA81FA98D1A00DC130A /* AddPeopleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBC6EA71FA98D1A00DC130A /* AddPeopleViewController.swift */; };
 		7BBC913424333DCA00FC3F3A /* CircleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBC913324333DCA00FC3F3A /* CircleCell.swift */; };
+		7BBCABAE2524644C00601762 /* FloatingPiPViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBCABAD2524644C00601762 /* FloatingPiPViewController.swift */; };
 		7BBCEC1825232A9800F270DF /* WebMoreMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBCEC1725232A9800F270DF /* WebMoreMenuViewController.swift */; };
 		7BBCEC2025232FC700F270DF /* PopupTitleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BBCEC1F25232FC700F270DF /* PopupTitleView.xib */; };
 		7BBCEC242523332200F270DF /* PopupTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBCEC232523332200F270DF /* PopupTitleView.swift */; };
@@ -1269,6 +1270,7 @@
 		7BBB6F522451C9E7002798F2 /* BackupTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BackupTableHeaderView.xib; sourceTree = "<group>"; };
 		7BBC6EA71FA98D1A00DC130A /* AddPeopleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPeopleViewController.swift; sourceTree = "<group>"; };
 		7BBC913324333DCA00FC3F3A /* CircleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleCell.swift; sourceTree = "<group>"; };
+		7BBCABAD2524644C00601762 /* FloatingPiPViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingPiPViewController.swift; sourceTree = "<group>"; };
 		7BBCEC1725232A9800F270DF /* WebMoreMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebMoreMenuViewController.swift; sourceTree = "<group>"; };
 		7BBCEC1F25232FC700F270DF /* PopupTitleView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PopupTitleView.xib; sourceTree = "<group>"; };
 		7BBCEC232523332200F270DF /* PopupTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupTitleView.swift; sourceTree = "<group>"; };
@@ -2705,6 +2707,7 @@
 				7B63A8622431C9EE00D0F7C7 /* CirclesViewController.swift */,
 				7BB0F90F2434821000BEDA97 /* CircleEditorViewController.swift */,
 				7B4ADAA6243C7C8400F04CA6 /* HomeAppsViewController.swift */,
+				7BBCABAD2524644C00601762 /* FloatingPiPViewController.swift */,
 				7B9650AD248794FD00DE86B9 /* MinimizedCallViewController.swift */,
 			);
 			path = Home;
@@ -3997,6 +4000,7 @@
 				7B17F0712226890C00D617A2 /* ConversationExtensionSwitch.swift in Sources */,
 				7BE6C7EC242DF07B00A0F2AE /* MessageAction.swift in Sources */,
 				7B70D1A524A924DE0034B704 /* GroupCallMembersCollectionView.swift in Sources */,
+				7BBCABAE2524644C00601762 /* FloatingPiPViewController.swift in Sources */,
 				7B9D825922F1BFEA0099381E /* LargeNetworkOperationIconSet.swift in Sources */,
 				DF06D929222FC83200FE7FBC /* LoginConfirmWindow.swift in Sources */,
 				7B08CD2C2178700C00FB8CCF /* CallService.swift in Sources */,

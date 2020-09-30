@@ -33,7 +33,7 @@ class UrlWindow {
                 UIApplication.currentActivity()?.alert(R.string.localizable.desktop_upgrade())
                 return true
             case .unknown:
-                return ignoreUnsupportMixinSchema ? MixinURL.isMixinSchema(url: url) : false
+                return ignoreUnsupportMixinSchema ? url.scheme == MixinURL.scheme : false
             }
         } else if let url = MixinInternalURL(url: url) {
             switch url {

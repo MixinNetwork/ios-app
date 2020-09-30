@@ -99,7 +99,4 @@ enum MixinURL {
         self.init(url: url)
     }
     
-    static func isMixinSchema(url: URL) -> Bool {
-        return url.scheme == MixinURL.scheme || url.host == MixinURL.host
-    }
 }

@@ -20,6 +20,7 @@ class AddressWindow: BottomSheetView {
             return
         }
         addressView.dismissCallback?(false)
+        addressView.dismissCallback = nil
         super.dismissPopupControllerAnimated()
     }
 

@@ -898,3 +898,4 @@
 "error_withdrawal_amount_too_small" = "提现金额太少了";
 "error_blockchian_not_in_sync" = "区块链同步异常，请稍后重试";
 "error_malformed_address" = "地址格式错误";
+"error_malformed_address_eos" = "地址格式错误。Mixin 不支持提现到 EOS 合约地址！";

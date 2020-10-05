@@ -127,6 +127,10 @@ extension AssetItem {
         return chainId == "c6d0c728-2624-429b-8e0d-d9d19b6592fa"
     }
     
+    public var isEOSChain: Bool {
+        return chainId == "6cfe566e-4aad-470b-8c9a-2fd35b49c68d"
+    }
+    
 }
 
 extension AssetItem {

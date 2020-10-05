@@ -23,9 +23,11 @@ class AddressView: UIStackView {
     private var addressRequest: AddressRequest?
     private var address: Address?
     private var fromWeb = false
+    private var asset: AssetItem!
     
     private(set) var processing = false
-    private(set) var dismissCallback: ((Bool) -> Void)?
+    
+    var dismissCallback: ((Bool) -> Void)?
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -51,6 +53,7 @@ class AddressView: UIStackView {
         self.addressRequest = addressRequest
         self.dismissCallback = dismissCallback
         self.superView = superView
+        self.asset = asset
 
         switch addressAction {
         case .add:
@@ -126,6 +129,10 @@ extension AddressView: PinFieldDelegate {
                     AddressDAO.shared.insertOrUpdateAddress(addresses: [address])
                     AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
                     showAutoHiddenHud(style: .notification, text: Localized.TOAST_SAVED)
+                case .failure(.malformedAddress):
+                    let errorMsg = self?.asset?.isEOSChain ?? false ? R.string.localizable.error_malformed_address_eos() : R.string.localizable.error_malformed_address()
+                    self?.superView?.alert(errorMsg)
+                    self?.superView?.dismissPopupControllerAnimated()
                 case let .failure(error):
                     PINVerificationFailureHandler.handle(error: error) { (description) in
                         self?.superView?.alert(description)

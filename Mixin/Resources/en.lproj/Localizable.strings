@@ -897,3 +897,4 @@
 "error_withdrawal_amount_too_small" = "Withdraw amount too small";
 "error_blockchian_not_in_sync" = "Blockchain not in sync, please try again later.";
 "error_malformed_address" = "Invalid address format.";
+"error_malformed_address_eos" = "Invalid address format. Mixin does not support withdrawal to the EOS contract address!";

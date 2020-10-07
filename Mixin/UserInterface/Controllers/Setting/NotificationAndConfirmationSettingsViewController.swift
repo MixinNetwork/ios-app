@@ -5,13 +5,18 @@ class NotificationAndConfirmationSettingsViewController: SettingsTableViewContro
     
     private lazy var messagePreviewRow = SettingsRow(title: R.string.localizable.setting_notification_message_preview(),
                                                      accessory: .switch(isOn: showsMessagePreview))
+    private lazy var duplicateTransferRow = SettingsRow(title: R.string.localizable.setting_duplicate_transfer_title(),
+                                                     accessory: .switch(isOn: duplicateTransferConfirmation))
     
     private lazy var dataSource = SettingsDataSource(sections: [
         SettingsSection(footer: R.string.localizable.setting_notification_message_preview_description(), rows: [
             messagePreviewRow
         ]),
         makeTransferNotificationThresholdSection(),
-        makeTransferConfirmationThresholdSection()
+        makeTransferConfirmationThresholdSection(),
+        SettingsSection(footer: R.string.localizable.setting_duplicate_transfer_summary(), rows: [
+            duplicateTransferRow
+        ])
     ])
     
     private lazy var editorController: AlertEditorController = {
@@ -22,6 +27,10 @@ class NotificationAndConfirmationSettingsViewController: SettingsTableViewContro
     
     private var showsMessagePreview: Bool {
         AppGroupUserDefaults.User.showMessagePreviewInNotification
+    }
+    
+    private var duplicateTransferConfirmation: Bool {
+        AppGroupUserDefaults.User.duplicateTransferConfirmation
     }
     
     private var transferNotificationThreshold: String {
@@ -46,14 +55,21 @@ class NotificationAndConfirmationSettingsViewController: SettingsTableViewContro
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(switchMessagePreview(_:)),
                                                name: SettingsRow.accessoryDidChangeNotification,
-                                               object: messagePreviewRow)
+                                               object: nil)
     }
     
     @objc func switchMessagePreview(_ notification: Notification) {
-        guard case let .switch(isOn, _) = messagePreviewRow.accessory else {
+        guard let row = notification.object as? SettingsRow else {
             return
         }
-        AppGroupUserDefaults.User.showMessagePreviewInNotification = isOn
+        guard case let .switch(isOn, _) = row.accessory else {
+            return
+        }
+        if row == messagePreviewRow {
+            AppGroupUserDefaults.User.showMessagePreviewInNotification = isOn
+        } else if row == duplicateTransferRow {
+            AppGroupUserDefaults.User.duplicateTransferConfirmation = isOn
+        }
     }
     
 }
@@ -65,8 +81,6 @@ extension NotificationAndConfirmationSettingsViewController: UITableViewDelegate
         let actionTitle = R.string.localizable.dialog_button_change()
         let placeholder = R.string.localizable.wallet_send_amount()
         switch indexPath.section {
-        case 0:
-            break
         case 1:
             let title = R.string.localizable.setting_notification_transfer_amount(Currency.current.symbol)
             editorController.present(title: title, actionTitle: actionTitle, currentText: transferNotificationThreshold, placeholder: placeholder) { (controller) in
@@ -75,7 +89,7 @@ extension NotificationAndConfirmationSettingsViewController: UITableViewDelegate
                 }
                 self.saveTransferNotificationThreshold(amount)
             }
-        default:
+        case 2:
             let title = R.string.localizable.setting_transfer_large_title(Currency.current.symbol)
             editorController.present(title: title, actionTitle: actionTitle, currentText: transferConfirmationThreshold, placeholder: placeholder) { (controller) in
                 guard let amount = controller.textFields?.first?.text else {
@@ -83,6 +97,8 @@ extension NotificationAndConfirmationSettingsViewController: UITableViewDelegate
                 }
                 self.saveTransferConfirmationThreshold(amount)
             }
+        default:
+            break
         }
     }
     

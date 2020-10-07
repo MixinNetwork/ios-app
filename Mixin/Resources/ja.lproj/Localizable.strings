@@ -758,6 +758,8 @@
 "setting_transfer_large" = "送金額の確認";
 "setting_transfer_large_title" = "送金額の確認 (%@)";
 "setting_transfer_large_summary" = "%@以上を送金する時に確認画面を表示する.";
+"setting_duplicate_transfer_title" = "Duplicate Transfer Confirmation";
+"setting_duplicate_transfer_summary" = "Display confirmation dialog when you transfer the same amount to the same person within 6 hours.";
 "setting_backup_title" = "チャット履歴のバックアップ";
 "setting_backup_now" = "バックアップする";
 "setting_backing" = "バックアップしています...";

@@ -759,6 +759,8 @@
 "setting_transfer_large" = "大额转账确认";
 "setting_transfer_large_title" = "大额转账确认（%@）";
 "setting_transfer_large_summary" = "当转账金额大于或等于 %@ 时显示确认弹窗";
+"setting_duplicate_transfer_title" = "重复转账确认";
+"setting_duplicate_transfer_summary" = "当你在 6 个小时内给相同的人转相同的金额时显示确认弹窗";
 "setting_backup_title" = "聊天记录备份";
 "setting_backup_now" = "立即备份";
 "setting_backing" = "正在备份...";

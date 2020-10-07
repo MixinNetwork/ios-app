@@ -78,14 +78,14 @@ final class NotificationService: UNNotificationServiceExtension {
             ownerUser = nil
         }
         let content = UNMutableNotificationContent(message: message, ownerUser: ownerUser, conversation: conversation)
-        contentHandler?(content)
+        deliverContent(content: content)
     }
     
     private func deliverRawContent(from: String) {
         guard let rawContent = rawContent else {
             return
         }
-        contentHandler?(rawContent)
+        deliverContent(content: rawContent)
 
         if let conversationId = self.conversationId {
             Logger.write(conversationId: conversationId, log: """
@@ -97,6 +97,28 @@ final class NotificationService: UNNotificationServiceExtension {
                 isRunningInMainApp:\(AppGroupUserDefaults.isRunningInMainApp)]...
             """)
         }
+    }
+    
+    private func deliverContent(content: UNNotificationContent?) {
+        guard let content = content else {
+            return
+        }
+        guard canProcessMessages else {
+            contentHandler?(content)
+            return
+        }
+        let notificationContent = UNMutableNotificationContent()
+        notificationContent.title = content.title
+        notificationContent.subtitle = content.subtitle
+        notificationContent.body = content.body
+        notificationContent.userInfo = content.userInfo
+        notificationContent.sound = content.sound
+        notificationContent.categoryIdentifier = content.categoryIdentifier
+        notificationContent.threadIdentifier = content.threadIdentifier
+        notificationContent.attachments = content.attachments
+        notificationContent.badge = NSNumber(value: ConversationDAO.shared.getUnreadMessageCountWithoutMuted())
+        
+        contentHandler?(notificationContent)
     }
     
 }

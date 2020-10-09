@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -11,6 +11,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MinimizedCallViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
                 <outlet property="contentView" destination="Icf-vi-CBF" id="N9H-H6-0uU"/>
+                <outlet property="panRecognizer" destination="Asi-cg-odr" id="IGm-Gf-vl4"/>
                 <outlet property="statusLabel" destination="odt-x1-Qfc" id="kid-HG-SwO"/>
                 <outlet property="view" destination="iN0-l3-epB" id="RYy-wp-yLu"/>
             </connections>
@@ -33,7 +34,7 @@
                             <color key="textColor" name="minimized_call_duration"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QR0-wq-5SN">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QR0-wq-5SN">
                             <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
                             <connections>
                                 <action selector="maximizeAction:" destination="-1" eventType="touchUpInside" id="byk-c0-sam"/>

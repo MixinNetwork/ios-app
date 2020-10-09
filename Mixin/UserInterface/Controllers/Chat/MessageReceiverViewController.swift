@@ -280,7 +280,8 @@ extension MessageReceiverViewController {
     
     static func makeMessages(content: MessageContent, to conversationId: String) -> [Message] {
         switch content {
-        case .message(let message):
+        case .message(var message):
+            message.conversationId = conversationId
             return [message]
         case .messages(let messages):
             let date = Date()

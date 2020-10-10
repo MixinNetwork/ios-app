@@ -10,8 +10,6 @@ class MixinWebViewController: WebViewController {
         static let reloadTheme = "reloadTheme"
     }
     
-    private let loadingIndicator = AppLoadingIndicatorView(frame: .zero)
-    
     override var config: WKWebViewConfiguration {
         let config = WKWebViewConfiguration()
         config.dataDetectorTypes = .all
@@ -28,31 +26,16 @@ class MixinWebViewController: WebViewController {
         return config
     }
     
-    private var context: Context!
+    private let loadingIndicator = AppLoadingIndicatorView(frame: .zero)
+    
+    private(set) var context: Context!
+    
     private var webViewTitleObserver: NSKeyValueObservation?
     
     class func presentInstance(with context: Context, asChildOf parent: UIViewController) {
         let vc = MixinWebViewController(nib: R.nib.webView)
         vc.context = context
-        vc.view.frame = parent.view.bounds
-        vc.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        parent.addChild(vc)
-        let parentView: UIView
-        if let view = parent.view as? UIVisualEffectView {
-            parentView = view.contentView
-        } else {
-            parentView = parent.view
-        }
-        parentView.addSubview(vc.view)
-        vc.didMove(toParent: parent)
-        
-        vc.view.center.y = parent.view.bounds.height * 3 / 2
-        UIView.animate(withDuration: 0.5) {
-            UIView.setAnimationCurve(.overdamped)
-            vc.view.center.y = parent.view.bounds.height / 2
-        }
-        
-        AppDelegate.current.mainWindow.endEditing(true)
+        vc.presentAsChild(of: parent, completion: nil)
     }
     
     override func viewDidLoad() {
@@ -67,7 +50,31 @@ class MixinWebViewController: WebViewController {
         webView.uiDelegate = self
         loadWebView()
     }
-
+    
+    func presentAsChild(of parent: UIViewController, completion: (() -> Void)?) {
+        view.frame = parent.view.bounds
+        view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        parent.addChild(self)
+        let parentView: UIView
+        if let view = parent.view as? UIVisualEffectView {
+            parentView = view.contentView
+        } else {
+            parentView = parent.view
+        }
+        parentView.addSubview(view)
+        didMove(toParent: parent)
+        
+        view.center.y = parent.view.bounds.height * 3 / 2
+        UIView.animate(withDuration: 0.5) {
+            UIView.setAnimationCurve(.overdamped)
+            self.view.center.y = parent.view.bounds.height / 2
+        } completion: { (_) in
+            completion?()
+        }
+        
+        AppDelegate.current.mainWindow.endEditing(true)
+    }
+    
     private func loadNormalUrl() {
         webViewTitleObserver = webView.observe(\.title, options: [.initial, .new], changeHandler: { [weak self] (webView, _) in
             guard let weakSelf = self, case .webPage = weakSelf.context.style else {
@@ -211,7 +218,7 @@ class MixinWebViewController: WebViewController {
         case let .app(app, _):
             more.titleView.subtitleLabel.text = app.appNumber
             more.titleView.imageView.isHidden = false
-            more.titleView.imageView.setImage(with: app.iconUrl, userId: app.appId, name: app.name)
+            more.titleView.imageView.setImage(app: app)
         case .webPage:
             more.titleView.subtitleLabel.text = (context.initialUrl.host ?? "") + context.initialUrl.path
             more.titleView.imageView.isHidden = true
@@ -328,7 +335,9 @@ extension MixinWebViewController: WebMoreMenuControllerDelegate {
                     shareUrlAction(currentUrl: url)
                 }
             case .float:
-                break
+                dismiss(completion: {
+                    UIApplication.clipSwitcher.insert(self)
+                })
             case .about:
                 aboutAction()
             case .copyLink:

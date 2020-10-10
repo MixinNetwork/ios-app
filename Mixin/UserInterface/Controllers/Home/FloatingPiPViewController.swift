@@ -63,14 +63,16 @@ class FloatingPiPViewController: UIViewController {
     }
     
     func stickViewToEdge(center: CGPoint, animated: Bool) {
-        let newCenter: CGPoint = {
-            let x = center.x > centerRestriction.midX ? centerRestriction.maxX : centerRestriction.minX
-            let y = max(centerRestriction.minY, min(centerRestriction.maxY, center.y))
-            return CGPoint(x: x, y: y)
-        }()
-        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {
-            self.view.center = newCenter
-        }, completion: nil)
+        let x = center.x > centerRestriction.midX ? centerRestriction.maxX : centerRestriction.minX
+        let y = max(centerRestriction.minY, min(centerRestriction.maxY, center.y))
+        let layout = {
+            self.view.center = CGPoint(x: x, y: y)
+        }
+        if animated {
+            UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: layout, completion: nil)
+        } else {
+            layout()
+        }
     }
     
     func stickViewToEdgeIfNotPanning(center: CGPoint, animated: Bool) {

@@ -5,6 +5,8 @@ import MixinServices
 
 extension UIApplication {
     
+    static let clipSwitcher = ClipSwitcher()
+    
     static var homeContainerViewController: HomeContainerViewController? {
         return AppDelegate.current.mainWindow.rootViewController as? HomeContainerViewController
     }

@@ -159,7 +159,7 @@ class WebViewController: UIViewController {
         setNeedsStatusBarAppearanceUpdate()
     }
     
-    func dismiss() {
+    func dismiss(completion: (() -> Void)? = nil) {
         if let parent = parent {
             isBeingDismissedAsChild = true
             parent.setNeedsStatusBarAppearanceUpdate()
@@ -170,9 +170,10 @@ class WebViewController: UIViewController {
                 self.willMove(toParent: nil)
                 self.view.removeFromSuperview()
                 self.removeFromParent()
+                completion?()
             }
         } else {
-            dismiss(animated: true, completion: nil)
+            dismiss(animated: true, completion: completion)
         }
     }
     

@@ -26,6 +26,15 @@ class HomeContainerViewController: UIViewController {
         return controller
     }()
     
+    lazy var minimizedClipSwitcherViewController: MinimizedClipSwitcherViewController = {
+        let controller = MinimizedClipSwitcherViewController()
+        addChild(controller)
+        view.addSubview(controller.view)
+        controller.didMove(toParent: self)
+        controller.placeViewToTopRight()
+        return controller
+    }()
+        
     override var childForStatusBarHidden: UIViewController? {
         return galleryIsOnTopMost ? galleryViewController : homeNavigationController
     }

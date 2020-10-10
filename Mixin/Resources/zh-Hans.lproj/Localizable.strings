@@ -48,6 +48,7 @@
 "action_change_amount" = "修改金额";
 "action_continue_withdrawal" = "继续提现";
 "action_float" = "浮窗";
+"action_remove_all" = "全部删除";
 "menu_delete" = "删除";
 "menu_edit" = "编辑";
 "menu_report" = "上报";
@@ -202,6 +203,9 @@
 "home_title_apps" = "机器人";
 "home_apps_candidate_empty" = "可以添加你喜欢的机器人";
 "home_apps_pin_empty" = "长按并拖拽机器人置顶";
+
+// Clip
+"clip_remove_all" = "确定要删除全部浮窗？";
 
 // Circle
 "circle_title" = "圈子";

@@ -122,13 +122,7 @@ public enum Logger {
         let callFile = AppGroupContainer.logUrl.appendingPathComponent("\(callLog).txt")
         let filename = "\(myIdentityNumber)_\(DateFormatter.filename.string(from: Date()))"
 
-        var logFiles = [conversationFile, systemFile]
-        if FileManager.default.fileSize(errorFile.path) > 0 {
-            logFiles += [errorFile]
-        }
-        if FileManager.default.fileSize(callFile.path) > 0 {
-            logFiles += [callFile]
-        }
+        let logFiles = [conversationFile, errorFile, systemFile, callFile].filter { FileManager.default.fileSize($0.path) > 0 }
         do {
             return try Zip.quickZipFiles(logFiles, fileName: filename)
         } catch {

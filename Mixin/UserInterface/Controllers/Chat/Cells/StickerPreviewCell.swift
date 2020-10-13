@@ -24,6 +24,7 @@ class StickerPreviewCell: UICollectionViewCell {
     }
     
     private func loadSubview() {
+        stickerView.clipsToBounds = true
         stickerView.backgroundColor = .clear
         stickerView.contentMode = .scaleAspectFit
         contentView.addSubview(stickerView)

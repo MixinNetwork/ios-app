@@ -7,11 +7,11 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     
     let videoView = GalleryVideoView()
     
-    private let stickToEdgeVelocityLimit: CGFloat = 800
-    private let pipModeMinInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)
-    private let pipModeDefaultTopMargin: CGFloat = 61
+    private let pipVideoInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+    private let pipCornerRadius: CGFloat = 6
     
-    private var panRecognizer: UIPanGestureRecognizer!
+    private(set) var panningController: ViewPanningController?
+    
     private var tapRecognizer: UITapGestureRecognizer!
     private var itemStatusObserver: NSKeyValueObservation?
     private var timeControlObserver: NSKeyValueObservation?
@@ -22,8 +22,12 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     private var rateBeforeSeeking: Float?
     private var playerDidReachEnd = false
     private var playerDidFailedToPlay = false
-    private var isPipMode = false
     private var videoRatio: CGFloat = 1
+    private var isPipMode = false {
+        didSet {
+            panningController?.isEnabled = isPipMode
+        }
+    }
     
     var hidePlayControlAfterPlaybackBegins = false
     
@@ -127,16 +131,16 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
             slider.addTarget(self, action: #selector(endScrubbingAction(_:)), for: event)
         }
         
-        panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panAction(_:)))
-        panRecognizer.delegate = self
-        videoView.addGestureRecognizer(panRecognizer)
+        let panningController = ViewPanningController(view: view)
+        panningController.isEnabled = isPipMode
+        self.panningController = panningController
         
         tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapAction(_:)))
         videoView.addGestureRecognizer(tapRecognizer)
-        
-        view.insertSubview(videoView, at: 0)
         videoView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         videoView.frame = view.bounds
+        videoView.clipsToBounds = true
+        view.insertSubview(videoView, at: 0)
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -253,7 +257,10 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
                 self.willMove(toParent: nil)
                 self.view.removeFromSuperview()
                 self.removeFromParent()
-                UIApplication.homeContainerViewController?.pipController = nil
+                if let container = UIApplication.homeContainerViewController {
+                    container.pipController = nil
+                    container.overlaysCoordinator.unregister(overlay: self.view)
+                }
             } else {
                 self.galleryViewController?.dismiss(transitionViewInitialOffsetY: 0)
             }
@@ -301,23 +308,6 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     @objc func pauseAction(_ sender: Any) {
         removeTimeObservers()
         player.pause()
-    }
-    
-    @objc func panAction(_ recognizer: UIPanGestureRecognizer) {
-        switch recognizer.state {
-        case .began:
-            recognizer.setTranslation(.zero, in: view)
-        case .changed:
-            let translation = recognizer.translation(in: view)
-            view.center = CGPoint(x: view.center.x + translation.x,
-                                  y: view.center.y + translation.y)
-            recognizer.setTranslation(.zero, in: view)
-        case .ended, .cancelled:
-            let velocity = recognizer.velocity(in: view).x
-            stickToParentEdge(horizontalVelocity: velocity)
-        default:
-            break
-        }
     }
     
     @objc func tapAction(_ recognizer: UITapGestureRecognizer) {
@@ -407,11 +397,17 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
             if self.isPipMode {
                 self.controlView.pipButton.setImage(R.image.ic_maximize(), for: .normal)
                 self.galleryViewController?.dismiss(pipController: self)
-                UIApplication.homeContainerViewController?.pipController = self
+                if let container = UIApplication.homeContainerViewController {
+                    container.pipController = self
+                    container.overlaysCoordinator.register(overlay: self.view)
+                }
             } else {
                 self.controlView.pipButton.setImage(R.image.ic_minimize(), for: .normal)
                 self.galleryViewController?.show(itemViewController: self)
-                UIApplication.homeContainerViewController?.pipController = nil
+                if let container = UIApplication.homeContainerViewController {
+                    container.pipController = nil
+                    container.overlaysCoordinator.unregister(overlay: self.view)
+                }
             }
             if self.player.timeControlStatus == .playing {
                 self.updateControlView(playControlsHidden: true, otherControlsHidden: true, animated: false)
@@ -424,29 +420,6 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
                     self.layoutFullsized()
                 }
             }, completion: completion)
-        }
-    }
-    
-    func stickToParentEdge(horizontalVelocity: CGFloat) {
-        guard let parentView = parent?.view else {
-            return
-        }
-        let x: CGFloat
-        let shouldStickToRightEdge = view.center.x > parentView.bounds.midX && horizontalVelocity > -stickToEdgeVelocityLimit
-            || view.center.x < parentView.bounds.midX && horizontalVelocity > stickToEdgeVelocityLimit
-        if shouldStickToRightEdge {
-            x = parentView.bounds.width - pipModeMinInsets.right - view.frame.size.width / 2
-        } else {
-            x = pipModeMinInsets.left + view.frame.size.width / 2
-        }
-        let y: CGFloat = {
-            let halfHeight = view.frame.size.height / 2
-            let minY = pipModeLayoutInsets.top + pipModeMinInsets.top + halfHeight
-            let maxY = parentView.bounds.height - pipModeLayoutInsets.bottom - pipModeMinInsets.bottom - halfHeight
-            return min(maxY, max(minY, view.center.y))
-        }()
-        UIView.animate(withDuration: 0.3) {
-            self.view.center = CGPoint(x: x, y: y)
         }
     }
     
@@ -469,23 +442,20 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
                 size = CGSize(width: width, height: height)
             }
         }
-        view.frame.size = ceil(size)
+        view.frame.size = CGSize(width: size.width + pipVideoInsets.horizontal,
+                                 height: size.height + pipVideoInsets.vertical)
+        videoView.frame = view.bounds.inset(by: pipVideoInsets)
+        videoView.layer.cornerRadius = pipCornerRadius
+        
+        view.layer.shadowOffset = CGSize(width: 0, height: 2)
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowRadius = 4
+        updateViewShadowOpacity(to: 0.14)
+        
         if usesArbitraryVideoViewCenter {
-            view.center = CGPoint(x: parentView.bounds.width - pipModeMinInsets.right - size.width / 2,
-                                  y: pipModeLayoutInsets.top + pipModeDefaultTopMargin + size.height / 2)
+            panningController?.placeViewToTopRight()
         } else {
-            var center = view.center
-            if view.frame.minX < parentView.bounds.minX + pipModeMinInsets.left {
-                center.x = parentView.bounds.minX + pipModeMinInsets.right + view.frame.width / 2
-            } else if view.frame.maxX > parentView.bounds.maxX - pipModeMinInsets.right {
-                center.x = parentView.bounds.maxX - pipModeMinInsets.right - view.frame.width / 2
-            }
-            if view.frame.minY < parentView.bounds.minY + pipModeMinInsets.top {
-                center.y = parentView.bounds.minY + pipModeMinInsets.top + view.frame.height / 2
-            } else if view.frame.maxY > parentView.bounds.maxY - pipModeMinInsets.bottom {
-                center.y = parentView.bounds.maxY - pipModeMinInsets.bottom - view.frame.height / 2
-            }
-            view.center = center
+            panningController?.placeViewToTopRight()
         }
     }
     
@@ -494,6 +464,22 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
             return
         }
         view.frame = parentView.bounds
+        videoView.frame = view.bounds
+        videoView.layer.cornerRadius = 0
+        updateViewShadowOpacity(to: 0)
+    }
+    
+}
+
+extension GalleryVideoItemViewController {
+    
+    private func updateViewShadowOpacity(to opacity: Float) {
+        view.layer.shadowOpacity = opacity
+        let shadowOpacityAnimation = CABasicAnimation(keyPath: #keyPath(CALayer.shadowOpacity))
+        shadowOpacityAnimation.fromValue = view.layer.shadowOpacity
+        shadowOpacityAnimation.toValue = opacity
+        shadowOpacityAnimation.duration = animationDuration
+        view.layer.add(shadowOpacityAnimation, forKey: shadowOpacityAnimation.keyPath)
     }
     
     private func executeInPortraitOrientation(_ work: @escaping () -> Void) {
@@ -709,14 +695,6 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
             return 1
         }
         return videoRatio
-    }
-    
-}
-
-extension GalleryVideoItemViewController: UIGestureRecognizerDelegate {
-    
-    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        return isPipMode
     }
     
 }

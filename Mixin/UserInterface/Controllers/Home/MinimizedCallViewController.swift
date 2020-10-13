@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class MinimizedCallViewController: FloatingPiPViewController {
+class MinimizedCallViewController: HomeOverlayViewController {
     
     @IBOutlet weak var statusLabel: UILabel!
     
@@ -46,7 +46,7 @@ class MinimizedCallViewController: FloatingPiPViewController {
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (_) in
             self.statusLabel.text = CallService.shared.connectionDuration
             self.updateViewSize()
-            self.stickViewToEdgeIfNotPanning(center: self.view.center, animated: true)
+            self.panningController.stickViewToEdgeIfNotPanning(animated: true)
         })
     }
     
@@ -57,7 +57,7 @@ class MinimizedCallViewController: FloatingPiPViewController {
     private func updateLabel(status: Call.Status?) {
         defer {
             updateViewSize()
-            stickViewToEdgeIfNotPanning(center: view.center, animated: true)
+            panningController.stickViewToEdgeIfNotPanning(animated: true)
         }
         guard let status = status else {
             endUpdatingDuration()

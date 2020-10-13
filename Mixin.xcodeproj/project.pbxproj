@@ -343,6 +343,8 @@
 		7BA1F8AB221ED35200DBFCE2 /* Hud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA1F8AA221ED35200DBFCE2 /* Hud.swift */; };
 		7BA1F8CD221FDABF00DBFCE2 /* RoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA1F8CC221FDABF00DBFCE2 /* RoundedButton.swift */; };
 		7BA21082248E1C30003FBC25 /* CallMessageSaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA21081248E1C30003FBC25 /* CallMessageSaver.swift */; };
+		7BA24D7325342575004906AD /* HomeOverlaysCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA24D7225342575004906AD /* HomeOverlaysCoordinator.swift */; };
+		7BA24D77253438B9004906AD /* ViewPanningController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA24D76253438B9004906AD /* ViewPanningController.swift */; };
 		7BA398C9242B514200DB5154 /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5D9F161F9C5E6A0036D5FD /* UIColorExtension.swift */; };
 		7BA398CD242B539900DB5154 /* UIColor+Assets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA398CC242B539900DB5154 /* UIColor+Assets.swift */; };
 		7BA398CE242B54A100DB5154 /* AvatarImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7B2BC41FB15B6A0002BED5 /* AvatarImageView.swift */; };
@@ -410,7 +412,7 @@
 		7BBB6F532451C9E7002798F2 /* BackupTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BBB6F522451C9E7002798F2 /* BackupTableHeaderView.xib */; };
 		7BBC6EA81FA98D1A00DC130A /* AddPeopleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBC6EA71FA98D1A00DC130A /* AddPeopleViewController.swift */; };
 		7BBC913424333DCA00FC3F3A /* CircleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBC913324333DCA00FC3F3A /* CircleCell.swift */; };
-		7BBCABAE2524644C00601762 /* FloatingPiPViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBCABAD2524644C00601762 /* FloatingPiPViewController.swift */; };
+		7BBCABAE2524644C00601762 /* HomeOverlayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBCABAD2524644C00601762 /* HomeOverlayViewController.swift */; };
 		7BBCEC1825232A9800F270DF /* WebMoreMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBCEC1725232A9800F270DF /* WebMoreMenuViewController.swift */; };
 		7BBCEC2025232FC700F270DF /* PopupTitleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BBCEC1F25232FC700F270DF /* PopupTitleView.xib */; };
 		7BBCEC242523332200F270DF /* PopupTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBCEC232523332200F270DF /* PopupTitleView.swift */; };
@@ -1216,6 +1218,8 @@
 		7BA1F8AA221ED35200DBFCE2 /* Hud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hud.swift; sourceTree = "<group>"; };
 		7BA1F8CC221FDABF00DBFCE2 /* RoundedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedButton.swift; sourceTree = "<group>"; };
 		7BA21081248E1C30003FBC25 /* CallMessageSaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallMessageSaver.swift; sourceTree = "<group>"; };
+		7BA24D7225342575004906AD /* HomeOverlaysCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeOverlaysCoordinator.swift; sourceTree = "<group>"; };
+		7BA24D76253438B9004906AD /* ViewPanningController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewPanningController.swift; sourceTree = "<group>"; };
 		7BA398CC242B539900DB5154 /* UIColor+Assets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Assets.swift"; sourceTree = "<group>"; };
 		7BA4193D209AFAB500DFCD39 /* AppCardMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCardMessageCell.swift; sourceTree = "<group>"; };
 		7BA4193F209AFBCD00DFCD39 /* AppCardMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCardMessageViewModel.swift; sourceTree = "<group>"; };
@@ -1281,7 +1285,7 @@
 		7BBB6F522451C9E7002798F2 /* BackupTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BackupTableHeaderView.xib; sourceTree = "<group>"; };
 		7BBC6EA71FA98D1A00DC130A /* AddPeopleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPeopleViewController.swift; sourceTree = "<group>"; };
 		7BBC913324333DCA00FC3F3A /* CircleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleCell.swift; sourceTree = "<group>"; };
-		7BBCABAD2524644C00601762 /* FloatingPiPViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingPiPViewController.swift; sourceTree = "<group>"; };
+		7BBCABAD2524644C00601762 /* HomeOverlayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeOverlayViewController.swift; sourceTree = "<group>"; };
 		7BBCEC1725232A9800F270DF /* WebMoreMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebMoreMenuViewController.swift; sourceTree = "<group>"; };
 		7BBCEC1F25232FC700F270DF /* PopupTitleView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PopupTitleView.xib; sourceTree = "<group>"; };
 		7BBCEC232523332200F270DF /* PopupTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupTitleView.swift; sourceTree = "<group>"; };
@@ -2033,6 +2037,8 @@
 				94438D56252DAD73005760AF /* Clip.swift */,
 				7B4CBDC12528533600BA66D0 /* ClipSwitcher.swift */,
 				7B7D279F2528682B006BBFAB /* ClipSwitcherThumbnailFlowLayout.swift */,
+				7BA24D7225342575004906AD /* HomeOverlaysCoordinator.swift */,
+				7BA24D76253438B9004906AD /* ViewPanningController.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -2725,7 +2731,7 @@
 				7B63A8622431C9EE00D0F7C7 /* CirclesViewController.swift */,
 				7BB0F90F2434821000BEDA97 /* CircleEditorViewController.swift */,
 				7B4ADAA6243C7C8400F04CA6 /* HomeAppsViewController.swift */,
-				7BBCABAD2524644C00601762 /* FloatingPiPViewController.swift */,
+				7BBCABAD2524644C00601762 /* HomeOverlayViewController.swift */,
 				7B9650AD248794FD00DE86B9 /* MinimizedCallViewController.swift */,
 				7BBCEC372523A2B400F270DF /* MinimizedClipSwitcherViewController.swift */,
 				7B2C8B2C2524D26900347AC3 /* ClipSwitcherViewController.swift */,
@@ -3927,6 +3933,7 @@
 				DFA5B5931FB051BB00549728 /* WalletViewController.swift in Sources */,
 				DF53BB71202362F1002BF028 /* AuthorizationScopeCell.swift in Sources */,
 				7B86B1F323F6AA5C00C80AD9 /* AudioMessageProgressView.swift in Sources */,
+				7BA24D77253438B9004906AD /* ViewPanningController.swift in Sources */,
 				7B311BAA22B9EAFE00C16652 /* IntroTextView.swift in Sources */,
 				DF81413220C51D5E00E89DE8 /* PhotoLibraryExtension.swift in Sources */,
 				7BE6C996242DF47E00A0F2AE /* MessageItem+MessageAction.swift in Sources */,
@@ -4023,7 +4030,7 @@
 				7B17F0712226890C00D617A2 /* ConversationExtensionSwitch.swift in Sources */,
 				7BE6C7EC242DF07B00A0F2AE /* MessageAction.swift in Sources */,
 				7B70D1A524A924DE0034B704 /* GroupCallMembersCollectionView.swift in Sources */,
-				7BBCABAE2524644C00601762 /* FloatingPiPViewController.swift in Sources */,
+				7BBCABAE2524644C00601762 /* HomeOverlayViewController.swift in Sources */,
 				7B9D825922F1BFEA0099381E /* LargeNetworkOperationIconSet.swift in Sources */,
 				DF06D929222FC83200FE7FBC /* LoginConfirmWindow.swift in Sources */,
 				7B08CD2C2178700C00FB8CCF /* CallService.swift in Sources */,
@@ -4352,6 +4359,7 @@
 				7B9F810E222EA3EC0012BFDD /* PopupPresentationAnimator.swift in Sources */,
 				DFDD89EB22C4D5F900128991 /* DepositTipWindow.swift in Sources */,
 				7BF4047D2048FA0E004C54E4 /* VerifyPinViewController.swift in Sources */,
+				7BA24D7325342575004906AD /* HomeOverlaysCoordinator.swift in Sources */,
 				7B81BF2822893F8B00266A77 /* GroupParticipantCell.swift in Sources */,
 				E0B53A6D23B0C4D3008DA9F1 /* MessageItem+Quote.swift in Sources */,
 				DFCF3BEE20CF6ECD0030AD4A /* StickerManagerViewController.swift in Sources */,

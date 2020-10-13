@@ -1,0 +1,95 @@
+import UIKit
+
+class ViewPanningController {
+    
+    var isEnabled: Bool {
+        get {
+            panRecognizer.isEnabled
+        }
+        set {
+            panRecognizer.isEnabled = newValue
+        }
+    }
+    
+    private let view: UIView
+    private let stickToEdgeVelocityLimit: CGFloat = 800
+    
+    private var panRecognizer: UIPanGestureRecognizer!
+    
+    private weak var overlaysCoordinator = UIApplication.homeContainerViewController?.overlaysCoordinator
+    
+    private var centerRestriction: CGRect {
+        let superview = view.superview ?? AppDelegate.current.mainWindow
+        let halfContentWidth = view.frame.size.width / 2
+        let halfContentHeight = view.frame.size.height / 2
+        let contentInsets = UIEdgeInsets(top: halfContentHeight,
+                                         left: halfContentWidth,
+                                         bottom: halfContentHeight,
+                                         right: halfContentWidth)
+        return superview.bounds
+            .inset(by: superview.safeAreaInsets)
+            .inset(by: contentInsets)
+    }
+    
+    init(view: UIView) {
+        self.view = view
+        let recognizer = UIPanGestureRecognizer(target: self, action: #selector(panAction(_:)))
+        view.addGestureRecognizer(recognizer)
+        self.panRecognizer = recognizer
+    }
+    
+    @objc func panAction(_ recognizer: UIPanGestureRecognizer) {
+        switch recognizer.state {
+        case .began:
+            recognizer.setTranslation(.zero, in: nil)
+            view.superview?.bringSubviewToFront(view)
+        case .changed:
+            let center = view.center + recognizer.translation(in: nil)
+            view.center = center
+            recognizer.setTranslation(.zero, in: nil)
+        case .ended, .cancelled:
+            let velocity = recognizer.velocity(in: nil).x
+            stickViewToParentEdge(horizontalVelocity: velocity, animated: true)
+        default:
+            break
+        }
+    }
+    
+    func placeViewToTopRight() {
+        let center = CGPoint(x: centerRestriction.maxX,
+                             y: centerRestriction.minY)
+        overlaysCoordinator?.update(center: center, for: view)
+    }
+    
+    func stickViewToParentEdge(horizontalVelocity: CGFloat?, animated: Bool) {
+        let shouldStickToRightEdge: Bool
+        if let velocity = horizontalVelocity {
+            shouldStickToRightEdge = (view.center.x > centerRestriction.midX && velocity > -stickToEdgeVelocityLimit)
+                || (view.center.x < centerRestriction.midX && velocity > stickToEdgeVelocityLimit)
+        } else {
+            shouldStickToRightEdge = view.center.x > centerRestriction.midX
+        }
+        let x = shouldStickToRightEdge ? centerRestriction.maxX : centerRestriction.minX
+        let center = CGPoint(x: x, y: view.center.y) // y will be clamped by overlays coordinator
+        let layout: () -> Void = {
+            self.overlaysCoordinator?.update(center: center, for: self.view)
+        }
+        if animated {
+            UIView.animate(withDuration: 0.3,
+                           delay: 0,
+                           options: .curveEaseOut,
+                           animations: layout,
+                           completion: nil)
+        } else {
+            layout()
+        }
+    }
+    
+    func stickViewToEdgeIfNotPanning(animated: Bool) {
+        guard ![.began, .changed, .ended].contains(panRecognizer.state) else {
+            return
+        }
+        stickViewToParentEdge(horizontalVelocity: nil, animated: animated)
+    }
+    
+}

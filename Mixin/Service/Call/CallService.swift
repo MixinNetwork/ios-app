@@ -377,7 +377,8 @@ extension CallService {
         AppDelegate.current.mainWindow.makeKeyAndVisible()
         if let mini = UIApplication.homeContainerViewController?.minimizedCallViewControllerIfLoaded {
             mini.view.alpha = 0
-            mini.placeViewToTopRight()
+            mini.updateViewSize()
+            mini.panningController.placeViewToTopRight()
         }
         viewController?.disableConnectionDurationTimer()
         viewController = nil

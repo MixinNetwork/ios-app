@@ -11,7 +11,6 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MinimizedCallViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
                 <outlet property="contentView" destination="Icf-vi-CBF" id="N9H-H6-0uU"/>
-                <outlet property="panRecognizer" destination="Asi-cg-odr" id="IGm-Gf-vl4"/>
                 <outlet property="statusLabel" destination="odt-x1-Qfc" id="kid-HG-SwO"/>
                 <outlet property="view" destination="iN0-l3-epB" id="RYy-wp-yLu"/>
             </connections>
@@ -60,9 +59,6 @@
                             <integer key="value" value="10"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
-                    <connections>
-                        <outletCollection property="gestureRecognizers" destination="Asi-cg-odr" appends="YES" id="Lzt-3f-JIT"/>
-                    </connections>
                 </view>
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -74,11 +70,6 @@
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <point key="canvasLocation" x="139" y="125"/>
         </view>
-        <panGestureRecognizer minimumNumberOfTouches="1" id="Asi-cg-odr">
-            <connections>
-                <action selector="panAction:" destination="-1" id="GVW-OZ-Q5J"/>
-            </connections>
-        </panGestureRecognizer>
     </objects>
     <resources>
         <image name="Call/ic_minimized_call_encrypted" width="18.5" height="21"/>

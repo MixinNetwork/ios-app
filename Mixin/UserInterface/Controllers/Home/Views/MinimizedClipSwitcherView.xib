@@ -18,7 +18,6 @@
                 <outlet property="middleAvatarImageView" destination="uUb-DM-6u5" id="ZPn-2M-KWf"/>
                 <outlet property="middleIconBackgroundView" destination="nBj-iF-AVg" id="QUP-cP-okd"/>
                 <outlet property="middleIconTrailingConstraint" destination="Bne-by-Tao" id="NAQ-NS-4NZ"/>
-                <outlet property="panRecognizer" destination="Uon-iE-UmZ" id="B5A-fh-KU2"/>
                 <outlet property="rightIconBackgroundView" destination="x2d-5k-wO0" id="Xng-pm-lgl"/>
                 <outlet property="rightIconTrailingConstraint" destination="s85-VF-PR1" id="2vn-W9-1oz"/>
                 <outlet property="rightLabel" destination="sng-0i-nJJ" id="prP-2X-yKK"/>
@@ -153,9 +152,6 @@
                             <integer key="value" value="24"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
-                    <connections>
-                        <outletCollection property="gestureRecognizers" destination="Uon-iE-UmZ" appends="YES" id="qkL-aJ-8cT"/>
-                    </connections>
                 </view>
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -167,11 +163,6 @@
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <point key="canvasLocation" x="165.21739130434784" y="124.55357142857142"/>
         </view>
-        <panGestureRecognizer minimumNumberOfTouches="1" id="Uon-iE-UmZ">
-            <connections>
-                <action selector="panAction:" destination="-1" id="IMB-Qa-4dm"/>
-            </connections>
-        </panGestureRecognizer>
     </objects>
     <resources>
         <namedColor name="background_secondary">

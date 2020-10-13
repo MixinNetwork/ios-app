@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class MinimizedClipSwitcherViewController: FloatingPiPViewController {
+class MinimizedClipSwitcherViewController: HomeOverlayViewController {
     
     @IBOutlet weak var leftIconBackgroundView: UIView!
     @IBOutlet weak var leftAvatarImageView: AvatarImageView!
@@ -82,7 +82,7 @@ class MinimizedClipSwitcherViewController: FloatingPiPViewController {
         
         self.view.layoutIfNeeded()
         self.updateViewSize()
-        self.stickViewToEdge(center: self.view.center, animated: false)
+        self.panningController.stickViewToParentEdge(horizontalVelocity: nil, animated: false)
     }
     
 }

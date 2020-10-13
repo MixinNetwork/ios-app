@@ -2,6 +2,8 @@ import UIKit
 
 class HomeContainerViewController: UIViewController {
     
+    let overlaysCoordinator = HomeOverlaysCoordinator()
+    
     var pipController: GalleryVideoItemViewController?
     
     let homeNavigationController: HomeNavigationController = {
@@ -21,7 +23,9 @@ class HomeContainerViewController: UIViewController {
         addChild(controller)
         view.addSubview(controller.view)
         controller.didMove(toParent: self)
-        controller.placeViewToTopRight()
+        controller.updateViewSize()
+        controller.panningController.placeViewToTopRight()
+        overlaysCoordinator.register(overlay: controller.view)
         minimizedCallViewControllerIfLoaded = controller
         return controller
     }()
@@ -31,7 +35,9 @@ class HomeContainerViewController: UIViewController {
         addChild(controller)
         view.addSubview(controller.view)
         controller.didMove(toParent: self)
-        controller.placeViewToTopRight()
+        controller.updateViewSize()
+        controller.panningController.placeViewToTopRight()
+        overlaysCoordinator.register(overlay: controller.view)
         return controller
     }()
         

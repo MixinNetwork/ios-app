@@ -40,9 +40,16 @@ class ClipSwitcherViewController: UIViewController {
     @IBAction func removeAll(_ sender: Any) {
         let controller = UIAlertController(title: R.string.localizable.clip_remove_all(), message: nil, preferredStyle: .actionSheet)
         controller.addAction(UIAlertAction(title: R.string.localizable.action_remove_all(), style: .destructive, handler: { (_) in
-            self.clips = []
+            self.collectionView.performBatchUpdates {
+                let indexPaths = (0..<self.clips.count).map {
+                    IndexPath(item: $0, section: 0)
+                }
+                self.clips = []
+                self.collectionView.deleteItems(at: indexPaths)
+            } completion: { (_) in
+                self.hide()
+            }
             UIApplication.clipSwitcher.removeAll()
-            self.hide()
         }))
         controller.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
         present(controller, animated: true, completion: nil)

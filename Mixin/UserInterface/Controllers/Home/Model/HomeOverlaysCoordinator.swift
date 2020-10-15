@@ -14,9 +14,6 @@ class HomeOverlaysCoordinator {
     
     func update(center: CGPoint, for anchorOverlay: UIView) {
         anchorOverlay.center = center
-        guard overlays.count != 0 else {
-            return
-        }
         let sortedOverlays = overlays.allObjects
             .filter {
                 $0.alpha != 0 && !$0.isHidden
@@ -24,6 +21,9 @@ class HomeOverlaysCoordinator {
             .sorted { (one, another) -> Bool in
                 one.center.y < another.center.y
             }
+        guard sortedOverlays.count != 0 else {
+            return
+        }
         
         func moveUpwardIfIntersected(forAnyOverlayAbove index: Int) {
             guard index != 0 else {

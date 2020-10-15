@@ -44,6 +44,7 @@ extension AppGroupUserDefaults {
             case isCircleSynchronized = "is_circle_synchronized"
             
             case homeApp = "home_app"
+            case clips = "clips"
         }
         
         public static let version = 25
@@ -158,6 +159,9 @@ extension AppGroupUserDefaults {
                 NotificationCenter.default.postOnMain(name: homeAppIdsDidChangeNotification, object: self)
             }
         }
+        
+        @Default(namespace: .user, key: Key.clips, defaultValue: [])
+        public static var clips: [Data]
         
         public static func insertRecentlyUsedAppId(id: String) {
             let maxNumberOfIds = 12

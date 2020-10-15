@@ -140,7 +140,7 @@ extension ClipSwitcherViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
-        if let parent = UIApplication.homeNavigationController {
+        if let parent = UIApplication.homeContainerViewController {
             let clip = clips[indexPath.row]
             hide()
             clip.controller.presentAsChild(of: parent, completion: nil)

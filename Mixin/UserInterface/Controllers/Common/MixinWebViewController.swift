@@ -32,9 +32,14 @@ class MixinWebViewController: WebViewController {
     
     private var webViewTitleObserver: NSKeyValueObservation?
     
-    class func presentInstance(with context: Context, asChildOf parent: UIViewController) {
+    class func instance(with context: Context) -> MixinWebViewController {
         let vc = MixinWebViewController(nib: R.nib.webView)
         vc.context = context
+        return vc
+    }
+    
+    class func presentInstance(with context: Context, asChildOf parent: UIViewController) {
+        let vc = Self.instance(with: context)
         vc.presentAsChild(of: parent, completion: nil)
     }
     

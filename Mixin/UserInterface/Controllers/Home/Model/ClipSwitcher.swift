@@ -1,5 +1,6 @@
 import UIKit
 import WebKit
+import MixinServices
 
 class ClipSwitcher {
     
@@ -8,6 +9,16 @@ class ClipSwitcher {
     private var minimizedController: MinimizedClipSwitcherViewController? {
         let container = UIApplication.homeContainerViewController
         return container?.minimizedClipSwitcherViewController
+    }
+    
+    func loadClipsFromPreviousSession() {
+        clips = AppGroupUserDefaults.User.clips.compactMap { (data) -> Clip? in
+            try? JSONDecoder.default.decode(Clip.self, from: data)
+        }
+        if let controller = minimizedController {
+            controller.clips = clips
+            controller.panningController.placeViewToTopRight()
+        }
     }
     
     func insert(_ controller: MixinWebViewController) {
@@ -31,16 +42,24 @@ class ClipSwitcher {
         controller.webView.takeSnapshot(with: config) { (image, error) in
             clip.thumbnail = image
         }
+        
+        AppGroupUserDefaults.User.clips = clips.compactMap { (clip) -> Data? in
+            try? JSONEncoder.default.encode(clip)
+        }
     }
     
     func removeClip(at index: Int) {
         minimizedController?.clips.remove(at: index)
         clips.remove(at: index)
+        if index < AppGroupUserDefaults.User.clips.count {
+            AppGroupUserDefaults.User.clips.remove(at: index)
+        }
     }
     
     func removeAll() {
         minimizedController?.clips = []
         clips = []
+        AppGroupUserDefaults.User.clips = []
     }
     
     @objc func showFullscreenSwitcher() {

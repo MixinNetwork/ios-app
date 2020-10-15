@@ -22,6 +22,9 @@ class ClipSwitcher {
     }
     
     func insert(_ controller: MixinWebViewController) {
+        guard !clips.contains(where: { $0.controllerIfLoaded == controller }) else {
+            return
+        }
         let clip: Clip
         switch controller.context.style {
         case let .app(app, _):

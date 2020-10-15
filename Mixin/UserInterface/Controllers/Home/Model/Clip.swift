@@ -14,7 +14,7 @@ final class Clip: Codable {
     var thumbnail: UIImage?
     var controller: MixinWebViewController {
         let controller: MixinWebViewController = {
-            if let controller = _controller {
+            if let controller = controllerIfLoaded {
                 return controller
             } else if let app = app {
                 return MixinWebViewController.instance(with: .init(conversationId: "", app: app))
@@ -22,11 +22,11 @@ final class Clip: Codable {
                 return MixinWebViewController.instance(with: .init(conversationId: "", initialUrl: url))
             }
         }()
-        _controller = controller
+        controllerIfLoaded = controller
         return controller
     }
     
-    private var _controller: MixinWebViewController?
+    private(set) var controllerIfLoaded: MixinWebViewController?
     
     init(app: App?, url: URL, controller: MixinWebViewController) {
         self.app = app
@@ -37,7 +37,7 @@ final class Clip: Codable {
         }
         self.url = url
         self.thumbnail = nil
-        self._controller = controller
+        self.controllerIfLoaded = controller
     }
     
     init(from decoder: Decoder) throws {

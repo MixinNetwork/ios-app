@@ -197,6 +197,8 @@
 		7B600D262452F19C001D8146 /* LayoutMarginsInsetedTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B600D252452F19C001D8146 /* LayoutMarginsInsetedTableView.swift */; };
 		7B600D282453186B001D8146 /* DesktopTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B600D272453186B001D8146 /* DesktopTableHeaderView.xib */; };
 		7B60A375206537FE00673CA1 /* GeometryExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B60A374206537FE00673CA1 /* GeometryExtension.swift */; };
+		7B61B9C62538E0CE001F94A3 /* ScreenHeight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B61B9C52538E0CE001F94A3 /* ScreenHeight.swift */; };
+		7B61B9CA2538E1C8001F94A3 /* ScreenHeightCompatibleLayoutConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B61B9C92538E1C8001F94A3 /* ScreenHeightCompatibleLayoutConstraint.swift */; };
 		7B6351D52410F2430034D9F8 /* ImageMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B6351D42410F2430034D9F8 /* ImageMessageViewModel.swift */; };
 		7B6372101FE3E849006BCAB8 /* NetworkOperationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B63720F1FE3E849006BCAB8 /* NetworkOperationButton.swift */; };
 		7B63A8632431C9EE00D0F7C7 /* CirclesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B63A8622431C9EE00D0F7C7 /* CirclesViewController.swift */; };
@@ -1059,6 +1061,8 @@
 		7B600D252452F19C001D8146 /* LayoutMarginsInsetedTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutMarginsInsetedTableView.swift; sourceTree = "<group>"; };
 		7B600D272453186B001D8146 /* DesktopTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DesktopTableHeaderView.xib; sourceTree = "<group>"; };
 		7B60A374206537FE00673CA1 /* GeometryExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeometryExtension.swift; sourceTree = "<group>"; };
+		7B61B9C52538E0CE001F94A3 /* ScreenHeight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenHeight.swift; sourceTree = "<group>"; };
+		7B61B9C92538E1C8001F94A3 /* ScreenHeightCompatibleLayoutConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenHeightCompatibleLayoutConstraint.swift; sourceTree = "<group>"; };
 		7B6351D42410F2430034D9F8 /* ImageMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageMessageViewModel.swift; sourceTree = "<group>"; };
 		7B63720F1FE3E849006BCAB8 /* NetworkOperationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkOperationButton.swift; sourceTree = "<group>"; };
 		7B63A8622431C9EE00D0F7C7 /* CirclesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CirclesViewController.swift; sourceTree = "<group>"; };
@@ -2045,6 +2049,7 @@
 				7B2AFEE020FE022C00C747BB /* MXMFastURLDetector.h */,
 				7B2AFEE120FE022C00C747BB /* MXMFastURLDetector.m */,
 				7B5FEE3F2101AD790008321F /* ScreenSize.swift */,
+				7B61B9C52538E0CE001F94A3 /* ScreenHeight.swift */,
 				7BEE5352222E21D7008D3911 /* KeyboardHeight.swift */,
 				7B746B3F22A628ED0097D18A /* Counter.swift */,
 				7B5A748E230274E200C6107E /* GroupIconMaker.swift */,
@@ -2581,6 +2586,7 @@
 				DF048CD122433D69005F1EF5 /* LineHeightLabel.swift */,
 				DF768562200647CC0055F3FF /* BouncingButton.swift */,
 				7B2E3E4C1FA07F5D00DDDDEB /* HairlineLayoutConstraint.swift */,
+				7B61B9C92538E1C8001F94A3 /* ScreenHeightCompatibleLayoutConstraint.swift */,
 				7B5FEE3D2101AA9A0008321F /* ScreenSizeCompatibleLayoutConstraint.swift */,
 				7BAD3A8D21A6D10400BAEE0B /* BusyButton.swift */,
 				7B92F82A1FA1BCD5000B838B /* StateResponsiveButton.swift */,
@@ -3834,6 +3840,7 @@
 				7BBC6EA81FA98D1A00DC130A /* AddPeopleViewController.swift in Sources */,
 				DFD93F1E2111C0030013401A /* UIDeviceExtension.swift in Sources */,
 				7B35AF78228AA3BD00E8101D /* MessagesWithUserSearchResult.swift in Sources */,
+				7B61B9CA2538E1C8001F94A3 /* ScreenHeightCompatibleLayoutConstraint.swift in Sources */,
 				7BF8AD85244051680038D293 /* HomeAppResizeGestureCoordinator.swift in Sources */,
 				7B2A115F22C1ECB100AD029C /* RoundedBlurButton.swift in Sources */,
 				7BEB423622EAD20A003B4479 /* ModernNetworkOperationButton.swift in Sources */,
@@ -4214,6 +4221,7 @@
 				7BF19C22241E0DB600B192D5 /* UserPickedLocation.swift in Sources */,
 				7B015F4F241F91A60004A563 /* SearchResultAnnotation.swift in Sources */,
 				7B4E30762295659200A03F6E /* SearchBoxTextField.swift in Sources */,
+				7B61B9C62538E0CE001F94A3 /* ScreenHeight.swift in Sources */,
 				7B75E6471FE0E20000CD66F1 /* InsetLabel.swift in Sources */,
 				7BD7534C2182CD7A00BAC172 /* CallMessageViewModel.swift in Sources */,
 				7B2D174F22B11A8600AE3DD8 /* LoginInfoInputViewController.swift in Sources */,

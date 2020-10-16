@@ -2,12 +2,6 @@ import UIKit
 
 class ScreenHeightCompatibleLayoutConstraint: NSLayoutConstraint {
     
-    @IBInspectable var extraShortConstant: CGFloat = .nan {
-        didSet {
-            updateConstant(extraShortConstant, for: .extraShort)
-        }
-    }
-    
     @IBInspectable var shortConstant: CGFloat = .nan {
         didSet {
             updateConstant(shortConstant, for: .short)

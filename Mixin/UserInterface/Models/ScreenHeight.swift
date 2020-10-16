@@ -3,9 +3,6 @@ import UIKit
 enum ScreenHeight {
     
     /*
-     Extra short
-     iPhone 3.5”:                       320 x 480 pt
-     
      Short
      iPhone 4”:                         320 x 568 pt
      
@@ -23,7 +20,6 @@ enum ScreenHeight {
      iPhone 6.7”:                       428 x 926 pt
     */
     
-    case extraShort
     case short
     case medium
     case long
@@ -31,9 +27,7 @@ enum ScreenHeight {
     
     static let current: ScreenHeight = {
         let height = max(UIScreen.main.bounds.height, UIScreen.main.bounds.width)
-        if height <= 480 {
-            return .extraShort
-        } else if height <= (568 + 667) / 2 {
+        if height <= (568 + 667) / 2 {
             return .short
         } else if height <= (693 + 736) / 2 {
             return .medium

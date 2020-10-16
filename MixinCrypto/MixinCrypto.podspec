@@ -20,7 +20,7 @@ Pod::Spec.new do |s|
   s.author           = { 'wuyuehyang' => 'wuyuehyang@mixin.one' }
   s.source           = { :git => 'https://github.com/wuyuehyang/MixinCrypto.git', :tag => s.version.to_s }
 
-  s.ios.deployment_target = '11.0'
+  s.ios.deployment_target = '12.0'
 
   s.static_framework = true
 

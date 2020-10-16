@@ -32,10 +32,9 @@ class NumberPadButton: UIControl, XibDesignable {
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        guard #available(iOS 12.0, *), traitCollection.userInterfaceStyle != previousTraitCollection?.userInterfaceStyle else {
-            return
+        if traitCollection.userInterfaceStyle != previousTraitCollection?.userInterfaceStyle {
+            updateButtonBackground()
         }
-        updateButtonBackground()
     }
     
     @IBAction func touchUpInsideAction(_ sender: Any) {

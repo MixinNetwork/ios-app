@@ -17,10 +17,7 @@ class SearchNavigationViewController: UINavigationController {
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        if #available(iOS 12.0, *) {
-            guard traitCollection.userInterfaceStyle != previousTraitCollection?.userInterfaceStyle else {
-                return
-            }
+        if traitCollection.userInterfaceStyle != previousTraitCollection?.userInterfaceStyle {
             prepareNavigationBar()
         }
     }

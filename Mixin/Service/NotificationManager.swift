@@ -181,12 +181,7 @@ extension NotificationManager {
             return
         }
         UNUserNotificationCenter.current().getNotificationSettings { (settings) in
-            let isAuthorized: Bool
-            if #available(iOS 12.0, *) {
-                isAuthorized = [.authorized, .provisional].contains(settings.authorizationStatus)
-            } else {
-                isAuthorized = .authorized == settings.authorizationStatus
-            }
+            let isAuthorized = [.authorized, .provisional].contains(settings.authorizationStatus)
             if isAuthorized {
                 DispatchQueue.main.async(execute: UIApplication.shared.registerForRemoteNotifications)
             }

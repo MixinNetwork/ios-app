@@ -17,7 +17,7 @@ class LocationMessageCell: ImageMessageCell {
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        if #available(iOS 12.0, *), previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle {
+        if previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle {
             reloadMapImage()
         }
     }

@@ -19,7 +19,7 @@ Mixin Core Services.
   s.author           = { 'wuyueyang' => 'wuyueyang@mixin.one' }
   s.source           = { :git => 'https://github.com/wuyueyang/MixinServices.git', :tag => s.version.to_s }
 
-  s.ios.deployment_target = '11.0'
+  s.ios.deployment_target = '12.0'
 
   s.static_framework = true
 

@@ -18,7 +18,7 @@ class TransactionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if ScreenSize.current >= .inch6_1 {
+        if ScreenHeight.current >= .extraLong {
             assetIconView.chainIconWidth = 28
             assetIconView.chainIconOutlineWidth = 4
             tableView.tableHeaderView?.frame.size.height = 210

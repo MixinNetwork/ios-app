@@ -98,7 +98,11 @@ extension EditSharedAppsViewController: UITableViewDelegate {
                 return 40
             }
         } else {
-            return ScreenSize.current >= .inch5_8 ? 41 : 61
+            if AppDelegate.current.mainWindow.safeAreaInsets.bottom >= 20 {
+                return 41
+            } else {
+                return 61
+            }
         }
     }
     

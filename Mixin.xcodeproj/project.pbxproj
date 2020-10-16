@@ -226,6 +226,7 @@
 		7B75E6471FE0E20000CD66F1 /* InsetLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B75E6461FE0E20000CD66F1 /* InsetLabel.swift */; };
 		7B78B2461FF2170400371632 /* InviteLinkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B78B2451FF2170400371632 /* InviteLinkViewController.swift */; };
 		7B7A243B236A9B86003F1458 /* RoundedInsetLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7A243A236A9B86003F1458 /* RoundedInsetLabel.swift */; };
+		7B7ABBE02539799900070B71 /* ScreenWidth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7ABBDF2539799900070B71 /* ScreenWidth.swift */; };
 		7B7B2BC51FB15B6A0002BED5 /* AvatarImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7B2BC41FB15B6A0002BED5 /* AvatarImageView.swift */; };
 		7B7B5DB2230EBA5E00D0F463 /* PopupSearchableTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7B5DB0230EBA5E00D0F463 /* PopupSearchableTableViewController.swift */; };
 		7B7B5DB3230EBA5E00D0F463 /* PopupSearchableTableView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B7B5DB1230EBA5E00D0F463 /* PopupSearchableTableView.xib */; };
@@ -1090,6 +1091,7 @@
 		7B75E6461FE0E20000CD66F1 /* InsetLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsetLabel.swift; sourceTree = "<group>"; };
 		7B78B2451FF2170400371632 /* InviteLinkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteLinkViewController.swift; sourceTree = "<group>"; };
 		7B7A243A236A9B86003F1458 /* RoundedInsetLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedInsetLabel.swift; sourceTree = "<group>"; };
+		7B7ABBDF2539799900070B71 /* ScreenWidth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenWidth.swift; sourceTree = "<group>"; };
 		7B7B2BC41FB15B6A0002BED5 /* AvatarImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarImageView.swift; sourceTree = "<group>"; };
 		7B7B5DB0230EBA5E00D0F463 /* PopupSearchableTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupSearchableTableViewController.swift; sourceTree = "<group>"; };
 		7B7B5DB1230EBA5E00D0F463 /* PopupSearchableTableView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PopupSearchableTableView.xib; sourceTree = "<group>"; };
@@ -2050,6 +2052,7 @@
 				7B2AFEE120FE022C00C747BB /* MXMFastURLDetector.m */,
 				7B5FEE3F2101AD790008321F /* ScreenSize.swift */,
 				7B61B9C52538E0CE001F94A3 /* ScreenHeight.swift */,
+				7B7ABBDF2539799900070B71 /* ScreenWidth.swift */,
 				7BEE5352222E21D7008D3911 /* KeyboardHeight.swift */,
 				7B746B3F22A628ED0097D18A /* Counter.swift */,
 				7B5A748E230274E200C6107E /* GroupIconMaker.swift */,
@@ -4134,6 +4137,7 @@
 				DF43304522648B32006D971D /* AssetInfoWindow.swift in Sources */,
 				7B492F982252159B00C05A45 /* ActivityIndicatorView.swift in Sources */,
 				7BC022E7214A150400B7A398 /* AuthorizationTableViewCell.swift in Sources */,
+				7B7ABBE02539799900070B71 /* ScreenWidth.swift in Sources */,
 				DFCF3BF020CF6EE10030AD4A /* StickerAddViewController.swift in Sources */,
 				7B9916D421945A6800C11401 /* AssetCell.swift in Sources */,
 				7BAD3339216E1DFA006C0309 /* RTCSessionDescription+JSON.swift in Sources */,

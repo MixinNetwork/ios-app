@@ -25,9 +25,9 @@ class UserHandleViewController: UITableViewController {
     }
     
     private let initialVisibleCellsCount: CGFloat = {
-        if ScreenSize.current <= .inch4 {
+        if ScreenHeight.current <= .short {
             return 1.5
-        } else if ScreenSize.current <= .inch4_7 {
+        } else if ScreenHeight.current <= .medium {
             return 2.5
         } else {
             return 3.5

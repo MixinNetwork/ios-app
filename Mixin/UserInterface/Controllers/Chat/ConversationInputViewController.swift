@@ -72,7 +72,7 @@ class ConversationInputViewController: UIViewController {
     
     private let interactiveDismissResponder = InteractiveDismissResponder(height: 50)
     private let maxInputRow: Int = {
-        if ScreenSize.current <= .inch4 {
+        if ScreenHeight.current <= .short {
             return 4
         } else {
             return 5

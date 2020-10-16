@@ -28,6 +28,11 @@ class VerificationCodeViewController: ContinueButtonViewController {
         } else if ScreenSize.current == .inch4 {
             contentStackView.spacing = 18
         }
+        if let label = resendButton.titleLabel {
+            label.setFont(scaledFor: .monospacedDigitSystemFont(ofSize: 14, weight: .regular),
+                          adjustForContentSize: true)
+            label.adjustsFontForContentSizeCategory = true
+        }
         resendButton.normalTitle = Localized.BUTTON_TITLE_RESEND_CODE
         resendButton.pendingTitleTemplate = Localized.BUTTON_TITLE_RESEND_CODE_PENDING
         resendButton.beginCountDown(resendInterval)

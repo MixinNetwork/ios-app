@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -49,7 +49,7 @@
                                     <rect key="frame" x="18" y="0.0" width="299" height="54"/>
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="feW-Xn-BjG">
-                                            <rect key="frame" x="0.0" y="0.0" width="78" height="54"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="58" height="54"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <inset key="contentEdgeInsets" minX="6" minY="0.0" maxX="0.0" maxY="0.0"/>
                                             <inset key="imageEdgeInsets" minX="-12" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -61,7 +61,7 @@
                                             </connections>
                                         </button>
                                         <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="mobile number" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ldl-y9-A44">
-                                            <rect key="frame" x="98" y="0.0" width="201" height="54"/>
+                                            <rect key="frame" x="78" y="0.0" width="221" height="54"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                             <textInputTraits key="textInputTraits" keyboardType="phonePad" returnKeyType="send" textContentType="tel"/>
                                             <userDefinedRuntimeAttributes>
@@ -74,21 +74,15 @@
                                     </subviews>
                                 </stackView>
                             </subviews>
+                            <viewLayoutGuide key="safeArea" id="jG4-yd-Q6i"/>
                             <color key="backgroundColor" name="background_input"/>
                             <constraints>
                                 <constraint firstItem="jG4-yd-Q6i" firstAttribute="bottom" secondItem="nhz-3G-1O2" secondAttribute="bottom" id="8O0-UJ-iXP"/>
-                                <constraint firstAttribute="height" constant="54" id="J7F-nt-xp3" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
-                                    <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
-                                            <real key="value" value="40"/>
-                                        </userDefinedRuntimeAttribute>
-                                    </userDefinedRuntimeAttributes>
-                                </constraint>
+                                <constraint firstAttribute="height" constant="54" id="J7F-nt-xp3"/>
                                 <constraint firstItem="nhz-3G-1O2" firstAttribute="leading" secondItem="jG4-yd-Q6i" secondAttribute="leading" constant="18" id="lGA-hD-OFs"/>
                                 <constraint firstItem="jG4-yd-Q6i" firstAttribute="trailing" secondItem="nhz-3G-1O2" secondAttribute="trailing" constant="18" id="seL-Ea-doN"/>
                                 <constraint firstItem="nhz-3G-1O2" firstAttribute="top" secondItem="jG4-yd-Q6i" secondAttribute="top" id="wAg-w1-U4u"/>
                             </constraints>
-                            <viewLayoutGuide key="safeArea" id="jG4-yd-Q6i"/>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                     <integer key="value" value="4"/>
@@ -98,22 +92,19 @@
                     </subviews>
                 </stackView>
             </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <color key="backgroundColor" name="background"/>
             <constraints>
-                <constraint firstItem="VjS-KQ-3YO" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="64" id="EZC-Oe-Uyv" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                <constraint firstItem="VjS-KQ-3YO" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="64" id="EZC-Oe-Uyv" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                     <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="number" keyPath="inch4">
-                            <real key="value" value="52"/>
-                        </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
-                            <real key="value" value="52"/>
+                        <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
+                            <real key="value" value="44"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </constraint>
                 <constraint firstItem="VjS-KQ-3YO" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="SnP-ZB-jXZ"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="VjS-KQ-3YO" secondAttribute="trailing" constant="20" id="lnS-vE-PYg"/>
             </constraints>
-            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <point key="canvasLocation" x="138" y="155"/>
         </view>
     </objects>
@@ -123,7 +114,7 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_input">
-            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.96100002527236938" green="0.96899998188018799" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

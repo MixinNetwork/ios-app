@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -30,7 +30,7 @@
                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                 </textView>
-                <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BkP-Za-gmw" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BkP-Za-gmw" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
                     <rect key="frame" x="152.5" y="698" width="109" height="50"/>
                     <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                     <inset key="contentEdgeInsets" minX="30" minY="15" maxX="30" maxY="15"/>
@@ -53,26 +53,21 @@
                     </constraints>
                 </view>
             </subviews>
+            <viewLayoutGuide key="safeArea" id="Eza-P2-erW"/>
             <color key="backgroundColor" name="background"/>
             <constraints>
-                <constraint firstItem="BkP-Za-gmw" firstAttribute="top" secondItem="Os9-OT-ppk" secondAttribute="bottom" constant="80" id="3l5-sv-OMG" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                <constraint firstItem="BkP-Za-gmw" firstAttribute="top" secondItem="Os9-OT-ppk" secondAttribute="bottom" constant="80" id="3l5-sv-OMG" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                     <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                        <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
                             <real key="value" value="40"/>
                         </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="number" keyPath="inch4">
-                            <real key="value" value="40"/>
-                        </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="number" keyPath="inch4_7">
+                        <userDefinedRuntimeAttribute type="number" keyPath="mediumConstant">
                             <real key="value" value="60"/>
                         </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="number" keyPath="inch5_8">
-                            <real key="value" value="120"/>
+                        <userDefinedRuntimeAttribute type="number" keyPath="longConstant">
+                            <real key="value" value="80"/>
                         </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="number" keyPath="inch6_1">
-                            <real key="value" value="120"/>
-                        </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="number" keyPath="inch6_5">
+                        <userDefinedRuntimeAttribute type="number" keyPath="extraLongConstant">
                             <real key="value" value="120"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
@@ -86,7 +81,6 @@
                 <constraint firstItem="0F8-nf-Eax" firstAttribute="leading" secondItem="xbJ-a9-MH8" secondAttribute="leading" id="hk2-mt-u06"/>
                 <constraint firstItem="Os9-OT-ppk" firstAttribute="top" secondItem="xbJ-a9-MH8" secondAttribute="top" id="ie8-MB-cE7"/>
             </constraints>
-            <viewLayoutGuide key="safeArea" id="Eza-P2-erW"/>
             <point key="canvasLocation" x="139" y="154"/>
         </view>
     </objects>
@@ -95,7 +89,7 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_input">
-            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.96100002527236938" green="0.96899998188018799" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

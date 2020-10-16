@@ -10,8 +10,6 @@ class TransactionViewController: UIViewController {
     @IBOutlet weak var symbolLabel: InsetLabel!
     @IBOutlet weak var fiatMoneyValueLabel: UILabel!
     
-    @IBOutlet weak var avatarImageViewWidthConstraint: ScreenSizeCompatibleLayoutConstraint!
-    
     private let cellReuseId = "cell"
     
     private var asset: AssetItem!

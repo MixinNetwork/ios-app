@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -22,15 +22,12 @@
                             <rect key="frame" x="0.0" y="0.0" width="414" height="70"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="70" id="4Rm-uu-ea0" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                                <constraint firstAttribute="height" constant="70" id="4Rm-uu-ea0" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                                     <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                                        <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
                                             <real key="value" value="44"/>
                                         </userDefinedRuntimeAttribute>
-                                        <userDefinedRuntimeAttribute type="number" keyPath="inch4">
-                                            <real key="value" value="44"/>
-                                        </userDefinedRuntimeAttribute>
-                                        <userDefinedRuntimeAttribute type="number" keyPath="inch4_7">
+                                        <userDefinedRuntimeAttribute type="number" keyPath="mediumConstant">
                                             <real key="value" value="44"/>
                                         </userDefinedRuntimeAttribute>
                                     </userDefinedRuntimeAttributes>
@@ -46,7 +43,7 @@
                             <rect key="frame" x="30" y="70" width="354" height="288"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="EOS Deposit" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="604-vb-h8v">
-                                    <rect key="frame" x="124.5" y="0.0" width="105.5" height="21.5"/>
+                                    <rect key="frame" x="124.5" y="0.0" width="105" height="21.5"/>
                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                                     <color key="textColor" name="title"/>
                                     <nil key="highlightedColor"/>
@@ -66,16 +63,13 @@
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstAttribute="width" secondItem="iih-sR-Gjt" secondAttribute="height" multiplier="1:1" id="J3d-bX-aZx"/>
-                                        <constraint firstAttribute="width" constant="70" id="NEl-xt-ws1" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                                        <constraint firstAttribute="width" constant="70" id="NEl-xt-ws1" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                                             <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="number" keyPath="inch4_7">
+                                                <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
+                                                    <real key="value" value="50"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="mediumConstant">
                                                     <real key="value" value="60"/>
-                                                </userDefinedRuntimeAttribute>
-                                                <userDefinedRuntimeAttribute type="number" keyPath="inch4">
-                                                    <real key="value" value="50"/>
-                                                </userDefinedRuntimeAttribute>
-                                                <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
-                                                    <real key="value" value="50"/>
                                                 </userDefinedRuntimeAttribute>
                                             </userDefinedRuntimeAttributes>
                                         </constraint>
@@ -116,7 +110,7 @@ confirmations. </string>
                                     </constraints>
                                 </view>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Notice: Both an Account Memo and an AccountName are required to successfully deposit your EOS to Mixin." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y5p-dy-ReY">
-                                    <rect key="frame" x="0.5" y="214.5" width="353" height="33.5"/>
+                                    <rect key="frame" x="1" y="214.5" width="352.5" height="33.5"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                     <color key="textColor" name="red"/>
                                     <nil key="highlightedColor"/>
@@ -136,7 +130,7 @@ confirmations. </string>
                                 <constraint firstItem="iih-sR-Gjt" firstAttribute="width" secondItem="iih-sR-Gjt" secondAttribute="height" multiplier="1:1" id="RB1-4e-XDo"/>
                             </constraints>
                         </stackView>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="plh-FU-Uiw" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="plh-FU-Uiw" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="149" y="390" width="116" height="42"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="42" id="inB-MU-RBI"/>
@@ -156,15 +150,12 @@ confirmations. </string>
                     </subviews>
                     <color key="backgroundColor" name="background"/>
                     <constraints>
-                        <constraint firstItem="plh-FU-Uiw" firstAttribute="top" secondItem="KEs-gY-Z4X" secondAttribute="bottom" constant="32" id="Nah-XZ-4Xc" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                        <constraint firstItem="plh-FU-Uiw" firstAttribute="top" secondItem="KEs-gY-Z4X" secondAttribute="bottom" constant="32" id="Nah-XZ-4Xc" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                             <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="inch4_7">
+                                <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
                                     <real key="value" value="32"/>
                                 </userDefinedRuntimeAttribute>
-                                <userDefinedRuntimeAttribute type="number" keyPath="inch4">
-                                    <real key="value" value="32"/>
-                                </userDefinedRuntimeAttribute>
-                                <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                                <userDefinedRuntimeAttribute type="number" keyPath="mediumConstant">
                                     <real key="value" value="32"/>
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
@@ -184,6 +175,7 @@ confirmations. </string>
                     </userDefinedRuntimeAttributes>
                 </view>
             </subviews>
+            <viewLayoutGuide key="safeArea" id="Lz3-15-BbT"/>
             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="Lz3-15-BbT" firstAttribute="trailing" secondItem="IBN-Cg-mAs" secondAttribute="trailing" id="cdc-qZ-g98"/>
@@ -191,7 +183,6 @@ confirmations. </string>
                 <constraint firstItem="Lz3-15-BbT" firstAttribute="bottom" secondItem="plh-FU-Uiw" secondAttribute="bottom" constant="45" id="inG-O0-AyZ"/>
                 <constraint firstItem="IBN-Cg-mAs" firstAttribute="leading" secondItem="Lz3-15-BbT" secondAttribute="leading" id="j1r-QJ-r5A"/>
             </constraints>
-            <viewLayoutGuide key="safeArea" id="Lz3-15-BbT"/>
             <connections>
                 <outlet property="assetView" destination="iih-sR-Gjt" id="BgQ-LT-iYP"/>
                 <outlet property="continueButton" destination="plh-FU-Uiw" id="wQU-LL-4ty"/>

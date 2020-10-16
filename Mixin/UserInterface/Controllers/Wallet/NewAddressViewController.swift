@@ -14,7 +14,6 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
     @IBOutlet weak var continueWrapperView: UIView!
     @IBOutlet weak var memoView: CornerView!
 
-    @IBOutlet weak var opponentImageViewWidthConstraint: ScreenSizeCompatibleLayoutConstraint!
     @IBOutlet weak var continueWrapperBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var scrollViewBottomConstraint: NSLayoutConstraint!
     

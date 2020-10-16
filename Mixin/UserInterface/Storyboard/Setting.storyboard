@@ -63,13 +63,13 @@
                                                         <stackView opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="250" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="nlN-sg-Adq">
                                                             <rect key="frame" x="65" y="19.5" width="249" height="41.5"/>
                                                             <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="App" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c2p-Yy-sgH">
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="App" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c2p-Yy-sgH">
                                                                     <rect key="frame" x="0.0" y="0.0" width="249" height="19.5"/>
                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                                                     <color key="textColor" name="text"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="123" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pt1-GX-Ih1">
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="123" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pt1-GX-Ih1">
                                                                     <rect key="frame" x="0.0" y="24.5" width="249" height="17"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                     <color key="textColor" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1" colorSpace="calibratedRGB"/>
@@ -597,12 +597,9 @@
                                     <constraint firstAttribute="trailing" secondItem="1jz-c0-1oi" secondAttribute="trailing" constant="30" id="ii4-8E-eqm"/>
                                     <constraint firstItem="1jz-c0-1oi" firstAttribute="leading" secondItem="Swr-M8-nCZ" secondAttribute="leading" constant="30" id="jyq-Jz-Fvf"/>
                                     <constraint firstItem="Ug6-5I-fh2" firstAttribute="leading" secondItem="Swr-M8-nCZ" secondAttribute="leading" constant="30" id="sct-RZ-5Qe"/>
-                                    <constraint firstItem="mGo-Ey-I7z" firstAttribute="top" secondItem="Swr-M8-nCZ" secondAttribute="top" constant="70" id="zen-uN-OW6" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                                    <constraint firstItem="mGo-Ey-I7z" firstAttribute="top" secondItem="Swr-M8-nCZ" secondAttribute="top" constant="70" id="zen-uN-OW6" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                                         <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
-                                                <real key="value" value="20"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="inch4">
+                                            <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
                                                 <real key="value" value="30"/>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
@@ -633,12 +630,9 @@
                         <viewLayoutGuide key="safeArea" id="jVc-6A-6FU"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="jVc-6A-6FU" firstAttribute="bottom" secondItem="EVy-Pe-t5v" secondAttribute="bottom" constant="50" id="2Ia-oJ-Zgt" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                            <constraint firstItem="jVc-6A-6FU" firstAttribute="bottom" secondItem="EVy-Pe-t5v" secondAttribute="bottom" constant="50" id="2Ia-oJ-Zgt" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
-                                        <real key="value" value="20"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="inch4">
+                                    <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
                                         <real key="value" value="20"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
@@ -648,12 +642,9 @@
                             <constraint firstAttribute="bottom" secondItem="Swr-M8-nCZ" secondAttribute="bottom" constant="-13" id="agm-h2-GfF"/>
                             <constraint firstItem="EVy-Pe-t5v" firstAttribute="centerX" secondItem="jVc-6A-6FU" secondAttribute="centerX" id="fg7-zR-SFr"/>
                             <constraint firstItem="Swr-M8-nCZ" firstAttribute="top" relation="greaterThanOrEqual" secondItem="jVc-6A-6FU" secondAttribute="top" id="uuS-pY-hAF"/>
-                            <constraint firstItem="EVy-Pe-t5v" firstAttribute="top" secondItem="1jz-c0-1oi" secondAttribute="bottom" constant="56" id="yVI-a5-eFg" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                            <constraint firstItem="EVy-Pe-t5v" firstAttribute="top" secondItem="1jz-c0-1oi" secondAttribute="bottom" constant="56" id="yVI-a5-eFg" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
-                                        <real key="value" value="20"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="inch4">
+                                    <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
                                         <real key="value" value="30"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>

@@ -25,7 +25,6 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
     @IBOutlet weak var switchAmountButton: UIButton!
     @IBOutlet weak var memoView: CornerView!
 
-    @IBOutlet weak var opponentImageViewWidthConstraint: ScreenSizeCompatibleLayoutConstraint!
     @IBOutlet weak var continueWrapperBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var symbolLeadingConstraint: NSLayoutConstraint!
     

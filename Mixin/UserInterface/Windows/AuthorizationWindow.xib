@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -66,7 +66,7 @@
                                 <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
                             </userDefinedRuntimeAttributes>
                         </label>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="z0u-DF-ohD" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="z0u-DF-ohD" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="146" y="555.5" width="122" height="42"/>
                             <constraints>
                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="116" id="hNE-t3-nqF"/>
@@ -96,15 +96,12 @@
                         <constraint firstItem="Mfp-Qe-iP4" firstAttribute="centerX" secondItem="rph-I6-ZA7" secondAttribute="centerX" id="19Z-yL-Cgq"/>
                         <constraint firstAttribute="trailing" secondItem="1RF-kj-XBd" secondAttribute="trailing" id="3Au-3l-pBF"/>
                         <constraint firstItem="i3u-pZ-R09" firstAttribute="top" secondItem="Mfp-Qe-iP4" secondAttribute="bottom" constant="26" id="6Jh-pB-xxi"/>
-                        <constraint firstItem="Mfp-Qe-iP4" firstAttribute="top" secondItem="1RF-kj-XBd" secondAttribute="bottom" constant="62" id="9c4-df-yFS" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                        <constraint firstItem="Mfp-Qe-iP4" firstAttribute="top" secondItem="1RF-kj-XBd" secondAttribute="bottom" constant="62" id="9c4-df-yFS" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                             <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                                <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
                                     <real key="value" value="8"/>
                                 </userDefinedRuntimeAttribute>
-                                <userDefinedRuntimeAttribute type="number" keyPath="inch4">
-                                    <real key="value" value="8"/>
-                                </userDefinedRuntimeAttribute>
-                                <userDefinedRuntimeAttribute type="number" keyPath="inch4_7">
+                                <userDefinedRuntimeAttribute type="number" keyPath="mediumConstant">
                                     <real key="value" value="20"/>
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
@@ -113,15 +110,12 @@
                         <constraint firstItem="Hoh-Ub-0jd" firstAttribute="centerX" secondItem="rph-I6-ZA7" secondAttribute="centerX" id="N0X-Rj-UVE"/>
                         <constraint firstItem="i3u-pZ-R09" firstAttribute="centerX" secondItem="rph-I6-ZA7" secondAttribute="centerX" id="ZM0-nW-c9L"/>
                         <constraint firstItem="z0u-DF-ohD" firstAttribute="centerX" secondItem="rph-I6-ZA7" secondAttribute="centerX" id="rZx-4L-OfX"/>
-                        <constraint firstItem="z0u-DF-ohD" firstAttribute="top" secondItem="Hoh-Ub-0jd" secondAttribute="bottom" constant="60" id="u8f-1G-Sne" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                        <constraint firstItem="z0u-DF-ohD" firstAttribute="top" secondItem="Hoh-Ub-0jd" secondAttribute="bottom" constant="60" id="u8f-1G-Sne" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                             <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
-                                    <real key="value" value="8"/>
-                                </userDefinedRuntimeAttribute>
-                                <userDefinedRuntimeAttribute type="number" keyPath="inch4">
+                                <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
                                     <real key="value" value="20"/>
                                 </userDefinedRuntimeAttribute>
-                                <userDefinedRuntimeAttribute type="number" keyPath="inch4_7">
+                                <userDefinedRuntimeAttribute type="number" keyPath="mediumConstant">
                                     <real key="value" value="40"/>
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
@@ -136,26 +130,23 @@
                     </userDefinedRuntimeAttributes>
                 </view>
             </subviews>
+            <viewLayoutGuide key="safeArea" id="hQj-XO-iMW"/>
             <color key="backgroundColor" white="0.0" alpha="0.5" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="rph-I6-ZA7" secondAttribute="trailing" id="0qw-D7-NiJ"/>
-                <constraint firstItem="hQj-XO-iMW" firstAttribute="bottom" secondItem="z0u-DF-ohD" secondAttribute="bottom" constant="126" id="F2B-ML-OVf" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                <constraint firstItem="hQj-XO-iMW" firstAttribute="bottom" secondItem="z0u-DF-ohD" secondAttribute="bottom" constant="126" id="F2B-ML-OVf" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                     <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="number" keyPath="inch4_7">
-                            <real key="value" value="40"/>
-                        </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="number" keyPath="inch4">
+                        <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
                             <real key="value" value="20"/>
                         </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
-                            <real key="value" value="8"/>
+                        <userDefinedRuntimeAttribute type="number" keyPath="mediumConstant">
+                            <real key="value" value="40"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </constraint>
                 <constraint firstAttribute="bottom" secondItem="rph-I6-ZA7" secondAttribute="bottom" constant="-13" id="K1m-zD-4D7"/>
                 <constraint firstItem="rph-I6-ZA7" firstAttribute="leading" secondItem="WPn-rX-5IO" secondAttribute="leading" id="eHP-yW-E18"/>
             </constraints>
-            <viewLayoutGuide key="safeArea" id="hQj-XO-iMW"/>
             <connections>
                 <outlet property="authorizeButton" destination="z0u-DF-ohD" id="cZ8-dH-2r5"/>
                 <outlet property="closeButton" destination="FOI-GB-2Kz" id="eyK-Gh-sKl"/>

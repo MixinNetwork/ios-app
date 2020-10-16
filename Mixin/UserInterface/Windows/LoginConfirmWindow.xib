@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -16,7 +16,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4af-Sc-29x">
-                    <rect key="frame" x="0.0" y="-36" width="375" height="716"/>
+                    <rect key="frame" x="0.0" y="32" width="375" height="648"/>
                     <subviews>
                         <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EXJ-y2-8uH">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
@@ -46,10 +46,10 @@
                             </userDefinedRuntimeAttributes>
                         </view>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Setting/ic_desktop" translatesAutoresizingMaskIntoConstraints="NO" id="c8a-W9-LfK">
-                            <rect key="frame" x="74.5" y="132" width="226" height="144"/>
+                            <rect key="frame" x="121.5" y="132" width="132" height="76"/>
                         </imageView>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oH0-FK-y9T" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="129.5" y="511" width="116" height="42"/>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oH0-FK-y9T" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="129.5" y="443" width="116" height="42"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="42" id="ete-Ss-aOS"/>
                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="116" id="sc4-jz-UwM"/>
@@ -66,7 +66,7 @@
                             </connections>
                         </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hTp-rW-A9R">
-                            <rect key="frame" x="50" y="302" width="275" height="43"/>
+                            <rect key="frame" x="50" y="234" width="275" height="43"/>
                             <string key="text">Confirm login to 
 Mixin Messenger Desktop</string>
                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
@@ -77,8 +77,8 @@ Mixin Messenger Desktop</string>
                                 <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
                             </userDefinedRuntimeAttributes>
                         </label>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fiW-MT-YrZ">
-                            <rect key="frame" x="136.5" y="583" width="102" height="44"/>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fiW-MT-YrZ">
+                            <rect key="frame" x="136.5" y="515" width="102" height="44"/>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                             <inset key="contentEdgeInsets" minX="26" minY="12" maxX="26" maxY="12"/>
                             <state key="normal" title="Cancel">
@@ -105,15 +105,12 @@ Mixin Messenger Desktop</string>
                         <constraint firstItem="c8a-W9-LfK" firstAttribute="top" secondItem="EXJ-y2-8uH" secondAttribute="bottom" constant="62" id="ofY-lD-Xh7"/>
                         <constraint firstItem="hTp-rW-A9R" firstAttribute="top" secondItem="c8a-W9-LfK" secondAttribute="bottom" constant="26" id="qNE-0b-nbf"/>
                         <constraint firstItem="fiW-MT-YrZ" firstAttribute="centerX" secondItem="4af-Sc-29x" secondAttribute="centerX" id="t2P-9g-vAG"/>
-                        <constraint firstItem="oH0-FK-y9T" firstAttribute="top" secondItem="hTp-rW-A9R" secondAttribute="bottom" constant="166" id="tXy-ce-TjU" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                        <constraint firstItem="oH0-FK-y9T" firstAttribute="top" secondItem="hTp-rW-A9R" secondAttribute="bottom" constant="166" id="tXy-ce-TjU" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                             <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                                <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
                                     <real key="value" value="83"/>
                                 </userDefinedRuntimeAttribute>
-                                <userDefinedRuntimeAttribute type="number" keyPath="inch4">
-                                    <real key="value" value="83"/>
-                                </userDefinedRuntimeAttribute>
-                                <userDefinedRuntimeAttribute type="number" keyPath="inch4_7">
+                                <userDefinedRuntimeAttribute type="number" keyPath="mediumConstant">
                                     <real key="value" value="103"/>
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
@@ -127,17 +124,15 @@ Mixin Messenger Desktop</string>
                     </userDefinedRuntimeAttributes>
                 </view>
             </subviews>
+            <viewLayoutGuide key="safeArea" id="1N0-u4-BA5"/>
             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstItem="1N0-u4-BA5" firstAttribute="bottom" secondItem="fiW-MT-YrZ" secondAttribute="bottom" constant="76" id="834-cF-nYR" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                <constraint firstItem="1N0-u4-BA5" firstAttribute="bottom" secondItem="fiW-MT-YrZ" secondAttribute="bottom" constant="76" id="834-cF-nYR" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                     <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="number" keyPath="inch4">
+                        <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
                             <real key="value" value="38"/>
                         </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
-                            <real key="value" value="32"/>
-                        </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="number" keyPath="inch4_7">
+                        <userDefinedRuntimeAttribute type="number" keyPath="mediumConstant">
                             <real key="value" value="50"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
@@ -146,7 +141,6 @@ Mixin Messenger Desktop</string>
                 <constraint firstAttribute="bottom" secondItem="4af-Sc-29x" secondAttribute="bottom" constant="-13" id="Tb2-fv-LUk"/>
                 <constraint firstItem="1N0-u4-BA5" firstAttribute="trailing" secondItem="4af-Sc-29x" secondAttribute="trailing" id="yOM-sR-ldf"/>
             </constraints>
-            <viewLayoutGuide key="safeArea" id="1N0-u4-BA5"/>
             <connections>
                 <outlet property="loginButton" destination="oH0-FK-y9T" id="8yH-Rb-lW5"/>
                 <outlet property="popupView" destination="4af-Sc-29x" id="6m7-lB-pHo"/>
@@ -155,13 +149,13 @@ Mixin Messenger Desktop</string>
         </view>
     </objects>
     <resources>
-        <image name="Setting/ic_desktop" width="113" height="72"/>
+        <image name="Setting/ic_desktop" width="132" height="76"/>
         <image name="ic_dialog_close" width="26" height="26"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="title">
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

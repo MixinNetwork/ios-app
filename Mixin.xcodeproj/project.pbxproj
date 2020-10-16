@@ -192,7 +192,6 @@
 		7B5EF7E420BE9EAC009A7972 /* AudioMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5EF7E320BE9EAC009A7972 /* AudioMessageCell.swift */; };
 		7B5F96692414241C003A087B /* LocationInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5F96682414241C003A087B /* LocationInformationView.swift */; };
 		7B5F966B241424CD003A087B /* LocationInformationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B5F966A241424CD003A087B /* LocationInformationView.xib */; };
-		7B5FEE3E2101AA9A0008321F /* ScreenSizeCompatibleLayoutConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5FEE3D2101AA9A0008321F /* ScreenSizeCompatibleLayoutConstraint.swift */; };
 		7B5FEE402101AD790008321F /* ScreenSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5FEE3F2101AD790008321F /* ScreenSize.swift */; };
 		7B600D262452F19C001D8146 /* LayoutMarginsInsetedTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B600D252452F19C001D8146 /* LayoutMarginsInsetedTableView.swift */; };
 		7B600D282453186B001D8146 /* DesktopTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B600D272453186B001D8146 /* DesktopTableHeaderView.xib */; };
@@ -1057,7 +1056,6 @@
 		7B5EF7E320BE9EAC009A7972 /* AudioMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioMessageCell.swift; sourceTree = "<group>"; };
 		7B5F96682414241C003A087B /* LocationInformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationInformationView.swift; sourceTree = "<group>"; };
 		7B5F966A241424CD003A087B /* LocationInformationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LocationInformationView.xib; sourceTree = "<group>"; };
-		7B5FEE3D2101AA9A0008321F /* ScreenSizeCompatibleLayoutConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenSizeCompatibleLayoutConstraint.swift; sourceTree = "<group>"; };
 		7B5FEE3F2101AD790008321F /* ScreenSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenSize.swift; sourceTree = "<group>"; };
 		7B600D252452F19C001D8146 /* LayoutMarginsInsetedTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutMarginsInsetedTableView.swift; sourceTree = "<group>"; };
 		7B600D272453186B001D8146 /* DesktopTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DesktopTableHeaderView.xib; sourceTree = "<group>"; };
@@ -2590,7 +2588,6 @@
 				DF768562200647CC0055F3FF /* BouncingButton.swift */,
 				7B2E3E4C1FA07F5D00DDDDEB /* HairlineLayoutConstraint.swift */,
 				7B61B9C92538E1C8001F94A3 /* ScreenHeightCompatibleLayoutConstraint.swift */,
-				7B5FEE3D2101AA9A0008321F /* ScreenSizeCompatibleLayoutConstraint.swift */,
 				7BAD3A8D21A6D10400BAEE0B /* BusyButton.swift */,
 				7B92F82A1FA1BCD5000B838B /* StateResponsiveButton.swift */,
 				7B2E3E591FA0816D00DDDDEB /* LoginContinueButton.swift */,
@@ -3804,7 +3801,6 @@
 				7B6351D52410F2430034D9F8 /* ImageMessageViewModel.swift in Sources */,
 				7B4BE55D243E0F3400198EE9 /* CandidateHomeAppsModelController.swift in Sources */,
 				7BF196BA241209A900CC8325 /* ImageMessageCell.swift in Sources */,
-				7B5FEE3E2101AA9A0008321F /* ScreenSizeCompatibleLayoutConstraint.swift in Sources */,
 				DFD15C701FB5ACE7004B45CE /* UICollationExtension.swift in Sources */,
 				7B95860F2369599800F1F6E1 /* ProfileViewController.swift in Sources */,
 				7BD38B6020BEA03200D06E5C /* WaveformView.swift in Sources */,

@@ -71,7 +71,7 @@ class MinimizedClipSwitcherViewController: HomeOverlayViewController {
             
             loadClip(clips[0], to: leftAvatarImageView)
             loadClip(clips[1], to: middleAvatarImageView)
-            rightLabel.text = "+\(clips.count - 1)"
+            rightLabel.text = "+\(clips.count - 2)"
             
             leftIconTrailingConstraint.priority = .defaultLow
             middleIconTrailingConstraint.priority = .defaultLow

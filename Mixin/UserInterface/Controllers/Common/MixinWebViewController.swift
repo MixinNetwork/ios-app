@@ -209,12 +209,18 @@ class MixinWebViewController: WebViewController {
     }
     
     override func moreAction(_ sender: Any) {
+        let floatAction: WebMoreMenuViewController.MenuItem
+        if UIApplication.clipSwitcher.clips.contains(where: { $0.controller == self }) {
+            floatAction = .cancelFloat
+        } else {
+            floatAction = .float
+        }
         let sections: [[WebMoreMenuViewController.MenuItem]]
         switch context.style {
         case .app:
-            sections = [[.share], [.float], [.about, .refresh]]
+            sections = [[.share], [floatAction], [.about, .refresh]]
         case .webPage:
-            sections = [[.share], [.float], [.copyLink, .refresh, .openInSafari]]
+            sections = [[.share], [floatAction], [.copyLink, .refresh, .openInSafari]]
         }
         let more = WebMoreMenuViewController(sections: sections)
         more.overrideStatusBarStyle = preferredStatusBarStyle
@@ -343,6 +349,10 @@ extension MixinWebViewController: WebMoreMenuControllerDelegate {
                 dismiss(completion: {
                     UIApplication.clipSwitcher.insert(self)
                 })
+            case .cancelFloat:
+                if let index = UIApplication.clipSwitcher.clips.firstIndex(where: { $0.controller == self }) {
+                    UIApplication.clipSwitcher.removeClip(at: index)
+                }
             case .about:
                 aboutAction()
             case .copyLink:

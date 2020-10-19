@@ -114,6 +114,7 @@ extension WebMoreMenuViewController {
         
         case share
         case float
+        case cancelFloat
         case about
         case copyLink
         case refresh
@@ -125,6 +126,8 @@ extension WebMoreMenuViewController {
                 return R.image.web.ic_action_share()
             case .float:
                 return R.image.web.ic_action_float()
+            case .cancelFloat:
+                return R.image.web.ic_action_cancel_float()
             case .about:
                 return R.image.web.ic_action_about()
             case .copyLink:
@@ -142,6 +145,8 @@ extension WebMoreMenuViewController {
                 return R.string.localizable.action_share()
             case .float:
                 return R.string.localizable.action_float()
+            case .cancelFloat:
+                return R.string.localizable.action_cancel_float()
             case .about:
                 return R.string.localizable.setting_about()
             case .copyLink:

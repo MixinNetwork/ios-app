@@ -48,6 +48,7 @@
 "action_change_amount" = "Change amount";
 "action_continue_withdrawal" = "進む";
 "action_float" = "Floating";
+"action_cancel_float" = "Cancel Floating";
 "action_remove_all" = "Remove All";
 "menu_delete" = "削除";
 "menu_edit" = "編集";

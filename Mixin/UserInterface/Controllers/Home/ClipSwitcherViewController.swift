@@ -55,10 +55,6 @@ class ClipSwitcherViewController: UIViewController {
         present(controller, animated: true, completion: nil)
     }
     
-    @IBAction func tapAction(_ recognizer: UITapGestureRecognizer) {
-        hide()
-    }
-    
     func show() {
         guard parent == nil else {
             return
@@ -80,7 +76,7 @@ class ClipSwitcherViewController: UIViewController {
         }
     }
     
-    func hide() {
+    @IBAction func hide() {
         UIView.animate(withDuration: 0.3) {
             self.backgroundView.effect = nil
             self.collectionView.alpha = 0

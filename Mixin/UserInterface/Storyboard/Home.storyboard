@@ -1351,7 +1351,7 @@
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ba7-Qi-ZVb">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="68"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="88"/>
                                             <connections>
                                                 <action selector="hide" destination="zxM-vp-2hb" eventType="touchUpInside" id="r0q-NY-c4A"/>
                                             </connections>
@@ -1370,7 +1370,7 @@
                                             </connections>
                                         </button>
                                         <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceHorizontal="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" prefetchingEnabled="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eqT-S7-L6S">
-                                            <rect key="frame" x="0.0" y="68" width="375" height="599"/>
+                                            <rect key="frame" x="0.0" y="88" width="375" height="579"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <gestureRecognizers/>
                                             <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="z1Q-md-nXb">
@@ -1478,7 +1478,7 @@
                                         <constraint firstItem="Ba7-Qi-ZVb" firstAttribute="top" secondItem="7SM-ZV-Qs5" secondAttribute="top" id="AKA-5O-zLB"/>
                                         <constraint firstAttribute="bottom" secondItem="eqT-S7-L6S" secondAttribute="bottom" id="Cxd-ct-snb"/>
                                         <constraint firstItem="eqT-S7-L6S" firstAttribute="leading" secondItem="7SM-ZV-Qs5" secondAttribute="leading" id="Jz2-9z-UCb"/>
-                                        <constraint firstItem="eqT-S7-L6S" firstAttribute="top" secondItem="K7U-zu-DLu" secondAttribute="bottom" id="Mr0-WG-V5W"/>
+                                        <constraint firstItem="eqT-S7-L6S" firstAttribute="top" secondItem="K7U-zu-DLu" secondAttribute="bottom" constant="20" id="Mr0-WG-V5W"/>
                                         <constraint firstItem="Ba7-Qi-ZVb" firstAttribute="leading" secondItem="7SM-ZV-Qs5" secondAttribute="leading" id="OQf-Dq-848"/>
                                         <constraint firstAttribute="trailing" secondItem="eqT-S7-L6S" secondAttribute="trailing" id="RBR-oQ-VWG"/>
                                         <constraint firstAttribute="trailing" secondItem="OMH-HP-hdl" secondAttribute="trailing" id="W6d-EN-dno"/>
@@ -1792,7 +1792,7 @@ chat history from icloud</string>
             <color red="0.18431372549019609" green="0.18823529411764706" blue="0.19607843137254902" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
             <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

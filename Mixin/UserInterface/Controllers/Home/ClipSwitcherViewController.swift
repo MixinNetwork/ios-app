@@ -24,7 +24,7 @@ class ClipSwitcherViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let pageInset = UIEdgeInsets(top: 0, left: 20, bottom: 98, right: 20)
+        let pageInset = UIEdgeInsets(top: 0, left: 20, bottom: 118, right: 20)
         let layout = ClipSwitcherThumbnailFlowLayout(numberOfRows: numberOfRows,
                                                      numberOfColumns: numberOfColumns,
                                                      interitemSpacing: 16,

@@ -54,4 +54,8 @@ final class Clip: Codable {
         try container.encode(url, forKey: .url)
     }
     
+    func removeCachedController() {
+        controllerIfLoaded = nil
+    }
+    
 }

@@ -11,6 +11,17 @@ class ClipSwitcher {
         return container?.minimizedClipSwitcherViewController
     }
     
+    init() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(didReceiveMemoryWarningNotification(_:)),
+                                               name: UIApplication.didReceiveMemoryWarningNotification,
+                                               object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     func loadClipsFromPreviousSession() {
         clips = AppGroupUserDefaults.User.clips.compactMap { (data) -> Clip? in
             try? JSONDecoder.default.decode(Clip.self, from: data)
@@ -69,6 +80,18 @@ class ClipSwitcher {
         let switcher = R.storyboard.home.clip_switcher()!
         switcher.clips = clips
         switcher.show()
+    }
+    
+    @objc func didReceiveMemoryWarningNotification(_ notification: Notification) {
+        if clips.count > 6 {
+            for clip in clips[0..<(clips.count - 6)] {
+                clip.removeCachedController()
+            }
+        } else {
+            for clip in clips {
+                clip.removeCachedController()
+            }
+        }
     }
     
 }

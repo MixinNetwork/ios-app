@@ -39,8 +39,8 @@
                                     <rect key="frame" x="40" y="1" width="36" height="36"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="+1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="6" translatesAutoresizingMaskIntoConstraints="NO" id="sng-0i-nJJ">
-                                            <rect key="frame" x="20" y="0.0" width="13" height="36"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                            <rect key="frame" x="20" y="0.0" width="14" height="36"/>
+                                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
                                             <color key="textColor" name="text_accessory"/>
                                             <nil key="highlightedColor"/>
                                         </label>
@@ -51,7 +51,7 @@
                                         <constraint firstAttribute="bottom" secondItem="sng-0i-nJJ" secondAttribute="bottom" id="T9o-Ou-FLG"/>
                                         <constraint firstAttribute="width" constant="36" id="f8M-Gl-QXd"/>
                                         <constraint firstItem="sng-0i-nJJ" firstAttribute="top" secondItem="x2d-5k-wO0" secondAttribute="top" id="hFO-rE-Njo"/>
-                                        <constraint firstAttribute="trailing" secondItem="sng-0i-nJJ" secondAttribute="trailing" constant="3" id="uRW-5W-tAe"/>
+                                        <constraint firstAttribute="trailing" secondItem="sng-0i-nJJ" secondAttribute="trailing" constant="2" id="uRW-5W-tAe"/>
                                     </constraints>
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">

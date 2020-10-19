@@ -42,7 +42,7 @@ final class Clip: Codable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.app = try container.decode(App.self, forKey: .app)
+        self.app = try container.decodeIfPresent(App.self, forKey: .app)
         self.title = try container.decode(String.self, forKey: .title)
         self.url = try container.decode(URL.self, forKey: .url)
     }

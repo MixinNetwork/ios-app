@@ -171,9 +171,13 @@ class WebViewController: UIViewController {
                 self.view.removeFromSuperview()
                 self.removeFromParent()
                 completion?()
+                self.contentView.transform = .identity
             }
         } else {
-            dismiss(animated: true, completion: completion)
+            dismiss(animated: true) {
+                completion?()
+                self.contentView.transform = .identity
+            }
         }
     }
     

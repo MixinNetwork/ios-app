@@ -45,6 +45,8 @@
 "action_learn_more" = "もっとみる";
 "action_later" = "後で";
 "action_try_again" = "もう一度";
+"action_change_amount" = "Change amount";
+"action_continue_withdrawal" = "進む";
 "menu_delete" = "削除";
 "menu_edit" = "編集";
 "menu_report" = "報告";
@@ -470,7 +472,7 @@
 "wallet_password_address_tips" = "PINで保存";
 "wallet_withdrawal_change_amount" = "数量を変更";
 "wallet_withdrawal_change_amount_count" = "変更後の数量 (%@)";
-"wallet_withdrawal_address_tips" = "最初の出金は少額で行ってください";
+"wallet_withdrawal_address_tips" = "最初の出金は少額で行ってください。アドレスが間違っていると資産は失われます。";
 "wallet_withdrawal_asset" = "%@を出金";
 "wallet_withdrawal_pay_password" = "PINを使って出金";
 "wallet_withdrawal_reserve" = " %@は最低%@の残高が必要です。";

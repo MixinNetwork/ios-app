@@ -45,6 +45,8 @@
 "action_learn_more" = "了解更多";
 "action_later" = "稍后";
 "action_try_again" = "重试";
+"action_change_amount" = "修改金额";
+"action_continue_withdrawal" = "继续提现";
 "menu_delete" = "删除";
 "menu_edit" = "编辑";
 "menu_report" = "上报";
@@ -471,7 +473,7 @@
 "wallet_password_address_tips" = "通过密码修改";
 "wallet_withdrawal_change_amount" = "修改金额";
 "wallet_withdrawal_change_amount_count" = "修改金额 (%@)";
-"wallet_withdrawal_address_tips" = "首次提现到新地址，请小额尝试！";
+"wallet_withdrawal_address_tips" = "首次提现到新地址，请小额尝试！如果您提现到错误的地址资产将无法找回！";
 "wallet_withdrawal_asset" = "%@ 提现";
 "wallet_withdrawal_pay_password" = "通过密码提现";
 "wallet_withdrawal_reserve" = " %@ 要求账号至少保留 %@。";

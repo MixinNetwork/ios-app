@@ -49,7 +49,7 @@ class ClipSwitcherViewController: UIViewController {
             } completion: { (_) in
                 self.hide()
             }
-            UIApplication.clipSwitcher.removeAll()
+            UIApplication.homeContainerViewController?.clipSwitcher.removeAll()
         }))
         controller.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
         present(controller, animated: true, completion: nil)
@@ -166,7 +166,7 @@ extension ClipSwitcherViewController: ClipThumbnailCellDelegate {
                 self.hide()
             }
         }
-        UIApplication.clipSwitcher.removeClip(at: indexPath.row)
+        UIApplication.homeContainerViewController?.clipSwitcher.removeClip(at: indexPath.row)
     }
     
 }

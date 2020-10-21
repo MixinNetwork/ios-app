@@ -2,6 +2,7 @@ import UIKit
 
 class HomeContainerViewController: UIViewController {
     
+    let clipSwitcher = ClipSwitcher()
     let overlaysCoordinator = HomeOverlaysCoordinator()
     
     var pipController: GalleryVideoItemViewController?

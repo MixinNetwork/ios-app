@@ -210,7 +210,7 @@ class MixinWebViewController: WebViewController {
     
     override func moreAction(_ sender: Any) {
         let floatAction: WebMoreMenuViewController.MenuItem
-        if UIApplication.clipSwitcher.clips.contains(where: { $0.controller == self }) {
+        if let switcher = UIApplication.homeContainerViewController?.clipSwitcher, switcher.clips.contains(where: { $0.controller == self }) {
             floatAction = .cancelFloat
         } else {
             floatAction = .float
@@ -347,11 +347,13 @@ extension MixinWebViewController: WebMoreMenuControllerDelegate {
                 }
             case .float:
                 dismiss(completion: {
-                    UIApplication.clipSwitcher.insert(self)
+                    UIApplication.homeContainerViewController?.clipSwitcher.insert(self)
                 })
             case .cancelFloat:
-                if let index = UIApplication.clipSwitcher.clips.firstIndex(where: { $0.controller == self }) {
-                    UIApplication.clipSwitcher.removeClip(at: index)
+                if let switcher = UIApplication.homeContainerViewController?.clipSwitcher {
+                    if let index = switcher.clips.firstIndex(where: { $0.controller == self }) {
+                        switcher.removeClip(at: index)
+                    }
                 }
             case .about:
                 aboutAction()

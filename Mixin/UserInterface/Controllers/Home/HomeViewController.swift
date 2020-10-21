@@ -136,7 +136,7 @@ class HomeViewController: UIViewController {
                 ConcurrentJobQueue.shared.addJob(job: RecoverMediaJob())
             }
         }
-        UIApplication.clipSwitcher.loadClipsFromPreviousSession()
+        UIApplication.homeContainerViewController?.clipSwitcher.loadClipsFromPreviousSession()
     }
     
     override func viewWillAppear(_ animated: Bool) {

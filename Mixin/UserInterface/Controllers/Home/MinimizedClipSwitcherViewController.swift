@@ -24,9 +24,10 @@ class MinimizedClipSwitcherViewController: HomeOverlayViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        button.addTarget(UIApplication.clipSwitcher,
-                         action: #selector(ClipSwitcher.showFullscreenSwitcher),
-                         for: .touchUpInside)
+        if let switcher = UIApplication.homeContainerViewController?.clipSwitcher {
+            let action = #selector(ClipSwitcher.showFullscreenSwitcher)
+            button.addTarget(switcher, action: action, for: .touchUpInside)
+        }
     }
     
     private func loadClip(_ clip: Clip, to view: AvatarImageView) {

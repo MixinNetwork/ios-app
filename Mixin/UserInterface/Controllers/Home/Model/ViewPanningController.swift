@@ -57,8 +57,8 @@ class ViewPanningController {
     
     func placeViewNextToLastOverlayOrTopRight() {
         let y: CGFloat
-        if let bottom = overlaysCoordinator?.bottomOverlay, bottom != self.view {
-            y = bottom.frame.maxY + view.frame.height / 2
+        if let previous = overlaysCoordinator?.bottomRightOverlay, previous != self.view {
+            y = previous.frame.maxY + view.frame.height / 2
         } else {
             // Overlay looks better if the navigation bar is not covered
             y = centerRestriction.minY + 44
@@ -67,14 +67,9 @@ class ViewPanningController {
         overlaysCoordinator?.update(center: center, for: view)
     }
     
-    func stickViewToParentEdge(horizontalVelocity: CGFloat?, animated: Bool) {
-        let shouldStickToRightEdge: Bool
-        if let velocity = horizontalVelocity {
-            shouldStickToRightEdge = (view.center.x > centerRestriction.midX && velocity > -stickToEdgeVelocityLimit)
-                || (view.center.x < centerRestriction.midX && velocity > stickToEdgeVelocityLimit)
-        } else {
-            shouldStickToRightEdge = view.center.x > centerRestriction.midX
-        }
+    func stickViewToParentEdge(horizontalVelocity: CGFloat, animated: Bool) {
+        let shouldStickToRightEdge = (view.center.x > centerRestriction.midX && horizontalVelocity > -stickToEdgeVelocityLimit)
+            || (view.center.x < centerRestriction.midX && horizontalVelocity > stickToEdgeVelocityLimit)
         let x = shouldStickToRightEdge ? centerRestriction.maxX : centerRestriction.minX
         let center = CGPoint(x: x, y: view.center.y) // y will be clamped by overlays coordinator
         let layout: () -> Void = {
@@ -95,7 +90,7 @@ class ViewPanningController {
         guard ![.began, .changed, .ended].contains(panRecognizer.state) else {
             return
         }
-        stickViewToParentEdge(horizontalVelocity: nil, animated: animated)
+        stickViewToParentEdge(horizontalVelocity: 0, animated: animated)
     }
     
 }

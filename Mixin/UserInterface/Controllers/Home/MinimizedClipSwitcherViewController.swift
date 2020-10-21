@@ -83,7 +83,7 @@ class MinimizedClipSwitcherViewController: HomeOverlayViewController {
         
         self.view.layoutIfNeeded()
         self.updateViewSize()
-        self.panningController.stickViewToParentEdge(horizontalVelocity: nil, animated: false)
+        self.panningController.stickViewToParentEdge(horizontalVelocity: 0, animated: false)
     }
     
 }

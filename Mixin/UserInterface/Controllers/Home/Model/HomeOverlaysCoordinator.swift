@@ -4,10 +4,12 @@ class HomeOverlaysCoordinator {
     
     private var overlays = NSHashTable<UIView>(options: .weakMemory)
     
-    var bottomOverlay: UIView? {
-        let overlays = self.visibleOverlays
-        if let (index, _) = overlays.map(\.frame.maxY).enumerated().max(by: { $0.element > $1.element }) {
-            return overlays[index]
+    var bottomRightOverlay: UIView? {
+        let rightOverlays = self.visibleOverlays.filter { (view) -> Bool in
+            view.frame.origin.x > 1
+        }
+        if let (index, _) = rightOverlays.map(\.frame.maxY).enumerated().max(by: { $0.element > $1.element }) {
+            return rightOverlays[index]
         } else {
             return nil
         }

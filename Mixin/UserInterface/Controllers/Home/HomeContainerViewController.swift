@@ -25,7 +25,7 @@ class HomeContainerViewController: UIViewController {
         view.addSubview(controller.view)
         controller.didMove(toParent: self)
         controller.updateViewSize()
-        controller.panningController.placeViewToTopRight()
+        controller.panningController.placeViewNextToLastOverlayOrTopRight()
         overlaysCoordinator.register(overlay: controller.view)
         minimizedCallViewControllerIfLoaded = controller
         return controller
@@ -37,7 +37,7 @@ class HomeContainerViewController: UIViewController {
         view.addSubview(controller.view)
         controller.didMove(toParent: self)
         controller.updateViewSize()
-        controller.panningController.placeViewToTopRight()
+        controller.panningController.placeViewNextToLastOverlayOrTopRight()
         overlaysCoordinator.register(overlay: controller.view)
         return controller
     }()

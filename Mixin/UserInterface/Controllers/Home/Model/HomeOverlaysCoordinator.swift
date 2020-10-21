@@ -4,6 +4,21 @@ class HomeOverlaysCoordinator {
     
     private var overlays = NSHashTable<UIView>(options: .weakMemory)
     
+    var bottomOverlay: UIView? {
+        let overlays = self.visibleOverlays
+        if let (index, _) = overlays.map(\.frame.maxY).enumerated().max(by: { $0.element > $1.element }) {
+            return overlays[index]
+        } else {
+            return nil
+        }
+    }
+    
+    private var visibleOverlays: [UIView] {
+        overlays.allObjects.filter {
+            $0.alpha != 0 && !$0.isHidden
+        }
+    }
+    
     func register(overlay: UIView) {
         overlays.add(overlay)
     }
@@ -14,13 +29,9 @@ class HomeOverlaysCoordinator {
     
     func update(center: CGPoint, for anchorOverlay: UIView) {
         anchorOverlay.center = center
-        let sortedOverlays = overlays.allObjects
-            .filter {
-                $0.alpha != 0 && !$0.isHidden
-            }
-            .sorted { (one, another) -> Bool in
-                one.center.y < another.center.y
-            }
+        let sortedOverlays = visibleOverlays.sorted { (one, another) -> Bool in
+            one.center.y < another.center.y
+        }
         guard sortedOverlays.count != 0 else {
             return
         }

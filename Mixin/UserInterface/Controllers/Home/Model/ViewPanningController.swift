@@ -55,9 +55,15 @@ class ViewPanningController {
         }
     }
     
-    func placeViewToTopRight() {
-        let center = CGPoint(x: centerRestriction.maxX,
-                             y: centerRestriction.minY)
+    func placeViewNextToLastOverlayOrTopRight() {
+        let y: CGFloat
+        if let bottom = overlaysCoordinator?.bottomOverlay, bottom != self.view {
+            y = bottom.frame.maxY + view.frame.height / 2
+        } else {
+            // Overlay looks better if the navigation bar is not covered
+            y = centerRestriction.minY + 44
+        }
+        let center = CGPoint(x: centerRestriction.maxX, y: y)
         overlaysCoordinator?.update(center: center, for: view)
     }
     

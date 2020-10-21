@@ -28,7 +28,7 @@ class ClipSwitcher {
         }
         if let controller = minimizedController {
             controller.clips = clips
-            controller.panningController.placeViewToTopRight()
+            controller.panningController.placeViewNextToLastOverlayOrTopRight()
         }
     }
     

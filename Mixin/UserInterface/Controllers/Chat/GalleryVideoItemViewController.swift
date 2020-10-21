@@ -415,7 +415,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
             self.animate(animations: {
                 self.videoView.isPipMode = self.isPipMode
                 if self.isPipMode {
-                    self.layoutPip(usesArbitraryVideoViewCenter: true)
+                    self.layoutPip()
                 } else {
                     self.layoutFullsized()
                 }
@@ -423,7 +423,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         }
     }
     
-    func layoutPip(usesArbitraryVideoViewCenter: Bool) {
+    func layoutPip() {
         guard let parentView = parent?.view else {
             return
         }
@@ -452,11 +452,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         view.layer.shadowRadius = 4
         updateViewShadowOpacity(to: 0.14)
         
-        if usesArbitraryVideoViewCenter {
-            panningController?.placeViewToTopRight()
-        } else {
-            panningController?.placeViewToTopRight()
-        }
+        panningController?.placeViewNextToLastOverlayOrTopRight()
     }
     
     func layoutFullsized() {
@@ -608,7 +604,7 @@ extension GalleryVideoItemViewController {
         videoView.videoRatio = videoRatio
         videoView.setNeedsLayout()
         if isPipMode {
-            layoutPip(usesArbitraryVideoViewCenter: false)
+            layoutPip()
         } else {
             layoutFullsized()
         }

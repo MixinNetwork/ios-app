@@ -15,7 +15,7 @@ class HomeOverlaysCoordinator {
         }
     }
     
-    private var visibleOverlays: [UIView] {
+    var visibleOverlays: [UIView] {
         overlays.allObjects.filter {
             $0.alpha != 0 && !$0.isHidden
         }

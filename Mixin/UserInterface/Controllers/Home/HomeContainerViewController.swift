@@ -43,7 +43,7 @@ class HomeContainerViewController: UIViewController {
         overlaysCoordinator.register(overlay: controller.view)
         return controller
     }()
-        
+    
     override var childForStatusBarHidden: UIViewController? {
         return galleryIsOnTopMost ? galleryViewController : homeNavigationController
     }
@@ -75,27 +75,17 @@ class HomeContainerViewController: UIViewController {
         homeNavigationController.didMove(toParent: self)
     }
     
-    private func chainingDelegate(of conversationId: String) -> GalleryViewControllerDelegate? {
-        let sharedMedia = homeNavigationController.viewControllers
-            .compactMap({ $0 as? ContainerViewController })
-            .compactMap({ $0.viewController as? SharedMediaViewController })
-            .first(where: { $0.conversationId == conversationId })?
-            .children
-            .compactMap({ $0 as? SharedMediaMediaViewController })
-            .first
-        let conversation = homeNavigationController.viewControllers
-            .compactMap({ $0 as? ConversationViewController })
-            .first(where: { $0.conversationId == conversationId })
-        return sharedMedia ?? conversation
-    }
-    
-    private func removeGalleryFromItsParentIfNeeded() {
-        guard galleryViewController.parent != nil else {
-            return
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        if let controller = pipController {
+            // TODO: It's hard to arrange overlays in landscape mode, close it as workaround currently
+            controller.closeAction()
         }
-        galleryViewController.willMove(toParent: nil)
-        galleryViewController.view.removeFromSuperview()
-        galleryViewController.removeFromParent()
+        let overlays = overlaysCoordinator.visibleOverlays
+        overlays.forEach { $0.alpha = 0 }
+        coordinator.animate(alongsideTransition: nil) { (context) in
+            overlays.forEach { $0.alpha = 1 }
+        }
     }
     
 }
@@ -147,6 +137,33 @@ extension HomeContainerViewController: GalleryViewControllerDelegate {
     
     func galleryViewController(_ viewController: GalleryViewController, didCancelDismissalFor item: GalleryItem) {
         chainingDelegate(of: item.conversationId)?.galleryViewController(viewController, didCancelDismissalFor: item)
+    }
+    
+}
+
+extension HomeContainerViewController {
+    
+    private func chainingDelegate(of conversationId: String) -> GalleryViewControllerDelegate? {
+        let sharedMedia = homeNavigationController.viewControllers
+            .compactMap({ $0 as? ContainerViewController })
+            .compactMap({ $0.viewController as? SharedMediaViewController })
+            .first(where: { $0.conversationId == conversationId })?
+            .children
+            .compactMap({ $0 as? SharedMediaMediaViewController })
+            .first
+        let conversation = homeNavigationController.viewControllers
+            .compactMap({ $0 as? ConversationViewController })
+            .first(where: { $0.conversationId == conversationId })
+        return sharedMedia ?? conversation
+    }
+    
+    private func removeGalleryFromItsParentIfNeeded() {
+        guard galleryViewController.parent != nil else {
+            return
+        }
+        galleryViewController.willMove(toParent: nil)
+        galleryViewController.view.removeFromSuperview()
+        galleryViewController.removeFromParent()
     }
     
 }

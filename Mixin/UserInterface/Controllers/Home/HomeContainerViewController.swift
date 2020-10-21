@@ -62,9 +62,7 @@ class HomeContainerViewController: UIViewController {
     private var navigationInteractiveGestureWasEnabled = true
     
     var galleryIsOnTopMost: Bool {
-        return isShowingGallery
-            && galleryViewController.parent != nil
-            && galleryViewController.parent == homeNavigationController.viewControllers.last
+        isShowingGallery && galleryViewController.parent != nil
     }
     
     override func viewDidLoad() {
@@ -108,11 +106,15 @@ extension HomeContainerViewController: GalleryViewControllerDelegate {
     
     func galleryViewController(_ viewController: GalleryViewController, willShow item: GalleryItem) {
         removeGalleryFromItsParentIfNeeded()
-        let topMostViewController = homeNavigationController.viewControllers.last ?? self
-        topMostViewController.addChild(viewController)
-        topMostViewController.view.addSubview(viewController.view)
+        addChild(viewController)
+        if let pipController = pipController {
+            view.bringSubviewToFront(pipController.view)
+            view.insertSubview(viewController.view, belowSubview: pipController.view)
+        } else {
+            view.addSubview(viewController.view)
+        }
         viewController.view.snp.makeEdgesEqualToSuperview()
-        viewController.didMove(toParent: topMostViewController)
+        viewController.didMove(toParent: self)
         viewController.view.setNeedsLayout()
         viewController.view.layoutIfNeeded()
         isShowingGallery = true

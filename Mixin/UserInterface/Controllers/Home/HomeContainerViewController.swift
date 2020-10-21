@@ -21,6 +21,7 @@ class HomeContainerViewController: UIViewController {
     
     lazy var minimizedCallViewController: MinimizedCallViewController = {
         let controller = MinimizedCallViewController()
+        controller.view.autoresizingMask = [.flexibleTopMargin, .flexibleLeftMargin]
         addChild(controller)
         view.addSubview(controller.view)
         controller.didMove(toParent: self)
@@ -33,6 +34,7 @@ class HomeContainerViewController: UIViewController {
     
     lazy var minimizedClipSwitcherViewController: MinimizedClipSwitcherViewController = {
         let controller = MinimizedClipSwitcherViewController()
+        controller.view.autoresizingMask = [.flexibleTopMargin, .flexibleLeftMargin]
         addChild(controller)
         view.addSubview(controller.view)
         controller.didMove(toParent: self)
@@ -106,6 +108,8 @@ extension HomeContainerViewController: GalleryViewControllerDelegate {
     
     func galleryViewController(_ viewController: GalleryViewController, willShow item: GalleryItem) {
         removeGalleryFromItsParentIfNeeded()
+        viewController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        viewController.view.frame = view.bounds
         addChild(viewController)
         if let pipController = pipController {
             view.bringSubviewToFront(pipController.view)
@@ -113,10 +117,7 @@ extension HomeContainerViewController: GalleryViewControllerDelegate {
         } else {
             view.addSubview(viewController.view)
         }
-        viewController.view.snp.makeEdgesEqualToSuperview()
         viewController.didMove(toParent: self)
-        viewController.view.setNeedsLayout()
-        viewController.view.layoutIfNeeded()
         isShowingGallery = true
         setNeedsStatusBarAppearanceUpdate()
         setNeedsUpdateOfHomeIndicatorAutoHidden()

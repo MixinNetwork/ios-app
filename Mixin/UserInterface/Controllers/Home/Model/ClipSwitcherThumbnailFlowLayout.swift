@@ -38,6 +38,11 @@ class ClipSwitcherThumbnailFlowLayout: UICollectionViewLayout {
         contentSize
     }
     
+    override func invalidateLayout() {
+        super.invalidateLayout()
+        cache = []
+    }
+    
     override func prepare() {
         guard cache.isEmpty, let collectionView = collectionView else {
             return
@@ -46,6 +51,9 @@ class ClipSwitcherThumbnailFlowLayout: UICollectionViewLayout {
         // Supports only 1 section currently
         assert(collectionView.numberOfSections == 1)
         
+        guard collectionView.numberOfItems(inSection: 0) > 0 else {
+            return
+        }
         let columnsWidth = collectionView.bounds.width
             - collectionView.contentInset.horizontal
             - pageInset.horizontal

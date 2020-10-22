@@ -55,6 +55,24 @@ class ClipSwitcherViewController: UIViewController {
         present(controller, animated: true, completion: nil)
     }
     
+    @IBAction func pageControlValueChanged(_ pageControl: UIPageControl) {
+        let x = CGFloat(pageControl.currentPage) * collectionView.frame.width
+        let offset = CGPoint(x: x, y: 0)
+        collectionView.setContentOffset(offset, animated: true)
+    }
+    
+    @IBAction func hide() {
+        UIView.animate(withDuration: 0.3) {
+            self.backgroundView.effect = nil
+            self.collectionView.alpha = 0
+            self.removeAllButton.alpha = 0
+        } completion: { (_) in
+            self.willMove(toParent: nil)
+            self.view.removeFromSuperview()
+            self.removeFromParent()
+        }
+    }
+    
     func show() {
         guard parent == nil else {
             return
@@ -73,18 +91,6 @@ class ClipSwitcherViewController: UIViewController {
             self.backgroundView.effect = .darkBlur
             self.collectionView.alpha = 1
             self.removeAllButton.alpha = 1
-        }
-    }
-    
-    @IBAction func hide() {
-        UIView.animate(withDuration: 0.3) {
-            self.backgroundView.effect = nil
-            self.collectionView.alpha = 0
-            self.removeAllButton.alpha = 0
-        } completion: { (_) in
-            self.willMove(toParent: nil)
-            self.view.removeFromSuperview()
-            self.removeFromParent()
         }
     }
     

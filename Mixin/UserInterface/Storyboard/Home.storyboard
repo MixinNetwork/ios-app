@@ -1470,7 +1470,10 @@
                                             </connections>
                                         </collectionView>
                                         <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" hidesForSinglePage="YES" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="OMH-HP-hdl">
-                                            <rect key="frame" x="0.0" y="609.5" width="375" height="27.5"/>
+                                            <rect key="frame" x="126.5" y="609.5" width="122.5" height="27.5"/>
+                                            <connections>
+                                                <action selector="pageControlValueChanged:" destination="zxM-vp-2hb" eventType="valueChanged" id="Ekz-aY-j5o"/>
+                                            </connections>
                                         </pageControl>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1481,10 +1484,9 @@
                                         <constraint firstItem="eqT-S7-L6S" firstAttribute="top" secondItem="K7U-zu-DLu" secondAttribute="bottom" constant="20" id="Mr0-WG-V5W"/>
                                         <constraint firstItem="Ba7-Qi-ZVb" firstAttribute="leading" secondItem="7SM-ZV-Qs5" secondAttribute="leading" id="OQf-Dq-848"/>
                                         <constraint firstAttribute="trailing" secondItem="eqT-S7-L6S" secondAttribute="trailing" id="RBR-oQ-VWG"/>
-                                        <constraint firstAttribute="trailing" secondItem="OMH-HP-hdl" secondAttribute="trailing" id="W6d-EN-dno"/>
                                         <constraint firstAttribute="trailing" secondItem="Ba7-Qi-ZVb" secondAttribute="trailing" id="ZAs-yZ-ndJ"/>
                                         <constraint firstItem="eqT-S7-L6S" firstAttribute="top" secondItem="Ba7-Qi-ZVb" secondAttribute="bottom" id="ZEn-iE-f6o"/>
-                                        <constraint firstItem="OMH-HP-hdl" firstAttribute="leading" secondItem="7SM-ZV-Qs5" secondAttribute="leading" id="iNk-UE-LwY"/>
+                                        <constraint firstItem="OMH-HP-hdl" firstAttribute="centerX" secondItem="7SM-ZV-Qs5" secondAttribute="centerX" id="dJP-S4-qwk"/>
                                     </constraints>
                                 </view>
                                 <blurEffect style="regular"/>
@@ -1795,7 +1797,7 @@ chat history from icloud</string>
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_desc">
             <color red="0.73725490196078436" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

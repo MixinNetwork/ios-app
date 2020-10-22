@@ -6,6 +6,7 @@ protocol ClipThumbnailCellDelegate {
 
 class ClipThumbnailCell: UICollectionViewCell {
     
+    @IBOutlet weak var contentWrapperView: UIView!
     @IBOutlet weak var appAvatarImageView: AvatarImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var thumbnailWrapperView: UIView!

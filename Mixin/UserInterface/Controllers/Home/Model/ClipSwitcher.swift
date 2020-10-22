@@ -85,6 +85,14 @@ class ClipSwitcher {
         AppGroupUserDefaults.User.clips = []
     }
     
+    func replaceClips(with clips: [Clip]) {
+        minimizedController?.clips = clips
+        self.clips = clips
+        AppGroupUserDefaults.User.clips = clips.compactMap { (clip) -> Data? in
+            try? JSONEncoder.default.encode(clip)
+        }
+    }
+    
     func hideFullscreenSwitcher() {
         fullscreenSwitcher.hide()
     }

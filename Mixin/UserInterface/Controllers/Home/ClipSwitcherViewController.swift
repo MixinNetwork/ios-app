@@ -35,6 +35,9 @@ class ClipSwitcherViewController: UIViewController {
         collectionView.collectionViewLayout = layout
         collectionView.dataSource = self
         collectionView.delegate = self
+        collectionView.dragDelegate = self
+        collectionView.dropDelegate = self
+        collectionView.dragInteractionEnabled = true
         reloadData()
         tapRecognizer.delegate = self
     }
@@ -114,6 +117,19 @@ class ClipSwitcherViewController: UIViewController {
         pageControl.numberOfPages = Int(numberOfPages)
     }
     
+    private func dragOrDropPreviewParameters(forItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
+        guard let cell = collectionView.cellForItem(at: indexPath) as? ClipThumbnailCell else {
+            return nil
+        }
+        let param = UIDragPreviewParameters()
+        let radii = CGSize(width: cell.contentWrapperView.layer.cornerRadius,
+                           height: cell.contentWrapperView.layer.cornerRadius)
+        param.visiblePath = UIBezierPath(roundedRect: cell.bounds,
+                                         byRoundingCorners: .allCorners,
+                                         cornerRadii: radii)
+        return param
+    }
+    
 }
 
 extension ClipSwitcherViewController: UICollectionViewDataSource {
@@ -177,6 +193,60 @@ extension ClipSwitcherViewController: UICollectionViewDelegate {
         } else {
             present()
         }
+    }
+    
+}
+
+extension ClipSwitcherViewController: UICollectionViewDragDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+        let provider = NSItemProvider(object: "\(indexPath)" as NSString)
+        let item = UIDragItem(itemProvider: provider)
+        item.localObject = clips[indexPath.row]
+        return [item]
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, dragPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
+        dragOrDropPreviewParameters(forItemAt: indexPath)
+    }
+    
+}
+
+extension ClipSwitcherViewController: UICollectionViewDropDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
+        if collectionView.hasActiveDrag {
+            return UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+        } else {
+            return UICollectionViewDropProposal(operation: .forbidden)
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
+        guard coordinator.proposal.operation == .move else {
+            return
+        }
+        guard let item = coordinator.items.first, let sourceIndexPath = item.sourceIndexPath else {
+            return
+        }
+        let destinationIndexPath: IndexPath
+        if let indexPath = coordinator.destinationIndexPath {
+            destinationIndexPath = indexPath
+        } else {
+            destinationIndexPath = IndexPath(item: 0, section: 0)
+        }
+        collectionView.performBatchUpdates {
+            let clip = self.clips.remove(at: sourceIndexPath.item)
+            self.clips.insert(clip, at: destinationIndexPath.item)
+            collectionView.moveItem(at: sourceIndexPath, to: destinationIndexPath)
+        } completion: { (_) in
+            UIApplication.homeContainerViewController?.clipSwitcher.replaceClips(with: self.clips)
+        }
+        coordinator.drop(item.dragItem, toItemAt: destinationIndexPath)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, dropPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
+        dragOrDropPreviewParameters(forItemAt: indexPath)
     }
     
 }

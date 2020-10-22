@@ -460,9 +460,9 @@
 "wallet_address_destination" = "地址";
 "wallet_address_tag" = "Tag（标签）";
 "wallet_address_memo" = "Memo（标签）";
-"wallet_deposit_attention" = "首次充值请小额尝试！";
-"wallet_deposit_attention_minimum" = "首次充值请小额尝试！首次充值至少 %@ %@！";
-"wallet_deposit_account_attention" = "注意：首次充值请小额尝试！地址和 Memo（标签）同时使用才能充值 %@ 到 Mixin Messenger。";
+"wallet_deposit_attention" = "首次充值建议小额尝试！";
+"wallet_deposit_attention_minimum" = "首次充值建议小额尝试！首次充值至少 %@ %@！";
+"wallet_deposit_account_attention" = "注意：首次充值建议小额尝试！地址和 Memo（标签）同时使用才能充值 %@ 到 Mixin Messenger。";
 "wallet_menu_show_hidden_assets" = "隐藏资产";
 "wallet_menu_show_asset" = "显示资产";
 "wallet_menu_hide_asset" = "隐藏资产";
@@ -473,7 +473,7 @@
 "wallet_password_address_tips" = "通过密码修改";
 "wallet_withdrawal_change_amount" = "修改金额";
 "wallet_withdrawal_change_amount_count" = "修改金额 (%@)";
-"wallet_withdrawal_address_tips" = "首次提现到新地址，请小额尝试！如果您提现到错误的地址资产将无法找回！";
+"wallet_withdrawal_address_tips" = "首次提现到新地址，建议小额尝试！如果您提现到错误的地址资产将无法找回！";
 "wallet_withdrawal_asset" = "%@ 提现";
 "wallet_withdrawal_pay_password" = "通过密码提现";
 "wallet_withdrawal_reserve" = " %@ 要求账号至少保留 %@。";

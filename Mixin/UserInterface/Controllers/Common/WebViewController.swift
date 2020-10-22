@@ -6,6 +6,8 @@ import MixinServices
 
 class WebViewController: UIViewController {
     
+    static let didDismissNotification = Notification.Name("one.mixin.messenger.MixinWebViewController.didDismiss")
+    
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var statusBarBackgroundView: UIView!
     @IBOutlet weak var titleWrapperView: UIView!
@@ -175,6 +177,7 @@ class WebViewController: UIViewController {
             self.removeFromParent()
             completion?()
             self.contentView.transform = .identity
+            NotificationCenter.default.post(name: Self.didDismissNotification, object: self)
         }
         if animated {
             UIView.animate(withDuration: 0.5, animations: animation) { (_) in

@@ -5,6 +5,8 @@ import MixinServices
 
 class MixinWebViewController: WebViewController {
     
+    static let didFinishNavigationNotification = Notification.Name("one.mixin.messenger.MixinWebViewController.didFinishNavigation")
+    
     private enum HandlerName {
         static let mixinContext = "MixinContext"
         static let reloadTheme = "reloadTheme"
@@ -280,8 +282,9 @@ extension MixinWebViewController: WKNavigationDelegate {
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         reloadTheme(webView: webView)
+        NotificationCenter.default.post(name: Self.didFinishNavigationNotification, object: self)
     }
-
+    
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
         let nsError = error as NSError
         guard let failURL = nsError.userInfo["NSErrorFailingURLKey"] as? URL, let host = failURL.host else {

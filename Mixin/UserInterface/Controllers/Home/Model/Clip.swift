@@ -1,4 +1,5 @@
 import UIKit
+import WebKit
 import MixinServices
 
 final class Clip: Codable {
@@ -38,6 +39,7 @@ final class Clip: Codable {
         self.url = url
         self.thumbnail = nil
         self.controllerIfLoaded = controller
+        addObservers()
     }
     
     init(from decoder: Decoder) throws {
@@ -45,6 +47,11 @@ final class Clip: Codable {
         self.app = try container.decodeIfPresent(App.self, forKey: .app)
         self.title = try container.decode(String.self, forKey: .title)
         self.url = try container.decode(URL.self, forKey: .url)
+        addObservers()
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     func encode(to encoder: Encoder) throws {
@@ -56,6 +63,23 @@ final class Clip: Codable {
     
     func removeCachedController() {
         controllerIfLoaded = nil
+    }
+    
+    @objc private func updateThumbnail(_ notification: Notification) {
+        guard let controller = notification.object as? WebViewController, controller == controllerIfLoaded else {
+            return
+        }
+        let config = WKSnapshotConfiguration()
+        config.rect = controller.webView.frame
+        config.snapshotWidth = NSNumber(value: Int(controller.webView.frame.width))
+        controller.webView.takeSnapshot(with: config) { [weak self] (image, error) in
+            self?.thumbnail = image
+        }
+    }
+    
+    private func addObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(updateThumbnail(_:)), name: MixinWebViewController.didFinishNavigationNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateThumbnail(_:)), name: WebViewController.didDismissNotification, object: nil)
     }
     
 }

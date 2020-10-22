@@ -112,7 +112,7 @@ class HomeViewController: UIViewController {
             CallService.shared.registerForPushKitNotificationsIfAvailable()
         }
         Logger.write(log: "HomeViewController...viewDidLoad...applicationState:\(UIApplication.shared.applicationStateString)")
-        if UIApplication.shared.applicationState == .active {
+        if UIApplication.shared.applicationState != .background {
             ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())
             ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob())
             ConcurrentJobQueue.shared.addJob(job: CleanUpUnusedAttachmentJob())

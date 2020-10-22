@@ -17,7 +17,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fuC-N5-Rgi">
-                    <rect key="frame" x="0.0" y="443" width="414" height="466"/>
+                    <rect key="frame" x="0.0" y="426" width="414" height="483"/>
                     <subviews>
                         <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eUF-TX-avq">
                             <rect key="frame" x="0.0" y="0.0" width="414" height="70"/>
@@ -32,7 +32,7 @@
                             </userDefinedRuntimeAttributes>
                         </view>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="65Q-3F-reP">
-                            <rect key="frame" x="30" y="70" width="354" height="159"/>
+                            <rect key="frame" x="30" y="70" width="354" height="176"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wMQ-Xy-5OF" customClass="AssetIconView" customModule="Mixin" customModuleProvider="target">
                                     <rect key="frame" x="145" y="0.0" width="64" height="64"/>
@@ -73,8 +73,8 @@
                                         <constraint firstAttribute="height" constant="16" id="ibW-4P-Qjy"/>
                                     </constraints>
                                 </view>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="For the first withdraw to the new address, please try a small amount." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rm3-Re-MC5">
-                                    <rect key="frame" x="1.5" y="125.5" width="351" height="33.5"/>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="For the first withdraw to the new address, please try a small amount. You will lost those assets if the address goes wrong." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rm3-Re-MC5">
+                                    <rect key="frame" x="1.5" y="125.5" width="351" height="50.5"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                     <color key="textColor" name="red"/>
                                     <nil key="highlightedColor"/>
@@ -85,38 +85,41 @@
                                 </label>
                             </subviews>
                         </stackView>
-                        <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hCZ-b5-DO0" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="134" y="285" width="146" height="42"/>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hCZ-b5-DO0" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="112.5" y="302" width="189" height="42"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="42" id="0pe-Si-ppZ"/>
                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="116" id="3Ng-EL-Ic6"/>
                             </constraints>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
-                            <inset key="contentEdgeInsets" minX="30" minY="0.0" maxX="30" maxY="0.0"/>
-                            <state key="normal" title="Continue (3)"/>
+                            <inset key="contentEdgeInsets" minX="40" minY="0.0" maxX="40" maxY="0.0"/>
+                            <state key="normal" title="Change amount">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </state>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="action_change_amount"/>
                             </userDefinedRuntimeAttributes>
                             <connections>
-                                <action selector="continueAction:" destination="vpk-7x-aS6" eventType="touchUpInside" id="7xp-Q9-Zkb"/>
+                                <action selector="dismissAction:" destination="vpk-7x-aS6" eventType="touchUpInside" id="PXb-Us-YXq"/>
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0Lr-oD-oU5">
-                            <rect key="frame" x="157" y="347" width="100" height="42"/>
+                            <rect key="frame" x="150" y="364" width="114" height="42"/>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                             <inset key="contentEdgeInsets" minX="26" minY="12" maxX="26" maxY="12"/>
-                            <state key="normal" title="Cancel">
+                            <state key="normal" title="Continue">
                                 <color key="titleColor" red="0.23921568630000001" green="0.45882352939999999" blue="0.89019607840000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             </state>
                             <state key="disabled">
                                 <color key="titleColor" red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </state>
                             <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="dialog_button_cancel"/>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="action_continue_withdrawal"/>
                                 <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
                             </userDefinedRuntimeAttributes>
                             <connections>
-                                <action selector="dismissAction:" destination="vpk-7x-aS6" eventType="touchUpInside" id="wVk-mC-F37"/>
+                                <action selector="continueAction:" destination="vpk-7x-aS6" eventType="touchUpInside" id="1Yc-ZH-nRX"/>
                             </connections>
                         </button>
                     </subviews>
@@ -159,7 +162,6 @@
             </constraints>
             <connections>
                 <outlet property="assetIconView" destination="wMQ-Xy-5OF" id="God-iy-anq"/>
-                <outlet property="confirmButton" destination="hCZ-b5-DO0" id="vwH-sN-J5K"/>
                 <outlet property="popupView" destination="fuC-N5-Rgi" id="f7C-hb-8CK"/>
                 <outlet property="tipsLabel" destination="Rm3-Re-MC5" id="W9i-ge-R10"/>
                 <outlet property="titleLabel" destination="bma-M8-FfU" id="E5n-Xv-3Zh"/>

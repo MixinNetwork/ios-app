@@ -45,6 +45,8 @@
 "action_learn_more" = "Learn More";
 "action_later" = "Later";
 "action_try_again" = "Try Again";
+"action_change_amount" = "Change amount";
+"action_continue_withdrawal" = "Continue";
 "menu_delete" = "Delete";
 "menu_edit" = "Edit";
 "menu_report" = "Report";
@@ -470,7 +472,7 @@
 "wallet_password_address_tips" = "Save by PIN";
 "wallet_withdrawal_change_amount" = "Change Amount";
 "wallet_withdrawal_change_amount_count" = "Change Amount (%@)";
-"wallet_withdrawal_address_tips" = "For the first withdraw to the new address, please try a small amount.";
+"wallet_withdrawal_address_tips" = "For the first withdrawal to a new address, please try small amounts! If you withdraw the assets to the wrong address, that would not be recovered!";
 "wallet_withdrawal_asset" = "%@ Withdrawal";
 "wallet_withdrawal_pay_password" = "Withdraw with PIN";
 "wallet_withdrawal_reserve" = " %@ has a minimum %@ reserve requirement.";

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -12,6 +12,9 @@
             <connections>
                 <outlet property="assetIconView" destination="jl4-Uy-Tng" id="GgR-sv-aC6"/>
                 <outlet property="contentLabel" destination="L6b-gv-92p" id="i8j-Lh-2D8"/>
+                <outlet property="contentLeadingConstraint" destination="a1t-iN-6u9" id="dNd-Cn-0aY"/>
+                <outlet property="contentSpacingConstraint" destination="jJT-8S-eBc" id="oMw-DO-JaF"/>
+                <outlet property="contentTrailingConstraint" destination="Q48-6N-QSO" id="eOy-gg-Lif"/>
                 <outlet property="qrCodeImageView" destination="R7z-eB-YMg" id="7xw-FT-8Y3"/>
                 <outlet property="shadowView" destination="fqu-jH-FEz" id="XuW-rX-Bhb"/>
                 <outlet property="titleLabel" destination="ocV-R6-UEn" id="doi-aS-77M"/>
@@ -47,7 +50,7 @@
                                             <rect key="frame" x="0.0" y="94.5" width="50" height="38.5"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </view>
-                                        <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="w6l-cN-ErJ" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                                        <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="w6l-cN-ErJ" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="134" width="64" height="29"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                             <inset key="contentEdgeInsets" minX="15" minY="6" maxX="15" maxY="6"/>
@@ -110,7 +113,7 @@
                                                 <constraint firstAttribute="bottom" secondItem="jl4-Uy-Tng" secondAttribute="bottom" constant="1" id="kIl-1P-v3f"/>
                                             </constraints>
                                         </view>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VDQ-tC-0ep">
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VDQ-tC-0ep">
                                             <rect key="frame" x="0.0" y="0.0" width="163" height="163"/>
                                             <connections>
                                                 <action selector="showQRCodeAction:" destination="-1" eventType="touchUpInside" id="XrF-eR-qKY"/>
@@ -137,16 +140,7 @@
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstAttribute="trailing" secondItem="0VM-3w-cAL" secondAttribute="trailing" id="FPF-4G-dxo"/>
-                                <constraint firstItem="0VM-3w-cAL" firstAttribute="leading" secondItem="Sfa-Qc-uEt" secondAttribute="trailing" constant="33" id="jJT-8S-eBc" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
-                                    <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
-                                            <real key="value" value="16"/>
-                                        </userDefinedRuntimeAttribute>
-                                        <userDefinedRuntimeAttribute type="number" keyPath="inch4">
-                                            <real key="value" value="16"/>
-                                        </userDefinedRuntimeAttribute>
-                                    </userDefinedRuntimeAttributes>
-                                </constraint>
+                                <constraint firstItem="0VM-3w-cAL" firstAttribute="leading" secondItem="Sfa-Qc-uEt" secondAttribute="trailing" constant="33" id="jJT-8S-eBc"/>
                                 <constraint firstItem="Sfa-Qc-uEt" firstAttribute="top" secondItem="GGQ-e5-PNg" secondAttribute="top" id="m3f-fb-zpH"/>
                                 <constraint firstItem="0VM-3w-cAL" firstAttribute="top" secondItem="GGQ-e5-PNg" secondAttribute="top" id="oB3-FD-EMQ"/>
                                 <constraint firstAttribute="bottom" secondItem="Sfa-Qc-uEt" secondAttribute="bottom" id="vbR-eJ-yOa"/>
@@ -157,27 +151,9 @@
                     <color key="backgroundColor" name="background"/>
                     <constraints>
                         <constraint firstAttribute="bottom" secondItem="GGQ-e5-PNg" secondAttribute="bottom" constant="45" id="Ia8-JT-KD1"/>
-                        <constraint firstAttribute="trailing" secondItem="GGQ-e5-PNg" secondAttribute="trailing" constant="35" id="Q48-6N-QSO" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
-                                    <real key="value" value="20"/>
-                                </userDefinedRuntimeAttribute>
-                                <userDefinedRuntimeAttribute type="number" keyPath="inch4">
-                                    <real key="value" value="20"/>
-                                </userDefinedRuntimeAttribute>
-                            </userDefinedRuntimeAttributes>
-                        </constraint>
+                        <constraint firstAttribute="trailing" secondItem="GGQ-e5-PNg" secondAttribute="trailing" constant="35" id="Q48-6N-QSO"/>
                         <constraint firstAttribute="height" priority="750" constant="228" id="Sib-iX-NSq"/>
-                        <constraint firstItem="GGQ-e5-PNg" firstAttribute="leading" secondItem="zIa-ex-QbW" secondAttribute="leading" constant="35" id="a1t-iN-6u9" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
-                                    <real key="value" value="20"/>
-                                </userDefinedRuntimeAttribute>
-                                <userDefinedRuntimeAttribute type="number" keyPath="inch4">
-                                    <real key="value" value="20"/>
-                                </userDefinedRuntimeAttribute>
-                            </userDefinedRuntimeAttributes>
-                        </constraint>
+                        <constraint firstItem="GGQ-e5-PNg" firstAttribute="leading" secondItem="zIa-ex-QbW" secondAttribute="leading" constant="35" id="a1t-iN-6u9"/>
                         <constraint firstItem="GGQ-e5-PNg" firstAttribute="top" secondItem="zIa-ex-QbW" secondAttribute="top" constant="20" id="gFE-0f-Cqs"/>
                     </constraints>
                 </view>
@@ -211,10 +187,10 @@
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

@@ -192,11 +192,12 @@
 		7B5EF7E420BE9EAC009A7972 /* AudioMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5EF7E320BE9EAC009A7972 /* AudioMessageCell.swift */; };
 		7B5F96692414241C003A087B /* LocationInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5F96682414241C003A087B /* LocationInformationView.swift */; };
 		7B5F966B241424CD003A087B /* LocationInformationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B5F966A241424CD003A087B /* LocationInformationView.xib */; };
-		7B5FEE3E2101AA9A0008321F /* ScreenSizeCompatibleLayoutConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5FEE3D2101AA9A0008321F /* ScreenSizeCompatibleLayoutConstraint.swift */; };
 		7B5FEE402101AD790008321F /* ScreenSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5FEE3F2101AD790008321F /* ScreenSize.swift */; };
 		7B600D262452F19C001D8146 /* LayoutMarginsInsetedTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B600D252452F19C001D8146 /* LayoutMarginsInsetedTableView.swift */; };
 		7B600D282453186B001D8146 /* DesktopTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B600D272453186B001D8146 /* DesktopTableHeaderView.xib */; };
 		7B60A375206537FE00673CA1 /* GeometryExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B60A374206537FE00673CA1 /* GeometryExtension.swift */; };
+		7B61B9C62538E0CE001F94A3 /* ScreenHeight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B61B9C52538E0CE001F94A3 /* ScreenHeight.swift */; };
+		7B61B9CA2538E1C8001F94A3 /* ScreenHeightCompatibleLayoutConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B61B9C92538E1C8001F94A3 /* ScreenHeightCompatibleLayoutConstraint.swift */; };
 		7B6351D52410F2430034D9F8 /* ImageMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B6351D42410F2430034D9F8 /* ImageMessageViewModel.swift */; };
 		7B6372101FE3E849006BCAB8 /* NetworkOperationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B63720F1FE3E849006BCAB8 /* NetworkOperationButton.swift */; };
 		7B63A8632431C9EE00D0F7C7 /* CirclesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B63A8622431C9EE00D0F7C7 /* CirclesViewController.swift */; };
@@ -224,6 +225,7 @@
 		7B75E6471FE0E20000CD66F1 /* InsetLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B75E6461FE0E20000CD66F1 /* InsetLabel.swift */; };
 		7B78B2461FF2170400371632 /* InviteLinkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B78B2451FF2170400371632 /* InviteLinkViewController.swift */; };
 		7B7A243B236A9B86003F1458 /* RoundedInsetLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7A243A236A9B86003F1458 /* RoundedInsetLabel.swift */; };
+		7B7ABBE02539799900070B71 /* ScreenWidth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7ABBDF2539799900070B71 /* ScreenWidth.swift */; };
 		7B7B2BC51FB15B6A0002BED5 /* AvatarImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7B2BC41FB15B6A0002BED5 /* AvatarImageView.swift */; };
 		7B7B5DB2230EBA5E00D0F463 /* PopupSearchableTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7B5DB0230EBA5E00D0F463 /* PopupSearchableTableViewController.swift */; };
 		7B7B5DB3230EBA5E00D0F463 /* PopupSearchableTableView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B7B5DB1230EBA5E00D0F463 /* PopupSearchableTableView.xib */; };
@@ -1054,11 +1056,12 @@
 		7B5EF7E320BE9EAC009A7972 /* AudioMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioMessageCell.swift; sourceTree = "<group>"; };
 		7B5F96682414241C003A087B /* LocationInformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationInformationView.swift; sourceTree = "<group>"; };
 		7B5F966A241424CD003A087B /* LocationInformationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LocationInformationView.xib; sourceTree = "<group>"; };
-		7B5FEE3D2101AA9A0008321F /* ScreenSizeCompatibleLayoutConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenSizeCompatibleLayoutConstraint.swift; sourceTree = "<group>"; };
 		7B5FEE3F2101AD790008321F /* ScreenSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenSize.swift; sourceTree = "<group>"; };
 		7B600D252452F19C001D8146 /* LayoutMarginsInsetedTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutMarginsInsetedTableView.swift; sourceTree = "<group>"; };
 		7B600D272453186B001D8146 /* DesktopTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DesktopTableHeaderView.xib; sourceTree = "<group>"; };
 		7B60A374206537FE00673CA1 /* GeometryExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeometryExtension.swift; sourceTree = "<group>"; };
+		7B61B9C52538E0CE001F94A3 /* ScreenHeight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenHeight.swift; sourceTree = "<group>"; };
+		7B61B9C92538E1C8001F94A3 /* ScreenHeightCompatibleLayoutConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenHeightCompatibleLayoutConstraint.swift; sourceTree = "<group>"; };
 		7B6351D42410F2430034D9F8 /* ImageMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageMessageViewModel.swift; sourceTree = "<group>"; };
 		7B63720F1FE3E849006BCAB8 /* NetworkOperationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkOperationButton.swift; sourceTree = "<group>"; };
 		7B63A8622431C9EE00D0F7C7 /* CirclesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CirclesViewController.swift; sourceTree = "<group>"; };
@@ -1086,6 +1089,7 @@
 		7B75E6461FE0E20000CD66F1 /* InsetLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsetLabel.swift; sourceTree = "<group>"; };
 		7B78B2451FF2170400371632 /* InviteLinkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteLinkViewController.swift; sourceTree = "<group>"; };
 		7B7A243A236A9B86003F1458 /* RoundedInsetLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedInsetLabel.swift; sourceTree = "<group>"; };
+		7B7ABBDF2539799900070B71 /* ScreenWidth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenWidth.swift; sourceTree = "<group>"; };
 		7B7B2BC41FB15B6A0002BED5 /* AvatarImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarImageView.swift; sourceTree = "<group>"; };
 		7B7B5DB0230EBA5E00D0F463 /* PopupSearchableTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupSearchableTableViewController.swift; sourceTree = "<group>"; };
 		7B7B5DB1230EBA5E00D0F463 /* PopupSearchableTableView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PopupSearchableTableView.xib; sourceTree = "<group>"; };
@@ -2045,6 +2049,8 @@
 				7B2AFEE020FE022C00C747BB /* MXMFastURLDetector.h */,
 				7B2AFEE120FE022C00C747BB /* MXMFastURLDetector.m */,
 				7B5FEE3F2101AD790008321F /* ScreenSize.swift */,
+				7B61B9C52538E0CE001F94A3 /* ScreenHeight.swift */,
+				7B7ABBDF2539799900070B71 /* ScreenWidth.swift */,
 				7BEE5352222E21D7008D3911 /* KeyboardHeight.swift */,
 				7B746B3F22A628ED0097D18A /* Counter.swift */,
 				7B5A748E230274E200C6107E /* GroupIconMaker.swift */,
@@ -2581,7 +2587,7 @@
 				DF048CD122433D69005F1EF5 /* LineHeightLabel.swift */,
 				DF768562200647CC0055F3FF /* BouncingButton.swift */,
 				7B2E3E4C1FA07F5D00DDDDEB /* HairlineLayoutConstraint.swift */,
-				7B5FEE3D2101AA9A0008321F /* ScreenSizeCompatibleLayoutConstraint.swift */,
+				7B61B9C92538E1C8001F94A3 /* ScreenHeightCompatibleLayoutConstraint.swift */,
 				7BAD3A8D21A6D10400BAEE0B /* BusyButton.swift */,
 				7B92F82A1FA1BCD5000B838B /* StateResponsiveButton.swift */,
 				7B2E3E591FA0816D00DDDDEB /* LoginContinueButton.swift */,
@@ -3795,7 +3801,6 @@
 				7B6351D52410F2430034D9F8 /* ImageMessageViewModel.swift in Sources */,
 				7B4BE55D243E0F3400198EE9 /* CandidateHomeAppsModelController.swift in Sources */,
 				7BF196BA241209A900CC8325 /* ImageMessageCell.swift in Sources */,
-				7B5FEE3E2101AA9A0008321F /* ScreenSizeCompatibleLayoutConstraint.swift in Sources */,
 				DFD15C701FB5ACE7004B45CE /* UICollationExtension.swift in Sources */,
 				7B95860F2369599800F1F6E1 /* ProfileViewController.swift in Sources */,
 				7BD38B6020BEA03200D06E5C /* WaveformView.swift in Sources */,
@@ -3834,6 +3839,7 @@
 				7BBC6EA81FA98D1A00DC130A /* AddPeopleViewController.swift in Sources */,
 				DFD93F1E2111C0030013401A /* UIDeviceExtension.swift in Sources */,
 				7B35AF78228AA3BD00E8101D /* MessagesWithUserSearchResult.swift in Sources */,
+				7B61B9CA2538E1C8001F94A3 /* ScreenHeightCompatibleLayoutConstraint.swift in Sources */,
 				7BF8AD85244051680038D293 /* HomeAppResizeGestureCoordinator.swift in Sources */,
 				7B2A115F22C1ECB100AD029C /* RoundedBlurButton.swift in Sources */,
 				7BEB423622EAD20A003B4479 /* ModernNetworkOperationButton.swift in Sources */,
@@ -4127,6 +4133,7 @@
 				DF43304522648B32006D971D /* AssetInfoWindow.swift in Sources */,
 				7B492F982252159B00C05A45 /* ActivityIndicatorView.swift in Sources */,
 				7BC022E7214A150400B7A398 /* AuthorizationTableViewCell.swift in Sources */,
+				7B7ABBE02539799900070B71 /* ScreenWidth.swift in Sources */,
 				DFCF3BF020CF6EE10030AD4A /* StickerAddViewController.swift in Sources */,
 				7B9916D421945A6800C11401 /* AssetCell.swift in Sources */,
 				7BAD3339216E1DFA006C0309 /* RTCSessionDescription+JSON.swift in Sources */,
@@ -4214,6 +4221,7 @@
 				7BF19C22241E0DB600B192D5 /* UserPickedLocation.swift in Sources */,
 				7B015F4F241F91A60004A563 /* SearchResultAnnotation.swift in Sources */,
 				7B4E30762295659200A03F6E /* SearchBoxTextField.swift in Sources */,
+				7B61B9C62538E0CE001F94A3 /* ScreenHeight.swift in Sources */,
 				7B75E6471FE0E20000CD66F1 /* InsetLabel.swift in Sources */,
 				7BD7534C2182CD7A00BAC172 /* CallMessageViewModel.swift in Sources */,
 				7B2D174F22B11A8600AE3DD8 /* LoginInfoInputViewController.swift in Sources */,
@@ -4534,7 +4542,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -4588,7 +4596,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -4859,7 +4867,7 @@
 				CURRENT_PROJECT_VERSION = 389;
 				DEVELOPMENT_TEAM = 5EL4S7LCG6;
 				INFOPLIST_FILE = MixinShare/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MARKETING_VERSION = 0.27.3;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
@@ -4882,7 +4890,7 @@
 				CURRENT_PROJECT_VERSION = 389;
 				DEVELOPMENT_TEAM = 5EL4S7LCG6;
 				INFOPLIST_FILE = MixinShare/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MARKETING_VERSION = 0.27.3;
 				MTL_FAST_MATH = YES;
@@ -4904,7 +4912,7 @@
 				CURRENT_PROJECT_VERSION = 389;
 				DEVELOPMENT_TEAM = 5EL4S7LCG6;
 				INFOPLIST_FILE = MixinNotificationService/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MARKETING_VERSION = 0.27.3;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
@@ -4927,7 +4935,7 @@
 				CURRENT_PROJECT_VERSION = 389;
 				DEVELOPMENT_TEAM = 5EL4S7LCG6;
 				INFOPLIST_FILE = MixinNotificationService/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MARKETING_VERSION = 0.27.3;
 				MTL_FAST_MATH = YES;

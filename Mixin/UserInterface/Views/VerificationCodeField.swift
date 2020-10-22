@@ -12,18 +12,7 @@ class VerificationCodeField: UIControl, UITextInputTraits {
     var returnKeyType: UIReturnKeyType = .default
     var enablesReturnKeyAutomatically: Bool = true
     var keyboardType: UIKeyboardType = .numberPad
-    var textContentType: UITextContentType! {
-        get {
-            if #available(iOS 12.0, *) {
-                return .oneTimeCode
-            } else {
-                return nil
-            }
-        }
-        set {
-            
-        }
-    }
+    var textContentType: UITextContentType = .oneTimeCode
     
     // UITextInput
     var selectedTextRange: UITextRange?

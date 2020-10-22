@@ -1,19 +1,13 @@
 import Foundation
 
-enum UserInterfaceStyle {
+enum UserInterfaceStyle: String {
     
     static var current: UserInterfaceStyle {
-        if #available(iOS 12.0, *) {
-            let style = UIScreen.main.traitCollection.userInterfaceStyle
-            return UserInterfaceStyle(style: style)
-        } else {
-            return .light
-        }
+        UserInterfaceStyle(style: UIScreen.main.traitCollection.userInterfaceStyle)
     }
     
     case light, dark
     
-    @available(iOS 12.0, *)
     init(style: UIUserInterfaceStyle) {
         switch style {
         case .unspecified, .light:

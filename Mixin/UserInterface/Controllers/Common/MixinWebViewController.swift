@@ -452,17 +452,10 @@ extension MixinWebViewController {
         var isImmersive: Bool
         
         var appContextString: String {
-            let appearance: String = {
-                if #available(iOS 13.0, *), UITraitCollection.current.userInterfaceStyle == .dark {
-                    return "dark"
-                } else {
-                    return "light"
-                }
-            }()
             let ctx: [String: Any] = [
                 "app_version": Bundle.main.shortVersion,
                 "immersive": isImmersive,
-                "appearance": appearance,
+                "appearance": UserInterfaceStyle.current.rawValue,
                 "currency": Currency.current.code,
                 "locale": "\(Locale.current.languageCode ?? "")-\(Locale.current.regionCode ?? "")",
                 "platform": "iOS",

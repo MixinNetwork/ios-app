@@ -83,9 +83,6 @@ class PayWindow: BottomSheetView {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        if ScreenSize.current == .inch3_5 {
-            pinField.cellLength = 8
-        }
         pinField.delegate = self
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillAppear), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillDisappear), name: UIResponder.keyboardWillHideNotification, object: nil)

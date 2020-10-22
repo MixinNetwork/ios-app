@@ -110,11 +110,7 @@ extension MixinCallInterface: CallInterface {
                                                             name: call.conversationName)
                         }
                         UNUserNotificationCenter.current().getNotificationSettings { (settings) in
-                            var authorizedStatus: [UNAuthorizationStatus] = [.authorized]
-                            if #available(iOS 12.0, *) {
-                                authorizedStatus.append(.provisional)
-                            }
-                            if authorizedStatus.contains(settings.authorizationStatus) {
+                            if [.authorized, .provisional].contains(settings.authorizationStatus) {
                                 self.vibrator.start()
                             }
                         }

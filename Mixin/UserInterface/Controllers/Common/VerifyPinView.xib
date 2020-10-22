@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina6_1" orientation="portrait" appearance="dark"/>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina5_9" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -17,14 +17,14 @@
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="2Jf-4f-JsX">
-            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="50" translatesAutoresizingMaskIntoConstraints="NO" id="OeD-UP-3TT">
-                    <rect key="frame" x="0.0" y="108" width="414" height="95.5"/>
+                    <rect key="frame" x="0.0" y="108" width="375" height="95.666666666666686"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Verify PIN" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TQD-Xf-UmO">
-                            <rect key="frame" x="165" y="0.0" width="84" height="21.5"/>
+                            <rect key="frame" x="146" y="0.0" width="83" height="21.666666666666668"/>
                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                             <color key="textColor" name="title"/>
                             <nil key="highlightedColor"/>
@@ -34,7 +34,7 @@
                             </userDefinedRuntimeAttributes>
                         </label>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="re8-BN-ipd" customClass="PinField" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="121" y="71.5" width="172" height="24"/>
+                            <rect key="frame" x="101.66666666666669" y="71.666666666666657" width="172" height="24"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <color key="tintColor" name="text_accessory"/>
                             <constraints>
@@ -48,22 +48,19 @@
                     </subviews>
                 </stackView>
             </subviews>
+            <viewLayoutGuide key="safeArea" id="eQ1-Yp-6oN"/>
             <color key="backgroundColor" name="background"/>
             <constraints>
                 <constraint firstItem="OeD-UP-3TT" firstAttribute="leading" secondItem="eQ1-Yp-6oN" secondAttribute="leading" id="C9l-5D-St2"/>
-                <constraint firstItem="OeD-UP-3TT" firstAttribute="top" secondItem="eQ1-Yp-6oN" secondAttribute="top" constant="64" id="K02-Aj-Vi1" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                <constraint firstItem="OeD-UP-3TT" firstAttribute="top" secondItem="eQ1-Yp-6oN" secondAttribute="top" constant="64" id="K02-Aj-Vi1" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                     <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
-                            <real key="value" value="52"/>
-                        </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="number" keyPath="inch4">
+                        <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
                             <real key="value" value="52"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </constraint>
                 <constraint firstItem="eQ1-Yp-6oN" firstAttribute="trailing" secondItem="OeD-UP-3TT" secondAttribute="trailing" id="QvX-Sz-Bly"/>
             </constraints>
-            <viewLayoutGuide key="safeArea" id="eQ1-Yp-6oN"/>
             <point key="canvasLocation" x="139" y="154"/>
         </view>
     </objects>
@@ -72,7 +69,7 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="title">
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

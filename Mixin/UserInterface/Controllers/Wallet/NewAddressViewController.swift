@@ -14,7 +14,6 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
     @IBOutlet weak var continueWrapperView: UIView!
     @IBOutlet weak var memoView: CornerView!
 
-    @IBOutlet weak var opponentImageViewWidthConstraint: ScreenSizeCompatibleLayoutConstraint!
     @IBOutlet weak var continueWrapperBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var scrollViewBottomConstraint: NSLayoutConstraint!
     
@@ -45,7 +44,7 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
         memoTextView.delegate = self
         memoTextView.textContainerInset = .zero
         memoTextView.textContainer.lineFragmentPadding = 0
-        if ScreenSize.current >= .inch6_1 {
+        if ScreenHeight.current >= .extraLong {
             assetView.chainIconWidth = 28
             assetView.chainIconOutlineWidth = 4
         }

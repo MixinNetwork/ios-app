@@ -54,7 +54,7 @@ class ConversationViewController: UIViewController {
     
     // Margin to navigation title bar
     private let minInputWrapperTopMargin: CGFloat = {
-        if ScreenSize.current <= .inch4 {
+        if ScreenHeight.current <= .short {
             return 60
         } else {
             return 112
@@ -796,7 +796,7 @@ class ConversationViewController: UIViewController {
             if let dataSource = dataSource, dataSource.category == .group {
                 dataSource.conversation.announcement = conversation.announcement
                 let hasUnreadAnnouncement = AppGroupUserDefaults.User.hasUnreadAnnouncement[conversationId] ?? false
-                let canShowAnnouncement = ScreenSize.current > .inch4 || !isShowingKeyboard
+                let canShowAnnouncement = ScreenHeight.current > .short || !isShowingKeyboard
                 if hasUnreadAnnouncement && canShowAnnouncement {
                     updateAnnouncementBadge(announcement: conversation.announcement)
                 } else {
@@ -925,7 +925,7 @@ class ConversationViewController: UIViewController {
     
     @objc func keyboardWillShow(_ notification: Notification) {
         isShowingKeyboard = true
-        if ScreenSize.current <= .inch4 {
+        if ScreenHeight.current <= .short {
             updateAnnouncementBadge(announcement: nil)
         }
     }
@@ -934,11 +934,11 @@ class ConversationViewController: UIViewController {
         isShowingKeyboard = false
         if dataSource.category == .group {
             let hasUnreadAnnouncement = AppGroupUserDefaults.User.hasUnreadAnnouncement[conversationId] ?? false
-            if ScreenSize.current <= .inch4 && hasUnreadAnnouncement {
+            if ScreenHeight.current <= .short && hasUnreadAnnouncement {
                 updateAnnouncementBadge(announcement: dataSource.conversation.announcement)
             }
         } else {
-            if ScreenSize.current <= .inch4 {
+            if ScreenHeight.current <= .short {
                 showScamAnnouncementIfNeeded()
             }
         }

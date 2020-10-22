@@ -72,7 +72,6 @@ final class MediaPreviewViewController: UIViewController {
         playerObservation?.invalidate()
     }
     
-    @available(iOS 11.0, *)
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         stackViewBottomConstraint.constant = max(view.safeAreaInsets.bottom, stackViewBottomConstraint.constant)

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -19,7 +19,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="414" height="70"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Add XIN Address" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tq0-lr-hPQ">
-                            <rect key="frame" x="20" y="24.5" width="143" height="21.5"/>
+                            <rect key="frame" x="20" y="24.5" width="142.5" height="21.5"/>
                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                             <color key="textColor" name="title"/>
                             <nil key="highlightedColor"/>
@@ -73,13 +73,10 @@
                     <constraints>
                         <constraint firstItem="wWX-Fz-Q0B" firstAttribute="centerX" secondItem="uIs-S6-Gno" secondAttribute="centerX" id="78r-Fo-eHx"/>
                         <constraint firstItem="wWX-Fz-Q0B" firstAttribute="top" secondItem="uIs-S6-Gno" secondAttribute="top" constant="26" id="ZSV-MJ-2RM"/>
-                        <constraint firstAttribute="height" constant="106" id="mxl-w9-Eeo" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                        <constraint firstAttribute="height" constant="106" id="mxl-w9-Eeo" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                             <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="inch4">
+                                <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
                                     <real key="value" value="73"/>
-                                </userDefinedRuntimeAttribute>
-                                <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
-                                    <real key="value" value="40"/>
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                         </constraint>
@@ -124,13 +121,7 @@
                             <color key="tintColor" red="0.73333333329999995" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="172" id="Vhi-P1-tnk"/>
-                                <constraint firstAttribute="height" constant="10" id="wTR-XT-O66" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
-                                    <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
-                                            <real key="value" value="12"/>
-                                        </userDefinedRuntimeAttribute>
-                                    </userDefinedRuntimeAttributes>
-                                </constraint>
+                                <constraint firstAttribute="height" constant="10" id="wTR-XT-O66"/>
                             </constraints>
                         </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Save by PIN" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="niE-Ec-UPE">
@@ -160,35 +151,17 @@
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstItem="cvc-OW-wKl" firstAttribute="centerX" secondItem="mw0-oC-Knv" secondAttribute="centerX" id="6Db-hK-aRn"/>
-                        <constraint firstAttribute="bottom" secondItem="niE-Ec-UPE" secondAttribute="bottom" constant="64" id="FBq-bH-Zv1" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
-                                    <real key="value" value="4"/>
-                                </userDefinedRuntimeAttribute>
-                            </userDefinedRuntimeAttributes>
-                        </constraint>
-                        <constraint firstAttribute="height" constant="130" id="L88-3w-3pH" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
-                                    <real key="value" value="60"/>
-                                </userDefinedRuntimeAttribute>
-                            </userDefinedRuntimeAttributes>
-                        </constraint>
+                        <constraint firstAttribute="bottom" secondItem="niE-Ec-UPE" secondAttribute="bottom" constant="64" id="FBq-bH-Zv1"/>
+                        <constraint firstAttribute="height" constant="130" id="L88-3w-3pH"/>
                         <constraint firstItem="0k5-MV-RVU" firstAttribute="centerY" secondItem="cvc-OW-wKl" secondAttribute="centerY" id="Vma-Ns-xpP"/>
                         <constraint firstItem="niE-Ec-UPE" firstAttribute="centerX" secondItem="mw0-oC-Knv" secondAttribute="centerX" id="Wl7-Mf-C6v"/>
                         <constraint firstItem="0k5-MV-RVU" firstAttribute="centerX" secondItem="cvc-OW-wKl" secondAttribute="centerX" id="a7M-0q-FDc"/>
-                        <constraint firstItem="niE-Ec-UPE" firstAttribute="top" secondItem="cvc-OW-wKl" secondAttribute="bottom" constant="16" id="rV0-TR-rvc" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
-                                    <real key="value" value="8"/>
-                                </userDefinedRuntimeAttribute>
-                            </userDefinedRuntimeAttributes>
-                        </constraint>
+                        <constraint firstItem="niE-Ec-UPE" firstAttribute="top" secondItem="cvc-OW-wKl" secondAttribute="bottom" constant="16" id="rV0-TR-rvc"/>
                     </constraints>
                 </view>
             </subviews>
-            <color key="backgroundColor" name="background"/>
             <viewLayoutGuide key="safeArea" id="GPG-SD-hw4"/>
+            <color key="backgroundColor" name="background"/>
             <connections>
                 <outlet property="addressLabel" destination="FpA-VY-TU6" id="sMr-2Y-Z6W"/>
                 <outlet property="assetIconView" destination="wWX-Fz-Q0B" id="Jmu-Zx-Yvp"/>
@@ -208,7 +181,7 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="title">
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

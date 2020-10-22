@@ -212,8 +212,12 @@ class MixinWebViewController: WebViewController {
     
     override func moreAction(_ sender: Any) {
         let floatAction: WebMoreMenuViewController.MenuItem
-        if let switcher = UIApplication.homeContainerViewController?.clipSwitcher, switcher.clips.contains(where: { $0.controller == self }) {
-            floatAction = .cancelFloat
+        if let switcher = UIApplication.homeContainerViewController?.clipSwitcher {
+            var hasSameClip = switcher.clips.contains(where: { $0.controller == self })
+            if case let .app(app, _) = context.style {
+                hasSameClip = hasSameClip || switcher.clips.contains(where: { $0.app?.appId == app.appId })
+            }
+            floatAction = hasSameClip ? .cancelFloat : .float
         } else {
             floatAction = .float
         }
@@ -361,7 +365,14 @@ extension MixinWebViewController: WebMoreMenuControllerDelegate {
                 }
             case .cancelFloat:
                 if let switcher = UIApplication.homeContainerViewController?.clipSwitcher {
-                    if let index = switcher.clips.firstIndex(where: { $0.controller == self }) {
+                    let maybeIndex: Int?
+                    switch context.style {
+                    case .webPage:
+                        maybeIndex = switcher.clips.firstIndex(where: { $0.controller == self })
+                    case let .app(app, _):
+                        maybeIndex = switcher.clips.firstIndex(where: { $0.app?.appId == app.appId })
+                    }
+                    if let index = maybeIndex {
                         switcher.removeClip(at: index)
                     }
                 }

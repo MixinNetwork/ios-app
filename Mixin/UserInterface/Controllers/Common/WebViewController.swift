@@ -97,7 +97,7 @@ class WebViewController: UIViewController {
             let scale = 1 - 0.2 * recognizer.fractionComplete
             contentView.transform = CGAffineTransform(scaleX: scale, y: scale)
         case .ended:
-            dismiss()
+            dismissAsChild(animated: true)
         case .cancelled:
             UIView.animate(withDuration: 0.25, animations: {
                 self.contentView.transform = .identity
@@ -139,7 +139,7 @@ class WebViewController: UIViewController {
     }
     
     @objc func dismissAction(_ sender: Any) {
-        dismiss()
+        dismissAsChild(animated: true)
     }
     
     func updateBackground(pageThemeColor: UIColor) {
@@ -159,25 +159,30 @@ class WebViewController: UIViewController {
         setNeedsStatusBarAppearanceUpdate()
     }
     
-    func dismiss(completion: (() -> Void)? = nil) {
-        if let parent = parent {
-            isBeingDismissedAsChild = true
-            parent.setNeedsStatusBarAppearanceUpdate()
-            UIView.animate(withDuration: 0.5, animations: {
-                UIView.setAnimationCurve(.overdamped)
-                self.view.center.y = parent.view.bounds.height * 3 / 2
-            }) { (_) in
-                self.willMove(toParent: nil)
-                self.view.removeFromSuperview()
-                self.removeFromParent()
-                completion?()
-                self.contentView.transform = .identity
+    func dismissAsChild(animated: Bool, completion: (() -> Void)? = nil) {
+        guard let parent = parent else {
+            return
+        }
+        isBeingDismissedAsChild = true
+        parent.setNeedsStatusBarAppearanceUpdate()
+        let animation = {
+            UIView.setAnimationCurve(.overdamped)
+            self.view.center.y = parent.view.bounds.height * 3 / 2
+        }
+        let animationCompletion = {
+            self.willMove(toParent: nil)
+            self.view.removeFromSuperview()
+            self.removeFromParent()
+            completion?()
+            self.contentView.transform = .identity
+        }
+        if animated {
+            UIView.animate(withDuration: 0.5, animations: animation) { (_) in
+                animationCompletion()
             }
         } else {
-            dismiss(animated: true) {
-                completion?()
-                self.contentView.transform = .identity
-            }
+            animation()
+            animationCompletion()
         }
     }
     

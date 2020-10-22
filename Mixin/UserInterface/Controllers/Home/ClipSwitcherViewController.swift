@@ -136,17 +136,27 @@ extension ClipSwitcherViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
-        if let parent = UIApplication.homeNavigationController?.topViewController {
-            func present() {
-                let clip = clips[indexPath.row]
-                hide()
-                clip.controller.presentAsChild(of: parent, completion: nil)
+        let clip = clips[indexPath.row]
+        guard let parent = UIApplication.homeNavigationController?.topViewController else {
+            return
+        }
+        guard !parent.children.contains(clip.controller) else {
+            hide()
+            return
+        }
+        func present() {
+            hide()
+            clip.controller.presentAsChild(of: parent) {
+                parent.children
+                    .compactMap { $0 as? MixinWebViewController }
+                    .filter { $0 != clip.controller }
+                    .forEach { $0.dismissAsChild(animated: false) }
             }
-            if let presented = parent.presentedViewController {
-                presented.dismiss(animated: true, completion: present)
-            } else {
-                present()
-            }
+        }
+        if let presented = parent.presentedViewController {
+            presented.dismiss(animated: true, completion: present)
+        } else {
+            present()
         }
     }
     

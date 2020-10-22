@@ -182,7 +182,7 @@ class MixinWebViewController: WebViewController {
                 hud.hide()
                 UIApplication.homeNavigationController?.pushViewController(withBackRoot: ConversationViewController.instance(ownerUser: developUser))
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
-                    self?.dismiss()
+                    self?.dismissAsChild(animated: true)
                 }
             }
         }
@@ -346,9 +346,9 @@ extension MixinWebViewController: WebMoreMenuControllerDelegate {
                     shareUrlAction(currentUrl: url)
                 }
             case .float:
-                dismiss(completion: {
+                dismissAsChild(animated: true) {
                     UIApplication.homeContainerViewController?.clipSwitcher.insert(self)
-                })
+                }
             case .cancelFloat:
                 if let switcher = UIApplication.homeContainerViewController?.clipSwitcher {
                     if let index = switcher.clips.firstIndex(where: { $0.controller == self }) {

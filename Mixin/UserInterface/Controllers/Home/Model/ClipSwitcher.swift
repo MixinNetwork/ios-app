@@ -6,6 +6,8 @@ class ClipSwitcher {
     
     private(set) var clips: [Clip] = []
     
+    private lazy var switcher = R.storyboard.home.clip_switcher()!
+    
     private var minimizedController: MinimizedClipSwitcherViewController? {
         let container = UIApplication.homeContainerViewController
         return container?.minimizedClipSwitcherViewController
@@ -77,7 +79,6 @@ class ClipSwitcher {
     }
     
     @objc func showFullscreenSwitcher() {
-        let switcher = R.storyboard.home.clip_switcher()!
         switcher.clips = clips
         switcher.show()
     }

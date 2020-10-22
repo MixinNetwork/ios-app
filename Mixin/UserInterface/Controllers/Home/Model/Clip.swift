@@ -78,7 +78,6 @@ final class Clip: Codable {
     }
     
     private func addObservers() {
-        NotificationCenter.default.addObserver(self, selector: #selector(updateThumbnail(_:)), name: MixinWebViewController.didFinishNavigationNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateThumbnail(_:)), name: WebViewController.didDismissNotification, object: nil)
     }
     

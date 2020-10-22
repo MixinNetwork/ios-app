@@ -78,6 +78,10 @@ class ClipSwitcher {
         AppGroupUserDefaults.User.clips = []
     }
     
+    func hideFullscreenSwitcher() {
+        switcher.hide()
+    }
+    
     @objc func showFullscreenSwitcher() {
         switcher.clips = clips
         switcher.show()

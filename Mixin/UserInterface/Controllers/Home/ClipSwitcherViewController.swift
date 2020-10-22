@@ -62,6 +62,9 @@ class ClipSwitcherViewController: UIViewController {
     }
     
     @IBAction func hide() {
+        guard parent != nil else {
+            return
+        }
         UIView.animate(withDuration: 0.3) {
             self.backgroundView.effect = nil
             self.collectionView.alpha = 0

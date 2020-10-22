@@ -141,6 +141,7 @@ extension NotificationManager: UNUserNotificationCenterDelegate {
                 DispatchQueue.main.async {
                     WebSocketService.shared.connectIfNeeded()
                     func pushConversationController() {
+                        UIApplication.homeContainerViewController?.clipSwitcher.hideFullscreenSwitcher()
                         let vc = ConversationViewController.instance(conversation: conversation)
                         UIApplication.homeNavigationController?.pushViewController(withBackRoot: vc)
                     }

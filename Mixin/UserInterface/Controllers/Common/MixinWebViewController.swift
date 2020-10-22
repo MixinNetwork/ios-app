@@ -349,8 +349,15 @@ extension MixinWebViewController: WebMoreMenuControllerDelegate {
                     shareUrlAction(currentUrl: url)
                 }
             case .float:
-                dismissAsChild(animated: true) {
-                    UIApplication.homeContainerViewController?.clipSwitcher.insert(self)
+                if let switcher = UIApplication.homeContainerViewController?.clipSwitcher {
+                    if switcher.clips.count < ClipSwitcher.maxNumber {
+                        dismissAsChild(animated: true) {
+                            switcher.insert(self)
+                        }
+                    } else {
+                        let text = R.string.localizable.clip_hint_did_reach_max("\(ClipSwitcher.maxNumber)")
+                        showAutoHiddenHud(style: .error, text: text)
+                    }
                 }
             case .cancelFloat:
                 if let switcher = UIApplication.homeContainerViewController?.clipSwitcher {

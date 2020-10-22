@@ -207,6 +207,7 @@
 
 // Clip
 "clip_remove_all" = "确定要删除全部浮窗？";
+"clip_hint_did_reach_max" = "最多支持 %@ 个浮窗";
 
 // Circle
 "circle_title" = "圈子";

@@ -207,6 +207,7 @@
 
 // Clip
 "clip_remove_all" = "Remove all floats?";
+"clip_hint_did_reach_max" = "Floats allows up to %@ ones";
 
 // Circle
 "circle_title" = "Circle";

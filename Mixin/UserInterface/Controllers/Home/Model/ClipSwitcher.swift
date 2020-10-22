@@ -4,6 +4,8 @@ import MixinServices
 
 class ClipSwitcher {
     
+    static let maxNumber = 18
+    
     private(set) var clips: [Clip] = []
     
     private lazy var switcher = R.storyboard.home.clip_switcher()!

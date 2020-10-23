@@ -51,6 +51,12 @@ public final class LoginManager {
         pthread_rwlock_init(&lock, nil)
         _account = LoginManager.getAccountFromUserDefaults()
         _isLoggedIn = _account != nil && hasValidSessionSecret
+        
+        if !isAppExtension && _account != nil && !_isLoggedIn {
+            DispatchQueue.global().async {
+                LoginManager.shared.logout(from: "LoginManager")
+            }
+        }
     }
 
     fileprivate static func getAccountFromUserDefaults() -> Account? {

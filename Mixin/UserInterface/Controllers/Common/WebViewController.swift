@@ -177,6 +177,7 @@ class WebViewController: UIViewController {
             self.removeFromParent()
             completion?()
             self.contentView.transform = .identity
+            self.isBeingDismissedAsChild = false
             NotificationCenter.default.post(name: Self.didDismissNotification, object: self)
         }
         if animated {

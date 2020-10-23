@@ -11,6 +11,8 @@ class ClipSwitcherViewController: UIViewController {
     
     @IBOutlet weak var removeAllButtonTopConstraint: NSLayoutConstraint!
     
+    private(set) var isShowing = false
+    
     private let numberOfRows = 3
     private let numberOfColumns = 2
     
@@ -35,6 +37,10 @@ class ClipSwitcherViewController: UIViewController {
         collectionView.delegate = self
         reloadData()
         tapRecognizer.delegate = self
+    }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        .lightContent
     }
     
     @IBAction func removeAll(_ sender: Any) {
@@ -65,6 +71,8 @@ class ClipSwitcherViewController: UIViewController {
         guard parent != nil else {
             return
         }
+        isShowing = false
+        UIApplication.homeContainerViewController?.setNeedsStatusBarAppearanceUpdate()
         UIView.animate(withDuration: 0.3) {
             self.backgroundView.effect = nil
             self.collectionView.alpha = 0
@@ -83,6 +91,8 @@ class ClipSwitcherViewController: UIViewController {
         guard let container = UIApplication.homeContainerViewController else {
             return
         }
+        isShowing = true
+        UIApplication.homeContainerViewController?.setNeedsStatusBarAppearanceUpdate()
         loadViewIfNeeded()
         backgroundView.effect = nil
         collectionView.alpha = 0

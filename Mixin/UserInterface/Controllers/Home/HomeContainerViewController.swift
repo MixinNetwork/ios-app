@@ -45,15 +45,15 @@ class HomeContainerViewController: UIViewController {
     }()
     
     override var childForStatusBarHidden: UIViewController? {
-        return galleryIsOnTopMost ? galleryViewController : homeNavigationController
+        interfaceStyleRepresentation
     }
     
     override var childForStatusBarStyle: UIViewController? {
-        return galleryIsOnTopMost ? galleryViewController : homeNavigationController
+        interfaceStyleRepresentation
     }
     
     override var childForHomeIndicatorAutoHidden: UIViewController? {
-        return galleryIsOnTopMost ? galleryViewController : homeNavigationController
+        interfaceStyleRepresentation
     }
     
     private(set) var isShowingGallery = false
@@ -142,6 +142,16 @@ extension HomeContainerViewController: GalleryViewControllerDelegate {
 }
 
 extension HomeContainerViewController {
+    
+    private var interfaceStyleRepresentation: UIViewController {
+        if let switcher = clipSwitcher.fullscreenSwitcherIfLoaded, switcher.isShowing {
+            return switcher
+        } else if galleryIsOnTopMost {
+            return galleryViewController
+        } else {
+            return homeNavigationController
+        }
+    }
     
     private func chainingDelegate(of conversationId: String) -> GalleryViewControllerDelegate? {
         let sharedMedia = homeNavigationController.viewControllers

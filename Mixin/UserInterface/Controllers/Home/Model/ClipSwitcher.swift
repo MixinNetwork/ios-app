@@ -7,8 +7,13 @@ class ClipSwitcher {
     static let maxNumber = 18
     
     private(set) var clips: [Clip] = []
+    private(set) weak var fullscreenSwitcherIfLoaded: ClipSwitcherViewController?
     
-    private lazy var switcher = R.storyboard.home.clip_switcher()!
+    private lazy var fullscreenSwitcher: ClipSwitcherViewController = {
+        let controller = R.storyboard.home.clip_switcher()!
+        self.fullscreenSwitcherIfLoaded = controller
+        return controller
+    }()
     
     private var minimizedController: MinimizedClipSwitcherViewController? {
         let container = UIApplication.homeContainerViewController
@@ -81,12 +86,12 @@ class ClipSwitcher {
     }
     
     func hideFullscreenSwitcher() {
-        switcher.hide()
+        fullscreenSwitcher.hide()
     }
     
     @objc func showFullscreenSwitcher() {
-        switcher.clips = clips
-        switcher.show()
+        fullscreenSwitcher.clips = clips
+        fullscreenSwitcher.show()
     }
     
     @objc func didReceiveMemoryWarningNotification(_ notification: Notification) {

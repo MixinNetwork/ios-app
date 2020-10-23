@@ -3,7 +3,7 @@
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -18,6 +18,7 @@
                 <outlet property="middleAvatarImageView" destination="uUb-DM-6u5" id="ZPn-2M-KWf"/>
                 <outlet property="middleIconBackgroundView" destination="nBj-iF-AVg" id="QUP-cP-okd"/>
                 <outlet property="middleIconTrailingConstraint" destination="Bne-by-Tao" id="NAQ-NS-4NZ"/>
+                <outlet property="rightIconBackgroundLeadingConstraint" destination="saW-bY-N7x" id="E0n-dz-lJ3"/>
                 <outlet property="rightIconBackgroundView" destination="x2d-5k-wO0" id="Xng-pm-lgl"/>
                 <outlet property="rightIconTrailingConstraint" destination="s85-VF-PR1" id="2vn-W9-1oz"/>
                 <outlet property="rightLabel" destination="sng-0i-nJJ" id="prP-2X-yKK"/>
@@ -38,7 +39,7 @@
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="x2d-5k-wO0" userLabel="Right Icon Background View">
                                     <rect key="frame" x="40" y="1" width="36" height="36"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="+1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="6" translatesAutoresizingMaskIntoConstraints="NO" id="sng-0i-nJJ">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="+1" textAlignment="center" lineBreakMode="clip" baselineAdjustment="alignBaselines" minimumFontSize="6" translatesAutoresizingMaskIntoConstraints="NO" id="sng-0i-nJJ">
                                             <rect key="frame" x="20" y="0.0" width="14" height="36"/>
                                             <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
                                             <color key="textColor" name="text_accessory"/>

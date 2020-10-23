@@ -14,6 +14,7 @@ class MinimizedClipSwitcherViewController: HomeOverlayViewController {
     @IBOutlet weak var leftIconTrailingConstraint: NSLayoutConstraint!
     @IBOutlet weak var middleIconTrailingConstraint: NSLayoutConstraint!
     @IBOutlet weak var rightIconTrailingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var rightIconBackgroundLeadingConstraint: NSLayoutConstraint!
     
     var clips: [Clip] = [] {
         didSet {
@@ -72,11 +73,17 @@ class MinimizedClipSwitcherViewController: HomeOverlayViewController {
             
             loadClip(clips[0], to: leftAvatarImageView)
             loadClip(clips[1], to: middleAvatarImageView)
-            rightLabel.text = "+\(clips.count - 2)"
+            let numberText = "+\(clips.count - 2)"
+            rightLabel.text = numberText
             
             leftIconTrailingConstraint.priority = .defaultLow
             middleIconTrailingConstraint.priority = .defaultLow
             rightIconTrailingConstraint.priority = .defaultHigh
+            if numberText.count == 3 {
+                rightIconBackgroundLeadingConstraint.constant = 22
+            } else {
+                rightIconBackgroundLeadingConstraint.constant = 20
+            }
             middleIconBackgroundView.isHidden = false
             rightIconBackgroundView.isHidden = false
         }

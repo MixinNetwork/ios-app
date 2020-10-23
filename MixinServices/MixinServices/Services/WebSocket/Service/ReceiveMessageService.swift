@@ -285,9 +285,15 @@ public class ReceiveMessageService: MixinService {
             updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
             return
         }
-
-        if let updatedAt = appCard.updatedAt, let appId = appCard.appId {
-            syncApp(appId: appId, updatedAt: updatedAt)
+        if let appId = appCard.appId {
+            guard !appId.isEmpty, UUID(uuidString: appId) != nil else {
+                processUnknownMessage(data: data)
+                updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
+                return
+            }
+            if let updatedAt = appCard.updatedAt {
+                syncApp(appId: appId, updatedAt: updatedAt)
+            }
         }
         _ = syncUser(userId: data.getSenderId())
 
@@ -515,6 +521,10 @@ public class ReceiveMessageService: MixinService {
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }
+            guard !transferData.userId.isEmpty, UUID(uuidString: transferData.userId) != nil else {
+                ReceiveMessageService.shared.processUnknownMessage(data: data)
+                return
+            }
             guard syncUser(userId: transferData.userId) else {
                 return
             }
@@ -650,6 +660,10 @@ public class ReceiveMessageService: MixinService {
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }
+            guard !transferData.userId.isEmpty, UUID(uuidString: transferData.userId) != nil else {
+                ReceiveMessageService.shared.processUnknownMessage(data: data)
+                return
+            }
             guard syncUser(userId: transferData.userId) else {
                 return
             }
@@ -665,7 +679,11 @@ public class ReceiveMessageService: MixinService {
             return nil
         }
 
-        if let stickerId = transferStickerData.stickerId, !stickerId.isEmpty {
+        if let stickerId = transferStickerData.stickerId {
+            guard !stickerId.isEmpty, UUID(uuidString: stickerId) != nil else {
+                ReceiveMessageService.shared.processUnknownMessage(data: data)
+                return nil
+            }
             guard !StickerDAO.shared.isExist(stickerId: stickerId) else {
                 return transferStickerData
             }

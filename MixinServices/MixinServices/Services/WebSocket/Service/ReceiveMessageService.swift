@@ -515,7 +515,10 @@ public class ReceiveMessageService: MixinService {
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }
-            guard syncUser(userId: transferData.userId) else {
+            guard let userId = UUID(uuidString: transferData.userId) else {
+                return
+            }
+            guard syncUser(userId: userId.uuidString.lowercased()) else {
                 return
             }
             let message = Message.createMessage(contactData: transferData, data: data)

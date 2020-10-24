@@ -108,6 +108,8 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
                 reporter.report(event: .login, userInfo: ["source": "normal"])
             }
             
+            logBackup()
+            
             var backupExist = false
             if let backupDir = backupUrl {
                 backupExist = backupDir.appendingPathComponent(backupDatabaseName).isStoredCloud || backupDir.appendingPathComponent("mixin.backup.db").isStoredCloud
@@ -137,6 +139,40 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
                 self.handleVerificationCodeError(error)
             }
         }
+    }
+    
+    private func logBackup() {
+        guard let icloudDir = FileManager.default.url(forUbiquityContainerIdentifier: nil) else {
+            return
+        }
+        
+        var logs = [String]()
+        logs.append("[iCloud]...isLogoutByServer:\(AppGroupUserDefaults.User.isLogoutByServer)")
+        if let backupDir = backupUrl {
+            let backupExist = backupDir.appendingPathComponent(backupDatabaseName).isStoredCloud
+            let fileSize = backupDir.appendingPathComponent(backupDatabaseName).fileSize
+            logs.append("[iCloud][\(backupDatabaseName)]...backupExist:\(backupExist)...fileSize:\(fileSize.sizeRepresentation())")
+        }
+        logs += debugCloudFiles(baseDir: icloudDir, parentDir: icloudDir)
+        Logger.write(log: logs.joined(separator: "\n"), newSection: true)
+    }
+    
+    
+    private func debugCloudFiles(baseDir: URL, parentDir: URL) -> [String] {
+        let files = FileManager.default.childFiles(parentDir)
+        var dirs = [String]()
+        
+        for file in files {
+            let url = parentDir.appendingPathComponent(file)
+            if FileManager.default.directoryExists(atPath: url.path) {
+                dirs.append("[iCloud][\(url.suffix(base: baseDir))] \(files.count) child files")
+                dirs += debugCloudFiles(baseDir: baseDir, parentDir: url)
+            } else if file.contains("mixin.db") {
+                dirs.append("[iCloud][\(url.suffix(base: baseDir))] file size:\(url.fileSize.sizeRepresentation())")
+            }
+        }
+        
+        return dirs
     }
     
 }

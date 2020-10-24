@@ -33,6 +33,7 @@ class RestoreViewController: UIViewController {
         guard !restoreButton.isBusy else {
             return
         }
+        Logger.write(log: "[iCloud][RestoreViewController]...restore...")
         restoreButton.isBusy = true
         skipButton.isHidden = true
         progressLabel.isHidden = false
@@ -49,6 +50,7 @@ class RestoreViewController: UIViewController {
                 cloudURL = backupDir.appendingPathComponent("mixin.backup.db")
             }
             guard cloudURL.isStoredCloud else {
+                Logger.write(log: "[iCloud][RestoreViewController][\(cloudURL.suffix(base: backupDir))]...isStoredCloud:false")
                 DispatchQueue.main.async {
                     self.skipAction(sender)
                 }
@@ -63,6 +65,8 @@ class RestoreViewController: UIViewController {
                     try self.downloadFromCloud(cloudURL: cloudURL, progress: { (progress) in
                         self.progressLabel.text = NumberFormatter.simplePercentage.string(from: NSNumber(value: progress))
                     })
+                } else {
+                    Logger.write(log: "[iCloud][RestoreViewController][\(cloudURL.suffix(base: backupDir))]...isDownloaded:false")
                 }
                 try FileManager.default.copyItem(at: cloudURL, to: localURL)
 
@@ -76,12 +80,14 @@ class RestoreViewController: UIViewController {
                     AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
                 }
             } catch {
+                Logger.write(error: error, extra: "[iCloud][RestoreViewController][\(cloudURL.suffix(base: backupDir))]")
                 self.restoreFailed(error: error)
             }
         }
     }
 
     @IBAction func skipAction(_ sender: Any) {
+        Logger.write(log: "[iCloud][RestoreViewController]...skip...")
         AppGroupUserDefaults.Account.canRestoreChat = false
         AppGroupUserDefaults.Account.canRestoreMedia = false
         AppDelegate.current.mainWindow.rootViewController =
@@ -101,7 +107,8 @@ class RestoreViewController: UIViewController {
             semaphore.wait()
         } catch {
             semaphore.signal()
-            restoreFailed(error: error)
+            try? FileManager.default.removeItem(at: databaseURL)
+            Logger.write(error: error, extra: "[iCloud][RestoreViewController]...remove database failed...")
         }
     }
 

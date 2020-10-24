@@ -58,8 +58,8 @@ open class Reporter {
         MSAppCenter.setUserId(account.user_id)
 
         var properties = MSCustomProperties()
-        properties.setString(account.identity_number, forKey: "identity_number")
-        properties.setString(account.full_name, forKey: "full_name")
+        properties.setString(account.identity_number, forKey: "IdentityNumber")
+        properties.setString(account.full_name, forKey: "FullName")
         MSAppCenter.setCustomProperties(properties)
     }
     

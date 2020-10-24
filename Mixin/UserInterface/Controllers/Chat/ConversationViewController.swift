@@ -751,11 +751,11 @@ class ConversationViewController: UIViewController {
         
         let conversationId = self.conversationId
         let alc = UIAlertController(title: Localized.REPORT_TITLE, message: MixinHost.http, preferredStyle: .actionSheet)
-        alc.addAction(UIAlertAction(title: Localized.REPORT_BUTTON, style: .default, handler: { [weak self](_) in
-            self?.report(conversationId: conversationId, shareFile: false)
+        alc.addAction(UIAlertAction(title: Localized.REPORT_BUTTON, style: .default, handler: { (_) in
+            self.report(conversationId: conversationId)
         }))
-        alc.addAction(UIAlertAction(title: R.string.localizable.report_share(), style: .default, handler: { [weak self](_) in
-            self?.report(conversationId: conversationId, shareFile: true)
+        alc.addAction(UIAlertAction(title: R.string.localizable.report_share(), style: .default, handler: { (_) in
+            self.reportAirDop(conversationId: conversationId)
         }))
         if !Self.allowReportSingleMessage {
             alc.addAction(UIAlertAction(title: R.string.localizable.report_message(), style: .default, handler: { (_) in
@@ -1268,7 +1268,7 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
                 navigationController?.pushViewController(vc, animated: true)
             }
         case .report:
-            report(conversationId: conversationId, shareFile: false, message: message)
+            report(conversationId: conversationId, message: message)
         }
     }
 }
@@ -2146,8 +2146,23 @@ extension ConversationViewController {
             MixinWebViewController.presentInstance(with: .init(conversationId: conversationId, initialUrl: url), asChildOf: self)
         }
     }
+    
+    private func reportAirDop(conversationId: String) {
+        DispatchQueue.global().async {
+            Logger.write(conversationId: conversationId, log: "[Report][Websocket]...isReachable:\(ReachabilityManger.shared.isReachable)...isConnected:\(WebSocketService.shared.isConnected)...isRealConnected:\(WebSocketService.shared.isRealConnected)")
 
-    private func report(conversationId: String, shareFile: Bool, message: MessageItem? = nil) {
+            guard let targetUrl = Logger.export(conversationId: conversationId), FileManager.default.fileSize(targetUrl.path) > 0 else {
+                return
+            }
+            
+            DispatchQueue.main.async {
+                let inviteController = UIActivityViewController(activityItems: [targetUrl], applicationActivities: nil)
+                self.navigationController?.present(inviteController, animated: true, completion: nil)
+            }
+        }
+    }
+
+    private func report(conversationId: String, message: MessageItem? = nil) {
         DispatchQueue.global().async { [weak self] in
             let developID = myIdentityNumber == "762532" ? "31911" : "762532"
             var user = UserDAO.shared.getUser(identityNumber: developID)
@@ -2205,25 +2220,18 @@ extension ConversationViewController {
                 return
             }
 
-            if shareFile {
-                DispatchQueue.main.async {
-                    let inviteController = UIActivityViewController(activityItems: [targetUrl], applicationActivities: nil)
-                    self?.navigationController?.present(inviteController, animated: true, completion: nil)
-                }
-            } else {
-                let developConversationId = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: developUser.userId)
-                var message = Message.createMessage(category: MessageCategory.PLAIN_DATA.rawValue, conversationId: developConversationId, userId: myUserId)
-                message.name = url.lastPathComponent
-                message.mediaSize = FileManager.default.fileSize(targetUrl.path)
-                message.mediaMimeType = FileManager.default.mimeType(ext: url.pathExtension)
-                message.mediaUrl = url.lastPathComponent
-                message.mediaStatus = MediaStatus.PENDING.rawValue
+            let developConversationId = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: developUser.userId)
+            var message = Message.createMessage(category: MessageCategory.PLAIN_DATA.rawValue, conversationId: developConversationId, userId: myUserId)
+            message.name = url.lastPathComponent
+            message.mediaSize = FileManager.default.fileSize(targetUrl.path)
+            message.mediaMimeType = FileManager.default.mimeType(ext: url.pathExtension)
+            message.mediaUrl = url.lastPathComponent
+            message.mediaStatus = MediaStatus.PENDING.rawValue
 
-                self?.dataSource?.queue.async {
-                    SendMessageService.shared.sendMessage(message: message, ownerUser: developUser, isGroupMessage: false)
-                    DispatchQueue.main.async {
-                        self?.navigationController?.pushViewController(withBackRoot: ConversationViewController.instance(ownerUser: developUser))
-                    }
+            self?.dataSource?.queue.async {
+                SendMessageService.shared.sendMessage(message: message, ownerUser: developUser, isGroupMessage: false)
+                DispatchQueue.main.async {
+                    self?.navigationController?.pushViewController(withBackRoot: ConversationViewController.instance(ownerUser: developUser))
                 }
             }
         }

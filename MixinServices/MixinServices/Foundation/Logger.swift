@@ -123,6 +123,9 @@ public enum Logger {
         let filename = "\(myIdentityNumber)_\(DateFormatter.filename.string(from: Date()))"
 
         let logFiles = [conversationFile, errorFile, systemFile, callFile].filter { FileManager.default.fileSize($0.path) > 0 }
+        guard logFiles.count > 0 else  {
+            return nil
+        }
         do {
             return try Zip.quickZipFiles(logFiles, fileName: filename)
         } catch {

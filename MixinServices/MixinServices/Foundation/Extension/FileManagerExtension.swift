@@ -76,6 +76,10 @@ public extension FileManager {
             }
         }
     }
+    
+    public func childFiles(_ directory: URL) -> [String] {
+        (try? FileManager.default.contentsOfDirectory(atPath: directory.path)) ?? []
+    }
 
     func removeCloudCacheFiles(_ directory: URL) {
         guard directoryExists(atPath: directory.path) else {

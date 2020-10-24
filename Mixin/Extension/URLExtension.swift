@@ -55,6 +55,10 @@ extension URL {
 
         return String(mimeUTI.takeUnretainedValue())
     }
+    
+    func suffix(base: URL) -> String {
+        return String(path.suffix(path.count - base.path.count))
+    }
 }
 
 extension URLComponents {

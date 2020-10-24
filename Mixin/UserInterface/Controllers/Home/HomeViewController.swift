@@ -24,6 +24,7 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var bottomBarView: UIView!
     @IBOutlet weak var leftAppButton: UIButton!
     @IBOutlet weak var rightAppButton: UIButton!
+    @IBOutlet weak var myAvatarImageView: AvatarImageView!
     
     @IBOutlet weak var bulletinWrapperViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var bulletinContentTopConstraint: NSLayoutConstraint!
@@ -82,6 +83,9 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         titleButton.setTitle(topLeftTitle, for: .normal)
+        if let account = LoginManager.shared.account {
+            myAvatarImageView.setImage(with: account)
+        }
         isBulletinViewHidden = true
         updateBulletinView()
         searchContainerBeginTopConstant = searchContainerTopConstraint.constant
@@ -371,17 +375,17 @@ class HomeViewController: UIViewController {
                 if let left = apps.first {
                     setImage(with: left, to: self.leftAppButton)
                     self.leftAppAction = action(for: left)
-                    self.leftAppButton.alpha = 1
+                    self.leftAppButton.isHidden = false
                 } else {
-                    self.leftAppButton.alpha = 0
+                    self.leftAppButton.isHidden = true
                 }
                 if apps.count == 2 {
                     let app = apps[1]
                     setImage(with: app, to: self.rightAppButton)
                     self.rightAppAction = action(for: app)
-                    self.rightAppButton.alpha = 1
+                    self.rightAppButton.isHidden = false
                 } else {
-                    self.rightAppButton.alpha = 0
+                    self.rightAppButton.isHidden = true
                 }
             }
         }

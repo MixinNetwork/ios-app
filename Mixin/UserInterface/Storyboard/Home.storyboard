@@ -3,7 +3,7 @@
     <device id="retina4_7" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
@@ -349,7 +349,6 @@
                                                     <constraint firstAttribute="width" secondItem="sgk-eO-xl5" secondAttribute="height" id="vpg-Rw-5UU"/>
                                                 </constraints>
                                                 <color key="tintColor" name="icon_tint"/>
-                                                <state key="normal" image="ic_title_contact"/>
                                                 <connections>
                                                     <action selector="contactsAction:" destination="hQE-mj-dkd" eventType="touchUpInside" id="WPi-vz-bR7"/>
                                                 </connections>
@@ -359,11 +358,26 @@
                                             <constraint firstAttribute="height" constant="44" id="AFx-TY-vZv"/>
                                         </constraints>
                                     </stackView>
+                                    <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vYU-3O-kpb" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
+                                        <rect key="frame" x="331" y="30" width="24" height="24"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="24" id="Agg-1J-839"/>
+                                            <constraint firstAttribute="width" constant="24" id="RsZ-YL-t4Y"/>
+                                        </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="titleFontSize">
+                                                <real key="value" value="12"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </view>
                                 </subviews>
                                 <color key="backgroundColor" name="background"/>
                                 <constraints>
+                                    <constraint firstItem="vYU-3O-kpb" firstAttribute="centerX" secondItem="sgk-eO-xl5" secondAttribute="centerX" id="1RY-Vg-Ijd"/>
                                     <constraint firstAttribute="bottom" secondItem="JkM-gn-X6q" secondAttribute="bottom" id="JdA-uP-oO5"/>
                                     <constraint firstItem="JkM-gn-X6q" firstAttribute="leading" secondItem="2PV-tA-eIh" secondAttribute="leading" constant="20" id="ZhY-ez-BtH"/>
+                                    <constraint firstItem="vYU-3O-kpb" firstAttribute="centerY" secondItem="sgk-eO-xl5" secondAttribute="centerY" id="cc6-Mb-oKu"/>
                                     <constraint firstAttribute="trailing" secondItem="JkM-gn-X6q" secondAttribute="trailing" constant="10" id="hac-oe-hM7"/>
                                 </constraints>
                             </view>
@@ -380,7 +394,7 @@
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="50" translatesAutoresizingMaskIntoConstraints="NO" id="NKg-z2-Eo8">
                                         <rect key="frame" x="71.5" y="23" width="232" height="44"/>
                                         <subviews>
-                                            <button opaque="NO" alpha="0.0" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vqg-GI-nmb">
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vqg-GI-nmb">
                                                 <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="vqg-GI-nmb" secondAttribute="height" id="CNE-MX-Vhp"/>
@@ -390,24 +404,25 @@
                                                     <action selector="leftAppAction:" destination="hQE-mj-dkd" eventType="touchUpInside" id="T87-qH-8PF"/>
                                                 </connections>
                                             </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UfU-t2-rlQ">
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fjb-22-pJO">
                                                 <rect key="frame" x="94" y="0.0" width="44" height="44"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" secondItem="UfU-t2-rlQ" secondAttribute="height" id="ToR-16-9wz"/>
-                                                </constraints>
-                                                <state key="normal" image="ic_home_app_add"/>
-                                                <connections>
-                                                    <action selector="showAppsAction:" destination="hQE-mj-dkd" eventType="touchUpInside" id="vh5-TE-Mei"/>
-                                                </connections>
-                                            </button>
-                                            <button opaque="NO" alpha="0.0" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fjb-22-pJO">
-                                                <rect key="frame" x="188" y="0.0" width="44" height="44"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="Fjb-22-pJO" secondAttribute="height" id="GMH-Wl-Nxj"/>
                                                 </constraints>
                                                 <color key="tintColor" name="icon_tint"/>
                                                 <connections>
                                                     <action selector="rightAppAction:" destination="hQE-mj-dkd" eventType="touchUpInside" id="Dku-Pe-9lm"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UfU-t2-rlQ">
+                                                <rect key="frame" x="188" y="0.0" width="44" height="44"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="UfU-t2-rlQ" secondAttribute="height" id="ToR-16-9wz"/>
+                                                </constraints>
+                                                <color key="tintColor" name="text"/>
+                                                <state key="normal" image="ic_home_app_add"/>
+                                                <connections>
+                                                    <action selector="showAppsAction:" destination="hQE-mj-dkd" eventType="touchUpInside" id="vh5-TE-Mei"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -484,6 +499,7 @@
                         <outlet property="guideLabel" destination="ihi-Yl-qaN" id="8oB-nb-bkP"/>
                         <outlet property="guideView" destination="L82-pj-DlR" id="X4h-WI-gQy"/>
                         <outlet property="leftAppButton" destination="vqg-GI-nmb" id="wVS-Bo-T9D"/>
+                        <outlet property="myAvatarImageView" destination="vYU-3O-kpb" id="eOU-Jw-Dv0"/>
                         <outlet property="navigationBarView" destination="2PV-tA-eIh" id="CLx-za-35J"/>
                         <outlet property="rightAppButton" destination="Fjb-22-pJO" id="8YB-kx-6Es"/>
                         <outlet property="searchContainerTopConstraint" destination="o6R-WF-m77" id="5U8-yb-0fY"/>
@@ -1597,11 +1613,10 @@ chat history from icloud</string>
         <image name="ic_clock_skew" width="72" height="72"/>
         <image name="ic_database" width="62" height="68"/>
         <image name="ic_dialog_close" width="26" height="26"/>
-        <image name="ic_home_app_add" width="36" height="36"/>
+        <image name="ic_home_app_add" width="24" height="24"/>
         <image name="ic_message_photo" width="14" height="12"/>
         <image name="ic_title_add" width="16" height="16"/>
         <image name="ic_title_close" width="15" height="15"/>
-        <image name="ic_title_contact" width="24" height="24"/>
         <image name="ic_title_search" width="28.5" height="28"/>
         <image name="ic_user_bot" width="14" height="11"/>
         <namedColor name="background">
@@ -1614,7 +1629,7 @@ chat history from icloud</string>
             <color red="0.18431372549019609" green="0.18823529411764706" blue="0.19607843137254902" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
             <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

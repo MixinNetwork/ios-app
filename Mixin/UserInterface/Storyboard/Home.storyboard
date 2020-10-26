@@ -392,30 +392,10 @@
                                         <rect key="frame" x="0.0" y="-45" width="375" height="120"/>
                                     </imageView>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="50" translatesAutoresizingMaskIntoConstraints="NO" id="NKg-z2-Eo8">
-                                        <rect key="frame" x="71.5" y="23" width="232" height="44"/>
+                                        <rect key="frame" x="165.5" y="23" width="44" height="44"/>
                                         <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vqg-GI-nmb">
-                                                <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" secondItem="vqg-GI-nmb" secondAttribute="height" id="CNE-MX-Vhp"/>
-                                                </constraints>
-                                                <color key="tintColor" name="icon_tint"/>
-                                                <connections>
-                                                    <action selector="leftAppAction:" destination="hQE-mj-dkd" eventType="touchUpInside" id="T87-qH-8PF"/>
-                                                </connections>
-                                            </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fjb-22-pJO">
-                                                <rect key="frame" x="94" y="0.0" width="44" height="44"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" secondItem="Fjb-22-pJO" secondAttribute="height" id="GMH-Wl-Nxj"/>
-                                                </constraints>
-                                                <color key="tintColor" name="icon_tint"/>
-                                                <connections>
-                                                    <action selector="rightAppAction:" destination="hQE-mj-dkd" eventType="touchUpInside" id="Dku-Pe-9lm"/>
-                                                </connections>
-                                            </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UfU-t2-rlQ">
-                                                <rect key="frame" x="188" y="0.0" width="44" height="44"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="UfU-t2-rlQ" secondAttribute="height" id="ToR-16-9wz"/>
                                                 </constraints>
@@ -486,6 +466,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="Zif-1j-Fve"/>
                     <connections>
+                        <outlet property="appStackView" destination="NKg-z2-Eo8" id="f9p-Az-BTT"/>
                         <outlet property="bottomBarView" destination="iHT-NY-1rS" id="VGV-Cg-Gt1"/>
                         <outlet property="bottomNavigationBottomConstraint" destination="FfU-Cc-iFt" id="RTk-iN-DDP"/>
                         <outlet property="bulletinContentTopConstraint" destination="0Nv-vF-vKp" id="7i0-04-M7u"/>
@@ -498,10 +479,8 @@
                         <outlet property="guideButton" destination="mGh-0e-UXt" id="luZ-zh-eKQ"/>
                         <outlet property="guideLabel" destination="ihi-Yl-qaN" id="8oB-nb-bkP"/>
                         <outlet property="guideView" destination="L82-pj-DlR" id="X4h-WI-gQy"/>
-                        <outlet property="leftAppButton" destination="vqg-GI-nmb" id="wVS-Bo-T9D"/>
                         <outlet property="myAvatarImageView" destination="vYU-3O-kpb" id="eOU-Jw-Dv0"/>
                         <outlet property="navigationBarView" destination="2PV-tA-eIh" id="CLx-za-35J"/>
-                        <outlet property="rightAppButton" destination="Fjb-22-pJO" id="8YB-kx-6Es"/>
                         <outlet property="searchContainerTopConstraint" destination="o6R-WF-m77" id="5U8-yb-0fY"/>
                         <outlet property="searchContainerView" destination="uc0-po-iUR" id="Q0R-V2-fEi"/>
                         <outlet property="tableView" destination="9MA-tT-pfZ" id="c0q-R0-LjX"/>
@@ -1629,10 +1608,10 @@ chat history from icloud</string>
             <color red="0.18431372549019609" green="0.18823529411764706" blue="0.19607843137254902" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_desc">
             <color red="0.73725490196078436" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

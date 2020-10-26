@@ -22,8 +22,7 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var bulletinTitleLabel: UILabel!
     @IBOutlet weak var bulletinDescriptionView: UILabel!
     @IBOutlet weak var bottomBarView: UIView!
-    @IBOutlet weak var leftAppButton: UIButton!
-    @IBOutlet weak var rightAppButton: UIButton!
+    @IBOutlet weak var appStackView: UIStackView!
     @IBOutlet weak var myAvatarImageView: AvatarImageView!
     
     @IBOutlet weak var bulletinWrapperViewHeightConstraint: NSLayoutConstraint!
@@ -35,7 +34,8 @@ class HomeViewController: UIViewController {
     private let dragDownIndicator = DragDownIndicator()
     private let feedback = UISelectionFeedbackGenerator()
     private let messageCountPerPage = 30
-
+    private let numberOfHomeApps = 3
+    
     private var conversations = [ConversationItem]()
     private var needRefresh = true
     private var refreshing = false
@@ -43,8 +43,8 @@ class HomeViewController: UIViewController {
     private var searchViewController: SearchViewController!
     private var searchContainerBeginTopConstant: CGFloat!
     private var loadMoreMessageThreshold = 10
-    private var leftAppAction: (() -> Void)?
-    private var rightAppAction: (() -> Void)?
+    private var appButtons = [UIButton]()
+    private var appActions: [(() -> Void)?] = []
     private var isEditingRow = false
     
     private var isBulletinViewHidden = false {
@@ -97,6 +97,18 @@ class HomeViewController: UIViewController {
         dragDownIndicator.bounds.size = CGSize(width: 40, height: 40)
         dragDownIndicator.center = CGPoint(x: tableView.frame.width / 2, y: -40)
         tableView.addSubview(dragDownIndicator)
+        for index in 0..<numberOfHomeApps {
+            let button = UIButton()
+            button.tintColor = R.color.icon_tint()
+            button.tag = index
+            button.addTarget(self, action: #selector(homeAppAction(_:)), for: .touchUpInside)
+            appButtons.append(button)
+            appStackView.insertArrangedSubview(button, at: appStackView.arrangedSubviews.count - 1)
+            button.snp.makeConstraints { (make) in
+                make.width.equalTo(button.snp.height)
+            }
+            appActions.append(nil)
+        }
         updateHomeApps()
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: .ConversationDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: MessageDAO.didInsertMessageNotification, object: nil)
@@ -234,14 +246,6 @@ class HomeViewController: UIViewController {
         vc.presentAsChild(of: self)
     }
     
-    @IBAction func leftAppAction(_ sender: Any) {
-        leftAppAction?()
-    }
-    
-    @IBAction func rightAppAction(_ sender: Any) {
-        rightAppAction?()
-    }
-    
     @objc func applicationDidBecomeActive(_ sender: Notification) {
         updateBulletinView()
         fetchConversations()
@@ -329,28 +333,12 @@ class HomeViewController: UIViewController {
     @objc func circleNameDidChange() {
         titleButton.setTitle(topLeftTitle, for: .normal)
     }
-
-    func dismissAppsWindow() {
-        if let homeApps = children.compactMap({ $0 as? HomeAppsViewController }).first {
-            homeApps.dismissAsChild(completion: nil)
-        }
+    
+    @objc func homeAppAction(_ button: UIButton) {
+        appActions[button.tag]?()
     }
     
     @objc func updateHomeApps() {
-        func setImage(with app: HomeApp, to button: UIButton) {
-            button.setImage(app.categoryIcon, for: .normal)
-            switch app {
-            case .embedded(let app):
-                if button == leftAppButton {
-                    leftAppAction = app.action
-                } else if button == rightAppButton {
-                    rightAppAction = app.action
-                }
-            case .external:
-                break
-            }
-        }
-        
         func action(for app: HomeApp) -> (() -> Void) {
             switch app {
             case .embedded(let app):
@@ -370,24 +358,29 @@ class HomeViewController: UIViewController {
         }
         
         DispatchQueue.global().async {
-            let apps = AppGroupUserDefaults.User.homeAppIds.compactMap(HomeApp.init).prefix(2)
+            let apps = AppGroupUserDefaults.User.homeAppIds
+                .compactMap(HomeApp.init)
+                .prefix(self.numberOfHomeApps)
             DispatchQueue.main.async {
-                if let left = apps.first {
-                    setImage(with: left, to: self.leftAppButton)
-                    self.leftAppAction = action(for: left)
-                    self.leftAppButton.isHidden = false
-                } else {
-                    self.leftAppButton.isHidden = true
-                }
-                if apps.count == 2 {
-                    let app = apps[1]
-                    setImage(with: app, to: self.rightAppButton)
-                    self.rightAppAction = action(for: app)
-                    self.rightAppButton.isHidden = false
-                } else {
-                    self.rightAppButton.isHidden = true
+                for index in 0..<self.numberOfHomeApps {
+                    if index < apps.count {
+                        let button = self.appButtons[index]
+                        let app = apps[index]
+                        button.setImage(app.categoryIcon, for: .normal)
+                        button.isHidden = false
+                        self.appActions[index] = action(for: app)
+                    } else {
+                        self.appButtons[index].isHidden = true
+                        self.appActions[index] = nil
+                    }
                 }
             }
+        }
+    }
+    
+    func dismissAppsWindow() {
+        if let homeApps = children.compactMap({ $0 as? HomeAppsViewController }).first {
+            homeApps.dismissAsChild(completion: nil)
         }
     }
     

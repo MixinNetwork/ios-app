@@ -374,6 +374,11 @@ class HomeViewController: UIViewController {
                         self.appActions[index] = nil
                     }
                 }
+                if self.appStackView.arrangedSubviews.count <= 3 {
+                    self.appStackView.spacing = 44
+                } else {
+                    self.appStackView.spacing = 36
+                }
             }
         }
     }

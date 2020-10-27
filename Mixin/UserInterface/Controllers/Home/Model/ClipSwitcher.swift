@@ -4,7 +4,7 @@ import MixinServices
 
 class ClipSwitcher {
     
-    static let maxNumber = 18
+    static let maxNumber = 6
     
     private(set) var clips: [Clip] = []
     private(set) weak var fullscreenSwitcherIfLoaded: ClipSwitcherViewController?
@@ -103,14 +103,8 @@ class ClipSwitcher {
     }
     
     @objc func didReceiveMemoryWarningNotification(_ notification: Notification) {
-        if clips.count > 6 {
-            for clip in clips[0..<(clips.count - 6)] {
-                clip.removeCachedController()
-            }
-        } else {
-            for clip in clips {
-                clip.removeCachedController()
-            }
+        for clip in clips {
+            clip.removeCachedController()
         }
     }
     

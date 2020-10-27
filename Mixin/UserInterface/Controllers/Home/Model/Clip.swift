@@ -5,14 +5,30 @@ import MixinServices
 final class Clip: Codable {
     
     enum CodingKeys: CodingKey {
-        case app, title, url
+        case id, app, title, url
     }
     
+    private static let thumbnailProcessingQueue = DispatchQueue(label: "one.mixin.messenger.Clip.ThumbnailProcessing")
+    
+    private static var thumbnailCachesURL: URL? {
+        let urls = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)
+        return urls.first?.appendingPathComponent("Clips")
+    }
+    
+    let id: UUID
     let app: App?
     let title: String
     let url: URL
     
-    var thumbnail: UIImage?
+    var thumbnail: UIImage? {
+        didSet {
+            let thumbnail = self.thumbnail
+            Self.thumbnailProcessingQueue.async {
+                self.updateCache(for: thumbnail)
+            }
+        }
+    }
+    
     var controller: MixinWebViewController {
         let controller: MixinWebViewController = {
             if let controller = controllerIfLoaded {
@@ -29,7 +45,12 @@ final class Clip: Codable {
     
     private(set) var controllerIfLoaded: MixinWebViewController?
     
+    private var thumbnailCacheURL: URL? {
+        Self.thumbnailCachesURL?.appendingPathComponent(id.uuidString)
+    }
+    
     init(app: App?, url: URL, controller: MixinWebViewController) {
+        self.id = UUID()
         self.app = app
         if let app = app {
             self.title = app.name
@@ -44,18 +65,26 @@ final class Clip: Codable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = try container.decode(UUID.self, forKey: .id)
         self.app = try container.decodeIfPresent(App.self, forKey: .app)
         self.title = try container.decode(String.self, forKey: .title)
         self.url = try container.decode(URL.self, forKey: .url)
         addObservers()
+        loadThumbnailFromCache()
     }
     
     deinit {
         NotificationCenter.default.removeObserver(self)
+        if let url = self.thumbnailCacheURL {
+            Self.thumbnailProcessingQueue.async {
+                try? FileManager.default.removeItem(at: url)
+            }
+        }
     }
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
         try container.encode(app, forKey: .app)
         try container.encode(title, forKey: .title)
         try container.encode(url, forKey: .url)
@@ -79,6 +108,54 @@ final class Clip: Codable {
     
     private func addObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(updateThumbnail(_:)), name: WebViewController.didDismissNotification, object: nil)
+    }
+    
+    private func updateCache(for thumbnail: UIImage?) {
+        let fileManager = FileManager.default
+        guard let thumbnailCachesURL = Self.thumbnailCachesURL else {
+            return
+        }
+        
+        var isDirectory = ObjCBool(false)
+        var isExist = fileManager.fileExists(atPath: thumbnailCachesURL.path, isDirectory: &isDirectory)
+        if isExist && !isDirectory.boolValue {
+            try? fileManager.removeItem(at: thumbnailCachesURL)
+        } else if !isExist {
+            try? fileManager.createDirectory(at: thumbnailCachesURL,
+                                             withIntermediateDirectories: true,
+                                             attributes: nil)
+        }
+        isExist = fileManager.fileExists(atPath: thumbnailCachesURL.path, isDirectory: &isDirectory)
+        guard isExist && isDirectory.boolValue else {
+            return
+        }
+        
+        guard let url = self.thumbnailCacheURL else {
+            return
+        }
+        if let thumbnail = thumbnail {
+            let data = thumbnail.jpegData(compressionQuality: 0.6)
+            try? data?.write(to: url)
+        } else {
+            try? fileManager.removeItem(at: url)
+        }
+    }
+    
+    private func loadThumbnailFromCache() {
+        guard let url = thumbnailCacheURL else {
+            return
+        }
+        Self.thumbnailProcessingQueue.async { [weak self] in
+            guard let data = try? Data(contentsOf: url) else {
+                return
+            }
+            guard let image = UIImage(data: data) else {
+                return
+            }
+            DispatchQueue.main.async {
+                self?.thumbnail = image
+            }
+        }
     }
     
 }

@@ -13,9 +13,9 @@ enum ScreenHeight: Int {
      Long
      iPhone 5.5”:                       414 x 736 pt
      iPhone 5.4” & 5.8”:                375 x 812 pt
+     iPhone 6.1" (2020):                390 x 844 pt
      
      Extra Long
-     iPhone 6.1" (2020):                390 x 844 pt
      iPhone 6.1” (2018–2019) & 6.5”:    414 x 896 pt
      iPhone 6.7”:                       428 x 926 pt
      */
@@ -31,7 +31,7 @@ enum ScreenHeight: Int {
             return .short
         } else if height <= (693 + 736) / 2 {
             return .medium
-        } else if height <= (812 + 844) / 2 {
+        } else if height <= (844 + 896) / 2 {
             return .long
         } else {
             return .extraLong

@@ -192,7 +192,6 @@
 		7B5EF7E420BE9EAC009A7972 /* AudioMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5EF7E320BE9EAC009A7972 /* AudioMessageCell.swift */; };
 		7B5F96692414241C003A087B /* LocationInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5F96682414241C003A087B /* LocationInformationView.swift */; };
 		7B5F966B241424CD003A087B /* LocationInformationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B5F966A241424CD003A087B /* LocationInformationView.xib */; };
-		7B5FEE402101AD790008321F /* ScreenSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5FEE3F2101AD790008321F /* ScreenSize.swift */; };
 		7B600D262452F19C001D8146 /* LayoutMarginsInsetedTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B600D252452F19C001D8146 /* LayoutMarginsInsetedTableView.swift */; };
 		7B600D282453186B001D8146 /* DesktopTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B600D272453186B001D8146 /* DesktopTableHeaderView.xib */; };
 		7B60A375206537FE00673CA1 /* GeometryExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B60A374206537FE00673CA1 /* GeometryExtension.swift */; };
@@ -1056,7 +1055,6 @@
 		7B5EF7E320BE9EAC009A7972 /* AudioMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioMessageCell.swift; sourceTree = "<group>"; };
 		7B5F96682414241C003A087B /* LocationInformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationInformationView.swift; sourceTree = "<group>"; };
 		7B5F966A241424CD003A087B /* LocationInformationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LocationInformationView.xib; sourceTree = "<group>"; };
-		7B5FEE3F2101AD790008321F /* ScreenSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenSize.swift; sourceTree = "<group>"; };
 		7B600D252452F19C001D8146 /* LayoutMarginsInsetedTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutMarginsInsetedTableView.swift; sourceTree = "<group>"; };
 		7B600D272453186B001D8146 /* DesktopTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DesktopTableHeaderView.xib; sourceTree = "<group>"; };
 		7B60A374206537FE00673CA1 /* GeometryExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeometryExtension.swift; sourceTree = "<group>"; };
@@ -2048,7 +2046,6 @@
 				7B72651B209C5F9300F234BE /* Link.swift */,
 				7B2AFEE020FE022C00C747BB /* MXMFastURLDetector.h */,
 				7B2AFEE120FE022C00C747BB /* MXMFastURLDetector.m */,
-				7B5FEE3F2101AD790008321F /* ScreenSize.swift */,
 				7B61B9C52538E0CE001F94A3 /* ScreenHeight.swift */,
 				7B7ABBDF2539799900070B71 /* ScreenWidth.swift */,
 				7BEE5352222E21D7008D3911 /* KeyboardHeight.swift */,
@@ -3943,7 +3940,6 @@
 				7BB20A8C207B5F0C007ACFEE /* ContactMessageViewModel.swift in Sources */,
 				DF6CF2E9221FDE5D00B65294 /* QrcodeWindow.swift in Sources */,
 				7B894CD620D24BE2004FA5A8 /* RecorderLockView.swift in Sources */,
-				7B5FEE402101AD790008321F /* ScreenSize.swift in Sources */,
 				DFB9B39A1FAB01E6009503CE /* HomeNavigationController.swift in Sources */,
 				7B7FBF8D2282D51100644693 /* IconPrefixedTextMessageViewModel.swift in Sources */,
 				7BAECA3A20401DE500AEA42F /* AttachmentLoadingViewModel.swift in Sources */,

@@ -50,6 +50,7 @@
 "action_float" = "Floating";
 "action_cancel_float" = "Cancel Floating";
 "action_remove_all" = "Remove All";
+"action_close" = "Close";
 "menu_delete" = "Delete";
 "menu_edit" = "Edit";
 "menu_report" = "Report";

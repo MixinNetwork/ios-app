@@ -50,6 +50,7 @@
 "action_float" = "浮窗";
 "action_cancel_float" = "关闭浮窗";
 "action_remove_all" = "全部删除";
+"action_close" = "关闭";
 "menu_delete" = "删除";
 "menu_edit" = "编辑";
 "menu_report" = "上报";

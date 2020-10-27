@@ -812,8 +812,16 @@ extension CallService {
     }
     
     private func insertCallCompletedMessage(call: PeerToPeerCall, isUserInitiated: Bool, category: MessageCategory) {
-        let timeIntervalSinceNow = call.connectedDate?.timeIntervalSinceNow ?? 0
-        let duration = abs(timeIntervalSinceNow * millisecondsPerSecond)
+        let timeIntervalSinceNow: TimeInterval
+        if let date = call.connectedDate {
+            timeIntervalSinceNow = date.timeIntervalSinceNow
+            self.log("[CallService] insert message using valid date: \(date), interval since now: \(timeIntervalSinceNow)")
+        } else {
+            timeIntervalSinceNow = 0
+            self.log("[CallService] insert message with nil date, using 0 as interval")
+        }
+        let duration = Int64(abs(timeIntervalSinceNow * millisecondsPerSecond))
+        self.log("[CallService] insert message with duration: \(duration)")
         let shouldMarkMessageRead = call.isOutgoing
             || category == .WEBRTC_AUDIO_END
             || (category == .WEBRTC_AUDIO_DECLINE && isUserInitiated)
@@ -823,7 +831,7 @@ extension CallService {
                                               conversationId: call.conversationId,
                                               userId: userId,
                                               category: category,
-                                              mediaDuration: Int64(duration),
+                                              mediaDuration: duration,
                                               status: status)
         MessageDAO.shared.insertMessage(message: msg, messageSource: "")
     }

@@ -40,10 +40,10 @@ class MinimizedClipSwitcherViewController: HomeOverlayViewController {
             additional = halfIconOffset + quarterIconOffset * CGFloat(numberOfVisibleIcons - 2)
         }
         let iconsWidth = iconLength + additional
-        let horizontalMargin = contentMargin
+        let horizontalMargin = horizontalContentMargin
             + iconsWrapperLeadingConstraint.constant
             + iconsWrapperTrailingConstraint.constant
-        let verticalMargin = contentMargin
+        let verticalMargin = verticalContentMargin
             + iconsWrapperTopConstraint.constant
             + iconsWrapperBottomConstraint.constant
         view.bounds.size = CGSize(width: iconsWidth + horizontalMargin,

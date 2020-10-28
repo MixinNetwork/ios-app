@@ -4,7 +4,8 @@ class HomeOverlayViewController: UIViewController {
     
     @IBOutlet weak var contentView: UIView!
     
-    let contentMargin: CGFloat = 20
+    let horizontalContentMargin: CGFloat = 20
+    let verticalContentMargin: CGFloat = 12
     let contentViewVerticalShadowOffset: CGFloat = 4
     
     private(set) var panningController: ViewPanningController!
@@ -26,8 +27,8 @@ class HomeOverlayViewController: UIViewController {
     
     func updateViewSize() {
         view.layoutIfNeeded()
-        view.bounds.size = CGSize(width: contentView.frame.width + contentMargin,
-                                  height: contentView.frame.height + contentMargin)
+        view.bounds.size = CGSize(width: contentView.frame.width + horizontalContentMargin,
+                                  height: contentView.frame.height + verticalContentMargin)
     }
     
 }

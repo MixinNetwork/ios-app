@@ -22,11 +22,11 @@
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="JbU-4x-ojb">
-            <rect key="frame" x="0.0" y="0.0" width="108" height="68"/>
+            <rect key="frame" x="0.0" y="0.0" width="108" height="60"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fSc-TA-azG" userLabel="Content View">
-                    <rect key="frame" x="10" y="10" width="88" height="48"/>
+                    <rect key="frame" x="10" y="6" width="88" height="48"/>
                     <subviews>
                         <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="csg-qO-o7W">
                             <rect key="frame" x="5" y="5" width="78" height="38"/>
@@ -59,9 +59,9 @@
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <gestureRecognizers/>
             <constraints>
-                <constraint firstItem="fSc-TA-azG" firstAttribute="top" secondItem="JbU-4x-ojb" secondAttribute="top" constant="10" id="YWp-AA-ewp"/>
+                <constraint firstItem="fSc-TA-azG" firstAttribute="top" secondItem="JbU-4x-ojb" secondAttribute="top" constant="6" id="YWp-AA-ewp"/>
                 <constraint firstAttribute="trailing" secondItem="fSc-TA-azG" secondAttribute="trailing" constant="10" id="ZT2-CR-xTJ"/>
-                <constraint firstAttribute="bottom" secondItem="fSc-TA-azG" secondAttribute="bottom" constant="10" id="gPZ-An-JrY"/>
+                <constraint firstAttribute="bottom" secondItem="fSc-TA-azG" secondAttribute="bottom" constant="6" id="gPZ-An-JrY"/>
                 <constraint firstItem="fSc-TA-azG" firstAttribute="leading" secondItem="JbU-4x-ojb" secondAttribute="leading" constant="10" id="kab-uS-zJa"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

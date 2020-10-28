@@ -7,7 +7,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     
     let videoView = GalleryVideoView()
     
-    private let pipVideoInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+    private let pipVideoInsets = UIEdgeInsets(top: 6, left: 10, bottom: 6, right: 10)
     private let pipCornerRadius: CGFloat = 6
     
     private(set) var panningController: ViewPanningController?

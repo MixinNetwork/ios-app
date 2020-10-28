@@ -80,7 +80,7 @@ class ClipSwitcher {
     }
     
     func replaceClips(with clips: [Clip]) {
-        minimizedController?.replaceClips(with: [])
+        minimizedController?.replaceClips(with: clips)
         self.clips = clips
         AppGroupUserDefaults.User.clips = clips.compactMap { (clip) -> Data? in
             try? JSONEncoder.default.encode(clip)

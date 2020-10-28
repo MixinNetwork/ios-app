@@ -12,16 +12,11 @@
             <connections>
                 <outlet property="button" destination="1ta-pe-osI" id="tAl-sh-Sc2"/>
                 <outlet property="contentView" destination="fSc-TA-azG" id="txV-YD-gkZ"/>
-                <outlet property="leftAvatarImageView" destination="2e4-Tw-GCU" id="zLT-cW-TpD"/>
-                <outlet property="leftIconBackgroundView" destination="RVd-0f-xtW" id="RAy-ud-eja"/>
-                <outlet property="leftIconTrailingConstraint" destination="g0v-Qr-fTU" id="Ho5-TD-YJS"/>
-                <outlet property="middleAvatarImageView" destination="uUb-DM-6u5" id="ZPn-2M-KWf"/>
-                <outlet property="middleIconBackgroundView" destination="nBj-iF-AVg" id="QUP-cP-okd"/>
-                <outlet property="middleIconTrailingConstraint" destination="Bne-by-Tao" id="NAQ-NS-4NZ"/>
-                <outlet property="rightIconBackgroundLeadingConstraint" destination="saW-bY-N7x" id="E0n-dz-lJ3"/>
-                <outlet property="rightIconBackgroundView" destination="x2d-5k-wO0" id="Xng-pm-lgl"/>
-                <outlet property="rightIconTrailingConstraint" destination="s85-VF-PR1" id="2vn-W9-1oz"/>
-                <outlet property="rightLabel" destination="sng-0i-nJJ" id="prP-2X-yKK"/>
+                <outlet property="iconsWrapperBottomConstraint" destination="dG4-N3-VcJ" id="Dwo-e9-fvD"/>
+                <outlet property="iconsWrapperLeadingConstraint" destination="Rug-6U-vCq" id="gCt-wX-oEo"/>
+                <outlet property="iconsWrapperTopConstraint" destination="ya1-Xw-sKN" id="1aY-uh-scd"/>
+                <outlet property="iconsWrapperTrailingConstraint" destination="HB9-kF-lYY" id="IuM-L1-UO3"/>
+                <outlet property="iconsWrapperView" destination="csg-qO-o7W" id="YaJ-Wn-DW5"/>
                 <outlet property="view" destination="JbU-4x-ojb" id="PLb-DO-ME7"/>
             </connections>
         </placeholder>
@@ -35,101 +30,7 @@
                     <subviews>
                         <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="csg-qO-o7W">
                             <rect key="frame" x="5" y="5" width="78" height="38"/>
-                            <subviews>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="x2d-5k-wO0" userLabel="Right Icon Background View">
-                                    <rect key="frame" x="40" y="1" width="36" height="36"/>
-                                    <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="+1" textAlignment="center" lineBreakMode="clip" baselineAdjustment="alignBaselines" minimumFontSize="6" translatesAutoresizingMaskIntoConstraints="NO" id="sng-0i-nJJ">
-                                            <rect key="frame" x="20" y="0.0" width="14" height="36"/>
-                                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
-                                            <color key="textColor" name="text_accessory"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                    </subviews>
-                                    <color key="backgroundColor" name="background_secondary"/>
-                                    <constraints>
-                                        <constraint firstAttribute="width" secondItem="x2d-5k-wO0" secondAttribute="height" id="O1f-kf-MNW"/>
-                                        <constraint firstAttribute="bottom" secondItem="sng-0i-nJJ" secondAttribute="bottom" id="T9o-Ou-FLG"/>
-                                        <constraint firstAttribute="width" constant="36" id="f8M-Gl-QXd"/>
-                                        <constraint firstItem="sng-0i-nJJ" firstAttribute="top" secondItem="x2d-5k-wO0" secondAttribute="top" id="hFO-rE-Njo"/>
-                                        <constraint firstAttribute="trailing" secondItem="sng-0i-nJJ" secondAttribute="trailing" constant="2" id="uRW-5W-tAe"/>
-                                    </constraints>
-                                    <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                            <integer key="value" value="19"/>
-                                        </userDefinedRuntimeAttribute>
-                                    </userDefinedRuntimeAttributes>
-                                </view>
-                                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nBj-iF-AVg" userLabel="Middle Icon Background View">
-                                    <rect key="frame" x="20" y="-1" width="40" height="40"/>
-                                    <subviews>
-                                        <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uUb-DM-6u5" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
-                                            <rect key="frame" x="2" y="2" width="36" height="36"/>
-                                            <color key="backgroundColor" name="background_secondary"/>
-                                            <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                    <integer key="value" value="18"/>
-                                                </userDefinedRuntimeAttribute>
-                                            </userDefinedRuntimeAttributes>
-                                        </view>
-                                    </subviews>
-                                    <color key="backgroundColor" name="minimized_call_background"/>
-                                    <constraints>
-                                        <constraint firstItem="uUb-DM-6u5" firstAttribute="top" secondItem="nBj-iF-AVg" secondAttribute="top" constant="2" id="9nw-D9-QOh"/>
-                                        <constraint firstAttribute="bottom" secondItem="uUb-DM-6u5" secondAttribute="bottom" constant="2" id="C2v-TH-4Rj"/>
-                                        <constraint firstAttribute="trailing" secondItem="uUb-DM-6u5" secondAttribute="trailing" constant="2" id="TxX-ZA-5aV"/>
-                                        <constraint firstAttribute="width" constant="40" id="WrT-yo-Fhd"/>
-                                        <constraint firstItem="uUb-DM-6u5" firstAttribute="leading" secondItem="nBj-iF-AVg" secondAttribute="leading" constant="2" id="ZGT-kq-08a"/>
-                                    </constraints>
-                                    <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                            <integer key="value" value="20"/>
-                                        </userDefinedRuntimeAttribute>
-                                    </userDefinedRuntimeAttributes>
-                                </view>
-                                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RVd-0f-xtW" userLabel="Left Icon Background View">
-                                    <rect key="frame" x="0.0" y="-1" width="40" height="40"/>
-                                    <subviews>
-                                        <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2e4-Tw-GCU" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
-                                            <rect key="frame" x="2" y="2" width="36" height="36"/>
-                                            <color key="backgroundColor" name="background_secondary"/>
-                                            <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                    <integer key="value" value="18"/>
-                                                </userDefinedRuntimeAttribute>
-                                            </userDefinedRuntimeAttributes>
-                                        </view>
-                                    </subviews>
-                                    <color key="backgroundColor" name="minimized_call_background"/>
-                                    <constraints>
-                                        <constraint firstItem="2e4-Tw-GCU" firstAttribute="leading" secondItem="RVd-0f-xtW" secondAttribute="leading" constant="2" id="420-I1-XvT"/>
-                                        <constraint firstAttribute="trailing" secondItem="2e4-Tw-GCU" secondAttribute="trailing" constant="2" id="5dr-0X-YMo"/>
-                                        <constraint firstItem="2e4-Tw-GCU" firstAttribute="top" secondItem="RVd-0f-xtW" secondAttribute="top" constant="2" id="FTk-ta-0Pp"/>
-                                        <constraint firstAttribute="width" constant="40" id="Qqg-fB-vN5"/>
-                                        <constraint firstAttribute="bottom" secondItem="2e4-Tw-GCU" secondAttribute="bottom" constant="2" id="oFo-lY-j4E"/>
-                                    </constraints>
-                                    <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                            <integer key="value" value="20"/>
-                                        </userDefinedRuntimeAttribute>
-                                    </userDefinedRuntimeAttributes>
-                                </view>
-                            </subviews>
                             <color key="backgroundColor" name="minimized_call_background"/>
-                            <constraints>
-                                <constraint firstItem="x2d-5k-wO0" firstAttribute="centerY" secondItem="csg-qO-o7W" secondAttribute="centerY" id="AlF-a5-b3l"/>
-                                <constraint firstAttribute="trailing" secondItem="nBj-iF-AVg" secondAttribute="trailing" priority="500" id="Bne-by-Tao"/>
-                                <constraint firstItem="RVd-0f-xtW" firstAttribute="centerY" secondItem="csg-qO-o7W" secondAttribute="centerY" id="EYY-F2-42n"/>
-                                <constraint firstItem="nBj-iF-AVg" firstAttribute="leading" secondItem="RVd-0f-xtW" secondAttribute="leading" constant="20" id="Wr2-7t-WK7"/>
-                                <constraint firstItem="sng-0i-nJJ" firstAttribute="leading" secondItem="nBj-iF-AVg" secondAttribute="trailing" id="Y66-Ll-1hU"/>
-                                <constraint firstItem="nBj-iF-AVg" firstAttribute="centerY" secondItem="csg-qO-o7W" secondAttribute="centerY" id="cCe-q2-BYX"/>
-                                <constraint firstAttribute="trailing" secondItem="RVd-0f-xtW" secondAttribute="trailing" priority="500" id="g0v-Qr-fTU"/>
-                                <constraint firstItem="nBj-iF-AVg" firstAttribute="width" secondItem="nBj-iF-AVg" secondAttribute="height" id="lTd-aL-PCP"/>
-                                <constraint firstAttribute="trailing" secondItem="x2d-5k-wO0" secondAttribute="trailing" priority="750" constant="2" id="s85-VF-PR1"/>
-                                <constraint firstItem="x2d-5k-wO0" firstAttribute="leading" secondItem="nBj-iF-AVg" secondAttribute="leading" constant="20" id="saW-bY-N7x"/>
-                                <constraint firstItem="RVd-0f-xtW" firstAttribute="leading" secondItem="csg-qO-o7W" secondAttribute="leading" id="uac-Z8-XxX"/>
-                                <constraint firstItem="RVd-0f-xtW" firstAttribute="width" secondItem="RVd-0f-xtW" secondAttribute="height" id="yRV-20-rKB"/>
-                            </constraints>
                         </view>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1ta-pe-osI">
                             <rect key="frame" x="0.0" y="0.0" width="88" height="48"/>
@@ -158,22 +59,18 @@
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <gestureRecognizers/>
             <constraints>
-                <constraint firstItem="fSc-TA-azG" firstAttribute="centerY" secondItem="JbU-4x-ojb" secondAttribute="centerY" id="1f0-uU-eyi"/>
-                <constraint firstItem="fSc-TA-azG" firstAttribute="centerX" secondItem="JbU-4x-ojb" secondAttribute="centerX" id="2qe-3g-ZzO"/>
+                <constraint firstItem="fSc-TA-azG" firstAttribute="top" secondItem="JbU-4x-ojb" secondAttribute="top" constant="10" id="YWp-AA-ewp"/>
+                <constraint firstAttribute="trailing" secondItem="fSc-TA-azG" secondAttribute="trailing" constant="10" id="ZT2-CR-xTJ"/>
+                <constraint firstAttribute="bottom" secondItem="fSc-TA-azG" secondAttribute="bottom" constant="10" id="gPZ-An-JrY"/>
+                <constraint firstItem="fSc-TA-azG" firstAttribute="leading" secondItem="JbU-4x-ojb" secondAttribute="leading" constant="10" id="kab-uS-zJa"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <point key="canvasLocation" x="165.21739130434784" y="124.55357142857142"/>
         </view>
     </objects>
     <resources>
-        <namedColor name="background_secondary">
-            <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
         <namedColor name="minimized_call_background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
-        <namedColor name="text_accessory">
-            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

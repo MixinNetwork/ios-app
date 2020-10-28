@@ -4,9 +4,9 @@ class HomeOverlayViewController: UIViewController {
     
     @IBOutlet weak var contentView: UIView!
     
-    private(set) var panningController: ViewPanningController!
+    let contentMargin: CGFloat = 20
     
-    private let contentMargin: CGFloat = 20
+    private(set) var panningController: ViewPanningController!
     
     override func viewDidLoad() {
         super.viewDidLoad()

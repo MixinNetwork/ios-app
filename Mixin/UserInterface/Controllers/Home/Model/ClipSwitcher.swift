@@ -36,12 +36,12 @@ class ClipSwitcher {
             try? JSONDecoder.default.decode(Clip.self, from: data)
         }
         if let controller = minimizedController {
-            controller.clips = clips
+            controller.replaceClips(with: clips)
             controller.panningController.placeViewNextToLastOverlayOrTopRight()
         }
     }
     
-    func insert(_ controller: MixinWebViewController) {
+    func appendClip(with controller: MixinWebViewController) {
         guard !clips.contains(where: { $0.controllerIfLoaded == controller }) else {
             return
         }
@@ -56,7 +56,7 @@ class ClipSwitcher {
                         url: controller.webView.url ?? .blank,
                         controller: controller)
         }
-        minimizedController?.clips.append(clip)
+        minimizedController?.appendClip(clip)
         clips.append(clip)
         
         let config = WKSnapshotConfiguration()
@@ -72,21 +72,15 @@ class ClipSwitcher {
     }
     
     func removeClip(at index: Int) {
-        minimizedController?.clips.remove(at: index)
+        minimizedController?.removeClip(at: index)
         clips.remove(at: index)
         if index < AppGroupUserDefaults.User.clips.count {
             AppGroupUserDefaults.User.clips.remove(at: index)
         }
     }
     
-    func removeAll() {
-        minimizedController?.clips = []
-        clips = []
-        AppGroupUserDefaults.User.clips = []
-    }
-    
     func replaceClips(with clips: [Clip]) {
-        minimizedController?.clips = clips
+        minimizedController?.replaceClips(with: [])
         self.clips = clips
         AppGroupUserDefaults.User.clips = clips.compactMap { (clip) -> Data? in
             try? JSONEncoder.default.encode(clip)

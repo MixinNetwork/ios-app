@@ -58,7 +58,7 @@ class ClipSwitcherViewController: UIViewController {
             } completion: { (_) in
                 self.hide()
             }
-            UIApplication.homeContainerViewController?.clipSwitcher.removeAll()
+            UIApplication.homeContainerViewController?.clipSwitcher.replaceClips(with: [])
         }))
         controller.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
         present(controller, animated: true, completion: nil)

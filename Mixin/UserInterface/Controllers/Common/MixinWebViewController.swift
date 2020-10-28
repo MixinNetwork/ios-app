@@ -353,7 +353,7 @@ extension MixinWebViewController: WebMoreMenuControllerDelegate {
                 if let switcher = UIApplication.homeContainerViewController?.clipSwitcher {
                     if switcher.clips.count < ClipSwitcher.maxNumber {
                         dismissAsChild(animated: true) {
-                            switcher.insert(self)
+                            switcher.appendClip(with: self)
                         }
                     } else {
                         let text = R.string.localizable.clip_hint_did_reach_max("\(ClipSwitcher.maxNumber)")

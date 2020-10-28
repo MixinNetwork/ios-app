@@ -321,6 +321,8 @@
 		7B9863911FA313E300D4B16C /* BottomWrapperView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B9863901FA313E300D4B16C /* BottomWrapperView.xib */; };
 		7B9863931FA3141F00D4B16C /* XibDesignable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9863921FA3141F00D4B16C /* XibDesignable.swift */; };
 		7B9916D421945A6800C11401 /* AssetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9916D321945A6800C11401 /* AssetCell.swift */; };
+		7B9A08FD25481A7600E8568D /* MinimizedClipIconView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B9A08FC25481A7600E8568D /* MinimizedClipIconView.xib */; };
+		7B9A090525481ADB00E8568D /* MinimizedClipIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9A090425481ADB00E8568D /* MinimizedClipIconView.swift */; };
 		7B9A18162428932A00187693 /* PageControlView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B9A18152428932A00187693 /* PageControlView.xib */; };
 		7B9A18182428939A00187693 /* PageControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9A18172428939A00187693 /* PageControlView.swift */; };
 		7B9A2BD12023729E00135DA4 /* AppButtonGroupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9A2BD02023729E00135DA4 /* AppButtonGroupViewModel.swift */; };
@@ -1196,6 +1198,8 @@
 		7B9863901FA313E300D4B16C /* BottomWrapperView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BottomWrapperView.xib; sourceTree = "<group>"; };
 		7B9863921FA3141F00D4B16C /* XibDesignable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XibDesignable.swift; sourceTree = "<group>"; };
 		7B9916D321945A6800C11401 /* AssetCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetCell.swift; sourceTree = "<group>"; };
+		7B9A08FC25481A7600E8568D /* MinimizedClipIconView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MinimizedClipIconView.xib; sourceTree = "<group>"; };
+		7B9A090425481ADB00E8568D /* MinimizedClipIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinimizedClipIconView.swift; sourceTree = "<group>"; };
 		7B9A18152428932A00187693 /* PageControlView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PageControlView.xib; sourceTree = "<group>"; };
 		7B9A18172428939A00187693 /* PageControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageControlView.swift; sourceTree = "<group>"; };
 		7B9A2BD02023729E00135DA4 /* AppButtonGroupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButtonGroupViewModel.swift; sourceTree = "<group>"; };
@@ -2115,6 +2119,8 @@
 				7B054051243CCCD500C1FCB6 /* HomeTitleButton.swift */,
 				7B9650AF24879B9000DE86B9 /* MinimizedCallView.xib */,
 				7BBCEC332523A1FF00F270DF /* MinimizedClipSwitcherView.xib */,
+				7B9A08FC25481A7600E8568D /* MinimizedClipIconView.xib */,
+				7B9A090425481ADB00E8568D /* MinimizedClipIconView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3450,6 +3456,7 @@
 				DFA5B58E1FADC88D00549728 /* Group.storyboard in Resources */,
 				DF1ED8E220BC0794003E10E8 /* Photo.storyboard in Resources */,
 				7B9863911FA313E300D4B16C /* BottomWrapperView.xib in Resources */,
+				7B9A08FD25481A7600E8568D /* MinimizedClipIconView.xib in Resources */,
 				7B015D8121A81C8D000C9F1E /* SearchBoxView.xib in Resources */,
 				7B2E3E531FA07F9F00DDDDEB /* CountryCode.xcassets in Resources */,
 				DFB18FFC2330E71E0021CAF3 /* AnnouncementView.xib in Resources */,
@@ -4415,6 +4422,7 @@
 				E08F4DDA2395326D00C0D021 /* SharedAppsViewController.swift in Sources */,
 				7B7B5DB2230EBA5E00D0F463 /* PopupSearchableTableViewController.swift in Sources */,
 				ABE865C223F260FE00C0167D /* PermissionsActionCell.swift in Sources */,
+				7B9A090525481ADB00E8568D /* MinimizedClipIconView.swift in Sources */,
 				7B23FEA52229538B00F912EC /* PhotoInputAlbumCell.swift in Sources */,
 				7B37B16323ED483D00590215 /* GalleryTransitionFromNonQuotingMessageCellView.swift in Sources */,
 				7B40207E215B7046008FF42E /* AttachmentExpirationHintingMessageCell.swift in Sources */,

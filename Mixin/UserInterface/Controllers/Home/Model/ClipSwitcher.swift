@@ -35,7 +35,7 @@ class ClipSwitcher {
         clips = AppGroupUserDefaults.User.clips.compactMap { (data) -> Clip? in
             try? JSONDecoder.default.decode(Clip.self, from: data)
         }
-        if let controller = minimizedController {
+        if !clips.isEmpty, let controller = minimizedController {
             controller.replaceClips(with: clips)
             controller.panningController.placeViewNextToLastOverlayOrTopRight()
         }
@@ -56,7 +56,7 @@ class ClipSwitcher {
                         url: controller.webView.url ?? .blank,
                         controller: controller)
         }
-        minimizedController?.appendClip(clip)
+        minimizedController?.appendClip(clip, animated: true)
         clips.append(clip)
         
         let config = WKSnapshotConfiguration()

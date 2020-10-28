@@ -5,6 +5,7 @@ class HomeOverlayViewController: UIViewController {
     @IBOutlet weak var contentView: UIView!
     
     let contentMargin: CGFloat = 20
+    let contentViewVerticalShadowOffset: CGFloat = 4
     
     private(set) var panningController: ViewPanningController!
     
@@ -17,7 +18,7 @@ class HomeOverlayViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        view.layer.shadowPath = CGPath(roundedRect: contentView.frame.offsetBy(dx: 0, dy: 4),
+        view.layer.shadowPath = CGPath(roundedRect: contentView.frame.offsetBy(dx: 0, dy: contentViewVerticalShadowOffset),
                                        cornerWidth: contentView.layer.cornerRadius,
                                        cornerHeight: contentView.layer.cornerRadius,
                                        transform: nil)

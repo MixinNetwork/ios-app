@@ -50,25 +50,74 @@ class MinimizedClipSwitcherViewController: HomeOverlayViewController {
                                   height: iconLength + verticalMargin)
     }
     
-    func appendClip(_ clip: Clip) {
+    func appendClip(_ clip: Clip, animated: Bool) {
         clips.append(clip)
+        loadViewIfNeeded()
         view.alpha = 1
-        if clips.count <= maxNumberOfVisibleClips {
-            loadViewIfNeeded()
-            let view = insertIconView(with: clip)
-            visibleIconViews.append(view)
-            view.center = iconCenter(for: visibleIconViews.count - 1,
-                                     in: visibleIconViews.count)
-            if visibleIconViews.count >= 4 {
-                view.showsPlaceholder = true
-            }
-            if visibleIconViews.count == 4 {
-                visibleIconViews[2].center = iconCenter(for: 2, in: visibleIconViews.count)
-                visibleIconViews[2].showsPlaceholder = true
-            }
-            updateViewSize()
-            panningController.stickViewToParentEdge(horizontalVelocity: 0, animated: false)
+        
+        guard clips.count <= maxNumberOfVisibleClips else {
+            return
         }
+        let animationDuration: TimeInterval = 0.3
+        let contentShadowRectBefore = contentView.frame.offsetBy(dx: 0, dy: contentViewVerticalShadowOffset)
+        let iconView = insertIconView(with: clip)
+        if visibleIconViews.count >= 4 {
+            UIView.performWithoutAnimation {
+                iconView.showsPlaceholder = true
+            }
+        }
+        
+        var shadowAnimation: CABasicAnimation? = nil
+        if animated {
+            iconView.center = iconCenter(for: 0, in: visibleIconViews.count)
+            if visibleIconViews.count == 1 {
+                if let superview = view.superview {
+                    view.frame.origin.x = superview.bounds.width
+                }
+            } else {
+                shadowAnimation = {
+                    let anim = CABasicAnimation(keyPath: #keyPath(CALayer.shadowPath))
+                    anim.fromValue = CGPath(roundedRect: contentShadowRectBefore,
+                                            cornerWidth: contentView.layer.cornerRadius,
+                                            cornerHeight: contentView.layer.cornerRadius,
+                                            transform: nil)
+                    anim.duration = animationDuration
+                    anim.autoreverses = false
+                    anim.isRemovedOnCompletion = true
+                    anim.timingFunction = CAMediaTimingFunction(name: .easeOut)
+                    return anim
+                }()
+            }
+        }
+        
+        let layout = {
+            iconView.center = self.iconCenter(for: self.visibleIconViews.count - 1,
+                                              in: self.visibleIconViews.count)
+            if self.visibleIconViews.count == 4 {
+                self.visibleIconViews[2].center = self.iconCenter(for: 2, in: self.visibleIconViews.count)
+                self.visibleIconViews[2].showsPlaceholder = true
+            }
+            self.updateViewSize()
+            self.view.layoutIfNeeded()
+        }
+        
+        if animated {
+            UIView.animate(withDuration: animationDuration,
+                           delay: 0,
+                           options: .curveEaseOut,
+                           animations: layout,
+                           completion: nil)
+            if let animation = shadowAnimation {
+                animation.toValue = CGPath(roundedRect: contentView.frame.offsetBy(dx: 0, dy: contentViewVerticalShadowOffset),
+                                           cornerWidth: contentView.layer.cornerRadius,
+                                           cornerHeight: contentView.layer.cornerRadius,
+                                           transform: nil)
+                view.layer.add(animation, forKey: #keyPath(CALayer.shadowPath))
+            }
+        } else {
+            layout()
+        }
+        panningController.stickViewToParentEdge(horizontalVelocity: 0, animated: animated)
     }
     
     func removeClip(at index: Int) {
@@ -76,10 +125,10 @@ class MinimizedClipSwitcherViewController: HomeOverlayViewController {
             return
         }
         clips.remove(at: index)
-        loadViewIfNeeded()
-        guard index < maxNumberOfVisibleClips else {
+        guard index < visibleIconViews.count else {
             return
         }
+        loadViewIfNeeded()
         visibleIconViews[index].removeFromSuperview()
         visibleIconViews.remove(at: index)
         if visibleIconViews.count == 3 {
@@ -88,7 +137,6 @@ class MinimizedClipSwitcherViewController: HomeOverlayViewController {
         } else if clips.count > visibleIconViews.count, visibleIconViews.count < maxNumberOfVisibleClips {
             let clip = clips[visibleIconViews.count]
             let view = insertIconView(with: clip)
-            visibleIconViews.append(view)
             view.showsPlaceholder = visibleIconViews.count == 4
             view.center = iconCenter(for: visibleIconViews.count,
                                      in: visibleIconViews.count + 1)
@@ -108,10 +156,10 @@ class MinimizedClipSwitcherViewController: HomeOverlayViewController {
         for icon in visibleIconViews {
             icon.removeFromSuperview()
         }
+        visibleIconViews = []
         let visibleClips = clips.prefix(maxNumberOfVisibleClips)
         for (index, clip) in visibleClips.enumerated() {
             let view = insertIconView(with: clip)
-            visibleIconViews.append(view)
             view.showsPlaceholder = visibleClips.count >= 4 && index >= 2
             view.center = iconCenter(for: index, in: visibleClips.count)
         }
@@ -146,6 +194,7 @@ extension MinimizedClipSwitcherViewController {
         view.showsPlaceholder = false
         view.load(clip: clip)
         iconsWrapperView.insertSubview(view, at: 0)
+        visibleIconViews.append(view)
         return view
     }
     

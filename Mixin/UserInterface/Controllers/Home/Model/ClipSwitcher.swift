@@ -72,7 +72,7 @@ class ClipSwitcher {
     }
     
     func removeClip(at index: Int) {
-        minimizedController?.removeClip(at: index)
+        minimizedController?.removeClip(at: index, animated: true)
         clips.remove(at: index)
         if index < AppGroupUserDefaults.User.clips.count {
             AppGroupUserDefaults.User.clips.remove(at: index)

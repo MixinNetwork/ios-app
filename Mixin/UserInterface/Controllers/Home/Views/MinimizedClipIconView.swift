@@ -26,6 +26,7 @@ class MinimizedClipIconView: UIView {
         } else {
             avatarImageView.imageView.contentMode = .center
             avatarImageView.image = R.image.ic_clip_webpage()
+            avatarImageView.imageView.backgroundColorIgnoringSystemSettings = R.color.background_secondary()!
         }
     }
     

@@ -3,6 +3,7 @@ import UIKit
 class ClipSwitcherViewController: UIViewController {
     
     @IBOutlet weak var backgroundView: UIVisualEffectView!
+    @IBOutlet weak var closeButton: UIButton!
     @IBOutlet weak var removeAllButton: UIButton!
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var pageControl: UIPageControl!
@@ -79,6 +80,7 @@ class ClipSwitcherViewController: UIViewController {
         UIView.animate(withDuration: 0.3) {
             self.backgroundView.effect = nil
             self.collectionView.alpha = 0
+            self.closeButton.alpha = 0
             self.removeAllButton.alpha = 0
         } completion: { (_) in
             self.willMove(toParent: nil)
@@ -99,6 +101,7 @@ class ClipSwitcherViewController: UIViewController {
         loadViewIfNeeded()
         backgroundView.effect = nil
         collectionView.alpha = 0
+        closeButton.alpha = 0
         removeAllButton.alpha = 0
         container.addChild(self)
         container.view.addSubview(self.view)
@@ -106,6 +109,7 @@ class ClipSwitcherViewController: UIViewController {
         UIView.animate(withDuration: 0.3) {
             self.backgroundView.effect = .darkBlur
             self.collectionView.alpha = 1
+            self.closeButton.alpha = 1
             self.removeAllButton.alpha = 1
         }
     }

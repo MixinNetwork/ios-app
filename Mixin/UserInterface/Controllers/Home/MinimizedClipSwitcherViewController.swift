@@ -11,7 +11,8 @@ class MinimizedClipSwitcherViewController: HomeOverlayViewController {
     @IBOutlet weak var iconsWrapperTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var iconsWrapperBottomConstraint: NSLayoutConstraint!
     
-    private let maxNumberOfVisibleClips = 5
+    private let maxNumberOfVisibleClips = 3
+    private let numberOfAdditionalPlaceholders = 2
     private let iconLength: CGFloat = 40
     private let halfIconOffset: CGFloat = 12
     private let quarterIconOffset: CGFloat = 6
@@ -19,6 +20,7 @@ class MinimizedClipSwitcherViewController: HomeOverlayViewController {
     private var clips: [Clip] = []
     private var iconViews: [MinimizedClipIconView] = []
     private var visibleIconViews: [MinimizedClipIconView] = []
+    private var additionalPlaceholders: [MinimizedClipIconView] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,7 +31,7 @@ class MinimizedClipSwitcherViewController: HomeOverlayViewController {
     }
     
     override func updateViewSize() {
-        let numberOfVisibleIcons = visibleIconViews.count
+        let numberOfVisibleIcons = visibleIconViews.count + additionalPlaceholders.count
         let additional: CGFloat
         switch numberOfVisibleIcons {
         case 0, 1:
@@ -37,7 +39,7 @@ class MinimizedClipSwitcherViewController: HomeOverlayViewController {
         case 2, 3:
             additional = halfIconOffset * CGFloat(numberOfVisibleIcons - 1)
         default:
-            additional = halfIconOffset + quarterIconOffset * CGFloat(numberOfVisibleIcons - 2)
+            additional = halfIconOffset + quarterIconOffset * 3
         }
         let iconsWidth = iconLength + additional
         let horizontalMargin = horizontalContentMargin
@@ -55,42 +57,52 @@ class MinimizedClipSwitcherViewController: HomeOverlayViewController {
         loadViewIfNeeded()
         view.alpha = 1
         
-        guard clips.count <= maxNumberOfVisibleClips else {
+        guard clips.count <= maxNumberOfVisibleClips + 1 else {
             return
         }
+        var animations: [() -> Void] = []
         let contentViewFrameBefore = contentView.frame
-        let iconView = insertIconView(with: clip)
-        if visibleIconViews.count >= 4 {
-            UIView.performWithoutAnimation {
-                iconView.showsPlaceholder = true
+        let hasNoIconBefore = visibleIconViews.count == 0
+        if visibleIconViews.count < maxNumberOfVisibleClips {
+            if hasNoIconBefore, let superview = view.superview {
+                view.frame.origin.x = superview.bounds.width
             }
-        }
-        
-        var shadowAnimation: CABasicAnimation? = nil
-        if animated {
-            iconView.center = iconCenter(for: 0, in: visibleIconViews.count)
-            if visibleIconViews.count == 1 {
-                if let superview = view.superview {
-                    view.frame.origin.x = superview.bounds.width
+            let iconView = insertIconView(with: clip)
+            iconView.center = iconCenter(for: visibleIconViews.count - 1, in: visibleIconViews.count)
+            visibleIconViews.append(iconView)
+            animations.append {
+                iconView.center = self.iconCenter(for: self.visibleIconViews.count - 1, in: self.visibleIconViews.count)
+            }
+        } else {
+            additionalPlaceholders = [visibleIconViews.removeLast()]
+            for _ in 0..<2 {
+                let view = insertPlaceholder()
+                view.center = iconCenter(for: maxNumberOfVisibleClips - 1,
+                                         in: maxNumberOfVisibleClips - 1 + numberOfAdditionalPlaceholders)
+                additionalPlaceholders.append(view)
+            }
+            animations.append {
+                for (index, placeholder) in self.additionalPlaceholders.enumerated() {
+                    placeholder.showsPlaceholder = true
+                    placeholder.center = self.iconCenter(for: self.maxNumberOfVisibleClips - 1 + index,
+                                                         in: self.maxNumberOfVisibleClips - 1 + self.numberOfAdditionalPlaceholders)
                 }
-            } else {
-                shadowAnimation = makeShadowAnimation(fromContentViewFrame: contentViewFrameBefore)
             }
         }
-        
-        let layout = {
-            iconView.center = self.iconCenter(for: self.visibleIconViews.count - 1,
-                                              in: self.visibleIconViews.count)
-            if self.visibleIconViews.count == 4 {
-                self.visibleIconViews[2].center = self.iconCenter(for: 2, in: self.visibleIconViews.count)
-                self.visibleIconViews[2].showsPlaceholder = true
-            }
+        animations.append {
             self.updateViewSize()
             self.view.layoutIfNeeded()
         }
         
+        var shadowAnimation: CABasicAnimation? = nil
         if animated {
-            animate(layout, completion: nil)
+            shadowAnimation = makeShadowAnimation(fromContentViewFrame: contentViewFrameBefore)
+        }
+        
+        if animated {
+            animate({
+                animations.forEach({ $0() })
+            }, completion: nil)
             if let animation = shadowAnimation {
                 animation.toValue = CGPath(roundedRect: contentView.frame.offsetBy(dx: 0, dy: contentViewVerticalShadowOffset),
                                            cornerWidth: contentView.layer.cornerRadius,
@@ -99,7 +111,7 @@ class MinimizedClipSwitcherViewController: HomeOverlayViewController {
                 view.layer.add(animation, forKey: #keyPath(CALayer.shadowPath))
             }
         } else {
-            layout()
+            animations.forEach({ $0() })
         }
         panningController.stickViewToParentEdge(horizontalVelocity: 0, animated: animated)
     }
@@ -109,11 +121,13 @@ class MinimizedClipSwitcherViewController: HomeOverlayViewController {
             return
         }
         clips.remove(at: index)
-        guard isViewLoaded, index < visibleIconViews.count else {
+        let willCauseVisibleChanges = index <= maxNumberOfVisibleClips
+            || (visibleIconViews.count + additionalPlaceholders.count) <= (maxNumberOfVisibleClips + numberOfAdditionalPlaceholders)
+        guard willCauseVisibleChanges else {
             return
         }
-        let needsBringAnIconToVisible = clips.count > (visibleIconViews.count - 1)
-            && index < maxNumberOfVisibleClips
+        loadViewIfNeeded()
+        
         if visibleIconViews.count == 1 {
             let layout = {
                 if let superview = self.view.superview {
@@ -131,60 +145,122 @@ class MinimizedClipSwitcherViewController: HomeOverlayViewController {
                 completion()
             }
         } else {
-            let iconViewToRemove = visibleIconViews.remove(at: index)
             let shadowAnimation = makeShadowAnimation(fromContentViewFrame: contentView.frame)
-            let layout = {
+            var animations: [() -> Void] = []
+            var completions: [() -> Void] = []
+            let isRemovingVisibleIcon = index < visibleIconViews.count
+            if isRemovingVisibleIcon {
+                let iconViewToRemove = visibleIconViews.remove(at: index)
                 if index == 0 {
-                    iconViewToRemove.alpha = 0
+                    animations.append {
+                        iconViewToRemove.alpha = 0
+                    }
                 } else {
-                    iconViewToRemove.center = self.iconCenter(for: index - 1,
-                                                              in: self.visibleIconViews.count)
-                }
-                if needsBringAnIconToVisible {
-                    UIView.performWithoutAnimation {
-                        let clip = self.clips[self.visibleIconViews.count]
-                        let view = self.insertIconView(with: clip)
-                        view.showsPlaceholder = true
+                    animations.append {
+                        iconViewToRemove.center = self.iconCenter(for: index - 1, in: self.clips.count)
                     }
                 }
-                self.updateViewSize()
-                for (index, iconView) in self.visibleIconViews.enumerated() {
-                    iconView.center = self.iconCenter(for: index, in: self.visibleIconViews.count)
-                    iconView.showsPlaceholder = self.visibleIconViews.count >= 4 && index > 1
+                completions.append {
+                    iconViewToRemove.removeFromSuperview()
                 }
+            }
+            if clips.count == maxNumberOfVisibleClips {
+                if isRemovingVisibleIcon {
+                    for index in 1..<maxNumberOfVisibleClips {
+                        let iconView = additionalPlaceholders.removeFirst()
+                        iconView.load(clip: clips[index])
+                        iconView.center = iconCenter(for: 0, in: clips.count)
+                        visibleIconViews.append(iconView)
+                        animations.append {
+                            iconView.showsPlaceholder = false
+                        }
+                    }
+                } else {
+                    let iconView = additionalPlaceholders.removeFirst()
+                    iconView.load(clip: clips[maxNumberOfVisibleClips - 1])
+                    iconView.center = iconCenter(for: clips.count - 2, in: clips.count)
+                    visibleIconViews.append(iconView)
+                    animations.append {
+                        iconView.showsPlaceholder = false
+                    }
+                }
+                let placeholdersToRemove = self.additionalPlaceholders
+                additionalPlaceholders = []
+                animations.append {
+                    for view in placeholdersToRemove {
+                        view.center = self.iconCenter(for: 0, in: 1)
+                    }
+                }
+                completions.append {
+                    for view in placeholdersToRemove {
+                        view.removeFromSuperview()
+                    }
+                }
+            }
+            animations.append {
+                let numberOfAllIcons = self.visibleIconViews.count + self.additionalPlaceholders.count
+                for (index, icon) in self.visibleIconViews.enumerated() {
+                    icon.center = self.iconCenter(for: index, in: numberOfAllIcons)
+                }
+                for (index, placeholder) in self.additionalPlaceholders.enumerated() {
+                    placeholder.center = self.iconCenter(for: self.visibleIconViews.count + index,
+                                                         in: numberOfAllIcons)
+                }
+                self.updateViewSize()
                 self.view.layoutIfNeeded()
             }
             if animated {
-                animate(layout, completion: iconViewToRemove.removeFromSuperview)
-            } else {
-                layout()
-                iconViewToRemove.removeFromSuperview()
-            }
-            panningController.stickViewToParentEdge(horizontalVelocity: 0, animated: animated)
-            if animated {
+                animate {
+                    animations.forEach({ $0() })
+                } completion: {
+                    completions.forEach({ $0() })
+                }
                 shadowAnimation.toValue = CGPath(roundedRect: contentView.frame.offsetBy(dx: 0, dy: contentViewVerticalShadowOffset),
                                                  cornerWidth: contentView.layer.cornerRadius,
                                                  cornerHeight: contentView.layer.cornerRadius,
                                                  transform: nil)
                 view.layer.add(shadowAnimation, forKey: #keyPath(CALayer.shadowPath))
+            } else {
+                animations.forEach({ $0() })
+                completions.forEach({ $0() })
             }
+            panningController.stickViewToParentEdge(horizontalVelocity: 0, animated: animated)
         }
     }
     
     func replaceClips(with clips: [Clip]) {
         self.clips = clips
         loadViewIfNeeded()
-        for icon in visibleIconViews {
+        for icon in [visibleIconViews, additionalPlaceholders].flatMap({ $0 }) {
             icon.removeFromSuperview()
         }
         visibleIconViews = []
-        let visibleClips = clips.prefix(maxNumberOfVisibleClips)
-        for (index, clip) in visibleClips.enumerated() {
-            let view = insertIconView(with: clip)
-            view.showsPlaceholder = visibleClips.count >= 4 && index >= 2
-            view.center = iconCenter(for: index, in: visibleClips.count)
+        additionalPlaceholders = []
+        
+        if clips.count <= maxNumberOfVisibleClips {
+            for clip in clips {
+                let view = insertIconView(with: clip)
+                visibleIconViews.append(view)
+            }
+        } else {
+            for clip in clips.prefix(maxNumberOfVisibleClips - 1) {
+                let view = insertIconView(with: clip)
+                visibleIconViews.append(view)
+            }
+            for _ in 0..<(numberOfAdditionalPlaceholders + 1) {
+                let view = insertPlaceholder()
+                additionalPlaceholders.append(view)
+            }
         }
-        if clips.isEmpty {
+        
+        let numberOfAllIcons = visibleIconViews.count + additionalPlaceholders.count
+        for (index, view) in visibleIconViews.enumerated() {
+            view.center = iconCenter(for: index, in: numberOfAllIcons)
+        }
+        for (index, view) in additionalPlaceholders.enumerated() {
+            view.center = iconCenter(for: visibleIconViews.count + index, in: numberOfAllIcons)
+        }
+        if numberOfAllIcons == 0 {
             view.alpha = 0
         } else {
             view.alpha = 1
@@ -206,6 +282,7 @@ extension MinimizedClipSwitcherViewController {
             iconViews.append(view)
         }
         view.avatarImageView.imageView.tintColor = R.color.text_accessory()
+        view.alpha = 1
         return view
     }
     
@@ -213,10 +290,16 @@ extension MinimizedClipSwitcherViewController {
     private func insertIconView(with clip: Clip) -> MinimizedClipIconView  {
         let view = dequeueReusableIconView()
         view.showsPlaceholder = false
-        view.alpha = 1
         view.load(clip: clip)
         iconsWrapperView.insertSubview(view, at: 0)
-        visibleIconViews.append(view)
+        return view
+    }
+    
+    @discardableResult
+    private func insertPlaceholder() -> MinimizedClipIconView  {
+        let view = dequeueReusableIconView()
+        view.showsPlaceholder = true
+        iconsWrapperView.insertSubview(view, at: 0)
         return view
     }
     

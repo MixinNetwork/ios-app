@@ -3,6 +3,9 @@ import MixinServices
 
 class AvatarImageView: UIView {
     
+    let titleLabel = UILabel()
+    let imageView = SolidBackgroundColorImageView()
+    
     @IBInspectable
     var titleFontSize: CGFloat = 22 {
         didSet {
@@ -26,9 +29,6 @@ class AvatarImageView: UIView {
             imageView.image = newValue
         }
     }
-    
-    private let titleLabel = UILabel()
-    private let imageView = SolidBackgroundColorImageView()
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -91,6 +91,10 @@ class AvatarImageView: UIView {
     
     func setImage(user: UserResponse) {
         setImage(with: user.avatarUrl, userId: user.userId, name: user.fullName)
+    }
+    
+    func setImage(app: App) {
+        setImage(with: app.iconUrl, userId: app.appId, name: app.name)
     }
     
     func setImage(with url: String, userId: String, name: String, placeholder: Bool = true) {

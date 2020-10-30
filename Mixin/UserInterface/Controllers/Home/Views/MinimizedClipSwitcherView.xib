@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MinimizedClipSwitcherViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="button" destination="1ta-pe-osI" id="tAl-sh-Sc2"/>
+                <outlet property="contentView" destination="fSc-TA-azG" id="txV-YD-gkZ"/>
+                <outlet property="iconsWrapperBottomConstraint" destination="dG4-N3-VcJ" id="Dwo-e9-fvD"/>
+                <outlet property="iconsWrapperLeadingConstraint" destination="Rug-6U-vCq" id="gCt-wX-oEo"/>
+                <outlet property="iconsWrapperTopConstraint" destination="ya1-Xw-sKN" id="1aY-uh-scd"/>
+                <outlet property="iconsWrapperTrailingConstraint" destination="HB9-kF-lYY" id="IuM-L1-UO3"/>
+                <outlet property="iconsWrapperView" destination="csg-qO-o7W" id="YaJ-Wn-DW5"/>
+                <outlet property="view" destination="JbU-4x-ojb" id="PLb-DO-ME7"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="JbU-4x-ojb">
+            <rect key="frame" x="0.0" y="0.0" width="108" height="60"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fSc-TA-azG" userLabel="Content View">
+                    <rect key="frame" x="10" y="6" width="88" height="48"/>
+                    <subviews>
+                        <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="csg-qO-o7W">
+                            <rect key="frame" x="5" y="5" width="78" height="38"/>
+                            <color key="backgroundColor" name="minimized_call_background"/>
+                        </view>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1ta-pe-osI">
+                            <rect key="frame" x="0.0" y="0.0" width="88" height="48"/>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" name="minimized_call_background"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="csg-qO-o7W" secondAttribute="trailing" constant="5" id="HB9-kF-lYY"/>
+                        <constraint firstItem="csg-qO-o7W" firstAttribute="leading" secondItem="fSc-TA-azG" secondAttribute="leading" constant="5" id="Rug-6U-vCq"/>
+                        <constraint firstAttribute="bottom" secondItem="csg-qO-o7W" secondAttribute="bottom" constant="5" id="dG4-N3-VcJ"/>
+                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="48" id="dME-c1-1DV"/>
+                        <constraint firstItem="1ta-pe-osI" firstAttribute="leading" secondItem="fSc-TA-azG" secondAttribute="leading" id="eR7-yZ-bTn"/>
+                        <constraint firstItem="1ta-pe-osI" firstAttribute="top" secondItem="fSc-TA-azG" secondAttribute="top" id="gzF-5I-S03"/>
+                        <constraint firstAttribute="height" constant="48" id="mEZ-Ms-p61"/>
+                        <constraint firstAttribute="bottom" secondItem="1ta-pe-osI" secondAttribute="bottom" id="neu-zg-EB2"/>
+                        <constraint firstAttribute="trailing" secondItem="1ta-pe-osI" secondAttribute="trailing" id="r17-LY-T0Z"/>
+                        <constraint firstItem="csg-qO-o7W" firstAttribute="top" secondItem="fSc-TA-azG" secondAttribute="top" constant="5" id="ya1-Xw-sKN"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="24"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <gestureRecognizers/>
+            <constraints>
+                <constraint firstItem="fSc-TA-azG" firstAttribute="top" secondItem="JbU-4x-ojb" secondAttribute="top" constant="6" id="YWp-AA-ewp"/>
+                <constraint firstAttribute="trailing" secondItem="fSc-TA-azG" secondAttribute="trailing" constant="10" id="ZT2-CR-xTJ"/>
+                <constraint firstAttribute="bottom" secondItem="fSc-TA-azG" secondAttribute="bottom" constant="6" id="gPZ-An-JrY"/>
+                <constraint firstItem="fSc-TA-azG" firstAttribute="leading" secondItem="JbU-4x-ojb" secondAttribute="leading" constant="10" id="kab-uS-zJa"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="165.21739130434784" y="124.55357142857142"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="minimized_call_background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

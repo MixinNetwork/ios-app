@@ -18,9 +18,7 @@ final class GalleryVideoView: UIView, GalleryAnimatable {
             } else {
                 controlView.style.remove(.pip)
             }
-            setNeedsLayout()
             layoutIfNeeded()
-            updateCornerRadiusAndShadow()
         }
     }
     
@@ -47,7 +45,6 @@ final class GalleryVideoView: UIView, GalleryAnimatable {
         contentView.center = CGPoint(x: bounds.midX, y: bounds.midY)
         
         playerView.frame = contentView.bounds
-        
         coverImageView.frame = coverSize.rect(fittingSize: contentView.bounds.size)
         
         layoutControlView()
@@ -67,34 +64,7 @@ final class GalleryVideoView: UIView, GalleryAnimatable {
         }
     }
     
-    private func updateCornerRadiusAndShadow() {
-        let fromCornerRadius = contentView.layer.cornerRadius
-        let toCornerRadius: CGFloat = isPipMode ? 6 : 0
-        contentView.layer.cornerRadius = toCornerRadius
-        let cornerRadiusAnimation = CABasicAnimation(keyPath: #keyPath(CALayer.cornerRadius))
-        cornerRadiusAnimation.fromValue = fromCornerRadius
-        cornerRadiusAnimation.toValue = toCornerRadius
-        cornerRadiusAnimation.duration = animationDuration
-        
-        let toShadowOpacity: Float = isPipMode ? 0.14 : 0
-        let fromShadowOpacity = layer.shadowOpacity
-        layer.shadowOpacity = toShadowOpacity
-        let shadowOpacityAnimation = CABasicAnimation(keyPath: #keyPath(CALayer.shadowOpacity))
-        shadowOpacityAnimation.fromValue = fromShadowOpacity
-        shadowOpacityAnimation.toValue = toShadowOpacity
-        shadowOpacityAnimation.duration = animationDuration
-        
-        contentView.layer.add(cornerRadiusAnimation, forKey: cornerRadiusAnimation.keyPath)
-        layer.add(shadowOpacityAnimation, forKey: shadowOpacityAnimation.keyPath)
-    }
-    
     private func prepare() {
-        // TODO: Use explicit shadowPath
-        layer.shadowOffset = CGSize(width: 0, height: 2)
-        layer.shadowColor = UIColor.black.cgColor
-        layer.shadowRadius = 4
-        layer.shadowOpacity = 0
-        
         contentView.frame = bounds
         contentView.clipsToBounds = true
         contentView.backgroundColor = .black

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17156"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clipsSubviews="YES" contentMode="scaleToFill" id="iN0-l3-epB" customClass="MinimizedClipIconView" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GCp-nZ-gHZ">
+                    <rect key="frame" x="2" y="2" width="36" height="36"/>
+                    <color key="backgroundColor" red="0.90196078431372551" green="0.91764705882352937" blue="0.95686274509803915" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="85E-T5-5F7" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="2" y="2" width="36" height="36"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </view>
+            </subviews>
+            <color key="backgroundColor" name="minimized_call_background"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="85E-T5-5F7" secondAttribute="bottom" constant="2" id="0Tj-hh-cqc"/>
+                <constraint firstAttribute="trailing" secondItem="85E-T5-5F7" secondAttribute="trailing" constant="2" id="2US-LQ-Say"/>
+                <constraint firstItem="85E-T5-5F7" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="2" id="Jtf-GN-vMm"/>
+                <constraint firstItem="85E-T5-5F7" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="2" id="KmE-go-4J4"/>
+                <constraint firstAttribute="trailing" secondItem="GCp-nZ-gHZ" secondAttribute="trailing" constant="2" id="Ma9-gg-IV8"/>
+                <constraint firstItem="GCp-nZ-gHZ" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="2" id="Vv4-Ps-l2v"/>
+                <constraint firstItem="GCp-nZ-gHZ" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="2" id="Xub-lb-4ox"/>
+                <constraint firstAttribute="bottom" secondItem="GCp-nZ-gHZ" secondAttribute="bottom" constant="2" id="suy-Xt-cQc"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="avatarImageView" destination="85E-T5-5F7" id="rPN-46-VoM"/>
+                <outlet property="placeholderView" destination="GCp-nZ-gHZ" id="fPT-ZL-qoX"/>
+            </connections>
+            <point key="canvasLocation" x="140.57971014492756" y="121.875"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="minimized_call_background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

@@ -47,6 +47,10 @@
 "action_try_again" = "重试";
 "action_change_amount" = "修改金额";
 "action_continue_withdrawal" = "继续提现";
+"action_float" = "浮窗";
+"action_cancel_float" = "关闭浮窗";
+"action_remove_all" = "全部删除";
+"action_close" = "关闭";
 "menu_delete" = "删除";
 "menu_edit" = "编辑";
 "menu_report" = "上报";
@@ -201,6 +205,10 @@
 "home_title_apps" = "机器人";
 "home_apps_candidate_empty" = "可以添加你喜欢的机器人";
 "home_apps_pin_empty" = "长按并拖拽机器人置顶";
+
+// Clip
+"clip_remove_all" = "确定要删除全部浮窗？";
+"clip_hint_did_reach_max" = "最多支持 %@ 个浮窗";
 
 // Circle
 "circle_title" = "圈子";

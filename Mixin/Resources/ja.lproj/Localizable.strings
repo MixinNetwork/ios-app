@@ -47,6 +47,10 @@
 "action_try_again" = "もう一度";
 "action_change_amount" = "Change amount";
 "action_continue_withdrawal" = "進む";
+"action_float" = "Floating";
+"action_cancel_float" = "Cancel Floating";
+"action_remove_all" = "Remove All";
+"action_close" = "Close";
 "menu_delete" = "削除";
 "menu_edit" = "編集";
 "menu_report" = "報告";
@@ -201,6 +205,10 @@
 "home_title_apps" = "ボット";
 "home_apps_candidate_empty" = "お気に入りのボットを追加してください";
 "home_apps_pin_empty" = "長押ししながらドラッグして固定ピンに追加";
+
+// Clip
+"clip_remove_all" = "Remove all floats?";
+"clip_hint_did_reach_max" = "Floating allows up to %@ ones";
 
 // Circle
 "circle_title" = "サークル";

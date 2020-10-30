@@ -10,8 +10,6 @@ class MixinWebViewController: WebViewController {
         static let reloadTheme = "reloadTheme"
     }
     
-    private let loadingIndicator = AppLoadingIndicatorView(frame: .zero)
-    
     override var config: WKWebViewConfiguration {
         let config = WKWebViewConfiguration()
         config.dataDetectorTypes = .all
@@ -28,31 +26,31 @@ class MixinWebViewController: WebViewController {
         return config
     }
     
-    private var context: Context!
+    private let loadingIndicator = AppLoadingIndicatorView(frame: .zero)
+    
+    private(set) var context: Context!
+    
     private var webViewTitleObserver: NSKeyValueObservation?
     
-    class func presentInstance(with context: Context, asChildOf parent: UIViewController) {
+    class func instance(with context: Context) -> MixinWebViewController {
         let vc = MixinWebViewController(nib: R.nib.webView)
         vc.context = context
-        vc.view.frame = parent.view.bounds
-        vc.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        parent.addChild(vc)
-        let parentView: UIView
-        if let view = parent.view as? UIVisualEffectView {
-            parentView = view.contentView
-        } else {
-            parentView = parent.view
+        return vc
+    }
+    
+    class func presentInstance(with context: Context, asChildOf parent: UIViewController) {
+        let controller: MixinWebViewController
+        switch context.style {
+        case let .app(app, _):
+            if let clip = UIApplication.homeContainerViewController?.clipSwitcher.clips.first(where: { $0.app?.appId == app.appId }) {
+                controller = clip.controller
+            } else {
+                fallthrough
+            }
+        default:
+            controller = Self.instance(with: context)
         }
-        parentView.addSubview(vc.view)
-        vc.didMove(toParent: parent)
-        
-        vc.view.center.y = parent.view.bounds.height * 3 / 2
-        UIView.animate(withDuration: 0.5) {
-            UIView.setAnimationCurve(.overdamped)
-            vc.view.center.y = parent.view.bounds.height / 2
-        }
-        
-        AppDelegate.current.mainWindow.endEditing(true)
+        controller.presentAsChild(of: parent, completion: nil)
     }
     
     override func viewDidLoad() {
@@ -67,7 +65,31 @@ class MixinWebViewController: WebViewController {
         webView.uiDelegate = self
         loadWebView()
     }
-
+    
+    func presentAsChild(of parent: UIViewController, completion: (() -> Void)?) {
+        view.frame = parent.view.bounds
+        view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        parent.addChild(self)
+        let parentView: UIView
+        if let view = parent.view as? UIVisualEffectView {
+            parentView = view.contentView
+        } else {
+            parentView = parent.view
+        }
+        parentView.addSubview(view)
+        didMove(toParent: parent)
+        
+        view.center.y = parent.view.bounds.height * 3 / 2
+        UIView.animate(withDuration: 0.5) {
+            UIView.setAnimationCurve(.overdamped)
+            self.view.center.y = parent.view.bounds.height / 2
+        } completion: { (_) in
+            completion?()
+        }
+        
+        AppDelegate.current.mainWindow.endEditing(true)
+    }
+    
     private func loadNormalUrl() {
         webViewTitleObserver = webView.observe(\.title, options: [.initial, .new], changeHandler: { [weak self] (webView, _) in
             guard let weakSelf = self, case .webPage = weakSelf.context.style else {
@@ -170,7 +192,7 @@ class MixinWebViewController: WebViewController {
                 hud.hide()
                 UIApplication.homeNavigationController?.pushViewController(withBackRoot: ConversationViewController.instance(ownerUser: developUser))
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
-                    self?.dismiss()
+                    self?.dismissAsChild(animated: true)
                 }
             }
         }
@@ -197,39 +219,37 @@ class MixinWebViewController: WebViewController {
     }
     
     override func moreAction(_ sender: Any) {
-        let currentUrl = webView.url ?? .blank
-        let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        
+        let floatAction: WebMoreMenuViewController.MenuItem
+        if let switcher = UIApplication.homeContainerViewController?.clipSwitcher {
+            var hasSameClip = switcher.clips.contains(where: { $0.controller == self })
+            if case let .app(app, _) = context.style {
+                hasSameClip = hasSameClip || switcher.clips.contains(where: { $0.app?.appId == app.appId })
+            }
+            floatAction = hasSameClip ? .cancelFloat : .float
+        } else {
+            floatAction = .float
+        }
+        let sections: [[WebMoreMenuViewController.MenuItem]]
         switch context.style {
         case .app:
-            controller.addAction(UIAlertAction(title: R.string.localizable.action_share(), style: .default, handler: { (_) in
-                self.shareAppCardAction(currentUrl: currentUrl)
-            }))
-
-            controller.addAction(UIAlertAction(title: R.string.localizable.setting_about(), style: .default, handler: { (_) in
-                self.aboutAction()
-            }))
-            
-            controller.addAction(UIAlertAction(title: Localized.ACTION_REFRESH, style: .default, handler: { (_) in
-                self.reloadWebView()
-            }))
+            sections = [[.share], [floatAction], [.about, .refresh]]
         case .webPage:
-            controller.addAction(UIAlertAction(title: R.string.localizable.action_share(), style: .default, handler: { (_) in
-                self.shareUrlAction(currentUrl: currentUrl)
-            }))
-            controller.addAction(UIAlertAction(title: R.string.localizable.group_button_title_copy_link(), style: .default, handler: { (_) in
-                self.copyAction(currentUrl: currentUrl)
-            }))
-            controller.addAction(UIAlertAction(title: Localized.ACTION_REFRESH, style: .default, handler: { (_) in
-                self.reloadWebView()
-            }))
-            controller.addAction(UIAlertAction(title: Localized.ACTION_OPEN_SAFARI, style: .default, handler: { (_) in
-                UIApplication.shared.open(currentUrl, options: [:], completionHandler: nil)
-            }))
+            sections = [[.share], [floatAction], [.copyLink, .refresh, .openInSafari]]
         }
-        
-        controller.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
-        present(controller, animated: true, completion: nil)
+        let more = WebMoreMenuViewController(sections: sections)
+        more.overrideStatusBarStyle = preferredStatusBarStyle
+        more.titleView.titleLabel.text = titleLabel.text
+        switch context.style {
+        case let .app(app, _):
+            more.titleView.subtitleLabel.text = app.appNumber
+            more.titleView.imageView.isHidden = false
+            more.titleView.imageView.setImage(app: app)
+        case .webPage:
+            more.titleView.subtitleLabel.text = (context.initialUrl.host ?? "") + context.initialUrl.path
+            more.titleView.imageView.isHidden = true
+        }
+        more.delegate = self
+        present(more, animated: true, completion: nil)
     }
     
 }
@@ -275,7 +295,7 @@ extension MixinWebViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         reloadTheme(webView: webView)
     }
-
+    
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
         let nsError = error as NSError
         guard let failURL = nsError.userInfo["NSErrorFailingURLKey"] as? URL, let host = failURL.host else {
@@ -321,6 +341,60 @@ extension MixinWebViewController: WKScriptMessageHandler {
         if message.name == HandlerName.reloadTheme {
             reloadTheme(webView: webView)
         }
+    }
+    
+}
+
+extension MixinWebViewController: WebMoreMenuControllerDelegate {
+    
+    func webMoreMenuViewController(_ controller: WebMoreMenuViewController, didSelect item: WebMoreMenuViewController.MenuItem) {
+        
+        func handle() {
+            let url = webView.url ?? .blank
+            switch item {
+            case .share:
+                switch context.style {
+                case .app:
+                    shareAppCardAction(currentUrl: url)
+                case .webPage:
+                    shareUrlAction(currentUrl: url)
+                }
+            case .float:
+                if let switcher = UIApplication.homeContainerViewController?.clipSwitcher {
+                    if switcher.clips.count < ClipSwitcher.maxNumber {
+                        dismissAsChild(animated: true) {
+                            switcher.appendClip(with: self)
+                        }
+                    } else {
+                        let text = R.string.localizable.clip_hint_did_reach_max("\(ClipSwitcher.maxNumber)")
+                        showAutoHiddenHud(style: .error, text: text)
+                    }
+                }
+            case .cancelFloat:
+                if let switcher = UIApplication.homeContainerViewController?.clipSwitcher {
+                    let maybeIndex: Int?
+                    switch context.style {
+                    case .webPage:
+                        maybeIndex = switcher.clips.firstIndex(where: { $0.controller == self })
+                    case let .app(app, _):
+                        maybeIndex = switcher.clips.firstIndex(where: { $0.app?.appId == app.appId })
+                    }
+                    if let index = maybeIndex {
+                        switcher.removeClip(at: index)
+                    }
+                }
+            case .about:
+                aboutAction()
+            case .copyLink:
+                copyAction(currentUrl: url)
+            case .refresh:
+                reloadWebView()
+            case .openInSafari:
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            }
+        }
+        
+        controller.dismiss(animated: true, completion: handle)
     }
     
 }

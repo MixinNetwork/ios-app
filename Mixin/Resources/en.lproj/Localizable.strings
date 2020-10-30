@@ -47,6 +47,10 @@
 "action_try_again" = "Try Again";
 "action_change_amount" = "Change amount";
 "action_continue_withdrawal" = "Continue";
+"action_float" = "Floating";
+"action_cancel_float" = "Cancel Floating";
+"action_remove_all" = "Remove All";
+"action_close" = "Close";
 "menu_delete" = "Delete";
 "menu_edit" = "Edit";
 "menu_report" = "Report";
@@ -201,6 +205,10 @@
 "home_title_apps" = "Bots";
 "home_apps_candidate_empty" = "Please add your favorite bot first.";
 "home_apps_pin_empty" = "Long press and drag a bot to pin";
+
+// Clip
+"clip_remove_all" = "Remove all floats?";
+"clip_hint_did_reach_max" = "Floats allows up to %@ ones";
 
 // Circle
 "circle_title" = "Circle";

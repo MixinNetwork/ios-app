@@ -804,6 +804,9 @@
 "setting_permissions_date" = "Approved: %@, Last Accessed: %@";
 "setting_appearance" = "Appearance";
 "setting_pin" = "PIN";
+"setting_feedback" = "Feedback";
+"setting_share_this_app" = "Share This App";
+"setting_share_this_app_content" = "Let's chat on Mixin Messenger! Simple, safe and easy to use. It also supports cryptocurrencies such as Bitcoin and Ethereum. Download https://mixin.one/messenger and search for %@ to add me.";
 
 // About
 "about_twitter" = "Follow us on Twitter";

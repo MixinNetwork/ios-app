@@ -805,6 +805,9 @@
 "setting_permissions_date" = "授权时间: %@, 上次访问: %@";
 "setting_appearance" = "显示";
 "setting_pin" = "密码";
+"setting_feedback" = "反馈";
+"setting_share_this_app" = "分享此 App";
+"setting_share_this_app_content" = "快来 Mixin 与我聊天！简单、安全好用还支持比特币、以太坊等加密货币，下载 https://mixin.one/messenger 后搜索 %@ 加我好友。";
 
 // About
 "about_twitter" = "关注我们的 Twitter";

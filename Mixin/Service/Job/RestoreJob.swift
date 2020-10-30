@@ -159,6 +159,7 @@ class RestoreJob: BaseJob {
                 do {
                     try FileManager.default.startDownloadingUbiquitousItem(at: file.cloudURL)
                 } catch {
+                    Logger.write(error: error, extra: "\(file.cloudURL.path)")
                     monitors.removeValue(forKey: fileName)
                     reporter.report(error: error)
                 }

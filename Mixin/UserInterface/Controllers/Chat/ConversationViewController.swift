@@ -2189,20 +2189,23 @@ extension ConversationViewController {
                             ...mediaDuration:\(message.mediaDuration ?? 0)
                             ...mediaLocalIdentifier:\(message.mediaLocalIdentifier ?? "")
                             ...mediaWidth:\(message.mediaWidth ?? 0)
-                            ...mediaHeight:\(message.mediaHeight ?? 0)
+                            ...mediaHeight:\(message.mediaHeight ?? 0)\n
                            """
 
                     if let mediaUrl = message.mediaUrl, !mediaUrl.isEmpty, !mediaUrl.hasPrefix("http") {
                         if message.category.hasSuffix("_IMAGE") {
                             let url = AttachmentContainer.url(for: .photos, filename: mediaUrl)
-                            log += "...fileExists:\(FileManager.default.fileExists(atPath: url.path))...fileSize:\(FileManager.default.fileSize(url.path))"
+                            log += "\(url.path)...fileExists:\(FileManager.default.fileExists(atPath: url.path))...fileSize:\(FileManager.default.fileSize(url.path))"
                         } else if message.category.hasSuffix("_VIDEO") {
                             let url = AttachmentContainer.url(for: .videos, filename: mediaUrl)
-                            log += "...fileExists:\(FileManager.default.fileExists(atPath: url.path))...fileSize:\(FileManager.default.fileSize(url.path))"
+                            log += "\(url.path)...fileExists:\(FileManager.default.fileExists(atPath: url.path))...fileSize:\(FileManager.default.fileSize(url.path))"
                         }
                     }
+                    
+                    log += "\n\(AppGroupContainer.documentsUrl.path)\n"
+                    log += Self.debugCloudFiles(baseDir: AppGroupContainer.documentsUrl, parentDir: AppGroupContainer.documentsUrl).joined(separator: "\n")
                 }
-
+                
                 Logger.write(conversationId: conversationId, log: log, newSection: true)
             }
 
@@ -2235,6 +2238,23 @@ extension ConversationViewController {
                 }
             }
         }
+    }
+    
+    private static func debugCloudFiles(baseDir: URL, parentDir: URL) -> [String] {
+        let files = FileManager.default.childFiles(parentDir)
+        var dirs = [String]()
+        
+        for file in files {
+            let url = parentDir.appendingPathComponent(file)
+            if FileManager.default.directoryExists(atPath: url.path) {
+                dirs.append("[Local][\(url.suffix(base: baseDir))] \(files.count) child files")
+                dirs += debugCloudFiles(baseDir: baseDir, parentDir: url)
+            } else if file.contains("mixin.db") {
+                dirs.append("[Local][\(url.suffix(base: baseDir))] file size:\(url.fileSize.sizeRepresentation())")
+            }
+        }
+        
+        return dirs
     }
     
     private func deleteForMe(viewModels: [MessageViewModel]) {

@@ -39,8 +39,18 @@ class MixinWebViewController: WebViewController {
     }
     
     class func presentInstance(with context: Context, asChildOf parent: UIViewController) {
-        let vc = Self.instance(with: context)
-        vc.presentAsChild(of: parent, completion: nil)
+        let controller: MixinWebViewController
+        switch context.style {
+        case let .app(app, _):
+            if let clip = UIApplication.homeContainerViewController?.clipSwitcher.clips.first(where: { $0.app?.appId == app.appId }) {
+                controller = clip.controller
+            } else {
+                fallthrough
+            }
+        default:
+            controller = Self.instance(with: context)
+        }
+        controller.presentAsChild(of: parent, completion: nil)
     }
     
     override func viewDidLoad() {

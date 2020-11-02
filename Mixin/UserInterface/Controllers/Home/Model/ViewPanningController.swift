@@ -1,5 +1,9 @@
 import UIKit
 
+protocol ViewPanningControllerDelegate: class {
+    func animateAlongsideViewPanningControllerEdgeSticking(_ controller: ViewPanningController)
+}
+
 class ViewPanningController {
     
     var isEnabled: Bool {
@@ -11,8 +15,12 @@ class ViewPanningController {
         }
     }
     
+    weak var delegate: ViewPanningControllerDelegate?
+    
     private let view: UIView
     private let stickToEdgeVelocityLimit: CGFloat = 800
+    
+    private(set) var stickingEdge: UIRectEdge = .right
     
     private var panRecognizer: UIPanGestureRecognizer!
     
@@ -70,9 +78,11 @@ class ViewPanningController {
     func stickViewToParentEdge(horizontalVelocity: CGFloat, animated: Bool) {
         let shouldStickToRightEdge = (view.center.x > centerRestriction.midX && horizontalVelocity > -stickToEdgeVelocityLimit)
             || (view.center.x < centerRestriction.midX && horizontalVelocity > stickToEdgeVelocityLimit)
+        stickingEdge = shouldStickToRightEdge ? .right : .left
         let x = shouldStickToRightEdge ? centerRestriction.maxX : centerRestriction.minX
         let center = CGPoint(x: x, y: view.center.y) // y will be clamped by overlays coordinator
         let layout: () -> Void = {
+            self.delegate?.animateAlongsideViewPanningControllerEdgeSticking(self)
             self.overlaysCoordinator?.update(center: center, for: self.view)
         }
         if animated {

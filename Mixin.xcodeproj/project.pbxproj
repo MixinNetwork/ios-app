@@ -189,6 +189,7 @@
 		7B5E5D2A255055E8003FFDE0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7B5E5D28255055E8003FFDE0 /* Main.storyboard */; };
 		7B5E5D2C255055E9003FFDE0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7B5E5D2B255055E9003FFDE0 /* Assets.xcassets */; };
 		7B5E5D2F255055E9003FFDE0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7B5E5D2D255055E9003FFDE0 /* LaunchScreen.storyboard */; };
+		7B5E596F254FFB4B003FFDE0 /* InitializeFTSJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E596E254FFB4B003FFDE0 /* InitializeFTSJob.swift */; };
 		7B5E5D971FCE9CAA00F6048D /* ConversationInputTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E5D961FCE9CAA00F6048D /* ConversationInputTextView.swift */; };
 		7B5E9B40243700CD000AE24E /* ConversationCircleEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E9B3F243700CD000AE24E /* ConversationCircleEditorViewController.swift */; };
 		7B5E9B4424370ABB000AE24E /* CircleProfileMenuItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E9B4324370ABB000AE24E /* CircleProfileMenuItemView.swift */; };
@@ -1084,6 +1085,7 @@
 		7B5E5D2E255055E9003FFDE0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7B5E5D30255055E9003FFDE0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7B5E5D3725505615003FFDE0 /* MixinAppGroupAccess.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MixinAppGroupAccess.entitlements; sourceTree = "<group>"; };
+		7B5E596E254FFB4B003FFDE0 /* InitializeFTSJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitializeFTSJob.swift; sourceTree = "<group>"; };
 		7B5E5D961FCE9CAA00F6048D /* ConversationInputTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationInputTextView.swift; sourceTree = "<group>"; };
 		7B5E9B3F243700CD000AE24E /* ConversationCircleEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationCircleEditorViewController.swift; sourceTree = "<group>"; };
 		7B5E9B4324370ABB000AE24E /* CircleProfileMenuItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleProfileMenuItemView.swift; sourceTree = "<group>"; };
@@ -3238,6 +3240,7 @@
 				7B331B6C21B10349000370E9 /* LoadMoreSnapshotsJob.swift */,
 				DF2EB15B23F93870005E5A4F /* CleanUpUnusedAttachmentJob.swift */,
 				DFAD89972418EE0500836EDD /* RecoverMediaJob.swift */,
+				7B5E596E254FFB4B003FFDE0 /* InitializeFTSJob.swift */,
 			);
 			path = Job;
 			sourceTree = "<group>";
@@ -4356,6 +4359,7 @@
 				E0A14D3C2372F0340044D131 /* GroupProfileViewController.swift in Sources */,
 				7B7FBF8F2282D75400644693 /* RecalledMessageViewModel.swift in Sources */,
 				7B9D825A22F1BFEA0099381E /* NormalNetworkOperationIconSet.swift in Sources */,
+				7B5E596F254FFB4B003FFDE0 /* InitializeFTSJob.swift in Sources */,
 				7B6E5503223F69D90060E6FC /* KeyboardBasedLayoutViewController.swift in Sources */,
 				9B748DCD1FA71CEF00BC009B /* CameraViewController.swift in Sources */,
 				7B54F95B22B24A5600908A9D /* CreateEmergencyContactVerificationCodeViewController.swift in Sources */,

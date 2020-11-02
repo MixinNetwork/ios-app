@@ -135,6 +135,9 @@ class HomeViewController: UIViewController {
             if AppGroupUserDefaults.User.hasRecoverMedia {
                 ConcurrentJobQueue.shared.addJob(job: RecoverMediaJob())
             }
+            if !AppGroupUserDefaults.Database.isFTSInitialized {
+                ConcurrentJobQueue.shared.addJob(job: InitializeFTSJob())
+            }
         }
         UIApplication.homeContainerViewController?.clipSwitcher.loadClipsFromPreviousSession()
     }

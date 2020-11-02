@@ -313,6 +313,12 @@ public enum MessageCategory: String, Decodable {
         return Set(categories.map(\.rawValue))
     }()
     
+    public static let ftsAvailable: Set<Self> = [
+        .SIGNAL_TEXT, .PLAIN_TEXT,
+        .SIGNAL_POST, .PLAIN_POST,
+        .SIGNAL_DATA, .PLAIN_DATA
+    ]
+    
 }
 
 public enum MessageStatus: String, Codable {

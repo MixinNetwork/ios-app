@@ -8,8 +8,7 @@ extension MessageDAO {
     SELECT m.id, m.category, m.content, m.created_at, u.user_id, u.full_name, u.avatar_url, u.is_verified, u.app_id
         FROM messages m
         LEFT JOIN users u ON m.user_id = u.user_id
-        WHERE conversation_id = ? AND m.category in ('SIGNAL_TEXT','SIGNAL_DATA','SIGNAL_POST','PLAIN_TEXT','PLAIN_DATA','PLAIN_POST')
-        AND m.status != 'FAILED' AND (m.content LIKE ? ESCAPE '/' OR m.name LIKE ? ESCAPE '/')
+        WHERE m.id in (SELECT message_id FROM fts_messages WHERE conversation_id = ? AND (content MATCH ? OR name MATCH ?))
     """
     
     func getMessages(conversationId: String, contentLike keyword: String, belowMessageId location: String?, limit: Int?) -> [MessageSearchResult] {
@@ -34,10 +33,9 @@ extension MessageDAO {
             let cs = try MixinDatabase.shared.database.prepare(stmt)
             
             let bindingCounter = Counter(value: 0)
-            let wildcardedKeyword = "%\(keyword.sqlEscaped)%"
             cs.bind(conversationId, toIndex: bindingCounter.advancedValue)
-            cs.bind(wildcardedKeyword, toIndex: bindingCounter.advancedValue)
-            cs.bind(wildcardedKeyword, toIndex: bindingCounter.advancedValue)
+            cs.bind(keyword, toIndex: bindingCounter.advancedValue)
+            cs.bind(keyword, toIndex: bindingCounter.advancedValue)
             
             while try cs.step() {
                 let counter = Counter(value: -1)

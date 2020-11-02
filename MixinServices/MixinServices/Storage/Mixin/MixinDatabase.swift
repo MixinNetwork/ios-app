@@ -13,9 +13,16 @@ public class MixinDatabase: BaseDatabase {
     
     private var _database = Database(path: AppGroupContainer.mixinDatabaseUrl.path)
     
+    override init() {
+        super.init()
+        database.setTokenizes(.WCDB)
+    }
+    
     public func initDatabase(clearSentSenderKey: Bool = false) {
         _database = Database(path: AppGroupContainer.mixinDatabaseUrl.path)
+        database.setTokenizes(.WCDB)
         do {
+            try database.create(virtualTable: FTSMessage.tableName, of: FTSMessage.self)
             try database.run(transaction: {
                 var localVersion = try database.getDatabaseVersion()
                 if localVersion == 0 {
@@ -23,8 +30,12 @@ public class MixinDatabase: BaseDatabase {
                     // Database won't be opened if UserDefaults migration fails (e.g. launched in App Extension)
                     // As long as database is open this is guaranteed running in main App
                     localVersion = DatabaseUserDefault.shared.mixinDatabaseVersion
+                    AppGroupUserDefaults.Database.isFTSInitialized = true
                 }
                 try self.createBefore(database: database, localVersion: localVersion)
+                if !(try database.isTableExists(Message.tableName)) {
+                    AppGroupUserDefaults.Database.isFTSInitialized = true
+                }
                 
                 try database.create(of: Asset.self)
                 try database.create(table: Asset.topAssetsTableName, of: Asset.self)

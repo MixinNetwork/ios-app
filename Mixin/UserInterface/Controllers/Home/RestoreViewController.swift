@@ -73,6 +73,7 @@ class RestoreViewController: UIViewController {
                 AppGroupUserDefaults.Account.canRestoreChat = false
                 AppGroupUserDefaults.Account.canRestoreMedia = true
                 AppGroupUserDefaults.Database.isSentSenderKeyCleared = false
+                AppGroupUserDefaults.Database.isFTSInitialized = false
                 AppGroupUserDefaults.User.needsRebuildDatabase = true
                 AppGroupUserDefaults.User.isCircleSynchronized = false
                 

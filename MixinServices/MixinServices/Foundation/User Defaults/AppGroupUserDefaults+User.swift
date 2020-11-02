@@ -48,7 +48,7 @@ extension AppGroupUserDefaults {
             case assetSearchHistory = "asset_search_history"
         }
         
-        public static let version = 25
+        public static let version = 26
         public static let uninitializedVersion = -1
         
         public static let didChangeRecentlyUsedAppIdsNotification = Notification.Name(rawValue: "one.mixin.services.recently.used.app.ids.change")

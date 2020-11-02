@@ -449,6 +449,11 @@ public final class MessageDAO {
         } else {
             try database.insertOrReplace(objects: message, intoTable: Message.tableName)
         }
+        if message.status != MessageStatus.FAILED.rawValue {
+            try FTSMessageDAO.shared.insert(database: database,
+                                            messageId: message.messageId,
+                                            category: message.category)
+        }
         try MessageDAO.shared.updateUnseenMessageCount(database: database, conversationId: message.conversationId)
 
         if isAppExtension {
@@ -484,6 +489,10 @@ public final class MessageDAO {
     }
     
     public func recallMessage(database: Database, messageId: String, conversationId: String, category: String, status: String, quoteMessageIds: [String]) throws {
+        if let category = MessageCategory(rawValue: category), MessageCategory.ftsAvailable.contains(category) {
+            try FTSMessageDAO.shared.remove(database: database, messageId: messageId)
+        }
+        
         var values: [(PropertyConvertible, ColumnEncodable?)] = [
             (Message.Properties.category, MessageCategory.MESSAGE_RECALL.rawValue)
         ]
@@ -549,6 +558,7 @@ public final class MessageDAO {
             try delete.execute()
             deleteCount = delete.changes ?? 0
             try db.delete(fromTable: MessageMention.tableName, where: MessageMention.Properties.messageId == id)
+            try FTSMessageDAO.shared.remove(database: db, messageId: id)
         }
         return deleteCount > 0
     }
@@ -572,37 +582,6 @@ public final class MessageDAO {
 }
 
 extension MessageDAO {
-    
-    private func updateRedecryptMessage(keys: [PropertyConvertible], values: [ColumnEncodable?], mention: MessageMention? = nil, messageId: String, category: String, conversationId: String, messageSource: String) {
-        var newMessage: MessageItem?
-        MixinDatabase.shared.transaction { (database) in
-            if let mention = mention {
-                try database.insertOrReplace(objects: [mention], intoTable: MessageMention.tableName)
-            }
-            let updateStatment = try database.prepareUpdate(table: Message.tableName, on: keys).where(Message.Properties.messageId == messageId && Message.Properties.category != MessageCategory.MESSAGE_RECALL.rawValue)
-            try updateStatment.execute(with: values)
-            guard updateStatment.changes ?? 0 > 0 else {
-                return
-            }
-            
-            try MessageDAO.shared.updateUnseenMessageCount(database: database, conversationId: conversationId)
-            
-            newMessage = try database.prepareSelectSQL(on: MessageItem.Properties.all, sql: MessageDAO.sqlQueryFullMessageById, values: [messageId]).allObjects().first
-        }
-        
-        guard let message = newMessage else {
-            return
-        }
-        
-        let userInfo: [String: Any] = [
-            MessageDAO.UserInfoKey.conversationId: message.conversationId,
-            MessageDAO.UserInfoKey.message: message,
-            MessageDAO.UserInfoKey.messsageSource: messageSource
-        ]
-        performSynchronouslyOnMainThread {
-            NotificationCenter.default.post(name: MessageDAO.didRedecryptMessageNotification, object: self, userInfo: userInfo)
-        }
-    }
     
     public func updateMessageContentAndStatus(content: String, status: String, mention: MessageMention?, messageId: String, category: String, conversationId: String, messageSource: String) {
         updateRedecryptMessage(keys: [Message.Properties.content, Message.Properties.status],
@@ -670,6 +649,41 @@ extension MessageDAO {
     
     public func updateContactMessage(transferData: TransferContactData, status: String, messageId: String, category: String, conversationId: String, messageSource: String) {
         updateRedecryptMessage(keys: [Message.Properties.sharedUserId, Message.Properties.status], values: [transferData.userId, status], messageId: messageId, category: category, conversationId: conversationId, messageSource: messageSource)
+    }
+    
+}
+
+extension MessageDAO {
+    
+    private func updateRedecryptMessage(keys: [PropertyConvertible], values: [ColumnEncodable?], mention: MessageMention? = nil, messageId: String, category: String, conversationId: String, messageSource: String) {
+        var newMessage: MessageItem?
+        MixinDatabase.shared.transaction { (database) in
+            if let mention = mention {
+                try database.insertOrReplace(objects: [mention], intoTable: MessageMention.tableName)
+            }
+            let updateStatment = try database.prepareUpdate(table: Message.tableName, on: keys).where(Message.Properties.messageId == messageId && Message.Properties.category != MessageCategory.MESSAGE_RECALL.rawValue)
+            try updateStatment.execute(with: values)
+            guard updateStatment.changes ?? 0 > 0 else {
+                return
+            }
+            try FTSMessageDAO.shared.insert(database: database, messageId: messageId, category: category)
+            try MessageDAO.shared.updateUnseenMessageCount(database: database, conversationId: conversationId)
+            
+            newMessage = try database.prepareSelectSQL(on: MessageItem.Properties.all, sql: MessageDAO.sqlQueryFullMessageById, values: [messageId]).allObjects().first
+        }
+        
+        guard let message = newMessage else {
+            return
+        }
+        
+        let userInfo: [String: Any] = [
+            MessageDAO.UserInfoKey.conversationId: message.conversationId,
+            MessageDAO.UserInfoKey.message: message,
+            MessageDAO.UserInfoKey.messsageSource: messageSource
+        ]
+        performSynchronouslyOnMainThread {
+            NotificationCenter.default.post(name: MessageDAO.didRedecryptMessageNotification, object: self, userInfo: userInfo)
+        }
     }
     
 }

@@ -155,6 +155,7 @@ public final class ConversationDAO {
 
         MixinDatabase.shared.transaction { (db) in
             try db.delete(fromTable: Message.tableName, where: Message.Properties.conversationId == conversationId)
+            try db.delete(fromTable: FTSMessage.tableName, where: FTSMessage.Properties.conversationId == conversationId)
             try db.delete(fromTable: MessageMention.tableName, where: MessageMention.Properties.conversationId == conversationId)
             try db.delete(fromTable: Conversation.tableName, where: Conversation.Properties.conversationId == conversationId)
             try db.delete(fromTable: Participant.tableName, where: Participant.Properties.conversationId == conversationId)
@@ -171,6 +172,7 @@ public final class ConversationDAO {
 
         MixinDatabase.shared.transaction { (db) in
             try db.delete(fromTable: Message.tableName, where: Message.Properties.conversationId == conversationId)
+            try db.delete(fromTable: FTSMessage.tableName, where: FTSMessage.Properties.conversationId == conversationId)
             try db.delete(fromTable: MessageMention.tableName, where: MessageMention.Properties.conversationId == conversationId)
             try db.update(table: Conversation.tableName,
                 on: [Conversation.Properties.unseenMessageCount],

@@ -117,6 +117,12 @@ class SearchViewController: UIViewController, HomeSearchViewController {
             guard !op.isCancelled else {
                 return
             }
+            while !AppGroupUserDefaults.Database.isFTSInitialized {
+                Thread.sleep(forTimeInterval: 5)
+                if op.isCancelled {
+                    return
+                }
+            }
             
             let assets = AssetDAO.shared.getAssets(keyword: keyword, sortResult: true, limit: limit)
                 .map { AssetSearchResult(asset: $0, keyword: keyword) }

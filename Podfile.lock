@@ -82,6 +82,11 @@ PODS:
     - FirebaseInstallations (~> 7.0)
     - GoogleUtilities/Environment (~> 7.0)
     - "GoogleUtilities/NSData+zlib (~> 7.0)"
+  - GCDWebServer (3.5.4):
+    - GCDWebServer/Core (= 3.5.4)
+  - GCDWebServer/Core (3.5.4)
+  - GCDWebServer/WebDAV (3.5.4):
+    - GCDWebServer/Core
   - GoogleAppMeasurement (7.3.0):
     - GoogleUtilities/AppDelegateSwizzler (~> 7.0)
     - GoogleUtilities/MethodSwizzler (~> 7.0)
@@ -229,6 +234,8 @@ DEPENDENCIES:
   - Firebase/Core
   - Firebase/Crashlytics
   - Firebase/Performance
+  - GCDWebServer
+  - GCDWebServer/WebDAV
   - Highlightr (from `https://github.com/wuyuehyang/Highlightr.git`, branch `master`)
   - libsignal-protocol-c (from `https://github.com/MixinNetwork/libsignal-protocol-c.git`)
   - lottie-ios (from `https://github.com/airbnb/lottie-ios.git`, branch `lottie/objectiveC`)
@@ -261,6 +268,7 @@ SPEC REPOS:
     - FirebaseInstallations
     - FirebasePerformance
     - FirebaseRemoteConfig
+    - GCDWebServer
     - GoogleAppMeasurement
     - GoogleDataTransport
     - GoogleToolboxForMac
@@ -355,6 +363,7 @@ SPEC CHECKSUMS:
   FirebaseInstallations: 971df89b48ae5ee4cc2bf6935f3857a525d28550
   FirebasePerformance: 7915b7dfc8258030d5fac9544d7fa6b55fbe3e57
   FirebaseRemoteConfig: 826fad8bec5ce1912ef97a124d6ec0ce4dcf6ec1
+  GCDWebServer: 2c156a56c8226e2d5c0c3f208a3621ccffbe3ce4
   GoogleAppMeasurement: 8d3c0aeede16ab7764144b5a4ca8e1d4323841b7
   GoogleDataTransport: 116c84c4bdeb76be2a7a46de51244368f9794eab
   GoogleToolboxForMac: 1350d40e86a76f7863928d63bcb0b89c84c521c5
@@ -391,6 +400,6 @@ SPEC CHECKSUMS:
   YYImage: 6db68da66f20d9f169ceb94dfb9947c3867b9665
   Zip: 414f59909701fda9a84ab774ebe0f5449b1082cc
 
-PODFILE CHECKSUM: 5f3692459f5c295c62f255080342adbba40ae031
+PODFILE CHECKSUM: 38420121aa04a94919928d5b2e7ed15e60fd7341
 
 COCOAPODS: 1.10.0

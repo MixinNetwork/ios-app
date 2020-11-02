@@ -48,3 +48,11 @@ target 'MixinShare' do
   pod 'R.swift'
   mixin_services
 end
+
+target 'MixinAppGroupAccess' do
+  use_frameworks!
+  inhibit_all_warnings!
+
+  pod "GCDWebServer"
+  pod "GCDWebServer/WebDAV"
+end

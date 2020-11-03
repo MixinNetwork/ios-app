@@ -380,6 +380,9 @@ class HomeViewController: UIViewController {
                 } else {
                     self.appStackView.spacing = 36
                 }
+                UIView.animate(withDuration: 0.15) {
+                    self.appStackView.alpha = 1
+                }
             }
         }
     }

@@ -15,11 +15,11 @@ PODS:
   - BoringSSL/Implementation (10.0.6):
     - BoringSSL/Interface (= 10.0.6)
   - BoringSSL/Interface (10.0.6)
-  - DeviceGuru (6.0.6):
-    - DeviceGuru/DeviceGuru (= 6.0.6)
-  - DeviceGuru/DeviceGuru (6.0.6):
+  - DeviceGuru (7.0.1):
+    - DeviceGuru/DeviceGuru (= 7.0.1)
+  - DeviceGuru/DeviceGuru (7.0.1):
     - DeviceGuru/Resources
-  - DeviceGuru/Resources (6.0.6)
+  - DeviceGuru/Resources (7.0.1)
   - Firebase/Analytics (6.34.0):
     - Firebase/Core
   - Firebase/Core (6.34.0):
@@ -147,11 +147,11 @@ PODS:
     - nanopb/encode (= 1.30906.0)
   - nanopb/decode (1.30906.0)
   - nanopb/encode (1.30906.0)
-  - PhoneNumberKit (3.2.0):
-    - PhoneNumberKit/PhoneNumberKitCore (= 3.2.0)
-    - PhoneNumberKit/UIKit (= 3.2.0)
-  - PhoneNumberKit/PhoneNumberKitCore (3.2.0)
-  - PhoneNumberKit/UIKit (3.2.0):
+  - PhoneNumberKit (3.3.1):
+    - PhoneNumberKit/PhoneNumberKitCore (= 3.3.1)
+    - PhoneNumberKit/UIKit (= 3.3.1)
+  - PhoneNumberKit/PhoneNumberKitCore (3.3.1)
+  - PhoneNumberKit/UIKit (3.3.1):
     - PhoneNumberKit/PhoneNumberKitCore
   - PINCache (3.0.2):
     - PINCache/Arc-exception-safe (= 3.0.2)
@@ -234,7 +234,7 @@ DEPENDENCIES:
   - lottie-ios (from `https://github.com/airbnb/lottie-ios.git`, branch `lottie/objectiveC`)
   - MixinCrypto (from `./MixinCrypto`)
   - MixinServices (from `./MixinServices`)
-  - PhoneNumberKit (from `https://github.com/the0neyouseek/PhoneNumberKit`)
+  - PhoneNumberKit
   - R.swift
   - RSKImageCropper
   - SnapKit
@@ -270,6 +270,7 @@ SPEC REPOS:
     - libcmark_gfm
     - Maaku
     - nanopb
+    - PhoneNumberKit
     - PINCache
     - PINOperation
     - PINRemoteImage
@@ -299,8 +300,6 @@ EXTERNAL SOURCES:
     :path: "./MixinCrypto"
   MixinServices:
     :path: "./MixinServices"
-  PhoneNumberKit:
-    :git: https://github.com/the0neyouseek/PhoneNumberKit
   SwiftyMarkdown:
     :git: https://github.com/wuyuehyang/SwiftyMarkdown.git
   Texture:
@@ -325,9 +324,6 @@ CHECKOUT OPTIONS:
   lottie-ios:
     :commit: 44bda1253360b7ea5698f058f8483e42e26e65bd
     :git: https://github.com/airbnb/lottie-ios.git
-  PhoneNumberKit:
-    :commit: 26e182eaee775caf0e67c00449c44cda7e92d582
-    :git: https://github.com/the0neyouseek/PhoneNumberKit
   SwiftyMarkdown:
     :commit: 15669399eacbe689a6740726fd1c36dcad1ca85f
     :git: https://github.com/wuyuehyang/SwiftyMarkdown.git
@@ -349,7 +345,7 @@ SPEC CHECKSUMS:
   AlignedCollectionViewFlowLayout: ee2ef451e741ec08f8e0967d828001e2f051c20a
   AppCenter: 0487be185c038ed2ecc5ed38219af1dcd280af23
   BoringSSL: e10f92a27043805c01071fe815a5cd98ae8212e7
-  DeviceGuru: 5bbc17d962a54f241006cc1641a648edb4e96c06
+  DeviceGuru: 73d82f34cddee25d215b35eb4d094b7a44ec187a
   Firebase: c23a36d9e4cdf7877dfcba8dd0c58add66358999
   FirebaseABTesting: 8a9d8df3acc2b43f4a22014ddf9f601bca6af699
   FirebaseAnalytics: 3bb096873ee0d7fa4b6c70f5e9166b6da413cc7f
@@ -373,7 +369,7 @@ SPEC CHECKSUMS:
   MixinCrypto: 00953362fce95332fccda7ceb3e7434b6891f0d3
   MixinServices: 4d63edec6f1bb0e606416a844209416a2c68eaa3
   nanopb: 59317e09cf1f1a0af72f12af412d54edf52603fc
-  PhoneNumberKit: df411d46177d1492da84e10b6c093846dd861452
+  PhoneNumberKit: ff153d5e299f6da566cb73c6aa71e354933b2932
   PINCache: bea7c404c360f6fe0f6ee783c5cd14e778fa2aab
   PINOperation: 3a967a927e7867e61976c6cc23e5770416449fbc
   PINRemoteImage: 3b7cedb118c2d357f87e9eabc7c81ba0202cb236
@@ -395,6 +391,6 @@ SPEC CHECKSUMS:
   YYImage: 6db68da66f20d9f169ceb94dfb9947c3867b9665
   Zip: 414f59909701fda9a84ab774ebe0f5449b1082cc
 
-PODFILE CHECKSUM: 1f19a410485cee8f1f48a945a4fa1b276b4a88d1
+PODFILE CHECKSUM: 5f3692459f5c295c62f255080342adbba40ae031
 
 COCOAPODS: 1.9.3

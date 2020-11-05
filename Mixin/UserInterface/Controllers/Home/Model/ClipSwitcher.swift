@@ -6,6 +6,8 @@ class ClipSwitcher {
     
     static let maxNumber = 6
     
+    private let encoder = JSONEncoder.default
+    
     private(set) var clips: [Clip] = []
     private(set) weak var fullscreenSwitcherIfLoaded: ClipSwitcherViewController?
     
@@ -22,8 +24,8 @@ class ClipSwitcher {
     
     init() {
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(didReceiveMemoryWarningNotification(_:)),
-                                               name: UIApplication.didReceiveMemoryWarningNotification,
+                                               selector: #selector(updateSerializedClip(_:)),
+                                               name: Clip.propertiesDidUpdateNotification,
                                                object: nil)
     }
     
@@ -66,8 +68,10 @@ class ClipSwitcher {
             clip.thumbnail = image
         }
         
-        AppGroupUserDefaults.User.clips = clips.compactMap { (clip) -> Data? in
-            try? JSONEncoder.default.encode(clip)
+        if clips.count == AppGroupUserDefaults.User.clips.count + 1, let encoded = try? encoder.encode(clip) {
+            AppGroupUserDefaults.User.clips.append(encoded)
+        } else {
+            updateAllSerializedClips()
         }
     }
     
@@ -76,15 +80,15 @@ class ClipSwitcher {
         clips.remove(at: index)
         if index < AppGroupUserDefaults.User.clips.count {
             AppGroupUserDefaults.User.clips.remove(at: index)
+        } else {
+            updateAllSerializedClips()
         }
     }
     
     func replaceClips(with clips: [Clip]) {
         minimizedController?.replaceClips(with: clips)
         self.clips = clips
-        AppGroupUserDefaults.User.clips = clips.compactMap { (clip) -> Data? in
-            try? JSONEncoder.default.encode(clip)
-        }
+        updateAllSerializedClips()
     }
     
     func hideFullscreenSwitcher() {
@@ -96,9 +100,20 @@ class ClipSwitcher {
         fullscreenSwitcher.show()
     }
     
-    @objc func didReceiveMemoryWarningNotification(_ notification: Notification) {
-        for clip in clips {
-            clip.removeCachedController()
+    @objc private func updateSerializedClip(_ notification: Notification) {
+        guard let clip = notification.object as? Clip else {
+            return
+        }
+        if let index = clips.firstIndex(where: { $0 == clip }), index < AppGroupUserDefaults.User.clips.count, let encoded = try? encoder.encode(clip) {
+            AppGroupUserDefaults.User.clips[index] = encoded
+        } else {
+            updateAllSerializedClips()
+        }
+    }
+    
+    private func updateAllSerializedClips() {
+        AppGroupUserDefaults.User.clips = clips.compactMap { (clip) -> Data? in
+            try? JSONEncoder.default.encode(clip)
         }
     }
     

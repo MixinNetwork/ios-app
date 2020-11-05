@@ -8,6 +8,8 @@ final class Clip: Codable {
         case id, app, title, url
     }
     
+    static let propertiesDidUpdateNotification = Notification.Name("one.mixin.messenger.Clip.propertiesDidUpdate")
+    
     private static let thumbnailProcessingQueue = DispatchQueue(label: "one.mixin.messenger.Clip.ThumbnailProcessing")
     
     private static var thumbnailCachesURL: URL? {
@@ -17,14 +19,20 @@ final class Clip: Codable {
     
     let id: UUID
     let app: App?
-    let title: String
-    let url: URL
+    
+    private(set) var title: String
+    private(set) var url: URL
+    
+    private var _thumbnail: UIImage?
     
     var thumbnail: UIImage? {
-        didSet {
-            let thumbnail = self.thumbnail
+        get {
+            _thumbnail
+        }
+        set {
+            _thumbnail = newValue
             Self.thumbnailProcessingQueue.async {
-                self.updateCache(for: thumbnail)
+                self.updateCache(for: newValue)
             }
         }
     }
@@ -91,10 +99,6 @@ final class Clip: Codable {
         try container.encode(url, forKey: .url)
     }
     
-    func removeCachedController() {
-        controllerIfLoaded = nil
-    }
-    
 }
 
 extension Clip: Equatable {
@@ -107,20 +111,57 @@ extension Clip: Equatable {
 
 extension Clip {
     
-    @objc private func updateThumbnail(_ notification: Notification) {
+    @objc private func removeCachedController() {
+        controllerIfLoaded = nil
+    }
+    
+    @objc private func updateProperties(_ notification: Notification) {
         guard let controller = notification.object as? WebViewController, controller == controllerIfLoaded else {
             return
         }
+        
         let config = WKSnapshotConfiguration()
         config.rect = controller.webView.frame
         config.snapshotWidth = NSNumber(value: Int(controller.webView.frame.width))
         controller.webView.takeSnapshot(with: config) { [weak self] (image, error) in
             self?.thumbnail = image
         }
+        
+        updateURLAndTitle()
     }
     
+    @objc private func applicationWillTerminate() {
+        if controllerIfLoaded?.parent != nil {
+            updateURLAndTitle()
+        }
+    }
+    
+}
+
+extension Clip {
+    
     private func addObservers() {
-        NotificationCenter.default.addObserver(self, selector: #selector(updateThumbnail(_:)), name: WebViewController.didDismissNotification, object: nil)
+        let center = NotificationCenter.default
+        center.addObserver(self,
+                           selector: #selector(removeCachedController),
+                           name: UIApplication.didReceiveMemoryWarningNotification,
+                           object: nil)
+        center.addObserver(self,
+                           selector: #selector(updateProperties(_:)),
+                           name: WebViewController.didDismissNotification,
+                           object: nil)
+        center.addObserver(self,
+                           selector: #selector(applicationWillTerminate),
+                           name: UIApplication.willTerminateNotification,
+                           object: nil)
+    }
+    
+    private func updateURLAndTitle() {
+        if let url = controller.webView.url, self.url != url {
+            self.url = url
+        }
+        self.title = controller.webView.title ?? ""
+        NotificationCenter.default.post(name: Self.propertiesDidUpdateNotification, object: self)
     }
     
     private func updateCache(for thumbnail: UIImage?) {
@@ -166,7 +207,9 @@ extension Clip {
                 return
             }
             DispatchQueue.main.async {
-                self?.thumbnail = image
+                if self?.thumbnail == nil {
+                    self?._thumbnail = image
+                }
             }
         }
     }

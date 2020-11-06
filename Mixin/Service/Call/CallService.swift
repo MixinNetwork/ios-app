@@ -797,7 +797,7 @@ extension CallService {
                 call.status = .disconnecting
                 call.timer?.invalidate()
                 insertCallCompletedMessage(call: call, isUserInitiated: false, category: category)
-            } else {
+            } else if category == .WEBRTC_AUDIO_CANCEL {
                 // When a call is pushed via APN User Notifications and gets cancelled before app is launched
                 // This routine may execute when app is launched manually, sometimes before pending WebRTC jobs are awake
                 let msg = Message.createWebRTCMessage(messageId: data.quoteMessageId,

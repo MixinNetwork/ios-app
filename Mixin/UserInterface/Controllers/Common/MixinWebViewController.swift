@@ -10,6 +10,8 @@ class MixinWebViewController: WebViewController {
         static let reloadTheme = "reloadTheme"
     }
     
+    weak var associatedClip: Clip?
+    
     override var config: WKWebViewConfiguration {
         let config = WKWebViewConfiguration()
         config.dataDetectorTypes = .all
@@ -39,18 +41,8 @@ class MixinWebViewController: WebViewController {
     }
     
     class func presentInstance(with context: Context, asChildOf parent: UIViewController) {
-        let controller: MixinWebViewController
-        switch context.style {
-        case let .app(app, _):
-            if let clip = UIApplication.homeContainerViewController?.clipSwitcher.clips.first(where: { $0.app?.appId == app.appId }) {
-                controller = clip.controller
-            } else {
-                fallthrough
-            }
-        default:
-            controller = Self.instance(with: context)
-        }
-        controller.presentAsChild(of: parent, completion: nil)
+        let vc = Self.instance(with: context)
+        vc.presentAsChild(of: parent, completion: nil)
     }
     
     override func viewDidLoad() {
@@ -220,14 +212,10 @@ class MixinWebViewController: WebViewController {
     
     override func moreAction(_ sender: Any) {
         let floatAction: WebMoreMenuViewController.MenuItem
-        if let switcher = UIApplication.homeContainerViewController?.clipSwitcher {
-            var hasSameClip = switcher.clips.contains(where: { $0.controller == self })
-            if case let .app(app, _) = context.style {
-                hasSameClip = hasSameClip || switcher.clips.contains(where: { $0.app?.appId == app.appId })
-            }
-            floatAction = hasSameClip ? .cancelFloat : .float
-        } else {
+        if associatedClip == nil {
             floatAction = .float
+        } else {
+            floatAction = .cancelFloat
         }
         let sections: [[WebMoreMenuViewController.MenuItem]]
         switch context.style {
@@ -371,18 +359,12 @@ extension MixinWebViewController: WebMoreMenuControllerDelegate {
                     }
                 }
             case .cancelFloat:
-                if let switcher = UIApplication.homeContainerViewController?.clipSwitcher {
-                    let maybeIndex: Int?
-                    switch context.style {
-                    case .webPage:
-                        maybeIndex = switcher.clips.firstIndex(where: { $0.controller == self })
-                    case let .app(app, _):
-                        maybeIndex = switcher.clips.firstIndex(where: { $0.app?.appId == app.appId })
-                    }
-                    if let index = maybeIndex {
-                        switcher.removeClip(at: index)
-                    }
+                if let clip = associatedClip,
+                   let switcher = UIApplication.homeContainerViewController?.clipSwitcher,
+                   let index = switcher.clips.firstIndex(of: clip) {
+                    switcher.removeClip(at: index)
                 }
+                associatedClip = nil
             case .about:
                 aboutAction()
             case .copyLink:

@@ -39,6 +39,7 @@ final class Clip: Codable {
                 return MixinWebViewController.instance(with: .init(conversationId: "", initialUrl: url))
             }
         }()
+        controller.associatedClip = self
         controllerIfLoaded = controller
         return controller
     }
@@ -93,6 +94,18 @@ final class Clip: Codable {
     func removeCachedController() {
         controllerIfLoaded = nil
     }
+    
+}
+
+extension Clip: Equatable {
+    
+    static func == (lhs: Clip, rhs: Clip) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+}
+
+extension Clip {
     
     @objc private func updateThumbnail(_ notification: Notification) {
         guard let controller = notification.object as? WebViewController, controller == controllerIfLoaded else {

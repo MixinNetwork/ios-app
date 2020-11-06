@@ -54,7 +54,7 @@ class PhotoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
         guard mediaStatus == MediaStatus.PENDING.rawValue else {
             return
         }
-        guard isTriggeredByUser || !downloadIsTriggeredByUser else {
+        guard isTriggeredByUser || (!downloadIsTriggeredByUser && !shouldUpload) else {
             return
         }
         if shouldUpload {

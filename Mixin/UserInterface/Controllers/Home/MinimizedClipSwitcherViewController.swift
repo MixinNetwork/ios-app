@@ -28,20 +28,12 @@ class MinimizedClipSwitcherViewController: HomeOverlayViewController {
             let action = #selector(ClipSwitcher.showFullscreenSwitcher)
             button.addTarget(switcher, action: action, for: .touchUpInside)
         }
+        panningController.delegate = self
     }
     
     override func updateViewSize() {
         let numberOfVisibleIcons = visibleIconViews.count + additionalPlaceholders.count
-        let additional: CGFloat
-        switch numberOfVisibleIcons {
-        case 0, 1:
-            additional = 0
-        case 2, 3:
-            additional = halfIconOffset * CGFloat(numberOfVisibleIcons - 1)
-        default:
-            additional = halfIconOffset + quarterIconOffset * 3
-        }
-        let iconsWidth = iconLength + additional
+        let iconsWidth = self.iconsWidth(for: numberOfVisibleIcons)
         let horizontalMargin = horizontalContentMargin
             + iconsWrapperLeadingConstraint.constant
             + iconsWrapperTrailingConstraint.constant
@@ -198,14 +190,7 @@ class MinimizedClipSwitcherViewController: HomeOverlayViewController {
                 }
             }
             animations.append {
-                let numberOfAllIcons = self.visibleIconViews.count + self.additionalPlaceholders.count
-                for (index, icon) in self.visibleIconViews.enumerated() {
-                    icon.center = self.iconCenter(for: index, in: numberOfAllIcons)
-                }
-                for (index, placeholder) in self.additionalPlaceholders.enumerated() {
-                    placeholder.center = self.iconCenter(for: self.visibleIconViews.count + index,
-                                                         in: numberOfAllIcons)
-                }
+                self.updateAllIconsCenter()
                 self.updateViewSize()
                 self.view.layoutIfNeeded()
             }
@@ -253,20 +238,22 @@ class MinimizedClipSwitcherViewController: HomeOverlayViewController {
             }
         }
         
-        let numberOfAllIcons = visibleIconViews.count + additionalPlaceholders.count
-        for (index, view) in visibleIconViews.enumerated() {
-            view.center = iconCenter(for: index, in: numberOfAllIcons)
-        }
-        for (index, view) in additionalPlaceholders.enumerated() {
-            view.center = iconCenter(for: visibleIconViews.count + index, in: numberOfAllIcons)
-        }
-        if numberOfAllIcons == 0 {
+        updateAllIconsCenter()
+        if visibleIconViews.count + additionalPlaceholders.count == 0 {
             view.alpha = 0
         } else {
             view.alpha = 1
             updateViewSize()
             panningController.stickViewToParentEdge(horizontalVelocity: 0, animated: false)
         }
+    }
+    
+}
+
+extension MinimizedClipSwitcherViewController: ViewPanningControllerDelegate {
+    
+    func animateAlongsideViewPanningControllerEdgeSticking(_ controller: ViewPanningController) {
+        updateAllIconsCenter()
     }
     
 }
@@ -284,6 +271,29 @@ extension MinimizedClipSwitcherViewController {
         view.avatarImageView.imageView.tintColor = R.color.text_accessory()
         view.alpha = 1
         return view
+    }
+    
+    private func iconsWidth(for count: Int) -> CGFloat {
+        let additional: CGFloat
+        switch count {
+        case 0, 1:
+            additional = 0
+        case 2, 3:
+            additional = halfIconOffset * CGFloat(count - 1)
+        default:
+            additional = halfIconOffset + quarterIconOffset * 3
+        }
+        return iconLength + additional
+    }
+    
+    private func updateAllIconsCenter() {
+        let numberOfAllIcons = visibleIconViews.count + additionalPlaceholders.count
+        for (index, view) in visibleIconViews.enumerated() {
+            view.center = iconCenter(for: index, in: numberOfAllIcons)
+        }
+        for (index, view) in additionalPlaceholders.enumerated() {
+            view.center = iconCenter(for: visibleIconViews.count + index, in: numberOfAllIcons)
+        }
     }
     
     @discardableResult
@@ -319,7 +329,13 @@ extension MinimizedClipSwitcherViewController {
         default:
             offset = halfIconOffset + quarterIconOffset * CGFloat(index - 1)
         }
-        return CGPoint(x: iconLength / 2 + offset, y: iconLength / 2)
+        let x: CGFloat
+        if panningController.stickingEdge.contains(.left) {
+            x = iconsWidth(for: numberOfIcons) - iconLength / 2 - offset
+        } else {
+            x = iconLength / 2 + offset
+        }
+        return CGPoint(x: x, y: iconLength / 2)
     }
     
     private func animate(_ animations: @escaping () -> Void, completion: (() -> Void)?) {

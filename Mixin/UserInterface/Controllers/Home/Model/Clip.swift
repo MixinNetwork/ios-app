@@ -157,11 +157,18 @@ extension Clip {
     }
     
     private func updateURLAndTitle() {
+        var hasPropertyChange = false
         if let url = controller.webView.url, self.url != url {
             self.url = url
+            hasPropertyChange = true
         }
-        self.title = controller.webView.title ?? ""
-        NotificationCenter.default.post(name: Self.propertiesDidUpdateNotification, object: self)
+        if app == nil {
+            self.title = controller.webView.title ?? ""
+            hasPropertyChange = true
+        }
+        if hasPropertyChange {
+            NotificationCenter.default.post(name: Self.propertiesDidUpdateNotification, object: self)
+        }
     }
     
     private func updateCache(for thumbnail: UIImage?) {

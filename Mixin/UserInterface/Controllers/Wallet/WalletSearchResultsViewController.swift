@@ -35,6 +35,7 @@ class WalletSearchResultsViewController: WalletSearchTableViewController {
             searchResults = []
             tableView.reloadData()
             tableView.removeEmptyIndicator()
+            activityIndicator.stopAnimating()
             return
         }
         activityIndicator.startAnimating()

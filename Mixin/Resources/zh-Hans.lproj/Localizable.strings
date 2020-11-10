@@ -550,6 +550,8 @@
 "transaction_type_fee" = "手续费";
 "transaction_type_rebate" = "退款";
 "transaction_type_raw" = "其他";
+"wallet_header_recent_searches" = "搜索历史";
+"wallet_header_trending" = "流行趋势";
 
 // Address Book
 "address_book_title" = "%@ 地址簿";

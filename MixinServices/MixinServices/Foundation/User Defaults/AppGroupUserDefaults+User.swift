@@ -45,6 +45,7 @@ extension AppGroupUserDefaults {
             
             case homeApp = "home_app"
             case clips = "clips"
+            case assetSearchHistory = "asset_search_history"
         }
         
         public static let version = 25
@@ -53,6 +54,8 @@ extension AppGroupUserDefaults {
         public static let didChangeRecentlyUsedAppIdsNotification = Notification.Name(rawValue: "one.mixin.services.recently.used.app.ids.change")
         public static let circleNameDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.circle.name.change")
         public static let homeAppIdsDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.home.app.ids.change")
+        
+        private static let maxNumberOfAssetSearchHistory = 2
         
         public static var needsUpgradeInMainApp: Bool {
             return localVersion < version || needsRebuildDatabase
@@ -163,6 +166,10 @@ extension AppGroupUserDefaults {
         @Default(namespace: .user, key: Key.clips, defaultValue: [])
         public static var clips: [Data]
         
+        // Stores asset id
+        @Default(namespace: .user, key: Key.assetSearchHistory, defaultValue: [])
+        public private(set) static var assetSearchHistory: [String]
+        
         public static func insertRecentlyUsedAppId(id: String) {
             let maxNumberOfIds = 12
             var ids = recentlyUsedAppIds
@@ -181,6 +188,15 @@ extension AppGroupUserDefaults {
             }
             lastUpdateOrInstallVersion = Bundle.main.bundleVersion
             lastUpdateOrInstallDate = Date()
+        }
+        
+        public static func insertAssetSearchHistory(with id: String) {
+            guard !assetSearchHistory.contains(id) else {
+                return
+            }
+            var history = assetSearchHistory
+            history.insert(id, at: 0)
+            AppGroupUserDefaults.User.assetSearchHistory = Array(history.prefix(maxNumberOfAssetSearchHistory))
         }
         
         internal static func migrate() {

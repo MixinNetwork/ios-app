@@ -31,7 +31,13 @@ extension UIView {
             }
             EmptyView.instance().render(text: text, photo: photo, container: self)
         } else {
-            self.subviews.first(where: { $0 is EmptyView })?.removeFromSuperview()
+            removeEmptyIndicator()
+        }
+    }
+    
+    func removeEmptyIndicator() {
+        for indicator in subviews.compactMap({ $0 as? EmptyView }) {
+            indicator.removeFromSuperview()
         }
     }
 

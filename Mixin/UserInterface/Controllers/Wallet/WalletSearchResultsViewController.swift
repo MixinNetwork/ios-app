@@ -46,12 +46,12 @@ class WalletSearchResultsViewController: WalletSearchTableViewController {
                 return
             }
             
-            let localAssets = AssetDAO.shared.getAssets(keyword: keyword, limit: nil)
+            let localItems = AssetDAO.shared.getAssets(keyword: keyword, limit: nil)
             DispatchQueue.main.sync {
                 guard !op.isCancelled else {
                     return
                 }
-                self.searchResults = localAssets
+                self.searchResults = localItems
                 self.tableView.reloadData()
                 self.tableView.removeEmptyIndicator()
             }
@@ -63,7 +63,7 @@ class WalletSearchResultsViewController: WalletSearchTableViewController {
             case .failure:
                 remoteAssets = []
             }
-            let localIds = Set(localAssets.map(\.assetId))
+            let localIds = Set(localItems.map(\.assetId))
             let remoteItems = remoteAssets.compactMap({ (asset) -> AssetItem? in
                 guard !localIds.contains(asset.assetId) else {
                     return nil
@@ -79,7 +79,7 @@ class WalletSearchResultsViewController: WalletSearchTableViewController {
             })
             
             let defaultIconUrl = "https://images.mixin.one/yH_I5b0GiV2zDmvrXRyr3bK5xusjfy5q7FX3lw3mM2Ryx4Dfuj6Xcw8SHNRnDKm7ZVE3_LvpKlLdcLrlFQUBhds=s128"
-            let items = (localAssets + remoteItems).sorted { (one, another) -> Bool in
+            let items = (localItems + remoteItems).sorted { (one, another) -> Bool in
                 let isEqualOneSymbol = one.symbol.lowercased() == keyword.lowercased()
                 let isEqualAnotherSymbol = another.symbol.lowercased() == keyword.lowercased()
                 if !(isEqualOneSymbol && isEqualAnotherSymbol) && (isEqualOneSymbol || isEqualAnotherSymbol) {

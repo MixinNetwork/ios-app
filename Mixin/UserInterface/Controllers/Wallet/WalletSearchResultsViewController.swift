@@ -53,6 +53,8 @@ class WalletSearchResultsViewController: WalletSearchTableViewController {
                 let anotherSymbolEqualsToKeyword = another.symbol.lowercased() == lowercasedKeyword
                 if oneSymbolEqualsToKeyword && !anotherSymbolEqualsToKeyword {
                     return true
+                } else if !oneSymbolEqualsToKeyword && anotherSymbolEqualsToKeyword {
+                    return false
                 }
                 
                 let oneCapitalization = one.balance.doubleValue * one.priceUsd.doubleValue
@@ -65,6 +67,8 @@ class WalletSearchResultsViewController: WalletSearchTableViewController {
                 let anotherHasIcon = another.iconUrl != defaultIconUrl
                 if oneHasIcon && !anotherHasIcon {
                     return true
+                } else if !oneHasIcon && anotherHasIcon {
+                    return false
                 }
                 
                 return one.name < another.name

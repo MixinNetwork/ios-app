@@ -52,10 +52,10 @@ public final class AssetDAO {
     public func getAssets(keyword: String, sortResult: Bool, limit: Int?) -> [AssetItem] {
         var sql = """
         \(Self.sqlQueryTable)
-        WHERE a1.balance > 0 AND (a1.name LIKE ? OR a1.symbol LIKE ?)
+        WHERE (a1.name LIKE ? OR a1.symbol LIKE ?)
         """
         if sortResult {
-            sql += " ORDER BY CASE WHEN a1.symbol LIKE ? THEN 1 ELSE 0 END DESC, \(Self.sqlOrder)"
+            sql += " AND a1.balance > 0 ORDER BY CASE WHEN a1.symbol LIKE ? THEN 1 ELSE 0 END DESC, \(Self.sqlOrder)"
         }
         if let limit = limit {
             sql += " LIMIT \(limit)"

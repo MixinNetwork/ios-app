@@ -46,11 +46,37 @@ class WalletSearchResultsViewController: WalletSearchTableViewController {
                 return
             }
             
-            let localItems = AssetDAO.shared.getAssets(keyword: keyword, limit: nil)
-            DispatchQueue.main.sync {
-                guard !op.isCancelled else {
-                    return
+            let lowercasedKeyword = keyword.lowercased()
+            let defaultIconUrl = "https://images.mixin.one/yH_I5b0GiV2zDmvrXRyr3bK5xusjfy5q7FX3lw3mM2Ryx4Dfuj6Xcw8SHNRnDKm7ZVE3_LvpKlLdcLrlFQUBhds=s128"
+            func assetSorting(_ one: AssetItem, _ another: AssetItem) -> Bool {
+                let oneSymbolEqualsToKeyword = one.symbol.lowercased() == lowercasedKeyword
+                let anotherSymbolEqualsToKeyword = another.symbol.lowercased() == lowercasedKeyword
+                if oneSymbolEqualsToKeyword && !anotherSymbolEqualsToKeyword {
+                    return true
                 }
+                
+                let oneCapitalization = one.balance.doubleValue * one.priceUsd.doubleValue
+                let anotherCapitalization = another.balance.doubleValue * another.priceUsd.doubleValue
+                if oneCapitalization != anotherCapitalization {
+                    return oneCapitalization > anotherCapitalization
+                }
+                
+                let oneHasIcon = one.iconUrl != defaultIconUrl
+                let anotherHasIcon = another.iconUrl != defaultIconUrl
+                if oneHasIcon && !anotherHasIcon {
+                    return true
+                }
+                
+                return one.name < another.name
+            }
+            
+            let localItems = AssetDAO.shared
+                .getAssets(keyword: keyword, sortResult: false, limit: nil)
+                .sorted(by: assetSorting)
+            guard !op.isCancelled else {
+                return
+            }
+            DispatchQueue.main.sync {
                 self.searchResults = localItems
                 self.tableView.reloadData()
                 self.tableView.removeEmptyIndicator()
@@ -78,32 +104,21 @@ class WalletSearchResultsViewController: WalletSearchTableViewController {
                 return item
             })
             
-            let defaultIconUrl = "https://images.mixin.one/yH_I5b0GiV2zDmvrXRyr3bK5xusjfy5q7FX3lw3mM2Ryx4Dfuj6Xcw8SHNRnDKm7ZVE3_LvpKlLdcLrlFQUBhds=s128"
-            let items = (localItems + remoteItems).sorted { (one, another) -> Bool in
-                let isEqualOneSymbol = one.symbol.lowercased() == keyword.lowercased()
-                let isEqualAnotherSymbol = another.symbol.lowercased() == keyword.lowercased()
-                if !(isEqualOneSymbol && isEqualAnotherSymbol) && (isEqualOneSymbol || isEqualAnotherSymbol) {
-                    return isEqualOneSymbol
-                }
-                
-                let oneCapitalization = one.balance.doubleValue * one.priceUsd.doubleValue
-                let anotherCapitalization = another.balance.doubleValue * another.priceUsd.doubleValue
-                if oneCapitalization != anotherCapitalization {
-                    return oneCapitalization > anotherCapitalization
-                }
-                
-                if (one.iconUrl == defaultIconUrl && another.iconUrl == defaultIconUrl) || (one.iconUrl != defaultIconUrl && another.iconUrl != defaultIconUrl) {
-                    return one.name > another.name
-                }
-                
-                return one.iconUrl != defaultIconUrl
+            let allItems: [AssetItem]?
+            if remoteItems.isEmpty {
+                allItems = nil
+            } else {
+                allItems = (localItems + remoteItems).sorted(by: assetSorting)
+            }
+            guard !op.isCancelled else {
+                return
             }
             
             DispatchQueue.main.sync {
                 guard !op.isCancelled else {
                     return
                 }
-                if !remoteItems.isEmpty {
+                if let items = allItems {
                     self.searchResults = items
                     self.tableView.reloadData()
                 }

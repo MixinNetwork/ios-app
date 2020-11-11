@@ -118,7 +118,7 @@ class SearchViewController: UIViewController, HomeSearchViewController {
                 return
             }
             
-            let assets = AssetDAO.shared.getAssets(keyword: keyword, limit: limit)
+            let assets = AssetDAO.shared.getAssets(keyword: keyword, sortResult: true, limit: limit)
                 .map { AssetSearchResult(asset: $0, keyword: keyword) }
             guard !op.isCancelled else {
                 return

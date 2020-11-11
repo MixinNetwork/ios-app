@@ -531,6 +531,8 @@
 "wallet_store_encrypted_pin" = "Enable %@ Pay";
 "wallet_touch_id" = "Touch ID";
 "wallet_face_id" = "Face ID";
+"wallet_header_recent_searches" = "Recent searches";
+"wallet_header_trending" = "Trending";
 
 // Transaction
 "transaction_title" = "Transaction";

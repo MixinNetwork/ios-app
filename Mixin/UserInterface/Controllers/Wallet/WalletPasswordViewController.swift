@@ -119,7 +119,8 @@ class WalletPasswordViewController: ContinueButtonViewController {
             if let target = weakSelf.dismissTarget {
                 switch target {
                 case .wallet:
-                    self?.navigationController?.pushViewController(withBackRoot: WalletViewController.instance())
+                    let wallet = R.storyboard.wallet.wallet()!
+                    self?.navigationController?.pushViewController(withBackRoot: wallet)
                 case let .transfer(user):
                     self?.navigationController?.pushViewController(withBackChat: TransferOutViewController.instance(asset: nil, type: .contact(user)))
                 case .changePhone:

@@ -13,11 +13,7 @@ public final class AssetDAO {
     private static let sqlQuery = "\(sqlQueryTable) ORDER BY \(sqlOrder)"
     private static let sqlQueryAvailable = "\(sqlQueryTable) WHERE a1.balance > 0 ORDER BY \(sqlOrder) LIMIT 1"
     private static let sqlQueryAvailableList = "\(sqlQueryTable) WHERE a1.balance > 0 ORDER BY \(sqlOrder)"
-    private static let sqlQuerySearch = """
-    \(sqlQueryTable)
-    WHERE a1.balance > 0 AND (a1.name LIKE ? OR a1.symbol LIKE ?)
-    ORDER BY CASE WHEN a1.symbol LIKE ? THEN 1 ELSE 0 END DESC, \(sqlOrder)
-    """
+    
     private static let sqlQueryById = "\(sqlQueryTable) WHERE a1.asset_id = ?"
     
     public func getAsset(assetId: String) -> AssetItem? {
@@ -53,13 +49,26 @@ public final class AssetDAO {
         return assetItem
     }
     
-    public func getAssets(keyword: String, limit: Int?) -> [AssetItem] {
-        let keyword = "%\(keyword)%"
-        var sql = AssetDAO.sqlQuerySearch
+    public func getAssets(keyword: String, sortResult: Bool, limit: Int?) -> [AssetItem] {
+        var sql = """
+        \(Self.sqlQueryTable)
+        WHERE (a1.name LIKE ? OR a1.symbol LIKE ?)
+        """
+        if sortResult {
+            sql += " AND a1.balance > 0 ORDER BY CASE WHEN a1.symbol LIKE ? THEN 1 ELSE 0 END DESC, \(Self.sqlOrder)"
+        }
         if let limit = limit {
             sql += " LIMIT \(limit)"
         }
-        return MixinDatabase.shared.getCodables(sql: sql, values: [keyword, keyword, keyword])
+        
+        let keyword = "%\(keyword)%"
+        let values: [String]
+        if sortResult {
+            values = [keyword, keyword, keyword]
+        } else {
+            values = [keyword, keyword]
+        }
+        return MixinDatabase.shared.getCodables(sql: sql, values: values)
     }
     
     public func getAssets() -> [AssetItem] {

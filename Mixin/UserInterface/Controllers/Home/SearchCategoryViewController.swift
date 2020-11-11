@@ -123,7 +123,7 @@ class SearchCategoryViewController: UIViewController, HomeSearchViewController {
             let models: [Any]
             switch category {
             case .asset:
-                models = AssetDAO.shared.getAssets(keyword: keyword, limit: nil)
+                models = AssetDAO.shared.getAssets(keyword: keyword, sortResult: true, limit: nil)
                     .map { AssetSearchResult(asset: $0, keyword: keyword) }
             case .user:
                 models = UserDAO.shared.getUsers(keyword: keyword, limit: nil)

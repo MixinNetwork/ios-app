@@ -7,6 +7,12 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var tableHeaderView: WalletHeaderView!
     
+    private let searchAppearingAnimationDistance: CGFloat = 20
+    
+    private var searchCenterYConstraint: NSLayoutConstraint?
+    private var searchViewController: WalletSearchViewController?
+    
+    private var isSearchViewControllerPreloaded = false
     private var assets = [AssetItem]()
     
     private lazy var assetActions: [UITableViewRowAction] = {
@@ -21,10 +27,6 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
         NotificationCenter.default.removeObserver(self)
     }
     
-    class func instance() -> UIViewController {
-        return ContainerViewController.instance(viewController: R.storyboard.wallet.instantiateInitialViewController()!, title: Localized.WALLET_TITLE)
-    }
-
     class func presentWallet() {
         guard let account = LoginManager.shared.account else {
             return
@@ -41,14 +43,15 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
                 AppGroupUserDefaults.Wallet.periodicPinVerificationInterval = PeriodicPinVerificationInterval.min
                 shouldValidatePin = true
             }
-
+            
+            let wallet = R.storyboard.wallet.wallet()!
             if shouldValidatePin {
                 let validator = PinValidationViewController(onSuccess: { (_) in
-                    navigationController.pushViewController(withBackRoot: WalletViewController.instance())
+                    navigationController.pushViewController(withBackRoot: wallet)
                 })
                 UIApplication.homeViewController?.present(validator, animated: true, completion: nil)
             } else {
-                navigationController.pushViewController(withBackRoot: WalletViewController.instance())
+                navigationController.pushViewController(withBackRoot: wallet)
             }
         } else {
             navigationController.pushViewController(withBackRoot: WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: .wallet))
@@ -70,101 +73,119 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
         ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob())
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if !isSearchViewControllerPreloaded {
+            let controller = R.storyboard.wallet.wallet_search()!
+            controller.loadViewIfNeeded()
+            isSearchViewControllerPreloaded = true
+        }
+    }
+    
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         updateTableViewContentInset()
     }
     
-    override func didMove(toParent parent: UIViewController?) {
-        super.didMove(toParent: parent)
-        if let leftButton = container?.leftButton {
-            leftButton.setImage(R.image.ic_title_close(), for: .normal)
-            leftButton.tintColor = R.color.icon_tint()
+    @IBAction func backAction(_ sender: Any) {
+        navigationController?.popViewController(animated: true)
+    }
+    
+    @IBAction func searchAction(_ sender: Any) {
+        let controller = R.storyboard.wallet.wallet_search()!
+        controller.view.alpha = 0
+        addChild(controller)
+        view.addSubview(controller.view)
+        controller.view.snp.makeConstraints { (make) in
+            make.size.equalTo(view.snp.size)
+            make.centerX.equalToSuperview()
+        }
+        let constraint = controller.view.centerYAnchor.constraint(equalTo: view.centerYAnchor,
+                                                                  constant: -searchAppearingAnimationDistance)
+        constraint.isActive = true
+        controller.didMove(toParent: self)
+        self.view.layoutIfNeeded()
+        UIView.animate(withDuration: 0.5) {
+            UIView.setAnimationCurve(.overdamped)
+            controller.view.alpha = 1
+            constraint.constant = 0
+            self.view.layoutIfNeeded()
+        }
+        self.searchViewController = controller
+        self.searchCenterYConstraint = constraint
+    }
+    
+    @IBAction func moreAction(_ sender: Any) {
+        let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        sheet.addAction(UIAlertAction(title: R.string.localizable.wallet_all_transactions_title(), style: .default, handler: { (_) in
+            self.navigationController?.pushViewController(AllTransactionsViewController.instance(), animated: true)
+        }))
+        sheet.addAction(UIAlertAction(title: R.string.localizable.wallet_menu_show_hidden_assets(), style: .default, handler: { (_) in
+            self.navigationController?.pushViewController(HiddenAssetViewController.instance(), animated: true)
+        }))
+        sheet.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
+        present(sheet, animated: true, completion: nil)
+    }
+    
+    func dismissSearch() {
+        guard let searchViewController = searchViewController else {
+            return
+        }
+        UIView.animate(withDuration: 0.5) {
+            UIView.setAnimationCurve(.overdamped)
+            searchViewController.view.alpha = 0
+            self.searchCenterYConstraint?.constant = -self.searchAppearingAnimationDistance
+            self.view.layoutIfNeeded()
+        } completion: { (_) in
+            searchViewController.willMove(toParent: nil)
+            searchViewController.view.removeFromSuperview()
+            searchViewController.removeFromParent()
         }
     }
     
 }
 
-extension WalletViewController: ContainerViewControllerDelegate {
-    
-    func barRightButtonTappedAction() {
-        let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        alc.addAction(UIAlertAction(title: Localized.WALLET_TITLE_ADD_ASSET, style: .default, handler: { [weak self](_) in
-            self?.navigationController?.pushViewController(AddAssetViewController.instance(), animated: true)
-        }))
-        alc.addAction(UIAlertAction(title: Localized.WALLET_ALL_TRANSACTIONS_TITLE, style: .default, handler: { [weak self](_) in
-            self?.navigationController?.pushViewController(AllTransactionsViewController.instance(), animated: true)
-        }))
-        alc.addAction(UIAlertAction(title: Localized.WALLET_MENU_SHOW_HIDDEN_ASSETS, style: .default, handler: { [weak self](_) in
-            self?.navigationController?.pushViewController(HiddenAssetViewController.instance(), animated: true)
-        }))
-        alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
-        self.present(alc, animated: true, completion: nil)
-    }
-    
-    func imageBarRightButton() -> UIImage? {
-        return R.image.ic_title_more()
-    }
-    
-}
-
-extension WalletViewController: UITableViewDataSource, UITableViewDelegate {
+extension WalletViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return section == 0 ? assets.count : 1
+        assets.count
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return AssetCell.height
+        AssetCell.height
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch indexPath.section {
-        case 0:
-            let asset = assets[indexPath.row]
-            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.asset, for: indexPath)!
-            cell.render(asset: asset)
-            return cell
-        default:
-            return tableView.dequeueReusableCell(withIdentifier: ReuseId.addAsset)!
-        }
+        let asset = assets[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.asset, for: indexPath)!
+        cell.render(asset: asset)
+        return cell
     }
     
+}
+
+extension WalletViewController: UITableViewDelegate {
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        switch indexPath.section {
-        case 0:
-            let vc = AssetViewController.instance(asset: assets[indexPath.row])
-            navigationController?.pushViewController(vc, animated: true)
-        default:
-            let vc = AddAssetViewController.instance()
-            navigationController?.pushViewController(vc, animated: true)
-        }
+        let vc = AssetViewController.instance(asset: assets[indexPath.row])
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        if indexPath.section == 0 {
-            return assetActions
-        } else {
-            return []
-        }
+        assetActions
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return indexPath.section == 0
+        true
     }
     
 }
 
 extension WalletViewController {
-    
-    private enum ReuseId {
-        static let addAsset = "wallet_add_asset"
-    }
     
     private func updateTableViewContentInset() {
         if view.safeAreaInsets.bottom < 1 {

@@ -78,12 +78,33 @@ class WalletSearchResultsViewController: WalletSearchTableViewController {
                 return item
             })
             
+            let defaultIconUrl = "https://images.mixin.one/yH_I5b0GiV2zDmvrXRyr3bK5xusjfy5q7FX3lw3mM2Ryx4Dfuj6Xcw8SHNRnDKm7ZVE3_LvpKlLdcLrlFQUBhds=s128"
+            let items = (localAssets + remoteItems).sorted { (one, another) -> Bool in
+                let isEqualOneSymbol = one.symbol.lowercased() == keyword.lowercased()
+                let isEqualAnotherSymbol = another.symbol.lowercased() == keyword.lowercased()
+                if !(isEqualOneSymbol && isEqualAnotherSymbol) && (isEqualOneSymbol || isEqualAnotherSymbol) {
+                    return isEqualOneSymbol
+                }
+                
+                let oneCapitalization = one.balance.doubleValue * one.priceUsd.doubleValue
+                let anotherCapitalization = another.balance.doubleValue * another.priceUsd.doubleValue
+                if oneCapitalization != anotherCapitalization {
+                    return oneCapitalization > anotherCapitalization
+                }
+                
+                if (one.iconUrl == defaultIconUrl && another.iconUrl == defaultIconUrl) || (one.iconUrl != defaultIconUrl && another.iconUrl != defaultIconUrl) {
+                    return one.name > another.name
+                }
+                
+                return one.iconUrl != defaultIconUrl
+            }
+            
             DispatchQueue.main.sync {
                 guard !op.isCancelled else {
                     return
                 }
                 if !remoteItems.isEmpty {
-                    self.searchResults.append(contentsOf: remoteItems)
+                    self.searchResults = items
                     self.tableView.reloadData()
                 }
                 self.tableView.checkEmpty(dataCount: self.searchResults.count,

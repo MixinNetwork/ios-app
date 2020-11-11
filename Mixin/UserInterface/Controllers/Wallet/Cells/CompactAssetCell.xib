@@ -18,7 +18,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="F5k-EN-gLg">
-                        <rect key="frame" x="33" y="15" width="348" height="44"/>
+                        <rect key="frame" x="20" y="15" width="374" height="44"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H1b-lm-ev9" customClass="AssetIconView" customModule="Mixin" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
@@ -29,16 +29,16 @@
                                 </constraints>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="500" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="LbR-Hn-yh0">
-                                <rect key="frame" x="60" y="1.5" width="288" height="41.5"/>
+                                <rect key="frame" x="60" y="1.5" width="314" height="41.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BCH" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JsW-9o-NGh">
-                                        <rect key="frame" x="0.0" y="0.0" width="288" height="19.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="314" height="19.5"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                         <color key="textColor" name="text"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bitcoin Cash" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lIs-aF-EnQ">
-                                        <rect key="frame" x="0.0" y="24.5" width="288" height="17"/>
+                                        <rect key="frame" x="0.0" y="24.5" width="314" height="17"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <color key="textColor" name="text_accessory"/>
                                         <nil key="highlightedColor"/>
@@ -52,8 +52,8 @@
                     </stackView>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="F5k-EN-gLg" firstAttribute="leading" secondItem="jOx-I3-bcy" secondAttribute="leading" constant="33" id="7MQ-vH-eNl"/>
-                    <constraint firstAttribute="trailing" secondItem="F5k-EN-gLg" secondAttribute="trailing" constant="33" id="fSs-c8-04i"/>
+                    <constraint firstItem="F5k-EN-gLg" firstAttribute="leading" secondItem="jOx-I3-bcy" secondAttribute="leading" constant="20" id="7MQ-vH-eNl"/>
+                    <constraint firstAttribute="trailing" secondItem="F5k-EN-gLg" secondAttribute="trailing" constant="20" id="fSs-c8-04i"/>
                     <constraint firstItem="F5k-EN-gLg" firstAttribute="centerY" secondItem="jOx-I3-bcy" secondAttribute="centerY" id="rzl-ZI-eTE"/>
                 </constraints>
             </tableViewCellContentView>

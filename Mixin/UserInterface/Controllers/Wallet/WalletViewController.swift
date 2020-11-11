@@ -12,6 +12,7 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
     private var searchCenterYConstraint: NSLayoutConstraint?
     private var searchViewController: WalletSearchViewController?
     
+    private var isSearchViewControllerPreloaded = false
     private var assets = [AssetItem]()
     
     private lazy var assetActions: [UITableViewRowAction] = {
@@ -70,6 +71,15 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
         NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: .HiddenAssetsDidChange, object: nil)
         fetchAssets()
         ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob())
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if !isSearchViewControllerPreloaded {
+            let controller = R.storyboard.wallet.wallet_search()!
+            controller.loadViewIfNeeded()
+            isSearchViewControllerPreloaded = true
+        }
     }
     
     override func viewSafeAreaInsetsDidChange() {

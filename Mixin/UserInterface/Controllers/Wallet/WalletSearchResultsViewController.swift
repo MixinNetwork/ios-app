@@ -21,7 +21,7 @@ class WalletSearchResultsViewController: WalletSearchTableViewController {
         view.addSubview(activityIndicator)
         activityIndicator.snp.makeConstraints { (make) in
             make.leading.trailing.equalToSuperview()
-            make.bottom.equalToSuperview().offset(-16)
+            make.bottom.equalToSuperview().offset(-23)
         }
     }
     

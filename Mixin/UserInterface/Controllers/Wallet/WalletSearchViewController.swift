@@ -13,6 +13,9 @@ class WalletSearchViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        searchBoxView.textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+        searchBoxView.textField.placeholder = R.string.localizable.search_placeholder_asset()
+        view.layoutIfNeeded()
         for child in [searchResults, recommendation] {
             addChild(child)
             contentWrapperView.addSubview(child.view)
@@ -22,7 +25,6 @@ class WalletSearchViewController: UIViewController {
             }
             child.didMove(toParent: self)
         }
-        searchBoxView.textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
     

@@ -10,8 +10,8 @@ class WalletSearchTableViewController: UIViewController {
         view.addSubview(tableView)
         tableView.backgroundColor = .background
         tableView.snp.makeEdgesEqualToSuperview()
-        tableView.rowHeight = 80
-        tableView.estimatedRowHeight = 80
+        tableView.rowHeight = 72
+        tableView.estimatedRowHeight = 72
         tableView.keyboardDismissMode = .onDrag
         tableView.separatorStyle = .none
         let headerFooterFrame = CGRect(x: 0, y: 0, width: tableView.bounds.width, height: .leastNormalMagnitude)

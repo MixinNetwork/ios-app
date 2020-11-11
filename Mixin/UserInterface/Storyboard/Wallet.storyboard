@@ -22,8 +22,11 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="omQ-aX-4Rh" customClass="SearchBoxView" customModule="Mixin" customModuleProvider="target">
-                                        <rect key="frame" x="20" y="0.0" width="306" height="44"/>
+                                        <rect key="frame" x="20" y="2" width="306" height="40"/>
                                         <color key="backgroundColor" name="background"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="i9T-uM-YEi"/>
+                                        </constraints>
                                     </view>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DnU-UT-8Sh">
                                         <rect key="frame" x="326" y="0.0" width="88" height="44"/>
@@ -40,11 +43,10 @@
                                 <color key="backgroundColor" name="background"/>
                                 <constraints>
                                     <constraint firstItem="omQ-aX-4Rh" firstAttribute="leading" secondItem="vrC-c1-P1C" secondAttribute="leading" constant="20" id="48X-AT-uLb"/>
+                                    <constraint firstItem="omQ-aX-4Rh" firstAttribute="centerY" secondItem="vrC-c1-P1C" secondAttribute="centerY" id="8po-Dh-Qmf"/>
                                     <constraint firstAttribute="trailing" secondItem="DnU-UT-8Sh" secondAttribute="trailing" id="CZZ-vd-2HB"/>
                                     <constraint firstItem="DnU-UT-8Sh" firstAttribute="top" secondItem="vrC-c1-P1C" secondAttribute="top" id="FId-4j-72L"/>
                                     <constraint firstItem="DnU-UT-8Sh" firstAttribute="leading" secondItem="omQ-aX-4Rh" secondAttribute="trailing" id="Z3n-ni-C64"/>
-                                    <constraint firstAttribute="bottom" secondItem="omQ-aX-4Rh" secondAttribute="bottom" id="bq2-Or-u9l"/>
-                                    <constraint firstItem="omQ-aX-4Rh" firstAttribute="top" secondItem="vrC-c1-P1C" secondAttribute="top" id="gxk-Ag-iFa"/>
                                     <constraint firstAttribute="bottom" secondItem="DnU-UT-8Sh" secondAttribute="bottom" id="is5-G6-lD6"/>
                                     <constraint firstAttribute="height" constant="44" id="zMG-T9-mQT"/>
                                 </constraints>

@@ -47,25 +47,27 @@ public extension UIImage {
     }
 
     public var base64: String? {
-        let data = self.jpegData(compressionQuality: 0.75)
+        let data = self.jpegData(compressionQuality: JPEGCompressionQuality.medium)
         return data?.base64EncodedString()
     }
-
-    public func scaledToSize(newSize: CGSize) -> UIImage {
-        UIGraphicsBeginImageContext(newSize)
-        draw(in: CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height))
-        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+    
+    public func imageByScaling(to size: CGSize) -> UIImage {
+        // UIGraphicsImageRenderer crashes on size of 3840x2880
+        // Don't quite know the reason so we do this in traditional manner
+        UIGraphicsBeginImageContext(size)
+        draw(in: CGRect(origin: .zero, size: size))
+        let output = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        return newImage!
+        return output!
     }
-
+    
     public func base64Thumbnail(maxLength: CGFloat = 48) -> String {
         let scaledImage: UIImage
         if max(size.width, size.height) > maxLength {
-            var targetSize = size.rect(fittingSize: CGSize(width: maxLength, height: maxLength)).size
+            var targetSize = size.sizeThatFits(CGSize(width: maxLength, height: maxLength))
             targetSize = CGSize(width: max(1, targetSize.width),
                                 height: max(1, targetSize.height))
-            scaledImage = scaledToSize(newSize: targetSize)
+            scaledImage = self.imageByScaling(to: targetSize)
         } else {
             scaledImage = self
         }
@@ -78,16 +80,5 @@ public extension UIImage {
         }
         return scaledImage.base64 ?? ""
     }
-
-    public func scaleForUpload() -> UIImage {
-        let maxShortSideLength: CGFloat = 1440
-        guard min(size.width, size.height) >= maxShortSideLength else {
-            return self
-        }
-        let maxLongSideLength: CGFloat = 1920
-        let scale = CGFloat(size.width) / CGFloat(size.height)
-        let targetWidth: CGFloat = size.width > size.height ? maxLongSideLength : maxLongSideLength * scale
-        let targetHeight: CGFloat = size.width > size.height ? maxLongSideLength / scale : maxLongSideLength
-        return scaledToSize(newSize: CGSize(width: targetWidth, height: targetHeight))
-    }
+    
 }

@@ -280,8 +280,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
             } else {
                 let filename = "\(message.messageId).\(ExtensionName.jpeg)"
                 let targetUrl = AttachmentContainer.url(for: .photos, filename: filename)
-                let targetPhoto = image.scaleForUpload()
-                if targetPhoto.saveToFile(path: targetUrl), FileManager.default.fileSize(targetUrl.path) > 0 {
+                if let targetPhoto = ImageUploadSanitizer.sanitizedImage(from: image).image, targetPhoto.saveToFile(path: targetUrl), FileManager.default.fileSize(targetUrl.path) > 0 {
                     message.thumbImage = targetPhoto.base64Thumbnail()
                     message.mediaSize = FileManager.default.fileSize(targetUrl.path)
                     message.mediaWidth = Int(targetPhoto.size.width)

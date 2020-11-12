@@ -195,7 +195,7 @@ extension Clip {
             return
         }
         if let thumbnail = thumbnail {
-            let data = thumbnail.jpegData(compressionQuality: 0.6)
+            let data = thumbnail.jpegData(compressionQuality: JPEGCompressionQuality.low)
             try? data?.write(to: url)
         } else {
             try? fileManager.removeItem(at: url)

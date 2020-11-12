@@ -22,9 +22,6 @@ let qrCodeDetector: CIDetector? = {
     return CIDetector(ofType: CIDetectorTypeQRCode, context: context, options: options)
 }()
 
-let bytesPerKiloByte: UInt = 1024
-let bytesPerMegaByte: UInt = bytesPerKiloByte * 1024
-
 enum PeriodicPinVerificationInterval {
     static let min: TimeInterval = 60 * 10
     static let max: TimeInterval = 60 * 60 * 24

@@ -67,9 +67,17 @@ public extension UIImage {
         } else {
             return nil
         }
+        
+        let orientationResolvedSize: CGSize
+        if [.left, .leftMirrored, .right, .rightMirrored].contains(imageOrientation) {
+            orientationResolvedSize = CGSize(width: size.height, height: size.width)
+        } else {
+            orientationResolvedSize = size
+        }
+        
         guard let context = CGContext(data: nil,
-                                      width: Int(size.width),
-                                      height: Int(size.height),
+                                      width: Int(orientationResolvedSize.width),
+                                      height: Int(orientationResolvedSize.height),
                                       bitsPerComponent: cgImage.bitsPerComponent,
                                       bytesPerRow: cgImage.bytesPerRow,
                                       space: cgImage.colorSpace ?? CGColorSpace(name: CGColorSpace.sRGB)!,
@@ -77,7 +85,7 @@ public extension UIImage {
             return nil
         }
         context.interpolationQuality = .high
-        context.draw(cgImage, in: CGRect(origin: .zero, size: size))
+        context.draw(cgImage, in: CGRect(origin: .zero, size: orientationResolvedSize))
         guard let scaled = context.makeImage() else {
             return nil
         }

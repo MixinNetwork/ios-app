@@ -13,7 +13,7 @@ public enum ImageUploadSanitizer {
         } else {
             let newSize = rawImage.size.sizeThatFits(maxSize)
             let newImage = rawImage.imageByScaling(to: newSize)
-            let newData = newImage.jpegData(compressionQuality: JPEGCompressionQuality.high)
+            let newData = newImage?.jpegData(compressionQuality: JPEGCompressionQuality.high)
             return (newImage, newData)
         }
     }

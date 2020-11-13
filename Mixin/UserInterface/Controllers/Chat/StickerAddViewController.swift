@@ -136,7 +136,7 @@ extension StickerAddViewController {
                 return
             }
             let scaledImage = image.imageByScaling(to: scaledSize)
-            guard let data = scaledImage.jpegData(compressionQuality: JPEGCompressionQuality.medium) else {
+            guard let data = scaledImage?.jpegData(compressionQuality: JPEGCompressionQuality.medium) else {
                 DispatchQueue.main.async(execute: {
                     self?.showFailureAlert()
                 })

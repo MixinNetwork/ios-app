@@ -11,7 +11,7 @@ class UrlWindow {
             case let .codes(code):
                 return checkCodesUrl(code, clearNavigationStack: clearNavigationStack)
             case .pay:
-                return checkPayUrl(query: url.getKeyVals())
+                return checkPayUrl(url: url.absoluteString, query: url.getKeyVals())
             case .withdrawal:
                 return checkWithdrawal(url: url)
             case .address:
@@ -307,19 +307,23 @@ class UrlWindow {
         guard let components = URLComponents(string: url.lowercased()) else {
             return false
         }
-        return checkPayUrl(query: components.getKeyVals())
+        return checkPayUrl(url: url, query: components.getKeyVals())
     }
 
-    class func checkPayUrl(query: [String: String]) -> Bool {
+    class func checkPayUrl(url: String, query: [String: String]) -> Bool {
         guard LoginManager.shared.account?.has_pin ?? false else {
             UIApplication.homeNavigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil), animated: true)
             return true
         }
         guard let recipientId = query["recipient"], let assetId = query["asset"], let amount = query["amount"] else {
-            return false
+            Logger.write(errorMsg: "[UrlWindow][CheckPayUrl]\(url)")
+            showAutoHiddenHud(style: .error, text: R.string.localizable.url_invalid_payment())
+            return true
         }
         guard !recipientId.isEmpty && UUID(uuidString: recipientId) != nil && !assetId.isEmpty && UUID(uuidString: assetId) != nil && !amount.isEmpty && amount.isNumeric else {
-            return false
+            Logger.write(errorMsg: "[UrlWindow][CheckPayUrl]\(url)")
+            showAutoHiddenHud(style: .error, text: R.string.localizable.url_invalid_payment())
+            return true
         }
 
         let traceId = query["trace"].uuidString ?? UUID().uuidString.lowercased()

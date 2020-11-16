@@ -72,7 +72,9 @@ extension TransferAttachmentData: Decodable {
         } catch {
             Logger.write(error: error)
         }
-        return try container.decode(String.self, forKey: key).intValue
+        let stringValue = try container.decode(String.self, forKey: key)
+        return Int(stringValue)
+            ?? NumberFormatter.usLocalizedDecimal.number(from: stringValue)?.intValue
     }
 
     private static func safeDecodeInt64(container: KeyedDecodingContainer<CodingKeys>, key: KeyedDecodingContainer<CodingKeys>.Key) throws -> Int64? {
@@ -86,6 +88,9 @@ extension TransferAttachmentData: Decodable {
         } catch {
             Logger.write(error: error)
         }
-        return try container.decode(String.self, forKey: key).int64Value
+        let stringValue = try container.decode(String.self, forKey: key)
+        return Int64(stringValue)
+            ?? NumberFormatter.usLocalizedDecimal.number(from: stringValue)?.int64Value
     }
+    
 }

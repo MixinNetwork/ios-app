@@ -147,13 +147,13 @@ extension AddressView {
         guard let info = sender.userInfo, let superView = self.superView, superView.isShowing else {
             return
         }
-        guard let duration = (info[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue else {
+        guard let duration = info[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval else {
             return
         }
-        guard let endKeyboardRect = (info[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
+        guard let endKeyboardRect = info[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {
             return
         }
-        guard let animation = (info[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber)?.intValue else {
+        guard let animation = info[UIResponder.keyboardAnimationCurveUserInfoKey] as? Int else {
             return
         }
         let options = UIView.AnimationOptions(rawValue: UInt(animation << 16))
@@ -168,16 +168,15 @@ extension AddressView {
         guard let info = sender.userInfo, let superView = self.superView, superView.isShowing else {
             return
         }
-        guard let duration = (info[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue else {
+        guard let duration = info[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval else {
             return
         }
-        guard let animation = (info[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber)?.intValue else {
+        guard let animation = info[UIResponder.keyboardAnimationCurveUserInfoKey] as? Int else {
             return
         }
         let options = UIView.AnimationOptions(rawValue: UInt(animation << 16))
 
         UIView.animate(withDuration: duration, delay: 0, options: options, animations: {
-            UIView.setAnimationCurve(.overdamped)
             superView.contentBottomConstraint.constant = 0
             superView.alpha = 0
             superView.layoutIfNeeded()

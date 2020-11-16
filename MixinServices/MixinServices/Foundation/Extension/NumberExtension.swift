@@ -9,7 +9,11 @@ public extension NumberFormatter {
         return formatter
     }()
     
-    static let decimal = NumberFormatter(numberStyle: .decimal)
+    static let decimal: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        return formatter
+    }()
     
     static let simplePercentage: NumberFormatter = {
         let formatter = NumberFormatter()
@@ -32,20 +36,6 @@ public extension NumberFormatter {
         return formatter
     }()
     
-    convenience init(numberStyle: NumberFormatter.Style, maximumFractionDigits: Int? = nil, roundingMode: NumberFormatter.RoundingMode? = nil, locale: Locale? = nil) {
-        self.init()
-        self.numberStyle = numberStyle
-        if let maximumFractionDigits = maximumFractionDigits {
-            self.maximumFractionDigits = maximumFractionDigits
-        }
-        if let roundingMode = roundingMode {
-            self.roundingMode = roundingMode
-        }
-        if let locale = locale {
-            self.locale = locale
-        }
-    }
-
     func stringFormat(value: Float64) -> String {
         return string(from: NSNumber(value: value)) ?? "\(Int64(value))"
     }

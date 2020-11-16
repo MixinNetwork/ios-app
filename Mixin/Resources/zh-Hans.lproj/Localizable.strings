@@ -596,6 +596,9 @@
 "withdraw_duplicate_title" = "重复提现确认";
 "withdraw_duplicate_prompt" = "你已经在%3$@前提现 %1$@ 到 %2$@，确认还要再提一次吗？";
 
+// Url
+"url_invalid_payment" = "无效支付信息";
+
 // Multisig
 "multisig_by_pin" = "通过密码签名";
 "multisig_use_face" = "使用面容签名";

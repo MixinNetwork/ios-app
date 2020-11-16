@@ -398,13 +398,13 @@ extension PayWindow {
         guard let info = sender.userInfo, isShowing else {
             return
         }
-        guard let duration = (info[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue else {
+        guard let duration = info[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval else {
             return
         }
-        guard let endKeyboardRect = (info[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
+        guard let endKeyboardRect = info[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {
             return
         }
-        guard let animation = (info[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber)?.intValue else {
+        guard let animation = info[UIResponder.keyboardAnimationCurveUserInfoKey] as? Int else {
             return
         }
         let options = UIView.AnimationOptions(rawValue: UInt(animation << 16))
@@ -419,10 +419,10 @@ extension PayWindow {
         guard let info = sender.userInfo, isShowing, !isMultisigUsersAppear else {
             return
         }
-        guard let duration = (info[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue else {
+        guard let duration = info[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval else {
             return
         }
-        guard let animation = (info[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber)?.intValue else {
+        guard let animation = info[UIResponder.keyboardAnimationCurveUserInfoKey] as? Int else {
             return
         }
         let options = UIView.AnimationOptions(rawValue: UInt(animation << 16))

@@ -20,24 +20,12 @@ public extension String {
         return hasPrefix("-")
     }
     
-    var integerValue: Int {
-        return Int(self) ?? 0
-    }
-    
     var doubleValue: Double {
         return Double(self)
             ?? NumberFormatter.decimal.number(from: self)?.doubleValue
             ?? 0
     }
-
-    var intValue: Int? {
-        return Int(self) ?? NumberFormatter.decimal.number(from: self)?.intValue
-    }
-
-    var int64Value: Int64? {
-        return Int64(self) ?? NumberFormatter.decimal.number(from: self)?.int64Value
-    }
-
+    
     var sqlEscaped: String {
         return replacingOccurrences(of: "/", with: "//")
             .replacingOccurrences(of: "%", with: "/%")

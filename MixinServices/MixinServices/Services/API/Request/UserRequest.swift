@@ -9,6 +9,8 @@ public struct UserPreferenceRequest: Codable {
     public let accept_conversation_source: String?
     public let accept_search_source: String?
     public let fiat_currency: String?
+    
+    // XXX: Does these two vars below losing precision?
     public let transfer_notification_threshold: Double?
     public let transfer_confirmation_threshold: Double?
     

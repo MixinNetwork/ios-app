@@ -124,14 +124,14 @@ extension NotificationAndConfirmationSettingsViewController {
         return SettingsSection(footer: footer, rows: [row])
     }
     
-    private func saveTransferNotificationThreshold(_ value: String) {
-        guard !value.isEmpty, value.isNumeric else {
+    private func saveTransferNotificationThreshold(_ string: String) {
+        guard let decimal = LocalizedDecimal(string: string) else {
             return
         }
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         let request = UserPreferenceRequest(fiat_currency: Currency.current.code,
-                                            transfer_notification_threshold: value.doubleValue)
+                                            transfer_notification_threshold: decimal.doubleValue)
         AccountAPI.preferences(preferenceRequest: request, completion: { (result) in
             switch result {
             case .success(let account):
@@ -147,14 +147,14 @@ extension NotificationAndConfirmationSettingsViewController {
         })
     }
     
-    private func saveTransferConfirmationThreshold(_ value: String) {
-        guard !value.isEmpty, value.isNumeric else {
+    private func saveTransferConfirmationThreshold(_ string: String) {
+        guard let decimal = LocalizedDecimal(string: string) else {
             return
         }
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         let request = UserPreferenceRequest(fiat_currency: Currency.current.code,
-                                            transfer_confirmation_threshold: value.doubleValue)
+                                            transfer_confirmation_threshold: decimal.doubleValue)
         AccountAPI.preferences(preferenceRequest: request, completion: { (result) in
             switch result {
             case .success(let account):

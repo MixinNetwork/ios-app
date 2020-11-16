@@ -318,7 +318,7 @@ class UrlWindow {
         guard let recipientId = query["recipient"], let assetId = query["asset"], let amount = query["amount"] else {
             return false
         }
-        guard !recipientId.isEmpty && UUID(uuidString: recipientId) != nil && !assetId.isEmpty && UUID(uuidString: assetId) != nil && !amount.isEmpty && amount.isNumeric else {
+        guard !recipientId.isEmpty && UUID(uuidString: recipientId) != nil && !assetId.isEmpty && UUID(uuidString: assetId) != nil && !amount.isEmpty && amount.isGenericNumber else {
             return false
         }
 

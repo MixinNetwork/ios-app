@@ -1,6 +1,6 @@
 import Foundation
 
-public struct CurrencyFormatter {
+public enum CurrencyFormatter {
     
     public enum Format {
         case precision
@@ -27,38 +27,18 @@ public struct CurrencyFormatter {
     
     static let roundToIntegerBehavior = NSDecimalNumberHandler(roundingMode: .down, scale: 0, raiseOnExactness: false, raiseOnOverflow: false, raiseOnUnderflow: false, raiseOnDivideByZero: false)
     
-    public static func localizedString(from string: String?, locale: Locale = .us, format: Format, sign: SignBehavior, symbol: Symbol? = nil) -> String? {
-        guard let string = string, let decimal = Decimal(string: string, locale: locale), decimal.isZero || decimal.isNormal else {
-            return nil
-        }
-        return formattedString(from: decimal, format: format, sign: sign, symbol: symbol)
+    public static func localizedFiatMoneyAmount(asset: AssetItem, assetAmount: Decimal) -> String {
+        let value = assetAmount * asset.decimalUSDPrice * Currency.current.decimalRate
+        let string = CurrencyFormatter.localizedString(from: value, format: .fiatMoney, sign: .never)
+        return "≈ " + Currency.current.symbol + string
     }
-
-    public static func localizedPrice(price: String, priceUsd: String) -> String {
-        guard let value = CurrencyFormatter.localizedString(from: price.doubleValue * priceUsd.doubleValue * Currency.current.rate, format: .fiatMoney, sign: .never) else {
-            return price
-        }
-        
-        return "≈ " + Currency.current.symbol + value
-    }
-
+    
     public static func localizedString(from number: Double, format: Format, sign: SignBehavior, symbol: Symbol? = nil) -> String? {
         let decimal = Decimal(number)
-        return formattedString(from: decimal, format: format, sign: sign, symbol: symbol)
+        return localizedString(from: decimal, format: format, sign: sign, symbol: symbol)
     }
     
-    private static func decimalFormatter(maximumFractionDigits: Int?) -> NumberFormatter {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        if let maximumFractionDigits = maximumFractionDigits {
-            formatter.maximumFractionDigits = maximumFractionDigits
-        }
-        formatter.roundingMode = .down
-        formatter.locale = .current
-        return formatter
-    }
-    
-    private static func formattedString(from decimal: Decimal, format: Format, sign: SignBehavior, symbol: Symbol? = nil) -> String? {
+    public static func localizedString(from decimal: Decimal, format: Format, sign: SignBehavior, symbol: Symbol? = nil) -> String {
         let number = NSDecimalNumber(decimal: decimal)
         var str: String
         
@@ -104,6 +84,21 @@ public struct CurrencyFormatter {
         }
         
         return str
+    }
+    
+}
+
+extension CurrencyFormatter {
+    
+    private static func decimalFormatter(maximumFractionDigits: Int?) -> NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        if let maximumFractionDigits = maximumFractionDigits {
+            formatter.maximumFractionDigits = maximumFractionDigits
+        }
+        formatter.roundingMode = .down
+        formatter.locale = .current
+        return formatter
     }
     
     private static func setSignBehavior(_ sign: SignBehavior, for formatter: NumberFormatter) {

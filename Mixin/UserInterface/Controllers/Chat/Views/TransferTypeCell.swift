@@ -16,8 +16,7 @@ class TransferTypeCell: UITableViewCell {
     func render(asset: AssetItem) {
         assetIconView.setIcon(asset: asset)
         nameLabel.text = asset.name
-        let balance = CurrencyFormatter.localizedString(from: asset.balance, format: .precision, sign: .never)
-            ?? asset.localizedBalance
+        let balance = CurrencyFormatter.localizedString(from: asset.decimalBalance, format: .precision, sign: .never)
         balanceLabel.text = balance + " " + asset.symbol
     }
     

@@ -18,12 +18,10 @@ class CompactAssetCell: UITableViewCell {
     func render(asset: AssetItem) {
         assetIconView.setIcon(asset: asset)
         nameLabel.text = asset.symbol
-        descriptionLabel.text = asset.name
-        
-        // TODO: Update these after decimal calculation is merged
-        if asset.priceUsd.doubleValue > 0 {
+        descriptionLabel.text = asset.name        
+        if asset.decimalUSDPrice > 0 {
             changeLabel.text = " \(asset.localizedUsdChange)%"
-            if asset.changeUsd.doubleValue > 0 {
+            if asset.decimalUSDChange > 0 {
                 changeLabel.textColor = .walletGreen
             } else {
                 changeLabel.textColor = .walletRed

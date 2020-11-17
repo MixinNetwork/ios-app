@@ -1,7 +1,7 @@
 import Foundation
 import WCDBSwift
 
-public struct Address: BaseCodable {
+public class Address: BaseCodable {
     
     public static let tableName = "addresses"
     
@@ -15,6 +15,10 @@ public struct Address: BaseCodable {
     public let reserve: String
     public let dust: String
     public let updatedAt: String
+    
+    public private(set) lazy var decimalReserve = Decimal(string: reserve) ?? 0
+    public private(set) lazy var decimalFee = Decimal(string: fee) ?? 0
+    public private(set) lazy var decimalDust = Decimal(string: dust) ?? 0
     
     public enum CodingKeys: String, CodingTableKey {
         

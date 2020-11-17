@@ -77,7 +77,7 @@ class SnapshotCell: ModernSelectedBackgroundCell {
         default:
             break
         }
-        amountLabel.text = CurrencyFormatter.localizedString(from: snapshot.amount, format: .precision, sign: .always)
+        amountLabel.text = CurrencyFormatter.localizedString(from: snapshot.decimalAmount, format: .precision, sign: .always)
         symbolLabel.text = asset?.symbol ?? snapshot.assetSymbol
         if snapshot.type == SnapshotType.pendingDeposit.rawValue, let finished = snapshot.confirmations, let total = asset?.confirmations {
             pendingDepositProgressView.isHidden = false

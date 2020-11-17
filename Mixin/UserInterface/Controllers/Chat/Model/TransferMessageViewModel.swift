@@ -9,7 +9,7 @@ class TransferMessageViewModel: CardMessageViewModel, TitledCardContentWidthCalc
     let snapshotAmount: String?
     
     override init(message: MessageItem) {
-        snapshotAmount = CurrencyFormatter.localizedString(from: message.snapshotAmount, format: .precision, sign: .whenNegative)
+        snapshotAmount = CurrencyFormatter.localizedString(from: message.decimalSnapshotAmount, format: .precision, sign: .whenNegative)
         super.init(message: message)
     }
     

@@ -7,7 +7,7 @@ public class Currency {
     
     // TODO: Remove this compatibilily layer after all types are converted
     public var rate: Double {
-        (decimalRate as NSDecimalNumber).doubleValue
+        decimalRate.doubleValue
     }
     
     public private(set) var decimalRate: Decimal

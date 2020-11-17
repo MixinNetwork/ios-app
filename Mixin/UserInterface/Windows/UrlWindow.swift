@@ -260,10 +260,13 @@ class UrlWindow {
             return true
         }
         let query = url.getKeyVals()
-        guard let assetId = query["asset"], let amount = query["amount"], let traceId = query["trace"], let addressId = query["address"] else {
+        guard let assetId = query["asset"], let amountString = query["amount"], let traceId = query["trace"], let addressId = query["address"] else {
             return false
         }
-        guard !assetId.isEmpty && UUID(uuidString: assetId) != nil && !traceId.isEmpty && UUID(uuidString: traceId) != nil && !addressId.isEmpty && UUID(uuidString: addressId) != nil && !amount.isEmpty else {
+        guard !assetId.isEmpty && UUID(uuidString: assetId) != nil && !traceId.isEmpty && UUID(uuidString: traceId) != nil && !addressId.isEmpty && UUID(uuidString: addressId) != nil else {
+            return false
+        }
+        guard let amount = GenericDecimal(string: amountString)?.decimal else {
             return false
         }
         var memo = query["memo"]
@@ -319,12 +322,12 @@ class UrlWindow {
             UIApplication.homeNavigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil), animated: true)
             return true
         }
-        guard let recipientId = query["recipient"], let assetId = query["asset"], let amount = query["amount"] else {
+        guard let recipientId = query["recipient"], let assetId = query["asset"], let amountString = query["amount"] else {
             Logger.write(errorMsg: "[UrlWindow][CheckPayUrl]\(url)")
             showAutoHiddenHud(style: .error, text: R.string.localizable.url_invalid_payment())
             return true
         }
-        guard !recipientId.isEmpty && UUID(uuidString: recipientId) != nil && !assetId.isEmpty && UUID(uuidString: assetId) != nil && !amount.isEmpty && GenericDecimal.isValidDecimal(amount) else {
+        guard UUID(uuidString: recipientId) != nil, UUID(uuidString: assetId) != nil, let amount = GenericDecimal(string: amountString)?.decimal else {
             Logger.write(errorMsg: "[UrlWindow][CheckPayUrl]\(url)")
             showAutoHiddenHud(style: .error, text: R.string.localizable.url_invalid_payment())
             return true
@@ -657,7 +660,10 @@ extension UrlWindow {
             guard let asset = syncAsset(assetId: multisig.assetId, hud: hud) else {
                 return
             }
-
+            guard let amount = GenericDecimal(string: multisig.amount)?.decimal else {
+                return
+            }
+            
             let senders = multisig.senders
             let receivers = multisig.receivers
             var senderUsers = [UserResponse]()
@@ -683,7 +689,7 @@ extension UrlWindow {
 
             DispatchQueue.main.async {
                 hud.hide()
-                PayWindow.instance().render(asset: asset, action: .multisig(multisig: multisig, senders: senderUsers, receivers: receiverUsers), amount: multisig.amount, memo: "", error: error).presentPopupControllerAnimated()
+                PayWindow.instance().render(asset: asset, action: .multisig(multisig: multisig, senders: senderUsers, receivers: receiverUsers), amount: amount, memo: "", error: error).presentPopupControllerAnimated()
             }
         }
     }
@@ -693,6 +699,13 @@ extension UrlWindow {
             guard let asset = AssetDAO.shared.getAsset(assetId: payment.assetId) else {
                 DispatchQueue.main.async {
                     hud.set(style: .error, text: R.string.localizable.asset_not_found())
+                    hud.scheduleAutoHidden()
+                }
+                return
+            }
+            guard let amount = GenericDecimal(string: payment.amount)?.decimal else {
+                DispatchQueue.main.async {
+                    hud.set(style: .error, text: MixinAPIError.invalidTokenAmount.localizedDescription)
                     hud.scheduleAutoHidden()
                 }
                 return
@@ -715,7 +728,7 @@ extension UrlWindow {
 
             DispatchQueue.main.async {
                 hud.hide()
-                PayWindow.instance().render(asset: asset, action: .payment(payment: payment, receivers: receiverUsers), amount: payment.amount, memo: "", error: error).presentPopupControllerAnimated()
+                PayWindow.instance().render(asset: asset, action: .payment(payment: payment, receivers: receiverUsers), amount: amount, memo: "", error: error).presentPopupControllerAnimated()
             }
         }
     }

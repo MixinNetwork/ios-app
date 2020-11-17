@@ -121,30 +121,33 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         }
         let amountString = amountTextField.text ?? ""
         amountTextField.font = amountString.isEmpty ? placeHolderFont : amountFont
-        guard let decimal = LocalizedDecimal(string: amountString) else {
+        guard let localizedDecimal = LocalizedDecimal(string: amountString) else {
             if isInputAssetAmount {
-                amountExchangeLabel.text = "0" + currentDecimalSeparator + "00 " + Currency.current.code
+                amountExchangeLabel.text = zeroFiatMoneyRepresentation + " " + Currency.current.code
             } else {
-                amountExchangeLabel.text = "0 " + asset.symbol
+                amountExchangeLabel.text = zeroAssetRepresentation + " " + asset.symbol
             }
             amountSymbolLabel.isHidden = true
             continueButton.isEnabled = false
             return
         }
         
-        let fiatMoneyPrice = asset.priceUsd.doubleValue * Currency.current.rate
+        let decimalAmount = localizedDecimal.decimal
+        let genericAmountString = localizedDecimal.generic.string
+        
+        let fiatMoneyPrice = asset.decimalUSDPrice * Currency.current.decimalRate
         if isInputAssetAmount {
-            let fiatMoneyAmount = decimal.doubleValue * fiatMoneyPrice
+            let fiatMoneyAmount = decimalAmount * fiatMoneyPrice
             amountExchangeLabel.text = CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currentCurrency)
         } else {
-            let assetAmount = decimal.doubleValue / fiatMoneyPrice
-            amountExchangeLabel.text = CurrencyFormatter.localizedString(from: assetAmount, format: .pretty, sign: .whenNegative, symbol: .custom(asset.symbol))
+            let tokenAmount = decimalAmount / fiatMoneyPrice
+            amountExchangeLabel.text = CurrencyFormatter.localizedString(from: tokenAmount, format: .pretty, sign: .whenNegative, symbol: .custom(asset.symbol))
         }
         
         if isInputAssetAmount {
             if amountTextField.text == asset.balance {
                 hideInputAccessoryView()
-            } else if decimal.generic.string.count >= 4, asset.balance.doubleValue != 0, asset.balance.hasPrefix(decimal.generic.string) {
+            } else if genericAmountString.count >= 4, !asset.decimalBalance.isZero, asset.balance.hasPrefix(genericAmountString) {
                 showInputAccessoryView()
             } else {
                 hideInputAccessoryView()
@@ -159,11 +162,14 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
             amountSymbolLabel.superview?.layoutIfNeeded()
         }
         
-        continueButton.isEnabled = decimal.generic.decimal > 0
+        continueButton.isEnabled = decimalAmount > 0
     }
     
     @IBAction func continueAction(_ sender: Any) {
         guard let asset = self.asset else {
+            return
+        }
+        guard let localizedAmountDecimal = LocalizedDecimal(string: amountTextField.text?.trim() ?? "") else {
             return
         }
         guard !continueButton.isBusy else {
@@ -172,18 +178,16 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         continueButton.isBusy = true
         
         let memo = memoTextField.text?.trim() ?? ""
-        var amount = amountTextField.text?.trim() ?? ""
-        var fiatMoneyAmount: String? = nil
-        if !isInputAssetAmount {
-            fiatMoneyAmount = amount
-            let formatter = NumberFormatter()
-            formatter.numberStyle = .none
-            formatter.usesGroupingSeparator = false
-            formatter.maximumFractionDigits = 8
-            formatter.roundingMode = .down
-            let fiatMoneyPrice = asset.priceUsd.doubleValue * Currency.current.rate
-            let number = NSNumber(value: amount.doubleValue / fiatMoneyPrice)
-            amount = formatter.string(from: number) ?? ""
+        
+        let fiatMoneyPrice = asset.decimalUSDPrice * Currency.current.decimalRate
+        let tokenAmount: Decimal
+        let fiatMoneyAmount: Decimal?
+        if isInputAssetAmount {
+            tokenAmount = localizedAmountDecimal.decimal
+            fiatMoneyAmount = nil
+        } else {
+            fiatMoneyAmount = localizedAmountDecimal.decimal
+            tokenAmount = localizedAmountDecimal.decimal / fiatMoneyPrice
         }
         
         adjustBottomConstraintWhenKeyboardFrameChanges = false
@@ -199,14 +203,14 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         case .contact(let user):
             DispatchQueue.global().async { [weak self] in
                 let action: PayWindow.PinAction = .transfer(trackId: traceId, user: user, fromWeb: false)
-                PayWindow.checkPay(traceId: traceId, asset: asset, action: action, opponentId: user.userId, amount: amount, fiatMoneyAmount: fiatMoneyAmount, memo: memo, fromWeb: false) { (canPay, errorMsg) in
+                PayWindow.checkPay(traceId: traceId, asset: asset, action: action, opponentId: user.userId, amount: tokenAmount, fiatMoneyAmount: fiatMoneyAmount, memo: memo, fromWeb: false) { (canPay, errorMsg) in
                     DispatchQueue.main.async {
                         guard let weakSelf = self else {
                             return
                         }
                         weakSelf.continueButton.isBusy = false
                         if canPay {
-                            payWindow.render(asset: asset, action: action, amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, textfield: weakSelf.amountTextField).presentPopupControllerAnimated()
+                            payWindow.render(asset: asset, action: action, amount: tokenAmount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, textfield: weakSelf.amountTextField).presentPopupControllerAnimated()
                         } else {
                             weakSelf.amountTextField.becomeFirstResponder()
                             if let error = errorMsg {
@@ -223,14 +227,14 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
                 }
 
                 let action: PayWindow.PinAction = .withdraw(trackId: traceId, address: address, chainAsset: chainAsset, fromWeb: false)
-                PayWindow.checkPay(traceId: traceId, asset: asset, action: action, destination: address.destination, tag: address.tag, addressId: address.addressId, amount: amount, fiatMoneyAmount: fiatMoneyAmount, memo: memo, fromWeb: false) { (canPay, errorMsg) in
+                PayWindow.checkPay(traceId: traceId, asset: asset, action: action, destination: address.destination, tag: address.tag, addressId: address.addressId, amount: tokenAmount, fiatMoneyAmount: fiatMoneyAmount, memo: memo, fromWeb: false) { (canPay, errorMsg) in
                     DispatchQueue.main.async {
                         guard let weakSelf = self else {
                             return
                         }
                         weakSelf.continueButton.isBusy = false
                         if canPay {
-                            payWindow.render(asset: asset, action: action, amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, textfield: weakSelf.amountTextField).presentPopupControllerAnimated()
+                            payWindow.render(asset: asset, action: action, amount: tokenAmount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, textfield: weakSelf.amountTextField).presentPopupControllerAnimated()
                         } else {
                             weakSelf.amountTextField.becomeFirstResponder()
                             if let error = errorMsg {
@@ -309,9 +313,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         }
         switchAmountButton.isHidden = asset.priceBtc.doubleValue <= 0
         nameLabel.text = asset.name
-        let balance = CurrencyFormatter.localizedString(from: asset.balance, format: .precision, sign: .never)
-            ?? asset.localizedBalance
-        balanceLabel.text = balance + " " + asset.symbol
+        balanceLabel.text = CurrencyFormatter.localizedString(from: asset.decimalBalance, format: .precision, sign: .never, symbol: .custom(asset.symbol))
         assetIconView.setIcon(asset: asset)
         amountSymbolLabel.text = isInputAssetAmount ? asset.symbol : Currency.current.code
     }
@@ -350,11 +352,11 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
                 return
             }
             self?.chainAsset = chainAsset
-            let feeRepresentation = address.fee + " " + chainAsset.symbol
+            let feeRepresentation = CurrencyFormatter.localizedString(from: address.decimalFee, format: .precision, sign: .never, symbol: .custom(chainAsset.symbol))
             var hint = Localized.WALLET_HINT_TRANSACTION_FEE(feeRepresentation: feeRepresentation, name: asset.name)
             var ranges = [(hint as NSString).range(of: feeRepresentation)]
-            if address.reserve.doubleValue > 0 {
-                let reserveRepresentation = address.reserve + " " + chainAsset.symbol
+            if address.decimalReserve > 0 {
+                let reserveRepresentation = CurrencyFormatter.localizedString(from: address.decimalReserve, format: .precision, sign: .never, symbol: .custom(chainAsset.symbol))
                 let reserveHint = Localized.WALLET_WITHDRAWAL_RESERVE(reserveRepresentation: reserveRepresentation, name: chainAsset.name)
                 let reserveRange = (reserveHint as NSString).range(of: reserveRepresentation)
                 ranges.append(NSRange(location: hint.count + reserveRange.location, length: reserveRange.length))
@@ -383,8 +385,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         guard let asset = asset else {
             return
         }
-        let balance = CurrencyFormatter.localizedString(from: asset.balance, format: .precision, sign: .never)
-            ?? asset.localizedBalance
+        let balance = CurrencyFormatter.localizedString(from: asset.decimalBalance, format: .precision, sign: .never)
         balanceInputAccessoryView.balanceLabel.text = balance
         amountTextField.inputAccessoryView = balanceInputAccessoryView
         amountTextField.reloadInputViews()

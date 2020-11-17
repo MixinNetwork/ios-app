@@ -8,6 +8,7 @@ public enum MixinAPIError: Error {
     case foundNilResult
     
     case prerequistesNotFulfilled
+    case invalidTokenAmount
     case invalidJSON(Error)
     case invalidServerPinToken
     case invalidPath

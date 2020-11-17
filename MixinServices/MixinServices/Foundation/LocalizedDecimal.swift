@@ -12,23 +12,27 @@ public class LocalizedDecimal {
     
     public let generic: GenericDecimal
     
+    public var decimal: Decimal {
+        generic.decimal
+    }
+    
     public var doubleValue: Double {
         generic.doubleValue
     }
     
-    public required init?(string: String) {
+    public init?(string: String) {
         let whitespaceFiltered = string.filter { !$0.isWhitespace }
         guard let decimal = Self.formatter.number(from: whitespaceFiltered) as? Decimal else {
             return nil
         }
-        guard decimal.isNormal else {
+        guard let generic = GenericDecimal(decimal: decimal) else {
             return nil
         }
-        self.generic = GenericDecimal(decimal: decimal)
+        self.generic = generic
     }
     
     public static func isValidDecimal(_ string: String) -> Bool {
-        if let _ = Self(string: string) {
+        if let _ = LocalizedDecimal(string: string) {
             return true
         } else {
             return false

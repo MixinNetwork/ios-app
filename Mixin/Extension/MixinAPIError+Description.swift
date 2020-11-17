@@ -29,7 +29,7 @@ extension MixinAPIError {
         case let .unknown(_, code, description):
             return R.string.localizable.error_two_parts("\(code)", description)
             
-        case .invalidRequestBody:
+        case .invalidRequestBody, .invalidTokenAmount:
             return R.string.localizable.error_invalid_request_body()
         case .unauthorized:
             return R.string.localizable.error_unauthorized()

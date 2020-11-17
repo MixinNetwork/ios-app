@@ -17,10 +17,10 @@ public extension String {
         return hasPrefix("-")
     }
     
+    // Similar to [NSString doubleValue], skips leading and trailing whitespaces, not locale-aware
     var doubleValue: Double {
-        return Double(self)
-            ?? NumberFormatter.usLocalizedDecimal.number(from: self)?.doubleValue
-            ?? 0
+        let trimmed = trimmingCharacters(in: .whitespacesAndNewlines)
+        return Double(trimmed) ?? 0
     }
     
     var sqlEscaped: String {

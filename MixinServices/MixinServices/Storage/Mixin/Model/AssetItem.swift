@@ -51,25 +51,23 @@ public class AssetItem: TableCodable, NumberStringLocalizable {
         
     }
     
-    public lazy var localizedBalance = localizedNumberString(balance)
+    public private(set) lazy var decimalBalance = Decimal(string: balance, locale: .us) ?? 0
+    public private(set) lazy var decimalBTCPrice = Decimal(string: priceBtc, locale: .us) ?? 0
+    public private(set) lazy var decimalUSDPrice = Decimal(string: priceUsd, locale: .us) ?? 0
+    public private(set) lazy var decimalUSDChange = Decimal(string: changeUsd, locale: .us) ?? 0
     
-    public lazy var localizedFiatMoneyPrice: String = {
-        let value = priceUsd.doubleValue * Currency.current.rate
-        return CurrencyFormatter.localizedString(from: value, format: .fiatMoneyPrice, sign: .never) ?? ""
+    public private(set) lazy var localizedBalance = localizedNumberString(balance)
+    
+    public private(set) lazy var localizedFiatMoneyPrice: String = {
+        let value = decimalUSDPrice * Currency.current.decimalRate
+        return CurrencyFormatter.localizedString(from: value, format: .fiatMoneyPrice, sign: .never)
     }()
     
-    public lazy var localizedFiatMoneyBalance: String = {
-        let fiatMoneyBalance = balance.doubleValue * priceUsd.doubleValue * Currency.current.rate
-        if let value = CurrencyFormatter.localizedString(from: fiatMoneyBalance, format: .fiatMoney, sign: .never) {
-            return "≈ " + Currency.current.symbol + value
-        } else {
-            return ""
-        }
-    }()
+    public private(set) lazy var localizedFiatMoneyBalance = CurrencyFormatter.localizedFiatMoneyAmount(asset: self, assetAmount: decimalBalance)
     
-    public lazy var localizedUsdChange: String = {
-        let usdChange = changeUsd.doubleValue * 100
-        return CurrencyFormatter.localizedString(from: usdChange, format: .fiatMoney, sign: .whenNegative) ?? "0\(currentDecimalSeparator)00"
+    public private(set) lazy var localizedUsdChange: String = {
+        let value = decimalUSDChange * 100
+        return CurrencyFormatter.localizedString(from: value, format: .fiatMoney, sign: .whenNegative)
     }()
     
     public init(assetId: String, type: String, symbol: String, name: String, iconUrl: String, balance: String, destination: String, tag: String, priceBtc: String, priceUsd: String, chainId: String, chainIconUrl: String?, changeUsd: String, confirmations: Int, assetKey: String, chainName: String?, chainSymbol: String, reserve: String) {

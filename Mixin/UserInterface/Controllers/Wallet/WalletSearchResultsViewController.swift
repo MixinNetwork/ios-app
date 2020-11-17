@@ -57,8 +57,8 @@ class WalletSearchResultsViewController: WalletSearchTableViewController {
                     return false
                 }
                 
-                let oneCapitalization = one.balance.doubleValue * one.priceUsd.doubleValue
-                let anotherCapitalization = another.balance.doubleValue * another.priceUsd.doubleValue
+                let oneCapitalization = one.decimalBalance * one.decimalUSDPrice
+                let anotherCapitalization = another.decimalBalance * another.decimalUSDPrice
                 if oneCapitalization != anotherCapitalization {
                     return oneCapitalization > anotherCapitalization
                 }

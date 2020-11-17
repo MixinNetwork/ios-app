@@ -59,7 +59,7 @@ class PayWindow: BottomSheetView {
     private var pinAction: PinAction!
     private var errorContinueAction: ErrorContinueAction?
     private var asset: AssetItem!
-    private var amount = ""
+    private var amount: Decimal = 0
     private var memo = ""
     private var soundId: SystemSoundID = 0
     private var isAutoFillPIN = false
@@ -87,24 +87,33 @@ class PayWindow: BottomSheetView {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillAppear), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillDisappear), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
-
-    func render(asset: AssetItem, action: PinAction, amount: String, memo: String, error: String? = nil, fiatMoneyAmount: String? = nil, textfield: UITextField? = nil) -> PayWindow {
+    
+    func render(asset: AssetItem, action: PinAction, amount: Decimal, memo: String, error: String? = nil, fiatMoneyAmount: Decimal? = nil, textfield: UITextField? = nil) -> PayWindow {
         self.asset = asset
         self.amount = amount
         self.memo = memo
         self.pinAction = action
         self.textfield = textfield
 
-        let amountToken = CurrencyFormatter.localizedString(from: amount, locale: .current, format: .precision, sign: .whenNegative, symbol: .custom(asset.symbol)) ?? amount
-        let amountExchange = CurrencyFormatter.localizedPrice(price: amount, priceUsd: asset.priceUsd)
+        let localizedTokenAmount = CurrencyFormatter.localizedString(from: amount, format: .precision, sign: .whenNegative, symbol: .custom(asset.symbol))
+        let localizedFiatMoneyAmount: String
         if let fiatMoneyAmount = fiatMoneyAmount {
-            amountLabel.text = fiatMoneyAmount + " " + Currency.current.code
-            amountExchangeLabel.text = amountToken
+            localizedFiatMoneyAmount = CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoney, sign: .whenNegative)
+            amountLabel.text = localizedFiatMoneyAmount + " " + Currency.current.code
+            amountExchangeLabel.text = localizedTokenAmount
         } else {
-            amountLabel.text = amountToken
-            amountExchangeLabel.text = amountExchange
+            let fiatMoneyAmount = amount * asset.decimalUSDPrice * Currency.current.decimalRate
+            localizedFiatMoneyAmount = CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoney, sign: .whenNegative)
+            amountLabel.text = localizedTokenAmount
         }
-
+        
+        let localizedEstimatedFiatMoneyAmount = "≈ " + Currency.current.symbol + localizedFiatMoneyAmount
+        if fiatMoneyAmount == nil {
+            amountExchangeLabel.text = localizedEstimatedFiatMoneyAmount
+        } else {
+            amountExchangeLabel.text = localizedTokenAmount
+        }
+        
         let showError = !(error?.isEmpty ?? true)
         let showBiometric = isAllowBiometricPay
         switch pinAction! {
@@ -128,12 +137,14 @@ class PayWindow: BottomSheetView {
             multisigView.isHidden = true
             nameLabel.text = R.string.localizable.pay_withdrawal_title(address.label)
             mixinIDLabel.text = address.fullAddress
-            let feeToken = CurrencyFormatter.localizedString(from: address.fee, locale: .current, format: .precision, sign: .whenNegative, symbol: .custom(chainAsset.symbol)) ?? address.fee
-            let feeExchange = CurrencyFormatter.localizedPrice(price: address.fee, priceUsd: chainAsset.priceUsd)
-            if let fiatMoneyAmount = fiatMoneyAmount {
-                amountExchangeLabel.text = R.string.localizable.pay_withdrawal_memo(amountToken, "≈ " + Currency.current.symbol + fiatMoneyAmount, feeToken, feeExchange)
+            
+            let localizedFeeAmount = CurrencyFormatter.localizedString(from: address.decimalFee, format: .precision, sign: .whenNegative, symbol: .custom(chainAsset.symbol))
+            let localizedFeeExchange = CurrencyFormatter.localizedFiatMoneyAmount(asset: chainAsset, assetAmount: address.decimalFee)
+            
+            if fiatMoneyAmount == nil {
+                amountExchangeLabel.text = R.string.localizable.pay_withdrawal_memo(localizedTokenAmount, localizedEstimatedFiatMoneyAmount, localizedFeeAmount, localizedFeeExchange)
             } else {
-                amountExchangeLabel.text = R.string.localizable.pay_withdrawal_memo(amountToken, amountExchange, feeToken, feeExchange)
+                amountExchangeLabel.text = R.string.localizable.pay_withdrawal_memo(localizedTokenAmount, "≈ " + Currency.current.symbol + localizedFiatMoneyAmount, localizedFeeAmount, localizedFeeExchange)
             }
 
             if !showError {
@@ -548,26 +559,30 @@ extension PayWindow: PinFieldDelegate {
                 weakSelf.failedHandler(error: error)
             }
         }
-
-        let generalizedAmount: String
-        if let decimalSeparator = Locale.current.decimalSeparator, decimalSeparator != "." {
-            generalizedAmount = amount.replacingOccurrences(of: decimalSeparator, with: ".")
-        } else {
-            generalizedAmount = amount
+        
+        guard let amountString = GenericDecimal(decimal: amount)?.string else {
+            completion(.failure(.invalidTokenAmount))
+            return
         }
-
         switch pinAction {
         case let .transfer(trackId, user, _):
-            trace = Trace(traceId: trackId, assetId: assetId, amount: generalizedAmount, opponentId: user.userId, destination: nil, tag: nil)
+            trace = Trace(traceId: trackId, assetId: assetId, amount: amountString, opponentId: user.userId, destination: nil, tag: nil)
             TraceDAO.shared.saveTrace(trace: trace)
-            PaymentAPI.transfer(assetId: assetId, opponentId: user.userId, amount: generalizedAmount, memo: memo, pin: pin, traceId: trackId, completion: completion)
+            PaymentAPI.transfer(assetId: assetId, opponentId: user.userId, amount: amount, memo: memo, pin: pin, traceId: trackId, completion: completion)
         case let .payment(payment, _):
-            let transactionRequest = RawTransactionRequest(assetId: payment.assetId, opponentMultisig: OpponentMultisig(receivers: payment.receivers, threshold: payment.threshold), amount: payment.amount, pin: "", traceId: payment.traceId, memo: payment.memo)
+            let opponentMultisig = OpponentMultisig(receivers: payment.receivers,
+                                                    threshold: payment.threshold)
+            let transactionRequest = RawTransactionRequest(assetId: payment.assetId,
+                                                           opponentMultisig: opponentMultisig,
+                                                           amount: amountString,
+                                                           pin: "",
+                                                           traceId: payment.traceId,
+                                                           memo: payment.memo)
             PaymentAPI.transactions(transactionRequest: transactionRequest, pin: pin, completion: completion)
         case let .withdraw(trackId, address, _, _):
-            trace = Trace(traceId: trackId, assetId: assetId, amount: generalizedAmount, opponentId: nil, destination: address.destination, tag: address.tag)
+            trace = Trace(traceId: trackId, assetId: assetId, amount: amountString, opponentId: nil, destination: address.destination, tag: address.tag)
             TraceDAO.shared.saveTrace(trace: trace)
-            WithdrawalAPI.withdrawal(withdrawal: WithdrawalRequest(addressId: address.addressId, amount: generalizedAmount, traceId: trackId, pin: pin, memo: memo), completion: completion)
+            WithdrawalAPI.withdrawal(withdrawal: WithdrawalRequest(addressId: address.addressId, amount: amountString, traceId: trackId, pin: pin, memo: memo), completion: completion)
         case let .multisig(multisig, _, _):
             let multisigCompletion = { [weak self] (result: MixinAPI.Result<Empty>) in
                 guard let weakSelf = self else {
@@ -653,7 +668,7 @@ extension PayWindow: PinFieldDelegate {
 
 extension PayWindow {
 
-    static func checkPay(traceId: String, asset: AssetItem, action: PayWindow.PinAction, opponentId: String? = nil, destination: String? = nil, tag: String? = nil, addressId: String? = nil, amount: String, fiatMoneyAmount: String? = nil, memo: String, fromWeb: Bool, completion: @escaping AssetConfirmationWindow.CompletionHandler) {
+    static func checkPay(traceId: String, asset: AssetItem, action: PayWindow.PinAction, opponentId: String? = nil, destination: String? = nil, tag: String? = nil, addressId: String? = nil, amount: Decimal, fiatMoneyAmount: Decimal? = nil, memo: String, fromWeb: Bool, completion: @escaping AssetConfirmationWindow.CompletionHandler) {
 
         if fromWeb {
             var response: MixinAPI.Result<PaymentResponse>?
@@ -683,21 +698,26 @@ extension PayWindow {
         let checkAmountAction = {
             switch action {
             case let .transfer(_, user, _):
-                let fiatMoneyValue = amount.doubleValue * asset.priceUsd.doubleValue * Currency.current.rate
-                let threshold = LoginManager.shared.account?.transfer_confirmation_threshold ?? 0
-                if threshold != 0 && fiatMoneyValue >= threshold {
+                let fiatMoneyValue = amount * asset.decimalUSDPrice * Currency.current.decimalRate
+                let threshold: Decimal
+                if let value = LoginManager.shared.account?.transfer_confirmation_threshold {
+                    threshold = Decimal(value)
+                } else {
+                    threshold = 0
+                }
+                if threshold.isNormal && fiatMoneyValue >= threshold {
                     DispatchQueue.main.async {
                         BigAmountConfirmationWindow.instance().render(asset: asset, user: user, amount: amount, memo: memo, completion: completion).presentPopupControllerAnimated()
                     }
                     return
                 }
             case let .withdraw(_, address, _, _):
-                if let amount = Decimal(string: amount, locale: .current), let dust = Decimal(string: address.dust, locale: .us), amount < dust {
+                if amount < address.decimalDust {
                     completion(false, R.string.localizable.withdrawal_minimum_amount(address.dust, asset.symbol))
                     return
                 }
-
-                if AppGroupUserDefaults.Wallet.withdrawnAddressIds[address.addressId] == nil && amount.doubleValue * asset.priceUsd.doubleValue * Currency.current.rate > 10 {
+                let fiatMoneyValue = amount * asset.decimalUSDPrice * Currency.current.decimalRate
+                if AppGroupUserDefaults.Wallet.withdrawnAddressIds[address.addressId] == nil && fiatMoneyValue > 10 {
                     DispatchQueue.main.async {
                         WithdrawalTipWindow.instance().render(asset: asset, completion: completion).presentPopupControllerAnimated()
                     }
@@ -710,7 +730,7 @@ extension PayWindow {
             completion(true, nil)
         }
 
-        if AppGroupUserDefaults.User.duplicateTransferConfirmation, let trace = TraceDAO.shared.getTrace(assetId: asset.assetId, amount: amount, opponentId: opponentId, destination: destination, tag: tag, createdAt: Date().within6Hours().toUTCString()) {
+        if AppGroupUserDefaults.User.duplicateTransferConfirmation, let amountString = GenericDecimal(decimal: amount)?.string, let trace = TraceDAO.shared.getTrace(assetId: asset.assetId, amount: amountString, opponentId: opponentId, destination: destination, tag: tag, createdAt: Date().within6Hours().toUTCString()) {
 
             if let snapshotId = trace.snapshotId, !snapshotId.isEmpty {
                 DispatchQueue.main.async {

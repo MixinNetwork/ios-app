@@ -12,3 +12,19 @@ public enum JPEGCompressionQuality {
     public static let medium: CGFloat = 0.75
     public static let low: CGFloat = 0.6
 }
+
+public let zeroFiatMoneyRepresentation: String = {
+    let formatter = NumberFormatter()
+    formatter.numberStyle = .decimal
+    formatter.minimumFractionDigits = 2
+    formatter.locale = .current
+    return formatter.string(from: 0)
+        ?? "0\(currentDecimalSeparator)00"
+}()
+
+public let zeroAssetRepresentation: String = {
+    let formatter = NumberFormatter()
+    formatter.numberStyle = .decimal
+    formatter.locale = .current
+    return formatter.string(from: 0) ?? "0"
+}()

@@ -1,6 +1,6 @@
 import WCDBSwift
 
-public struct SnapshotItem: TableCodable {
+public class SnapshotItem: TableCodable {
     
     public let snapshotId: String
     public let type: String
@@ -21,6 +21,8 @@ public struct SnapshotItem: TableCodable {
     public let opponentUserFullName: String?
     public let opponentUserAvatarUrl: String?
     public let opponentUserIdentityNumber: String?
+    
+    public private(set) lazy var decimalAmount = Decimal(string: amount) ?? 0
     
     public enum CodingKeys: String, CodingTableKey {
         public typealias Root = SnapshotItem

@@ -34,10 +34,10 @@ class AssetCell: ModernSelectedBackgroundCell {
     func render(asset: AssetItem, attributedSymbol: NSAttributedString? = nil) {
         assetIconView.setIcon(asset: asset)
         let balance: String
-        if asset.balance == "0" {
-            balance = "0\(currentDecimalSeparator)00"
+        if asset.decimalBalance == 0 {
+            balance = zeroFiatMoneyRepresentation
         } else {
-            balance = CurrencyFormatter.localizedString(from: asset.balance, format: .pretty, sign: .never) ?? ""
+            balance = CurrencyFormatter.localizedString(from: asset.decimalBalance, format: .pretty, sign: .never)
         }
         balanceLabel.text = balance
         if let attributedSymbol = attributedSymbol {
@@ -45,9 +45,9 @@ class AssetCell: ModernSelectedBackgroundCell {
         } else {
             symbolLabel.attributedText = NSAttributedString(string: asset.symbol, attributes: AssetCell.symbolAttributes)
         }
-        if asset.priceUsd.doubleValue > 0 {
+        if asset.decimalUSDPrice > 0 {
             changeLabel.text = " \(asset.localizedUsdChange)%"
-            if asset.changeUsd.doubleValue > 0 {
+            if asset.decimalUSDChange > 0 {
                 changeLabel.textColor = .walletGreen
             } else {
                 changeLabel.textColor = .walletRed

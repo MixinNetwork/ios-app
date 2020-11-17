@@ -31,17 +31,16 @@ class AssetConfirmationWindow: BottomSheetView {
         super.dismissPopupControllerAnimated()
     }
 
-    func render(asset: AssetItem, amount: String, memo: String, fiatMoneyAmount: String? = nil, completion: @escaping CompletionHandler) -> BottomSheetView {
+    func render(asset: AssetItem, amount: Decimal, memo: String, fiatMoneyAmount: Decimal? = nil, completion: @escaping CompletionHandler) -> BottomSheetView {
         self.completion = completion
-
-        let amountToken = CurrencyFormatter.localizedString(from: amount, locale: .current, format: .precision, sign: .whenNegative, symbol: .custom(asset.symbol)) ?? amount
-        let amountExchange = CurrencyFormatter.localizedPrice(price: amount, priceUsd: asset.priceUsd)
+        
+        let localizedTokenAmount = CurrencyFormatter.localizedString(from: amount, format: .precision, sign: .whenNegative, symbol: .custom(asset.symbol))
         if let fiatMoneyAmount = fiatMoneyAmount {
-            amountLabel.text = fiatMoneyAmount + " " + Currency.current.code
-            amountExchangeLabel.text = amountToken
+            amountLabel.text = CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .precision, sign: .whenNegative, symbol: .custom(Currency.current.code))
+            amountExchangeLabel.text = localizedTokenAmount
         } else {
-            amountLabel.text = amountToken
-            amountExchangeLabel.text = amountExchange
+            amountLabel.text = localizedTokenAmount
+            amountExchangeLabel.text = CurrencyFormatter.localizedFiatMoneyAmount(asset: asset, assetAmount: amount)
         }
 
         assetIconView.setIcon(asset: asset)

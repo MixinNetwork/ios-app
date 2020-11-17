@@ -27,7 +27,7 @@ class TransactionViewController: UIViewController {
         view.layoutIfNeeded()
         symbolLabel.contentInset = UIEdgeInsets(top: 2, left: 0, bottom: 0, right: 0)
         assetIconView.setIcon(asset: asset)
-        amountLabel.text = CurrencyFormatter.localizedString(from: snapshot.amount, format: .precision, sign: .always)
+        amountLabel.text = CurrencyFormatter.localizedString(from: snapshot.decimalAmount, format: .precision, sign: .always)
         if snapshot.type == SnapshotType.pendingDeposit.rawValue {
             amountLabel.textColor = .walletGray
         } else {
@@ -38,7 +38,7 @@ class TransactionViewController: UIViewController {
             }
         }
         amountLabel.setFont(scaledFor: .dinCondensedBold(ofSize: 34), adjustForContentSize: true)
-        fiatMoneyValueLabel.text = R.string.localizable.transaction_value_now(Currency.current.symbol + getFormatValue(priceUsd: asset.priceUsd))
+        fiatMoneyValueLabel.text = R.string.localizable.transaction_value_now(localizedFiatMoneyValue(usdPrice: asset.decimalUSDPrice))
         symbolLabel.text = snapshot.assetSymbol
         makeContents()
         tableView.dataSource = self
@@ -54,18 +54,20 @@ class TransactionViewController: UIViewController {
             }
             switch result {
             case let .success(asset):
-                let nowValue = self.getFormatValue(priceUsd: self.asset.priceUsd)
-                let thenValue = self.getFormatValue(priceUsd: asset.priceUsd)
-                self.fiatMoneyValueLabel.text = R.string.localizable.transaction_value_now(Currency.current.symbol + nowValue) + "\n" + R.string.localizable.transaction_value_then(Currency.current.symbol + thenValue)
+                let nowValue = self.localizedFiatMoneyValue(usdPrice: self.asset.decimalUSDPrice)
+                let thenValue = self.localizedFiatMoneyValue(usdPrice: asset.decimalUSDPrice)
+                self.fiatMoneyValueLabel.text = R.string.localizable.transaction_value_now(nowValue)
+                    + "\n"
+                    + R.string.localizable.transaction_value_then(thenValue)
             case .failure:
                 break
             }
         }
     }
     
-    private func getFormatValue(priceUsd: String) -> String {
-        let fiatMoneyValue = snapshot.amount.doubleValue * priceUsd.doubleValue * Currency.current.rate
-        return CurrencyFormatter.localizedString(from: fiatMoneyValue, format: .fiatMoney, sign: .never) ?? ""
+    private func localizedFiatMoneyValue(usdPrice: Decimal) -> String {
+        let fiatMoneyValue = snapshot.decimalAmount * usdPrice * Currency.current.decimalRate
+        return Currency.current.symbol + CurrencyFormatter.localizedString(from: fiatMoneyValue, format: .fiatMoney, sign: .never)
     }
     
     override func viewSafeAreaInsetsDidChange() {
@@ -176,7 +178,7 @@ extension TransactionViewController {
             }
         case SnapshotType.transfer.rawValue:
             contents.append((title: Localized.TRANSACTION_TYPE, subtitle: Localized.TRANSACTION_TYPE_TRANSFER))
-            if snapshot.amount.doubleValue > 0 {
+            if snapshot.decimalAmount > 0 {
                 contents.append((title: R.string.localizable.wallet_snapshot_transfer_from(), subtitle: snapshot.opponentUserFullName))
             } else {
                 contents.append((title: R.string.localizable.wallet_snapshot_transfer_to(), subtitle: snapshot.opponentUserFullName))

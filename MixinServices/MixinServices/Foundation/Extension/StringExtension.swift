@@ -8,11 +8,6 @@ public extension String {
     
     private static var hashCodeMaps = SafeDictionary<String, Int>()
     
-    var isGenericNumber: Bool {
-        let number = NumberFormatter.usLocalizedDecimal.number(from: self)
-        return number != nil
-    }
-    
     // Indicates string is made of english numerals (or Hindu-Arabic numbers) only
     var isEnglishNumeric: Bool {
         !isEmpty && Set(self).isSubset(of: Self.englishNumbers)
@@ -24,7 +19,7 @@ public extension String {
     
     var doubleValue: Double {
         return Double(self)
-            ?? NumberFormatter.decimal.number(from: self)?.doubleValue
+            ?? NumberFormatter.usLocalizedDecimal.number(from: self)?.doubleValue
             ?? 0
     }
     

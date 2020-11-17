@@ -2,11 +2,13 @@ import Foundation
 
 public class GenericDecimal {
     
-    public static let decimalSeparator = Locale.us.decimalSeparator ?? "."
+    public static let decimalSeparator = "."
     
+    private static let legalCharacters: Set<Character> = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "-", "."]
     private static let formatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
+        formatter.decimalSeparator = decimalSeparator
         formatter.locale = .us
         formatter.generatesDecimalNumbers = true
         formatter.usesGroupingSeparator = false
@@ -28,6 +30,12 @@ public class GenericDecimal {
     }
     
     public required init?(string: String) {
+        guard !string.isEmpty && Set(string).isSubset(of: Self.legalCharacters) else {
+            // Number formatter recognize any numeral systems as long as it respects number format of the locale
+            // e.g. arabic number "۱۰.۱" is recognized by the formatter as 10.1
+            // Drop any number characters other than english ones
+            return nil
+        }
         guard let decimal = Self.formatter.number(from: string) as? Decimal else {
             return nil
         }

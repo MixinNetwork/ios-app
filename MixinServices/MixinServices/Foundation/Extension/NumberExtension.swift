@@ -2,6 +2,13 @@ import Foundation
 
 public extension NumberFormatter {
     
+    static let usLocalizedDecimal: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.locale = .us
+        return formatter
+    }()
+    
     static let decimal = NumberFormatter(numberStyle: .decimal)
     
     static let simplePercentage: NumberFormatter = {

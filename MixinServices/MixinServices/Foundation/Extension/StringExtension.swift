@@ -5,7 +5,12 @@ import CoreText
 public extension String {
 
     private static var hashCodeMaps = SafeDictionary<String, Int>()
-
+    
+    var isGenericNumber: Bool {
+        let number = NumberFormatter.usLocalizedDecimal.number(from: self)
+        return number != nil
+    }
+    
     var isNumeric: Bool {
         let number = NumberFormatter.decimal.number(from: self)
         return number != nil

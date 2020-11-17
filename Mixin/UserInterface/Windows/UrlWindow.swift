@@ -320,7 +320,7 @@ class UrlWindow {
             showAutoHiddenHud(style: .error, text: R.string.localizable.url_invalid_payment())
             return true
         }
-        guard !recipientId.isEmpty && UUID(uuidString: recipientId) != nil && !assetId.isEmpty && UUID(uuidString: assetId) != nil && !amount.isEmpty && amount.isNumeric else {
+        guard !recipientId.isEmpty && UUID(uuidString: recipientId) != nil && !assetId.isEmpty && UUID(uuidString: assetId) != nil && !amount.isEmpty && amount.isGenericNumber else {
             Logger.write(errorMsg: "[UrlWindow][CheckPayUrl]\(url)")
             showAutoHiddenHud(style: .error, text: R.string.localizable.url_invalid_payment())
             return true

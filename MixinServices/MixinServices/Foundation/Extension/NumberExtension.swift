@@ -9,12 +9,6 @@ public extension NumberFormatter {
         return formatter
     }()
     
-    static let decimal: NumberFormatter = {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        return formatter
-    }()
-    
     static let simplePercentage: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .percent

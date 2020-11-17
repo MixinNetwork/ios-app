@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 class AlertEditorController {
     
@@ -43,7 +44,7 @@ class AlertEditorController {
         guard let controller = alertController, let text = controller.textFields?.first?.text else {
             return
         }
-        controller.actions[1].isEnabled = !text.isEmpty && (!isNumericOnly || text.isNumeric)
+        controller.actions[1].isEnabled = !text.isEmpty && (!isNumericOnly || LocalizedDecimal.isValidDecimal(text))
     }
     
 }

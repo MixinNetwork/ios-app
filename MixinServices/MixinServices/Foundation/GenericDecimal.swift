@@ -1,6 +1,8 @@
 import Foundation
 
-public struct GenericDecimal {
+public class GenericDecimal {
+    
+    public static let decimalSeparator = Locale.us.decimalSeparator ?? "."
     
     private static let formatter: NumberFormatter = {
         let formatter = NumberFormatter()
@@ -13,6 +15,10 @@ public struct GenericDecimal {
     
     public let decimal: Decimal
     
+    // Since we have a normal decimal, the formatter should work
+    // See https://lists.apple.com/archives/cocoa-dev/2002/Dec/msg00370.html
+    public private(set) lazy var string = Self.formatter.string(from: decimal as NSNumber)!
+    
     public var doubleValue: Double {
         (decimal as NSDecimalNumber).doubleValue
     }
@@ -21,8 +27,11 @@ public struct GenericDecimal {
         self.decimal = decimal
     }
     
-    public init?(string: String) {
+    public required init?(string: String) {
         guard let decimal = Self.formatter.number(from: string) as? Decimal else {
+            return nil
+        }
+        guard decimal.isNormal else {
             return nil
         }
         self.decimal = decimal

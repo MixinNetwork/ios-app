@@ -3,7 +3,9 @@ import CommonCrypto
 import CoreText
 
 public extension String {
-
+    
+    private static let englishNumbers: Set<Character> = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+    
     private static var hashCodeMaps = SafeDictionary<String, Int>()
     
     var isGenericNumber: Bool {
@@ -11,9 +13,9 @@ public extension String {
         return number != nil
     }
     
-    var isNumeric: Bool {
-        let number = NumberFormatter.decimal.number(from: self)
-        return number != nil
+    // Indicates string is made of english numerals (or Hindu-Arabic numbers) only
+    var isEnglishNumeric: Bool {
+        !isEmpty && Set(self).isSubset(of: Self.englishNumbers)
     }
     
     var hasMinusPrefix: Bool {

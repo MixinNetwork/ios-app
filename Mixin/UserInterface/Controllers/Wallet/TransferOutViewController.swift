@@ -119,9 +119,9 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         guard let asset = self.asset else {
             return
         }
-        let amountText = amountTextField.text ?? ""
-        amountTextField.font = amountText.isEmpty ? placeHolderFont : amountFont
-        guard amountText.isNumeric else {
+        let amountString = amountTextField.text ?? ""
+        amountTextField.font = amountString.isEmpty ? placeHolderFont : amountFont
+        guard let decimal = LocalizedDecimal(string: amountString) else {
             if isInputAssetAmount {
                 amountExchangeLabel.text = "0" + currentDecimalSeparator + "00 " + Currency.current.code
             } else {
@@ -134,17 +134,17 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         
         let fiatMoneyPrice = asset.priceUsd.doubleValue * Currency.current.rate
         if isInputAssetAmount {
-            let fiatMoneyAmount = amountText.doubleValue * fiatMoneyPrice
+            let fiatMoneyAmount = decimal.doubleValue * fiatMoneyPrice
             amountExchangeLabel.text = CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currentCurrency)
         } else {
-            let assetAmount = amountText.doubleValue / fiatMoneyPrice
+            let assetAmount = decimal.doubleValue / fiatMoneyPrice
             amountExchangeLabel.text = CurrencyFormatter.localizedString(from: assetAmount, format: .pretty, sign: .whenNegative, symbol: .custom(asset.symbol))
         }
         
         if isInputAssetAmount {
             if amountTextField.text == asset.balance {
                 hideInputAccessoryView()
-            } else if amountText.count >= 4, asset.balance.doubleValue != 0, asset.balance.hasPrefix(amountText) {
+            } else if decimal.generic.string.count >= 4, asset.balance.doubleValue != 0, asset.balance.hasPrefix(decimal.generic.string) {
                 showInputAccessoryView()
             } else {
                 hideInputAccessoryView()
@@ -159,7 +159,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
             amountSymbolLabel.superview?.layoutIfNeeded()
         }
         
-        continueButton.isEnabled = amountText.doubleValue > 0
+        continueButton.isEnabled = decimal.generic.decimal > 0
     }
     
     @IBAction func continueAction(_ sender: Any) {
@@ -440,8 +440,8 @@ extension TransferOutViewController: UITextFieldDelegate {
         let newText = ((textField.text ?? "") as NSString).replacingCharacters(in: range, with: string)
         if newText.isEmpty {
             return true
-        } else if newText.isNumeric {
-            let components = newText.components(separatedBy: currentDecimalSeparator)
+        } else if let newAmount = LocalizedDecimal(string: newText) {
+            let components = newAmount.generic.string.components(separatedBy: GenericDecimal.decimalSeparator)
             if isInputAssetAmount {
                 return components.count == 1 || components[1].count <= 8
             } else {

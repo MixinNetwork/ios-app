@@ -47,7 +47,7 @@ class EmergencyContactIdVerificationViewController: LoginInfoInputViewController
 extension EmergencyContactIdVerificationViewController: UITextFieldDelegate {
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        return string.isEmpty || string.isNumeric
+        return string.isEmpty || string.isEnglishNumeric
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

@@ -1,6 +1,6 @@
 import Foundation
 
-public struct LocalizedDecimal {
+public class LocalizedDecimal {
     
     private static let formatter: NumberFormatter = {
         let formatter = NumberFormatter()
@@ -16,9 +16,12 @@ public struct LocalizedDecimal {
         generic.doubleValue
     }
     
-    public init?(string: String) {
+    public required init?(string: String) {
         let whitespaceFiltered = string.filter { !$0.isWhitespace }
         guard let decimal = Self.formatter.number(from: whitespaceFiltered) as? Decimal else {
+            return nil
+        }
+        guard decimal.isNormal else {
             return nil
         }
         self.generic = GenericDecimal(decimal: decimal)

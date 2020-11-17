@@ -62,7 +62,7 @@ class PinValidationViewController: UIViewController {
                 self.onSuccess?(pin)
                 self.dismiss(animated: true, completion: nil)
             case let .failure(error):
-                if !pin.isNumeric || pin.trimmingCharacters(in: .whitespacesAndNewlines).count != 6 {
+                if !pin.isEnglishNumeric || pin.trimmingCharacters(in: .whitespacesAndNewlines).count != 6 {
                     reporter.report(error: MixinError.invalidPin)
                 } else if !error.isTransportTimedOut {
                     reporter.report(error: error)

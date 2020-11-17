@@ -136,7 +136,6 @@ extension NotificationAndConfirmationSettingsViewController {
             switch result {
             case .success(let account):
                 LoginManager.shared.setAccount(account)
-                Currency.refreshCurrentCurrency()
                 hud.set(style: .notification, text: R.string.localizable.toast_saved())
                 let section = self.makeTransferNotificationThresholdSection()
                 self.dataSource.replaceSection(at: 1, with: section, animation: .none)
@@ -159,7 +158,6 @@ extension NotificationAndConfirmationSettingsViewController {
             switch result {
             case .success(let account):
                 LoginManager.shared.setAccount(account)
-                Currency.refreshCurrentCurrency()
                 hud.set(style: .notification, text: R.string.localizable.toast_saved())
                 let section = self.makeTransferConfirmationThresholdSection()
                 self.dataSource.replaceSection(at: 2, with: section, animation: .none)

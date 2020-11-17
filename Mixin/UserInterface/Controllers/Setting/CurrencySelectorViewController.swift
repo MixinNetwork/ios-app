@@ -68,7 +68,6 @@ extension CurrencySelectorViewController: UITableViewDelegate {
             switch result {
             case .success(let account):
                 LoginManager.shared.setAccount(account)
-                Currency.refreshCurrentCurrency()
                 hud.set(style: .notification, text: R.string.localizable.toast_saved())
                 self?.dismiss(animated: true, completion: nil)
             case let .failure(error):

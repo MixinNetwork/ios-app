@@ -18,7 +18,7 @@ class AppearanceSettingsViewController: SettingsTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         updateCurrencySubtitle()
-        NotificationCenter.default.addObserver(self, selector: #selector(updateCurrencySubtitle), name: Currency.currentCurrencyDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateCurrencySubtitle), name: LoginManager.accountDidChangeNotification, object: nil)
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
     }

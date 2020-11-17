@@ -102,7 +102,7 @@ extension AppGroupUserDefaults {
     public static var firstLaunchDate: Date?
     
     @Default(namespace: nil, key: "currency_rates", defaultValue: [:])
-    public static var currencyRates: [String: Double]
+    public static var currencyRates: [String: String]
     
     @Default(namespace: nil, key: "server_index", defaultValue: 0)
     public static var serverIndex: Int

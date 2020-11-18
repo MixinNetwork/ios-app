@@ -183,13 +183,13 @@
 		7B5BABE31FB57B0300341FE6 /* ImagePickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5BABE21FB57B0300341FE6 /* ImagePickerController.swift */; };
 		7B5BC7B720AA1BB300DA5296 /* AttachmentLoadingMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5BC7B620AA1BB300DA5296 /* AttachmentLoadingMessageCell.swift */; };
 		7B5C77232220188200395C7D /* AssetFilterHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5C77222220188200395C7D /* AssetFilterHeaderView.swift */; };
+		7B5E596F254FFB4B003FFDE0 /* InitializeFTSJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E596E254FFB4B003FFDE0 /* InitializeFTSJob.swift */; };
 		7B5E5D23255055E8003FFDE0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E5D22255055E8003FFDE0 /* AppDelegate.swift */; };
 		7B5E5D25255055E8003FFDE0 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E5D24255055E8003FFDE0 /* SceneDelegate.swift */; };
 		7B5E5D27255055E8003FFDE0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E5D26255055E8003FFDE0 /* ViewController.swift */; };
 		7B5E5D2A255055E8003FFDE0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7B5E5D28255055E8003FFDE0 /* Main.storyboard */; };
 		7B5E5D2C255055E9003FFDE0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7B5E5D2B255055E9003FFDE0 /* Assets.xcassets */; };
 		7B5E5D2F255055E9003FFDE0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7B5E5D2D255055E9003FFDE0 /* LaunchScreen.storyboard */; };
-		7B5E596F254FFB4B003FFDE0 /* InitializeFTSJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E596E254FFB4B003FFDE0 /* InitializeFTSJob.swift */; };
 		7B5E5D971FCE9CAA00F6048D /* ConversationInputTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E5D961FCE9CAA00F6048D /* ConversationInputTextView.swift */; };
 		7B5E9B40243700CD000AE24E /* ConversationCircleEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E9B3F243700CD000AE24E /* ConversationCircleEditorViewController.swift */; };
 		7B5E9B4424370ABB000AE24E /* CircleProfileMenuItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E9B4324370ABB000AE24E /* CircleProfileMenuItemView.swift */; };
@@ -1076,6 +1076,7 @@
 		7B5BABE21FB57B0300341FE6 /* ImagePickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerController.swift; sourceTree = "<group>"; };
 		7B5BC7B620AA1BB300DA5296 /* AttachmentLoadingMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentLoadingMessageCell.swift; sourceTree = "<group>"; };
 		7B5C77222220188200395C7D /* AssetFilterHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetFilterHeaderView.swift; sourceTree = "<group>"; };
+		7B5E596E254FFB4B003FFDE0 /* InitializeFTSJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitializeFTSJob.swift; sourceTree = "<group>"; };
 		7B5E5D20255055E8003FFDE0 /* MixinAppGroupAccess.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MixinAppGroupAccess.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B5E5D22255055E8003FFDE0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7B5E5D24255055E8003FFDE0 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -1085,7 +1086,6 @@
 		7B5E5D2E255055E9003FFDE0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7B5E5D30255055E9003FFDE0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7B5E5D3725505615003FFDE0 /* MixinAppGroupAccess.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MixinAppGroupAccess.entitlements; sourceTree = "<group>"; };
-		7B5E596E254FFB4B003FFDE0 /* InitializeFTSJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitializeFTSJob.swift; sourceTree = "<group>"; };
 		7B5E5D961FCE9CAA00F6048D /* ConversationInputTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationInputTextView.swift; sourceTree = "<group>"; };
 		7B5E9B3F243700CD000AE24E /* ConversationCircleEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationCircleEditorViewController.swift; sourceTree = "<group>"; };
 		7B5E9B4324370ABB000AE24E /* CircleProfileMenuItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleProfileMenuItemView.swift; sourceTree = "<group>"; };
@@ -3687,7 +3687,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$SRCROOT/MixinNotificationService/R.generated.swift",
+				$SRCROOT/MixinNotificationService/R.generated.swift,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -3784,7 +3784,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$SRCROOT/MixinShare/R.generated.swift",
+				$SRCROOT/MixinShare/R.generated.swift,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -3804,7 +3804,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$SRCROOT/R.generated.swift",
+				$SRCROOT/R.generated.swift,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

@@ -15,7 +15,7 @@ class InitializeFTSJob: BaseJob {
         }
         
         let categories = "('" + MessageCategory.ftsAvailable.map(\.rawValue).joined(separator: "','") + "')"
-        let rowIdSql = """
+        let firstUninitializedRowIdSql = """
         SELECT MIN(rowid) FROM messages
         WHERE category in \(categories)
         AND status != 'FAILED'
@@ -33,23 +33,33 @@ class InitializeFTSJob: BaseJob {
         """
         
         var isFinished = false
-        var rowid = MixinDatabase.shared.scalar(sql: rowIdSql).int64Value
+        var rowid = MixinDatabase.shared.scalar(sql: firstUninitializedRowIdSql).int64Value
+        var numberOfMessagesProcessed = 0
+        let startDate = Date()
         
         repeat {
             guard !isCancelled else {
                 return
             }
             
-            let stmt = try MixinDatabase.shared.database.prepareUpdateSQL(sql: insertionSql)
-            try stmt.execute(with: [rowid])
-            if (stmt.changes ?? 0) < insertionLimit {
-                isFinished = true
-            } else {
-                rowid += insertionLimit
+            do {
+                let stmt = try MixinDatabase.shared.database.prepareUpdateSQL(sql: insertionSql)
+                try stmt.execute(with: [rowid])
+                let numberOfChanges = stmt.changes ?? 0
+                numberOfMessagesProcessed += numberOfChanges
+                if numberOfChanges < insertionLimit {
+                    isFinished = true
+                } else {
+                    rowid = MixinDatabase.shared.scalar(sql: firstUninitializedRowIdSql).int64Value
+                }
+                Thread.sleep(forTimeInterval: 0.1)
+            } catch {
+                print(error)
             }
-            Thread.sleep(forTimeInterval: 0.1)
         } while !isFinished
         
+        let interval = -startDate.timeIntervalSinceNow
+        print("[FTS] Initialized \(numberOfMessagesProcessed) messages in \(interval)s")
         AppGroupUserDefaults.Database.isFTSInitialized = true
     }
     

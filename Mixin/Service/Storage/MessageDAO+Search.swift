@@ -29,13 +29,14 @@ extension MessageDAO {
         }
         
         do {
+            let wildcardedKeyword = keyword + "*"
             let stmt = StatementSelectSQL(sql: sql)
             let cs = try MixinDatabase.shared.database.prepare(stmt)
             
             let bindingCounter = Counter(value: 0)
             cs.bind(conversationId, toIndex: bindingCounter.advancedValue)
-            cs.bind(keyword, toIndex: bindingCounter.advancedValue)
-            cs.bind(keyword, toIndex: bindingCounter.advancedValue)
+            cs.bind(wildcardedKeyword, toIndex: bindingCounter.advancedValue)
+            cs.bind(wildcardedKeyword, toIndex: bindingCounter.advancedValue)
             
             while try cs.step() {
                 let counter = Counter(value: -1)

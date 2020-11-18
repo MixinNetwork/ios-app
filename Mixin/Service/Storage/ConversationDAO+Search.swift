@@ -19,6 +19,7 @@ extension ConversationDAO {
     """
     
     func getConversation(withMessageLike keyword: String, limit: Int?, callback: (CoreStatement) -> Void) -> [MessagesWithinConversationSearchResult] {
+        let wildcardedKeyword = keyword + "*"
         var sql = ConversationDAO.sqlSearchMessages
         if let limit = limit {
             sql += " LIMIT \(limit)"
@@ -27,8 +28,8 @@ extension ConversationDAO {
         var items = [MessagesWithinConversationSearchResult]()
         let cs = try! MixinDatabase.shared.database.prepare(stmt)
         callback(cs)
-        cs.bind(keyword, toIndex: 0)
-        cs.bind(keyword, toIndex: 1)
+        cs.bind(wildcardedKeyword, toIndex: 0)
+        cs.bind(wildcardedKeyword, toIndex: 1)
         while (try? cs.step()) ?? false {
             var i = -1
             var autoIncrement: Int {

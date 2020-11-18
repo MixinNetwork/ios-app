@@ -249,7 +249,7 @@ DEPENDENCIES:
   - Texture (from `https://github.com/TextureGroup/Texture.git`, branch `master`)
   - TexturedMaaku (from `https://github.com/wuyuehyang/TexturedMaaku.git`, branch `mixin`)
   - TexturedMaaku/SyntaxColors (from `https://github.com/wuyuehyang/TexturedMaaku.git`, branch `mixin`)
-  - WCDB.swift (from `https://github.com/MixinNetwork/wcdb.git`, branch `bugfix/fts`)
+  - WCDB.swift (from `https://github.com/MixinNetwork/wcdb.git`, branch `feature/mixin`)
   - YYImage (from `https://github.com/wuyuehyang/YYImage.git`)
 
 SPEC REPOS:
@@ -317,7 +317,7 @@ EXTERNAL SOURCES:
     :branch: mixin
     :git: https://github.com/wuyuehyang/TexturedMaaku.git
   WCDB.swift:
-    :branch: bugfix/fts
+    :branch: feature/mixin
     :git: https://github.com/MixinNetwork/wcdb.git
   YYImage:
     :git: https://github.com/wuyuehyang/YYImage.git
@@ -342,7 +342,7 @@ CHECKOUT OPTIONS:
     :commit: a73def5253fcec7b49307001176592b4b431b65d
     :git: https://github.com/wuyuehyang/TexturedMaaku.git
   WCDB.swift:
-    :commit: 18ee3d5d9596a269f149153fab2dea656bb04653
+    :commit: fc401bbecdf9ebffce17f528c0bcc6de6124f226
     :git: https://github.com/MixinNetwork/wcdb.git
   YYImage:
     :commit: 7acf346c746f6685f46c2fbc3edb1a05a12be827
@@ -400,6 +400,6 @@ SPEC CHECKSUMS:
   YYImage: 6db68da66f20d9f169ceb94dfb9947c3867b9665
   Zip: 414f59909701fda9a84ab774ebe0f5449b1082cc
 
-PODFILE CHECKSUM: 38420121aa04a94919928d5b2e7ed15e60fd7341
+PODFILE CHECKSUM: a27883edd304bffe838198f5a6dc59ba4619279c
 
 COCOAPODS: 1.10.0

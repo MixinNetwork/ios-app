@@ -89,9 +89,6 @@ class ImageUploadJob: AttachmentUploadJob {
             extensionName = ExtensionName.jpeg.rawValue
             PHImageManager.default().requestImageData(for: asset, options: options) { (data, _, _, _) in
                 imageData = data
-                if let data = data {
-                    image = UIImage(data: data)
-                }
             }
         } else {
             extensionName = ExtensionName.jpeg.rawValue

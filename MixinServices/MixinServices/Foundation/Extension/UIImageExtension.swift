@@ -92,6 +92,7 @@ public extension UIImage {
             ]
             let error = MixinServicesError.invalidScalingContextParameter(infos)
             reporter.report(error: error)
+            Logger.write(error: error, userInfo: infos)
             return nil
         }
         context.interpolationQuality = .high

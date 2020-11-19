@@ -288,6 +288,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
                             fallthrough
                         }
                     } catch {
+                        Logger.write(error: error)
                         fallthrough
                     }
                     message.thumbImage = image.base64Thumbnail()

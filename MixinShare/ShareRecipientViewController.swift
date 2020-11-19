@@ -285,7 +285,7 @@ extension ShareRecipientViewController {
                                 guard let image = UIImage(contentsOfFile: url.path) else {
                                     return
                                 }
-                                if UTTypeConformsTo(inUTI, kUTTypeGIF) {
+                                if UTTypeConformsTo(inUTI, kUTTypeGIF) || (UTTypeConformsTo(inUTI, kUTTypeJPEG) && imageWithRatioMaybeAnArticle(image.size)) {
                                     imageData = try? Data(contentsOf: url)
                                 } else {
                                     imageData = ImageUploadSanitizer.sanitizedImage(from: image).data

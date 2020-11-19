@@ -85,22 +85,18 @@ class ImageUploadJob: AttachmentUploadJob {
             PHImageManager.default().requestImageData(for: asset, options: options) { (data, uti, orientation, info) in
                 imageData = data
             }
+        } else if UTTypeConformsTo(uti, kUTTypeJPEG) && imageWithRatioMaybeAnArticle(CGSize(width: asset.pixelWidth, height: asset.pixelHeight)) {
+            extensionName = ExtensionName.jpeg.rawValue
+            PHImageManager.default().requestImageData(for: asset, options: options) { (data, _, _, _) in
+                imageData = data
+                if let data = data {
+                    image = UIImage(data: data)
+                }
+            }
         } else {
             extensionName = ExtensionName.jpeg.rawValue
-            let assetSize = CGSize(width: asset.pixelWidth, height: asset.pixelHeight)
-            let targetSize: CGSize
-            let contentMode: PHImageContentMode
-            if imageWithRatioMaybeAnArticle(assetSize) {
-                targetSize = PHImageManagerMaximumSize
-                contentMode = .default
-                options.resizeMode = .none
-            } else {
-                targetSize = ImageUploadSanitizer.maxSize
-                contentMode = .aspectFit
-                options.resizeMode = .fast
-            }
             options.deliveryMode = .highQualityFormat
-            PHImageManager.default().requestImage(for: asset, targetSize: targetSize, contentMode: contentMode, options: options) { (rawImage, infos) in
+            PHImageManager.default().requestImage(for: asset, targetSize: ImageUploadSanitizer.maxSize, contentMode: .aspectFit, options: options) { (rawImage, _) in
                 guard let rawImage = rawImage else {
                     return
                 }

@@ -70,28 +70,35 @@ class ImageUploadJob: AttachmentUploadJob {
         }
         
         let uti = asset.uniformTypeIdentifier ?? kUTTypeJPEG
+        let options: PHImageRequestOptions = {
+            let options = PHImageRequestOptions()
+            options.isNetworkAccessAllowed = true
+            options.isSynchronous = true
+            return options
+        }()
+        
         let extensionName: String
         var image: UIImage?
         var imageData: Data?
         if UTTypeConformsTo(uti, kUTTypeGIF) {
             extensionName = ExtensionName.gif.rawValue
-            let options = PHImageRequestOptions()
-            options.isNetworkAccessAllowed = true
-            options.isSynchronous = true
             PHImageManager.default().requestImageData(for: asset, options: options) { (data, uti, orientation, info) in
+                imageData = data
+            }
+        } else if UTTypeConformsTo(uti, kUTTypeJPEG) && imageWithRatioMaybeAnArticle(CGSize(width: asset.pixelWidth, height: asset.pixelHeight)) {
+            extensionName = ExtensionName.jpeg.rawValue
+            PHImageManager.default().requestImageData(for: asset, options: options) { (data, _, _, _) in
                 imageData = data
             }
         } else {
             extensionName = ExtensionName.jpeg.rawValue
-            let options = PHImageRequestOptions()
-            options.resizeMode = .exact
-            options.isNetworkAccessAllowed = true
-            options.isSynchronous = true
-            let targetSize = size(for: asset)
-            PHImageManager.default().requestImage(for: asset, targetSize: targetSize, contentMode: .aspectFit, options: options) { (result, info) in
-                image = result
+            options.deliveryMode = .highQualityFormat
+            PHImageManager.default().requestImage(for: asset, targetSize: ImageUploadSanitizer.maxSize, contentMode: .aspectFit, options: options) { (rawImage, _) in
+                guard let rawImage = rawImage else {
+                    return
+                }
+                (image, imageData) = ImageUploadSanitizer.sanitizedImage(from: rawImage)
             }
-            imageData = image?.jpegData(compressionQuality: jpegCompressionQuality)
         }
         
         let filename = "\(message.messageId).\(extensionName)"
@@ -107,25 +114,13 @@ class ImageUploadJob: AttachmentUploadJob {
                 message.thumbImage = thumbnail?.base64Thumbnail() ?? ""
             }
             guard !isCancelled else {
-                try? FileManager.default.removeItem(at: url)
+                try FileManager.default.removeItem(at: url)
                 return
             }
             updateMediaUrlAndPostNotification(filename: filename, url: url)
         } catch {
             reporter.report(error: error)
         }
-    }
-    
-    private func size(for asset: PHAsset) -> CGSize {
-        let maxShortSideLength = 1440
-        guard min(asset.pixelWidth, asset.pixelHeight) >= maxShortSideLength else {
-            return CGSize(width: asset.pixelWidth, height: asset.pixelHeight)
-        }
-        let maxLongSideLength: Double = 1920
-        let scale = Double(asset.pixelWidth) / Double(asset.pixelHeight)
-        let width = Int(scale > 1 ? maxLongSideLength : maxLongSideLength * scale)
-        let height = Int(scale > 1 ? maxLongSideLength / scale : maxLongSideLength)
-        return CGSize(width: width, height: height)
     }
     
     private func updateMediaUrlAndPostNotification(filename: String, url: URL) {

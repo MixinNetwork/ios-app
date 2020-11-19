@@ -285,13 +285,13 @@ extension ShareRecipientViewController {
                                 guard let image = UIImage(contentsOfFile: url.path) else {
                                     return
                                 }
-                                if UTTypeConformsTo(inUTI, kUTTypeGIF) {
+                                if UTTypeConformsTo(inUTI, kUTTypeGIF) || (UTTypeConformsTo(inUTI, kUTTypeJPEG) && imageWithRatioMaybeAnArticle(image.size)) {
                                     imageData = try? Data(contentsOf: url)
                                 } else {
-                                    imageData = image.scaleForUpload().jpegData(compressionQuality: 0.75)
+                                    imageData = ImageUploadSanitizer.sanitizedImage(from: image).data
                                 }
                             } else if let image = item as? UIImage {
-                                imageData = image.scaleForUpload().jpegData(compressionQuality: 0.75)
+                                imageData = ImageUploadSanitizer.sanitizedImage(from: image).data
                             }
 
                             guard let data = imageData else {

@@ -31,5 +31,17 @@ extension CGSize {
         }
         return CGRect(origin: origin, size: size)
     }
-
+    
+    public func sizeThatFits(_ canvasSize: CGSize) -> CGSize {
+        let containerRatio = canvasSize.width / canvasSize.height
+        let myRatio = width / height
+        let size: CGSize
+        if myRatio > containerRatio {
+            size = CGSize(width: canvasSize.width, height: round(canvasSize.width / myRatio))
+        } else {
+            size = CGSize(width: round(canvasSize.height * myRatio), height: canvasSize.height)
+        }
+        return size
+    }
+    
 }

@@ -39,3 +39,7 @@ public enum Mention {
     public static let suffix: Character = " "
     
 }
+
+public func imageWithRatioMaybeAnArticle(_ ratio: CGSize) -> Bool {
+    ratio.height / ratio.width > 3
+}

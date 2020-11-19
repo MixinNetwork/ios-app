@@ -30,6 +30,7 @@ public enum MixinServicesError: Error {
     case emptyResponse
     case badKrakenBlazeMessage
     case missingConversationId
+    case invalidScalingContextParameter([String: Any])
     
 }
 
@@ -83,6 +84,8 @@ extension MixinServicesError: CustomNSError {
             return 22
         case .missingConversationId:
             return 23
+        case .invalidScalingContextParameter:
+            return 24
         }
     }
     
@@ -134,6 +137,8 @@ extension MixinServicesError: CustomNSError {
             userInfo["conversationId"] = conversationId
             userInfo["category"] = category
             userInfo["size"] = "\(gzipSize / 1024)kb"
+        case let .invalidScalingContextParameter(info):
+            userInfo = info
         default:
             userInfo = [:]
         }

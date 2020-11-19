@@ -1,8 +1,6 @@
 import UIKit
 import CoreGraphics
 
-let jpegCompressionQuality: CGFloat = 0.75
-
 extension UIImage {
 
     private static let thumbnailMaxWH: CGFloat = 48
@@ -62,19 +60,5 @@ extension UIImage {
 
         return nil
     }
-
-
-    public func blurHashThumbnail() -> String {
-        let scaledImage: UIImage
-        if max(size.width, size.height) > 48 {
-            var targetSize = size.rect(fittingSize: CGSize(width: Self.thumbnailMaxWH, height: Self.thumbnailMaxWH)).size
-            targetSize = CGSize(width: max(1, targetSize.width),
-                                height: max(1, targetSize.height))
-            scaledImage = scaledToSize(newSize: targetSize)
-        } else {
-            scaledImage = self
-        }
-        return scaledImage.blurHash()
-    }
-
+    
 }

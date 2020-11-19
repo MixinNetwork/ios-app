@@ -29,7 +29,7 @@ class PhotoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
     override init(message: MessageItem) {
         super.init(message: message)
         updateOperationButtonStyle()
-        layoutPosition = GalleryItem.shouldLayoutImageOfRatioAsAriticle(contentRatio) ? .relativeOffset(0) : .center
+        layoutPosition = imageWithRatioMaybeAnArticle(contentRatio) ? .relativeOffset(0) : .center
     }
     
     func beginAttachmentLoading(isTriggeredByUser: Bool) {

@@ -74,8 +74,6 @@ class ImageUploadJob: AttachmentUploadJob {
             let options = PHImageRequestOptions()
             options.isNetworkAccessAllowed = true
             options.isSynchronous = true
-            options.deliveryMode = .highQualityFormat
-            options.resizeMode = .fast
             return options
         }()
         
@@ -89,7 +87,20 @@ class ImageUploadJob: AttachmentUploadJob {
             }
         } else {
             extensionName = ExtensionName.jpeg.rawValue
-            PHImageManager.default().requestImage(for: asset, targetSize: ImageUploadSanitizer.maxSize, contentMode: .aspectFit, options: options) { (rawImage, infos) in
+            let assetSize = CGSize(width: asset.pixelWidth, height: asset.pixelHeight)
+            let targetSize: CGSize
+            let contentMode: PHImageContentMode
+            if imageWithRatioMaybeAnArticle(assetSize) {
+                targetSize = PHImageManagerMaximumSize
+                contentMode = .default
+                options.resizeMode = .none
+            } else {
+                targetSize = ImageUploadSanitizer.maxSize
+                contentMode = .aspectFit
+                options.resizeMode = .fast
+            }
+            options.deliveryMode = .highQualityFormat
+            PHImageManager.default().requestImage(for: asset, targetSize: targetSize, contentMode: contentMode, options: options) { (rawImage, infos) in
                 guard let rawImage = rawImage else {
                     return
                 }

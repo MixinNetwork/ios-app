@@ -38,7 +38,7 @@ class PhotoRepresentableMessageViewModel: ImageMessageViewModel {
         }
         super.layout(width: width, style: style)
         layoutTrailingInfoBackgroundFrame()
-        if GalleryItem.shouldLayoutImageOfRatioAsAriticle(contentRatio) {
+        if imageWithRatioMaybeAnArticle(contentRatio) {
             let margin: CGFloat
             if style.contains(.received) {
                 margin = 9

@@ -99,7 +99,7 @@ struct GalleryItem: Equatable {
             self.thumbnail = .none
         }
         self.createdAt = createdAt
-        self.shouldLayoutAsArticle = GalleryItem.shouldLayoutImageOfRatioAsAriticle(size)
+        self.shouldLayoutAsArticle = imageWithRatioMaybeAnArticle(size)
         self.mediaStatus = MediaStatus(rawValue: mediaStatus ?? "")
         self.mediaDuration = mediaDuration ?? 0
     }
@@ -129,10 +129,6 @@ struct GalleryItem: Equatable {
     
     static func ==(lhs: GalleryItem, rhs: GalleryItem) -> Bool {
         return lhs.messageId == rhs.messageId
-    }
-    
-    static func shouldLayoutImageOfRatioAsAriticle(_ ratio: CGSize) -> Bool {
-        return ratio.height / ratio.width > 3
     }
     
 }

@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 class GalleryTransitionFromSharedMediaView: GalleryTransitionView {
     
@@ -35,7 +36,7 @@ class GalleryTransitionFromSharedMediaView: GalleryTransitionView {
         }
         
         let frame: CGRect
-        if GalleryItem.shouldLayoutImageOfRatioAsAriticle(ratio) {
+        if imageWithRatioMaybeAnArticle(ratio) {
             let height = min(containerBounds.height, containerBounds.width / ratio.width * ratio.height)
             let size = CGSize(width: containerBounds.width, height: height)
             let origin = CGPoint(x: 0, y: (containerBounds.height - height) / 2)

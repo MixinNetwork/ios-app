@@ -82,6 +82,16 @@ public extension UIImage {
                                       bytesPerRow: 0, // Only a few combinations are not supported by iOS, use auto-calculated bpr
                                       space: cgImage.colorSpace ?? CGColorSpace(name: CGColorSpace.sRGB)!,
                                       bitmapInfo: cgImage.bitmapInfo.rawValue) else {
+            let infos: [String : Any] = [
+                "width": Int(orientationResolvedSize.width),
+                "height": Int(orientationResolvedSize.height),
+                "bitsPerComponent": cgImage.bitsPerComponent,
+                "bytesPerRow": 0,
+                "space": cgImage.colorSpace?.name ?? "(null)",
+                "bitmapInfo": cgImage.bitmapInfo.rawValue
+            ]
+            let error = MixinServicesError.invalidScalingContextParameter(infos)
+            reporter.report(error: error)
             return nil
         }
         context.interpolationQuality = .high

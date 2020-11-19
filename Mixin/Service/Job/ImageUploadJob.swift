@@ -74,6 +74,8 @@ class ImageUploadJob: AttachmentUploadJob {
             let options = PHImageRequestOptions()
             options.isNetworkAccessAllowed = true
             options.isSynchronous = true
+            options.deliveryMode = .highQualityFormat
+            options.resizeMode = .fast
             return options
         }()
         
@@ -87,7 +89,7 @@ class ImageUploadJob: AttachmentUploadJob {
             }
         } else {
             extensionName = ExtensionName.jpeg.rawValue
-            PHImageManager.default().requestImage(for: asset, targetSize: PHImageManagerMaximumSize, contentMode: .default, options: options) { (rawImage, infos) in
+            PHImageManager.default().requestImage(for: asset, targetSize: ImageUploadSanitizer.maxSize, contentMode: .aspectFit, options: options) { (rawImage, infos) in
                 guard let rawImage = rawImage else {
                     return
                 }

@@ -2,7 +2,7 @@ import UIKit
 
 public enum ImageUploadSanitizer {
     
-    private static let maxSize = CGSize(width: 3840, height: 3840)
+    public static let maxSize = CGSize(width: 3840, height: 3840)
     
     public static func sanitizedImage(from rawImage: UIImage) -> (image: UIImage?, data: Data?) {
         guard let rawData = rawImage.jpegData(compressionQuality: JPEGCompressionQuality.high) else {

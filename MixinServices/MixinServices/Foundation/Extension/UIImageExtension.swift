@@ -79,7 +79,7 @@ public extension UIImage {
                                       width: Int(orientationResolvedSize.width),
                                       height: Int(orientationResolvedSize.height),
                                       bitsPerComponent: cgImage.bitsPerComponent,
-                                      bytesPerRow: cgImage.bytesPerRow,
+                                      bytesPerRow: 0, // Only a few combinations are not supported by iOS, use auto-calculated bpr
                                       space: cgImage.colorSpace ?? CGColorSpace(name: CGColorSpace.sRGB)!,
                                       bitmapInfo: cgImage.bitmapInfo.rawValue) else {
             return nil

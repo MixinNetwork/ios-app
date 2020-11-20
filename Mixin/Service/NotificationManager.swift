@@ -214,7 +214,7 @@ extension NotificationManager {
         let center = UNUserNotificationCenter.current()
         center.getNotificationSettings { (settings) in
             switch settings.authorizationStatus {
-            case .authorized, .provisional:
+            case .authorized, .provisional, .ephemeral:
                 completion(true)
             case .notDetermined:
                 center.requestAuthorization(options: [.alert, .sound, .badge]) { (isGranted, _) in

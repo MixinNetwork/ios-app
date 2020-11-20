@@ -1,6 +1,6 @@
 import Foundation
 
-@objc class ProvisionMessage: NSObject, Codable {
+@objc class ProvisionMessage: NSObject, Encodable {
     
     let identityKeyPublic: Data
     let identityKeyPrivate: Data

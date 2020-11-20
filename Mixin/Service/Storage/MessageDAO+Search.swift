@@ -8,20 +8,24 @@ extension MessageDAO {
     SELECT m.id, m.category, m.content, m.created_at, u.user_id, u.full_name, u.avatar_url, u.is_verified, u.app_id
         FROM messages m
         LEFT JOIN users u ON m.user_id = u.user_id
-        WHERE m.id in (SELECT message_id FROM fts_messages WHERE conversation_id = ? AND (content MATCH ? OR name MATCH ?))
     """
     
     func getMessages(conversationId: String, contentLike keyword: String, belowMessageId location: String?, limit: Int?) -> [MessageSearchResult] {
         var results = [MessageSearchResult]()
         
-        var sql: String!
+        var sql = MessageDAO.sqlSearchMessageContent
+        if AppGroupUserDefaults.Database.isFTSInitialized {
+            sql += "WHERE m.id in (SELECT message_id FROM fts_messages WHERE conversation_id = ? AND (content MATCH ? OR name MATCH ?))"
+        } else {
+            sql += "WHERE conversation_id = ? AND m.category in ('SIGNAL_TEXT','SIGNAL_DATA','SIGNAL_POST','PLAIN_TEXT','PLAIN_DATA','PLAIN_POST') AND m.status != 'FAILED' AND (m.content LIKE ? ESCAPE '/' OR m.name LIKE ? ESCAPE '/')"
+        }
+        
         if let location = location {
             let rowId = MixinDatabase.shared.getRowId(tableName: Message.tableName,
                                                       condition: Message.Properties.messageId == location)
-            sql = MessageDAO.sqlSearchMessageContent + " AND m.ROWID < \(rowId)"
-        } else {
-            sql = MessageDAO.sqlSearchMessageContent
+            sql += " AND m.ROWID < \(rowId)"
         }
+        
         if let limit = limit {
             sql += " ORDER BY m.created_at DESC LIMIT \(limit)"
         } else {
@@ -29,7 +33,7 @@ extension MessageDAO {
         }
         
         do {
-            let wildcardedKeyword = keyword + "*"
+            let wildcardedKeyword = AppGroupUserDefaults.Database.isFTSInitialized ? keyword + "*" : "%\(keyword.sqlEscaped)%"
             let stmt = StatementSelectSQL(sql: sql)
             let cs = try MixinDatabase.shared.database.prepare(stmt)
             

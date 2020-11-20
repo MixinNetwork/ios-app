@@ -7,6 +7,7 @@ public enum Logger {
     private static let systemLog = "system"
     private static let callLog = "call"
     private static let errorLog = "error"
+    private static let databaseLog = "database"
 
     public static func write(errorMsg: String) {
         queue.async {
@@ -28,6 +29,27 @@ public enum Logger {
             for (key, value) in userInfo {
                 writeLog(filename: errorLog, log: "[\(key)]:\(value)", appendTime: false)
             }
+        }
+    }
+    
+    public static func writeDatabase(error: Error, extra: String = "") {
+        queue.async {
+            #if DEBUG
+            print("===error:\(error)...\n\(extra)")
+            #endif
+            writeLog(filename: databaseLog, log: "\n------------------------------------\n[Error]" + String(describing: error))
+            if !extra.isEmpty {
+                writeLog(filename: databaseLog, log: extra)
+            }
+        }
+    }
+    
+    public static func writeDatabase(log: String, newSection: Bool = false) {
+        queue.async {
+            #if DEBUG
+            print("===\(log)...\(Date())")
+            #endif
+            writeLog(filename: databaseLog, log: log, newSection: newSection)
         }
     }
 
@@ -120,9 +142,10 @@ public enum Logger {
         let systemFile = AppGroupContainer.logUrl.appendingPathComponent("\(systemLog).txt")
         let errorFile = AppGroupContainer.logUrl.appendingPathComponent("\(errorLog).txt")
         let callFile = AppGroupContainer.logUrl.appendingPathComponent("\(callLog).txt")
+        let databaseFile = AppGroupContainer.logUrl.appendingPathComponent("\(databaseLog).txt")
         let filename = "\(myIdentityNumber)_\(DateFormatter.filename.string(from: Date()))"
 
-        let logFiles = [conversationFile, errorFile, systemFile, callFile].filter { FileManager.default.fileSize($0.path) > 0 }
+        let logFiles = [conversationFile, errorFile, systemFile, callFile, databaseFile].filter { FileManager.default.fileSize($0.path) > 0 }
         guard logFiles.count > 0 else  {
             return nil
         }

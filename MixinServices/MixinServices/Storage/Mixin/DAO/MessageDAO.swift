@@ -433,13 +433,11 @@ public final class MessageDAO {
             quotedMessage = nil
         }
         
-        if let mention = MessageMention(message: message, quotedMessage: quotedMessage) {
-            MixinDatabase.shared.transaction { (db) in
+        MixinDatabase.shared.transaction { (db) in
+            if let mention = MessageMention(message: message, quotedMessage: quotedMessage) {
                 try db.insertOrReplace(objects: [mention], intoTable: MessageMention.tableName)
-                try insertMessage(database: db, message: message, messageSource: messageSource)
             }
-        } else {
-            try! insertMessage(database: MixinDatabase.shared.database, message: message, messageSource: messageSource)
+            try insertMessage(database: db, message: message, messageSource: messageSource)
         }
     }
     

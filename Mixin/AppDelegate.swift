@@ -198,6 +198,9 @@ extension AppDelegate {
                 BackupJobQueue.shared.addJob(job: RestoreJob())
             }
         }
+        if !AppGroupUserDefaults.Database.isFTSInitialized {
+            ConcurrentJobQueue.shared.addJob(job: InitializeFTSJob())
+        }
 
         if let date = AppGroupUserDefaults.Crypto.oneTimePrekeyRefreshDate, -date.timeIntervalSinceNow > 3600 * 2 {
             ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob())

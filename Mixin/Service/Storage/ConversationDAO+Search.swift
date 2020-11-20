@@ -13,14 +13,19 @@ extension ConversationDAO {
     FROM messages m
     LEFT JOIN conversations c ON m.conversation_id = c.conversation_id
     LEFT JOIN users u ON c.owner_id = u.user_id
-    WHERE m.id in (SELECT message_id FROM fts_messages WHERE content MATCH ? OR name MATCH ?)
-    GROUP BY m.conversation_id
-    ORDER BY c.pin_time DESC, c.last_message_created_at DESC
     """
     
     func getConversation(withMessageLike keyword: String, limit: Int?, callback: (CoreStatement) -> Void) -> [MessagesWithinConversationSearchResult] {
-        let wildcardedKeyword = keyword + "*"
+        let wildcardedKeyword = AppGroupUserDefaults.Database.isFTSInitialized ? keyword + "*" : "%\(keyword.sqlEscaped)%"
         var sql = ConversationDAO.sqlSearchMessages
+        if AppGroupUserDefaults.Database.isFTSInitialized {
+            sql += " WHERE m.id in (SELECT message_id FROM fts_messages WHERE content MATCH ? OR name MATCH ?)"
+        } else {
+            sql += " WHERE m.category in ('SIGNAL_TEXT','SIGNAL_DATA','SIGNAL_POST','PLAIN_TEXT','PLAIN_DATA','PLAIN_POST') AND m.status != 'FAILED' AND (m.content LIKE ? ESCAPE '/' OR m.name LIKE ? ESCAPE '/')"
+        }
+        
+        sql += " GROUP BY m.conversation_id ORDER BY c.pin_time DESC, c.last_message_created_at DESC"
+        
         if let limit = limit {
             sql += " LIMIT \(limit)"
         }

@@ -13,6 +13,9 @@ extension AppGroupUserDefaults {
         @Default(namespace: .database, key: "fts_initialized", defaultValue: false)
         public static var isFTSInitialized: Bool
         
+        @Default(namespace: .database, key: "fts_offset", defaultValue: 0)
+        public static var ftsOffset: Int
+        
         internal static func migrate() {
             vacuumDate = Date(timeIntervalSince1970: DatabaseUserDefault.shared.lastVacuumTime)
             isSentSenderKeyCleared = !DatabaseUserDefault.shared.clearSentSenderKey

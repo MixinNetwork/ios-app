@@ -325,6 +325,13 @@ extension CallService {
         }
     }
     
+    func showCallingInterfaceIfHasCall(with uuid: UUID) {
+        guard let call = activeOrPendingAnswerCall(with: uuid) else {
+            return
+        }
+        showCallingInterface(call: call)
+    }
+    
     func setInterfaceMinimized(_ minimized: Bool, animated: Bool) {
         self.isMinimized = minimized
         guard let min = UIApplication.homeContainerViewController?.minimizedCallViewController else {

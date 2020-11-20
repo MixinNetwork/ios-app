@@ -191,6 +191,9 @@ extension NativeCallInterface: CXProviderDelegate {
         } else {
             pendingAnswerAction = action
         }
+        DispatchQueue.main.sync {
+            service.showCallingInterfaceIfHasCall(with: uuid)
+        }
     }
     
     func provider(_ provider: CXProvider, perform action: CXEndCallAction) {

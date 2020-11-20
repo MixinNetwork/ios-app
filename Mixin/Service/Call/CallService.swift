@@ -224,14 +224,19 @@ extension CallService {
             let me = UserItem.createUser(from: account)
             members.append(me)
         }
-        self.log("[CallService] Making call with members: \(members.map(\.fullName))")
-        let call = GroupCall(uuid: UUID(),
-                             isOutgoing: true,
-                             conversation: conversation,
-                             members: members,
-                             invitingMembers: invitingMembers)
-        let handle = CXHandle(type: .generic, value: conversation.conversationId)
-        requestStartCall(call, handle: handle, playOutgoingRingtone: false)
+        if let uuid = groupCallUUIDs[conversation.conversationId], hasCall(with: uuid) {
+            self.log("[CallService] Request to start but we found existed group call: \(uuid)")
+            callInterface.requestAnswerCall(uuid: uuid)
+        } else {
+            self.log("[CallService] Making call with members: \(members.map(\.fullName))")
+            let call = GroupCall(uuid: UUID(),
+                                 isOutgoing: true,
+                                 conversation: conversation,
+                                 members: members,
+                                 invitingMembers: invitingMembers)
+            let handle = CXHandle(type: .generic, value: conversation.conversationId)
+            requestStartCall(call, handle: handle, playOutgoingRingtone: false)
+        }
     }
     
     func requestAnswerCall() {

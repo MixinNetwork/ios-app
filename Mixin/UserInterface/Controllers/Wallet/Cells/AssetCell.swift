@@ -63,7 +63,7 @@ class AssetCell: ModernSelectedBackgroundCell {
             fiatMoneyPriceLabel.alpha = 0
             noFiatMoneyPriceIndicatorLabel.alpha = 1
         }
-        fiatMoneyBalanceLabel.text = asset.localizedFiatMoneyBalance
+        fiatMoneyBalanceLabel.text = asset.localizedFiatMoneyBalanceEstimation
     }
     
 }

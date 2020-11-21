@@ -33,7 +33,7 @@ class AssetTableHeaderView: InfiniteTopView {
             fiatMoneyValueLabel.text = "≈ $0\(currentDecimalSeparator)00"
         } else {
             amount = CurrencyFormatter.localizedString(from: asset.decimalBalance, format: .precision, sign: .never)
-            fiatMoneyValueLabel.text = asset.localizedFiatMoneyBalance
+            fiatMoneyValueLabel.text = asset.localizedFiatMoneyBalanceEstimation
         }
         depositButton.isBusy = asset.destination.isEmpty
         let attributedAmount = attributedString(amount: amount, symbol: asset.symbol)

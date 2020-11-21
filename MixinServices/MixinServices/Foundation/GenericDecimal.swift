@@ -22,6 +22,14 @@ public class GenericDecimal {
     // See https://lists.apple.com/archives/cocoa-dev/2002/Dec/msg00370.html
     public private(set) lazy var string = Self.formatter.string(from: decimal as NSDecimalNumber)!
     
+    public var intValue: Int {
+        (decimal as NSDecimalNumber).intValue
+    }
+    
+    public var int64Value: Int64 {
+        (decimal as NSDecimalNumber).int64Value
+    }
+    
     public var doubleValue: Double {
         decimal.doubleValue
     }

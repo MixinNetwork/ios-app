@@ -63,7 +63,7 @@ public class AssetItem: TableCodable, NumberStringLocalizable {
         return CurrencyFormatter.localizedString(from: value, format: .fiatMoneyPrice, sign: .never)
     }()
     
-    public private(set) lazy var localizedFiatMoneyBalance = CurrencyFormatter.localizedFiatMoneyAmount(asset: self, assetAmount: decimalBalance)
+    public private(set) lazy var localizedFiatMoneyBalanceEstimation = CurrencyFormatter.localizedFiatMoneyEstimation(asset: self, tokenAmount: decimalBalance)
     
     public private(set) lazy var localizedUsdChange: String = {
         let value = decimalUSDChange * 100

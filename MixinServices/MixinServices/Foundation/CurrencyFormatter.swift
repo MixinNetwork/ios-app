@@ -21,21 +21,21 @@ public enum CurrencyFormatter {
         case custom(String)
     }
     
-    static let precisionFormatter = decimalFormatter(maximumFractionDigits: 8)
-    static let prettyFormatter = decimalFormatter(maximumFractionDigits: nil)
-    static let fiatMoneyFormatter = decimalFormatter(maximumFractionDigits: 2)
+    private static let precisionFormatter = decimalFormatter(maximumFractionDigits: 8)
+    private static let prettyFormatter = decimalFormatter(maximumFractionDigits: nil)
+    private static let fiatMoneyFormatter = decimalFormatter(maximumFractionDigits: 2)
     
-    static let roundToIntegerBehavior = NSDecimalNumberHandler(roundingMode: .down, scale: 0, raiseOnExactness: false, raiseOnOverflow: false, raiseOnUnderflow: false, raiseOnDivideByZero: false)
+    private static let prettyRounding = NSDecimalNumberHandler(roundingMode: .down,
+                                                               scale: 0,
+                                                               raiseOnExactness: false,
+                                                               raiseOnOverflow: false,
+                                                               raiseOnUnderflow: false,
+                                                               raiseOnDivideByZero: false)
     
-    public static func localizedFiatMoneyAmount(asset: AssetItem, assetAmount: Decimal) -> String {
-        let value = assetAmount * asset.decimalUSDPrice * Currency.current.rate
+    public static func localizedFiatMoneyEstimation(asset: AssetItem, tokenAmount: Decimal) -> String {
+        let value = tokenAmount * asset.decimalUSDPrice * Currency.current.rate
         let string = CurrencyFormatter.localizedString(from: value, format: .fiatMoney, sign: .never)
         return "≈ " + Currency.current.symbol + string
-    }
-    
-    public static func localizedString(from number: Double, format: Format, sign: SignBehavior, symbol: Symbol? = nil) -> String? {
-        let decimal = Decimal(number)
-        return localizedString(from: decimal, format: format, sign: sign, symbol: symbol)
     }
     
     public static func localizedString(from decimal: Decimal, format: Format, sign: SignBehavior, symbol: Symbol? = nil) -> String {
@@ -49,7 +49,7 @@ public enum CurrencyFormatter {
         case .pretty:
             setSignBehavior(sign, for: prettyFormatter)
             let numberOfFractionalDigits = max(-decimal.exponent, 0)
-            let integralPart = number.rounding(accordingToBehavior: roundToIntegerBehavior).doubleValue
+            let integralPart = number.rounding(accordingToBehavior: prettyRounding).doubleValue
             if integralPart == 0 {
                 prettyFormatter.maximumFractionDigits = 8
             } else if numberOfFractionalDigits > 0 {

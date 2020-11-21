@@ -40,7 +40,7 @@ class AssetConfirmationWindow: BottomSheetView {
             amountExchangeLabel.text = localizedTokenAmount
         } else {
             amountLabel.text = localizedTokenAmount
-            amountExchangeLabel.text = CurrencyFormatter.localizedFiatMoneyAmount(asset: asset, assetAmount: amount)
+            amountExchangeLabel.text = CurrencyFormatter.localizedFiatMoneyEstimation(asset: asset, tokenAmount: amount)
         }
 
         assetIconView.setIcon(asset: asset)

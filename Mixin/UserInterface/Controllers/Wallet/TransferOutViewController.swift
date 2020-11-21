@@ -135,7 +135,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         let decimalAmount = localizedDecimal.decimal
         let genericAmountString = localizedDecimal.generic.string
         
-        let fiatMoneyPrice = asset.decimalUSDPrice * Currency.current.decimalRate
+        let fiatMoneyPrice = asset.decimalUSDPrice * Currency.current.rate
         if isInputAssetAmount {
             let fiatMoneyAmount = decimalAmount * fiatMoneyPrice
             amountExchangeLabel.text = CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currentCurrency)
@@ -179,7 +179,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         
         let memo = memoTextField.text?.trim() ?? ""
         
-        let fiatMoneyPrice = asset.decimalUSDPrice * Currency.current.decimalRate
+        let fiatMoneyPrice = asset.decimalUSDPrice * Currency.current.rate
         let tokenAmount: Decimal
         let fiatMoneyAmount: Decimal?
         if isInputAssetAmount {

@@ -131,7 +131,7 @@ extension WalletHeaderView {
         if usdBalance == 0 {
             return zeroFiatMoneyRepresentation
         } else {
-            return CurrencyFormatter.localizedString(from: usdBalance * Currency.current.decimalRate,
+            return CurrencyFormatter.localizedString(from: usdBalance * Currency.current.rate,
                                                      format: .fiatMoney,
                                                      sign: .never)
         }

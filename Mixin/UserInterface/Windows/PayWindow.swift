@@ -102,7 +102,7 @@ class PayWindow: BottomSheetView {
             amountLabel.text = localizedFiatMoneyAmount + " " + Currency.current.code
             amountExchangeLabel.text = localizedTokenAmount
         } else {
-            let fiatMoneyAmount = amount * asset.decimalUSDPrice * Currency.current.decimalRate
+            let fiatMoneyAmount = amount * asset.decimalUSDPrice * Currency.current.rate
             localizedFiatMoneyAmount = CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoney, sign: .whenNegative)
             amountLabel.text = localizedTokenAmount
         }
@@ -698,7 +698,7 @@ extension PayWindow {
         let checkAmountAction = {
             switch action {
             case let .transfer(_, user, _):
-                let fiatMoneyValue = amount * asset.decimalUSDPrice * Currency.current.decimalRate
+                let fiatMoneyValue = amount * asset.decimalUSDPrice * Currency.current.rate
                 let threshold: Decimal
                 if let value = LoginManager.shared.account?.transfer_confirmation_threshold {
                     threshold = Decimal(value)
@@ -716,7 +716,7 @@ extension PayWindow {
                     completion(false, R.string.localizable.withdrawal_minimum_amount(address.dust, asset.symbol))
                     return
                 }
-                let fiatMoneyValue = amount * asset.decimalUSDPrice * Currency.current.decimalRate
+                let fiatMoneyValue = amount * asset.decimalUSDPrice * Currency.current.rate
                 if AppGroupUserDefaults.Wallet.withdrawnAddressIds[address.addressId] == nil && fiatMoneyValue > 10 {
                     DispatchQueue.main.async {
                         WithdrawalTipWindow.instance().render(asset: asset, completion: completion).presentPopupControllerAnimated()

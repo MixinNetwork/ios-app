@@ -5,21 +5,16 @@ public class Currency {
     public let code: String
     public let symbol: String
     
-    // TODO: Remove this compatibilily layer after all types are converted
-    public var rate: Double {
-        decimalRate.doubleValue
-    }
-    
-    public private(set) var decimalRate: Decimal
+    public private(set) var rate: Decimal
     
     public var icon: UIImage {
-        return UIImage(named: "CurrencyIcon/\(code)")!
+        UIImage(named: "CurrencyIcon/\(code)")!
     }
     
-    init(code: String, symbol: String, decimalRate: Decimal) {
+    init(code: String, symbol: String, rate: Decimal) {
         self.code = code
         self.symbol = symbol
-        self.decimalRate = decimalRate
+        self.rate = rate
     }
     
 }
@@ -44,16 +39,16 @@ extension Currency {
     
     public private(set) static var all: [Currency] = {
         let currencies = [
-            Currency(code: "USD", symbol: "$", decimalRate: Decimal(string: "1")!),
-            Currency(code: "CNY", symbol: "¥", decimalRate: Decimal(string: "6.57")!),
-            Currency(code: "JPY", symbol: "¥", decimalRate: Decimal(string: "104.59")!),
-            Currency(code: "EUR", symbol: "€", decimalRate: Decimal(string: "0.8447")!),
-            Currency(code: "KRW", symbol: "₩", decimalRate: Decimal(string: "1107.94")!),
-            Currency(code: "HKD", symbol: "HK$", decimalRate: Decimal(string: "7.76")!),
-            Currency(code: "GBP", symbol: "£", decimalRate: Decimal(string: "0.758052")!),
-            Currency(code: "AUD", symbol: "A$", decimalRate: Decimal(string: "1.37")!),
-            Currency(code: "SGD", symbol: "S$", decimalRate: Decimal(string: "1.35")!),
-            Currency(code: "MYR", symbol: "RM", decimalRate: Decimal(string: "4.11")!)
+            Currency(code: "USD", symbol: "$", rate: Decimal(string: "1")!),
+            Currency(code: "CNY", symbol: "¥", rate: Decimal(string: "6.57")!),
+            Currency(code: "JPY", symbol: "¥", rate: Decimal(string: "104.59")!),
+            Currency(code: "EUR", symbol: "€", rate: Decimal(string: "0.8447")!),
+            Currency(code: "KRW", symbol: "₩", rate: Decimal(string: "1107.94")!),
+            Currency(code: "HKD", symbol: "HK$", rate: Decimal(string: "7.76")!),
+            Currency(code: "GBP", symbol: "£", rate: Decimal(string: "0.758052")!),
+            Currency(code: "AUD", symbol: "A$", rate: Decimal(string: "1.37")!),
+            Currency(code: "SGD", symbol: "S$", rate: Decimal(string: "1.35")!),
+            Currency(code: "MYR", symbol: "RM", rate: Decimal(string: "4.11")!)
         ]
         let rates = AppGroupUserDefaults.currencyRates
         for currency in currencies {
@@ -63,7 +58,7 @@ extension Currency {
             guard let decimalRate = Decimal(string: rate) else {
                 continue
             }
-            currency.decimalRate = decimalRate
+            currency.rate = decimalRate
         }
         return currencies
     }()
@@ -72,9 +67,9 @@ extension Currency {
     
     internal static func updateRate(with monies: [FiatMoney]) {
         for money in monies {
-            map[money.code]?.decimalRate = money.rate
+            map[money.code]?.rate = money.rate
         }
-        let rates = map.mapValues({ ($0.decimalRate as NSDecimalNumber).stringValue })
+        let rates = map.mapValues({ ($0.rate as NSDecimalNumber).stringValue })
         AppGroupUserDefaults.currencyRates = rates
     }
     

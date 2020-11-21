@@ -28,7 +28,7 @@ public enum CurrencyFormatter {
     static let roundToIntegerBehavior = NSDecimalNumberHandler(roundingMode: .down, scale: 0, raiseOnExactness: false, raiseOnOverflow: false, raiseOnUnderflow: false, raiseOnDivideByZero: false)
     
     public static func localizedFiatMoneyAmount(asset: AssetItem, assetAmount: Decimal) -> String {
-        let value = assetAmount * asset.decimalUSDPrice * Currency.current.decimalRate
+        let value = assetAmount * asset.decimalUSDPrice * Currency.current.rate
         let string = CurrencyFormatter.localizedString(from: value, format: .fiatMoney, sign: .never)
         return "≈ " + Currency.current.symbol + string
     }

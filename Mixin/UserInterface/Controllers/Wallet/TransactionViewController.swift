@@ -66,7 +66,7 @@ class TransactionViewController: UIViewController {
     }
     
     private func localizedFiatMoneyValue(usdPrice: Decimal) -> String {
-        let fiatMoneyValue = snapshot.decimalAmount * usdPrice * Currency.current.decimalRate
+        let fiatMoneyValue = snapshot.decimalAmount * usdPrice * Currency.current.rate
         return Currency.current.symbol + CurrencyFormatter.localizedString(from: fiatMoneyValue, format: .fiatMoney, sign: .never)
     }
     

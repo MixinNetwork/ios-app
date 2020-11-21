@@ -59,7 +59,7 @@ public class AssetItem: TableCodable, NumberStringLocalizable {
     public private(set) lazy var localizedBalance = localizedNumberString(balance)
     
     public private(set) lazy var localizedFiatMoneyPrice: String = {
-        let value = decimalUSDPrice * Currency.current.decimalRate
+        let value = decimalUSDPrice * Currency.current.rate
         return CurrencyFormatter.localizedString(from: value, format: .fiatMoneyPrice, sign: .never)
     }()
     

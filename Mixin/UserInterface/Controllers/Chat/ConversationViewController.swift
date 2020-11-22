@@ -60,9 +60,13 @@ class ConversationViewController: UIViewController {
             return 112
         }
     }()
+    
     private let showScrollToBottomButtonThreshold: CGFloat = 150
     private let loadMoreMessageThreshold = 20
     private let animationDuration: TimeInterval = 0.3
+    private let fastReplyConfirmedDistance: CGFloat = 20
+    private let fastReplyMaxDistance: CGFloat = 40
+    private let feedback = UIImpactFeedbackGenerator()
     
     private var ownerUser: UserItem?
     private var quotingMessageId: String?
@@ -76,7 +80,7 @@ class ConversationViewController: UIViewController {
     private var tapRecognizer: UITapGestureRecognizer!
     private var reportRecognizer: UILongPressGestureRecognizer!
     private var resizeInputRecognizer: ResizeInputWrapperGestureRecognizer!
-    private var fastReplyRecognizer: UITapGestureRecognizer!
+    private var fastReplyRecognizer: FastReplyGestureRecognizer!
     private var conversationInputViewController: ConversationInputViewController!
     private var previewDocumentController: UIDocumentInteractionController?
     private var previewDocumentMessageId: String?
@@ -231,8 +235,8 @@ class ConversationViewController: UIViewController {
         titleLabel.isUserInteractionEnabled = true
         titleLabel.addGestureRecognizer(reportRecognizer)
         
-        fastReplyRecognizer = UITapGestureRecognizer(target: self, action: #selector(fastReplyAction(_:)))
-        fastReplyRecognizer.numberOfTapsRequired = 2
+        fastReplyRecognizer = FastReplyGestureRecognizer(target: self, action: #selector(fastReplyAction(_:)))
+        fastReplyRecognizer.delegate = self
         tableView.addGestureRecognizer(fastReplyRecognizer)
         
         tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapAction(_:)))
@@ -486,6 +490,10 @@ class ConversationViewController: UIViewController {
         case .began:
             recognizer.inputWrapperHeightWhenBegan = inputWrapperHeight
         case .changed:
+            if !tableView.isScrollEnabled {
+                // Prevent input wrapper get resized when fast reply gesture is working
+                return
+            }
             let shouldMoveDown = verticalVelocity > 0 && location.y > 0
             let canMoveUp = !conversationInputViewController.textView.isFirstResponder
                 || inputWrapperHeight < conversationInputViewController.regularHeight
@@ -725,23 +733,45 @@ class ConversationViewController: UIViewController {
         }
     }
     
-    @objc func fastReplyAction(_ recognizer: UIGestureRecognizer) {
-        guard let indexPath = tableView.indexPathForRow(at: recognizer.location(in: tableView)) else {
-            return
+    @objc func fastReplyAction(_ recognizer: FastReplyGestureRecognizer) {
+        switch recognizer.state {
+        case .began:
+            let location = recognizer.location(in: tableView)
+            if let indexPath = tableView.indexPathForRow(at: location) {
+                recognizer.cell = tableView.cellForRow(at: indexPath) as? MessageCell
+            }
+            recognizer.setTranslation(.zero, in: recognizer.view)
+            tableView.isScrollEnabled = false
+            feedback.prepare()
+        case .changed:
+            guard let cell = recognizer.cell else {
+                return
+            }
+            let oldX = cell.messageContentView.frame.origin.x
+            var newX = oldX + recognizer.translation(in: recognizer.view).x
+            newX = min(0, max(-fastReplyMaxDistance, newX))
+            if oldX > -fastReplyConfirmedDistance && newX < -fastReplyConfirmedDistance {
+                feedback.impactOccurred()
+            }
+            cell.messageContentView.frame.origin.x = newX
+            recognizer.setTranslation(.zero, in: recognizer.view)
+        case .ended:
+            tableView.isScrollEnabled = true
+            guard let cell = recognizer.cell else {
+                return
+            }
+            let shouldQuote = cell.messageContentView.frame.origin.x < -fastReplyConfirmedDistance
+            UIView.animate(withDuration: animationDuration) {
+                cell.messageContentView.frame.origin.x = 0
+            }
+            if shouldQuote, let viewModel = cell.viewModel {
+                conversationInputViewController.quote = (viewModel.message, viewModel.thumbnail)
+            }
+        case .cancelled, .failed:
+            tableView.isScrollEnabled = true
+        default:
+            break
         }
-        guard let cell = tableView.cellForRow(at: indexPath) as? TextMessageCell else {
-            return
-        }
-        guard !cell.contentLabel.canResponseTouch(at: recognizer.location(in: cell.contentLabel)) else {
-            return
-        }
-        guard let viewModel = dataSource.viewModel(for: indexPath) else {
-            return
-        }
-        guard viewModel.message.allowedActions.contains(.reply) else {
-            return
-        }
-        conversationInputViewController.quote = (viewModel.message, viewModel.thumbnail)
     }
     
     @objc func showReportMenuAction() {
@@ -1157,18 +1187,43 @@ class ConversationViewController: UIViewController {
 extension ConversationViewController: UIGestureRecognizerDelegate {
     
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        return gestureRecognizer != resizeInputRecognizer
-            || inputWrapperHeightConstraint.constant > conversationInputViewController.minimizedHeight
+        switch gestureRecognizer {
+        case resizeInputRecognizer:
+            return tableView.isScrollEnabled
+                && inputWrapperHeightConstraint.constant > conversationInputViewController.minimizedHeight
+        case fastReplyRecognizer:
+            guard !tableView.allowsMultipleSelection else {
+                return false
+            }
+            guard let indexPath = tableView.indexPathForRow(at: gestureRecognizer.location(in: tableView)) else {
+                return false
+            }
+            guard let cell = tableView.cellForRow(at: indexPath) as? MessageCell else {
+                return false
+            }
+            guard let viewModel = cell.viewModel, viewModel.message.allowedActions.contains(.reply) else {
+                return false
+            }
+            let velocity = fastReplyRecognizer.velocity(in: nil)
+            return velocity.x < 0 && abs(velocity.x) > abs(velocity.y)
+        default:
+            return true
+        }
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-        if gestureRecognizer != tapRecognizer || isShowingMenu {
+        switch gestureRecognizer {
+        case tapRecognizer:
+            if isShowingMenu {
+                return true
+            } else if let view = touch.view as? TextMessageLabel {
+                return !view.canResponseTouch(at: touch.location(in: view))
+            } else {
+                return true
+            }
+        default:
             return true
         }
-        if let view = touch.view as? TextMessageLabel {
-            return !view.canResponseTouch(at: touch.location(in: view))
-        }
-        return true
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
@@ -2404,7 +2459,7 @@ extension ConversationViewController {
             }
         }
         
-        return UITargetedPreview(view: cell, parameters: param)
+        return UITargetedPreview(view: cell.messageContentView, parameters: param)
     }
     
 }
@@ -2430,6 +2485,12 @@ extension ConversationViewController {
             super.reset()
             hasMovedInputWrapperDuringChangedState = false
         }
+        
+    }
+    
+    class FastReplyGestureRecognizer: UIPanGestureRecognizer {
+        
+        weak var cell: MessageCell?
         
     }
     

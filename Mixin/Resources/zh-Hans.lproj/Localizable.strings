@@ -680,7 +680,7 @@
 "profile_remove_hint_contact" = "删除联系人？聊天记录将会保留";
 "profile_remove_hint_bot" = "删除机器人？聊天记录将会保留";
 "profile_exit_group_hint" = "退出\"%@\"?";
-"profile_delete_contact_chat_hint" = "删除与\"%@\"的聊天?";
+"profile_delete_contact_chat_hint" = "删除与\"%@\"的会话并清空聊天记录?";
 "profile_delete_group_chat_hint" = "删除\"%@\"的聊天?";
 "profile_clear_contact_chat_hint" = "清空与\"%@\"的聊天记录?";
 "profile_clear_group_chat_hint" = "清空\"%@\"的聊天记录?";

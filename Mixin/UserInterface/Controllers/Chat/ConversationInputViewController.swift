@@ -990,7 +990,7 @@ extension ConversationInputViewController {
     
     private func handlePhotoAuthorizationStatus(_ status: PHAuthorizationStatus) {
         switch status {
-        case .authorized:
+        case .authorized, .limited:
             performSynchronouslyOnMainThread(loadPhotoInput)
         case .notDetermined:
             PHPhotoLibrary.requestAuthorization(handlePhotoAuthorizationStatus)

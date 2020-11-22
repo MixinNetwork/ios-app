@@ -1,27 +1,12 @@
 import Foundation
 import CoreTelephony
 
-class Country: NSObject {
-    let callingCode: String
-    let isoRegionCode: String
-    @objc let localizedName: String
-    let usLocalizedName: String
-    
-    init(callingCode: String, isoRegionCode: String, localizedName: String, usLocalizedName: String) {
-        self.callingCode = callingCode
-        self.isoRegionCode = isoRegionCode
-        self.localizedName = localizedName
-        self.usLocalizedName = usLocalizedName
-    }
-}
-
 struct CountryCodeLibrary {
     
     static let shared = CountryCodeLibrary()
     
     let callingCodes: [String: NSNumber] // Key is ISO Region Code
     let countries: [Country]
-    let isChina: Bool
     let deviceCountry: Country
     
     init() {
@@ -42,19 +27,27 @@ struct CountryCodeLibrary {
         })
         self.countries = countries
         
-        let deviceISOCountryCode: String
-        if let carrier = CTTelephonyNetworkInfo().subscriberCellularProvider, let isoCountryCode = carrier.isoCountryCode?.lowercased(), let mobileCountryCode = carrier.mobileCountryCode {
-            isChina = isoCountryCode == "cn" || mobileCountryCode == "460"
-            deviceISOCountryCode = isoCountryCode.uppercased()
-        } else if let countryCode = locale.object(forKey: NSLocale.Key.countryCode) as? String {
-            isChina = countryCode.lowercased() == "cn"
-            deviceISOCountryCode = countryCode.uppercased()
-        } else {
-            isChina = false
-            deviceISOCountryCode = "US"
-        }
+        let networkInfo = CTTelephonyNetworkInfo()
+        let dataServiceIdentifier: String? = {
+            if #available(iOS 13.0, *) {
+                return networkInfo.dataServiceIdentifier
+            } else {
+                return nil
+            }
+        }()
+        let carrierCountryCode: String? = {
+            if let id = dataServiceIdentifier, let code = networkInfo.serviceSubscriberCellularProviders?[id]?.isoCountryCode {
+                return code.uppercased()
+            } else if let code = networkInfo.serviceSubscriberCellularProviders?.values.compactMap(\.isoCountryCode).first {
+                return code.uppercased()
+            } else {
+                return nil
+            }
+        }()
+        let inferredCountryCode = (locale.object(forKey: .countryCode) as? String)?.uppercased()
+        let deviceCountryCode = carrierCountryCode ?? inferredCountryCode
         
-        if let country = countries.first(where: { $0.isoRegionCode == deviceISOCountryCode }) {
+        if let country = countries.first(where: { $0.isoRegionCode == deviceCountryCode }) {
             deviceCountry = country
         } else {
             deviceCountry = Country(callingCode: "1", isoRegionCode: "US", localizedName: "United States", usLocalizedName: "United States")

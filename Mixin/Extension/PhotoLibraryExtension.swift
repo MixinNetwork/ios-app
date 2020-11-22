@@ -13,12 +13,12 @@ extension PHPhotoLibrary {
         }
 
         switch PHPhotoLibrary.authorizationStatus() {
-        case .authorized:
+        case .authorized, .limited:
             block(true)
         case .notDetermined:
             PHPhotoLibrary.requestAuthorization { (status) in
                 switch status {
-                case .authorized:
+                case .authorized, .limited:
                     block(true)
                 case .denied, .notDetermined, .restricted:
                     block(false)

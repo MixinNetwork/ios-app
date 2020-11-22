@@ -2,14 +2,6 @@ import Foundation
 
 public class LocalizedDecimal {
     
-    private static let formatter: NumberFormatter = {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.locale = .current
-        formatter.generatesDecimalNumbers = true
-        return formatter
-    }()
-    
     public let generic: GenericDecimal
     
     public var decimal: Decimal {
@@ -22,7 +14,9 @@ public class LocalizedDecimal {
     
     public init?(string: String) {
         let whitespaceFiltered = string.filter { !$0.isWhitespace }
-        guard let decimal = Self.formatter.number(from: whitespaceFiltered) as? Decimal else {
+        let maybeDecimal = (Self.preferredLocaleFormatter.number(from: whitespaceFiltered) as? Decimal)
+            ?? (Self.currentLocaleFormatter.number(from: whitespaceFiltered) as? Decimal)
+        guard let decimal = maybeDecimal else {
             return nil
         }
         guard let generic = GenericDecimal(decimal: decimal) else {
@@ -37,6 +31,21 @@ public class LocalizedDecimal {
         } else {
             return false
         }
+    }
+    
+}
+
+extension LocalizedDecimal {
+    
+    private static let currentLocaleFormatter = formatter(locale: .current)
+    private static let preferredLocaleFormatter = formatter(locale: .preferred)
+    
+    private static func formatter(locale: Locale) -> NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.locale = locale
+        formatter.generatesDecimalNumbers = true
+        return formatter
     }
     
 }

@@ -3,7 +3,12 @@ import MixinServices
 
 class AlertEditorController {
     
-    var isNumericOnly = false
+    enum Content {
+        case decimal
+        case text
+    }
+    
+    var acceptContent: Content = .text
     
     private weak var viewController: UIViewController?
     private weak var alertController: UIAlertController?
@@ -22,8 +27,11 @@ class AlertEditorController {
         alert.addTextField { (textField) in
             textField.text = currentText
             textField.placeholder = placeholder
-            if self.isNumericOnly {
-                textField.keyboardType = .numberPad
+            switch self.acceptContent {
+            case .decimal:
+                textField.keyboardType = .decimalPad
+            case .text:
+                textField.keyboardType = .default
             }
             textField.addTarget(self, action: #selector(self.alertInputChangedAction(_:)), for: .editingChanged)
         }
@@ -44,7 +52,14 @@ class AlertEditorController {
         guard let controller = alertController, let text = controller.textFields?.first?.text else {
             return
         }
-        controller.actions[1].isEnabled = !text.isEmpty && (!isNumericOnly || LocalizedDecimal.isValidDecimal(text))
+        var isTextLegal = !text.isEmpty
+        switch acceptContent {
+        case .decimal:
+            isTextLegal = isTextLegal && LocalizedDecimal.isValidDecimal(text)
+        case .text:
+            break
+        }
+        controller.actions[1].isEnabled = isTextLegal
     }
     
 }

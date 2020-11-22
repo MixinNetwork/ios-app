@@ -153,6 +153,7 @@ extension MixinAPI {
                         }
                     } catch {
                         Logger.write(error: error, extra: "data decode failed.")
+                        reporter.report(error: error)
                         completion(.failure(.invalidJSON(error)))
                     }
                 case let .failure(error):

@@ -5,6 +5,8 @@ extension MixinAPIError {
     
     var localizedDescription: String {
         switch self {
+        case let .invalidJSON(error):
+            return R.string.localizable.error_server_data_error()
         case let .httpTransport(error):
             if let underlying = (error.underlyingError as NSError?), underlying.domain == NSURLErrorDomain {
                 switch underlying.code {

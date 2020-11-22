@@ -24,6 +24,7 @@ public final class TaskDatabase: BaseDatabase {
                 try database.setDatabaseVersion(version: TaskDatabase.databaseVersion)
             })
         } catch {
+            Logger.writeDatabase(error: error)
             reporter.report(error: error)
         }
     }

@@ -32,17 +32,16 @@ public class BaseDatabase {
             return
         }
         BaseDatabase.isTraced = true
-        #if DEBUG
+        
         Database.globalTrace(ofPerformance: { (tag, sqls, cost) in
             let millisecond = UInt64(cost) / NSEC_PER_MSEC
-            if millisecond > 200 {
+            if millisecond > 1000 {
                 sqls.forEach({ (arg) in
-                    print("[WCDB][Performance]SQL: \(arg.key)")
+                    Logger.writeDatabase(log: "[WCDB][Performance]SQL: \(arg.key)")
                 })
-                print("[WCDB][Performance]Total cost \(millisecond) ms")
+                Logger.writeDatabase(log: "[WCDB][Performance]Total cost \(millisecond) ms", newSection: true)
             }
         })
-        #endif
         
         Database.globalTrace(ofError: {(error) in
             switch error.type {
@@ -60,7 +59,7 @@ public class BaseDatabase {
                 }
                 reporter.report(error: error)
             }
-            Logger.write(error: error)
+            Logger.writeDatabase(error: error, extra: "[WCDB]\(error.description)", newSection: true)
         })
     }
     
@@ -116,6 +115,7 @@ public class BaseDatabase {
         do {
             return try callback(database)
         } catch {
+            Logger.writeDatabase(error: error)
             reporter.report(error: error)
         }
         return []

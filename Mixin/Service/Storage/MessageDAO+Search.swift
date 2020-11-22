@@ -55,6 +55,7 @@ extension MessageDAO {
                 results.append(result)
             }
         } catch {
+            Logger.writeDatabase(error: error)
             reporter.report(error: error)
         }
         

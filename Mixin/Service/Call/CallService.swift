@@ -224,14 +224,19 @@ extension CallService {
             let me = UserItem.createUser(from: account)
             members.append(me)
         }
-        self.log("[CallService] Making call with members: \(members.map(\.fullName))")
-        let call = GroupCall(uuid: UUID(),
-                             isOutgoing: true,
-                             conversation: conversation,
-                             members: members,
-                             invitingMembers: invitingMembers)
-        let handle = CXHandle(type: .generic, value: conversation.conversationId)
-        requestStartCall(call, handle: handle, playOutgoingRingtone: false)
+        if let uuid = groupCallUUIDs[conversation.conversationId], hasCall(with: uuid) {
+            self.log("[CallService] Request to start but we found existed group call: \(uuid)")
+            callInterface.requestAnswerCall(uuid: uuid)
+        } else {
+            self.log("[CallService] Making call with members: \(members.map(\.fullName))")
+            let call = GroupCall(uuid: UUID(),
+                                 isOutgoing: true,
+                                 conversation: conversation,
+                                 members: members,
+                                 invitingMembers: invitingMembers)
+            let handle = CXHandle(type: .generic, value: conversation.conversationId)
+            requestStartCall(call, handle: handle, playOutgoingRingtone: false)
+        }
     }
     
     func requestAnswerCall() {
@@ -323,6 +328,13 @@ extension CallService {
         } else {
             UIView.performWithoutAnimation(updateInterface)
         }
+    }
+    
+    func showCallingInterfaceIfHasCall(with uuid: UUID) {
+        guard let call = activeOrPendingAnswerCall(with: uuid) else {
+            return
+        }
+        showCallingInterface(call: call)
     }
     
     func setInterfaceMinimized(_ minimized: Bool, animated: Bool) {
@@ -1504,20 +1516,8 @@ extension CallService {
                 guard let error = error else {
                     return
                 }
-                self.activeCall = nil
-                if let call = call as? GroupCall {
-                    self.groupCallUUIDs[call.conversationId] = nil
-                }
+                self.close(uuid: call.uuid)
                 if let error = error as? CallError {
-                    DispatchQueue.main.async {
-                        guard let viewController = self.window?.rootViewController else {
-                            return
-                        }
-                        guard viewController is GroupCallConfirmationViewController else {
-                            return
-                        }
-                        self.dismissCallingInterface()
-                    }
                     self.alert(error: error)
                 } else {
                     showAutoHiddenHud(style: .error, text: R.string.localizable.chat_message_call_failed())

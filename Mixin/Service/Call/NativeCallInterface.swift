@@ -94,7 +94,8 @@ extension NativeCallInterface: CallInterface {
     }
     
     func requestAnswerCall(uuid: UUID) {
-        assertionFailure("This is not expected to happen")
+        let action = CXAnswerCallAction(call: uuid)
+        callController.requestTransaction(with: action, completion: { _ in })
     }
     
     func requestEndCall(uuid: UUID, completion: @escaping CallInterfaceCompletion) {
@@ -190,6 +191,9 @@ extension NativeCallInterface: CXProviderDelegate {
             }
         } else {
             pendingAnswerAction = action
+        }
+        DispatchQueue.main.sync {
+            service.showCallingInterfaceIfHasCall(with: uuid)
         }
     }
     

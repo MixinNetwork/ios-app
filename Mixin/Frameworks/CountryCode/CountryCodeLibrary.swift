@@ -44,8 +44,10 @@ struct CountryCodeLibrary {
                 return nil
             }
         }()
+        let inferredCountryCode = (locale.object(forKey: .countryCode) as? String)?.uppercased()
+        let deviceCountryCode = carrierCountryCode ?? inferredCountryCode
         
-        if let country = countries.first(where: { $0.isoRegionCode == carrierCountryCode }) {
+        if let country = countries.first(where: { $0.isoRegionCode == deviceCountryCode }) {
             deviceCountry = country
         } else {
             deviceCountry = Country(callingCode: "1", isoRegionCode: "US", localizedName: "United States", usLocalizedName: "United States")

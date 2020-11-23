@@ -19,7 +19,7 @@ public let zeroFiatMoneyRepresentation: String = {
     formatter.minimumFractionDigits = 2
     formatter.locale = .current
     return formatter.string(from: 0)
-        ?? "0\(currentDecimalSeparator)00"
+        ?? "0\(Locale.current.decimalSeparator ?? ".")00"
 }()
 
 public let zeroAssetRepresentation: String = {

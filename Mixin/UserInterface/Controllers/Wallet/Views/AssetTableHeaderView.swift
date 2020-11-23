@@ -28,9 +28,9 @@ class AssetTableHeaderView: InfiniteTopView {
     func render(asset: AssetItem) {
         assetIconView.setIcon(asset: asset)
         let amount: String
-        if asset.balance == "0" {
-            amount = "0\(currentDecimalSeparator)00"
-            fiatMoneyValueLabel.text = "≈ $0\(currentDecimalSeparator)00"
+        if asset.decimalBalance == 0 {
+            amount = zeroFiatMoneyRepresentation
+            fiatMoneyValueLabel.text = "≈ " + Currency.current.symbol + zeroFiatMoneyRepresentation
         } else {
             amount = CurrencyFormatter.localizedString(from: asset.decimalBalance, format: .precision, sign: .never)
             fiatMoneyValueLabel.text = asset.localizedFiatMoneyBalanceEstimation

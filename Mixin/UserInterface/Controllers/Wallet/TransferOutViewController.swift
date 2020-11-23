@@ -64,7 +64,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        amountExchangeLabel.text = "0" + currentDecimalSeparator + "00 " + Currency.current.code
+        amountExchangeLabel.text = zeroFiatMoneyRepresentation + Currency.current.code
         switch opponent! {
         case .contact(let user):
             targetUser = user

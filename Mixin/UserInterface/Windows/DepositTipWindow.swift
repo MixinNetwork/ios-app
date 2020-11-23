@@ -39,7 +39,7 @@ class DepositTipWindow: BottomSheetView {
             timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(countDownAction), userInfo: nil, repeats: true)
         } else {
             continueButton.isEnabled = true
-            if asset.reserve.doubleValue > 0 {
+            if asset.decimalReserve > 0 {
                 warningLabel.text = R.string.localizable.wallet_deposit_attention_minimum(asset.reserve , asset.chainSymbol)
             } else {
                 warningLabel.text = R.string.localizable.wallet_deposit_attention()

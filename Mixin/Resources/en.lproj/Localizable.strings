@@ -545,6 +545,8 @@
 "transaction_receiver" = "Receiver";
 "transaction_hash" = "Transaction Hash";
 "transaction_status" = "Status";
+"transaction_value_now" = "value now %@";
+"transaction_value_then" = "value then %@";
 "transaction_type_deposit" = "Deposit";
 "transaction_type_transfer" = "Transfer";
 "transaction_type_withdrawal" = "Withdrawal";

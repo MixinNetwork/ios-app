@@ -38,17 +38,34 @@ class TransactionViewController: UIViewController {
             }
         }
         amountLabel.setFont(scaledFor: .dinCondensedBold(ofSize: 34), adjustForContentSize: true)
-        let fiatMoneyValue = snapshot.amount.doubleValue * asset.priceUsd.doubleValue * Currency.current.rate
-        if let value = CurrencyFormatter.localizedString(from: fiatMoneyValue, format: .fiatMoney, sign: .never) {
-            fiatMoneyValueLabel.text = "≈ " + Currency.current.symbol + value
-        } else {
-            fiatMoneyValueLabel.text = nil
-        }
+        fiatMoneyValueLabel.text = R.string.localizable.transaction_value_now(Currency.current.symbol + getFormatValue(priceUsd: asset.priceUsd))
         symbolLabel.text = snapshot.assetSymbol
         makeContents()
         tableView.dataSource = self
         tableView.delegate = self
         updateTableViewContentInsetBottom()
+        fetchThatTimePrice()
+    }
+    
+    private func fetchThatTimePrice() {
+        AssetAPI.ticker(asset: snapshot.assetId, offset: snapshot.createdAt) { [weak self](result) in
+            guard let self = self else {
+                return
+            }
+            switch result {
+            case let .success(asset):
+                let nowValue = self.getFormatValue(priceUsd: self.asset.priceUsd)
+                let thenValue = self.getFormatValue(priceUsd: asset.priceUsd)
+                self.fiatMoneyValueLabel.text = R.string.localizable.transaction_value_now(Currency.current.symbol + nowValue) + "\n" + R.string.localizable.transaction_value_then(Currency.current.symbol + thenValue)
+            case .failure:
+                break
+            }
+        }
+    }
+    
+    private func getFormatValue(priceUsd: String) -> String {
+        let fiatMoneyValue = snapshot.amount.doubleValue * priceUsd.doubleValue * Currency.current.rate
+        return CurrencyFormatter.localizedString(from: fiatMoneyValue, format: .fiatMoney, sign: .never) ?? ""
     }
     
     override func viewSafeAreaInsetsDidChange() {

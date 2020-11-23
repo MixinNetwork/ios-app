@@ -544,6 +544,8 @@
 "transaction_receiver" = "接收者";
 "transaction_hash" = "交易哈希";
 "transaction_status" = "交易状态";
+"transaction_value_now" = "价值 %@";
+"transaction_value_then" = "当时价值 %@";
 "transaction_type_deposit" = "充值";
 "transaction_type_transfer" = "转账";
 "transaction_type_withdrawal" = "提现";

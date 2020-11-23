@@ -55,6 +55,7 @@ public class AssetItem: TableCodable, NumberStringLocalizable {
     public private(set) lazy var decimalBTCPrice = Decimal(string: priceBtc, locale: .us) ?? 0
     public private(set) lazy var decimalUSDPrice = Decimal(string: priceUsd, locale: .us) ?? 0
     public private(set) lazy var decimalUSDChange = Decimal(string: changeUsd, locale: .us) ?? 0
+    public private(set) lazy var decimalReserve = Decimal(string: reserve, locale: .us) ?? 0
     
     public private(set) lazy var localizedBalance = localizedNumberString(balance)
     

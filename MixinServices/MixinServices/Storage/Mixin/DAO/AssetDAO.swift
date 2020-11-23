@@ -76,7 +76,7 @@ public final class AssetDAO {
     }
     
     public func getDefaultTransferAsset() -> AssetItem? {
-        if let assetId = AppGroupUserDefaults.Wallet.defaultTransferAssetId, !assetId.isEmpty, let asset = getAsset(assetId: assetId), asset.balance.doubleValue > 0 {
+        if let assetId = AppGroupUserDefaults.Wallet.defaultTransferAssetId, !assetId.isEmpty, let asset = getAsset(assetId: assetId), asset.decimalBalance > 0 {
             return asset
         }
         if let availableAsset: AssetItem = MixinDatabase.shared.getCodables(sql: AssetDAO.sqlQueryAvailable).first {

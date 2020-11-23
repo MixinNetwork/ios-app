@@ -40,7 +40,7 @@ class DepositViewController: UIViewController {
             warningLabel.text = R.string.localizable.wallet_deposit_account_attention(asset.symbol)
         } else {
             lowerDepositFieldView.isHidden = true
-            if asset.reserve.doubleValue > 0 {
+            if asset.decimalReserve > 0 {
                 warningLabel.text = R.string.localizable.wallet_deposit_attention_minimum(asset.reserve, asset.chainSymbol)
             } else {
                 warningLabel.text = R.string.localizable.wallet_deposit_attention()

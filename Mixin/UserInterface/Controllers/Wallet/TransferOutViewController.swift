@@ -311,7 +311,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         guard let asset = self.asset else {
             return
         }
-        switchAmountButton.isHidden = asset.priceBtc.doubleValue <= 0
+        switchAmountButton.isHidden = asset.decimalBTCPrice <= 0
         nameLabel.text = asset.name
         balanceLabel.text = CurrencyFormatter.localizedString(from: asset.decimalBalance, format: .precision, sign: .never, symbol: .custom(asset.symbol))
         assetIconView.setIcon(asset: asset)

@@ -107,9 +107,9 @@ class PayWindow: BottomSheetView {
             amountLabel.text = localizedTokenAmount
         }
         
-        let localizedEstimatedFiatMoneyAmount = "≈ " + Currency.current.symbol + localizedFiatMoneyAmount
+        let localizedFiatMoneyEstimation = CurrencyFormatter.localizedFiatMoneyEstimation(asset: asset, tokenAmount: amount)
         if fiatMoneyAmount == nil {
-            amountExchangeLabel.text = localizedEstimatedFiatMoneyAmount
+            amountExchangeLabel.text = localizedFiatMoneyEstimation
         } else {
             amountExchangeLabel.text = localizedTokenAmount
         }
@@ -142,7 +142,7 @@ class PayWindow: BottomSheetView {
             let localizedFeeExchange = CurrencyFormatter.localizedFiatMoneyEstimation(asset: chainAsset, tokenAmount: address.decimalFee)
             
             if fiatMoneyAmount == nil {
-                amountExchangeLabel.text = R.string.localizable.pay_withdrawal_memo(localizedTokenAmount, localizedEstimatedFiatMoneyAmount, localizedFeeAmount, localizedFeeExchange)
+                amountExchangeLabel.text = R.string.localizable.pay_withdrawal_memo(localizedTokenAmount, localizedFiatMoneyEstimation, localizedFeeAmount, localizedFeeExchange)
             } else {
                 amountExchangeLabel.text = R.string.localizable.pay_withdrawal_memo(localizedTokenAmount, "≈ " + Currency.current.symbol + localizedFiatMoneyAmount, localizedFeeAmount, localizedFeeExchange)
             }

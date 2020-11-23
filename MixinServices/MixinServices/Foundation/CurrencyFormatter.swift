@@ -25,7 +25,7 @@ public enum CurrencyFormatter {
     private static let prettyFormatter = decimalFormatter(maximumFractionDigits: nil)
     private static let fiatMoneyFormatter = decimalFormatter(maximumFractionDigits: 2)
     
-    private static let prettyRounding = NSDecimalNumberHandler(roundingMode: .down,
+    private static let extractInteger = NSDecimalNumberHandler(roundingMode: .down,
                                                                scale: 0,
                                                                raiseOnExactness: false,
                                                                raiseOnOverflow: false,
@@ -49,7 +49,7 @@ public enum CurrencyFormatter {
         case .pretty:
             setSignBehavior(sign, for: prettyFormatter)
             let numberOfFractionalDigits = max(-decimal.exponent, 0)
-            let integralPart = number.rounding(accordingToBehavior: prettyRounding).doubleValue
+            let integralPart = number.rounding(accordingToBehavior: extractInteger).doubleValue
             if integralPart == 0 {
                 prettyFormatter.maximumFractionDigits = 8
             } else if numberOfFractionalDigits > 0 {

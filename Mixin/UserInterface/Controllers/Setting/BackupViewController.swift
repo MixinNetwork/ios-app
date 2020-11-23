@@ -44,6 +44,7 @@ class BackupViewController: SettingsTableViewController {
     }()
     
     private weak var timer: Timer?
+    private var reportRecognizer: UILongPressGestureRecognizer!
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -83,6 +84,11 @@ class BackupViewController: SettingsTableViewController {
             AppGroupUserDefaults.User.lastBackupDate = nil
             AppGroupUserDefaults.User.lastBackupSize = nil
         }
+        
+        reportRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(showReportMenuAction))
+        reportRecognizer.minimumPressDuration = 2
+        container?.titleLabel.isUserInteractionEnabled = true
+        container?.titleLabel.addGestureRecognizer(reportRecognizer)
     }
     
     @objc func backupChanged() {
@@ -202,4 +208,111 @@ extension BackupViewController {
         })
     }
     
+}
+
+extension BackupViewController {
+    
+    @objc func showReportMenuAction() {
+        let alc = UIAlertController(title: Localized.REPORT_TITLE, message: AppGroupContainer.mixinDatabaseUrl.fileSize.sizeRepresentation(), preferredStyle: .actionSheet)
+        alc.addAction(UIAlertAction(title: Localized.REPORT_BUTTON, style: .default, handler: { (_) in
+            self.report()
+        }))
+        alc.addAction(UIAlertAction(title: R.string.localizable.report_compress_database(), style: .default, handler: { (_) in
+            self.compressDatabase()
+        }))
+        alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        self.present(alc, animated: true, completion: nil)
+    }
+    
+    private func compressDatabase() {
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        DispatchQueue.global().async {
+            do {
+                Logger.writeDatabase(log: "[Database] start compressing ...size:\(AppGroupContainer.mixinDatabaseUrl.fileSize.sizeRepresentation())")
+                try MixinDatabase.shared.database.prepareUpdateSQL(sql: "PRAGMA wal_checkpoint(FULL)").execute()
+                try MixinDatabase.shared.database.prepareUpdateSQL(sql: "VACUUM").execute()
+                Logger.writeDatabase(log: "[Database] end of compression ...size:\(AppGroupContainer.mixinDatabaseUrl.fileSize.sizeRepresentation())")
+                DispatchQueue.main.async {
+                    hud.set(style: .notification, text: R.string.localizable.report_compress_database_success())
+                    hud.scheduleAutoHidden()
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    hud.set(style: .error, text: R.string.localizable.error_operation_failed())
+                    hud.scheduleAutoHidden()
+                }
+                Logger.writeDatabase(error: error)
+            }
+        }
+    }
+    
+    private func report() {
+        DispatchQueue.global().async { [weak self] in
+            let developID = myIdentityNumber == "762532" ? "31911" : "762532"
+            var user = UserDAO.shared.getUser(identityNumber: developID)
+            if user == nil {
+                switch UserAPI.search(keyword: developID) {
+                case let .success(userResponse):
+                    UserDAO.shared.updateUsers(users: [userResponse])
+                    user = UserItem.createUser(from: userResponse)
+                case .failure:
+                    return
+                }
+            }
+            guard let developUser = user else {
+                return
+            }
+            
+            var log = "\n\(AppGroupContainer.documentsUrl.path)\n"
+            log += Self.debugCloudFiles(baseDir: AppGroupContainer.documentsUrl, parentDir: AppGroupContainer.documentsUrl).joined(separator: "\n")
+            Logger.write(log: log)
+            
+            Logger.writeDatabase(log: "[Database] mixin.db size:\(AppGroupContainer.mixinDatabaseUrl.fileSize.sizeRepresentation())")
+            
+            let developConversationId = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: developUser.userId)
+            guard let url = Logger.export(conversationId: developConversationId) else {
+                return
+            }
+            let targetUrl = AttachmentContainer.url(for: .files, filename: url.lastPathComponent)
+            do {
+                try FileManager.default.copyItem(at: url, to: targetUrl)
+                try FileManager.default.removeItem(at: url)
+            } catch {
+                return
+            }
+            guard FileManager.default.fileSize(targetUrl.path) > 0 else {
+                return
+            }
+            
+            var message = Message.createMessage(category: MessageCategory.PLAIN_DATA.rawValue, conversationId: developConversationId, userId: myUserId)
+            message.name = url.lastPathComponent
+            message.mediaSize = FileManager.default.fileSize(targetUrl.path)
+            message.mediaMimeType = FileManager.default.mimeType(ext: url.pathExtension)
+            message.mediaUrl = url.lastPathComponent
+            message.mediaStatus = MediaStatus.PENDING.rawValue
+
+            SendMessageService.shared.sendMessage(message: message, ownerUser: developUser, isGroupMessage: false)
+            DispatchQueue.main.async {
+                self?.navigationController?.pushViewController(withBackRoot: ConversationViewController.instance(ownerUser: developUser))
+            }
+        }
+    }
+    
+    private static func debugCloudFiles(baseDir: URL, parentDir: URL) -> [String] {
+        let files = FileManager.default.childFiles(parentDir)
+        var dirs = [String]()
+        
+        for file in files {
+            let url = parentDir.appendingPathComponent(file)
+            if FileManager.default.directoryExists(atPath: url.path) {
+                dirs.append("[Local][\(url.suffix(base: baseDir))] \(files.count) child files")
+                dirs += debugCloudFiles(baseDir: baseDir, parentDir: url)
+            } else if file.contains("mixin.db") {
+                dirs.append("[Local][\(url.suffix(base: baseDir))] file size:\(url.fileSize.sizeRepresentation())")
+            }
+        }
+        
+        return dirs
+    }
 }

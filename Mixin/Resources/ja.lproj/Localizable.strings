@@ -829,6 +829,8 @@
 "report_copy_user_id"="ユーザーIDをコピー";
 "report_copy_conversation_id"="会話IDをコピー";
 "report_message"="マニュアル報告を許可する";
+"report_compress_database"="Compress Database";
+"report_compress_database_success"="Compressed";
 
 // Notification
 "notification_reply" = "返信";

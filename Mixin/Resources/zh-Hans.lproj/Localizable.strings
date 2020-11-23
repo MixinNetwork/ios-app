@@ -824,12 +824,14 @@
 "about_privacy_policy" = "服务条款";
 "about_app_upgrade" = "版本更新";
 
-"report_title"="给开发人员发送聊天日志（不包含聊天内容）?";
+"report_title"="给开发人员发送聊天日志?";
 "report_button"="把日志发给开发者";
 "report_share"="分享日志文件";
 "report_copy_user_id"="复制用户 ID";
 "report_copy_conversation_id"="复制会话 ID";
 "report_message"="允许手动上报消息";
+"report_compress_database"="压缩数据库";
+"report_compress_database_success"="已压缩";
 
 // Notification
 "notification_reply" = "回复";

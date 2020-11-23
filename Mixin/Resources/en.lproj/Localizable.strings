@@ -829,6 +829,8 @@
 "report_copy_user_id"="Copy User Id";
 "report_copy_conversation_id"="Copy Conversation Id";
 "report_message"="Allow Manual Report Message";
+"report_compress_database"="Compress Database";
+"report_compress_database_success"="Compressed";
 
 // Notifications
 "notification_reply" = "Reply";

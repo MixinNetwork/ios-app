@@ -543,8 +543,8 @@
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="190"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
-                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="X9m-wq-bBJ">
-                                            <rect key="frame" x="20" y="18" width="374" height="144.33333333333334"/>
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="-4" translatesAutoresizingMaskIntoConstraints="NO" id="X9m-wq-bBJ">
+                                            <rect key="frame" x="20" y="18" width="374" height="146"/>
                                             <subviews>
                                                 <view userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0iU-Qh-8sq" customClass="AssetIconView" customModule="Mixin" customModuleProvider="target">
                                                     <rect key="frame" x="152" y="0.0" width="70" height="70"/>
@@ -571,33 +571,40 @@
                                                         </userDefinedRuntimeAttribute>
                                                     </userDefinedRuntimeAttributes>
                                                 </view>
-                                                <stackView opaque="NO" contentMode="scaleToFill" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="HOU-mR-kEE">
-                                                    <rect key="frame" x="97.333333333333329" y="70" width="179.33333333333337" height="60"/>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3UQ-iv-CJC">
+                                                    <rect key="frame" x="162" y="66" width="50" height="18"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="18" id="A5H-fw-Be0"/>
+                                                    </constraints>
+                                                </view>
+                                                <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="HOU-mR-kEE">
+                                                    <rect key="frame" x="99.333333333333329" y="80" width="175.33333333333337" height="55.666666666666657"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="enL-XN-l1B">
-                                                            <rect key="frame" x="0.0" y="10" width="3" height="50"/>
+                                                            <rect key="frame" x="0.0" y="6" width="3" height="49.666666666666664"/>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="3" id="txl-EP-N3o"/>
                                                             </constraints>
                                                         </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="+0.00001342" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hy0-UM-G0M">
-                                                            <rect key="frame" x="9" y="10" width="140.66666666666666" height="50"/>
+                                                            <rect key="frame" x="7" y="6" width="140.66666666666666" height="49.666666666666664"/>
                                                             <fontDescription key="fontDescription" name="DINCondensed-Bold" family="DIN Condensed" pointSize="34"/>
                                                             <color key="textColor" red="0.16078431372549018" green="0.74509803921568629" blue="0.45098039215686275" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ETH" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ptc-MK-Zp1" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
-                                                            <rect key="frame" x="155.66666666666669" y="10" width="23.666666666666657" height="50"/>
+                                                            <rect key="frame" x="151.66666666666669" y="6" width="23.666666666666657" height="49.666666666666664"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                             <color key="textColor" name="text"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                     </subviews>
-                                                    <edgeInsets key="layoutMargins" top="10" left="0.0" bottom="0.0" right="0.0"/>
+                                                    <edgeInsets key="layoutMargins" top="6" left="0.0" bottom="0.0" right="0.0"/>
                                                 </stackView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="≈ $4080.73" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="35Q-tB-pB9">
-                                                    <rect key="frame" x="154" y="130" width="66" height="14.333333333333343"/>
+                                                    <rect key="frame" x="154" y="131.66666666666666" width="66" height="14.333333333333343"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                     <color key="textColor" name="text_accessory"/>
                                                     <nil key="highlightedColor"/>
@@ -617,6 +624,7 @@
                                         <constraint firstItem="X9m-wq-bBJ" firstAttribute="leading" secondItem="f6H-FD-FE2" secondAttribute="leading" constant="20" id="Dlb-Rn-N0G"/>
                                         <constraint firstItem="7aO-v0-YsR" firstAttribute="leading" secondItem="f6H-FD-FE2" secondAttribute="leading" id="Drn-9F-8Eh"/>
                                         <constraint firstItem="X9m-wq-bBJ" firstAttribute="top" secondItem="f6H-FD-FE2" secondAttribute="top" constant="18" id="KS0-5i-uXW"/>
+                                        <constraint firstItem="7aO-v0-YsR" firstAttribute="top" secondItem="X9m-wq-bBJ" secondAttribute="bottom" constant="16" id="S55-Yv-P9p"/>
                                         <constraint firstAttribute="trailing" secondItem="X9m-wq-bBJ" secondAttribute="trailing" constant="20" id="XAD-Ik-Brm"/>
                                         <constraint firstAttribute="bottom" secondItem="7aO-v0-YsR" secondAttribute="bottom" id="lPd-Sh-gPL"/>
                                         <constraint firstAttribute="trailing" secondItem="7aO-v0-YsR" secondAttribute="trailing" id="pdQ-Me-Bhe"/>
@@ -696,10 +704,12 @@
                     </view>
                     <connections>
                         <outlet property="amountLabel" destination="hy0-UM-G0M" id="sDe-VT-obR"/>
+                        <outlet property="amountStackView" destination="HOU-mR-kEE" id="QTD-r7-f1h"/>
                         <outlet property="assetIconView" destination="0iU-Qh-8sq" id="JYV-ll-5cc"/>
                         <outlet property="fiatMoneyValueLabel" destination="35Q-tB-pB9" id="I8E-Pt-pfZ"/>
-                        <outlet property="headerContentStackView" destination="X9m-wq-bBJ" id="Sud-Ho-ph3"/>
+                        <outlet property="headerContentStackView" destination="X9m-wq-bBJ" id="I2t-lZ-bym"/>
                         <outlet property="symbolLabel" destination="Ptc-MK-Zp1" id="wTk-bs-OjE"/>
+                        <outlet property="tableHeaderView" destination="f6H-FD-FE2" id="LRl-z1-Ow9"/>
                         <outlet property="tableView" destination="n3U-Zp-vXX" id="9Zs-Ac-nU6"/>
                     </connections>
                 </viewController>
@@ -2104,7 +2114,7 @@
             <color red="0.90980392156862744" green="0.41960784313725491" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
             <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

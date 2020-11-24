@@ -750,7 +750,7 @@ class ConversationViewController: UIViewController {
             let oldX = cell.messageContentView.frame.origin.x
             var newX = oldX + recognizer.translation(in: recognizer.view).x
             newX = min(0, max(-fastReplyMaxDistance, newX))
-            if oldX > -fastReplyConfirmedDistance && newX < -fastReplyConfirmedDistance {
+            if oldX > -fastReplyConfirmedDistance && newX <= -fastReplyConfirmedDistance {
                 feedback.impactOccurred()
             }
             cell.messageContentView.frame.origin.x = newX
@@ -760,7 +760,7 @@ class ConversationViewController: UIViewController {
             guard let cell = recognizer.cell else {
                 return
             }
-            let shouldQuote = cell.messageContentView.frame.origin.x < -fastReplyConfirmedDistance
+            let shouldQuote = cell.messageContentView.frame.origin.x <= -fastReplyConfirmedDistance
             UIView.animate(withDuration: animationDuration) {
                 cell.messageContentView.frame.origin.x = 0
             }

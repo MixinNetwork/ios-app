@@ -4,6 +4,7 @@ import MixinServices
 class TransactionViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var tableHeaderView: InfiniteTopView!
     @IBOutlet weak var headerContentStackView: UIStackView!
     @IBOutlet weak var assetIconView: AssetIconView!
     @IBOutlet weak var amountLabel: UILabel!
@@ -18,13 +19,6 @@ class TransactionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if ScreenHeight.current >= .extraLong {
-            assetIconView.chainIconWidth = 28
-            assetIconView.chainIconOutlineWidth = 4
-            tableView.tableHeaderView?.frame.size.height = 210
-            headerContentStackView.spacing = 5
-        }
-        view.layoutIfNeeded()
         symbolLabel.contentInset = UIEdgeInsets(top: 2, left: 0, bottom: 0, right: 0)
         assetIconView.setIcon(asset: asset)
         amountLabel.text = CurrencyFormatter.localizedString(from: snapshot.amount, format: .precision, sign: .always)
@@ -38,8 +32,14 @@ class TransactionViewController: UIViewController {
             }
         }
         amountLabel.setFont(scaledFor: .dinCondensedBold(ofSize: 34), adjustForContentSize: true)
-        fiatMoneyValueLabel.text = R.string.localizable.transaction_value_now(Currency.current.symbol + getFormatValue(priceUsd: asset.priceUsd))
+        fiatMoneyValueLabel.text = R.string.localizable.transaction_value_now(Currency.current.symbol + getFormatValue(priceUsd: asset.priceUsd)) + "\n "
         symbolLabel.text = snapshot.assetSymbol
+        if ScreenHeight.current >= .extraLong {
+            assetIconView.chainIconWidth = 28
+            assetIconView.chainIconOutlineWidth = 4
+            headerContentStackView.spacing = 16
+        }
+        layoutTableHeaderView()
         makeContents()
         tableView.dataSource = self
         tableView.delegate = self
@@ -47,30 +47,19 @@ class TransactionViewController: UIViewController {
         fetchThatTimePrice()
     }
     
-    private func fetchThatTimePrice() {
-        AssetAPI.ticker(asset: snapshot.assetId, offset: snapshot.createdAt) { [weak self](result) in
-            guard let self = self else {
-                return
-            }
-            switch result {
-            case let .success(asset):
-                let nowValue = self.getFormatValue(priceUsd: self.asset.priceUsd)
-                let thenValue = self.getFormatValue(priceUsd: asset.priceUsd)
-                self.fiatMoneyValueLabel.text = R.string.localizable.transaction_value_now(Currency.current.symbol + nowValue) + "\n" + R.string.localizable.transaction_value_then(Currency.current.symbol + thenValue)
-            case .failure:
-                break
-            }
-        }
-    }
-    
-    private func getFormatValue(priceUsd: String) -> String {
-        let fiatMoneyValue = snapshot.amount.doubleValue * priceUsd.doubleValue * Currency.current.rate
-        return CurrencyFormatter.localizedString(from: fiatMoneyValue, format: .fiatMoney, sign: .never) ?? ""
-    }
-    
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         updateTableViewContentInsetBottom()
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if traitCollection.preferredContentSizeCategory != previousTraitCollection?.preferredContentSizeCategory {
+            DispatchQueue.main.async {
+                self.layoutTableHeaderView()
+                self.tableView.tableHeaderView = self.tableHeaderView
+            }
+        }
     }
     
     class func instance(asset: AssetItem, snapshot: SnapshotItem) -> UIViewController {
@@ -154,6 +143,33 @@ extension TransactionViewController {
         } else {
             tableView.contentInset.bottom = 20
         }
+    }
+    
+    private func layoutTableHeaderView() {
+        let targetSize = CGSize(width: AppDelegate.current.mainWindow.bounds.width,
+                                height: UIView.layoutFittingExpandedSize.height)
+        tableHeaderView.frame.size.height = tableHeaderView.systemLayoutSizeFitting(targetSize).height
+    }
+    
+    private func fetchThatTimePrice() {
+        AssetAPI.ticker(asset: snapshot.assetId, offset: snapshot.createdAt) { [weak self](result) in
+            guard let self = self else {
+                return
+            }
+            switch result {
+            case let .success(asset):
+                let nowValue = self.getFormatValue(priceUsd: self.asset.priceUsd)
+                let thenValue = self.getFormatValue(priceUsd: asset.priceUsd)
+                self.fiatMoneyValueLabel.text = R.string.localizable.transaction_value_now(Currency.current.symbol + nowValue) + "\n" + R.string.localizable.transaction_value_then(Currency.current.symbol + thenValue)
+            case .failure:
+                break
+            }
+        }
+    }
+    
+    private func getFormatValue(priceUsd: String) -> String {
+        let fiatMoneyValue = snapshot.amount.doubleValue * priceUsd.doubleValue * Currency.current.rate
+        return CurrencyFormatter.localizedString(from: fiatMoneyValue, format: .fiatMoney, sign: .never) ?? ""
     }
     
     private func makeContents() {

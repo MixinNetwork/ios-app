@@ -697,6 +697,7 @@
                     </view>
                     <connections>
                         <outlet property="amountLabel" destination="hy0-UM-G0M" id="sDe-VT-obR"/>
+                        <outlet property="amountStackView" destination="HOU-mR-kEE" id="QTD-r7-f1h"/>
                         <outlet property="assetIconView" destination="0iU-Qh-8sq" id="JYV-ll-5cc"/>
                         <outlet property="fiatMoneyValueLabel" destination="35Q-tB-pB9" id="I8E-Pt-pfZ"/>
                         <outlet property="headerContentStackView" destination="X9m-wq-bBJ" id="Sud-Ho-ph3"/>
@@ -2106,7 +2107,7 @@
             <color red="0.90980392156862744" green="0.41960784313725491" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
             <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

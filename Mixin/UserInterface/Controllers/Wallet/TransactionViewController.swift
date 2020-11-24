@@ -7,6 +7,7 @@ class TransactionViewController: UIViewController {
     @IBOutlet weak var tableHeaderView: InfiniteTopView!
     @IBOutlet weak var headerContentStackView: UIStackView!
     @IBOutlet weak var assetIconView: AssetIconView!
+    @IBOutlet weak var amountStackView: UIStackView!
     @IBOutlet weak var amountLabel: UILabel!
     @IBOutlet weak var symbolLabel: InsetLabel!
     @IBOutlet weak var fiatMoneyValueLabel: UILabel!
@@ -19,6 +20,7 @@ class TransactionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        headerContentStackView.setCustomSpacing(3, after: amountStackView)
         symbolLabel.contentInset = UIEdgeInsets(top: 2, left: 0, bottom: 0, right: 0)
         assetIconView.setIcon(asset: asset)
         amountLabel.text = CurrencyFormatter.localizedString(from: snapshot.amount, format: .precision, sign: .always)

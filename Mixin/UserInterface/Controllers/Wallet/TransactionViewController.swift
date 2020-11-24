@@ -158,6 +158,9 @@ extension TransactionViewController {
             }
             switch result {
             case let .success(asset):
+                guard asset.priceUsd.doubleValue > 0 else {
+                    return
+                }
                 let nowValue = self.getFormatValue(priceUsd: self.asset.priceUsd)
                 let thenValue = self.getFormatValue(priceUsd: asset.priceUsd)
                 self.fiatMoneyValueLabel.text = R.string.localizable.transaction_value_now(Currency.current.symbol + nowValue) + "\n" + R.string.localizable.transaction_value_then(Currency.current.symbol + thenValue)

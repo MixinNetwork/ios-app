@@ -20,7 +20,6 @@ class TransactionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        headerContentStackView.setCustomSpacing(3, after: amountStackView)
         symbolLabel.contentInset = UIEdgeInsets(top: 2, left: 0, bottom: 0, right: 0)
         assetIconView.setIcon(asset: asset)
         amountLabel.text = CurrencyFormatter.localizedString(from: snapshot.amount, format: .precision, sign: .always)
@@ -39,7 +38,7 @@ class TransactionViewController: UIViewController {
         if ScreenHeight.current >= .extraLong {
             assetIconView.chainIconWidth = 28
             assetIconView.chainIconOutlineWidth = 4
-            headerContentStackView.spacing = 16
+            headerContentStackView.spacing = 2
         }
         layoutTableHeaderView()
         makeContents()
@@ -160,12 +159,9 @@ extension TransactionViewController {
             }
             switch result {
             case let .success(asset):
-                guard asset.priceUsd.doubleValue > 0 else {
-                    return
-                }
-                let nowValue = self.getFormatValue(priceUsd: self.asset.priceUsd)
-                let thenValue = self.getFormatValue(priceUsd: asset.priceUsd)
-                self.fiatMoneyValueLabel.text = R.string.localizable.transaction_value_now(Currency.current.symbol + nowValue) + "\n" + R.string.localizable.transaction_value_then(Currency.current.symbol + thenValue)
+                let nowValue = Currency.current.symbol + self.getFormatValue(priceUsd: self.asset.priceUsd)
+                let thenValue = asset.priceUsd.doubleValue > 0 ? Currency.current.symbol + self.getFormatValue(priceUsd: asset.priceUsd) : R.string.localizable.wallet_no_price()
+                self.fiatMoneyValueLabel.text = R.string.localizable.transaction_value_now(nowValue) + "\n" + R.string.localizable.transaction_value_then(thenValue)
             case .failure:
                 break
             }

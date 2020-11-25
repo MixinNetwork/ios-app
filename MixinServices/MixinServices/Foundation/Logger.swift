@@ -80,9 +80,9 @@ public enum Logger {
     public static func write(conversationId: String, log: String, newSection: Bool = false) {
         queue.async {
             if conversationId.isEmpty {
-                writeLog(filename: conversationId, log: log, newSection: newSection)
-            } else {
                 write(log: log, newSection: newSection)
+            } else {
+                writeLog(filename: conversationId, log: log, newSection: newSection)
             }
         }
     }

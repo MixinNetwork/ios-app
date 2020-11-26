@@ -46,6 +46,24 @@ class TransactionViewController: UIViewController {
         tableView.delegate = self
         updateTableViewContentInsetBottom()
         fetchThatTimePrice()
+        
+        assetIconView.isUserInteractionEnabled = true
+        assetIconView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(backToAsset(_:))))
+    }
+    
+    @objc func backToAsset(_ recognizer: UITapGestureRecognizer) {
+        guard let viewControllers = navigationController?.viewControllers else {
+            return
+        }
+        
+        if let assetViewController = viewControllers
+            .compactMap({ $0 as? ContainerViewController })
+            .compactMap({ $0.viewController as? AssetViewController })
+            .first(where: { $0.asset.assetId == asset.assetId })?.container {
+            navigationController?.popToViewController(assetViewController, animated: true)
+        } else {
+            navigationController?.pushViewController(AssetViewController.instance(asset: asset), animated: true)
+        }
     }
     
     override func viewSafeAreaInsetsDidChange() {

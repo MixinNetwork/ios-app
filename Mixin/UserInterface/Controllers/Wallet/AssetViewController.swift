@@ -12,7 +12,7 @@ class AssetViewController: UIViewController {
     
     private let loadMoreThreshold = 20
     
-    private var asset: AssetItem!
+    private(set) var asset: AssetItem!
     private var snapshotDataSource: SnapshotDataSource!
     
     private lazy var noTransactionFooterView = Bundle.main.loadNibNamed("NoTransactionFooterView", owner: self, options: nil)?.first as! UIView

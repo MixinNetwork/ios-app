@@ -178,7 +178,11 @@ class UrlWindow {
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         DispatchQueue.global().async {
-            guard let (user, updateUserFromRemoteAfterReloaded) = syncUser(userId: userId, hud: hud), user.isCreatedByMessenger else {
+            guard let (user, updateUserFromRemoteAfterReloaded) = syncUser(userId: userId, hud: hud) else {
+                return
+            }
+            guard user.isCreatedByMessenger else {
+                hud.hideInMainThread()
                 return
             }
 

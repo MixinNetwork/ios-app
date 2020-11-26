@@ -1205,7 +1205,7 @@ extension ConversationViewController: UIGestureRecognizerDelegate {
                 return false
             }
             let velocity = fastReplyRecognizer.velocity(in: nil)
-            return velocity.x < 0 && abs(velocity.x) > abs(velocity.y)
+            return velocity.x < 0 && abs(velocity.x) > abs(velocity.y) * 3.5
         default:
             return true
         }

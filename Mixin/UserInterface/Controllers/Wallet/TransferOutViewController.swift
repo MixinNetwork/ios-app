@@ -324,6 +324,9 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
             }
             switch result {
             case let .success(address):
+                if case .address = weakSelf.opponent {
+                    weakSelf.opponent = .address(address)
+                }
                 weakSelf.fillFeeHint(address: address)
             case .failure:
                 DispatchQueue.global().asyncAfter(deadline: .now() + 3, execute: {

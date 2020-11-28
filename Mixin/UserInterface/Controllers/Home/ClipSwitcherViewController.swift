@@ -96,6 +96,7 @@ class ClipSwitcherViewController: UIViewController {
         guard let container = UIApplication.homeContainerViewController else {
             return
         }
+        AppDelegate.current.mainWindow.endEditing(true)
         isShowing = true
         UIApplication.homeContainerViewController?.setNeedsStatusBarAppearanceUpdate()
         loadViewIfNeeded()

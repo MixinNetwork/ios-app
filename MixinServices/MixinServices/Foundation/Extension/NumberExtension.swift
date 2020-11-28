@@ -47,11 +47,3 @@ public extension Int64 {
     }
 
 }
-
-extension Decimal {
-    
-    public var doubleValue: Double {
-        (self as NSDecimalNumber).doubleValue
-    }
-    
-}

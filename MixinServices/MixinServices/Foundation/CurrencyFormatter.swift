@@ -32,20 +32,40 @@ public enum CurrencyFormatter {
                                                                raiseOnUnderflow: false,
                                                                raiseOnDivideByZero: false)
     
-    public static func localizedFiatMoneyEstimation(asset: AssetItem, tokenAmount: Decimal) -> String {
+    public static func localizedFiatMoneyEstimation(asset: AssetItem, tokenAmount: DecimalNumber) -> String {
         let value = tokenAmount * asset.decimalUSDPrice * Currency.current.rate
         let string = CurrencyFormatter.localizedString(from: value, format: .fiatMoney, sign: .never)
         return "≈ " + Currency.current.symbol + string
     }
     
-    public static func localizedString(from decimal: Decimal, format: Format, sign: SignBehavior, symbol: Symbol? = nil) -> String {
-        let number = NSDecimalNumber(decimal: decimal)
+    public static func localizedString(from decimal: DecimalNumber, format: Format, sign: SignBehavior, symbol: Symbol? = nil) -> String {
         var str: String
+        if let number = decimal.nsDecimalNumber {
+            str = localizedString(from: number, format: format, sign: sign)
+        } else {
+            str = customLocalizedString(from: decimal, format: format, sign: sign)
+        }
         
+        if let symbol = symbol {
+            switch symbol {
+            case .btc:
+                str += " BTC"
+            case .currentCurrency:
+                str += " " + Currency.current.code
+            case .custom(let symbol):
+                str += " " + symbol
+            }
+        }
+        
+        return str
+    }
+    
+    private static func localizedString(from number: NSDecimalNumber, format: Format, sign: SignBehavior) -> String {
+        let decimal = number as Decimal
         switch format {
         case .precision:
             setSignBehavior(sign, for: precisionFormatter)
-            str = precisionFormatter.string(from: number) ?? ""
+            return precisionFormatter.string(from: number) ?? ""
         case .pretty:
             setSignBehavior(sign, for: prettyFormatter)
             let numberOfFractionalDigits = max(-decimal.exponent, 0)
@@ -58,29 +78,53 @@ public enum CurrencyFormatter {
             } else {
                 prettyFormatter.maximumFractionDigits = 0
             }
-            str = prettyFormatter.string(from: number) ?? ""
+            return prettyFormatter.string(from: number) ?? ""
         case .fiatMoney:
             setSignBehavior(sign, for: fiatMoneyFormatter)
-            str = fiatMoneyFormatter.string(from: number) ?? ""
+            return fiatMoneyFormatter.string(from: number) ?? ""
         case .fiatMoneyPrice:
             if decimal.isLess(than: 1) {
                 setSignBehavior(sign, for: precisionFormatter)
-                str = precisionFormatter.string(from: number) ?? ""
+                return precisionFormatter.string(from: number) ?? ""
             } else {
                 setSignBehavior(sign, for: fiatMoneyFormatter)
-                str = fiatMoneyFormatter.string(from: number) ?? ""
+                return fiatMoneyFormatter.string(from: number) ?? ""
             }
         }
+    }
+    
+    private static func customLocalizedString(from number: DecimalNumber, format: Format, sign: SignBehavior) -> String {
+        var str: String
         
-        if let symbol = symbol {
-            switch symbol {
-            case .btc:
-                str += " BTC"
-            case .currentCurrency:
-                str += " " + Currency.current.code
-            case .custom(let symbol):
-                str += " " + symbol
+        switch format {
+        case .precision:
+            str = number.stringValue
+        case .pretty:
+            let maximumFractionDigits: Int
+            let numberOfDigits = number.numberOfDigits
+            if numberOfDigits.integer == 0 {
+                maximumFractionDigits = 8
+            } else if numberOfDigits.fraction > 0 {
+                maximumFractionDigits = max(0, 8 - numberOfDigits.integer)
+            } else {
+                maximumFractionDigits = 0
             }
+            str = number.numberByRoundingDownFraction(with: maximumFractionDigits).stringValue
+        case .fiatMoneyPrice:
+            if number < 1 {
+                str = number.stringValue
+            } else {
+                fallthrough
+            }
+        case .fiatMoney:
+            str = number.numberByRoundingDownFraction(with: 2).stringValue
+        }
+        
+        switch sign {
+        case .never where str.hasMinusPrefix:
+            str.removeFirst()
+        default:
+            break
         }
         
         return str

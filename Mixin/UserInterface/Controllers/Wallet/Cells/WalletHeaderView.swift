@@ -48,8 +48,8 @@ class WalletHeaderView: InfiniteTopView {
     func render(assets: [AssetItem]) {
         fiatMoneySymbolLabel.text = Currency.current.symbol
         var assetPortions = [AssetPortion]()
-        var btcTotalBalance: Decimal = 0
-        let usdTotalBalance: Decimal = assets
+        var btcTotalBalance: DecimalNumber = 0
+        let usdTotalBalance: DecimalNumber = assets
             .map { $0.decimalBalance * $0.decimalUSDPrice }
             .reduce(0, +)
         var maxPortion = 3
@@ -60,7 +60,7 @@ class WalletHeaderView: InfiniteTopView {
                 let btcBalance = balance * asset.decimalBTCPrice
                 btcTotalBalance += btcBalance
                 if assetPortions.count < maxPortion {
-                    let percent = ((usdBalance / usdTotalBalance) as NSDecimalNumber)
+                    let percent = ((usdBalance / usdTotalBalance).nsDecimalNumber ?? 0)
                         .rounding(accordingToBehavior: percentRounding) as Decimal
                     let new = AssetPortion(symbol: asset.symbol, usdBalance: usdBalance, percent: percent)
                     assetPortions.append(new)
@@ -100,7 +100,7 @@ class WalletHeaderView: InfiniteTopView {
             assetPortions[1].percent = (1 - assetPortions[0].percent as NSDecimalNumber)
                 .rounding(accordingToBehavior: percentRounding) as Decimal
             rightAssetPercentLabel.text = NumberFormatter.simplePercentage.string(from: assetPortions[1].percent as NSDecimalNumber)
-            assetChartView.proportions = assetPortions.map { $0.percent.doubleValue }
+            assetChartView.proportions = assetPortions.map { ($0.percent as NSDecimalNumber).doubleValue }
         default:
             leftAssetWrapperView.isHidden = false
             middleAssetWrapperView.isHidden = false
@@ -113,7 +113,7 @@ class WalletHeaderView: InfiniteTopView {
             assetPortions[2].percent = (abs(1 - assetPortions[0].percent - assetPortions[1].percent) as NSDecimalNumber)
                 .rounding(accordingToBehavior: percentRounding) as Decimal
             rightAssetPercentLabel.text = NumberFormatter.simplePercentage.string(from: assetPortions[2].percent as NSDecimalNumber)
-            assetChartView.proportions = assetPortions.map { $0.percent.doubleValue }
+            assetChartView.proportions = assetPortions.map { ($0.percent as NSDecimalNumber).doubleValue }
         }
     }
     
@@ -122,12 +122,17 @@ class WalletHeaderView: InfiniteTopView {
 extension WalletHeaderView {
     
     struct AssetPortion {
+        
         var symbol: String
-        var usdBalance: Decimal
+        var usdBalance: DecimalNumber
+        
+        // Percentage won't exceed the precision limit of Decimal
+        // Use Decimal here to cooperate with NSNumberFormatter for percentage formatting
         var percent: Decimal
+        
     }
     
-    private func fiatMoneyBalanceRepresentation(usdBalance: Decimal) -> String? {
+    private func fiatMoneyBalanceRepresentation(usdBalance: DecimalNumber) -> String? {
         if usdBalance == 0 {
             return zeroFiatMoneyRepresentation
         } else {

@@ -22,7 +22,7 @@ public class SnapshotItem: TableCodable {
     public let opponentUserAvatarUrl: String?
     public let opponentUserIdentityNumber: String?
     
-    public private(set) lazy var decimalAmount = Decimal(string: amount) ?? 0
+    public private(set) lazy var decimalAmount = DecimalNumber(string: amount) ?? 0
     
     public enum CodingKeys: String, CodingTableKey {
         public typealias Root = SnapshotItem

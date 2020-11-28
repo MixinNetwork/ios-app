@@ -55,7 +55,7 @@ class AlertEditorController {
         var isTextLegal = !text.isEmpty
         switch acceptContent {
         case .decimal:
-            isTextLegal = isTextLegal && LocalizedDecimal.isValidDecimal(text)
+            isTextLegal = isTextLegal && DecimalNumber.isValidNumber(localizedString: text)
         case .text:
             break
         }

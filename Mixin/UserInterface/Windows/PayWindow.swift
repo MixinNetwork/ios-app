@@ -59,7 +59,7 @@ class PayWindow: BottomSheetView {
     private var pinAction: PinAction!
     private var errorContinueAction: ErrorContinueAction?
     private var asset: AssetItem!
-    private var amount: Decimal = 0
+    private var amount: DecimalNumber = 0
     private var memo = ""
     private var soundId: SystemSoundID = 0
     private var isAutoFillPIN = false
@@ -88,7 +88,7 @@ class PayWindow: BottomSheetView {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillDisappear), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
-    func render(asset: AssetItem, action: PinAction, amount: Decimal, memo: String, error: String? = nil, fiatMoneyAmount: Decimal? = nil, textfield: UITextField? = nil) -> PayWindow {
+    func render(asset: AssetItem, action: PinAction, amount: DecimalNumber, memo: String, error: String? = nil, fiatMoneyAmount: DecimalNumber? = nil, textfield: UITextField? = nil) -> PayWindow {
         self.asset = asset
         self.amount = amount
         self.memo = memo
@@ -560,13 +560,9 @@ extension PayWindow: PinFieldDelegate {
             }
         }
         
-        guard let amountString = GenericDecimal(decimal: amount)?.string else {
-            completion(.failure(.invalidTokenAmount))
-            return
-        }
         switch pinAction {
         case let .transfer(trackId, user, _):
-            trace = Trace(traceId: trackId, assetId: assetId, amount: amountString, opponentId: user.userId, destination: nil, tag: nil)
+            trace = Trace(traceId: trackId, assetId: assetId, amount: amount.stringValue, opponentId: user.userId, destination: nil, tag: nil)
             TraceDAO.shared.saveTrace(trace: trace)
             PaymentAPI.transfer(assetId: assetId, opponentId: user.userId, amount: amount, memo: memo, pin: pin, traceId: trackId, completion: completion)
         case let .payment(payment, _):
@@ -574,15 +570,15 @@ extension PayWindow: PinFieldDelegate {
                                                     threshold: payment.threshold)
             let transactionRequest = RawTransactionRequest(assetId: payment.assetId,
                                                            opponentMultisig: opponentMultisig,
-                                                           amount: amountString,
+                                                           amount: amount.stringValue,
                                                            pin: "",
                                                            traceId: payment.traceId,
                                                            memo: payment.memo)
             PaymentAPI.transactions(transactionRequest: transactionRequest, pin: pin, completion: completion)
         case let .withdraw(trackId, address, _, _):
-            trace = Trace(traceId: trackId, assetId: assetId, amount: amountString, opponentId: nil, destination: address.destination, tag: address.tag)
+            trace = Trace(traceId: trackId, assetId: assetId, amount: amount.stringValue, opponentId: nil, destination: address.destination, tag: address.tag)
             TraceDAO.shared.saveTrace(trace: trace)
-            WithdrawalAPI.withdrawal(withdrawal: WithdrawalRequest(addressId: address.addressId, amount: amountString, traceId: trackId, pin: pin, memo: memo), completion: completion)
+            WithdrawalAPI.withdrawal(withdrawal: WithdrawalRequest(addressId: address.addressId, amount: amount.stringValue, traceId: trackId, pin: pin, memo: memo), completion: completion)
         case let .multisig(multisig, _, _):
             let multisigCompletion = { [weak self] (result: MixinAPI.Result<Empty>) in
                 guard let weakSelf = self else {
@@ -668,7 +664,7 @@ extension PayWindow: PinFieldDelegate {
 
 extension PayWindow {
 
-    static func checkPay(traceId: String, asset: AssetItem, action: PayWindow.PinAction, opponentId: String? = nil, destination: String? = nil, tag: String? = nil, addressId: String? = nil, amount: Decimal, fiatMoneyAmount: Decimal? = nil, memo: String, fromWeb: Bool, completion: @escaping AssetConfirmationWindow.CompletionHandler) {
+    static func checkPay(traceId: String, asset: AssetItem, action: PayWindow.PinAction, opponentId: String? = nil, destination: String? = nil, tag: String? = nil, addressId: String? = nil, amount: DecimalNumber, fiatMoneyAmount: DecimalNumber? = nil, memo: String, fromWeb: Bool, completion: @escaping AssetConfirmationWindow.CompletionHandler) {
 
         if fromWeb {
             var response: MixinAPI.Result<PaymentResponse>?
@@ -699,13 +695,13 @@ extension PayWindow {
             switch action {
             case let .transfer(_, user, _):
                 let fiatMoneyValue = amount * asset.decimalUSDPrice * Currency.current.rate
-                let threshold: Decimal
+                let threshold: DecimalNumber
                 if let value = LoginManager.shared.account?.transfer_confirmation_threshold {
-                    threshold = Decimal(value)
+                    threshold = DecimalNumber(value)
                 } else {
                     threshold = 0
                 }
-                if threshold.isNormal && fiatMoneyValue >= threshold {
+                if !threshold.isZero && fiatMoneyValue >= threshold {
                     DispatchQueue.main.async {
                         BigAmountConfirmationWindow.instance().render(asset: asset, user: user, amount: amount, memo: memo, completion: completion).presentPopupControllerAnimated()
                     }
@@ -730,7 +726,7 @@ extension PayWindow {
             completion(true, nil)
         }
 
-        if AppGroupUserDefaults.User.duplicateTransferConfirmation, let amountString = GenericDecimal(decimal: amount)?.string, let trace = TraceDAO.shared.getTrace(assetId: asset.assetId, amount: amountString, opponentId: opponentId, destination: destination, tag: tag, createdAt: Date().within6Hours().toUTCString()) {
+        if AppGroupUserDefaults.User.duplicateTransferConfirmation, let trace = TraceDAO.shared.getTrace(assetId: asset.assetId, amount: amount.stringValue, opponentId: opponentId, destination: destination, tag: tag, createdAt: Date().within6Hours().toUTCString()) {
 
             if let snapshotId = trace.snapshotId, !snapshotId.isEmpty {
                 DispatchQueue.main.async {

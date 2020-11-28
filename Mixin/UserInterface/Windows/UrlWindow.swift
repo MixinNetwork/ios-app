@@ -266,7 +266,7 @@ class UrlWindow {
         guard !assetId.isEmpty && UUID(uuidString: assetId) != nil && !traceId.isEmpty && UUID(uuidString: traceId) != nil && !addressId.isEmpty && UUID(uuidString: addressId) != nil else {
             return false
         }
-        guard let amount = GenericDecimal(string: amountString)?.decimal else {
+        guard let amount = DecimalNumber(string: amountString) else {
             return false
         }
         var memo = query["memo"]
@@ -327,7 +327,7 @@ class UrlWindow {
             showAutoHiddenHud(style: .error, text: R.string.localizable.url_invalid_payment())
             return true
         }
-        guard UUID(uuidString: recipientId) != nil, UUID(uuidString: assetId) != nil, let amount = GenericDecimal(string: amountString)?.decimal else {
+        guard UUID(uuidString: recipientId) != nil, UUID(uuidString: assetId) != nil, let amount = DecimalNumber(string: amountString) else {
             Logger.write(errorMsg: "[UrlWindow][CheckPayUrl]\(url)")
             showAutoHiddenHud(style: .error, text: R.string.localizable.url_invalid_payment())
             return true
@@ -660,7 +660,7 @@ extension UrlWindow {
             guard let asset = syncAsset(assetId: multisig.assetId, hud: hud) else {
                 return
             }
-            guard let amount = GenericDecimal(string: multisig.amount)?.decimal else {
+            guard let amount = DecimalNumber(string: multisig.amount) else {
                 return
             }
             
@@ -703,7 +703,7 @@ extension UrlWindow {
                 }
                 return
             }
-            guard let amount = GenericDecimal(string: payment.amount)?.decimal else {
+            guard let amount = DecimalNumber(string: payment.amount) else {
                 DispatchQueue.main.async {
                     hud.set(style: .error, text: MixinAPIError.invalidTokenAmount.localizedDescription)
                     hud.scheduleAutoHidden()

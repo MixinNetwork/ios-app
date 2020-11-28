@@ -31,7 +31,7 @@ class AssetConfirmationWindow: BottomSheetView {
         super.dismissPopupControllerAnimated()
     }
 
-    func render(asset: AssetItem, amount: Decimal, memo: String, fiatMoneyAmount: Decimal? = nil, completion: @escaping CompletionHandler) -> BottomSheetView {
+    func render(asset: AssetItem, amount: DecimalNumber, memo: String, fiatMoneyAmount: DecimalNumber? = nil, completion: @escaping CompletionHandler) -> BottomSheetView {
         self.completion = completion
         
         let localizedTokenAmount = CurrencyFormatter.localizedString(from: amount, format: .precision, sign: .whenNegative, symbol: .custom(asset.symbol))

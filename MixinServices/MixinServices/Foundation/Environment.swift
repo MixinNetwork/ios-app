@@ -9,6 +9,8 @@ public var isAppExtension: Bool {
 
 public let reporter = reporterClass.init()
 
+public let maxFractionDigitsOfTokenAmount = 8
+
 public var reporterClass = Reporter.self
 
 public var requestTimeout: TimeInterval = isAppExtension ? 3 : 5

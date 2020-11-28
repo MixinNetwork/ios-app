@@ -3,7 +3,7 @@ import MixinServices
 
 class BigAmountConfirmationWindow: AssetConfirmationWindow {
 
-    func render(asset: AssetItem, user: UserItem, amount: Decimal, memo: String, fiatMoneyAmount: Decimal? = nil, completion: @escaping CompletionHandler) -> BottomSheetView {
+    func render(asset: AssetItem, user: UserItem, amount: DecimalNumber, memo: String, fiatMoneyAmount: DecimalNumber? = nil, completion: @escaping CompletionHandler) -> BottomSheetView {
         let result = super.render(asset: asset, amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, completion: completion)
         titleLabel.text = R.string.localizable.transfer_large_title()
         tipsLabel.text = R.string.localizable.transfer_large_prompt(amountExchangeLabel.text ?? "", asset.symbol, user.fullName)

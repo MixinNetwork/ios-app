@@ -16,9 +16,9 @@ public class Address: BaseCodable {
     public let dust: String
     public let updatedAt: String
     
-    public private(set) lazy var decimalReserve = Decimal(string: reserve) ?? 0
-    public private(set) lazy var decimalFee = Decimal(string: fee) ?? 0
-    public private(set) lazy var decimalDust = Decimal(string: dust) ?? 0
+    public private(set) lazy var decimalReserve = DecimalNumber(string: reserve) ?? 0
+    public private(set) lazy var decimalFee = DecimalNumber(string: fee) ?? 0
+    public private(set) lazy var decimalDust = DecimalNumber(string: dust) ?? 0
     
     public enum CodingKeys: String, CodingTableKey {
         

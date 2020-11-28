@@ -3,7 +3,7 @@ import MixinServices
 
 class DuplicateConfirmationWindow: AssetConfirmationWindow {
 
-    func render(traceCreatedAt: String, asset: AssetItem, action: PayWindow.PinAction, amount: Decimal, memo: String, fiatMoneyAmount: Decimal? = nil, completion: @escaping CompletionHandler) -> BottomSheetView {
+    func render(traceCreatedAt: String, asset: AssetItem, action: PayWindow.PinAction, amount: DecimalNumber, memo: String, fiatMoneyAmount: DecimalNumber? = nil, completion: @escaping CompletionHandler) -> BottomSheetView {
         let result = super.render(asset: asset, amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, completion: completion)
         switch action {
         case let .transfer(_, user, _):

@@ -125,14 +125,14 @@ extension NotificationAndConfirmationSettingsViewController {
     }
     
     private func saveTransferNotificationThreshold(_ string: String) {
-        guard let decimal = LocalizedDecimal(string: string)?.decimal else {
+        guard let decimal = DecimalNumber(localizedString: string)?.nsDecimalNumber else {
             showAutoHiddenHud(style: .error, text: MixinAPIError.invalidTokenAmount.localizedDescription)
             return
         }
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         let request = UserPreferenceRequest(fiat_currency: Currency.current.code,
-                                            transfer_notification_threshold: decimal)
+                                            transfer_notification_threshold: decimal as Decimal)
         AccountAPI.preferences(preferenceRequest: request, completion: { (result) in
             switch result {
             case .success(let account):
@@ -148,14 +148,14 @@ extension NotificationAndConfirmationSettingsViewController {
     }
     
     private func saveTransferConfirmationThreshold(_ string: String) {
-        guard let decimal = LocalizedDecimal(string: string)?.decimal else {
+        guard let decimal = DecimalNumber(localizedString: string)?.nsDecimalNumber else {
             showAutoHiddenHud(style: .error, text: MixinAPIError.invalidTokenAmount.localizedDescription)
             return
         }
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         let request = UserPreferenceRequest(fiat_currency: Currency.current.code,
-                                            transfer_confirmation_threshold: decimal)
+                                            transfer_confirmation_threshold: decimal as Decimal)
         AccountAPI.preferences(preferenceRequest: request, completion: { (result) in
             switch result {
             case .success(let account):

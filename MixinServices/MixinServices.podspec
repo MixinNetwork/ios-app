@@ -40,4 +40,5 @@ Mixin Core Services.
   s.dependency 'SwiftyMarkdown'
   s.dependency 'lottie-ios'
   s.dependency 'MixinCrypto'
+  s.dependency 'BigNumber'
 end

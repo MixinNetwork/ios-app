@@ -73,7 +73,13 @@ extension TransferAttachmentData: Decodable {
             Logger.write(error: error)
         }
         let stringValue = try container.decode(String.self, forKey: key)
-        return Int(stringValue) ?? GenericDecimal(string: stringValue)?.intValue ?? 0
+        if let value = Int(stringValue) {
+            return value
+        } else if let decimal = Decimal(string: stringValue, locale: .us) {
+            return (decimal as NSDecimalNumber).intValue
+        } else {
+            return 0
+        }
     }
 
     private static func safeDecodeInt64(container: KeyedDecodingContainer<CodingKeys>, key: KeyedDecodingContainer<CodingKeys>.Key) throws -> Int64? {
@@ -88,7 +94,13 @@ extension TransferAttachmentData: Decodable {
             Logger.write(error: error)
         }
         let stringValue = try container.decode(String.self, forKey: key)
-        return Int64(stringValue) ?? GenericDecimal(string: stringValue)?.int64Value ?? 0
+        if let value = Int64(stringValue) {
+            return value
+        } else if let decimal = Decimal(string: stringValue, locale: .us) {
+            return (decimal as NSDecimalNumber).int64Value
+        } else {
+            return 0
+        }
     }
     
 }

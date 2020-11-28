@@ -9,6 +9,10 @@ public struct UserPreferenceRequest: Codable {
     public let accept_conversation_source: String?
     public let accept_search_source: String?
     public let fiat_currency: String?
+    
+    // Since the threshold is number of fiat currency, it rearly exceeds the precision
+    // limit of Decimal. Also we need to encode it as a JSON number, a Decimal seems
+    // to be a not-too-bad choice
     public let transfer_notification_threshold: Decimal?
     public let transfer_confirmation_threshold: Decimal?
     

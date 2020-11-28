@@ -121,7 +121,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         }
         let amountString = amountTextField.text ?? ""
         amountTextField.font = amountString.isEmpty ? placeHolderFont : amountFont
-        guard let localizedDecimal = LocalizedDecimal(string: amountString) else {
+        guard let decimalAmount = DecimalNumber(localizedString: amountString) else {
             if isInputAssetAmount {
                 amountExchangeLabel.text = zeroFiatMoneyRepresentation + " " + Currency.current.code
             } else {
@@ -132,8 +132,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
             return
         }
         
-        let decimalAmount = localizedDecimal.decimal
-        let genericAmountString = localizedDecimal.generic.string
+        let genericAmountString = decimalAmount.stringValue
         
         let fiatMoneyPrice = asset.decimalUSDPrice * Currency.current.rate
         if isInputAssetAmount {
@@ -169,7 +168,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         guard let asset = self.asset else {
             return
         }
-        guard let localizedAmountDecimal = LocalizedDecimal(string: amountTextField.text?.trim() ?? "") else {
+        guard let amount = DecimalNumber(localizedString: amountTextField.text?.trim() ?? "") else {
             return
         }
         guard !continueButton.isBusy else {
@@ -180,14 +179,14 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         let memo = memoTextField.text?.trim() ?? ""
         
         let fiatMoneyPrice = asset.decimalUSDPrice * Currency.current.rate
-        let tokenAmount: Decimal
-        let fiatMoneyAmount: Decimal?
+        let tokenAmount: DecimalNumber
+        let fiatMoneyAmount: DecimalNumber?
         if isInputAssetAmount {
-            tokenAmount = localizedAmountDecimal.decimal
+            tokenAmount = amount
             fiatMoneyAmount = nil
         } else {
-            fiatMoneyAmount = localizedAmountDecimal.decimal
-            tokenAmount = localizedAmountDecimal.decimal / fiatMoneyPrice
+            fiatMoneyAmount = amount
+            tokenAmount = amount / fiatMoneyPrice
         }
         
         adjustBottomConstraintWhenKeyboardFrameChanges = false
@@ -441,12 +440,11 @@ extension TransferOutViewController: UITextFieldDelegate {
         let newText = ((textField.text ?? "") as NSString).replacingCharacters(in: range, with: string)
         if newText.isEmpty {
             return true
-        } else if let newAmount = LocalizedDecimal(string: newText) {
-            let components = newAmount.generic.string.components(separatedBy: GenericDecimal.decimalSeparator)
+        } else if let newAmount = DecimalNumber(localizedString: newText) {
             if isInputAssetAmount {
-                return components.count == 1 || components[1].count <= 8
+                return newAmount.numberOfDigits.fraction <= 8
             } else {
-                return components.count == 1 || components[1].count <= 2
+                return newAmount.numberOfDigits.fraction <= 2
             }
         } else {
             return false

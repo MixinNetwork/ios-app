@@ -88,7 +88,7 @@ public class MessageItem: TableCodable, MentionedFullnameReplaceable {
     
     public lazy var mentionedFullnameReplacedContent = makeMentionedFullnameReplacedContent()
     public lazy var markdownControlCodeRemovedContent = makeMarkdownControlCodeRemovedContent()
-    public lazy var decimalSnapshotAmount = Decimal(string: snapshotAmount ?? "") ?? 0
+    public lazy var decimalSnapshotAmount = DecimalNumber(string: snapshotAmount ?? "") ?? 0
     
     public lazy var location: Location? = {
         guard category.hasSuffix("_LOCATION") else {

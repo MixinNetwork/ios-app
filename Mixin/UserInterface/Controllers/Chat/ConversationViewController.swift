@@ -64,8 +64,8 @@ class ConversationViewController: UIViewController {
     private let showScrollToBottomButtonThreshold: CGFloat = 150
     private let loadMoreMessageThreshold = 20
     private let animationDuration: TimeInterval = 0.3
-    private let fastReplyConfirmedDistance: CGFloat = 20
-    private let fastReplyMaxDistance: CGFloat = 40
+    private let fastReplyConfirmedDistance: CGFloat = 30
+    private let fastReplyMaxDistance: CGFloat = 60
     private let feedback = UIImpactFeedbackGenerator()
     
     private var ownerUser: UserItem?
@@ -1205,7 +1205,7 @@ extension ConversationViewController: UIGestureRecognizerDelegate {
                 return false
             }
             let velocity = fastReplyRecognizer.velocity(in: nil)
-            return velocity.x < 0 && abs(velocity.x) > abs(velocity.y)
+            return velocity.x < 0 && abs(velocity.x) > abs(velocity.y) * 2
         default:
             return true
         }

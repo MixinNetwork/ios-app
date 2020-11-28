@@ -376,9 +376,9 @@ class HomeViewController: UIViewController {
                     }
                 }
                 if self.appStackView.arrangedSubviews.count <= 3 {
-                    self.appStackView.spacing = 44
+                    self.appStackView.spacing = 28
                 } else {
-                    self.appStackView.spacing = 36
+                    self.appStackView.spacing = 20
                 }
                 UIView.animate(withDuration: 0.15) {
                     self.appStackView.alpha = 1

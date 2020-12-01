@@ -49,7 +49,7 @@ public enum Logger {
             #if DEBUG
             print("===error:\(error)...\n\(extra)")
             #endif
-            writeLog(filename: databaseLog, log: "\n------------------------------------\n[Error]" + String(describing: error), newSection: extra.isEmpty && newSection)
+            writeLog(filename: databaseLog, log: "\n------------------------------------\n[Error]" + error.localizedDescription, newSection: extra.isEmpty && newSection)
             if !extra.isEmpty {
                 writeLog(filename: databaseLog, log: extra, newSection: newSection)
             }

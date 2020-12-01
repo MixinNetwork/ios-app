@@ -9,7 +9,6 @@ enum RequestSigning {
         if let signedToken = Self.signedToken(request: request) {
             headers["Authorization"] = signedToken
         }
-        headers["X-Request-Id"] = UUID().uuidString.lowercased()
         return headers
     }
     

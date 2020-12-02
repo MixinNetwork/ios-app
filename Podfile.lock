@@ -120,6 +120,9 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (7.1.1):
     - GoogleUtilities/Logger
+  - GRDB.swift (5.1.0):
+    - GRDB.swift/standard (= 5.1.0)
+  - GRDB.swift/standard (5.1.0)
   - GTMSessionFetcher/Core (1.5.0)
   - GzipSwift (5.1.1)
   - Highlightr (2.1.0)
@@ -136,6 +139,7 @@ PODS:
     - Alamofire
     - AppCenter
     - DeviceGuru
+    - GRDB.swift
     - GzipSwift
     - libsignal-protocol-c
     - lottie-ios
@@ -144,7 +148,6 @@ PODS:
     - SDWebImageYYPlugin/YYImage
     - SocketRocket
     - SwiftyMarkdown
-    - WCDB.swift
     - YYImage/WebP
     - Zip
   - nanopb (2.30906.0):
@@ -187,8 +190,6 @@ PODS:
     - YYImage/Core
   - SnapKit (5.0.1)
   - SocketRocket (0.5.1)
-  - SQLiteRepairKit (1.2.2):
-    - WCDBOptimizedSQLCipher (~> 1.2.0)
   - SwiftyMarkdown (1.2.3)
   - Texture (3.0.0):
     - Texture/AssetsLibrary (= 3.0.0)
@@ -217,10 +218,6 @@ PODS:
     - Texture
   - TexturedMaaku/SyntaxColors (0.7.0):
     - Highlightr
-  - WCDB.swift (1.0.8.2):
-    - SQLiteRepairKit (~> 1.2.0)
-    - WCDBOptimizedSQLCipher (~> 1.2.0)
-  - WCDBOptimizedSQLCipher (1.2.1)
   - YYImage (1.0.4):
     - YYImage/Core (= 1.0.4)
   - YYImage/Core (1.0.4)
@@ -249,7 +246,6 @@ DEPENDENCIES:
   - Texture (from `https://github.com/TextureGroup/Texture.git`, branch `master`)
   - TexturedMaaku (from `https://github.com/wuyuehyang/TexturedMaaku.git`, branch `mixin`)
   - TexturedMaaku/SyntaxColors (from `https://github.com/wuyuehyang/TexturedMaaku.git`, branch `mixin`)
-  - WCDB.swift (from `https://github.com/MixinNetwork/wcdb.git`, branch `bugfix/fts`)
   - YYImage (from `https://github.com/wuyuehyang/YYImage.git`)
 
 SPEC REPOS:
@@ -273,6 +269,7 @@ SPEC REPOS:
     - GoogleDataTransport
     - GoogleToolboxForMac
     - GoogleUtilities
+    - GRDB.swift
     - GTMSessionFetcher
     - GzipSwift
     - libcmark_gfm
@@ -291,8 +288,6 @@ SPEC REPOS:
     - SDWebImageYYPlugin
     - SnapKit
     - SocketRocket
-    - SQLiteRepairKit
-    - WCDBOptimizedSQLCipher
     - Zip
 
 EXTERNAL SOURCES:
@@ -316,9 +311,6 @@ EXTERNAL SOURCES:
   TexturedMaaku:
     :branch: mixin
     :git: https://github.com/wuyuehyang/TexturedMaaku.git
-  WCDB.swift:
-    :branch: bugfix/fts
-    :git: https://github.com/MixinNetwork/wcdb.git
   YYImage:
     :git: https://github.com/wuyuehyang/YYImage.git
 
@@ -341,9 +333,6 @@ CHECKOUT OPTIONS:
   TexturedMaaku:
     :commit: a73def5253fcec7b49307001176592b4b431b65d
     :git: https://github.com/wuyuehyang/TexturedMaaku.git
-  WCDB.swift:
-    :commit: 18ee3d5d9596a269f149153fab2dea656bb04653
-    :git: https://github.com/MixinNetwork/wcdb.git
   YYImage:
     :commit: 7acf346c746f6685f46c2fbc3edb1a05a12be827
     :git: https://github.com/wuyuehyang/YYImage.git
@@ -368,6 +357,7 @@ SPEC CHECKSUMS:
   GoogleDataTransport: 116c84c4bdeb76be2a7a46de51244368f9794eab
   GoogleToolboxForMac: 1350d40e86a76f7863928d63bcb0b89c84c521c5
   GoogleUtilities: 3dc4ff0d5e4840e2fa8eef0889620e8c33d4218c
+  GRDB.swift: 9bc45e93b2aa2fa6d02bee883d803d1d187efb2f
   GTMSessionFetcher: b3503b20a988c4e20cc189aa798fd18220133f52
   GzipSwift: 893f3e48e597a1a4f62fafcb6514220fcf8287fa
   Highlightr: c687b337a60af6e46a478b4376006168bb5bd7c5
@@ -376,7 +366,7 @@ SPEC CHECKSUMS:
   lottie-ios: 0e760146411886f6104050c932a8e6964853267f
   Maaku: 0eb331f423453177018d0b483068bcc181e135b4
   MixinCrypto: 00953362fce95332fccda7ceb3e7434b6891f0d3
-  MixinServices: 4d63edec6f1bb0e606416a844209416a2c68eaa3
+  MixinServices: 8a3b0e065d26134f1252ef8cae8543fe56db6f61
   nanopb: 1bf24dd71191072e120b83dd02d08f3da0d65e53
   PhoneNumberKit: ff153d5e299f6da566cb73c6aa71e354933b2932
   PINCache: 7a8fc1a691173d21dbddbf86cd515de6efa55086
@@ -391,15 +381,12 @@ SPEC CHECKSUMS:
   SDWebImageYYPlugin: a0a9d1b51c6903757bd7c0978d9d39f1e6254624
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
   SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
-  SQLiteRepairKit: 35aaae5a8838adb85f5b1eb4d796055be6060a4b
   SwiftyMarkdown: be01b2905694bd7bfd95330cd43704bfdb978aec
   Texture: 41ce7d2fdff193a45cc8cfa3c254115cf776068a
   TexturedMaaku: e868edf580d7466afe381d5380dea6751e9d99ca
-  WCDB.swift: 2e767b45d58cfca1b12e7e9ab6d65d357d5c85e7
-  WCDBOptimizedSQLCipher: baf44493b0c7a3d49e97bc5b64a3856f6428ddd1
   YYImage: 6db68da66f20d9f169ceb94dfb9947c3867b9665
   Zip: 414f59909701fda9a84ab774ebe0f5449b1082cc
 
-PODFILE CHECKSUM: 38420121aa04a94919928d5b2e7ed15e60fd7341
+PODFILE CHECKSUM: 86937169d88719622e19f77f14c416a06b804dab
 
 COCOAPODS: 1.10.0

@@ -19,7 +19,7 @@ class SystemMessageViewModel: MessageViewModel {
     
     override init(message: MessageItem) {
         let senderIsMe = message.userId == myUserId
-        let senderName = senderIsMe ? R.string.localizable.chat_message_you() : message.userFullName
+        let senderName = senderIsMe ? R.string.localizable.chat_message_you() : (message.userFullName ?? "")
         if message.category == MessageCategory.KRAKEN_PUBLISH.rawValue {
             text = R.string.localizable.group_call_publish(senderName)
         } else if message.category == MessageCategory.KRAKEN_CANCEL.rawValue {
@@ -35,10 +35,10 @@ class SystemMessageViewModel: MessageViewModel {
         } else {
             text = SystemConversationAction.getSystemMessage(actionName: message.actionName,
                                                              userId: message.userId,
-                                                             userFullName: message.userFullName,
+                                                             userFullName: message.userFullName ?? "",
                                                              participantId: message.participantUserId,
                                                              participantFullName: message.participantFullName,
-                                                             content: message.content)
+                                                             content: message.content ?? "")
         }
         super.init(message: message)
         backgroundImage = R.image.ic_chat_bubble_system()

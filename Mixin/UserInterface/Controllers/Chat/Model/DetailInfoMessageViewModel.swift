@@ -59,7 +59,7 @@ class DetailInfoMessageViewModel: MessageViewModel {
     
     override func layout(width: CGFloat, style: MessageViewModel.Style) {
         super.layout(width: width, style: style)
-        let fullnameSize = (message.userFullName as NSString)
+        let fullnameSize = ((message.userFullName ?? "") as NSString)
             .boundingRect(with: UIView.layoutFittingExpandedSize,
                           options: [],
                           attributes: [.font: MessageFontSet.fullname.scaled],

@@ -1,6 +1,4 @@
-
 import UIKit
-import WCDBSwift
 
 public class AttachmentCleanUpJob: BaseJob {
 

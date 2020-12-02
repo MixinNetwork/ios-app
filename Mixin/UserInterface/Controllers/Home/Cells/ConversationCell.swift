@@ -153,7 +153,7 @@ class ConversationCell: ModernSelectedBackgroundCell {
                 contentLabel.text = R.string.localizable.group_call_end()
             } else {
                 if item.contentType.hasPrefix("SYSTEM_") {
-                    contentLabel.text = SystemConversationAction.getSystemMessage(actionName: item.actionName, userId: item.senderId, userFullName: item.senderFullName, participantId: item.participantUserId, participantFullName: item.participantFullName, content: item.content)
+                    contentLabel.text = SystemConversationAction.getSystemMessage(actionName: item.actionName, userId: item.senderId, userFullName: item.senderFullName, participantId: item.participantUserId, participantFullName: item.participantFullName, content: item.content ?? "")
                 } else if item.messageId.isEmpty {
                     contentLabel.text = ""
                 } else {

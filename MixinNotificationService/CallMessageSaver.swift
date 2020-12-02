@@ -24,7 +24,7 @@ extension CallMessageSaver: CallMessageCoordinator {
             MessageDAO.shared.insertMessage(message: msg, messageSource: "")
         } else {
             let job = Job(pendingWebRTCMessage: data)
-            MixinDatabase.shared.insertOrReplace(objects: [job])
+            UserDatabase.current.save(job)
         }
     }
     

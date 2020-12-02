@@ -65,7 +65,7 @@ class SharedMediaAudioCell: UITableViewCell, AudioCell {
         if let avatarUrl = audio.message.userAvatarUrl {
             avatarImageView.setImage(with: avatarUrl,
                                      userId: audio.message.userId,
-                                     name: audio.message.userFullName)
+                                     name: audio.message.userFullName ?? "")
         }
         lengthLabel.text = audio.length
         waveformView.waveform = audio.mediaWaveform

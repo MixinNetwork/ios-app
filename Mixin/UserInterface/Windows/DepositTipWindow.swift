@@ -40,7 +40,7 @@ class DepositTipWindow: BottomSheetView {
         } else {
             continueButton.isEnabled = true
             if asset.reserve.doubleValue > 0 {
-                warningLabel.text = R.string.localizable.wallet_deposit_attention_minimum(asset.reserve , asset.chainSymbol)
+                warningLabel.text = R.string.localizable.wallet_deposit_attention_minimum(asset.reserve, asset.chain?.symbol ?? "")
             } else {
                 warningLabel.text = R.string.localizable.wallet_deposit_attention()
             }

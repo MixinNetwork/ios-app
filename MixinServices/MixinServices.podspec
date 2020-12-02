@@ -36,7 +36,7 @@ Mixin Core Services.
   s.dependency 'Zip'
   s.dependency 'libsignal-protocol-c'
   s.dependency 'SocketRocket'
-  s.dependency 'WCDB.swift'
+  s.dependency 'GRDB.swift'
   s.dependency 'SwiftyMarkdown'
   s.dependency 'lottie-ios'
   s.dependency 'MixinCrypto'

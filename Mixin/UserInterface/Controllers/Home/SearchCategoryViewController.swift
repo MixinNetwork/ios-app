@@ -1,5 +1,5 @@
 import UIKit
-import WCDBSwift
+import GRDB
 import MixinServices
 
 class SearchCategoryViewController: UIViewController, HomeSearchViewController {
@@ -43,7 +43,7 @@ class SearchCategoryViewController: UIViewController, HomeSearchViewController {
     private var lastKeyword: String?
     private var lastSearchFieldText: String?
     private var models = [[Any]]()
-    private var statement: CoreStatement?
+    private var snapshot: DatabaseSnapshot?
     
     deinit {
         cancelOperation()
@@ -120,7 +120,7 @@ class SearchCategoryViewController: UIViewController, HomeSearchViewController {
             guard !op.isCancelled, self != nil else {
                 return
             }
-            let models: [Any]
+            var models: [Any] = []
             switch category {
             case .asset:
                 models = AssetDAO.shared.getAssets(keyword: keyword, sortResult: true, limit: nil)
@@ -132,12 +132,9 @@ class SearchCategoryViewController: UIViewController, HomeSearchViewController {
                 models = ConversationDAO.shared.getGroupOrStrangerConversation(withNameLike: keyword, limit: nil)
                     .map { ConversationSearchResult(conversation: $0, keyword: keyword) }
             case .conversationsByMessage:
-                models = ConversationDAO.shared.getConversation(withMessageLike: keyword, limit: nil, callback: { (statement) in
-                    guard !op.isCancelled else {
-                        return
-                    }
-                    self?.statement = statement
-                })
+                self?.snapshot = ConversationDAO.shared.getConversation(withMessageLike: keyword, limit: nil) { (results) in
+                    models = results
+                }
             }
             guard !op.isCancelled, self != nil else {
                 return
@@ -157,8 +154,8 @@ class SearchCategoryViewController: UIViewController, HomeSearchViewController {
     }
     
     private func cancelOperation() {
-        statement?.interrupt()
-        statement = nil
+        snapshot?.interrupt()
+        snapshot = nil
         queue.cancelAllOperations()
     }
     

@@ -1,6 +1,5 @@
 import Foundation
 import UIKit
-import WCDBSwift
 import MixinServices
 
 class RestoreViewController: UIViewController {
@@ -59,7 +58,7 @@ class RestoreViewController: UIViewController {
             }
 
             let localURL = AppGroupContainer.mixinDatabaseUrl
-            self.removeDatabase(databaseURL: localURL)
+            try? FileManager.default.removeItem(at: localURL) // FIXME: Needs to close the db before deletion?
             do {
                 if !cloudURL.isDownloaded {
                     try self.downloadFromCloud(cloudURL: cloudURL, progress: { (progress) in
@@ -93,25 +92,7 @@ class RestoreViewController: UIViewController {
         AppDelegate.current.mainWindow.rootViewController =
             makeInitialViewController()
     }
-
-    private func removeDatabase(databaseURL: URL) {
-        guard FileManager.default.fileExists(atPath: databaseURL.path) else {
-            return
-        }
-        let semaphore = DispatchSemaphore(value: 0)
-        do {
-            try Database(withPath: databaseURL.path).close {
-                try FileManager.default.removeItem(at: databaseURL)
-                semaphore.signal()
-            }
-            semaphore.wait()
-        } catch {
-            semaphore.signal()
-            try? FileManager.default.removeItem(at: databaseURL)
-            Logger.write(error: error, extra: "[iCloud][RestoreViewController]...remove database failed...")
-        }
-    }
-
+    
     private func restoreFailed(error: Swift.Error) {
         DispatchQueue.main.async {
             self.restoreButton.isBusy = false

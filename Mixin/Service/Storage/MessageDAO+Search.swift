@@ -1,5 +1,5 @@
 import Foundation
-import WCDBSwift
+import GRDB
 import MixinServices
 
 extension MessageDAO {
@@ -15,10 +15,8 @@ extension MessageDAO {
     func getMessages(conversationId: String, contentLike keyword: String, belowMessageId location: String?, limit: Int?) -> [MessageSearchResult] {
         var results = [MessageSearchResult]()
         
-        var sql: String!
-        if let location = location {
-            let rowId = MixinDatabase.shared.getRowId(tableName: Message.tableName,
-                                                      condition: Message.Properties.messageId == location)
+        var sql: String
+        if let location = location, let rowId: Int = UserDatabase.current.select(column: .rowID, from: Message.self, where: Message.column(of: .messageId) == location) {
             sql = MessageDAO.sqlSearchMessageContent + " AND m.ROWID < \(rowId)"
         } else {
             sql = MessageDAO.sqlSearchMessageContent
@@ -30,29 +28,25 @@ extension MessageDAO {
         }
         
         do {
-            let stmt = StatementSelectSQL(sql: sql)
-            let cs = try MixinDatabase.shared.database.prepare(stmt)
-            
-            let bindingCounter = Counter(value: 0)
-            let wildcardedKeyword = "%\(keyword.sqlEscaped)%"
-            cs.bind(conversationId, toIndex: bindingCounter.advancedValue)
-            cs.bind(wildcardedKeyword, toIndex: bindingCounter.advancedValue)
-            cs.bind(wildcardedKeyword, toIndex: bindingCounter.advancedValue)
-            
-            while try cs.step() {
-                let counter = Counter(value: -1)
-                let result = MessageSearchResult(conversationId: conversationId,
-                                                 messageId: cs.value(atIndex: counter.advancedValue) ?? "",
-                                                 category: cs.value(atIndex: counter.advancedValue) ?? "",
-                                                 content: cs.value(atIndex: counter.advancedValue) ?? "",
-                                                 createdAt: cs.value(atIndex: counter.advancedValue) ?? "",
-                                                 userId: cs.value(atIndex: counter.advancedValue) ?? "",
-                                                 fullname: cs.value(atIndex: counter.advancedValue) ?? "",
-                                                 avatarUrl: cs.value(atIndex: counter.advancedValue) ?? "",
-                                                 isVerified: cs.value(atIndex: counter.advancedValue) ?? false,
-                                                 appId: cs.value(atIndex: counter.advancedValue) ?? "",
-                                                 keyword: keyword)
-                results.append(result)
+            try UserDatabase.current.pool.read { (db) -> Void in
+                let wildcardedKeyword = "%\(keyword.sqlEscaped)%"
+                let arguments = StatementArguments([conversationId, wildcardedKeyword, wildcardedKeyword])
+                let rows = try Row.fetchCursor(db, sql: sql, arguments: arguments, adapter: nil)
+                while let row = try rows.next() {
+                    let counter = Counter(value: -1)
+                    let result = MessageSearchResult(conversationId: conversationId,
+                                                     messageId: row[counter.advancedValue] ?? "",
+                                                     category: row[counter.advancedValue] ?? "",
+                                                     content: row[counter.advancedValue] ?? "",
+                                                     createdAt: row[counter.advancedValue] ?? "",
+                                                     userId: row[counter.advancedValue] ?? "",
+                                                     fullname: row[counter.advancedValue] ?? "",
+                                                     avatarUrl: row[counter.advancedValue] ?? "",
+                                                     isVerified: row[counter.advancedValue] ?? false,
+                                                     appId: row[counter.advancedValue] ?? "",
+                                                     keyword: keyword)
+                    results.append(result)
+                }
             }
         } catch {
             Logger.writeDatabase(error: error)

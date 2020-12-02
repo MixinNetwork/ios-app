@@ -1,0 +1,96 @@
+import Foundation
+import GRDB
+
+public final class AssetDAO: UserDatabaseDAO {
+    
+    public static let shared = AssetDAO()
+    
+    private static let sqlQueryTable = """
+    SELECT a.asset_id, a.type, a.symbol, a.name, a.icon_url, a.balance, a.destination, a.tag,
+        a.price_btc, a.price_usd, a.change_usd, a.chain_id, a.confirmations, a.asset_key, a.reserve,
+        chain.icon_url as chain_icon_url, chain.name as chain_name, chain.symbol as chain_symbol
+    FROM assets a
+    LEFT JOIN assets chain ON a.chain_id = chain.asset_id
+    """
+    private static let sqlOrder = "a.balance * a.price_usd DESC, a.price_usd DESC, cast(a.balance AS REAL) DESC, a.name DESC"
+    private static let sqlQuery = "\(sqlQueryTable) ORDER BY \(sqlOrder)"
+    private static let sqlQueryAvailable = "\(sqlQueryTable) WHERE a.balance > 0 ORDER BY \(sqlOrder) LIMIT 1"
+    private static let sqlQueryAvailableList = "\(sqlQueryTable) WHERE a.balance > 0 ORDER BY \(sqlOrder)"
+    
+    private static let sqlQueryById = "\(sqlQueryTable) WHERE a.asset_id = ?"
+    
+    public func getAsset(assetId: String) -> AssetItem? {
+        db.select(with: AssetDAO.sqlQueryById, arguments: [assetId])
+    }
+    
+    public func getAssetIds() -> [String] {
+        db.select(column: Asset.column(of: .assetId), from: Asset.self)
+    }
+    
+    public func isExist(assetId: String) -> Bool {
+        db.recordExists(in: Asset.self, where: Asset.column(of: .assetId) == assetId)
+    }
+    
+    public func insertOrUpdateAssets(assets: [Asset]) {
+        guard !assets.isEmpty else {
+            return
+        }
+        db.save(assets) { _ in
+            if assets.count == 1 {
+                NotificationCenter.default.postOnMain(name: .AssetsDidChange, object: assets[0].assetId)
+            } else {
+                NotificationCenter.default.postOnMain(name: .AssetsDidChange)
+            }
+        }
+    }
+    
+    public func saveAsset(asset: Asset) -> AssetItem? {
+        var assetItem: AssetItem?
+        try db.save(asset) { db in
+            assetItem = try! AssetItem.fetchOne(db,
+                                                sql: AssetDAO.sqlQueryById,
+                                                arguments: [asset.assetId],
+                                                adapter: nil)
+        }
+        return assetItem
+    }
+    
+    public func getAssets(keyword: String, sortResult: Bool, limit: Int?) -> [AssetItem] {
+        var sql = """
+        \(Self.sqlQueryTable)
+        WHERE (a.name LIKE ? OR a.symbol LIKE ?)
+        """
+        if sortResult {
+            sql += " AND a.balance > 0 ORDER BY CASE WHEN a.symbol LIKE ? THEN 1 ELSE 0 END DESC, \(Self.sqlOrder)"
+        }
+        if let limit = limit {
+            sql += " LIMIT \(limit)"
+        }
+        
+        let keyword = "%\(keyword)%"
+        let arguments: StatementArguments
+        if sortResult {
+            arguments = [keyword, keyword, keyword]
+        } else {
+            arguments = [keyword, keyword]
+        }
+        
+        return db.select(with: sql, arguments: arguments)
+    }
+    
+    public func getAssets() -> [AssetItem] {
+        db.select(with: AssetDAO.sqlQuery)
+    }
+    
+    public func getDefaultTransferAsset() -> AssetItem? {
+        if let assetId = AppGroupUserDefaults.Wallet.defaultTransferAssetId, !assetId.isEmpty, let asset = getAsset(assetId: assetId), asset.balance.doubleValue > 0 {
+            return asset
+        }
+        return UserDatabase.current.select(with: AssetDAO.sqlQueryAvailable)
+    }
+    
+    public func getAvailableAssets() -> [AssetItem] {
+        db.select(with: AssetDAO.sqlQueryAvailableList)
+    }
+    
+}

@@ -75,8 +75,14 @@ public class MixinService {
 
             noKeyList = requestSignalKeyUsers.filter{!keys.contains($0.userId)}
             if !noKeyList.isEmpty {
-                let sentSenderKeys = noKeyList.compactMap { ParticipantSession(conversationId: conversationId, userId: $0.userId, sessionId: $0.sessionId!, sentToServer: SenderKeyStatus.UNKNOWN.rawValue, createdAt: Date().toUTCString()) }
-                MixinDatabase.shared.insertOrReplace(objects: sentSenderKeys)
+                let sentSenderKeys = noKeyList.compactMap {
+                    ParticipantSession(conversationId: conversationId,
+                                       userId: $0.userId,
+                                       sessionId: $0.sessionId!,
+                                       sentToServer: SenderKeyStatus.UNKNOWN.rawValue,
+                                       createdAt: Date().toUTCString())
+                }
+                UserDatabase.current.save(sentSenderKeys)
             }
             Logger.write(conversationId: conversationId, log: "[CheckSessionSenderKey][SignalKeys]...\(signalKeys.map { "{\($0.userId ?? "")}" }.joined(separator: ","))...")
         }
@@ -89,8 +95,14 @@ public class MixinService {
         let blazeMessage = BlazeMessage(params: param, action: BlazeMessageAction.createSignalKeyMessage.rawValue)
         let (success, _, retry) = deliverNoThrow(blazeMessage: blazeMessage)
         if success {
-            let sentSenderKeys = signalKeyMessages.compactMap { ParticipantSession(conversationId: conversationId, userId: $0.recipientId!, sessionId: $0.sessionId!, sentToServer: SenderKeyStatus.SENT.rawValue, createdAt: Date().toUTCString()) }
-            MixinDatabase.shared.insertOrReplace(objects: sentSenderKeys)
+            let sentSenderKeys = signalKeyMessages.compactMap {
+                ParticipantSession(conversationId: conversationId,
+                                   userId: $0.recipientId!,
+                                   sessionId: $0.sessionId!,
+                                   sentToServer: SenderKeyStatus.SENT.rawValue,
+                                   createdAt: Date().toUTCString())
+            }
+            UserDatabase.current.save(sentSenderKeys)
         } else if retry {
             return try checkSessionSenderKey(conversationId: conversationId)
         }
@@ -133,7 +145,12 @@ public class MixinService {
             try SignalProtocol.shared.processSession(userId: recipientId, key: signalKeys[0])
         } else {
             Logger.write(conversationId: conversationId, log: "[SendSenderKey]...recipientId:\(recipientId)...No any signal key from server")
-            MixinDatabase.shared.insertOrReplace(objects: [ParticipantSession(conversationId: conversationId, userId: recipientId, sessionId: sessionId, sentToServer: SenderKeyStatus.UNKNOWN.rawValue, createdAt: Date().toUTCString())])
+            let session = ParticipantSession(conversationId: conversationId,
+                                             userId: recipientId,
+                                             sessionId: sessionId,
+                                             sentToServer: SenderKeyStatus.UNKNOWN.rawValue,
+                                             createdAt: Date().toUTCString())
+            UserDatabase.current.save(session)
             return false
         }
 
@@ -147,7 +164,12 @@ public class MixinService {
         let blazeMessage = BlazeMessage(params: param, action: BlazeMessageAction.createSignalKeyMessage.rawValue)
         let (success, _, retry) = deliverNoThrow(blazeMessage: blazeMessage)
         if success {
-            MixinDatabase.shared.insertOrReplace(objects: [ParticipantSession(conversationId: conversationId, userId: recipientId, sessionId: sessionId, sentToServer: SenderKeyStatus.SENT.rawValue, createdAt: Date().toUTCString())])
+            let session = ParticipantSession(conversationId: conversationId,
+                                             userId: recipientId,
+                                             sessionId: sessionId,
+                                             sentToServer: SenderKeyStatus.SENT.rawValue,
+                                             createdAt: Date().toUTCString())
+            UserDatabase.current.save(session)
         } else if retry {
             return try sendSenderKey(conversationId: conversationId, recipientId: recipientId, sessionId: sessionId)
         }
@@ -175,7 +197,7 @@ public class MixinService {
                 let participantSessions = sessions.map {
                     ParticipantSession(conversationId: conversationId, userId: $0.userId, sessionId: $0.sessionId, sentToServer: nil, createdAt: Date().toUTCString())
                 }
-                MixinDatabase.shared.insertOrReplace(objects: participantSessions)
+                UserDatabase.current.save(participantSessions)
                 return true
             case .failure(.unauthorized):
                 return false

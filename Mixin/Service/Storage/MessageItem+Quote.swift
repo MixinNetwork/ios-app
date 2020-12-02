@@ -29,7 +29,7 @@ extension MessageItem {
         } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
             return (snapshotAmount ?? "0") + " " + (assetSymbol ?? "")
         } else if category.hasSuffix("_CONTACT") {
-            return sharedUserIdentityNumber
+            return sharedUserIdentityNumber ?? ""
         } else if category == MessageCategory.APP_CARD.rawValue {
             return appCard?.description ?? ""
         } else if category == MessageCategory.APP_BUTTON_GROUP.rawValue {

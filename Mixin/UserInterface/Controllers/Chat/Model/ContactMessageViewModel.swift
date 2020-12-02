@@ -14,9 +14,9 @@ class ContactMessageViewModel: CardMessageViewModel {
     let verifiedImage: UIImage?
     
     override init(message: MessageItem) {
-        if message.sharedUserIsVerified {
+        if message.sharedUserIsVerified ?? false {
             verifiedImage = R.image.ic_user_verified()
-        } else if !message.sharedUserAppId.isEmpty {
+        } else if let id = message.sharedUserAppId, !id.isEmpty {
             verifiedImage = R.image.ic_user_bot()
         } else {
             verifiedImage = nil
@@ -25,7 +25,7 @@ class ContactMessageViewModel: CardMessageViewModel {
     }
     
     override func layout(width: CGFloat, style: MessageViewModel.Style) {
-        let fullnameWidth = (message.sharedUserFullName as NSString)
+        let fullnameWidth = ((message.sharedUserFullName ?? "") as NSString)
             .size(withAttributes: [NSAttributedString.Key.font: Self.fullnameFontSet.scaled])
             .width
         let iconWidth: CGFloat = {
@@ -35,7 +35,7 @@ class ContactMessageViewModel: CardMessageViewModel {
                 return 0
             }
         }()
-        let idWidth = (message.sharedUserIdentityNumber as NSString)
+        let idWidth = ((message.sharedUserIdentityNumber ?? "") as NSString)
             .size(withAttributes: [NSAttributedString.Key.font: Self.idFontSet.scaled])
             .width
         contentWidth = Self.leftViewSideLength

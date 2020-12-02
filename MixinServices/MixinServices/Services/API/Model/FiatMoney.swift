@@ -1,5 +1,4 @@
 import Foundation
-import WCDBSwift
 
 public struct FiatMoney: Codable {
     

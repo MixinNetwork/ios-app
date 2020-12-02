@@ -68,7 +68,7 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
         var hint: String
         var action: String
         if noMemo {
-            if asset.isUseTag {
+            if asset.usesTag {
                 hint = R.string.localizable.address_memo_add(R.string.localizable.address_add_tag())
                 action = R.string.localizable.address_add_tag()
             } else {
@@ -77,7 +77,7 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
             }
             memoView.isHidden = true
         } else {
-            if asset.isUseTag {
+            if asset.usesTag {
                 hint = R.string.localizable.address_memo_no(R.string.localizable.address_no_tag())
                 action = R.string.localizable.address_no_tag()
             } else {

@@ -1,5 +1,4 @@
 import UIKit
-import WCDBSwift
 import MixinServices
 
 class BackupViewController: SettingsTableViewController {
@@ -230,8 +229,10 @@ extension BackupViewController {
         DispatchQueue.global().async {
             do {
                 Logger.writeDatabase(log: "[Database] start compressing ...size:\(AppGroupContainer.mixinDatabaseUrl.fileSize.sizeRepresentation())")
-                try MixinDatabase.shared.database.prepareUpdateSQL(sql: "PRAGMA wal_checkpoint(FULL)").execute()
-                try MixinDatabase.shared.database.prepareUpdateSQL(sql: "VACUUM").execute()
+                try UserDatabase.current.pool.write({ (db) -> Void in
+                    try db.checkpoint(.full, on: nil)
+                })
+                try UserDatabase.current.pool.vacuum()
                 Logger.writeDatabase(log: "[Database] end of compression ...size:\(AppGroupContainer.mixinDatabaseUrl.fileSize.sizeRepresentation())")
                 DispatchQueue.main.async {
                     hud.set(style: .notification, text: R.string.localizable.report_compress_database_success())

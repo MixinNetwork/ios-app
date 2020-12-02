@@ -76,8 +76,13 @@ class VideoUploadJob: AttachmentUploadJob {
         message.mediaUrl = videoFilename
         message.mediaDuration = mediaDuration
         message.mediaSize = mediaSize
-        MessageDAO.shared.updateMediaMessage(messageId: message.messageId, keyValues: [(Message.Properties.mediaUrl, videoFilename), (Message.Properties.mediaSize, mediaSize), (Message.Properties.mediaDuration, mediaDuration)])
-
+        let assignments = [
+            Message.column(of: .mediaUrl).set(to: videoFilename),
+            Message.column(of: .mediaSize).set(to: mediaSize),
+            Message.column(of: .mediaDuration).set(to: mediaDuration)
+        ]
+        MessageDAO.shared.updateMediaMessage(messageId: message.messageId, assignments: assignments)
+        
         let change = ConversationChange(conversationId: message.conversationId,
                                         action: .updateMediaContent(messageId: message.messageId, message: message))
         NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)

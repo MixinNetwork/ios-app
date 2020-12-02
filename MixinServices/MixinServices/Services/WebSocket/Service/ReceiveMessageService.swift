@@ -233,7 +233,12 @@ public class ReceiveMessageService: MixinService {
         }
         let participantSession = ParticipantSessionDAO.shared.getParticipantSession(conversationId: data.conversationId, userId: data.userId, sessionId: data.sessionId)
         if participantSession == nil {
-            MixinDatabase.shared.insertOrReplace(objects: [ParticipantSession(conversationId: data.conversationId, userId: data.userId, sessionId: data.sessionId, sentToServer: nil, createdAt: Date().toUTCString())])
+            let session = ParticipantSession(conversationId: data.conversationId,
+                                             userId: data.userId,
+                                             sessionId: data.sessionId,
+                                             sentToServer: nil,
+                                             createdAt: Date().toUTCString())
+            UserDatabase.current.save(session)
         }
     }
 

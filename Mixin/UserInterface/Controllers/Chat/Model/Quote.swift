@@ -46,7 +46,7 @@ struct Quote {
     
     init(quotedMessage message: MessageItem) {
         messageId = message.messageId
-        title = message.userFullName
+        title = message.userFullName ?? ""
         tintColor = UIColor.usernameColors[message.userId.positiveHashCode() % UIColor.usernameColors.count]
         if message.category == MessageCategory.MESSAGE_RECALL.rawValue {
             category = .recalled
@@ -77,7 +77,9 @@ struct Quote {
                     image = .persistentSticker(url)
                 }
             } else if message.category.hasSuffix("_CONTACT") {
-                image = .user(urlString: message.sharedUserAvatarUrl, userId: message.sharedUserId ?? "", name: message.sharedUserFullName)
+                image = .user(urlString: message.sharedUserAvatarUrl ?? "",
+                              userId: message.sharedUserId ?? "",
+                              name: message.sharedUserFullName ?? "")
             }
             if image == nil, let thumbnail = UIImage.createImageFromString(thumbImage: message.thumbImage, width: message.mediaWidth, height: message.mediaHeight) {
                 image = .thumbnail(thumbnail)

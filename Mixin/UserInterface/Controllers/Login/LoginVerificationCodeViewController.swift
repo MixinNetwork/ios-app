@@ -94,8 +94,14 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
                 AppGroupUserDefaults.migrateUserSpecificDefaults()
             }
             AppGroupContainer.migrateIfNeeded()
-            MixinDatabase.shared.initDatabase(clearSentSenderKey: AppGroupUserDefaults.User.isLogoutByServer)
-            TaskDatabase.shared.initDatabase()
+            
+            TaskDatabase.rebuildCurrent()
+            UserDatabase.rebuildCurrent()
+            if AppGroupUserDefaults.User.isLogoutByServer {
+                UserDatabase.current.clearSentSenderKey()
+                AppGroupUserDefaults.Database.isSentSenderKeyCleared = true
+            }
+            
             if AppGroupUserDefaults.User.localVersion == AppGroupUserDefaults.User.uninitializedVersion {
                 AppGroupUserDefaults.User.localVersion = AppGroupUserDefaults.User.version
             }

@@ -1190,13 +1190,13 @@ extension MessageItem {
     static let encryptionHintMessageId = "encryption_hint"
     
     static func encryptionHintMessage(conversationId: String) -> MessageItem {
-        let message = MessageItem()
-        message.messageId = encryptionHintMessageId
-        message.status = MessageStatus.READ.rawValue
-        message.category = MessageCategory.EXT_ENCRYPTION.rawValue
-        message.conversationId = conversationId
-        message.createdAt = ""
-        message.content = Localized.CHAT_CELL_TITLE_ENCRYPTION
+        let message = MessageItem(messageId: encryptionHintMessageId,
+                                  conversationId: conversationId,
+                                  userId: "",
+                                  category: MessageCategory.EXT_ENCRYPTION.rawValue,
+                                  content: Localized.CHAT_CELL_TITLE_ENCRYPTION,
+                                  status: MessageStatus.READ.rawValue,
+                                  createdAt: "")
         return message
     }
     

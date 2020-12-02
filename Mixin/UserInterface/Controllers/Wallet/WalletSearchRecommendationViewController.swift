@@ -152,8 +152,7 @@ extension WalletSearchRecommendationViewController: UITableViewDelegate {
                 guard !AssetDAO.shared.isExist(assetId: item.assetId) else {
                     return
                 }
-                let asset = Asset(item: item)
-                AssetDAO.shared.insertOrUpdateAssets(assets: [asset])
+                AssetDAO.shared.insertOrUpdateAssets(assets: [item])
             }
         }
         let vc = AssetViewController.instance(asset: item)

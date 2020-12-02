@@ -19,9 +19,9 @@ class ContactMessageCell: CardMessageCell<AvatarImageView, ContactMessageCellRig
             let message = viewModel.message
             rightView.fullnameLabel.text = message.sharedUserFullName
             rightView.idLabel.text = message.sharedUserIdentityNumber
-            leftView.setImage(with: viewModel.message.sharedUserAvatarUrl,
+            leftView.setImage(with: viewModel.message.sharedUserAvatarUrl ?? "",
                               userId: viewModel.message.sharedUserId ?? "",
-                              name: viewModel.message.sharedUserFullName)
+                              name: viewModel.message.sharedUserFullName ?? "")
             if let image = viewModel.verifiedImage {
                 rightView.badgeImageView.image = image
                 rightView.badgeImageView.isHidden = false

@@ -19,7 +19,7 @@ extension AssetItem {
     }
     
     var memoLabel: String {
-        return isUseTag ? R.string.localizable.wallet_address_tag() : R.string.localizable.wallet_address_memo()
+        return usesTag ? R.string.localizable.wallet_address_tag() : R.string.localizable.wallet_address_memo()
     }
     
 }

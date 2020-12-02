@@ -72,7 +72,9 @@ class QuotePreviewView: UIView, XibDesignable {
                 imageView.sd_setImage(with: URL(string: thumbUrl))
             }
         } else if message.category.hasSuffix("_CONTACT") {
-            avatarImageView.setImage(with: message.sharedUserAvatarUrl, userId: message.sharedUserId ?? "", name: message.sharedUserFullName)
+            avatarImageView.setImage(with: message.sharedUserAvatarUrl ?? "",
+                                     userId: message.sharedUserId ?? "",
+                                     name: message.sharedUserFullName ?? "")
         }
         UIView.performWithoutAnimation {
             iconImageView.image = MessageCategory.iconImage(forMessageCategoryString: message.category)

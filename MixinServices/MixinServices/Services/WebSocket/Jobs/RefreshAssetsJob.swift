@@ -45,7 +45,9 @@ public class RefreshAssetsJob: AsynchronousJob {
                             let remoteAssetIds = assets.map { $0.assetId }
                             let notExistAssetIds = Set<String>(localAssetIds).subtracting(remoteAssetIds)
                             if notExistAssetIds.count > 0 {
-                                MixinDatabase.shared.update(maps: [(Asset.Properties.balance, "0")], tableName: Asset.tableName, condition: Asset.Properties.assetId.in(Array(notExistAssetIds)))
+                                UserDatabase.current.update(Asset.self,
+                                                            assignments: [Asset.column(of: .balance).set(to: "0")],
+                                                            where: notExistAssetIds.contains(Asset.column(of: .assetId)))
                             }
                         }
 

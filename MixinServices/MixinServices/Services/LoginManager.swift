@@ -119,12 +119,13 @@ public final class LoginManager {
                 AppGroupUserDefaults.Account.clearAll()
                 AppGroupKeychain.removeAllItems()
                 RequestSigning.removeCachedKey()
-                SignalDatabase.shared.logout()
+                SignalDatabase.current.erase()
+                AppGroupUserDefaults.Crypto.clearAll()
                 NotificationCenter.default.post(name: LoginManager.didLogoutNotification, object: self)
             }
         }
     }
-
+    
 }
 
 

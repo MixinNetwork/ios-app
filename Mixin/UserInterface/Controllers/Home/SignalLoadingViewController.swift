@@ -13,7 +13,7 @@ class SignalLoadingViewController: UIViewController {
         Logger.write(log: "SignalLoadingView...isPrekeyLoaded:\(AppGroupUserDefaults.Crypto.isPrekeyLoaded)...isSessionSynchronized:\(AppGroupUserDefaults.Crypto.isSessionSynchronized)...isCircleSynchronized:\(AppGroupUserDefaults.User.isCircleSynchronized)")
         let startTime = Date()
         DispatchQueue.global().async {
-            try! SignalDatabase.shared.initDatabase()
+            try! SignalDatabase.rebuildCurrent()
 
             self.syncSignalKeys()
             self.syncSession()
@@ -70,8 +70,8 @@ class SignalLoadingViewController: UIViewController {
             switch CircleAPI.circles() {
             case let .success(response):
                 let circles = response.map { Circle(circleId: $0.circleId, name: $0.name, createdAt: $0.createdAt) }
-                MixinDatabase.shared.insertOrReplace(objects: circles)
-
+                UserDatabase.current.save(circles)
+                
                 for circle in circles {
                     syncCircleConversations(circleId: circle.circleId)
                 }
@@ -93,7 +93,7 @@ class SignalLoadingViewController: UIViewController {
 
             switch CircleAPI.circleConversations(circleId: circleId, offset: offset, limit: 500) {
             case let .success(conversations):
-                MixinDatabase.shared.insertOrReplace(objects: conversations)
+                UserDatabase.current.save(conversations)
                 offset = conversations.last?.createdAt
                 if conversations.count < 500 {
                     return
@@ -144,14 +144,15 @@ class SignalLoadingViewController: UIViewController {
                         newSession.append(Session(address: session.address, device: Int(deviceId), record: session.record, timestamp: session.timestamp))
                     }
                 }
-                SignalDatabase.shared.insertOrReplace(objects: newSession)
+                SignalDatabase.current.save(newSession)
 
                 let senderKeys = SenderKeyDAO.shared.syncGetSenderKeys()
                 senderKeys.forEach { (key) in
                     if key.senderId.hasSuffix(":1") {
                         let userId = String(key.senderId.prefix(key.senderId.count - 2))
                         if let deviceId = sessionMap[userId] {
-                            SenderKeyDAO.shared.insertOrReplace(obj: SenderKey(groupId: key.groupId, senderId: "\(userId):\(deviceId)", record: key.record))
+                            let key = SenderKey(groupId: key.groupId, senderId: "\(userId):\(deviceId)", record: key.record)
+                            SignalDatabase.current.save(key)
                         }
                     }
                 }
@@ -163,7 +164,7 @@ class SignalLoadingViewController: UIViewController {
                     }
                     return ParticipantSession(conversationId: $0.conversationId, userId: $0.userId, sessionId: sessionId, sentToServer: nil, createdAt: Date().toUTCString())
                 }
-                MixinDatabase.shared.insertOrReplace(objects: participantSessions)
+                UserDatabase.current.save(participantSessions)
                 return
             case .failure(.unauthorized):
                 return

@@ -1,7 +1,7 @@
 import UIKit
 import PhoneNumberKit
 import Alamofire
-import WCDBSwift
+import GRDB
 import MixinServices
 
 class SearchViewController: UIViewController, HomeSearchViewController {
@@ -33,7 +33,7 @@ class SearchViewController: UIViewController, HomeSearchViewController {
     private var recentAppsViewController: RecentAppsViewController?
     private var searchNumberRequest: Request?
     private var lastSearchFieldText: String?
-    private var statement: CoreStatement?
+    private var snapshot: DatabaseSnapshot?
     
     private var searchNumberCell: SearchNumberCell? {
         let indexPath = IndexPath(row: 0, section: Section.searchNumber.rawValue)
@@ -145,13 +145,12 @@ class SearchViewController: UIViewController, HomeSearchViewController {
                 self.showSearchResults()
                 self.lastKeyword = keyword
             }
-
-            let conversationsByMessage = ConversationDAO.shared.getConversation(withMessageLike: keyword, limit: limit, callback: { (statement) in
-                guard !op.isCancelled else {
-                    return
-                }
-                self.statement = statement
+            
+            var conversationsByMessage: [MessagesWithinConversationSearchResult] = []
+            self.snapshot = ConversationDAO.shared.getConversation(withMessageLike: keyword, limit: limit, completion: { (results) in
+                conversationsByMessage = results
             })
+            
             guard !op.isCancelled else {
                 return
             }
@@ -408,8 +407,8 @@ extension SearchViewController {
     }
     
     private func cancelOperation() {
-        statement?.interrupt()
-        statement = nil
+        snapshot?.interrupt()
+        snapshot = nil
         queue.cancelAllOperations()
     }
     

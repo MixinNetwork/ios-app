@@ -32,10 +32,14 @@ class RecognizeWindow: BottomSheetView {
 extension RecognizeWindow: UITextViewDelegate {
     
     func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
-        guard let parent = UIApplication.homeNavigationController?.visibleViewController else {
+        guard let container = UIApplication.homeContainerViewController else {
             return true
         }
         dismissPopupControllerAnimated()
+        var parent = container.topMostChild
+        if let visibleViewController = (parent as? UINavigationController)?.visibleViewController {
+            parent = visibleViewController
+        }
         MixinWebViewController.presentInstance(with: .init(conversationId: "", initialUrl: URL), asChildOf: parent)
         return false
     }

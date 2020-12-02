@@ -392,10 +392,10 @@
                                         <rect key="frame" x="0.0" y="-45" width="375" height="120"/>
                                     </imageView>
                                     <stackView opaque="NO" alpha="0.0" contentMode="scaleToFill" spacing="44" translatesAutoresizingMaskIntoConstraints="NO" id="NKg-z2-Eo8">
-                                        <rect key="frame" x="157.5" y="15" width="60" height="60"/>
+                                        <rect key="frame" x="147.5" y="5" width="80" height="80"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UfU-t2-rlQ">
-                                                <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="UfU-t2-rlQ" secondAttribute="height" id="ToR-16-9wz"/>
                                                 </constraints>
@@ -407,7 +407,7 @@
                                             </button>
                                         </subviews>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="60" id="b1Z-96-RdR"/>
+                                            <constraint firstAttribute="height" constant="80" id="b1Z-96-RdR"/>
                                         </constraints>
                                     </stackView>
                                 </subviews>
@@ -443,7 +443,7 @@
                             <constraint firstAttribute="bottom" secondItem="iHT-NY-1rS" secondAttribute="bottom" id="7vz-Ps-kqi"/>
                             <constraint firstAttribute="trailing" secondItem="2PV-tA-eIh" secondAttribute="trailing" id="BPC-s8-zeI"/>
                             <constraint firstItem="tgL-jC-hwU" firstAttribute="leading" secondItem="J91-yj-SMd" secondAttribute="leading" id="Bx7-4f-VwT"/>
-                            <constraint firstItem="5mk-Fk-SFN" firstAttribute="bottom" secondItem="NKg-z2-Eo8" secondAttribute="bottom" id="FfU-Cc-iFt"/>
+                            <constraint firstItem="5mk-Fk-SFN" firstAttribute="bottom" secondItem="NKg-z2-Eo8" secondAttribute="bottom" constant="-10" id="FfU-Cc-iFt"/>
                             <constraint firstAttribute="bottom" secondItem="tgL-jC-hwU" secondAttribute="bottom" id="Glt-3l-wx7"/>
                             <constraint firstItem="2PV-tA-eIh" firstAttribute="leading" secondItem="J91-yj-SMd" secondAttribute="leading" id="Hzi-ct-Nth"/>
                             <constraint firstAttribute="trailing" secondItem="iHT-NY-1rS" secondAttribute="trailing" id="Ib9-w1-7Cu"/>

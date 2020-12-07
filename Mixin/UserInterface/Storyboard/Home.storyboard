@@ -382,17 +382,17 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iHT-NY-1rS">
-                                <rect key="frame" x="0.0" y="592" width="375" height="75"/>
+                                <rect key="frame" x="0.0" y="597" width="375" height="70"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cix-KB-afd">
-                                        <rect key="frame" x="0.0" y="75" width="375" height="0.0"/>
+                                        <rect key="frame" x="0.0" y="70" width="375" height="0.0"/>
                                         <color key="backgroundColor" name="background"/>
                                     </view>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg_home_bottom" translatesAutoresizingMaskIntoConstraints="NO" id="kA4-pv-sCo">
-                                        <rect key="frame" x="0.0" y="-45" width="375" height="120"/>
+                                        <rect key="frame" x="0.0" y="-50" width="375" height="120"/>
                                     </imageView>
                                     <stackView opaque="NO" alpha="0.0" contentMode="scaleToFill" spacing="44" translatesAutoresizingMaskIntoConstraints="NO" id="NKg-z2-Eo8">
-                                        <rect key="frame" x="147.5" y="5" width="80" height="80"/>
+                                        <rect key="frame" x="147.5" y="0.0" width="80" height="80"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UfU-t2-rlQ">
                                                 <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
@@ -415,10 +415,10 @@
                                 <constraints>
                                     <constraint firstItem="cix-KB-afd" firstAttribute="leading" secondItem="iHT-NY-1rS" secondAttribute="leading" id="09G-MV-xYm"/>
                                     <constraint firstAttribute="trailing" secondItem="kA4-pv-sCo" secondAttribute="trailing" id="G7H-AD-3c2"/>
+                                    <constraint firstItem="NKg-z2-Eo8" firstAttribute="top" secondItem="iHT-NY-1rS" secondAttribute="top" id="H4A-r7-5eY"/>
                                     <constraint firstItem="cix-KB-afd" firstAttribute="top" secondItem="kA4-pv-sCo" secondAttribute="bottom" id="HqI-QZ-h0t"/>
                                     <constraint firstItem="NKg-z2-Eo8" firstAttribute="centerX" secondItem="iHT-NY-1rS" secondAttribute="centerX" id="PEd-KM-jqp"/>
                                     <constraint firstAttribute="bottom" secondItem="cix-KB-afd" secondAttribute="bottom" id="Snq-gY-G1L"/>
-                                    <constraint firstAttribute="height" constant="75" id="cQF-MN-LDQ"/>
                                     <constraint firstAttribute="trailing" secondItem="cix-KB-afd" secondAttribute="trailing" id="oFw-dX-SGJ"/>
                                     <constraint firstItem="kA4-pv-sCo" firstAttribute="leading" secondItem="iHT-NY-1rS" secondAttribute="leading" id="vb5-rb-gAi"/>
                                 </constraints>
@@ -1812,7 +1812,7 @@ chat history from icloud</string>
             <color red="0.18431372549019609" green="0.18823529411764706" blue="0.19607843137254902" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
             <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

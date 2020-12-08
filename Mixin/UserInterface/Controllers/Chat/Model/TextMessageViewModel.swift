@@ -28,6 +28,7 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
     private let minimumTextSize = CGSize(width: 5, height: 17)
     private let linkColor = UIColor.systemTint
     private let hightlightPathCornerRadius: CGFloat = 4
+    private let additionalLineSpacing: CGFloat = 1
     
     private var contentSize = CGSize.zero // contentSize is textSize concatenated with additionalTrailingSize and fullname width
     private var linkRanges = [Link.Range]()
@@ -88,7 +89,7 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
         for linkRange in linkRanges {
             str.addAttribute(.foregroundColor, value: linkColor, range: linkRange.range)
         }
-        return str.copy() as! NSAttributedString
+        return NSAttributedString(attributedString: str)
     }
     
     override init(message: MessageItem) {
@@ -118,7 +119,7 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
             var lineOrigins = [CGPoint]()
             var lineRanges = [CFRange]()
             var characterIndex: CFIndex = 0
-            var y: CGFloat?
+            var y: CGFloat = 0
             var lastLineWidth: CGFloat = 0
             var size = CGSize.zero
             var lineCharacterCount = CTTypesetterSuggestLineBreak(typesetter, characterIndex, typesetWidth)
@@ -132,6 +133,8 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
             }
             
             while lineCharacterCount > 0 && !didReachLineCountLimit {
+                let isFirstLine = lines.isEmpty
+                
                 let lineRange = CFRange(location: characterIndex, length: lineCharacterCount)
                 lineRanges.append(lineRange)
                 
@@ -147,11 +150,15 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
                 size.height += lineHeight
                 size.width = max(size.width, lineWidth)
                 
-                if y == nil {
+                if isFirstLine {
                     y = max(4, descent)
                 }
-                y! -= lineHeight
-                let lineOrigin = CGPoint(x: 0, y: y!)
+                y -= lineHeight
+                if !isFirstLine {
+                    y -= additionalLineSpacing
+                }
+                
+                let lineOrigin = CGPoint(x: 0, y: y)
                 lineOrigins.append(lineOrigin)
                 
                 lastLineWidth = lineWidth
@@ -159,7 +166,8 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
                 lineCharacterCount = CTTypesetterSuggestLineBreak(typesetter, characterIndex, typesetWidth)
             }
             
-            size = CGSize(width: ceil(size.width), height: ceil(size.height) + 1)
+            size = CGSize(width: ceil(size.width),
+                          height: ceil(size.height) + CGFloat(lines.count - 1) * additionalLineSpacing + 1)
             lineOrigins = lineOrigins.map {
                 CGPoint(x: $0.x, y: $0.y + size.height)
             }

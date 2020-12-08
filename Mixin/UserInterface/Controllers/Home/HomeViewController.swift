@@ -114,6 +114,7 @@ class HomeViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: MessageDAO.didInsertMessageNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: MessageDAO.didRedecryptMessageNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: .UserDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadAccount), name: LoginManager.accountDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(appDidChange(_:)), name: .AppDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(circleConversationDidChange(_:)), name: CircleConversationDAO.circleConversationsDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(webSocketDidConnect(_:)), name: WebSocketService.didConnectNotification, object: nil)
@@ -258,6 +259,15 @@ class HomeViewController: UIViewController {
             return
         }
         fetchConversations()
+    }
+    
+    @objc func reloadAccount() {
+        guard let account = LoginManager.shared.account else {
+            return
+        }
+        DispatchQueue.main.async {
+            self.myAvatarImageView.setImage(with: account)
+        }
     }
 
     @objc func appDidChange(_ notification: Notification) {

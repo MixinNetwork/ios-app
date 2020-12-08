@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
@@ -382,20 +382,20 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iHT-NY-1rS">
-                                <rect key="frame" x="0.0" y="592" width="375" height="75"/>
+                                <rect key="frame" x="0.0" y="597" width="375" height="70"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cix-KB-afd">
-                                        <rect key="frame" x="0.0" y="75" width="375" height="0.0"/>
+                                        <rect key="frame" x="0.0" y="70" width="375" height="0.0"/>
                                         <color key="backgroundColor" name="background"/>
                                     </view>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg_home_bottom" translatesAutoresizingMaskIntoConstraints="NO" id="kA4-pv-sCo">
-                                        <rect key="frame" x="0.0" y="-45" width="375" height="120"/>
+                                        <rect key="frame" x="0.0" y="-50" width="375" height="120"/>
                                     </imageView>
                                     <stackView opaque="NO" alpha="0.0" contentMode="scaleToFill" spacing="44" translatesAutoresizingMaskIntoConstraints="NO" id="NKg-z2-Eo8">
-                                        <rect key="frame" x="165.5" y="23" width="44" height="44"/>
+                                        <rect key="frame" x="147.5" y="0.0" width="80" height="80"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UfU-t2-rlQ">
-                                                <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="UfU-t2-rlQ" secondAttribute="height" id="ToR-16-9wz"/>
                                                 </constraints>
@@ -407,7 +407,7 @@
                                             </button>
                                         </subviews>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="44" id="b1Z-96-RdR"/>
+                                            <constraint firstAttribute="height" constant="80" id="b1Z-96-RdR"/>
                                         </constraints>
                                     </stackView>
                                 </subviews>
@@ -415,10 +415,10 @@
                                 <constraints>
                                     <constraint firstItem="cix-KB-afd" firstAttribute="leading" secondItem="iHT-NY-1rS" secondAttribute="leading" id="09G-MV-xYm"/>
                                     <constraint firstAttribute="trailing" secondItem="kA4-pv-sCo" secondAttribute="trailing" id="G7H-AD-3c2"/>
+                                    <constraint firstItem="NKg-z2-Eo8" firstAttribute="top" secondItem="iHT-NY-1rS" secondAttribute="top" id="H4A-r7-5eY"/>
                                     <constraint firstItem="cix-KB-afd" firstAttribute="top" secondItem="kA4-pv-sCo" secondAttribute="bottom" id="HqI-QZ-h0t"/>
                                     <constraint firstItem="NKg-z2-Eo8" firstAttribute="centerX" secondItem="iHT-NY-1rS" secondAttribute="centerX" id="PEd-KM-jqp"/>
                                     <constraint firstAttribute="bottom" secondItem="cix-KB-afd" secondAttribute="bottom" id="Snq-gY-G1L"/>
-                                    <constraint firstAttribute="height" constant="75" id="cQF-MN-LDQ"/>
                                     <constraint firstAttribute="trailing" secondItem="cix-KB-afd" secondAttribute="trailing" id="oFw-dX-SGJ"/>
                                     <constraint firstItem="kA4-pv-sCo" firstAttribute="leading" secondItem="iHT-NY-1rS" secondAttribute="leading" id="vb5-rb-gAi"/>
                                 </constraints>
@@ -443,7 +443,7 @@
                             <constraint firstAttribute="bottom" secondItem="iHT-NY-1rS" secondAttribute="bottom" id="7vz-Ps-kqi"/>
                             <constraint firstAttribute="trailing" secondItem="2PV-tA-eIh" secondAttribute="trailing" id="BPC-s8-zeI"/>
                             <constraint firstItem="tgL-jC-hwU" firstAttribute="leading" secondItem="J91-yj-SMd" secondAttribute="leading" id="Bx7-4f-VwT"/>
-                            <constraint firstItem="5mk-Fk-SFN" firstAttribute="bottom" secondItem="NKg-z2-Eo8" secondAttribute="bottom" constant="8" id="FfU-Cc-iFt"/>
+                            <constraint firstItem="5mk-Fk-SFN" firstAttribute="bottom" secondItem="NKg-z2-Eo8" secondAttribute="bottom" constant="-10" id="FfU-Cc-iFt"/>
                             <constraint firstAttribute="bottom" secondItem="tgL-jC-hwU" secondAttribute="bottom" id="Glt-3l-wx7"/>
                             <constraint firstItem="2PV-tA-eIh" firstAttribute="leading" secondItem="J91-yj-SMd" secondAttribute="leading" id="Hzi-ct-Nth"/>
                             <constraint firstAttribute="trailing" secondItem="iHT-NY-1rS" secondAttribute="trailing" id="Ib9-w1-7Cu"/>
@@ -1812,10 +1812,10 @@ chat history from icloud</string>
             <color red="0.18431372549019609" green="0.18823529411764706" blue="0.19607843137254902" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_desc">
             <color red="0.73725490196078436" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

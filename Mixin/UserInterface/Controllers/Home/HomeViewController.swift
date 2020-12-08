@@ -375,10 +375,10 @@ class HomeViewController: UIViewController {
                         self.appActions[index] = nil
                     }
                 }
-                if self.appStackView.arrangedSubviews.count <= 3 {
-                    self.appStackView.spacing = 44
+                if apps.count <= 2 {
+                    self.appStackView.spacing = 8
                 } else {
-                    self.appStackView.spacing = 36
+                    self.appStackView.spacing = 0
                 }
                 UIView.animate(withDuration: 0.15) {
                     self.appStackView.alpha = 1

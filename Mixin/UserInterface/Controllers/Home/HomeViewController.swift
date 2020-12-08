@@ -375,7 +375,7 @@ class HomeViewController: UIViewController {
                         self.appActions[index] = nil
                     }
                 }
-                if apps.count <= 3 {
+                if apps.count <= 2 {
                     self.appStackView.spacing = 8
                 } else {
                     self.appStackView.spacing = 0

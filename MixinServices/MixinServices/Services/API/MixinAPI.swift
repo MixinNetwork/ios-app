@@ -138,6 +138,14 @@ extension MixinAPI {
         return makeRequest(session)
             .validate(statusCode: 200...299)
             .responseData(completionHandler: { (response) in
+                if let requestId = response.request?.allHTTPHeaderFields?["X-Request-Id"], !requestId.isEmpty {
+                    let responseRequestId = (response.response?.allHeaderFields["x-request-id"] as? String) ?? ""
+                    if requestId != responseRequestId {
+                        Logger.write(errorMsg: "[X-Request-Id][\(requestId)]...response...\(response.response?.allHeaderFields)")
+                        completion(.failure(.internalServerError))
+                        return
+                    }
+                }
                 switch response.result {
                 case .success(let data):
                     do {

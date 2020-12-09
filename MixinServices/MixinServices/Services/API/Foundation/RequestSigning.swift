@@ -6,9 +6,11 @@ enum RequestSigning {
     
     static func signedHeaders(for request: URLRequest) -> [String: String] {
         var headers = Self.baseHeaders
-        if let signedToken = Self.signedToken(request: request) {
+        let requestId = UUID().uuidString.lowercased()
+        if let signedToken = Self.signedToken(request: request, requestId: requestId) {
             headers["Authorization"] = signedToken
         }
+        headers["X-Request-Id"] = requestId
         return headers
     }
     
@@ -40,7 +42,7 @@ extension RequestSigning {
         }
     }
     
-    private static func signedToken(request: URLRequest) -> String? {
+    private static func signedToken(request: URLRequest, requestId: String) -> String? {
         guard let account = LoginManager.shared.account else {
             return nil
         }
@@ -53,7 +55,7 @@ extension RequestSigning {
                                 sid: account.session_id,
                                 iat: date,
                                 exp: date.addingTimeInterval(30 * secondsPerMinute),
-                                jti: UUID().uuidString.lowercased(),
+                                jti: requestId,
                                 sig: sig.sha256(),
                                 scp: "FULL")
         

@@ -108,14 +108,7 @@ extension MixinAPI {
         let host = MixinHost.http
         
         func handleDeauthorization(response: HTTPURLResponse?) {
-            let xServerTimeKeyPair = response?.allHeaderFields.first(where: { (key, value) -> Bool in
-                if let key = key as? String {
-                    return key.lowercased() == "x-server-time"
-                } else {
-                    return false
-                }
-            })
-            let xServerTime = TimeInterval(xServerTimeKeyPair?.value as? String ?? "0") ?? 0
+            let xServerTime = TimeInterval(response?.allHeaderFields[caseInsensitive: "x-server-time"] ?? "0") ?? 0
             let serverTimeIntervalSince1970 = xServerTime / TimeInterval(NSEC_PER_SEC)
             let serverTime = Date(timeIntervalSince1970: serverTimeIntervalSince1970)
             if abs(requestTime.timeIntervalSinceNow) > secondsPerMinute {
@@ -139,9 +132,9 @@ extension MixinAPI {
             .validate(statusCode: 200...299)
             .responseData(completionHandler: { (response) in
                 if let requestId = response.request?.allHTTPHeaderFields?["X-Request-Id"], !requestId.isEmpty {
-                    let responseRequestId = (response.response?.allHeaderFields["x-request-id"] as? String) ?? ""
+                    let responseRequestId = response.response?.allHeaderFields[caseInsensitive: "x-request-id"] ?? ""
                     if requestId != responseRequestId {
-                        Logger.write(errorMsg: "[X-Request-Id][\(requestId)]...response...\(response.response?.allHeaderFields)")
+                        Logger.write(errorMsg: "[MixinAPI][\(response.request?.url?.path ?? "")][X-Request-Id][\(requestId)]...response...\(response.response?.allHeaderFields)")
                         completion(.failure(.internalServerError))
                         return
                     }
@@ -193,6 +186,26 @@ extension MixinAPI {
                 && codes.contains(nsError.code)
         } else {
             return false
+        }
+    }
+    
+}
+
+fileprivate extension Dictionary where Key == AnyHashable, Value == Any {
+    
+    subscript(caseInsensitive key: String) -> String? {
+        get {
+            if let k = keys.first(where: { ($0 as? String)?.lowercased() == key }) {
+                return self[k] as? String
+            }
+            return nil
+        }
+        set {
+            if let k = keys.first(where: { ($0 as? String)?.lowercased() == key }) {
+                self[k] = newValue
+            } else {
+                self[key] = newValue
+            }
         }
     }
     

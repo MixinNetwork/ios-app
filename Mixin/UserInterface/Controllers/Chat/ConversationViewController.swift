@@ -1542,6 +1542,19 @@ extension ConversationViewController: AttachmentLoadingMessageCellDelegate {
 }
 
 // MARK: - CoreTextLabelDelegate
+extension ConversationViewController: UITextViewDelegate {
+    
+    // Works for UITextView in AnnouncementBadgeContentView
+    func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
+        if !openUrlOutsideApplication(URL) {
+            open(url: URL)
+        }
+        return false
+    }
+    
+}
+
+// MARK: - CoreTextLabelDelegate
 extension ConversationViewController: CoreTextLabelDelegate {
     
     func coreTextLabel(_ label: CoreTextLabel, didSelectURL url: URL) {
@@ -2006,6 +2019,7 @@ extension ConversationViewController {
             if announcementBadgeContentView.superview == nil {
                 announcementBadgeView.addSubview(announcementBadgeContentView)
                 announcementBadgeContentView.snp.makeEdgesEqualToSuperview()
+                announcementBadgeContentView.textView.delegate = self
             }
             announcementBadgeContentView.textView.text = announcement
             announcementBadgeContentView.layoutAsCompressed()

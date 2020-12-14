@@ -4,8 +4,9 @@ import MixinServices
 
 final class Clip: Codable {
     
-    enum CodingKeys: CodingKey {
+    enum CodingKeys: String, CodingKey {
         case id, app, title, url
+        case conversationId = "conversation_id"
     }
     
     static let propertiesDidUpdateNotification = Notification.Name("one.mixin.messenger.Clip.propertiesDidUpdate")
@@ -18,6 +19,7 @@ final class Clip: Codable {
     }
     
     let id: UUID
+    let conversationId: String
     let app: App?
     
     private(set) var title: String
@@ -42,9 +44,9 @@ final class Clip: Codable {
             if let controller = controllerIfLoaded {
                 return controller
             } else if let app = app {
-                return MixinWebViewController.instance(with: .init(conversationId: "", app: app))
+                return MixinWebViewController.instance(with: .init(conversationId: conversationId, app: app))
             } else {
-                return MixinWebViewController.instance(with: .init(conversationId: "", initialUrl: url))
+                return MixinWebViewController.instance(with: .init(conversationId: conversationId, initialUrl: url))
             }
         }()
         controller.associatedClip = self
@@ -60,6 +62,7 @@ final class Clip: Codable {
     
     init(app: App?, url: URL, controller: MixinWebViewController) {
         self.id = UUID()
+        self.conversationId = controller.context.conversationId
         self.app = app
         if let app = app {
             self.title = app.name
@@ -75,6 +78,7 @@ final class Clip: Codable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decode(UUID.self, forKey: .id)
+        self.conversationId = (try? container.decodeIfPresent(String.self, forKey: .conversationId)) ?? ""
         self.app = try container.decodeIfPresent(App.self, forKey: .app)
         self.title = try container.decode(String.self, forKey: .title)
         self.url = try container.decode(URL.self, forKey: .url)
@@ -94,6 +98,7 @@ final class Clip: Codable {
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
+        try container.encode(conversationId, forKey: .conversationId)
         try container.encode(app, forKey: .app)
         try container.encode(title, forKey: .title)
         try container.encode(url, forKey: .url)

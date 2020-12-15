@@ -131,16 +131,16 @@ extension MixinAPI {
         return makeRequest(session)
             .validate(statusCode: 200...299)
             .responseData(completionHandler: { (response) in
-                if let requestId = response.request?.allHTTPHeaderFields?["X-Request-Id"], !requestId.isEmpty {
-                    let responseRequestId = response.response?.allHeaderFields[caseInsensitive: "x-request-id"] ?? ""
-                    if requestId != responseRequestId {
-                        Logger.write(errorMsg: "[MixinAPI][\(response.request?.url?.path ?? "")][X-Request-Id][\(requestId)]...response...\(response.response?.allHeaderFields)")
-                        completion(.failure(.internalServerError))
-                        return
-                    }
-                }
                 switch response.result {
                 case .success(let data):
+                    if let requestId = response.request?.allHTTPHeaderFields?["X-Request-Id"], !requestId.isEmpty {
+                        let responseRequestId = response.response?.allHeaderFields[caseInsensitive: "x-request-id"] ?? ""
+                        if requestId != responseRequestId {
+                            Logger.write(errorMsg: "[MixinAPI][\(response.request?.url?.path ?? "")][X-Request-Id][\(requestId)]...response...\(response.response?.allHeaderFields)")
+                            completion(.failure(.internalServerError))
+                            return
+                        }
+                    }
                     do {
                         let responseObject = try JSONDecoder.default.decode(ResponseObject<Response>.self, from: data)
                         if let data = responseObject.data {

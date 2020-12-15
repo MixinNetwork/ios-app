@@ -780,8 +780,14 @@ extension UrlWindow {
             
             DispatchQueue.main.async {
                 hud.hide()
-                let vc = GroupProfileViewController(response: conversation, codeId: codeId, participants: participants, isMember: isMember)
-                UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
+                if isMember {
+                    let vc = ConversationViewController.instance(conversation: ConversationItem(response: conversation))
+                    UIApplication.homeNavigationController?.pushViewController(withBackRoot: vc)
+                } else {
+                    let vc = GroupProfileViewController(response: conversation, codeId: codeId, participants: participants, isMember: isMember)
+                    UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
+                }
+                
             }
         }
     }

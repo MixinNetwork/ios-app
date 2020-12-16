@@ -778,6 +778,10 @@ extension UrlWindow {
                 }
             }
             
+            if isMember && ConversationDAO.shared.getConversationStatus(conversationId: conversation.conversationId) != ConversationStatus.SUCCESS.rawValue {
+                ConversationDAO.shared.createConversation(conversation: conversation, targetStatus: .SUCCESS)
+            }
+            
             DispatchQueue.main.async {
                 hud.hide()
                 if isMember {

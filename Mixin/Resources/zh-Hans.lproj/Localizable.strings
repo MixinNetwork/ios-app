@@ -633,6 +633,10 @@
 "auth_permission_messages_represent_description" = "允许机器人代表你发消息";
 "auth_permission_snapshots_read" = "查看转账记录";
 "auth_permission_snapshots_read_description" = "访问你的转账记录";
+"auth_permission_circles_read" = "查看圈子";
+"auth_permission_circles_read_description" = "访问你的圈子列表";
+"auth_permission_circles_write" = "管理圈子";
+"auth_permission_circles_write_description" = "管理你所有的圈子";
 "auth_assets_more" = "等";
 "auth_profile_description" = "%@, %@, 头像";
 "auth_success" = "成功登录 %@";

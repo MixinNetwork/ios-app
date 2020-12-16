@@ -632,6 +632,10 @@
 "auth_permission_messages_represent_description" = "allow bot to send messages represent of you";
 "auth_permission_snapshots_read" = "Read Snapshots";
 "auth_permission_snapshots_read_description" = "access your snapshots";
+"auth_permission_circles_read" = "Read Circles";
+"auth_permission_circles_read_description" = "access your circle list";
+"auth_permission_circles_write" = "Write Circles";
+"auth_permission_circles_write_description" = "manage all your circles";
 "auth_assets_more" = " and more";
 "auth_profile_description" = "%@, %@, profile photo";
 "auth_success" = "Successfully log in to %@";

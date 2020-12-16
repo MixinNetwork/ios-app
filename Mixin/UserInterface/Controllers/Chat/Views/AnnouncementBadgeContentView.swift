@@ -58,6 +58,7 @@ class AnnouncementBadgeContentView: UIView {
         textView.adjustsFontForContentSizeCategory = true
         textView.textContainerInset = .zero
         textView.textContainer.lineFragmentPadding = 0
+        textView.linkTextAttributes = [.foregroundColor: UIColor.theme]
         minHeightConstraint = heightAnchor.constraint(greaterThanOrEqualToConstant: 76)
         minHeightConstraint.isActive = true
         layer.shadowColor = UIColor.black.cgColor
@@ -82,6 +83,7 @@ class AnnouncementBadgeContentView: UIView {
         guard isExpandable else {
             return
         }
+        textView.isSelectable = true
         textView.textContainer.maximumNumberOfLines = 0
         textView.isScrollEnabled = true
         moreViewIfLoaded?.isHidden = true
@@ -121,8 +123,10 @@ class AnnouncementBadgeContentView: UIView {
         }
         if numberOfLines > 2 {
             moreView.isHidden = false
+            textView.isSelectable = false
         } else {
             moreViewIfLoaded?.isHidden = true
+            textView.isSelectable = true
         }
         
         let contentHeight = ceil(scaledFont.lineHeight * CGFloat(min(2, numberOfLines)))

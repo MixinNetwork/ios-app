@@ -26,7 +26,12 @@ class GroupCallConfirmationViewController: CallViewController {
         nameLabel.text = conversation.getConversationName()
         peerToPeerCallRemoteUserStackView.isHidden = true
         groupCallMembersCollectionView.isHidden = false
-        statusLabel.text = nil
+        
+        // A CallViewController is shown when user picks the accept button, nearly identical
+        // to this ViewController but with text in status label. If we don't put a placeholder
+        // here, the avatar group jitters on interface switching
+        statusLabel.text = " "
+        
         hangUpStackView.alpha = 0
         acceptStackView.alpha = 1
         acceptButtonTrailingConstraint.priority = .defaultLow

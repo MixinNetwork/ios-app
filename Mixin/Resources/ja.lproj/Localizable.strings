@@ -632,6 +632,10 @@
 "auth_permission_messages_represent_description" = "あなたへのボットメッセージを許可する";
 "auth_permission_snapshots_read" = "スナップショット";
 "auth_permission_snapshots_read_description" = "スナップショットを許可する";
+"auth_permission_circles_read" = "Read Circles";
+"auth_permission_circles_read_description" = "access your circle list";
+"auth_permission_circles_write" = "Write Circles";
+"auth_permission_circles_write_description" = "manage all your circles";
 "auth_assets_more" = " さらに詳しく";
 "auth_profile_description" = "%@, %@, プロフィール画像";
 "auth_success" = "%@にログインしました";

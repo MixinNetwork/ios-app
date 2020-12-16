@@ -93,6 +93,9 @@ final class Clip: Codable {
                 try? FileManager.default.removeItem(at: url)
             }
         }
+        if let controller = controllerIfLoaded, controller.viewIfLoaded == nil || controller.view.window == nil {
+            controller.removeAllMessageHandlers()
+        }
     }
     
     func encode(to encoder: Encoder) throws {
@@ -117,7 +120,19 @@ extension Clip: Equatable {
 extension Clip {
     
     @objc private func removeCachedController() {
-        controllerIfLoaded = nil
+        guard let controller = controllerIfLoaded else {
+            return
+        }
+        let isControllerInvisible: Bool
+        if let view = controller.viewIfLoaded {
+            isControllerInvisible = view.window == nil
+        } else {
+            isControllerInvisible = true
+        }
+        if isControllerInvisible {
+            controller.removeAllMessageHandlers()
+            controllerIfLoaded = nil
+        }
     }
     
     @objc private func updateProperties(_ notification: Notification) {

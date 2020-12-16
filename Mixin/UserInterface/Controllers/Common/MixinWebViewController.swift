@@ -37,6 +37,12 @@ class MixinWebViewController: WebViewController {
     private var isMessageHandlerAdded = true
     private var webViewTitleObserver: NSKeyValueObservation?
     
+    deinit {
+        #if DEBUG
+        print("\(self) deinited")
+        #endif
+    }
+    
     class func instance(with context: Context) -> MixinWebViewController {
         let vc = MixinWebViewController(nib: R.nib.webView)
         vc.context = context
@@ -61,77 +67,24 @@ class MixinWebViewController: WebViewController {
         loadWebView()
     }
     
-    func presentAsChild(of parent: UIViewController, completion: (() -> Void)?) {
-        view.frame = parent.view.bounds
-        view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        parent.addChild(self)
-        let parentView: UIView
-        if let view = parent.view as? UIVisualEffectView {
-            parentView = view.contentView
-        } else {
-            parentView = parent.view
-        }
-        parentView.addSubview(view)
-        didMove(toParent: parent)
-        
-        view.center.y = parent.view.bounds.height * 3 / 2
-        UIView.animate(withDuration: 0.5) {
-            UIView.setAnimationCurve(.overdamped)
-            self.view.center.y = parent.view.bounds.height / 2
-        } completion: { (_) in
-            completion?()
-        }
-        
-        AppDelegate.current.mainWindow.endEditing(true)
-    }
-    
-    private func loadNormalUrl() {
-        webViewTitleObserver = webView.observe(\.title, options: [.initial, .new], changeHandler: { [weak self] (webView, _) in
-            guard let weakSelf = self, case .webPage = weakSelf.context.style else {
-                return
-            }
-            self?.titleLabel.text = webView.title
-        })
-        webView.load(URLRequest(url: context.initialUrl))
-    }
-
-    private func loadAppUrl(title: String, iconUrl: URL?) {
-        titleLabel.text = title
-        if let iconUrl = iconUrl {
-            titleImageView.isHidden = false
-            titleImageView.sd_setImage(with: iconUrl, completed: nil)
-        }
-        
-        if !context.extraParams.isEmpty, var components = URLComponents(url: context.initialUrl, resolvingAgainstBaseURL: true) {
-            var queryItems: [URLQueryItem] = components.queryItems ?? []
-            for item in context.extraParams {
-                queryItems.append(URLQueryItem(name: item.key, value: item.value))
-            }
-            components.queryItems = queryItems
-            webView.load(URLRequest(url: components.url ?? context.initialUrl))
-        } else {
-            webView.load(URLRequest(url: context.initialUrl))
-        }
-    }
-    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if !isMessageHandlerAdded {
-            webView.configuration.userContentController.add(self, name: HandlerName.mixinContext)
-            webView.configuration.userContentController.add(self, name: HandlerName.reloadTheme)
-            webView.configuration.userContentController.add(self, name: HandlerName.playlist)
+            let controller = webView.configuration.userContentController
+            controller.add(self, name: HandlerName.mixinContext)
+            controller.add(self, name: HandlerName.reloadTheme)
+            controller.add(self, name: HandlerName.playlist)
             isMessageHandlerAdded = true
         }
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        webView.configuration.userContentController.removeScriptMessageHandler(forName: HandlerName.mixinContext)
-        webView.configuration.userContentController.removeScriptMessageHandler(forName: HandlerName.reloadTheme)
-        webView.configuration.userContentController.removeScriptMessageHandler(forName: HandlerName.playlist)
-        isMessageHandlerAdded = false
+        if associatedClip == nil {
+            removeAllMessageHandlers()
+        }
     }
-
+    
     override func continueAction(_ sender: Any) {
         suspicionView.isHidden = true
         loadNormalUrl()
@@ -140,57 +93,7 @@ class MixinWebViewController: WebViewController {
     override func reloadAction(_ sender: Any) {
         reloadWebView()
     }
-
-    private func reloadWebView() {
-        loadFailView.isHidden = true
-        if let currentUrl = webView.url {
-            let request = URLRequest(url: currentUrl,
-                                     cachePolicy: .reloadIgnoringLocalCacheData,
-                                     timeoutInterval: 10)
-            self.webView.load(request)
-        } else {
-            loadWebView()
-        }
-    }
-
-    private func loadWebView() {
-        switch context.style {
-        case .webPage:
-            loadNormalUrl()
-        case let .app(app, isHomeUrl):
-            let appId = app.appId
-            let title = app.name
-            let iconUrl = URL(string: app.iconUrl)
-            if isHomeUrl {
-                loadAppUrl(title: title, iconUrl: iconUrl)
-            } else {
-                let validUrl = context.initialUrl.absoluteString + "/"
-                DispatchQueue.global().async { [weak self] in
-                    var app = AppDAO.shared.getApp(appId: appId)
-                    if app == nil || !(app?.resourcePatterns?.contains(where: validUrl.hasPrefix) ?? false) {
-                        if case let .success(response) = UserAPI.showUser(userId: appId) {
-                            UserDAO.shared.updateUsers(users: [response])
-                            app = response.app
-                        }
-                    }
-
-                    DispatchQueue.main.async {
-                        guard let weakSelf = self else {
-                            return
-                        }
-                        if app?.resourcePatterns?.contains(where: validUrl.hasPrefix) ?? false {
-                            weakSelf.loadAppUrl(title: title, iconUrl: iconUrl)
-                        } else {
-                            weakSelf.suspicionView.isHidden = false
-                            weakSelf.context.style = .webPage
-                            weakSelf.context.isImmersive = false
-                        }
-                    }
-                }
-            }
-        }
-    }
-
+    
     override func contactDeveloperAction(_ sender: Any) {
         guard case let .app(app, _) = context.style else {
             return
@@ -211,26 +114,6 @@ class MixinWebViewController: WebViewController {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
                     self?.dismissAsChild(animated: true)
                 }
-            }
-        }
-    }
-
-    private static func syncUser(userId: String, hud: Hud) -> UserItem? {
-        if let user = UserDAO.shared.getUser(userId: userId) {
-            return user
-        } else {
-            switch UserAPI.showUser(userId: userId) {
-            case let .success(userItem):
-                let user = UserItem.createUser(from: userItem)
-                UserDAO.shared.updateUsers(users: [userItem])
-                return user
-            case let .failure(error):
-                DispatchQueue.main.async {
-                    let text = error.localizedDescription(overridingNotFoundDescriptionWith: R.string.localizable.user_not_found())
-                    hud.set(style: .error, text: text)
-                    hud.scheduleAutoHidden()
-                }
-                return nil
             }
         }
     }
@@ -263,6 +146,41 @@ class MixinWebViewController: WebViewController {
         }
         more.delegate = self
         present(more, animated: true, completion: nil)
+    }
+    
+    func presentAsChild(of parent: UIViewController, completion: (() -> Void)?) {
+        view.frame = parent.view.bounds
+        view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        parent.addChild(self)
+        let parentView: UIView
+        if let view = parent.view as? UIVisualEffectView {
+            parentView = view.contentView
+        } else {
+            parentView = parent.view
+        }
+        parentView.addSubview(view)
+        didMove(toParent: parent)
+        
+        view.center.y = parent.view.bounds.height * 3 / 2
+        UIView.animate(withDuration: 0.5) {
+            UIView.setAnimationCurve(.overdamped)
+            self.view.center.y = parent.view.bounds.height / 2
+        } completion: { (_) in
+            completion?()
+        }
+        
+        AppDelegate.current.mainWindow.endEditing(true)
+    }
+    
+    func removeAllMessageHandlers() {
+        guard isViewLoaded && isMessageHandlerAdded else {
+            return
+        }
+        let controller = webView.configuration.userContentController
+        controller.removeScriptMessageHandler(forName: HandlerName.mixinContext)
+        controller.removeScriptMessageHandler(forName: HandlerName.reloadTheme)
+        controller.removeScriptMessageHandler(forName: HandlerName.playlist)
+        isMessageHandlerAdded = false
     }
     
 }
@@ -419,6 +337,84 @@ extension MixinWebViewController: WebMoreMenuControllerDelegate {
 
 extension MixinWebViewController {
     
+    private func loadNormalUrl() {
+        webViewTitleObserver = webView.observe(\.title, options: [.initial, .new], changeHandler: { [weak self] (webView, _) in
+            guard let weakSelf = self, case .webPage = weakSelf.context.style else {
+                return
+            }
+            self?.titleLabel.text = webView.title
+        })
+        webView.load(URLRequest(url: context.initialUrl))
+    }
+
+    private func loadAppUrl(title: String, iconUrl: URL?) {
+        titleLabel.text = title
+        if let iconUrl = iconUrl {
+            titleImageView.isHidden = false
+            titleImageView.sd_setImage(with: iconUrl, completed: nil)
+        }
+        if !context.extraParams.isEmpty, var components = URLComponents(url: context.initialUrl, resolvingAgainstBaseURL: true) {
+            var queryItems: [URLQueryItem] = components.queryItems ?? []
+            for item in context.extraParams {
+                queryItems.append(URLQueryItem(name: item.key, value: item.value))
+            }
+            components.queryItems = queryItems
+            webView.load(URLRequest(url: components.url ?? context.initialUrl))
+        } else {
+            webView.load(URLRequest(url: context.initialUrl))
+        }
+    }
+    
+    private func reloadWebView() {
+        loadFailView.isHidden = true
+        if let currentUrl = webView.url {
+            let request = URLRequest(url: currentUrl,
+                                     cachePolicy: .reloadIgnoringLocalCacheData,
+                                     timeoutInterval: 10)
+            self.webView.load(request)
+        } else {
+            loadWebView()
+        }
+    }
+    
+    private func loadWebView() {
+        switch context.style {
+        case .webPage:
+            loadNormalUrl()
+        case let .app(app, isHomeUrl):
+            let appId = app.appId
+            let title = app.name
+            let iconUrl = URL(string: app.iconUrl)
+            if isHomeUrl {
+                loadAppUrl(title: title, iconUrl: iconUrl)
+            } else {
+                let validUrl = context.initialUrl.absoluteString + "/"
+                DispatchQueue.global().async { [weak self] in
+                    var app = AppDAO.shared.getApp(appId: appId)
+                    if app == nil || !(app?.resourcePatterns?.contains(where: validUrl.hasPrefix) ?? false) {
+                        if case let .success(response) = UserAPI.showUser(userId: appId) {
+                            UserDAO.shared.updateUsers(users: [response])
+                            app = response.app
+                        }
+                    }
+
+                    DispatchQueue.main.async {
+                        guard let weakSelf = self else {
+                            return
+                        }
+                        if app?.resourcePatterns?.contains(where: validUrl.hasPrefix) ?? false {
+                            weakSelf.loadAppUrl(title: title, iconUrl: iconUrl)
+                        } else {
+                            weakSelf.suspicionView.isHidden = false
+                            weakSelf.context.style = .webPage
+                            weakSelf.context.isImmersive = false
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
     private func reloadTheme(webView: WKWebView) {
         webView.evaluateJavaScript(Script.getThemeColor) { [weak self] (result, error) in
             guard let colorString = result as? String else {
@@ -500,6 +496,26 @@ extension MixinWebViewController {
         
         let vc = MessageReceiverViewController.instance(content: .text(currentUrl.absoluteString))
         navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    private static func syncUser(userId: String, hud: Hud) -> UserItem? {
+        if let user = UserDAO.shared.getUser(userId: userId) {
+            return user
+        } else {
+            switch UserAPI.showUser(userId: userId) {
+            case let .success(userItem):
+                let user = UserItem.createUser(from: userItem)
+                UserDAO.shared.updateUsers(users: [userItem])
+                return user
+            case let .failure(error):
+                DispatchQueue.main.async {
+                    let text = error.localizedDescription(overridingNotFoundDescriptionWith: R.string.localizable.user_not_found())
+                    hud.set(style: .error, text: text)
+                    hud.scheduleAutoHidden()
+                }
+                return nil
+            }
+        }
     }
     
 }

@@ -83,12 +83,18 @@ class ClipSwitcher {
         } else {
             updateAllSerializedClips()
         }
+        
+        // Remove the clip immediately will release the unretained clip ASAP,
+        // as well as the webview associated with it, or the clip will be released
+        // on next time of full screen switcher's showing
+        fullscreenSwitcherIfLoaded?.clips = clips
     }
     
     func replaceClips(with clips: [Clip]) {
         minimizedController?.replaceClips(with: clips)
         self.clips = clips
         updateAllSerializedClips()
+        fullscreenSwitcherIfLoaded?.clips = clips
     }
     
     func hideFullscreenSwitcher() {

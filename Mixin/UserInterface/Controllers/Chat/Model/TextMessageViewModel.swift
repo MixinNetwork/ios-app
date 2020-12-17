@@ -319,7 +319,7 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
         })
         
         let str = string as NSString
-        for mention in message.mentions ?? [:] {
+        for mention in message.sortedMentions {
             var searchingRange = NSRange(location: 0, length: str.length)
             var range: NSRange
             while searchingRange.location < str.length {

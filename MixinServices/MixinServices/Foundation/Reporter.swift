@@ -40,10 +40,10 @@ open class Reporter {
             return
         }
         
-        MSAppCenter.start(key, withServices: [MSAnalytics.self, MSCrashes.self])
+        AppCenter.start(withAppSecret: key, services: [Analytics.self, Crashes.self])
 
         if !isAppExtension {
-            guard MSCrashes.hasCrashedInLastSession(), let crashReport = MSCrashes.lastSessionCrashReport() else {
+            guard Crashes.hasCrashedInLastSession, let crashReport = Crashes.lastSessionCrashReport else {
                 return
             }
             
@@ -55,12 +55,12 @@ open class Reporter {
         guard let account = LoginManager.shared.account else {
             return
         }
-        MSAppCenter.setUserId(account.user_id)
+        AppCenter.userId = account.user_id
 
-        var properties = MSCustomProperties()
-        properties.setString(account.identity_number, forKey: "IdentityNumber")
-        properties.setString(account.full_name, forKey: "FullName")
-        MSAppCenter.setCustomProperties(properties)
+        var properties = CustomProperties()
+        properties.set(account.identity_number, forKey: "IdentityNumber")
+        properties.set(account.full_name, forKey: "FullName")
+        AppCenter.setCustomProperties(properties)
     }
     
     open func report(event: Event, userInfo: UserInfo? = nil) {
@@ -69,9 +69,9 @@ open class Reporter {
             userInfo.forEach { (key, value) in
                 properties[key] = "\(value)"
             }
-            MSAnalytics.trackEvent(event.name, withProperties: properties)
+            Analytics.trackEvent(event.name, withProperties: properties)
         } else {
-            MSAnalytics.trackEvent(event.name)
+            Analytics.trackEvent(event.name)
         }
     }
 

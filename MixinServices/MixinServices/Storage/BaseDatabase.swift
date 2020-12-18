@@ -34,6 +34,9 @@ public class BaseDatabase {
         BaseDatabase.isTraced = true
         
         Database.globalTrace(ofPerformance: { (tag, sqls, cost) in
+            guard cost > 0 else {
+                return
+            }
             let millisecond = UInt64(cost) / NSEC_PER_MSEC
             if millisecond > 1000 {
                 sqls.forEach({ (arg) in

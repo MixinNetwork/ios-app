@@ -44,10 +44,10 @@ final class AccountAPI: MixinAPI {
     }
     
     @discardableResult
-    static func sendCode(to phoneNumber: String, reCaptchaToken: String?, purpose: VerificationPurpose, completion: @escaping (MixinAPI.Result<VerificationResponse>) -> Void) -> Request? {
+    static func sendCode(to phoneNumber: String, captchaToken: String?, purpose: VerificationPurpose, completion: @escaping (MixinAPI.Result<VerificationResponse>) -> Void) -> Request? {
         var param = ["phone": phoneNumber,
                      "purpose": purpose.rawValue]
-        if let token = reCaptchaToken {
+        if let token = captchaToken {
             param["g_recaptcha_response"] = token
         }
         if let bundleIdentifier = Bundle.main.bundleIdentifier {

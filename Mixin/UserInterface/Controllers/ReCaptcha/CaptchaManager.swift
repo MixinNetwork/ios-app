@@ -2,33 +2,33 @@ import UIKit
 import WebKit
 import MixinServices
 
-class ReCaptchaManager: NSObject {
+class CaptchaManager: NSObject {
     
-    static let shared = ReCaptchaManager()
+    static let shared = CaptchaManager()
     
     var webView: WKWebView?
-    var reCaptchaViewController: ReCaptchaViewController?
+    var captchaViewController: CaptchaViewController?
     
-    private let messageHandlerName = "recaptcha"
+    private let messageHandlerName = "captcha"
     private let executeReCaptchaJS = "gReCaptchaExecute();"
     private let scriptURL = "https://www.recaptcha.net/recaptcha/api.js"
     private let baseURL = URL(string: "https://api.mixin.one/")!
     private let timeoutInterval: TimeInterval = 10
     
-    private lazy var htmlFilePath = Bundle.main.path(forResource: "recaptcha", ofType: ExtensionName.html.rawValue)
     private weak var requestingViewController: UIViewController?
     private var completion: CompletionCallback?
     private var timer: Timer?
     
     func validate(onViewController viewController: UIViewController, completion: @escaping CompletionCallback) {
-        guard let htmlFilePath = htmlFilePath, let htmlString = try? String(contentsOfFile: htmlFilePath), let key = MixinKeys.reCaptcha else {
-            assertionFailure("Failed to load reCAPTCHA html. Probably due to missing of Mixin-Keys.plist")
+        guard let htmlFilePath = R.file.captchaHtml.path(), let htmlString = try? String(contentsOfFile: htmlFilePath), let key = MixinKeys.reCaptcha else {
+            assertionFailure("Failed to load captcha.html. Probably due to missing of Mixin-Keys.plist")
             return
         }
         let config = WKWebViewConfiguration()
         config.userContentController.add(self, name: messageHandlerName)
         let webView = WKWebView(frame: UIScreen.main.bounds, configuration: config)
         webView.frame.origin.y = UIScreen.main.bounds.height
+        webView.customUserAgent = "Googlebot/2.1"
         UIApplication.shared.keyWindow?.addSubview(webView)
         let keyReplacedHTMLString = htmlString
             .replacingOccurrences(of: Replacement.apiKey, with: key)
@@ -38,7 +38,7 @@ class ReCaptchaManager: NSObject {
         self.requestingViewController = viewController
         self.completion = completion
         timer = Timer.scheduledTimer(withTimeInterval: timeoutInterval, repeats: false, block: { [weak self](_) in
-            showAutoHiddenHud(style: .error, text: Localized.TOAST_RECAPTCHA_TIMED_OUT)
+            showAutoHiddenHud(style: .error, text: R.string.localizable.toast_captcha_timeout())
             guard let weakSelf = self else {
                 return
             }
@@ -58,7 +58,7 @@ class ReCaptchaManager: NSObject {
         webView?.configuration.userContentController.removeScriptMessageHandler(forName: messageHandlerName)
         webView?.removeFromSuperview()
         webView = nil
-        reCaptchaViewController = nil
+        captchaViewController = nil
         requestingViewController = nil
         completion = nil
     }
@@ -72,18 +72,19 @@ class ReCaptchaManager: NSObject {
             return
         }
         webView.removeFromSuperview()
-        let reCaptchaViewController = ReCaptchaViewController.instance(webView: webView)
-        requestingViewController.present(reCaptchaViewController, animated: true, completion: nil)
+        let captchaViewController = CaptchaViewController()
+        captchaViewController.load(webView: webView)
+        requestingViewController.present(captchaViewController, animated: true, completion: nil)
     }
     
 }
 
-extension ReCaptchaManager: WKScriptMessageHandler {
+extension CaptchaManager: WKScriptMessageHandler {
     
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         guard let msg = Message(messageBody: message.body) else {
             let body = String(describing: message.body)
-            reporter.report(error: MixinError.unrecognizedReCaptchaMessage(body))
+            reporter.report(error: MixinError.unrecognizedCaptchaMessage(body))
             return
         }
         switch msg {
@@ -114,7 +115,7 @@ extension ReCaptchaManager: WKScriptMessageHandler {
     
 }
 
-extension ReCaptchaManager {
+extension CaptchaManager {
     
     typealias CompletionCallback = (Result) -> Void
     

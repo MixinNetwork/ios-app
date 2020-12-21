@@ -6,7 +6,7 @@ class ChangeNumberVerificationCodeViewController: VerificationCodeViewController
     var context: ChangeNumberContext!
     
     deinit {
-        ReCaptchaManager.shared.clean()
+        CaptchaManager.shared.clean()
     }
     
     override func viewDidLoad() {
@@ -53,8 +53,8 @@ class ChangeNumberVerificationCodeViewController: VerificationCodeViewController
         })
     }
     
-    override func requestVerificationCode(reCaptchaToken token: String?) {
-        AccountAPI.sendCode(to: context.newNumber, reCaptchaToken: token, purpose: .phone) { [weak self] (result) in
+    override func requestVerificationCode(captchaToken token: String?) {
+        AccountAPI.sendCode(to: context.newNumber, captchaToken: token, purpose: .phone) { [weak self] (result) in
             guard let weakSelf = self else {
                 return
             }
@@ -65,11 +65,11 @@ class ChangeNumberVerificationCodeViewController: VerificationCodeViewController
                 weakSelf.resendButton.beginCountDown(weakSelf.resendInterval)
             case let.failure(error):
                 switch error {
-                case .requiresReCaptcha:
-                    ReCaptchaManager.shared.validate(onViewController: weakSelf) { (result) in
+                case .requiresCaptcha:
+                    CaptchaManager.shared.validate(onViewController: weakSelf) { (result) in
                         switch result {
                         case .success(let token):
-                            self?.requestVerificationCode(reCaptchaToken: token)
+                            self?.requestVerificationCode(captchaToken: token)
                         default:
                             self?.resendButton.isBusy = false
                         }

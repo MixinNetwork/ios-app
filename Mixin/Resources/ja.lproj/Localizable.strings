@@ -153,7 +153,7 @@
 "placeholder_mobile_number" = "電話番号";
 "init_signal" = "初期化しています...";
 "init_explain" = "ユーザー間のメッセージはエンドツーエンドの暗号化によって守られています";
-"toast_recaptcha_timed_out" = "認証時間切れ";
+"toast_captcha_timeout" = "認証時間切れ";
 "desktop_login_confim" = "デスクトップ版Mixinメッセンジャーからログインを確認してください";
 "desktop_upgrade" = "デスクトップ版Mixinメッセンジャーを最新のバージョンにしてください";
 
@@ -901,7 +901,7 @@
 "error_unauthorized" = "Unauthorized";
 "error_invalid_request_data" = "Invalid request data";
 "error_failed_to_deliver_sms" = "Failed to deliver sms";
-"error_requires_recaptcha" = "Recaptcha is required.";
+"error_requires_captcha" = "Captcha is required.";
 "error_invalid_phone_number" = "Invalid phone number";
 "error_invalid_phone_verification_code" = "Invalid phone verification code";
 "error_expired_phone_verification_code" = "Expired phone verification code";
@@ -917,7 +917,7 @@
 "error_peer_closed" = "Peer closed";
 "error_track_not_found" = "Track not found";
 "error_group_full" = "グループチャットが満員です";
-"error_invalid_recaptcha" = "リキャプチャが間違っています";
+"error_invalid_captcha" = "リキャプチャが間違っています";
 "error_insufficient_balance" = "残高不足";
 "error_pin_incorrect" = "PINが間違っています";
 "error_fee_insufficient" = "トランザクション手数料が不足しています";

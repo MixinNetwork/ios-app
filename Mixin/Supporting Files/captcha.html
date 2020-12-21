@@ -3,11 +3,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script type="text/javascript">
         var postMessage = function(value) {
-            window.webkit.messageHandlers.recaptcha.postMessage({ message: value });
+            window.webkit.messageHandlers.captcha.postMessage({ message: value });
         }
 
         var postToken = function(value) {
-            window.webkit.messageHandlers.recaptcha.postMessage({ token: value });
+            window.webkit.messageHandlers.captcha.postMessage({ token: value });
         }
 
         var gReCaptchaExecute = function() {

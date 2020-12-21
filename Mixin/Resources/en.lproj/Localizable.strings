@@ -153,7 +153,7 @@
 "placeholder_mobile_number" = "Phone number";
 "init_signal" = "Initializing";
 "init_explain" = "Messages between users are protected with an end-to-end encryption";
-"toast_recaptcha_timed_out" = "Validation timed out";
+"toast_captcha_timeout" = "Validation timed out";
 "desktop_login_confim" = "Confirm login to Mixin Messenger Desktop";
 "desktop_upgrade" = "Please upgrade Mixin Messenger Desktop to the latest version.";
 
@@ -900,7 +900,7 @@
 "error_unauthorized" = "Unauthorized";
 "error_invalid_request_data" = "Invalid request data";
 "error_failed_to_deliver_sms" = "Failed to deliver sms";
-"error_requires_recaptcha" = "Recaptcha is required.";
+"error_requires_captcha" = "Captcha is required.";
 "error_invalid_phone_number" = "Invalid phone number";
 "error_invalid_phone_verification_code" = "Invalid phone verification code";
 "error_expired_phone_verification_code" = "Expired phone verification code";
@@ -916,7 +916,7 @@
 "error_peer_closed" = "Peer closed";
 "error_track_not_found" = "Track not found";
 "error_group_full" = "The group chat is full.";
-"error_invalid_recaptcha" = "Recaptcha is invalid.";
+"error_invalid_captcha" = "Captcha is invalid.";
 "error_insufficient_balance" = "Insufficient balance";
 "error_pin_incorrect" = "PIN incorrect";
 "error_fee_insufficient" = "Insufficient transaction fee";

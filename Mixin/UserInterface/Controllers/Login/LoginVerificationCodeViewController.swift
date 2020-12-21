@@ -7,7 +7,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
     var context: LoginContext!
 
     deinit {
-        ReCaptchaManager.shared.clean()
+        CaptchaManager.shared.clean()
     }
     
     override func viewDidLoad() {
@@ -29,8 +29,8 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
         login()
     }
     
-    override func requestVerificationCode(reCaptchaToken token: String?) {
-        AccountAPI.sendCode(to: context.fullNumber, reCaptchaToken: token, purpose: .session) { [weak self] (result) in
+    override func requestVerificationCode(captchaToken token: String?) {
+        AccountAPI.sendCode(to: context.fullNumber, captchaToken: token, purpose: .session) { [weak self] (result) in
             guard let weakSelf = self else {
                 return
             }
@@ -40,11 +40,11 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
                 weakSelf.context.hasEmergencyContact = verification.hasEmergencyContact
                 weakSelf.resendButton.isBusy = false
                 weakSelf.resendButton.beginCountDown(weakSelf.resendInterval)
-            case .failure(.requiresReCaptcha):
-                ReCaptchaManager.shared.validate(onViewController: weakSelf) { (result) in
+            case .failure(.requiresCaptcha):
+                CaptchaManager.shared.validate(onViewController: weakSelf) { (result) in
                     switch result {
                     case .success(let token):
-                        self?.requestVerificationCode(reCaptchaToken: token)
+                        self?.requestVerificationCode(captchaToken: token)
                     default:
                         self?.resendButton.isBusy = false
                     }

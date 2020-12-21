@@ -61,10 +61,10 @@ class VerificationCodeViewController: ContinueButtonViewController {
     @IBAction func resendAction(_ sender: Any) {
         resendButton.isBusy = true
         verificationCodeField.clear()
-        requestVerificationCode(reCaptchaToken: nil)
+        requestVerificationCode(captchaToken: nil)
     }
     
-    func requestVerificationCode(reCaptchaToken token: String?) {
+    func requestVerificationCode(captchaToken token: String?) {
         
     }
     

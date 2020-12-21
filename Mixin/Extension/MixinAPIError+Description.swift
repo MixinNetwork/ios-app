@@ -5,7 +5,7 @@ extension MixinAPIError {
     
     var localizedDescription: String {
         switch self {
-        case let .invalidJSON:
+        case .invalidJSON:
             return R.string.localizable.error_server_data_error()
         case let .httpTransport(error):
             if let underlying = (error.underlyingError as NSError?), underlying.domain == NSURLErrorDomain {
@@ -47,10 +47,10 @@ extension MixinAPIError {
             return R.string.localizable.error_invalid_request_data()
         case .failedToDeliverSMS:
             return R.string.localizable.error_failed_to_deliver_sms()
-        case .invalidReCaptcha:
-            return R.string.localizable.error_invalid_recaptcha()
-        case .requiresReCaptcha:
-            return R.string.localizable.error_requires_recaptcha()
+        case .invalidCaptchaToken:
+            return R.string.localizable.error_invalid_captcha()
+        case .requiresCaptcha:
+            return R.string.localizable.error_requires_captcha()
         case .requiresUpdate:
             return R.string.localizable.app_update_short_tips()
         case .invalidPhoneNumber:

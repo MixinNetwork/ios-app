@@ -60,7 +60,7 @@ final class LoginMobileNumberViewController: MobileNumberViewController {
         present(alert, animated: true, completion: nil)
     }
     
-    private func requestVerificationCode(captchaToken token: String?) {
+    private func requestVerificationCode(captchaToken token: CaptchaToken?) {
         continueButton.isBusy = true
         var ctx = LoginContext(callingCode: country.callingCode,
                                mobileNumber: mobileNumber,
@@ -80,7 +80,7 @@ final class LoginMobileNumberViewController: MobileNumberViewController {
             case let .failure(error):
                 switch error {
                 case .requiresCaptcha:
-                    CaptchaManager.shared.validate(onViewController: weakSelf, completion: { (result) in
+                    CaptchaManager.shared.validate(on: weakSelf, completion: { (result) in
                         switch result {
                         case .success(let token):
                             self?.requestVerificationCode(captchaToken: token)

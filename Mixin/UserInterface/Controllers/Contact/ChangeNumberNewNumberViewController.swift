@@ -16,7 +16,7 @@ class ChangeNumberNewNumberViewController: MobileNumberViewController {
         requestVerificationCode(captchaToken: nil)
     }
     
-    private func requestVerificationCode(captchaToken token: String? = nil) {
+    private func requestVerificationCode(captchaToken token: CaptchaToken?) {
         AccountAPI.sendCode(to: context.newNumber, captchaToken: token, purpose: .phone) { [weak self] (result) in
             guard let weakSelf = self else {
                 return
@@ -31,7 +31,7 @@ class ChangeNumberNewNumberViewController: MobileNumberViewController {
             case let .failure(error):
                 switch error {
                 case .requiresCaptcha:
-                    CaptchaManager.shared.validate(onViewController: weakSelf) { (result) in
+                    CaptchaManager.shared.validate(on: weakSelf) { (result) in
                         switch result {
                         case .success(let token):
                             self?.requestVerificationCode(captchaToken: token)

@@ -29,7 +29,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
         login()
     }
     
-    override func requestVerificationCode(captchaToken token: String?) {
+    override func requestVerificationCode(captchaToken token: CaptchaToken?) {
         AccountAPI.sendCode(to: context.fullNumber, captchaToken: token, purpose: .session) { [weak self] (result) in
             guard let weakSelf = self else {
                 return
@@ -41,7 +41,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
                 weakSelf.resendButton.isBusy = false
                 weakSelf.resendButton.beginCountDown(weakSelf.resendInterval)
             case .failure(.requiresCaptcha):
-                CaptchaManager.shared.validate(onViewController: weakSelf) { (result) in
+                CaptchaManager.shared.validate(on: weakSelf) { (result) in
                     switch result {
                     case .success(let token):
                         self?.requestVerificationCode(captchaToken: token)

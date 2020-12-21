@@ -64,7 +64,7 @@ class VerificationCodeViewController: ContinueButtonViewController {
         requestVerificationCode(captchaToken: nil)
     }
     
-    func requestVerificationCode(captchaToken token: String?) {
+    func requestVerificationCode(captchaToken token: CaptchaToken?) {
         
     }
     

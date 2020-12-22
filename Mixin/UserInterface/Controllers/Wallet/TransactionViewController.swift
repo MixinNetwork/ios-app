@@ -235,21 +235,21 @@ extension TransactionViewController {
             contents.append((title: Localized.TRANSACTION_TYPE, subtitle:
                 Localized.TRANSACTION_TYPE_WITHDRAWAL))
             contents.append((title: R.string.localizable.transaction_hash(), subtitle: snapshot.transactionHash))
-            contents.append((title: R.string.localizable.wallet_address_destination(), subtitle: snapshot.receiver))
+            contents.append((title: R.string.localizable.transaction_receiver(), subtitle: snapshot.receiver))
             if snapshot.hasMemo {
                 contents.append((title: asset.memoLabel, subtitle: snapshot.memo))
             }
         case SnapshotType.fee.rawValue:
             contents.append((title: Localized.TRANSACTION_TYPE, subtitle: Localized.TRANSACTION_TYPE_FEE))
             contents.append((title: R.string.localizable.transaction_hash(), subtitle: snapshot.transactionHash))
-            contents.append((title: R.string.localizable.wallet_address_destination(), subtitle: snapshot.receiver))
+            contents.append((title: R.string.localizable.transaction_receiver(), subtitle: snapshot.receiver))
             if snapshot.hasMemo {
                 contents.append((title: asset.memoLabel, subtitle: snapshot.memo))
             }
         case SnapshotType.rebate.rawValue:
             contents.append((title: Localized.TRANSACTION_TYPE, subtitle: Localized.TRANSACTION_TYPE_REBATE))
             contents.append((title: R.string.localizable.transaction_hash(), subtitle: snapshot.transactionHash))
-            contents.append((title: R.string.localizable.wallet_address_destination(), subtitle: snapshot.receiver))
+            contents.append((title: R.string.localizable.transaction_receiver(), subtitle: snapshot.receiver))
             if snapshot.hasMemo {
                 contents.append((title: asset.memoLabel, subtitle: snapshot.memo))
             }

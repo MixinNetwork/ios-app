@@ -156,14 +156,14 @@ extension AppGroupUserDefaults {
         @Default(namespace: .user, key: Key.circleName, defaultValue: nil)
         public static var circleName: String? {
             didSet {
-                NotificationCenter.default.postOnMain(name: circleNameDidChangeNotification, object: self)
+                NotificationCenter.default.post(onMainThread: circleNameDidChangeNotification, object: self)
             }
         }
         
         @Default(namespace: .user, key: Key.homeApp, defaultValue: [App.walletAppId, App.cameraAppId])
         public static var homeAppIds: [String] {
             didSet {
-                NotificationCenter.default.postOnMain(name: homeAppIdsDidChangeNotification, object: self)
+                NotificationCenter.default.post(onMainThread: homeAppIdsDidChangeNotification, object: self)
             }
         }
         

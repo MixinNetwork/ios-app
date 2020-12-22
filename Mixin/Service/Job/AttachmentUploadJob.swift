@@ -142,7 +142,7 @@ extension AttachmentUploadJob: URLSessionTaskDelegate {
         let progress = Double(totalBytesSent) / Double(totalBytesExpectedToSend)
         let change = ConversationChange(conversationId: message.conversationId,
                                         action: .updateUploadProgress(messageId: message.messageId, progress: progress))
-        NotificationCenter.default.postOnMain(name: .ConversationDidChange, object: change)
+        NotificationCenter.default.post(onMainThread: .ConversationDidChange, object: change)
     }
     
 }

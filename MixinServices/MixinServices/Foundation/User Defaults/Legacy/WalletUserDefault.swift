@@ -96,7 +96,7 @@ internal class WalletUserDefault {
         }
         set {
             session.set(newValue, forKey: keyHiddenAssets)
-            NotificationCenter.default.postOnMain(name: .HiddenAssetsDidChange)
+            NotificationCenter.default.post(onMainThread: .HiddenAssetsDidChange, object: self)
         }
     }
 

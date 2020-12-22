@@ -23,7 +23,7 @@ class StickersViewController: StickersCollectionViewController, ConversationInpu
                 StickerDAO.shared.updateUsedAt(stickerId: sticker.stickerId, usedAt: newUsedAt)
                 var newSticker = sticker
                 newSticker.lastUseAt = newUsedAt
-                NotificationCenter.default.postOnMain(name: .StickerUsedAtDidUpdate, object: newSticker)
+                NotificationCenter.default.post(onMainThread: .StickerUsedAtDidUpdate, object: newSticker)
             }
         }
     }

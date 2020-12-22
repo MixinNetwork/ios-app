@@ -49,7 +49,7 @@ public class WebSocketService {
                 return
             }
             guard ReachabilityManger.shared.isReachable else {
-                NotificationCenter.default.postOnMain(name: WebSocketService.didDisconnectNotification)
+                NotificationCenter.default.post(onMainThread: WebSocketService.didDisconnectNotification, object: self)
                 return
             }
             guard self.status == .disconnected else {
@@ -64,7 +64,7 @@ public class WebSocketService {
             }
 
             if !firstConnect {
-                NotificationCenter.default.postOnMain(name: WebSocketService.didDisconnectNotification)
+                NotificationCenter.default.post(onMainThread: WebSocketService.didDisconnectNotification, object: self)
             }
 
             self.host = MixinHost.webSocket
@@ -114,7 +114,7 @@ public class WebSocketService {
                 return
             }
             guard ReachabilityManger.shared.isReachable else {
-                NotificationCenter.default.postOnMain(name: WebSocketService.didDisconnectNotification)
+                NotificationCenter.default.post(onMainThread: WebSocketService.didDisconnectNotification, object: self)
                 return
             }
             if self.status == .connected && self.socket?.isConnected ?? false, let heartbeat = self.heartbeat {
@@ -203,7 +203,7 @@ extension WebSocketService: WebSocketProviderDelegate {
                 } else {
                     AppGroupUserDefaults.Account.isClockSkewed = true
                     disconnect()
-                    NotificationCenter.default.postOnMain(name: MixinService.clockSkewDetectedNotification)
+                    NotificationCenter.default.post(onMainThread: MixinService.clockSkewDetectedNotification, object: self)
                 }
                 return
             }
@@ -211,7 +211,7 @@ extension WebSocketService: WebSocketProviderDelegate {
 
 
         status = .connected
-        NotificationCenter.default.postOnMain(name: WebSocketService.didConnectNotification, object: self)
+        NotificationCenter.default.post(onMainThread: WebSocketService.didConnectNotification, object: self)
         ReceiveMessageService.shared.processReceiveMessages()
         requestListPendingMessages()
         ConcurrentJobQueue.shared.resume()
@@ -310,7 +310,7 @@ extension WebSocketService {
                     }
                 }
             } else {
-                NotificationCenter.default.postOnMain(name: WebSocketService.didDisconnectNotification, object: self)
+                NotificationCenter.default.post(onMainThread: WebSocketService.didDisconnectNotification, object: self)
             }
         }
     }
@@ -343,7 +343,7 @@ extension WebSocketService {
                 if isAppExtension {
                     SendMessageService.shared.processMessages()
                 } else {
-                    NotificationCenter.default.postOnMain(name: Self.didSendListPendingMessageNotification)
+                    NotificationCenter.default.post(onMainThread: Self.didSendListPendingMessageNotification, object: self)
                 }
             case .failure:
                 self.queue.asyncAfter(deadline: .now() + 2, execute: {

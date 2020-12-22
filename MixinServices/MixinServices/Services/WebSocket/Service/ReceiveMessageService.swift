@@ -141,7 +141,7 @@ public class ReceiveMessageService: MixinService {
             defer {
                 self.processing = false
                 if displaySyncProcess {
-                    NotificationCenter.default.postOnMain(name: .SyncMessageDidAppear, object: 100)
+                    NotificationCenter.default.post(onMainThread: .SyncMessageDidAppear, object: 100)
                 }
             }
 
@@ -175,7 +175,7 @@ public class ReceiveMessageService: MixinService {
                 if remainJobCount + finishedJobCount > 500 {
                     displaySyncProcess = true
                     let progress = blazeMessageDatas.count == 0 ? 100 : Int(Float(finishedJobCount) / Float(remainJobCount + finishedJobCount) * 100)
-                    NotificationCenter.default.postOnMain(name: .SyncMessageDidAppear, object: progress)
+                    NotificationCenter.default.post(onMainThread: .SyncMessageDidAppear, object: progress)
                 }
 
                 for data in blazeMessageDatas {
@@ -1032,7 +1032,7 @@ extension ReceiveMessageService {
             Logger.write(log: "[ReceiveMessageService][ProcessSystemSessionMessage]...log out desktop...", newSection: true)
 
             ParticipantSessionDAO.shared.provisionSession(userId: systemSession.userId, sessionId: systemSession.sessionId)
-            NotificationCenter.default.postOnMain(name: .UserSessionDidChange)
+            NotificationCenter.default.post(onMainThread: .UserSessionDidChange, object: self)
         } else if (systemSession.action == SystemSessionMessageAction.DESTROY.rawValue) {
             guard AppGroupUserDefaults.Account.extensionSession == systemSession.sessionId else {
                 return
@@ -1044,7 +1044,7 @@ extension ReceiveMessageService {
 
             JobDAO.shared.clearSessionJob()
             ParticipantSessionDAO.shared.destorySession(userId: systemSession.userId, sessionId: systemSession.sessionId)
-            NotificationCenter.default.postOnMain(name: .UserSessionDidChange)
+            NotificationCenter.default.post(onMainThread: .UserSessionDidChange, object: self)
         }
     }
 

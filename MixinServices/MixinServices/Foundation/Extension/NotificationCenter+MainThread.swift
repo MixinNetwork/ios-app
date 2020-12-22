@@ -2,7 +2,7 @@ import UIKit
 
 public extension NotificationCenter {
 
-    func postOnMain(name: NSNotification.Name, object: Any? = nil, userInfo: [AnyHashable: Any]? = nil) {
+    func post(onMainThread name: NSNotification.Name, object: Any?, userInfo: [AnyHashable : Any]? = nil) {
         if Thread.isMainThread {
             post(name: name, object: object, userInfo: userInfo)
         } else {

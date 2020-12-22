@@ -49,7 +49,7 @@ final public class CircleConversationDAO: UserDatabaseDAO {
         db.save(objects) { (_) in
             if sendNotificationAfterFinished {
                 let userInfo = [Self.circleIdUserInfoKey: circleId]
-                NotificationCenter.default.postOnMain(name: Self.circleConversationsDidChangeNotification, userInfo: userInfo)
+                NotificationCenter.default.post(onMainThread: Self.circleConversationsDidChangeNotification, object: self, userInfo: userInfo)
             }
         }
     }
@@ -59,7 +59,7 @@ final public class CircleConversationDAO: UserDatabaseDAO {
             && CircleConversation.column(of: .conversationId) == conversationId
         db.delete(CircleConversation.self, where: condition)
         let userInfo = [Self.circleIdUserInfoKey: circleId]
-        NotificationCenter.default.postOnMain(name: Self.circleConversationsDidChangeNotification, userInfo: userInfo)
+        NotificationCenter.default.post(onMainThread: Self.circleConversationsDidChangeNotification, object: self, userInfo: userInfo)
     }
     
     public func delete(circleId: String, conversationIds: [String]) {
@@ -67,7 +67,7 @@ final public class CircleConversationDAO: UserDatabaseDAO {
             && conversationIds.contains(CircleConversation.column(of: .conversationId))
         db.delete(CircleConversation.self, where: condition)
         let userInfo = [Self.circleIdUserInfoKey: circleId]
-        NotificationCenter.default.postOnMain(name: Self.circleConversationsDidChangeNotification, userInfo: userInfo)
+        NotificationCenter.default.post(onMainThread: Self.circleConversationsDidChangeNotification, object: self, userInfo: userInfo)
     }
     
 }

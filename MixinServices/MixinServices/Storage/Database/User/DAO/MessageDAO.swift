@@ -324,7 +324,7 @@ public final class MessageDAO: UserDatabaseDAO {
                     .updateAll(db, [Message.column(of: .mediaStatus).set(to: targetStatus.rawValue)])
                 if numberOfChanges > 0 {
                     let change = ConversationChange(conversationId: conversationId, action: .updateMediaStatus(messageId: messageId, mediaStatus: targetStatus))
-                    NotificationCenter.default.postOnMain(name: .ConversationDidChange, object: change)
+                    NotificationCenter.default.post(onMainThread: .ConversationDidChange, object: change)
                 }
             }
         }

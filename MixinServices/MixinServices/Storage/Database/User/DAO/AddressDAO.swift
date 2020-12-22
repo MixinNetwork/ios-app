@@ -26,14 +26,14 @@ public final class AddressDAO: UserDatabaseDAO {
             return
         }
         db.save(addresses) { _ in
-            NotificationCenter.default.postOnMain(name: .AddressDidChange)
+            NotificationCenter.default.post(onMainThread: .AddressDidChange, object: self)
         }
     }
     
     public func deleteAddress(assetId: String, addressId: String) {
         db.delete(Address.self,
                   where: Address.column(of: .addressId) == addressId)
-        NotificationCenter.default.postOnMain(name: .AddressDidChange)
+        NotificationCenter.default.post(onMainThread: .AddressDidChange, object: self)
     }
     
 }

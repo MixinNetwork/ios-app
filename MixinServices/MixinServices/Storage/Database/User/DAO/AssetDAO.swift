@@ -37,9 +37,9 @@ public final class AssetDAO: UserDatabaseDAO {
         }
         db.save(assets) { _ in
             if assets.count == 1 {
-                NotificationCenter.default.postOnMain(name: .AssetsDidChange, object: assets[0].assetId)
+                NotificationCenter.default.post(onMainThread: .AssetsDidChange, object: assets[0].assetId)
             } else {
-                NotificationCenter.default.postOnMain(name: .AssetsDidChange)
+                NotificationCenter.default.post(onMainThread: .AssetsDidChange, object: nil)
             }
         }
     }

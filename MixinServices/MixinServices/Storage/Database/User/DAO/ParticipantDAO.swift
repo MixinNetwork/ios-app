@@ -103,7 +103,7 @@ public final class ParticipantDAO: UserDatabaseDAO {
                 try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: source)
             }
             db.afterNextTransactionCommit { (db) in
-                NotificationCenter.default.postOnMain(name: .ParticipantDidChange, object: conversationId)
+                NotificationCenter.default.post(onMainThread: .ParticipantDidChange, object: conversationId)
             }
         }
     }

@@ -5,7 +5,7 @@ public final class SignalDatabase: Database {
     public static var current: SignalDatabase! = try! SignalDatabase(url: AppGroupContainer.signalDatabaseUrl)
     
     public override class var config: Configuration {
-        var config = super.config
+        var config = Configuration()
         config.label = "Signal"
         return config
     }

@@ -7,8 +7,7 @@ open class Database {
     public typealias Completion = ((GRDB.Database) -> Void)
     
     open class var config: Configuration {
-        let config = Configuration()
-        return config
+        Configuration()
     }
     
     open var needsMigration: Bool {

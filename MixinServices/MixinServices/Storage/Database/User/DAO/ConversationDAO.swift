@@ -168,6 +168,10 @@ public final class ConversationDAO: UserDatabaseDAO {
             try ParticipantSession
                 .filter(Participant.column(of: .conversationId) == conversationId)
                 .deleteAll(db)
+            if AppGroupUserDefaults.Database.isFTSInitialized {
+                try db.execute(sql: "DELETE FROM \(Message.ftsTableName) WHERE conversation_id = ?",
+                               arguments: [conversationId])
+            }
         }
         let change = ConversationChange(conversationId: conversationId, action: .updateConversationStatus(status: .QUIT))
         NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
@@ -193,6 +197,10 @@ public final class ConversationDAO: UserDatabaseDAO {
             try ParticipantSession
                 .filter(ParticipantSession.column(of: .conversationId) == conversationId)
                 .deleteAll(db)
+            if AppGroupUserDefaults.Database.isFTSInitialized {
+                try db.execute(sql: "DELETE FROM \(Message.ftsTableName) WHERE conversation_id = ?",
+                               arguments: [conversationId])
+            }
         }
         
         ConcurrentJobQueue.shared.addJob(job: AttachmentCleanUpJob(conversationId: conversationId, mediaUrls: mediaUrls))

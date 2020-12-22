@@ -7,6 +7,9 @@ public final class UserDatabase: Database {
     public override class var config: Configuration {
         var config = super.config
         config.label = "User"
+        config.prepareDatabase { (db) in
+            db.add(tokenizer: MixinTokenizer.self)
+        }
         return config
     }
     
@@ -120,6 +123,16 @@ public final class UserDatabase: Database {
         migrator.registerMigration("v21") { (db) in
             try db.execute(sql: "UPDATE assets SET reserve = '0'")
             try db.execute(sql: "UPDATE top_assets SET reserve = '0'")
+        }
+        
+        migrator.registerMigration("fts5") { (db) in
+            try db.create(virtualTable: Message.ftsTableName, using: FTS5()) { t in
+                t.tokenizer = MixinTokenizer.tokenizerDescriptor()
+                t.column(Message.column(of: .messageId).name).notIndexed()
+                t.column(Message.column(of: .conversationId).name).notIndexed()
+                t.column(Message.column(of: .content).name)
+                t.column(Message.column(of: .name).name)
+            }
         }
         
         return migrator

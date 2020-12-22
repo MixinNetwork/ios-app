@@ -13,23 +13,32 @@ extension ConversationDAO {
     FROM messages m
     LEFT JOIN conversations c ON m.conversation_id = c.conversation_id
     LEFT JOIN users u ON c.owner_id = u.user_id
-    WHERE m.category in ('SIGNAL_TEXT','SIGNAL_DATA','SIGNAL_POST','PLAIN_TEXT','PLAIN_DATA','PLAIN_POST') AND m.status != 'FAILED'
-    AND (m.content LIKE ? ESCAPE '/' OR m.name LIKE ? ESCAPE '/')
-    GROUP BY m.conversation_id
-    ORDER BY c.pin_time DESC, c.last_message_created_at DESC
     """
     
     func getConversation(withMessageLike keyword: String, limit: Int?, completion: ([MessagesWithinConversationSearchResult]) -> Void) -> DatabaseSnapshot {
         var sql = ConversationDAO.sqlSearchMessages
-        if let limit = limit {
-            sql += " LIMIT \(limit)"
+        let arguments: [String: String]
+        if AppGroupUserDefaults.Database.isFTSInitialized {
+            sql += "\nWHERE m.id in (SELECT id FROM \(Message.ftsTableName) WHERE \(Message.ftsTableName) MATCH :keyword)"
+            arguments = ["keyword": keyword]
+        } else {
+            sql += """
+                WHERE m.category in ('SIGNAL_TEXT','SIGNAL_DATA','SIGNAL_POST','PLAIN_TEXT','PLAIN_DATA','PLAIN_POST')
+                    AND m.status != 'FAILED'
+                    AND (m.content LIKE :keyword ESCAPE '/' OR m.name LIKE :keyword ESCAPE '/')
+            """
+            arguments = ["keyword": "%\(keyword.sqlEscaped)%"]
         }
-        let keyword = "%\(keyword.sqlEscaped)%"
+        sql += "\nGROUP BY m.conversation_id ORDER BY c.pin_time DESC, c.last_message_created_at DESC"
+        if let limit = limit {
+            sql += "\nLIMIT \(limit)"
+        }
+        
         let snapshot = try! UserDatabase.current.pool.makeSnapshot()
         defer {
             try! snapshot.read { (db) -> Void in
                 var items = [MessagesWithinConversationSearchResult]()
-                let rows = try Row.fetchCursor(db, sql: sql, arguments: [keyword, keyword], adapter: nil)
+                let rows = try Row.fetchCursor(db, sql: sql, arguments: StatementArguments(arguments), adapter: nil)
                 while let row = try rows.next() {
                     let counter = Counter(value: -1)
                     let conversationId: String = row[counter.advancedValue] ?? ""
@@ -63,6 +72,7 @@ extension ConversationDAO {
                     }
                     items.append(item)
                 }
+                completion(items)
             }
         }
         return snapshot

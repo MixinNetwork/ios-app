@@ -503,6 +503,10 @@ public final class MessageDAO: UserDatabaseDAO {
         } else {
             try message.save(database)
         }
+        if AppGroupUserDefaults.Database.isFTSInitialized && message.status != MessageStatus.FAILED.rawValue {
+            try database.execute(sql: "INSERT INTO \(Message.ftsTableName) VALUES (?, ?, ?, ?)",
+                                 arguments: [message.messageId, message.conversationId, message.content, message.name])
+        }
         try MessageDAO.shared.updateUnseenMessageCount(database: database, conversationId: message.conversationId)
         
         database.afterNextTransactionCommit { (_) in
@@ -584,6 +588,10 @@ public final class MessageDAO: UserDatabaseDAO {
         try MessageMention
             .filter(MessageMention.column(of: .messageId) == messageId)
             .deleteAll(database)
+        if AppGroupUserDefaults.Database.isFTSInitialized, let category = MessageCategory(rawValue: category), MessageCategory.ftsAvailable.contains(category) {
+            try database.execute(sql: "DELETE FROM \(Message.ftsTableName) WHERE id=?",
+                                 arguments: [messageId])
+        }
         
         if status == MessageStatus.FAILED.rawValue {
             try MessageDAO.shared.updateUnseenMessageCount(database: database, conversationId: conversationId)
@@ -613,6 +621,10 @@ public final class MessageDAO: UserDatabaseDAO {
             try MessageMention
                 .filter(MessageMention.column(of: .messageId) == id)
                 .deleteAll(db)
+            if AppGroupUserDefaults.Database.isFTSInitialized {
+                try db.execute(sql: "DELETE FROM \(Message.ftsTableName) WHERE id=?",
+                               arguments: [id])
+            }
         }
         return deleteCount > 0
     }
@@ -656,6 +668,14 @@ extension MessageDAO {
             return
         }
         
+        db.write { (db) in
+            // FTS initialization writes index with barrier, which postpone any writing after it
+            // Embed fts initialization checking inside writing pool could keep the flag in sync
+            if AppGroupUserDefaults.Database.isFTSInitialized {
+                try db.execute(sql: "INSERT INTO \(Message.ftsTableName) VALUES (?, ?, ?, ?)",
+                               arguments: [message.messageId, message.conversationId, message.content, message.name])
+            }
+        }
         let userInfo: [String: Any] = [
             MessageDAO.UserInfoKey.conversationId: message.conversationId,
             MessageDAO.UserInfoKey.message: message,

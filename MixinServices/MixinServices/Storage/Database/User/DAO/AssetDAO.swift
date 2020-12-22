@@ -58,7 +58,7 @@ public final class AssetDAO: UserDatabaseDAO {
     public func getAssets(keyword: String, sortResult: Bool, limit: Int?) -> [AssetItem] {
         var sql = """
         \(Self.sqlQueryTable)
-        WHERE (a.name LIKE ? OR a.symbol LIKE ?)
+        WHERE (a.name LIKE :keyword OR a.symbol LIKE :keyword)
         """
         if sortResult {
             sql += " AND a.balance > 0 ORDER BY CASE WHEN a.symbol LIKE ? THEN 1 ELSE 0 END DESC, \(Self.sqlOrder)"
@@ -66,16 +66,7 @@ public final class AssetDAO: UserDatabaseDAO {
         if let limit = limit {
             sql += " LIMIT \(limit)"
         }
-        
-        let keyword = "%\(keyword)%"
-        let arguments: StatementArguments
-        if sortResult {
-            arguments = [keyword, keyword, keyword]
-        } else {
-            arguments = [keyword, keyword]
-        }
-        
-        return db.select(with: sql, arguments: arguments)
+        return db.select(with: sql, arguments: ["keyword": "%\(keyword)%"])
     }
     
     public func getAssets() -> [AssetItem] {

@@ -74,6 +74,7 @@ extension Message: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mix
 extension Message: TableRecord, PersistableRecord {
     
     public static let databaseTableName = "messages"
+    public static let ftsTableName = "messages_fts"
     
 }
 
@@ -293,6 +294,15 @@ public enum MessageCategory: String, Decodable {
         ]
         return Set(categories.map(\.rawValue))
     }()
+    
+    // ⚠️ Database table creation depends on this, look after database when modifying
+    public static let ftsAvailable: Set<Self> = [
+        .SIGNAL_TEXT, .PLAIN_TEXT,
+        .SIGNAL_POST, .PLAIN_POST,
+        .SIGNAL_DATA, .PLAIN_DATA
+    ]
+    
+    public static let ftsAvailableCategorySequence = "('" + MessageCategory.ftsAvailable.map(\.rawValue).joined(separator: "', '") + "')"
     
 }
 

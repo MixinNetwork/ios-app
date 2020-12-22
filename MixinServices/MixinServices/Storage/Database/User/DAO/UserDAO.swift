@@ -190,12 +190,11 @@ public final class UserDAO: UserDatabaseDAO {
         
     }
     
-    public func updateNotificationEnabled(userId: String, muteUntil: String) {
-        DispatchQueue.global().async { [weak self] in
-            self?.db.update(User.self,
-                            assignments: [User.column(of: .muteUntil).set(to: muteUntil)],
-                            where: User.column(of: .userId) == userId)
-            if let user = self?.getUser(userId: userId) {
+    public func updateUser(with userId: String, muteUntil: String) {
+        db.update(User.self,
+                  assignments: [User.column(of: .muteUntil).set(to: muteUntil)],
+                  where: User.column(of: .userId) == userId) { _ in
+            if let user = self.getUser(userId: userId) {
                 NotificationCenter.default.afterPostOnMain(name: NSNotification.Name.UserDidChange, object: user)
             }
         }

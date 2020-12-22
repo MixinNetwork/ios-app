@@ -136,9 +136,13 @@ final class UserProfileViewController: ProfileViewController {
         ConversationAPI.mute(conversationId: conversationId, conversationRequest: conversationRequest) { [weak self] (result) in
             switch result {
             case let .success(response):
-                self?.user.muteUntil = response.muteUntil
-                self?.reloadData()
-                UserDAO.shared.updateNotificationEnabled(userId: userId, muteUntil: response.muteUntil)
+                DispatchQueue.global().async {
+                    UserDAO.shared.updateUser(with: userId, muteUntil: response.muteUntil)
+                }
+                if let self = self {
+                    self.user.muteUntil = response.muteUntil
+                    self.reloadData()
+                }
                 let toastMessage: String
                 if interval == MuteInterval.none {
                     toastMessage = Localized.PROFILE_TOAST_UNMUTED

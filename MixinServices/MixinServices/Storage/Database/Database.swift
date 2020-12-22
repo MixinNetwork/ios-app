@@ -271,10 +271,14 @@ extension Database {
     public func update<Record: PersistableRecord>(
         _ record: Record.Type,
         assignments: [ColumnAssignment],
-        where condition: SQLSpecificExpressible
+        where condition: SQLSpecificExpressible,
+        completion: Completion? = nil
     ) -> Bool {
         write { (db) in
             try record.filter(condition).updateAll(db, assignments)
+            if let completion = completion {
+                db.afterNextTransactionCommit(completion)
+            }
         }
     }
     

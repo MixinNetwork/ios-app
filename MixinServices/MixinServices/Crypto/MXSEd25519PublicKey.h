@@ -3,7 +3,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(Ed25519PublicKey)
-@interface MXCEd25519PublicKey : NSObject
+@interface MXSEd25519PublicKey : NSObject
 
 @property (nonatomic, strong, readonly) NSData *rawRepresentation;
 

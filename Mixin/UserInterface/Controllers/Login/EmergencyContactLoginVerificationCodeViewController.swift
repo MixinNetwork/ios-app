@@ -1,5 +1,4 @@
 import UIKit
-import MixinCrypto
 import MixinServices
 
 class EmergencyContactLoginVerificationCodeViewController: LoginVerificationCodeViewController {

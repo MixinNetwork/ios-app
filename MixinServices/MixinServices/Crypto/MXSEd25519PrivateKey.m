@@ -1,12 +1,12 @@
-#import "MXCEd25519PrivateKey.h"
-#import "MXCEd25519PublicKeyInternal.h"
+#import "MXSEd25519PrivateKey.h"
+#import "MXSEd25519PublicKeyInternal.h"
 #include <openssl/curve25519.h>
 #include <openssl/rand.h>
 #include <openssl/sha.h>
 
 static const int seedLength = 32;
 
-@implementation MXCEd25519PrivateKey {
+@implementation MXSEd25519PrivateKey {
     uint8_t _seed[seedLength];
     uint8_t _publicKey[ED25519_PUBLIC_KEY_LEN];
     uint8_t _privateKey[ED25519_PRIVATE_KEY_LEN];
@@ -32,7 +32,7 @@ static const int seedLength = 32;
 }
 
 - (NSString *)description {
-    NSMutableString *desc = [@"MXCEd25519PrivateKey <seed: " mutableCopy];
+    NSMutableString *desc = [@"MXSEd25519PrivateKey <seed: " mutableCopy];
     [desc appendString:[self.rfc8032Representation base64EncodedStringWithOptions:0]];
     [desc appendString:@", public key: "];
     [desc appendString:[self.publicKey.rawRepresentation base64EncodedStringWithOptions:0]];
@@ -40,8 +40,8 @@ static const int seedLength = 32;
     return [desc copy];
 }
 
-- (MXCEd25519PublicKey *)publicKey {
-    return [[MXCEd25519PublicKey alloc] initWithBytes:_publicKey];
+- (MXSEd25519PublicKey *)publicKey {
+    return [[MXSEd25519PublicKey alloc] initWithBytes:_publicKey];
 }
 
 - (NSData *)rfc8032Representation {

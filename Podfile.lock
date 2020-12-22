@@ -133,17 +133,15 @@ PODS:
     - libcmark_gfm (~> 0.29.3)
   - Maaku/Core (0.9.2):
     - Maaku/CMark
-  - MixinCrypto (0.1.0):
-    - BoringSSL
   - MixinServices (0.1.0):
     - Alamofire
     - AppCenter
+    - BoringSSL
     - DeviceGuru
     - GRDB.swift
     - GzipSwift
     - libsignal-protocol-c
     - lottie-ios
-    - MixinCrypto
     - SDWebImage
     - SDWebImageYYPlugin/YYImage
     - SocketRocket
@@ -236,7 +234,6 @@ DEPENDENCIES:
   - Highlightr (from `https://github.com/wuyuehyang/Highlightr.git`, branch `master`)
   - libsignal-protocol-c (from `https://github.com/MixinNetwork/libsignal-protocol-c.git`)
   - lottie-ios (from `https://github.com/airbnb/lottie-ios.git`, branch `lottie/objectiveC`)
-  - MixinCrypto (from `./MixinCrypto`)
   - MixinServices (from `./MixinServices`)
   - PhoneNumberKit
   - R.swift
@@ -299,8 +296,6 @@ EXTERNAL SOURCES:
   lottie-ios:
     :branch: lottie/objectiveC
     :git: https://github.com/airbnb/lottie-ios.git
-  MixinCrypto:
-    :path: "./MixinCrypto"
   MixinServices:
     :path: "./MixinServices"
   SwiftyMarkdown:
@@ -365,8 +360,7 @@ SPEC CHECKSUMS:
   libsignal-protocol-c: bf65792f9f777e7d54dfab84bba0379eba42044e
   lottie-ios: 0e760146411886f6104050c932a8e6964853267f
   Maaku: 0eb331f423453177018d0b483068bcc181e135b4
-  MixinCrypto: 00953362fce95332fccda7ceb3e7434b6891f0d3
-  MixinServices: 8a3b0e065d26134f1252ef8cae8543fe56db6f61
+  MixinServices: e40b2894545e24139249b099aba8a4083f368482
   nanopb: 1bf24dd71191072e120b83dd02d08f3da0d65e53
   PhoneNumberKit: ff153d5e299f6da566cb73c6aa71e354933b2932
   PINCache: 7a8fc1a691173d21dbddbf86cd515de6efa55086
@@ -387,6 +381,6 @@ SPEC CHECKSUMS:
   YYImage: 6db68da66f20d9f169ceb94dfb9947c3867b9665
   Zip: 414f59909701fda9a84ab774ebe0f5449b1082cc
 
-PODFILE CHECKSUM: fae953032bafc2826a60d7b2225150f3805a4ea4
+PODFILE CHECKSUM: eb7073b033c49ad75f0737bc9313c7f50c1594b4
 
 COCOAPODS: 1.10.0

@@ -1,6 +1,6 @@
 import Foundation
 import DeviceGuru
-import MixinCrypto
+import MixinServices
 
 enum RequestSigning {
     

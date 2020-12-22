@@ -24,7 +24,7 @@ Mixin Core Services.
   s.static_framework = true
 
   s.ios.vendored_frameworks = 'MixinServices/Goutils.framework'
-  s.source_files = 'MixinServices/Foundation/**/*', 'MixinServices/Services/**/*', 'MixinServices/Storage/**/*'
+  s.source_files = 'MixinServices/Foundation/**/*', 'MixinServices/Services/**/*', 'MixinServices/Storage/**/*', 'MixinServices/Crypto/**/*'
 
   s.dependency 'AppCenter'
   s.dependency 'Alamofire'
@@ -39,5 +39,5 @@ Mixin Core Services.
   s.dependency 'GRDB.swift'
   s.dependency 'SwiftyMarkdown'
   s.dependency 'lottie-ios'
-  s.dependency 'MixinCrypto'
+  s.dependency 'BoringSSL'
 end

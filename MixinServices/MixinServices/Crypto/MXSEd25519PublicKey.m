@@ -1,7 +1,7 @@
-#import "MXCEd25519PublicKey.h"
+#import "MXSEd25519PublicKey.h"
 #include <openssl/curve25519.h>
 
-@implementation MXCEd25519PublicKey {
+@implementation MXSEd25519PublicKey {
     uint8_t _bytes[ED25519_PUBLIC_KEY_LEN];
 }
 

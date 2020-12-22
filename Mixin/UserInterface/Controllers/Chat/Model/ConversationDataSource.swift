@@ -94,7 +94,7 @@ class ConversationDataSource {
     }
     
     func initData(completion: @escaping () -> Void) {
-        NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: .ConversationDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: MixinServices.conversationDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(messageDaoDidInsertMessage(_:)), name: MessageDAO.didInsertMessageNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(messageDaoDidRedecryptMessage(_:)), name: MessageDAO.didRedecryptMessageNotification, object: nil)
         reload(completion: completion)

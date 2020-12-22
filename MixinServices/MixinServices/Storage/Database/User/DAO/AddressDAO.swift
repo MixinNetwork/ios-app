@@ -4,6 +4,7 @@ import GRDB
 public final class AddressDAO: UserDatabaseDAO {
     
     public static let shared = AddressDAO()
+    public static let addressDidChangeNotification = NSNotification.Name("one.mixin.services.AddressDAO.addressDidChange")
     
     public func getAddress(addressId: String) -> Address? {
         db.select(where: Address.column(of: .addressId) == addressId)
@@ -18,7 +19,7 @@ public final class AddressDAO: UserDatabaseDAO {
     
     public func getAddresses(assetId: String) -> [Address] {
         db.select(where: Address.column(of: .assetId) == assetId,
-                                    order: [Address.column(of: .updatedAt).desc])
+                  order: [Address.column(of: .updatedAt).desc])
     }
     
     public func insertOrUpdateAddress(addresses: [Address]) {
@@ -26,14 +27,14 @@ public final class AddressDAO: UserDatabaseDAO {
             return
         }
         db.save(addresses) { _ in
-            NotificationCenter.default.post(onMainThread: .AddressDidChange, object: self)
+            NotificationCenter.default.post(onMainThread: Self.addressDidChangeNotification, object: self)
         }
     }
     
     public func deleteAddress(assetId: String, addressId: String) {
         db.delete(Address.self,
                   where: Address.column(of: .addressId) == addressId)
-        NotificationCenter.default.post(onMainThread: .AddressDidChange, object: self)
+        NotificationCenter.default.post(onMainThread: Self.addressDidChangeNotification, object: self)
     }
     
 }

@@ -56,7 +56,7 @@ class SharedMediaDataSource<ItemType: SharedMediaItem, CategorizerType: SharedMe
     init() {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(conversationDidChange(_:)),
-                                               name: .ConversationDidChange,
+                                               name: MixinServices.conversationDidChangeNotification,
                                                object: nil)
     }
     

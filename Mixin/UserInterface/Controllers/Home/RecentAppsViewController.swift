@@ -34,7 +34,7 @@ class RecentAppsViewController: UIViewController {
                                                object: nil)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(userDidChange(_:)),
-                                               name: .UserDidChange,
+                                               name: UserDAO.userDidChangeNotification,
                                                object: nil)
         reloadIfNeeded()
     }
@@ -57,13 +57,8 @@ class RecentAppsViewController: UIViewController {
         needsReload = true
     }
     
-    @objc func userDidChange(_ sender: Notification) {
-        let userId: String
-        if let response = sender.object as? UserResponse {
-            userId = response.userId
-        } else if let user = sender.object as? UserItem {
-            userId = user.userId
-        } else {
+    @objc func userDidChange(_ notification: Notification) {
+        guard let userId = (notification.userInfo?[UserDAO.UserInfoKey.user] as? UserItem)?.userId else {
             return
         }
         if users.contains(where: { $0.userId == userId }) {

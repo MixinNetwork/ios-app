@@ -23,7 +23,10 @@ final class StorageUsageViewController: UIViewController {
         tableView.delegate = self
         tableView.tableFooterView = UIView()
         fetchConversations()
-        NotificationCenter.default.addObserver(self, selector: #selector(fetchConversations), name: .StorageUsageDidChange, object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(fetchConversations),
+                                               name: MixinServices.storageUsageDidChangeNotification,
+                                               object: nil)
     }
     
     @objc private func fetchConversations() {

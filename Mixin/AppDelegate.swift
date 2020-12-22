@@ -9,7 +9,6 @@ import Lottie
 import SwiftyMarkdown
 import MixinServices
 
-@UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     static var current: AppDelegate {

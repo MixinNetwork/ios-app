@@ -29,10 +29,10 @@ public final class BlazeMessageDAO {
             condition = nil
         }
         let data: [Data] = TaskDatabase.current.select(column: MessageBlaze.column(of: .message),
-                                               from: MessageBlaze.self,
-                                               where: condition,
-                                               order: [MessageBlaze.column(of: .createdAt).asc],
-                                               limit: limit)
+                                                       from: MessageBlaze.self,
+                                                       where: condition,
+                                                       order: [MessageBlaze.column(of: .createdAt).asc],
+                                                       limit: limit)
         return data.compactMap { (data) -> BlazeMessageData? in
             try? JSONDecoder.default.decode(BlazeMessageData.self, from: data)
         }

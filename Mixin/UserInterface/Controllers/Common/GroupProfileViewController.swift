@@ -60,7 +60,7 @@ final class GroupProfileViewController: ProfileViewController {
     
     override func updateMuteInterval(inSeconds interval: Int64) {
         let conversationId = conversation.conversationId
-        NotificationCenter.default.post(onMainThread: .ConversationDidChange, object: ConversationChange(conversationId: conversationId, action: .startedUpdateConversation))
+        NotificationCenter.default.post(onMainThread: MixinServices.conversationDidChangeNotification, object: ConversationChange(conversationId: conversationId, action: .startedUpdateConversation))
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         let conversationRequest = ConversationRequest(conversationId: conversationId, name: nil, category: ConversationCategory.GROUP.rawValue, participants: nil, duration: interval, announcement: nil)
@@ -151,7 +151,7 @@ extension GroupProfileViewController {
     @objc func editGroupName() {
         let conversation = self.conversation
         presentEditNameController(title: Localized.CONTACT_TITLE_CHANGE_NAME, text: conversation.name, placeholder: Localized.PLACEHOLDER_NEW_NAME) { [weak self] (name) in
-            NotificationCenter.default.post(onMainThread: .ConversationDidChange, object: ConversationChange(conversationId: conversation.conversationId, action: .startedUpdateConversation))
+            NotificationCenter.default.post(onMainThread: MixinServices.conversationDidChangeNotification, object: ConversationChange(conversationId: conversation.conversationId, action: .startedUpdateConversation))
             let hud = Hud()
             hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
             ConversationAPI.updateGroupName(conversationId: conversation.conversationId, name: name) { (result) in

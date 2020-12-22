@@ -24,7 +24,7 @@ public final class AlbumDAO: UserDatabaseDAO {
     
     public func getAlbums() -> [Album] {
         db.select(where: Album.column(of: .category) != AlbumCategory.PERSONAL.rawValue,
-                                    order: [Album.column(of: .updatedAt).desc])
+                  order: [Album.column(of: .updatedAt).desc])
     }
     
     public func getAblumsUpdateAt() -> [String: String] {

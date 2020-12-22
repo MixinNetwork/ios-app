@@ -32,7 +32,10 @@ class DesktopViewController: SettingsTableViewController {
         reloadData()
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
-        NotificationCenter.default.addObserver(self, selector: #selector(reloadData), name: .UserSessionDidChange, object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(reloadData),
+                                               name: ReceiveMessageService.userSessionDidChangeNotification,
+                                               object: nil)
     }
     
     @objc func reloadData() {

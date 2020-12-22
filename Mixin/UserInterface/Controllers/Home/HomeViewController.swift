@@ -109,16 +109,16 @@ class HomeViewController: UIViewController {
             appActions.append(nil)
         }
         updateHomeApps()
-        NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: .ConversationDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: MixinServices.conversationDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: MessageDAO.didInsertMessageNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: MessageDAO.didRedecryptMessageNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: .UserDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: UserDAO.userDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reloadAccount), name: LoginManager.accountDidChangeNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(appDidChange(_:)), name: .AppDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(appDidChange(_:)), name: UserDAO.correspondingAppDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(circleConversationDidChange(_:)), name: CircleConversationDAO.circleConversationsDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(webSocketDidConnect(_:)), name: WebSocketService.didConnectNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(webSocketDidDisconnect(_:)), name: WebSocketService.didDisconnectNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(syncStatusChange), name: .SyncMessageDidAppear, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(syncStatusChange), name: ReceiveMessageService.progressNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive(_:)), name: UIApplication.didBecomeActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive(_:)), name: ReceiveMessageService.groupConversationParticipantDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(circleNameDidChange), name: AppGroupUserDefaults.User.circleNameDidChangeNotification, object: nil)
@@ -273,13 +273,12 @@ class HomeViewController: UIViewController {
     }
 
     @objc func appDidChange(_ notification: Notification) {
-        guard let appId = notification.object as? String, !appId.isEmpty else {
+        guard let app = notification.userInfo?[UserDAO.UserInfoKey.app] as? App else {
             return
         }
-        guard AppGroupUserDefaults.User.homeAppIds.contains(appId) else {
+        guard AppGroupUserDefaults.User.homeAppIds.contains(app.appId) else {
             return
         }
-
         updateHomeApps()
     }
     
@@ -304,10 +303,9 @@ class HomeViewController: UIViewController {
     }
     
     @objc func syncStatusChange(_ notification: Notification) {
-        guard let progress = notification.object as? Int else {
+        guard let progress = notification.userInfo?[ReceiveMessageService.UserInfoKey.progress] as? Int else {
             return
         }
-
         if progress >= 100 {
             if WebSocketService.shared.isRealConnected {
                 titleButton.setTitle(topLeftTitle, for: .normal)

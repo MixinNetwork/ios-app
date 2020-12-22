@@ -14,11 +14,15 @@ public class ReceiveMessageService: MixinService {
         public static let conversationId = "cid"
         public static let userId = "uid"
         public static let sessionId = "sid"
+        public static let progress = "prog"
     }
     
     public static let shared = ReceiveMessageService()
+    
     public static let groupConversationParticipantDidChangeNotification = Notification.Name("one.mixin.services.group.participant.did.change")
     public static let senderKeyDidChangeNotification = NSNotification.Name("one.mixin.services.ReceiveMessageService.SenderKeyDidChange")
+    public static let progressNotification = NSNotification.Name("one.mixin.services.ReceiveMessageService.progressNotification")
+    public static let userSessionDidChangeNotification = NSNotification.Name("one.mixin.services.ReceiveMessageService.userSessionDidChange")
     
     private let processDispatchQueue = DispatchQueue(label: "one.mixin.services.queue.receive.messages")
     private let receiveDispatchQueue = DispatchQueue(label: "one.mixin.services.queue.receive")
@@ -141,7 +145,9 @@ public class ReceiveMessageService: MixinService {
             defer {
                 self.processing = false
                 if displaySyncProcess {
-                    NotificationCenter.default.post(onMainThread: .SyncMessageDidAppear, object: 100)
+                    NotificationCenter.default.post(onMainThread: Self.progressNotification,
+                                                    object: self,
+                                                    userInfo: [Self.UserInfoKey.progress: 100])
                 }
             }
 
@@ -175,7 +181,9 @@ public class ReceiveMessageService: MixinService {
                 if remainJobCount + finishedJobCount > 500 {
                     displaySyncProcess = true
                     let progress = blazeMessageDatas.count == 0 ? 100 : Int(Float(finishedJobCount) / Float(remainJobCount + finishedJobCount) * 100)
-                    NotificationCenter.default.post(onMainThread: .SyncMessageDidAppear, object: progress)
+                    NotificationCenter.default.post(onMainThread: Self.progressNotification,
+                                                    object: self,
+                                                    userInfo: [Self.UserInfoKey.progress: progress])
                 }
 
                 for data in blazeMessageDatas {
@@ -1032,7 +1040,7 @@ extension ReceiveMessageService {
             Logger.write(log: "[ReceiveMessageService][ProcessSystemSessionMessage]...log out desktop...", newSection: true)
 
             ParticipantSessionDAO.shared.provisionSession(userId: systemSession.userId, sessionId: systemSession.sessionId)
-            NotificationCenter.default.post(onMainThread: .UserSessionDidChange, object: self)
+            NotificationCenter.default.post(onMainThread: Self.userSessionDidChangeNotification, object: self)
         } else if (systemSession.action == SystemSessionMessageAction.DESTROY.rawValue) {
             guard AppGroupUserDefaults.Account.extensionSession == systemSession.sessionId else {
                 return
@@ -1044,7 +1052,7 @@ extension ReceiveMessageService {
 
             JobDAO.shared.clearSessionJob()
             ParticipantSessionDAO.shared.destorySession(userId: systemSession.userId, sessionId: systemSession.sessionId)
-            NotificationCenter.default.post(onMainThread: .UserSessionDidChange, object: self)
+            NotificationCenter.default.post(onMainThread: Self.userSessionDidChangeNotification, object: self)
         }
     }
 

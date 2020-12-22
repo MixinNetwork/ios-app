@@ -282,11 +282,11 @@ class ConversationViewController: UIViewController {
         dataSource.initData(completion: finishInitialLoading)
         
         let center = NotificationCenter.default
-        center.addObserver(self, selector: #selector(conversationDidChange(_:)), name: .ConversationDidChange, object: nil)
-        center.addObserver(self, selector: #selector(userDidChange(_:)), name: .UserDidChange, object: nil)
+        center.addObserver(self, selector: #selector(conversationDidChange(_:)), name: MixinServices.conversationDidChangeNotification, object: nil)
+        center.addObserver(self, selector: #selector(userDidChange(_:)), name: UserDAO.userDidChangeNotification, object: nil)
         center.addObserver(self, selector: #selector(menuControllerDidShowMenu(_:)), name: UIMenuController.didShowMenuNotification, object: nil)
         center.addObserver(self, selector: #selector(menuControllerDidHideMenu(_:)), name: UIMenuController.didHideMenuNotification, object: nil)
-        center.addObserver(self, selector: #selector(participantDidChange(_:)), name: .ParticipantDidChange, object: nil)
+        center.addObserver(self, selector: #selector(participantDidChange(_:)), name: ParticipantDAO.participantDidChangeNotification, object: nil)
         center.addObserver(self, selector: #selector(didAddMessageOutOfBounds(_:)), name: ConversationDataSource.newMessageOutOfVisibleBoundsNotification, object: dataSource)
         center.addObserver(self, selector: #selector(audioManagerWillPlayNextNode(_:)), name: AudioManager.willPlayNextNotification, object: nil)
         center.addObserver(self, selector: #selector(willRecallMessage(_:)), name: SendMessageService.willRecallMessageNotification, object: nil)
@@ -845,10 +845,8 @@ class ConversationViewController: UIViewController {
         }
     }
     
-    @objc func userDidChange(_ sender: Notification) {
-        if let userResponse = sender.object as? UserResponse, userResponse.userId == self.ownerUser?.userId {
-            updateOwnerUser(withUserResponse: userResponse, updateDatabase: false)
-        } else if let user = sender.object as? UserItem, user.userId == self.ownerUser?.userId {
+    @objc func userDidChange(_ notification: Notification) {
+        if let user = notification.userInfo?[UserDAO.UserInfoKey.user] as? UserItem, user.userId == self.ownerUser?.userId {
             self.ownerUser = user
             updateNavigationBar()
             conversationInputViewController.update(opponentUser: user)
@@ -870,7 +868,10 @@ class ConversationViewController: UIViewController {
     }
     
     @objc func participantDidChange(_ notification: Notification) {
-        guard isViewLoaded, let conversationId = notification.object as? String, conversationId == self.conversationId else {
+        guard let conversationId = notification.userInfo?[ParticipantDAO.UserInfoKey.conversationId] as? String else {
+            return
+        }
+        guard isViewLoaded, conversationId == self.conversationId else {
             return
         }
         updateSubtitleAndInputBar()

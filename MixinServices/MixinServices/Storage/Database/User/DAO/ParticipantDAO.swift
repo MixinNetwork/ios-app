@@ -3,7 +3,13 @@ import GRDB
 
 public final class ParticipantDAO: UserDatabaseDAO {
     
+    public enum UserInfoKey {
+        public static let conversationId = "cid"
+    }
+    
     public static let shared = ParticipantDAO()
+    
+    public static let participantDidChangeNotification = NSNotification.Name("one.mixin.services.ParticipantDAO.participantDidChange")
     
     private static let sqlQueryColumns = """
     SELECT p.conversation_id, p.user_id, p.role, p.status, p.created_at FROM participants p
@@ -103,7 +109,9 @@ public final class ParticipantDAO: UserDatabaseDAO {
                 try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: source)
             }
             db.afterNextTransactionCommit { (db) in
-                NotificationCenter.default.post(onMainThread: .ParticipantDidChange, object: conversationId)
+                NotificationCenter.default.post(onMainThread: Self.participantDidChangeNotification,
+                                                object: self,
+                                                userInfo: [Self.UserInfoKey.conversationId: conversationId])
             }
         }
     }
@@ -118,7 +126,9 @@ public final class ParticipantDAO: UserDatabaseDAO {
             try participant.save(db)
             try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: source)
             db.afterNextTransactionCommit { (db) in
-                NotificationCenter.default.afterPostOnMain(name: .ParticipantDidChange, object: conversationId)
+                NotificationCenter.default.post(onMainThread: Self.participantDidChangeNotification,
+                                                object: self,
+                                                userInfo: [Self.UserInfoKey.conversationId: conversationId])
             }
         }
     }
@@ -135,9 +145,14 @@ public final class ParticipantDAO: UserDatabaseDAO {
                 .filter(ParticipantSession.column(of: .conversationId) == conversationId)
                 .updateAll(db, ParticipantSession.column(of: .sentToServer).set(to: nil))
             try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: source)
-            
-            NotificationCenter.default.afterPostOnMain(name: .ParticipantDidChange, object: conversationId)
-            NotificationCenter.default.post(name: ReceiveMessageService.senderKeyDidChangeNotification, object: self, userInfo: [ReceiveMessageService.UserInfoKey.conversationId: conversationId])
+            NotificationCenter.default.post(name: ReceiveMessageService.senderKeyDidChangeNotification,
+                                            object: self,
+                                            userInfo: [ReceiveMessageService.UserInfoKey.conversationId: conversationId])
+            db.afterNextTransactionCommit { (_) in
+                NotificationCenter.default.post(onMainThread: Self.participantDidChangeNotification,
+                                                object: self,
+                                                userInfo: [Self.UserInfoKey.conversationId: conversationId])
+            }
         }
     }
     
@@ -150,8 +165,12 @@ public final class ParticipantDAO: UserDatabaseDAO {
             try Conversation
                 .filter(Conversation.column(of: .conversationId) == conversationId)
                 .updateAll(db, [Conversation.column(of: .status).set(to: ConversationStatus.QUIT.rawValue)])
+            db.afterNextTransactionCommit { (_) in
+                NotificationCenter.default.post(onMainThread: Self.participantDidChangeNotification,
+                                                object: self,
+                                                userInfo: [Self.UserInfoKey.conversationId: conversationId])
+            }
         }
-        NotificationCenter.default.afterPostOnMain(name: .ParticipantDidChange, object: conversationId)
     }
     
     public func participants(conversationId: String, limit: Int? = nil) -> [Participant] {

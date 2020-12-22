@@ -72,7 +72,7 @@ class SharedMediaAudioCell: UITableViewCell, AudioCell {
         highlightedWaveformView.waveform = audio.mediaWaveform
         update(with: audio.mediaStatus)
         updateUnreadStyle()
-        NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: .ConversationDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: MixinServices.conversationDidChangeNotification, object: nil)
     }
     
     func update(with mediaStatus: MediaStatus) {

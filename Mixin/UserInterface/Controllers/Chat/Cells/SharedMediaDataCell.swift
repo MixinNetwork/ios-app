@@ -30,7 +30,7 @@ class SharedMediaDataCell: ModernSelectedBackgroundCell, AttachmentLoadingMessag
         let mediaExpired = viewModel.message.mediaStatus == MediaStatus.EXPIRED.rawValue
         subtitleLabel.text = mediaExpired ? Localized.CHAT_FILE_EXPIRED : viewModel.sizeRepresentation
         updateOperationButtonStyle()
-        NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: .ConversationDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: MixinServices.conversationDidChangeNotification, object: nil)
     }
     
     func updateProgress() {

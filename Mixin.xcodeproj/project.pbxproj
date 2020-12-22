@@ -580,13 +580,15 @@
 		811C8154F03C8CBB72DBA1F4 /* Pods_MixinShare.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67A8E0E9B65F16ADB27E6F25 /* Pods_MixinShare.framework */; };
 		84A10E96256B63B4006AC741 /* AssetAPI+Ticker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A10E95256B63B4006AC741 /* AssetAPI+Ticker.swift */; };
 		84A10E9A256B6416006AC741 /* TickerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A10E99256B6416006AC741 /* TickerResponse.swift */; };
+		9424C6432592469500FFDAE0 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9424C6422592469500FFDAE0 /* Application.swift */; };
+		9424C64B259246B600FFDAE0 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9424C64A259246B600FFDAE0 /* main.swift */; };
 		94438D57252DAD73005760AF /* Clip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94438D56252DAD73005760AF /* Clip.swift */; };
 		945A9E63532A9E5E449174EB /* Pods_MixinAppGroupAccess.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 470400A1924B7FC84415D7DF /* Pods_MixinAppGroupAccess.framework */; };
 		945AA6582567B18200B39415 /* Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945AA6572567B18200B39415 /* Country.swift */; };
+		947F4AD625866D6C00B0A5F9 /* InitializeFTSJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947F4AD525866D6C00B0A5F9 /* InitializeFTSJob.swift */; };
 		94904FD325912A2000F2FDE6 /* CaptchaToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94904FD225912A2000F2FDE6 /* CaptchaToken.swift */; };
 		94DA83762588E595006B0F16 /* WebRTC.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94DA83722588E58B006B0F16 /* WebRTC.xcframework */; };
 		94DA83772588E595006B0F16 /* WebRTC.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 94DA83722588E58B006B0F16 /* WebRTC.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		947F4AD625866D6C00B0A5F9 /* InitializeFTSJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947F4AD525866D6C00B0A5F9 /* InitializeFTSJob.swift */; };
 		9B748DCD1FA71CEF00BC009B /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B748DCC1FA71CEF00BC009B /* CameraViewController.swift */; };
 		9B8D579A1F9F0ADA008A7957 /* Chat.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9B8D57991F9F0ADA008A7957 /* Chat.storyboard */; };
 		9BB351671FB19ECB00EDDD2C /* ConversationDateHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB351661FB19ECB00EDDD2C /* ConversationDateHeaderView.swift */; };
@@ -1491,11 +1493,13 @@
 		84A10E95256B63B4006AC741 /* AssetAPI+Ticker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AssetAPI+Ticker.swift"; sourceTree = "<group>"; };
 		84A10E99256B6416006AC741 /* TickerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TickerResponse.swift; sourceTree = "<group>"; };
 		8C43D9D96FCB101481DFD90F /* Pods-Mixin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mixin.release.xcconfig"; path = "Pods/Target Support Files/Pods-Mixin/Pods-Mixin.release.xcconfig"; sourceTree = "<group>"; };
+		9424C6422592469500FFDAE0 /* Application.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
+		9424C64A259246B600FFDAE0 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		94438D56252DAD73005760AF /* Clip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clip.swift; sourceTree = "<group>"; };
 		945AA6572567B18200B39415 /* Country.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Country.swift; sourceTree = "<group>"; };
+		947F4AD525866D6C00B0A5F9 /* InitializeFTSJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitializeFTSJob.swift; sourceTree = "<group>"; };
 		94904FD225912A2000F2FDE6 /* CaptchaToken.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CaptchaToken.swift; sourceTree = "<group>"; };
 		94DA83722588E58B006B0F16 /* WebRTC.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = WebRTC.xcframework; sourceTree = "<group>"; };
-		947F4AD525866D6C00B0A5F9 /* InitializeFTSJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitializeFTSJob.swift; sourceTree = "<group>"; };
 		9B748DCC1FA71CEF00BC009B /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		9B8D57991F9F0ADA008A7957 /* Chat.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Chat.storyboard; sourceTree = "<group>"; };
 		9BB351661FB19ECB00EDDD2C /* ConversationDateHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationDateHeaderView.swift; sourceTree = "<group>"; };
@@ -1864,6 +1868,8 @@
 				DF5D9F1C1F9C77620036D5FD /* UserInterface */,
 				DF5D9F341F9C95F20036D5FD /* Resources */,
 				DF5D9F481F9CDBDE0036D5FD /* Supporting Files */,
+				9424C64A259246B600FFDAE0 /* main.swift */,
+				9424C6422592469500FFDAE0 /* Application.swift */,
 				277FF7021F909A1200DBB2EB /* AppDelegate.swift */,
 				277FF70B1F909A1200DBB2EB /* Assets.xcassets */,
 				7B8BB58F234F36C000991ACB /* Colors.xcassets */,
@@ -4320,6 +4326,7 @@
 				7B35AF76228A98EF00E8101D /* ConversationSearchResult.swift in Sources */,
 				84A10E96256B63B4006AC741 /* AssetAPI+Ticker.swift in Sources */,
 				7B7264F5209C5B1A00F234BE /* CoreTextLabel.swift in Sources */,
+				9424C64B259246B600FFDAE0 /* main.swift in Sources */,
 				7BEB5D9F22B79F5500B8B10E /* EmergencyContactLoginVerificationCodeViewController.swift in Sources */,
 				7B59535122672D3500D59DB4 /* SearchNumberCell.swift in Sources */,
 				7BEE5353222E21D7008D3911 /* KeyboardHeight.swift in Sources */,
@@ -4330,6 +4337,7 @@
 				7B86B1F523F6AB0B00C80AD9 /* TitledCardContentWidthCalculable.swift in Sources */,
 				7BF7837B2179D1AF00BECB4B /* Call.swift in Sources */,
 				7BE5505923573AC00074DB4A /* FontExtension.swift in Sources */,
+				9424C6432592469500FFDAE0 /* Application.swift in Sources */,
 				DF8CECEF1FC4240500E40064 /* BlockedUsersViewController.swift in Sources */,
 				7B894AF5205BFC9B0065A1B8 /* NewAddressViewController.swift in Sources */,
 				7BB5250324160F3D0060DAE1 /* LocationPreviewViewController.swift in Sources */,
@@ -5117,7 +5125,10 @@
 				DEVELOPMENT_TEAM = 5EL4S7LCG6;
 				INFOPLIST_FILE = MixinAppGroupAccess/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = one.mixin.MixinAppGroupAccess;
@@ -5139,7 +5150,10 @@
 				DEVELOPMENT_TEAM = 5EL4S7LCG6;
 				INFOPLIST_FILE = MixinAppGroupAccess/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = one.mixin.MixinAppGroupAccess;
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -37,7 +37,7 @@ final class GalleryItemModelController: NSObject {
     
     override init() {
         super.init()
-        NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: .ConversationDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: MixinServices.conversationDidChangeNotification, object: nil)
     }
     
     deinit {

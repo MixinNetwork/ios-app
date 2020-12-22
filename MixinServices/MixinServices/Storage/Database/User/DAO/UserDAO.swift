@@ -2,7 +2,16 @@ import GRDB
 
 public final class UserDAO: UserDatabaseDAO {
     
+    public enum UserInfoKey {
+        public static let user = "user"
+        public static let app = "app"
+    }
+    
     public static let shared = UserDAO()
+    
+    public static let contactsDidChangeNotification = NSNotification.Name("one.mixin.services.UserDAO.contactsDidChange")
+    public static let userDidChangeNotification = NSNotification.Name("one.mixin.services.UserDAO.userDidChange")
+    public static let correspondingAppDidChange = NSNotification.Name("one.mixin.services.UserDAO.correspondingAppDidChange")
     
     private static let sqlQueryColumns = """
     SELECT u.user_id, u.full_name, u.biography, u.identity_number, u.avatar_url, u.phone, u.is_verified, u.mute_until, u.app_id, u.relationship, u.created_at, u.is_scam, '' AS role, a.creator_id as appCreatorId
@@ -174,17 +183,25 @@ public final class UserDAO: UserDatabaseDAO {
                             .updateAll(db, [Participant.column(of: .status).set(to: ParticipantStatus.SUCCESS.rawValue)])
                     }
                 }
-            }
-            if sendNotificationAfterFinished {
-                if users.count == 1 {
-                    NotificationCenter.default.afterPostOnMain(name: .UserDidChange, object: UserItem.createUser(from: users[0]))
+                db.afterNextTransactionCommit { (_) in
+                    if sendNotificationAfterFinished {
+                        if users.count == 1 {
+                            let user = UserItem.createUser(from: users[0])
+                            NotificationCenter.default.post(onMainThread: Self.userDidChangeNotification,
+                                                            object: self,
+                                                            userInfo: [Self.UserInfoKey.user: user])
+                        }
+                    }
+                    if isAppUpdated {
+                        NotificationCenter.default.post(onMainThread: Self.correspondingAppDidChange,
+                                                        object: self,
+                                                        userInfo: [Self.UserInfoKey.app: users[0].app])
+                    }
+                    if notifyContact {
+                        NotificationCenter.default.post(onMainThread: Self.contactsDidChangeNotification,
+                                                        object: self)
+                    }
                 }
-            }
-            if isAppUpdated {
-                NotificationCenter.default.afterPostOnMain(name: .AppDidChange, object: users[0].app?.appId)
-            }
-            if notifyContact {
-                NotificationCenter.default.afterPostOnMain(name: .ContactsDidChange)
             }
         }
         
@@ -195,7 +212,9 @@ public final class UserDAO: UserDatabaseDAO {
                   assignments: [User.column(of: .muteUntil).set(to: muteUntil)],
                   where: User.column(of: .userId) == userId) { _ in
             if let user = self.getUser(userId: userId) {
-                NotificationCenter.default.afterPostOnMain(name: NSNotification.Name.UserDidChange, object: user)
+                NotificationCenter.default.post(onMainThread: Self.userDidChangeNotification,
+                                                object: self,
+                                                userInfo: [Self.UserInfoKey.user: user])
             }
         }
     }

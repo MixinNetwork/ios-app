@@ -29,7 +29,10 @@ class AddressViewController: UIViewController {
         tableView.delegate = self
         tableView.tableFooterView = UIView()
         reloadLocalAddresses()
-        NotificationCenter.default.addObserver(self, selector: #selector(reloadLocalAddresses), name: .AddressDidChange, object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(reloadLocalAddresses),
+                                               name: AddressDAO.addressDidChangeNotification,
+                                               object: nil)
         WithdrawalAPI.addresses(assetId: asset.assetId) { (result) in
             guard case let .success(addresses) = result else {
                 return

@@ -81,11 +81,11 @@ class VideoUploadJob: AttachmentUploadJob {
             Message.column(of: .mediaSize).set(to: mediaSize),
             Message.column(of: .mediaDuration).set(to: mediaDuration)
         ]
-        MessageDAO.shared.updateMediaMessage(messageId: message.messageId, assignments: assignments)
-        
         let change = ConversationChange(conversationId: message.conversationId,
                                         action: .updateMediaContent(messageId: message.messageId, message: message))
-        NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
+        MessageDAO.shared.updateMediaMessage(messageId: message.messageId, assignments: assignments) { _ in
+            NotificationCenter.default.post(onMainThread: MixinServices.conversationDidChangeNotification, object: change)
+        }
     }
     
 }

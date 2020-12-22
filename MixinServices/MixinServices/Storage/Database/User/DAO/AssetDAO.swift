@@ -3,7 +3,13 @@ import GRDB
 
 public final class AssetDAO: UserDatabaseDAO {
     
+    public enum UserInfoKey {
+        public static let assetId = "aid"
+    }
+    
     public static let shared = AssetDAO()
+    
+    public static let assetsDidChangeNotification = NSNotification.Name("one.mixin.services.AssetDAO.assetsDidChange")
     
     private static let sqlQueryTable = """
     SELECT a.asset_id, a.type, a.symbol, a.name, a.icon_url, a.balance, a.destination, a.tag,
@@ -36,10 +42,14 @@ public final class AssetDAO: UserDatabaseDAO {
             return
         }
         db.save(assets) { _ in
+            let center = NotificationCenter.default
             if assets.count == 1 {
-                NotificationCenter.default.post(onMainThread: .AssetsDidChange, object: assets[0].assetId)
+                center.post(onMainThread: Self.assetsDidChangeNotification,
+                            object: self,
+                            userInfo: [Self.UserInfoKey.assetId: assets[0].assetId])
             } else {
-                NotificationCenter.default.post(onMainThread: .AssetsDidChange, object: nil)
+                center.post(onMainThread: Self.assetsDidChangeNotification,
+                            object: nil)
             }
         }
     }

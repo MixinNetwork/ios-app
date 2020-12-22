@@ -94,8 +94,11 @@ public final class ConversationDAO: UserDatabaseDAO {
     public func updateCodeUrl(conversation: ConversationResponse) {
         db.update(Conversation.self,
                   assignments: [Conversation.column(of: .codeUrl).set(to: conversation.codeUrl)],
-                  where: Conversation.column(of: .conversationId) == conversation.conversationId)
-        NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: ConversationChange(conversationId: conversation.conversationId, action: .updateConversation(conversation: conversation)))
+                  where: Conversation.column(of: .conversationId) == conversation.conversationId) { _ in
+            let change = ConversationChange(conversationId: conversation.conversationId,
+                                            action: .updateConversation(conversation: conversation))
+            NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: change)
+        }
     }
     
     public func getConversationIconUrl(conversationId: String) -> String? {
@@ -131,12 +134,14 @@ public final class ConversationDAO: UserDatabaseDAO {
     public func updateConversationMuteUntil(conversationId: String, muteUntil: String) {
         db.update(Conversation.self,
                   assignments: [Conversation.column(of: .muteUntil).set(to: muteUntil)],
-                  where: Conversation.column(of: .conversationId) == conversationId)
-        guard let conversation = getConversation(conversationId: conversationId) else {
-            return
+                  where: Conversation.column(of: .conversationId) == conversationId) { _ in
+            guard let conversation = self.getConversation(conversationId: conversationId) else {
+                return
+            }
+            let change = ConversationChange(conversationId: conversationId,
+                                            action: .update(conversation: conversation))
+            NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: change)
         }
-        let change = ConversationChange(conversationId: conversationId, action: .update(conversation: conversation))
-        NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
     }
     
     public func updateConversation(with conversationId: String, inCirleOf circleId: String?, pinTime: String?) {
@@ -172,10 +177,15 @@ public final class ConversationDAO: UserDatabaseDAO {
                 try db.execute(sql: "DELETE FROM \(Message.ftsTableName) WHERE conversation_id = ?",
                                arguments: [conversationId])
             }
+            db.afterNextTransactionCommit { (_) in
+                NotificationCenter.default.post(onMainThread: ParticipantDAO.participantDidChangeNotification,
+                                                object: self,
+                                                userInfo: [ParticipantDAO.UserInfoKey.conversationId: conversationId])
+                let change = ConversationChange(conversationId: conversationId,
+                                                action: .updateConversationStatus(status: .QUIT))
+                NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: change)
+            }
         }
-        let change = ConversationChange(conversationId: conversationId, action: .updateConversationStatus(status: .QUIT))
-        NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
-        NotificationCenter.default.afterPostOnMain(name: .ParticipantDidChange, object: conversationId)
     }
     
     public func deleteChat(conversationId: String) {
@@ -201,10 +211,11 @@ public final class ConversationDAO: UserDatabaseDAO {
                 try db.execute(sql: "DELETE FROM \(Message.ftsTableName) WHERE conversation_id = ?",
                                arguments: [conversationId])
             }
+            db.afterNextTransactionCommit { (_) in
+                ConcurrentJobQueue.shared.addJob(job: AttachmentCleanUpJob(conversationId: conversationId, mediaUrls: mediaUrls))
+                NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: nil)
+            }
         }
-        
-        ConcurrentJobQueue.shared.addJob(job: AttachmentCleanUpJob(conversationId: conversationId, mediaUrls: mediaUrls))
-        NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange)
     }
     
     public func clearChat(conversationId: String) {
@@ -220,12 +231,12 @@ public final class ConversationDAO: UserDatabaseDAO {
             try Conversation
                 .filter(Conversation.column(of: .conversationId) == conversationId)
                 .updateAll(db, [Conversation.column(of: .unseenMessageCount).set(to: 0)])
+            db.afterNextTransactionCommit { (_) in
+                ConcurrentJobQueue.shared.addJob(job: AttachmentCleanUpJob(conversationId: conversationId, mediaUrls: mediaUrls))
+                let change = ConversationChange(conversationId: conversationId, action: .reload)
+                NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: change)
+            }
         })
-        
-        ConcurrentJobQueue.shared.addJob(job: AttachmentCleanUpJob(conversationId: conversationId, mediaUrls: mediaUrls))
-        
-        let change = ConversationChange(conversationId: conversationId, action: .reload)
-        NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
     }
     
     public func getConversation(conversationId: String) -> ConversationItem? {
@@ -319,7 +330,7 @@ public final class ConversationDAO: UserDatabaseDAO {
         db.save(conversation)
     }
     
-    public func createConversation(conversationId: String, name: String, members: [GroupUser]) -> Bool {
+    public func createConversation(conversationId: String, name: String, members: [GroupUser], completion: @escaping (_ success: Bool) -> Void) {
         let createdAt = Date().toUTCString()
         let conversation = Conversation(conversationId: conversationId,
                                         ownerId: myUserId,
@@ -350,11 +361,18 @@ public final class ConversationDAO: UserDatabaseDAO {
                              createdAt: createdAt)
         participants.append(me)
         
-        return db.write { (db) in
-            try conversation.insert(db)
-            for participant in participants {
-                try participant.save(db)
+        do {
+            try db.pool.write { (db) -> Void in
+                try conversation.insert(db)
+                for participant in participants {
+                    try participant.save(db)
+                }
+                db.afterNextTransactionCommit { (_) in
+                    completion(true)
+                }
             }
+        } catch {
+            completion(false)
         }
     }
     
@@ -453,7 +471,11 @@ public final class ConversationDAO: UserDatabaseDAO {
             
             resultConversation = try ConversationItem.fetchOne(db, sql: ParticipantDAO.sqlUpdateStatus, arguments: [conversationId], adapter: nil)
             
-            NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: ConversationChange(conversationId: conversationId, action: .updateConversation(conversation: conversation)))
+            db.afterNextTransactionCommit { (_) in
+                let change = ConversationChange(conversationId: conversationId,
+                                                action: .updateConversation(conversation: conversation))
+                NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: change)
+            }
         }
         return resultConversation
     }
@@ -507,11 +529,16 @@ public final class ConversationDAO: UserDatabaseDAO {
                 ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: userIds))
             }
             
-            if oldConversation.status != ConversationStatus.SUCCESS.rawValue {
-                let change = ConversationChange(conversationId: conversationId, action: .updateConversationStatus(status: .SUCCESS))
-                NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
+            db.afterNextTransactionCommit { (_) in
+                if oldConversation.status != ConversationStatus.SUCCESS.rawValue {
+                    let change = ConversationChange(conversationId: conversationId,
+                                                    action: .updateConversationStatus(status: .SUCCESS))
+                    NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: change)
+                }
+                let change = ConversationChange(conversationId: conversationId,
+                                                action: .updateConversation(conversation: conversation))
+                NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: change)
             }
-            NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: ConversationChange(conversationId: conversationId, action: .updateConversation(conversation: conversation)))
         }
     }
     

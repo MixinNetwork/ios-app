@@ -3,6 +3,7 @@ import GRDB
 public final class SnapshotDAO: UserDatabaseDAO {
     
     public static let shared = SnapshotDAO()
+    public static let snapshotDidChangeNotification = NSNotification.Name("one.mixin.services.SnapshotDAO.snapshotDidChange")
     
     private static let sqlQueryTable = """
     SELECT s.snapshot_id, s.type, s.asset_id, s.amount, s.opponent_id, s.transaction_hash, s.sender, s.receiver, s.memo, s.confirmations, s.trace_id, s.created_at, a.symbol, u.user_id, u.full_name, u.avatar_url, u.identity_number
@@ -60,10 +61,10 @@ public final class SnapshotDAO: UserDatabaseDAO {
     public func getSnapshot(traceId: String) -> SnapshotItem? {
         db.select(with: SnapshotDAO.sqlQueryByTrace, arguments: [traceId])
     }
-
+    
     public func insertOrReplaceSnapshots(snapshots: [Snapshot], userInfo: [AnyHashable: Any]? = nil) {
         db.save(snapshots) { (db) in
-            NotificationCenter.default.afterPostOnMain(name: .SnapshotDidChange, object: nil, userInfo: userInfo)
+            NotificationCenter.default.post(onMainThread: SnapshotDAO.snapshotDidChangeNotification, object: self, userInfo: userInfo)
         }
     }
     
@@ -146,7 +147,7 @@ extension SnapshotDAO {
         }
         return snapshots
     }
-
+    
     private func refreshAssetIfNeeded(_ snapshot: SnapshotItem) {
         guard snapshot.assetSymbol == nil else {
             return

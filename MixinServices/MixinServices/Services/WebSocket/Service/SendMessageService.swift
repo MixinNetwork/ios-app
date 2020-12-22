@@ -159,6 +159,7 @@ public class SendMessageService: MixinService {
                     }
                 }
                 
+                let isLastLoop = nextPosition >= messageIds.count
                 UserDatabase.current.write { (db) in
                     for job in jobs {
                         try job.insert(db)
@@ -166,15 +167,19 @@ public class SendMessageService: MixinService {
                     try db.execute(sql: "UPDATE messages SET status = '\(MessageStatus.READ.rawValue)' WHERE conversation_id = ? AND status = ? AND user_id != ? AND ROWID <= ?",
                                    arguments: [conversationId, MessageStatus.DELIVERED.rawValue, myUserId, lastRowID])
                     try MessageDAO.shared.updateUnseenMessageCount(database: db, conversationId: conversationId)
+                    if isLastLoop {
+                        db.afterNextTransactionCommit { (_) in
+                            NotificationCenter.default.post(name: MixinService.messageReadStatusDidChangeNotification, object: self)
+                            NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: nil)
+                        }
+                    }
                 }
                 
                 position = nextPosition
-                if nextPosition < messageIds.count {
+                if !isLastLoop {
                     Thread.sleep(forTimeInterval: 0.1)
                 }
             }
-            NotificationCenter.default.post(name: MixinService.messageReadStatusDidChangeNotification, object: self)
-            NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange)
             SendMessageService.shared.processMessages()
         }
     }

@@ -6,7 +6,10 @@ class RecentStickersViewController: StickersViewController {
     init(index: Int) {
         super.init(nibName: nil, bundle: nil)
         self.index = index
-        NotificationCenter.default.addObserver(self, selector: #selector(stickerUsedAtDidUpdate(_:)), name: .StickerUsedAtDidUpdate, object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(stickerUsedAtDidUpdate(_:)),
+                                               name: StickersViewController.stickerUsedAtDidUpdateNotification,
+                                               object: nil)
     }
     
     required init?(coder aDecoder: NSCoder) {

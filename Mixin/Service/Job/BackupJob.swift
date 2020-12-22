@@ -222,7 +222,7 @@ class BackupJob: BaseJob {
             AppGroupUserDefaults.Account.hasUnfinishedBackup = false
         }
 
-        NotificationCenter.default.post(onMainThread: .BackupDidChange, object: self)
+        NotificationCenter.default.post(onMainThread: Application.backupDidChangeNotification, object: self)
     }
 
     private func getDatabaseFileSize() -> Int64 {

@@ -57,7 +57,7 @@ class CirclesViewController: UIViewController {
         reloadCircles()
         NotificationCenter.default.addObserver(self, selector: #selector(reloadUserCircle), name: CircleDAO.circleDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reloadUserCircle), name: CircleConversationDAO.circleConversationsDidChangeNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(reloadUserCircle), name: .ConversationDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadUserCircle), name: MixinServices.conversationDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reloadUserCircle), name: MessageDAO.didInsertMessageNotification, object: nil)
     }
     

@@ -188,7 +188,7 @@ extension AttachmentDownloadJob: URLSessionDataDelegate {
             let progress = downloadedContentLength / contentLength
             let change = ConversationChange(conversationId: message.conversationId,
                                             action: .updateDownloadProgress(messageId: messageId, progress: progress))
-            NotificationCenter.default.post(onMainThread: .ConversationDidChange, object: change)
+            NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: change)
         }
     }
     

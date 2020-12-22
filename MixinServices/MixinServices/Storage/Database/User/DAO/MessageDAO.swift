@@ -159,12 +159,10 @@ public final class MessageDAO: UserDatabaseDAO {
         ]
         let condition: SQLSpecificExpressible = Message.column(of: .messageId) == messageId
             && Message.column(of: .category) != MessageCategory.MESSAGE_RECALL.rawValue
-        let didUpdate = db.update(Message.self,
-                                  assignments: assignments,
-                                  where: condition)
-        if didUpdate {
-            let change = ConversationChange(conversationId: conversationId, action: .updateMediaStatus(messageId: messageId, mediaStatus: mediaStatus))
-            NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
+        db.update(Message.self, assignments: assignments, where: condition) { _ in
+            let change = ConversationChange(conversationId: conversationId,
+                                            action: .updateMediaStatus(messageId: messageId, mediaStatus: mediaStatus))
+            NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: change)
         }
     }
     
@@ -215,22 +213,24 @@ public final class MessageDAO: UserDatabaseDAO {
                     .filter(mentionMessageIds.contains(MessageMention.column(of: .messageId)))
                     .updateAll(db, [MessageMention.column(of: .hasRead).set(to: true)])
             }
+            
+            if !isAppExtension {
+                db.afterNextTransactionCommit { (_) in
+                    for message in readMessages {
+                        let change = ConversationChange(conversationId: message.conversationId, action: .updateMessageStatus(messageId: message.messageId, newStatus: .READ))
+                        NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: change)
+                    }
+                    for message in mentionMessages {
+                        let change = ConversationChange(conversationId: message.conversationId, action: .updateMessageMentionStatus(messageId: message.messageId, newStatus: .MENTION_READ))
+                        NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: change)
+                    }
+                }
+            }
         }
         
         guard !isAppExtension else {
             return
         }
-        
-        for message in readMessages {
-            let change = ConversationChange(conversationId: message.conversationId, action: .updateMessageStatus(messageId: message.messageId, newStatus: .READ))
-            NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
-        }
-        
-        for message in mentionMessages {
-            let change = ConversationChange(conversationId: message.conversationId, action: .updateMessageMentionStatus(messageId: message.messageId, newStatus: .MENTION_READ))
-            NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
-        }
-        
         NotificationCenter.default.post(name: MixinService.messageReadStatusDidChangeNotification, object: self)
         UNUserNotificationCenter.current().removeNotifications(withIdentifiers: readMessageIds)
         UNUserNotificationCenter.current().removeNotifications(withIdentifiers: mentionMessageIds)
@@ -251,23 +251,36 @@ public final class MessageDAO: UserDatabaseDAO {
         }
         
         let conversationId = oldMessage.conversationId
+        
+        let completion: ((GRDB.Database) -> Void)?
+        if isAppExtension {
+            completion = nil
+        } else {
+            completion = { _ in
+                let status = MessageStatus(rawValue: status) ?? .UNKNOWN
+                let change = ConversationChange(conversationId: conversationId,
+                                                action: .updateMessageStatus(messageId: messageId, newStatus: status))
+                NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: change)
+            }
+        }
+        
         if updateUnseen {
             db.write { (db) in
                 try Message
                     .filter(Message.column(of: .messageId) == messageId)
                     .updateAll(db, [Message.column(of: .status).set(to: status)])
                 try updateUnseenMessageCount(database: db, conversationId: conversationId)
+                if let completion = completion {
+                    db.afterNextTransactionCommit(completion)
+                }
             }
         } else {
             db.update(Message.self,
                       assignments: [Message.column(of: .status).set(to: status)],
-                      where: Message.column(of: .messageId) == messageId)
+                      where: Message.column(of: .messageId) == messageId,
+                      completion: completion)
         }
         
-        if !isAppExtension {
-            let change = ConversationChange(conversationId: conversationId, action: .updateMessageStatus(messageId: messageId, newStatus: MessageStatus(rawValue: status) ?? .UNKNOWN))
-            NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
-        }
         return true
     }
     
@@ -277,12 +290,13 @@ public final class MessageDAO: UserDatabaseDAO {
     }
     
     @discardableResult
-    public func updateMediaMessage(messageId: String, assignments: [ColumnAssignment]) -> Bool {
+    public func updateMediaMessage(messageId: String, assignments: [ColumnAssignment], completion: Database.Completion? = nil) -> Bool {
         let condition = Message.column(of: .messageId) == messageId
             && Message.column(of: .category) != MessageCategory.MESSAGE_RECALL.rawValue
         return db.update(Message.self,
                          assignments: assignments,
-                         where: condition)
+                         where: condition,
+                         completion: completion)
     }
     
     public func updateMediaMessage(messageId: String, mediaUrl: String, status: MediaStatus, conversationId: String) {
@@ -292,12 +306,10 @@ public final class MessageDAO: UserDatabaseDAO {
         ]
         let condition: SQLSpecificExpressible = Message.column(of: .messageId) == messageId
             && Message.column(of: .category) != MessageCategory.MESSAGE_RECALL.rawValue
-        let didUpdate = db.update(Message.self,
-                                  assignments: assignments,
-                                  where: condition)
-        if didUpdate {
-            let change = ConversationChange(conversationId: conversationId, action: .updateMessage(messageId: messageId))
-            NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
+        db.update(Message.self, assignments: assignments, where: condition) { _ in
+            let change = ConversationChange(conversationId: conversationId,
+                                            action: .updateMessage(messageId: messageId))
+            NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: change)
         }
     }
     
@@ -324,7 +336,7 @@ public final class MessageDAO: UserDatabaseDAO {
                     .updateAll(db, [Message.column(of: .mediaStatus).set(to: targetStatus.rawValue)])
                 if numberOfChanges > 0 {
                     let change = ConversationChange(conversationId: conversationId, action: .updateMediaStatus(messageId: messageId, mediaStatus: targetStatus))
-                    NotificationCenter.default.post(onMainThread: .ConversationDidChange, object: change)
+                    NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: change)
                 }
             }
         }
@@ -605,9 +617,12 @@ public final class MessageDAO: UserDatabaseDAO {
         }
         
         let messageIds = quoteMessageIds + [messageId]
-        for messageId in messageIds {
-            let change = ConversationChange(conversationId: conversationId, action: .recallMessage(messageId: messageId))
-            NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
+        database.afterNextTransactionCommit { (_) in
+            for messageId in messageIds {
+                let change = ConversationChange(conversationId: conversationId,
+                                                action: .recallMessage(messageId: messageId))
+                NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: change)
+            }
         }
     }
     

@@ -8,13 +8,13 @@
 
 import UIKit
 import GCDWebServer
+import MixinServices
 
 class ViewController: UIViewController {
     
     @IBOutlet weak var serverStatusLabel: UILabel!
     @IBOutlet weak var serverURLTextField: UITextField!
-    
-    let appGroupIdentifier = "group.one.mixin.messenger"
+    @IBOutlet weak var ftsInitializationSwitch: UISwitch!
     
     private let urlSession = URLSession(configuration: .default)
     
@@ -22,6 +22,8 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        ftsInitializationSwitch.isOn = AppGroupUserDefaults.Database.isFTSInitialized
         
         // Request network permission for devices sold in mainland China
         let task = urlSession.dataTask(with: URL(string: "https://www.baidu.com")!)
@@ -46,6 +48,10 @@ class ViewController: UIViewController {
     
     @IBAction func copyServerURL(_ sender: Any) {
         UIPasteboard.general.string = serverURLTextField.text
+    }
+    
+    @IBAction func toggleFTSInitialization(_ sender: Any) {
+        AppGroupUserDefaults.Database.isFTSInitialized = ftsInitializationSwitch.isOn
     }
     
 }

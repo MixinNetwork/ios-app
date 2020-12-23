@@ -53,6 +53,7 @@ target 'MixinAppGroupAccess' do
 
   pod "GCDWebServer"
   pod "GCDWebServer/WebDAV"
+  mixin_services
 end
 
 post_install do |installer|

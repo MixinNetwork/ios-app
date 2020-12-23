@@ -71,7 +71,7 @@ public final class AssetDAO: UserDatabaseDAO {
         WHERE (a.name LIKE :keyword OR a.symbol LIKE :keyword)
         """
         if sortResult {
-            sql += " AND a.balance > 0 ORDER BY CASE WHEN a.symbol LIKE ? THEN 1 ELSE 0 END DESC, \(Self.sqlOrder)"
+            sql += " AND a.balance > 0 ORDER BY CASE WHEN a.symbol LIKE :keyword THEN 1 ELSE 0 END DESC, \(Self.sqlOrder)"
         }
         if let limit = limit {
             sql += " LIMIT \(limit)"

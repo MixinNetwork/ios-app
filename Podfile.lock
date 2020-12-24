@@ -236,6 +236,7 @@ DEPENDENCIES:
   - Firebase/Performance
   - GCDWebServer
   - GCDWebServer/WebDAV
+  - GRDB.swift/SQLCipher (from `https://github.com/wuyuehyang/GRDB.swift.git`, branch `mixin`)
   - Highlightr (from `https://github.com/wuyuehyang/Highlightr.git`, branch `master`)
   - libsignal-protocol-c (from `https://github.com/MixinNetwork/libsignal-protocol-c.git`)
   - lottie-ios (from `https://github.com/airbnb/lottie-ios.git`, branch `lottie/objectiveC`)
@@ -271,7 +272,6 @@ SPEC REPOS:
     - GoogleDataTransport
     - GoogleToolboxForMac
     - GoogleUtilities
-    - GRDB.swift
     - GTMSessionFetcher
     - GzipSwift
     - libcmark_gfm
@@ -294,6 +294,9 @@ SPEC REPOS:
     - Zip
 
 EXTERNAL SOURCES:
+  GRDB.swift:
+    :branch: mixin
+    :git: https://github.com/wuyuehyang/GRDB.swift.git
   Highlightr:
     :branch: master
     :git: https://github.com/wuyuehyang/Highlightr.git
@@ -316,6 +319,9 @@ EXTERNAL SOURCES:
     :git: https://github.com/wuyuehyang/YYImage.git
 
 CHECKOUT OPTIONS:
+  GRDB.swift:
+    :commit: 59377b5fd5e50e14ccce74d6256c87e320542374
+    :git: https://github.com/wuyuehyang/GRDB.swift.git
   Highlightr:
     :commit: 9b9fc465efecb7b3c039c8fedc66e4ae4f315ad9
     :git: https://github.com/wuyuehyang/Highlightr.git
@@ -388,6 +394,6 @@ SPEC CHECKSUMS:
   YYImage: 6db68da66f20d9f169ceb94dfb9947c3867b9665
   Zip: 414f59909701fda9a84ab774ebe0f5449b1082cc
 
-PODFILE CHECKSUM: 67edbcec273b50dd80dfc3d60224ffbdafe08145
+PODFILE CHECKSUM: e25e00b475cbf5607b4114455be74e6716e75ad4
 
 COCOAPODS: 1.10.0

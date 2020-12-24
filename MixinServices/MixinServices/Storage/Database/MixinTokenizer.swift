@@ -16,7 +16,16 @@ class MixinTokenizer: FTS5WrapperTokenizer {
     private let isDebugging = false
     
     required init(db: GRDB.Database, arguments: [String]) throws {
-        wrappedTokenizer = try db.makeTokenizer(.unicode61(diacritics: .removeLegacy))
+        let components = [
+            "unicode61",
+            "remove_diacritics", "2",
+            // ⚠️ Reorder these categories may end up with malfunctioned tokenizing on ascii chars.
+            // Don't quite know the reason, maybe a bug of SQLite, whatever just keep the order as
+            // same as what was in sqlite3Fts5UnicodeCatParse. Confirmed with SQLCipher 4.4.2
+            "categories", "'Co L* N* S*'"
+        ]
+        let descriptor = FTS5TokenizerDescriptor(components: components)
+        wrappedTokenizer = try db.makeTokenizer(descriptor)
     }
     
     func accept(token: String, flags: FTS5TokenFlags, for tokenization: FTS5Tokenization, tokenCallback: (String, FTS5TokenFlags) throws -> Void) throws {

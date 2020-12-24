@@ -8,10 +8,10 @@ import MixinServices
 class PayWindow: BottomSheetView {
 
     enum PinAction {
-        case payment(payment: PaymentCodeResponse, receivers: [UserResponse])
+        case payment(payment: PaymentCodeResponse, receivers: [UserItem])
         case transfer(trackId: String, user: UserItem, fromWeb: Bool)
         case withdraw(trackId: String, address: Address, chainAsset: AssetItem, fromWeb: Bool)
-        case multisig(multisig: MultisigResponse, senders: [UserResponse], receivers: [UserResponse])
+        case multisig(multisig: MultisigResponse, senders: [UserItem], receivers: [UserItem])
     }
 
     enum ErrorContinueAction {
@@ -154,7 +154,7 @@ class PayWindow: BottomSheetView {
             multisigActionView.image = R.image.multisig_sign()
             nameLabel.text = R.string.localizable.multisig_transaction()
             mixinIDLabel.text = payment.memo
-            renderMultisigInfo(showError: showError, showBiometric: showBiometric, senders: [UserResponse.createUser(account: account)], receivers: receivers)
+            renderMultisigInfo(showError: showError, showBiometric: showBiometric, senders: [UserItem.createUser(from: account)], receivers: receivers)
         case let .multisig(multisig, senders, receivers):
             multisigView.isHidden = false
             switch multisig.action {
@@ -190,7 +190,7 @@ class PayWindow: BottomSheetView {
         return self
     }
 
-    private func renderMultisigInfo(showError: Bool, showBiometric: Bool, senders: [UserResponse], receivers: [UserResponse]) {
+    private func renderMultisigInfo(showError: Bool, showBiometric: Bool, senders: [UserItem], receivers: [UserItem]) {
         if !showError {
             payLabel.text = R.string.localizable.multisig_by_pin()
             if showBiometric {
@@ -207,10 +207,10 @@ class PayWindow: BottomSheetView {
         }
 
         if senders.count > 0 {
-            senderViewOne.setImage(user: senders[0])
+            senderViewOne.setImage(with: senders[0])
         }
         if senders.count > 1 {
-            senderViewTwo.setImage(user: senders[1])
+            senderViewTwo.setImage(with: senders[1])
             senderViewTwo.isHidden = false
         } else {
             senderViewTwo.isHidden = true
@@ -230,10 +230,10 @@ class PayWindow: BottomSheetView {
         }
 
         if receivers.count > 0 {
-            receiverViewOne.setImage(user: receivers[0])
+            receiverViewOne.setImage(with: receivers[0])
         }
         if receivers.count > 1 {
-            receiverViewTwo.setImage(user: receivers[1])
+            receiverViewTwo.setImage(with: receivers[1])
             receiverViewTwo.isHidden = false
         } else {
             receiverViewTwo.isHidden = true
@@ -328,7 +328,7 @@ class PayWindow: BottomSheetView {
 
 
     @IBAction func receiversAction(_ sender: Any) {
-        var users = [UserResponse]()
+        var users = [UserItem]()
         switch pinAction! {
         case let .multisig(_, _, receivers):
             users = receivers

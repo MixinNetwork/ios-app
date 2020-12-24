@@ -6,11 +6,11 @@ class MultisigUsersWindow: BottomSheetView {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var titleLabel: UILabel!
 
-    private var users: [UserResponse] = []
+    private var users: [UserItem] = []
 
     var onDismiss: (() -> Void)?
     
-    func render(users: [UserResponse], isSender: Bool) {
+    func render(users: [UserItem], isSender: Bool) {
         self.users = users
         if isSender {
             titleLabel.text = R.string.localizable.multisig_senders()

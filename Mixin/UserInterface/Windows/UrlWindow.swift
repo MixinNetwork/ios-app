@@ -651,28 +651,40 @@ extension UrlWindow {
             return nil
         }
     }
+    
+    private static func syncUsers(userIds: [String], hud: Hud) -> [UserItem]? {
+        let uniqueUserIds = userIds.removingDuplicates()
+        var users = UserDAO.shared.getUsers(with: uniqueUserIds)
+        let syncUserIds = users.filter { !uniqueUserIds.contains($0.userId) }.compactMap { $0.userId }
+        
+        if !syncUserIds.isEmpty {
+            switch UserAPI.showUsers(userIds: syncUserIds) {
+            case let .success(userItems):
+                UserDAO.shared.updateUsers(users: userItems)
+                users += userItems.compactMap { UserItem.createUser(from: $0) }
+            case let .failure(error):
+                DispatchQueue.main.async {
+                    hud.set(style: .error, text: error.localizedDescription)
+                    hud.scheduleAutoHidden()
+                }
+                return nil
+            }
+        }
+        
+        return users
+    }
 
     private static func presentMultisig(multisig: MultisigResponse, hud: Hud) {
         DispatchQueue.global().async {
             guard let asset = syncAsset(assetId: multisig.assetId, hud: hud) else {
                 return
             }
-
-            let senders = multisig.senders
-            let receivers = multisig.receivers
-            var senderUsers = [UserResponse]()
-            var receiverUsers = [UserResponse]()
-            switch UserAPI.showUsers(userIds: multisig.senders + multisig.receivers) {
-            case let .success(users):
-                senderUsers = users.filter { senders.contains($0.userId) }
-                receiverUsers = users.filter { receivers.contains($0.userId) }
-            case let .failure(error):
-                DispatchQueue.main.async {
-                    hud.set(style: .error, text: error.localizedDescription)
-                    hud.scheduleAutoHidden()
-                }
+            guard let users = syncUsers(userIds: multisig.senders + multisig.receivers, hud: hud) else {
                 return
             }
+
+            let senderUsers = users.filter { multisig.senders.contains($0.userId) }
+            let receiverUsers = users.filter { multisig.receivers.contains($0.userId) }
 
             var error = ""
             if multisig.action == MultisigAction.sign.rawValue && multisig.state == MultisigState.signed.rawValue {
@@ -690,27 +702,14 @@ extension UrlWindow {
 
     private static func presentPayment(payment: PaymentCodeResponse, hud: Hud) {
         DispatchQueue.global().async {
-            guard let asset = AssetDAO.shared.getAsset(assetId: payment.assetId) else {
-                DispatchQueue.main.async {
-                    hud.set(style: .error, text: R.string.localizable.asset_not_found())
-                    hud.scheduleAutoHidden()
-                }
+            guard let asset = syncAsset(assetId: payment.assetId, hud: hud) else {
+                return
+            }
+            guard let users = syncUsers(userIds: payment.receivers, hud: hud) else {
                 return
             }
 
-            let receivers = payment.receivers
-            var receiverUsers = [UserResponse]()
-            switch UserAPI.showUsers(userIds: payment.receivers) {
-            case let .success(users):
-                receiverUsers = users.filter { receivers.contains($0.userId) }
-            case let .failure(error):
-                DispatchQueue.main.async {
-                    hud.set(style: .error, text: error.localizedDescription)
-                    hud.scheduleAutoHidden()
-                }
-                return
-            }
-
+            let receiverUsers = users.filter { payment.receivers.contains($0.userId) }
             let error = payment.status == PaymentStatus.paid.rawValue ? R.string.localizable.transfer_paid() : ""
 
             DispatchQueue.main.async {
@@ -794,5 +793,14 @@ extension UrlWindow {
                 
             }
         }
+    }
+}
+
+extension Array where Element: Hashable {
+    
+    func removingDuplicates() -> [Element] {
+        var uniq = Set<Element>()
+        uniq.reserveCapacity(count)
+        return filter { uniq.insert($0).inserted }
     }
 }

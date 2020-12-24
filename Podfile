@@ -55,13 +55,3 @@ target 'MixinAppGroupAccess' do
   pod "GCDWebServer/WebDAV"
   mixin_services
 end
-
-post_install do |installer|
-  installer.generated_projects.each do |project|
-    project.targets.select { |target| target.name == "GRDB.swift" }.each do |target|
-      target.build_configurations.each do |config|
-        config.build_settings['OTHER_SWIFT_FLAGS'] = "$(inherited) -D SQLITE_ENABLE_FTS5"
-      end
-    end
-  end
-end

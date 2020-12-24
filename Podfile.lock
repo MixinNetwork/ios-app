@@ -120,9 +120,8 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (7.1.1):
     - GoogleUtilities/Logger
-  - GRDB.swift (5.1.0):
-    - GRDB.swift/standard (= 5.1.0)
-  - GRDB.swift/standard (5.1.0)
+  - GRDB.swift/SQLCipher (5.2.0):
+    - SQLCipher (>= 3.4.0)
   - GTMSessionFetcher/Core (1.5.0)
   - GzipSwift (5.1.1)
   - Highlightr (2.1.0)
@@ -138,13 +137,14 @@ PODS:
     - AppCenter
     - BoringSSL
     - DeviceGuru
-    - GRDB.swift
+    - GRDB.swift/SQLCipher
     - GzipSwift
     - libsignal-protocol-c
     - lottie-ios
     - SDWebImage
     - SDWebImageYYPlugin/YYImage
     - SocketRocket
+    - SQLCipher (~> 4.0)
     - SwiftyMarkdown
     - YYImage/WebP
     - Zip
@@ -188,6 +188,11 @@ PODS:
     - YYImage/Core
   - SnapKit (5.0.1)
   - SocketRocket (0.5.1)
+  - SQLCipher (4.4.2):
+    - SQLCipher/standard (= 4.4.2)
+  - SQLCipher/common (4.4.2)
+  - SQLCipher/standard (4.4.2):
+    - SQLCipher/common
   - SwiftyMarkdown (1.2.3)
   - Texture (3.0.0):
     - Texture/AssetsLibrary (= 3.0.0)
@@ -285,6 +290,7 @@ SPEC REPOS:
     - SDWebImageYYPlugin
     - SnapKit
     - SocketRocket
+    - SQLCipher
     - Zip
 
 EXTERNAL SOURCES:
@@ -352,7 +358,7 @@ SPEC CHECKSUMS:
   GoogleDataTransport: 116c84c4bdeb76be2a7a46de51244368f9794eab
   GoogleToolboxForMac: 1350d40e86a76f7863928d63bcb0b89c84c521c5
   GoogleUtilities: 3dc4ff0d5e4840e2fa8eef0889620e8c33d4218c
-  GRDB.swift: 9bc45e93b2aa2fa6d02bee883d803d1d187efb2f
+  GRDB.swift: f44f61fd032e176e3aadb1f70e15656dc50ca018
   GTMSessionFetcher: b3503b20a988c4e20cc189aa798fd18220133f52
   GzipSwift: 893f3e48e597a1a4f62fafcb6514220fcf8287fa
   Highlightr: c687b337a60af6e46a478b4376006168bb5bd7c5
@@ -360,7 +366,7 @@ SPEC CHECKSUMS:
   libsignal-protocol-c: bf65792f9f777e7d54dfab84bba0379eba42044e
   lottie-ios: 0e760146411886f6104050c932a8e6964853267f
   Maaku: 0eb331f423453177018d0b483068bcc181e135b4
-  MixinServices: e40b2894545e24139249b099aba8a4083f368482
+  MixinServices: b72f8b68dd4297da10554fc0024d6b5573427b68
   nanopb: 1bf24dd71191072e120b83dd02d08f3da0d65e53
   PhoneNumberKit: ff153d5e299f6da566cb73c6aa71e354933b2932
   PINCache: 7a8fc1a691173d21dbddbf86cd515de6efa55086
@@ -375,12 +381,13 @@ SPEC CHECKSUMS:
   SDWebImageYYPlugin: a0a9d1b51c6903757bd7c0978d9d39f1e6254624
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
   SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
+  SQLCipher: 1ab0b9486a77d141e72e92ff30681926ed79c07a
   SwiftyMarkdown: be01b2905694bd7bfd95330cd43704bfdb978aec
   Texture: 41ce7d2fdff193a45cc8cfa3c254115cf776068a
   TexturedMaaku: e868edf580d7466afe381d5380dea6751e9d99ca
   YYImage: 6db68da66f20d9f169ceb94dfb9947c3867b9665
   Zip: 414f59909701fda9a84ab774ebe0f5449b1082cc
 
-PODFILE CHECKSUM: 711babdadcd678c6874995a7852c21a7b7d7ecab
+PODFILE CHECKSUM: 67edbcec273b50dd80dfc3d60224ffbdafe08145
 
 COCOAPODS: 1.10.0

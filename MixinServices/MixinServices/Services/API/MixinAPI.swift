@@ -158,7 +158,8 @@ extension MixinAPI {
                         completion(.failure(.invalidJSON(error)))
                     }
                 case let .failure(error):
-                    Logger.write(error: error)
+                    let requestId = response.request?.allHTTPHeaderFields?["X-Request-Id"] ?? ""
+                    Logger.write(error: error, extra: "[RequestId]...\(requestId)...")
                     if shouldToggleServer(for: error) {
                         MixinHost.toggle(currentHttpHost: host)
                     }

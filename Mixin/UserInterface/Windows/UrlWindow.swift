@@ -653,9 +653,9 @@ extension UrlWindow {
     }
     
     private static func syncUsers(userIds: [String], hud: Hud) -> [UserItem]? {
-        let uniqueUserIds = userIds.removingDuplicates()
+        let uniqueUserIds = userIds.filterDuplicates()
         var users = UserDAO.shared.getUsers(with: uniqueUserIds)
-        let syncUserIds = users.filter { !uniqueUserIds.contains($0.userId) }.compactMap { $0.userId }
+        let syncUserIds = uniqueUserIds.symmetricDifference(from: users.compactMap { $0.userId })
         
         if !syncUserIds.isEmpty {
             switch UserAPI.showUsers(userIds: syncUserIds) {
@@ -798,9 +798,15 @@ extension UrlWindow {
 
 extension Array where Element: Hashable {
     
-    func removingDuplicates() -> [Element] {
+    func filterDuplicates() -> [Element] {
         var uniq = Set<Element>()
         uniq.reserveCapacity(count)
         return filter { uniq.insert($0).inserted }
+    }
+    
+    func symmetricDifference(from other: [Element]) -> [Element] {
+        let thisSet = Set(self)
+        let otherSet = Set(other)
+        return Array(thisSet.symmetricDifference(otherSet))
     }
 }

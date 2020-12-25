@@ -503,7 +503,7 @@ public final class ConversationDAO: UserDatabaseDAO {
         }
         db.write { (db) in
             try Participant
-                .select(Participant.column(of: .conversationId) == conversationId)
+                .filter(Participant.column(of: .conversationId) == conversationId)
                 .deleteAll(db)
             let participants = conversation.participants.map {
                 Participant(conversationId: conversationId, userId: $0.userId, role: $0.role, status: ParticipantStatus.START.rawValue, createdAt: $0.createdAt)

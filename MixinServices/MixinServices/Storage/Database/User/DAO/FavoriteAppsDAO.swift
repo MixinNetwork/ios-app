@@ -41,8 +41,7 @@ public final class FavoriteAppsDAO: UserDatabaseDAO {
         let appIds = apps.compactMap({ $0.appId })
         db.write { (db) -> Void in
             try FavoriteApp
-                .filter(FavoriteApp.column(of: .userId) == userId)
-                .filter(!appIds.contains(FavoriteApp.column(of: .appId)))
+                .filter(FavoriteApp.column(of: .userId) == userId && !appIds.contains(FavoriteApp.column(of: .appId)))
                 .deleteAll(db)
             for app in apps {
                 try app.save(db)

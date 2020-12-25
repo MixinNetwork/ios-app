@@ -146,10 +146,14 @@ class SearchViewController: UIViewController, HomeSearchViewController {
                 self.lastKeyword = keyword
             }
             
-            var conversationsByMessage: [MessagesWithinConversationSearchResult] = []
-            self.snapshot = ConversationDAO.shared.getConversation(withMessageLike: keyword, limit: limit, completion: { (results) in
-                conversationsByMessage = results
-            })
+            let conversationsByMessage: [MessagesWithinConversationSearchResult]
+            self.snapshot = try? UserDatabase.current.pool.makeSnapshot()
+            if let snapshot = self.snapshot {
+                conversationsByMessage = ConversationDAO.shared.getConversation(from: snapshot, with: keyword, limit: limit)
+            } else {
+                conversationsByMessage = []
+            }
+            self.snapshot = nil
             
             guard !op.isCancelled else {
                 return

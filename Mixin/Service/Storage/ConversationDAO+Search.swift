@@ -15,7 +15,7 @@ extension ConversationDAO {
     LEFT JOIN users u ON c.owner_id = u.user_id
     """
     
-    func getConversation(withMessageLike keyword: String, limit: Int?, completion: ([MessagesWithinConversationSearchResult]) -> Void) -> DatabaseSnapshot {
+    func getConversation(from snapshot: DatabaseSnapshot, with keyword: String, limit: Int?) -> [MessagesWithinConversationSearchResult] {
         var sql = ConversationDAO.sqlSearchMessages
         let arguments: [String: String]
         if AppGroupUserDefaults.Database.isFTSInitialized {
@@ -33,10 +33,8 @@ extension ConversationDAO {
         if let limit = limit {
             sql += "\nLIMIT \(limit)"
         }
-        
-        let snapshot = try! UserDatabase.current.pool.makeSnapshot()
-        defer {
-            try! snapshot.read { (db) -> Void in
+        return snapshot.read { (db) -> [MessagesWithinConversationSearchResult] in
+            do {
                 var items = [MessagesWithinConversationSearchResult]()
                 let rows = try Row.fetchCursor(db, sql: sql, arguments: StatementArguments(arguments), adapter: nil)
                 while let row = try rows.next() {
@@ -72,10 +70,11 @@ extension ConversationDAO {
                     }
                     items.append(item)
                 }
-                completion(items)
+                return items
+            } catch {
+                return []
             }
         }
-        return snapshot
     }
     
 }

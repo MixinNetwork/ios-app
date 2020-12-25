@@ -120,7 +120,7 @@ class SearchCategoryViewController: UIViewController, HomeSearchViewController {
             guard !op.isCancelled, self != nil else {
                 return
             }
-            var models: [Any] = []
+            let models: [Any]
             switch category {
             case .asset:
                 models = AssetDAO.shared.getAssets(keyword: keyword, sortResult: true, limit: nil)
@@ -132,9 +132,13 @@ class SearchCategoryViewController: UIViewController, HomeSearchViewController {
                 models = ConversationDAO.shared.getGroupOrStrangerConversation(withNameLike: keyword, limit: nil)
                     .map { ConversationSearchResult(conversation: $0, keyword: keyword) }
             case .conversationsByMessage:
-                self?.snapshot = ConversationDAO.shared.getConversation(withMessageLike: keyword, limit: nil) { (results) in
-                    models = results
+                self?.snapshot = try? UserDatabase.current.pool.makeSnapshot()
+                if let snapshot = self?.snapshot {
+                    models = ConversationDAO.shared.getConversation(from: snapshot, with: keyword, limit: nil)
+                } else {
+                    models = []
                 }
+                self?.snapshot = nil
             }
             guard !op.isCancelled, self != nil else {
                 return

@@ -368,7 +368,10 @@ public final class ConversationDAO: UserDatabaseDAO {
                     try participant.save(db)
                 }
                 db.afterNextTransactionCommit { (_) in
-                    completion(true)
+                    // Avoid potential deadlock
+                    DispatchQueue.global().async {
+                        completion(true)
+                    }
                 }
             }
         } catch {

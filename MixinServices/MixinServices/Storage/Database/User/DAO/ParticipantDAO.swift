@@ -108,7 +108,7 @@ public final class ParticipantDAO: UserDatabaseDAO {
             if !role.isEmpty {
                 try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: source)
             }
-            db.afterNextTransactionCommit { (db) in
+            db.afterNextTransactionCommit { _ in
                 NotificationCenter.default.post(onMainThread: Self.participantDidChangeNotification,
                                                 object: self,
                                                 userInfo: [Self.UserInfoKey.conversationId: conversationId])
@@ -125,7 +125,7 @@ public final class ParticipantDAO: UserDatabaseDAO {
         return db.write { (db) in
             try participant.save(db)
             try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: source)
-            db.afterNextTransactionCommit { (db) in
+            db.afterNextTransactionCommit { _ in
                 NotificationCenter.default.post(onMainThread: Self.participantDidChangeNotification,
                                                 object: self,
                                                 userInfo: [Self.UserInfoKey.conversationId: conversationId])

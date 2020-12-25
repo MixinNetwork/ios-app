@@ -522,21 +522,27 @@ public final class MessageDAO: UserDatabaseDAO {
         try MessageDAO.shared.updateUnseenMessageCount(database: database, conversationId: message.conversationId)
         
         database.afterNextTransactionCommit { (_) in
-            if isAppExtension {
-                if AppGroupUserDefaults.isRunningInMainApp {
-                    DarwinNotificationManager.shared.notifyConversationDidChangeInMainApp()
-                }
-                if AppGroupUserDefaults.User.currentConversationId == message.conversationId {
-                    AppGroupUserDefaults.User.reloadConversation = true
-                }
-            } else if let newMessage: MessageItem = try? self.db.select(with: MessageDAO.sqlQueryFullMessageById, arguments: [message.messageId]) {
-                let userInfo: [String: Any] = [
-                    MessageDAO.UserInfoKey.conversationId: newMessage.conversationId,
-                    MessageDAO.UserInfoKey.message: newMessage,
-                    MessageDAO.UserInfoKey.messsageSource: messageSource
-                ]
-                performSynchronouslyOnMainThread {
-                    NotificationCenter.default.post(name: MessageDAO.didInsertMessageNotification, object: self, userInfo: userInfo)
+            /* ⚠️ Callbacks registered with afterNextTransactionCommit may introduce a deadlocking situation.
+             Like here, this func writes within DatabasePool's writing queue, and access the pool again for reading
+             in the next transaction commit hook, this pattern works fine in normal r/w scenerios, except for
+             barrier writing. If another process invokes barrierWriteWithoutTransaction simultaneously, that process
+             will be waiting for this writing to finish, while reading in the hook waits for that barrier to finish
+             In order to reduce the issue, dispatch the pool reading to a global queue */
+            DispatchQueue.global().async {
+                if isAppExtension {
+                    if AppGroupUserDefaults.isRunningInMainApp {
+                        DarwinNotificationManager.shared.notifyConversationDidChangeInMainApp()
+                    }
+                    if AppGroupUserDefaults.User.currentConversationId == message.conversationId {
+                        AppGroupUserDefaults.User.reloadConversation = true
+                    }
+                } else if let newMessage: MessageItem = try? self.db.select(with: MessageDAO.sqlQueryFullMessageById, arguments: [message.messageId]) {
+                    let userInfo: [String: Any] = [
+                        MessageDAO.UserInfoKey.conversationId: newMessage.conversationId,
+                        MessageDAO.UserInfoKey.message: newMessage,
+                        MessageDAO.UserInfoKey.messsageSource: messageSource
+                    ]
+                    NotificationCenter.default.post(onMainThread: MessageDAO.didInsertMessageNotification, object: self, userInfo: userInfo)
                 }
             }
         }

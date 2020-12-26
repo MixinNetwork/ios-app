@@ -5,7 +5,7 @@ public class TaskDatabase: Database {
     public private(set) static var current: TaskDatabase! = try! TaskDatabase(url: AppGroupContainer.taskDatabaseUrl)
     
     public override class var config: Configuration {
-        var config = Configuration()
+        var config = super.config
         config.label = "Task"
         return config
     }

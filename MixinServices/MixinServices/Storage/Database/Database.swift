@@ -7,8 +7,33 @@ open class Database {
     public typealias Completion = ((GRDB.Database) -> Void)
     
     open class var config: Configuration {
-        Configuration()
+        var config = Configuration()
+        config.prepareDatabase { (db) in
+            db.trace(options: .profile) { (event) in
+                guard case let .profile(statement, duration) = event else {
+                    return
+                }
+                if duration > 1 {
+                    Logger.writeDatabase(log: "[DB][Performance]SQL: \(statement.sql)")
+                    Logger.writeDatabase(log: "[DB][Performance]Total cost \(duration)s", newSection: true)
+                }
+            }
+        }
+        return config
     }
+    
+    private static let registerErrorLogFunction: () -> Void = {
+        struct Error: Swift.Error {
+            let code: CInt
+            let message: String
+        }
+        GRDB.Database.logError = { (code, message) in
+            // TODO: rebuild the database on 'no such table'
+            reporter.report(error: Error(code: code.rawValue, message: message))
+            Logger.writeDatabase(log: "[DB] Error: \(code), \(message)", newSection: true)
+        }
+        return {}
+    }()
     
     open var needsMigration: Bool {
         false
@@ -17,6 +42,7 @@ open class Database {
     public let pool: DatabasePool
     
     public init(url: URL) throws {
+        Self.registerErrorLogFunction()
         pool = try DatabasePool(path: url.path, configuration: Self.config)
     }
     

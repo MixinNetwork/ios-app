@@ -5,7 +5,7 @@ public final class UserDatabase: Database {
     public private(set) static var current: UserDatabase! = try! UserDatabase(url: AppGroupContainer.mixinDatabaseUrl)
     
     public override class var config: Configuration {
-        var config = Configuration()
+        var config = super.config
         config.label = "User"
         config.prepareDatabase { (db) in
             db.add(tokenizer: MixinTokenizer.self)

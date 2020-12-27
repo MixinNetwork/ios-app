@@ -1,6 +1,5 @@
 import Foundation
 import DeviceGuru
-import MixinServices
 
 enum RequestSigning {
     

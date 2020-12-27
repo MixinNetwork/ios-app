@@ -1,7 +1,6 @@
 import Foundation
 import UIKit
 import SDWebImage
-import MixinServices
 
 public protocol CallMessageCoordinator: class {
     func shouldSendRtcBlazeMessage(with category: MessageCategory) -> Bool

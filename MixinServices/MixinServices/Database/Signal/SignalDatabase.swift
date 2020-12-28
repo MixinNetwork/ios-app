@@ -2,7 +2,7 @@ import GRDB
 
 public final class SignalDatabase: Database {
     
-    public static var current: SignalDatabase! = try! SignalDatabase(url: AppGroupContainer.signalDatabaseUrl)
+    public private(set) static var current: SignalDatabase! = makeDatabaseWithDefaultLocation()
     
     public override class var config: Configuration {
         var config = super.config
@@ -30,9 +30,17 @@ public final class SignalDatabase: Database {
         return migrator
     }
     
-    public static func rebuildCurrent() {
-        current = try! SignalDatabase(url: AppGroupContainer.signalDatabaseUrl)
+    public static func reloadCurrent() {
+        current = makeDatabaseWithDefaultLocation()
         current.migrate()
+    }
+    
+    public static func closeCurrent() {
+        current = nil
+    }
+    
+    private static func makeDatabaseWithDefaultLocation() -> SignalDatabase {
+        try! SignalDatabase(url: AppGroupContainer.signalDatabaseUrl)
     }
     
     public func erase() {

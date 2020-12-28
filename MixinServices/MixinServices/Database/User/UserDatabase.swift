@@ -138,7 +138,7 @@ public final class UserDatabase: Database {
         return migrator
     }
     
-    public static func rebuildCurrent() {
+    public static func reloadCurrent() {
         current = try! UserDatabase(url: AppGroupContainer.mixinDatabaseUrl)
         current.migrate()
     }

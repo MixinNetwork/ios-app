@@ -5,22 +5,24 @@ public class SessionDAO: SignalDAO {
     
     public static let shared = SessionDAO()
     
+    func sessionExists(address: String, device: Int) -> Bool {
+        db.recordExists(in: Session.self, where: Session.column(of: .address) == address && Session.column(of: .device) == device)
+    }
+    
+    func getCount() -> Int {
+        db.count(in: Session.self)
+    }
+    
+}
+
+extension SessionDAO {
+    
     func getSession(address: String, device: Int) -> Session? {
         db.select(where: Session.column(of: .address) == address && Session.column(of: .device) == device)
     }
     
-    func delete(address: String, device: Int) -> Bool {
-        db.delete(Session.self, where: Session.column(of: .address) == address && Session.column(of: .device) == device)
-        return true
-    }
-    
-    @discardableResult
-    func delete(address: String) -> Int {
-        db.delete(Session.self, where: Session.column(of: .address) == address)
-    }
-    
-    func isExist(address: String, device: Int) -> Bool {
-        db.recordExists(in: Session.self, where: Session.column(of: .address) == address && Session.column(of: .device) == device)
+    func getSessions(address: String) -> [Session] {
+        db.select(where: Session.column(of: .address) == address)
     }
     
     func getSubDevices(address: String) -> [Int32] {
@@ -29,16 +31,22 @@ public class SessionDAO: SignalDAO {
                   where: Session.column(of: .address) == address && Session.column(of: .device) != 1)
     }
     
-    func getSessions(address: String) -> [Session] {
-        db.select(where: Session.column(of: .address) == address)
-    }
-    
-    func getCount() -> Int {
-        db.count(in: Session.self)
-    }
-    
-    public func syncGetSessionAddress() -> [Session] {
+    public func getSessionAddress() -> [Session] {
         db.select(where: Session.column(of: .device) == 1)
+    }
+    
+}
+
+extension SessionDAO {
+    
+    @discardableResult
+    func delete(address: String) -> Int {
+        db.delete(Session.self, where: Session.column(of: .address) == address)
+    }
+    
+    func delete(address: String, device: Int) -> Bool {
+        db.delete(Session.self, where: Session.column(of: .address) == address && Session.column(of: .device) == device)
+        return true
     }
     
 }

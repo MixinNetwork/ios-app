@@ -32,7 +32,7 @@ class MixinSessionStore: SessionStore {
     }
     
     func containsSession(for address: SignalAddress) -> Bool {
-        return SessionDAO.shared.isExist(address: address.name, device: Int(address.deviceId))
+        return SessionDAO.shared.sessionExists(address: address.name, device: Int(address.deviceId))
     }
     
     func deleteSession(for address: SignalAddress) -> Bool? {

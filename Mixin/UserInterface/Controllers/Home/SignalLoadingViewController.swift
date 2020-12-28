@@ -13,7 +13,7 @@ class SignalLoadingViewController: UIViewController {
         Logger.write(log: "SignalLoadingView...isPrekeyLoaded:\(AppGroupUserDefaults.Crypto.isPrekeyLoaded)...isSessionSynchronized:\(AppGroupUserDefaults.Crypto.isSessionSynchronized)...isCircleSynchronized:\(AppGroupUserDefaults.User.isCircleSynchronized)")
         let startTime = Date()
         DispatchQueue.global().async {
-            try! SignalDatabase.rebuildCurrent()
+            SignalDatabase.reloadCurrent()
 
             self.syncSignalKeys()
             self.syncSession()
@@ -112,7 +112,7 @@ class SignalLoadingViewController: UIViewController {
 
         AppGroupUserDefaults.Account.extensionSession = nil
         JobDAO.shared.clearSessionJob()
-        let sessions = SessionDAO.shared.syncGetSessionAddress()
+        let sessions = SessionDAO.shared.getSessionAddress()
         let userIds = sessions.compactMap { $0.address }
 
         repeat {
@@ -146,7 +146,7 @@ class SignalLoadingViewController: UIViewController {
                 }
                 SignalDatabase.current.save(newSession)
 
-                let senderKeys = SenderKeyDAO.shared.syncGetSenderKeys()
+                let senderKeys = SenderKeyDAO.shared.getAllSenderKeys()
                 senderKeys.forEach { (key) in
                     if key.senderId.hasSuffix(":1") {
                         let userId = String(key.senderId.prefix(key.senderId.count - 2))

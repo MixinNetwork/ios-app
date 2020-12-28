@@ -379,10 +379,16 @@ public class ReceiveMessageService: MixinService {
                     }
                 }
             })
-            let status = RatchetSenderKeyDAO.shared.getRatchetSenderKeyStatus(groupId: data.conversationId, senderId: data.userId, sessionId: data.sessionId)
+            let deviceId = SignalProtocol.convertSessionIdToDeviceId(data.sessionId)
+            let address = SignalAddress(name: data.userId, deviceId: deviceId)
+            let status = RatchetSenderKeyDAO.shared.getRatchetSenderKeyStatus(groupId: data.conversationId,
+                                                                              senderId: address.toString(),
+                                                                              sessionId: data.sessionId)
             Logger.write(conversationId: data.conversationId, log: "[ProcessSignalMessage][\(username)][\(data.category)]...decrypt success...messageId:\(data.messageId)...\(data.createdAt)...status:\(status ?? "")...source:\(data.source)...resendMessageId:\(decoded.resendMessageId ?? "")...deviceId:\(SignalProtocol.convertSessionIdToDeviceId(data.sessionId))")
             if status == RatchetStatus.REQUESTING.rawValue {
-                RatchetSenderKeyDAO.shared.deleteRatchetSenderKey(groupId: data.conversationId, senderId: data.userId, sessionId: data.sessionId)
+                let address = SignalAddress(name: data.userId,
+                                            deviceId: SignalProtocol.convertSessionIdToDeviceId(data.sessionId))
+                RatchetSenderKeyDAO.shared.deleteRatchetSenderKey(groupId: data.conversationId, senderId: address.toString())
                 self.requestResendMessage(conversationId: data.conversationId, userId: data.userId, sessionId: data.sessionId)
             }
         } catch {
@@ -417,7 +423,9 @@ public class ReceiveMessageService: MixinService {
                 return
             }
             if (data.category == MessageCategory.SIGNAL_KEY.rawValue) {
-                RatchetSenderKeyDAO.shared.deleteRatchetSenderKey(groupId: data.conversationId, senderId: data.userId, sessionId: data.sessionId)
+                let address = SignalAddress(name: data.userId,
+                                            deviceId: SignalProtocol.convertSessionIdToDeviceId(data.sessionId))
+                RatchetSenderKeyDAO.shared.deleteRatchetSenderKey(groupId: data.conversationId, senderId: address.toString())
                 refreshKeys(conversationId: data.conversationId)
             } else {
                 insertFailedMessage(data: data)
@@ -873,7 +881,9 @@ public class ReceiveMessageService: MixinService {
                 }
                 SendMessageService.shared.resendMessages(conversationId: data.conversationId, userId: data.userId, sessionId: data.sessionId, messageIds: messageIds)
             case PlainDataAction.NO_KEY.rawValue:
-                RatchetSenderKeyDAO.shared.deleteRatchetSenderKey(groupId: data.conversationId, senderId: data.userId, sessionId: data.sessionId)
+                let address = SignalAddress(name: data.userId,
+                                            deviceId: SignalProtocol.convertSessionIdToDeviceId(data.sessionId))
+                RatchetSenderKeyDAO.shared.deleteRatchetSenderKey(groupId: data.conversationId, senderId: address.toString())
             case PlainDataAction.ACKNOWLEDGE_MESSAGE_RECEIPTS.rawValue:
                 guard let ackMessages = plainData.ackMessages else {
                     return
@@ -924,8 +934,13 @@ public class ReceiveMessageService: MixinService {
         let params = BlazeMessageParam(conversationId: conversationId, recipientId: recipientId, category: MessageCategory.PLAIN_JSON.rawValue, data: encoded, status: MessageStatus.SENDING.rawValue, messageId: messageId, sessionId: sessionId)
         let blazeMessage = BlazeMessage(params: params, action: BlazeMessageAction.createMessage.rawValue)
         SendMessageService.shared.sendMessage(conversationId: conversationId, userId: recipientId, blazeMessage: blazeMessage, action: .REQUEST_RESEND_KEY)
-
-        RatchetSenderKeyDAO.shared.setRatchetSenderKeyStatus(groupId: conversationId, senderId: recipientId, status: RatchetStatus.REQUESTING.rawValue, sessionId: sessionId)
+        
+        let address = SignalAddress(name: recipientId,
+                                    deviceId: SignalProtocol.convertSessionIdToDeviceId(sessionId))
+        let key = RatchetSenderKey(groupId: conversationId,
+                                   senderId: address.toString(),
+                                   status: RatchetStatus.REQUESTING.rawValue)
+        RatchetSenderKeyDAO.shared.saveRatchetSenderKey(key)
     }
 
     private func updateRemoteMessageStatus(messageId: String, status: MessageStatus) {

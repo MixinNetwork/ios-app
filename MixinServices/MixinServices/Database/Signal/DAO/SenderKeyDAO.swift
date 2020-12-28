@@ -20,7 +20,7 @@ public class SenderKeyDAO: SignalDAO {
         return true
     }
     
-    public func syncGetSenderKeys() -> [SenderKey] {
+    public func getAllSenderKeys() -> [SenderKey] {
         db.selectAll()
     }
     

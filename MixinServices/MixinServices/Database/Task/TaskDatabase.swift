@@ -32,7 +32,7 @@ public class TaskDatabase: Database {
         return migrator
     }
     
-    public static func rebuildCurrent() {
+    public static func reloadCurrent() {
         current = try! TaskDatabase(url: AppGroupContainer.taskDatabaseUrl)
         current.migrate()
     }

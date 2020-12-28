@@ -94,8 +94,8 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
             }
             AppGroupContainer.migrateIfNeeded()
             
-            TaskDatabase.rebuildCurrent()
-            UserDatabase.rebuildCurrent()
+            TaskDatabase.reloadCurrent()
+            UserDatabase.reloadCurrent()
             if AppGroupUserDefaults.User.isLogoutByServer {
                 UserDatabase.current.clearSentSenderKey()
                 AppGroupUserDefaults.Database.isSentSenderKeyCleared = true

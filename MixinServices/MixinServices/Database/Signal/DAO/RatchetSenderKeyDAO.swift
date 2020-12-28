@@ -17,20 +17,16 @@ internal class RatchetSenderKeyDAO: SignalDAO {
         db.delete(RatchetSenderKey.self, where: condition)
     }
     
-    func setRatchetSenderKeyStatus(groupId: String, senderId: String, status: String, sessionId: String?) {
-        let address = SignalAddress(name: senderId, deviceId: SignalProtocol.convertSessionIdToDeviceId(sessionId))
-        let ratchet = RatchetSenderKey(groupId: groupId, senderId: address.toString(), status: status)
-        db.save(ratchet)
+    func saveRatchetSenderKey(_ key: RatchetSenderKey) {
+        db.save(key)
     }
     
     func getRatchetSenderKeyStatus(groupId: String, senderId: String, sessionId: String?) -> String? {
-        let address = SignalAddress(name: senderId, deviceId: SignalProtocol.convertSessionIdToDeviceId(sessionId))
-        return getRatchetSenderKey(groupId: groupId, senderId: address.toString())?.status
+        getRatchetSenderKey(groupId: groupId, senderId: senderId)?.status
     }
     
-    func deleteRatchetSenderKey(groupId: String, senderId: String, sessionId: String?) {
-        let address = SignalAddress(name: senderId, deviceId: SignalProtocol.convertSessionIdToDeviceId(sessionId))
-        delete(groupId: groupId, senderId: address.toString())
+    func deleteRatchetSenderKey(groupId: String, senderId: String) {
+        delete(groupId: groupId, senderId: senderId)
     }
     
 }

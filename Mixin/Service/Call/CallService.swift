@@ -1402,7 +1402,7 @@ extension CallService {
             // https://stackoverflow.com/questions/49170274/callkit-loudspeaker-bug-how-whatsapp-fixed-it
             // Every post in the link above👆 is totally gibberish. A default mode gloss over the
             // issue but mess it up when it comes to AirPods
-            let options: AVAudioSession.CategoryOptions = [.allowBluetooth, .allowBluetoothA2DP, .duckOthers]
+            let options: AVAudioSession.CategoryOptions = [.duckOthers, .allowBluetooth, .allowBluetoothA2DP, .allowAirPlay]
             
             let mode = AVAudioSession.Mode.voiceChat.rawValue
             let audioPort: AVAudioSession.PortOverride = usesSpeaker ? .speaker : .none

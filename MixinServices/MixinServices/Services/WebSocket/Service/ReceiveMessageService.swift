@@ -459,12 +459,12 @@ public class ReceiveMessageService: MixinService {
                 return
             }
             guard let transferMediaData = (try? JSONDecoder.default.decode(TransferAttachmentData.self, from: base64Data)) else {
-                Logger.write(conversationId: data.conversationId, log: "[ProcessDecryptSuccess][BadData]\(String(data: base64Data, encoding: .utf8))")
+                Logger.write(conversationId: data.conversationId, log: "[BadData][ProcessDecryptSuccess][\(data.category)]\(String(data: base64Data, encoding: .utf8))")
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }
             guard let height = transferMediaData.height, let width = transferMediaData.width, height > 0, width > 0 else {
-                Logger.write(conversationId: data.conversationId, log: "[ProcessDecryptSuccess][BadData]\(String(data: base64Data, encoding: .utf8))")
+                Logger.write(conversationId: data.conversationId, log: "[BadData][ProcessDecryptSuccess][\(data.category)]\(String(data: base64Data, encoding: .utf8))")
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }
@@ -484,14 +484,25 @@ public class ReceiveMessageService: MixinService {
             let message = Message.createMessage(mediaData: transferMediaData, data: data)
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
         } else if data.category.hasSuffix("_LIVE") {
-            guard let base64Data = Data(base64Encoded: plainText), let live = (try? JSONDecoder.default.decode(TransferLiveData.self, from: base64Data)) else {
+            guard let base64Data = Data(base64Encoded: plainText) else {
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }
+            guard let live = (try? JSONDecoder.default.decode(TransferLiveData.self, from: base64Data)) else {
+                Logger.write(conversationId: data.conversationId, log: "[BadData][ProcessDecryptSuccess][\(data.category)]\(String(data: base64Data, encoding: .utf8))")
+                ReceiveMessageService.shared.processUnknownMessage(data: data)
+                return
+            }
+            
             let message = Message.createMessage(liveData: live, data: data)
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
         } else if data.category.hasSuffix("_DATA")  {
-            guard let base64Data = Data(base64Encoded: plainText), let transferMediaData = (try? JSONDecoder.default.decode(TransferAttachmentData.self, from: base64Data)) else {
+            guard let base64Data = Data(base64Encoded: plainText) else {
+                ReceiveMessageService.shared.processUnknownMessage(data: data)
+                return
+            }
+            guard let transferMediaData = (try? JSONDecoder.default.decode(TransferAttachmentData.self, from: base64Data)) else {
+                Logger.write(conversationId: data.conversationId, log: "[BadData][ProcessDecryptSuccess][\(data.category)]\(String(data: base64Data, encoding: .utf8))")
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }
@@ -502,7 +513,12 @@ public class ReceiveMessageService: MixinService {
             let message = Message.createMessage(mediaData: transferMediaData, data: data)
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
         } else if data.category.hasSuffix("_AUDIO") {
-            guard let base64Data = Data(base64Encoded: plainText), let transferMediaData = (try? JSONDecoder.default.decode(TransferAttachmentData.self, from: base64Data)) else {
+            guard let base64Data = Data(base64Encoded: plainText) else {
+                ReceiveMessageService.shared.processUnknownMessage(data: data)
+                return
+            }
+            guard let transferMediaData = (try? JSONDecoder.default.decode(TransferAttachmentData.self, from: base64Data)) else {
+                Logger.write(conversationId: data.conversationId, log: "[BadData][ProcessDecryptSuccess][\(data.category)]\(String(data: base64Data, encoding: .utf8))")
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }
@@ -517,11 +533,17 @@ public class ReceiveMessageService: MixinService {
             let message = Message.createMessage(stickerData: transferStickerData, data: data)
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
         } else if data.category.hasSuffix("_CONTACT") {
-            guard let base64Data = Data(base64Encoded: plainText), let transferData = (try? JSONDecoder.default.decode(TransferContactData.self, from: base64Data)) else {
+            guard let base64Data = Data(base64Encoded: plainText) else {
+                ReceiveMessageService.shared.processUnknownMessage(data: data)
+                return
+            }
+            guard let transferData = (try? JSONDecoder.default.decode(TransferContactData.self, from: base64Data)) else {
+                Logger.write(conversationId: data.conversationId, log: "[BadData][ProcessDecryptSuccess][\(data.category)]\(String(data: base64Data, encoding: .utf8))")
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }
             guard !transferData.userId.isEmpty, UUID(uuidString: transferData.userId) != nil else {
+                Logger.write(conversationId: data.conversationId, log: "[BadData][ProcessDecryptSuccess][\(data.category)]\(String(data: base64Data, encoding: .utf8))")
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }
@@ -674,13 +696,19 @@ public class ReceiveMessageService: MixinService {
     }
 
     private func parseSticker(data: BlazeMessageData, stickerText: String) -> TransferStickerData? {
-        guard let base64Data = Data(base64Encoded: stickerText), let transferStickerData = (try? JSONDecoder.default.decode(TransferStickerData.self, from: base64Data)) else {
+        guard let base64Data = Data(base64Encoded: stickerText) else {
+            ReceiveMessageService.shared.processUnknownMessage(data: data)
+            return nil
+        }
+        guard let transferStickerData = (try? JSONDecoder.default.decode(TransferStickerData.self, from: base64Data)) else {
+            Logger.write(conversationId: data.conversationId, log: "[BadData][ParseSticker]\(String(data: base64Data, encoding: .utf8))")
             ReceiveMessageService.shared.processUnknownMessage(data: data)
             return nil
         }
 
         if let stickerId = transferStickerData.stickerId {
             guard !stickerId.isEmpty, UUID(uuidString: stickerId) != nil else {
+                Logger.write(conversationId: data.conversationId, log: "[BadData][ParseSticker]\(String(data: base64Data, encoding: .utf8))")
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return nil
             }

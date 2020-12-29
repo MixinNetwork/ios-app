@@ -20,7 +20,7 @@ final public class CircleConversationDAO: UserDatabaseDAO {
             }
             let oldCircleCondition: SQLSpecificExpressible = CircleConversation.column(of: .conversationId) == conversation.conversationId
                 && circleIds.contains(CircleConversation.column(of: .circleId))
-            let oldCircles = try CircleConversation.fetchAll(db, Circle.filter(oldCircleCondition))
+            let oldCircles = try CircleConversation.fetchAll(db, CircleConversation.filter(oldCircleCondition))
             var dict: [String: CircleConversation] = [:]
             for circle in oldCircles {
                 dict[circle.circleId] = circle

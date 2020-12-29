@@ -229,6 +229,18 @@ class SignalTests: XCTestCase {
         
         XCTAssertTrue(dao.delete(address: sessions[3].address, device: sessions[3].device))
         XCTAssertEqual(dao.getCount(), 1)
+        
+        let oldSession = sessions[2]
+        let newRecord = Data([0x13, 0x14, 0x15])
+        let newTimestamp = Date().timeIntervalSince1970
+        let assignments = [
+            Session.column(of: .record).set(to: newRecord),
+            Session.column(of: .timestamp).set(to: newTimestamp)
+        ]
+        dao.updateSession(with: oldSession.address, device: oldSession.device, assignments: assignments)
+        let newSession = dao.getSession(address: oldSession.address, device: oldSession.device)!
+        XCTAssertEqual(newSession.record, newRecord)
+        XCTAssertEqual(newSession.timestamp, newTimestamp)
     }
     
     func testSignedPreKeyDAO() {

@@ -22,11 +22,20 @@ class MixinSessionStore: SessionStore {
         }
         
         let oldSession = SessionDAO.shared.getSession(address: address.name, device:  Int(address.deviceId))
-        let newSession = Session(address: address.name, device: Int(address.deviceId), record: session, timestamp: Date().timeIntervalSince1970)
         if oldSession == nil {
+            let newSession = Session(address: address.name,
+                                     device: Int(address.deviceId),
+                                     record: session,
+                                     timestamp: Date().timeIntervalSince1970)
             SignalDatabase.current.save(newSession)
         } else if oldSession!.record != session {
-            SignalDatabase.current.save(newSession)
+            let assignments = [
+                Session.column(of: .record).set(to: session),
+                Session.column(of: .timestamp).set(to: Date().timeIntervalSince1970)
+            ]
+            SessionDAO.shared.updateSession(with: address.name,
+                                            device: Int(address.deviceId),
+                                            assignments: assignments)
         }
         return true
     }

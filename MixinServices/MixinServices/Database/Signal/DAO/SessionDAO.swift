@@ -39,6 +39,12 @@ extension SessionDAO {
 
 extension SessionDAO {
     
+    func updateSession(with address: String, device: Int, assignments: [ColumnAssignment]) {
+        db.update(Session.self,
+                  assignments: assignments,
+                  where: Session.column(of: .address) == address && Session.column(of: .device) == device)
+    }
+    
     @discardableResult
     func delete(address: String) -> Int {
         db.delete(Session.self, where: Session.column(of: .address) == address)

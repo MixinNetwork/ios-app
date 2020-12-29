@@ -28,7 +28,16 @@ open class Database {
             let message: String
         }
         GRDB.Database.logError = { (code, message) in
-            // TODO: rebuild the database on 'no such table'
+            guard code.primaryResultCode != .SQLITE_NOTICE else {
+                return
+            }
+            if code.primaryResultCode == .SQLITE_ERROR {
+                if message.hasPrefix("no such table: grdb_migrations") {
+                    return
+                } else {
+                    // TODO: rebuild the database on 'no such table'
+                }
+            }
             reporter.report(error: Error(code: code.rawValue, message: message))
             Logger.writeDatabase(log: "[DB] Error: \(code), \(message)", newSection: true)
         }

@@ -51,6 +51,20 @@ class SignalTests: XCTestCase {
     func testIdentityDAO() {
         let dao = IdentityDAO.shared
         
+        let pk1 = Data([0x01, 0x02, 0x03])
+        let a1 = "-1"
+        XCTAssertEqual(dao.getCount(), 0)
+        XCTAssertTrue(dao.save(publicKey: pk1, for: a1))
+        XCTAssertEqual(dao.getCount(), 1)
+        
+        let i1 = dao.getLocalIdentity()!
+        XCTAssertEqual(pk1, i1.publicKey)
+        XCTAssertEqual(a1, i1.address)
+        
+        XCTAssertEqual(dao.getCount(), 1)
+        dao.deleteIdentity(address: a1)
+        XCTAssertEqual(dao.getCount(), 0)
+        
         dao.saveLocalIdentity()
         
         let identity = dao.getLocalIdentity()!
@@ -58,10 +72,6 @@ class SignalTests: XCTestCase {
         XCTAssertEqual(identity.publicKey, AppGroupUserDefaults.Signal.publicKey)
         XCTAssertEqual(identity.privateKey, AppGroupUserDefaults.Signal.privateKey)
         XCTAssertNil(identity.nextPreKeyId)
-        
-        XCTAssertEqual(dao.getCount(), 1)
-        dao.deleteIdentity(address: identity.address)
-        XCTAssertEqual(dao.getCount(), 0)
     }
     
     func testPreKeyDAO() {

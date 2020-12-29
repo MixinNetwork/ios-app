@@ -1,4 +1,5 @@
 import Foundation
+import GRDB
 
 class MixinIdentityKeyStore: IdentityKeyStore {
     
@@ -28,13 +29,7 @@ class MixinIdentityKeyStore: IdentityKeyStore {
             reporter.report(error: MixinServicesError.saveIdentity)
             return false
         }
-        let identity = Identity(address: address.name,
-                                registrationId: nil,
-                                publicKey: identityKey,
-                                privateKey: nil,
-                                nextPreKeyId: nil,
-                                timestamp: Date().timeIntervalSince1970)
-        SignalDatabase.current.save(identity)
+        IdentityDAO.shared.save(publicKey: identityKey, for: address.name)
         return true
     }
     

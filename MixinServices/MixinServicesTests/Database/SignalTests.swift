@@ -61,6 +61,11 @@ class SignalTests: XCTestCase {
         XCTAssertEqual(pk1, i1.publicKey)
         XCTAssertEqual(a1, i1.address)
         
+        let pk2 = Data([0x04, 0x05, 0x06])
+        XCTAssertTrue(dao.save(publicKey: pk2, for: a1))
+        let i2 = dao.getLocalIdentity()!
+        XCTAssertEqual(pk2, i2.publicKey)
+        
         XCTAssertEqual(dao.getCount(), 1)
         dao.deleteIdentity(address: a1)
         XCTAssertEqual(dao.getCount(), 0)

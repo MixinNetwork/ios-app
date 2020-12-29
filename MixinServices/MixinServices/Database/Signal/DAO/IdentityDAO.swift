@@ -25,7 +25,8 @@ public class IdentityDAO: SignalDAO {
         db.write { (db) in
             let condition = Identity.column(of: .address) == address
             let timestamp = Date().timeIntervalSince1970
-            let addressExists = try Identity.select(Column.rowID).filter(condition).fetchOne(db) != nil
+            let maybeRowID: Int? = try Identity.select(Column.rowID).filter(condition).fetchOne(db)
+            let addressExists = maybeRowID != nil
             if addressExists {
                 let assignments = [
                     Identity.column(of: .publicKey).set(to: publicKey),

@@ -17,7 +17,7 @@ public class SendMessageService: MixinService {
     private var httpProcessing = false
     
     public func recallMessage(messageId: String, category: String, mediaUrl: String?, conversationId: String, status: String) {
-        guard SendMessageService.recallableSuffices.contains(where: category.hasSuffix) else {
+        guard category == MessageCategory.APP_CARD.rawValue || SendMessageService.recallableSuffices.contains(where: category.hasSuffix) else {
             return
         }
 

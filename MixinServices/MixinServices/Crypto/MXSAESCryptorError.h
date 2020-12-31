@@ -7,9 +7,12 @@ FOUNDATION_EXTERN const NSErrorDomain MXSAESCryptorErrorDomain NS_SWIFT_NAME(AES
 
 typedef NS_CLOSED_ENUM(NSUInteger, MXSAESCryptorErrorCode) {
     MXSAESCryptorErrorCodeCreateCryptor,
+    MXSAESCryptorErrorCodeInitializeCryptor,
     MXSAESCryptorErrorCodeAllocateOutput,
     MXSAESCryptorErrorCodeUpdation,
     MXSAESCryptorErrorCodeFinalization,
+    MXSAESCryptorErrorCodeGetTag,
+    MXSAESCryptorErrorCodeSetTag,
 } NS_SWIFT_NAME(AESCryptorError);
 
 #endif /* MXSAESCryptorError_h */

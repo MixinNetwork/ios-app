@@ -41,7 +41,7 @@ Mixin Core Services.
   s.dependency 'lottie-ios'
   s.dependency 'BoringSSL'
 
-  s.test_spec 'DatabaseTests' do |dbtest|
-    dbtest.source_files = 'MixinServicesTests/Database/*'
+  s.test_spec 'Tests' do |tests|
+    tests.source_files = 'MixinServicesTests/**/*'
   end
 end

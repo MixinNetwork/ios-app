@@ -151,7 +151,7 @@ PODS:
     - SQLCipher (~> 4.0)
     - YYImage/WebP
     - Zip
-  - MixinServices/DatabaseTests (0.1.0):
+  - MixinServices/Tests (0.1.0):
     - Alamofire
     - AppCenter
     - BoringSSL
@@ -215,7 +215,7 @@ DEPENDENCIES:
   - libsignal-protocol-c (from `https://github.com/MixinNetwork/libsignal-protocol-c.git`)
   - lottie-ios (from `https://github.com/airbnb/lottie-ios.git`, branch `lottie/objectiveC`)
   - MixinServices (from `./MixinServices`)
-  - MixinServices/DatabaseTests (from `./MixinServices`)
+  - MixinServices/Tests (from `./MixinServices`)
   - PhoneNumberKit
   - R.swift
   - RSKImageCropper
@@ -305,7 +305,7 @@ SPEC CHECKSUMS:
   GzipSwift: 893f3e48e597a1a4f62fafcb6514220fcf8287fa
   libsignal-protocol-c: bf65792f9f777e7d54dfab84bba0379eba42044e
   lottie-ios: 0e760146411886f6104050c932a8e6964853267f
-  MixinServices: 1a27c4c5311b9abda9fa61475083b2417dbc13ee
+  MixinServices: 67774802fbd7cd96616ab61941929e328b8a4aa3
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   PhoneNumberKit: 4ce83273551c4d2ae10b7361162f4283dd02835f
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
@@ -321,6 +321,6 @@ SPEC CHECKSUMS:
   YYImage: 6db68da66f20d9f169ceb94dfb9947c3867b9665
   Zip: 414f59909701fda9a84ab774ebe0f5449b1082cc
 
-PODFILE CHECKSUM: c0ccd691e49a5538f15ae78e7cd8ec4bffeda079
+PODFILE CHECKSUM: c6d7f3b3101e6a62fbe5d8991314e7221178350b
 
 COCOAPODS: 1.10.1

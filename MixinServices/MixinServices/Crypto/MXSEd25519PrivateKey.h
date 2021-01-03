@@ -10,8 +10,8 @@ NS_SWIFT_NAME(Ed25519PrivateKey)
 @property (nonatomic, strong, readonly) NSData *rfc8032Representation;
 @property (nonatomic, strong, readonly) NSData *x25519Representation;
 
-- (instancetype)initWithRFC8032Representation:(NSData *)seed;
 - (instancetype)init;
+- (nullable instancetype)initWithRFC8032Representation:(NSData *)seed;
 - (NSData * _Nullable)signatureForData:(NSData *)data;
 
 @end

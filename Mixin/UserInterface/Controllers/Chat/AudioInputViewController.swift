@@ -208,6 +208,7 @@ extension AudioInputViewController: AudioRecorderDelegate {
         if reason != .userInitiated {
             var userInfo = userInfo ?? [:]
             userInfo["reason"] = reason.rawValue
+            Logger.write(errorMsg: "[AudioRecorderDidCancelRecording]...reason:\(reason.rawValue)")
             reporter.report(event: .cancelAudioRecording, userInfo: userInfo)
         }
     }
@@ -217,6 +218,7 @@ extension AudioInputViewController: AudioRecorderDelegate {
         layoutForStopping()
         stopRedDotAnimation()
         reporter.report(error: error)
+        Logger.write(error: error)
     }
     
     func audioRecorder(_ recorder: AudioRecorder, didFinishRecordingWithMetadata metadata: AudioMetadata) {

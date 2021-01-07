@@ -675,6 +675,13 @@ extension UrlWindow {
     }
 
     private static func presentMultisig(multisig: MultisigResponse, hud: Hud) {
+        guard LoginManager.shared.account?.has_pin ?? false else {
+            UIApplication.homeNavigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil), animated: true)
+            DispatchQueue.main.async {
+                hud.hide()
+            }
+            return
+        }
         DispatchQueue.global().async {
             guard let asset = syncAsset(assetId: multisig.assetId, hud: hud) else {
                 return
@@ -701,6 +708,13 @@ extension UrlWindow {
     }
 
     private static func presentPayment(payment: PaymentCodeResponse, hud: Hud) {
+        guard LoginManager.shared.account?.has_pin ?? false else {
+            UIApplication.homeNavigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil), animated: true)
+            DispatchQueue.main.async {
+                hud.hide()
+            }
+            return
+        }
         DispatchQueue.global().async {
             guard let asset = syncAsset(assetId: payment.assetId, hud: hud) else {
                 return

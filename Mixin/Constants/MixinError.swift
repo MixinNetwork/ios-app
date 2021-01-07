@@ -7,7 +7,7 @@ enum MixinError: Error {
     case missingBackup
     case requestLoginVerificationCode([String: Any])
     case generateRsaKeyPair
-    case unrecognizedReCaptchaMessage(String)
+    case unrecognizedCaptchaMessage(String)
     case unrecognizedUrl(URL)
     case missingApp
     
@@ -31,7 +31,7 @@ extension MixinError: CustomNSError {
             return 4
         case .generateRsaKeyPair:
             return 5
-        case .unrecognizedReCaptchaMessage:
+        case .unrecognizedCaptchaMessage:
             return 6
         case .unrecognizedUrl:
             return 7
@@ -48,7 +48,7 @@ extension MixinError: CustomNSError {
             return [:]
         case let .requestLoginVerificationCode(info):
             return info
-        case let .unrecognizedReCaptchaMessage(body):
+        case let .unrecognizedCaptchaMessage(body):
             return ["body": body]
         case let .unrecognizedUrl(url):
             return ["url": url.absoluteString]

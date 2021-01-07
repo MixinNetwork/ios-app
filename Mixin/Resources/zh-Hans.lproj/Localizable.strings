@@ -153,7 +153,7 @@
 "placeholder_mobile_number" = "手机号码";
 "init_signal" = "正在初始化";
 "init_explain" = "用户之间的消息将受到端对端加密保护";
-"toast_recaptcha_timed_out" = "验证超时";
+"toast_captcha_timeout" = "验证超时";
 "desktop_login_confim" = "确认登录 Mixin Messenger 桌面端？";
 "desktop_upgrade" = "请升级 Mixin Messenger 桌面端至最新版！";
 
@@ -901,7 +901,7 @@
 "error_unauthorized" = "未授权";
 "error_invalid_request_data" = "无效的请求数据";
 "error_failed_to_deliver_sms" = "发送短信失败";
-"error_requires_recaptcha" = "需要验证码";
+"error_requires_captcha" = "需要验证码";
 "error_invalid_phone_number" = "无效的手机号码";
 "error_invalid_phone_verification_code" = "验证码错误";
 "error_expired_phone_verification_code" = "验证码已失效";
@@ -917,7 +917,7 @@
 "error_peer_closed" = "Peer 已关闭";
 "error_track_not_found" = "Track 无效";
 "error_group_full" = "群组成员人数已达上限";
-"error_invalid_recaptcha" = "验证失败";
+"error_invalid_captcha" = "验证失败";
 "error_insufficient_balance" = "余额不足";
 "error_pin_incorrect" = "密码不正确";
 "error_fee_insufficient" = "手续费不足";

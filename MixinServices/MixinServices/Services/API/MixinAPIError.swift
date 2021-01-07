@@ -29,8 +29,8 @@ public enum MixinAPIError: Error {
     
     case invalidRequestData
     case failedToDeliverSMS
-    case invalidReCaptcha
-    case requiresReCaptcha
+    case invalidCaptchaToken
+    case requiresCaptcha
     case requiresUpdate
     case invalidPhoneNumber
     case invalidPhoneVerificationCode
@@ -95,9 +95,9 @@ extension MixinAPIError {
         case (202, 10003):
             self = .failedToDeliverSMS
         case (202, 10004):
-            self = .invalidReCaptcha
+            self = .invalidCaptchaToken
         case (202, 10005):
-            self = .requiresReCaptcha
+            self = .requiresCaptcha
         case (202, 10006):
             self = .requiresUpdate
         case (202, 20110):

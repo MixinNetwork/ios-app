@@ -3,11 +3,15 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script type="text/javascript">
         var postMessage = function(value) {
-            window.webkit.messageHandlers.recaptcha.postMessage({ message: value });
+            window.webkit.messageHandlers.captcha.postMessage({ message: value });
         }
 
-        var postToken = function(value) {
-            window.webkit.messageHandlers.recaptcha.postMessage({ token: value });
+        var postReCaptchaToken = function(value) {
+            window.webkit.messageHandlers.captcha.postMessage({ recaptcha_token: value });
+        }
+
+        var postHCaptchaToken = function(value) {
+            window.webkit.messageHandlers.captcha.postMessage({ hcaptcha_token: value });
         }
 
         var gReCaptchaExecute = function() {
@@ -16,12 +20,7 @@
             grecaptcha.execute();
         };
 
-        var reCaptchaRenderFinished = function(observer) {
-            observer.disconnect();
-            postMessage("did_load");
-        }
-
-        var onloadCallback = function() {
+        var onReCaptchaLoad = function() {
             var observer = new MutationObserver(function(mutations) {
                 var inserted = false;
                 for (var i = 0; i < mutations.length; i++) {
@@ -31,23 +30,41 @@
                     }
                 }
                 if (inserted) {
-                    reCaptchaRenderFinished(observer);
+                    observer.disconnect();
+                    postMessage("recaptcha_did_load");
                 }
             })
             observer.observe(document.getElementsByTagName("body")[0], { childList: true })
             grecaptcha.render('html_element', {
                 'sitekey': '${api_key}',
-                'callback': postToken,
+                'callback': postReCaptchaToken,
                 'size': 'invisible'
             });
         };
+
+        var onHCaptchaFailed = function() {
+            postMessage("hcaptcha_failed");
+        }
+        
+        var onHCaptchaLoad = function() {
+            var widgetID = hcaptcha.render('html_element', {
+                'sitekey': '${api_key}',
+                'callback': postHCaptchaToken,
+                'open-callback': function() { postMessage("challenge_change"); },
+                'expired-callback': onHCaptchaFailed,
+                'chalexpired-callback': onHCaptchaFailed,
+                'error-callback': onHCaptchaFailed,
+                'size': 'invisible'
+            });
+            hcaptcha.execute(widgetID);
+        }
         </script>
     </head>
     <body>
         <form action="?" method="POST" style="hidden">
             <div id="html_element"></div>
         </form>
-        <script src="${script_url}?onload=onloadCallback&render=explicit" async defer>
+        <script src="${script_url}" async defer>
         </script>
     </body>
 </html>

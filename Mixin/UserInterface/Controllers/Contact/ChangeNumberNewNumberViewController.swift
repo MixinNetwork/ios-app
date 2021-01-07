@@ -6,18 +6,18 @@ class ChangeNumberNewNumberViewController: MobileNumberViewController {
     var context: ChangeNumberContext!
     
     deinit {
-        ReCaptchaManager.shared.clean()
+        CaptchaManager.shared.clean()
     }
     
     override func continueAction(_ sender: Any) {
         continueButton.isBusy = true
         context.newNumber = fullNumber(withSpacing: false)
         context.newNumberRepresentation = fullNumber(withSpacing: true)
-        requestVerificationCode(reCaptchaToken: nil)
+        requestVerificationCode(captchaToken: nil)
     }
     
-    private func requestVerificationCode(reCaptchaToken token: String? = nil) {
-        AccountAPI.sendCode(to: context.newNumber, reCaptchaToken: token, purpose: .phone) { [weak self] (result) in
+    private func requestVerificationCode(captchaToken token: CaptchaToken?) {
+        AccountAPI.sendCode(to: context.newNumber, captchaToken: token, purpose: .phone) { [weak self] (result) in
             guard let weakSelf = self else {
                 return
             }
@@ -30,11 +30,11 @@ class ChangeNumberNewNumberViewController: MobileNumberViewController {
                 weakSelf.continueButton.isBusy = false
             case let .failure(error):
                 switch error {
-                case .requiresReCaptcha:
-                    ReCaptchaManager.shared.validate(onViewController: weakSelf) { (result) in
+                case .requiresCaptcha:
+                    CaptchaManager.shared.validate(on: weakSelf) { (result) in
                         switch result {
                         case .success(let token):
-                            self?.requestVerificationCode(reCaptchaToken: token)
+                            self?.requestVerificationCode(captchaToken: token)
                         default:
                             self?.continueButton.isBusy = false
                         }

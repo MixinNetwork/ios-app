@@ -37,7 +37,7 @@ final class LoginMobileNumberViewController: MobileNumberViewController {
     }
     
     deinit {
-        ReCaptchaManager.shared.clean()
+        CaptchaManager.shared.clean()
     }
     
     override func viewDidLoad() {
@@ -55,17 +55,17 @@ final class LoginMobileNumberViewController: MobileNumberViewController {
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CHANGE, style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CONFIRM, style: .default, handler: { _ in
-            self.requestVerificationCode()
+            self.requestVerificationCode(captchaToken: nil)
         }))
         present(alert, animated: true, completion: nil)
     }
     
-    private func requestVerificationCode(reCaptchaToken token: String? = nil) {
+    private func requestVerificationCode(captchaToken token: CaptchaToken?) {
         continueButton.isBusy = true
         var ctx = LoginContext(callingCode: country.callingCode,
                                mobileNumber: mobileNumber,
                                fullNumber: fullNumber(withSpacing: false))
-        self.request = AccountAPI.sendCode(to: ctx.fullNumber, reCaptchaToken: token, purpose: .session) { [weak self] (result) in
+        self.request = AccountAPI.sendCode(to: ctx.fullNumber, captchaToken: token, purpose: .session) { [weak self] (result) in
             guard let weakSelf = self else {
                 return
             }
@@ -79,11 +79,11 @@ final class LoginMobileNumberViewController: MobileNumberViewController {
                 weakSelf.continueButton.isBusy = false
             case let .failure(error):
                 switch error {
-                case .requiresReCaptcha:
-                    ReCaptchaManager.shared.validate(onViewController: weakSelf, completion: { (result) in
+                case .requiresCaptcha:
+                    CaptchaManager.shared.validate(on: weakSelf, completion: { (result) in
                         switch result {
                         case .success(let token):
-                            self?.requestVerificationCode(reCaptchaToken: token)
+                            self?.requestVerificationCode(captchaToken: token)
                         default:
                             self?.continueButton.isBusy = false
                         }

@@ -137,7 +137,7 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
     });
 }
 
-- (void)cancel {
+- (void)cancelForReason:(MXMAudioRecorderCancelledReason)reason userInfo:(NSDictionary<NSString*, id> * _Nullable)userInfo {
     dispatch_async(_processingQueue, ^{
         if (!self->_recording) {
             return;
@@ -145,14 +145,14 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
         [self cleanUp];
         [self->_writer removeFile];
         dispatch_sync(dispatch_get_main_queue(), ^{
-            [self->_delegate audioRecorderDidCancelRecording:self];
+            [self->_delegate audioRecorderDidCancelRecording:self forReason:reason userInfo:userInfo];
         });
     });
 }
 
 // MARK: - Private works
 - (void)audioSessionInterruption:(NSNotification *)notification {
-    [self cancel];
+    [self cancelForReason:MXMAudioRecorderCancelledReasonAudioSessionInterrupted userInfo:nil];
 }
 
 - (void)audioSessionRouteChange:(NSNotification *)notification {
@@ -160,7 +160,7 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
     BOOL categoryIsAvailable = [category isEqualToString:AVAudioSessionCategoryRecord] || [category isEqualToString:AVAudioSessionCategoryPlayAndRecord];
     BOOL hasInput = [AVAudioSession sharedInstance].currentRoute.inputs.count;
     if (!hasInput || !categoryIsAvailable) {
-        [self cancel];
+        [self cancelForReason:MXMAudioRecorderCancelledReasonAudioRouteChange userInfo:nil];
     }
 }
 
@@ -317,7 +317,7 @@ void inputBufferhandler(void *inUserData, AudioQueueRef inAQ, AudioQueueBufferRe
     if (recorder->_recording) {
         result = AudioQueueEnqueueBuffer(inAQ, inBuffer, 0, NULL);
         if (result != noErr) {
-            [recorder cancel];
+            [recorder cancelForReason:MXMAudioRecorderCancelledReasonBufferEnqueueFailed userInfo:@{@"enqueue_buffer_result": @(result)}];
             return;
         }
     }

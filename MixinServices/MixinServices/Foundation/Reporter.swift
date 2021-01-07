@@ -12,6 +12,7 @@ open class Reporter {
         case login
         case sendSticker
         case openApp
+        case cancelAudioRecording
         
         public var name: String {
             switch self {
@@ -23,6 +24,8 @@ open class Reporter {
                 return "send_sticker"
             case .openApp:
                 return "open_app"
+            case .cancelAudioRecording:
+                return "cancel_audio_record"
             }
         }
     }

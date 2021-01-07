@@ -122,7 +122,7 @@ class AudioInputViewController: UIViewController, ConversationInputAccessible {
     
     @IBAction func cancelAction(_ sender: Any) {
         layoutForStopping()
-        recorder?.cancel()
+        recorder?.cancel(for: .userInitiated)
         animateHideLockView()
     }
     
@@ -201,16 +201,22 @@ extension AudioInputViewController: AudioRecorderDelegate {
         startRedDotAnimation()
     }
     
-    func audioRecorderDidCancelRecording(_ recorder: AudioRecorder) {
+    func audioRecorderDidCancelRecording(_ recorder: AudioRecorder, for reason: AudioRecorderCancelledReason, userInfo: [String : Any]?) {
         resetTimerAndRecorder()
         layoutForStopping()
         stopRedDotAnimation()
+        if reason != .userInitiated {
+            var userInfo = userInfo ?? [:]
+            userInfo["reason"] = reason.rawValue
+            reporter.report(event: .cancelAudioRecording, userInfo: userInfo)
+        }
     }
     
     func audioRecorder(_ recorder: AudioRecorder, didFailRecordingWithError error: Error) {
         resetTimerAndRecorder()
         layoutForStopping()
         stopRedDotAnimation()
+        reporter.report(error: error)
     }
     
     func audioRecorder(_ recorder: AudioRecorder, didFinishRecordingWithMetadata metadata: AudioMetadata) {

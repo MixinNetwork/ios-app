@@ -1,5 +1,6 @@
 import Foundation
 import AVFoundation
+import MixinServices
 
 class AudioPlayer {
     
@@ -30,9 +31,12 @@ class AudioPlayer {
         }
     }
     
-    fileprivate(set) var status: Status = .readyToPlay {
+    @Synchronized(value: .readyToPlay)
+    fileprivate(set) var status: Status {
         didSet {
-            onStatusChanged?(self)
+            DispatchQueue.main.async {
+                self.onStatusChanged?(self)
+            }
         }
     }
     

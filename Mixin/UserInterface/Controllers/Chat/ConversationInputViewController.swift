@@ -544,10 +544,10 @@ extension ConversationInputViewController {
         guard parent != nil else {
             return
         }
-        guard dataSource.category == .group else {
+        guard let conversationId = notification.userInfo?[ParticipantDAO.UserInfoKey.conversationId] as? String else {
             return
         }
-        guard let conversationId = notification.userInfo?[ParticipantDAO.UserInfoKey.conversationId] as? String else {
+        guard dataSource.category == .group, dataSource.conversationId == conversationId else {
             return
         }
         DispatchQueue.global().async { [weak self] in

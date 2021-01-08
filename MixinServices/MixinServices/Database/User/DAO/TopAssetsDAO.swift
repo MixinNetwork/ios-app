@@ -18,9 +18,7 @@ public final class TopAssetsDAO: UserDatabaseDAO {
     
     public func replaceAssets(_ assets: [TopAsset]) {
         db.write { (db) in
-            for asset in assets {
-                try asset.save(db)
-            }
+            try assets.save(db)
         }
         NotificationCenter.default.post(name: TopAssetsDAO.didChangeNotification, object: nil)
     }

@@ -288,9 +288,7 @@ extension Database {
     ) -> Bool {
         do {
             try pool.write { (db) -> Void in
-                for record in records {
-                    try record.save(db)
-                }
+                try records.save(db)
                 if let completion = completion {
                     db.afterNextTransactionCommit(completion)
                 }
@@ -339,6 +337,22 @@ extension Database {
             return numberOfChanges
         } catch {
             return 0
+        }
+    }
+    
+}
+
+extension Array where Iterator.Element: PersistableRecord {
+    
+    public func save(_ db: GRDB.Database) throws {
+        for record in self {
+            try record.save(db)
+        }
+    }
+    
+    public func insert(_ db: GRDB.Database) throws {
+        for record in self {
+            try record.insert(db)
         }
     }
     

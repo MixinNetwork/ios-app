@@ -57,9 +57,7 @@ public final class ParticipantSessionDAO: UserDatabaseDAO {
             let participants = conversation.participants.map {
                 Participant(conversationId: conversationId, userId: $0.userId, role: $0.role, status: ParticipantStatus.START.rawValue, createdAt: $0.createdAt)
             }
-            for participant in participants {
-                try participant.save(db)
-            }
+            try participants.save(db)
             
             try db.execute(sql: ParticipantDAO.sqlUpdateStatus, arguments: [conversationId])
             try ParticipantSessionDAO.shared.syncConversationParticipantSession(conversation: conversation, db: db)
@@ -89,9 +87,7 @@ public final class ParticipantSessionDAO: UserDatabaseDAO {
                                    sentToServer: sentToServerMap[$0.uniqueIdentifier] ?? nil,
                                    createdAt: Date().toUTCString())
             }
-            for session in sessionParticipants {
-                try session.save(db)
-            }
+            try sessionParticipants.save(db)
         }
     }
     

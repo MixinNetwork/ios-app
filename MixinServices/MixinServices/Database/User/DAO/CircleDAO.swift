@@ -63,9 +63,7 @@ public final class CircleDAO: UserDatabaseDAO {
     public func replaceAllCircles(with circles: [Circle]) {
         try! db.pool.write { (db) -> Void in
             try Circle.deleteAll(db)
-            for circle in circles {
-                try circle.save(db)
-            }
+            try circles.save(db)
         }
     }
     

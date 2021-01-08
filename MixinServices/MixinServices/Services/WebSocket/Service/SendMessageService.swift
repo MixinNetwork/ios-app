@@ -107,12 +107,8 @@ public class SendMessageService: MixinService {
         }
         
         UserDatabase.current.write { (db) in
-            for job in jobs {
-                try job.save(db)
-            }
-            for msg in resendMessages {
-                try msg.save(db)
-            }
+            try jobs.save(db)
+            try resendMessages.save(db)
         }
         SendMessageService.shared.processMessages()
     }

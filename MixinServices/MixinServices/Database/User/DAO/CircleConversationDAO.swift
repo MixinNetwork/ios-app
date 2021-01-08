@@ -39,9 +39,7 @@ final public class CircleConversationDAO: UserDatabaseDAO {
             try CircleConversation
                 .filter(CircleConversation.column(of: .conversationId) == conversation.conversationId)
                 .deleteAll(db)
-            for object in objects {
-                try object.save(db)
-            }
+            try objects.save(db)
         }
     }
     

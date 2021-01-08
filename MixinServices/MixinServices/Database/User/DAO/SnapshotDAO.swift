@@ -74,9 +74,7 @@ public final class SnapshotDAO: UserDatabaseDAO {
             let condition: SQLSpecificExpressible = Snapshot.column(of: .assetId) == assetId
                 && Snapshot.column(of: .type) == SnapshotType.pendingDeposit.rawValue
             try Snapshot.filter(condition).deleteAll(db)
-            for snapshot in snapshots {
-                try snapshot.save(db)
-            }
+            try snapshots.save(db)
         }
     }
     

@@ -364,9 +364,7 @@ public final class ConversationDAO: UserDatabaseDAO {
         do {
             try db.pool.write { (db) -> Void in
                 try conversation.insert(db)
-                for participant in participants {
-                    try participant.save(db)
-                }
+                try participants.save(db)
                 db.afterNextTransactionCommit { (_) in
                     // Avoid potential deadlock
                     DispatchQueue.global().async {
@@ -446,9 +444,7 @@ public final class ConversationDAO: UserDatabaseDAO {
                 let participants = conversation.participants.map {
                     Participant(conversationId: conversationId, userId: $0.userId, role: $0.role, status: ParticipantStatus.START.rawValue, createdAt: $0.createdAt)
                 }
-                for participant in participants {
-                    try participant.save(db)
-                }
+                try participants.save(db)
                 
                 if conversation.category == ConversationCategory.GROUP.rawValue {
                     let creatorId = conversation.creatorId
@@ -462,9 +458,7 @@ public final class ConversationDAO: UserDatabaseDAO {
                 let sessionParticipants = participantSessions.map {
                     ParticipantSession(conversationId: conversationId, userId: $0.userId, sessionId: $0.sessionId, sentToServer: nil, createdAt: Date().toUTCString())
                 }
-                for session in sessionParticipants {
-                    try session.save(db)
-                }
+                try sessionParticipants.save(db)
             }
             
             let userIds = try ParticipantDAO.shared.getNeedSyncParticipantIds(database: db, conversationId: conversationId)
@@ -508,9 +502,7 @@ public final class ConversationDAO: UserDatabaseDAO {
             let participants = conversation.participants.map {
                 Participant(conversationId: conversationId, userId: $0.userId, role: $0.role, status: ParticipantStatus.START.rawValue, createdAt: $0.createdAt)
             }
-            for participant in participants {
-                try participant.save(db)
-            }
+            try participants.save(db)
             try ParticipantSessionDAO.shared.syncConversationParticipantSession(conversation: conversation, db: db)
             try db.execute(sql: ParticipantDAO.sqlUpdateStatus, arguments: [conversationId])
             

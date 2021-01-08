@@ -8,7 +8,7 @@ class FavoriteStickersViewController: StickersViewController {
         self.index = index
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(favoriteStickerDidChange(_:)),
-                                               name: StickerRelationshipDAO.favoriteStickersDidChangeNotification,
+                                               name: StickerDAO.favoriteStickersDidChangeNotification,
                                                object: nil)
     }
     

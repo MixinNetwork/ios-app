@@ -2,6 +2,8 @@ import GRDB
 
 public final class StickerDAO: UserDatabaseDAO {
     
+    public static let favoriteStickersDidChangeNotification = NSNotification.Name("one.mixin.services.StickerDAO.favoriteStickersDidChange")
+    
     private static let sqlQueryColumns = """
     SELECT s.sticker_id, s.name, s.asset_url, s.asset_type, s.asset_width, s.asset_height, s.last_used_at, a.category
     FROM stickers s
@@ -80,6 +82,9 @@ public final class StickerDAO: UserDatabaseDAO {
                 let relationship = StickerRelationship(albumId: albumId, stickerId: response.stickerId, createdAt: response.createdAt)
                 try relationship.save(db)
                 try insertOrUpdateSticker(into: db, with: response)
+            }
+            db.afterNextTransactionCommit { (_) in
+                NotificationCenter.default.post(onMainThread: Self.favoriteStickersDidChangeNotification, object: self)
             }
         }
     }

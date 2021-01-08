@@ -1,13 +1,13 @@
 PODS:
-  - Alamofire (5.4.0)
+  - Alamofire (5.4.1)
   - AlignedCollectionViewFlowLayout (1.1.2)
-  - AppCenter (4.0.0):
-    - AppCenter/Analytics (= 4.0.0)
-    - AppCenter/Crashes (= 4.0.0)
-  - AppCenter/Analytics (4.0.0):
+  - AppCenter (4.1.0):
+    - AppCenter/Analytics (= 4.1.0)
+    - AppCenter/Crashes (= 4.1.0)
+  - AppCenter/Analytics (4.1.0):
     - AppCenter/Core
-  - AppCenter/Core (4.0.0)
-  - AppCenter/Crashes (4.0.0):
+  - AppCenter/Core (4.1.0)
+  - AppCenter/Crashes (4.1.0):
     - AppCenter/Core
   - BoringSSL (10.0.6):
     - BoringSSL/Implementation (= 10.0.6)
@@ -196,9 +196,9 @@ PODS:
     - R.swift.Library (~> 5.3.0)
   - R.swift.Library (5.3.0)
   - RSKImageCropper (3.0.1)
-  - SDWebImage (5.10.0):
-    - SDWebImage/Core (= 5.10.0)
-  - SDWebImage/Core (5.10.0)
+  - SDWebImage (5.10.2):
+    - SDWebImage/Core (= 5.10.2)
+  - SDWebImage/Core (5.10.2)
   - SDWebImageYYPlugin/YYImage (0.6.0):
     - SDWebImage/Core (~> 5.7)
     - YYImage/Core
@@ -362,9 +362,9 @@ CHECKOUT OPTIONS:
     :git: https://github.com/wuyuehyang/YYImage.git
 
 SPEC CHECKSUMS:
-  Alamofire: 3b6a534a3df22db367e4dedeeca73d1ddfcf0e2f
+  Alamofire: 2291f7d21ca607c491dd17642e5d40fdcda0e65c
   AlignedCollectionViewFlowLayout: ee2ef451e741ec08f8e0967d828001e2f051c20a
-  AppCenter: 51351e0121e40ba75e28ecb7de5c2e69d480df5e
+  AppCenter: 8832b158d17e54845c3b88a91076218f0b07174d
   BoringSSL: e10f92a27043805c01071fe815a5cd98ae8212e7
   DeviceGuru: 73d82f34cddee25d215b35eb4d094b7a44ec187a
   Firebase: 26223c695fe322633274198cb19dca8cb7e54416
@@ -400,7 +400,7 @@ SPEC CHECKSUMS:
   R.swift: 56ec7e3aef34b9eee47a659e42462db2c1cc5ac3
   R.swift.Library: 0fc583cb55a99e28901299cc451614cad1161962
   RSKImageCropper: 617b4976e4a0ca18f3ce84f6cfa5945e574b51a3
-  SDWebImage: 9169792e9eec3e45bba2a0c02f74bf8bd922d1ee
+  SDWebImage: b969dcfc02c40a5da71eac0b03b8f1a0c794a86f
   SDWebImageYYPlugin: a0a9d1b51c6903757bd7c0978d9d39f1e6254624
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
   SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531

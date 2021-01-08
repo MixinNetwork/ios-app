@@ -35,7 +35,7 @@ open class Database {
                 if message.hasPrefix("no such table: grdb_migrations") {
                     return
                 } else {
-                    // TODO: rebuild the database on 'no such table'
+                    AppGroupUserDefaults.User.needsRebuildDatabase = true
                 }
             }
             reporter.report(error: Error(code: code.rawValue, message: message))

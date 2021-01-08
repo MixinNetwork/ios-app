@@ -2,7 +2,7 @@ import GRDB
 
 public final class UserDatabase: Database {
     
-    public private(set) static var current: UserDatabase! = try! UserDatabase(url: AppGroupContainer.mixinDatabaseUrl)
+    public private(set) static var current: UserDatabase! = loadCurrent()
     
     public override class var config: Configuration {
         var config = super.config
@@ -126,7 +126,7 @@ public final class UserDatabase: Database {
         }
         
         migrator.registerMigration("fts5") { (db) in
-            try db.create(virtualTable: Message.ftsTableName, using: FTS5()) { t in
+            try db.create(virtualTable: Message.ftsTableName, ifNotExists: true, using: FTS5()) { t in
                 t.tokenizer = MixinTokenizer.tokenizerDescriptor()
                 t.column(Message.column(of: .messageId).name).notIndexed()
                 t.column(Message.column(of: .conversationId).name).notIndexed()
@@ -138,10 +138,28 @@ public final class UserDatabase: Database {
         return migrator
     }
     
+}
+
+extension UserDatabase {
+    
     public static func reloadCurrent() {
-        current = try! UserDatabase(url: AppGroupContainer.mixinDatabaseUrl)
-        current.migrate()
+        current = loadCurrent()
     }
+    
+    private static func loadCurrent() -> UserDatabase {
+        let db = try! UserDatabase(url: AppGroupContainer.mixinDatabaseUrl)
+        if AppGroupUserDefaults.User.needsRebuildDatabase {
+            try? db.pool.barrierWriteWithoutTransaction { (db) -> Void in
+                try db.execute(sql: "DROP TABLE IF EXISTS grdb_migrations")
+            }
+        }
+        db.migrate()
+        return db
+    }
+    
+}
+
+extension UserDatabase {
     
     public func clearSentSenderKey() {
         try! pool.barrierWriteWithoutTransaction { (db) -> Void in

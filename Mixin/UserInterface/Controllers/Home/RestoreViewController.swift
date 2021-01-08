@@ -58,7 +58,6 @@ class RestoreViewController: UIViewController {
             }
 
             let localURL = AppGroupContainer.mixinDatabaseUrl
-            try? FileManager.default.removeItem(at: localURL) // FIXME: Needs to close the db before deletion?
             do {
                 if !cloudURL.isDownloaded {
                     try self.downloadFromCloud(cloudURL: cloudURL, progress: { (progress) in
@@ -66,6 +65,9 @@ class RestoreViewController: UIViewController {
                     })
                 } else {
                     Logger.write(log: "[iCloud][RestoreViewController][\(cloudURL.suffix(base: backupDir))]...isDownloaded:false")
+                }
+                if FileManager.default.fileExists(atPath: localURL.path) {
+                    try FileManager.default.removeItem(at: localURL)
                 }
                 try FileManager.default.copyItem(at: cloudURL, to: localURL)
 

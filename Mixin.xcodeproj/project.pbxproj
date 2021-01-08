@@ -4712,7 +4712,7 @@
 				CODE_SIGN_ENTITLEMENTS = Mixin/Mixin.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 415;
+				CURRENT_PROJECT_VERSION = 416;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 5EL4S7LCG6;
 				ENABLE_BITCODE = NO;
@@ -4842,7 +4842,7 @@
 				CODE_SIGN_ENTITLEMENTS = Mixin/Mixin.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 415;
+				CURRENT_PROJECT_VERSION = 416;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 5EL4S7LCG6;
 				ENABLE_BITCODE = NO;
@@ -4969,7 +4969,7 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = MixinShare/MixinShare.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 415;
+				CURRENT_PROJECT_VERSION = 416;
 				DEVELOPMENT_TEAM = 5EL4S7LCG6;
 				INFOPLIST_FILE = MixinShare/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -4996,7 +4996,7 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = MixinShare/MixinShare.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 415;
+				CURRENT_PROJECT_VERSION = 416;
 				DEVELOPMENT_TEAM = 5EL4S7LCG6;
 				INFOPLIST_FILE = MixinShare/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -5022,7 +5022,7 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = MixinNotificationService/MixinNotificationService.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 415;
+				CURRENT_PROJECT_VERSION = 416;
 				DEVELOPMENT_TEAM = 5EL4S7LCG6;
 				INFOPLIST_FILE = MixinNotificationService/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -5049,7 +5049,7 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = MixinNotificationService/MixinNotificationService.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 415;
+				CURRENT_PROJECT_VERSION = 416;
 				DEVELOPMENT_TEAM = 5EL4S7LCG6;
 				INFOPLIST_FILE = MixinNotificationService/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;

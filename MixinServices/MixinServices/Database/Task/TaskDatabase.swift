@@ -25,7 +25,7 @@ public class TaskDatabase: Database {
             try db.execute(sql: "CREATE INDEX IF NOT EXISTS messages_blaze_index ON messages_blaze(created_at)")
         }
         
-        migrator.registerMigration("v2") { (db) in
+        migrator.registerMigration("wcdb") { (db) in
             try db.execute(sql: "DROP INDEX IF EXISTS messages_blaze_conversation_indexs")
         }
         

@@ -16,8 +16,8 @@ public final class SignalDatabase: Database {
         migrator.registerMigration("create_table") { db in
             try db.execute(sql: "CREATE TABLE IF NOT EXISTS identities(id INTEGER PRIMARY KEY AUTOINCREMENT, address TEXT, registrationId INTEGER, publicKey BLOB, privateKey BLOB, nextPreKeyId INTEGER, timestamp REAL)")
             try db.execute(sql: "CREATE TABLE IF NOT EXISTS prekeys(id INTEGER PRIMARY KEY AUTOINCREMENT, preKeyId INTEGER, record BLOB)")
-            try db.execute(sql: "CREATE TABLE IF NOT EXISTS ratchet_sender_keys(groupId TEXT, senderId TEXT, status TEXT, CONSTRAINT _multi_primary PRIMARY KEY(groupId, senderId))")
-            try db.execute(sql: "CREATE TABLE IF NOT EXISTS sender_keys(groupId TEXT, senderId TEXT, record BLOB, CONSTRAINT _multi_primary PRIMARY KEY(groupId, senderId))")
+            try db.execute(sql: "CREATE TABLE IF NOT EXISTS ratchet_sender_keys(groupId TEXT, senderId TEXT, status TEXT, PRIMARY KEY(groupId, senderId))")
+            try db.execute(sql: "CREATE TABLE IF NOT EXISTS sender_keys(groupId TEXT, senderId TEXT, record BLOB, PRIMARY KEY(groupId, senderId))")
             try db.execute(sql: "CREATE TABLE IF NOT EXISTS sessions(id INTEGER PRIMARY KEY AUTOINCREMENT, address TEXT, device INTEGER, record BLOB, timestamp REAL)")
             try db.execute(sql: "CREATE TABLE IF NOT EXISTS signed_prekeys(id INTEGER PRIMARY KEY AUTOINCREMENT, preKeyId INTEGER, record BLOB, timestamp REAL)")
             

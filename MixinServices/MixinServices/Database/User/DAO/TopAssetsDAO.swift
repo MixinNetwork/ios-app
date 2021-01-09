@@ -17,10 +17,8 @@ public final class TopAssetsDAO: UserDatabaseDAO {
     }
     
     public func replaceAssets(_ assets: [TopAsset]) {
-        db.write { (db) in
-            try assets.save(db)
+        db.save(assets) { (_) in
+            NotificationCenter.default.post(name: TopAssetsDAO.didChangeNotification, object: nil)
         }
-        NotificationCenter.default.post(name: TopAssetsDAO.didChangeNotification, object: nil)
     }
-    
 }

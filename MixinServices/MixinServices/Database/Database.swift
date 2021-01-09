@@ -286,6 +286,9 @@ extension Database {
         _ records: [Record],
         completion: Completion? = nil
     ) -> Bool {
+        guard records.count > 0 else {
+            return true
+        }
         do {
             try pool.write { (db) -> Void in
                 try records.save(db)

@@ -606,7 +606,7 @@ public final class MessageDAO: UserDatabaseDAO {
         try MessageMention
             .filter(MessageMention.column(of: .messageId) == messageId)
             .deleteAll(database)
-        if AppGroupUserDefaults.Database.isFTSInitialized, let category = MessageCategory(rawValue: category), MessageCategory.ftsAvailable.contains(category) {
+        if let category = MessageCategory(rawValue: category), MessageCategory.ftsAvailable.contains(category) {
             try database.execute(sql: "DELETE FROM \(Message.ftsTableName) WHERE id=?",
                                  arguments: [messageId])
         }
@@ -642,10 +642,8 @@ public final class MessageDAO: UserDatabaseDAO {
             try MessageMention
                 .filter(MessageMention.column(of: .messageId) == id)
                 .deleteAll(db)
-            if AppGroupUserDefaults.Database.isFTSInitialized {
-                try db.execute(sql: "DELETE FROM \(Message.ftsTableName) WHERE id=?",
-                               arguments: [id])
-            }
+            try db.execute(sql: "DELETE FROM \(Message.ftsTableName) WHERE id=?",
+                           arguments: [id])
         }
         return deleteCount > 0
     }

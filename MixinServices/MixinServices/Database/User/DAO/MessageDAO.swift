@@ -14,18 +14,6 @@ public final class MessageDAO: UserDatabaseDAO {
     public static let didInsertMessageNotification = Notification.Name("one.mixin.services.did.insert.msg")
     public static let didRedecryptMessageNotification = Notification.Name("one.mixin.services.did.redecrypt.msg")
     
-    static let sqlTriggerLastMessageInsert = """
-    CREATE TRIGGER IF NOT EXISTS conversation_last_message_update AFTER INSERT ON messages
-    BEGIN
-        UPDATE conversations SET last_message_id = new.id, last_message_created_at = new.created_at WHERE conversation_id = new.conversation_id;
-    END
-    """
-    static let sqlTriggerLastMessageDelete = """
-    CREATE TRIGGER IF NOT EXISTS conversation_last_message_delete AFTER DELETE ON messages
-    BEGIN
-        UPDATE conversations SET last_message_id = (select id from messages where conversation_id = old.conversation_id order by created_at DESC limit 1) WHERE conversation_id = old.conversation_id;
-    END
-    """
     static let sqlQueryLastUnreadMessageTime = """
         SELECT created_at FROM messages
         WHERE conversation_id = ? AND status = 'DELIVERED' AND user_id != ?

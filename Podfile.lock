@@ -120,7 +120,7 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (7.1.1):
     - GoogleUtilities/Logger
-  - GRDB.swift/SQLCipher (5.2.0):
+  - GRDB.swift/SQLCipher (5.3.0):
     - SQLCipher (>= 3.4.0)
   - GTMSessionFetcher/Core (1.5.0)
   - GzipSwift (5.1.1)
@@ -252,7 +252,7 @@ DEPENDENCIES:
   - Firebase/Performance
   - GCDWebServer
   - GCDWebServer/WebDAV
-  - GRDB.swift/SQLCipher (from `https://github.com/wuyuehyang/GRDB.swift.git`, branch `mixin`)
+  - GRDB.swift/SQLCipher
   - Highlightr (from `https://github.com/wuyuehyang/Highlightr.git`, branch `master`)
   - libsignal-protocol-c (from `https://github.com/MixinNetwork/libsignal-protocol-c.git`)
   - lottie-ios (from `https://github.com/airbnb/lottie-ios.git`, branch `lottie/objectiveC`)
@@ -289,6 +289,7 @@ SPEC REPOS:
     - GoogleDataTransport
     - GoogleToolboxForMac
     - GoogleUtilities
+    - GRDB.swift
     - GTMSessionFetcher
     - GzipSwift
     - libcmark_gfm
@@ -311,9 +312,6 @@ SPEC REPOS:
     - Zip
 
 EXTERNAL SOURCES:
-  GRDB.swift:
-    :branch: mixin
-    :git: https://github.com/wuyuehyang/GRDB.swift.git
   Highlightr:
     :branch: master
     :git: https://github.com/wuyuehyang/Highlightr.git
@@ -336,9 +334,6 @@ EXTERNAL SOURCES:
     :git: https://github.com/wuyuehyang/YYImage.git
 
 CHECKOUT OPTIONS:
-  GRDB.swift:
-    :commit: 59377b5fd5e50e14ccce74d6256c87e320542374
-    :git: https://github.com/wuyuehyang/GRDB.swift.git
   Highlightr:
     :commit: 9b9fc465efecb7b3c039c8fedc66e4ae4f315ad9
     :git: https://github.com/wuyuehyang/Highlightr.git
@@ -381,7 +376,7 @@ SPEC CHECKSUMS:
   GoogleDataTransport: 116c84c4bdeb76be2a7a46de51244368f9794eab
   GoogleToolboxForMac: 1350d40e86a76f7863928d63bcb0b89c84c521c5
   GoogleUtilities: 3dc4ff0d5e4840e2fa8eef0889620e8c33d4218c
-  GRDB.swift: f44f61fd032e176e3aadb1f70e15656dc50ca018
+  GRDB.swift: 6d44795b19d716e9f09f19018c3bde5b71b67ae9
   GTMSessionFetcher: b3503b20a988c4e20cc189aa798fd18220133f52
   GzipSwift: 893f3e48e597a1a4f62fafcb6514220fcf8287fa
   Highlightr: c687b337a60af6e46a478b4376006168bb5bd7c5
@@ -411,6 +406,6 @@ SPEC CHECKSUMS:
   YYImage: 6db68da66f20d9f169ceb94dfb9947c3867b9665
   Zip: 414f59909701fda9a84ab774ebe0f5449b1082cc
 
-PODFILE CHECKSUM: 99b38e01e50ec1dc050d5ce75657cc3379fa75cf
+PODFILE CHECKSUM: 638a10f9f01b421a99b5d3934bc7068b2a643fc1
 
-COCOAPODS: 1.10.0
+COCOAPODS: 1.10.1

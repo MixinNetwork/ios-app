@@ -105,31 +105,45 @@ class SignalTests: XCTestCase {
     
     func testRatchetSenderKeyDAO() {
         let dao = RatchetSenderKeyDAO.shared
+        let groupId = UUID().uuidString.lowercased()
+        let senderId = UUID().uuidString.lowercased()
         let sessionId = UUID().uuidString.lowercased()
-        let address = SignalAddress(name: UUID().uuidString.lowercased(),
-                                    deviceId: SignalProtocol.convertSessionIdToDeviceId(sessionId))
-        let key = RatchetSenderKey(groupId: UUID().uuidString.lowercased(),
-                                   senderId: address.toString(),
-                                   status: RatchetStatus.REQUESTING.rawValue)
         
-        dao.saveRatchetSenderKey(key)
-        let loadedKey = dao.getRatchetSenderKey(groupId: key.groupId, senderId: key.senderId)!
-        XCTAssertEqual(loadedKey.groupId, key.groupId)
-        XCTAssertEqual(loadedKey.senderId, key.senderId)
-        XCTAssertEqual(loadedKey.status, key.status)
+        let s1 = RatchetStatus.REQUESTING.rawValue
+        dao.setRatchetSenderKeyStatus(groupId: groupId,
+                                      senderId: senderId,
+                                      status: s1,
+                                      sessionId: sessionId)
+        let s2 = dao.getRatchetSenderKeyStatus(groupId: groupId,
+                                               senderId: senderId,
+                                               sessionId: sessionId)
+        XCTAssertEqual(s1, s2)
         
-        dao.delete(groupId: key.groupId, senderId: key.senderId)
-        XCTAssertNil(dao.getRatchetSenderKey(groupId: key.groupId, senderId: key.senderId))
+        dao.deleteRatchetSenderKey(groupId: groupId,
+                                   senderId: senderId,
+                                   sessionId: sessionId)
+        let s3 = dao.getRatchetSenderKeyStatus(groupId: groupId,
+                                               senderId: senderId,
+                                               sessionId: sessionId)
+        XCTAssertNil(s3)
         
-        dao.saveRatchetSenderKey(key)
-        let loadedStatus = dao.getRatchetSenderKeyStatus(groupId: key.groupId,
-                                                            senderId: key.senderId,
-                                                            sessionId: sessionId)
-        XCTAssertEqual(loadedStatus, key.status)
+        let s4 = RatchetStatus.REQUESTING.rawValue
+        dao.setRatchetSenderKeyStatus(groupId: groupId,
+                                      senderId: senderId,
+                                      status: s1,
+                                      sessionId: nil)
+        let s5 = dao.getRatchetSenderKeyStatus(groupId: groupId,
+                                               senderId: senderId,
+                                               sessionId: nil)
+        XCTAssertEqual(s4, s5)
         
-        dao.deleteRatchetSenderKey(groupId: key.groupId,
-                                   senderId: key.senderId)
-        XCTAssertNil(dao.getRatchetSenderKey(groupId: key.groupId, senderId: key.senderId))
+        dao.deleteRatchetSenderKey(groupId: groupId,
+                                   senderId: senderId,
+                                   sessionId: nil)
+        let s6 = dao.getRatchetSenderKeyStatus(groupId: groupId,
+                                               senderId: senderId,
+                                               sessionId: nil)
+        XCTAssertNil(s6)
     }
     
     func testSenderKeyDAO() {

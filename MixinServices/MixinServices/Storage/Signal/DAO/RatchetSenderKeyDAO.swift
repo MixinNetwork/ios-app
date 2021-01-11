@@ -5,28 +5,25 @@ internal class RatchetSenderKeyDAO: SignalDAO {
     
     static let shared = RatchetSenderKeyDAO()
     
-    func getRatchetSenderKey(groupId: String, senderId: String) -> RatchetSenderKey? {
-        let condition: SQLSpecificExpressible = RatchetSenderKey.column(of: .groupId) == groupId
-            && RatchetSenderKey.column(of: .senderId) == senderId
-        return db.select(where: condition)
-    }
-    
-    func delete(groupId: String, senderId: String) {
-        let condition: SQLSpecificExpressible = RatchetSenderKey.column(of: .groupId) == groupId
-            && RatchetSenderKey.column(of: .senderId) == senderId
-        db.delete(RatchetSenderKey.self, where: condition)
-    }
-    
-    func saveRatchetSenderKey(_ key: RatchetSenderKey) {
-        db.save(key)
+    func setRatchetSenderKeyStatus(groupId: String, senderId: String, status: String, sessionId: String?) {
+        let address = SignalAddress(name: senderId, deviceId: SignalProtocol.convertSessionIdToDeviceId(sessionId))
+        let ratchet = RatchetSenderKey(groupId: groupId, senderId: address.toString(), status: status)
+        db.save(ratchet)
     }
     
     func getRatchetSenderKeyStatus(groupId: String, senderId: String, sessionId: String?) -> String? {
-        getRatchetSenderKey(groupId: groupId, senderId: senderId)?.status
+        let address = SignalAddress(name: senderId, deviceId: SignalProtocol.convertSessionIdToDeviceId(sessionId))
+        let condition: SQLSpecificExpressible = RatchetSenderKey.column(of: .groupId) == groupId
+            && RatchetSenderKey.column(of: .senderId) == address.toString()
+        let ratchet: RatchetSenderKey? = db.select(where: condition)
+        return ratchet?.status
     }
     
-    func deleteRatchetSenderKey(groupId: String, senderId: String) {
-        delete(groupId: groupId, senderId: senderId)
+    func deleteRatchetSenderKey(groupId: String, senderId: String, sessionId: String?) {
+        let address = SignalAddress(name: senderId, deviceId: SignalProtocol.convertSessionIdToDeviceId(sessionId))
+        let condition: SQLSpecificExpressible = RatchetSenderKey.column(of: .groupId) == groupId
+            && RatchetSenderKey.column(of: .senderId) == address.toString()
+        db.delete(RatchetSenderKey.self, where: condition)
     }
     
 }

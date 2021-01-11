@@ -124,7 +124,7 @@ class NewGroupViewController: KeyboardBasedLayoutViewController {
                     return
                 }
                 DispatchQueue.main.async {
-                    NotificationCenter.default.post(onMainThread: MixinServices.conversationDidChangeNotification, object: nil)
+                    NotificationCenter.default.post(name: MixinServices.conversationDidChangeNotification, object: nil)
                     self?.shouldLayoutByKeyboard = false
                     self?.navigationController?.backToHome()
                 }

@@ -3,7 +3,7 @@ import MixinServices
 
 class StickersViewController: StickersCollectionViewController, ConversationInputAccessible {
     
-    static let stickerUsedAtDidUpdateNotification = NSNotification.Name("one.mixin.services.StickersViewController.stickerUsedAtDidUpdate")
+    static let stickerUsedAtDidUpdateNotification = NSNotification.Name("one.mixin.messenger.StickersViewController.stickerUsedAtDidUpdate")
     static let stickerUserInfoKey = "sticker"
     
     var stickers = [StickerItem]()

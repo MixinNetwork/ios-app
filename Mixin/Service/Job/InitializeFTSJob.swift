@@ -5,18 +5,11 @@ class InitializeFTSJob: BaseJob {
     
     private static let insertionLimit: Int = 1000
     
-    private let firstUninitializedRowIDSQL = """
-        SELECT MIN(ROWID) FROM messages
-        WHERE category in \(MessageCategory.ftsAvailableCategorySequence)
-            AND status != 'FAILED'
-            AND ROWID > (SELECT IFNULL(MAX(ROWID), -1) FROM \(Message.ftsTableName))
-    """
-    
     private let insertionSQL = """
         INSERT INTO \(Message.ftsTableName)(id, conversation_id, content, name)
         SELECT id, conversation_id, content, name
         FROM \(Message.databaseTableName)
-        WHERE category in \(MessageCategory.ftsAvailableCategorySequence) AND status != 'FAILED' AND ROWID >= ?
+        WHERE category in \(MessageCategory.ftsAvailableCategorySequence) AND status != 'FAILED' AND ROWID > ?
         ORDER BY created_at ASC
         LIMIT \(InitializeFTSJob.insertionLimit)
     """
@@ -30,11 +23,11 @@ class InitializeFTSJob: BaseJob {
             return
         }
         
-        var nextRowID: Int? = UserDatabase.current.select(with: firstUninitializedRowIDSQL)
+        var lastRowID: Int? = try lastInitializedRowID()
         var numberOfMessagesProcessed = 0
         let startDate = Date()
         
-        while let rowID = nextRowID, !MixinService.isStopProcessMessages {
+        while let rowID = lastRowID, !MixinService.isStopProcessMessages {
             guard !isCancelled else {
                 return
             }
@@ -51,9 +44,9 @@ class InitializeFTSJob: BaseJob {
                     }
                 }
                 if didInitializedAllMessages {
-                    nextRowID = nil
+                    lastRowID = nil
                 } else {
-                    nextRowID = UserDatabase.current.select(with: firstUninitializedRowIDSQL)
+                    lastRowID = try lastInitializedRowID()
                 }
             } catch {
                 Logger.writeDatabase(error: error)
@@ -64,6 +57,18 @@ class InitializeFTSJob: BaseJob {
         
         let interval = -startDate.timeIntervalSinceNow
         Logger.writeDatabase(log: "[FTS] Initialized \(numberOfMessagesProcessed) messages in \(interval)s")
+    }
+    
+    private func lastInitializedRowID() throws -> Int? {
+        let lastFTSMessageIDSQL = "SELECT id FROM \(Message.ftsTableName) ORDER BY rowid DESC LIMIT 1"
+        return try UserDatabase.current.pool.read { (db) -> Int? in
+            let lastFTSMessageID: String? = try String.fetchOne(db, sql: lastFTSMessageIDSQL)
+            if let id = lastFTSMessageID {
+                return try Int.fetchOne(db, sql: "SELECT rowid FROM messages WHERE id=?", arguments: [id])
+            } else {
+                return -1
+            }
+        }
     }
     
 }

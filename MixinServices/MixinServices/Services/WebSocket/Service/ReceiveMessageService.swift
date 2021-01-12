@@ -1084,8 +1084,8 @@ extension ReceiveMessageService {
                 && sysMessage.action != SystemConversationAction.UPDATE.rawValue
                 && sysMessage.action != SystemConversationAction.ROLE.rawValue
             if participantDidChange {
-                let userInfo = [MixinService.UserInfoKey.conversationId: data.conversationId]
-                NotificationCenter.default.post(name: Self.groupConversationParticipantDidChangeNotification, object: self, userInfo: userInfo)
+                let userInfo = [ReceiveMessageService.UserInfoKey.conversationId: data.conversationId]
+                NotificationCenter.default.post(name: ReceiveMessageService.groupConversationParticipantDidChangeNotification, object: self, userInfo: userInfo)
             }
         }
         

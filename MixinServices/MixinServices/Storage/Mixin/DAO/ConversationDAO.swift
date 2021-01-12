@@ -257,21 +257,15 @@ public final class ConversationDAO: UserDatabaseDAO {
     }
     
     public func getConversationStatus(conversationId: String) -> Int? {
-        let sql = """
-        SELECT \(Conversation.CodingKeys.status.rawValue)
-        FROM \(Conversation.databaseTableName)
-        WHERE \(Conversation.CodingKeys.conversationId.rawValue) = ?
-        """
-        return db.select(with: sql, arguments: [conversationId])
+        db.select(column: Conversation.column(of: .status),
+                  from: Conversation.self,
+                  where: Conversation.column(of: .conversationId) == conversationId)
     }
     
     public func getConversationCategory(conversationId: String) -> String? {
-        let sql = """
-        SELECT \(Conversation.CodingKeys.category.rawValue)
-        FROM \(Conversation.databaseTableName)
-        WHERE \(Conversation.CodingKeys.conversationId.rawValue) = ?
-        """
-        return db.select(with: sql, arguments: [conversationId])
+        db.select(column: Conversation.column(of: .category),
+                  from: Conversation.self,
+                  where: Conversation.column(of: .conversationId) == conversationId)
     }
     
     public func conversationList(limit: Int? = nil, circleId: String? = nil) -> [ConversationItem] {
@@ -363,6 +357,7 @@ public final class ConversationDAO: UserDatabaseDAO {
                 try participants.save(db)
                 db.afterNextTransactionCommit { (_) in
                     // Avoid potential deadlock
+                    // TODO: Nested transactions could be auto detected, make some assertion?
                     DispatchQueue.global().async {
                         completion(true)
                     }

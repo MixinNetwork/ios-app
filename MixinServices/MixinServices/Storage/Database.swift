@@ -161,8 +161,10 @@ extension Database {
                 request = request.limit(limit, offset: offset)
             }
             let rows = try Row.fetchCursor(db, request)
-            while let row = try rows.next() {
-                output.append(row[0])
+            while let row = try rows.next(), let value = row[0] {
+                // It's legit for row[0] to be NULL so unwrap it safely
+                // Wrong type is a programming error, unwrap it forcibly
+                output.append(value as! Value)
             }
             return output
         }

@@ -156,23 +156,6 @@ public final class ParticipantDAO: UserDatabaseDAO {
         }
     }
     
-    public func removeParticipant(conversationId: String) {
-        let userId = myUserId
-        db.write { (db) in
-            try Participant
-                .filter(Participant.column(of: .conversationId) == conversationId && Participant.column(of: .userId) == userId)
-                .deleteAll(db)
-            try Conversation
-                .filter(Conversation.column(of: .conversationId) == conversationId)
-                .updateAll(db, [Conversation.column(of: .status).set(to: ConversationStatus.QUIT.rawValue)])
-            db.afterNextTransactionCommit { (_) in
-                NotificationCenter.default.post(onMainThread: Self.participantDidChangeNotification,
-                                                object: self,
-                                                userInfo: [Self.UserInfoKey.conversationId: conversationId])
-            }
-        }
-    }
-    
     public func participants(conversationId: String, limit: Int? = nil) -> [Participant] {
         var sql = """
         \(Self.sqlQueryColumns)

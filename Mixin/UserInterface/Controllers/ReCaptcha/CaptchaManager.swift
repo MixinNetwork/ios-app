@@ -14,7 +14,6 @@ class CaptchaManager: NSObject {
     private weak var requestingViewController: UIViewController?
     
     private var webView: WKWebView?
-    private var captchaViewController: CaptchaViewController?
     private var completion: CompletionCallback?
     private var timer: Timer?
     
@@ -42,7 +41,6 @@ class CaptchaManager: NSObject {
         webView?.configuration.userContentController.removeScriptMessageHandler(forName: messageHandlerName)
         webView?.removeFromSuperview()
         webView = nil
-        captchaViewController = nil
         requestingViewController = nil
         completion = nil
     }
@@ -79,7 +77,7 @@ extension CaptchaManager: WKScriptMessageHandler {
             captchaViewController.load(webView: webView)
             requestingViewController.present(captchaViewController, animated: true, completion: nil)
         case .hCaptchaFailed:
-            captchaViewController?.dismiss(animated: true, completion: nil)
+            requestingViewController?.dismiss(animated: true, completion: nil)
             showAutoHiddenHud(style: .error, text: R.string.localizable.toast_captcha_timeout())
             completion?(.timedOut)
             clean()

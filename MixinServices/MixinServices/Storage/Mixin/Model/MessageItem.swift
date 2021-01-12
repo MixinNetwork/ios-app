@@ -274,7 +274,7 @@ extension MessageItem {
         guard userId == myUserId, status != MessageStatus.SENDING.rawValue else {
             return false
         }
-        guard SendMessageService.recallableSuffices.contains(where: category.hasSuffix) else {
+        guard category == MessageCategory.APP_CARD.rawValue || SendMessageService.recallableSuffices.contains(where: category.hasSuffix) else {
             return false
         }
         guard abs(createdAt.toUTCDate().timeIntervalSinceNow) < 3600 else {

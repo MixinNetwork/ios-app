@@ -208,9 +208,10 @@ extension Database {
             }
             let rows = try Row.fetchCursor(db, request)
             while let row = try rows.next() {
-                let key: UniqueStringPairs.Key = row[keyColumn.name]
-                let value: UniqueStringPairs.Value = row[valueColumn.name]
-                pairs[key] = value
+                guard let key: UniqueStringPairs.Key = row[keyColumn.name] else {
+                    continue
+                }
+                pairs[key] = row[valueColumn.name]
             }
             return pairs
         }

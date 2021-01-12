@@ -211,7 +211,10 @@ public final class UserDAO: UserDatabaseDAO {
         db.update(User.self,
                   assignments: [User.column(of: .muteUntil).set(to: muteUntil)],
                   where: User.column(of: .userId) == userId) { _ in
-            if let user = self.getUser(userId: userId) {
+            DispatchQueue.global().async {
+                guard let user = self.getUser(userId: userId) else {
+                    return
+                }
                 NotificationCenter.default.post(onMainThread: Self.userDidChangeNotification,
                                                 object: self,
                                                 userInfo: [Self.UserInfoKey.user: user])

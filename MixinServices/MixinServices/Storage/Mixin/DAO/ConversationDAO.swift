@@ -170,7 +170,7 @@ public final class ConversationDAO: UserDatabaseDAO {
             try ParticipantSession
                 .filter(ParticipantSession.column(of: .conversationId) == conversationId)
                 .deleteAll(db)
-            try ParticipantSession
+            try Participant
                 .filter(Participant.column(of: .conversationId) == conversationId)
                 .deleteAll(db)
             try db.execute(sql: "DELETE FROM \(Message.ftsTableName) WHERE conversation_id = ?",

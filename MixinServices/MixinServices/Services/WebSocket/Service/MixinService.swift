@@ -1,10 +1,13 @@
 import Foundation
 
 public class MixinService {
-
+    
     public enum UserInfoKey {
-        public static let messageId = "msg_id"
-        public static let conversationId = "conv_id"
+        public static let messageId = "mid"
+        public static let conversationId = "cid"
+        public static let userId = "uid"
+        public static let sessionId = "sid"
+        public static let progress = "prog"
     }
     
     public static let willRecallMessageNotification = Notification.Name(rawValue: "one.mixin.services.will.recall.msg")

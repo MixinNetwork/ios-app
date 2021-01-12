@@ -18,7 +18,7 @@ public final class BlazeMessageDAO {
     }
     
     func getMessageBlaze(messageId: String) -> MessageBlaze? {
-        TaskDatabase.current.select(where: Column(MessageBlaze.CodingKeys.messageId) == messageId)
+        TaskDatabase.current.select(where: MessageBlaze.column(of: .messageId) == messageId)
     }
     
     public func getBlazeMessageData(createdAt: String? = nil, limit: Int) -> [BlazeMessageData] {

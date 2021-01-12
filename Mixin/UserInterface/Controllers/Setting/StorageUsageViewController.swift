@@ -70,12 +70,14 @@ extension StorageUsageViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.storage_usage, for: indexPath)!
         let conversation = conversations[indexPath.row]
         if conversation.category == ConversationCategory.CONTACT.rawValue {
-            cell.avatarImageView.setImage(with: conversation.ownerAvatarUrl, userId: conversation.ownerId, name: conversation.ownerFullName)
+            cell.avatarImageView.setImage(with: conversation.ownerAvatarUrl ?? "",
+                                          userId: conversation.ownerId ?? "",
+                                          name: conversation.ownerFullName ?? "")
         } else {
-            cell.avatarImageView.setGroupImage(with: conversation.iconUrl)
+            cell.avatarImageView.setGroupImage(with: conversation.iconUrl ?? "")
         }
         cell.nameLabel.text = conversation.getConversationName()
-        cell.sizeLabel.text = VideoMessageViewModel.byteCountFormatter.string(fromByteCount: conversation.mediaSize)
+        cell.sizeLabel.text = VideoMessageViewModel.byteCountFormatter.string(fromByteCount: conversation.mediaSize ?? 0)
         return cell
     }
     

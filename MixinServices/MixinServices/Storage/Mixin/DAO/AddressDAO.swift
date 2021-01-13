@@ -32,9 +32,9 @@ public final class AddressDAO: UserDatabaseDAO {
     }
     
     public func deleteAddress(assetId: String, addressId: String) {
-        db.delete(Address.self,
-                  where: Address.column(of: .addressId) == addressId)
-        NotificationCenter.default.post(onMainThread: Self.addressDidChangeNotification, object: self)
+        db.delete(Address.self, where: Address.column(of: .addressId) == addressId) { _ in
+            NotificationCenter.default.post(onMainThread: Self.addressDidChangeNotification, object: self)
+        }
     }
     
 }

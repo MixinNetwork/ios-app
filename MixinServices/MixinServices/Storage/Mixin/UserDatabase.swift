@@ -64,27 +64,277 @@ public final class UserDatabase: Database {
         }
         
         migrator.registerMigration("create_table") { db in
-            try db.execute(sql: "CREATE TABLE IF NOT EXISTS addresses(type TEXT, address_id TEXT PRIMARY KEY, asset_id TEXT, destination TEXT, label TEXT, tag TEXT, fee TEXT, reserve TEXT, dust TEXT, updated_at TEXT)")
-            try db.execute(sql: "CREATE TABLE IF NOT EXISTS albums(album_id TEXT PRIMARY KEY, name TEXT, icon_url TEXT, created_at TEXT, update_at TEXT, user_id TEXT, category TEXT, description TEXT)")
-            try db.execute(sql: "CREATE TABLE IF NOT EXISTS apps(app_id TEXT PRIMARY KEY, app_number TEXT, redirect_uri TEXT, name TEXT, category TEXT, icon_url TEXT, capabilites BLOB, resource_patterns BLOB, home_uri TEXT, creator_id TEXT, updated_at TEXT)")
-            try db.execute(sql: "CREATE TABLE IF NOT EXISTS assets(asset_id TEXT PRIMARY KEY, type TEXT, symbol TEXT, name TEXT, icon_url TEXT, balance TEXT, destination TEXT, tag TEXT, price_btc TEXT, price_usd TEXT, change_usd TEXT, chain_id TEXT, confirmations INTEGER, asset_key TEXT, reserve TEXT)")
-            try db.execute(sql: "CREATE TABLE IF NOT EXISTS circle_conversations(circle_id TEXT, conversation_id TEXT, user_id TEXT, created_at TEXT, pin_time TEXT, PRIMARY KEY(conversation_id, circle_id))")
-            try db.execute(sql: "CREATE TABLE IF NOT EXISTS circles(circle_id TEXT PRIMARY KEY, name TEXT, created_at TEXT)")
-            try db.execute(sql: "CREATE TABLE IF NOT EXISTS conversations(conversation_id TEXT PRIMARY KEY, owner_id TEXT, category TEXT, name TEXT, icon_url TEXT, announcement TEXT, last_message_id TEXT, last_message_created_at TEXT, last_read_message_id TEXT, unseen_message_count INTEGER, status INTEGER, draft TEXT, mute_until TEXT, code_url TEXT, pin_time TEXT)")
-            try db.execute(sql: "CREATE TABLE IF NOT EXISTS favorite_apps(user_id TEXT, app_id TEXT, created_at TEXT, PRIMARY KEY(user_id, app_id))")
-            try db.execute(sql: "CREATE TABLE IF NOT EXISTS jobs(orderId INTEGER PRIMARY KEY AUTOINCREMENT, job_id TEXT, priority INTEGER, blaze_message BLOB, blaze_message_data BLOB, action TEXT, category TEXT, conversation_id TEXT, user_id TEXT, resend_message_id TEXT, message_id TEXT, status TEXT, session_id TEXT)")
-            try db.execute(sql: "CREATE TABLE IF NOT EXISTS message_mentions(message_id TEXT PRIMARY KEY, conversation_id TEXT, mentions BLOB, has_read INTEGER)")
-            try db.execute(sql: "CREATE TABLE IF NOT EXISTS messages(id TEXT PRIMARY KEY, conversation_id TEXT, user_id TEXT, category TEXT, content TEXT, media_url TEXT, media_mime_type TEXT, media_size INTEGER, media_duration INTEGER, media_width INTEGER, media_height INTEGER, media_hash TEXT, media_key BLOB, media_digest BLOB, media_status TEXT, media_waveform BLOB, media_local_id TEXT, thumb_image TEXT, thumb_url TEXT, status TEXT, action TEXT, participant_id TEXT, snapshot_id TEXT, name TEXT, sticker_id TEXT, shared_user_id TEXT, quote_message_id TEXT, quote_content BLOB, created_at TEXT)")
-            try db.execute(sql: "CREATE TABLE IF NOT EXISTS messages_history(message_id TEXT PRIMARY KEY)")
-            try db.execute(sql: "CREATE TABLE IF NOT EXISTS participant_session(conversation_id TEXT, user_id TEXT, session_id TEXT, sent_to_server INTEGER, created_at TEXT, PRIMARY KEY(conversation_id, user_id, session_id))")
-            try db.execute(sql: "CREATE TABLE IF NOT EXISTS participants(conversation_id TEXT, user_id TEXT, role TEXT, status INTEGER, created_at TEXT, PRIMARY KEY(conversation_id, user_id))")
-            try db.execute(sql: "CREATE TABLE IF NOT EXISTS resend_session_messages(message_id TEXT, user_id TEXT, session_id TEXT, status INTEGER, PRIMARY KEY(message_id, user_id, session_id))")
-            try db.execute(sql: "CREATE TABLE IF NOT EXISTS snapshots(snapshot_id TEXT PRIMARY KEY, type TEXT, asset_id TEXT, amount TEXT, opponent_id TEXT, transaction_hash TEXT, sender TEXT, receiver TEXT, memo TEXT, confirmations INTEGER, trace_id TEXT, created_at TEXT)")
-            try db.execute(sql: "CREATE TABLE IF NOT EXISTS sticker_relationships(album_id TEXT, sticker_id TEXT, created_at TEXT, PRIMARY KEY(album_id, sticker_id))")
-            try db.execute(sql: "CREATE TABLE IF NOT EXISTS stickers(sticker_id TEXT PRIMARY KEY, name TEXT, asset_url TEXT, asset_type TEXT, asset_width INTEGER, asset_height INTEGER, last_used_at TEXT)")
-            try db.execute(sql: "CREATE TABLE IF NOT EXISTS top_assets(asset_id TEXT PRIMARY KEY, type TEXT, symbol TEXT, name TEXT, icon_url TEXT, balance TEXT, destination TEXT, tag TEXT, price_btc TEXT, price_usd TEXT, change_usd TEXT, chain_id TEXT, confirmations INTEGER, asset_key TEXT, reserve TEXT)")
-            try db.execute(sql: "CREATE TABLE IF NOT EXISTS traces(trace_id TEXT PRIMARY KEY, asset_id TEXT, amount TEXT, opponent_id TEXT, destination TEXT, tag TEXT, snapshot_id TEXT, created_at TEXT)")
-            try db.execute(sql: "CREATE TABLE IF NOT EXISTS users(user_id TEXT PRIMARY KEY, full_name TEXT, biography TEXT, identity_number TEXT, avatar_url TEXT, phone TEXT, is_verified INTEGER, mute_until TEXT, app_id TEXT, relationship TEXT, created_at TEXT, is_scam INTEGER)")
+            let addresses = TableDefinition<Address>(constraints: nil, columns: [
+                .init(key: .type, constraints: "TEXT"),
+                .init(key: .addressId, constraints: "TEXT PRIMARY KEY"),
+                .init(key: .assetId, constraints: "TEXT"),
+                .init(key: .destination, constraints: "TEXT"),
+                .init(key: .label, constraints: "TEXT"),
+                .init(key: .tag, constraints: "TEXT"),
+                .init(key: .fee, constraints: "TEXT"),
+                .init(key: .reserve, constraints: "TEXT"),
+                .init(key: .dust, constraints: "TEXT"),
+                .init(key: .updatedAt, constraints: "TEXT"),
+            ])
+            try self.migrateTable(with: addresses, into: db)
+            
+            let albums = TableDefinition<Album>(constraints: nil, columns: [
+                .init(key: .albumId, constraints: "TEXT PRIMARY KEY"),
+                .init(key: .name, constraints: "TEXT"),
+                .init(key: .iconUrl, constraints: "TEXT"),
+                .init(key: .createdAt, constraints: "TEXT"),
+                .init(key: .updatedAt, constraints: "TEXT"),
+                .init(key: .userId, constraints: "TEXT"),
+                .init(key: .category, constraints: "TEXT"),
+                .init(key: .description, constraints: "TEXT"),
+            ])
+            try self.migrateTable(with: albums, into: db)
+            
+            let apps = TableDefinition<App>(constraints: nil, columns: [
+                .init(key: .appId, constraints: "TEXT PRIMARY KEY"),
+                .init(key: .appNumber, constraints: "TEXT"),
+                .init(key: .redirectUri, constraints: "TEXT"),
+                .init(key: .name, constraints: "TEXT"),
+                .init(key: .category, constraints: "TEXT"),
+                .init(key: .iconUrl, constraints: "TEXT"),
+                .init(key: .capabilities, constraints: "BLOB"),
+                .init(key: .resourcePatterns, constraints: "BLOB"),
+                .init(key: .homeUri, constraints: "TEXT"),
+                .init(key: .creatorId, constraints: "TEXT"),
+                .init(key: .updatedAt, constraints: "TEXT"),
+            ])
+            try self.migrateTable(with: apps, into: db)
+            
+            let assets = TableDefinition<Asset>(constraints: nil, columns: [
+                .init(key: .assetId, constraints: "TEXT PRIMARY KEY"),
+                .init(key: .type, constraints: "TEXT"),
+                .init(key: .symbol, constraints: "TEXT"),
+                .init(key: .name, constraints: "TEXT"),
+                .init(key: .iconUrl, constraints: "TEXT"),
+                .init(key: .balance, constraints: "TEXT"),
+                .init(key: .destination, constraints: "TEXT"),
+                .init(key: .tag, constraints: "TEXT"),
+                .init(key: .priceBtc, constraints: "TEXT"),
+                .init(key: .priceUsd, constraints: "TEXT"),
+                .init(key: .changeUsd, constraints: "TEXT"),
+                .init(key: .chainId, constraints: "TEXT"),
+                .init(key: .confirmations, constraints: "INTEGER"),
+                .init(key: .assetKey, constraints: "TEXT"),
+                .init(key: .reserve, constraints: "TEXT"),
+            ])
+            try self.migrateTable(with: assets, into: db)
+            
+            let circleConversations = TableDefinition<CircleConversation>(constraints: "PRIMARY KEY(conversation_id, circle_id)", columns: [
+                .init(key: .circleId, constraints: "TEXT"),
+                .init(key: .conversationId, constraints: "TEXT"),
+                .init(key: .userId, constraints: "TEXT"),
+                .init(key: .createdAt, constraints: "TEXT"),
+                .init(key: .pinTime, constraints: "TEXT"),
+            ])
+            try self.migrateTable(with: circleConversations, into: db)
+            
+            let circles = TableDefinition<Circle>(constraints: nil, columns: [
+                .init(key: .circleId, constraints: "TEXT PRIMARY KEY"),
+                .init(key: .name, constraints: "TEXT"),
+                .init(key: .createdAt, constraints: "TEXT"),
+            ])
+            try self.migrateTable(with: circles, into: db)
+            
+            let conversations = TableDefinition<Conversation>(constraints: nil, columns: [
+                .init(key: .conversationId, constraints: "TEXT PRIMARY KEY"),
+                .init(key: .ownerId, constraints: "TEXT"),
+                .init(key: .category, constraints: "TEXT"),
+                .init(key: .name, constraints: "TEXT"),
+                .init(key: .iconUrl, constraints: "TEXT"),
+                .init(key: .announcement, constraints: "TEXT"),
+                .init(key: .lastMessageId, constraints: "TEXT"),
+                .init(key: .lastMessageCreatedAt, constraints: "TEXT"),
+                .init(key: .lastReadMessageId, constraints: "TEXT"),
+                .init(key: .unseenMessageCount, constraints: "INTEGER"),
+                .init(key: .status, constraints: "INTEGER"),
+                .init(key: .draft, constraints: "TEXT"),
+                .init(key: .muteUntil, constraints: "TEXT"),
+                .init(key: .codeUrl, constraints: "TEXT"),
+                .init(key: .pinTime, constraints: "TEXT"),
+            ])
+            try self.migrateTable(with: conversations, into: db)
+            
+            let favoriteApps = TableDefinition<FavoriteApp>(constraints: "PRIMARY KEY(user_id, app_id)", columns: [
+                .init(key: .userId, constraints: "TEXT"),
+                .init(key: .appId, constraints: "TEXT"),
+                .init(key: .createdAt, constraints: "TEXT"),
+            ])
+            try self.migrateTable(with: favoriteApps, into: db)
+            
+            let jobs = TableDefinition<Job>(constraints: nil, columns: [
+                .init(key: .orderId, constraints: "INTEGER PRIMARY KEY AUTOINCREMENT"),
+                .init(key: .jobId, constraints: "TEXT"),
+                .init(key: .priority, constraints: "INTEGER"),
+                .init(key: .blazeMessage, constraints: "BLOB"),
+                .init(key: .blazeMessageData, constraints: "BLOB"),
+                .init(key: .action, constraints: "TEXT"),
+                .init(key: .category, constraints: "TEXT"),
+                .init(key: .conversationId, constraints: "TEXT"),
+                .init(key: .userId, constraints: "TEXT"),
+                .init(key: .resendMessageId, constraints: "TEXT"),
+                .init(key: .messageId, constraints: "TEXT"),
+                .init(key: .status, constraints: "TEXT"),
+                .init(key: .sessionId, constraints: "TEXT"),
+            ])
+            try self.migrateTable(with: jobs, into: db)
+            
+            let messageMentions = TableDefinition<MessageMention>(constraints: nil, columns: [
+                .init(key: .messageId, constraints: "TEXT PRIMARY KEY"),
+                .init(key: .conversationId, constraints: "TEXT"),
+                .init(key: .mentionsJson, constraints: "BLOB"),
+                .init(key: .hasRead, constraints: "INTEGER"),
+            ])
+            try self.migrateTable(with: messageMentions, into: db)
+            
+            let messages = TableDefinition<Message>(constraints: nil, columns: [
+                .init(key: .messageId, constraints: "TEXT PRIMARY KEY"),
+                .init(key: .conversationId, constraints: "TEXT"),
+                .init(key: .userId, constraints: "TEXT"),
+                .init(key: .category, constraints: "TEXT"),
+                .init(key: .content, constraints: "TEXT"),
+                .init(key: .mediaUrl, constraints: "TEXT"),
+                .init(key: .mediaMimeType, constraints: "TEXT"),
+                .init(key: .mediaSize, constraints: "INTEGER"),
+                .init(key: .mediaDuration, constraints: "INTEGER"),
+                .init(key: .mediaWidth, constraints: "INTEGER"),
+                .init(key: .mediaHeight, constraints: "INTEGER"),
+                .init(key: .mediaHash, constraints: "TEXT"),
+                .init(key: .mediaKey, constraints: "BLOB"),
+                .init(key: .mediaDigest, constraints: "BLOB"),
+                .init(key: .mediaStatus, constraints: "TEXT"),
+                .init(key: .mediaWaveform, constraints: "BLOB"),
+                .init(key: .mediaLocalIdentifier, constraints: "TEXT"),
+                .init(key: .thumbImage, constraints: "TEXT"),
+                .init(key: .thumbUrl, constraints: "TEXT"),
+                .init(key: .status, constraints: "TEXT"),
+                .init(key: .action, constraints: "TEXT"),
+                .init(key: .participantId, constraints: "TEXT"),
+                .init(key: .snapshotId, constraints: "TEXT"),
+                .init(key: .name, constraints: "TEXT"),
+                .init(key: .stickerId, constraints: "TEXT"),
+                .init(key: .sharedUserId, constraints: "TEXT"),
+                .init(key: .quoteMessageId, constraints: "TEXT"),
+                .init(key: .quoteContent, constraints: "BLOB"),
+                .init(key: .createdAt, constraints: "TEXT"),
+            ])
+            try self.migrateTable(with: messages, into: db)
+            
+            let messageHistory = TableDefinition<MessageHistory>(constraints: nil, columns: [
+                .init(key: .messageId, constraints: "TEXT PRIMARY KEY"),
+            ])
+            try self.migrateTable(with: messageHistory, into: db)
+            
+            let participantSession = TableDefinition<ParticipantSession>(constraints: "PRIMARY KEY(conversation_id, user_id, session_id)", columns: [
+                .init(key: .conversationId, constraints: "TEXT"),
+                .init(key: .userId, constraints: "TEXT"),
+                .init(key: .sessionId, constraints: "TEXT"),
+                .init(key: .sentToServer, constraints: "INTEGER"),
+                .init(key: .createdAt, constraints: "TEXT"),
+            ])
+            try self.migrateTable(with: participantSession, into: db)
+            
+            let participants = TableDefinition<Participant>(constraints: "PRIMARY KEY(conversation_id, user_id)", columns: [
+                .init(key: .conversationId, constraints: "TEXT"),
+                .init(key: .userId, constraints: "TEXT"),
+                .init(key: .role, constraints: "TEXT"),
+                .init(key: .status, constraints: "INTEGER"),
+                .init(key: .createdAt, constraints: "TEXT"),
+            ])
+            try self.migrateTable(with: participants, into: db)
+            
+            let resendSessionMessage = TableDefinition<ResendSessionMessage>(constraints: "PRIMARY KEY(message_id, user_id, session_id)", columns: [
+                .init(key: .messageId, constraints: "TEXT"),
+                .init(key: .userId, constraints: "TEXT"),
+                .init(key: .sessionId, constraints: "TEXT"),
+                .init(key: .status, constraints: "INTEGER"),
+            ])
+            try self.migrateTable(with: participants, into: db)
+            
+            let snapshots = TableDefinition<Snapshot>(constraints: nil, columns: [
+                .init(key: .snapshotId, constraints: "TEXT PRIMARY KEY"),
+                .init(key: .type, constraints: "TEXT"),
+                .init(key: .assetId, constraints: "TEXT"),
+                .init(key: .amount, constraints: "TEXT"),
+                .init(key: .opponentId, constraints: "TEXT"),
+                .init(key: .transactionHash, constraints: "TEXT"),
+                .init(key: .sender, constraints: "TEXT"),
+                .init(key: .receiver, constraints: "TEXT"),
+                .init(key: .memo, constraints: "TEXT"),
+                .init(key: .confirmations, constraints: "INTEGER"),
+                .init(key: .traceId, constraints: "TEXT"),
+                .init(key: .createdAt, constraints: "TEXT"),
+            ])
+            try self.migrateTable(with: snapshots, into: db)
+            
+            let stickerRelationships = TableDefinition<StickerRelationship>(constraints: "PRIMARY KEY(album_id, sticker_id)", columns: [
+                .init(key: .albumId, constraints: "TEXT"),
+                .init(key: .stickerId, constraints: "TEXT"),
+                .init(key: .createdAt, constraints: "TEXT"),
+            ])
+            try self.migrateTable(with: stickerRelationships, into: db)
+            
+            let stickers = TableDefinition<Sticker>(constraints: nil, columns: [
+                .init(key: .stickerId, constraints: "TEXT PRIMARY KEY"),
+                .init(key: .name, constraints: "TEXT"),
+                .init(key: .assetUrl, constraints: "TEXT"),
+                .init(key: .assetType, constraints: "TEXT"),
+                .init(key: .assetWidth, constraints: "INTEGER"),
+                .init(key: .assetHeight, constraints: "INTEGER"),
+                .init(key: .lastUseAt, constraints: "TEXT"),
+            ])
+            try self.migrateTable(with: stickers, into: db)
+            
+            let topAssets = TableDefinition<TopAsset>(constraints: nil, columns: [
+                .init(key: .assetId, constraints: "TEXT PRIMARY KEY"),
+                .init(key: .type, constraints: "TEXT"),
+                .init(key: .symbol, constraints: "TEXT"),
+                .init(key: .name, constraints: "TEXT"),
+                .init(key: .iconUrl, constraints: "TEXT"),
+                .init(key: .balance, constraints: "TEXT"),
+                .init(key: .destination, constraints: "TEXT"),
+                .init(key: .tag, constraints: "TEXT"),
+                .init(key: .priceBtc, constraints: "TEXT"),
+                .init(key: .priceUsd, constraints: "TEXT"),
+                .init(key: .changeUsd, constraints: "TEXT"),
+                .init(key: .chainId, constraints: "TEXT"),
+                .init(key: .confirmations, constraints: "INTEGER"),
+                .init(key: .assetKey, constraints: "TEXT"),
+                .init(key: .reserve, constraints: "TEXT"),
+            ])
+            try self.migrateTable(with: topAssets, into: db)
+            
+            let traces = TableDefinition<Trace>(constraints: nil, columns: [
+                .init(key: .traceId, constraints: "TEXT PRIMARY KEY"),
+                .init(key: .assetId, constraints: "TEXT"),
+                .init(key: .amount, constraints: "TEXT"),
+                .init(key: .opponentId, constraints: "TEXT"),
+                .init(key: .destination, constraints: "TEXT"),
+                .init(key: .tag, constraints: "TEXT"),
+                .init(key: .snapshotId, constraints: "TEXT"),
+                .init(key: .createdAt, constraints: "TEXT"),
+            ])
+            try self.migrateTable(with: topAssets, into: db)
+            
+            let users = TableDefinition<User>(constraints: nil, columns: [
+                .init(key: .userId, constraints: "TEXT PRIMARY KEY"),
+                .init(key: .fullName, constraints: "TEXT"),
+                .init(key: .biography, constraints: "TEXT"),
+                .init(key: .identityNumber, constraints: "TEXT"),
+                .init(key: .avatarUrl, constraints: "TEXT"),
+                .init(key: .phone, constraints: "TEXT"),
+                .init(key: .isVerified, constraints: "INTEGER"),
+                .init(key: .muteUntil, constraints: "TEXT"),
+                .init(key: .appId, constraints: "TEXT"),
+                .init(key: .relationship, constraints: "TEXT"),
+                .init(key: .createdAt, constraints: "TEXT"),
+                .init(key: .isScam, constraints: "INTEGER"),
+            ])
+            try self.migrateTable(with: users, into: db)
             
             try db.execute(sql: "CREATE INDEX IF NOT EXISTS conversations_indexs ON conversations(pin_time, last_message_created_at)")
             try db.execute(sql: "CREATE UNIQUE INDEX IF NOT EXISTS jobs_index_id ON jobs(job_id)")

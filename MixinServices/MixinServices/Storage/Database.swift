@@ -65,6 +65,32 @@ open class Database {
         }
     }
     
+    @discardableResult
+    public func execute(
+        sql: String,
+        arguments: StatementArguments = StatementArguments()
+    ) -> Bool {
+        write { (db) in
+            try db.execute(sql: sql, arguments: arguments)
+        }
+    }
+    
+    // Only use for migrating from WCDB. See comments in *TableDefinition*
+    internal func migrateTable<Record: TableRecord & DatabaseColumnConvertible>(
+        with tableDefinition: TableDefinition<Record>,
+        into db: GRDB.Database
+    ) throws {
+        if try db.tableExists(Record.databaseTableName) {
+            let existedColumns = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(\(Record.databaseTableName.quotedDatabaseIdentifier));")
+            let existedColumnNames = Set(existedColumns.map(\.name))
+            if let sql = tableDefinition.alterTableSQL(existedColumnNames: existedColumnNames) {
+                try db.execute(sql: sql)
+            }
+        } else {
+            try db.execute(sql: tableDefinition.createTableSQL())
+        }
+    }
+    
 }
 
 // MARK: - Metadata Fetching
@@ -321,12 +347,6 @@ extension Database {
         }
     }
     
-    @discardableResult
-    public func execute(sql: String, arguments: StatementArguments = StatementArguments()) -> Bool {
-        write { (db) in
-            try db.execute(sql: sql, arguments: arguments)
-        }
-    }
 }
 
 // MARK: - Record Deletion

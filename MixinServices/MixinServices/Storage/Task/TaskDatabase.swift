@@ -21,7 +21,13 @@ public class TaskDatabase: Database {
         var migrator = DatabaseMigrator()
         
         migrator.registerMigration("create_table") { db in
-            try db.execute(sql: "CREATE TABLE IF NOT EXISTS messages_blaze(_id TEXT PRIMARY KEY, message BLOB, created_at TEXT)")
+            let messageBlaze = TableDefinition<MessageBlaze>(constraints: nil, columns: [
+                .init(key: .messageId, constraints: "TEXT PRIMARY KEY"),
+                .init(key: .message, constraints: "BLOB"),
+                .init(key: .createdAt, constraints: "TEXT"),
+            ])
+            try self.migrateTable(with: messageBlaze, into: db)
+            
             try db.execute(sql: "CREATE INDEX IF NOT EXISTS messages_blaze_index ON messages_blaze(created_at)")
         }
         

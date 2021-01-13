@@ -675,11 +675,13 @@ extension MessageDAO {
             return
         }
         
-        // FTS initialization writes index with barrier, which postpone any writing after it
-        // Embed fts initialization checking inside writing pool could keep the flag in sync
-        if AppGroupUserDefaults.Database.isFTSInitialized {
-            db.execute(sql: "INSERT INTO \(Message.ftsTableName) VALUES (?, ?, ?, ?)",
-                           arguments: [message.messageId, message.conversationId, message.content, message.name])
+        db.write { (db) in
+            // FTS initialization writes index with barrier, which postpone any writing after it
+            // Embed fts initialization checking inside writing pool could keep the flag in sync
+            if AppGroupUserDefaults.Database.isFTSInitialized {
+                try db.execute(sql: "INSERT INTO \(Message.ftsTableName) VALUES (?, ?, ?, ?)",
+                               arguments: [message.messageId, message.conversationId, message.content, message.name])
+            }
         }
         let userInfo: [String: Any] = [
             MessageDAO.UserInfoKey.conversationId: message.conversationId,

@@ -62,7 +62,7 @@ public final class ConversationDAO: UserDatabaseDAO {
     
     public func getCategoryStorages(conversationId: String) -> [ConversationCategoryStorage] {
         let sql = """
-        SELECT category, sum(media_size) as mediaSize, count(id) as messageCount  FROM messages
+        SELECT category, sum(media_size) as mediaSize, count(id) as messageCount FROM messages
         WHERE conversation_id = ? AND media_status = 'DONE' GROUP BY category
         """
         return db.select(with: sql, arguments: [conversationId])
@@ -159,7 +159,7 @@ public final class ConversationDAO: UserDatabaseDAO {
     }
     
     public func exitGroup(conversationId: String) {
-        try! db.pool.write { (db) -> Void in
+        db.write { db in
             let assignments = [
                 Conversation.column(of: .unseenMessageCount).set(to: 0),
                 Conversation.column(of: .status).set(to: ConversationStatus.QUIT.rawValue)
@@ -189,7 +189,7 @@ public final class ConversationDAO: UserDatabaseDAO {
     public func deleteChat(conversationId: String) {
         let mediaUrls = MessageDAO.shared.getMediaUrls(conversationId: conversationId, categories: MessageCategory.allMediaCategories)
         
-        try! db.pool.write { (db) -> Void in
+        db.write { db in
             try Message
                 .filter(Message.column(of: .conversationId) == conversationId)
                 .deleteAll(db)
@@ -217,7 +217,7 @@ public final class ConversationDAO: UserDatabaseDAO {
     public func clearChat(conversationId: String) {
         let mediaUrls = MessageDAO.shared.getMediaUrls(conversationId: conversationId, categories: MessageCategory.allMediaCategories)
         
-        try! db.pool.write({ (db) -> Void in
+        db.write { db in
             try Message
                 .filter(Message.column(of: .conversationId) == conversationId)
                 .deleteAll(db)
@@ -232,7 +232,7 @@ public final class ConversationDAO: UserDatabaseDAO {
                 let change = ConversationChange(conversationId: conversationId, action: .reload)
                 NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: change)
             }
-        })
+        }
     }
     
     public func getConversation(conversationId: String) -> ConversationItem? {

@@ -6,11 +6,10 @@ public final class CircleDAO: UserDatabaseDAO {
     
     public static let circleDidChangeNotification = Notification.Name("one.mixin.messenger.circle.did_change")
     
-    public func insertOrReplace(circle: CircleResponse) {
+    public func save(circle: CircleResponse) {
         let circle = Circle(circleId: circle.circleId, name: circle.name, createdAt: circle.createdAt)
-        db.save(circle)
-        DispatchQueue.main.async {
-            NotificationCenter.default.post(name: Self.circleDidChangeNotification, object: self)
+        db.save(circle) { _ in
+            NotificationCenter.default.post(onMainThread: Self.circleDidChangeNotification, object: nil)
         }
     }
     
@@ -61,21 +60,21 @@ public final class CircleDAO: UserDatabaseDAO {
     }
     
     public func replaceAllCircles(with circles: [Circle]) {
-        try! db.pool.write { (db) -> Void in
+        db.write { db in
             try Circle.deleteAll(db)
             try circles.save(db)
         }
     }
     
     public func delete(circleId: String) {
-        try! db.pool.write({ (db) -> Void in
+        db.write { db in
             try Circle
                 .filter(Circle.column(of: .circleId) == circleId)
                 .deleteAll(db)
             try CircleConversation
                 .filter(CircleConversation.column(of: .circleId) == circleId)
                 .deleteAll(db)
-        })
+        }
     }
     
     public func circles(of conversationId: String, userId: String?) -> [CircleItem] {

@@ -27,7 +27,7 @@ class LoadMoreSnapshotsJob: RefreshSnapshotsJob {
                 LoadMoreSnapshotsJob.jobIdUserInfoKey: getJobId(),
                 LoadMoreSnapshotsJob.didLoadEarliestSnapshotUserInfoKey: snapshots.count < limit
             ]
-            SnapshotDAO.shared.insertOrReplaceSnapshots(snapshots: snapshots, userInfo: userInfo)
+            SnapshotDAO.shared.saveSnapshots(snapshots: snapshots, userInfo: userInfo)
             RefreshSnapshotsJob.setOffset(snapshots.last?.createdAt, for: category)
         case let .failure(error):
             throw error

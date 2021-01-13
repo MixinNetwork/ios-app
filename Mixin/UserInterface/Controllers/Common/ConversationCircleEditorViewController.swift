@@ -93,7 +93,7 @@ class ConversationCircleEditorViewController: UITableViewController {
             switch result {
             case .success(let circle):
                 DispatchQueue.global().async {
-                    CircleDAO.shared.insertOrReplace(circle: circle)
+                    CircleDAO.shared.save(circle: circle)
                     self.addThisConversationIntoCircle(circleId: circle.circleId, hud: hud)
                 }
             case .failure(let error):
@@ -108,7 +108,7 @@ class ConversationCircleEditorViewController: UITableViewController {
             switch result {
             case .success(let objects):
                 DispatchQueue.global().async {
-                    CircleConversationDAO.shared.insertOrReplace(circleId: circleId, objects: objects)
+                    CircleConversationDAO.shared.save(circleId: circleId, objects: objects)
                     DispatchQueue.main.sync {
                         self?.reloadData()
                         hud.set(style: .notification, text: R.string.localizable.toast_saved())
@@ -249,7 +249,7 @@ extension ConversationCircleEditorViewController: CircleCellDelegate {
                 switch result {
                 case .success(let objects):
                     DispatchQueue.global().async {
-                        CircleConversationDAO.shared.insertOrReplace(circleId: circle.circleId, objects: objects)
+                        CircleConversationDAO.shared.save(circleId: circle.circleId, objects: objects)
                         DispatchQueue.main.sync {
                             hud.set(style: .notification, text: R.string.localizable.toast_saved())
                             hud.scheduleAutoHidden()

@@ -33,18 +33,14 @@ public final class ParticipantSessionDAO: UserDatabaseDAO {
         WHERE p.user_id = ? AND ifnull(u.app_id, '') = ''
         """
         let formatted = String(format: sql, userId, sessionId, Date().toUTCString())
-        db.write { (db) in
-            try db.execute(sql: sql, arguments: [userId])
-        }
+        db.execute(sql: sql, arguments: [userId])
     }
 
     public func destorySession(userId: String, sessionId: String) {
         let sql = """
         DELETE FROM participant_session WHERE user_id = ? AND session_id = ?
         """
-        db.write { (db) in
-            try db.execute(sql: sql, arguments: [userId, sessionId])
-        }
+        db.execute(sql: sql, arguments: [userId, sessionId])
     }
 
     public func syncConversationParticipantSession(conversation: ConversationResponse) {

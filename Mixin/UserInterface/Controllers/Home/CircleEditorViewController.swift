@@ -189,7 +189,7 @@ extension CircleEditorViewController: ContainerViewControllerDelegate {
             switch result {
             case let .success(circles):
                 DispatchQueue.global().async {
-                    CircleConversationDAO.shared.insertOrReplace(circleId: circleId, objects: circles, sendNotificationAfterFinished: false)
+                    CircleConversationDAO.shared.save(circleId: circleId, objects: circles, sendNotificationAfterFinished: false)
                     CircleConversationDAO.shared.delete(circleId: circleId, conversationIds: removeMembers.map { $0.conversationId })
                     DispatchQueue.main.sync {
                         hud.set(style: .notification, text: R.string.localizable.toast_saved())

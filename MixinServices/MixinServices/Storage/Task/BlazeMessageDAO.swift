@@ -8,7 +8,7 @@ public final class BlazeMessageDAO {
         TaskDatabase.current.recordExists(in: MessageBlaze.self, where: MessageBlaze.column(of: .messageId) == data.messageId)
     }
     
-    public func insertOrReplace(messageId: String, conversationId: String, data: Data, createdAt: String) -> Bool {
+    public func save(messageId: String, conversationId: String, data: Data, createdAt: String) -> Bool {
         let msg = MessageBlaze(messageId: messageId, message: data, createdAt: createdAt)
         return TaskDatabase.current.save(msg)
     }

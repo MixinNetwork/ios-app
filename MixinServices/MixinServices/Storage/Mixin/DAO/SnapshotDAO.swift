@@ -21,8 +21,7 @@ public final class SnapshotDAO: UserDatabaseDAO {
             db.afterNextTransactionCommit { (db) in
                 snapshotItem = try? SnapshotItem.fetchOne(db,
                                                           sql: SnapshotDAO.sqlQueryById,
-                                                          arguments: [snapshot.snapshotId],
-                                                          adapter: nil)
+                                                          arguments: [snapshot.snapshotId])
             }
         }
         return snapshotItem
@@ -32,7 +31,7 @@ public final class SnapshotDAO: UserDatabaseDAO {
         let additionalCondition: String?
         var additionalArguments: [String: String] = [:]
         if let assetId = assetId {
-            additionalCondition = "snapshots.asset_id = :asset_id"
+            additionalCondition = " AND s.asset_id = :asset_id"
             additionalArguments["asset_id"] = assetId
         } else {
             additionalCondition = nil
@@ -50,7 +49,7 @@ public final class SnapshotDAO: UserDatabaseDAO {
                                                          sort: sort,
                                                          filter: filter,
                                                          limit: limit,
-                                                         additionalCondition: "snapshots.opponent_id = :opponent_id",
+                                                         additionalCondition: " AND s.opponent_id = :opponent_id",
                                                          additionalArguments: ["opponent_id": opponentId])
     }
     
@@ -62,7 +61,7 @@ public final class SnapshotDAO: UserDatabaseDAO {
         db.select(with: SnapshotDAO.sqlQueryByTrace, arguments: [traceId])
     }
     
-    public func insertOrReplaceSnapshots(snapshots: [Snapshot], userInfo: [AnyHashable: Any]? = nil) {
+    public func saveSnapshots(snapshots: [Snapshot], userInfo: [AnyHashable: Any]? = nil) {
         db.save(snapshots) { (db) in
             NotificationCenter.default.post(onMainThread: SnapshotDAO.snapshotDidChangeNotification, object: self, userInfo: userInfo)
         }
@@ -91,45 +90,43 @@ extension SnapshotDAO {
     
     private func getSnapshotsAndRefreshCorrespondingAssetIfNeeded(below location: SnapshotItem? = nil, sort: Snapshot.Sort, filter: Snapshot.Filter, limit: Int, additionalCondition: String?, additionalArguments: [String: String]) -> [SnapshotItem] {
         var sql = """
-        SELECT snapshots.snapshot_id, snapshots.type, snapshots.asset_id, snapshots.amount,
-                snapshots.opponent_id, snapshots.transaction_hash, snapshots.sender, snapshots.receiver,
-                snapshots.memo, snapshots.confirmations, snapshots.trace_id, snapshots.created_at, assets.symbol,
-                users.user_id, users.full_name, users.avatar_url, users.identity_number
-        FROM (snapshots LEFT JOIN assets ON (snapshots.asset_id = assets.asset_id)
-                        LEFT JOIN users ON (snapshots.opponent_id = users.user_id))
+        SELECT s.snapshot_id, s.type, s.asset_id, s.amount,
+                s.opponent_id, s.transaction_hash, s.sender, s.receiver,
+                s.memo, s.confirmations, s.trace_id, s.created_at, a.symbol,
+                u.user_id, u.full_name, u.avatar_url, u.identity_number
+        FROM snapshots s
+        LEFT JOIN assets a ON s.asset_id = a.asset_id
+        LEFT JOIN users u ON s.opponent_id = u.user_id
+        WHERE 1 = 1
         """
         
         var conditions: [String] = []
         if let condition = additionalCondition {
-            conditions.append(condition)
+            sql += condition
         }
         if let location = location {
             switch sort {
             case .createdAt:
-                conditions.append("snapshots.created_at < :location_created_at")
+                sql += " AND s.created_at < :location_created_at"
             case .amount:
-                let absAmount = "ABS(snapshots.amount)"
+                let absAmount = "ABS(s.amount)"
                 let locationAbsAmount = "ABS(:location_amount)"
-                let condition = "\(absAmount) < \(locationAbsAmount) OR (\(absAmount) = \(locationAbsAmount) AND snapshots.created_at < :location_created_at)"
-                conditions.append(condition)
+                sql += " AND (\(absAmount) < \(locationAbsAmount) OR (\(absAmount) = \(locationAbsAmount) AND s.created_at < :location_created_at))"
             }
         }
         if filter != .all {
             let types = filter.snapshotTypes.map(\.rawValue).joined(separator: "', '")
-            conditions.append("snapshots.type IN('\(types)')")
-        }
-        if !conditions.isEmpty {
-            sql += "\nWHERE (\(conditions.joined(separator: ") AND (")))"
+            sql += " AND s.type IN('\(types)')"
         }
         
         switch sort {
         case .createdAt:
-            sql += "\nORDER BY snapshots.created_at DESC"
+            sql += " ORDER BY s.created_at DESC"
         case .amount:
-            sql += "\nORDER BY ABS(snapshots.amount) DESC, snapshots.created_at DESC"
+            sql += " ORDER BY ABS(s.amount) DESC, s.created_at DESC"
         }
         
-        sql += "\nLIMIT \(limit)"
+        sql += " LIMIT \(limit)"
         
         var arguments: [String: String] = [:]
         arguments["location_created_at"] = location?.createdAt

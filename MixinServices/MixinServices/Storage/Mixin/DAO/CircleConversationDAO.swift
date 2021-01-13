@@ -43,8 +43,8 @@ final public class CircleConversationDAO: UserDatabaseDAO {
         }
     }
     
-    public func insertOrReplace(circleId: String, objects: [CircleConversation], sendNotificationAfterFinished: Bool = true) {
-        db.save(objects) { (_) in
+    public func save(circleId: String, objects: [CircleConversation], sendNotificationAfterFinished: Bool = true) {
+        db.save(objects) { _ in
             if sendNotificationAfterFinished {
                 let userInfo = [Self.circleIdUserInfoKey: circleId]
                 NotificationCenter.default.post(onMainThread: Self.circleConversationsDidChangeNotification, object: self, userInfo: userInfo)
@@ -55,17 +55,19 @@ final public class CircleConversationDAO: UserDatabaseDAO {
     public func delete(circleId: String, conversationId: String) {
         let condition: SQLSpecificExpressible = CircleConversation.column(of: .circleId) == circleId
             && CircleConversation.column(of: .conversationId) == conversationId
-        db.delete(CircleConversation.self, where: condition)
-        let userInfo = [Self.circleIdUserInfoKey: circleId]
-        NotificationCenter.default.post(onMainThread: Self.circleConversationsDidChangeNotification, object: self, userInfo: userInfo)
+        db.delete(CircleConversation.self, where: condition) { _ in
+            let userInfo = [Self.circleIdUserInfoKey: circleId]
+            NotificationCenter.default.post(onMainThread: Self.circleConversationsDidChangeNotification, object: self, userInfo: userInfo)
+        }
     }
     
     public func delete(circleId: String, conversationIds: [String]) {
         let condition: SQLSpecificExpressible = CircleConversation.column(of: .circleId) == circleId
             && conversationIds.contains(CircleConversation.column(of: .conversationId))
-        db.delete(CircleConversation.self, where: condition)
-        let userInfo = [Self.circleIdUserInfoKey: circleId]
-        NotificationCenter.default.post(onMainThread: Self.circleConversationsDidChangeNotification, object: self, userInfo: userInfo)
+        db.delete(CircleConversation.self, where: condition) { _ in
+            let userInfo = [Self.circleIdUserInfoKey: circleId]
+            NotificationCenter.default.post(onMainThread: Self.circleConversationsDidChangeNotification, object: self, userInfo: userInfo)
+        }
     }
     
 }

@@ -108,7 +108,7 @@ public class RefreshAssetsJob: AsynchronousJob {
                         return
                     }
                     AppGroupUserDefaults.Wallet.assetTransactionsOffset[assetId] = snapshots.last?.createdAt
-                    SnapshotDAO.shared.insertOrReplaceSnapshots(snapshots: snapshots)
+                    SnapshotDAO.shared.saveSnapshots(snapshots: snapshots)
                 }
             case let .failure(error):
                 reporter.report(error: error)

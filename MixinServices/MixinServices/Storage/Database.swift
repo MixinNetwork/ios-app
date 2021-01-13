@@ -321,6 +321,12 @@ extension Database {
         }
     }
     
+    @discardableResult
+    public func execute(sql: String, arguments: StatementArguments = StatementArguments()) -> Bool {
+        write { (db) in
+            try db.execute(sql: sql, arguments: arguments)
+        }
+    }
 }
 
 // MARK: - Record Deletion

@@ -85,9 +85,9 @@ public final class ParticipantDAO: UserDatabaseDAO {
     
     public func getNeedSyncParticipantIds(database: GRDB.Database, conversationId: String) throws -> [String] {
         let sql = """
-        SELECT participants.user_id
-        FROM (participants LEFT JOIN users ON (users.user_id = participants.user_id))
-        WHERE (((participants.conversation_id = ?) AND (users.identity_number ISNULL)) AND (participants.user_id != ?))
+        SELECT p.user_id FROM participants p
+        LEFT JOIN users u ON u.user_id = p.user_id
+        WHERE p.conversation_id = ? AND u.identity_number IS NULL AND p.user_id != ?
         """
         return try String.fetchAll(database, sql: sql, arguments: [conversationId, myUserId], adapter: nil)
     }

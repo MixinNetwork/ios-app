@@ -63,7 +63,7 @@ public class ReceiveMessageService: MixinService {
                 if blazeMessageData.userId == myUserId && blazeMessageData.category.isEmpty {
                     MessageDAO.shared.updateMessageStatus(messageId: messageId, status: status, from: blazeMessage.action)
                 } else {
-                    guard BlazeMessageDAO.shared.insertOrReplace(messageId: messageId, conversationId: blazeMessageData.conversationId, data: data, createdAt: blazeMessageData.createdAt) else {
+                    guard BlazeMessageDAO.shared.save(messageId: messageId, conversationId: blazeMessageData.conversationId, data: data, createdAt: blazeMessageData.createdAt) else {
                         return
                     }
                     ReceiveMessageService.shared.processReceiveMessages()
@@ -982,7 +982,7 @@ extension ReceiveMessageService {
             if let userId = systemCircle.userId {
                 syncUser(userId: userId)
             }
-            CircleConversationDAO.shared.insertOrReplace(circleId: systemCircle.circleId, objects: [circleConversation])
+            CircleConversationDAO.shared.save(circleId: systemCircle.circleId, objects: [circleConversation])
         } else if systemCircle.action == SystemCircleMessageAction.REMOVE.rawValue {
             guard let conversationId = systemCircle.makeConversationIdIfNeeded() else {
                 return
@@ -1014,7 +1014,7 @@ extension ReceiveMessageService {
             SnapshotDAO.shared.removePendingDeposits(assetId: snapshot.assetId, transactionHash: transactionHash)
         }
 
-        SnapshotDAO.shared.insertOrReplaceSnapshots(snapshots: [snapshot])
+        SnapshotDAO.shared.saveSnapshots(snapshots: [snapshot])
         let message = Message.createMessage(snapshotMesssage: snapshot, data: data)
         MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
     }

@@ -157,12 +157,7 @@ extension Database {
             if let condition = condition {
                 request = request.filter(condition)
             }
-            let rows = try Row.fetchCursor(db, request)
-            if let row = try rows.next() {
-                return row[0]
-            } else {
-                return nil
-            }
+            return try Value.fetchOne(db, request)
         }
     }
     
@@ -175,7 +170,6 @@ extension Database {
         limit: Int? = nil
     ) -> [Value] {
         try! pool.read { (db) -> [Value] in
-            var output: [Value] = []
             var request = Record.select([column])
             if let condition = condition {
                 request = request.filter(condition)
@@ -186,13 +180,7 @@ extension Database {
             if let limit = limit {
                 request = request.limit(limit, offset: offset)
             }
-            let rows = try Row.fetchCursor(db, request)
-            while let row = try rows.next(), let value = row[0] {
-                // It's legit for row[0] to be NULL so unwrap it safely
-                // Wrong type is a programming error, unwrap it forcibly
-                output.append(value as! Value)
-            }
-            return output
+            return try Value.fetchAll(db, request)
         }
     }
     

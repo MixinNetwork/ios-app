@@ -302,7 +302,8 @@ public enum MessageCategory: String, Decodable {
         .SIGNAL_DATA, .PLAIN_DATA
     ]
     
-    public static let ftsAvailableCategorySequence = "('" + MessageCategory.ftsAvailable.map(\.rawValue).joined(separator: "', '") + "')"
+    public static let ftsAvailableCategoryStrings: Set<String> = Set(ftsAvailable.map(\.rawValue))
+    public static let ftsAvailableCategorySequence = "('" + ftsAvailableCategoryStrings.joined(separator: "', '") + "')"
     
 }
 

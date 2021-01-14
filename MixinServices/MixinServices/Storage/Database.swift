@@ -75,9 +75,9 @@ open class Database {
         }
     }
     
-    // Only use for migrating from WCDB. See comments in *WCDBMigratableTableDefinition*
+    // Only use for migration. See comments in *ColumnMigratableTableDefinition*
     internal func migrateTable(
-        with table: WCDBTableMigratable,
+        with table: ColumnMigratable,
         into db: GRDB.Database
     ) throws {
         if try db.tableExists(table.tableName) {

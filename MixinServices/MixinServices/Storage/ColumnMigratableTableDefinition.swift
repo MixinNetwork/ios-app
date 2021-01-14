@@ -1,19 +1,19 @@
 import Foundation
 import GRDB
 
-protocol WCDBTableMigratable {
+protocol ColumnMigratable {
     var tableName: String { get }
     func createTableSQL() -> String
     func alterTableSQL(existedColumnNames: Set<String>) -> String?
 }
 
-// ⚠️ Use this struct only when migrating from WCDB
+// ⚠️ Use this struct only when migrating from database which mayin absence of column
 // This struct is intended to be a compatibility layer, in order to migrate tables
-// created by WCDB. WCDB alters table automatically on creation if new columns are
-// added to Model, instead of creating table from scratch. This struct provides
-// curated function to mimic that behavior, it's not a well-defined robust struct,
-// so don't use this besides migration
-internal struct WCDBMigratableTableDefinition<Record: TableRecord & DatabaseColumnConvertible> {
+// created by elder version. Before then, it alters table automatically on creation if
+// new columns are added to Model, instead of creating table from scratch. This struct
+// provides curated function to mimic that behavior, it's not a well-defined robust
+// struct, so don't use this besides migration
+internal struct ColumnMigratableTableDefinition<Record: TableRecord & DatabaseColumnConvertible> {
     
     let columns: [ColumnDefinition]
     let constraints: String?
@@ -25,7 +25,7 @@ internal struct WCDBMigratableTableDefinition<Record: TableRecord & DatabaseColu
     
 }
 
-extension WCDBMigratableTableDefinition: WCDBTableMigratable {
+extension ColumnMigratableTableDefinition: ColumnMigratable {
     
     var tableName: String {
         Record.databaseTableName
@@ -62,7 +62,7 @@ extension WCDBMigratableTableDefinition: WCDBTableMigratable {
     
 }
 
-extension WCDBMigratableTableDefinition {
+extension ColumnMigratableTableDefinition {
     
     struct ColumnDefinition {
         

@@ -10,8 +10,8 @@ public final class SignalDatabase: Database {
         return config
     }
     
-    internal lazy var tableMigrations: [WCDBTableMigratable] = [
-        WCDBMigratableTableDefinition<Identity>(constraints: nil, columns: [
+    internal lazy var tableMigrations: [ColumnMigratable] = [
+        ColumnMigratableTableDefinition<Identity>(constraints: nil, columns: [
             .init(key: .address, constraints: "TEXT"),
             .init(key: .registrationId, constraints: "INTEGER"),
             .init(key: .publicKey, constraints: "BLOB"),
@@ -19,27 +19,27 @@ public final class SignalDatabase: Database {
             .init(key: .nextPreKeyId, constraints: "INTEGER"),
             .init(key: .timestamp, constraints: "REAL"),
         ]),
-        WCDBMigratableTableDefinition<PreKey>(constraints: nil, columns: [
+        ColumnMigratableTableDefinition<PreKey>(constraints: nil, columns: [
             .init(key: .preKeyId, constraints: "INTEGER"),
             .init(key: .record, constraints: "BLOB"),
         ]),
-        WCDBMigratableTableDefinition<RatchetSenderKey>(constraints: "PRIMARY KEY(groupId, senderId)", columns: [
+        ColumnMigratableTableDefinition<RatchetSenderKey>(constraints: "PRIMARY KEY(groupId, senderId)", columns: [
             .init(key: .groupId, constraints: "TEXT"),
             .init(key: .senderId, constraints: "TEXT"),
             .init(key: .status, constraints: "TEXT"),
         ]),
-        WCDBMigratableTableDefinition<SenderKey>(constraints: "PRIMARY KEY(groupId, senderId)", columns: [
+        ColumnMigratableTableDefinition<SenderKey>(constraints: "PRIMARY KEY(groupId, senderId)", columns: [
             .init(key: .groupId, constraints: "TEXT"),
             .init(key: .senderId, constraints: "TEXT"),
             .init(key: .record, constraints: "BLOB"),
         ]),
-        WCDBMigratableTableDefinition<Session>(constraints: nil, columns: [
+        ColumnMigratableTableDefinition<Session>(constraints: nil, columns: [
             .init(key: .address, constraints: "TEXT"),
             .init(key: .device, constraints: "INTEGER"),
             .init(key: .record, constraints: "BLOB"),
             .init(key: .timestamp, constraints: "REAL"),
         ]),
-        WCDBMigratableTableDefinition<SignedPreKey>(constraints: nil, columns: [
+        ColumnMigratableTableDefinition<SignedPreKey>(constraints: nil, columns: [
             .init(key: .preKeyId, constraints: "INTEGER"),
             .init(key: .record, constraints: "BLOB"),
             .init(key: .timestamp, constraints: "REAL"),

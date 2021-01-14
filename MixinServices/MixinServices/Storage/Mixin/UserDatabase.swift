@@ -20,8 +20,8 @@ public final class UserDatabase: Database {
         })
     }
     
-    internal lazy var tableMigrations: [WCDBTableMigratable] = [
-        WCDBMigratableTableDefinition<Address>(constraints: nil, columns: [
+    internal lazy var tableMigrations: [ColumnMigratable] = [
+        ColumnMigratableTableDefinition<Address>(constraints: nil, columns: [
             .init(key: .type, constraints: "TEXT"),
             .init(key: .addressId, constraints: "TEXT PRIMARY KEY"),
             .init(key: .assetId, constraints: "TEXT"),
@@ -33,7 +33,7 @@ public final class UserDatabase: Database {
             .init(key: .dust, constraints: "TEXT"),
             .init(key: .updatedAt, constraints: "TEXT"),
         ]),
-        WCDBMigratableTableDefinition<Album>(constraints: nil, columns: [
+        ColumnMigratableTableDefinition<Album>(constraints: nil, columns: [
             .init(key: .albumId, constraints: "TEXT PRIMARY KEY"),
             .init(key: .name, constraints: "TEXT"),
             .init(key: .iconUrl, constraints: "TEXT"),
@@ -43,7 +43,7 @@ public final class UserDatabase: Database {
             .init(key: .category, constraints: "TEXT"),
             .init(key: .description, constraints: "TEXT"),
         ]),
-        WCDBMigratableTableDefinition<App>(constraints: nil, columns: [
+        ColumnMigratableTableDefinition<App>(constraints: nil, columns: [
             .init(key: .appId, constraints: "TEXT PRIMARY KEY"),
             .init(key: .appNumber, constraints: "TEXT"),
             .init(key: .redirectUri, constraints: "TEXT"),
@@ -56,7 +56,7 @@ public final class UserDatabase: Database {
             .init(key: .creatorId, constraints: "TEXT"),
             .init(key: .updatedAt, constraints: "TEXT"),
         ]),
-        WCDBMigratableTableDefinition<Asset>(constraints: nil, columns: [
+        ColumnMigratableTableDefinition<Asset>(constraints: nil, columns: [
             .init(key: .assetId, constraints: "TEXT PRIMARY KEY"),
             .init(key: .type, constraints: "TEXT"),
             .init(key: .symbol, constraints: "TEXT"),
@@ -73,19 +73,19 @@ public final class UserDatabase: Database {
             .init(key: .assetKey, constraints: "TEXT"),
             .init(key: .reserve, constraints: "TEXT"),
         ]),
-        WCDBMigratableTableDefinition<CircleConversation>(constraints: "PRIMARY KEY(conversation_id, circle_id)", columns: [
+        ColumnMigratableTableDefinition<CircleConversation>(constraints: "PRIMARY KEY(conversation_id, circle_id)", columns: [
             .init(key: .circleId, constraints: "TEXT"),
             .init(key: .conversationId, constraints: "TEXT"),
             .init(key: .userId, constraints: "TEXT"),
             .init(key: .createdAt, constraints: "TEXT"),
             .init(key: .pinTime, constraints: "TEXT"),
         ]),
-        WCDBMigratableTableDefinition<Circle>(constraints: nil, columns: [
+        ColumnMigratableTableDefinition<Circle>(constraints: nil, columns: [
             .init(key: .circleId, constraints: "TEXT PRIMARY KEY"),
             .init(key: .name, constraints: "TEXT"),
             .init(key: .createdAt, constraints: "TEXT"),
         ]),
-        WCDBMigratableTableDefinition<Conversation>(constraints: nil, columns: [
+        ColumnMigratableTableDefinition<Conversation>(constraints: nil, columns: [
             .init(key: .conversationId, constraints: "TEXT PRIMARY KEY"),
             .init(key: .ownerId, constraints: "TEXT"),
             .init(key: .category, constraints: "TEXT"),
@@ -102,12 +102,12 @@ public final class UserDatabase: Database {
             .init(key: .codeUrl, constraints: "TEXT"),
             .init(key: .pinTime, constraints: "TEXT"),
         ]),
-        WCDBMigratableTableDefinition<FavoriteApp>(constraints: "PRIMARY KEY(user_id, app_id)", columns: [
+        ColumnMigratableTableDefinition<FavoriteApp>(constraints: "PRIMARY KEY(user_id, app_id)", columns: [
             .init(key: .userId, constraints: "TEXT"),
             .init(key: .appId, constraints: "TEXT"),
             .init(key: .createdAt, constraints: "TEXT"),
         ]),
-        WCDBMigratableTableDefinition<Job>(constraints: nil, columns: [
+        ColumnMigratableTableDefinition<Job>(constraints: nil, columns: [
             .init(key: .orderId, constraints: "INTEGER PRIMARY KEY AUTOINCREMENT"),
             .init(key: .jobId, constraints: "TEXT"),
             .init(key: .priority, constraints: "INTEGER"),
@@ -122,13 +122,13 @@ public final class UserDatabase: Database {
             .init(key: .status, constraints: "TEXT"),
             .init(key: .sessionId, constraints: "TEXT"),
         ]),
-        WCDBMigratableTableDefinition<MessageMention>(constraints: nil, columns: [
+        ColumnMigratableTableDefinition<MessageMention>(constraints: nil, columns: [
             .init(key: .messageId, constraints: "TEXT PRIMARY KEY"),
             .init(key: .conversationId, constraints: "TEXT"),
             .init(key: .mentionsJson, constraints: "BLOB"),
             .init(key: .hasRead, constraints: "INTEGER"),
         ]),
-        WCDBMigratableTableDefinition<Message>(constraints: nil, columns: [
+        ColumnMigratableTableDefinition<Message>(constraints: nil, columns: [
             .init(key: .messageId, constraints: "TEXT PRIMARY KEY"),
             .init(key: .conversationId, constraints: "TEXT"),
             .init(key: .userId, constraints: "TEXT"),
@@ -159,30 +159,30 @@ public final class UserDatabase: Database {
             .init(key: .quoteContent, constraints: "BLOB"),
             .init(key: .createdAt, constraints: "TEXT"),
         ]),
-        WCDBMigratableTableDefinition<MessageHistory>(constraints: nil, columns: [
+        ColumnMigratableTableDefinition<MessageHistory>(constraints: nil, columns: [
             .init(key: .messageId, constraints: "TEXT PRIMARY KEY"),
         ]),
-        WCDBMigratableTableDefinition<ParticipantSession>(constraints: "PRIMARY KEY(conversation_id, user_id, session_id)", columns: [
+        ColumnMigratableTableDefinition<ParticipantSession>(constraints: "PRIMARY KEY(conversation_id, user_id, session_id)", columns: [
             .init(key: .conversationId, constraints: "TEXT"),
             .init(key: .userId, constraints: "TEXT"),
             .init(key: .sessionId, constraints: "TEXT"),
             .init(key: .sentToServer, constraints: "INTEGER"),
             .init(key: .createdAt, constraints: "TEXT"),
         ]),
-        WCDBMigratableTableDefinition<Participant>(constraints: "PRIMARY KEY(conversation_id, user_id)", columns: [
+        ColumnMigratableTableDefinition<Participant>(constraints: "PRIMARY KEY(conversation_id, user_id)", columns: [
             .init(key: .conversationId, constraints: "TEXT"),
             .init(key: .userId, constraints: "TEXT"),
             .init(key: .role, constraints: "TEXT"),
             .init(key: .status, constraints: "INTEGER"),
             .init(key: .createdAt, constraints: "TEXT"),
         ]),
-        WCDBMigratableTableDefinition<ResendSessionMessage>(constraints: "PRIMARY KEY(message_id, user_id, session_id)", columns: [
+        ColumnMigratableTableDefinition<ResendSessionMessage>(constraints: "PRIMARY KEY(message_id, user_id, session_id)", columns: [
             .init(key: .messageId, constraints: "TEXT"),
             .init(key: .userId, constraints: "TEXT"),
             .init(key: .sessionId, constraints: "TEXT"),
             .init(key: .status, constraints: "INTEGER"),
         ]),
-        WCDBMigratableTableDefinition<Snapshot>(constraints: nil, columns: [
+        ColumnMigratableTableDefinition<Snapshot>(constraints: nil, columns: [
             .init(key: .snapshotId, constraints: "TEXT PRIMARY KEY"),
             .init(key: .type, constraints: "TEXT"),
             .init(key: .assetId, constraints: "TEXT"),
@@ -196,12 +196,12 @@ public final class UserDatabase: Database {
             .init(key: .traceId, constraints: "TEXT"),
             .init(key: .createdAt, constraints: "TEXT"),
         ]),
-        WCDBMigratableTableDefinition<StickerRelationship>(constraints: "PRIMARY KEY(album_id, sticker_id)", columns: [
+        ColumnMigratableTableDefinition<StickerRelationship>(constraints: "PRIMARY KEY(album_id, sticker_id)", columns: [
             .init(key: .albumId, constraints: "TEXT"),
             .init(key: .stickerId, constraints: "TEXT"),
             .init(key: .createdAt, constraints: "TEXT"),
         ]),
-        WCDBMigratableTableDefinition<Sticker>(constraints: nil, columns: [
+        ColumnMigratableTableDefinition<Sticker>(constraints: nil, columns: [
             .init(key: .stickerId, constraints: "TEXT PRIMARY KEY"),
             .init(key: .name, constraints: "TEXT"),
             .init(key: .assetUrl, constraints: "TEXT"),
@@ -210,7 +210,7 @@ public final class UserDatabase: Database {
             .init(key: .assetHeight, constraints: "INTEGER"),
             .init(key: .lastUseAt, constraints: "TEXT"),
         ]),
-        WCDBMigratableTableDefinition<TopAsset>(constraints: nil, columns: [
+        ColumnMigratableTableDefinition<TopAsset>(constraints: nil, columns: [
             .init(key: .assetId, constraints: "TEXT PRIMARY KEY"),
             .init(key: .type, constraints: "TEXT"),
             .init(key: .symbol, constraints: "TEXT"),
@@ -227,7 +227,7 @@ public final class UserDatabase: Database {
             .init(key: .assetKey, constraints: "TEXT"),
             .init(key: .reserve, constraints: "TEXT"),
         ]),
-        WCDBMigratableTableDefinition<Trace>(constraints: nil, columns: [
+        ColumnMigratableTableDefinition<Trace>(constraints: nil, columns: [
             .init(key: .traceId, constraints: "TEXT PRIMARY KEY"),
             .init(key: .assetId, constraints: "TEXT"),
             .init(key: .amount, constraints: "TEXT"),
@@ -237,7 +237,7 @@ public final class UserDatabase: Database {
             .init(key: .snapshotId, constraints: "TEXT"),
             .init(key: .createdAt, constraints: "TEXT"),
         ]),
-        WCDBMigratableTableDefinition<User>(constraints: nil, columns: [
+        ColumnMigratableTableDefinition<User>(constraints: nil, columns: [
             .init(key: .userId, constraints: "TEXT PRIMARY KEY"),
             .init(key: .fullName, constraints: "TEXT"),
             .init(key: .biography, constraints: "TEXT"),

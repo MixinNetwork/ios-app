@@ -308,7 +308,7 @@ public final class MessageDAO: UserDatabaseDAO {
                 let request = try Message
                     .select(Message.column(of: .mediaStatus))
                     .filter(Message.column(of: .messageId) == messageId)
-                let oldStatus: String? = try Row.fetchOne(db, request)?[0]
+                let oldStatus = try String.fetchOne(db, request)
                 
                 guard oldStatus != targetStatus.rawValue else {
                     return
@@ -490,10 +490,8 @@ public final class MessageDAO: UserDatabaseDAO {
         db.write { (db) in
             if let mention = MessageMention(message: message, quotedMessage: quotedMessage) {
                 try mention.save(db)
-                try insertMessage(database: db, message: message, messageSource: messageSource)
-            } else {
-                try insertMessage(database: db, message: message, messageSource: messageSource)
             }
+            try insertMessage(database: db, message: message, messageSource: messageSource)
         }
     }
     

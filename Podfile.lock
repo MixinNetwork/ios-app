@@ -252,7 +252,6 @@ DEPENDENCIES:
   - Firebase/Performance
   - GCDWebServer
   - GCDWebServer/WebDAV
-  - GRDB.swift/SQLCipher
   - Highlightr (from `https://github.com/wuyuehyang/Highlightr.git`, branch `master`)
   - libsignal-protocol-c (from `https://github.com/MixinNetwork/libsignal-protocol-c.git`)
   - lottie-ios (from `https://github.com/airbnb/lottie-ios.git`, branch `lottie/objectiveC`)
@@ -406,6 +405,6 @@ SPEC CHECKSUMS:
   YYImage: 6db68da66f20d9f169ceb94dfb9947c3867b9665
   Zip: 414f59909701fda9a84ab774ebe0f5449b1082cc
 
-PODFILE CHECKSUM: 638a10f9f01b421a99b5d3934bc7068b2a643fc1
+PODFILE CHECKSUM: fa956f3cd6fb4ecd48f11cffa83a1fd4891aac65
 
 COCOAPODS: 1.10.1

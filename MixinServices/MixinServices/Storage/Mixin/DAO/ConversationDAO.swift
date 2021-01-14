@@ -102,12 +102,9 @@ public final class ConversationDAO: UserDatabaseDAO {
     }
     
     public func getConversationIconUrl(conversationId: String) -> String? {
-        let sql = """
-        SELECT \(Conversation.CodingKeys.iconUrl.rawValue)
-        FROM \(Conversation.databaseTableName)
-        WHERE \(Conversation.CodingKeys.conversationId.rawValue) = ?
-        """
-        return db.select(with: sql, arguments: [conversationId])
+        return db.select(column: Conversation.column(of: .iconUrl),
+                         from: Conversation.self,
+                         where: Conversation.column(of: .conversationId) == conversationId)
     }
     
     public func updateIconUrl(conversationId: String, iconUrl: String) {
@@ -117,12 +114,9 @@ public final class ConversationDAO: UserDatabaseDAO {
     }
     
     public func getStartStatusConversations() -> [String] {
-        let sql = """
-        SELECT \(Conversation.CodingKeys.conversationId.rawValue)
-        FROM \(Conversation.databaseTableName)
-        WHERE \(Conversation.CodingKeys.status.rawValue) = ?
-        """
-        return db.select(with: sql, arguments: [ConversationStatus.START.rawValue])
+        return db.select(column: Conversation.column(of: .conversationId),
+                         from: Conversation.self,
+                         where: Conversation.column(of: .status) == ConversationStatus.START.rawValue)
     }
     
     public func updateConversationOwnerId(conversationId: String, ownerId: String) -> Bool {
@@ -364,6 +358,7 @@ public final class ConversationDAO: UserDatabaseDAO {
                 }
             }
         } catch {
+            Logger.write(error: error)
             completion(false)
         }
     }

@@ -15,12 +15,10 @@ protocol WCDBTableMigratable {
 // so don't use this besides migration
 internal struct WCDBMigratableTableDefinition<Record: TableRecord & DatabaseColumnConvertible> {
     
-    let tableName: String
     let columns: [ColumnDefinition]
     let constraints: String?
     
     init(constraints: String?, columns: [ColumnDefinition]) {
-        self.tableName = Record.databaseTableName
         self.columns = columns
         self.constraints = constraints
     }
@@ -29,9 +27,13 @@ internal struct WCDBMigratableTableDefinition<Record: TableRecord & DatabaseColu
 
 extension WCDBMigratableTableDefinition: WCDBTableMigratable {
     
+    var tableName: String {
+        Record.databaseTableName
+    }
+    
     func createTableSQL() -> String {
         let columnDefinitions = columns.map(\.sqlDefinition).joined(separator: ", ")
-        var sql = "CREATE TABLE \(Record.databaseTableName)(\(columnDefinitions)"
+        var sql = "CREATE TABLE \(tableName)(\(columnDefinitions)"
         if let constraints = constraints {
             sql += ", \(constraints)"
         }
@@ -48,7 +50,7 @@ extension WCDBMigratableTableDefinition: WCDBTableMigratable {
         } else {
             var sqls: [String] = []
             for column in columnsToAdd {
-                sqls.append("ALTER TABLE \(Record.databaseTableName) ADD COLUMN \(column.name) \(column.constraints);")
+                sqls.append("ALTER TABLE \(tableName) ADD COLUMN \(column.sqlDefinition);")
             }
             if sqls.isEmpty {
                 return nil

@@ -25,6 +25,35 @@ class SignalTests: XCTestCase {
         }
     }
     
+    func testTableMigration() {
+        var migrations = SignalDatabase.current.tableMigrations
+        let sqls = [
+            "CREATE TABLE identities(address TEXT, registrationId INTEGER, publicKey BLOB, privateKey BLOB, nextPreKeyId INTEGER, timestamp REAL)",
+            "CREATE TABLE prekeys(preKeyId INTEGER, record BLOB)",
+            "CREATE TABLE ratchet_sender_keys(groupId TEXT, senderId TEXT, status TEXT, PRIMARY KEY(groupId, senderId))",
+            "CREATE TABLE sender_keys(groupId TEXT, senderId TEXT, record BLOB, PRIMARY KEY(groupId, senderId))",
+            "CREATE TABLE sessions(address TEXT, device INTEGER, record BLOB, timestamp REAL)",
+            "CREATE TABLE signed_prekeys(preKeyId INTEGER, record BLOB, timestamp REAL)"
+        ]
+        XCTAssertEqual(migrations.count, sqls.count)
+        while !migrations.isEmpty {
+            guard let migration = migrations.last else {
+                break
+            }
+            let migrationSQL = migration.createTableSQL()
+            guard let originalSQL = sqls.first(where: { $0.hasPrefix("CREATE TABLE \(migration.tableName)") }) else {
+                XCTAssert(false)
+                return
+            }
+            if migrationSQL != originalSQL {
+                print("[NonEqual] m: \(migrationSQL)")
+                print("[NonEqual] o: \(originalSQL)")
+            }
+            XCTAssertEqual(migrationSQL, originalSQL)
+            migrations.removeLast()
+        }
+    }
+    
     func testMigration() throws {
         try SignalDatabase.current!.pool.read { (db) -> Void in
             XCTAssertTrue(try db.tableExists("identities"))

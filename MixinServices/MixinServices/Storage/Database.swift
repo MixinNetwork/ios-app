@@ -75,19 +75,19 @@ open class Database {
         }
     }
     
-    // Only use for migrating from WCDB. See comments in *TableDefinition*
-    internal func migrateTable<Record: TableRecord & DatabaseColumnConvertible>(
-        with tableDefinition: TableDefinition<Record>,
+    // Only use for migrating from WCDB. See comments in *WCDBMigratableTableDefinition*
+    internal func migrateTable(
+        with table: WCDBTableMigratable,
         into db: GRDB.Database
     ) throws {
-        if try db.tableExists(Record.databaseTableName) {
-            let existedColumns = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(\(Record.databaseTableName.quotedDatabaseIdentifier));")
+        if try db.tableExists(table.tableName) {
+            let existedColumns = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(\(table.tableName.quotedDatabaseIdentifier));")
             let existedColumnNames = Set(existedColumns.map(\.name))
-            if let sql = tableDefinition.alterTableSQL(existedColumnNames: existedColumnNames) {
+            if let sql = table.alterTableSQL(existedColumnNames: existedColumnNames) {
                 try db.execute(sql: sql)
             }
         } else {
-            try db.execute(sql: tableDefinition.createTableSQL())
+            try db.execute(sql: table.createTableSQL())
         }
     }
     

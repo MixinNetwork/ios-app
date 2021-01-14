@@ -21,7 +21,7 @@ public class TaskDatabase: Database {
         var migrator = DatabaseMigrator()
         
         migrator.registerMigration("create_table") { db in
-            let messageBlaze = TableDefinition<MessageBlaze>(constraints: nil, columns: [
+            let messageBlaze = WCDBMigratableTableDefinition<MessageBlaze>(constraints: nil, columns: [
                 .init(key: .messageId, constraints: "TEXT PRIMARY KEY"),
                 .init(key: .message, constraints: "BLOB"),
                 .init(key: .createdAt, constraints: "TEXT"),

@@ -244,7 +244,7 @@ class SignalTests: XCTestCase {
         let s1 = dao.getSubDevices(address: duplicatedAddress)
             .sorted(by: <)
         let s2 = sessions.filter({ $0.address == duplicatedAddress })
-            .map(\.device).map(Int32.init).filter({ $0 != 1 })
+            .map(\.device).filter({ $0 != 1 })
             .sorted(by: <)
         XCTAssertEqual(s1, s2)
         

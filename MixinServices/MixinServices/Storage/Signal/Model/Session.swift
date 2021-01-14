@@ -4,11 +4,11 @@ import GRDB
 public struct Session {
     
     public let address: String
-    public let device: Int
+    public let device: Int32
     public let record: Data
     public let timestamp: TimeInterval
     
-    public init(address: String, device: Int, record: Data, timestamp: TimeInterval) {
+    public init(address: String, device: Int32, record: Data, timestamp: TimeInterval) {
         self.address = address
         self.device = device
         self.record = record

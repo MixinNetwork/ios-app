@@ -5,7 +5,7 @@ public class SessionDAO: SignalDAO {
     
     public static let shared = SessionDAO()
     
-    func sessionExists(address: String, device: Int) -> Bool {
+    func sessionExists(address: String, device: Int32) -> Bool {
         db.recordExists(in: Session.self, where: Session.column(of: .address) == address && Session.column(of: .device) == device)
     }
     
@@ -17,7 +17,7 @@ public class SessionDAO: SignalDAO {
 
 extension SessionDAO {
     
-    func getSession(address: String, device: Int) -> Session? {
+    func getSession(address: String, device: Int32) -> Session? {
         db.select(where: Session.column(of: .address) == address && Session.column(of: .device) == device)
     }
     
@@ -39,7 +39,7 @@ extension SessionDAO {
 
 extension SessionDAO {
     
-    func updateSession(with address: String, device: Int, assignments: [ColumnAssignment]) {
+    func updateSession(with address: String, device: Int32, assignments: [ColumnAssignment]) {
         db.update(Session.self,
                   assignments: assignments,
                   where: Session.column(of: .address) == address && Session.column(of: .device) == device)
@@ -50,7 +50,7 @@ extension SessionDAO {
         db.delete(Session.self, where: Session.column(of: .address) == address)
     }
     
-    func delete(address: String, device: Int) -> Bool {
+    func delete(address: String, device: Int32) -> Bool {
         db.delete(Session.self, where: Session.column(of: .address) == address && Session.column(of: .device) == device)
         return true
     }

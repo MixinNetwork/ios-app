@@ -5,7 +5,7 @@ class MixinSessionStore: SessionStore {
     private let lock = NSLock()
     
     func loadSession(for address: SignalAddress) -> (session: Data, userRecord: Data?)? {
-        guard let session = SessionDAO.shared.getSession(address: address.name, device: Int(address.deviceId)) else {
+        guard let session = SessionDAO.shared.getSession(address: address.name, device: address.deviceId) else {
             return nil
         }
         return (session.record, nil)
@@ -21,10 +21,10 @@ class MixinSessionStore: SessionStore {
             objc_sync_exit(lock)
         }
         
-        let oldSession = SessionDAO.shared.getSession(address: address.name, device:  Int(address.deviceId))
+        let oldSession = SessionDAO.shared.getSession(address: address.name, device: address.deviceId)
         if oldSession == nil {
             let newSession = Session(address: address.name,
-                                     device: Int(address.deviceId),
+                                     device: address.deviceId,
                                      record: session,
                                      timestamp: Date().timeIntervalSince1970)
             SignalDatabase.current.save(newSession)
@@ -34,18 +34,18 @@ class MixinSessionStore: SessionStore {
                 Session.column(of: .timestamp).set(to: Date().timeIntervalSince1970)
             ]
             SessionDAO.shared.updateSession(with: address.name,
-                                            device: Int(address.deviceId),
+                                            device: address.deviceId,
                                             assignments: assignments)
         }
         return true
     }
     
     func containsSession(for address: SignalAddress) -> Bool {
-        return SessionDAO.shared.sessionExists(address: address.name, device: Int(address.deviceId))
+        return SessionDAO.shared.sessionExists(address: address.name, device: address.deviceId)
     }
     
     func deleteSession(for address: SignalAddress) -> Bool? {
-        return SessionDAO.shared.delete(address: address.name, device: Int(address.deviceId))
+        return SessionDAO.shared.delete(address: address.name, device: address.deviceId)
     }
     
     func deleteAllSessions(for name: String) -> Int? {

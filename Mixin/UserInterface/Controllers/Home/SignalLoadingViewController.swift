@@ -141,7 +141,7 @@ class SignalLoadingViewController: UIViewController {
                 var newSession = [Session]()
                 sessions.forEach { (session) in
                     if let deviceId = sessionMap[session.address] {
-                        newSession.append(Session(address: session.address, device: Int(deviceId), record: session.record, timestamp: session.timestamp))
+                        newSession.append(Session(address: session.address, device: deviceId, record: session.record, timestamp: session.timestamp))
                     }
                 }
                 SignalDatabase.current.save(newSession)

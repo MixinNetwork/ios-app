@@ -658,6 +658,7 @@ extension MessageDAO {
     
     private func updateRedecryptMessage(assignments: [ColumnAssignment], mention: MessageMention? = nil, messageId: String, category: String, conversationId: String, messageSource: String) {
         var newMessage: MessageItem?
+        
         db.write { (db) in
             try mention?.save(db)
             let condition: SQLSpecificExpressible = Message.column(of: .messageId) == messageId
@@ -667,23 +668,17 @@ extension MessageDAO {
                 try MessageDAO.shared.updateUnseenMessageCount(database: db, conversationId: conversationId)
                 newMessage = try MessageItem.fetchOne(db, sql: MessageDAO.sqlQueryFullMessageById, arguments: [messageId], adapter: nil)
             }
+            
+            // isFTSInitialized is wrote inside a write block, checking it within a write block keeps the value in sync
+            if MessageCategory.ftsAvailableCategoryStrings.contains(category), AppGroupUserDefaults.Database.isFTSInitialized, let message = newMessage {
+                try db.execute(sql: "INSERT INTO \(Message.ftsTableName) VALUES (?, ?, ?, ?)",
+                               arguments: [messageId, conversationId, message.content, message.name])
+            }
         }
         
         guard let message = newMessage else {
             return
         }
-        
-        if MessageCategory.ftsAvailableCategoryStrings.contains(category) {
-            db.write { (db) in
-                // FTS initialization writes index serialized
-                // Embed fts initialization checking inside writing could keep the flag in sync
-                if AppGroupUserDefaults.Database.isFTSInitialized {
-                    try db.execute(sql: "INSERT INTO \(Message.ftsTableName) VALUES (?, ?, ?, ?)",
-                                   arguments: [message.messageId, message.conversationId, message.content, message.name])
-                }
-            }
-        }
-        
         let userInfo: [String: Any] = [
             MessageDAO.UserInfoKey.conversationId: message.conversationId,
             MessageDAO.UserInfoKey.message: message,

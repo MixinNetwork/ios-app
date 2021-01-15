@@ -36,7 +36,7 @@ class InitializeFTSJob: BaseJob {
                 return
             }
             do {
-                try UserDatabase.current.pool.barrierWriteWithoutTransaction { (db) -> Void in
+                try UserDatabase.current.pool.write { (db) -> Void in
                     let lastInitializedRowID: Int?
                     let lastFTSMessageIDSQL = "SELECT id FROM \(Message.ftsTableName) ORDER BY rowid DESC LIMIT 1"
                     if let lastFTSMessageID = try String.fetchOne(db, sql: lastFTSMessageIDSQL) {

@@ -511,12 +511,9 @@ public final class MessageDAO: UserDatabaseDAO {
         try MessageDAO.shared.updateUnseenMessageCount(database: database, conversationId: message.conversationId)
         
         database.afterNextTransactionCommit { (_) in
-            /* ⚠️ Callbacks registered with afterNextTransactionCommit may introduce a deadlocking situation.
-             Like here, this func writes within DatabasePool's writing queue, and access the pool again for reading
-             in the next transaction commit hook, this pattern works fine in normal r/w scenerios, except for
-             barrier writing. If another process invokes barrierWriteWithoutTransaction simultaneously, that process
-             will be waiting for this writing to finish, while reading in the hook waits for that barrier to finish
-             In order to reduce the issue, dispatch the pool reading to a global queue */
+            // Dispatch to global queue to prevent deadlock
+            // Inside the block there's a request to access reading pool, embedding it inside write
+            // may causes deadlock
             DispatchQueue.global().async {
                 if isAppExtension {
                     if AppGroupUserDefaults.isRunningInMainApp {
@@ -678,8 +675,8 @@ extension MessageDAO {
         
         if MessageCategory.ftsAvailableCategoryStrings.contains(category) {
             db.write { (db) in
-                // FTS initialization writes index with barrier, which postpone any writing after it
-                // Embed fts initialization checking inside writing pool could keep the flag in sync
+                // FTS initialization writes index serialized
+                // Embed fts initialization checking inside writing could keep the flag in sync
                 if AppGroupUserDefaults.Database.isFTSInitialized {
                     try db.execute(sql: "INSERT INTO \(Message.ftsTableName) VALUES (?, ?, ?, ?)",
                                    arguments: [message.messageId, message.conversationId, message.content, message.name])

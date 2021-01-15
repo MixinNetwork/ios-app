@@ -1,9 +1,9 @@
 import Foundation
 import GRDB
 
-public class Asset: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord {
+public class Asset: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord, TableRecord, PersistableRecord {
     
-    internal class var tableName: String {
+    public class var databaseTableName: String {
         "assets"
     }
     
@@ -57,14 +57,6 @@ public class Asset: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
         case confirmations
         case assetKey = "asset_key"
         case reserve
-    }
-    
-}
-
-extension Asset: TableRecord, PersistableRecord {
-    
-    public static var databaseTableName: String {
-        Self.tableName
     }
     
 }

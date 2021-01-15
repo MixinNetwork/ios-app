@@ -2,7 +2,7 @@ import Foundation
 
 public class TopAsset: Asset {
     
-    override class var tableName: String {
+    public override class var databaseTableName: String {
         "top_assets"
     }
     

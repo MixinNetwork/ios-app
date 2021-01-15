@@ -3,6 +3,10 @@ import MixinServices
 
 class InitializeFTSJob: BaseJob {
     
+    enum Error: Swift.Error {
+        case mismatchedFTSTable
+    }
+    
     private static let insertionLimit: Int = 1000
     
     private let insertionSQL = """
@@ -23,17 +27,28 @@ class InitializeFTSJob: BaseJob {
             return
         }
         
-        var lastRowID: Int? = try lastInitializedRowID()
+        var didInitializedAllMessages = false
         var numberOfMessagesProcessed = 0
         let startDate = Date()
         
-        while let rowID = lastRowID, !MixinService.isStopProcessMessages {
+        while !didInitializedAllMessages && !MixinService.isStopProcessMessages {
             guard !isCancelled else {
                 return
             }
             do {
-                var didInitializedAllMessages = false
                 try UserDatabase.current.pool.barrierWriteWithoutTransaction { (db) -> Void in
+                    let lastInitializedRowID: Int?
+                    let lastFTSMessageIDSQL = "SELECT id FROM \(Message.ftsTableName) ORDER BY rowid DESC LIMIT 1"
+                    if let lastFTSMessageID = try String.fetchOne(db, sql: lastFTSMessageIDSQL) {
+                        lastInitializedRowID = try Int.fetchOne(db,
+                                                                sql: "SELECT rowid FROM messages WHERE id=?",
+                                                                arguments: [lastFTSMessageID])
+                    } else {
+                        lastInitializedRowID = -1
+                    }
+                    guard let rowID = lastInitializedRowID else {
+                        throw Error.mismatchedFTSTable
+                    }
                     try db.execute(sql: insertionSQL, arguments: [rowID])
                     let numberOfChanges = db.changesCount
                     numberOfMessagesProcessed += numberOfChanges
@@ -42,11 +57,6 @@ class InitializeFTSJob: BaseJob {
                     if didInitializedAllMessages {
                         AppGroupUserDefaults.Database.isFTSInitialized = true
                     }
-                }
-                if didInitializedAllMessages {
-                    lastRowID = nil
-                } else {
-                    lastRowID = try lastInitializedRowID()
                 }
             } catch {
                 Logger.writeDatabase(error: error)
@@ -57,18 +67,6 @@ class InitializeFTSJob: BaseJob {
         
         let interval = -startDate.timeIntervalSinceNow
         Logger.writeDatabase(log: "[FTS] Initialized \(numberOfMessagesProcessed) messages in \(interval)s")
-    }
-    
-    private func lastInitializedRowID() throws -> Int? {
-        let lastFTSMessageIDSQL = "SELECT id FROM \(Message.ftsTableName) ORDER BY rowid DESC LIMIT 1"
-        return try UserDatabase.current.pool.read { (db) -> Int? in
-            let lastFTSMessageID: String? = try String.fetchOne(db, sql: lastFTSMessageIDSQL)
-            if let id = lastFTSMessageID {
-                return try Int.fetchOne(db, sql: "SELECT rowid FROM messages WHERE id=?", arguments: [id])
-            } else {
-                return -1
-            }
-        }
     }
     
 }

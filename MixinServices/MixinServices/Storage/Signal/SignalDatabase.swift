@@ -12,37 +12,37 @@ public final class SignalDatabase: Database {
     
     internal lazy var tableMigrations: [ColumnMigratable] = [
         ColumnMigratableTableDefinition<Identity>(constraints: nil, columns: [
-            .init(key: .address, constraints: "TEXT"),
+            .init(key: .address, constraints: "TEXT NOT NULL"),
             .init(key: .registrationId, constraints: "INTEGER"),
-            .init(key: .publicKey, constraints: "BLOB"),
+            .init(key: .publicKey, constraints: "BLOB NOT NULL"),
             .init(key: .privateKey, constraints: "BLOB"),
             .init(key: .nextPreKeyId, constraints: "INTEGER"),
-            .init(key: .timestamp, constraints: "REAL"),
+            .init(key: .timestamp, constraints: "REAL NOT NULL"),
         ]),
         ColumnMigratableTableDefinition<PreKey>(constraints: nil, columns: [
-            .init(key: .preKeyId, constraints: "INTEGER"),
-            .init(key: .record, constraints: "BLOB"),
+            .init(key: .preKeyId, constraints: "INTEGER NOT NULL"),
+            .init(key: .record, constraints: "BLOB NOT NULL"),
         ]),
         ColumnMigratableTableDefinition<RatchetSenderKey>(constraints: "PRIMARY KEY(groupId, senderId)", columns: [
-            .init(key: .groupId, constraints: "TEXT"),
-            .init(key: .senderId, constraints: "TEXT"),
-            .init(key: .status, constraints: "TEXT"),
+            .init(key: .groupId, constraints: "TEXT NOT NULL"),
+            .init(key: .senderId, constraints: "TEXT NOT NULL"),
+            .init(key: .status, constraints: "TEXT NOT NULL"),
         ]),
         ColumnMigratableTableDefinition<SenderKey>(constraints: "PRIMARY KEY(groupId, senderId)", columns: [
-            .init(key: .groupId, constraints: "TEXT"),
-            .init(key: .senderId, constraints: "TEXT"),
-            .init(key: .record, constraints: "BLOB"),
+            .init(key: .groupId, constraints: "TEXT NOT NULL"),
+            .init(key: .senderId, constraints: "TEXT NOT NULL"),
+            .init(key: .record, constraints: "BLOB NOT NULL"),
         ]),
         ColumnMigratableTableDefinition<Session>(constraints: nil, columns: [
-            .init(key: .address, constraints: "TEXT"),
-            .init(key: .device, constraints: "INTEGER"),
-            .init(key: .record, constraints: "BLOB"),
-            .init(key: .timestamp, constraints: "REAL"),
+            .init(key: .address, constraints: "TEXT NOT NULL"),
+            .init(key: .device, constraints: "INTEGER NOT NULL"),
+            .init(key: .record, constraints: "BLOB NOT NULL"),
+            .init(key: .timestamp, constraints: "REAL NOT NULL"),
         ]),
         ColumnMigratableTableDefinition<SignedPreKey>(constraints: nil, columns: [
-            .init(key: .preKeyId, constraints: "INTEGER"),
-            .init(key: .record, constraints: "BLOB"),
-            .init(key: .timestamp, constraints: "REAL"),
+            .init(key: .preKeyId, constraints: "INTEGER NOT NULL"),
+            .init(key: .record, constraints: "BLOB NOT NULL"),
+            .init(key: .timestamp, constraints: "REAL NOT NULL"),
         ])
     ]
     

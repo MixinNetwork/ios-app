@@ -23,8 +23,8 @@ public class TaskDatabase: Database {
         migrator.registerMigration("create_table") { db in
             let messageBlaze = ColumnMigratableTableDefinition<MessageBlaze>(constraints: nil, columns: [
                 .init(key: .messageId, constraints: "TEXT PRIMARY KEY"),
-                .init(key: .message, constraints: "BLOB"),
-                .init(key: .createdAt, constraints: "TEXT"),
+                .init(key: .message, constraints: "BLOB NOT NULL"),
+                .init(key: .createdAt, constraints: "TEXT NOT NULL"),
             ])
             try self.migrateTable(with: messageBlaze, into: db)
             

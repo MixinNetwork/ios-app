@@ -372,9 +372,7 @@ public final class ConversationDAO: UserDatabaseDAO {
             let participants = response.participants.map {
                 Participant(conversationId: conversationId, userId: $0.userId, role: $0.role, status: ParticipantStatus.SUCCESS.rawValue, createdAt: $0.createdAt)
             }
-            for participant in participants {
-                try participant.insert(db)
-            }
+            try participants.insert(db)
             conversation = try ConversationItem.fetchOne(db, sql: ConversationDAO.sqlQueryConversationByCoversationId, arguments: [conversationId], adapter: nil)
             participantUsers = try ParticipantUser.fetchAll(db, sql: ParticipantDAO.sqlQueryGroupIconParticipants, arguments: [conversationId], adapter: nil)
         }

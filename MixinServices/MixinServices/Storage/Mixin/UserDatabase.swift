@@ -287,12 +287,14 @@ public final class UserDatabase: Database {
                 try db.execute(sql: "DROP INDEX IF EXISTS jobs_next_indexs")
             }
             
-            if try db.tableExists("assets") && localVersion < 21 {
-                try db.execute(sql: "UPDATE assets SET reserve = '0'")
-            }
-            
-            if try db.tableExists("top_assets") && localVersion < 21 {
-                try db.execute(sql: "UPDATE top_assets SET reserve = '0'")
+            if localVersion < 21 {
+                if try db.tableExists("assets") {
+                    try db.execute(sql: "UPDATE assets SET reserve = '0'")
+                }
+                
+                if try db.tableExists("top_assets") {
+                    try db.execute(sql: "UPDATE top_assets SET reserve = '0'")
+                }
             }
         }
         

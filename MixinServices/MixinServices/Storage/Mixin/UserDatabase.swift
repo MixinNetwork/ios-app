@@ -7,6 +7,7 @@ public final class UserDatabase: Database {
     public override class var config: Configuration {
         var config = super.config
         config.label = "User"
+        config.foreignKeysEnabled = false
         config.prepareDatabase { (db) in
             db.add(tokenizer: MixinTokenizer.self)
         }

@@ -697,6 +697,7 @@ extension HomeViewController {
         alert.addAction(UIAlertAction(title: R.string.localizable.group_menu_clear(), style: .destructive, handler: { (_) in
             self.tableView.beginUpdates()
             self.conversations[indexPath.row].contentType = MessageCategory.UNKNOWN.rawValue
+            self.conversations[indexPath.row].messageId = ""
             self.conversations[indexPath.row].unseenMessageCount = 0
             self.tableView.reloadRows(at: [indexPath], with: .automatic)
             self.tableView.endUpdates()

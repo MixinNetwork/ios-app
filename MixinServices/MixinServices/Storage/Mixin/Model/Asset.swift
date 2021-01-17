@@ -23,6 +23,25 @@ public class Asset: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
     public let assetKey: String
     public let reserve: String
     
+    public required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        assetId = try container.decode(String.self, forKey: .assetId)
+        type = try container.decodeIfPresent(String.self, forKey: .type) ?? ""
+        symbol = try container.decodeIfPresent(String.self, forKey: .symbol) ?? ""
+        name = try container.decodeIfPresent(String.self, forKey: .name) ?? ""
+        iconUrl = try container.decodeIfPresent(String.self, forKey: .iconUrl) ?? ""
+        balance = try container.decodeIfPresent(String.self, forKey: .balance) ?? ""
+        destination = try container.decodeIfPresent(String.self, forKey: .destination) ?? ""
+        tag = try container.decodeIfPresent(String.self, forKey: .tag) ?? ""
+        priceBtc = try container.decodeIfPresent(String.self, forKey: .priceBtc) ?? ""
+        priceUsd = try container.decodeIfPresent(String.self, forKey: .priceUsd) ?? ""
+        changeUsd = try container.decodeIfPresent(String.self, forKey: .changeUsd) ?? ""
+        chainId = try container.decodeIfPresent(String.self, forKey: .chainId) ?? ""
+        confirmations = try container.decodeIfPresent(Int.self, forKey: .confirmations) ?? 0
+        assetKey = try container.decodeIfPresent(String.self, forKey: .assetKey) ?? ""
+        reserve = try container.decodeIfPresent(String.self, forKey: .reserve) ?? ""
+    }
+    
     public init(assetId: String, type: String, symbol: String, name: String, iconUrl: String, balance: String, destination: String, tag: String, priceBtc: String, priceUsd: String, changeUsd: String, chainId: String, confirmations: Int, assetKey: String, reserve: String) {
         self.assetId = assetId
         self.type = type

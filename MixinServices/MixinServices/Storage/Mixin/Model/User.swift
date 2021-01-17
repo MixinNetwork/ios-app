@@ -3,25 +3,41 @@ import GRDB
 
 public struct User {
     
+    static let systemUser = "00000000-0000-0000-0000-000000000000"
+    
     public let userId: String
     public let fullName: String?
     public let biography: String?
     public let identityNumber: String
     public let avatarUrl: String?
-    public var phone: String? = nil
-    public var isVerified: Bool? = nil
-    public var muteUntil: String? = nil
-    public var appId: String? = nil
+    public var phone: String?
+    public var isVerified: Bool
+    public var muteUntil: String?
+    public var appId: String?
     public let createdAt: String?
     public let relationship: String
-    public var isScam: Bool = false
+    public var isScam: Bool
     
-    public var app: App? = nil
+    public var app: App?
     
-    static let systemUser = "00000000-0000-0000-0000-000000000000"
+    internal init(userId: String, fullName: String?, biography: String?, identityNumber: String, avatarUrl: String?, phone: String? = nil, isVerified: Bool, muteUntil: String? = nil, appId: String? = nil, createdAt: String?, relationship: String, isScam: Bool, app: App? = nil) {
+        self.userId = userId
+        self.fullName = fullName
+        self.biography = biography
+        self.identityNumber = identityNumber
+        self.avatarUrl = avatarUrl
+        self.phone = phone
+        self.isVerified = isVerified
+        self.muteUntil = muteUntil
+        self.appId = appId
+        self.createdAt = createdAt
+        self.relationship = relationship
+        self.isScam = isScam
+        self.app = app
+    }
     
     public static func createSystemUser() -> User {
-        return User(userId: systemUser, fullName: "0", biography: "", identityNumber: "0", avatarUrl: nil, phone: nil, isVerified: false, muteUntil: nil, appId: nil, createdAt: nil, relationship: "", app: nil)
+        return User(userId: systemUser, fullName: "0", biography: "", identityNumber: "0", avatarUrl: nil, phone: nil, isVerified: false, muteUntil: nil, appId: nil, createdAt: nil, relationship: "", isScam: false, app: nil)
     }
     
     public static func createUser(from user: UserResponse) -> User {
@@ -29,7 +45,7 @@ public struct User {
     }
 
     public static func createUser(from account: Account) -> User {
-        return User(userId: account.user_id, fullName: account.full_name, biography: account.biography, identityNumber: account.identity_number, avatarUrl: account.avatar_url, phone: account.phone, isVerified: false, muteUntil: nil, appId: nil, createdAt: account.created_at, relationship: Relationship.ME.rawValue, app: nil)
+        return User(userId: account.user_id, fullName: account.full_name, biography: account.biography, identityNumber: account.identity_number, avatarUrl: account.avatar_url, phone: account.phone, isVerified: false, muteUntil: nil, appId: nil, createdAt: account.created_at, relationship: Relationship.ME.rawValue, isScam: false, app: nil)
     }
     
 }
@@ -49,6 +65,30 @@ extension User: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinE
         case relationship
         case createdAt = "created_at"
         case isScam = "is_scam"
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        self.userId = try container.decode(String.self, forKey: .userId)
+        
+        self.fullName = try container.decodeIfPresent(String.self, forKey: .fullName)
+        self.biography = try container.decodeIfPresent(String.self, forKey: .biography)
+        
+        self.identityNumber = (try container.decodeIfPresent(String.self, forKey: .identityNumber)) ?? ""
+        
+        self.avatarUrl = try container.decodeIfPresent(String.self, forKey: .avatarUrl)
+        self.phone = try container.decodeIfPresent(String.self, forKey: .phone)
+        
+        self.isVerified = try container.decodeIfPresent(Bool.self, forKey: .isVerified) ?? false
+        
+        self.muteUntil = try container.decodeIfPresent(String.self, forKey: .muteUntil)
+        self.appId = try container.decodeIfPresent(String.self, forKey: .appId)
+        self.createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt)
+        
+        self.relationship = (try container.decodeIfPresent(String.self, forKey: .relationship)) ?? ""
+        
+        self.isScam = (try container.decodeIfPresent(Bool.self, forKey: .isScam)) ?? false
     }
     
 }

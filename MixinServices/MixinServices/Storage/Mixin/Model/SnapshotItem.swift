@@ -70,6 +70,29 @@ extension SnapshotItem: Decodable, MixinFetchableRecord {
         case opponentUserIdentityNumber = "identity_number"
     }
     
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        snapshotId = try container.decode(String.self, forKey: .snapshotId)
+        type = try container.decodeIfPresent(String.self, forKey: .type) ?? ""
+        assetId = try container.decodeIfPresent(String.self, forKey: .assetId) ?? ""
+        amount = try container.decodeIfPresent(String.self, forKey: .amount) ?? ""
+        opponentId = try container.decodeIfPresent(String.self, forKey: .opponentId)
+        transactionHash = try container.decodeIfPresent(String.self, forKey: .transactionHash)
+        sender = try container.decodeIfPresent(String.self, forKey: .sender)
+        receiver = try container.decodeIfPresent(String.self, forKey: .receiver)
+        memo = try container.decodeIfPresent(String.self, forKey: .memo)
+        confirmations = try container.decodeIfPresent(Int.self, forKey: .confirmations)
+        traceId = try container.decodeIfPresent(String.self, forKey: .traceId)
+        createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt) ?? ""
+        
+        assetSymbol = try container.decodeIfPresent(String.self, forKey: .assetSymbol)
+        
+        opponentUserId = try container.decodeIfPresent(String.self, forKey: .opponentUserId)
+        opponentUserFullName = try container.decodeIfPresent(String.self, forKey: .opponentUserFullName)
+        opponentUserAvatarUrl = try container.decodeIfPresent(String.self, forKey: .opponentUserAvatarUrl)
+        opponentUserIdentityNumber = try container.decodeIfPresent(String.self, forKey: .opponentUserIdentityNumber)
+    }
+    
 }
 
 extension SnapshotItem {

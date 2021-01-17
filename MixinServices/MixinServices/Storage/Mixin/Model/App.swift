@@ -54,6 +54,21 @@ extension App: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEn
         case updatedAt = "updated_at"
     }
     
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        appId = try container.decode(String.self, forKey: .appId)
+        appNumber = try container.decodeIfPresent(String.self, forKey: .appNumber) ?? ""
+        redirectUri = try container.decodeIfPresent(String.self, forKey: .redirectUri) ?? ""
+        name = try container.decodeIfPresent(String.self, forKey: .name) ?? ""
+        iconUrl = try container.decodeIfPresent(String.self, forKey: .iconUrl) ?? ""
+        capabilities = try container.decodeIfPresent([String].self, forKey: .capabilities)
+        resourcePatterns = try container.decodeIfPresent([String].self, forKey: .resourcePatterns)
+        homeUri = try container.decodeIfPresent(String.self, forKey: .homeUri) ?? ""
+        creatorId = try container.decodeIfPresent(String.self, forKey: .creatorId) ?? ""
+        updatedAt = try container.decodeIfPresent(String.self, forKey: .updatedAt)
+        category = try container.decodeIfPresent(String.self, forKey: .category) ?? ""
+    }
+    
 }
 
 extension App: TableRecord, PersistableRecord {

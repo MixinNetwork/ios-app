@@ -31,6 +31,20 @@ extension Address: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mix
         case updatedAt = "updated_at"
     }
     
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        addressId = try container.decode(String.self, forKey: .addressId)
+        type = try container.decodeIfPresent(String.self, forKey: .type) ?? ""
+        assetId = try container.decodeIfPresent(String.self, forKey: .assetId) ?? ""
+        destination = try container.decodeIfPresent(String.self, forKey: .destination) ?? ""
+        label = try container.decodeIfPresent(String.self, forKey: .label) ?? ""
+        tag = try container.decodeIfPresent(String.self, forKey: .tag) ?? ""
+        fee = try container.decodeIfPresent(String.self, forKey: .fee) ?? ""
+        reserve = try container.decodeIfPresent(String.self, forKey: .reserve) ?? ""
+        dust = try container.decodeIfPresent(String.self, forKey: .dust) ?? ""
+        updatedAt = try container.decodeIfPresent(String.self, forKey: .updatedAt) ?? ""
+    }
+    
 }
 
 extension Address: TableRecord, PersistableRecord {

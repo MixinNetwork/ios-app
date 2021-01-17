@@ -361,3 +361,15 @@ extension Database {
     }
     
 }
+
+extension GRDB.Database {
+    
+    func columnExist(
+        in tableName: String,
+        columnName: String
+    ) throws -> Bool {
+        return try tableExists(tableName)
+            && (try columns(in: tableName).contains { $0.name == columnName })
+    }
+    
+}

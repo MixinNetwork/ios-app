@@ -49,7 +49,7 @@ public final class UserDatabase: Database {
             .init(key: .appNumber, constraints: "TEXT NOT NULL"),
             .init(key: .redirectUri, constraints: "TEXT NOT NULL"),
             .init(key: .name, constraints: "TEXT NOT NULL"),
-            .init(key: .category, constraints: "TEXT"),
+            .init(key: .category, constraints: "TEXT NOT NULL"),
             .init(key: .iconUrl, constraints: "TEXT NOT NULL"),
             .init(key: .capabilities, constraints: "BLOB"),
             .init(key: .resourcePatterns, constraints: "BLOB"),
@@ -263,49 +263,39 @@ public final class UserDatabase: Database {
                 localVersion = DatabaseUserDefault.shared.mixinDatabaseVersion
             }
             
-            if localVersion > 0 {
-                if localVersion < 8 {
-                    try db.execute(sql: "DROP TABLE IF EXISTS sent_sender_keys")
-                    try db.execute(sql: "DROP INDEX IF EXISTS jobs_next_indexs")
-                }
-                
-                if localVersion < 9 {
-                    try db.execute(sql: "DROP TABLE IF EXISTS resend_messages")
-                }
-                
-                if try db.tableExists("participant_session") && localVersion < 11 {
-                    try db.execute(sql: "DELETE FROM participant_session WHERE ifnull(session_id,'') == ''")
-                }
-                
-                if localVersion < 15 {
-                    try db.execute(sql: "DROP TRIGGER IF EXISTS conversation_unseen_message_count_insert")
-                }
-                
-                if localVersion < 18 {
-                    try db.execute(sql: "DROP INDEX IF EXISTS jobs_next_indexs")
-                }
+            guard localVersion > 0 else {
+                return
             }
             
-            if try db.columnExist(in: Address.databaseTableName, columnName: "dust") {
-                try db.execute(sql: "UPDATE \(Address.databaseTableName) SET dust = 0 WHERE dust IS NULL")
+            if localVersion < 8 {
+                try db.execute(sql: "DROP TABLE IF EXISTS sent_sender_keys")
+                try db.execute(sql: "DROP INDEX IF EXISTS jobs_next_indexs")
             }
             
-            if try db.columnExist(in: Asset.databaseTableName, columnName: "asset_key") {
-                try db.execute(sql: "UPDATE \(Asset.databaseTableName) SET asset_key = '' WHERE asset_key IS NULL")
-            }
-            if try db.columnExist(in: Asset.databaseTableName, columnName: "reserve") {
-                try db.execute(sql: "UPDATE \(Asset.databaseTableName) SET reserve = 0 WHERE reserve IS NULL")
-            }
-            if try db.columnExist(in: TopAsset.databaseTableName, columnName: "reserve") {
-                try db.execute(sql: "UPDATE \(TopAsset.databaseTableName) SET reserve = 0 WHERE reserve IS NULL")
+            if localVersion < 9 {
+                try db.execute(sql: "DROP TABLE IF EXISTS resend_messages")
             }
             
-            if try db.columnExist(in: User.databaseTableName, columnName: "is_scam") {
-                try db.execute(sql: "UPDATE \(User.databaseTableName) SET is_scam = 0 WHERE is_scam IS NULL")
+            if try db.tableExists("participant_session") && localVersion < 11 {
+                try db.execute(sql: "DELETE FROM participant_session WHERE ifnull(session_id,'') == ''")
             }
             
-            if try db.columnExist(in: App.databaseTableName, columnName: "category") {
-                try db.execute(sql: "UPDATE \(App.databaseTableName) SET category = '\(AppCategory.OTHER.rawValue)' WHERE category IS NULL")
+            if localVersion < 15 {
+                try db.execute(sql: "DROP TRIGGER IF EXISTS conversation_unseen_message_count_insert")
+            }
+            
+            if localVersion < 18 {
+                try db.execute(sql: "DROP INDEX IF EXISTS jobs_next_indexs")
+            }
+            
+            if localVersion < 21 {
+                if try db.tableExists("assets") {
+                    try db.execute(sql: "UPDATE assets SET reserve = '0'")
+                }
+                
+                if try db.tableExists("top_assets") {
+                    try db.execute(sql: "UPDATE top_assets SET reserve = '0'")
+                }
             }
         }
         

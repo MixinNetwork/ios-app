@@ -17,6 +17,13 @@ extension FavoriteApp: Codable, DatabaseColumnConvertible, MixinFetchableRecord,
         case createdAt = "created_at"
     }
     
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        userId = try container.decodeIfPresent(String.self, forKey: .userId) ?? ""
+        appId = try container.decodeIfPresent(String.self, forKey: .appId) ?? ""
+        createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt) ?? ""
+    }
+    
 }
 
 extension FavoriteApp: TableRecord, PersistableRecord {

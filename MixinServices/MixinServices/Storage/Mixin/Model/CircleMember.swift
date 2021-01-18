@@ -30,6 +30,17 @@ public final class CircleMember {
         self.badgeImage = badgeImage
     }
     
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        conversationId = try container.decodeIfPresent(String.self, forKey: .conversationId) ?? ""
+        userId = try container.decodeIfPresent(String.self, forKey: .userId)
+        category = try container.decodeIfPresent(String.self, forKey: .category) ?? ""
+        name = try container.decodeIfPresent(String.self, forKey: .name) ?? ""
+        iconUrl = try container.decodeIfPresent(String.self, forKey: .iconUrl) ?? ""
+        identityNumber = try container.decodeIfPresent(String.self, forKey: .identityNumber)
+        phoneNumber = try container.decodeIfPresent(String.self, forKey: .phoneNumber)
+    }
+    
 }
 
 extension CircleMember: Equatable {

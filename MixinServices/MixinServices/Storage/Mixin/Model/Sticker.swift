@@ -45,6 +45,17 @@ extension Sticker: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mix
         case lastUseAt = "last_used_at"
     }
     
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        stickerId = try container.decodeIfPresent(String.self, forKey: .stickerId) ?? ""
+        name = try container.decodeIfPresent(String.self, forKey: .name) ?? ""
+        assetUrl = try container.decodeIfPresent(String.self, forKey: .assetUrl) ?? ""
+        assetType = try container.decodeIfPresent(String.self, forKey: .assetType) ?? ""
+        assetWidth = try container.decodeIfPresent(Int.self, forKey: .assetWidth) ?? 0
+        assetHeight = try container.decodeIfPresent(Int.self, forKey: .assetHeight) ?? 0
+        lastUseAt = try container.decodeIfPresent(String.self, forKey: .lastUseAt)
+    }
+    
 }
 
 extension Sticker: TableRecord, PersistableRecord {

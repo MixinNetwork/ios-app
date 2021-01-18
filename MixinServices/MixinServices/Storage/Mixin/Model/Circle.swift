@@ -23,6 +23,13 @@ extension Circle: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mixi
         case createdAt = "created_at"
     }
     
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        circleId = try container.decode(String.self, forKey: .circleId)
+        name = try container.decodeIfPresent(String.self, forKey: .name) ?? ""
+        createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt) ?? ""
+    }
+    
 }
 
 extension Circle: TableRecord, PersistableRecord {

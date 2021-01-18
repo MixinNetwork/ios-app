@@ -40,6 +40,15 @@ extension Participant: Codable, DatabaseColumnConvertible, MixinFetchableRecord,
         case createdAt = "created_at"
     }
     
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        conversationId = try container.decodeIfPresent(String.self, forKey: .conversationId) ?? ""
+        userId = try container.decodeIfPresent(String.self, forKey: .userId) ?? ""
+        role = try container.decodeIfPresent(String.self, forKey: .role) ?? ""
+        status = try container.decodeIfPresent(Int.self, forKey: .status) ?? 0
+        createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt) ?? ""
+    }
+    
 }
 
 extension Participant: TableRecord, PersistableRecord {

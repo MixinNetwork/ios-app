@@ -17,6 +17,15 @@ public final class CircleConversation {
         self.pinTime = pinTime
     }
     
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        circleId = try container.decode(String.self, forKey: .circleId)
+        conversationId = try container.decodeIfPresent(String.self, forKey: .conversationId) ?? ""
+        userId = try container.decodeIfPresent(String.self, forKey: .userId)
+        createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt) ?? ""
+        pinTime = try container.decodeIfPresent(String.self, forKey: .pinTime)
+    }
+    
 }
 
 extension CircleConversation: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord {

@@ -32,6 +32,18 @@ extension Album: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mixin
         case description
     }
     
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        albumId = try container.decode(String.self, forKey: .albumId)
+        name = try container.decodeIfPresent(String.self, forKey: .name) ?? ""
+        iconUrl = try container.decodeIfPresent(String.self, forKey: .iconUrl) ?? ""
+        createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt) ?? ""
+        updatedAt = try container.decodeIfPresent(String.self, forKey: .updatedAt) ?? ""
+        userId = try container.decodeIfPresent(String.self, forKey: .userId) ?? ""
+        category = try container.decodeIfPresent(String.self, forKey: .category) ?? ""
+        description = try container.decodeIfPresent(String.self, forKey: .description) ?? ""
+    }
+    
 }
 
 extension Album: TableRecord, PersistableRecord {

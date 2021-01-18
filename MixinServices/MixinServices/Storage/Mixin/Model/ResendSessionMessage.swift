@@ -19,6 +19,14 @@ extension ResendSessionMessage: Codable, DatabaseColumnConvertible, MixinFetchab
         case status
     }
     
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        messageId = try container.decodeIfPresent(String.self, forKey: .messageId) ?? ""
+        userId = try container.decodeIfPresent(String.self, forKey: .userId) ?? ""
+        sessionId = try container.decodeIfPresent(String.self, forKey: .sessionId) ?? ""
+        status = try container.decodeIfPresent(Int.self, forKey: .status) ?? 0
+    }
+    
 }
 
 extension ResendSessionMessage: TableRecord, PersistableRecord {

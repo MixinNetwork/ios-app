@@ -59,4 +59,14 @@ extension ParticipantUser: Codable, DatabaseColumnConvertible, MixinFetchableRec
         case userIdentityNumber
     }
     
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        conversationId = try container.decodeIfPresent(String.self, forKey: .conversationId) ?? ""
+        role = try container.decodeIfPresent(String.self, forKey: .role) ?? ""
+        userId = try container.decodeIfPresent(String.self, forKey: .userId) ?? ""
+        userFullName = try container.decodeIfPresent(String.self, forKey: .userFullName) ?? ""
+        userAvatarUrl = try container.decodeIfPresent(String.self, forKey: .userAvatarUrl) ?? ""
+        userIdentityNumber = try container.decodeIfPresent(String.self, forKey: .userIdentityNumber) ?? ""
+    }
+    
 }

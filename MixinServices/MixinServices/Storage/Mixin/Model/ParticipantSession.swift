@@ -22,6 +22,15 @@ public struct ParticipantSession {
         self.createdAt = createdAt
     }
     
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        conversationId = try container.decodeIfPresent(String.self, forKey: .conversationId) ?? ""
+        userId = try container.decodeIfPresent(String.self, forKey: .userId) ?? ""
+        sessionId = try container.decodeIfPresent(String.self, forKey: .sessionId) ?? ""
+        sentToServer = try container.decodeIfPresent(Int.self, forKey: .sentToServer)
+        createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt) ?? ""
+    }
+    
 }
 
 extension ParticipantSession: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord {

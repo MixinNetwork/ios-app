@@ -17,5 +17,12 @@ extension ConversationCategoryStorage: Decodable, MixinFetchableRecord {
         case messageCount
     }
     
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        category = try container.decodeIfPresent(String.self, forKey: .category) ?? ""
+        mediaSize = try container.decodeIfPresent(Int64.self, forKey: .mediaSize) ?? 0
+        messageCount = try container.decodeIfPresent(Int.self, forKey: .messageCount) ?? 0
+    }
+    
 }
 

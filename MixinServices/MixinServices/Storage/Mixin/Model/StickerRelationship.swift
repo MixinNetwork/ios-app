@@ -17,6 +17,13 @@ extension StickerRelationship: Codable, DatabaseColumnConvertible, MixinFetchabl
         case createdAt = "created_at"
     }
     
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        albumId = try container.decodeIfPresent(String.self, forKey: .albumId) ?? ""
+        stickerId = try container.decodeIfPresent(String.self, forKey: .stickerId) ?? ""
+        createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt) ?? ""
+    }
+    
 }
 
 extension StickerRelationship: TableRecord, PersistableRecord {

@@ -58,6 +58,12 @@ public class AttachmentEncryptingInputStream: InputStream {
         prepare()
     }
     
+    deinit {
+        if let cryptor = cryptor {
+            CCCryptorRelease(cryptor)
+        }
+    }
+    
     override public func open() {
         inputStream.open()
     }

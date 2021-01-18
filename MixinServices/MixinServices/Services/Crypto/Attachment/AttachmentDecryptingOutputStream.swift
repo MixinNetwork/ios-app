@@ -57,6 +57,12 @@ class AttachmentDecryptingOutputStream: OutputStream {
         super.init(url: url, append: false)
     }
     
+    deinit {
+        if let cryptor = cryptor {
+            CCCryptorRelease(cryptor)
+        }
+    }
+    
     override func open() {
         status = .open
     }

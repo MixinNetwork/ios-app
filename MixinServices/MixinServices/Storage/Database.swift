@@ -143,7 +143,8 @@ extension Database {
         arguments: StatementArguments = StatementArguments()
     ) -> [Value] {
         try! pool.read({ (db) -> [Value] in
-            try Value.fetchAll(db, sql: sql, arguments: arguments, adapter: nil)
+            let values = try Value?.fetchAll(db, sql: sql, arguments: arguments, adapter: nil)
+            return values.compactMap { $0 }
         })
     }
     
@@ -180,24 +181,8 @@ extension Database {
             if let limit = limit {
                 request = request.limit(limit, offset: offset)
             }
-            return try Value.fetchAll(db, request)
-        }
-    }
-    
-    public func select(
-        with sql: String,
-        keyColumn: Column,
-        valueColumn: Column
-    ) -> UniqueStringPairs {
-        try! pool.read { (db) -> UniqueStringPairs in
-            var pairs = UniqueStringPairs()
-            let rows = try Row.fetchCursor(db, sql: sql)
-            while let row = try rows.next() {
-                let key: UniqueStringPairs.Key = row[keyColumn.name]
-                let value: UniqueStringPairs.Value = row[valueColumn.name]
-                pairs[key] = value
-            }
-            return pairs
+            let values = try Value?.fetchAll(db, request)
+            return values.compactMap { $0 }
         }
     }
     

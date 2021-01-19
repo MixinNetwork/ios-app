@@ -42,8 +42,8 @@ extension Participant: Codable, DatabaseColumnConvertible, MixinFetchableRecord,
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        conversationId = try container.decodeIfPresent(String.self, forKey: .conversationId) ?? ""
-        userId = try container.decodeIfPresent(String.self, forKey: .userId) ?? ""
+        conversationId = try container.decode(String.self, forKey: .conversationId)
+        userId = try container.decode(String.self, forKey: .userId)
         role = try container.decodeIfPresent(String.self, forKey: .role) ?? ""
         status = try container.decodeIfPresent(Int.self, forKey: .status) ?? 0
         createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt) ?? ""

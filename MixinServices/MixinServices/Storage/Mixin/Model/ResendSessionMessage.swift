@@ -21,9 +21,9 @@ extension ResendSessionMessage: Codable, DatabaseColumnConvertible, MixinFetchab
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        messageId = try container.decodeIfPresent(String.self, forKey: .messageId) ?? ""
-        userId = try container.decodeIfPresent(String.self, forKey: .userId) ?? ""
-        sessionId = try container.decodeIfPresent(String.self, forKey: .sessionId) ?? ""
+        messageId = try container.decode(String.self, forKey: .messageId)
+        userId = try container.decode(String.self, forKey: .userId)
+        sessionId = try container.decode(String.self, forKey: .sessionId)
         status = try container.decodeIfPresent(Int.self, forKey: .status) ?? 0
     }
     

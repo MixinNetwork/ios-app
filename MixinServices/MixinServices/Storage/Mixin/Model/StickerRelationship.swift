@@ -19,8 +19,8 @@ extension StickerRelationship: Codable, DatabaseColumnConvertible, MixinFetchabl
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        albumId = try container.decodeIfPresent(String.self, forKey: .albumId) ?? ""
-        stickerId = try container.decodeIfPresent(String.self, forKey: .stickerId) ?? ""
+        albumId = try container.decode(String.self, forKey: .albumId)
+        stickerId = try container.decode(String.self, forKey: .stickerId)
         createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt) ?? ""
     }
     

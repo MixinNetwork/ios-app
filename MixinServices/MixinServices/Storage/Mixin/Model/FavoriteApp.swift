@@ -19,8 +19,8 @@ extension FavoriteApp: Codable, DatabaseColumnConvertible, MixinFetchableRecord,
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        userId = try container.decodeIfPresent(String.self, forKey: .userId) ?? ""
-        appId = try container.decodeIfPresent(String.self, forKey: .appId) ?? ""
+        userId = try container.decode(String.self, forKey: .userId)
+        appId = try container.decode(String.self, forKey: .appId)
         createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt) ?? ""
     }
     

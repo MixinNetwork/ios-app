@@ -81,6 +81,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         requestTimeout = 5
         BackgroundMessagingService.shared.end()
         MixinService.isStopProcessMessages = false
+        if !AppGroupUserDefaults.Database.isFTSInitialized {
+            ConcurrentJobQueue.shared.addJob(job: InitializeFTSJob())
+        }
         if WebSocketService.shared.isConnected && WebSocketService.shared.isRealConnected {
             DispatchQueue.global().async {
                 guard canProcessMessages else {

@@ -87,7 +87,7 @@ public final class AssetAPI: MixinAPI {
         return request(method: .get, path: url)
     }
     
-    public static func topAssets(completion: @escaping (MixinAPI.Result<[Asset]>) -> Void) {
+    public static func topAssets(completion: @escaping (MixinAPI.Result<[TopAsset]>) -> Void) {
         request(method: .get, path: Path.top, completion: completion)
     }
     

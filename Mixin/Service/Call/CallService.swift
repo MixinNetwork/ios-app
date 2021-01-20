@@ -18,7 +18,7 @@ class CallService: NSObject {
     
     var isMuted = false {
         didSet {
-            NotificationCenter.default.postOnMain(name: Self.mutenessDidChangeNotification)
+            NotificationCenter.default.post(onMainThread: Self.mutenessDidChangeNotification, object: self)
             updateAudioTrackEnabling()
         }
     }

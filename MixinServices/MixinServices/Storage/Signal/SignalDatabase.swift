@@ -1,46 +1,92 @@
-import Foundation
-import WCDBSwift
+import GRDB
 
-public class SignalDatabase: BaseDatabase {
+public final class SignalDatabase: Database {
     
-    private static let databaseVersion: Int = 2
+    public private(set) static var current: SignalDatabase! = makeDatabaseWithDefaultLocation()
     
-    public static let shared = SignalDatabase()
-    
-    private var _database = Database(path: AppGroupContainer.signalDatabaseUrl.path)
-    
-    override var database: Database! {
-        get { return _database }
-        set { }
+    public override class var config: Configuration {
+        var config = super.config
+        config.label = "Signal"
+        return config
     }
     
-    public func initDatabase() throws {
-        try database.run(transaction: {
-            try database.create(of: Identity.self)
-            try database.create(of: PreKey.self)
-            try database.create(of: RatchetSenderKey.self)
-            try database.create(of: SenderKey.self)
-            try database.create(of: Session.self)
-            try database.create(of: SignedPreKey.self)
-            try database.setDatabaseVersion(version: SignalDatabase.databaseVersion)
-        })
+    internal lazy var tableMigrations: [ColumnMigratable] = [
+        ColumnMigratableTableDefinition<Identity>(constraints: nil, columns: [
+            .init(key: .address, constraints: "TEXT NOT NULL"),
+            .init(key: .registrationId, constraints: "INTEGER"),
+            .init(key: .publicKey, constraints: "BLOB NOT NULL"),
+            .init(key: .privateKey, constraints: "BLOB"),
+            .init(key: .nextPreKeyId, constraints: "INTEGER"),
+            .init(key: .timestamp, constraints: "REAL NOT NULL"),
+        ]),
+        ColumnMigratableTableDefinition<PreKey>(constraints: nil, columns: [
+            .init(key: .preKeyId, constraints: "INTEGER NOT NULL"),
+            .init(key: .record, constraints: "BLOB NOT NULL"),
+        ]),
+        ColumnMigratableTableDefinition<RatchetSenderKey>(constraints: "PRIMARY KEY(groupId, senderId)", columns: [
+            .init(key: .groupId, constraints: "TEXT NOT NULL"),
+            .init(key: .senderId, constraints: "TEXT NOT NULL"),
+            .init(key: .status, constraints: "TEXT NOT NULL"),
+        ]),
+        ColumnMigratableTableDefinition<SenderKey>(constraints: "PRIMARY KEY(groupId, senderId)", columns: [
+            .init(key: .groupId, constraints: "TEXT NOT NULL"),
+            .init(key: .senderId, constraints: "TEXT NOT NULL"),
+            .init(key: .record, constraints: "BLOB NOT NULL"),
+        ]),
+        ColumnMigratableTableDefinition<Session>(constraints: nil, columns: [
+            .init(key: .address, constraints: "TEXT NOT NULL"),
+            .init(key: .device, constraints: "INTEGER NOT NULL"),
+            .init(key: .record, constraints: "BLOB NOT NULL"),
+            .init(key: .timestamp, constraints: "REAL NOT NULL"),
+        ]),
+        ColumnMigratableTableDefinition<SignedPreKey>(constraints: nil, columns: [
+            .init(key: .preKeyId, constraints: "INTEGER NOT NULL"),
+            .init(key: .record, constraints: "BLOB NOT NULL"),
+            .init(key: .timestamp, constraints: "REAL NOT NULL"),
+        ])
+    ]
+    
+    private var migrator: DatabaseMigrator {
+        var migrator = DatabaseMigrator()
+        
+        migrator.registerMigration("create_table") { db in
+            for table in self.tableMigrations {
+                try self.migrateTable(with: table, into: db)
+            }
+            
+            try db.execute(sql: "CREATE UNIQUE INDEX IF NOT EXISTS identities_index_id ON identities(address)")
+            try db.execute(sql: "CREATE UNIQUE INDEX IF NOT EXISTS prekeys_index_id ON prekeys(preKeyId)")
+            try db.execute(sql: "CREATE UNIQUE INDEX IF NOT EXISTS sessions_multi_index ON sessions(address, device)")
+            try db.execute(sql: "CREATE UNIQUE INDEX IF NOT EXISTS signed_prekeys_index_id ON signed_prekeys(preKeyId)")
+        }
+        
+        return migrator
     }
     
-    public func logout() {
+    public static func reloadCurrent() {
+        current = makeDatabaseWithDefaultLocation()
+        current.migrate()
+    }
+    
+    public static func closeCurrent() {
+        current = nil
+    }
+    
+    private static func makeDatabaseWithDefaultLocation() -> SignalDatabase {
+        try! SignalDatabase(url: AppGroupContainer.signalDatabaseUrl)
+    }
+    
+    public func erase() {
         do {
-            try database.run(transaction: {
-                try database.delete(fromTable: Identity.tableName)
-                try database.delete(fromTable: PreKey.tableName)
-                try database.delete(fromTable: RatchetSenderKey.tableName)
-                try database.delete(fromTable: SenderKey.tableName)
-                try database.delete(fromTable: Session.tableName)
-                try database.delete(fromTable: SignedPreKey.tableName)
-            })
+            try pool.erase()
         } catch {
             Logger.writeDatabase(error: error)
             reporter.report(error: error)
         }
-        AppGroupUserDefaults.Crypto.clearAll()
+    }
+    
+    private func migrate() {
+        try! migrator.migrate(pool)
     }
     
 }

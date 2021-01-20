@@ -1,74 +1,89 @@
-import WCDBSwift
+import GRDB
 
-public final class ParticipantSessionDAO {
-    
-    private let sqlQueryParticipantUsers = """
-    SELECT p.* FROM participant_session p
-    LEFT JOIN users u ON p.user_id = u.user_id
-    WHERE p.conversation_id = ? AND p.session_id != ? AND ifnull(u.app_id,'') == '' AND ifnull(p.sent_to_server,'') == ''
-    """
-    private let sqlInsertParticipantSession = """
-    INSERT OR REPLACE INTO participant_session(conversation_id, user_id, session_id, created_at)
-    SELECT c.conversation_id, '%@', '%@', '%@' FROM conversations c
-    INNER JOIN users u ON c.owner_id = u.user_id
-    LEFT JOIN participants p on p.conversation_id = c.conversation_id
-    WHERE p.user_id = ? AND ifnull(u.app_id, '') = ''
-    """
-    private let sqlDeleteParticipantSession = """
-    DELETE FROM participant_session WHERE user_id = ? AND session_id = ?
-    """
+public final class ParticipantSessionDAO: UserDatabaseDAO {
     
     public static let shared = ParticipantSessionDAO()
     
     public func getParticipantSessions(conversationId: String) -> [ParticipantSession] {
-        return MixinDatabase.shared.getCodables(condition: ParticipantSession.Properties.conversationId == conversationId)
+        db.select(where: ParticipantSession.column(of: .conversationId) == conversationId)
     }
     
     public func getParticipantSession(conversationId: String, userId: String, sessionId: String) -> ParticipantSession? {
-        return MixinDatabase.shared.getCodable(condition: ParticipantSession.Properties.conversationId == conversationId && ParticipantSession.Properties.userId == userId && ParticipantSession.Properties.sessionId == sessionId)
+        let condition: SQLSpecificExpressible = ParticipantSession.column(of: .conversationId) == conversationId
+            && ParticipantSession.column(of: .userId) == userId
+            && ParticipantSession.column(of: .sessionId) == sessionId
+        return db.select(where: condition)
     }
     
     public func getNotSendSessionParticipants(conversationId: String, sessionId: String) -> [ParticipantSession] {
-        return MixinDatabase.shared.getCodables(on: ParticipantSession.Properties.all, sql: sqlQueryParticipantUsers, values: [conversationId, sessionId])
+        let sql = """
+        SELECT p.* FROM participant_session p
+        LEFT JOIN users u ON p.user_id = u.user_id
+        WHERE p.conversation_id = ? AND p.session_id != ? AND ifnull(u.app_id,'') == '' AND ifnull(p.sent_to_server,'') == ''
+        """
+        return db.select(with: sql, arguments: [conversationId, sessionId])
     }
-    
+
     public func provisionSession(userId: String, sessionId: String) {
-        MixinDatabase.shared.execute(sql: String(format: sqlInsertParticipantSession, userId, sessionId, Date().toUTCString()), values: [userId])
+        let sql = """
+        INSERT OR REPLACE INTO participant_session(conversation_id, user_id, session_id, created_at)
+        SELECT c.conversation_id, '%@', '%@', '%@' FROM conversations c
+        INNER JOIN users u ON c.owner_id = u.user_id
+        LEFT JOIN participants p on p.conversation_id = c.conversation_id
+        WHERE p.user_id = ? AND ifnull(u.app_id, '') = ''
+        """
+        let formatted = String(format: sql, userId, sessionId, Date().toUTCString())
+        db.execute(sql: sql, arguments: [userId])
     }
-    
+
     public func destorySession(userId: String, sessionId: String) {
-        MixinDatabase.shared.execute(sql: sqlDeleteParticipantSession, values: [userId, sessionId])
+        let sql = """
+        DELETE FROM participant_session WHERE user_id = ? AND session_id = ?
+        """
+        db.execute(sql: sql, arguments: [userId, sessionId])
     }
-    
+
     public func syncConversationParticipantSession(conversation: ConversationResponse) {
         let conversationId = conversation.conversationId
-        MixinDatabase.shared.transaction { (db) in
-            try db.delete(fromTable: Participant.tableName, where: Participant.Properties.conversationId == conversationId)
-            let participants = conversation.participants.map { Participant(conversationId: conversationId, userId: $0.userId, role: $0.role, status: ParticipantStatus.START.rawValue, createdAt: $0.createdAt) }
-            try db.insertOrReplace(objects: participants, intoTable: Participant.tableName)
+        db.write { (db) in
+            try Participant
+                .filter(Participant.column(of: .conversationId) == conversationId)
+                .deleteAll(db)
             
-            let statment = try db.prepareUpdateSQL(sql: ParticipantDAO.sqlUpdateStatus)
-            try statment.execute(with: [conversationId])
-
+            let participants = conversation.participants.map {
+                Participant(conversationId: conversationId, userId: $0.userId, role: $0.role, status: ParticipantStatus.START.rawValue, createdAt: $0.createdAt)
+            }
+            try participants.save(db)
+            
+            try db.execute(sql: ParticipantDAO.sqlUpdateStatus, arguments: [conversationId])
             try ParticipantSessionDAO.shared.syncConversationParticipantSession(conversation: conversation, db: db)
         }
     }
-    
-    public func syncConversationParticipantSession(conversation: ConversationResponse, db: Database) throws {
+
+    public func syncConversationParticipantSession(conversation: ConversationResponse, db: GRDB.Database) throws {
         let conversationId = conversation.conversationId
         var sentToServerMap = [String: Int?]()
         
-        let oldParticipantSessions: [ParticipantSession] = try db.getObjects(on: ParticipantSession.Properties.all, fromTable: ParticipantSession.tableName, where: ParticipantSession.Properties.conversationId == conversationId)
-        oldParticipantSessions.forEach({ (participantSession) in
-            sentToServerMap[participantSession.uniqueIdentifier] = participantSession.sentToServer
-        })
-        try db.delete(fromTable: ParticipantSession.tableName, where: ParticipantSession.Properties.conversationId == conversationId)
+        let oldParticipantSessions = try ParticipantSession
+            .filter(ParticipantSession.column(of: .conversationId) == conversationId)
+            .fetchAll(db)
+        for session in oldParticipantSessions {
+            sentToServerMap[session.uniqueIdentifier] = session.sentToServer
+        }
+        
+        try ParticipantSession
+            .filter(ParticipantSession.column(of: .conversationId) == conversationId)
+            .deleteAll(db)
         
         if let participantSessions = conversation.participantSessions {
             let sessionParticipants = participantSessions.map {
-                ParticipantSession(conversationId: conversationId, userId: $0.userId, sessionId: $0.sessionId, sentToServer: sentToServerMap[$0.uniqueIdentifier] ?? nil, createdAt: Date().toUTCString())
+                ParticipantSession(conversationId: conversationId,
+                                   userId: $0.userId,
+                                   sessionId: $0.sessionId,
+                                   sentToServer: sentToServerMap[$0.uniqueIdentifier] ?? nil,
+                                   createdAt: Date().toUTCString())
             }
-            try db.insert(objects: sessionParticipants, intoTable: ParticipantSession.tableName)
+            try sessionParticipants.save(db)
         }
     }
     

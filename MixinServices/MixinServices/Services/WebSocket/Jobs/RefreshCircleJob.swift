@@ -20,7 +20,7 @@ class RefreshCircleJob: AsynchronousJob {
                     guard !MixinService.isStopProcessMessages else {
                         return
                     }
-                    CircleDAO.shared.insertOrReplace(circle: circle)
+                    CircleDAO.shared.save(circle: circle)
                 }
             case .failure:
                 break

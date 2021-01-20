@@ -1,9 +1,7 @@
 import Foundation
-import WCDBSwift
+import GRDB
 
-public struct Address: BaseCodable {
-    
-    public static let tableName = "addresses"
+public struct Address {
     
     public let type: String
     public let addressId: String
@@ -16,18 +14,11 @@ public struct Address: BaseCodable {
     public let dust: String
     public let updatedAt: String
     
-    public enum CodingKeys: String, CodingTableKey {
-        
-        public typealias Root = Address
-        
-        public static let objectRelationalMapping = TableBinding(CodingKeys.self)
-        
-        public static var columnConstraintBindings: [CodingKeys: ColumnConstraintBinding]? {
-            return [
-                addressId: ColumnConstraintBinding(isPrimary: true)
-            ]
-        }
-        
+}
+
+extension Address: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord {
+    
+    public enum CodingKeys: String, CodingKey, CaseIterable {
         case type
         case addressId = "address_id"
         case assetId = "asset_id"
@@ -38,15 +29,34 @@ public struct Address: BaseCodable {
         case reserve
         case dust
         case updatedAt = "updated_at"
-        
     }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        addressId = try container.decode(String.self, forKey: .addressId)
+        type = try container.decodeIfPresent(String.self, forKey: .type) ?? ""
+        assetId = try container.decodeIfPresent(String.self, forKey: .assetId) ?? ""
+        destination = try container.decodeIfPresent(String.self, forKey: .destination) ?? ""
+        label = try container.decodeIfPresent(String.self, forKey: .label) ?? ""
+        tag = try container.decodeIfPresent(String.self, forKey: .tag) ?? ""
+        fee = try container.decodeIfPresent(String.self, forKey: .fee) ?? ""
+        reserve = try container.decodeIfPresent(String.self, forKey: .reserve) ?? ""
+        dust = try container.decodeIfPresent(String.self, forKey: .dust) ?? ""
+        updatedAt = try container.decodeIfPresent(String.self, forKey: .updatedAt) ?? ""
+    }
+    
+}
+
+extension Address: TableRecord, PersistableRecord {
+    
+    public static let databaseTableName = "addresses"
     
 }
 
 extension Address {
     
     public var fullAddress: String {
-        return tag.isEmpty ? destination : "\(destination):\(tag)"
+        tag.isEmpty ? destination : "\(destination):\(tag)"
     }
     
 }

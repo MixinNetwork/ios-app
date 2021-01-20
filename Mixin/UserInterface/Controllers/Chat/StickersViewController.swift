@@ -3,6 +3,9 @@ import MixinServices
 
 class StickersViewController: StickersCollectionViewController, ConversationInputAccessible {
     
+    static let stickerUsedAtDidUpdateNotification = NSNotification.Name("one.mixin.messenger.StickersViewController.stickerUsedAtDidUpdate")
+    static let stickerUserInfoKey = "sticker"
+    
     var stickers = [StickerItem]()
     
     override var isEmpty: Bool {
@@ -23,7 +26,9 @@ class StickersViewController: StickersCollectionViewController, ConversationInpu
                 StickerDAO.shared.updateUsedAt(stickerId: sticker.stickerId, usedAt: newUsedAt)
                 var newSticker = sticker
                 newSticker.lastUseAt = newUsedAt
-                NotificationCenter.default.postOnMain(name: .StickerUsedAtDidUpdate, object: newSticker)
+                NotificationCenter.default.post(onMainThread: Self.stickerUsedAtDidUpdateNotification,
+                                                object: self,
+                                                userInfo: [Self.stickerUserInfoKey: newSticker])
             }
         }
     }

@@ -1,42 +1,58 @@
 import Foundation
-import WCDBSwift
+import GRDB
 
 public class SessionDAO: SignalDAO {
     
     public static let shared = SessionDAO()
-
-    func getSession(address: String, device: Int) -> Session? {
-        return SignalDatabase.shared.getCodable(condition: Session.Properties.address == address && Session.Properties.device == device)
+    
+    func sessionExists(address: String, device: Int32) -> Bool {
+        db.recordExists(in: Session.self, where: Session.column(of: .address) == address && Session.column(of: .device) == device)
     }
-
-    func delete(address: String, device: Int) -> Bool {
-        SignalDatabase.shared.delete(table: Session.tableName, condition: Session.Properties.address == address && Session.Properties.device == device)
-        return true
+    
+    func getCount() -> Int {
+        db.count(in: Session.self)
     }
+    
+}
 
+extension SessionDAO {
+    
+    func getSession(address: String, device: Int32) -> Session? {
+        db.select(where: Session.column(of: .address) == address && Session.column(of: .device) == device)
+    }
+    
+    func getSessions(address: String) -> [Session] {
+        db.select(where: Session.column(of: .address) == address)
+    }
+    
+    func getSubDevices(address: String) -> [Int32] {
+        db.select(column: Session.column(of: .device),
+                  from: Session.self,
+                  where: Session.column(of: .address) == address && Session.column(of: .device) != 1)
+    }
+    
+    public func getSessionAddress() -> [Session] {
+        db.select(where: Session.column(of: .device) == 1)
+    }
+    
+}
+
+extension SessionDAO {
+    
+    func updateSession(with address: String, device: Int32, assignments: [ColumnAssignment]) {
+        db.update(Session.self,
+                  assignments: assignments,
+                  where: Session.column(of: .address) == address && Session.column(of: .device) == device)
+    }
+    
     @discardableResult
     func delete(address: String) -> Int {
-        return SignalDatabase.shared.delete(table: Session.tableName, condition: Session.Properties.address == address)
+        db.delete(Session.self, where: Session.column(of: .address) == address)
     }
-
-    func isExist(address: String, device: Int) -> Bool {
-        return SignalDatabase.shared.isExist(type: Session.self, condition: Session.Properties.address == address && Session.Properties.device == device)
+    
+    func delete(address: String, device: Int32) -> Bool {
+        db.delete(Session.self, where: Session.column(of: .address) == address && Session.column(of: .device) == device)
+        return true
     }
-
-    func getSubDevices(address: String) -> [Int32] {
-        return SignalDatabase.shared.getInt32Values(column: Session.Properties.device.asColumnResult(), tableName: Session.tableName, condition: Session.Properties.address == address && Session.Properties.device != 1)
-    }
-
-    func getSessions(address: String) -> [Session] {
-        return SignalDatabase.shared.getCodables(condition: Session.Properties.address == address)
-    }
-
-    func getCount() -> Int {
-        return SignalDatabase.shared.getCount(on: Session.Properties.id.count(), fromTable: Session.tableName)
-    }
-
-    public func syncGetSessionAddress() -> [Session] {
-        return SignalDatabase.shared.getCodables(condition: Session.Properties.device == 1)
-    }
-
+    
 }

@@ -40,7 +40,7 @@ class RefreshSnapshotsJob: BaseJob {
         }
         switch result {
         case let .success(snapshots):
-            SnapshotDAO.shared.insertOrReplaceSnapshots(snapshots: snapshots)
+            SnapshotDAO.shared.saveSnapshots(snapshots: snapshots)
             RefreshSnapshotsJob.setOffset(snapshots.last?.createdAt, for: category)
         case let .failure(error):
             RefreshSnapshotsJob.setOffset(nil, for: category)

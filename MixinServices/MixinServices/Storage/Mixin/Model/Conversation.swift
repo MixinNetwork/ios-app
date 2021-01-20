@@ -1,42 +1,52 @@
 import Foundation
-import WCDBSwift
+import GRDB
 
-public struct Conversation: BaseCodable {
-    
-    public static let tableName: String = "conversations"
+public enum ConversationCategory: String {
+    case CONTACT = "CONTACT"
+    case GROUP = "GROUP"
+}
+
+public enum ConversationStatus: Int {
+    case START = 0
+    case SUCCESS = 1
+    case QUIT = 2
+}
+
+public struct Conversation {
     
     public let conversationId: String
-    public var ownerId: String? = nil
-    public var category: String? = nil
-    public var name: String? = nil
-    public var iconUrl: String? = nil
-    public var announcement: String? = nil
-    public var lastMessageId: String? = nil
-    public var lastMessageCreatedAt: String? = nil
-    public var lastReadMessageId: String? = nil
-    public var unseenMessageCount: Int? = nil
+    public var ownerId: String?
+    public var category: String?
+    public var name: String?
+    public var iconUrl: String?
+    public var announcement: String?
+    public var lastMessageId: String?
+    public var lastMessageCreatedAt: String?
+    public var lastReadMessageId: String?
+    public var unseenMessageCount: Int?
     public var status: Int
-    public var draft: String? = nil
-    public var muteUntil: String? = nil
-    public var codeUrl: String? = nil
-    public var pinTime: String? = nil
+    public var draft: String?
+    public var muteUntil: String?
+    public var codeUrl: String?
+    public var pinTime: String?
     
-    public enum CodingKeys: String, CodingTableKey {
-        
-        public typealias Root = Conversation
-        
-        public static let objectRelationalMapping = TableBinding(CodingKeys.self)
-        public static var columnConstraintBindings: [CodingKeys: ColumnConstraintBinding]? {
-            return [
-                conversationId: ColumnConstraintBinding(isPrimary: true)
-            ]
-        }
-        public static var indexBindings: [IndexBinding.Subfix: IndexBinding]? {
-            return [
-                "_indexs": IndexBinding(indexesBy: [pinTime, lastMessageCreatedAt])
-            ]
-        }
-        
+    public static func createConversation(from conversation: ConversationResponse, ownerId: String, status: ConversationStatus) -> Conversation {
+        return Conversation(conversationId: conversation.conversationId, ownerId: ownerId, category: conversation.category, name: conversation.name, iconUrl: conversation.iconUrl, announcement: conversation.announcement, lastMessageId: nil, lastMessageCreatedAt: Date().toUTCString(), lastReadMessageId: nil, unseenMessageCount: 0, status: status.rawValue, draft: nil, muteUntil: conversation.muteUntil, codeUrl: conversation.codeUrl, pinTime: nil)
+    }
+    
+    public static func createConversation(conversationId: String, category: String?, recipientId: String, status: Int) -> Conversation {
+        return Conversation(conversationId: conversationId, ownerId: recipientId, category: category, name: nil, iconUrl: nil, announcement: nil, lastMessageId: nil, lastMessageCreatedAt: Date().toUTCString(), lastReadMessageId: nil, unseenMessageCount: 0, status: status, draft: nil, muteUntil: nil, codeUrl: nil, pinTime: nil)
+    }
+    
+    public func isGroup() -> Bool {
+        return category == ConversationCategory.GROUP.rawValue
+    }
+    
+}
+
+extension Conversation: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord {
+    
+    public enum CodingKeys: String, CodingKey {
         case conversationId = "conversation_id"
         case ownerId = "owner_id"
         case category
@@ -54,31 +64,10 @@ public struct Conversation: BaseCodable {
         case pinTime = "pin_time"
     }
     
-    public static func createConversation(from conversation: ConversationResponse, ownerId: String, status: ConversationStatus) -> Conversation {
-        return Conversation(conversationId: conversation.conversationId, ownerId: ownerId, category: conversation.category, name: conversation.name, iconUrl: conversation.iconUrl, announcement: conversation.announcement, lastMessageId: nil, lastMessageCreatedAt: Date().toUTCString(), lastReadMessageId: nil, unseenMessageCount: 0, status: status.rawValue, draft: nil, muteUntil: conversation.muteUntil, codeUrl: conversation.codeUrl, pinTime: nil)
-    }
-    
-    public static func createConversation(conversationId: String, category: String?, recipientId: String, status: Int) -> Conversation {
-        return Conversation(conversationId: conversationId, ownerId: recipientId, category: category, name: nil, iconUrl: nil, announcement: nil, lastMessageId: nil, lastMessageCreatedAt: Date().toUTCString(), lastReadMessageId: nil, unseenMessageCount: 0, status: status, draft: nil, muteUntil: nil, codeUrl: nil, pinTime: nil)
-    }
-    
 }
 
-extension Conversation {
+extension Conversation: TableRecord, PersistableRecord {
     
-    public func isGroup() -> Bool {
-        return category == ConversationCategory.GROUP.rawValue
-    }
+    public static let databaseTableName = "conversations"
     
-}
-
-public enum ConversationCategory: String {
-    case CONTACT = "CONTACT"
-    case GROUP = "GROUP"
-}
-
-public enum ConversationStatus: Int {
-    case START = 0
-    case SUCCESS = 1
-    case QUIT = 2
 }

@@ -1,10 +1,9 @@
-import WCDBSwift
+import Foundation
+import GRDB
 
-public struct MessageMention: BaseCodable {
+public struct MessageMention {
     
     public typealias Mentions = [String: String]
-    
-    public static let tableName: String = "message_mentions"
     
     public let conversationId: String
     public let messageId: String
@@ -35,7 +34,7 @@ public struct MessageMention: BaseCodable {
         if let quoted = quotedMessage, message.userId != myUserId, quoted.userId == myUserId {
             mentions[myIdentityNumber] = myFullname
         }
-
+        
         if mentions.count == 0 {
             return nil
         }
@@ -62,30 +61,19 @@ public struct MessageMention: BaseCodable {
     
 }
 
-extension MessageMention {
+extension MessageMention: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord {
     
-    public enum CodingKeys: String, CodingTableKey {
-        
-        public typealias Root = MessageMention
-        
-        public static let objectRelationalMapping = TableBinding(CodingKeys.self)
-        
-        public static var columnConstraintBindings: [CodingKeys: ColumnConstraintBinding]? {
-            return [
-                messageId: ColumnConstraintBinding(isPrimary: true)
-            ]
-        }
-        public static var indexBindings: [IndexBinding.Subfix: IndexBinding]? {
-            return [
-                "_conversation_indexs": IndexBinding(indexesBy: conversationId, hasRead),
-            ]
-        }
-        
+    public enum CodingKeys: String, CodingKey {
         case messageId = "message_id"
         case conversationId = "conversation_id"
         case mentionsJson = "mentions"
         case hasRead = "has_read"
-        
     }
+    
+}
+
+extension MessageMention: TableRecord, PersistableRecord {
+    
+    public static let databaseTableName = "message_mentions"
     
 }

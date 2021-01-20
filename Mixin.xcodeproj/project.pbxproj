@@ -181,6 +181,12 @@
 		7B5BABE31FB57B0300341FE6 /* ImagePickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5BABE21FB57B0300341FE6 /* ImagePickerController.swift */; };
 		7B5BC7B720AA1BB300DA5296 /* AttachmentLoadingMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5BC7B620AA1BB300DA5296 /* AttachmentLoadingMessageCell.swift */; };
 		7B5C77232220188200395C7D /* AssetFilterHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5C77222220188200395C7D /* AssetFilterHeaderView.swift */; };
+		7B5E5D23255055E8003FFDE0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E5D22255055E8003FFDE0 /* AppDelegate.swift */; };
+		7B5E5D25255055E8003FFDE0 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E5D24255055E8003FFDE0 /* SceneDelegate.swift */; };
+		7B5E5D27255055E8003FFDE0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E5D26255055E8003FFDE0 /* ViewController.swift */; };
+		7B5E5D2A255055E8003FFDE0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7B5E5D28255055E8003FFDE0 /* Main.storyboard */; };
+		7B5E5D2C255055E9003FFDE0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7B5E5D2B255055E9003FFDE0 /* Assets.xcassets */; };
+		7B5E5D2F255055E9003FFDE0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7B5E5D2D255055E9003FFDE0 /* LaunchScreen.storyboard */; };
 		7B5E5D971FCE9CAA00F6048D /* ConversationInputTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E5D961FCE9CAA00F6048D /* ConversationInputTextView.swift */; };
 		7B5E9B40243700CD000AE24E /* ConversationCircleEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E9B3F243700CD000AE24E /* ConversationCircleEditorViewController.swift */; };
 		7B5E9B4424370ABB000AE24E /* CircleProfileMenuItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E9B4324370ABB000AE24E /* CircleProfileMenuItemView.swift */; };
@@ -574,8 +580,12 @@
 		811C8154F03C8CBB72DBA1F4 /* Pods_MixinShare.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67A8E0E9B65F16ADB27E6F25 /* Pods_MixinShare.framework */; };
 		84A10E96256B63B4006AC741 /* AssetAPI+Ticker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A10E95256B63B4006AC741 /* AssetAPI+Ticker.swift */; };
 		84A10E9A256B6416006AC741 /* TickerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A10E99256B6416006AC741 /* TickerResponse.swift */; };
+		9424C6432592469500FFDAE0 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9424C6422592469500FFDAE0 /* Application.swift */; };
+		9424C64B259246B600FFDAE0 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9424C64A259246B600FFDAE0 /* main.swift */; };
 		94438D57252DAD73005760AF /* Clip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94438D56252DAD73005760AF /* Clip.swift */; };
+		945A9E63532A9E5E449174EB /* Pods_MixinAppGroupAccess.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 470400A1924B7FC84415D7DF /* Pods_MixinAppGroupAccess.framework */; };
 		945AA6582567B18200B39415 /* Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945AA6572567B18200B39415 /* Country.swift */; };
+		947F4AD625866D6C00B0A5F9 /* InitializeFTSJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947F4AD525866D6C00B0A5F9 /* InitializeFTSJob.swift */; };
 		94904FD325912A2000F2FDE6 /* CaptchaToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94904FD225912A2000F2FDE6 /* CaptchaToken.swift */; };
 		94DA83762588E595006B0F16 /* WebRTC.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94DA83722588E58B006B0F16 /* WebRTC.xcframework */; };
 		94DA83772588E595006B0F16 /* WebRTC.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 94DA83722588E58B006B0F16 /* WebRTC.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -885,6 +895,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		153CE41B262D520A7F632775 /* Pods-MixinAppGroupAccess.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MixinAppGroupAccess.release.xcconfig"; path = "Pods/Target Support Files/Pods-MixinAppGroupAccess/Pods-MixinAppGroupAccess.release.xcconfig"; sourceTree = "<group>"; };
 		23987C4F141F7C6E533A683D /* Pods_Mixin.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Mixin.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		273A5E0B1F95EA4500AE802F /* Contacts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Contacts.framework; path = System/Library/Frameworks/Contacts.framework; sourceTree = SDKROOT; };
 		274264A820011BB0000A8808 /* mixin.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = mixin.caf; sourceTree = "<group>"; };
@@ -894,8 +905,10 @@
 		277FF70E1F909A1200DBB2EB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		277FF7101F909A1200DBB2EB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		46EBB0CE75C6636B3D8BA6D0 /* Pods-MixinShare.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MixinShare.release.xcconfig"; path = "Pods/Target Support Files/Pods-MixinShare/Pods-MixinShare.release.xcconfig"; sourceTree = "<group>"; };
+		470400A1924B7FC84415D7DF /* Pods_MixinAppGroupAccess.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MixinAppGroupAccess.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A0AC6121929BE42B09D0F1E /* Pods-Mixin.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mixin.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Mixin/Pods-Mixin.debug.xcconfig"; sourceTree = "<group>"; };
 		4A8D4E34146BCC9F9DFC5D60 /* Pods-MixinNotificationService.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MixinNotificationService.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MixinNotificationService/Pods-MixinNotificationService.debug.xcconfig"; sourceTree = "<group>"; };
+		4C7439A7A6C05D54835A2461 /* Pods-MixinAppGroupAccess.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MixinAppGroupAccess.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MixinAppGroupAccess/Pods-MixinAppGroupAccess.debug.xcconfig"; sourceTree = "<group>"; };
 		4DEF1DAAD7BD26CE1E41669D /* Pods-mixin.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mixin.debug.xcconfig"; path = "Pods/Target Support Files/Pods-mixin/Pods-mixin.debug.xcconfig"; sourceTree = "<group>"; };
 		60A0F3EECBE8095220D78A70 /* Pods-MixinShare.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MixinShare.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MixinShare/Pods-MixinShare.debug.xcconfig"; sourceTree = "<group>"; };
 		621D5146A79BB7A673B026F9 /* Pods-mixin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mixin.release.xcconfig"; path = "Pods/Target Support Files/Pods-mixin/Pods-mixin.release.xcconfig"; sourceTree = "<group>"; };
@@ -1067,6 +1080,15 @@
 		7B5BABE21FB57B0300341FE6 /* ImagePickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerController.swift; sourceTree = "<group>"; };
 		7B5BC7B620AA1BB300DA5296 /* AttachmentLoadingMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentLoadingMessageCell.swift; sourceTree = "<group>"; };
 		7B5C77222220188200395C7D /* AssetFilterHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetFilterHeaderView.swift; sourceTree = "<group>"; };
+		7B5E5D20255055E8003FFDE0 /* MixinAppGroupAccess.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MixinAppGroupAccess.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7B5E5D22255055E8003FFDE0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		7B5E5D24255055E8003FFDE0 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		7B5E5D26255055E8003FFDE0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		7B5E5D29255055E8003FFDE0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		7B5E5D2B255055E9003FFDE0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		7B5E5D2E255055E9003FFDE0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		7B5E5D30255055E9003FFDE0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7B5E5D3725505615003FFDE0 /* MixinAppGroupAccess.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MixinAppGroupAccess.entitlements; sourceTree = "<group>"; };
 		7B5E5D961FCE9CAA00F6048D /* ConversationInputTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationInputTextView.swift; sourceTree = "<group>"; };
 		7B5E9B3F243700CD000AE24E /* ConversationCircleEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationCircleEditorViewController.swift; sourceTree = "<group>"; };
 		7B5E9B4324370ABB000AE24E /* CircleProfileMenuItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleProfileMenuItemView.swift; sourceTree = "<group>"; };
@@ -1471,8 +1493,11 @@
 		84A10E95256B63B4006AC741 /* AssetAPI+Ticker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AssetAPI+Ticker.swift"; sourceTree = "<group>"; };
 		84A10E99256B6416006AC741 /* TickerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TickerResponse.swift; sourceTree = "<group>"; };
 		8C43D9D96FCB101481DFD90F /* Pods-Mixin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mixin.release.xcconfig"; path = "Pods/Target Support Files/Pods-Mixin/Pods-Mixin.release.xcconfig"; sourceTree = "<group>"; };
+		9424C6422592469500FFDAE0 /* Application.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
+		9424C64A259246B600FFDAE0 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		94438D56252DAD73005760AF /* Clip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clip.swift; sourceTree = "<group>"; };
 		945AA6572567B18200B39415 /* Country.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Country.swift; sourceTree = "<group>"; };
+		947F4AD525866D6C00B0A5F9 /* InitializeFTSJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitializeFTSJob.swift; sourceTree = "<group>"; };
 		94904FD225912A2000F2FDE6 /* CaptchaToken.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CaptchaToken.swift; sourceTree = "<group>"; };
 		94DA83722588E58B006B0F16 /* WebRTC.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = WebRTC.xcframework; sourceTree = "<group>"; };
 		9B748DCC1FA71CEF00BC009B /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
@@ -1771,6 +1796,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7B5E5D1D255055E8003FFDE0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				945A9E63532A9E5E449174EB /* Pods_MixinAppGroupAccess.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DFE861B62422673B009B1833 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1806,6 +1839,7 @@
 				277FF7011F909A1200DBB2EB /* Mixin */,
 				E090B9F823B3957E0088355B /* MixinNotificationService */,
 				DFE861BA2422673B009B1833 /* MixinShare */,
+				7B5E5D21255055E8003FFDE0 /* MixinAppGroupAccess */,
 				277FF7001F909A1200DBB2EB /* Products */,
 				506A45AFF37DF0AFA7DD4EEE /* Pods */,
 				DBADD0FED15BCB65F6FF70EB /* Frameworks */,
@@ -1818,6 +1852,7 @@
 				277FF6FF1F909A1200DBB2EB /* Mixin.app */,
 				E090B9F723B3957E0088355B /* MixinNotificationService.appex */,
 				DFE861B92422673B009B1833 /* MixinShare.appex */,
+				7B5E5D20255055E8003FFDE0 /* MixinAppGroupAccess.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1833,6 +1868,8 @@
 				DF5D9F1C1F9C77620036D5FD /* UserInterface */,
 				DF5D9F341F9C95F20036D5FD /* Resources */,
 				DF5D9F481F9CDBDE0036D5FD /* Supporting Files */,
+				9424C64A259246B600FFDAE0 /* main.swift */,
+				9424C6422592469500FFDAE0 /* Application.swift */,
 				277FF7021F909A1200DBB2EB /* AppDelegate.swift */,
 				277FF70B1F909A1200DBB2EB /* Assets.xcassets */,
 				7B8BB58F234F36C000991ACB /* Colors.xcassets */,
@@ -1851,6 +1888,8 @@
 				C148F70BB9EAB88D7B754DBA /* Pods-MixinNotificationService.release.xcconfig */,
 				60A0F3EECBE8095220D78A70 /* Pods-MixinShare.debug.xcconfig */,
 				46EBB0CE75C6636B3D8BA6D0 /* Pods-MixinShare.release.xcconfig */,
+				4C7439A7A6C05D54835A2461 /* Pods-MixinAppGroupAccess.debug.xcconfig */,
+				153CE41B262D520A7F632775 /* Pods-MixinAppGroupAccess.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -2067,6 +2106,21 @@
 				7B51DDB4223A489F008ACDBB /* LoginContext.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		7B5E5D21255055E8003FFDE0 /* MixinAppGroupAccess */ = {
+			isa = PBXGroup;
+			children = (
+				7B5E5D3725505615003FFDE0 /* MixinAppGroupAccess.entitlements */,
+				7B5E5D22255055E8003FFDE0 /* AppDelegate.swift */,
+				7B5E5D24255055E8003FFDE0 /* SceneDelegate.swift */,
+				7B5E5D26255055E8003FFDE0 /* ViewController.swift */,
+				7B5E5D28255055E8003FFDE0 /* Main.storyboard */,
+				7B5E5D2B255055E9003FFDE0 /* Assets.xcassets */,
+				7B5E5D2D255055E9003FFDE0 /* LaunchScreen.storyboard */,
+				7B5E5D30255055E9003FFDE0 /* Info.plist */,
+			);
+			path = MixinAppGroupAccess;
 			sourceTree = "<group>";
 		};
 		7B66F66A24A86F3D007D6709 /* Call */ = {
@@ -2430,6 +2484,7 @@
 				23987C4F141F7C6E533A683D /* Pods_Mixin.framework */,
 				DD2C79AAFC0C43AD7C5C9B4D /* Pods_MixinNotificationService.framework */,
 				67A8E0E9B65F16ADB27E6F25 /* Pods_MixinShare.framework */,
+				470400A1924B7FC84415D7DF /* Pods_MixinAppGroupAccess.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -3200,6 +3255,7 @@
 				7B331B6C21B10349000370E9 /* LoadMoreSnapshotsJob.swift */,
 				DF2EB15B23F93870005E5A4F /* CleanUpUnusedAttachmentJob.swift */,
 				DFAD89972418EE0500836EDD /* RecoverMediaJob.swift */,
+				947F4AD525866D6C00B0A5F9 /* InitializeFTSJob.swift */,
 			);
 			path = Job;
 			sourceTree = "<group>";
@@ -3292,6 +3348,25 @@
 			productReference = 277FF6FF1F909A1200DBB2EB /* Mixin.app */;
 			productType = "com.apple.product-type.application";
 		};
+		7B5E5D1F255055E8003FFDE0 /* MixinAppGroupAccess */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7B5E5D33255055E9003FFDE0 /* Build configuration list for PBXNativeTarget "MixinAppGroupAccess" */;
+			buildPhases = (
+				401043BE8C2B7C972A63E284 /* [CP] Check Pods Manifest.lock */,
+				7B5E5D1C255055E8003FFDE0 /* Sources */,
+				7B5E5D1D255055E8003FFDE0 /* Frameworks */,
+				7B5E5D1E255055E8003FFDE0 /* Resources */,
+				6B1A007F1CAC8DD87C52ECF0 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MixinAppGroupAccess;
+			productName = MixinAppGroupAccess;
+			productReference = 7B5E5D20255055E8003FFDE0 /* MixinAppGroupAccess.app */;
+			productType = "com.apple.product-type.application";
+		};
 		DFE861B82422673B009B1833 /* MixinShare */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = DFE861C62422673B009B1833 /* Build configuration list for PBXNativeTarget "MixinShare" */;
@@ -3336,7 +3411,7 @@
 		277FF6F71F909A1200DBB2EB /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1130;
+				LastSwiftUpdateCheck = 1210;
 				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = Mixin;
 				TargetAttributes = {
@@ -3355,6 +3430,10 @@
 								enabled = 1;
 							};
 						};
+					};
+					7B5E5D1F255055E8003FFDE0 = {
+						CreatedOnToolsVersion = 12.1;
+						ProvisioningStyle = Automatic;
 					};
 					DFE861B82422673B009B1833 = {
 						CreatedOnToolsVersion = 11.3.1;
@@ -3384,6 +3463,7 @@
 				277FF6FE1F909A1200DBB2EB /* Mixin */,
 				E090B9F623B3957E0088355B /* MixinNotificationService */,
 				DFE861B82422673B009B1833 /* MixinShare */,
+				7B5E5D1F255055E8003FFDE0 /* MixinAppGroupAccess */,
 			);
 		};
 /* End PBXProject section */
@@ -3516,6 +3596,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7B5E5D1E255055E8003FFDE0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7B5E5D2F255055E9003FFDE0 /* LaunchScreen.storyboard in Resources */,
+				7B5E5D2C255055E9003FFDE0 /* Assets.xcassets in Resources */,
+				7B5E5D2A255055E8003FFDE0 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DFE861B72422673B009B1833 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -3557,6 +3647,74 @@
 			shellPath = /bin/sh;
 			shellScript = "APP_PATH=\"${TARGET_BUILD_DIR}/${WRAPPER_NAME}\"\n\nfind \"$APP_PATH\" -name '*.framework' -type d | while read -r FRAMEWORK\ndo\nFRAMEWORK_EXECUTABLE_NAME=$(defaults read \"$FRAMEWORK/Info.plist\" CFBundleExecutable)\nFRAMEWORK_EXECUTABLE_PATH=\"$FRAMEWORK/$FRAMEWORK_EXECUTABLE_NAME\"\necho \"Executable is $FRAMEWORK_EXECUTABLE_PATH\"\necho $(lipo -info \"$FRAMEWORK_EXECUTABLE_PATH\")\n\nFRAMEWORK_TMP_PATH=\"$FRAMEWORK_EXECUTABLE_PATH-tmp\"\n\ncase \"${TARGET_BUILD_DIR}\" in\n*\"iphonesimulator\")\n    echo \"No need to remove archs\"\n    ;;\n*)\n    if $(lipo \"$FRAMEWORK_EXECUTABLE_PATH\" -verify_arch \"i386\") ; then\n    lipo -output \"$FRAMEWORK_TMP_PATH\" -remove \"i386\" \"$FRAMEWORK_EXECUTABLE_PATH\"\n    echo \"i386 architecture removed\"\n    rm \"$FRAMEWORK_EXECUTABLE_PATH\"\n    mv \"$FRAMEWORK_TMP_PATH\" \"$FRAMEWORK_EXECUTABLE_PATH\"\n    fi\n    if $(lipo \"$FRAMEWORK_EXECUTABLE_PATH\" -verify_arch \"x86_64\") ; then\n    lipo -output \"$FRAMEWORK_TMP_PATH\" -remove \"x86_64\" \"$FRAMEWORK_EXECUTABLE_PATH\"\n    echo \"x86_64 architecture removed\"\n    rm \"$FRAMEWORK_EXECUTABLE_PATH\"\n    mv \"$FRAMEWORK_TMP_PATH\" \"$FRAMEWORK_EXECUTABLE_PATH\"\n    fi\n    ;;\nesac\n\necho \"Completed for executable $FRAMEWORK_EXECUTABLE_PATH\"\necho $(lipo -info \"$FRAMEWORK_EXECUTABLE_PATH\")\n\ndone\n";
 		};
+		401043BE8C2B7C972A63E284 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-MixinAppGroupAccess-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6B1A007F1CAC8DD87C52ECF0 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MixinAppGroupAccess/Pods-MixinAppGroupAccess-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/BoringSSL/openssl.framework",
+				"${BUILT_PRODUCTS_DIR}/DeviceGuru/DeviceGuru.framework",
+				"${BUILT_PRODUCTS_DIR}/GRDB.swift/GRDB.framework",
+				"${BUILT_PRODUCTS_DIR}/GzipSwift/Gzip.framework",
+				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
+				"${BUILT_PRODUCTS_DIR}/SDWebImageYYPlugin/SDWebImageYYPlugin.framework",
+				"${BUILT_PRODUCTS_DIR}/SQLCipher/SQLCipher.framework",
+				"${BUILT_PRODUCTS_DIR}/SocketRocket/SocketRocket.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftyMarkdown/SwiftyMarkdown.framework",
+				"${BUILT_PRODUCTS_DIR}/YYImage/YYImage.framework",
+				"${BUILT_PRODUCTS_DIR}/Zip/Zip.framework",
+				"${BUILT_PRODUCTS_DIR}/libsignal-protocol-c/libsignal_protocol_c.framework",
+				"${BUILT_PRODUCTS_DIR}/lottie-ios/Lottie.framework",
+				"${BUILT_PRODUCTS_DIR}/GCDWebServer/GCDWebServer.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/openssl.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DeviceGuru.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GRDB.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Gzip.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImageYYPlugin.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SQLCipher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SocketRocket.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyMarkdown.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YYImage.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Zip.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libsignal_protocol_c.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Lottie.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GCDWebServer.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MixinAppGroupAccess/Pods-MixinAppGroupAccess-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		7BD387F324DC58A000A3035C /* R.swift */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -3571,7 +3729,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				$SRCROOT/MixinNotificationService/R.generated.swift,
+				"$SRCROOT/MixinNotificationService/R.generated.swift",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -3668,7 +3826,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				$SRCROOT/MixinShare/R.generated.swift,
+				"$SRCROOT/MixinShare/R.generated.swift",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -3688,7 +3846,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				$SRCROOT/R.generated.swift,
+				"$SRCROOT/R.generated.swift",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -3711,6 +3869,7 @@
 				"${BUILT_PRODUCTS_DIR}/FirebaseCrashlytics/FirebaseCrashlytics.framework",
 				"${BUILT_PRODUCTS_DIR}/FirebaseInstallations/FirebaseInstallations.framework",
 				"${BUILT_PRODUCTS_DIR}/FirebaseRemoteConfig/FirebaseRemoteConfig.framework",
+				"${BUILT_PRODUCTS_DIR}/GRDB.swift/GRDB.framework",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleDataTransport/GoogleDataTransport.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
@@ -3728,14 +3887,12 @@
 				"${BUILT_PRODUCTS_DIR}/RSKImageCropper/RSKImageCropper.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImageYYPlugin/SDWebImageYYPlugin.framework",
-				"${BUILT_PRODUCTS_DIR}/SQLiteRepairKit/sqliterk.framework",
+				"${BUILT_PRODUCTS_DIR}/SQLCipher/SQLCipher.framework",
 				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
 				"${BUILT_PRODUCTS_DIR}/SocketRocket/SocketRocket.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyMarkdown/SwiftyMarkdown.framework",
 				"${BUILT_PRODUCTS_DIR}/Texture/AsyncDisplayKit.framework",
 				"${BUILT_PRODUCTS_DIR}/TexturedMaaku/TexturedMaaku.framework",
-				"${BUILT_PRODUCTS_DIR}/WCDB.swift/WCDBSwift.framework",
-				"${BUILT_PRODUCTS_DIR}/WCDBOptimizedSQLCipher/sqlcipher.framework",
 				"${BUILT_PRODUCTS_DIR}/YYImage/YYImage.framework",
 				"${BUILT_PRODUCTS_DIR}/Zip/Zip.framework",
 				"${BUILT_PRODUCTS_DIR}/libcmark_gfm/libcmark_gfm.framework",
@@ -3755,6 +3912,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCrashlytics.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseInstallations.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseRemoteConfig.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GRDB.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleDataTransport.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
@@ -3772,14 +3930,12 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RSKImageCropper.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImageYYPlugin.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/sqliterk.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SQLCipher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SocketRocket.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyMarkdown.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AsyncDisplayKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TexturedMaaku.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WCDBSwift.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/sqlcipher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YYImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Zip.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libcmark_gfm.framework",
@@ -3997,6 +4153,7 @@
 				7B05CFDD22293B72006DA9E3 /* PhotoInputViewController.swift in Sources */,
 				DF5D9F311F9C95410036D5FD /* CountryCodeLibrary.swift in Sources */,
 				DF048CD222433D69005F1EF5 /* LineHeightLabel.swift in Sources */,
+				947F4AD625866D6C00B0A5F9 /* InitializeFTSJob.swift in Sources */,
 				7B91056022CF4A1E002E3608 /* LiveMessageViewModel.swift in Sources */,
 				7B3936CF20C15BA00075A97A /* MixinKeys.swift in Sources */,
 				7BBC913424333DCA00FC3F3A /* CircleCell.swift in Sources */,
@@ -4199,6 +4356,7 @@
 				7B35AF76228A98EF00E8101D /* ConversationSearchResult.swift in Sources */,
 				84A10E96256B63B4006AC741 /* AssetAPI+Ticker.swift in Sources */,
 				7B7264F5209C5B1A00F234BE /* CoreTextLabel.swift in Sources */,
+				9424C64B259246B600FFDAE0 /* main.swift in Sources */,
 				7BEB5D9F22B79F5500B8B10E /* EmergencyContactLoginVerificationCodeViewController.swift in Sources */,
 				7B59535122672D3500D59DB4 /* SearchNumberCell.swift in Sources */,
 				7BEE5353222E21D7008D3911 /* KeyboardHeight.swift in Sources */,
@@ -4209,6 +4367,7 @@
 				7B86B1F523F6AB0B00C80AD9 /* TitledCardContentWidthCalculable.swift in Sources */,
 				7BF7837B2179D1AF00BECB4B /* Call.swift in Sources */,
 				7BE5505923573AC00074DB4A /* FontExtension.swift in Sources */,
+				9424C6432592469500FFDAE0 /* Application.swift in Sources */,
 				DF8CECEF1FC4240500E40064 /* BlockedUsersViewController.swift in Sources */,
 				7B894AF5205BFC9B0065A1B8 /* NewAddressViewController.swift in Sources */,
 				7BB5250324160F3D0060DAE1 /* LocationPreviewViewController.swift in Sources */,
@@ -4498,6 +4657,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7B5E5D1C255055E8003FFDE0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7B5E5D27255055E8003FFDE0 /* ViewController.swift in Sources */,
+				7B5E5D23255055E8003FFDE0 /* AppDelegate.swift in Sources */,
+				7B5E5D25255055E8003FFDE0 /* SceneDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DFE861B52422673B009B1833 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -4545,6 +4714,22 @@
 			isa = PBXVariantGroup;
 			children = (
 				277FF70E1F909A1200DBB2EB /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		7B5E5D28255055E8003FFDE0 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7B5E5D29255055E8003FFDE0 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		7B5E5D2D255055E9003FFDE0 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7B5E5D2E255055E9003FFDE0 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -4758,8 +4943,6 @@
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/SwiftyMarkdown/SwiftyMarkdown.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/Texture/AsyncDisplayKit.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/TexturedMaaku/TexturedMaaku.framework/Headers\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/WCDB.swift/WCDBSwift.framework/Headers\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/WCDBOptimizedSQLCipher/sqlcipher.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/YYImage/YYImage.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/Zip/Zip.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/libcmark_gfm/libcmark_gfm.framework/Headers\"",
@@ -4888,8 +5071,6 @@
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/SwiftyMarkdown/SwiftyMarkdown.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/Texture/AsyncDisplayKit.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/TexturedMaaku/TexturedMaaku.framework/Headers\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/WCDB.swift/WCDBSwift.framework/Headers\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/WCDBOptimizedSQLCipher/sqlcipher.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/YYImage/YYImage.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/Zip/Zip.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/libcmark_gfm/libcmark_gfm.framework/Headers\"",
@@ -4959,6 +5140,55 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "Mixin/Supporting Files/Mixin-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		7B5E5D31255055E9003FFDE0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4C7439A7A6C05D54835A2461 /* Pods-MixinAppGroupAccess.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = MixinAppGroupAccess/MixinAppGroupAccess.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 5EL4S7LCG6;
+				INFOPLIST_FILE = MixinAppGroupAccess/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = one.mixin.MixinAppGroupAccess;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		7B5E5D32255055E9003FFDE0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 153CE41B262D520A7F632775 /* Pods-MixinAppGroupAccess.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = MixinAppGroupAccess/MixinAppGroupAccess.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 5EL4S7LCG6;
+				INFOPLIST_FILE = MixinAppGroupAccess/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = one.mixin.MixinAppGroupAccess;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -5085,6 +5315,15 @@
 			buildConfigurations = (
 				277FF7141F909A1200DBB2EB /* Debug */,
 				277FF7151F909A1200DBB2EB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7B5E5D33255055E9003FFDE0 /* Build configuration list for PBXNativeTarget "MixinAppGroupAccess" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7B5E5D31255055E9003FFDE0 /* Debug */,
+				7B5E5D32255055E9003FFDE0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

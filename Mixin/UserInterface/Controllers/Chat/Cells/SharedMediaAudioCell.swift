@@ -65,14 +65,14 @@ class SharedMediaAudioCell: UITableViewCell, AudioCell {
         if let avatarUrl = audio.message.userAvatarUrl {
             avatarImageView.setImage(with: avatarUrl,
                                      userId: audio.message.userId,
-                                     name: audio.message.userFullName)
+                                     name: audio.message.userFullName ?? "")
         }
         lengthLabel.text = audio.length
         waveformView.waveform = audio.mediaWaveform
         highlightedWaveformView.waveform = audio.mediaWaveform
         update(with: audio.mediaStatus)
         updateUnreadStyle()
-        NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: .ConversationDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: MixinServices.conversationDidChangeNotification, object: nil)
     }
     
     func update(with mediaStatus: MediaStatus) {

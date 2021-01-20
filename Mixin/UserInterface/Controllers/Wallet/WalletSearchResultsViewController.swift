@@ -101,10 +101,10 @@ class WalletSearchResultsViewController: WalletSearchTableViewController {
                 guard let chainAsset = AssetDAO.shared.getAsset(assetId: asset.chainId) else {
                     return nil
                 }
-                let item = AssetItem(asset: asset,
-                                     chainIconUrl: chainAsset.iconUrl,
-                                     chainName: chainAsset.name,
-                                     chainSymbol: chainAsset.symbol)
+                let chainInfo = AssetItem.ChainInfo(iconUrl: chainAsset.iconUrl,
+                                                    name: chainAsset.name,
+                                                    symbol: chainAsset.symbol)
+                let item = AssetItem(asset: asset, chain: chainInfo)
                 return item
             })
             
@@ -164,8 +164,7 @@ extension WalletSearchResultsViewController: UITableViewDelegate {
             guard !AssetDAO.shared.isExist(assetId: item.assetId) else {
                 return
             }
-            let asset = Asset(item: item)
-            AssetDAO.shared.insertOrUpdateAssets(assets: [asset])
+            AssetDAO.shared.insertOrUpdateAssets(assets: [item])
         }
     }
     

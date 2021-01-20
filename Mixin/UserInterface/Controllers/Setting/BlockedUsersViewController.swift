@@ -16,7 +16,10 @@ class BlockedUsersViewController: UIViewController {
         tableView.delegate = self
         UserAPI.syncBlockingUsers()
         fetchBlockedUsers()
-        NotificationCenter.default.addObserver(self, selector: #selector(fetchBlockedUsers), name: .UserDidChange, object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(fetchBlockedUsers),
+                                               name: UserDAO.userDidChangeNotification,
+                                               object: nil)
     }
     
     deinit {

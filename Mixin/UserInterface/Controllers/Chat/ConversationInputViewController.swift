@@ -163,7 +163,7 @@ class ConversationInputViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(saveDraft), name: UIApplication.willTerminateNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(participantDidChange(_:)), name: .ParticipantDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(participantDidChange(_:)), name: ParticipantDAO.participantDidChangeNotification, object: nil)
         textView.inputAccessoryView = interactiveDismissResponder
         textView.textContainerInset = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
         textView.delegate = self
@@ -544,10 +544,10 @@ extension ConversationInputViewController {
         guard parent != nil else {
             return
         }
-        guard dataSource.category == .group else {
+        guard let conversationId = notification.userInfo?[ParticipantDAO.UserInfoKey.conversationId] as? String else {
             return
         }
-        guard let conversationId = notification.object as? String, conversationId == dataSource.conversationId else {
+        guard dataSource.category == .group, dataSource.conversationId == conversationId else {
             return
         }
         DispatchQueue.global().async { [weak self] in

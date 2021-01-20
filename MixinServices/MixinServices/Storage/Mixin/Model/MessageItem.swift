@@ -1,79 +1,80 @@
-import WCDBSwift
+import Foundation
+import GRDB
 
-public class MessageItem: TableCodable, MentionedFullnameReplaceable {
+public final class MessageItem {
     
-    public var messageId: String = ""
-    public var conversationId: String = ""
-    public var userId: String = ""
-    public var category: String = ""
-    public var content = ""
-    public var mediaUrl: String? = nil
-    public var mediaMimeType: String? = nil
-    public var mediaSize: Int64? = nil
-    public var mediaDuration: Int64? = nil
-    public var mediaWidth: Int? = nil
-    public var mediaHeight: Int? = nil
-    public var mediaHash: String? = nil
-    public var mediaKey: Data? = nil
-    public var mediaDigest: Data? = nil
-    public var mediaStatus: String? = nil
-    public var mediaWaveform: Data? = nil
-    public var mediaLocalIdentifier: String? = nil
-    public var thumbImage: String? = nil
-    public var thumbUrl: String? = nil
-    public var status: String = ""
-    public var participantId: String? = nil
-    public var snapshotId: String? = nil
-    public var name: String? = nil
-    public var stickerId: String? = nil
-    public var createdAt: String = ""
+    public var messageId: String
+    public var conversationId: String
+    public var userId: String
+    public var category: String
+    public var content: String?
+    public var mediaUrl: String?
+    public var mediaMimeType: String?
+    public var mediaSize: Int64?
+    public var mediaDuration: Int64?
+    public var mediaWidth: Int?
+    public var mediaHeight: Int?
+    public var mediaHash: String?
+    public var mediaKey: Data?
+    public var mediaDigest: Data?
+    public var mediaStatus: String?
+    public var mediaWaveform: Data?
+    public var mediaLocalIdentifier: String?
+    public var thumbImage: String?
+    public var thumbUrl: String?
+    public var status: String
+    public var participantId: String?
+    public var snapshotId: String?
+    public var name: String?
+    public var stickerId: String?
+    public var createdAt: String
     
-    public var actionName: String? = nil
+    public var actionName: String?
     
-    public var userFullName: String = ""
-    public var userIdentityNumber: String = ""
-    public var userAvatarUrl: String? = nil
+    public var userFullName: String?
+    public var userIdentityNumber: String?
+    public var userAvatarUrl: String?
     
-    public var appId: String? = nil
+    public var appId: String?
     
-    public var snapshotAmount: String? = nil
-    public var snapshotAssetId: String? = nil
-    public var snapshotType: String = ""
+    public var snapshotAmount: String?
+    public var snapshotAssetId: String?
+    public var snapshotType: String?
     
-    public var participantFullName: String? = nil
-    public var participantUserId: String? = nil
+    public var participantFullName: String?
+    public var participantUserId: String?
     
-    public var assetUrl: String? = nil
-    public var assetType: String? = nil
-    public var assetSymbol: String? = nil
+    public var assetUrl: String?
+    public var assetType: String?
+    public var assetSymbol: String?
     
-    public var assetIcon: String? = nil
-    public var assetWidth: Int? = nil
-    public var assetHeight: Int? = nil
-    public var assetCategory: String? = nil
+    public var assetIcon: String?
+    public var assetWidth: Int?
+    public var assetHeight: Int?
+    public var assetCategory: String?
     
-    public var sharedUserId: String? = nil
-    public var sharedUserFullName: String = ""
-    public var sharedUserIdentityNumber: String = ""
-    public var sharedUserAvatarUrl: String = ""
-    public var sharedUserAppId: String = ""
-    public var sharedUserIsVerified: Bool = false
+    public var sharedUserId: String?
+    public var sharedUserFullName: String?
+    public var sharedUserIdentityNumber: String?
+    public var sharedUserAvatarUrl: String?
+    public var sharedUserAppId: String?
+    public var sharedUserIsVerified: Bool?
     
-    public var quoteMessageId: String? = nil
-    public var quoteContent: Data? = nil
+    public var quoteMessageId: String?
+    public var quoteContent: Data?
     
-    public var mentionsJson: Data? = nil
-    public var hasMentionRead: Bool? = nil
+    public var mentionsJson: Data?
+    public var hasMentionRead: Bool?
     
     public lazy var appButtons: [AppButtonData]? = {
-        guard category == MessageCategory.APP_BUTTON_GROUP.rawValue, let data = Data(base64Encoded: content) else {
+        guard category == MessageCategory.APP_BUTTON_GROUP.rawValue, let content = content, let data = Data(base64Encoded: content) else {
             return nil
         }
         return try? JSONDecoder.default.decode([AppButtonData].self, from: data)
     }()
     
     public lazy var appCard: AppCardData? = {
-        guard category == MessageCategory.APP_CARD.rawValue, let data = Data(base64Encoded: content) else {
+        guard category == MessageCategory.APP_CARD.rawValue, let content = content, let data = Data(base64Encoded: content) else {
             return nil
         }
         return try? JSONDecoder.default.decode(AppCardData.self, from: data)
@@ -93,34 +94,81 @@ public class MessageItem: TableCodable, MentionedFullnameReplaceable {
         guard category.hasSuffix("_LOCATION") else {
             return nil
         }
-        guard let json = content.data(using: .utf8) else {
+        guard let content = content, let json = content.data(using: .utf8) else {
             return nil
         }
         return try? JSONDecoder.default.decode(Location.self, from: json)
     }()
     
-    public init() {
-        
+    public init(messageId: String, conversationId: String, userId: String, category: String, content: String? = nil, mediaUrl: String? = nil, mediaMimeType: String? = nil, mediaSize: Int64? = nil, mediaDuration: Int64? = nil, mediaWidth: Int? = nil, mediaHeight: Int? = nil, mediaHash: String? = nil, mediaKey: Data? = nil, mediaDigest: Data? = nil, mediaStatus: String? = nil, mediaWaveform: Data? = nil, mediaLocalIdentifier: String? = nil, thumbImage: String? = nil, thumbUrl: String? = nil, status: String, participantId: String? = nil, snapshotId: String? = nil, name: String? = nil, stickerId: String? = nil, createdAt: String, actionName: String? = nil, userFullName: String? = nil, userIdentityNumber: String? = nil, userAvatarUrl: String? = nil, appId: String? = nil, snapshotAmount: String? = nil, snapshotAssetId: String? = nil, snapshotType: String? = nil, participantFullName: String? = nil, participantUserId: String? = nil, assetUrl: String? = nil, assetType: String? = nil, assetSymbol: String? = nil, assetIcon: String? = nil, assetWidth: Int? = nil, assetHeight: Int? = nil, assetCategory: String? = nil, sharedUserId: String? = nil, sharedUserFullName: String? = nil, sharedUserIdentityNumber: String? = nil, sharedUserAvatarUrl: String? = nil, sharedUserAppId: String? = nil, sharedUserIsVerified: Bool? = nil, quoteMessageId: String? = nil, quoteContent: Data? = nil, mentionsJson: Data? = nil, hasMentionRead: Bool? = nil) {
+        self.messageId = messageId
+        self.conversationId = conversationId
+        self.userId = userId
+        self.category = category
+        self.content = content
+        self.mediaUrl = mediaUrl
+        self.mediaMimeType = mediaMimeType
+        self.mediaSize = mediaSize
+        self.mediaDuration = mediaDuration
+        self.mediaWidth = mediaWidth
+        self.mediaHeight = mediaHeight
+        self.mediaHash = mediaHash
+        self.mediaKey = mediaKey
+        self.mediaDigest = mediaDigest
+        self.mediaStatus = mediaStatus
+        self.mediaWaveform = mediaWaveform
+        self.mediaLocalIdentifier = mediaLocalIdentifier
+        self.thumbImage = thumbImage
+        self.thumbUrl = thumbUrl
+        self.status = status
+        self.participantId = participantId
+        self.snapshotId = snapshotId
+        self.name = name
+        self.stickerId = stickerId
+        self.createdAt = createdAt
+        self.actionName = actionName
+        self.userFullName = userFullName
+        self.userIdentityNumber = userIdentityNumber
+        self.userAvatarUrl = userAvatarUrl
+        self.appId = appId
+        self.snapshotAmount = snapshotAmount
+        self.snapshotAssetId = snapshotAssetId
+        self.snapshotType = snapshotType
+        self.participantFullName = participantFullName
+        self.participantUserId = participantUserId
+        self.assetUrl = assetUrl
+        self.assetType = assetType
+        self.assetSymbol = assetSymbol
+        self.assetIcon = assetIcon
+        self.assetWidth = assetWidth
+        self.assetHeight = assetHeight
+        self.assetCategory = assetCategory
+        self.sharedUserId = sharedUserId
+        self.sharedUserFullName = sharedUserFullName
+        self.sharedUserIdentityNumber = sharedUserIdentityNumber
+        self.sharedUserAvatarUrl = sharedUserAvatarUrl
+        self.sharedUserAppId = sharedUserAppId
+        self.sharedUserIsVerified = sharedUserIsVerified
+        self.quoteMessageId = quoteMessageId
+        self.quoteContent = quoteContent
+        self.mentionsJson = mentionsJson
+        self.hasMentionRead = hasMentionRead
     }
     
     public convenience init(category: String, conversationId: String, createdAt: String) {
-        self.init()
-        self.messageId = UUID().uuidString.lowercased()
-        self.status = MessageStatus.SENDING.rawValue
-        self.category = category
-        self.conversationId = conversationId
-        self.createdAt = createdAt
+        self.init(messageId: UUID().uuidString.lowercased(),
+                  conversationId: conversationId,
+                  userId: "",
+                  category: category,
+                  status: MessageStatus.SENDING.rawValue,
+                  createdAt: createdAt)
     }
     
 }
 
-extension MessageItem {
+extension MessageItem: Codable, MixinFetchableRecord {
     
-    public enum CodingKeys: String, CodingTableKey {
-        
-        public typealias Root = MessageItem
-        
-        public static let objectRelationalMapping = TableBinding(CodingKeys.self)
+    public enum CodingKeys: String, CodingKey, CaseIterable {
         
         case messageId = "id"
         case conversationId = "conversation_id"
@@ -190,8 +238,20 @@ extension MessageItem {
 
 extension MessageItem: MarkdownControlCodeRemovable {
     
+    var contentBeforeRemovingMarkdownControlCode: String? {
+        content
+    }
+    
     var isPostContent: Bool {
         category.hasSuffix("_POST")
+    }
+    
+}
+
+extension MessageItem: MentionedFullnameReplaceable {
+    
+    public var contentBeforeReplacingMentionedFullname: String? {
+        content
     }
     
 }

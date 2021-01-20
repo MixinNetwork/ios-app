@@ -1,44 +1,26 @@
 import Foundation
-import WCDBSwift
+import GRDB
 
-public class ConversationStorageUsage: TableCodable {
+public final class ConversationStorageUsage: Decodable, MixinFetchableRecord {
     
-    public var conversationId: String = ""
-    public var ownerId: String = ""
-    public var category: String? = nil
-    public var name: String = ""
-    public var iconUrl: String = ""
+    public var conversationId: String
+    public var ownerId: String?
+    public var category: String?
+    public var name: String?
+    public var iconUrl: String?
     
-    public var ownerIdentityNumber: String = ""
-    public var ownerFullName: String = ""
-    public var ownerAvatarUrl: String = ""
-    public var ownerIsVerified = false
+    public var ownerIdentityNumber: String
+    public var ownerFullName: String?
+    public var ownerAvatarUrl: String?
+    public var ownerIsVerified: Bool?
     
-    public var mediaSize: Int64 = 0
-    
-    public enum CodingKeys: String, CodingTableKey {
-        public static let objectRelationalMapping = TableBinding(CodingKeys.self)
-        public typealias Root = ConversationStorageUsage
-        
-        case conversationId
-        case ownerId
-        case category
-        case iconUrl
-        case name
-        
-        case ownerIdentityNumber
-        case ownerFullName
-        case ownerAvatarUrl
-        case ownerIsVerified
-        
-        case mediaSize
-    }
+    public var mediaSize: Int64?
     
     public func getConversationName() -> String {
         guard category == ConversationCategory.CONTACT.rawValue else {
-            return name
+            return name ?? ""
         }
-        return ownerFullName
+        return ownerFullName ?? ""
     }
     
 }

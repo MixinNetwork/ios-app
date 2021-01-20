@@ -1,47 +1,64 @@
 import Foundation
-import WCDBSwift
+import GRDB
 
-public final class JobDAO {
+public final class JobDAO: UserDatabaseDAO {
     
     public static let shared = JobDAO()
     
     internal func nextJob(category: JobCategory) -> Job? {
-        return MixinDatabase.shared.getCodables(condition: Job.Properties.category == category.rawValue, orderBy: [Job.Properties.priority.asOrder(by: .descending), Job.Properties.orderId.asOrder(by: .ascending)], limit: 1).first
+        let orderings = [
+            Job.column(of: .priority).desc,
+            Job.column(of: .orderId).asc
+        ]
+        return db.select(where: Job.column(of: .category) == category.rawValue, order: orderings)
     }
     
     public func clearSessionJob() {
-        MixinDatabase.shared.delete(table: Job.tableName, condition: Job.Properties.category == JobCategory.WebSocket.rawValue && Job.Properties.action.in(JobAction.SEND_SESSION_MESSAGE.rawValue, JobAction.SEND_SESSION_MESSAGES.rawValue))
+        let condition = Job.column(of: .category) == JobCategory.WebSocket.rawValue
+            && [JobAction.SEND_SESSION_MESSAGE.rawValue, JobAction.SEND_SESSION_MESSAGES.rawValue].contains(Job.column(of: .action))
+        db.delete(Job.self, where: condition)
     }
-
-    public func nextJobs(category: JobCategory, action: JobAction, limit: Limit? = nil) -> [String: String] {
-        return MixinDatabase.shared.getDictionary(key: Job.Properties.jobId.asColumnResult(), value: Job.Properties.messageId.asColumnResult(), tableName: Job.tableName, condition: Job.Properties.category == category.rawValue && Job.Properties.action == action.rawValue, orderBy: [Job.Properties.orderId.asOrder(by: .ascending)], limit: limit)
+    
+    public func nextJobs(category: JobCategory, action: JobAction, limit: Int? = nil) -> [String: String] {
+        db.select(keyColumn: Job.column(of: .jobId),
+                  valueColumn: Job.column(of: .messageId),
+                  from: Job.self,
+                  where: Job.column(of: .category) == category.rawValue && Job.column(of: .action) == action.rawValue,
+                  order: [Job.column(of: .orderId).asc],
+                  limit: limit)
     }
-
-    internal func nextBatchJobs(category: JobCategory, limit: Limit) -> [Job] {
-        return MixinDatabase.shared.getCodables(condition: Job.Properties.category == category.rawValue, orderBy: [Job.Properties.orderId.asOrder(by: .ascending)], limit: limit)
+    
+    internal func nextBatchJobs(category: JobCategory, limit: Int) -> [Job] {
+        db.select(where: Job.column(of: .category) == category.rawValue,
+                  order: [Job.column(of: .orderId).asc],
+                  limit: limit)
     }
-
-    public func nextBatchJobs(category: JobCategory, action: JobAction, limit: Limit?) -> [Job] {
-        return MixinDatabase.shared.getCodables(condition: Job.Properties.category == category.rawValue && Job.Properties.action == action.rawValue, orderBy: [Job.Properties.orderId.asOrder(by: .ascending)], limit: limit)
+    
+    public func nextBatchJobs(category: JobCategory, action: JobAction, limit: Int?) -> [Job] {
+        let condition = Job.column(of: .category) == category.rawValue
+            && Job.column(of: .action) == action.rawValue
+        return db.select(where: condition,
+                         order: [Job.column(of: .orderId).asc],
+                         limit: limit)
     }
-
+    
     public func getCount(category: JobCategory) -> Int {
-        return MixinDatabase.shared.getCount(on: Job.Properties.jobId.count(), fromTable: Job.tableName, condition: Job.Properties.category == category.rawValue)
+        db.count(in: Job.self, where: Job.column(of: .category) == category.rawValue)
     }
-
+    
     internal func getCount() -> Int {
-        return MixinDatabase.shared.getCount(on: Job.Properties.jobId.count(), fromTable: Job.tableName)
+        db.count(in: Job.self)
     }
     
     public func removeJob(jobId: String) {
-        MixinDatabase.shared.delete(table: Job.tableName, condition: Job.Properties.jobId == jobId)
+        db.delete(Job.self, where: Job.column(of: .jobId) == jobId)
     }
     
     internal func removeJobs(jobIds: [String]) {
-        guard jobIds.count > 0 else {
+        guard !jobIds.isEmpty else {
             return
         }
-        MixinDatabase.shared.delete(table: Job.tableName, condition: Job.Properties.jobId.in(jobIds))
+        db.delete(Job.self, where: jobIds.contains(Job.column(of: .jobId)))
     }
     
 }

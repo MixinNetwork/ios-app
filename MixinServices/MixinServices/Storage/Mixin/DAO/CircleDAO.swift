@@ -1,23 +1,23 @@
-import WCDBSwift
+import GRDB
 
-public final class CircleDAO {
+public final class CircleDAO: UserDatabaseDAO {
     
     public static let shared = CircleDAO()
-
+    
     public static let circleDidChangeNotification = Notification.Name("one.mixin.messenger.circle.did_change")
-
-    public func insertOrReplace(circle: CircleResponse) {
+    
+    public func save(circle: CircleResponse) {
         let circle = Circle(circleId: circle.circleId, name: circle.name, createdAt: circle.createdAt)
-        MixinDatabase.shared.insertOrReplace(objects: [circle])
-        DispatchQueue.main.async {
-            NotificationCenter.default.post(name: Self.circleDidChangeNotification, object: self)
+        db.save(circle) { _ in
+            NotificationCenter.default.post(onMainThread: Self.circleDidChangeNotification, object: nil)
         }
     }
-
+    
     public func isExist(circleId: String) -> Bool {
-        return MixinDatabase.shared.isExist(type: Circle.self, condition: Circle.Properties.circleId == circleId)
+        db.recordExists(in: Circle.self,
+                        where: Circle.column(of: .circleId) == circleId)
     }
-
+    
     public func embeddedCircles() -> [EmbeddedCircle] {
         var circles = [EmbeddedCircle]()
         for category in EmbeddedCircle.Category.allCases {
@@ -40,7 +40,7 @@ public final class CircleDAO {
             FROM circles c
             ORDER BY c.created_at ASC
         """
-        return MixinDatabase.shared.getCodables(sql: sql)
+        return db.select(with: sql)
     }
     
     public func circleMembers(circleId: String) -> [CircleMember] {
@@ -56,31 +56,33 @@ public final class CircleDAO {
             LEFT JOIN users u ON u.user_id = cc.user_id
             WHERE cc.circle_id = ?
         """
-        return MixinDatabase.shared.getCodables(on: CircleMember.Properties.all,
-                                                sql: sql,
-                                                values: [circleId])
+        return db.select(with: sql, arguments: [circleId])
     }
     
     public func replaceAllCircles(with circles: [Circle]) {
-        MixinDatabase.shared.transaction { (db) in
-            try db.delete(fromTable: Circle.tableName)
-            try db.insert(objects: circles, intoTable: Circle.tableName)
+        db.write { db in
+            try Circle.deleteAll(db)
+            try circles.save(db)
         }
     }
     
     public func delete(circleId: String) {
-        MixinDatabase.shared.transaction { (db) in
-            try db.delete(fromTable: Circle.tableName, where: Circle.Properties.circleId == circleId)
-            try db.delete(fromTable: CircleConversation.tableName, where: CircleConversation.Properties.circleId == circleId)
+        db.write { db in
+            try Circle
+                .filter(Circle.column(of: .circleId) == circleId)
+                .deleteAll(db)
+            try CircleConversation
+                .filter(CircleConversation.column(of: .circleId) == circleId)
+                .deleteAll(db)
         }
     }
     
     public func circles(of conversationId: String, userId: String?) -> [CircleItem] {
-        var values = [conversationId]
         let userIdCondition: String
+        var arguments = [conversationId]
         if let userId = userId {
             userIdCondition = "OR cc.user_id = ?"
-            values.append(userId)
+            arguments.append(userId)
         } else {
             userIdCondition = ""
         }
@@ -93,7 +95,7 @@ public final class CircleDAO {
             WHERE conv.conversation_id = ? \(userIdCondition)
             ORDER BY c.created_at ASC
         """
-        return MixinDatabase.shared.getCodables(sql: sql, values: values)
+        return db.select(with: sql, arguments: StatementArguments(arguments))
     }
     
 }

@@ -1,8 +1,9 @@
-import WCDBSwift
+import GRDB
 
-public final class SnapshotDAO {
+public final class SnapshotDAO: UserDatabaseDAO {
     
     public static let shared = SnapshotDAO()
+    public static let snapshotDidChangeNotification = NSNotification.Name("one.mixin.services.SnapshotDAO.snapshotDidChange")
     
     private static let sqlQueryTable = """
     SELECT s.snapshot_id, s.type, s.asset_id, s.amount, s.opponent_id, s.transaction_hash, s.sender, s.receiver, s.memo, s.confirmations, s.trace_id, s.created_at, a.symbol, u.user_id, u.full_name, u.avatar_url, u.identity_number
@@ -13,149 +14,128 @@ public final class SnapshotDAO {
     private static let sqlQueryById = "\(sqlQueryTable) WHERE s.snapshot_id = ?"
     private static let sqlQueryByTrace = "\(sqlQueryTable) WHERE s.trace_id = ?"
     
-    private let createdAt = Snapshot.Properties.createdAt.in(table: Snapshot.tableName)
-    
     public func saveSnapshot(snapshot: Snapshot) -> SnapshotItem? {
         var snapshotItem: SnapshotItem?
-        MixinDatabase.shared.transaction { (db) in
-            try db.insertOrReplace(objects: snapshot, intoTable: Snapshot.tableName)
-            snapshotItem = try db.prepareSelectSQL(on: SnapshotItem.Properties.all, sql: SnapshotDAO.sqlQueryById, values: [snapshot.snapshotId]).allObjects().first
+        db.write { (db) in
+            try snapshot.save(db)
+            db.afterNextTransactionCommit { (db) in
+                snapshotItem = try? SnapshotItem.fetchOne(db,
+                                                          sql: SnapshotDAO.sqlQueryById,
+                                                          arguments: [snapshot.snapshotId])
+            }
         }
         return snapshotItem
     }
     
     public func getSnapshots(assetId: String? = nil, below location: SnapshotItem? = nil, sort: Snapshot.Sort, filter: Snapshot.Filter, limit: Int) -> [SnapshotItem] {
-        let amount = Snapshot.Properties.amount.in(table: Snapshot.tableName)
-        return getSnapshotsAndRefreshCorrespondingAssetIfNeeded { (statement) -> (StatementSelect) in
-            var stmt = statement
-            var condition = Expression(booleanLiteral: true)
-            if let assetId = assetId {
-                condition = condition && Snapshot.Properties.assetId.in(table: Snapshot.tableName) == assetId
-            }
-            switch sort {
-            case .createdAt:
-                if let location = location {
-                    condition = condition && createdAt < location.createdAt
-                }
-            case .amount:
-                if let location = location {
-                    let absAmount = amount.abs()
-                    let locationAbsAmount = Expression(stringLiteral: location.amount).abs()
-                    let isBelowLocation = absAmount < locationAbsAmount
-                        || (absAmount == locationAbsAmount && createdAt < location.createdAt)
-                    condition = condition && isBelowLocation
-                }
-            }
-            
-            if filter != .all {
-                let types = filter.snapshotTypes.map({ $0.rawValue })
-                let typeConstraint = Snapshot.Properties.type.in(table: Snapshot.tableName).in(types)
-                condition = condition && typeConstraint
-            }
-            
-            stmt.where(condition)
-            switch sort {
-            case .createdAt:
-                stmt = stmt.order(by: createdAt.asOrder(by: .descending))
-            case .amount:
-                stmt = stmt.order(by: [amount.abs().asOrder(by: .descending), createdAt.asOrder(by: .descending)])
-            }
-            stmt = stmt.limit(limit)
-            return stmt
+        let additionalCondition: String?
+        var additionalArguments: [String: String] = [:]
+        if let assetId = assetId {
+            additionalCondition = " AND s.asset_id = :asset_id"
+            additionalArguments["asset_id"] = assetId
+        } else {
+            additionalCondition = nil
         }
+        return getSnapshotsAndRefreshCorrespondingAssetIfNeeded(below: location,
+                                                                sort: sort,
+                                                                filter: filter,
+                                                                limit: limit,
+                                                                additionalCondition: additionalCondition,
+                                                                additionalArguments: additionalArguments)
     }
     
     public func getSnapshots(opponentId: String, below location: SnapshotItem? = nil, sort: Snapshot.Sort, filter: Snapshot.Filter, limit: Int) -> [SnapshotItem] {
-        let amount = Snapshot.Properties.amount.in(table: Snapshot.tableName)
-        return getSnapshotsAndRefreshCorrespondingAssetIfNeeded { (statement) -> (StatementSelect) in
-            var stmt = statement
-            var condition = Expression(booleanLiteral: true)
-            condition = condition && Snapshot.Properties.opponentId.in(table: Snapshot.tableName) == opponentId
-            switch sort {
-            case .createdAt:
-                if let location = location {
-                    condition = condition && createdAt < location.createdAt
-                }
-            case .amount:
-                if let location = location {
-                    let absAmount = amount.abs()
-                    let locationAbsAmount = Expression(stringLiteral: location.amount).abs()
-                    let isBelowLocation = absAmount < locationAbsAmount
-                        || (absAmount == locationAbsAmount && createdAt < location.createdAt)
-                    condition = condition && isBelowLocation
-                }
-            }
-            
-            if filter != .all {
-                let types = filter.snapshotTypes.map({ $0.rawValue })
-                let typeConstraint = Snapshot.Properties.type.in(table: Snapshot.tableName).in(types)
-                condition = condition && typeConstraint
-            }
-            
-            stmt.where(condition)
-            switch sort {
-            case .createdAt:
-                stmt = stmt.order(by: createdAt.asOrder(by: .descending))
-            case .amount:
-                stmt = stmt.order(by: [amount.abs().asOrder(by: .descending), createdAt.asOrder(by: .descending)])
-            }
-            stmt = stmt.limit(limit)
-            return stmt
-        }
+        getSnapshotsAndRefreshCorrespondingAssetIfNeeded(below: location,
+                                                         sort: sort,
+                                                         filter: filter,
+                                                         limit: limit,
+                                                         additionalCondition: " AND s.opponent_id = :opponent_id",
+                                                         additionalArguments: ["opponent_id": opponentId])
     }
     
     public func getSnapshot(snapshotId: String) -> SnapshotItem? {
-        return MixinDatabase.shared.getCodables(on: SnapshotItem.Properties.all, sql: SnapshotDAO.sqlQueryById, values: [snapshotId]).first
+        db.select(with: SnapshotDAO.sqlQueryById, arguments: [snapshotId])
     }
     
     public func getSnapshot(traceId: String) -> SnapshotItem? {
-        return MixinDatabase.shared.getCodables(on: SnapshotItem.Properties.all, sql: SnapshotDAO.sqlQueryByTrace, values: [traceId]).first
+        db.select(with: SnapshotDAO.sqlQueryByTrace, arguments: [traceId])
     }
     
-    public func insertOrReplaceSnapshots(snapshots: [Snapshot], userInfo: [AnyHashable: Any]? = nil) {
-        MixinDatabase.shared.insertOrReplace(objects: snapshots)
-        NotificationCenter.default.afterPostOnMain(name: .SnapshotDidChange, object: nil, userInfo: userInfo)
+    public func saveSnapshots(snapshots: [Snapshot], userInfo: [AnyHashable: Any]? = nil) {
+        db.save(snapshots) { (db) in
+            NotificationCenter.default.post(onMainThread: SnapshotDAO.snapshotDidChangeNotification, object: self, userInfo: userInfo)
+        }
     }
     
     public func replacePendingDeposits(assetId: String, pendingDeposits: [PendingDeposit]) {
         let snapshots = pendingDeposits.map({ $0.makeSnapshot(assetId: assetId )})
-        MixinDatabase.shared.transaction { (db) in
-            try db.delete(fromTable: Snapshot.tableName,
-                          where: Snapshot.Properties.assetId == assetId && Snapshot.Properties.type == SnapshotType.pendingDeposit.rawValue)
-            if snapshots.count > 0 {
-                try db.insertOrReplace(objects: snapshots, intoTable: Snapshot.tableName)
-            }
+        db.write { (db) in
+            let condition: SQLSpecificExpressible = Snapshot.column(of: .assetId) == assetId
+                && Snapshot.column(of: .type) == SnapshotType.pendingDeposit.rawValue
+            try Snapshot.filter(condition).deleteAll(db)
+            try snapshots.save(db)
         }
     }
     
     public func removePendingDeposits(assetId: String, transactionHash: String) {
-        let condition = Snapshot.Properties.assetId == assetId
-            && Snapshot.Properties.transactionHash == transactionHash
-            && Snapshot.Properties.type == SnapshotType.pendingDeposit.rawValue
-        MixinDatabase.shared.delete(table: Snapshot.tableName, condition: condition)
+        let condition = Snapshot.column(of: .assetId) == assetId
+            && Snapshot.column(of: .transactionHash) == transactionHash
+            && Snapshot.column(of: .type) == SnapshotType.pendingDeposit.rawValue
+        db.delete(Snapshot.self, where: condition)
     }
     
 }
 
 extension SnapshotDAO {
     
-    private func getSnapshotsAndRefreshCorrespondingAssetIfNeeded(prepare: (StatementSelect) -> (StatementSelect)) -> [SnapshotItem] {
-        let columns = Snapshot.Properties.all.map({ $0.in(table: Snapshot.tableName) })
-            + [Asset.Properties.symbol.in(table: Asset.tableName),
-               User.Properties.userId.in(table: User.tableName),
-               User.Properties.fullName.in(table: User.tableName),
-               User.Properties.avatarUrl.in(table: User.tableName),
-               User.Properties.identityNumber.in(table: User.tableName)]
-        let joinedTable = JoinClause(with: Snapshot.tableName)
-            .join(Asset.tableName, with: .left)
-            .on(Snapshot.Properties.assetId.in(table: Snapshot.tableName)
-                == Asset.Properties.assetId.in(table: Asset.tableName))
-            .join(User.tableName, with: .left)
-            .on(Snapshot.Properties.opponentId.in(table: Snapshot.tableName)
-                == User.Properties.userId.in(table: User.tableName))
-        var stmt = StatementSelect().select(columns).from(joinedTable)
-        stmt = prepare(stmt)
-        let snapshots: [SnapshotItem] = MixinDatabase.shared.getCodables(statement: stmt)
+    private func getSnapshotsAndRefreshCorrespondingAssetIfNeeded(below location: SnapshotItem? = nil, sort: Snapshot.Sort, filter: Snapshot.Filter, limit: Int, additionalCondition: String?, additionalArguments: [String: String]) -> [SnapshotItem] {
+        var sql = """
+        SELECT s.snapshot_id, s.type, s.asset_id, s.amount,
+                s.opponent_id, s.transaction_hash, s.sender, s.receiver,
+                s.memo, s.confirmations, s.trace_id, s.created_at, a.symbol,
+                u.user_id, u.full_name, u.avatar_url, u.identity_number
+        FROM snapshots s
+        LEFT JOIN assets a ON s.asset_id = a.asset_id
+        LEFT JOIN users u ON s.opponent_id = u.user_id
+        WHERE 1 = 1
+        """
+        
+        var conditions: [String] = []
+        if let condition = additionalCondition {
+            sql += condition
+        }
+        if let location = location {
+            switch sort {
+            case .createdAt:
+                sql += " AND s.created_at < :location_created_at"
+            case .amount:
+                let absAmount = "ABS(s.amount)"
+                let locationAbsAmount = "ABS(:location_amount)"
+                sql += " AND (\(absAmount) < \(locationAbsAmount) OR (\(absAmount) = \(locationAbsAmount) AND s.created_at < :location_created_at))"
+            }
+        }
+        if filter != .all {
+            let types = filter.snapshotTypes.map(\.rawValue).joined(separator: "', '")
+            sql += " AND s.type IN('\(types)')"
+        }
+        
+        switch sort {
+        case .createdAt:
+            sql += " ORDER BY s.created_at DESC"
+        case .amount:
+            sql += " ORDER BY ABS(s.amount) DESC, s.created_at DESC"
+        }
+        
+        sql += " LIMIT \(limit)"
+        
+        var arguments: [String: String] = [:]
+        arguments["location_created_at"] = location?.createdAt
+        arguments["location_amount"] = location?.amount
+        for (key, value) in additionalArguments {
+            arguments[key] = value
+        }
+        
+        let snapshots: [SnapshotItem] = db.select(with: sql, arguments: StatementArguments(arguments))
         for snapshot in snapshots where snapshot.assetSymbol == nil {
             let job = RefreshAssetsJob(assetId: snapshot.assetId)
             ConcurrentJobQueue.shared.addJob(job: job)

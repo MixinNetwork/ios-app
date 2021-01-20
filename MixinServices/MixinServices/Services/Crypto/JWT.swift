@@ -1,5 +1,4 @@
 import Foundation
-import MixinCrypto
 
 enum Jwt {
     

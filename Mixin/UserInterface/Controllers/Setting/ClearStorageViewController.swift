@@ -2,7 +2,7 @@ import UIKit
 import MixinServices
 
 class ClearStorageViewController: UITableViewController {
-
+    
     @IBOutlet weak var photoCell: ModernSelectedBackgroundCell!
     @IBOutlet weak var videoCell: ModernSelectedBackgroundCell!
     @IBOutlet weak var audioCell: ModernSelectedBackgroundCell!
@@ -132,7 +132,7 @@ extension ClearStorageViewController: ContainerViewControllerDelegate {
                 guard let weakSelf = self else {
                     return
                 }
-                NotificationCenter.default.post(name: .StorageUsageDidChange, object: nil)
+                NotificationCenter.default.post(name: MixinServices.storageUsageDidChangeNotification, object: self)
                 weakSelf.navigationController?.popViewController(animated: true)
             }
         }

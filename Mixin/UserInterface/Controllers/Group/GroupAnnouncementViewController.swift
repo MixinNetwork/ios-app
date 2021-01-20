@@ -18,7 +18,7 @@ class GroupAnnouncementViewController: AnnouncementViewController {
             switch response {
             case let .success(conversation):
                 let change = ConversationChange(conversationId: conversation.conversationId, action: .updateConversation(conversation: conversation))
-                NotificationCenter.default.post(name: .ConversationDidChange, object: change)
+                NotificationCenter.default.post(name: MixinServices.conversationDidChangeNotification, object: change)
                 self?.saveSuccessAction()
             case let .failure(error):
                 self?.saveFailedAction(error: error)

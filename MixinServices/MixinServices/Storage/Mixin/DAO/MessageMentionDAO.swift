@@ -1,21 +1,18 @@
-import WCDBSwift
+import GRDB
 
-public final class MessageMentionDAO {
+public final class MessageMentionDAO: UserDatabaseDAO {
     
     public static let shared = MessageMentionDAO()
     
-    private enum Sql {
-        static let unreadMessageIds = """
+    public func unreadMessageIds(conversationId: String) -> [String] {
+        let sql = """
         SELECT mm.message_id
-        FROM \(MessageMention.tableName) mm
-        LEFT JOIN \(Message.tableName) m ON m.id = mm.message_id
+        FROM \(MessageMention.databaseTableName) mm
+        LEFT JOIN \(Message.databaseTableName) m ON m.id = mm.message_id
         WHERE mm.conversation_id = ? AND mm.has_read = 0
         ORDER BY m.created_at ASC
         """
-    }
-    
-    public func unreadMessageIds(conversationId: String) -> [String] {
-        MixinDatabase.shared.getStringValues(sql: Sql.unreadMessageIds, values: [conversationId])
+        return db.select(with: sql, arguments: [conversationId])
     }
     
 }

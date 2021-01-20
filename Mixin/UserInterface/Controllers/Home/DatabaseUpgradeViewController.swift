@@ -1,5 +1,4 @@
 import UIKit
-import WCDBSwift
 import MixinServices
 
 class DatabaseUpgradeViewController: UIViewController {
@@ -40,11 +39,13 @@ class DatabaseUpgradeViewController: UIViewController {
             let localVersion = AppGroupUserDefaults.User.localVersion
             
             AppGroupContainer.migrateIfNeeded()
-            TaskDatabase.shared.initDatabase()
+            TaskDatabase.reloadCurrent()
             
-            let shouldClearSentSenderKey = !AppGroupUserDefaults.Database.isSentSenderKeyCleared
-            MixinDatabase.shared.initDatabase(clearSentSenderKey: shouldClearSentSenderKey)
-            AppGroupUserDefaults.Database.isSentSenderKeyCleared = true
+            UserDatabase.reloadCurrent()
+            if !AppGroupUserDefaults.Database.isSentSenderKeyCleared {
+                UserDatabase.current.clearSentSenderKey()
+                AppGroupUserDefaults.Database.isSentSenderKeyCleared = true
+            }
             
             if localVersion < 4 {
                 ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob())

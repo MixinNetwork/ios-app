@@ -1,10 +1,8 @@
 import Foundation
-import WCDBSwift
+import GRDB
 
-public struct Trace: BaseCodable {
-
-    public static let tableName: String = "traces"
-
+public struct Trace {
+    
     public let traceId: String
     public let assetId: String
     public let amount: String
@@ -13,26 +11,7 @@ public struct Trace: BaseCodable {
     public let tag: String?
     public let snapshotId: String?
     public let createdAt: String
-
-    public enum CodingKeys: String, CodingTableKey {
-        public typealias Root = Trace
-        case traceId = "trace_id"
-        case assetId = "asset_id"
-        case amount
-        case opponentId = "opponent_id"
-        case destination
-        case tag
-        case snapshotId = "snapshot_id"
-        case createdAt = "created_at"
-
-        public static let objectRelationalMapping = TableBinding(CodingKeys.self)
-        public static var columnConstraintBindings: [CodingKeys: ColumnConstraintBinding]? {
-            return [
-                traceId: ColumnConstraintBinding(isPrimary: true)
-            ]
-        }
-    }
-
+    
     public init(traceId: String, assetId: String, amount: String, opponentId: String?, destination: String?, tag: String?, createdAt: String = Date().toUTCString()) {
         self.traceId = traceId
         self.assetId = assetId
@@ -43,4 +22,26 @@ public struct Trace: BaseCodable {
         self.snapshotId = nil
         self.createdAt = createdAt
     }
+    
+}
+
+extension Trace: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord {
+    
+    public enum CodingKeys: String, CodingKey {
+        case traceId = "trace_id"
+        case assetId = "asset_id"
+        case amount
+        case opponentId = "opponent_id"
+        case destination
+        case tag
+        case snapshotId = "snapshot_id"
+        case createdAt = "created_at"
+    }
+    
+}
+
+extension Trace: TableRecord, PersistableRecord {
+    
+    public static let databaseTableName = "traces"
+    
 }

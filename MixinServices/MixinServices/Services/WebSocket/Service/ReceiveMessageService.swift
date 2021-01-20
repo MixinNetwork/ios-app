@@ -1,7 +1,6 @@
 import Foundation
 import UIKit
 import SDWebImage
-import MixinServices
 
 public protocol CallMessageCoordinator: class {
     func shouldSendRtcBlazeMessage(with category: MessageCategory) -> Bool
@@ -10,15 +9,12 @@ public protocol CallMessageCoordinator: class {
 
 public class ReceiveMessageService: MixinService {
     
-    public enum UserInfoKey {
-        public static let conversationId = "cid"
-        public static let userId = "uid"
-        public static let sessionId = "sid"
-    }
-    
     public static let shared = ReceiveMessageService()
+    
     public static let groupConversationParticipantDidChangeNotification = Notification.Name("one.mixin.services.group.participant.did.change")
     public static let senderKeyDidChangeNotification = NSNotification.Name("one.mixin.services.ReceiveMessageService.SenderKeyDidChange")
+    public static let progressNotification = NSNotification.Name("one.mixin.services.ReceiveMessageService.progressNotification")
+    public static let userSessionDidChangeNotification = NSNotification.Name("one.mixin.services.ReceiveMessageService.userSessionDidChange")
     
     private let processDispatchQueue = DispatchQueue(label: "one.mixin.services.queue.receive.messages")
     private let receiveDispatchQueue = DispatchQueue(label: "one.mixin.services.queue.receive")
@@ -67,7 +63,7 @@ public class ReceiveMessageService: MixinService {
                 if blazeMessageData.userId == myUserId && blazeMessageData.category.isEmpty {
                     MessageDAO.shared.updateMessageStatus(messageId: messageId, status: status, from: blazeMessage.action)
                 } else {
-                    guard BlazeMessageDAO.shared.insertOrReplace(messageId: messageId, conversationId: blazeMessageData.conversationId, data: data, createdAt: blazeMessageData.createdAt) else {
+                    guard BlazeMessageDAO.shared.save(messageId: messageId, conversationId: blazeMessageData.conversationId, data: data, createdAt: blazeMessageData.createdAt) else {
                         return
                     }
                     ReceiveMessageService.shared.processReceiveMessages()
@@ -141,7 +137,9 @@ public class ReceiveMessageService: MixinService {
             defer {
                 self.processing = false
                 if displaySyncProcess {
-                    NotificationCenter.default.postOnMain(name: .SyncMessageDidAppear, object: 100)
+                    NotificationCenter.default.post(onMainThread: Self.progressNotification,
+                                                    object: self,
+                                                    userInfo: [Self.UserInfoKey.progress: 100])
                 }
             }
 
@@ -175,7 +173,9 @@ public class ReceiveMessageService: MixinService {
                 if remainJobCount + finishedJobCount > 500 {
                     displaySyncProcess = true
                     let progress = blazeMessageDatas.count == 0 ? 100 : Int(Float(finishedJobCount) / Float(remainJobCount + finishedJobCount) * 100)
-                    NotificationCenter.default.postOnMain(name: .SyncMessageDidAppear, object: progress)
+                    NotificationCenter.default.post(onMainThread: Self.progressNotification,
+                                                    object: self,
+                                                    userInfo: [Self.UserInfoKey.progress: progress])
                 }
 
                 for data in blazeMessageDatas {
@@ -233,7 +233,12 @@ public class ReceiveMessageService: MixinService {
         }
         let participantSession = ParticipantSessionDAO.shared.getParticipantSession(conversationId: data.conversationId, userId: data.userId, sessionId: data.sessionId)
         if participantSession == nil {
-            MixinDatabase.shared.insertOrReplace(objects: [ParticipantSession(conversationId: data.conversationId, userId: data.userId, sessionId: data.sessionId, sentToServer: nil, createdAt: Date().toUTCString())])
+            let session = ParticipantSession(conversationId: data.conversationId,
+                                             userId: data.userId,
+                                             sessionId: data.sessionId,
+                                             sentToServer: nil,
+                                             createdAt: Date().toUTCString())
+            UserDatabase.current.save(session)
         }
     }
 
@@ -977,7 +982,7 @@ extension ReceiveMessageService {
             if let userId = systemCircle.userId {
                 syncUser(userId: userId)
             }
-            CircleConversationDAO.shared.insertOrReplace(circleId: systemCircle.circleId, objects: [circleConversation])
+            CircleConversationDAO.shared.save(circleId: systemCircle.circleId, objects: [circleConversation])
         } else if systemCircle.action == SystemCircleMessageAction.REMOVE.rawValue {
             guard let conversationId = systemCircle.makeConversationIdIfNeeded() else {
                 return
@@ -1009,7 +1014,7 @@ extension ReceiveMessageService {
             SnapshotDAO.shared.removePendingDeposits(assetId: snapshot.assetId, transactionHash: transactionHash)
         }
 
-        SnapshotDAO.shared.insertOrReplaceSnapshots(snapshots: [snapshot])
+        SnapshotDAO.shared.saveSnapshots(snapshots: [snapshot])
         let message = Message.createMessage(snapshotMesssage: snapshot, data: data)
         MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
     }
@@ -1027,7 +1032,7 @@ extension ReceiveMessageService {
             Logger.write(log: "[ReceiveMessageService][ProcessSystemSessionMessage]...log out desktop...", newSection: true)
 
             ParticipantSessionDAO.shared.provisionSession(userId: systemSession.userId, sessionId: systemSession.sessionId)
-            NotificationCenter.default.postOnMain(name: .UserSessionDidChange)
+            NotificationCenter.default.post(onMainThread: Self.userSessionDidChangeNotification, object: self)
         } else if (systemSession.action == SystemSessionMessageAction.DESTROY.rawValue) {
             guard AppGroupUserDefaults.Account.extensionSession == systemSession.sessionId else {
                 return
@@ -1039,7 +1044,7 @@ extension ReceiveMessageService {
 
             JobDAO.shared.clearSessionJob()
             ParticipantSessionDAO.shared.destorySession(userId: systemSession.userId, sessionId: systemSession.sessionId)
-            NotificationCenter.default.postOnMain(name: .UserSessionDidChange)
+            NotificationCenter.default.post(onMainThread: Self.userSessionDidChangeNotification, object: self)
         }
     }
 
@@ -1072,8 +1077,8 @@ extension ReceiveMessageService {
                 && sysMessage.action != SystemConversationAction.UPDATE.rawValue
                 && sysMessage.action != SystemConversationAction.ROLE.rawValue
             if participantDidChange {
-                let userInfo = [MixinService.UserInfoKey.conversationId: data.conversationId]
-                NotificationCenter.default.post(name: Self.groupConversationParticipantDidChangeNotification, object: self, userInfo: userInfo)
+                let userInfo = [ReceiveMessageService.UserInfoKey.conversationId: data.conversationId]
+                NotificationCenter.default.post(name: ReceiveMessageService.groupConversationParticipantDidChangeNotification, object: self, userInfo: userInfo)
             }
         }
         

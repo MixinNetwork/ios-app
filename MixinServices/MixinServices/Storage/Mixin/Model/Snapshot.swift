@@ -1,9 +1,17 @@
 import Foundation
-import WCDBSwift
+import GRDB
 
-public struct Snapshot: BaseCodable {
-    
-    public static let tableName: String = "snapshots"
+public enum SnapshotType: String, CaseIterable {
+    case raw
+    case deposit
+    case transfer
+    case withdrawal
+    case fee
+    case rebate
+    case pendingDeposit = "pending_deposit"
+}
+
+public struct Snapshot {
     
     public let snapshotId: String
     public let type: String
@@ -17,29 +25,6 @@ public struct Snapshot: BaseCodable {
     public let confirmations: Int?
     public let traceId: String?
     public var createdAt: String
-    
-    public enum CodingKeys: String, CodingTableKey {
-        public typealias Root = Snapshot
-        case snapshotId = "snapshot_id"
-        case type
-        case assetId = "asset_id"
-        case amount
-        case opponentId = "opponent_id"
-        case transactionHash = "transaction_hash"
-        case sender
-        case receiver
-        case memo
-        case confirmations
-        case traceId = "trace_id"
-        case createdAt = "created_at"
-        
-        public static let objectRelationalMapping = TableBinding(CodingKeys.self)
-        public static var columnConstraintBindings: [CodingKeys: ColumnConstraintBinding]? {
-            return [
-                snapshotId: ColumnConstraintBinding(isPrimary: true)
-            ]
-        }
-    }
     
     public init(snapshotId: String, type: String, assetId: String, amount: String, transactionHash: String?, sender: String?, opponentId: String?, memo: String?, receiver: String?, confirmations: Int?, traceId: String?, createdAt: String) {
         self.snapshotId = snapshotId
@@ -55,6 +40,51 @@ public struct Snapshot: BaseCodable {
         self.traceId = traceId
         self.createdAt = createdAt
     }
+    
+}
+
+extension Snapshot: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord {
+
+    public enum CodingKeys: String, CodingKey {
+        case snapshotId = "snapshot_id"
+        case type
+        case assetId = "asset_id"
+        case amount
+        case opponentId = "opponent_id"
+        case transactionHash = "transaction_hash"
+        case sender
+        case receiver
+        case memo
+        case confirmations
+        case traceId = "trace_id"
+        case createdAt = "created_at"
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        snapshotId = try container.decode(String.self, forKey: .snapshotId)
+        type = try container.decodeIfPresent(String.self, forKey: .type) ?? ""
+        assetId = try container.decodeIfPresent(String.self, forKey: .assetId) ?? ""
+        amount = try container.decodeIfPresent(String.self, forKey: .amount) ?? ""
+        opponentId = try container.decodeIfPresent(String.self, forKey: .opponentId)
+        transactionHash = try container.decodeIfPresent(String.self, forKey: .transactionHash)
+        sender = try container.decodeIfPresent(String.self, forKey: .sender)
+        receiver = try container.decodeIfPresent(String.self, forKey: .receiver)
+        memo = try container.decodeIfPresent(String.self, forKey: .memo)
+        confirmations = try container.decodeIfPresent(Int.self, forKey: .confirmations)
+        traceId = try container.decodeIfPresent(String.self, forKey: .traceId)
+        createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt) ?? ""
+    }
+    
+}
+
+extension Snapshot: TableRecord, PersistableRecord {
+    
+    public static let databaseTableName = "snapshots"
+    
+}
+
+extension Snapshot {
     
     public enum Sort {
         case createdAt
@@ -90,14 +120,4 @@ public struct Snapshot: BaseCodable {
         }
     }
     
-}
-
-public enum SnapshotType: String, CaseIterable {
-    case raw
-    case deposit
-    case transfer
-    case withdrawal
-    case fee
-    case rebate
-    case pendingDeposit = "pending_deposit"
 }

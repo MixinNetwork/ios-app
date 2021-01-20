@@ -39,7 +39,7 @@ class ContactViewController: UITableViewController {
         reloadAccount()
         reloadContacts()
         NotificationCenter.default.addObserver(self, selector: #selector(reloadAccount), name: LoginManager.accountDidChangeNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(reloadContacts), name: .ContactsDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadContacts), name: UserDAO.contactsDidChangeNotification, object: nil)
         ContactAPI.syncContacts()
         
     }

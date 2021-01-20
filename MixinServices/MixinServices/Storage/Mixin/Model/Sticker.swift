@@ -1,9 +1,7 @@
 import Foundation
-import WCDBSwift
+import GRDB
 
-public struct Sticker: BaseCodable {
-    
-    public static let tableName: String = "stickers"
+public struct Sticker {
     
     public let stickerId: String
     public let name: String
@@ -12,24 +10,6 @@ public struct Sticker: BaseCodable {
     public let assetWidth: Int
     public let assetHeight: Int
     public var lastUseAt: String?
-    
-    public enum CodingKeys: String, CodingTableKey {
-        public typealias Root = Sticker
-        case stickerId = "sticker_id"
-        case name
-        case assetUrl = "asset_url"
-        case assetType = "asset_type"
-        case assetWidth = "asset_width"
-        case assetHeight = "asset_height"
-        case lastUseAt = "last_used_at"
-        
-        public static let objectRelationalMapping = TableBinding(CodingKeys.self)
-        public static var columnConstraintBindings: [CodingKeys: ColumnConstraintBinding]? {
-            return [
-                stickerId: ColumnConstraintBinding(isPrimary: true)
-            ]
-        }
-    }
     
     public init(stickerId: String, name: String, assetUrl: String, assetType: String, assetWidth: Int, assetHeight: Int, lastUseAt: String?) {
         self.stickerId = stickerId
@@ -50,5 +30,36 @@ public struct Sticker: BaseCodable {
                   assetHeight: response.assetHeight,
                   lastUseAt: nil)
     }
+    
+}
+
+extension Sticker: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord {
+
+    public enum CodingKeys: String, CodingKey {
+        case stickerId = "sticker_id"
+        case name
+        case assetUrl = "asset_url"
+        case assetType = "asset_type"
+        case assetWidth = "asset_width"
+        case assetHeight = "asset_height"
+        case lastUseAt = "last_used_at"
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        stickerId = try container.decode(String.self, forKey: .stickerId)
+        name = try container.decodeIfPresent(String.self, forKey: .name) ?? ""
+        assetUrl = try container.decodeIfPresent(String.self, forKey: .assetUrl) ?? ""
+        assetType = try container.decodeIfPresent(String.self, forKey: .assetType) ?? ""
+        assetWidth = try container.decodeIfPresent(Int.self, forKey: .assetWidth) ?? 0
+        assetHeight = try container.decodeIfPresent(Int.self, forKey: .assetHeight) ?? 0
+        lastUseAt = try container.decodeIfPresent(String.self, forKey: .lastUseAt)
+    }
+    
+}
+
+extension Sticker: TableRecord, PersistableRecord {
+    
+    public static let databaseTableName = "stickers"
     
 }

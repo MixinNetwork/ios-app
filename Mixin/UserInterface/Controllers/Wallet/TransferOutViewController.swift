@@ -83,7 +83,10 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         if self.asset != nil {
             updateAssetUI()
         } else {
-            NotificationCenter.default.addObserver(self, selector: #selector(fetchAvailableAssets), name: .AssetsDidChange, object: nil)
+            NotificationCenter.default.addObserver(self,
+                                                   selector: #selector(fetchAvailableAssets),
+                                                   name: AssetDAO.assetsDidChangeNotification,
+                                                   object: nil)
             ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob())
             fetchAvailableAssets()
         }

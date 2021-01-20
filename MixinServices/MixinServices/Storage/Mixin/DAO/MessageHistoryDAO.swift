@@ -1,15 +1,17 @@
-import WCDBSwift
+import GRDB
 
-public final class MessageHistoryDAO {
+public final class MessageHistoryDAO: UserDatabaseDAO {
     
     public static let shared = MessageHistoryDAO()
     
     public func isExist(messageId: String) -> Bool {
-        return MixinDatabase.shared.isExist(type: MessageHistory.self, condition: MessageHistory.Properties.messageId == messageId)
+        db.recordExists(in: MessageHistory.self,
+                        where: MessageHistory.column(of: .messageId) == messageId)
     }
     
     public func replaceMessageHistory(messageId: String) {
-        MixinDatabase.shared.insertOrReplace(objects: [MessageHistory(messageId: messageId)])
+        let history = MessageHistory(messageId: messageId)
+        db.save(history)
     }
     
 }

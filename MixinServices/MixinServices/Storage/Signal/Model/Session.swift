@@ -1,48 +1,35 @@
-import WCDBSwift
+import Foundation
+import GRDB
 
-public struct Session: BaseCodable {
+public struct Session {
     
-    public static var tableName: String = "sessions"
-    
-    public var id: Int?
     public let address: String
-    public let device: Int
+    public let device: Int32
     public let record: Data
     public let timestamp: TimeInterval
     
-    public init(address: String, device: Int, record: Data, timestamp: TimeInterval) {
+    public init(address: String, device: Int32, record: Data, timestamp: TimeInterval) {
         self.address = address
         self.device = device
         self.record = record
         self.timestamp = timestamp
     }
     
-    public enum CodingKeys: String, CodingTableKey {
-        
-        public typealias Root = Session
-        
-        public static let objectRelationalMapping = TableBinding(CodingKeys.self)
-        public static var columnConstraintBindings: [CodingKeys: ColumnConstraintBinding]? {
-            return [
-                id: ColumnConstraintBinding(isPrimary: true, isAutoIncrement: true)
-            ]
-        }
-        public static var indexBindings: [IndexBinding.Subfix: IndexBinding]? {
-            return  [
-                "_multi_index": IndexBinding(isUnique: true, indexesBy: address, device)
-            ]
-        }
-        
-        case id
+}
+
+extension Session: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord {
+    
+    public enum CodingKeys: CodingKey {
         case address
         case device
         case record
         case timestamp
-        
     }
     
-    public var isAutoIncrement: Bool {
-        return true
-    }
+}
+
+extension Session: TableRecord, PersistableRecord {
+    
+    public static let databaseTableName = "sessions"
     
 }

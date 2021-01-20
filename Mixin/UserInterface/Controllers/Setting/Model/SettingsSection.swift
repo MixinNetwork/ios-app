@@ -7,7 +7,7 @@ class SettingsSection: NSObject {
     let header: String?
     var footer: String? {
         didSet {
-            NotificationCenter.default.postOnMain(name: Self.footerDidChangeNotification, object: self, userInfo: nil)
+            NotificationCenter.default.post(onMainThread: Self.footerDidChangeNotification, object: self, userInfo: nil)
         }
     }
     var rows: [SettingsRow]

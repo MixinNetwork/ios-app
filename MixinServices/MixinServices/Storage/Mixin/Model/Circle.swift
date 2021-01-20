@@ -1,27 +1,7 @@
-import UIKit
-import WCDBSwift
+import Foundation
+import GRDB
 
-public class Circle: BaseCodable {
-    
-    public enum CodingKeys: String, CodingTableKey {
-        
-        public typealias Root = Circle
-        
-        public static let objectRelationalMapping = TableBinding(CodingKeys.self)
-        
-        public static var columnConstraintBindings: [CodingKeys: ColumnConstraintBinding]? {
-            return [
-                circleId: ColumnConstraintBinding(isPrimary: true)
-            ]
-        }
-        
-        case circleId = "circle_id"
-        case name
-        case createdAt = "created_at"
-        
-    }
-    
-    public static let tableName: String = "circles"
+public struct Circle {
     
     public let circleId: String
     public let name: String
@@ -32,5 +12,28 @@ public class Circle: BaseCodable {
         self.name = name
         self.createdAt = createdAt
     }
+    
+}
+
+extension Circle: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord {
+    
+    public enum CodingKeys: String, CodingKey {
+        case circleId = "circle_id"
+        case name
+        case createdAt = "created_at"
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        circleId = try container.decode(String.self, forKey: .circleId)
+        name = try container.decodeIfPresent(String.self, forKey: .name) ?? ""
+        createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt) ?? ""
+    }
+    
+}
+
+extension Circle: TableRecord, PersistableRecord {
+    
+    public static let databaseTableName = "circles"
     
 }

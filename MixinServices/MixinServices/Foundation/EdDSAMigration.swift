@@ -1,5 +1,4 @@
 import Foundation
-import MixinServices
 
 public enum EdDSAMigration {
     

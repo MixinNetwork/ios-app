@@ -15,7 +15,7 @@ public extension UNMutableNotificationContent {
         } else if isRepresentativeMessage {
             title = conversation.ownerFullName
         } else {
-            title = message.userFullName
+            title = message.userFullName ?? ""
         }
         
         if AppGroupUserDefaults.User.showMessagePreviewInNotification {
@@ -39,68 +39,69 @@ public extension UNMutableNotificationContent {
     }
     
     private func messagePreview(conversationIsGroup: Bool, isRepresentativeMessage: Bool, message: MessageItem) -> String {
+        let userFullName = message.userFullName ?? ""
         if message.category.hasSuffix("_TEXT") {
             if conversationIsGroup || isRepresentativeMessage {
-                return "\(message.userFullName): \(message.mentionedFullnameReplacedContent)"
+                return "\(userFullName): \(message.mentionedFullnameReplacedContent)"
             } else {
                 return message.mentionedFullnameReplacedContent
             }
         } else if message.category.hasSuffix("_IMAGE") {
             if conversationIsGroup || isRepresentativeMessage {
-                return R.string.localizable.alert_key_group_image_message(message.userFullName)
+                return R.string.localizable.alert_key_group_image_message(userFullName)
             } else {
                 return R.string.localizable.alert_key_contact_image_message()
             }
         } else if message.category.hasSuffix("_VIDEO") {
             if conversationIsGroup || isRepresentativeMessage {
-                return R.string.localizable.alert_key_group_video_message(message.userFullName)
+                return R.string.localizable.alert_key_group_video_message(userFullName)
             } else {
                 return R.string.localizable.alert_key_contact_video_message()
             }
         } else if message.category.hasSuffix("_LIVE") {
             if conversationIsGroup || isRepresentativeMessage {
-                return R.string.localizable.alert_key_group_live_message(message.userFullName)
+                return R.string.localizable.alert_key_group_live_message(userFullName)
             } else {
                 return R.string.localizable.alert_key_contact_live_message()
             }
         } else if message.category.hasSuffix("_AUDIO") {
             if conversationIsGroup || isRepresentativeMessage {
-                return R.string.localizable.alert_key_group_audio_message(message.userFullName)
+                return R.string.localizable.alert_key_group_audio_message(userFullName)
             } else {
                 return R.string.localizable.alert_key_contact_audio_message()
             }
         } else if message.category.hasSuffix("_DATA") {
             if conversationIsGroup || isRepresentativeMessage {
-                return R.string.localizable.alert_key_group_data_message(message.userFullName)
+                return R.string.localizable.alert_key_group_data_message(userFullName)
             } else {
                 return R.string.localizable.alert_key_contact_data_message()
             }
         } else if message.category.hasSuffix("_STICKER") {
             if conversationIsGroup || isRepresentativeMessage {
-                return R.string.localizable.alert_key_group_sticker_message(message.userFullName)
+                return R.string.localizable.alert_key_group_sticker_message(userFullName)
             } else {
                 return R.string.localizable.alert_key_contact_sticker_message()
             }
         } else if message.category.hasSuffix("_CONTACT") {
             if conversationIsGroup || isRepresentativeMessage {
-                return R.string.localizable.alert_key_group_contact_message(message.userFullName)
+                return R.string.localizable.alert_key_group_contact_message(userFullName)
             } else {
                 return R.string.localizable.alert_key_contact_contact_message()
             }
         } else if message.category.hasSuffix("_POST") {
             if conversationIsGroup || isRepresentativeMessage {
-                return "\(message.userFullName): \(message.markdownControlCodeRemovedContent)"
+                return "\(userFullName): \(message.markdownControlCodeRemovedContent)"
             } else {
                 return message.markdownControlCodeRemovedContent
             }
         } else if message.category.hasSuffix("_LOCATION") {
             if conversationIsGroup || isRepresentativeMessage {
-                return R.string.localizable.alert_key_group_location_message(message.userFullName)
+                return R.string.localizable.alert_key_group_location_message(userFullName)
             } else {
                 return R.string.localizable.alert_key_contact_location_message()
             }
         } else if message.category.hasPrefix("KRAKEN_") {
-            return R.string.localizable.alert_key_group_audio_invite_message(message.userFullName)
+            return R.string.localizable.alert_key_group_audio_invite_message(userFullName)
         } else if message.category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
             switch message.snapshotType {
             case SnapshotType.deposit.rawValue:

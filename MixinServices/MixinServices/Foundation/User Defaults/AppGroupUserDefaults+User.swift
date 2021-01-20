@@ -58,7 +58,11 @@ extension AppGroupUserDefaults {
         private static let maxNumberOfAssetSearchHistory = 2
         
         public static var needsUpgradeInMainApp: Bool {
-            return localVersion < version || needsRebuildDatabase
+            return localVersion < version
+                || needsRebuildDatabase
+                || TaskDatabase.current.needsMigration
+                || SignalDatabase.current.needsMigration
+                || UserDatabase.current.needsMigration
         }
         
         @Default(namespace: .user, key: Key.localVersion, defaultValue: uninitializedVersion)
@@ -152,14 +156,14 @@ extension AppGroupUserDefaults {
         @Default(namespace: .user, key: Key.circleName, defaultValue: nil)
         public static var circleName: String? {
             didSet {
-                NotificationCenter.default.postOnMain(name: circleNameDidChangeNotification, object: self)
+                NotificationCenter.default.post(onMainThread: circleNameDidChangeNotification, object: self)
             }
         }
         
         @Default(namespace: .user, key: Key.homeApp, defaultValue: [App.walletAppId, App.cameraAppId])
         public static var homeAppIds: [String] {
             didSet {
-                NotificationCenter.default.postOnMain(name: homeAppIdsDidChangeNotification, object: self)
+                NotificationCenter.default.post(onMainThread: homeAppIdsDidChangeNotification, object: self)
             }
         }
         

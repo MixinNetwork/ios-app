@@ -38,7 +38,7 @@ class AssetViewController: UIViewController {
             weakSelf.updateTableHeaderFooterView()
         }
         snapshotDataSource.reloadFromLocal()
-        NotificationCenter.default.addObserver(self, selector: #selector(assetsDidChange(_:)), name: .AssetsDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(assetsDidChange(_:)), name: AssetDAO.assetsDidChangeNotification, object: nil)
         ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(assetId: asset.assetId))
     }
     
@@ -52,7 +52,10 @@ class AssetViewController: UIViewController {
     }
     
     @objc func assetsDidChange(_ notification: Notification) {
-        guard let assetId = notification.object as? String, assetId == asset.assetId else {
+        guard let id = notification.userInfo?[AssetDAO.UserInfoKey.assetId] as? String else {
+            return
+        }
+        guard id == asset.assetId else {
             return
         }
         reloadAsset()
@@ -122,7 +125,7 @@ extension AssetViewController: ContainerViewControllerDelegate {
             } else {
                 AppGroupUserDefaults.Wallet.hiddenAssetIds[asset.assetId] = true
             }
-            NotificationCenter.default.postOnMain(name: .AssetVisibleDidChange)
+            NotificationCenter.default.post(onMainThread: Application.assetVisibilityDidChangeNotification, object: self)
             weakSelf.navigationController?.popViewController(animated: true)
         }))
         alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))

@@ -1,11 +1,14 @@
-import WCDBSwift
+import GRDB
 
-public final class ResendSessionMessageDAO {
+public final class ResendSessionMessageDAO: UserDatabaseDAO {
     
     public static let shared = ResendSessionMessageDAO()
     
     public func isExist(messageId: String, userId: String, sessionId: String) -> Bool {
-        return MixinDatabase.shared.isExist(type: ResendSessionMessage.self, condition: ResendSessionMessage.Properties.messageId == messageId && ResendSessionMessage.Properties.userId == userId && ResendSessionMessage.Properties.sessionId == sessionId)
+        let condition: SQLSpecificExpressible = ResendSessionMessage.column(of: .messageId) == messageId
+            && ResendSessionMessage.column(of: .userId) == userId
+            && ResendSessionMessage.column(of: .sessionId) == sessionId
+        return db.recordExists(in: ResendSessionMessage.self, where: condition)
     }
     
 }

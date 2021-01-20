@@ -25,7 +25,7 @@ final class SettingsRow: NSObject {
     
     var title: String {
         didSet {
-            NotificationCenter.default.postOnMain(name: Self.titleDidChangeNotification, object: self, userInfo: nil)
+            NotificationCenter.default.post(onMainThread: Self.titleDidChangeNotification, object: self, userInfo: nil)
         }
     }
     
@@ -33,13 +33,13 @@ final class SettingsRow: NSObject {
     
     var subtitle: String? {
         didSet {
-            NotificationCenter.default.postOnMain(name: Self.subtitleDidChangeNotification, object: self, userInfo: nil)
+            NotificationCenter.default.post(onMainThread: Self.subtitleDidChangeNotification, object: self, userInfo: nil)
         }
     }
     
     var accessory: Accessory {
         didSet {
-            NotificationCenter.default.postOnMain(name: Self.accessoryDidChangeNotification, object: self, userInfo: nil)
+            NotificationCenter.default.post(onMainThread: Self.accessoryDidChangeNotification, object: self, userInfo: nil)
         }
     }
     

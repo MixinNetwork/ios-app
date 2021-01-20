@@ -1,6 +1,8 @@
-import WCDBSwift
+import GRDB
 
-public final class StickerDAO {
+public final class StickerDAO: UserDatabaseDAO {
+    
+    public static let favoriteStickersDidChangeNotification = NSNotification.Name("one.mixin.services.StickerDAO.favoriteStickersDidChange")
     
     private static let sqlQueryColumns = """
     SELECT s.sticker_id, s.name, s.asset_url, s.asset_type, s.asset_width, s.asset_height, s.last_used_at, a.category
@@ -45,45 +47,46 @@ public final class StickerDAO {
     public static let shared = StickerDAO()
     
     public func isExist(stickerId: String) -> Bool {
-        return MixinDatabase.shared.isExist(type: Sticker.self, condition: Sticker.Properties.stickerId == stickerId)
+        db.recordExists(in: Sticker.self, where: Sticker.column(of: .stickerId) == stickerId)
     }
     
     public func getSticker(albumId: String, name: String) -> StickerItem? {
-        return MixinDatabase.shared.getCodables(on: StickerItem.Properties.all, sql: StickerDAO.sqlQuerySticker, values: [albumId, name]).first
+        db.select(with: StickerDAO.sqlQuerySticker, arguments: [albumId, name])
     }
     
     public func getSticker(stickerId: String) -> StickerItem? {
-        return MixinDatabase.shared.getCodables(on: StickerItem.Properties.all, sql: StickerDAO.sqlQueryStickerByStickerId, values: [stickerId]).first
+        db.select(with: StickerDAO.sqlQueryStickerByStickerId, arguments: [stickerId])
     }
     
     public func getStickers(albumId: String) -> [StickerItem] {
-        return MixinDatabase.shared.getCodables(on: StickerItem.Properties.all, sql: StickerDAO.sqlQueryStickersByAlbum, values: [albumId])
+        db.select(with: StickerDAO.sqlQueryStickersByAlbum, arguments: [albumId])
     }
     
     public func getFavoriteStickers() -> [StickerItem] {
-        return MixinDatabase.shared.getCodables(sql: StickerDAO.sqlQueryFavoriteStickers)
+        db.select(with: StickerDAO.sqlQueryFavoriteStickers)
     }
     
     public func recentUsedStickers(limit: Int) -> [StickerItem] {
-        return MixinDatabase.shared.getCodables(sql: StickerDAO.sqlQueryRecentUsedStickers, values: [limit])
+        db.select(with: StickerDAO.sqlQueryRecentUsedStickers, arguments: [limit])
     }
     
     public func insertOrUpdateSticker(sticker: StickerResponse) {
-        let lastUserAtProperty = Sticker.Properties.lastUseAt.asProperty().name
-        let propertyList = Sticker.Properties.all.filter { $0.name != lastUserAtProperty }
-        
-        MixinDatabase.shared.insertOrReplace(objects: [Sticker(response: sticker)], on: propertyList)
+        db.write { (db) in
+            try insertOrUpdateSticker(into: db, with: sticker)
+        }
     }
     
     public func insertOrUpdateStickers(stickers: [StickerResponse], albumId: String) {
-        let lastUserAtProperty = Sticker.Properties.lastUseAt.asProperty().name
-        let propertyList = Sticker.Properties.all.filter { $0.name != lastUserAtProperty }
-        
-        MixinDatabase.shared.transaction { (database) in
-            try database.insertOrReplace(objects: stickers.map { StickerRelationship(albumId: albumId, stickerId: $0.stickerId, createdAt: $0.createdAt) }, intoTable: StickerRelationship.tableName)
-            try database.insertOrReplace(objects: stickers.map(Sticker.init), on: propertyList, intoTable: Sticker.tableName)
+        db.write { (db) in
+            for response in stickers {
+                let relationship = StickerRelationship(albumId: albumId, stickerId: response.stickerId, createdAt: response.createdAt)
+                try relationship.save(db)
+                try insertOrUpdateSticker(into: db, with: response)
+            }
+            db.afterNextTransactionCommit { (_) in
+                NotificationCenter.default.post(onMainThread: Self.favoriteStickersDidChangeNotification, object: self)
+            }
         }
-        NotificationCenter.default.afterPostOnMain(name: .FavoriteStickersDidChange)
     }
     
     public func insertOrUpdateFavoriteSticker(sticker: StickerResponse) {
@@ -107,7 +110,28 @@ public final class StickerDAO {
     }
     
     public func updateUsedAt(stickerId: String, usedAt: String) {
-        MixinDatabase.shared.update(maps: [(Sticker.Properties.lastUseAt, usedAt)], tableName: Sticker.tableName, condition: Sticker.Properties.stickerId == stickerId)
+        db.update(Sticker.self,
+                  assignments: [Sticker.column(of: .lastUseAt).set(to: usedAt)],
+                  where: Sticker.column(of: .stickerId) == stickerId)
+    }
+    
+    private func insertOrUpdateSticker(into db: GRDB.Database, with response: StickerResponse) throws {
+        let sticker = Sticker(response: response)
+        if try sticker.exists(db) {
+            let assignments = [
+                Sticker.column(of: .stickerId).set(to: response.stickerId),
+                Sticker.column(of: .name).set(to: response.name),
+                Sticker.column(of: .assetUrl).set(to: response.assetUrl),
+                Sticker.column(of: .assetType).set(to: response.assetType),
+                Sticker.column(of: .assetWidth).set(to: response.assetWidth),
+                Sticker.column(of: .assetHeight).set(to: response.assetHeight),
+            ]
+            try Sticker
+                .filter(Sticker.column(of: .stickerId) == response.stickerId)
+                .updateAll(db, assignments)
+        } else {
+            try sticker.save(db)
+        }
     }
     
 }

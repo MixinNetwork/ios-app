@@ -43,7 +43,9 @@ public class SignalProtocol {
 
     func clearSenderKey(groupId: String, senderId: String) {
         let senderKeyName = SignalSenderKeyName(groupId: groupId, sender: SignalAddress(name: senderId, deviceId: DEFAULT_DEVICE_ID))
-        store.senderKeyStore!.removeSenderKey(senderKeyName: senderKeyName)
+        if let store = store.senderKeyStore as? MixinSenderKeyStore {
+            store.removeSenderKey(senderKeyName: senderKeyName)
+        }
         Logger.write(conversationId: groupId, log: "[SignalProtocol][ClearSenderKey]...senderId:\(senderId)")
     }
 

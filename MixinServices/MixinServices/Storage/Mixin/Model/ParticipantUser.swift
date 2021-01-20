@@ -1,6 +1,7 @@
-import WCDBSwift
+import Foundation
+import GRDB
 
-public struct ParticipantUser: TableCodable {
+public struct ParticipantUser {
     
     public let conversationId: String
     public let role: String
@@ -8,21 +9,6 @@ public struct ParticipantUser: TableCodable {
     public let userFullName: String
     public let userAvatarUrl: String
     public let userIdentityNumber: String
-    
-    public enum CodingKeys: String, CodingTableKey {
-        
-        public typealias Root = ParticipantUser
-        
-        public static let objectRelationalMapping = TableBinding(CodingKeys.self)
-        
-        case userId
-        case userIdentityNumber
-        case userFullName
-        case userAvatarUrl
-        case role
-        case conversationId
-        
-    }
     
     public init(conversationId: String, role: String, userId: String, userFullName: String, userAvatarUrl: String, userIdentityNumber: String) {
         self.conversationId = conversationId
@@ -58,6 +44,29 @@ public struct ParticipantUser: TableCodable {
                   userFullName: account.full_name,
                   userAvatarUrl: account.avatar_url,
                   userIdentityNumber: account.identity_number)
+    }
+    
+}
+
+extension ParticipantUser: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord {
+    
+    public enum CodingKeys: CodingKey {
+        case conversationId
+        case role
+        case userId
+        case userFullName
+        case userAvatarUrl
+        case userIdentityNumber
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        conversationId = try container.decodeIfPresent(String.self, forKey: .conversationId) ?? ""
+        role = try container.decodeIfPresent(String.self, forKey: .role) ?? ""
+        userId = try container.decodeIfPresent(String.self, forKey: .userId) ?? ""
+        userFullName = try container.decodeIfPresent(String.self, forKey: .userFullName) ?? ""
+        userAvatarUrl = try container.decodeIfPresent(String.self, forKey: .userAvatarUrl) ?? ""
+        userIdentityNumber = try container.decodeIfPresent(String.self, forKey: .userIdentityNumber) ?? ""
     }
     
 }

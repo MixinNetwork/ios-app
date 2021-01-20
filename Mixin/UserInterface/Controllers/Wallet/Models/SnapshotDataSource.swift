@@ -31,7 +31,10 @@ class SnapshotDataSource {
             didLoadEarliestRemoteSnapshot = true
             didLoadEarliestLocalSnapshot = true
         } else {
-            NotificationCenter.default.addObserver(self, selector: #selector(snapshotsDidChange(_:)), name: .SnapshotDidChange, object: nil)
+            NotificationCenter.default.addObserver(self,
+                                                   selector: #selector(snapshotsDidChange(_:)),
+                                                   name: SnapshotDAO.snapshotDidChangeNotification,
+                                                   object: nil)
         }
     }
     

@@ -1,67 +1,43 @@
 import Foundation
-import WCDBSwift
+import GRDB
 
-public struct Message: BaseCodable {
-    
-    public static let tableName: String = "messages"
+public struct Message {
     
     public var messageId: String
     public var conversationId: String
     public var userId: String
     public var category: String
-    public var content: String? = nil
-    public var mediaUrl: String? = nil
-    public var mediaMimeType: String? = nil
-    public var mediaSize: Int64? = nil
-    public var mediaDuration: Int64? = nil
-    public var mediaWidth: Int? = nil
-    public var mediaHeight: Int? = nil
-    public var mediaHash: String? = nil
-    public var mediaKey: Data? = nil
-    public var mediaDigest: Data? = nil
-    public var mediaStatus: String? = nil
-    public var mediaWaveform: Data? = nil
-    public var mediaLocalIdentifier: String? = nil
-    public var thumbImage: String? = nil
-    public var thumbUrl: String? = nil
+    public var content: String?
+    public var mediaUrl: String?
+    public var mediaMimeType: String?
+    public var mediaSize: Int64?
+    public var mediaDuration: Int64?
+    public var mediaWidth: Int?
+    public var mediaHeight: Int?
+    public var mediaHash: String?
+    public var mediaKey: Data?
+    public var mediaDigest: Data?
+    public var mediaStatus: String?
+    public var mediaWaveform: Data?
+    public var mediaLocalIdentifier: String?
+    public var thumbImage: String?
+    public var thumbUrl: String?
     public var status: String
-    public var action: String? = nil
-    public var participantId: String? = nil
-    public var snapshotId: String? = nil
-    public var name: String? = nil
-    public var stickerId: String? = nil
-    public var sharedUserId: String? = nil
-    public var quoteMessageId: String? = nil
-    public var quoteContent: Data? = nil
+    public var action: String?
+    public var participantId: String?
+    public var snapshotId: String?
+    public var name: String?
+    public var stickerId: String?
+    public var sharedUserId: String?
+    public var quoteMessageId: String?
+    public var quoteContent: Data?
     public var createdAt: String
     
-    public enum CodingKeys: String, CodingTableKey {
-        
-        public typealias Root = Message
-        
-        public static let objectRelationalMapping = TableBinding(CodingKeys.self)
-        
-        public static var columnConstraintBindings: [CodingKeys: ColumnConstraintBinding]? {
-            return [
-                messageId: ColumnConstraintBinding(isPrimary: true)
-            ]
-        }
-        public static var indexBindings: [IndexBinding.Subfix: IndexBinding]? {
-            return [
-                "_category_indexs": IndexBinding(indexesBy: [category, status]),
-                "_pending_indexs": IndexBinding(indexesBy: [userId, status, createdAt]),
-                "_page_indexs": IndexBinding(indexesBy: [conversationId, createdAt]),
-                "_user_indexs": IndexBinding(indexesBy: [conversationId, userId, createdAt]),
-                "_unread_indexs": IndexBinding(indexesBy: [conversationId, status, createdAt])
-            ]
-        }
-        public static var tableConstraintBindings: [TableConstraintBinding.Name: TableConstraintBinding]? {
-            let foreignKey = ForeignKey(withForeignTable: Conversation.tableName, and: conversationId).onDelete(.cascade)
-            return [
-                "_foreign_key_constraint": ForeignKeyBinding(conversationId, foreignKey: foreignKey)
-            ]
-        }
-        
+}
+
+extension Message: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord {
+    
+    public enum CodingKeys: String, CodingKey {
         case messageId = "id"
         case conversationId = "conversation_id"
         case userId = "user_id"
@@ -91,8 +67,14 @@ public struct Message: BaseCodable {
         case quoteMessageId = "quote_message_id"
         case quoteContent = "quote_content"
         case createdAt = "created_at"
-        
     }
+    
+}
+
+extension Message: TableRecord, PersistableRecord {
+    
+    public static let databaseTableName = "messages"
+    public static let ftsTableName = "messages_fts"
     
 }
 
@@ -286,7 +268,7 @@ public enum MessageCategory: String, Decodable {
             return true
         }
     }
-
+    
     public static let allMediaCategories: [MessageCategory] = [
         .SIGNAL_IMAGE, .PLAIN_IMAGE,
         .SIGNAL_VIDEO, .PLAIN_VIDEO,
@@ -312,6 +294,16 @@ public enum MessageCategory: String, Decodable {
         ]
         return Set(categories.map(\.rawValue))
     }()
+    
+    // ⚠️ Database table creation depends on this, look after database when modifying
+    public static let ftsAvailable: Set<Self> = [
+        .SIGNAL_TEXT, .PLAIN_TEXT,
+        .SIGNAL_POST, .PLAIN_POST,
+        .SIGNAL_DATA, .PLAIN_DATA
+    ]
+    
+    public static let ftsAvailableCategoryStrings: Set<String> = Set(ftsAvailable.map(\.rawValue))
+    public static let ftsAvailableCategorySequence = "('" + ftsAvailableCategoryStrings.joined(separator: "', '") + "')"
     
 }
 

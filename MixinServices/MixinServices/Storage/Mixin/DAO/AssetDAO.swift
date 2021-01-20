@@ -1,50 +1,66 @@
-import WCDBSwift
+import Foundation
+import GRDB
 
-public final class AssetDAO {
+public final class AssetDAO: UserDatabaseDAO {
+    
+    public enum UserInfoKey {
+        public static let assetId = "aid"
+    }
     
     public static let shared = AssetDAO()
     
-    private static let sqlQueryTable = """
-    SELECT a1.asset_id, a1.type, a1.symbol, a1.name, a1.icon_url, a1.balance, a1.destination, a1.tag, a1.price_btc, a1.price_usd, a1.change_usd, a1.chain_id, a2.icon_url as chain_icon_url, a1.confirmations, a1.asset_key, a2.name as chain_name, a2.symbol as chain_symbol, a1.reserve
-    FROM assets a1
-    LEFT JOIN assets a2 ON a1.chain_id = a2.asset_id
-    """
-    private static let sqlOrder = "a1.balance * a1.price_usd DESC, a1.price_usd DESC, cast(a1.balance AS REAL) DESC, a1.name DESC"
-    private static let sqlQuery = "\(sqlQueryTable) ORDER BY \(sqlOrder)"
-    private static let sqlQueryAvailable = "\(sqlQueryTable) WHERE a1.balance > 0 ORDER BY \(sqlOrder) LIMIT 1"
-    private static let sqlQueryAvailableList = "\(sqlQueryTable) WHERE a1.balance > 0 ORDER BY \(sqlOrder)"
+    public static let assetsDidChangeNotification = NSNotification.Name("one.mixin.services.AssetDAO.assetsDidChange")
     
-    private static let sqlQueryById = "\(sqlQueryTable) WHERE a1.asset_id = ?"
+    private static let sqlQueryTable = """
+    SELECT a.asset_id, a.type, a.symbol, a.name, a.icon_url, a.balance, a.destination, a.tag,
+        a.price_btc, a.price_usd, a.change_usd, a.chain_id, a.confirmations, a.asset_key, a.reserve,
+        chain.icon_url as chain_icon_url, chain.name as chain_name, chain.symbol as chain_symbol
+    FROM assets a
+    LEFT JOIN assets chain ON a.chain_id = chain.asset_id
+    """
+    private static let sqlOrder = "a.balance * a.price_usd DESC, a.price_usd DESC, cast(a.balance AS REAL) DESC, a.name DESC"
+    private static let sqlQuery = "\(sqlQueryTable) ORDER BY \(sqlOrder)"
+    private static let sqlQueryAvailable = "\(sqlQueryTable) WHERE a.balance > 0 ORDER BY \(sqlOrder) LIMIT 1"
+    private static let sqlQueryAvailableList = "\(sqlQueryTable) WHERE a.balance > 0 ORDER BY \(sqlOrder)"
+    
+    private static let sqlQueryById = "\(sqlQueryTable) WHERE a.asset_id = ?"
     
     public func getAsset(assetId: String) -> AssetItem? {
-        return MixinDatabase.shared.getCodables(on: AssetItem.Properties.all, sql: AssetDAO.sqlQueryById, values: [assetId]).first
+        db.select(with: AssetDAO.sqlQueryById, arguments: [assetId])
     }
-
+    
     public func getAssetIds() -> [String] {
-        return MixinDatabase.shared.getStringValues(column: Asset.Properties.assetId.asColumnResult(), tableName: Asset.tableName)
+        db.select(column: Asset.column(of: .assetId), from: Asset.self)
     }
     
     public func isExist(assetId: String) -> Bool {
-        return MixinDatabase.shared.isExist(type: Asset.self, condition: Asset.Properties.assetId == assetId)
+        db.recordExists(in: Asset.self, where: Asset.column(of: .assetId) == assetId)
     }
     
     public func insertOrUpdateAssets(assets: [Asset]) {
-        guard assets.count > 0 else {
+        guard !assets.isEmpty else {
             return
         }
-        MixinDatabase.shared.insertOrReplace(objects: assets)
-        if assets.count == 1 {
-            NotificationCenter.default.afterPostOnMain(name: .AssetsDidChange, object: assets[0].assetId)
-        } else {
-            NotificationCenter.default.afterPostOnMain(name: .AssetsDidChange)
+        db.save(assets) { _ in
+            let center = NotificationCenter.default
+            if assets.count == 1 {
+                center.post(onMainThread: Self.assetsDidChangeNotification,
+                            object: self,
+                            userInfo: [Self.UserInfoKey.assetId: assets[0].assetId])
+            } else {
+                center.post(onMainThread: Self.assetsDidChangeNotification,
+                            object: nil)
+            }
         }
     }
     
     public func saveAsset(asset: Asset) -> AssetItem? {
         var assetItem: AssetItem?
-        MixinDatabase.shared.transaction { (db) in
-            try db.insertOrReplace(objects: asset, intoTable: Asset.tableName)
-            assetItem = try db.prepareSelectSQL(on: AssetItem.Properties.all, sql: AssetDAO.sqlQueryById, values: [asset.assetId]).allObjects().first
+        try db.save(asset) { db in
+            assetItem = try! AssetItem.fetchOne(db,
+                                                sql: AssetDAO.sqlQueryById,
+                                                arguments: [asset.assetId],
+                                                adapter: nil)
         }
         return assetItem
     }
@@ -52,41 +68,30 @@ public final class AssetDAO {
     public func getAssets(keyword: String, sortResult: Bool, limit: Int?) -> [AssetItem] {
         var sql = """
         \(Self.sqlQueryTable)
-        WHERE (a1.name LIKE ? OR a1.symbol LIKE ?)
+        WHERE (a.name LIKE :keyword OR a.symbol LIKE :keyword)
         """
         if sortResult {
-            sql += " AND a1.balance > 0 ORDER BY CASE WHEN a1.symbol LIKE ? THEN 1 ELSE 0 END DESC, \(Self.sqlOrder)"
+            sql += " AND a.balance > 0 ORDER BY CASE WHEN a.symbol LIKE :keyword THEN 1 ELSE 0 END DESC, \(Self.sqlOrder)"
         }
         if let limit = limit {
             sql += " LIMIT \(limit)"
         }
-        
-        let keyword = "%\(keyword)%"
-        let values: [String]
-        if sortResult {
-            values = [keyword, keyword, keyword]
-        } else {
-            values = [keyword, keyword]
-        }
-        return MixinDatabase.shared.getCodables(sql: sql, values: values)
+        return db.select(with: sql, arguments: ["keyword": "%\(keyword)%"])
     }
     
     public func getAssets() -> [AssetItem] {
-        return MixinDatabase.shared.getCodables(sql: AssetDAO.sqlQuery)
+        db.select(with: AssetDAO.sqlQuery)
     }
     
     public func getDefaultTransferAsset() -> AssetItem? {
         if let assetId = AppGroupUserDefaults.Wallet.defaultTransferAssetId, !assetId.isEmpty, let asset = getAsset(assetId: assetId), asset.balance.doubleValue > 0 {
             return asset
         }
-        if let availableAsset: AssetItem = MixinDatabase.shared.getCodables(sql: AssetDAO.sqlQueryAvailable).first {
-            return availableAsset
-        }
-        return nil
+        return UserDatabase.current.select(with: AssetDAO.sqlQueryAvailable)
     }
     
     public func getAvailableAssets() -> [AssetItem] {
-        return MixinDatabase.shared.getCodables(sql: AssetDAO.sqlQueryAvailableList)
+        db.select(with: AssetDAO.sqlQueryAvailableList)
     }
     
 }

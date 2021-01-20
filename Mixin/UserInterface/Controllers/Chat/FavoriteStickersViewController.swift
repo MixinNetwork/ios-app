@@ -6,7 +6,10 @@ class FavoriteStickersViewController: StickersViewController {
     init(index: Int) {
         super.init(nibName: nil, bundle: nil)
         self.index = index
-        NotificationCenter.default.addObserver(self, selector: #selector(favoriteStickerDidChange(_:)), name: .FavoriteStickersDidChange, object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(favoriteStickerDidChange(_:)),
+                                               name: StickerDAO.favoriteStickersDidChangeNotification,
+                                               object: nil)
     }
     
     required init?(coder aDecoder: NSCoder) {

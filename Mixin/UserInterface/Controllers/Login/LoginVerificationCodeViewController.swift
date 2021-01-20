@@ -1,5 +1,4 @@
 import UIKit
-import MixinCrypto
 import MixinServices
 
 class LoginVerificationCodeViewController: VerificationCodeViewController {
@@ -94,8 +93,14 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
                 AppGroupUserDefaults.migrateUserSpecificDefaults()
             }
             AppGroupContainer.migrateIfNeeded()
-            MixinDatabase.shared.initDatabase(clearSentSenderKey: AppGroupUserDefaults.User.isLogoutByServer)
-            TaskDatabase.shared.initDatabase()
+            
+            TaskDatabase.reloadCurrent()
+            UserDatabase.reloadCurrent()
+            if AppGroupUserDefaults.User.isLogoutByServer {
+                UserDatabase.current.clearSentSenderKey()
+                AppGroupUserDefaults.Database.isSentSenderKeyCleared = true
+            }
+            
             if AppGroupUserDefaults.User.localVersion == AppGroupUserDefaults.User.uninitializedVersion {
                 AppGroupUserDefaults.User.localVersion = AppGroupUserDefaults.User.version
             }

@@ -1,31 +1,27 @@
-import UIKit
-import WCDBSwift
+import Foundation
+import GRDB
 
-public class CircleItem: TableDecodable {
-    
-    public enum CodingKeys: String, CodingTableKey {
-        
-        public typealias Root = CircleItem
-        
-        public static let objectRelationalMapping = TableBinding(CodingKeys.self)
-        
-        case circleId = "circle_id"
-        case name
-        case conversationCount = "conversation_count"
-        case unreadCount = "unread_count"
-        
-    }
+public final class CircleItem {
     
     public let circleId: String
     public let name: String
+    public let unreadCount: Int
+    
     public var conversationCount: Int
-    public var unreadCount: Int = 0
     
     public init(circleId: String, name: String, conversationCount: Int, unreadCount: Int) {
         self.circleId = circleId
         self.name = name
         self.conversationCount = conversationCount
         self.unreadCount = unreadCount
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        circleId = try container.decode(String.self, forKey: .circleId)
+        name = try container.decode(String.self, forKey: .name)
+        unreadCount = try container.decodeIfPresent(Int.self, forKey: .unreadCount) ?? 0
+        conversationCount = try container.decode(Int.self, forKey: .conversationCount)
     }
     
 }
@@ -42,6 +38,17 @@ extension CircleItem: Hashable {
     
     public func hash(into hasher: inout Hasher) {
         hasher.combine(circleId)
+    }
+    
+}
+
+extension CircleItem: Decodable, MixinFetchableRecord {
+    
+    public enum CodingKeys: String, CodingKey {
+        case circleId = "circle_id"
+        case name
+        case conversationCount = "conversation_count"
+        case unreadCount = "unread_count"
     }
     
 }

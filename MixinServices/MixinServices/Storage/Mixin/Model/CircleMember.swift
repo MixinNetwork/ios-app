@@ -1,23 +1,7 @@
 import UIKit
-import WCDBSwift
+import GRDB
 
-public class CircleMember: TableDecodable {
-    
-    public enum CodingKeys: String, CodingTableKey {
-        
-        public typealias Root = CircleMember
-        
-        public static let objectRelationalMapping = TableBinding(CodingKeys.self)
-        
-        case conversationId = "conversation_id"
-        case userId = "user_id"
-        case category
-        case name
-        case iconUrl = "icon_url"
-        case identityNumber = "identity_number"
-        case phoneNumber = "phone"
-        
-    }
+public final class CircleMember {
     
     public let conversationId: String
     public let userId: String?
@@ -46,6 +30,17 @@ public class CircleMember: TableDecodable {
         self.badgeImage = badgeImage
     }
     
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        conversationId = try container.decodeIfPresent(String.self, forKey: .conversationId) ?? ""
+        userId = try container.decodeIfPresent(String.self, forKey: .userId)
+        category = try container.decodeIfPresent(String.self, forKey: .category) ?? ""
+        name = try container.decodeIfPresent(String.self, forKey: .name) ?? ""
+        iconUrl = try container.decodeIfPresent(String.self, forKey: .iconUrl) ?? ""
+        identityNumber = try container.decodeIfPresent(String.self, forKey: .identityNumber)
+        phoneNumber = try container.decodeIfPresent(String.self, forKey: .phoneNumber)
+    }
+    
 }
 
 extension CircleMember: Equatable {
@@ -63,3 +58,18 @@ extension CircleMember: Hashable {
     }
     
 }
+
+extension CircleMember: Decodable, MixinFetchableRecord {
+    
+    public enum CodingKeys: String, CodingKey {
+        case conversationId = "conversation_id"
+        case userId = "user_id"
+        case category
+        case name
+        case iconUrl = "icon_url"
+        case identityNumber = "identity_number"
+        case phoneNumber = "phone"
+    }
+    
+}
+

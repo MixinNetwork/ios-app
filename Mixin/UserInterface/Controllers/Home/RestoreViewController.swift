@@ -1,6 +1,5 @@
 import Foundation
 import UIKit
-import WCDBSwift
 import MixinServices
 
 class RestoreViewController: UIViewController {
@@ -59,7 +58,6 @@ class RestoreViewController: UIViewController {
             }
 
             let localURL = AppGroupContainer.mixinDatabaseUrl
-            self.removeDatabase(databaseURL: localURL)
             do {
                 if !cloudURL.isDownloaded {
                     try self.downloadFromCloud(cloudURL: cloudURL, progress: { (progress) in
@@ -68,11 +66,15 @@ class RestoreViewController: UIViewController {
                 } else {
                     Logger.write(log: "[iCloud][RestoreViewController][\(cloudURL.suffix(base: backupDir))]...isDownloaded:false")
                 }
+                if FileManager.default.fileExists(atPath: localURL.path) {
+                    try FileManager.default.removeItem(at: localURL)
+                }
                 try FileManager.default.copyItem(at: cloudURL, to: localURL)
 
                 AppGroupUserDefaults.Account.canRestoreChat = false
                 AppGroupUserDefaults.Account.canRestoreMedia = true
                 AppGroupUserDefaults.Database.isSentSenderKeyCleared = false
+                AppGroupUserDefaults.Database.isFTSInitialized = false
                 AppGroupUserDefaults.User.needsRebuildDatabase = true
                 AppGroupUserDefaults.User.isCircleSynchronized = false
                 
@@ -93,25 +95,7 @@ class RestoreViewController: UIViewController {
         AppDelegate.current.mainWindow.rootViewController =
             makeInitialViewController()
     }
-
-    private func removeDatabase(databaseURL: URL) {
-        guard FileManager.default.fileExists(atPath: databaseURL.path) else {
-            return
-        }
-        let semaphore = DispatchSemaphore(value: 0)
-        do {
-            try Database(withPath: databaseURL.path).close {
-                try FileManager.default.removeItem(at: databaseURL)
-                semaphore.signal()
-            }
-            semaphore.wait()
-        } catch {
-            semaphore.signal()
-            try? FileManager.default.removeItem(at: databaseURL)
-            Logger.write(error: error, extra: "[iCloud][RestoreViewController]...remove database failed...")
-        }
-    }
-
+    
     private func restoreFailed(error: Swift.Error) {
         DispatchQueue.main.async {
             self.restoreButton.isBusy = false

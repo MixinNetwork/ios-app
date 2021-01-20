@@ -59,7 +59,7 @@ class RefreshGroupIconJob: AsynchronousJob {
             try? FileManager.default.removeItem(atPath: AppGroupContainer.groupIconsUrl.appendingPathComponent(removeIconUrl).path)
         }
         let change = ConversationChange(conversationId: conversationId, action: .updateGroupIcon(iconUrl: imageFile))
-        NotificationCenter.default.postOnMain(name: .ConversationDidChange, object: change)
+        NotificationCenter.default.post(onMainThread: MixinServices.conversationDidChangeNotification, object: change)
     }
 
 }

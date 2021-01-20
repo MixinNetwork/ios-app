@@ -534,7 +534,7 @@ extension PayWindow: PinFieldDelegate {
                 default:
                     break
                 }
-                SnapshotDAO.shared.insertOrReplaceSnapshots(snapshots: [snapshot])
+                SnapshotDAO.shared.saveSnapshots(snapshots: [snapshot])
                 weakSelf.successHandler()
             case let .failure(error):
                 switch error {

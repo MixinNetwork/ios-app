@@ -57,7 +57,7 @@ class CirclesViewController: UIViewController {
         reloadCircles()
         NotificationCenter.default.addObserver(self, selector: #selector(reloadUserCircle), name: CircleDAO.circleDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reloadUserCircle), name: CircleConversationDAO.circleConversationsDidChangeNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(reloadUserCircle), name: .ConversationDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadUserCircle), name: MixinServices.conversationDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reloadUserCircle), name: MessageDAO.didInsertMessageNotification, object: nil)
     }
     
@@ -248,7 +248,7 @@ extension CirclesViewController {
             switch result {
             case .success(let circle):
                 DispatchQueue.global().async {
-                    CircleDAO.shared.insertOrReplace(circle: circle)
+                    CircleDAO.shared.save(circle: circle)
                     DispatchQueue.main.sync {
                         hud.set(style: .notification, text: R.string.localizable.toast_added())
                         hud.scheduleAutoHidden()
@@ -276,7 +276,7 @@ extension CirclesViewController {
                     self.toggleCirclesButton.setTitle(circle.name, for: .normal)
                 }
                 DispatchQueue.global().async {
-                    CircleDAO.shared.insertOrReplace(circle: circle)
+                    CircleDAO.shared.save(circle: circle)
                     DispatchQueue.main.async {
                         self.reloadCircles()
                         hud.set(style: .notification, text: R.string.localizable.toast_saved())

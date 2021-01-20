@@ -1,7 +1,7 @@
 import Foundation
-import WCDBSwift
+import GRDB
 
-public class EmbeddedCircle: BaseDecodable {
+public final class EmbeddedCircle {
     
     public enum Category: Int, CaseIterable {
         case all = 0
@@ -10,25 +10,21 @@ public class EmbeddedCircle: BaseDecodable {
 //        case contacts
     }
     
-    public enum CodingKeys: String, CodingTableKey {
-        
-        public typealias Root = EmbeddedCircle
-        
-        public static let objectRelationalMapping = TableBinding(CodingKeys.self)
-        
-        case conversationCount = "conversation_count"
-        case unreadCount = "unread_count"
-        
-    }
-    
-    public static let tableName = Conversation.tableName
-    
     public let conversationCount: Int
     public let unreadCount: Int
     
     public init(conversationCount: Int, unreadCount: Int) {
         self.conversationCount = conversationCount
         self.unreadCount = unreadCount
+    }
+    
+}
+
+extension EmbeddedCircle: Decodable, MixinFetchableRecord {
+    
+    public enum CodingKeys: String, CodingKey {
+        case conversationCount = "conversation_count"
+        case unreadCount = "unread_count"
     }
     
 }

@@ -1,7 +1,7 @@
 import Foundation
-import WCDBSwift
+import GRDB
 
-final public class CircleConversationDAO {
+final public class CircleConversationDAO: UserDatabaseDAO {
     
     public static let shared = CircleConversationDAO()
     
@@ -9,66 +9,65 @@ final public class CircleConversationDAO {
     public static let circleIdUserInfoKey = "cid"
     
     public func update(conversation: ConversationResponse) {
-        MixinDatabase.shared.transaction { (db) in
+        db.write { (db) in
             let circleIds = conversation.circles.map { $0.circleId }
-
-            let refreshCirclesIds = try db.getColumn(on: Circle.Properties.circleId, fromTable: Circle.tableName, where: Circle.Properties.circleId.notIn(circleIds)).map { $0.stringValue }
+            let refreshRequest = Circle
+                .select(Circle.column(of: .circleId))
+                .filter(!circleIds.contains(Circle.column(of: .circleId)))
+            let refreshCirclesIds = try String.fetchAll(db, refreshRequest)
             for circleId in refreshCirclesIds {
                 ConcurrentJobQueue.shared.addJob(job: RefreshCircleJob(circleId: circleId))
             }
-
-            let oldCircles: [CircleConversation] = try db.getObjects(on: CircleConversation.Properties.all, fromTable: CircleConversation.tableName, where: CircleConversation.Properties.conversationId == conversation.conversationId && CircleConversation.Properties.circleId.in(circleIds))
-            let dict = oldCircles.toDictionary { $0.circleId }
-
+            let oldCircleCondition: SQLSpecificExpressible = CircleConversation.column(of: .conversationId) == conversation.conversationId
+                && circleIds.contains(CircleConversation.column(of: .circleId))
+            let oldCircles = try CircleConversation.fetchAll(db, CircleConversation.filter(oldCircleCondition))
+            var dict: [String: CircleConversation] = [:]
+            for circle in oldCircles {
+                dict[circle.circleId] = circle
+            }
+            
             let objects = conversation.circles.map { (circle) -> CircleConversation in
+                let oldCircleConversation = dict[circle.circleId]
                 let circleConversation = CircleConversation(circleId: circle.circleId,
-                                                conversationId: conversation.conversationId,
-                                                userId: nil,
-                                                createdAt: circle.createdAt,
-                                                pinTime: nil)
-                if let oldCircleConversation = dict[circle.circleId] {
-                    circleConversation.userId = oldCircleConversation.userId
-                    circleConversation.pinTime = oldCircleConversation.pinTime
-                }
+                                                            conversationId: conversation.conversationId,
+                                                            userId: oldCircleConversation?.userId,
+                                                            createdAt: circle.createdAt,
+                                                            pinTime: oldCircleConversation?.pinTime)
                 return circleConversation
             }
-            try db.delete(fromTable: CircleConversation.tableName,
-                          where: CircleConversation.Properties.conversationId == conversation.conversationId)
-            try db.insertOrReplace(objects: objects,
-                                   intoTable: CircleConversation.tableName)
+            
+            try CircleConversation
+                .filter(CircleConversation.column(of: .conversationId) == conversation.conversationId)
+                .deleteAll(db)
+            try objects.save(db)
         }
     }
-
-    public func insertOrReplace(circleId: String, objects: [CircleConversation], sendNotificationAfterFinished: Bool = true) {
-        MixinDatabase.shared.insertOrReplace(objects: objects)
-
-        if sendNotificationAfterFinished {
-            let userInfo = [Self.circleIdUserInfoKey: circleId]
-            NotificationCenter.default.postOnMain(name: Self.circleConversationsDidChangeNotification, userInfo: userInfo)
+    
+    public func save(circleId: String, objects: [CircleConversation], sendNotificationAfterFinished: Bool = true) {
+        db.save(objects) { _ in
+            if sendNotificationAfterFinished {
+                let userInfo = [Self.circleIdUserInfoKey: circleId]
+                NotificationCenter.default.post(onMainThread: Self.circleConversationsDidChangeNotification, object: self, userInfo: userInfo)
+            }
         }
     }
     
     public func delete(circleId: String, conversationId: String) {
-        MixinDatabase.shared.delete(table: CircleConversation.tableName, condition: CircleConversation.Properties.circleId == circleId && CircleConversation.Properties.conversationId == conversationId)
-        let userInfo = [Self.circleIdUserInfoKey: circleId]
-        NotificationCenter.default.postOnMain(name: Self.circleConversationsDidChangeNotification, userInfo: userInfo)
-    }
-
-    public func delete(circleId: String, conversationIds: [String]) {
-        MixinDatabase.shared.delete(table: CircleConversation.tableName, condition: CircleConversation.Properties.circleId == circleId && CircleConversation.Properties.conversationId.in(conversationIds))
-        let userInfo = [Self.circleIdUserInfoKey: circleId]
-        NotificationCenter.default.postOnMain(name: Self.circleConversationsDidChangeNotification, userInfo: userInfo)
-    }
-}
-
-fileprivate extension Array {
-
-    public func toDictionary<Key: Hashable>(with selectKey: (Element) -> Key) -> [Key: Element] {
-        var dict = [Key: Element]()
-        for element in self {
-            dict[selectKey(element)] = element
+        let condition: SQLSpecificExpressible = CircleConversation.column(of: .circleId) == circleId
+            && CircleConversation.column(of: .conversationId) == conversationId
+        db.delete(CircleConversation.self, where: condition) { _ in
+            let userInfo = [Self.circleIdUserInfoKey: circleId]
+            NotificationCenter.default.post(onMainThread: Self.circleConversationsDidChangeNotification, object: self, userInfo: userInfo)
         }
-        return dict
+    }
+    
+    public func delete(circleId: String, conversationIds: [String]) {
+        let condition: SQLSpecificExpressible = CircleConversation.column(of: .circleId) == circleId
+            && conversationIds.contains(CircleConversation.column(of: .conversationId))
+        db.delete(CircleConversation.self, where: condition) { _ in
+            let userInfo = [Self.circleIdUserInfoKey: circleId]
+            NotificationCenter.default.post(onMainThread: Self.circleConversationsDidChangeNotification, object: self, userInfo: userInfo)
+        }
     }
     
 }

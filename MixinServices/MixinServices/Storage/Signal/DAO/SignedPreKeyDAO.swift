@@ -1,21 +1,21 @@
 import Foundation
-import WCDBSwift
+import GRDB
 
 internal class SignedPreKeyDAO: SignalDAO {
-
+    
     static let shared = SignedPreKeyDAO()
-
+    
     func getSignedPreKey(signedPreKeyId: Int) -> SignedPreKey? {
-        return SignalDatabase.shared.getCodable(condition: SignedPreKey.Properties.preKeyId == signedPreKeyId)
+        db.select(where: SignedPreKey.column(of: .preKeyId) == signedPreKeyId)
     }
-
+    
     func getSignedPreKeyList() -> [SignedPreKey] {
-        return SignalDatabase.shared.getCodables()
+        db.selectAll()
     }
-
+    
     func delete(signedPreKeyId: Int) -> Bool {
-        SignalDatabase.shared.delete(table: SignedPreKey.tableName, condition: SignedPreKey.Properties.preKeyId == signedPreKeyId)
+        db.delete(SignedPreKey.self, where: SignedPreKey.column(of: .preKeyId) == signedPreKeyId)
         return true
     }
-
+    
 }

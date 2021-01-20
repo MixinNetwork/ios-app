@@ -39,7 +39,7 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
     private var presentedContent: String
     
     override var debugDescription: String {
-        return super.debugDescription + ", contentSize: \(contentSize), contentLength: \(message.content.count)"
+        return super.debugDescription + ", contentSize: \(contentSize), contentLength: \(message.content?.count ?? -1)"
     }
     
     var fullnameHeight: CGFloat {
@@ -93,7 +93,7 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
     }
     
     override init(message: MessageItem) {
-        presentedContent = message.content
+        presentedContent = message.content ?? ""
         super.init(message: message)
         linkRanges = self.linkRanges(from: rawContent)
     }

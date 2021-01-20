@@ -38,13 +38,16 @@ class SearchBoxLeftView: UIView {
         if isBusy {
             activityIndicator.alpha = 1
             activityIndicator.startAnimating()
-            UIView.animate(withDuration: 0.2, delay: 0, options: [], animations: {
+            UIView.animate(withDuration: 0.2) {
                 self.magnifyingGlassImageView.alpha = 0
-            }, completion: nil)
+            }
         } else {
-            UIView.animate(withDuration: 0.2, delay: 0, options: [], animations: {
+            UIView.animate(withDuration: 0.2, animations: {
                 self.magnifyingGlassImageView.alpha = 1
             }) { (_) in
+                guard !self.isBusy else {
+                    return
+                }
                 self.activityIndicator.alpha = 0
                 self.activityIndicator.stopAnimating()
             }

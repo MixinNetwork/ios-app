@@ -26,7 +26,7 @@ class DepositViewController: UIViewController {
         upperDepositFieldView.delegate = self
 
         if !asset.tag.isEmpty {
-            if asset.isUseTag {
+            if asset.usesTag {
                 lowerDepositFieldView.titleLabel.text = R.string.localizable.wallet_address_tag()
             } else {
                 lowerDepositFieldView.titleLabel.text = R.string.localizable.wallet_address_memo()
@@ -41,7 +41,7 @@ class DepositViewController: UIViewController {
         } else {
             lowerDepositFieldView.isHidden = true
             if asset.reserve.doubleValue > 0 {
-                warningLabel.text = R.string.localizable.wallet_deposit_attention_minimum(asset.reserve, asset.chainSymbol)
+                warningLabel.text = R.string.localizable.wallet_deposit_attention_minimum(asset.reserve, asset.chain?.symbol ?? "")
             } else {
                 warningLabel.text = R.string.localizable.wallet_deposit_attention()
             }

@@ -1,24 +1,22 @@
 import Foundation
-import WCDBSwift
+import GRDB
 
-struct MessageHistory: BaseCodable {
-    
-    public static let tableName: String = "messages_history"
+struct MessageHistory {
     
     public let messageId: String
     
-    enum CodingKeys: String, CodingTableKey {
-        
-        typealias Root = MessageHistory
-        
-        static let objectRelationalMapping = TableBinding(CodingKeys.self)
-        static var columnConstraintBindings: [CodingKeys: ColumnConstraintBinding]? {
-            return [
-                messageId: ColumnConstraintBinding(isPrimary: true)
-            ]
-        }
-        
+}
+
+extension MessageHistory: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord {
+    
+    public enum CodingKeys: String, CodingKey {
         case messageId = "message_id"
     }
+    
+}
+
+extension MessageHistory: TableRecord, PersistableRecord {
+    
+    public static let databaseTableName = "messages_history"
     
 }

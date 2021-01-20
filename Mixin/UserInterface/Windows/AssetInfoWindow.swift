@@ -17,7 +17,7 @@ class AssetInfoWindow: BottomSheetView {
         assetView.setIcon(asset: asset)
         nameLabel.text = asset.name
         symbolLabel.text = asset.symbol
-        chainLabel.text = asset.chainName
+        chainLabel.text = asset.chain?.name
         if !asset.assetKey.isEmpty {
             contractLabel.text = asset.assetKey
             contractView.isHidden = false

@@ -1,8 +1,8 @@
 import UIKit
 
 public extension NotificationCenter {
-
-    func postOnMain(name: NSNotification.Name, object: Any? = nil, userInfo: [AnyHashable: Any]? = nil) {
+    
+    func post(onMainThread name: NSNotification.Name, object: Any?, userInfo: [AnyHashable : Any]? = nil) {
         if Thread.isMainThread {
             post(name: name, object: object, userInfo: userInfo)
         } else {
@@ -11,11 +11,5 @@ public extension NotificationCenter {
             }
         }
     }
-
-    func afterPostOnMain(deadline: DispatchTime = .now() + 0.2, name: NSNotification.Name, object: Any? = nil, userInfo: [AnyHashable: Any]? = nil) {
-        DispatchQueue.main.asyncAfter(deadline: deadline) {
-            self.post(name: name, object: object, userInfo: userInfo)
-        }
-    }
-
+    
 }

@@ -24,7 +24,7 @@ Mixin Core Services.
   s.static_framework = true
 
   s.ios.vendored_frameworks = 'MixinServices/Goutils.framework'
-  s.source_files = 'MixinServices/Foundation/**/*', 'MixinServices/Services/**/*', 'MixinServices/Storage/**/*'
+  s.source_files = 'MixinServices/Foundation/**/*', 'MixinServices/Crypto/**/*', 'MixinServices/Storage/**/*', 'MixinServices/Services/**/*'
 
   s.dependency 'AppCenter'
   s.dependency 'Alamofire'
@@ -36,8 +36,13 @@ Mixin Core Services.
   s.dependency 'Zip'
   s.dependency 'libsignal-protocol-c'
   s.dependency 'SocketRocket'
-  s.dependency 'WCDB.swift'
+  s.dependency 'GRDB.swift/SQLCipher'
+  s.dependency 'SQLCipher', '~> 4.0'
   s.dependency 'SwiftyMarkdown'
   s.dependency 'lottie-ios'
-  s.dependency 'MixinCrypto'
+  s.dependency 'BoringSSL'
+
+  s.test_spec 'DatabaseTests' do |dbtest|
+    dbtest.source_files = 'MixinServicesTests/Database/*'
+  end
 end

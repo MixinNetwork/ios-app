@@ -1,6 +1,5 @@
 import Foundation
 import SafariServices
-import WCDBSwift
 import MixinServices
 
 extension UIApplication {

@@ -55,7 +55,7 @@ class AssetIconView: UIView {
         let url = URL(string: asset.iconUrl)
         iconImageView.sd_setImage(with: url, placeholderImage: nil, context: assetIconContext)
         let shouldHideChainIcon: Bool
-        if let str = asset.chainIconUrl, let url = URL(string: str) {
+        if let str = asset.chain?.iconUrl, let url = URL(string: str) {
             chainImageView.sd_setImage(with: url, placeholderImage: nil, context: assetIconContext)
             shouldHideChainIcon = false
         } else {

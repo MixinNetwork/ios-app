@@ -33,8 +33,8 @@ class GroupParticipantsViewController: UserItemPeerViewController<GroupParticipa
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        NotificationCenter.default.addObserver(self, selector: #selector(participantDidChange(_:)), name: .ParticipantDidChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: .ConversationDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(participantDidChange(_:)), name: ParticipantDAO.participantDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: MixinServices.conversationDidChangeNotification, object: nil)
         let job = RefreshConversationJob(conversationId: conversation.conversationId)
         ConcurrentJobQueue.shared.addJob(job: job)
     }
@@ -95,7 +95,10 @@ class GroupParticipantsViewController: UserItemPeerViewController<GroupParticipa
 extension GroupParticipantsViewController {
     
     @objc func participantDidChange(_ notification: Notification) {
-        guard let conversationId = notification.object as? String, conversationId == conversation.conversationId else {
+        guard let conversationId = notification.userInfo?[ParticipantDAO.UserInfoKey.conversationId] as? String else {
+            return
+        }
+        guard conversationId == conversation.conversationId else {
             return
         }
         queue.operations

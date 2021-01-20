@@ -1,5 +1,5 @@
 import Foundation
-import WCDBSwift
+import GRDB
 import MixinServices
 
 class BackupJob: BaseJob {
@@ -222,14 +222,16 @@ class BackupJob: BaseJob {
             AppGroupUserDefaults.Account.hasUnfinishedBackup = false
         }
 
-        NotificationCenter.default.postOnMain(name: .BackupDidChange)
+        NotificationCenter.default.post(onMainThread: Application.backupDidChangeNotification, object: self)
     }
 
     private func getDatabaseFileSize() -> Int64 {
-        try? MixinDatabase.shared.database.prepareUpdateSQL(sql: "PRAGMA wal_checkpoint(FULL)").execute()
+        try? UserDatabase.current.pool.write({ (db) -> Void in
+            try db.checkpoint(.full, on: nil)
+        })
         if -AppGroupUserDefaults.Database.vacuumDate.timeIntervalSinceNow >= 86400 * 14 {
             AppGroupUserDefaults.Database.vacuumDate = Date()
-            try? MixinDatabase.shared.database.prepareUpdateSQL(sql: "VACUUM").execute()
+            try? UserDatabase.current.pool.vacuum()
         }
         return FileManager.default.fileSize(AppGroupContainer.mixinDatabaseUrl.path)
     }

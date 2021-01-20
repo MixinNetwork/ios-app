@@ -15,17 +15,22 @@ class StickerManagerViewController: UICollectionViewController {
         let itemWidth = (UIScreen.main.bounds.size.width - (rowCount + 1) * 8) / rowCount
         return CGSize(width: itemWidth, height: itemWidth)
     }()
-
+    
+    class func instance() -> UIViewController {
+        let vc = R.storyboard.chat.sticker_manager()!
+        return ContainerViewController.instance(viewController: vc, title: Localized.STICKER_MANAGER_TITLE)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         fetchStickers()
-
-        NotificationCenter.default.addObserver(forName: .FavoriteStickersDidChange, object: nil, queue: .main) { [weak self] (_) in
-            self?.fetchStickers()
-        }
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(fetchStickers),
+                                               name: StickerDAO.favoriteStickersDidChangeNotification,
+                                               object: nil)
     }
-
-    private func fetchStickers() {
+    
+    @objc private func fetchStickers() {
         DispatchQueue.global().async { [weak self] in
             let stickers = StickerDAO.shared.getFavoriteStickers()
             DispatchQueue.main.async {
@@ -35,12 +40,7 @@ class StickerManagerViewController: UICollectionViewController {
             }
         }
     }
-
-    class func instance() -> UIViewController {
-        let vc = R.storyboard.chat.sticker_manager()!
-        return ContainerViewController.instance(viewController: vc, title: Localized.STICKER_MANAGER_TITLE)
-    }
-
+    
 }
 
 extension StickerManagerViewController: ContainerViewControllerDelegate {

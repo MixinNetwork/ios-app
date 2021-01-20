@@ -1,10 +1,8 @@
 import Foundation
-import WCDBSwift
+import GRDB
 import SDWebImage
 
-public struct StickerItem: TableCodable, BaseCodable {
-    
-    public static let tableName: String = "stickers"
+public struct StickerItem {
     
     public let stickerId: String
     public let name: String
@@ -13,7 +11,6 @@ public struct StickerItem: TableCodable, BaseCodable {
     public let assetWidth: Int
     public let assetHeight: Int
     public var lastUseAt: String?
-    
     public let category: String?
     
     public var shouldCachePersistently: Bool {
@@ -24,10 +21,11 @@ public struct StickerItem: TableCodable, BaseCodable {
         return stickerLoadContext(persistent: shouldCachePersistently)
     }
     
-    public enum CodingKeys: String, CodingTableKey {
-        public typealias Root = StickerItem
-        public static var objectRelationalMapping = TableBinding(CodingKeys.self)
-        
+}
+
+extension StickerItem: Codable, DatabaseColumnConvertible, MixinFetchableRecord {
+
+    public enum CodingKeys: String, CodingKey {
         case stickerId = "sticker_id"
         case name
         case assetUrl = "asset_url"
@@ -36,6 +34,18 @@ public struct StickerItem: TableCodable, BaseCodable {
         case assetHeight = "asset_height"
         case lastUseAt = "last_used_at"
         case category
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        stickerId = try container.decode(String.self, forKey: .stickerId)
+        name = try container.decodeIfPresent(String.self, forKey: .name) ?? ""
+        assetUrl = try container.decodeIfPresent(String.self, forKey: .assetUrl) ?? ""
+        assetType = try container.decodeIfPresent(String.self, forKey: .assetType) ?? ""
+        assetWidth = try container.decodeIfPresent(Int.self, forKey: .assetWidth) ?? 0
+        assetHeight = try container.decodeIfPresent(Int.self, forKey: .assetHeight) ?? 0
+        lastUseAt = try container.decodeIfPresent(String.self, forKey: .lastUseAt)
+        category = try container.decodeIfPresent(String.self, forKey: .category)
     }
     
 }

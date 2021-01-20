@@ -1,33 +1,40 @@
 import Foundation
-import WCDBSwift
+import GRDB
 
-public final class AddressDAO {
+public final class AddressDAO: UserDatabaseDAO {
     
     public static let shared = AddressDAO()
+    public static let addressDidChangeNotification = NSNotification.Name("one.mixin.services.AddressDAO.addressDidChange")
     
     public func getAddress(addressId: String) -> Address? {
-        return MixinDatabase.shared.getCodable(condition: Address.Properties.addressId == addressId)
+        db.select(where: Address.column(of: .addressId) == addressId)
     }
     
     public func getAddress(assetId: String, destination: String, tag: String) -> Address? {
-        return MixinDatabase.shared.getCodable(condition: Address.Properties.assetId == assetId && Address.Properties.destination == destination && Address.Properties.tag == tag)
+        let condition: SQLSpecificExpressible = Address.column(of: .assetId) == assetId
+            && Address.column(of: .destination) == destination
+            && Address.column(of: .tag) == tag
+        return db.select(where: condition)
     }
     
     public func getAddresses(assetId: String) -> [Address] {
-        return MixinDatabase.shared.getCodables(condition: Address.Properties.assetId == assetId, orderBy: [Address.Properties.updatedAt.asOrder(by: .descending)])
+        db.select(where: Address.column(of: .assetId) == assetId,
+                  order: [Address.column(of: .updatedAt).desc])
     }
     
     public func insertOrUpdateAddress(addresses: [Address]) {
         guard !addresses.isEmpty else {
             return
         }
-        MixinDatabase.shared.insertOrReplace(objects: addresses)
-        NotificationCenter.default.afterPostOnMain(name: .AddressDidChange)
+        db.save(addresses) { _ in
+            NotificationCenter.default.post(onMainThread: Self.addressDidChangeNotification, object: self)
+        }
     }
     
     public func deleteAddress(assetId: String, addressId: String) {
-        MixinDatabase.shared.delete(table: Address.tableName, condition: Address.Properties.addressId == addressId)
-        NotificationCenter.default.postOnMain(name: .AddressDidChange)
+        db.delete(Address.self, where: Address.column(of: .addressId) == addressId) { _ in
+            NotificationCenter.default.post(onMainThread: Self.addressDidChangeNotification, object: self)
+        }
     }
     
 }

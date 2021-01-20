@@ -17,7 +17,9 @@ public class DarwinNotificationManager {
             }, checkStatusInAppExtensionDarwinNotificationName.rawValue, nil, .deliverImmediately)
 		} else {
             CFNotificationCenterAddObserver(darwinNotifyCenter, selfAsOpaquePointer, { (_, _, _, _, _) in
-				NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                    NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: nil)
+                }
             }, conversationDidChangeInMainAppDarwinNotificationName.rawValue, nil, .deliverImmediately)
 		}
     }

@@ -66,9 +66,8 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.reloadData()
-        NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: .AssetsDidChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: .AssetVisibleDidChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: .HiddenAssetsDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: AssetDAO.assetsDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: Application.assetVisibilityDidChangeNotification, object: nil)
         fetchAssets()
         ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob())
     }

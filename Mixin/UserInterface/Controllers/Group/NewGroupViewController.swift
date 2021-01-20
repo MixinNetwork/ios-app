@@ -119,9 +119,12 @@ class NewGroupViewController: KeyboardBasedLayoutViewController {
         let members = self.members
         
         DispatchQueue.global().async { [weak self] in
-            if ConversationDAO.shared.createConversation(conversationId: converstionId, name: name, members: members) {
+            ConversationDAO.shared.createConversation(conversationId: converstionId, name: name, members: members) { success in
+                guard success else {
+                    return
+                }
                 DispatchQueue.main.async {
-                    NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange)
+                    NotificationCenter.default.post(name: MixinServices.conversationDidChangeNotification, object: nil)
                     self?.shouldLayoutByKeyboard = false
                     self?.navigationController?.backToHome()
                 }

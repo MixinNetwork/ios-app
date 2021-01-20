@@ -7,7 +7,7 @@ class InitializeFTSJob: BaseJob {
         case mismatchedFTSTable
     }
     
-    private static let insertionLimit: Int = 1000
+    private static let insertionLimit: Int = 200
     
     private let insertionSQL = """
         INSERT INTO \(Message.ftsTableName)(id, conversation_id, content, name)
@@ -36,6 +36,7 @@ class InitializeFTSJob: BaseJob {
                 return
             }
             do {
+                usleep(100 * 1000)
                 try UserDatabase.current.pool.write { (db) -> Void in
                     let lastInitializedRowID: Int?
                     let lastFTSMessageIDSQL = "SELECT id FROM \(Message.ftsTableName) ORDER BY rowid DESC LIMIT 1"

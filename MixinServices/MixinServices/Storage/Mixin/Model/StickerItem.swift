@@ -38,7 +38,7 @@ extension StickerItem: Codable, DatabaseColumnConvertible, MixinFetchableRecord 
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        stickerId = try container.decodeIfPresent(String.self, forKey: .stickerId) ?? ""
+        stickerId = try container.decode(String.self, forKey: .stickerId)
         name = try container.decodeIfPresent(String.self, forKey: .name) ?? ""
         assetUrl = try container.decodeIfPresent(String.self, forKey: .assetUrl) ?? ""
         assetType = try container.decodeIfPresent(String.self, forKey: .assetType) ?? ""

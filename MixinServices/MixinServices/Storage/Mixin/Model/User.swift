@@ -75,7 +75,7 @@ extension User: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinE
         self.fullName = try container.decodeIfPresent(String.self, forKey: .fullName)
         self.biography = try container.decodeIfPresent(String.self, forKey: .biography)
         
-        self.identityNumber = (try container.decodeIfPresent(String.self, forKey: .identityNumber)) ?? ""
+        self.identityNumber = try container.decodeIfPresent(String.self, forKey: .identityNumber) ?? "0"
         
         self.avatarUrl = try container.decodeIfPresent(String.self, forKey: .avatarUrl)
         self.phone = try container.decodeIfPresent(String.self, forKey: .phone)
@@ -86,9 +86,9 @@ extension User: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinE
         self.appId = try container.decodeIfPresent(String.self, forKey: .appId)
         self.createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt)
         
-        self.relationship = (try container.decodeIfPresent(String.self, forKey: .relationship)) ?? ""
+        self.relationship = try container.decodeIfPresent(String.self, forKey: .relationship) ?? Relationship.STRANGER.rawValue
         
-        self.isScam = (try container.decodeIfPresent(Bool.self, forKey: .isScam)) ?? false
+        self.isScam = try container.decodeIfPresent(Bool.self, forKey: .isScam) ?? false
     }
     
 }

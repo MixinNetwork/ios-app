@@ -63,7 +63,7 @@ extension UserItem: Decodable, MixinFetchableRecord {
         
         self.fullName = try container.decodeIfPresent(String.self, forKey: .fullName) ?? ""
         self.biography = try container.decodeIfPresent(String.self, forKey: .biography) ?? ""
-        self.identityNumber = try container.decodeIfPresent(String.self, forKey: .identityNumber) ?? ""
+        self.identityNumber = try container.decodeIfPresent(String.self, forKey: .identityNumber) ?? "0"
         self.avatarUrl = try container.decodeIfPresent(String.self, forKey: .avatarUrl) ?? ""
         
         self.phone = try container.decodeIfPresent(String.self, forKey: .phone)
@@ -75,7 +75,7 @@ extension UserItem: Decodable, MixinFetchableRecord {
         self.createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt)
         
         self.isScam = try container.decodeIfPresent(Bool.self, forKey: .isScam) ?? false
-        self.relationship = try container.decodeIfPresent(String.self, forKey: .relationship) ?? ""
+        self.relationship = try container.decodeIfPresent(String.self, forKey: .relationship) ?? Relationship.STRANGER.rawValue
         self.role = try container.decodeIfPresent(String.self, forKey: .role) ?? ""
         
         self.appCreatorId = try container.decodeIfPresent(String.self, forKey: .appCreatorId)

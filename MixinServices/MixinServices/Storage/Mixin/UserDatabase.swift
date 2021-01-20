@@ -287,16 +287,6 @@ public final class UserDatabase: Database {
             if localVersion < 18 {
                 try db.execute(sql: "DROP INDEX IF EXISTS jobs_next_indexs")
             }
-            
-            if localVersion < 21 {
-                if try db.tableExists("assets") {
-                    try db.execute(sql: "UPDATE assets SET reserve = '0'")
-                }
-                
-                if try db.tableExists("top_assets") {
-                    try db.execute(sql: "UPDATE top_assets SET reserve = '0'")
-                }
-            }
         }
         
         migrator.registerMigration("create_table") { db in

@@ -86,6 +86,14 @@ class PayWindow: BottomSheetView {
         pinField.delegate = self
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillAppear), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillDisappear), name: UIResponder.keyboardWillHideNotification, object: nil)
+        switch ScreenHeight.current {
+        case .short:
+            mixinIDLabel.numberOfLines = 1
+        case .medium, .long:
+            mixinIDLabel.numberOfLines = 3
+        case .extraLong:
+            mixinIDLabel.numberOfLines = 5
+        }
     }
 
     func render(asset: AssetItem, action: PinAction, amount: String, memo: String, error: String? = nil, fiatMoneyAmount: String? = nil, textfield: UITextField? = nil) -> PayWindow {

@@ -320,7 +320,7 @@ class ConversationInputViewController: UIViewController {
             return
         }
         dataSource.sendMessage(type: .SIGNAL_TEXT,
-                               quoteMessageId: quote?.message.messageId,
+                               quote: quote?.message,
                                value: trimmedMessageDraft)
         mentionRanges.removeAll()
         textView.text = ""
@@ -432,12 +432,12 @@ class ConversationInputViewController: UIViewController {
     }
     
     func sendAudio(url: URL, metadata: AudioMetadata) {
-        dataSource.sendMessage(type: .SIGNAL_AUDIO, quoteMessageId: quote?.message.messageId, value: (url, metadata))
+        dataSource.sendMessage(type: .SIGNAL_AUDIO, quote: quote?.message, value: (url, metadata))
         quote = nil
     }
     
     func sendFile(url: URL) {
-        dataSource.sendMessage(type: .SIGNAL_DATA, quoteMessageId: quote?.message.messageId, value: url)
+        dataSource.sendMessage(type: .SIGNAL_DATA, quote: quote?.message, value: url)
         quote = nil
     }
     

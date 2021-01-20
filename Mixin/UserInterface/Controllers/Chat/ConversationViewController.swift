@@ -2195,7 +2195,7 @@ extension ConversationViewController {
         let inputAction = String(action.suffix(action.count - 6))
         if !inputAction.isEmpty {
             dataSource.sendMessage(type: .SIGNAL_TEXT,
-                                   quoteMessageId: nil,
+                                   quote: nil,
                                    value: inputAction)
         }
 

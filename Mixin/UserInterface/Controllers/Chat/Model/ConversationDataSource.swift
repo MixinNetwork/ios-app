@@ -677,11 +677,24 @@ extension ConversationDataSource {
 // MARK: - Send Message
 extension ConversationDataSource {
     
-    func sendMessage(type: MessageCategory, messageId: String? = nil, quoteMessageId: String? = nil , value: Any) {
+    func sendMessage(type: MessageCategory, messageId: String? = nil, quote: MessageItem? = nil , value: Any) {
         let isGroupMessage = category == .group
         let ownerUser = self.ownerUser
-        var message = Message.createMessage(category: type.rawValue, conversationId: conversationId, userId: me.user_id)
-        message.quoteMessageId = quoteMessageId
+        let createdAt: Date = {
+            var date = Date()
+            if let quote = quote {
+                let quoteDate = quote.createdAt.toUTCDate()
+                if quoteDate > date {
+                    date = quoteDate.addingTimeInterval(0.001)
+                }
+            }
+            return date
+        }()
+        var message = Message.createMessage(category: type.rawValue,
+                                            conversationId: conversationId,
+                                            createdAt: createdAt.toUTCString(),
+                                            userId: me.user_id)
+        message.quoteMessageId = quote?.messageId
         if let messageId = messageId {
             message.messageId = messageId
         }

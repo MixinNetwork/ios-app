@@ -7,7 +7,7 @@ class InitializeFTSJob: BaseJob {
         case mismatchedFTSTable
     }
     
-    private static let insertionLimit: Int = 1000
+    private static let insertionLimit: Int = 200
     
     private let insertionSQL = """
         INSERT INTO \(Message.ftsTableName)(id, conversation_id, content, name)
@@ -63,6 +63,7 @@ class InitializeFTSJob: BaseJob {
                 reporter.report(error: error)
                 return
             }
+            usleep(100 * 1000)
         }
         
         let interval = -startDate.timeIntervalSinceNow

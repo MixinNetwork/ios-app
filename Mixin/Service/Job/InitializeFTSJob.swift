@@ -36,7 +36,6 @@ class InitializeFTSJob: BaseJob {
                 return
             }
             do {
-                usleep(100 * 1000)
                 try UserDatabase.current.pool.write { (db) -> Void in
                     let lastInitializedRowID: Int?
                     let lastFTSMessageIDSQL = "SELECT id FROM \(Message.ftsTableName) ORDER BY rowid DESC LIMIT 1"
@@ -64,6 +63,7 @@ class InitializeFTSJob: BaseJob {
                 reporter.report(error: error)
                 return
             }
+            usleep(100 * 1000)
         }
         
         let interval = -startDate.timeIntervalSinceNow

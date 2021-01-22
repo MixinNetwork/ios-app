@@ -155,6 +155,8 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
     NSNumber *type = notification.userInfo[AVAudioSessionInterruptionTypeKey];
     if ([type unsignedIntegerValue] == AVAudioSessionInterruptionTypeBegan) {
         [self cancelForReason:MXMAudioRecorderCancelledReasonAudioSessionInterrupted userInfo:nil];
+    } else if ([type unsignedIntegerValue] == AVAudioSessionInterruptionTypeEnded) {
+        [self->_delegate audioRecorderDidDetectAudioSessionInterruptionEnd:self];
     }
 }
 

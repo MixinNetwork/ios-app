@@ -234,6 +234,10 @@ extension AudioInputViewController: AudioRecorderDelegate {
         }
     }
     
+    func audioRecorderDidDetectAudioSessionInterruptionEnd(_ recorder: AudioRecorder) {
+        Logger.write(errorMsg: "[AudioRecorderDidCancelRecording]...detect interruption end")
+    }
+    
 }
 
 extension AudioInputViewController {

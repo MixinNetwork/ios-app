@@ -50,7 +50,8 @@ class UrlWindow {
             return false
         }
 
-        let isOpenApp = url.getKeyVals()["action"] == "open"
+        let params = url.getKeyVals()
+        let isOpenApp = params["action"] == "open"
 
         DispatchQueue.global().async {
             var appItem = AppDAO.shared.getApp(ofUserId: userId)
@@ -92,8 +93,9 @@ class UrlWindow {
                     }
                     let userInfo = ["source": "UrlWindow", "identityNumber": app.appNumber]
                     reporter.report(event: .openApp, userInfo: userInfo)
+                    let extraParams = params.filter { $0.key != "action" }
                     DispatchQueue.main.async {
-                        MixinWebViewController.presentInstance(with: .init(conversationId: conversationId, app: app), asChildOf: parent)
+                        MixinWebViewController.presentInstance(with: .init(conversationId: conversationId, app: app, extraParams: extraParams), asChildOf: parent)
                     }
                 } else {
                     let vc = UserProfileViewController(user: user)

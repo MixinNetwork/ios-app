@@ -98,7 +98,17 @@ class MixinWebViewController: WebViewController {
             titleImageView.isHidden = false
             titleImageView.sd_setImage(with: iconUrl, completed: nil)
         }
-        webView.load(URLRequest(url: context.initialUrl))
+        
+        if !context.extraParams.isEmpty, var components = URLComponents(url: context.initialUrl, resolvingAgainstBaseURL: true) {
+            var queryItems: [URLQueryItem] = components.queryItems ?? []
+            for item in context.extraParams {
+                queryItems.append(URLQueryItem(name: item.key, value: item.value))
+            }
+            components.queryItems = queryItems
+            webView.load(URLRequest(url: components.url ?? context.initialUrl))
+        } else {
+            webView.load(URLRequest(url: context.initialUrl))
+        }
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -506,6 +516,7 @@ extension MixinWebViewController {
         var style: Style
         let initialUrl: URL
         var isImmersive: Bool
+        var extraParams: [String: String] = [:]
         
         var appContextString: String {
             let ctx: [String: Any] = [
@@ -524,8 +535,9 @@ extension MixinWebViewController {
             }
         }
         
-        init(conversationId: String, app: App) {
+        init(conversationId: String, app: App, extraParams: [String: String] = [:]) {
             self.conversationId = conversationId
+            self.extraParams = extraParams
             style = .app(app: app, isHomeUrl: true)
             initialUrl = URL(string: app.homeUri) ?? .blank
             isImmersive = app.capabilities?.contains("IMMERSIVE") ?? false

@@ -67,14 +67,25 @@ public final class SnapshotDAO: UserDatabaseDAO {
         }
     }
     
-    public func replacePendingDeposits(assetId: String, pendingDeposits: [PendingDeposit]) {
+    @discardableResult
+    public func replacePendingDeposits(assetId: String, pendingDeposits: [PendingDeposit], snapshotId: String? = nil) -> SnapshotItem? {
+        var snapshotItem: SnapshotItem?
         let snapshots = pendingDeposits.map({ $0.makeSnapshot(assetId: assetId )})
         db.write { (db) in
             let condition: SQLSpecificExpressible = Snapshot.column(of: .assetId) == assetId
                 && Snapshot.column(of: .type) == SnapshotType.pendingDeposit.rawValue
             try Snapshot.filter(condition).deleteAll(db)
             try snapshots.save(db)
+            
+            if let snapshotId = snapshotId {
+                db.afterNextTransactionCommit { (db) in
+                    snapshotItem = try? SnapshotItem.fetchOne(db,
+                                                              sql: SnapshotDAO.sqlQueryById,
+                                                              arguments: [snapshotId])
+                }
+            }
         }
+        return snapshotItem
     }
     
     public func removePendingDeposits(assetId: String, transactionHash: String) {

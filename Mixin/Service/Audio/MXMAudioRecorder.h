@@ -36,6 +36,7 @@ NS_SWIFT_NAME(AudioRecorderDelegate)
                                userInfo:(NSDictionary<NSString*, id> * _Nullable)userInfo;
 - (void)audioRecorder:(MXMAudioRecorder *)recorder didFailRecordingWithError:(NSError *)error;
 - (void)audioRecorder:(MXMAudioRecorder *)recorder didFinishRecordingWithMetadata:(MXMAudioMetadata *)data NS_SWIFT_NAME(audioRecorder(_:didFinishRecordingWithMetadata:));
+- (void)audioRecorderDidDetectAudioSessionInterruptionEnd:(MXMAudioRecorder *)recorder;
 
 @end
 

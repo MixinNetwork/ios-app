@@ -348,7 +348,7 @@ extension UserDatabase {
     }
     
     private static func loadCurrent() -> UserDatabase {
-        let db = try! UserDatabase(url: AppGroupContainer.mixinDatabaseUrl)
+        let db = try! UserDatabase(url: AppGroupContainer.userDatabaseUrl)
         if AppGroupUserDefaults.User.needsRebuildDatabase {
             try? db.pool.barrierWriteWithoutTransaction { (db) -> Void in
                 try db.execute(sql: "DROP TABLE IF EXISTS grdb_migrations")

@@ -4,8 +4,8 @@ import XCTest
 class UserTests: XCTestCase {
     
     override class func setUp() {
-        print("Testing with URL: \(AppGroupContainer.mixinDatabaseUrl)")
-        let fileExists = FileManager.default.fileExists(atPath: AppGroupContainer.mixinDatabaseUrl.path)
+        print("Testing with URL: \(AppGroupContainer.userDatabaseUrl)")
+        let fileExists = FileManager.default.fileExists(atPath: AppGroupContainer.userDatabaseUrl.path)
         if fileExists {
             assertionFailure("The test corrupts your existed app data. Test it with a fresh device.")
         }

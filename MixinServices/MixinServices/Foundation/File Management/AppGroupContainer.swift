@@ -33,7 +33,7 @@ public enum AppGroupContainer {
         return url
     }
     
-    public static var mixinDatabaseUrl: URL {
+    public static var userDatabaseUrl: URL {
         accountUrl.appendingPathComponent("mixin.db", isDirectory: false)
     }
     

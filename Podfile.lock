@@ -383,7 +383,7 @@ SPEC CHECKSUMS:
   libsignal-protocol-c: bf65792f9f777e7d54dfab84bba0379eba42044e
   lottie-ios: 0e760146411886f6104050c932a8e6964853267f
   Maaku: 0eb331f423453177018d0b483068bcc181e135b4
-  MixinServices: e9c28e67bf10033062040c69d4a56a4231bced42
+  MixinServices: 2d7bcfecad2a93cb85d4952f583c93d4e495ef91
   nanopb: 1bf24dd71191072e120b83dd02d08f3da0d65e53
   PhoneNumberKit: ff153d5e299f6da566cb73c6aa71e354933b2932
   PINCache: 7a8fc1a691173d21dbddbf86cd515de6efa55086

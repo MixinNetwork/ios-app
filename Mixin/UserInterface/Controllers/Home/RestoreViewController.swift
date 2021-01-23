@@ -57,7 +57,7 @@ class RestoreViewController: UIViewController {
                 return
             }
 
-            let localURL = AppGroupContainer.mixinDatabaseUrl
+            let localURL = AppGroupContainer.userDatabaseUrl
             do {
                 if !cloudURL.isDownloaded {
                     try self.downloadFromCloud(cloudURL: cloudURL, progress: { (progress) in

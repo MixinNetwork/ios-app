@@ -212,7 +212,7 @@ extension BackupViewController {
 extension BackupViewController {
     
     @objc func showReportMenuAction() {
-        let alc = UIAlertController(title: Localized.REPORT_TITLE, message: AppGroupContainer.mixinDatabaseUrl.fileSize.sizeRepresentation(), preferredStyle: .actionSheet)
+        let alc = UIAlertController(title: Localized.REPORT_TITLE, message: AppGroupContainer.userDatabaseUrl.fileSize.sizeRepresentation(), preferredStyle: .actionSheet)
         alc.addAction(UIAlertAction(title: Localized.REPORT_BUTTON, style: .default, handler: { (_) in
             self.report()
         }))
@@ -228,12 +228,12 @@ extension BackupViewController {
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         DispatchQueue.global().async {
             do {
-                Logger.writeDatabase(log: "[Database] start compressing ...size:\(AppGroupContainer.mixinDatabaseUrl.fileSize.sizeRepresentation())")
+                Logger.writeDatabase(log: "[Database] start compressing ...size:\(AppGroupContainer.userDatabaseUrl.fileSize.sizeRepresentation())")
                 try UserDatabase.current.pool.write({ (db) -> Void in
                     try db.checkpoint(.full, on: nil)
                 })
                 try UserDatabase.current.pool.vacuum()
-                Logger.writeDatabase(log: "[Database] end of compression ...size:\(AppGroupContainer.mixinDatabaseUrl.fileSize.sizeRepresentation())")
+                Logger.writeDatabase(log: "[Database] end of compression ...size:\(AppGroupContainer.userDatabaseUrl.fileSize.sizeRepresentation())")
                 DispatchQueue.main.async {
                     hud.set(style: .notification, text: R.string.localizable.report_compress_database_success())
                     hud.scheduleAutoHidden()
@@ -269,7 +269,7 @@ extension BackupViewController {
             log += Self.debugCloudFiles(baseDir: AppGroupContainer.documentsUrl, parentDir: AppGroupContainer.documentsUrl).joined(separator: "\n")
             Logger.write(log: log)
             
-            Logger.writeDatabase(log: "[Database] mixin.db size:\(AppGroupContainer.mixinDatabaseUrl.fileSize.sizeRepresentation())")
+            Logger.writeDatabase(log: "[Database] mixin.db size:\(AppGroupContainer.userDatabaseUrl.fileSize.sizeRepresentation())")
             
             let developConversationId = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: developUser.userId)
             guard let url = Logger.export(conversationId: developConversationId) else {

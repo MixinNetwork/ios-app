@@ -24,7 +24,7 @@ Mixin Core Services.
   s.static_framework = true
 
   s.ios.vendored_frameworks = 'MixinServices/Goutils.framework'
-  s.source_files = 'MixinServices/Foundation/**/*', 'MixinServices/Crypto/**/*', 'MixinServices/Storage/**/*', 'MixinServices/Services/**/*'
+  s.source_files = 'MixinServices/Foundation/**/*', 'MixinServices/Crypto/**/*', 'MixinServices/Database/**/*', 'MixinServices/Services/**/*'
 
   s.dependency 'AppCenter'
   s.dependency 'Alamofire'

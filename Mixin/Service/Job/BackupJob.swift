@@ -195,7 +195,7 @@ class BackupJob: BaseJob {
         }
 
         if isBackupDatabase {
-            copyToCloud(from: AppGroupContainer.mixinDatabaseUrl, destination: databaseCloudURL, isDatabase: true)
+            copyToCloud(from: AppGroupContainer.userDatabaseUrl, destination: databaseCloudURL, isDatabase: true)
         }
         for path in backupPaths {
             guard isContinueBackup else {
@@ -233,7 +233,7 @@ class BackupJob: BaseJob {
             AppGroupUserDefaults.Database.vacuumDate = Date()
             try? UserDatabase.current.pool.vacuum()
         }
-        return FileManager.default.fileSize(AppGroupContainer.mixinDatabaseUrl.path)
+        return FileManager.default.fileSize(AppGroupContainer.userDatabaseUrl.path)
     }
 
     private func stopQuery(query: NSMetadataQuery, semaphore: DispatchSemaphore) {

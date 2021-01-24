@@ -46,6 +46,7 @@ class TransactionViewController: UIViewController {
         tableView.delegate = self
         updateTableViewContentInsetBottom()
         fetchThatTimePrice()
+        fetchTransaction()
         
         assetIconView.isUserInteractionEnabled = true
         assetIconView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(backToAsset(_:))))
@@ -182,6 +183,49 @@ extension TransactionViewController {
                 self.fiatMoneyValueLabel.text = R.string.localizable.transaction_value_now(nowValue) + "\n" + R.string.localizable.transaction_value_then(thenValue)
             case .failure:
                 break
+            }
+        }
+    }
+    
+    private func fetchTransaction() {
+        if snapshot.type == SnapshotType.withdrawal.rawValue && snapshot.transactionHash.isNilOrEmpty {
+            SnapshotAPI.snapshot(snapshotId: snapshot.snapshotId) { [weak self](result) in
+                switch result {
+                case let .success(snapshot):
+                    DispatchQueue.global().async {
+                        guard let snapshotItem = SnapshotDAO.shared.saveSnapshot(snapshot: snapshot) else {
+                            return
+                        }
+                        
+                        DispatchQueue.main.async {
+                            self?.snapshot = snapshotItem
+                            self?.makeContents()
+                            self?.tableView.reloadData()
+                        }
+                    }
+                case .failure:
+                    break
+                }
+            }
+        } else if snapshot.type == SnapshotType.pendingDeposit.rawValue {
+            let assetId = asset.assetId
+            let snapshotId = snapshot.snapshotId
+            AssetAPI.pendingDeposits(assetId: assetId, destination: asset.destination, tag: asset.tag) { [weak self](result) in
+                switch result {
+                case let .success(deposits):
+                    DispatchQueue.global().async {
+                        guard let snapshotItem = SnapshotDAO.shared.replacePendingDeposits(assetId: assetId, pendingDeposits: deposits, snapshotId: snapshotId) else {
+                            return
+                        }
+                        DispatchQueue.main.async {
+                            self?.snapshot = snapshotItem
+                            self?.makeContents()
+                            self?.tableView.reloadData()
+                        }
+                    }
+                case .failure:
+                    break
+                }
             }
         }
     }

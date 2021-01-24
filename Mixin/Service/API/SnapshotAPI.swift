@@ -15,6 +15,10 @@ final class SnapshotAPI: MixinAPI {
         return request(method: .get, path: Path.snapshot(snapshotId: snapshotId))
     }
     
+    static func snapshot(snapshotId: String, completion: @escaping (MixinAPI.Result<Snapshot>) -> Void) {
+        request(method: .get, path: Path.snapshot(snapshotId: snapshotId), completion: completion)
+    }
+    
     static func trace(traceId: String) -> MixinAPI.Result<Snapshot> {
         return request(method: .get, path: Path.trace(traceId: traceId))
     }

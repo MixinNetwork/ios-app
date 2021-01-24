@@ -199,6 +199,7 @@ extension TransactionViewController {
                         
                         DispatchQueue.main.async {
                             self?.snapshot = snapshotItem
+                            self?.makeContents()
                             self?.tableView.reloadData()
                         }
                     }
@@ -218,6 +219,7 @@ extension TransactionViewController {
                         }
                         DispatchQueue.main.async {
                             self?.snapshot = snapshotItem
+                            self?.makeContents()
                             self?.tableView.reloadData()
                         }
                     }

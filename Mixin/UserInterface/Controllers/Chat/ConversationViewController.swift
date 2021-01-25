@@ -81,6 +81,7 @@ class ConversationViewController: UIViewController {
     private var reportRecognizer: UILongPressGestureRecognizer!
     private var resizeInputRecognizer: ResizeInputWrapperGestureRecognizer!
     private var fastReplyRecognizer: FastReplyGestureRecognizer!
+    private var textPreviewRecognizer: UITapGestureRecognizer!
     private var conversationInputViewController: ConversationInputViewController!
     private var previewDocumentController: UIDocumentInteractionController?
     private var previewDocumentMessageId: String?
@@ -140,7 +141,13 @@ class ConversationViewController: UIViewController {
         button.addTarget(self, action: #selector(endMultipleSelection), for: .touchUpInside)
         return button
     }()
-        
+    
+    private lazy var textPreviewView: TextPreviewView = {
+        let view = R.nib.textPreviewView(owner: nil)!
+        view.tapRecognizer.addTarget(self, action: #selector(dismissTextPreviewAction(_:)))
+        return view
+    }()
+    
     private var unreadBadgeValue: Int = 0 {
         didSet {
             guard unreadBadgeValue != oldValue else {
@@ -242,6 +249,10 @@ class ConversationViewController: UIViewController {
         tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapAction(_:)))
         tapRecognizer.delegate = self
         tableView.addGestureRecognizer(tapRecognizer)
+        
+        textPreviewRecognizer = UITapGestureRecognizer(target: self, action: #selector(presentTextPreviewAction(_:)))
+        textPreviewRecognizer.numberOfTapsRequired = 2
+        tableView.addGestureRecognizer(textPreviewRecognizer)
         
         tableView.dataSource = self
         tableView.delegate = self
@@ -771,6 +782,38 @@ class ConversationViewController: UIViewController {
             tableView.isScrollEnabled = true
         default:
             break
+        }
+    }
+    
+    @objc func presentTextPreviewAction(_ recognizer: UITapGestureRecognizer) {
+        guard let cell = tableView.messageCellForRow(at: recognizer.location(in: tableView)) else {
+            return
+        }
+        guard type(of: cell) == TextMessageCell.self else {
+            return
+        }
+        guard let viewModel = cell.viewModel as? TextMessageViewModel else {
+            return
+        }
+        guard cell.contentFrame.contains(recognizer.location(in: cell)) else {
+            return
+        }
+        textPreviewView.alpha = 0
+        textPreviewView.frame = view.bounds
+        view.addSubview(textPreviewView)
+        view.layoutIfNeeded()
+        textPreviewView.text = viewModel.presentedContent
+        UIView.animate(withDuration: 0.3) {
+            self.textPreviewView.alpha = 1
+        }
+    }
+    
+    @objc func dismissTextPreviewAction(_ sender: Any) {
+        UIView.animate(withDuration: 0.3) {
+            self.textPreviewView.alpha = 0
+        } completion: { (_) in
+            self.textPreviewView.text = nil
+            self.textPreviewView.removeFromSuperview()
         }
     }
     

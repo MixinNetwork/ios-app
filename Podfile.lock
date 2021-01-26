@@ -1,4 +1,5 @@
 PODS:
+  - AcknowList (1.9.5)
   - Alamofire (5.4.1)
   - AlignedCollectionViewFlowLayout (1.1.2)
   - AppCenter (4.1.0):
@@ -245,6 +246,7 @@ PODS:
   - Zip (2.1.1)
 
 DEPENDENCIES:
+  - AcknowList
   - AlignedCollectionViewFlowLayout
   - Firebase/Analytics
   - Firebase/Core
@@ -269,6 +271,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - AcknowList
     - Alamofire
     - AlignedCollectionViewFlowLayout
     - AppCenter
@@ -356,6 +359,7 @@ CHECKOUT OPTIONS:
     :git: https://github.com/wuyuehyang/YYImage.git
 
 SPEC CHECKSUMS:
+  AcknowList: 485f0e0da8ff7d5aaa8fb54bbff1da1f065e496c
   Alamofire: 2291f7d21ca607c491dd17642e5d40fdcda0e65c
   AlignedCollectionViewFlowLayout: ee2ef451e741ec08f8e0967d828001e2f051c20a
   AppCenter: 8832b158d17e54845c3b88a91076218f0b07174d
@@ -405,6 +409,6 @@ SPEC CHECKSUMS:
   YYImage: 6db68da66f20d9f169ceb94dfb9947c3867b9665
   Zip: 414f59909701fda9a84ab774ebe0f5449b1082cc
 
-PODFILE CHECKSUM: 248e324be26a8202690da213c814b6638323533e
+PODFILE CHECKSUM: 697a76448bd0b20a429eee98c2b4aaa52cff27d3
 
 COCOAPODS: 1.10.1

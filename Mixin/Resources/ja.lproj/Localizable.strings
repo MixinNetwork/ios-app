@@ -825,6 +825,7 @@
 "about_help" = "ヘルプセンター";
 "about_terms_of_service" = "利用規約";
 "about_privacy_policy" = "プライバシーポリシー";
+"about_acknowledgements" = "Acknowledgements";
 "about_app_upgrade" = "Version Update";
 
 "report_title"="Mixinの開発者へ会話記録を送信しますか?";

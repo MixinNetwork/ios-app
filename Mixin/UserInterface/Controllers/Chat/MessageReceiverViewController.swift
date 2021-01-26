@@ -283,6 +283,7 @@ extension MessageReceiverViewController {
         case .message(var message):
             message.messageId = UUID().uuidString.lowercased()
             message.conversationId = conversationId
+            message.createdAt = Date().toUTCString()
             return [message]
         case .messages(let messages):
             let date = Date()

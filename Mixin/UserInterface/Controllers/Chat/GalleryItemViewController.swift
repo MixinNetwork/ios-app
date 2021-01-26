@@ -3,6 +3,13 @@ import MixinServices
 
 class GalleryItemViewController: UIViewController {
     
+    struct Action: OptionSet {
+        let rawValue: UInt
+        
+        static let forward = Action(rawValue: 1 << 0)
+        static let saveToLibrary = Action(rawValue: 1 << 1)
+    }
+    
     let operationButton = LargeModernNetworkOperationButton()
     let expiredHintLabel = UILabel()
     let mediaStatusView = UIStackView()
@@ -35,8 +42,8 @@ class GalleryItemViewController: UIViewController {
         return parent == nil
     }
     
-    var respondsToLongPress: Bool {
-        return false
+    var supportedActions: Action {
+        []
     }
     
     var canPerformInteractiveDismissal: Bool {

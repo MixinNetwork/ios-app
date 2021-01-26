@@ -1,26 +1,44 @@
 import UIKit
 
+protocol TextPreviewViewDelegate: class {
+    func textPreviewView(_ view: TextPreviewView, didSelectURL url: URL)
+    func textPreviewView(_ view: TextPreviewView, didLongPressURL url: URL)
+    func textPreviewViewDidFinishPreview(_ view: TextPreviewView)
+}
+
 class TextPreviewView: UIView {
     
-    @IBOutlet weak var textView: UITextView!
+    @IBOutlet weak var textView: LinkLocatingTextView!
     @IBOutlet weak var tapRecognizer: UITapGestureRecognizer!
+    
+    weak var delegate: TextPreviewViewDelegate?
     
     private let horizontalMargin: CGFloat = 20
     
-    var text: String? {
+    var attributedText: NSAttributedString? {
         get {
-            textView.text
+            textView.attributedText
         }
         set {
-            textView.text = newValue ?? ""
+            let text = NSMutableAttributedString(attributedString: newValue ?? NSAttributedString())
+            text.addAttribute(.font,
+                              value: UIFont.preferredFont(forTextStyle: .title3),
+                              range: NSRange(location: 0, length: text.length))
+            textView.attributedText = text
             layoutText()
         }
     }
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        textView.textDragInteraction?.isEnabled = false
         textView.contentInset = UIEdgeInsets(top: 0, left: horizontalMargin, bottom: 0, right: horizontalMargin)
         tapRecognizer.delegate = self
+        textView.delegate = self
+    }
+    
+    @IBAction func finishPreview(_ sender: Any) {
+        delegate?.textPreviewViewDidFinishPreview(self)
     }
     
     private func layoutText() {
@@ -50,7 +68,33 @@ extension TextPreviewView: UIGestureRecognizerDelegate {
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return !(otherGestureRecognizer is UILongPressGestureRecognizer)
+        if gestureRecognizer == tapRecognizer {
+            if otherGestureRecognizer is UILongPressGestureRecognizer {
+                return false
+            } else if textView.hasLinkAttribute(on: tapRecognizer.location(in: textView)) {
+                return false
+            } else {
+                return true
+            }
+        } else {
+            return false
+        }
+    }
+    
+}
+
+extension TextPreviewView: UITextViewDelegate {
+    
+    func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
+        switch interaction {
+        case .invokeDefaultAction:
+            delegate?.textPreviewView(self, didSelectURL: URL)
+        case .presentActions, .preview:
+            delegate?.textPreviewView(self, didLongPressURL: URL)
+        @unknown default:
+            break
+        }
+        return false
     }
     
 }

@@ -15,9 +15,10 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="1WI-51-qrF">
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="1WI-51-qrF" customClass="LinkLocatingTextView" customModule="Mixin" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="44" width="414" height="852"/>
                     <color key="backgroundColor" name="background"/>
+                    <gestureRecognizers/>
                     <color key="textColor" name="text"/>
                     <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -36,10 +37,18 @@
                 <outlet property="tapRecognizer" destination="YWi-vV-YG4" id="Ejp-Ec-EZI"/>
                 <outlet property="textView" destination="1WI-51-qrF" id="Fup-GE-s2U"/>
                 <outletCollection property="gestureRecognizers" destination="YWi-vV-YG4" appends="YES" id="w9i-jA-CMb"/>
+                <outletCollection property="gestureRecognizers" destination="a8e-sM-GOU" appends="YES" id="wl8-GM-ob1"/>
             </connections>
             <point key="canvasLocation" x="140.57971014492756" y="153.34821428571428"/>
         </view>
-        <tapGestureRecognizer id="YWi-vV-YG4"/>
+        <tapGestureRecognizer id="YWi-vV-YG4">
+            <connections>
+                <action selector="finishPreview:" destination="iN0-l3-epB" id="Xsb-5r-bl8"/>
+            </connections>
+        </tapGestureRecognizer>
+        <screenEdgePanGestureRecognizer minimumNumberOfTouches="1" id="a8e-sM-GOU">
+            <rectEdge key="edges" left="YES"/>
+        </screenEdgePanGestureRecognizer>
     </objects>
     <resources>
         <namedColor name="background">

@@ -24,11 +24,6 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
     // e.g. when performing layout in SharedMediaPostTableViewController
     var layoutWithRawWidth = false
     
-    // The content presented may differs from message.content,
-    // e.g. when contentAttributedString is overrided
-    // highlight(keyword:) will be using this var for keyword range enumeration
-    public private(set) var presentedContent: String
-    
     private let trailingInfoLeftMargin: CGFloat = 20
     private let minimumTextSize = CGSize(width: 5, height: 17)
     private let linkColor = UIColor.systemTint
@@ -37,6 +32,11 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
     
     private var contentSize = CGSize.zero // contentSize is textSize concatenated with additionalTrailingSize and fullname width
     private var linkRanges = [Link.Range]()
+    
+    // The content presented may differs from message.content,
+    // e.g. when contentAttributedString is overrided
+    // highlight(keyword:) will be using this var for keyword range enumeration
+    private var presentedContent: String
     
     override var debugDescription: String {
         return super.debugDescription + ", contentSize: \(contentSize), contentLength: \(message.content?.count ?? -1)"
@@ -87,6 +87,7 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
         str.setAttributes([.font: Self.font, .foregroundColor: Self.textColor],
                           range: NSRange(location: 0, length: str.length))
         for linkRange in linkRanges {
+            str.addAttribute(.link, value: linkRange.url, range: linkRange.range)
             str.addAttribute(.foregroundColor, value: linkColor, range: linkRange.range)
         }
         return NSAttributedString(attributedString: str)

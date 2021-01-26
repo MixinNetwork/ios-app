@@ -144,7 +144,7 @@ class ConversationViewController: UIViewController {
     
     private lazy var textPreviewView: TextPreviewView = {
         let view = R.nib.textPreviewView(owner: nil)!
-        view.tapRecognizer.addTarget(self, action: #selector(dismissTextPreviewAction(_:)))
+        view.delegate = self
         return view
     }()
     
@@ -802,18 +802,9 @@ class ConversationViewController: UIViewController {
         textPreviewView.frame = view.bounds
         view.addSubview(textPreviewView)
         view.layoutIfNeeded()
-        textPreviewView.text = viewModel.presentedContent
+        textPreviewView.attributedText = viewModel.contentAttributedString
         UIView.animate(withDuration: 0.3) {
             self.textPreviewView.alpha = 1
-        }
-    }
-    
-    @objc func dismissTextPreviewAction(_ sender: Any) {
-        UIView.animate(withDuration: 0.3) {
-            self.textPreviewView.alpha = 0
-        } completion: { (_) in
-            self.textPreviewView.text = nil
-            self.textPreviewView.removeFromSuperview()
         }
     }
     
@@ -1602,27 +1593,13 @@ extension ConversationViewController: UITextViewDelegate {
 extension ConversationViewController: CoreTextLabelDelegate {
     
     func coreTextLabel(_ label: CoreTextLabel, didSelectURL url: URL) {
-        guard !openUrlOutsideApplication(url) else {
-            return
-        }
-        open(url: url)
+        handleTapping(on: url)
+        textPreviewRecognizer.isEnabled = false
+        textPreviewRecognizer.isEnabled = true
     }
     
     func coreTextLabel(_ label: CoreTextLabel, didLongPressOnURL url: URL) {
-        guard url.scheme != MixinInternalURL.scheme else {
-            return
-        }
-        let alert = UIAlertController(title: url.absoluteString, message: nil, preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: Localized.CHAT_MESSAGE_OPEN_URL, style: .default, handler: { [weak self](_) in
-            self?.open(url: url)
-        }))
-        alert.addAction(UIAlertAction(title: Localized.CHAT_MESSAGE_MENU_COPY, style: .default, handler: { (_) in
-            UIPasteboard.general.string = url.absoluteString
-            showAutoHiddenHud(style: .notification, text: Localized.TOAST_COPIED)
-
-        }))
-        alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
-        present(alert, animated: true, completion: nil)
+        handleLongPressing(on: url)
     }
     
 }
@@ -1710,6 +1687,28 @@ extension ConversationViewController: PhotoAssetPickerDelegate {
 
     func pickerController(_ picker: PickerViewController, contentOffset: CGPoint, didFinishPickingMediaWithAsset asset: PHAsset) {
         navigationController?.pushViewController(AssetSendViewController.instance(asset: asset, dataSource: dataSource), animated: true)
+    }
+    
+}
+
+// MARK: - TextPreviewViewDelegate
+extension ConversationViewController: TextPreviewViewDelegate {
+    
+    func textPreviewView(_ view: TextPreviewView, didSelectURL url: URL) {
+        handleTapping(on: url)
+    }
+    
+    func textPreviewView(_ view: TextPreviewView, didLongPressURL url: URL) {
+        handleLongPressing(on: url)
+    }
+    
+    func textPreviewViewDidFinishPreview(_ view: TextPreviewView) {
+        UIView.animate(withDuration: 0.3) {
+            self.textPreviewView.alpha = 0
+        } completion: { (_) in
+            self.textPreviewView.attributedText = nil
+            self.textPreviewView.removeFromSuperview()
+        }
     }
     
 }
@@ -2425,6 +2424,30 @@ extension ConversationViewController {
             self.messageIdToFlashAfterAnimationFinished = flashingId
             self.tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
         })
+    }
+    
+    private func handleTapping(on url: URL) {
+        guard !openUrlOutsideApplication(url) else {
+            return
+        }
+        open(url: url)
+    }
+    
+    private func handleLongPressing(on url: URL) {
+        guard url.scheme != MixinInternalURL.scheme else {
+            return
+        }
+        let alert = UIAlertController(title: url.absoluteString, message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: Localized.CHAT_MESSAGE_OPEN_URL, style: .default, handler: { [weak self](_) in
+            self?.open(url: url)
+        }))
+        alert.addAction(UIAlertAction(title: Localized.CHAT_MESSAGE_MENU_COPY, style: .default, handler: { (_) in
+            UIPasteboard.general.string = url.absoluteString
+            showAutoHiddenHud(style: .notification, text: Localized.TOAST_COPIED)
+            
+        }))
+        alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
     
 }

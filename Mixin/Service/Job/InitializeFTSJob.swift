@@ -36,6 +36,9 @@ class InitializeFTSJob: BaseJob {
             return
         }
         
+        let messageCount = UserDatabase.current.count(in: Message.self)
+        Logger.writeDatabase(log: "[FTS] Make fts content with \(messageCount) messages")
+        
         var didInitializedAllMessages = false
         var numberOfMessagesProcessed = 0
         let startDate = Date()

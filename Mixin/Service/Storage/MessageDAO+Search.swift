@@ -14,16 +14,16 @@ extension MessageDAO {
         let arguments: [String: String]
         
         if AppGroupUserDefaults.Database.isFTSInitialized {
-            sql += "\nWHERE m.id in (SELECT id FROM \(Message.ftsTableName) WHERE \(Message.ftsTableName) MATCH :keyword) AND m.conversation_id = :conv_id"
-            arguments = ["conv_id": conversationId, "keyword": keyword]
+            sql += "\nWHERE m.id in (SELECT id FROM \(Message.ftsTableName) WHERE \(Message.ftsTableName) MATCH :keyword) AND m.conversation_id = :cid"
+            arguments = ["cid": conversationId, "keyword": "{content name} : \"\(keyword)\""]
         } else {
             sql += """
-                WHERE conversation_id = :conv_id
+                WHERE conversation_id = :cid
                     AND m.category in ('SIGNAL_TEXT','SIGNAL_DATA','SIGNAL_POST','PLAIN_TEXT','PLAIN_DATA','PLAIN_POST')
                     AND m.status != 'FAILED'
                     AND (m.content LIKE :keyword ESCAPE '/' OR m.name LIKE :keyword ESCAPE '/')
             """
-            arguments = ["conv_id": conversationId, "keyword": "%\(keyword.sqlEscaped)%"]
+            arguments = ["cid": conversationId, "keyword": "%\(keyword.sqlEscaped)%"]
         }
         if let location = location, let rowId: Int = UserDatabase.current.select(column: .rowID, from: Message.self, where: Message.column(of: .messageId) == location) {
             sql += "\nAND m.ROWID < \(rowId)"

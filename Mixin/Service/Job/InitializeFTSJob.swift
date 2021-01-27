@@ -19,7 +19,7 @@ class InitializeFTSJob: BaseJob {
     }()
     
     private let insertionSQL = """
-        INSERT INTO \(Message.ftsTableName)(id, conversation_id, content, name)
+        INSERT INTO \(Message.ftsTableName)
         SELECT id, conversation_id, content, name
         FROM \(Message.databaseTableName)
         WHERE category in \(MessageCategory.ftsAvailableCategorySequence) AND status != 'FAILED' AND ROWID > ?

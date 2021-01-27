@@ -322,11 +322,12 @@ public final class UserDatabase: Database {
             try db.execute(sql: lastMessageUpdate)
         }
         
-        migrator.registerMigration("fts5") { (db) in
+        migrator.registerMigration("fts5_v2") { (db) in
+            try db.execute(sql: "DROP TABLE IF EXISTS \(Message.ftsTableName)")
             try db.create(virtualTable: Message.ftsTableName, ifNotExists: true, using: FTS5()) { t in
                 t.tokenizer = MixinTokenizer.tokenizerDescriptor()
-                t.column(Message.column(of: .messageId).name).notIndexed()
-                t.column(Message.column(of: .conversationId).name).notIndexed()
+                t.column(Message.column(of: .messageId).name)
+                t.column(Message.column(of: .conversationId).name)
                 t.column(Message.column(of: .content).name)
                 t.column(Message.column(of: .name).name)
             }

@@ -7,7 +7,16 @@ class InitializeFTSJob: BaseJob {
         case mismatchedFTSTable
     }
     
-    private static let insertionLimit: Int = 200
+    private static let insertionLimit: Int = {
+        switch DevicePerformance.current {
+        case .low:
+            return 100
+        case .medium:
+            return 500
+        case .high:
+            return 1000
+        }
+    }()
     
     private let insertionSQL = """
         INSERT INTO \(Message.ftsTableName)(id, conversation_id, content, name)

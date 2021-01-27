@@ -585,6 +585,7 @@
 		94438D57252DAD73005760AF /* Clip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94438D56252DAD73005760AF /* Clip.swift */; };
 		945A9E63532A9E5E449174EB /* Pods_MixinAppGroupAccess.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 470400A1924B7FC84415D7DF /* Pods_MixinAppGroupAccess.framework */; };
 		945AA6582567B18200B39415 /* Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945AA6572567B18200B39415 /* Country.swift */; };
+		94659DAA25C13793003403E5 /* DevicePerformance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94659DA925C13793003403E5 /* DevicePerformance.swift */; };
 		947F4AD625866D6C00B0A5F9 /* InitializeFTSJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947F4AD525866D6C00B0A5F9 /* InitializeFTSJob.swift */; };
 		94904FD325912A2000F2FDE6 /* CaptchaToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94904FD225912A2000F2FDE6 /* CaptchaToken.swift */; };
 		94DA83762588E595006B0F16 /* WebRTC.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94DA83722588E58B006B0F16 /* WebRTC.xcframework */; };
@@ -1497,6 +1498,7 @@
 		9424C64A259246B600FFDAE0 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		94438D56252DAD73005760AF /* Clip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clip.swift; sourceTree = "<group>"; };
 		945AA6572567B18200B39415 /* Country.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Country.swift; sourceTree = "<group>"; };
+		94659DA925C13793003403E5 /* DevicePerformance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DevicePerformance.swift; sourceTree = "<group>"; };
 		947F4AD525866D6C00B0A5F9 /* InitializeFTSJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitializeFTSJob.swift; sourceTree = "<group>"; };
 		94904FD225912A2000F2FDE6 /* CaptchaToken.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CaptchaToken.swift; sourceTree = "<group>"; };
 		94DA83722588E58B006B0F16 /* WebRTC.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = WebRTC.xcframework; sourceTree = "<group>"; };
@@ -3271,6 +3273,7 @@
 				DFB6CE1F23C4859300FB6615 /* Message */,
 				DFC0EB5723BB3CD60091E7AC /* API */,
 				7B88719C25060C76001FB418 /* Crypto */,
+				94659DA925C13793003403E5 /* DevicePerformance.swift */,
 				E0D4F5F423A9D803008F0189 /* NotificationManager.swift */,
 				E0FAE8D123CDC4F4008B056A /* CrashlyticalReporter.swift */,
 				7B8261D024D9548E00A39635 /* PINVerificationFailureHandler.swift */,
@@ -3729,7 +3732,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$SRCROOT/MixinNotificationService/R.generated.swift",
+				$SRCROOT/MixinNotificationService/R.generated.swift,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -3826,7 +3829,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$SRCROOT/MixinShare/R.generated.swift",
+				$SRCROOT/MixinShare/R.generated.swift,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -3846,7 +3849,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$SRCROOT/R.generated.swift",
+				$SRCROOT/R.generated.swift,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -4379,6 +4382,7 @@
 				277FF7031F909A1200DBB2EB /* AppDelegate.swift in Sources */,
 				7B2E3E4D1FA07F5D00DDDDEB /* HairlineLayoutConstraint.swift in Sources */,
 				7B4ADAA7243C7C8400F04CA6 /* HomeAppsViewController.swift in Sources */,
+				94659DAA25C13793003403E5 /* DevicePerformance.swift in Sources */,
 				DF43304522648B32006D971D /* AssetInfoWindow.swift in Sources */,
 				84A10E9A256B6416006AC741 /* TickerResponse.swift in Sources */,
 				7B492F982252159B00C05A45 /* ActivityIndicatorView.swift in Sources */,

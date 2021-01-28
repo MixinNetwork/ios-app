@@ -342,6 +342,7 @@ extension UserDatabase {
     
     public static func reloadCurrent() {
         current = loadCurrent()
+        current.migrate()
     }
     
     internal static func closeCurrent() {
@@ -355,7 +356,6 @@ extension UserDatabase {
                 try db.execute(sql: "DROP TABLE IF EXISTS grdb_migrations")
             }
         }
-        db.migrate()
         return db
     }
     

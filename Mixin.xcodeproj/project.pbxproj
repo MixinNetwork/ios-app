@@ -593,6 +593,9 @@
 		942F829825DD56E3004F913B /* opusenc_set_bitrate.c in Sources */ = {isa = PBXBuildFile; fileRef = 942F829725DD56E3004F913B /* opusenc_set_bitrate.c */; };
 		9430F9C525E38AB5001CCA2F /* MessageDAO+PlaylistItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9430F9C425E38AB5001CCA2F /* MessageDAO+PlaylistItem.swift */; };
 		9438252725EE697300709B7D /* CacheableAssetFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9438252625EE697300709B7D /* CacheableAssetFileManager.swift */; };
+		943E7F9B25B871DA0059CE97 /* md4c.c in Sources */ = {isa = PBXBuildFile; fileRef = 943E7F9625B871D90059CE97 /* md4c.c */; };
+		943E7F9C25B871DA0059CE97 /* entity.c in Sources */ = {isa = PBXBuildFile; fileRef = 943E7F9725B871D90059CE97 /* entity.c */; };
+		943E7F9D25B871DA0059CE97 /* md4c-html.c in Sources */ = {isa = PBXBuildFile; fileRef = 943E7F9925B871D90059CE97 /* md4c-html.c */; };
 		94438D57252DAD73005760AF /* Clip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94438D56252DAD73005760AF /* Clip.swift */; };
 		944C656125D9BA0A008BDDD3 /* OggOpusWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944C656025D9BA0A008BDDD3 /* OggOpusWriter.swift */; };
 		945278982626BCD600023A6C /* HighlightableButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945278972626BCD600023A6C /* HighlightableButton.swift */; };
@@ -1533,6 +1536,12 @@
 		942F829725DD56E3004F913B /* opusenc_set_bitrate.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = opusenc_set_bitrate.c; sourceTree = "<group>"; };
 		9430F9C425E38AB5001CCA2F /* MessageDAO+PlaylistItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MessageDAO+PlaylistItem.swift"; sourceTree = "<group>"; };
 		9438252625EE697300709B7D /* CacheableAssetFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheableAssetFileManager.swift; sourceTree = "<group>"; };
+		943E7F9525B871D90059CE97 /* md4c-html.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "md4c-html.h"; sourceTree = "<group>"; };
+		943E7F9625B871D90059CE97 /* md4c.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = md4c.c; sourceTree = "<group>"; };
+		943E7F9725B871D90059CE97 /* entity.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = entity.c; sourceTree = "<group>"; };
+		943E7F9825B871D90059CE97 /* md4c.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = md4c.h; sourceTree = "<group>"; };
+		943E7F9925B871D90059CE97 /* md4c-html.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "md4c-html.c"; sourceTree = "<group>"; };
+		943E7F9A25B871DA0059CE97 /* entity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = entity.h; sourceTree = "<group>"; };
 		94438D56252DAD73005760AF /* Clip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clip.swift; sourceTree = "<group>"; };
 		944C656025D9BA0A008BDDD3 /* OggOpusWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OggOpusWriter.swift; sourceTree = "<group>"; };
 		945278972626BCD600023A6C /* HighlightableButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightableButton.swift; sourceTree = "<group>"; };
@@ -1885,6 +1894,7 @@
 			isa = PBXGroup;
 			children = (
 				94DA83722588E58B006B0F16 /* WebRTC.xcframework */,
+				943E7FA125B871E10059CE97 /* md4c */,
 				DF0A09712444AD7600378B4F /* BlurHash */,
 				DF5D9F2F1F9C95270036D5FD /* CountryCode */,
 			);
@@ -2462,6 +2472,19 @@
 				7B3936D020C1722C0075A97A /* CaptchaViewController.swift */,
 			);
 			path = ReCaptcha;
+			sourceTree = "<group>";
+		};
+		943E7FA125B871E10059CE97 /* md4c */ = {
+			isa = PBXGroup;
+			children = (
+				943E7F9725B871D90059CE97 /* entity.c */,
+				943E7F9A25B871DA0059CE97 /* entity.h */,
+				943E7F9925B871D90059CE97 /* md4c-html.c */,
+				943E7F9525B871D90059CE97 /* md4c-html.h */,
+				943E7F9625B871D90059CE97 /* md4c.c */,
+				943E7F9825B871D90059CE97 /* md4c.h */,
+			);
+			path = md4c;
 			sourceTree = "<group>";
 		};
 		947B368025DE764900146111 /* OggOpus */ = {
@@ -4182,6 +4205,7 @@
 				7BD5A88A233228D900DD4E9A /* WebViewController.swift in Sources */,
 				7B5E9B40243700CD000AE24E /* ConversationCircleEditorViewController.swift in Sources */,
 				7B28FA16201196DD0023B28D /* DataMessageViewModel.swift in Sources */,
+				943E7F9C25B871DA0059CE97 /* entity.c in Sources */,
 				DFB6CE2323C485D400FB6615 /* SystemConversationAction+Description.swift in Sources */,
 				7B59534F2267215B00D59DB4 /* BottomShadowView.swift in Sources */,
 				7B6EC8FC20A91543009A7020 /* VideoUploadJob.swift in Sources */,
@@ -4388,6 +4412,7 @@
 				DFF4417A223BC63100DDD5F8 /* ContactCell.swift in Sources */,
 				7B955338224375D600CE95E6 /* SearchFooterView.swift in Sources */,
 				7BAB5D3E20C520F2009F4EE6 /* AudioUploadJob.swift in Sources */,
+				943E7F9B25B871DA0059CE97 /* md4c.c in Sources */,
 				E039AB06237277E40071386E /* ProfileScrollView.swift in Sources */,
 				DFC0ECE123BB60DE0091E7AC /* AuthorizationResponse.swift in Sources */,
 				9406978725E7F30800E7FDA0 /* PlaylistSlider.swift in Sources */,
@@ -4505,6 +4530,7 @@
 				7B9F06C820A985E70095A51B /* VideoMessageCell.swift in Sources */,
 				DF84777820DA5A1200DE5163 /* RecordButton.swift in Sources */,
 				7B86B1F523F6AB0B00C80AD9 /* TitledCardContentWidthCalculable.swift in Sources */,
+				943E7F9D25B871DA0059CE97 /* md4c-html.c in Sources */,
 				7BF7837B2179D1AF00BECB4B /* Call.swift in Sources */,
 				7BE5505923573AC00074DB4A /* FontExtension.swift in Sources */,
 				9424C6432592469500FFDAE0 /* Application.swift in Sources */,

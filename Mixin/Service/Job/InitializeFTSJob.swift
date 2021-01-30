@@ -7,10 +7,19 @@ class InitializeFTSJob: BaseJob {
         case mismatchedFTSTable
     }
     
-    private static let insertionLimit: Int = 200
+    private static let insertionLimit: Int = {
+        switch DevicePerformance.current {
+        case .low:
+            return 100
+        case .medium:
+            return 500
+        case .high:
+            return 1000
+        }
+    }()
     
     private let insertionSQL = """
-        INSERT INTO \(Message.ftsTableName)(id, conversation_id, content, name)
+        INSERT INTO \(Message.ftsTableName)
         SELECT id, conversation_id, content, name
         FROM \(Message.databaseTableName)
         WHERE category in \(MessageCategory.ftsAvailableCategorySequence) AND status != 'FAILED' AND ROWID > ?
@@ -26,6 +35,9 @@ class InitializeFTSJob: BaseJob {
         guard !AppGroupUserDefaults.Database.isFTSInitialized else {
             return
         }
+        
+        let messageCount = UserDatabase.current.count(in: Message.self)
+        Logger.writeDatabase(log: "[FTS] Make fts content with \(messageCount) messages")
         
         var didInitializedAllMessages = false
         var numberOfMessagesProcessed = 0

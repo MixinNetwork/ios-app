@@ -593,8 +593,7 @@ public final class MessageDAO: UserDatabaseDAO {
             .filter(MessageMention.column(of: .messageId) == messageId)
             .deleteAll(database)
         if let category = MessageCategory(rawValue: category), MessageCategory.ftsAvailable.contains(category) {
-            try database.execute(sql: "DELETE FROM \(Message.ftsTableName) WHERE id=?",
-                                 arguments: [messageId])
+            try deleteFTSContent(database, messageId: messageId)
         }
         
         if status == MessageStatus.FAILED.rawValue {
@@ -628,8 +627,7 @@ public final class MessageDAO: UserDatabaseDAO {
             try MessageMention
                 .filter(MessageMention.column(of: .messageId) == id)
                 .deleteAll(db)
-            try db.execute(sql: "DELETE FROM \(Message.ftsTableName) WHERE id=?",
-                           arguments: [id])
+            try deleteFTSContent(db, messageId: id)
         }
         return deleteCount > 0
     }
@@ -762,6 +760,15 @@ extension MessageDAO {
                                category: category,
                                conversationId: conversationId,
                                messageSource: messageSource)
+    }
+    
+}
+
+extension MessageDAO {
+    
+    private func deleteFTSContent(_ db: GRDB.Database, messageId: String) throws {
+        let sql = "DELETE FROM \(Message.ftsTableName) WHERE id MATCH ?"
+        try db.execute(sql: sql, arguments: ["\"\(messageId)\""])
     }
     
 }

@@ -14,24 +14,39 @@ extension MessageDAO {
         let arguments: [String: String]
         
         if AppGroupUserDefaults.Database.isFTSInitialized {
-            sql += "\nWHERE m.id in (SELECT id FROM \(Message.ftsTableName) WHERE \(Message.ftsTableName) MATCH :keyword) AND m.conversation_id = :conv_id"
-            arguments = ["conv_id": conversationId, "keyword": keyword]
+            var midSQL = "SELECT id FROM \(Message.ftsTableName) WHERE \(Message.ftsTableName) MATCH :keyword"
+            
+            let locationFTSRowIDSQL = "SELECT rowid FROM \(Message.ftsTableName) WHERE id MATCH ?"
+            if let location = location, let rowId: Int = UserDatabase.current.select(with: locationFTSRowIDSQL, arguments: ["\"\(location)\""]) {
+                midSQL += " AND rowid < \(rowId)"
+            }
+            
+            midSQL += "\nORDER BY rowid DESC"
+            if let limit = limit {
+                midSQL += "\nLIMIT \(limit)"
+            }
+            
+            sql += "\nWHERE m.id in (\(midSQL))\nORDER BY m.created_at DESC"
+            arguments = [
+                "cid": conversationId,
+                "keyword": "({content name} : \"\(keyword)\") AND (conversation_id : \"\(conversationId)\")"
+            ]
         } else {
             sql += """
-                WHERE conversation_id = :conv_id
+                WHERE conversation_id = :cid
                     AND m.category in ('SIGNAL_TEXT','SIGNAL_DATA','SIGNAL_POST','PLAIN_TEXT','PLAIN_DATA','PLAIN_POST')
                     AND m.status != 'FAILED'
                     AND (m.content LIKE :keyword ESCAPE '/' OR m.name LIKE :keyword ESCAPE '/')
             """
-            arguments = ["conv_id": conversationId, "keyword": "%\(keyword.sqlEscaped)%"]
-        }
-        if let location = location, let rowId: Int = UserDatabase.current.select(column: .rowID, from: Message.self, where: Message.column(of: .messageId) == location) {
-            sql += "\nAND m.ROWID < \(rowId)"
-        }
-        if let limit = limit {
-            sql += "\nORDER BY m.created_at DESC LIMIT \(limit)"
-        } else {
-            sql += "\nORDER BY m.created_at DESC"
+            if let location = location, let rowId: Int = UserDatabase.current.select(column: .rowID, from: Message.self, where: Message.column(of: .messageId) == location) {
+                sql += "\nAND m.ROWID < \(rowId)"
+            }
+            if let limit = limit {
+                sql += "\nORDER BY m.created_at DESC LIMIT \(limit)"
+            } else {
+                sql += "\nORDER BY m.created_at DESC"
+            }
+            arguments = ["cid": conversationId, "keyword": "%\(keyword.sqlEscaped)%"]
         }
         
         do {

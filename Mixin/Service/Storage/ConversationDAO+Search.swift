@@ -38,7 +38,7 @@ extension ConversationDAO {
         let arguments: [String: String]
         if AppGroupUserDefaults.Database.isFTSInitialized {
             sql = SQL.fts
-            arguments = ["keyword": keyword]
+            arguments = ["keyword": "{content name} : \"\(keyword)\""]
         } else {
             sql = SQL.nonFTS
             arguments = ["keyword": "%\(keyword.sqlEscaped)%"]

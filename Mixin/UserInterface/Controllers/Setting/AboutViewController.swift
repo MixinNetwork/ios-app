@@ -1,5 +1,4 @@
 import UIKit
-import AcknowList
 
 class AboutViewController: SettingsTableViewController {
     
@@ -48,7 +47,7 @@ extension AboutViewController: UITableViewDelegate {
         case 4:
             UIApplication.shared.openURL(url: .privacy)
         case 5:
-            let container = ContainerViewController.instance(viewController: AcknowListViewController(),
+            let container = ContainerViewController.instance(viewController: AcknowledgementsViewController(),
                                                              title: R.string.localizable.about_acknowledgements())
             navigationController?.pushViewController(container, animated: true)
             container.view.layoutIfNeeded()

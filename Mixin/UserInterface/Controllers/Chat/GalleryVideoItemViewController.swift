@@ -87,8 +87,15 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         return parent == nil && UIApplication.homeContainerViewController?.pipController != self
     }
     
-    override var respondsToLongPress: Bool {
-        return item?.category == .video
+    override var supportedActions: Action {
+        switch item?.category {
+        case .video:
+            return [.forward, .saveToLibrary]
+        case .live:
+            return [.forward]
+        default:
+            return []
+        }
     }
     
     override var canPerformInteractiveDismissal: Bool {

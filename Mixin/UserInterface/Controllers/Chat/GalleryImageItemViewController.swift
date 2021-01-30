@@ -48,8 +48,8 @@ final class GalleryImageItemViewController: GalleryItemViewController {
         return parent == nil
     }
     
-    override var respondsToLongPress: Bool {
-        return true
+    override var supportedActions: Action {
+        [.forward, .saveToLibrary]
     }
     
     override var canPerformInteractiveDismissal: Bool {

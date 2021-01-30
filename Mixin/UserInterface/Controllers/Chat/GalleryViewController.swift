@@ -208,7 +208,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         })
     }
     
-    func dismiss(transitionViewInitialOffsetY: CGFloat) {
+    func dismiss(transitionViewInitialOffsetY: CGFloat, completion: (() -> Void)? = nil) {
         guard let itemViewController = currentItemViewController, let item = itemViewController.item else {
             return
         }
@@ -243,6 +243,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
             self.delegate?.galleryViewController(self, didDismiss: item, relativeOffset: relativeOffset)
             self.pageViewController.view.alpha = 1
             self.transitionView?.alpha = 0
+            completion?()
         })
     }
     
@@ -261,6 +262,19 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         }, completion: {
             self.delegate?.galleryViewController(self, didDismiss: item, relativeOffset: nil)
         })
+    }
+    
+    func forward() {
+        guard let id = currentItemViewController?.item?.messageId else {
+            return
+        }
+        guard let message = MessageDAO.shared.getFullMessage(messageId: id) else {
+            return
+        }
+        let vc = MessageReceiverViewController.instance(content: .messages([message]))
+        dismiss(transitionViewInitialOffsetY: 0) {
+            UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
+        }
     }
     
     @objc func panAction(_ recognizer: UIPanGestureRecognizer) {
@@ -298,17 +312,24 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
     }
     
     @objc func longPressAction(_ recognizer: UILongPressGestureRecognizer) {
-        guard recognizer.state == .began, let itemViewController = currentItemViewController, itemViewController.respondsToLongPress else {
+        guard recognizer.state == .began, let itemViewController = currentItemViewController, !itemViewController.supportedActions.isEmpty else {
             return
         }
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: Localized.CHAT_PHOTO_SAVE, style: .default, handler: { (_) in
-            PHPhotoLibrary.checkAuthorization { (authorized) in
-                if authorized {
-                    itemViewController.saveToLibrary()
+        if itemViewController.supportedActions.contains(.forward) {
+            alert.addAction(UIAlertAction(title: R.string.localizable.chat_message_menu_forward(), style: .default, handler: { (_) in
+                self.forward()
+            }))
+        }
+        if itemViewController.supportedActions.contains(.saveToLibrary) {
+            alert.addAction(UIAlertAction(title: Localized.CHAT_PHOTO_SAVE, style: .default, handler: { (_) in
+                PHPhotoLibrary.checkAuthorization { (authorized) in
+                    if authorized {
+                        itemViewController.saveToLibrary()
+                    }
                 }
-            }
-        }))
+            }))
+        }
         if let url = (itemViewController as? GalleryImageItemViewController)?.detectedUrl {
             alert.addAction(UIAlertAction(title: Localized.SCAN_QR_CODE, style: .default, handler: { (_) in
                 if !UrlWindow.checkUrl(url: url, clearNavigationStack: false) {

@@ -37,6 +37,7 @@ class InitializeFTSJob: BaseJob {
         }
         
         let messageCount = UserDatabase.current.count(in: Message.self)
+        Logger.writeDatabase(log: "[FTS] Database file size \(AppGroupContainer.userDatabaseUrl.fileSize.sizeRepresentation())")
         Logger.writeDatabase(log: "[FTS] Make fts content with \(messageCount) messages")
         
         var didInitializedAllMessages = false

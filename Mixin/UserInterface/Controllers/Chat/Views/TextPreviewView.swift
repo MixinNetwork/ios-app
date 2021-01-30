@@ -8,12 +8,11 @@ protocol TextPreviewViewDelegate: class {
 
 class TextPreviewView: UIView {
     
+    @IBOutlet weak var visualEffectView: UIVisualEffectView!
     @IBOutlet weak var textView: LinkLocatingTextView!
     @IBOutlet weak var tapRecognizer: UITapGestureRecognizer!
     
     weak var delegate: TextPreviewViewDelegate?
-    
-    private let horizontalMargin: CGFloat = 20
     
     var attributedText: NSAttributedString? {
         get {
@@ -21,18 +20,34 @@ class TextPreviewView: UIView {
         }
         set {
             let text = NSMutableAttributedString(attributedString: newValue ?? NSAttributedString())
-            text.addAttribute(.font,
-                              value: UIFont.preferredFont(forTextStyle: .title3),
-                              range: NSRange(location: 0, length: text.length))
+            let range = NSRange(location: 0, length: text.length)
+            text.addAttributes(attributes, range: range)
             textView.attributedText = text
             layoutText()
         }
     }
     
+    private var horizontalMargin: CGFloat {
+        switch ScreenWidth.current {
+        case .short:
+            return 20
+        default:
+            return 36
+        }
+    }
+    
+    private var attributes: [NSAttributedString.Key: Any] {
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 9
+        return [.font: UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 24)),
+                .paragraphStyle: paragraphStyle]
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         textView.textDragInteraction?.isEnabled = false
-        textView.contentInset = UIEdgeInsets(top: 0, left: horizontalMargin, bottom: 0, right: horizontalMargin)
+        let bottomInset: CGFloat = AppDelegate.current.mainWindow.safeAreaInsets.bottom > 20 ? 0 : 20
+        textView.contentInset = UIEdgeInsets(top: 0, left: horizontalMargin, bottom: bottomInset, right: horizontalMargin)
         tapRecognizer.delegate = self
         textView.delegate = self
     }

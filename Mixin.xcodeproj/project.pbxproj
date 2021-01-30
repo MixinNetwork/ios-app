@@ -589,10 +589,12 @@
 		945AA6582567B18200B39415 /* Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945AA6572567B18200B39415 /* Country.swift */; };
 		94659DAA25C13793003403E5 /* DevicePerformance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94659DA925C13793003403E5 /* DevicePerformance.swift */; };
 		947F4AD625866D6C00B0A5F9 /* InitializeFTSJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947F4AD525866D6C00B0A5F9 /* InitializeFTSJob.swift */; };
+		9489E3A025C5B150000319F8 /* AcknowledgementsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9489E39F25C5B150000319F8 /* AcknowledgementsViewController.swift */; };
 		94904FD325912A2000F2FDE6 /* CaptchaToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94904FD225912A2000F2FDE6 /* CaptchaToken.swift */; };
 		94A1B1DF25BFD7CB0098586D /* LinkLocatingTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A1B1DE25BFD7CB0098586D /* LinkLocatingTextView.swift */; };
 		94DA83762588E595006B0F16 /* WebRTC.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94DA83722588E58B006B0F16 /* WebRTC.xcframework */; };
 		94DA83772588E595006B0F16 /* WebRTC.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 94DA83722588E58B006B0F16 /* WebRTC.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		94E8913925C019F000F1E5D4 /* Pods-Mixin-acknowledgements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 94E8913825C019F000F1E5D4 /* Pods-Mixin-acknowledgements.plist */; };
 		9B748DCD1FA71CEF00BC009B /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B748DCC1FA71CEF00BC009B /* CameraViewController.swift */; };
 		9B8D579A1F9F0ADA008A7957 /* Chat.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9B8D57991F9F0ADA008A7957 /* Chat.storyboard */; };
 		9BB351671FB19ECB00EDDD2C /* ConversationDateHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB351661FB19ECB00EDDD2C /* ConversationDateHeaderView.swift */; };
@@ -1505,9 +1507,11 @@
 		945AA6572567B18200B39415 /* Country.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Country.swift; sourceTree = "<group>"; };
 		94659DA925C13793003403E5 /* DevicePerformance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DevicePerformance.swift; sourceTree = "<group>"; };
 		947F4AD525866D6C00B0A5F9 /* InitializeFTSJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitializeFTSJob.swift; sourceTree = "<group>"; };
+		9489E39F25C5B150000319F8 /* AcknowledgementsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgementsViewController.swift; sourceTree = "<group>"; };
 		94904FD225912A2000F2FDE6 /* CaptchaToken.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CaptchaToken.swift; sourceTree = "<group>"; };
 		94A1B1DE25BFD7CB0098586D /* LinkLocatingTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkLocatingTextView.swift; sourceTree = "<group>"; };
 		94DA83722588E58B006B0F16 /* WebRTC.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = WebRTC.xcframework; sourceTree = "<group>"; };
+		94E8913825C019F000F1E5D4 /* Pods-Mixin-acknowledgements.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = "Pods-Mixin-acknowledgements.plist"; path = "Pods/Target Support Files/Pods-Mixin/Pods-Mixin-acknowledgements.plist"; sourceTree = SOURCE_ROOT; };
 		9B748DCC1FA71CEF00BC009B /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		9B8D57991F9F0ADA008A7957 /* Chat.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Chat.storyboard; sourceTree = "<group>"; };
 		9BB351661FB19ECB00EDDD2C /* ConversationDateHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationDateHeaderView.swift; sourceTree = "<group>"; };
@@ -2786,6 +2790,7 @@
 				DFF44173223A035000DDD5F8 /* Mixin-Keys.plist */,
 				7BBD8A3220C1D51C00DF2735 /* captcha.html */,
 				277FF7101F909A1200DBB2EB /* Info.plist */,
+				94E8913825C019F000F1E5D4 /* Pods-Mixin-acknowledgements.plist */,
 				DF8CECCE1FC2B1C900E40064 /* Mixin-Bridging-Header.h */,
 			);
 			path = "Supporting Files";
@@ -3218,6 +3223,7 @@
 				DFE48AD920E69B31003E0BF8 /* StorageUsageViewController.swift */,
 				DFE48ADD20EBADEE003E0BF8 /* ClearStorageViewController.swift */,
 				7BB8E2D024529E910098B1E8 /* AppearanceSettingsViewController.swift */,
+				9489E39F25C5B150000319F8 /* AcknowledgementsViewController.swift */,
 				DFBADC111FD1211E00722929 /* AboutViewController.swift */,
 				7BC022E4214A13DC00B7A398 /* AuthorizationsViewController.swift */,
 				7B9E7ABF21E6F8F000012A28 /* DesktopViewController.swift */,
@@ -3514,6 +3520,7 @@
 				7B8BB590234F36C000991ACB /* Colors.xcassets in Resources */,
 				7BFCB7762419FC5B00E7BC43 /* LocationCell.xib in Resources */,
 				DFD294491FA7145F00FADAAD /* Contact.storyboard in Resources */,
+				94E8913925C019F000F1E5D4 /* Pods-Mixin-acknowledgements.plist in Resources */,
 				7BD3880024DC66F900A3035C /* Localizable.strings in Resources */,
 				7BE73BFD230A8D0300B97FC6 /* group_separator_4.png in Resources */,
 				E05D992923911D55009F9E8D /* ProfileFavoriteAppsView.xib in Resources */,
@@ -3872,6 +3879,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Mixin/Pods-Mixin-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/AcknowList/AcknowList.framework",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/AlignedCollectionViewFlowLayout/AlignedCollectionViewFlowLayout.framework",
 				"${BUILT_PRODUCTS_DIR}/BoringSSL/openssl.framework",
@@ -3915,6 +3923,7 @@
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AcknowList.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AlignedCollectionViewFlowLayout.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/openssl.framework",
@@ -4028,6 +4037,7 @@
 				7BF8AD87244053F10038D293 /* PinnedHomeAppCell.swift in Sources */,
 				E09C5EB82370057B0095F729 /* UserProfileViewController.swift in Sources */,
 				7B9A2BD12023729E00135DA4 /* AppButtonGroupViewModel.swift in Sources */,
+				9489E3A025C5B150000319F8 /* AcknowledgementsViewController.swift in Sources */,
 				7BC96DE5241779F70047471D /* ExternalApiError.swift in Sources */,
 				DFE48ADE20EBADEE003E0BF8 /* ClearStorageViewController.swift in Sources */,
 				7B3FD4EC241965AB00B58006 /* LocationViewController.swift in Sources */,

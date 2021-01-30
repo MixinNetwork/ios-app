@@ -826,6 +826,7 @@
 "about_help" = "帮助中心";
 "about_terms_of_service" = "隐私政策";
 "about_privacy_policy" = "服务条款";
+"about_acknowledgements" = "许可证";
 "about_app_upgrade" = "版本更新";
 
 "report_title"="给开发人员发送聊天日志?";

@@ -11,6 +11,7 @@ class AboutViewController: SettingsTableViewController {
             SettingsRow(title: R.string.localizable.about_help(), accessory: .disclosure),
             SettingsRow(title: R.string.localizable.button_title_terms_of_service(), accessory: .disclosure),
             SettingsRow(title: R.string.localizable.button_title_privacy_policy(), accessory: .disclosure),
+            SettingsRow(title: R.string.localizable.about_acknowledgements(), accessory: .disclosure),
             SettingsRow(title: R.string.localizable.about_app_upgrade(), accessory: .disclosure)
         ])
     ])
@@ -46,6 +47,11 @@ extension AboutViewController: UITableViewDelegate {
         case 4:
             UIApplication.shared.openURL(url: .privacy)
         case 5:
+            let container = ContainerViewController.instance(viewController: AcknowledgementsViewController(),
+                                                             title: R.string.localizable.about_acknowledgements())
+            navigationController?.pushViewController(container, animated: true)
+            container.view.layoutIfNeeded()
+        case 6:
             UIApplication.shared.openURL(url: "itms-apps://itunes.apple.com/us/app/id1322324266")
         default:
             UIApplication.shared.openURL(url: "https://mixin.one")

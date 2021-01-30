@@ -825,6 +825,7 @@
 "about_help" = "Help Center";
 "about_terms_of_service" = "Terms of Service";
 "about_privacy_policy" = "Privacy Policy";
+"about_acknowledgements" = "Acknowledgements";
 "about_app_upgrade" = "Version Update";
 
 "report_title"="Send the conversation log to developers?";

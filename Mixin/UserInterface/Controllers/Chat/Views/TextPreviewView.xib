@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="TextPreviewView" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gdW-3T-scd">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                    <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Q8o-JJ-RpX">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" editable="NO" textAlignment="natural" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1WI-51-qrF" customClass="LinkLocatingTextView" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="44" width="414" height="852"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <gestureRecognizers/>
+                                <color key="textColor" name="text"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="1WI-51-qrF" firstAttribute="leading" secondItem="Q8o-JJ-RpX" secondAttribute="leading" id="0Ru-aH-KU5"/>
+                            <constraint firstAttribute="trailing" secondItem="1WI-51-qrF" secondAttribute="trailing" id="Ab9-fw-eJZ"/>
+                            <constraint firstAttribute="bottom" secondItem="1WI-51-qrF" secondAttribute="bottom" id="cP6-0U-2sC"/>
+                        </constraints>
+                    </view>
+                    <blurEffect style="prominent"/>
+                </visualEffectView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <gestureRecognizers/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="gdW-3T-scd" secondAttribute="trailing" id="6ge-WT-MEg"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="top" secondItem="1WI-51-qrF" secondAttribute="top" id="GRu-z8-OIO"/>
+                <constraint firstAttribute="bottom" secondItem="gdW-3T-scd" secondAttribute="bottom" id="cc6-5d-rks"/>
+                <constraint firstItem="gdW-3T-scd" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="lFy-x3-hS0"/>
+                <constraint firstItem="gdW-3T-scd" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="un0-w3-0JT"/>
+            </constraints>
+            <connections>
+                <outlet property="tapRecognizer" destination="YWi-vV-YG4" id="Ejp-Ec-EZI"/>
+                <outlet property="textView" destination="1WI-51-qrF" id="Fup-GE-s2U"/>
+                <outlet property="visualEffectView" destination="gdW-3T-scd" id="bY6-dV-144"/>
+                <outletCollection property="gestureRecognizers" destination="YWi-vV-YG4" appends="YES" id="w9i-jA-CMb"/>
+                <outletCollection property="gestureRecognizers" destination="a8e-sM-GOU" appends="YES" id="wl8-GM-ob1"/>
+            </connections>
+            <point key="canvasLocation" x="140.57971014492756" y="153.34821428571428"/>
+        </view>
+        <tapGestureRecognizer id="YWi-vV-YG4">
+            <connections>
+                <action selector="finishPreview:" destination="iN0-l3-epB" id="Xsb-5r-bl8"/>
+            </connections>
+        </tapGestureRecognizer>
+        <screenEdgePanGestureRecognizer minimumNumberOfTouches="1" id="a8e-sM-GOU">
+            <rectEdge key="edges" left="YES"/>
+        </screenEdgePanGestureRecognizer>
+    </objects>
+    <resources>
+        <namedColor name="text">
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

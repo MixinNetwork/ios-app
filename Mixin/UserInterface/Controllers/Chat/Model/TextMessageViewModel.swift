@@ -87,6 +87,7 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
         str.setAttributes([.font: Self.font, .foregroundColor: Self.textColor],
                           range: NSRange(location: 0, length: str.length))
         for linkRange in linkRanges {
+            str.addAttribute(.link, value: linkRange.url, range: linkRange.range)
             str.addAttribute(.foregroundColor, value: linkColor, range: linkRange.range)
         }
         return NSAttributedString(attributedString: str)

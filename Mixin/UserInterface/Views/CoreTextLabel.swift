@@ -83,7 +83,6 @@ class CoreTextLabel: UIView {
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesEnded(touches, with: event)
         NSObject.cancelPreviousPerformRequests(withTarget: self)
-        stopRespondingTouches = false
         guard let touch = touches.first, let content = content else {
             return
         }
@@ -92,12 +91,16 @@ class CoreTextLabel: UIView {
                 let point = touch.location(in: self)
                 if bounds.contains(point), let link = content.links.first(where: { $0.hitFrame.applying(coreTextTransform).contains(point) }) {
                     delegate?.coreTextLabel(self, didSelectURL: link.url)
+                    stopRespondingTouches = true
                 }
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
                 self.selectedLink = nil
                 self.setNeedsDisplay()
             })
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                self.stopRespondingTouches = false
+            }
         }
     }
     

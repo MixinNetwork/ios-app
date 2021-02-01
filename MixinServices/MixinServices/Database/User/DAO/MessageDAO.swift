@@ -54,18 +54,6 @@ public final class MessageDAO: UserDatabaseDAO {
     ORDER BY m.created_at DESC
     LIMIT ?
     """
-    static let sqlQueryFullMessageBeforeRowId = """
-    \(sqlQueryFullMessage)
-    WHERE m.conversation_id = ? AND m.ROWID < ?
-    ORDER BY m.created_at DESC
-    LIMIT ?
-    """
-    static let sqlQueryFullMessageAfterRowId = """
-    \(sqlQueryFullMessage)
-    WHERE m.conversation_id = ? AND m.ROWID > ?
-    ORDER BY m.created_at ASC
-    LIMIT ?
-    """
     static let sqlQueryFullAudioMessages = """
     \(sqlQueryFullMessage)
     WHERE m.conversation_id = ? AND m.category in ('SIGNAL_AUDIO', 'PLAIN_AUDIO')
@@ -401,12 +389,18 @@ public final class MessageDAO: UserDatabaseDAO {
     }
     
     public func getMessages(conversationId: String, aboveMessage location: MessageItem, count: Int) -> [MessageItem] {
+        let sql = """
+        \(Self.sqlQueryFullMessage)
+        WHERE m.conversation_id = ? AND m.ROWID < ?
+        ORDER BY m.created_at DESC
+        LIMIT ?
+        """
         let rowId: Int? = db.select(column: .rowID,
                                     from: Message.self,
                                     where: Message.column(of: .messageId) == location.messageId)
         if let id = rowId {
-            let messages: [MessageItem] = db.select(with: MessageDAO.sqlQueryFullMessageBeforeRowId,
-                                                    arguments: [conversationId, rowId, count])
+            let messages: [MessageItem] = db.select(with: sql,
+                                                    arguments: [conversationId, id, count])
             return messages.reversed()
         } else {
             return []
@@ -414,12 +408,18 @@ public final class MessageDAO: UserDatabaseDAO {
     }
     
     public func getMessages(conversationId: String, belowMessage location: MessageItem, count: Int) -> [MessageItem] {
+        let sql = """
+        \(Self.sqlQueryFullMessage)
+        WHERE m.conversation_id = ? AND m.ROWID > ?
+        ORDER BY m.created_at ASC
+        LIMIT ?
+        """
         let rowId: Int? = db.select(column: .rowID,
                                     from: Message.self,
                                     where: Message.column(of: .messageId) == location.messageId)
         if let id = rowId {
-            return db.select(with: MessageDAO.sqlQueryFullMessageAfterRowId,
-                             arguments: [conversationId, rowId, count])
+            return db.select(with: sql,
+                             arguments: [conversationId, id, count])
         } else {
             return []
         }
@@ -436,7 +436,7 @@ public final class MessageDAO: UserDatabaseDAO {
                                         from: Message.self,
                                         where: Message.column(of: .messageId) == location.messageId)
             if let id = rowId {
-                sql += " AND m.ROWID < \(rowId)"
+                sql += " AND m.ROWID < \(id)"
             }
         }
         sql += " ORDER BY m.created_at DESC LIMIT ?"

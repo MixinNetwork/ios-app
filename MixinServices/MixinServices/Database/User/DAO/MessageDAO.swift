@@ -505,8 +505,16 @@ public final class MessageDAO: UserDatabaseDAO {
             && message.status != MessageStatus.FAILED.rawValue
             && MessageCategory.ftsAvailableCategoryStrings.contains(message.category)
         if shouldInsertIntoFTSTable {
-            try database.execute(sql: "INSERT INTO \(Message.ftsTableName) VALUES (?, ?, ?, ?)",
-                                 arguments: [message.messageId, message.conversationId, message.content, message.name])
+            let arguments = StatementArguments([
+                uuidTokenString(uuidString: message.conversationId),
+                uuidTokenString(uuidString: message.userId),
+                uuidTokenString(uuidString: message.messageId),
+                message.category.hasSuffix("DATA") ? message.name : message.content,
+                unixTimeInMilliseconds(iso8601: message.createdAt),
+                nil,
+                nil
+            ])
+            try database.execute(sql: "INSERT INTO \(Message.ftsTableName) VALUES (?, ?, ?, ?, ?, ?, ?)", arguments: arguments)
         }
         try MessageDAO.shared.updateUnseenMessageCount(database: database, conversationId: message.conversationId)
         
@@ -669,8 +677,16 @@ extension MessageDAO {
             
             // isFTSInitialized is wrote inside a write block, checking it within a write block keeps the value in sync
             if MessageCategory.ftsAvailableCategoryStrings.contains(category), AppGroupUserDefaults.Database.isFTSInitialized, let message = newMessage {
-                try db.execute(sql: "INSERT INTO \(Message.ftsTableName) VALUES (?, ?, ?, ?)",
-                               arguments: [messageId, conversationId, message.content, message.name])
+                let arguments = StatementArguments([
+                    uuidTokenString(uuidString: message.conversationId),
+                    uuidTokenString(uuidString: message.userId),
+                    uuidTokenString(uuidString: message.messageId),
+                    message.category.hasSuffix("DATA") ? message.name : message.content,
+                    unixTimeInMilliseconds(iso8601: message.createdAt),
+                    nil,
+                    nil
+                ])
+                try db.execute(sql: "INSERT INTO \(Message.ftsTableName) VALUES (?, ?, ?, ?, ?, ?, ?)", arguments: arguments)
             }
         }
         

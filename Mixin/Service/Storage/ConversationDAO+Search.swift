@@ -11,7 +11,7 @@ extension ConversationDAO {
                 CASE c.category WHEN 'CONTACT' THEN u.avatar_url ELSE c.icon_url END,
                 CASE c.category WHEN 'CONTACT' THEN u.user_id ELSE NULL END,
                 u.is_verified, u.app_id, count
-            FROM (SELECT conversation_id AS cid, COUNT(id) AS count FROM messages_fts WHERE messages_fts MATCH :keyword GROUP BY conversation_id)
+            FROM (SELECT ttou(conversation_id) AS cid, COUNT(id) AS count FROM \(Message.ftsTableName) WHERE content MATCH :keyword GROUP BY conversation_id)
                 LEFT JOIN conversations c ON cid = c.conversation_id
                 LEFT JOIN users u ON c.owner_id = u.user_id
             ORDER BY c.pin_time DESC, c.last_message_created_at DESC
@@ -38,7 +38,7 @@ extension ConversationDAO {
         let arguments: [String: String]
         if AppGroupUserDefaults.Database.isFTSInitialized {
             sql = SQL.fts
-            arguments = ["keyword": "{content name} : \"\(keyword)\""]
+            arguments = ["keyword": "\"\(keyword)\""]
         } else {
             sql = SQL.nonFTS
             arguments = ["keyword": "%\(keyword.sqlEscaped)%"]

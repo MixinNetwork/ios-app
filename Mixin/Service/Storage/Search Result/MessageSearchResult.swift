@@ -37,7 +37,7 @@ class MessageSearchResult: SearchResult {
                                             keywordAttributes: SearchResult.highlightedTitleAttributes)
         
         if isData {
-            description = NSAttributedString(string: R.string.localizable.notification_content_live(),
+            description = NSAttributedString(string: R.string.localizable.notification_content_file(),
                                              attributes: SearchResult.normalDescriptionAttributes)
         } else {
             // TODO: Tokenize

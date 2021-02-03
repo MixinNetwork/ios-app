@@ -68,6 +68,8 @@ extension MessageDAO {
                     results.append(result)
                 }
             }
+        } catch DatabaseError.SQLITE_INTERRUPT {
+            // Ignore it
         } catch {
             Logger.writeDatabase(error: error)
             reporter.report(error: error)

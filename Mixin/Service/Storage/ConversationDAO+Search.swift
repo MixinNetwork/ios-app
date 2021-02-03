@@ -116,6 +116,8 @@ extension ConversationDAO {
                 items.append(item)
             }
             return items
+        } catch DatabaseError.SQLITE_INTERRUPT {
+            return []
         } catch {
             Logger.writeDatabase(error: error)
             return []

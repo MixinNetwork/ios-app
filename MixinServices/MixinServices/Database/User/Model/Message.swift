@@ -74,7 +74,7 @@ extension Message: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mix
 extension Message: TableRecord, PersistableRecord {
     
     public static let databaseTableName = "messages"
-    public static let ftsTableName = "messages_fts"
+    public static let ftsTableName = "messages_fts_v3"
     
 }
 

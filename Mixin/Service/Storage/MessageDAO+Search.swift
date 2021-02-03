@@ -14,10 +14,10 @@ extension MessageDAO {
         let arguments: [String: String]
         
         if AppGroupUserDefaults.Database.isFTSInitialized {
-            var midSQL = "SELECT id FROM \(Message.ftsTableName) WHERE \(Message.ftsTableName) MATCH :keyword"
+            var midSQL = "SELECT ttou(id) FROM \(Message.ftsTableName) WHERE \(Message.ftsTableName) MATCH :keyword"
             
             let locationFTSRowIDSQL = "SELECT rowid FROM \(Message.ftsTableName) WHERE id MATCH ?"
-            if let location = location, let rowId: Int = UserDatabase.current.select(with: locationFTSRowIDSQL, arguments: ["\"\(location)\""]) {
+            if let location = location, let rowId: Int = UserDatabase.current.select(with: locationFTSRowIDSQL, arguments: [uuidTokenString(uuidString: location)]) {
                 midSQL += " AND rowid < \(rowId)"
             }
             
@@ -29,7 +29,7 @@ extension MessageDAO {
             sql += "\nWHERE m.id in (\(midSQL))\nORDER BY m.created_at DESC"
             arguments = [
                 "cid": conversationId,
-                "keyword": "({content name} : \"\(keyword)\") AND (conversation_id : \"\(conversationId)\")"
+                "keyword": "(content : \"\(keyword)\") AND (conversation_id : \(uuidTokenString(uuidString: conversationId)))"
             ]
         } else {
             sql += """

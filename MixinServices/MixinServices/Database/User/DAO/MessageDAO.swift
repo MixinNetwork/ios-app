@@ -784,7 +784,7 @@ extension MessageDAO {
     
     private func deleteFTSContent(_ db: GRDB.Database, messageId: String) throws {
         let sql = "DELETE FROM \(Message.ftsTableName) WHERE id MATCH ?"
-        try db.execute(sql: sql, arguments: ["\"\(messageId)\""])
+        try db.execute(sql: sql, arguments: [uuidTokenString(uuidString: messageId)])
     }
     
 }

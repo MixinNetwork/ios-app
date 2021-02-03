@@ -530,7 +530,7 @@ extension ConversationDAO {
     
     private func deleteFTSContent(with conversationId: String, from db: GRDB.Database) throws {
         let sql = "DELETE FROM \(Message.ftsTableName) WHERE conversation_id MATCH ?"
-        try db.execute(sql: sql, arguments: ["\"\(conversationId)\""])
+        try db.execute(sql: sql, arguments: [uuidTokenString(uuidString: conversationId)])
     }
     
 }

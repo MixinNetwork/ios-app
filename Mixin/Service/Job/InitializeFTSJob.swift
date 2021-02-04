@@ -24,7 +24,7 @@ class InitializeFTSJob: BaseJob {
             SELECT conversation_id, user_id, id, CASE WHEN category = 'SIGNAL_DATA' OR category = 'PLAIN_DATA' THEN name ELSE content END AS content, created_at
             FROM \(Message.databaseTableName)
             WHERE category in \(MessageCategory.ftsAvailableCategorySequence) AND status != 'FAILED' AND rowid > ?
-            ORDER BY created_at ASC
+            ORDER BY rowid ASC
             LIMIT \(InitializeFTSJob.insertionLimit)
         )
     """

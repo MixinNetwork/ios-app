@@ -325,8 +325,14 @@ public final class UserDatabase: Database {
             try db.execute(sql: lastMessageUpdate)
         }
         
-        migrator.registerMigration("fts5_v3") { (db) in
+        migrator.registerMigration("fts5_v3_2") { (db) in
             try db.execute(sql: "DROP TABLE IF EXISTS messages_fts")
+            if !AppGroupUserDefaults.Database.isFTSInitialized {
+                // We found a new way to intialize FTS content with better performance
+                // It does not affect fts5_v3 table which is completely intialized
+                // Only drop the table for uncompleted ones
+                try db.execute(sql: "DROP TABLE IF EXISTS \(Message.ftsTableName)")
+            }
             try db.create(virtualTable: Message.ftsTableName, ifNotExists: true, using: FTS5()) { t in
                 t.tokenizer = MixinTokenizer.tokenizerDescriptor()
                 t.column(Message.column(of: .conversationId).name)

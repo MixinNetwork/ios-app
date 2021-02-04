@@ -135,6 +135,7 @@ class HomeViewController: UIViewController {
             if AppGroupUserDefaults.User.hasRecoverMedia {
                 ConcurrentJobQueue.shared.addJob(job: RecoverMediaJob())
             }
+            initializeFTSIfNeeded()
         }
         UIApplication.homeContainerViewController?.clipSwitcher.loadClipsFromPreviousSession()
     }
@@ -250,6 +251,7 @@ class HomeViewController: UIViewController {
     @objc func applicationDidBecomeActive(_ sender: Notification) {
         updateBulletinView()
         fetchConversations()
+        initializeFTSIfNeeded()
     }
     
     @objc func dataDidChange(_ sender: Notification) {
@@ -524,6 +526,13 @@ extension HomeViewController: UIScrollViewDelegate {
 }
 
 extension HomeViewController {
+    
+    private func initializeFTSIfNeeded() {
+        guard !AppGroupUserDefaults.Database.isFTSInitialized else {
+            return
+        }
+        ConcurrentJobQueue.shared.addJob(job: InitializeFTSJob())
+    }
     
     private func checkServerStatus() {
         guard LoginManager.shared.isLoggedIn else {

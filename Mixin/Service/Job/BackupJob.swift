@@ -229,7 +229,8 @@ class BackupJob: BaseJob {
         try? UserDatabase.current.pool.write({ (db) -> Void in
             try db.checkpoint(.full, on: nil)
         })
-        if -AppGroupUserDefaults.Database.vacuumDate.timeIntervalSinceNow >= 86400 * 14 {
+        
+        if AppGroupUserDefaults.Database.isFTSInitialized && -AppGroupUserDefaults.Database.vacuumDate.timeIntervalSinceNow >= 86400 * 14 {
             AppGroupUserDefaults.Database.vacuumDate = Date()
             try? UserDatabase.current.pool.vacuum()
         }

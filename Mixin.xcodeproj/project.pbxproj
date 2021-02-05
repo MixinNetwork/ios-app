@@ -442,8 +442,6 @@
 		7BC8503020CBA69B00A57B83 /* MXMOggOpusReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC8502320CBA69900A57B83 /* MXMOggOpusReader.m */; };
 		7BC8503120CBA69B00A57B83 /* MXMOggOpusError.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC8502420CBA69900A57B83 /* MXMOggOpusError.m */; };
 		7BC8503220CBA69B00A57B83 /* MXMOggOpusWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC8502620CBA69900A57B83 /* MXMOggOpusWriter.m */; };
-		7BC8503320CBA69B00A57B83 /* MXMAudioMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC8502A20CBA69A00A57B83 /* MXMAudioMetadata.m */; };
-		7BC8503520CBA69B00A57B83 /* MXMAudioRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC8502D20CBA69A00A57B83 /* MXMAudioRecorder.m */; };
 		7BC96DE324176B390047471D /* FoursquareAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC96DE224176B390047471D /* FoursquareAPI.swift */; };
 		7BC96DE5241779F70047471D /* ExternalApiError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC96DE4241779F70047471D /* ExternalApiError.swift */; };
 		7BC98FA721EF5B8C004A5D79 /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC98FA621EF5B8C004A5D79 /* AudioManager.swift */; };
@@ -582,6 +580,8 @@
 		84A10E9A256B6416006AC741 /* TickerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A10E99256B6416006AC741 /* TickerResponse.swift */; };
 		94095BB725BE8BC100F44832 /* TextPreviewView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94095BB625BE8BC100F44832 /* TextPreviewView.xib */; };
 		94095BBC25BE8DCF00F44832 /* TextPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94095BBB25BE8DCF00F44832 /* TextPreviewView.swift */; };
+		9416548325CD2D9A007E76D0 /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9416548225CD2D9A007E76D0 /* AudioRecorder.swift */; };
+		9416548B25CD7190007E76D0 /* AudioMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9416548A25CD7190007E76D0 /* AudioMetadata.swift */; };
 		9419374D25DFF3EE00F81A9C /* GroupIconSaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9419374C25DFF3EE00F81A9C /* GroupIconSaver.swift */; };
 		9424C6432592469500FFDAE0 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9424C6422592469500FFDAE0 /* Application.swift */; };
 		9424C64B259246B600FFDAE0 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9424C64A259246B600FFDAE0 /* main.swift */; };
@@ -1350,10 +1350,6 @@
 		7BC8502520CBA69900A57B83 /* MXMOggOpusWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXMOggOpusWriter.h; sourceTree = "<group>"; };
 		7BC8502620CBA69900A57B83 /* MXMOggOpusWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MXMOggOpusWriter.m; sourceTree = "<group>"; };
 		7BC8502720CBA69A00A57B83 /* MXMOggOpusReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXMOggOpusReader.h; sourceTree = "<group>"; };
-		7BC8502920CBA69A00A57B83 /* MXMAudioRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXMAudioRecorder.h; sourceTree = "<group>"; };
-		7BC8502A20CBA69A00A57B83 /* MXMAudioMetadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MXMAudioMetadata.m; sourceTree = "<group>"; };
-		7BC8502C20CBA69A00A57B83 /* MXMAudioMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXMAudioMetadata.h; sourceTree = "<group>"; };
-		7BC8502D20CBA69A00A57B83 /* MXMAudioRecorder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MXMAudioRecorder.m; sourceTree = "<group>"; };
 		7BC8502F20CBA69B00A57B83 /* MXMOggOpusError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXMOggOpusError.h; sourceTree = "<group>"; };
 		7BC96DE224176B390047471D /* FoursquareAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoursquareAPI.swift; sourceTree = "<group>"; };
 		7BC96DE4241779F70047471D /* ExternalApiError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalApiError.swift; sourceTree = "<group>"; };
@@ -1502,6 +1498,8 @@
 		8C43D9D96FCB101481DFD90F /* Pods-Mixin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mixin.release.xcconfig"; path = "Pods/Target Support Files/Pods-Mixin/Pods-Mixin.release.xcconfig"; sourceTree = "<group>"; };
 		94095BB625BE8BC100F44832 /* TextPreviewView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TextPreviewView.xib; sourceTree = "<group>"; };
 		94095BBB25BE8DCF00F44832 /* TextPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextPreviewView.swift; sourceTree = "<group>"; };
+		9416548225CD2D9A007E76D0 /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
+		9416548A25CD7190007E76D0 /* AudioMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioMetadata.swift; sourceTree = "<group>"; };
 		9419374C25DFF3EE00F81A9C /* GroupIconSaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupIconSaver.swift; sourceTree = "<group>"; };
 		9424C6422592469500FFDAE0 /* Application.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
 		9424C64A259246B600FFDAE0 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
@@ -2334,10 +2332,8 @@
 				7BC8502620CBA69900A57B83 /* MXMOggOpusWriter.m */,
 				7BC8502720CBA69A00A57B83 /* MXMOggOpusReader.h */,
 				7BC8502320CBA69900A57B83 /* MXMOggOpusReader.m */,
-				7BC8502C20CBA69A00A57B83 /* MXMAudioMetadata.h */,
-				7BC8502A20CBA69A00A57B83 /* MXMAudioMetadata.m */,
-				7BC8502920CBA69A00A57B83 /* MXMAudioRecorder.h */,
-				7BC8502D20CBA69A00A57B83 /* MXMAudioRecorder.m */,
+				9416548A25CD7190007E76D0 /* AudioMetadata.swift */,
+				9416548225CD2D9A007E76D0 /* AudioRecorder.swift */,
 				7B21782022C4E70B00C08106 /* AudioPlayer.swift */,
 				7B7DACA523505793006AA2AC /* AudioCell.swift */,
 				7BC98FA621EF5B8C004A5D79 /* AudioManager.swift */,
@@ -4089,7 +4085,6 @@
 				7BB78728245136850057B4ED /* SettingsRadioSection.swift in Sources */,
 				7BEEC0101FDEA0C500514A48 /* SystemMessageCell.swift in Sources */,
 				7BA1F8AB221ED35200DBFCE2 /* Hud.swift in Sources */,
-				7BC8503520CBA69B00A57B83 /* MXMAudioRecorder.m in Sources */,
 				DF06D925222FAEC900FE7FBC /* CALayerExtension.swift in Sources */,
 				DF0BD35323A8D4B200B44CF6 /* DynamicTextSizeExtension.swift in Sources */,
 				7B04FABA22684F51004F8F04 /* SearchResult.swift in Sources */,
@@ -4127,7 +4122,6 @@
 				7BBAE9DA244ADB3800CC8670 /* AssetQrCodeScanningController.swift in Sources */,
 				DFA063D222B0D0E80031E151 /* PrivacyViewController.swift in Sources */,
 				7BEFDC191FB05B3E00F66885 /* NewGroupViewController.swift in Sources */,
-				7BC8503320CBA69B00A57B83 /* MXMAudioMetadata.m in Sources */,
 				DF06D91F222FAE1400FE7FBC /* TransferOutViewController.swift in Sources */,
 				7B595353226736BD00D59DB4 /* SearchHeaderView.swift in Sources */,
 				DFBADC121FD1211E00722929 /* AboutViewController.swift in Sources */,
@@ -4478,6 +4472,7 @@
 				7B8ED47C21197F220039946B /* RecentStickersViewController.swift in Sources */,
 				7BDD4450233766CB00A0491D /* TableHeaderBypassTableView.swift in Sources */,
 				7BF5EE4F2497A55700DDD9CC /* GroupCallMemberPickerViewController.swift in Sources */,
+				9416548B25CD7190007E76D0 /* AudioMetadata.swift in Sources */,
 				7BDBDE6522361D85006220DF /* SeparatorShadowFooterView.swift in Sources */,
 				DF9E66E5205B9AF300F1A0B9 /* HiddenAssetViewController.swift in Sources */,
 				7B5E9B4E2437503A000AE24E /* CircleConversationRequest.swift in Sources */,
@@ -4607,6 +4602,7 @@
 				7BA1F8CD221FDABF00DBFCE2 /* RoundedButton.swift in Sources */,
 				7B8ECAE8250F6BE8006F0479 /* ExternalSharingContext.swift in Sources */,
 				7B6B07E824A88B7A001781F3 /* GroupCallMemberDataSource.swift in Sources */,
+				9416548325CD2D9A007E76D0 /* AudioRecorder.swift in Sources */,
 				7BDC2DE222F315480098AB81 /* GalleryActivityIndicatorView.swift in Sources */,
 				7B082D18242CA19F00C5E163 /* MultipleSelectionIntent.swift in Sources */,
 				DF03C88D1FF4D9A100C1ED6B /* RefreshGroupIconJob.swift in Sources */,

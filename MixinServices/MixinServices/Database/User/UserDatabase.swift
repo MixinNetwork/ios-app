@@ -357,8 +357,10 @@ extension UserDatabase {
         current.migrate()
     }
     
-    internal static func closeCurrent() {
-        current = nil
+    public static func closeCurrent() {
+        autoreleasepool {
+            current = nil
+        }
     }
     
     private static func loadCurrent() -> UserDatabase {

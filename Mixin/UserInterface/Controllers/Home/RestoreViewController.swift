@@ -67,6 +67,7 @@ class RestoreViewController: UIViewController {
                     Logger.write(log: "[iCloud][RestoreViewController][\(cloudURL.suffix(base: backupDir))]...isDownloaded:false")
                 }
                 if FileManager.default.fileExists(atPath: localURL.path) {
+                    UserDatabase.closeCurrent()
                     try FileManager.default.removeItem(at: localURL)
                 }
                 try FileManager.default.copyItem(at: cloudURL, to: localURL)
@@ -78,6 +79,7 @@ class RestoreViewController: UIViewController {
                 AppGroupUserDefaults.User.needsRebuildDatabase = true
                 AppGroupUserDefaults.User.isCircleSynchronized = false
                 
+                UserDatabase.reloadCurrent()
                 DispatchQueue.main.async {
                     AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
                 }

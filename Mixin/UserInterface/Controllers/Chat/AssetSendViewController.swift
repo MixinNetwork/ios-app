@@ -89,11 +89,18 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
     }
     
     @IBAction func playAction(_ sender: Any) {
-        AudioManager.shared.pause()
         if seekToZero {
             seekToZero = false
             videoView.seek(to: .zero)
         }
+        let mute: Bool
+        do {
+            try AudioSession.shared.activate(client: self)
+            mute = false
+        } catch {
+            mute = true
+        }
+        videoView.player.isMuted = mute
         videoView.play()
     }
     
@@ -233,6 +240,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
     }
     
     @IBAction func closeAction(_ sender: Any) {
+        try? AudioSession.shared.deactivate(client: self, notifyOthersOnDeactivation: true)
         navigationController?.popViewController(animated: true)
     }
 
@@ -322,7 +330,9 @@ extension AssetSendViewController {
 
     @objc func playerItemDidReachEnd(_ notification: Notification) {
         seekToZero = true
+        try? AudioSession.shared.deactivate(client: self, notifyOthersOnDeactivation: true)
     }
+    
 }
 
 extension AssetSendViewController: NotificationControllerDelegate {
@@ -334,6 +344,18 @@ extension AssetSendViewController: NotificationControllerDelegate {
         if !UrlWindow.checkUrl(url: url) {
             RecognizeWindow.instance().presentWindow(text: string)
         }
+    }
+    
+}
+
+extension AssetSendViewController: AudioSessionClient {
+    
+    var priority: AudioSessionClientPriority {
+        .playback
+    }
+    
+    func audioSessionDidBeganInterruption(_ audioSession: AudioSession) {
+        videoView.pause()
     }
     
 }

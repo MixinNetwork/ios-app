@@ -48,7 +48,6 @@ extension MixinCallInterface: CallInterface {
                 return
             }
             if playOutgoingRingtone {
-                try? AVAudioSession.sharedInstance().setActive(true, options: [])
                 self.service.ringtonePlayer.play(ringtone: .outgoing)
             }
         })

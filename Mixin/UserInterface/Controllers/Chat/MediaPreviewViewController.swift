@@ -87,29 +87,14 @@ final class MediaPreviewViewController: UIViewController {
         guard let asset = self.asset else {
             return
         }
-        AudioManager.shared.pause()
-        playButton.isHidden = true
-        if let player = playerView?.layer.player {
-            if seekToZeroBeforePlay {
-                player.seek(to: .zero)
-                seekToZeroBeforePlay = false
-            }
-            player.rate = 1
-        } else {
-            lastRequestId = PHImageManager.default().requestPlayerItem(forVideo: asset, options: offlineVideoRequestOptions) { [weak self] (item, info) in
-                let isCancelled = info?[PHImageCancelledKey] as? Bool ?? false
-                guard !isCancelled else {
-                    return
-                }
-                DispatchQueue.main.async {
-                    if let item = item {
-                        self?.play(item: item)
-                    } else {
-                        self?.requestRemoteVideoAssetAndPlay(asset: asset)
-                    }
-                }
-            }
+        let mute: Bool
+        do {
+            try AudioSession.shared.activate(client: self)
+            mute = false
+        } catch {
+            mute = true
         }
+        requestAndPlay(asset: asset, mute: mute)
     }
     
     @IBAction func pauseAction(_ sender: Any) {
@@ -124,6 +109,7 @@ final class MediaPreviewViewController: UIViewController {
     }
     
     @IBAction func dismissAction(_ sender: Any) {
+        try? AudioSession.shared.deactivate(client: self, notifyOthersOnDeactivation: true)
         dismiss(animated: true, completion: nil)
     }
     
@@ -161,12 +147,55 @@ final class MediaPreviewViewController: UIViewController {
     }
     
     @objc private func playerItemDidPlayToEndTime() {
+        try? AudioSession.shared.deactivate(client: self, notifyOthersOnDeactivation: true)
         DispatchQueue.main.async {
             self.seekToZeroBeforePlay = true
         }
     }
     
-    private func requestRemoteVideoAssetAndPlay(asset: PHAsset) {
+}
+
+extension MediaPreviewViewController: AudioSessionClient {
+    
+    var priority: AudioSessionClientPriority {
+        .playback
+    }
+    
+    func audioSessionDidBeganInterruption(_ audioSession: AudioSession) {
+        pauseAction(audioSession)
+    }
+    
+}
+
+extension MediaPreviewViewController {
+    
+    private func requestAndPlay(asset: PHAsset, mute: Bool) {
+        playButton.isHidden = true
+        if let player = playerView?.layer.player {
+            if seekToZeroBeforePlay {
+                player.seek(to: .zero)
+                seekToZeroBeforePlay = false
+            }
+            player.isMuted = mute
+            player.rate = 1
+        } else {
+            lastRequestId = PHImageManager.default().requestPlayerItem(forVideo: asset, options: offlineVideoRequestOptions) { [weak self] (item, info) in
+                let isCancelled = info?[PHImageCancelledKey] as? Bool ?? false
+                guard !isCancelled else {
+                    return
+                }
+                DispatchQueue.main.async {
+                    if let item = item {
+                        self?.play(item: item, mute: mute)
+                    } else {
+                        self?.requestRemoteVideoAssetAndPlay(asset: asset, mute: mute)
+                    }
+                }
+            }
+        }
+    }
+    
+    private func requestRemoteVideoAssetAndPlay(asset: PHAsset, mute: Bool) {
         activityIndicator.startAnimating()
         lastRequestId = PHImageManager.default().requestPlayerItem(forVideo: asset, options: onlineVideoRequestOptions) { [weak self] (item, info) in
             let isCancelled = info?[PHImageCancelledKey] as? Bool ?? false
@@ -174,12 +203,12 @@ final class MediaPreviewViewController: UIViewController {
                 return
             }
             DispatchQueue.main.async {
-                self?.play(item: item)
+                self?.play(item: item, mute: mute)
             }
         }
     }
     
-    private func play(item: AVPlayerItem) {
+    private func play(item: AVPlayerItem, mute: Bool) {
         let playerView = PlayerView(frame: contentView.bounds)
         playerView.backgroundColor = .clear
         contentView.insertSubview(playerView, aboveSubview: imageView)
@@ -189,6 +218,7 @@ final class MediaPreviewViewController: UIViewController {
         self.playerView = playerView
 
         let player = AVPlayer(playerItem: item)
+        player.isMuted = mute
         playerView.layer.player = player
         playerObservation?.invalidate()
         playerObservation = player.observe(\.timeControlStatus) { [weak self] (player, change) in

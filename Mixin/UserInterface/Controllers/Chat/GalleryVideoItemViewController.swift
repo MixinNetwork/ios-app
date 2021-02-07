@@ -80,6 +80,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
             if isPlayable {
                 updateControlView(playControlsHidden: false, otherControlsHidden: true, animated: false)
             }
+            try? AudioSession.shared.deactivate(client: self, notifyOthersOnDeactivation: false)
         }
     }
     
@@ -298,13 +299,19 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         playerDidFailedToPlay = false
         updateControlView(playControlsHidden: true, otherControlsHidden: true, animated: false)
         if item.category == .video || player.currentItem != nil {
-            AudioManager.shared.pause()
+            let mute: Bool
+            do {
+                try AudioSession.shared.activate(client: self)
+                mute = false
+            } catch {
+                mute = true
+            }
+            player.isMuted = mute
+            addTimeObservers()
             if playerDidReachEnd {
                 playerDidReachEnd = false
                 player.seek(to: .zero)
             }
-            addTimeObservers()
-            try? AVAudioSession.sharedInstance().setCategory(.playback)
             player.play()
         } else if let url = item.url {
             controlView.style.insert(.loading)
@@ -348,6 +355,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         }
         updateControlView(playControlsHidden: false, otherControlsHidden: false, animated: true)
         removeTimeObservers()
+        try? AudioSession.shared.deactivate(client: self, notifyOthersOnDeactivation: true)
     }
     
     @objc func playerItemFailedToPlayToEndTime(_ notification: Notification) {
@@ -356,6 +364,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         controlView.style.remove(.loading)
         updateControlView(playControlsHidden: false, otherControlsHidden: false, animated: true)
         removeTimeObservers()
+        try? AudioSession.shared.deactivate(client: self, notifyOthersOnDeactivation: true)
     }
     
     @objc func beginScrubbingAction(_ sender: Any) {
@@ -474,6 +483,19 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     
 }
 
+extension GalleryVideoItemViewController: AudioSessionClient {
+    
+    var priority: AudioSessionClientPriority {
+        .playback
+    }
+    
+    func audioSessionDidBeganInterruption(_ audioSession: AudioSession) {
+        pauseAction(audioSession)
+        controlView.set(playControlsHidden: false, otherControlsHidden: false, animated: true)
+    }
+    
+}
+
 extension GalleryVideoItemViewController {
     
     private func updateViewShadowOpacity(to opacity: Float) {
@@ -569,8 +591,14 @@ extension GalleryVideoItemViewController {
         
         player.replaceCurrentItem(with: item)
         if playAfterLoaded {
-            AudioManager.shared.pause()
-            try? AVAudioSession.sharedInstance().setCategory(.playback)
+            let mute: Bool
+            do {
+                try AudioSession.shared.activate(client: self)
+                mute = false
+            } catch {
+                mute = true
+            }
+            player.isMuted = mute
             player.play()
         }
     }

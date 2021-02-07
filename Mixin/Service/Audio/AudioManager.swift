@@ -36,11 +36,6 @@ class AudioManager: NSObject {
             return
         }
         
-        if let controller = UIApplication.homeContainerViewController?.pipController {
-            controller.pauseAction(self)
-            controller.controlView.set(playControlsHidden: false, otherControlsHidden: false, animated: true)
-        }
-        
         let shouldUpdateMediaStatus = message.mediaStatus != MediaStatus.READ.rawValue && message.userId != myUserId
         cells[message.messageId]?.cell?.style = .playing
         
@@ -51,11 +46,11 @@ class AudioManager: NSObject {
             }
         }
         
-        func resetAudioSession() {
+        func activateAudioSession() {
             do {
-                let session = AVAudioSession.sharedInstance()
-                try session.setCategory(.playback, mode: .default, options: [])
-                try session.setActive(true, options: [])
+                try AudioSession.shared.activate(client: self) { (session) in
+                    try session.setCategory(.playback, mode: .default, options: [])
+                }
             } catch {
                 handle(error: error)
             }
@@ -63,7 +58,7 @@ class AudioManager: NSObject {
         
         if message.messageId == playingMessage?.messageId, let player = player {
             queue.async {
-                resetAudioSession()
+                activateAudioSession()
                 DispatchQueue.main.sync(execute: player.play)
             }
             return
@@ -86,27 +81,8 @@ class AudioManager: NSObject {
                                                     conversationId: message.conversationId)
             }
             
-            resetAudioSession()
-            
-            let center = NotificationCenter.default
-            center.addObserver(self,
-                               selector: #selector(AudioManager.audioSessionInterruption(_:)),
-                               name: AVAudioSession.interruptionNotification,
-                               object: nil)
-            center.addObserver(self,
-                               selector: #selector(AudioManager.audioSessionRouteChange(_:)),
-                               name: AVAudioSession.routeChangeNotification,
-                               object: nil)
-            center.addObserver(self,
-                               selector: #selector(AudioManager.audioSessionMediaServicesWereReset(_:)),
-                               name: AVAudioSession.mediaServicesWereResetNotification,
-                               object: nil)
-            center.addObserver(self,
-                               selector: #selector(AudioManager.pause),
-                               name: CallService.willStartCallNotification,
-                               object: nil)
+            activateAudioSession()
             let path = AttachmentContainer.url(for: .audios, filename: mediaUrl).path
-            
             DispatchQueue.main.sync {
                 guard self.playingMessage?.messageId == message.messageId else {
                     return
@@ -147,8 +123,7 @@ class AudioManager: NSObject {
             self.playingMessage = nil
         }
         player.stop()
-        NotificationCenter.default.removeObserver(self)
-        try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        try? AudioSession.shared.deactivate(client: self, notifyOthersOnDeactivation: true)
     }
     
     func register(cell: AudioCell, forMessageId messageId: String) {
@@ -205,51 +180,6 @@ class AudioManager: NSObject {
         stop()
     }
     
-    @objc func audioSessionInterruption(_ notification: Notification) {
-        guard let value = notification.userInfo?[AVAudioSessionInterruptionTypeKey] as? UInt, let type = AVAudioSession.InterruptionType(rawValue: value) else {
-            return
-        }
-        if type == .began {
-            DispatchQueue.main.async(execute: pause)
-        }
-    }
-    
-    @objc func audioSessionRouteChange(_ notification: Notification) {
-        func pause() {
-            DispatchQueue.main.async(execute: self.pause)
-        }
-        let previousOutput = (notification.userInfo?[AVAudioSessionRouteChangePreviousRouteKey] as? AVAudioSessionRouteDescription)?.outputs.first
-        let output = AVAudioSession.sharedInstance().currentRoute.outputs.first
-        if previousOutput?.portType == .headphones, output?.portType != .headphones {
-            pause()
-            return
-        }
-        guard let value = notification.userInfo?[AVAudioSessionRouteChangeReasonKey] as? AVAudioSession.RouteChangeReason.RawValue, let reason = AVAudioSession.RouteChangeReason(rawValue: value) else {
-            return
-        }
-        switch reason {
-        case .override, .newDeviceAvailable, .routeConfigurationChange:
-            break
-        case .categoryChange:
-            let newCategory = AVAudioSession.sharedInstance().category
-            let canContinue = newCategory == .playback || newCategory == .playAndRecord
-            if !canContinue {
-                pause()
-            }
-        case .unknown, .oldDeviceUnavailable, .wakeFromSleep, .noSuitableRouteForCategory:
-            pause()
-        @unknown default:
-            pause()
-        }
-    }
-    
-    @objc func audioSessionMediaServicesWereReset(_ notification: Notification) {
-        DispatchQueue.main.async {
-            self.player?.dispose()
-            self.player = nil
-        }
-    }
-    
     func handleStatusChange(player: AudioPlayer) {
         UIApplication.shared.isIdleTimerDisabled = player.status == .playing
         if player.status == .didReachEnd, let playingMessage = playingMessage {
@@ -265,11 +195,52 @@ class AudioManager: NSObject {
                 } else {
                     DispatchQueue.main.sync {
                         self.playingMessage = nil
-                        NotificationCenter.default.removeObserver(self)
                     }
-                    try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+                    try? AudioSession.shared.deactivate(client: self, notifyOthersOnDeactivation: true)
                 }
             }
+        }
+    }
+    
+}
+
+extension AudioManager: AudioSessionClient {
+    
+    var priority: AudioSessionClientPriority {
+        .playback
+    }
+    
+    func audioSessionDidBeganInterruption(_ audioSession: AudioSession) {
+        pause()
+    }
+    
+    func audioSession(_ audioSession: AudioSession, didChangeRouteFrom previousRoute: AVAudioSessionRouteDescription, reason: AVAudioSession.RouteChangeReason) {
+        let previousOutput = previousRoute.outputs.first
+        let output = audioSession.avAudioSession.currentRoute.outputs.first
+        if previousOutput?.portType == .headphones, output?.portType != .headphones {
+            DispatchQueue.main.async(execute: pause)
+            return
+        }
+        switch reason {
+        case .override, .newDeviceAvailable, .routeConfigurationChange:
+            break
+        case .categoryChange:
+            let newCategory = audioSession.avAudioSession.category
+            let canContinue = newCategory == .playback || newCategory == .playAndRecord
+            if !canContinue {
+                DispatchQueue.main.async(execute: pause)
+            }
+        case .unknown, .oldDeviceUnavailable, .wakeFromSleep, .noSuitableRouteForCategory:
+            DispatchQueue.main.async(execute: pause)
+        @unknown default:
+            DispatchQueue.main.async(execute: pause)
+        }
+    }
+    
+    func audioSessionMediaServicesWereReset(_ audioSession: AudioSession) {
+        DispatchQueue.main.async {
+            self.player?.dispose()
+            self.player = nil
         }
     }
     

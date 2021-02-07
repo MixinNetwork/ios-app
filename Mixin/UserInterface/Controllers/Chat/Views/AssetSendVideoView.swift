@@ -38,40 +38,13 @@ class AssetSendVideoView: UIView {
     func loadVideo(asset: AVAsset, thumbnail: UIImage?) {
         let item = AVPlayerItem(asset: asset)
         if item.asset.statusOfValue(forKey: playableKey, error: nil) == .loaded {
-            loadItem(item, playAfterLoaded: false, thumbnail: thumbnail)
+            loadItem(item, thumbnail: thumbnail)
         } else {
             item.asset.loadValuesAsynchronously(forKeys: [playableKey], completionHandler: {
                 DispatchQueue.main.async {
-                    self.loadItem(item, playAfterLoaded: false, thumbnail: thumbnail)
+                    self.loadItem(item, thumbnail: thumbnail)
                 }
             })
-        }
-    }
-    
-    func loadVideo(url: URL, playAfterLoaded: Bool, thumbnail: UIImage?) {
-        if url != self.url {
-            self.url = url
-            let item = AVPlayerItem(url: url)
-            if item.asset.statusOfValue(forKey: playableKey, error: nil) == .loaded {
-                loadItem(item, playAfterLoaded: playAfterLoaded, thumbnail: thumbnail)
-            } else {
-                item.asset.loadValuesAsynchronously(forKeys: [playableKey], completionHandler: {
-                    guard url == self.url else {
-                        return
-                    }
-                    DispatchQueue.main.async {
-                        guard url == self.url else {
-                            return
-                        }
-                        self.loadItem(item, playAfterLoaded: playAfterLoaded, thumbnail: thumbnail)
-                    }
-                })
-            }
-        } else {
-            if playAfterLoaded, player.timeControlStatus != .playing, let item = player.currentItem, item.asset.isPlayable {
-                AudioManager.shared.pause()
-                player.play()
-            }
         }
     }
     
@@ -82,16 +55,12 @@ class AssetSendVideoView: UIView {
         addSubview(unplayableHintImageView)
     }
     
-    private func loadItem(_ item: AVPlayerItem, playAfterLoaded: Bool, thumbnail: UIImage?) {
+    private func loadItem(_ item: AVPlayerItem, thumbnail: UIImage?) {
         let isPlayable = item.asset.isPlayable
         unplayableHintImageView.isHidden = isPlayable
         thumbnailImageView.isHidden = isPlayable
         if isPlayable {
             player.replaceCurrentItem(with: item)
-            if playAfterLoaded {
-                AudioManager.shared.pause()
-                player.play()
-            }
         } else {
             thumbnailImageView.image = thumbnail
         }
@@ -108,7 +77,6 @@ class AssetSendVideoView: UIView {
         guard player.currentItem != nil, player.status == .readyToPlay else {
             return
         }
-        AudioManager.shared.pause()
         player.play()
     }
     

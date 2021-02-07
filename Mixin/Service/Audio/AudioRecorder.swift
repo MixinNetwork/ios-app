@@ -67,8 +67,7 @@ final class AudioRecorder {
     }
     
     func record(for duration: TimeInterval) {
-        let audioSession = AVAudioSession.sharedInstance()
-        if audioSession.secondaryAudioShouldBeSilencedHint {
+        if AVAudioSession.sharedInstance().secondaryAudioShouldBeSilencedHint {
             DispatchQueue.main.async {
                 self.delegate?.audioRecorderIsWaitingForActivation(self)
             }
@@ -78,12 +77,13 @@ final class AudioRecorder {
                 return
             }
             do {
-                try audioSession.setCategory(.playAndRecord,
-                                             mode: .default,
-                                             options: [.allowBluetooth])
-                try audioSession.setActive(true, options: [])
-                if self.vibratesAtBeginning {
-                    AudioServicesPlaySystemSound(1519);
+                try AudioSession.shared.activate(client: self) { (session) in
+                    try session.setCategory(.playAndRecord,
+                                            mode: .default,
+                                            options: [.allowBluetooth])
+                    if #available(iOS 13.0, *) {
+                        try session.setAllowHapticsAndSystemSoundsDuringRecording(true)
+                    }
                 }
             } catch {
                 DispatchQueue.main.async {
@@ -92,19 +92,9 @@ final class AudioRecorder {
                 return
             }
             
-            let center = NotificationCenter.default
-            center.addObserver(self,
-                               selector: #selector(Self.audioSessionInterruption(_:)),
-                               name: AVAudioSession.interruptionNotification,
-                               object: nil)
-            center.addObserver(self,
-                               selector: #selector(Self.audioSessionRouteChange(_:)),
-                               name: AVAudioSession.routeChangeNotification,
-                               object: nil)
-            center.addObserver(self,
-                               selector: #selector(Self.audioSessionMediaServicesWereReset(_:)),
-                               name: AVAudioSession.mediaServicesWereResetNotification,
-                               object: nil)
+            if self.vibratesAtBeginning {
+                AudioServicesPlaySystemSound(1519);
+            }
             do {
                 self.duration = duration
                 try self.performRecording()
@@ -112,7 +102,7 @@ final class AudioRecorder {
                     self.delegate?.audioRecorderDidStartRecording(self)
                 }
             } catch {
-                self.deactivateAudioSessionAndRemoveObservers()
+                try? AudioSession.shared.deactivate(client: self, notifyOthersOnDeactivation: true)
                 DispatchQueue.main.async {
                     self.delegate?.audioRecorder(self, didFailRecordingWithError: error)
                 }
@@ -148,37 +138,6 @@ final class AudioRecorder {
         }
     }
     
-}
-
-extension AudioRecorder {
-    
-    @objc private func audioSessionInterruption(_ notification: Notification) {
-        guard let type = notification.userInfo?[AVAudioSessionInterruptionTypeKey] as? NSNumber else {
-            return
-        }
-        if type.uintValue == AVAudioSession.InterruptionType.began.rawValue {
-            cancel(for: .audioSessionInterrupted)
-        } else if type.uintValue == AVAudioSession.InterruptionType.ended.rawValue {
-            delegate?.audioRecorderDidDetectAudioSessionInterruptionEnd(self)
-        }
-    }
-    
-    @objc private func audioSessionRouteChange(_ notification: Notification) {
-        let category = AVAudioSession.sharedInstance().category
-        let isCategoryAvailable = category == .record || category == .playAndRecord
-        let hasInput = !AVAudioSession.sharedInstance().currentRoute.inputs.isEmpty
-        if !hasInput || !isCategoryAvailable {
-            cancel(for: .audioRouteChange)
-        }
-    }
-    
-    @objc private func audioSessionMediaServicesWereReset(_ notification: Notification) {
-        isRecording = false
-        DispatchQueue.main.async {
-            self.delegate?.audioRecorder(self, didFailRecordingWithError: Error.mediaServiceWereReset)
-        }
-    }
-    
     fileprivate func processWaveformSamples(with pcmData: Data) {
         let numberOfSamples = pcmData.count / 2
         guard numberOfSamples > 0 else {
@@ -199,6 +158,38 @@ extension AudioRecorder {
                     waveformPeakCount = 0
                 }
             }
+        }
+    }
+    
+}
+
+extension AudioRecorder: AudioSessionClient {
+    
+    var priority: AudioSessionClientPriority {
+        .audioRecord
+    }
+    
+    func audioSessionDidBeganInterruption(_ audioSession: AudioSession) {
+        cancel(for: .audioSessionInterrupted)
+    }
+    
+    func audioSessionDidEndInterruption(_ audioSession: AudioSession) {
+        delegate?.audioRecorderDidDetectAudioSessionInterruptionEnd(self)
+    }
+ 
+    func audioSession(_ audioSession: AudioSession, didChangeRouteFrom previousRoute: AVAudioSessionRouteDescription, reason: AVAudioSession.RouteChangeReason) {
+        let category = audioSession.avAudioSession.category
+        let isCategoryAvailable = category == .record || category == .playAndRecord
+        let hasInput = !audioSession.avAudioSession.currentRoute.inputs.isEmpty
+        if !hasInput || !isCategoryAvailable {
+            cancel(for: .audioRouteChange)
+        }
+    }
+    
+    func audioSessionMediaServicesWereReset(_ audioSession: AudioSession) {
+        isRecording = false
+        DispatchQueue.main.async {
+            self.delegate?.audioRecorder(self, didFailRecordingWithError: Error.mediaServiceWereReset)
         }
     }
     
@@ -314,11 +305,6 @@ extension AudioRecorder {
         return Data(bytesNoCopy: intensities, count: numberOfWaveformIntensities, deallocator: .free)
     }
     
-    private func deactivateAudioSessionAndRemoveObservers() {
-        try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
-        NotificationCenter.default.removeObserver(self)
-    }
-    
     private func cleanUp() {
         isRecording = false
         timer?.invalidate()
@@ -328,7 +314,7 @@ extension AudioRecorder {
             AudioQueueDispose(audioQueue, true)
         }
         writer.close()
-        deactivateAudioSessionAndRemoveObservers()
+        try? AudioSession.shared.deactivate(client: self, notifyOthersOnDeactivation: true)
     }
     
 }

@@ -1109,20 +1109,7 @@ class ConversationViewController: UIViewController {
         guard let ownerUser = dataSource.ownerUser else {
             return
         }
-        let conversationId = dataSource.conversationId
-        let service = CallService.shared
-        service.queue.async {
-            let activeCall = service.activeCall
-            DispatchQueue.main.sync {
-                if service.isMinimized, activeCall?.conversationId == conversationId {
-                    service.setInterfaceMinimized(false, animated: true)
-                } else if activeCall != nil {
-                    service.alert(error: CallError.busy)
-                } else {
-                    service.requestStartPeerToPeerCall(remoteUser: ownerUser)
-                }
-            }
-        }
+        CallService.shared.requestStartPeerToPeerCall(remoteUser: ownerUser)
     }
     
     func pickPhotoOrVideoAction() {

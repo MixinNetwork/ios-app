@@ -76,6 +76,7 @@ class WalletSearchResultsViewController: WalletSearchTableViewController {
             
             let localItems = AssetDAO.shared
                 .getAssets(keyword: keyword, sortResult: false, limit: nil)
+                .filter{ $0.balance.doubleValue > 0 }
                 .sorted(by: assetSorting)
             guard !op.isCancelled else {
                 return

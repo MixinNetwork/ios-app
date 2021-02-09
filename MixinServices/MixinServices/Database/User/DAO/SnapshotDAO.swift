@@ -69,9 +69,28 @@ public final class SnapshotDAO: UserDatabaseDAO {
     
     @discardableResult
     public func replacePendingDeposits(assetId: String, pendingDeposits: [PendingDeposit], snapshotId: String? = nil) -> SnapshotItem? {
+        guard !pendingDeposits.isEmpty else {
+            return nil
+        }
         var snapshotItem: SnapshotItem?
-        let snapshots = pendingDeposits.map({ $0.makeSnapshot(assetId: assetId )})
+        let hashList = pendingDeposits.map{ $0.transactionHash }
+        
         db.write { (db) in
+            let request = Snapshot
+                .select(Snapshot.column(of: .transactionHash))
+                .filter(Snapshot.column(of: .assetId) == assetId
+                            && Snapshot.column(of: .type) == SnapshotType.deposit.rawValue
+                            && hashList.contains(Snapshot.column(of: .transactionHash)))
+            let transactionHashList = try String.fetchAll(db, request)
+            let snapshots: [Snapshot]
+            if transactionHashList.isEmpty {
+                snapshots = pendingDeposits.map{ $0.makeSnapshot(assetId: assetId )}
+            } else {
+                snapshots = pendingDeposits
+                    .filter { !transactionHashList.contains($0.transactionHash) }
+                    .map{ $0.makeSnapshot(assetId: assetId )}
+            }
+                        
             let condition: SQLSpecificExpressible = Snapshot.column(of: .assetId) == assetId
                 && Snapshot.column(of: .type) == SnapshotType.pendingDeposit.rawValue
             try Snapshot.filter(condition).deleteAll(db)

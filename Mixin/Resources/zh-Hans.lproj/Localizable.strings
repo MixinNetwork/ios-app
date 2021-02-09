@@ -838,6 +838,9 @@
 "report_compress_database"="压缩数据库";
 "report_compress_database_success"="已压缩";
 
+// Playlist
+"playlist" = "播放列表";
+
 // Notification
 "notification_reply" = "回复";
 "notification_mute" = "屏蔽";

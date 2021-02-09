@@ -837,6 +837,9 @@
 "report_compress_database"="Compress Database";
 "report_compress_database_success"="Compressed";
 
+// Playlist
+"playlist" = "Playlist";
+
 // Notification
 "notification_reply" = "返信";
 "notification_mute" = "消音";

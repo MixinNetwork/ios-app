@@ -32,6 +32,7 @@ class MixinWebViewController: WebViewController {
     
     private(set) var context: Context!
     
+    private var isMessageHandlerAdded = true
     private var webViewTitleObserver: NSKeyValueObservation?
     
     class func instance(with context: Context) -> MixinWebViewController {
@@ -111,10 +112,19 @@ class MixinWebViewController: WebViewController {
         }
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if !isMessageHandlerAdded {
+            webView.configuration.userContentController.add(self, name: HandlerName.mixinContext)
+            webView.configuration.userContentController.add(self, name: HandlerName.reloadTheme)
+        }
+    }
+    
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         webView.configuration.userContentController.removeScriptMessageHandler(forName: HandlerName.mixinContext)
         webView.configuration.userContentController.removeScriptMessageHandler(forName: HandlerName.reloadTheme)
+        isMessageHandlerAdded = false
     }
 
     override func continueAction(_ sender: Any) {

@@ -74,9 +74,8 @@ class WalletSearchResultsViewController: WalletSearchTableViewController {
                 return one.name < another.name
             }
             
-            let localItems = AssetDAO.shared
+            var localItems = AssetDAO.shared
                 .getAssets(keyword: keyword, sortResult: false, limit: nil)
-                .filter{ $0.balance.doubleValue > 0 }
                 .sorted(by: assetSorting)
             guard !op.isCancelled else {
                 return
@@ -92,8 +91,13 @@ class WalletSearchResultsViewController: WalletSearchTableViewController {
             case .success(let assets):
                 remoteAssets = assets
             case .failure:
-                remoteAssets = []
+                DispatchQueue.main.sync {
+                    self.activityIndicator.stopAnimating()
+                }
+                return
             }
+            
+            localItems = localItems.filter{ $0.balance.doubleValue > 0 }
             let localIds = Set(localItems.map(\.assetId))
             let remoteItems = remoteAssets.compactMap({ (asset) -> AssetItem? in
                 guard !localIds.contains(asset.assetId) else {

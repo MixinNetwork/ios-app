@@ -63,13 +63,12 @@ final class PermissionsViewController: UIViewController {
                 switch result {
                 case .success:
                     if let appHost = URL(string: appHomeUri)?.host {
-                        let types = Set<String>([WKWebsiteDataTypeCookies, WKWebsiteDataTypeLocalStorage])
-                        WKWebsiteDataStore.default().fetchDataRecords(ofTypes: types) { (records) in
-                            for record in records {
-                                if appHost.hasSuffix(record.displayName) {
-                                    WKWebsiteDataStore.default().removeData(ofTypes: types, for: [record], completionHandler: { })
-                                }
-                            }
+                        let dataStore = WKWebsiteDataStore.default()
+                        let types = WKWebsiteDataStore.allWebsiteDataTypes()
+                        dataStore.fetchDataRecords(ofTypes: types) { (records) in
+                            dataStore.removeData(ofTypes: types,
+                                                 for: records.filter { appHost.hasSuffix($0.displayName) },
+                                                 completionHandler: {})
                         }
                     }
                     self?.navigationController?.popViewController(animated: true)

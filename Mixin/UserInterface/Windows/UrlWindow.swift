@@ -164,9 +164,19 @@ class UrlWindow {
             }
             
             DispatchQueue.main.async {
-                hud.hide()
-                let vc = TransactionViewController.instance(asset: assetItem, snapshot: snapshot)
-                UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
+                func push() {
+                    hud.hide()
+                    let vc = TransactionViewController.instance(asset: assetItem, snapshot: snapshot)
+                    UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
+                }
+                
+                if UIApplication.homeContainerViewController?.isShowingGallery ?? false {
+                    UIApplication.homeContainerViewController?.galleryViewController.dismiss(transitionViewInitialOffsetY: 0) {
+                        push()
+                    }
+                } else {
+                    push()
+                }
             }
         }
         return true

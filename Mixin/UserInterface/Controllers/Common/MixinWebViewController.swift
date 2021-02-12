@@ -117,6 +117,7 @@ class MixinWebViewController: WebViewController {
         if !isMessageHandlerAdded {
             webView.configuration.userContentController.add(self, name: HandlerName.mixinContext)
             webView.configuration.userContentController.add(self, name: HandlerName.reloadTheme)
+            isMessageHandlerAdded = true
         }
     }
     

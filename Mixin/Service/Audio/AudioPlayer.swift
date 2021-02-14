@@ -2,6 +2,8 @@ import Foundation
 import AVFoundation
 import MixinServices
 
+fileprivate let audioQueueBufferSize: Int32 = 11520; // Should be smaller than AudioQueueBufferRef.mAudioDataByteSize
+
 class AudioPlayer {
     
     enum Error: Swift.Error {
@@ -31,6 +33,8 @@ class AudioPlayer {
         }
     }
     
+    fileprivate let reader: OggOpusReader
+    
     @Synchronized(value: .readyToPlay)
     fileprivate(set) var status: Status {
         didSet {
@@ -40,15 +44,13 @@ class AudioPlayer {
         }
     }
     
-    fileprivate let reader: OggOpusReader
-    fileprivate let sampleRate: Float64 = 48000
-    fileprivate let numberOfBuffers = 3
-    fileprivate let audioQueueBufferSize: UInt32 = 11520; // Should be smaller than AudioQueueBufferRef.mAudioDataByteSize
-    
-    fileprivate var buffers = [AudioQueueBufferRef]()
     fileprivate var audioQueue: AudioQueueRef!
     
-    private lazy var unretainedSelf = Unmanaged.passUnretained(self).toOpaque()
+    private let sampleRate: Float64 = 48000
+    private let numberOfBuffers = 3
+    
+    private var buffers = [AudioQueueBufferRef]()
+    
     private lazy var format: AudioStreamBasicDescription = {
         let mBitsPerChannel: UInt32 = 16
         let mChannelsPerFrame: UInt32 = 1
@@ -67,15 +69,18 @@ class AudioPlayer {
         return format
     }()
     
+    private var selfAsRawPointer: UnsafeMutableRawPointer {
+        Unmanaged.passUnretained(self).toOpaque()
+    }
+    
     init(path: String) throws {
         reader = try OggOpusReader(fileAtPath: path)
         
         var status: OSStatus = noErr
         
         var audioQueue: AudioQueueRef!
-        status = AudioQueueNewOutput(&format, aqBufferCallback, unretainedSelf, CFRunLoopGetMain(), CFRunLoopMode.commonModes.rawValue, 0, &audioQueue)
+        status = AudioQueueNewOutput(&format, aqBufferCallback, selfAsRawPointer, CFRunLoopGetMain(), CFRunLoopMode.commonModes.rawValue, 0, &audioQueue)
         guard status == noErr else {
-            dispose()
             throw Error.newOutput
         }
         self.audioQueue = audioQueue
@@ -83,7 +88,7 @@ class AudioPlayer {
         buffers.reserveCapacity(numberOfBuffers)
         for _ in 0..<numberOfBuffers {
             var buffer: AudioQueueBufferRef!
-            status = AudioQueueAllocateBuffer(audioQueue, audioQueueBufferSize, &buffer)
+            status = AudioQueueAllocateBuffer(audioQueue, UInt32(audioQueueBufferSize), &buffer)
             guard status == noErr else {
                 dispose()
                 throw Error.allocateBuffers
@@ -111,7 +116,7 @@ class AudioPlayer {
         case .readyToPlay, .didReachEnd:
             status = .playing
             for i in 0..<numberOfBuffers {
-                aqBufferCallback(inUserData: unretainedSelf, inAq: audioQueue, inBuffer: buffers[i])
+                aqBufferCallback(inUserData: selfAsRawPointer, inAq: audioQueue, inBuffer: buffers[i])
             }
             AudioQueueStart(audioQueue, nil)
         }
@@ -134,7 +139,6 @@ class AudioPlayer {
         if let audioQueue = audioQueue {
             AudioQueueDispose(audioQueue, true)
         }
-        reader.close()
     }
     
 }
@@ -147,7 +151,7 @@ fileprivate func aqBufferCallback(inUserData: UnsafeMutableRawPointer?, inAq: Au
     guard player.status != .didReachEnd else {
         return
     }
-    if let pcmData = try? player.reader.pcmData(withMaxLength: UInt(player.audioQueueBufferSize)), pcmData.count > 0 {
+    if let pcmData = try? player.reader.pcmData(maxLength: audioQueueBufferSize), pcmData.count > 0 {
         inBuffer.pointee.mAudioDataByteSize = UInt32(pcmData.count)
         pcmData.copyBytes(to: inBuffer.pointee.mAudioData.assumingMemoryBound(to: Data.Element.self),
                           count: pcmData.count)

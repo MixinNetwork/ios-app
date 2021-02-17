@@ -141,7 +141,7 @@ final class AudioRecorder {
                 return
             }
             self.cleanUp()
-            self.writer.removeFile()
+            try? FileManager.default.removeItem(atPath: self.path)
             DispatchQueue.main.async {
                 self.delegate?.audioRecorder(self, didCancelRecordingForReason: reason, userInfo: userInfo)
             }
@@ -350,7 +350,7 @@ fileprivate func inputBufferHandler(
                 return
             }
             recorder.numberOfEncodedSamples += UInt(pcmData.count / 2)
-            recorder.writer.writePCMData(pcmData)
+            recorder.writer.write(pcmData: pcmData)
             recorder.processWaveformSamples(with: pcmData)
         }
     }

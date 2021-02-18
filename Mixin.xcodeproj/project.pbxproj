@@ -2327,16 +2327,7 @@
 		7BC8502120CBA68700A57B83 /* Audio */ = {
 			isa = PBXGroup;
 			children = (
-				7BE6C952245680690038645C /* ogg */,
-				7BE6C957245680690038645C /* opus */,
-				7BE6C963245680690038645C /* opusenc */,
-				7BE6C95F245680690038645C /* opusfile */,
-				942F829625DD56E3004F913B /* opusenc_set_bitrate.h */,
-				942F829725DD56E3004F913B /* opusenc_set_bitrate.c */,
-				944C656025D9BA0A008BDDD3 /* OggOpusWriter.swift */,
-				94BE548D25D96932006575E2 /* OggOpusReader.swift */,
-				9416548225CD2D9A007E76D0 /* OggOpusRecorder.swift */,
-				7B21782022C4E70B00C08106 /* OggOpusPlayer.swift */,
+				947B368025DE764900146111 /* OggOpus */,
 				9416548A25CD7190007E76D0 /* AudioMetadata.swift */,
 				7B7DACA523505793006AA2AC /* AudioCell.swift */,
 				7BC98FA621EF5B8C004A5D79 /* AudioManager.swift */,
@@ -2420,6 +2411,23 @@
 				7B3936D020C1722C0075A97A /* CaptchaViewController.swift */,
 			);
 			path = ReCaptcha;
+			sourceTree = "<group>";
+		};
+		947B368025DE764900146111 /* OggOpus */ = {
+			isa = PBXGroup;
+			children = (
+				7BE6C952245680690038645C /* ogg */,
+				7BE6C957245680690038645C /* opus */,
+				7BE6C963245680690038645C /* opusenc */,
+				7BE6C95F245680690038645C /* opusfile */,
+				942F829625DD56E3004F913B /* opusenc_set_bitrate.h */,
+				942F829725DD56E3004F913B /* opusenc_set_bitrate.c */,
+				944C656025D9BA0A008BDDD3 /* OggOpusWriter.swift */,
+				94BE548D25D96932006575E2 /* OggOpusReader.swift */,
+				9416548225CD2D9A007E76D0 /* OggOpusRecorder.swift */,
+				7B21782022C4E70B00C08106 /* OggOpusPlayer.swift */,
+			);
+			path = OggOpus;
 			sourceTree = "<group>";
 		};
 		9B8D579B1F9F0AF4008A7957 /* Chat */ = {
@@ -5002,10 +5010,10 @@
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Mixin/Service/Audio/ogg",
-					"$(PROJECT_DIR)/Mixin/Service/Audio/opus",
-					"$(PROJECT_DIR)/Mixin/Service/Audio/opusfile",
-					"$(PROJECT_DIR)/Mixin/Service/Audio/opusenc",
+					"$(PROJECT_DIR)/Mixin/Service/Audio/OggOpus/ogg",
+					"$(PROJECT_DIR)/Mixin/Service/Audio/OggOpus/opus",
+					"$(PROJECT_DIR)/Mixin/Service/Audio/OggOpus/opusfile",
+					"$(PROJECT_DIR)/Mixin/Service/Audio/OggOpus/opusenc",
 				);
 				MARKETING_VERSION = 0.29.2;
 				OTHER_CFLAGS = (
@@ -5130,10 +5138,10 @@
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Mixin/Service/Audio/ogg",
-					"$(PROJECT_DIR)/Mixin/Service/Audio/opus",
-					"$(PROJECT_DIR)/Mixin/Service/Audio/opusfile",
-					"$(PROJECT_DIR)/Mixin/Service/Audio/opusenc",
+					"$(PROJECT_DIR)/Mixin/Service/Audio/OggOpus/ogg",
+					"$(PROJECT_DIR)/Mixin/Service/Audio/OggOpus/opus",
+					"$(PROJECT_DIR)/Mixin/Service/Audio/OggOpus/opusfile",
+					"$(PROJECT_DIR)/Mixin/Service/Audio/OggOpus/opusenc",
 				);
 				MARKETING_VERSION = 0.29.2;
 				OTHER_CFLAGS = (

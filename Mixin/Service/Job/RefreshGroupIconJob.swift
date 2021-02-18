@@ -27,7 +27,7 @@ class RefreshGroupIconJob: AsynchronousJob {
                 return participant.userAvatarUrl
             }
         }
-        let imageFile = conversationId + "-" + participantIds.joined().md5() + ".png"
+        let imageFile = conversationId + "-" + participantIds.joined().md5() + ".jpg"
         let imageUrl = AppGroupContainer.groupIconsUrl.appendingPathComponent(imageFile)
         guard !FileManager.default.fileExists(atPath: imageUrl.path) else {
             updateAndRemoveOld(conversationId: conversationId, imageFile: imageFile)
@@ -39,7 +39,7 @@ class RefreshGroupIconJob: AsynchronousJob {
 
         do {
             try? FileManager.default.removeItem(atPath: imageUrl.path)
-            if let data = groupImage.pngData() {
+            if let data = groupImage.jpegData(compressionQuality: JPEGCompressionQuality.medium) {
                 try data.write(to: imageUrl)
                 updateAndRemoveOld(conversationId: conversationId, imageFile: imageFile)
             }

@@ -2328,13 +2328,11 @@
 			isa = PBXGroup;
 			children = (
 				947B368025DE764900146111 /* OggOpus */,
+				947B368425DE769800146111 /* AudioSession */,
 				9416548A25CD7190007E76D0 /* AudioMetadata.swift */,
 				7B7DACA523505793006AA2AC /* AudioCell.swift */,
 				7BC98FA621EF5B8C004A5D79 /* AudioManager.swift */,
 				7B7DACA723505B41006AA2AC /* SharedMediaAudioManager.swift */,
-				941655C325CD7DA7007E76D0 /* AudioSessionClientPriority.swift */,
-				9463783525CD961D0071BCDD /* AudioSessionClient.swift */,
-				94571E0825CC48AE001980DA /* AudioSession.swift */,
 			);
 			path = Audio;
 			sourceTree = "<group>";
@@ -2428,6 +2426,16 @@
 				7B21782022C4E70B00C08106 /* OggOpusPlayer.swift */,
 			);
 			path = OggOpus;
+			sourceTree = "<group>";
+		};
+		947B368425DE769800146111 /* AudioSession */ = {
+			isa = PBXGroup;
+			children = (
+				941655C325CD7DA7007E76D0 /* AudioSessionClientPriority.swift */,
+				9463783525CD961D0071BCDD /* AudioSessionClient.swift */,
+				94571E0825CC48AE001980DA /* AudioSession.swift */,
+			);
+			path = AudioSession;
 			sourceTree = "<group>";
 		};
 		9B8D579B1F9F0AF4008A7957 /* Chat */ = {

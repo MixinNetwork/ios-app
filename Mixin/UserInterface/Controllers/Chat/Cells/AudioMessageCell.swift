@@ -61,7 +61,7 @@ class AudioMessageCell: CardMessageCell<AudioMessageActionView, AudioMessageProg
         timer?.invalidate()
         timer = nil
         if let messageId = viewModel?.message.messageId {
-            AudioManager.shared.unregister(cell: self, forMessageId: messageId)
+            AudioMessagePlayingManager.shared.unregister(cell: self, forMessageId: messageId)
         }
     }
     
@@ -78,7 +78,7 @@ class AudioMessageCell: CardMessageCell<AudioMessageActionView, AudioMessageProg
         timer?.invalidate()
         timer = nil
         if let messageId = viewModel?.message.messageId {
-            AudioManager.shared.unregister(cell: self, forMessageId: messageId)
+            AudioMessagePlayingManager.shared.unregister(cell: self, forMessageId: messageId)
         }
     }
 
@@ -94,7 +94,7 @@ class AudioMessageCell: CardMessageCell<AudioMessageActionView, AudioMessageProg
             duration = Float64(viewModel.message.mediaDuration ?? 0)
             updateUnreadStyle()
         }
-        AudioManager.shared.register(cell: self, forMessageId: viewModel.message.messageId)
+        AudioMessagePlayingManager.shared.register(cell: self, forMessageId: viewModel.message.messageId)
     }
     
     @IBAction func operationAction(_ sender: Any) {
@@ -124,7 +124,7 @@ class AudioMessageCell: CardMessageCell<AudioMessageActionView, AudioMessageProg
     }
     
     private func updateWaveformProgress() {
-        guard let player = AudioManager.shared.player, AudioManager.shared.playingMessage?.messageId == viewModel?.message.messageId else {
+        guard let player = AudioMessagePlayingManager.shared.player, AudioMessagePlayingManager.shared.playingMessage?.messageId == viewModel?.message.messageId else {
             return
         }
         let progress = player.currentTime * millisecondsPerSecond / (duration - waveformUpdateInterval * millisecondsPerSecond)

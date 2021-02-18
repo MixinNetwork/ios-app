@@ -10,7 +10,7 @@ class SharedMediaAudioCell: UITableViewCell, AudioCell {
     @IBOutlet weak var highlightedWaveformView: WaveformView!
     @IBOutlet weak var lengthLabel: UILabel!
     
-    weak var audioManager: SharedMediaAudioManager?
+    weak var playingManager: SharedMediaAudioMessagePlayingManager?
     
     private let waveformMaskView = UIView()
     private let waveformUpdateInterval: TimeInterval = 0.1
@@ -120,7 +120,7 @@ class SharedMediaAudioCell: UITableViewCell, AudioCell {
     }
     
     private func updateWaveformProgress() {
-        guard let audio = audio, let manager = audioManager, let player = manager.player, manager.playingMessage?.messageId == audio.messageId else {
+        guard let audio = audio, let manager = playingManager, let player = manager.player, manager.playingMessage?.messageId == audio.messageId else {
             return
         }
         let duration = Double(audio.duration) * millisecondsPerSecond

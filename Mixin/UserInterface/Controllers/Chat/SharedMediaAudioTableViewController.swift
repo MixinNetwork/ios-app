@@ -12,7 +12,7 @@ class SharedMediaAudioTableViewController: SharedMediaTableViewController {
     }
     
     private let dataSource = SharedMediaDataSource<ItemType, SharedMediaGroupedByDateCategorizer<ItemType>>()
-    private let audioManager = SharedMediaAudioManager()
+    private let playingManager = SharedMediaAudioMessagePlayingManager()
     
     private var playingIndexPath: IndexPath?
     
@@ -22,35 +22,35 @@ class SharedMediaAudioTableViewController: SharedMediaTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        audioManager.delegate = self
+        playingManager.delegate = self
         tableView.register(R.nib.sharedMediaAudioCell)
         tableView.dataSource = self
         tableView.delegate = self
         dataSource.setDelegate(self)
         dataSource.reload()
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(audioManagerWillPlayNext(_:)),
-                                               name: AudioManager.willPlayNextNotification,
-                                               object: audioManager)
+                                               selector: #selector(audioMessagePlayingManagerWillPlayNext(_:)),
+                                               name: AudioMessagePlayingManager.willPlayNextNotification,
+                                               object: playingManager)
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(audioManagerWillPlayPrevious(_:)),
-                                               name: AudioManager.willPlayPreviousNotification,
-                                               object: audioManager)
+                                               selector: #selector(audioMessagePlayingManagerWillPlayPrevious(_:)),
+                                               name: AudioMessagePlayingManager.willPlayPreviousNotification,
+                                               object: playingManager)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        audioManager.stop()
+        playingManager.stop()
     }
     
-    @objc func audioManagerWillPlayNext(_ notification: Notification) {
+    @objc func audioMessagePlayingManagerWillPlayNext(_ notification: Notification) {
         playingIndexPath?.row += 1
         DispatchQueue.main.async { [weak self] in
             self?.markPlayingViewModelAndCellAsRead()
         }
     }
     
-    @objc func audioManagerWillPlayPrevious(_ notification: Notification) {
+    @objc func audioMessagePlayingManagerWillPlayPrevious(_ notification: Notification) {
         playingIndexPath?.row -= 1
         DispatchQueue.main.async { [weak self] in
             self?.markPlayingViewModelAndCellAsRead()
@@ -123,7 +123,7 @@ extension SharedMediaAudioTableViewController: UITableViewDataSource {
         if let item = dataSource.item(at: indexPath) {
             cell.render(audio: item)
         }
-        cell.audioManager = audioManager
+        cell.playingManager = playingManager
         return cell
     }
     
@@ -136,14 +136,14 @@ extension SharedMediaAudioTableViewController: UITableViewDelegate {
         guard let cell = cell as? AudioCell, let item = dataSource.item(at: indexPath) else {
             return
         }
-        audioManager.register(cell: cell, forMessageId: item.messageId)
+        playingManager.register(cell: cell, forMessageId: item.messageId)
     }
     
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         guard let cell = cell as? AudioCell, let item = dataSource.item(at: indexPath) else {
             return
         }
-        audioManager.unregister(cell: cell, forMessageId: item.messageId)
+        playingManager.unregister(cell: cell, forMessageId: item.messageId)
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -156,15 +156,15 @@ extension SharedMediaAudioTableViewController: UITableViewDelegate {
         guard let item = dataSource.item(at: indexPath) else {
             return
         }
-        if AudioManager.shared.player?.status == .playing {
-            AudioManager.shared.player?.pause()
+        if AudioMessagePlayingManager.shared.player?.status == .playing {
+            AudioMessagePlayingManager.shared.player?.pause()
         }
-        if audioManager.playingMessage?.messageId == item.messageId, audioManager.player?.status == .playing {
+        if playingManager.playingMessage?.messageId == item.messageId, playingManager.player?.status == .playing {
             playingIndexPath = nil
-            audioManager.pause()
+            playingManager.pause()
         } else {
             playingIndexPath = indexPath
-            audioManager.play(message: item.message)
+            playingManager.play(message: item.message)
             item.mediaStatus = .READ
             (tableView.cellForRow(at: indexPath) as? SharedMediaAudioCell)?.updateUnreadStyle()
         }
@@ -172,9 +172,9 @@ extension SharedMediaAudioTableViewController: UITableViewDelegate {
     
 }
 
-extension SharedMediaAudioTableViewController: SharedMediaAudioManagerDelegate {
+extension SharedMediaAudioTableViewController: SharedMediaAudioMessagePlayingManagerDelegate {
     
-    func sharedMediaAudioManager(_ manager: SharedMediaAudioManager, playableMessageNextTo message: MessageItem) -> MessageItem? {
+    func sharedMediaAudioMessagePlayingManager(_ manager: SharedMediaAudioMessagePlayingManager, playableMessageNextTo message: MessageItem) -> MessageItem? {
         guard var indexPath = playingIndexPath else {
             return nil
         }
@@ -182,7 +182,7 @@ extension SharedMediaAudioTableViewController: SharedMediaAudioManagerDelegate {
         return dataSource.item(at: indexPath)?.message
     }
     
-    func sharedMediaAudioManager(_ manager: SharedMediaAudioManager, playableMessagePreviousTo message: MessageItem) -> MessageItem? {
+    func sharedMediaAudioMessagePlayingManager(_ manager: SharedMediaAudioMessagePlayingManager, playableMessagePreviousTo message: MessageItem) -> MessageItem? {
         guard var indexPath = playingIndexPath else {
             return nil
         }

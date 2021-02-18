@@ -239,7 +239,7 @@
 		7B7CBBB020BBCD7E005DF80A /* AudioInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7CBBAF20BBCD7E005DF80A /* AudioInputViewController.swift */; };
 		7B7D27A02528682B006BBFAB /* ClipSwitcherThumbnailFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7D279F2528682B006BBFAB /* ClipSwitcherThumbnailFlowLayout.swift */; };
 		7B7DACA623505793006AA2AC /* AudioCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7DACA523505793006AA2AC /* AudioCell.swift */; };
-		7B7DACA823505B41006AA2AC /* SharedMediaAudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7DACA723505B41006AA2AC /* SharedMediaAudioManager.swift */; };
+		7B7DACA823505B41006AA2AC /* SharedMediaAudioMessagePlayingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7DACA723505B41006AA2AC /* SharedMediaAudioMessagePlayingManager.swift */; };
 		7B7DACAA23505F06006AA2AC /* SharedMediaAudio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7DACA923505F06006AA2AC /* SharedMediaAudio.swift */; };
 		7B7DACAC2350707F006AA2AC /* SharedMediaWaveformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7DACAB2350707F006AA2AC /* SharedMediaWaveformView.swift */; };
 		7B7E7144217D87860052C7DD /* CallView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B7E7143217D87860052C7DD /* CallView.xib */; };
@@ -441,7 +441,7 @@
 		7BC80A62221D1C07008586AD /* AssetTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC80A61221D1C06008586AD /* AssetTableHeaderView.swift */; };
 		7BC96DE324176B390047471D /* FoursquareAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC96DE224176B390047471D /* FoursquareAPI.swift */; };
 		7BC96DE5241779F70047471D /* ExternalApiError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC96DE4241779F70047471D /* ExternalApiError.swift */; };
-		7BC98FA721EF5B8C004A5D79 /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC98FA621EF5B8C004A5D79 /* AudioManager.swift */; };
+		7BC98FA721EF5B8C004A5D79 /* AudioMessagePlayingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC98FA621EF5B8C004A5D79 /* AudioMessagePlayingManager.swift */; };
 		7BCA2E302452CBF6005BD2E4 /* AboutTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BCA2E2F2452CBF6005BD2E4 /* AboutTableHeaderView.xib */; };
 		7BCA3A572057F08E007617C1 /* CATransactionExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BCA3A562057F08E007617C1 /* CATransactionExtension.swift */; };
 		7BCA81C02501633F0019351F /* MXMAgreementCalculator.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BCA81BF2501633F0019351F /* MXMAgreementCalculator.m */; };
@@ -1151,7 +1151,7 @@
 		7B7CBBAF20BBCD7E005DF80A /* AudioInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioInputViewController.swift; sourceTree = "<group>"; };
 		7B7D279F2528682B006BBFAB /* ClipSwitcherThumbnailFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipSwitcherThumbnailFlowLayout.swift; sourceTree = "<group>"; };
 		7B7DACA523505793006AA2AC /* AudioCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioCell.swift; sourceTree = "<group>"; };
-		7B7DACA723505B41006AA2AC /* SharedMediaAudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedMediaAudioManager.swift; sourceTree = "<group>"; };
+		7B7DACA723505B41006AA2AC /* SharedMediaAudioMessagePlayingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedMediaAudioMessagePlayingManager.swift; sourceTree = "<group>"; };
 		7B7DACA923505F06006AA2AC /* SharedMediaAudio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedMediaAudio.swift; sourceTree = "<group>"; };
 		7B7DACAB2350707F006AA2AC /* SharedMediaWaveformView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedMediaWaveformView.swift; sourceTree = "<group>"; };
 		7B7E7143217D87860052C7DD /* CallView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CallView.xib; sourceTree = "<group>"; };
@@ -1350,7 +1350,7 @@
 		7BC80A61221D1C06008586AD /* AssetTableHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetTableHeaderView.swift; sourceTree = "<group>"; };
 		7BC96DE224176B390047471D /* FoursquareAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoursquareAPI.swift; sourceTree = "<group>"; };
 		7BC96DE4241779F70047471D /* ExternalApiError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalApiError.swift; sourceTree = "<group>"; };
-		7BC98FA621EF5B8C004A5D79 /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
+		7BC98FA621EF5B8C004A5D79 /* AudioMessagePlayingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioMessagePlayingManager.swift; sourceTree = "<group>"; };
 		7BCA2E2F2452CBF6005BD2E4 /* AboutTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AboutTableHeaderView.xib; sourceTree = "<group>"; };
 		7BCA3A562057F08E007617C1 /* CATransactionExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CATransactionExtension.swift; sourceTree = "<group>"; };
 		7BCA81BE2501633F0019351F /* MXMAgreementCalculator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXMAgreementCalculator.h; sourceTree = "<group>"; };
@@ -2331,8 +2331,8 @@
 				947B368425DE769800146111 /* AudioSession */,
 				9416548A25CD7190007E76D0 /* AudioMetadata.swift */,
 				7B7DACA523505793006AA2AC /* AudioCell.swift */,
-				7BC98FA621EF5B8C004A5D79 /* AudioManager.swift */,
-				7B7DACA723505B41006AA2AC /* SharedMediaAudioManager.swift */,
+				7BC98FA621EF5B8C004A5D79 /* AudioMessagePlayingManager.swift */,
+				7B7DACA723505B41006AA2AC /* SharedMediaAudioMessagePlayingManager.swift */,
 			);
 			path = Audio;
 			sourceTree = "<group>";
@@ -4044,7 +4044,7 @@
 				DFFDCF8420AD8A7A00B4956E /* FileSendViewController.swift in Sources */,
 				7B09E55A1FD157EB002E45D3 /* MessageViewModel.swift in Sources */,
 				7BF071C02244E6A1007240AD /* UploadContactCell.swift in Sources */,
-				7B7DACA823505B41006AA2AC /* SharedMediaAudioManager.swift in Sources */,
+				7B7DACA823505B41006AA2AC /* SharedMediaAudioMessagePlayingManager.swift in Sources */,
 				7BDFAE902559008800296F8B /* WalletSearchViewController.swift in Sources */,
 				7B8BFC8C1FDD7EC8004E19DB /* UnknownMessageCell.swift in Sources */,
 				7B50DE112333C37E00FB651A /* WebViewScreenEdgePanGestureRecognizer.swift in Sources */,
@@ -4121,7 +4121,7 @@
 				7BF8AD85244051680038D293 /* HomeAppResizeGestureCoordinator.swift in Sources */,
 				7B2A115F22C1ECB100AD029C /* RoundedBlurButton.swift in Sources */,
 				7BEB423622EAD20A003B4479 /* ModernNetworkOperationButton.swift in Sources */,
-				7BC98FA721EF5B8C004A5D79 /* AudioManager.swift in Sources */,
+				7BC98FA721EF5B8C004A5D79 /* AudioMessagePlayingManager.swift in Sources */,
 				7BE0726E2024A2AC00D7B44D /* AppButtonGroupMessageCell.swift in Sources */,
 				7BC26534207B595500EA7DFF /* ContactMessageCell.swift in Sources */,
 				7BBCEC1825232A9800F270DF /* WebMoreMenuViewController.swift in Sources */,

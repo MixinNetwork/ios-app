@@ -2,19 +2,19 @@ import Foundation
 import AVFoundation
 import MixinServices
 
-class AudioManager: NSObject {
+class AudioMessagePlayingManager: NSObject {
     
     struct WeakCellBox {
         weak var cell: AudioCell?
     }
     
-    static let shared = AudioManager()
-    static let willPlayNextNotification = Notification.Name("one.mixin.messenger.AudioManager.willPlayNext")
-    static let willPlayPreviousNotification = Notification.Name("one.mixin.messenger.AudioManager.willPlayPrevious")
+    static let shared = AudioMessagePlayingManager()
+    static let willPlayNextNotification = Notification.Name("one.mixin.messenger.AudioMessagePlayingManager.willPlayNext")
+    static let willPlayPreviousNotification = Notification.Name("one.mixin.messenger.AudioMessagePlayingManager.willPlayPrevious")
     static let conversationIdUserInfoKey = "conversation_id"
     static let messageIdUserInfoKey = "message_id"
     
-    private let queue = DispatchQueue(label: "one.mixin.messenger.AudioManager")
+    private let queue = DispatchQueue(label: "one.mixin.messenger.AudioMessagePlayingManager")
     
     // These 2 vars below should be access from main queue
     private(set) var player: OggOpusPlayer?
@@ -187,9 +187,9 @@ class AudioManager: NSObject {
             DispatchQueue.global().async {
                 if let next = self.playableMessage(nextTo: playingMessage) {
                     DispatchQueue.main.async {
-                        let userInfo = [AudioManager.conversationIdUserInfoKey: next.conversationId,
-                                        AudioManager.messageIdUserInfoKey: next.messageId]
-                        NotificationCenter.default.post(name: AudioManager.willPlayNextNotification, object: self, userInfo: userInfo)
+                        let userInfo = [AudioMessagePlayingManager.conversationIdUserInfoKey: next.conversationId,
+                                        AudioMessagePlayingManager.messageIdUserInfoKey: next.messageId]
+                        NotificationCenter.default.post(name: AudioMessagePlayingManager.willPlayNextNotification, object: self, userInfo: userInfo)
                         self.play(message: next)
                     }
                 } else {
@@ -204,7 +204,7 @@ class AudioManager: NSObject {
     
 }
 
-extension AudioManager: AudioSessionClient {
+extension AudioMessagePlayingManager: AudioSessionClient {
     
     var priority: AudioSessionClientPriority {
         .playback

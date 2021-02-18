@@ -114,7 +114,10 @@ class AudioManager: NSObject {
                 do {
                     let player = try AudioPlayer(path: path)
                     player.onStatusChanged = { [weak self] player in
-                        self?.handleStatusChange(player: player)
+                        guard let self = self else {
+                            return
+                        }
+                        self.handleStatusChange(player: player)
                     }
                     player.play()
                     self.player = player

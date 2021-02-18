@@ -40,7 +40,7 @@ class SharedMediaAudioManager: AudioManager {
         ConcurrentJobQueue.shared.addJob(job: job)
     }
     
-    override func handleStatusChange(player: AudioPlayer) {
+    override func handleStatusChange(player: OggOpusPlayer) {
         super.handleStatusChange(player: player)
         if #available(iOS 13.0, *) {
             let center = MPNowPlayingInfoCenter.default()
@@ -70,7 +70,7 @@ class SharedMediaAudioManager: AudioManager {
         }
     }
     
-    private func resetPlayingInfoAndRemoteCommandTarget(player: AudioPlayer) {
+    private func resetPlayingInfoAndRemoteCommandTarget(player: OggOpusPlayer) {
         removePlayingInfoAndRemoteCommandTarget()
         guard let message = playingMessage else {
             return

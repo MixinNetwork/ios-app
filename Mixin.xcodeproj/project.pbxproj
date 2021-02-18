@@ -56,7 +56,7 @@
 		7B1D61132512773F00BD6B15 /* ExternalSharingConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1D61122512773F00BD6B15 /* ExternalSharingConfirmationViewController.swift */; };
 		7B1D7BA51FBE944E00FDA52C /* ConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1D7BA41FBE944E00FDA52C /* ConversationViewController.swift */; };
 		7B1F5371219D3B90006D6983 /* RoundCornerSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1F5370219D3B90006D6983 /* RoundCornerSelectionView.swift */; };
-		7B21782122C4E70B00C08106 /* AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B21782022C4E70B00C08106 /* AudioPlayer.swift */; };
+		7B21782122C4E70B00C08106 /* OggOpusPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B21782022C4E70B00C08106 /* OggOpusPlayer.swift */; };
 		7B23FEA52229538B00F912EC /* PhotoInputAlbumCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B23FEA42229538B00F912EC /* PhotoInputAlbumCell.swift */; };
 		7B2636D5224E2A7E0057116D /* InfiniteTopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2636D4224E2A7E0057116D /* InfiniteTopView.swift */; };
 		7B280DEE22B120A90084E49E /* PhoneNumberLoginVerificationCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B280DED22B120A90084E49E /* PhoneNumberLoginVerificationCodeViewController.swift */; };
@@ -966,7 +966,7 @@
 		7B1D61122512773F00BD6B15 /* ExternalSharingConfirmationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalSharingConfirmationViewController.swift; sourceTree = "<group>"; };
 		7B1D7BA41FBE944E00FDA52C /* ConversationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationViewController.swift; sourceTree = "<group>"; };
 		7B1F5370219D3B90006D6983 /* RoundCornerSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundCornerSelectionView.swift; sourceTree = "<group>"; };
-		7B21782022C4E70B00C08106 /* AudioPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayer.swift; sourceTree = "<group>"; };
+		7B21782022C4E70B00C08106 /* OggOpusPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OggOpusPlayer.swift; sourceTree = "<group>"; };
 		7B23FEA42229538B00F912EC /* PhotoInputAlbumCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoInputAlbumCell.swift; sourceTree = "<group>"; };
 		7B2636D4224E2A7E0057116D /* InfiniteTopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfiniteTopView.swift; sourceTree = "<group>"; };
 		7B280DED22B120A90084E49E /* PhoneNumberLoginVerificationCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberLoginVerificationCodeViewController.swift; sourceTree = "<group>"; };
@@ -2336,8 +2336,8 @@
 				944C656025D9BA0A008BDDD3 /* OggOpusWriter.swift */,
 				94BE548D25D96932006575E2 /* OggOpusReader.swift */,
 				9416548225CD2D9A007E76D0 /* OggOpusRecorder.swift */,
+				7B21782022C4E70B00C08106 /* OggOpusPlayer.swift */,
 				9416548A25CD7190007E76D0 /* AudioMetadata.swift */,
-				7B21782022C4E70B00C08106 /* AudioPlayer.swift */,
 				7B7DACA523505793006AA2AC /* AudioCell.swift */,
 				7BC98FA621EF5B8C004A5D79 /* AudioManager.swift */,
 				7B7DACA723505B41006AA2AC /* SharedMediaAudioManager.swift */,
@@ -4365,7 +4365,7 @@
 				E0C510D723B0A7AE00A1BEE9 /* WKWebsiteDataStore+Clear.swift in Sources */,
 				7B51DDB2223A408A008ACDBB /* LoginMobileNumberViewController.swift in Sources */,
 				DFC0ECD423BB5FDE0091E7AC /* AuthorizationRequest.swift in Sources */,
-				7B21782122C4E70B00C08106 /* AudioPlayer.swift in Sources */,
+				7B21782122C4E70B00C08106 /* OggOpusPlayer.swift in Sources */,
 				7B3CDA6424FFDD1D003A3E80 /* FavoriteStickerCell.swift in Sources */,
 				7BC3559F2265B7C30073C7BF /* DragDownIndicator.swift in Sources */,
 				DFC0ECD223BB5FDE0091E7AC /* SessionRequest.swift in Sources */,

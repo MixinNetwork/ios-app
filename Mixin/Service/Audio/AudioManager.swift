@@ -17,7 +17,7 @@ class AudioManager: NSObject {
     private let queue = DispatchQueue(label: "one.mixin.messenger.AudioManager")
     
     // These 2 vars below should be access from main queue
-    private(set) var player: AudioPlayer?
+    private(set) var player: OggOpusPlayer?
     private(set) var playingMessage: MessageItem?
     
     private var cells = [String: WeakCellBox]()
@@ -88,7 +88,7 @@ class AudioManager: NSObject {
                     return
                 }
                 do {
-                    let player = try AudioPlayer(path: path)
+                    let player = try OggOpusPlayer(path: path)
                     player.onStatusChanged = { [weak self] player in
                         self?.handleStatusChange(player: player)
                     }
@@ -180,7 +180,7 @@ class AudioManager: NSObject {
         stop()
     }
     
-    func handleStatusChange(player: AudioPlayer) {
+    func handleStatusChange(player: OggOpusPlayer) {
         UIApplication.shared.isIdleTimerDisabled = player.status == .playing
         if player.status == .didReachEnd, let playingMessage = playingMessage {
             cells[playingMessage.messageId]?.cell?.style = .stopped

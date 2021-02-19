@@ -20,35 +20,22 @@ class RefreshGroupIconJob: AsynchronousJob {
         guard participants.count >= 4 || participants.count == ParticipantDAO.shared.getParticipantCount(conversationId: conversationId) else {
             return false
         }
-        let participantIds: [String] = participants.map { (participant) in
-            if participant.userAvatarUrl.isEmpty {
-                return String(participant.userFullName.prefix(1))
-            } else {
-                return participant.userAvatarUrl
-            }
-        }
-        let imageFile = conversationId + "-" + participantIds.joined().md5() + ".jpg"
-        let imageUrl = AppGroupContainer.groupIconsUrl.appendingPathComponent(imageFile)
-        guard !FileManager.default.fileExists(atPath: imageUrl.path) else {
-            updateAndRemoveOld(conversationId: conversationId, imageFile: imageFile)
+        guard let image = GroupIconMaker.make(participants: participants) else {
             return false
         }
-        guard let groupImage = GroupIconMaker.make(participants: participants) else {
-            return false
-        }
-
         do {
-            try? FileManager.default.removeItem(atPath: imageUrl.path)
-            if let data = groupImage.jpegData(compressionQuality: JPEGCompressionQuality.medium) {
-                try data.write(to: imageUrl)
-                updateAndRemoveOld(conversationId: conversationId, imageFile: imageFile)
-            }
+            let filename = try GroupIconSaver.save(image: image,
+                                                   forGroupWith: conversationId,
+                                                   participants: participants)
+            updateAndRemoveOld(conversationId: conversationId, imageFile: filename)
+        } catch let GroupIconSaver.Error.fileExists(filename) {
+            updateAndRemoveOld(conversationId: conversationId, imageFile: filename)
+            return false
         } catch {
             reporter.report(error: error)
         }
 
         finishJob()
-
         return true
     }
 

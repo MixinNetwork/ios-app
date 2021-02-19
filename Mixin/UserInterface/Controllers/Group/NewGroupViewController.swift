@@ -84,33 +84,22 @@ class NewGroupViewController: KeyboardBasedLayoutViewController {
     }
     
     private func saveGroupImage(conversationId: String, participants: [ParticipantUser]) -> String? {
-        guard let groupImage = groupImageView.image else {
+        guard let image = groupImageView.image else {
             return nil
         }
-        
-        let participantIds: [String] = participants.map { (participant) in
-            if participant.userAvatarUrl.isEmpty {
-                return String(participant.userFullName.prefix(1))
-            } else {
-                return participant.userAvatarUrl
-            }
-        }
-        let imageFile = conversationId + "-" + participantIds.joined().md5() + ".png"
-        let imageUrl = AppGroupContainer.groupIconsUrl.appendingPathComponent(imageFile)
-
-        guard !FileManager.default.fileExists(atPath: imageUrl.path) else {
-            return imageFile
-        }
         do {
-            if let data = groupImage.pngData() {
-                try data.write(to: imageUrl)
-                ConversationDAO.shared.updateIconUrl(conversationId: conversationId, iconUrl: imageFile)
-                return imageFile
-            }
+            let filename = try GroupIconSaver.save(image: image,
+                                                   forGroupWith: conversationId,
+                                                   participants: participants)
+            ConversationDAO.shared.updateIconUrl(conversationId: conversationId,
+                                                 iconUrl: filename)
+            return filename
+        } catch let GroupIconSaver.Error.fileExists(filename) {
+            return filename
         } catch {
             reporter.report(error: error)
+            return nil
         }
-        return nil
     }
     
     private func saveOfflineConversation() {

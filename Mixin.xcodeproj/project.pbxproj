@@ -582,6 +582,7 @@
 		84A10E9A256B6416006AC741 /* TickerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A10E99256B6416006AC741 /* TickerResponse.swift */; };
 		94095BB725BE8BC100F44832 /* TextPreviewView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94095BB625BE8BC100F44832 /* TextPreviewView.xib */; };
 		94095BBC25BE8DCF00F44832 /* TextPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94095BBB25BE8DCF00F44832 /* TextPreviewView.swift */; };
+		9419374D25DFF3EE00F81A9C /* GroupIconSaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9419374C25DFF3EE00F81A9C /* GroupIconSaver.swift */; };
 		9424C6432592469500FFDAE0 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9424C6422592469500FFDAE0 /* Application.swift */; };
 		9424C64B259246B600FFDAE0 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9424C64A259246B600FFDAE0 /* main.swift */; };
 		94438D57252DAD73005760AF /* Clip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94438D56252DAD73005760AF /* Clip.swift */; };
@@ -1501,6 +1502,7 @@
 		8C43D9D96FCB101481DFD90F /* Pods-Mixin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mixin.release.xcconfig"; path = "Pods/Target Support Files/Pods-Mixin/Pods-Mixin.release.xcconfig"; sourceTree = "<group>"; };
 		94095BB625BE8BC100F44832 /* TextPreviewView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TextPreviewView.xib; sourceTree = "<group>"; };
 		94095BBB25BE8DCF00F44832 /* TextPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextPreviewView.swift; sourceTree = "<group>"; };
+		9419374C25DFF3EE00F81A9C /* GroupIconSaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupIconSaver.swift; sourceTree = "<group>"; };
 		9424C6422592469500FFDAE0 /* Application.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
 		9424C64A259246B600FFDAE0 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		94438D56252DAD73005760AF /* Clip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clip.swift; sourceTree = "<group>"; };
@@ -2166,6 +2168,7 @@
 				7BEE5352222E21D7008D3911 /* KeyboardHeight.swift */,
 				7B746B3F22A628ED0097D18A /* Counter.swift */,
 				7B5A748E230274E200C6107E /* GroupIconMaker.swift */,
+				9419374C25DFF3EE00F81A9C /* GroupIconSaver.swift */,
 				7BF196B02411625300CC8325 /* UserInterfaceStyle.swift */,
 			);
 			path = Models;
@@ -4669,6 +4672,7 @@
 				7B36919F233A1962007321A7 /* LocationPickerViewController.swift in Sources */,
 				7B7E7146217D89790052C7DD /* CallViewController.swift in Sources */,
 				7BD89DBE1FB2D59000665635 /* PlaceholderTextView.swift in Sources */,
+				9419374D25DFF3EE00F81A9C /* GroupIconSaver.swift in Sources */,
 				7B4E307A22966FF900A03F6E /* MediaPreviewMaskView.swift in Sources */,
 				7BB0F9102434821000BEDA97 /* CircleEditorViewController.swift in Sources */,
 				7BFA9B702229810A00C88625 /* PhotoInputGridCell.swift in Sources */,

@@ -75,12 +75,8 @@ class PeerInfoView: UIView, XibDesignable {
             break
         }
         titleLabel.attributedText = result.title
-        if let badge = result.badgeImage {
-            badgeImageView.image = badge
-            badgeImageView.isHidden = false
-        } else {
-            badgeImageView.isHidden = true
-        }
+        badgeImageView.image = result.badgeImage
+        badgeImageView.isHidden = badgeImageView.image == nil
         superscriptLabel.text = result.superscript
         fileIcon.isHidden = !isDataMessage
         if let description = result.description {
@@ -95,6 +91,7 @@ class PeerInfoView: UIView, XibDesignable {
         avatarImageView.setImage(with: user.avatarUrl, userId: user.userId, name: user.fullName)
         titleLabel.text = user.fullName
         badgeImageView.image = SearchResult.userBadgeImage(isVerified: user.isVerified, appId: user.appId)
+        badgeImageView.isHidden = badgeImageView.image == nil
         superscriptLabel.text = nil
         fileIcon.isHidden = true
         descriptionLabel.isHidden = true
@@ -104,6 +101,7 @@ class PeerInfoView: UIView, XibDesignable {
         avatarImageView.setImage(with: user.avatarUrl ?? "", userId: user.userId, name: user.fullName ?? "")
         titleLabel.text = user.fullName
         badgeImageView.image = SearchResult.userBadgeImage(isVerified: user.isVerified, appId: user.appId)
+        badgeImageView.isHidden = badgeImageView.image == nil
         superscriptLabel.text = nil
         fileIcon.isHidden = true
         if userBiographyAsSubtitle {
@@ -123,6 +121,7 @@ class PeerInfoView: UIView, XibDesignable {
         }
         titleLabel.text = receiver.name
         badgeImageView.image = receiver.badgeImage
+        badgeImageView.isHidden = badgeImageView.image == nil
         superscriptLabel.text = nil
         fileIcon.isHidden = true
         descriptionLabel.isHidden = true
@@ -138,6 +137,7 @@ class PeerInfoView: UIView, XibDesignable {
         }
         titleLabel.text = member.name
         badgeImageView.image = member.badgeImage
+        badgeImageView.isHidden = badgeImageView.image == nil
         superscriptLabel.text = nil
         fileIcon.isHidden = true
         descriptionLabel.isHidden = true

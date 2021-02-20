@@ -13,6 +13,13 @@ public final class BlazeMessageDAO {
         return TaskDatabase.current.save(msg)
     }
     
+    public func getLastBlazeMessageCreatedAt() -> String? {
+        return TaskDatabase.current.select(column: MessageBlaze.column(of: .createdAt),
+                                           from: MessageBlaze.self,
+                                           order: [MessageBlaze.column(of: .createdAt).desc],
+                                           limit: 1).first
+    }
+    
     public func getCount() -> Int {
         TaskDatabase.current.count(in: MessageBlaze.self)
     }

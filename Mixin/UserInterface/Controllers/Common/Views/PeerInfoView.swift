@@ -103,7 +103,7 @@ class PeerInfoView: UIView, XibDesignable {
     func render(user: User, userBiographyAsSubtitle: Bool) {
         avatarImageView.setImage(with: user.avatarUrl ?? "", userId: user.userId, name: user.fullName ?? "")
         titleLabel.text = user.fullName
-        badgeImageView.image = SearchResult.userBadgeImage(isVerified: user.isVerified ?? false, appId: user.appId)
+        badgeImageView.image = SearchResult.userBadgeImage(isVerified: user.isVerified, appId: user.appId)
         superscriptLabel.text = nil
         fileIcon.isHidden = true
         if userBiographyAsSubtitle {

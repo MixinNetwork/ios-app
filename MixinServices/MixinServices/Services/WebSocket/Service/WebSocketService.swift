@@ -336,7 +336,12 @@ extension WebSocketService {
     }
     
     private func requestListPendingMessages() {
-        let message = BlazeMessage(action: BlazeMessageAction.listPendingMessages.rawValue)
+        let message: BlazeMessage
+        if let offset = BlazeMessageDAO.shared.getLastBlazeMessageCreatedAt() {
+            message = BlazeMessage(params: BlazeMessageParam(offset: offset), action: BlazeMessageAction.listPendingMessages.rawValue)
+        } else {
+            message = BlazeMessage(action: BlazeMessageAction.listPendingMessages.rawValue)
+        }
         messageHandlers[message.id] = { (result) in
             switch result {
             case .success:

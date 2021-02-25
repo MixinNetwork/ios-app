@@ -1,12 +1,37 @@
 import UIKit
 import MixinServices
 
-class DataMessageCell: CardMessageCell<DataMessageExtensionIconView, CardMessageTitleView>, AttachmentLoadingMessageCell {
+class DataMessageCell: CardMessageCell<DataMessageExtensionIconView, CardMessageTitleView>, AttachmentLoadingMessageCell, AudioCell {
     
     weak var attachmentLoadingDelegate: AttachmentLoadingMessageCellDelegate?
     
     var operationButton: NetworkOperationButton! {
         leftView.operationButton
+    }
+    
+    var style: AudioCellStyle = .stopped {
+        didSet {
+            switch style {
+            case .playing:
+                operationButton.setImage(R.image.ic_pause(), for: .normal)
+            case .stopped, .paused:
+                operationButton.setImage(R.image.ic_play(), for: .normal)
+            }
+        }
+    }
+    
+    deinit {
+        if let message = viewModel?.message, message.isListPlayable {
+            PlaylistManager.shared.unregister(cell: self, for: message.messageId)
+        }
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        style = .stopped
+        if let message = viewModel?.message, message.isListPlayable {
+            PlaylistManager.shared.unregister(cell: self, for: message.messageId)
+        }
     }
     
     override func prepare() {
@@ -36,6 +61,9 @@ class DataMessageCell: CardMessageCell<DataMessageExtensionIconView, CardMessage
             titleLabel.text = viewModel.message.name ?? " "
             let mediaExpired = viewModel.mediaStatus == MediaStatus.EXPIRED.rawValue
             subtitleLabel.text =  mediaExpired ? Localized.CHAT_FILE_EXPIRED : viewModel.sizeRepresentation
+            if viewModel.message.isListPlayable {
+                PlaylistManager.shared.register(cell: self, for: viewModel.message.messageId)
+            }
         }
     }
     

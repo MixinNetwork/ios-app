@@ -840,6 +840,8 @@
 
 // Playlist
 "playlist" = "播放列表";
+"playlist_unknown_artist" = "未知艺术家";
+"playlist_not_playing" = "未在播放";
 
 // Notification
 "notification_reply" = "回复";

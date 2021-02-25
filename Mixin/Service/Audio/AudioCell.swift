@@ -6,6 +6,6 @@ enum AudioCellStyle {
     case stopped
 }
 
-protocol AudioCell: class {
+protocol AudioCell: UITableViewCell {
     var style: AudioCellStyle { get set }
 }

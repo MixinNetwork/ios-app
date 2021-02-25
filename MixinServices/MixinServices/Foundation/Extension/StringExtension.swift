@@ -46,6 +46,19 @@ public extension String {
             .replacingOccurrences(of: "]", with: "/]")
     }
     
+    var sha1: String? {
+        guard let data = self.data(using: .utf8) else {
+            return nil
+        }
+        var digest = Data(count: Int(CC_SHA1_DIGEST_LENGTH))
+        data.withUnsafeBytes { (data: UnsafeRawBufferPointer) -> Void in
+            digest.withUnsafeMutableUInt8Pointer { (digest) -> Void in
+                CC_SHA1(data.baseAddress, CC_LONG(data.count), digest)
+            }
+        }
+        return digest.map { String(format: "%02hhx", $0) }.joined()
+    }
+    
     func md5() -> String {
         guard let messageData = data(using: .utf8) else {
             return self

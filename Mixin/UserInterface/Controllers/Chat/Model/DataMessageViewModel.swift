@@ -13,9 +13,12 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
     
     var isLoading = false
     var progress: Double?
-    var showPlayIconOnMediaStatusDone: Bool = false
     var operationButtonStyle: NetworkOperationButton.Style = .finished(showPlayIcon: false)
     var downloadIsTriggeredByUser = false
+    
+    var showPlayIconOnMediaStatusDone: Bool {
+        message.isListPlayable
+    }
     
     var shouldAutoDownload: Bool {
         switch AppGroupUserDefaults.User.autoDownloadFiles {

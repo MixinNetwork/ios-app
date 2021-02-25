@@ -839,6 +839,8 @@
 
 // Playlist
 "playlist" = "Playlist";
+"playlist_unknown_artist" = "Unknown Artist";
+"playlist_not_playing" = "Not playing";
 
 // Notifications
 "notification_reply" = "Reply";

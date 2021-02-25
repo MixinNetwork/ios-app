@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MinimizedPlaylistViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="contentView" destination="4UI-8K-BQK" id="gRP-Sb-vv6"/>
+                <outlet property="view" destination="iN0-l3-epB" id="pAV-Ly-26R"/>
+                <outlet property="waveView" destination="My0-w0-wr3" id="iR9-nU-sj7"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4UI-8K-BQK">
+                    <rect key="frame" x="6" y="6" width="48" height="48"/>
+                    <subviews>
+                        <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="My0-w0-wr3" customClass="MinimizedPlaylistWaveView" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="4" y="4" width="40" height="40"/>
+                            <color key="backgroundColor" name="button_background_disabled"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="My0-w0-wr3" secondAttribute="height" id="2Xh-X6-4HF"/>
+                                <constraint firstAttribute="height" constant="40" id="zAQ-Vf-4dQ"/>
+                            </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <integer key="value" value="20"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </view>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cWY-Nv-4vJ">
+                            <rect key="frame" x="0.0" y="0.0" width="48" height="48"/>
+                            <connections>
+                                <action selector="showPlaylist:" destination="-1" eventType="touchUpInside" id="nYR-Y0-STF"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" name="minimized_call_background"/>
+                    <constraints>
+                        <constraint firstItem="My0-w0-wr3" firstAttribute="top" secondItem="4UI-8K-BQK" secondAttribute="top" constant="4" id="7UY-hA-kyk"/>
+                        <constraint firstItem="My0-w0-wr3" firstAttribute="leading" secondItem="4UI-8K-BQK" secondAttribute="leading" constant="4" id="KW0-uS-QUh"/>
+                        <constraint firstAttribute="trailing" secondItem="cWY-Nv-4vJ" secondAttribute="trailing" id="dIg-Qy-Gw4"/>
+                        <constraint firstItem="cWY-Nv-4vJ" firstAttribute="top" secondItem="4UI-8K-BQK" secondAttribute="top" id="oxR-AW-p89"/>
+                        <constraint firstAttribute="bottom" secondItem="My0-w0-wr3" secondAttribute="bottom" constant="4" id="q53-XE-3px"/>
+                        <constraint firstAttribute="trailing" secondItem="My0-w0-wr3" secondAttribute="trailing" constant="4" id="s4a-01-AiJ"/>
+                        <constraint firstAttribute="bottom" secondItem="cWY-Nv-4vJ" secondAttribute="bottom" id="uIv-wt-rXx"/>
+                        <constraint firstItem="cWY-Nv-4vJ" firstAttribute="leading" secondItem="4UI-8K-BQK" secondAttribute="leading" id="xQK-tW-1jC"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="24"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="4UI-8K-BQK" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="k4j-Fq-IhQ"/>
+                <constraint firstItem="4UI-8K-BQK" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="tDF-1o-RfS"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="-20.289855072463769" y="153.34821428571428"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="button_background_disabled">
+            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="minimized_call_background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

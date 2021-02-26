@@ -221,6 +221,7 @@ class PlaylistManager {
                 UIApplication.homeContainerViewController?.minimizedPlaylistViewController.show()
                 self.loadEarlierItemsIfNeeded()
                 self.loadLaterItemsIfNeeded()
+                self.downloadNextAttachmentIfNeeded()
             }
         }
     }
@@ -526,6 +527,7 @@ extension PlaylistManager {
                 self.loadingLaterItemsPosition = nil
                 self.didLoadLatest = true
                 self.delegate?.playlistManager(self, didLoadLaterItems: newItems)
+                self.downloadNextAttachmentIfNeeded()
             }
         }
     }
@@ -561,6 +563,22 @@ extension PlaylistManager {
         if let index = playingItemIndex {
             availableIndicesInShuffleMode.remove(index)
         }
+    }
+    
+    private func downloadNextAttachmentIfNeeded() {
+        let shouldDownload: Bool
+        switch AppGroupUserDefaults.User.autoDownloadFiles {
+        case .never:
+            shouldDownload = false
+        case .wifi:
+            shouldDownload = ReachabilityManger.shared.isReachableOnEthernetOrWiFi
+        case .wifiAndCellular:
+            shouldDownload = true
+        }
+        guard shouldDownload, let index = nextItemIndex else {
+            return
+        }
+        items[index].downloadAttachment()
     }
     
 }

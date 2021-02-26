@@ -77,6 +77,16 @@ class PlaylistViewController: ResizablePopupViewController {
         
         manager.delegate = self
         addTimeObservers()
+        
+        let center = NotificationCenter.default
+        center.addObserver(self,
+                           selector: #selector(updateCell(_:)),
+                           name: PlaylistItem.willDownloadAssetNotification,
+                           object: nil)
+        center.addObserver(self,
+                           selector: #selector(updateCell(_:)),
+                           name: PlaylistItem.didDownloadAssetNotification,
+                           object: nil)
     }
     
     override func preferredContentHeight(forSize size: Size) -> CGFloat {
@@ -194,6 +204,9 @@ extension PlaylistViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        guard !manager.items.isEmpty else {
+            return
+        }
         guard let cell = cell as? AudioCell else {
             return
         }
@@ -204,15 +217,7 @@ extension PlaylistViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         let item = manager.items[indexPath.row]
         if item.asset == nil {
-            if item.downloadAttachment() {
-                if let cell = tableView.cellForRow(at: indexPath) as? PlaylistItemCell {
-                    cell.fileStatus = .downloading
-                }
-                NotificationCenter.default.addObserver(self,
-                                                       selector: #selector(attachmentDidDownload(_:)),
-                                                       name: PlaylistItem.didUpdateNotification,
-                                                       object: item)
-            }
+            item.downloadAttachment()
         } else {
             manager.playOrPauseLoadedItem(at: indexPath.row)
         }
@@ -257,7 +262,7 @@ extension PlaylistViewController: PlaylistManagerDelegate {
 
 extension PlaylistViewController {
     
-    @objc private func attachmentDidDownload(_ notification: Notification) {
+    @objc private func updateCell(_ notification: Notification) {
         guard let item = notification.object as? PlaylistItem else {
             return
         }

@@ -5,7 +5,8 @@ import MixinServices
 
 final class PlaylistItem {
     
-    static let didUpdateNotification = Notification.Name("one.mixin.messenger.PlaylistItem.didUpdate")
+    static let willDownloadAssetNotification = Notification.Name("one.mixin.messenger.PlaylistItem.willDownloadAsset")
+    static let didDownloadAssetNotification = Notification.Name("one.mixin.messenger.PlaylistItem.didDownloadAsset")
     
     let id: String
     
@@ -48,20 +49,19 @@ final class PlaylistItem {
         self.asset = asset
     }
     
-    func downloadAttachment() -> Bool {
+    func downloadAttachment() {
         guard asset == nil && !isDownloading else {
-            return false
+            return
         }
         isDownloading = true
         let job = FileDownloadJob(messageId: id)
         if ConcurrentJobQueue.shared.addJob(job: job) {
+            notificationCenter.post(name: Self.willDownloadAssetNotification,
+                                    object: self)
             notificationCenter.addObserver(self,
                                            selector: #selector(updateAsset(_:)),
                                            name: AttachmentDownloadJob.didFinishNotification,
                                            object: job)
-            return true
-        } else {
-            return false
         }
     }
     
@@ -74,7 +74,7 @@ final class PlaylistItem {
         self.metadata = Metadata(asset: asset, filename: url.lastPathComponent)
         self.asset = asset
         notificationCenter.removeObserver(self)
-        notificationCenter.post(name: Self.didUpdateNotification, object: self)
+        notificationCenter.post(name: Self.didDownloadAssetNotification, object: self)
         isDownloading = false
     }
     
@@ -107,6 +107,14 @@ extension PlaylistItem: Decodable, DatabaseColumnConvertible, MixinFetchableReco
         } else {
             let metadata = Metadata(image: nil, title: name, subtitle: nil)
             self.init(id: messageId, metadata: metadata, asset: nil)
+        }
+        let jobId = FileDownloadJob.jobId(messageId: messageId)
+        if let job = ConcurrentJobQueue.shared.findJobById(jodId: jobId) as? FileDownloadJob {
+            notificationCenter.addObserver(self,
+                                           selector: #selector(updateAsset(_:)),
+                                           name: AttachmentDownloadJob.didFinishNotification,
+                                           object: job)
+            isDownloading = true
         }
     }
     

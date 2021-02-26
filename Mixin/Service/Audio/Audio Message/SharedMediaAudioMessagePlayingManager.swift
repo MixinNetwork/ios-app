@@ -70,6 +70,11 @@ class SharedMediaAudioMessagePlayingManager: AudioMessagePlayingManager {
         }
     }
     
+    override func audioSessionDidBeganInterruption(_ audioSession: AudioSession) {
+        super.audioSessionDidBeganInterruption(audioSession)
+        removePlayingInfoAndRemoteCommandTarget()
+    }
+    
     private func resetPlayingInfoAndRemoteCommandTarget(player: OggOpusPlayer) {
         removePlayingInfoAndRemoteCommandTarget()
         guard let message = playingMessage else {

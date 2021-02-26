@@ -125,8 +125,8 @@ class PlaylistViewController: ResizablePopupViewController {
     }
     
     @IBAction func endScrubbingAction(_ sender: Any) {
-        manager.seek(to: slider.percentage) { [weak self] in
-            guard let self = self else {
+        manager.seek(to: slider.percentage) { [weak self] (finished) in
+            guard finished, let self = self else {
                 return
             }
             guard self.sliderObserver == nil && self.timeLabelObserver == nil else {

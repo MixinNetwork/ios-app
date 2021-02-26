@@ -2,7 +2,7 @@ import Foundation
 import AVFoundation
 import MixinServices
 
-class AudioMessagePlayingManager: NSObject {
+class AudioMessagePlayingManager: NSObject, AudioSessionClient {
     
     struct WeakCellBox {
         weak var cell: AudioCell?
@@ -210,10 +210,7 @@ class AudioMessagePlayingManager: NSObject {
         }
     }
     
-}
-
-extension AudioMessagePlayingManager: AudioSessionClient {
-    
+    // MARK: - AudioSessionClient
     var priority: AudioSessionClientPriority {
         .playback
     }

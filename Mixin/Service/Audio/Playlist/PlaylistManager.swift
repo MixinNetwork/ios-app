@@ -1,5 +1,6 @@
 import Foundation
 import AVFoundation
+import MediaPlayer
 import MixinServices
 
 protocol PlaylistManagerDelegate: AnyObject {
@@ -10,7 +11,7 @@ protocol PlaylistManagerDelegate: AnyObject {
     func playlistManagerDidClearAllItems(_ manager: PlaylistManager)
 }
 
-class PlaylistManager {
+class PlaylistManager: NSObject {
     
     static let shared = PlaylistManager()
     
@@ -64,7 +65,8 @@ class PlaylistManager {
     }
     
     private let queue = DispatchQueue(label: "one.mixin.messenger.PlaylistManager")
-    private let loadMoreThreshold = 2
+    private let infoCenter = MPNowPlayingInfoCenter.default()
+    private let commandCenter = MPRemoteCommandCenter.shared()
     
     private(set) var items: [PlaylistItem] = []
     
@@ -124,7 +126,8 @@ class PlaylistManager {
         }
     }
     
-    init() {
+    override init() {
+        super.init()
         let center = NotificationCenter.default
         center.addObserver(self,
                            selector: #selector(playerDidPlayToEndTime(_:)),
@@ -180,6 +183,7 @@ class PlaylistManager {
                         guard item.id == self.playingItem?.id else {
                             return
                         }
+                        self.playerWillPlay(item: item)
                         self.player.rate = self.playbackRate.avPlayerRate
                     }
                 }
@@ -216,9 +220,8 @@ class PlaylistManager {
             let playerItem = AVPlayerItem(asset: asset)
             DispatchQueue.main.sync {
                 self.player.replaceCurrentItem(with: playerItem)
-                self.delegate?.playlistManager(self, willPlay: item)
+                self.playerWillPlay(item: item)
                 self.player.rate = self.playbackRate.avPlayerRate
-                UIApplication.homeContainerViewController?.minimizedPlaylistViewController.show()
                 self.loadEarlierItemsIfNeeded()
                 self.loadLaterItemsIfNeeded()
                 self.downloadNextAttachmentIfNeeded()
@@ -232,7 +235,7 @@ class PlaylistManager {
         }
         setAudioCellStyle(.paused, forCellsRegisteredWith: item.id)
         player.pause()
-        delegate?.playlistManagerDidPause(self)
+        playerDidPause()
     }
     
     func stopAndClear() {
@@ -246,8 +249,7 @@ class PlaylistManager {
         loadingEarlierItemsPosition = nil
         loadingLaterItemsPosition = nil
         delegate?.playlistManagerDidClearAllItems(self)
-        UIApplication.homeContainerViewController?.minimizedPlaylistViewController.hide()
-        try? AudioSession.shared.deactivate(client: self, notifyOthersOnDeactivation: false)
+        playerDidEnd()
     }
     
     func playPreviousItem() {
@@ -269,9 +271,7 @@ class PlaylistManager {
             if player.timeControlStatus == .playing {
                 pause()
             } else if player.currentItem != nil {
-                let item = items[index]
-                setAudioCellStyle(.playing, forCellsRegisteredWith: item.id)
-                delegate?.playlistManager(self, willPlay: item)
+                playerWillPlay(item: items[index])
                 player.rate = playbackRate.avPlayerRate
             } else {
                 playLoadedItem(at: index, rebuildAvailableIndicesForShuffleMode: false)
@@ -281,7 +281,7 @@ class PlaylistManager {
         }
     }
     
-    func seek(to percentage: Double, completion: @escaping () -> Void) {
+    func seek(to percentage: Double, completion: @escaping (Bool) -> Void) {
         guard percentage >= 0 && percentage <= 1 else {
             assertionFailure("Accepts percentage between 0...1")
             return
@@ -295,13 +295,17 @@ class PlaylistManager {
         }
         let cmTime = CMTime(seconds: duration * percentage,
                             preferredTimescale: CMTimeScale(NSEC_PER_SEC))
-        player.seek(to: cmTime) { (_) in
-            completion()
+        player.seek(to: cmTime) { (finished) in
+            if finished {
+                self.updateNowPlayingInfoElapsedPlaybackTime()
+            }
+            completion(finished)
         }
     }
     
 }
 
+// MARK: - Cell Registration
 extension PlaylistManager {
     
     func register(cell: AudioCell, for id: String) {
@@ -342,6 +346,7 @@ extension PlaylistManager {
     
 }
 
+// MARK: - Player Callback
 extension PlaylistManager {
     
     @objc private func playerDidPlayToEndTime(_ notification: Notification) {
@@ -364,6 +369,138 @@ extension PlaylistManager {
     
 }
 
+// MARK: - Remote Command Callback
+extension PlaylistManager {
+    
+    @objc private func playCommand(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
+        if let index = playingItemIndex {
+            play(index: index, in: items, source: source)
+            return .success
+        } else {
+            return .noActionableNowPlayingItem
+        }
+    }
+    
+    @objc private func pauseCommand(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
+        pause()
+        return .success
+    }
+    
+    @objc private func nextTrackCommand(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
+        if hasNextItem {
+            playNextItem()
+            return .success
+        } else {
+            return .noSuchContent
+        }
+    }
+    
+    @objc private func previousTrackCommand(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
+        if hasPreviousItem {
+            playPreviousItem()
+            return .success
+        } else {
+            return .noSuchContent
+        }
+    }
+    
+    @objc private func changePlaybackPositionCommand(_ event: MPChangePlaybackPositionCommandEvent) -> MPRemoteCommandHandlerStatus {
+        let cmTime = CMTime(seconds: event.positionTime,
+                            preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+        player.seek(to: cmTime)
+        return .success
+    }
+    
+    @objc private func changePlaybackRateCommand(_ event: MPChangePlaybackRateCommandEvent) -> MPRemoteCommandHandlerStatus {
+        guard let rate = PlaybackRate(avPlayerRate: event.playbackRate) else {
+            return .noSuchContent
+        }
+        playbackRate = rate
+        return .success
+    }
+    
+}
+
+// MARK: - Now Playing Infos
+extension PlaylistManager {
+    
+    private func resetPlayingInfoAndRemoteCommandTarget() {
+        guard let index = playingItemIndex else {
+            removePlayingInfoAndRemoteCommandTarget()
+            return
+        }
+        let item = items[index]
+        guard let asset = item.asset else {
+            removePlayingInfoAndRemoteCommandTarget()
+            return
+        }
+        
+        infoCenter.nowPlayingInfo = {
+            let duration = TimeInterval(CMTimeGetSeconds(asset.duration))
+            let rate = Double(playbackRate.avPlayerRate)
+            let elapsed = Double(CMTimeGetSeconds(player.currentTime()))
+            
+            var info: [String: Any] = [
+                MPMediaItemPropertyPlaybackDuration: NSNumber(value: duration),
+                MPNowPlayingInfoPropertyPlaybackRate: NSNumber(value: rate),
+                MPNowPlayingInfoPropertyElapsedPlaybackTime: NSNumber(value: elapsed),
+            ]
+            if let title = item.metadata.title {
+                info[MPMediaItemPropertyTitle] = title
+            }
+            if let artist = item.metadata.subtitle {
+                info[MPMediaItemPropertyArtist] = artist
+            }
+            if let image = item.metadata.image {
+                info[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
+            }
+            return info
+        }()
+        
+        commandCenter.changePlaybackRateCommand.supportedPlaybackRates = PlaybackRate.allCases.map {
+            NSNumber(value: $0.avPlayerRate)
+        }
+        
+        func setCommandEnabled(_ command: MPRemoteCommand, with action: Selector) {
+            command.isEnabled = true
+            command.addTarget(self, action: action)
+        }
+        setCommandEnabled(commandCenter.playCommand, with: #selector(playCommand(_:)))
+        setCommandEnabled(commandCenter.pauseCommand, with: #selector(pauseCommand(_:)))
+        setCommandEnabled(commandCenter.nextTrackCommand, with: #selector(nextTrackCommand(_:)))
+        setCommandEnabled(commandCenter.previousTrackCommand, with: #selector(previousTrackCommand(_:)))
+        setCommandEnabled(commandCenter.changePlaybackPositionCommand, with: #selector(changePlaybackPositionCommand(_:)))
+        setCommandEnabled(commandCenter.changePlaybackRateCommand, with: #selector(changePlaybackRateCommand(_:)))
+    }
+    
+    private func removePlayingInfoAndRemoteCommandTarget() {
+        infoCenter.nowPlayingInfo = nil
+        let commands = [
+            commandCenter.playCommand,
+            commandCenter.pauseCommand,
+            commandCenter.nextTrackCommand,
+            commandCenter.previousTrackCommand,
+            commandCenter.changePlaybackPositionCommand,
+            commandCenter.changePlaybackRateCommand,
+        ]
+        for command in commands {
+            command.isEnabled = false
+            command.removeTarget(self)
+        }
+    }
+    
+    private func updateNowPlayingInfoElapsedPlaybackTime() {
+        guard var info = infoCenter.nowPlayingInfo else {
+            return
+        }
+        let elapsed = Double(CMTimeGetSeconds(player.currentTime()))
+        info[MPNowPlayingInfoPropertyElapsedPlaybackTime] = NSNumber(value: elapsed)
+        infoCenter.nowPlayingInfo = info
+    }
+    
+}
+
+// MARK: - Embedded Struct
 extension PlaylistManager {
     
     enum Status {
@@ -388,7 +525,7 @@ extension PlaylistManager {
         
     }
     
-    enum PlaybackRate: UInt {
+    enum PlaybackRate: UInt, CaseIterable {
         
         case normal = 0
         case faster
@@ -413,6 +550,19 @@ extension PlaylistManager {
             }
         }
         
+        init?(avPlayerRate rate: Float) {
+            switch rate {
+            case 1:
+                self = .normal
+            case 1.5:
+                self = .faster
+            case 2:
+                self = .fastest
+            default:
+                return nil
+            }
+        }
+        
     }
     
     enum ItemSource {
@@ -422,6 +572,7 @@ extension PlaylistManager {
     
 }
 
+// MARK: - AudioSessionClient
 extension PlaylistManager: AudioSessionClient {
     
     var priority: AudioSessionClientPriority {
@@ -430,6 +581,7 @@ extension PlaylistManager: AudioSessionClient {
     
     func audioSessionDidBeganInterruption(_ audioSession: AudioSession) {
         pause()
+        removePlayingInfoAndRemoteCommandTarget()
     }
     
     func audioSession(_ audioSession: AudioSession, didChangeRouteFrom previousRoute: AVAudioSessionRouteDescription, reason: AVAudioSession.RouteChangeReason) {
@@ -461,6 +613,39 @@ extension PlaylistManager: AudioSessionClient {
     
 }
 
+// MARK: - Player Status Cycle
+extension PlaylistManager {
+    
+    private func playerWillPlay(item: PlaylistItem) {
+        setAudioCellStyle(.playing, forCellsRegisteredWith: item.id)
+        delegate?.playlistManager(self, willPlay: item)
+        UIApplication.homeContainerViewController?.minimizedPlaylistViewController.show()
+        if #available(iOS 13.0, *) {
+            infoCenter.playbackState = .playing
+        }
+        resetPlayingInfoAndRemoteCommandTarget()
+    }
+    
+    private func playerDidPause() {
+        delegate?.playlistManagerDidPause(self)
+        if #available(iOS 13.0, *) {
+            infoCenter.playbackState = .paused
+        }
+        updateNowPlayingInfoElapsedPlaybackTime()
+    }
+    
+    private func playerDidEnd() {
+        UIApplication.homeContainerViewController?.minimizedPlaylistViewController.hide()
+        try? AudioSession.shared.deactivate(client: self, notifyOthersOnDeactivation: false)
+        if #available(iOS 13.0, *) {
+            infoCenter.playbackState = .stopped
+        }
+        removePlayingInfoAndRemoteCommandTarget()
+    }
+    
+}
+
+// MARK: - Private works
 extension PlaylistManager {
     
     private func loadEarlierItemsIfNeeded() {
@@ -546,8 +731,7 @@ extension PlaylistManager {
         let playerItem = AVPlayerItem(asset: asset)
         playingItemIndex = index
         player.replaceCurrentItem(with: playerItem)
-        delegate?.playlistManager(self, willPlay: item)
-        setAudioCellStyle(.playing, forCellsRegisteredWith: item.id)
+        playerWillPlay(item: item)
         player.rate = playbackRate.avPlayerRate
         if repeatMode == .shuffle {
             if rebuildAvailableIndicesForShuffleMode {

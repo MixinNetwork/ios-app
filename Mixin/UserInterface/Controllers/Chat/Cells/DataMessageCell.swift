@@ -11,6 +11,12 @@ class DataMessageCell: CardMessageCell<DataMessageExtensionIconView, CardMessage
     
     var style: AudioCellStyle = .stopped {
         didSet {
+            guard let mediaStatus = (viewModel as? DataMessageViewModel)?.mediaStatus else {
+                return
+            }
+            guard mediaStatus == MediaStatus.DONE.rawValue || mediaStatus == MediaStatus.READ.rawValue else {
+                return
+            }
             switch style {
             case .playing:
                 operationButton.setImage(R.image.ic_pause(), for: .normal)
@@ -21,16 +27,16 @@ class DataMessageCell: CardMessageCell<DataMessageExtensionIconView, CardMessage
     }
     
     deinit {
-        if let message = viewModel?.message, message.isListPlayable {
-            PlaylistManager.shared.unregister(cell: self, for: message.messageId)
+        if let viewModel = viewModel as? DataMessageViewModel, viewModel.isListPlayable {
+            PlaylistManager.shared.unregister(cell: self, for: viewModel.message.messageId)
         }
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
         style = .stopped
-        if let message = viewModel?.message, message.isListPlayable {
-            PlaylistManager.shared.unregister(cell: self, for: message.messageId)
+        if let viewModel = viewModel as? DataMessageViewModel, viewModel.isListPlayable {
+            PlaylistManager.shared.unregister(cell: self, for: viewModel.message.messageId)
         }
     }
     
@@ -61,7 +67,7 @@ class DataMessageCell: CardMessageCell<DataMessageExtensionIconView, CardMessage
             titleLabel.text = viewModel.message.name ?? " "
             let mediaExpired = viewModel.mediaStatus == MediaStatus.EXPIRED.rawValue
             subtitleLabel.text =  mediaExpired ? Localized.CHAT_FILE_EXPIRED : viewModel.sizeRepresentation
-            if viewModel.message.isListPlayable {
+            if viewModel.isListPlayable {
                 PlaylistManager.shared.register(cell: self, for: viewModel.message.messageId)
             }
         }

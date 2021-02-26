@@ -3,6 +3,13 @@ import UIKit
 
 open class AttachmentDownloadJob: UploadOrDownloadJob {
     
+    public enum UserInfoKey {
+        public static let messageId = "mid"
+        public static let mediaURL = "url"
+    }
+    
+    public static let didFinishNotification = Notification.Name("one.mixin.services.AttachmentDownloadJob.DidFinish")
+    
     private(set) var stream: OutputStream!
     
     private var contentLength: Double?
@@ -163,6 +170,11 @@ open class AttachmentDownloadJob: UploadOrDownloadJob {
             MessageDAO.shared.updateMediaMessage(messageId: messageId, mediaUrl: fileName, status: .CANCELED, conversationId: message.conversationId)
         } else {
             MessageDAO.shared.updateMediaMessage(messageId: messageId, mediaUrl: fileName, status: .DONE, conversationId: message.conversationId)
+            let userInfo = [
+                Self.UserInfoKey.messageId: messageId,
+                Self.UserInfoKey.mediaURL: fileName
+            ]
+            NotificationCenter.default.post(onMainThread: Self.didFinishNotification, object: self, userInfo: userInfo)
             removeJob()
         }
     }

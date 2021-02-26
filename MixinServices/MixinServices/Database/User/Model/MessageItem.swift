@@ -303,7 +303,6 @@ extension MessageItem {
     
     public var isListPlayable: Bool {
         mediaMimeType == "audio/mpeg"
-            || (mediaUrl ?? "").lowercased().hasSuffix(".mp3")
     }
     
 }

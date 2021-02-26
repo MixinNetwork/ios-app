@@ -5,22 +5,28 @@ import MixinServices
 
 final class PlaylistItem {
     
-    let id: String
-    let asset: AVURLAsset
-    let metadata: Metadata
+    static let didUpdateNotification = Notification.Name("one.mixin.messenger.PlaylistItem.didUpdate")
     
-    internal init(id: String, asset: AVURLAsset, metadata: PlaylistItem.Metadata) {
-        self.id = id
-        self.asset = asset
-        self.metadata = metadata
-    }
+    let id: String
+    
+    private(set) var isDownloading = false
+    private(set) var metadata: Metadata
+    private(set) var asset: AVURLAsset?
+    
+    private let notificationCenter = NotificationCenter.default
     
     init(message: MessageItem) {
-        let url = AttachmentContainer.url(for: .files, filename: message.mediaUrl)
-        let filename = message.name ?? message.mediaUrl ?? ""
         self.id = message.messageId
-        self.asset = AVURLAsset(url: url)
-        self.metadata = Metadata(asset: asset, filename: filename)
+        if let mediaURL = message.mediaUrl, message.mediaStatus == MediaStatus.DONE.rawValue || message.mediaStatus == MediaStatus.READ.rawValue {
+            let url = AttachmentContainer.url(for: .files, filename: mediaURL)
+            let asset = AVURLAsset(url: url)
+            self.asset = asset
+            let filename = message.name ?? message.mediaUrl ?? ""
+            self.metadata = Metadata(asset: asset, filename: filename)
+        } else {
+            self.asset = nil
+            self.metadata = Metadata(image: nil, title: message.name, subtitle: nil)
+        }
     }
     
     init?(urlString: String) {
@@ -30,9 +36,46 @@ final class PlaylistItem {
         guard let id = url.absoluteString.sha1 else {
             return nil
         }
+        let asset = AVURLAsset(url: url)
         self.id = id
-        self.asset = AVURLAsset(url: url)
+        self.asset = asset
         self.metadata = Metadata(asset: asset, filename: url.lastPathComponent)
+    }
+    
+    internal init(id: String, metadata: PlaylistItem.Metadata, asset: AVURLAsset?) {
+        self.id = id
+        self.metadata = metadata
+        self.asset = asset
+    }
+    
+    func downloadAttachment() -> Bool {
+        guard asset == nil && !isDownloading else {
+            return false
+        }
+        isDownloading = true
+        let job = FileDownloadJob(messageId: id)
+        if ConcurrentJobQueue.shared.addJob(job: job) {
+            notificationCenter.addObserver(self,
+                                           selector: #selector(updateAsset(_:)),
+                                           name: AttachmentDownloadJob.didFinishNotification,
+                                           object: job)
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    @objc private func updateAsset(_ notification: Notification) {
+        guard let filename = notification.userInfo?[AttachmentDownloadJob.UserInfoKey.mediaURL] as? String else {
+            return
+        }
+        let url = AttachmentContainer.url(for: .files, filename: filename)
+        let asset = AVURLAsset(url: url)
+        self.metadata = Metadata(asset: asset, filename: url.lastPathComponent)
+        self.asset = asset
+        notificationCenter.removeObserver(self)
+        notificationCenter.post(name: Self.didUpdateNotification, object: self)
+        isDownloading = false
     }
     
 }
@@ -45,10 +88,6 @@ extension PlaylistItem: TableRecord {
 
 extension PlaylistItem: Decodable, DatabaseColumnConvertible, MixinFetchableRecord {
     
-    enum InitializationError: Error {
-        case invalidMediaURL
-    }
-    
     enum CodingKeys: String, CodingKey {
         case messageId = "id"
         case conversationId = "conversation_id"
@@ -59,30 +98,33 @@ extension PlaylistItem: Decodable, DatabaseColumnConvertible, MixinFetchableReco
     convenience init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let messageId = try container.decode(String.self, forKey: .messageId)
-        guard let mediaURL = try container.decodeIfPresent(String.self, forKey: .mediaURL), !mediaURL.isEmpty else {
-            throw InitializationError.invalidMediaURL
+        let name = try container.decodeIfPresent(String.self, forKey: .name)
+        if let mediaURL = try container.decodeIfPresent(String.self, forKey: .mediaURL), !mediaURL.isEmpty {
+            let url = AttachmentContainer.url(for: .files, filename: mediaURL)
+            let asset = AVURLAsset(url: url)
+            let metadata = Metadata(asset: asset, filename: name ?? url.lastPathComponent)
+            self.init(id: messageId, metadata: metadata, asset: asset)
+        } else {
+            let metadata = Metadata(image: nil, title: name, subtitle: nil)
+            self.init(id: messageId, metadata: metadata, asset: nil)
         }
-        let filename = (try? container.decodeIfPresent(String.self, forKey: .name)) ?? mediaURL
-        let url = AttachmentContainer.url(for: .files, filename: mediaURL)
-        let asset = AVURLAsset(url: url)
-        let metadata = Metadata(asset: asset, filename: filename)
-        self.init(id: messageId, asset: asset, metadata: metadata)
     }
     
 }
 
 extension PlaylistItem {
     
-    enum Source {
-        case message(conversationId: String, messageId: String)
-        case online(String)
-    }
-    
-    class Metadata {
+    final class Metadata {
         
         let image: UIImage?
         let title: String?
         let subtitle: String?
+        
+        init(image: UIImage?, title: String?, subtitle: String?) {
+            self.image = image
+            self.title = title
+            self.subtitle = subtitle
+        }
         
         init(asset: AVURLAsset, filename: String) {
             var image: UIImage?

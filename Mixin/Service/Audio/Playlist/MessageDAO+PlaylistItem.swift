@@ -6,7 +6,7 @@ extension MessageDAO {
     
     func getPlaylistItems(ofConversationWith conversationId: String, aboveMessageWith messageId: String) -> [PlaylistItem] {
         let sql = """
-            SELECT id, conversation_id, media_url
+            SELECT id, conversation_id, media_url, name
             FROM messages
             WHERE conversation_id = ?
                 AND category in ('SIGNAL_DATA', 'PLAIN_DATA')
@@ -27,7 +27,7 @@ extension MessageDAO {
     
     func getPlaylistItems(ofConversationWith conversationId: String, belowMessageWith messageId: String) -> [PlaylistItem] {
         let sql = """
-            SELECT id, conversation_id, media_url
+            SELECT id, conversation_id, media_url, name
             FROM messages
             WHERE conversation_id = ?
                 AND category in ('SIGNAL_DATA', 'PLAIN_DATA')

@@ -697,7 +697,7 @@ class ConversationViewController: UIViewController {
                 if viewModel.mediaStatus == MediaStatus.DONE.rawValue || viewModel.mediaStatus == MediaStatus.READ.rawValue {
                     conversationInputViewController.dismiss()
                     UIApplication.homeContainerViewController?.pipController?.pauseAction(self)
-                    if message.isListPlayable {
+                    if viewModel.isListPlayable {
                         if CallService.shared.hasCall {
                             alert(R.string.localizable.chat_voice_record_on_call())
                         } else {

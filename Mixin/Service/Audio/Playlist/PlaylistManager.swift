@@ -154,6 +154,9 @@ class PlaylistManager {
     
     func play(index: Int, in items: [PlaylistItem], source: ItemSource) {
         let item = items[index]
+        guard let asset = item.asset else {
+            return
+        }
         
         func activateAudioSession() {
             do {
@@ -210,7 +213,7 @@ class PlaylistManager {
         
         queue.async {
             activateAudioSession()
-            let playerItem = AVPlayerItem(asset: item.asset)
+            let playerItem = AVPlayerItem(asset: asset)
             DispatchQueue.main.sync {
                 self.player.replaceCurrentItem(with: playerItem)
                 self.delegate?.playlistManager(self, willPlay: item)
@@ -347,7 +350,13 @@ extension PlaylistManager {
                 player.seek(to: .zero)
                 player.play()
             case .repeatList, .shuffle:
-                playNextItem()
+                if let index = nextItemIndex, items[index].asset != nil {
+                    playNextItem()
+                } else {
+                    player.seek(to: .zero) { _ in
+                        self.pause()
+                    }
+                }
             }
         }
     }
@@ -525,11 +534,14 @@ extension PlaylistManager {
         guard index >= 0 && index < items.count else {
             return
         }
+        let item = items[index]
+        guard let asset = item.asset else {
+            return
+        }
         if let index = playingItemIndex {
             setAudioCellStyle(.stopped, forCellsRegisteredWith: items[index].id)
         }
-        let item = items[index]
-        let playerItem = AVPlayerItem(asset: item.asset)
+        let playerItem = AVPlayerItem(asset: asset)
         playingItemIndex = index
         player.replaceCurrentItem(with: playerItem)
         delegate?.playlistManager(self, willPlay: item)

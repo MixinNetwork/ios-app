@@ -11,6 +11,8 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         false
     }
     
+    let isListPlayable: Bool
+    
     var isLoading = false
     var progress: Double?
     var operationButtonStyle: NetworkOperationButton.Style = .finished(showPlayIcon: false)
@@ -36,6 +38,7 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
     }
     
     override init(message: MessageItem) {
+        isListPlayable = message.isListPlayable
         super.init(message: message)
         updateOperationButtonStyle()
     }

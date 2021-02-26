@@ -169,11 +169,16 @@ extension PlaylistViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let metadata = manager.items[indexPath.row].metadata
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseId) as! PlaylistItemCell
-        cell.infoView.imageView.image = metadata.image
-        cell.infoView.titleLabel.text = metadata.title
-        cell.infoView.subtitleLabel.text = metadata.subtitle
+        let item = manager.items[indexPath.row]
+        cell.infoView.imageView.image = item.metadata.image
+        cell.infoView.titleLabel.text = item.metadata.title
+        cell.infoView.subtitleLabel.text = item.metadata.subtitle
+        if item.asset != nil {
+            cell.fileStatus = .ready
+        } else {
+            cell.fileStatus = item.isDownloading ? .downloading : .pending
+        }
         return cell
     }
     
@@ -197,7 +202,20 @@ extension PlaylistViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        manager.playOrPauseLoadedItem(at: indexPath.row)
+        let item = manager.items[indexPath.row]
+        if item.asset == nil {
+            if item.downloadAttachment() {
+                if let cell = tableView.cellForRow(at: indexPath) as? PlaylistItemCell {
+                    cell.fileStatus = .downloading
+                }
+                NotificationCenter.default.addObserver(self,
+                                                       selector: #selector(attachmentDidDownload(_:)),
+                                                       name: PlaylistItem.didUpdateNotification,
+                                                       object: item)
+            }
+        } else {
+            manager.playOrPauseLoadedItem(at: indexPath.row)
+        }
     }
     
 }
@@ -238,6 +256,16 @@ extension PlaylistViewController: PlaylistManagerDelegate {
 }
 
 extension PlaylistViewController {
+    
+    @objc private func attachmentDidDownload(_ notification: Notification) {
+        guard let item = notification.object as? PlaylistItem else {
+            return
+        }
+        guard let row = manager.items.firstIndex(where: { $0.id == item.id }) else {
+            return
+        }
+        tableView.reloadRows(at: [IndexPath(row: row, section: 0)], with: .none)
+    }
     
     private func updateSliderPosition(time: CMTime, duration: CMTime) {
         guard duration.isValid else {
@@ -281,10 +309,10 @@ extension PlaylistViewController {
             guard let self = self else {
                 return
             }
-            guard let item = self.manager.playingItem else {
+            guard let asset = self.manager.playingItem?.asset else {
                 return
             }
-            self.updateSliderPosition(time: time, duration: item.asset.duration)
+            self.updateSliderPosition(time: time, duration: asset.duration)
         }
         
         let timeLabelInterval = CMTime(seconds: 1, preferredTimescale: timescale)
@@ -292,10 +320,10 @@ extension PlaylistViewController {
             guard let self = self else {
                 return
             }
-            guard let item = self.manager.playingItem else {
+            guard let asset = self.manager.playingItem?.asset else {
                 return
             }
-            self.updateTimeLabel(time: time, duration: item.asset.duration)
+            self.updateTimeLabel(time: time, duration: asset.duration)
         }
     }
     
@@ -308,11 +336,11 @@ extension PlaylistViewController {
     }
     
     private func updateNowPlayingView(with item: PlaylistItem?) {
-        if let item = item {
+        if let item = item, let asset = item.asset {
             slider.isEnabled = true
             let player = manager.player
-            updateSliderPosition(time: player.currentTime(), duration: item.asset.duration)
-            updateTimeLabel(time: player.currentTime(), duration: item.asset.duration)
+            updateSliderPosition(time: player.currentTime(), duration: asset.duration)
+            updateTimeLabel(time: player.currentTime(), duration: asset.duration)
             nowPlayingInfoView.imageView.image = item.metadata.image
             nowPlayingInfoView.titleLabel.text = item.metadata.title
             nowPlayingInfoView.subtitleLabel.text = item.metadata.subtitle

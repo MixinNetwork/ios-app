@@ -100,7 +100,12 @@ class PlaylistViewController: ResizablePopupViewController {
     }
     
     @IBAction func removeAll(_ sender: Any) {
-        manager.stopAndClear()
+        let alert = UIAlertController(title: R.string.localizable.playlist_delete_all_confirmation(), message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: R.string.localizable.action_remove_all(), style: .destructive, handler: { (_) in
+            self.manager.stopAndClear()
+        }))
+        alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
     
     @IBAction func close(_ sender: Any) {

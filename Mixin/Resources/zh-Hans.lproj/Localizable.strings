@@ -842,6 +842,7 @@
 "playlist" = "播放列表";
 "playlist_unknown_artist" = "未知艺术家";
 "playlist_not_playing" = "未在播放";
+"playlist_delete_all_confirmation" = "确定要删除播放列表？";
 
 // Notification
 "notification_reply" = "回复";

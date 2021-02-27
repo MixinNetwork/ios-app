@@ -302,6 +302,7 @@ extension MixinWebViewController: WKNavigationDelegate {
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        webView.isOpaque = true
         reloadTheme(webView: webView)
     }
     

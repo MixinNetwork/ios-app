@@ -37,7 +37,12 @@ final class PlaylistItem {
         guard let id = url.absoluteString.sha1 else {
             return nil
         }
-        let asset = AVURLAsset(url: url)
+        let asset: AVURLAsset
+        if CacheableAsset.isURLCacheable(url) {
+            asset = CacheableAsset(url: url)
+        } else {
+            asset = AVURLAsset(url: url)
+        }
         self.id = id
         self.asset = asset
         self.metadata = Metadata(asset: asset, filename: url.lastPathComponent)

@@ -2,7 +2,7 @@ import UIKit
 
 class MinimizedPlaylistViewController: HomeOverlayViewController {
     
-    @IBOutlet weak var waveView: UIView!
+    @IBOutlet weak var waveView: MinimizedPlaylistWaveView!
     
     override func viewDidLoad() {
         super.viewDidLoad()

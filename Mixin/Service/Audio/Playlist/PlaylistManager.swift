@@ -619,7 +619,10 @@ extension PlaylistManager {
     private func playerWillPlay(item: PlaylistItem) {
         setAudioCellStyle(.playing, forCellsRegisteredWith: item.id)
         delegate?.playlistManager(self, willPlay: item)
-        UIApplication.homeContainerViewController?.minimizedPlaylistViewController.show()
+        if let mini = UIApplication.homeContainerViewController?.minimizedPlaylistViewController {
+            mini.show()
+            mini.waveView.startAnimating()
+        }
         if #available(iOS 13.0, *) {
             infoCenter.playbackState = .playing
         }
@@ -631,11 +634,17 @@ extension PlaylistManager {
         if #available(iOS 13.0, *) {
             infoCenter.playbackState = .paused
         }
+        if let mini = UIApplication.homeContainerViewController?.minimizedPlaylistViewController {
+            mini.waveView.stopAnimating()
+        }
         updateNowPlayingInfoElapsedPlaybackTime()
     }
     
     private func playerDidEnd() {
-        UIApplication.homeContainerViewController?.minimizedPlaylistViewController.hide()
+        if let mini = UIApplication.homeContainerViewController?.minimizedPlaylistViewController {
+            mini.waveView.stopAnimating()
+            mini.hide()
+        }
         try? AudioSession.shared.deactivate(client: self, notifyOthersOnDeactivation: false)
         if #available(iOS 13.0, *) {
             infoCenter.playbackState = .stopped

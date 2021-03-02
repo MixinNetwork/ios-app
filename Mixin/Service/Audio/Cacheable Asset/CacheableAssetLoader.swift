@@ -5,7 +5,6 @@ import MixinServices
 final class CacheableAssetLoader: NSObject {
     
     enum Error: Swift.Error {
-        case inaccessibleCacheFolder
         case missingAssetFile
         case missingContentInfo(Swift.Error?)
         case readsNothing
@@ -18,12 +17,6 @@ final class CacheableAssetLoader: NSObject {
         case local(ClosedRange<Int64>)
         case remote(ClosedRange<Int64>)
         case remoteStartFrom(Int64)
-    }
-    
-    private static var cacheURL: URL? {
-        FileManager.default
-            .urls(for: .cachesDirectory, in: .userDomainMask).first?
-            .appendingPathComponent("CacheableAssets", isDirectory: true)
     }
     
     let id: String
@@ -55,24 +48,16 @@ final class CacheableAssetLoader: NSObject {
     private var pendingRequests: [AVAssetResourceLoadingRequest] = []
     
     init(id: String) throws {
-        guard let cacheURL = Self.cacheURL else {
-            throw Error.inaccessibleCacheFolder
-        }
-        try Self.createFileIfNotExists(at: cacheURL, isDirectory: true)
+        let pack = try CacheableAssetFileManager.shared.filePack(for: id)
+        let assetFileHandle = try FileHandle(forUpdating: pack.assetURL)
         
-        let assetURL = cacheURL.appendingPathComponent(id, isDirectory: false)
-        let descriptionURL = cacheURL.appendingPathComponent(id + ".cafd", isDirectory: false)
-        let isAssetFileNewlyCreated = try Self.createFileIfNotExists(at: assetURL, isDirectory: false)
-        try Self.createFileIfNotExists(at: descriptionURL, isDirectory: false)
-        
-        let assetFileHandle = try FileHandle(forUpdating: assetURL)
         let fileDescription: CacheableAssetFileDescription
         let isFileDescriptionNewlyCreated: Bool
         do {
-            if isAssetFileNewlyCreated {
+            if pack.isAssetFileNewlyCreated {
                 throw Error.missingAssetFile
             }
-            let data = try Data(contentsOf: descriptionURL)
+            let data = try Data(contentsOf: pack.fileDescriptionURL)
             fileDescription = try decoder.decode(CacheableAssetFileDescription.self, from: data)
             isFileDescriptionNewlyCreated = false
         } catch {
@@ -84,37 +69,12 @@ final class CacheableAssetLoader: NSObject {
         self.queue = DispatchQueue(label: "one.mixin.messenger.CacheableAssetLoader-\(id)")
         self.fileDescription = fileDescription
         self.assetFileHandle = assetFileHandle
-        self.assetFileDescriptionURL = descriptionURL
+        self.assetFileDescriptionURL = pack.fileDescriptionURL
         
         super.init()
         
         if isFileDescriptionNewlyCreated {
             saveFileDescription()
-        }
-    }
-    
-    // Returns true if the file is newly created, false if the file already exists
-    @discardableResult
-    static func createFileIfNotExists(at url: URL, isDirectory shouldBeDirectory: Bool) throws -> Bool {
-        let fileManager = FileManager.default
-        var isDirectory = ObjCBool(false)
-        
-        if fileManager.fileExists(atPath: url.path, isDirectory: &isDirectory) {
-            if isDirectory.boolValue == shouldBeDirectory {
-                return false
-            } else {
-                try fileManager.removeItem(at: url)
-            }
-        }
-        
-        if shouldBeDirectory {
-            try fileManager.createDirectory(at: url,
-                                            withIntermediateDirectories: true,
-                                            attributes: nil)
-            return true
-        } else {
-            try Data().write(to: url)
-            return true
         }
     }
     

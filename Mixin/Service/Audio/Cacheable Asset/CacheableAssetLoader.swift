@@ -6,6 +6,7 @@ final class CacheableAssetLoader: NSObject {
     
     enum Error: Swift.Error {
         case inaccessibleCacheFolder
+        case missingAssetFile
         case missingContentInfo(Swift.Error?)
         case readsNothing
         case invalidURL
@@ -57,20 +58,26 @@ final class CacheableAssetLoader: NSObject {
         guard let cacheURL = Self.cacheURL else {
             throw Error.inaccessibleCacheFolder
         }
-        try Self.ensureFileExists(at: cacheURL, isDirectory: true)
+        try Self.createFileIfNotExists(at: cacheURL, isDirectory: true)
         
         let assetURL = cacheURL.appendingPathComponent(id, isDirectory: false)
         let descriptionURL = cacheURL.appendingPathComponent(id + ".cafd", isDirectory: false)
-        try Self.ensureFileExists(at: assetURL, isDirectory: false)
-        try Self.ensureFileExists(at: descriptionURL, isDirectory: false)
+        let isAssetFileNewlyCreated = try Self.createFileIfNotExists(at: assetURL, isDirectory: false)
+        try Self.createFileIfNotExists(at: descriptionURL, isDirectory: false)
         
         let assetFileHandle = try FileHandle(forUpdating: assetURL)
         let fileDescription: CacheableAssetFileDescription
+        let isFileDescriptionNewlyCreated: Bool
         do {
+            if isAssetFileNewlyCreated {
+                throw Error.missingAssetFile
+            }
             let data = try Data(contentsOf: descriptionURL)
             fileDescription = try decoder.decode(CacheableAssetFileDescription.self, from: data)
+            isFileDescriptionNewlyCreated = false
         } catch {
             fileDescription = CacheableAssetFileDescription(contentInfo: nil, availableRanges: [])
+            isFileDescriptionNewlyCreated = true
         }
         
         self.id = id
@@ -78,16 +85,23 @@ final class CacheableAssetLoader: NSObject {
         self.fileDescription = fileDescription
         self.assetFileHandle = assetFileHandle
         self.assetFileDescriptionURL = descriptionURL
+        
         super.init()
+        
+        if isFileDescriptionNewlyCreated {
+            saveFileDescription()
+        }
     }
     
-    static func ensureFileExists(at url: URL, isDirectory shouldBeDirectory: Bool) throws {
+    // Returns true if the file is newly created, false if the file already exists
+    @discardableResult
+    static func createFileIfNotExists(at url: URL, isDirectory shouldBeDirectory: Bool) throws -> Bool {
         let fileManager = FileManager.default
         var isDirectory = ObjCBool(false)
         
         if fileManager.fileExists(atPath: url.path, isDirectory: &isDirectory) {
             if isDirectory.boolValue == shouldBeDirectory {
-                return
+                return false
             } else {
                 try fileManager.removeItem(at: url)
             }
@@ -97,8 +111,10 @@ final class CacheableAssetLoader: NSObject {
             try fileManager.createDirectory(at: url,
                                             withIntermediateDirectories: true,
                                             attributes: nil)
+            return true
         } else {
             try Data().write(to: url)
+            return true
         }
     }
     

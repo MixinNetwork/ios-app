@@ -338,9 +338,6 @@ extension CacheableAssetLoader {
                         data = assetFileHandle.readData(ofLength: length)
                     }
                 } catch {
-                    currentRequest = nil
-                    currentDataTask = nil
-                    fragments = []
                     debugInfo("[CacheableAssetLoader] ❌ Failed to read local data: \(error)")
                     finishCurrentRequest(with: error)
                     return

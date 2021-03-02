@@ -841,7 +841,8 @@
 "playlist" = "Playlist";
 "playlist_unknown_artist" = "Unknown Artist";
 "playlist_not_playing" = "Not playing";
-"playlist_delete_all_confirmation" = "Clear this playlist?";
+"playlist_stop_confirmation" = "Stop playing this list？";
+"playlist_stop" = "Stop Playing";
 
 // Notifications
 "notification_reply" = "Reply";

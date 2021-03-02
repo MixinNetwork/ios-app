@@ -8,7 +8,6 @@ protocol PlaylistManagerDelegate: AnyObject {
     func playlistManagerDidPause(_ manager: PlaylistManager)
     func playlistManager(_ manager: PlaylistManager, didLoadEarlierItems items: [PlaylistItem])
     func playlistManager(_ manager: PlaylistManager, didLoadLaterItems items: [PlaylistItem])
-    func playlistManagerDidClearAllItems(_ manager: PlaylistManager)
 }
 
 class PlaylistManager: NSObject {
@@ -238,18 +237,20 @@ class PlaylistManager: NSObject {
         playerDidPause()
     }
     
-    func stopAndClear() {
+    func stop() {
         if let item = playingItem {
             setAudioCellStyle(.stopped, forCellsRegisteredWith: item.id)
         }
         playingItemIndex = nil
         player.replaceCurrentItem(with: nil)
+        playerDidEnd()
+    }
+    
+    func clearAllItems() {
         items = []
         loadedItemIds = []
         loadingEarlierItemsPosition = nil
         loadingLaterItemsPosition = nil
-        delegate?.playlistManagerDidClearAllItems(self)
-        playerDidEnd()
     }
     
     func playPreviousItem() {

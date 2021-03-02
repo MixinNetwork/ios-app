@@ -102,16 +102,19 @@ class PlaylistViewController: ResizablePopupViewController {
         }
     }
     
-    @IBAction func removeAll(_ sender: Any) {
-        let alert = UIAlertController(title: R.string.localizable.playlist_delete_all_confirmation(), message: nil, preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: R.string.localizable.action_remove_all(), style: .destructive, handler: { (_) in
-            self.manager.stopAndClear()
+    @IBAction func stop(_ sender: Any) {
+        let alert = UIAlertController(title: R.string.localizable.playlist_stop_confirmation(), message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: R.string.localizable.playlist_stop(), style: .default, handler: { (_) in
+            self.manager.stop()
+            self.dismiss(animated: true) {
+                self.manager.clearAllItems()
+            }
         }))
         alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
         present(alert, animated: true, completion: nil)
     }
     
-    @IBAction func close(_ sender: Any) {
+    @IBAction func hide(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
     
@@ -259,11 +262,6 @@ extension PlaylistViewController: PlaylistManagerDelegate {
         }
         tableView.insertRows(at: indexPaths, with: .none)
         nextTrackButton.isEnabled = manager.hasNextItem
-    }
-    
-    func playlistManagerDidClearAllItems(_ manager: PlaylistManager) {
-        tableView.reloadData()
-        updateNowPlayingView(with: nil)
     }
     
 }

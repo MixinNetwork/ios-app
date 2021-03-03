@@ -24,7 +24,15 @@ class AudioMessagePlayingManager: NSObject {
     
     override init() {
         super.init()
-        NotificationCenter.default.addObserver(self, selector: #selector(willRecallMessage(_:)), name: SendMessageService.willRecallMessageNotification, object: nil)
+        let center = NotificationCenter.default
+        center.addObserver(self,
+                           selector: #selector(willRecallMessage(_:)),
+                           name: SendMessageService.willRecallMessageNotification,
+                           object: nil)
+        center.addObserver(self,
+                           selector: #selector(pause),
+                           name: UIApplication.didEnterBackgroundNotification,
+                           object: nil)
     }
     
     deinit {

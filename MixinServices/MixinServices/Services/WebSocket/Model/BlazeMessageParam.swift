@@ -87,6 +87,10 @@ extension BlazeMessageParam {
     init(messages: [TransferMessage]) {
         self.messages = messages
     }
+    
+    init(offset: String) {
+        self.offset = offset
+    }
 
     init(sessionId: String, conversationId: String, ackMessages: [TransferMessage]) {
         let transferPlainData = PlainJsonMessagePayload(action: PlainDataAction.ACKNOWLEDGE_MESSAGE_RECEIPTS.rawValue, messageId: nil, messages: nil, ackMessages: ackMessages)

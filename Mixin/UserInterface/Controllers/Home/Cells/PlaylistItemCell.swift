@@ -18,12 +18,18 @@ class PlaylistItemCell: ModernSelectedBackgroundCell, AudioCell {
             case .pending:
                 indicator.stopAnimating()
                 statusImageView.image = R.image.ic_file_download()
+                statusImageView.backgroundColor = UIColor.black.withAlphaComponent(0.2)
+                infoView.setImageViewBackground(isOpaque: true)
             case .downloading:
                 indicator.startAnimating()
                 statusImageView.image = nil
+                statusImageView.backgroundColor = .clear
+                infoView.setImageViewBackground(isOpaque: false)
             case .ready:
                 indicator.stopAnimating()
                 statusImageView.image = nil
+                statusImageView.backgroundColor = UIColor.black.withAlphaComponent(0.2)
+                infoView.setImageViewBackground(isOpaque: true)
             }
         }
     }
@@ -46,7 +52,9 @@ class PlaylistItemCell: ModernSelectedBackgroundCell, AudioCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         statusImageView.contentMode = .center
         statusImageView.tintColor = .white
-        indicator.tintColor = .white
+        statusImageView.layer.cornerRadius = 19
+        statusImageView.clipsToBounds = true
+        indicator.tintColor = UIColor(displayP3RgbValue: 0xBCBEC3)
         contentView.addSubview(infoView)
         contentView.addSubview(statusImageView)
         contentView.addSubview(indicator)

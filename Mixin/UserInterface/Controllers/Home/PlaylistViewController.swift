@@ -58,6 +58,15 @@ class PlaylistViewController: ResizablePopupViewController {
         nowPlayingView.layer.shadowOffset = CGSize(width: 0, height: 1)
         nowPlayingView.layer.shadowRadius = 15
         
+        let nowPlayingImageMaskView = UIView()
+        nowPlayingImageMaskView.backgroundColor = UIColor.black.withAlphaComponent(0.2)
+        nowPlayingImageMaskView.layer.cornerRadius = nowPlayingInfoView.imageView.layer.cornerRadius
+        nowPlayingImageMaskView.clipsToBounds = true
+        nowPlayingView.addSubview(nowPlayingImageMaskView)
+        nowPlayingImageMaskView.snp.makeConstraints { (make) in
+            make.edges.equalTo(nowPlayingInfoView.imageView)
+        }
+        
         for label in [playedTimeLabel!, remainingTimeLabel!] {
             label.font = UIFontMetrics.default.scaledFont(for: .monospacedDigitSystemFont(ofSize: 14, weight: .regular))
             label.adjustsFontForContentSizeCategory = true

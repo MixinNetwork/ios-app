@@ -16,4 +16,8 @@ class MusicInfoView: UIView, XibDesignable {
         loadXib()
     }
     
+    func setImageViewBackground(isOpaque: Bool) {
+        imageView.backgroundColor = isOpaque ? UIColor(displayP3RgbValue: 0xEFEFF4) : .clear
+    }
+    
 }

@@ -201,7 +201,7 @@ extension AudioInputViewController: AudioRecorderDelegate {
         startRedDotAnimation()
     }
     
-    func audioRecorderDidCancelRecording(_ recorder: AudioRecorder, for reason: AudioRecorderCancelledReason, userInfo: [String : Any]?) {
+    func audioRecorder(_ recorder: AudioRecorder, didCancelRecordingForReason reason: AudioRecorder.CancelledReason, userInfo: [String : Any]?) {
         resetTimerAndRecorder()
         layoutForStopping()
         stopRedDotAnimation()

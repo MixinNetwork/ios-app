@@ -240,7 +240,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
     }
     
     @IBAction func closeAction(_ sender: Any) {
-        try? AudioSession.shared.deactivate(client: self, notifyOthersOnDeactivation: true)
+        AudioSession.shared.deactivateAsynchronously(client: self, notifyOthersOnDeactivation: true)
         navigationController?.popViewController(animated: true)
     }
 

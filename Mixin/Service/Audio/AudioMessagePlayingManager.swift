@@ -123,7 +123,7 @@ class AudioMessagePlayingManager: NSObject {
             self.playingMessage = nil
         }
         player.stop()
-        try? AudioSession.shared.deactivate(client: self, notifyOthersOnDeactivation: true)
+        AudioSession.shared.deactivateAsynchronously(client: self, notifyOthersOnDeactivation: true)
     }
     
     func register(cell: AudioCell, forMessageId messageId: String) {

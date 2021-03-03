@@ -109,7 +109,7 @@ final class MediaPreviewViewController: UIViewController {
     }
     
     @IBAction func dismissAction(_ sender: Any) {
-        try? AudioSession.shared.deactivate(client: self, notifyOthersOnDeactivation: true)
+        AudioSession.shared.deactivateAsynchronously(client: self, notifyOthersOnDeactivation: true)
         dismiss(animated: true, completion: nil)
     }
     
@@ -147,7 +147,7 @@ final class MediaPreviewViewController: UIViewController {
     }
     
     @objc private func playerItemDidPlayToEndTime() {
-        try? AudioSession.shared.deactivate(client: self, notifyOthersOnDeactivation: true)
+        AudioSession.shared.deactivateAsynchronously(client: self, notifyOthersOnDeactivation: true)
         DispatchQueue.main.async {
             self.seekToZeroBeforePlay = true
         }

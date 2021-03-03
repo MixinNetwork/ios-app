@@ -80,7 +80,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
             if isPlayable {
                 updateControlView(playControlsHidden: false, otherControlsHidden: true, animated: false)
             }
-            try? AudioSession.shared.deactivate(client: self, notifyOthersOnDeactivation: false)
+            AudioSession.shared.deactivateAsynchronously(client: self, notifyOthersOnDeactivation: false)
         }
     }
     
@@ -355,7 +355,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         }
         updateControlView(playControlsHidden: false, otherControlsHidden: false, animated: true)
         removeTimeObservers()
-        try? AudioSession.shared.deactivate(client: self, notifyOthersOnDeactivation: true)
+        AudioSession.shared.deactivateAsynchronously(client: self, notifyOthersOnDeactivation: false)
     }
     
     @objc func playerItemFailedToPlayToEndTime(_ notification: Notification) {
@@ -364,7 +364,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         controlView.style.remove(.loading)
         updateControlView(playControlsHidden: false, otherControlsHidden: false, animated: true)
         removeTimeObservers()
-        try? AudioSession.shared.deactivate(client: self, notifyOthersOnDeactivation: true)
+        AudioSession.shared.deactivateAsynchronously(client: self, notifyOthersOnDeactivation: false)
     }
     
     @objc func beginScrubbingAction(_ sender: Any) {

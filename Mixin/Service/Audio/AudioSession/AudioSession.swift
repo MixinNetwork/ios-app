@@ -73,6 +73,12 @@ class AudioSession {
         try avAudioSession.setActive(false, options: options)
     }
     
+    func deactivateAsynchronously(client: AudioSessionClient, notifyOthersOnDeactivation: Bool) {
+        DispatchQueue.global().async {
+            try? self.deactivate(client: client, notifyOthersOnDeactivation: notifyOthersOnDeactivation)
+        }
+    }
+    
     @objc private func audioSessionInterruption(_ notification: Notification) {
         guard let typeValue = notification.userInfo?[AVAudioSessionInterruptionTypeKey] as? NSNumber else {
             return

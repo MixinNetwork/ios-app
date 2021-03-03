@@ -6,8 +6,11 @@ import MixinServices
 protocol PlaylistManagerDelegate: AnyObject {
     func playlistManager(_ manager: PlaylistManager, willPlay item: PlaylistItem)
     func playlistManagerDidPause(_ manager: PlaylistManager)
+    func playlistManagerDidEnd(_ manager: PlaylistManager)
     func playlistManager(_ manager: PlaylistManager, didLoadEarlierItems items: [PlaylistItem])
     func playlistManager(_ manager: PlaylistManager, didLoadLaterItems items: [PlaylistItem])
+    func playlistManager(_ manager: PlaylistManager, didRemoveItemAt index: Int)
+    func playlistManagerDidRemoveAll(_ manager: PlaylistManager)
 }
 
 class PlaylistManager: NSObject {
@@ -132,6 +135,22 @@ class PlaylistManager: NSObject {
                            selector: #selector(playerDidPlayToEndTime(_:)),
                            name: .AVPlayerItemDidPlayToEndTime,
                            object: nil)
+        center.addObserver(self,
+                           selector: #selector(messageDAODidInsertMessage(_:)),
+                           name: MessageDAO.didInsertMessageNotification,
+                           object: nil)
+        center.addObserver(self,
+                           selector: #selector(messageDAOWillDeleteMessage(_:)),
+                           name: MessageDAO.willDeleteMessageNotification,
+                           object: nil)
+        center.addObserver(self,
+                           selector: #selector(conversationDAOWillClearConversation(_:)),
+                           name: ConversationDAO.willClearConversationNotification,
+                           object: nil)
+        center.addObserver(self,
+                           selector: #selector(messageServiceWillRecallMessage(_:)),
+                           name: SendMessageService.willRecallMessageNotification,
+                           object: nil)
     }
     
     deinit {
@@ -246,11 +265,13 @@ class PlaylistManager: NSObject {
         playerDidEnd()
     }
     
-    func clearAllItems() {
+    func removeAllItems() {
         items = []
         loadedItemIds = []
+        availableIndicesInShuffleMode = []
         loadingEarlierItemsPosition = nil
         loadingLaterItemsPosition = nil
+        delegate?.playlistManagerDidRemoveAll(self)
     }
     
     func playPreviousItem() {
@@ -642,6 +663,7 @@ extension PlaylistManager {
     }
     
     private func playerDidEnd() {
+        delegate?.playlistManagerDidEnd(self)
         if let mini = UIApplication.homeContainerViewController?.minimizedPlaylistViewController {
             mini.waveView.stopAnimating()
             mini.hide()
@@ -651,6 +673,69 @@ extension PlaylistManager {
             infoCenter.playbackState = .stopped
         }
         removePlayingInfoAndRemoteCommandTarget()
+    }
+    
+}
+
+// MARK: - Message update callback
+extension PlaylistManager {
+    
+    @objc private func messageDAODidInsertMessage(_ notification: Notification) {
+        guard let id = notification.userInfo?[MessageDAO.UserInfoKey.conversationId] as? String else {
+            return
+        }
+        guard case let .conversation(conversationId) = source, conversationId == id else {
+            return
+        }
+        guard let message = notification.userInfo?[MessageDAO.UserInfoKey.message] as? MessageItem else {
+            return
+        }
+        guard !loadedItemIds.contains(message.messageId), message.isListPlayable else {
+            return
+        }
+        loadingLaterItemsPosition = nil // This will cancel previously dispatched loading process
+        didLoadLatest = false
+        loadLaterItemsIfNeeded()
+    }
+    
+    @objc private func messageDAOWillDeleteMessage(_ notification: Notification) {
+        guard let messageId = notification.userInfo?[MessageDAO.UserInfoKey.messageId] as? String else {
+            return
+        }
+        guard case .conversation = source else {
+            return
+        }
+        removeItem(with: messageId)
+    }
+    
+    @objc private func conversationDAOWillClearConversation(_ notification: Notification) {
+        guard let id = notification.userInfo?[ConversationDAO.conversationIdUserInfoKey] as? String else {
+            return
+        }
+        guard case let .conversation(conversationId) = source, conversationId == id else {
+            return
+        }
+        stop()
+        removeAllItems()
+    }
+    
+    @objc private func messageServiceWillRecallMessage(_ notification: Notification) {
+        guard let userInfo = notification.userInfo else {
+            return
+        }
+        guard let id = userInfo[SendMessageService.UserInfoKey.conversationId] as? String else {
+            return
+        }
+        guard case let .conversation(conversationId) = source, conversationId == id else {
+            return
+        }
+        guard let messageId = userInfo[SendMessageService.UserInfoKey.messageId] as? String else {
+            return
+        }
+        guard loadedItemIds.contains(messageId) else {
+            return
+        }
+        removeItem(with: messageId)
     }
     
 }
@@ -773,6 +858,18 @@ extension PlaylistManager {
             return
         }
         items[index].downloadAttachment()
+    }
+    
+    private func removeItem(with id: String) {
+        loadedItemIds.remove(id)
+        if playingItem?.id == id {
+            stop()
+        }
+        if let index = items.firstIndex(where: { $0.id == id }) {
+            availableIndicesInShuffleMode.remove(index)
+            items.remove(at: index)
+            delegate?.playlistManager(self, didRemoveItemAt: index)
+        }
     }
     
 }

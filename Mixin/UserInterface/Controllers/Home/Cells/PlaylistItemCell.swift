@@ -12,6 +12,8 @@ class PlaylistItemCell: ModernSelectedBackgroundCell, AudioCell {
     let statusImageView = UIImageView()
     let indicator = ActivityIndicatorView()
     
+    var id: String?
+    
     var fileStatus: FileStatus = .pending {
         didSet {
             switch fileStatus {

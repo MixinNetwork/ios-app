@@ -81,9 +81,12 @@ class PlaylistViewController: ResizablePopupViewController {
         switch manager.status {
         case .playing:
             playButton.setImage(R.image.playlist.ic_pause(), for: .normal)
-        case .paused, .stopped:
+        case .paused:
+            playButton.setImage(R.image.playlist.ic_play(), for: .normal)
+        case .stopped:
             playButton.setImage(R.image.playlist.ic_play(), for: .normal)
         }
+        playButton.isEnabled = !manager.items.isEmpty
         updateRepeatModeButton()
         updatePlaybackRateButton()
         
@@ -116,7 +119,7 @@ class PlaylistViewController: ResizablePopupViewController {
         alert.addAction(UIAlertAction(title: R.string.localizable.playlist_stop(), style: .default, handler: { (_) in
             self.manager.stop()
             self.dismiss(animated: true) {
-                self.manager.clearAllItems()
+                self.manager.removeAllItems()
             }
         }))
         alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
@@ -201,6 +204,7 @@ extension PlaylistViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseId) as! PlaylistItemCell
         let item = manager.items[indexPath.row]
+        cell.id = item.id
         cell.infoView.imageView.image = item.metadata.image
         cell.infoView.titleLabel.text = item.metadata.title
         cell.infoView.subtitleLabel.text = item.metadata.subtitle
@@ -217,20 +221,17 @@ extension PlaylistViewController: UITableViewDataSource {
 extension PlaylistViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        guard let cell = cell as? AudioCell else {
+        guard let cell = cell as? PlaylistItemCell, let id = cell.id else {
             return
         }
-        manager.register(cell: cell, for: manager.items[indexPath.row].id)
+        manager.register(cell: cell, for: id)
     }
     
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        guard !manager.items.isEmpty else {
+        guard let cell = cell as? PlaylistItemCell, let id = cell.id else {
             return
         }
-        guard let cell = cell as? AudioCell else {
-            return
-        }
-        manager.unregister(cell: cell, for: manager.items[indexPath.row].id)
+        manager.unregister(cell: cell, for: id)
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -271,6 +272,26 @@ extension PlaylistViewController: PlaylistManagerDelegate {
         }
         tableView.insertRows(at: indexPaths, with: .none)
         nextTrackButton.isEnabled = manager.hasNextItem
+    }
+    
+    func playlistManagerDidEnd(_ manager: PlaylistManager) {
+        playButton.setImage(R.image.playlist.ic_play(), for: .normal)
+        updateNowPlayingView(with: nil)
+    }
+    
+    func playlistManager(_ manager: PlaylistManager, didRemoveItemAt index: Int) {
+        let indexPath = IndexPath(row: index, section: 0)
+        tableView.deleteRows(at: [indexPath], with: .automatic)
+        playButton.isEnabled = !manager.items.isEmpty
+        previousTrackButton.isEnabled = manager.hasPreviousItem
+        nextTrackButton.isEnabled = manager.hasNextItem
+    }
+    
+    func playlistManagerDidRemoveAll(_ manager: PlaylistManager) {
+        tableView.reloadData()
+        playButton.isEnabled = !manager.items.isEmpty
+        previousTrackButton.isEnabled = false
+        nextTrackButton.isEnabled = false
     }
     
 }

@@ -6,7 +6,7 @@ public extension NotificationCenter {
         if Thread.isMainThread {
             post(name: name, object: object, userInfo: userInfo)
         } else {
-            DispatchQueue.main.async {
+            DispatchQueue.main.sync {
                 self.post(name: name, object: object, userInfo: userInfo)
             }
         }

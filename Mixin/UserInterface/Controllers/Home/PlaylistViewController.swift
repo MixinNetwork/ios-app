@@ -332,7 +332,9 @@ extension PlaylistViewController {
             return
         }
         let time = CMTimeGetSeconds(time)
-        
+        guard time.isFinite && !time.isNaN else {
+            return
+        }
         playedTimeLabel.text = mediaDurationFormatter.string(from: time)
         if let remaining = mediaDurationFormatter.string(from: duration - time) {
             remainingTimeLabel.text = "-" + remaining

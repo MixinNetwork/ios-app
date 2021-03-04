@@ -179,24 +179,29 @@ class PlaylistManager: NSObject {
             return
         }
         
-        func activateAudioSession() {
+        // Returns true on success, false on failed
+        func activateAudioSession() -> Bool {
             do {
                 try AudioSession.shared.activate(client: self) { (session) in
                     try session.setCategory(.playback, mode: .default, options: [])
                 }
+                return true
             } catch {
-                performSynchronouslyOnMainThread {
-                    self.setAudioCellStyle(.stopped, forCellsRegisteredWith: item.id)
-                }
+                return false
             }
         }
         
         if let playingId = playingItem?.id {
             if playingId == item.id, loadedItemIds.isSuperset(of: items.map(\.id)) {
                 setAudioCellStyle(.playing, forCellsRegisteredWith: playingId)
-                UIApplication.homeContainerViewController?.minimizedPlaylistViewController.show()
                 queue.async {
-                    activateAudioSession()
+                    guard activateAudioSession() else {
+                        DispatchQueue.main.sync {
+                            self.setAudioCellStyle(.paused, forCellsRegisteredWith: item.id)
+                            self.playerDidPause()
+                        }
+                        return
+                    }
                     DispatchQueue.main.sync {
                         guard item.id == self.playingItem?.id else {
                             return
@@ -234,7 +239,13 @@ class PlaylistManager: NSObject {
         }
         
         queue.async {
-            activateAudioSession()
+            guard activateAudioSession() else {
+                DispatchQueue.main.sync {
+                    self.setAudioCellStyle(.paused, forCellsRegisteredWith: item.id)
+                    self.playerDidPause()
+                }
+                return
+            }
             let playerItem = AVPlayerItem(asset: asset)
             DispatchQueue.main.sync {
                 self.player.replaceCurrentItem(with: playerItem)

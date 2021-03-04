@@ -102,6 +102,10 @@ class PlaylistViewController: ResizablePopupViewController {
                            selector: #selector(updateCell(_:)),
                            name: PlaylistItem.didDownloadAssetNotification,
                            object: nil)
+        center.addObserver(self,
+                           selector: #selector(applicationDidEnterBackground(_:)),
+                           name: UIApplication.didEnterBackgroundNotification,
+                           object: nil)
     }
     
     override func preferredContentHeight(forSize size: Size) -> CGFloat {
@@ -298,6 +302,10 @@ extension PlaylistViewController: PlaylistManagerDelegate {
 
 extension PlaylistViewController {
     
+    @objc private func applicationDidEnterBackground(_ notification: Notification) {
+        dismiss(animated: false, completion: nil)
+    }
+    
     @objc private func updateCell(_ notification: Notification) {
         guard let item = notification.object as? PlaylistItem else {
             return
@@ -307,6 +315,10 @@ extension PlaylistViewController {
         }
         tableView.reloadRows(at: [IndexPath(row: row, section: 0)], with: .none)
     }
+    
+}
+
+extension PlaylistViewController {
     
     private func updateSliderPosition(time: CMTime, duration: CMTime) {
         guard duration.isValid else {

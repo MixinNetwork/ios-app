@@ -3,14 +3,14 @@ import MediaPlayer
 import SDWebImage
 import MixinServices
 
-protocol SharedMediaAudioManagerDelegate: class {
-    func sharedMediaAudioManager(_ manager: SharedMediaAudioManager, playableMessageNextTo message: MessageItem) -> MessageItem?
-    func sharedMediaAudioManager(_ manager: SharedMediaAudioManager, playableMessagePreviousTo message: MessageItem) -> MessageItem?
+protocol SharedMediaAudioMessagePlayingManagerDelegate: class {
+    func sharedMediaAudioMessagePlayingManager(_ manager: SharedMediaAudioMessagePlayingManager, playableMessageNextTo message: MessageItem) -> MessageItem?
+    func sharedMediaAudioMessagePlayingManager(_ manager: SharedMediaAudioMessagePlayingManager, playableMessagePreviousTo message: MessageItem) -> MessageItem?
 }
 
-class SharedMediaAudioManager: AudioManager {
+class SharedMediaAudioMessagePlayingManager: AudioMessagePlayingManager {
     
-    weak var delegate: SharedMediaAudioManagerDelegate?
+    weak var delegate: SharedMediaAudioMessagePlayingManagerDelegate?
     
     private var needsUpdatePlayingInfo = false
     
@@ -26,11 +26,11 @@ class SharedMediaAudioManager: AudioManager {
     }
     
     override func playableMessage(nextTo message: MessageItem) -> MessageItem? {
-        return delegate?.sharedMediaAudioManager(self, playableMessageNextTo: message)
+        return delegate?.sharedMediaAudioMessagePlayingManager(self, playableMessageNextTo: message)
     }
     
     override func preloadAudio(nextTo message: MessageItem) {
-        guard let next = delegate?.sharedMediaAudioManager(self, playableMessageNextTo: message) else {
+        guard let next = delegate?.sharedMediaAudioMessagePlayingManager(self, playableMessageNextTo: message) else {
             return
         }
         guard next.category.hasSuffix("_AUDIO"), next.mediaStatus == MediaStatus.CANCELED.rawValue || next.mediaStatus == MediaStatus.PENDING.rawValue else {
@@ -40,7 +40,7 @@ class SharedMediaAudioManager: AudioManager {
         ConcurrentJobQueue.shared.addJob(job: job)
     }
     
-    override func handleStatusChange(player: AudioPlayer) {
+    override func handleStatusChange(player: OggOpusPlayer) {
         super.handleStatusChange(player: player)
         if #available(iOS 13.0, *) {
             let center = MPNowPlayingInfoCenter.default()
@@ -70,7 +70,7 @@ class SharedMediaAudioManager: AudioManager {
         }
     }
     
-    private func resetPlayingInfoAndRemoteCommandTarget(player: AudioPlayer) {
+    private func resetPlayingInfoAndRemoteCommandTarget(player: OggOpusPlayer) {
         removePlayingInfoAndRemoteCommandTarget()
         guard let message = playingMessage else {
             return
@@ -139,7 +139,7 @@ class SharedMediaAudioManager: AudioManager {
     
 }
 
-extension SharedMediaAudioManager {
+extension SharedMediaAudioMessagePlayingManager {
     
     @objc private func playCommand(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
         if let message = playingMessage {
@@ -162,10 +162,10 @@ extension SharedMediaAudioManager {
     
     @objc private func nextTrackCommand(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
         if let current = playingMessage {
-            if let next = delegate?.sharedMediaAudioManager(self, playableMessageNextTo: current) {
-                let userInfo = [AudioManager.conversationIdUserInfoKey: next.conversationId,
-                                AudioManager.messageIdUserInfoKey: next.messageId]
-                NotificationCenter.default.post(name: AudioManager.willPlayNextNotification, object: self, userInfo: userInfo)
+            if let next = delegate?.sharedMediaAudioMessagePlayingManager(self, playableMessageNextTo: current) {
+                let userInfo = [AudioMessagePlayingManager.conversationIdUserInfoKey: next.conversationId,
+                                AudioMessagePlayingManager.messageIdUserInfoKey: next.messageId]
+                NotificationCenter.default.post(name: AudioMessagePlayingManager.willPlayNextNotification, object: self, userInfo: userInfo)
                 play(message: next)
                 return .success
             } else {
@@ -178,10 +178,10 @@ extension SharedMediaAudioManager {
     
     @objc private func previousTrackCommand(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
         if let current = playingMessage {
-            if let previous = delegate?.sharedMediaAudioManager(self, playableMessagePreviousTo: current) {
-                let userInfo = [AudioManager.conversationIdUserInfoKey: previous.conversationId,
-                                AudioManager.messageIdUserInfoKey: previous.messageId]
-                NotificationCenter.default.post(name: AudioManager.willPlayPreviousNotification, object: self, userInfo: userInfo)
+            if let previous = delegate?.sharedMediaAudioMessagePlayingManager(self, playableMessagePreviousTo: current) {
+                let userInfo = [AudioMessagePlayingManager.conversationIdUserInfoKey: previous.conversationId,
+                                AudioMessagePlayingManager.messageIdUserInfoKey: previous.messageId]
+                NotificationCenter.default.post(name: AudioMessagePlayingManager.willPlayPreviousNotification, object: self, userInfo: userInfo)
                 play(message: previous)
                 return .success
             } else {

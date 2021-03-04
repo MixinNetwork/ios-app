@@ -33,15 +33,17 @@ class RingtonePlayer {
     
     func play(ringtone: Ringtone) {
         stop()
-        let session = AVAudioSession.sharedInstance()
+        let audioSession = AudioSession.shared.avAudioSession
+        let options: AVAudioSession.CategoryOptions = [
+            .duckOthers, .allowBluetooth, .allowBluetoothA2DP, .allowAirPlay
+        ]
         let player: AVAudioPlayer?
-        let options: AVAudioSession.CategoryOptions = [.duckOthers, .allowBluetooth, .allowBluetoothA2DP, .allowAirPlay]
         switch ringtone {
         case .incoming:
-            try? session.setCategory(.playback, mode: .default, options: options)
+            try? audioSession.setCategory(.playback, mode: .default, options: options)
             player = incomingPlayer
         case .outgoing:
-            try? session.setCategory(.playAndRecord, mode: .voiceChat, options: options)
+            try? audioSession.setCategory(.playAndRecord, mode: .voiceChat, options: options)
             player = outgoingPlayer
         }
         if let player = player {

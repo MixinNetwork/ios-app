@@ -299,7 +299,7 @@ class ConversationViewController: UIViewController {
         center.addObserver(self, selector: #selector(menuControllerDidHideMenu(_:)), name: UIMenuController.didHideMenuNotification, object: nil)
         center.addObserver(self, selector: #selector(participantDidChange(_:)), name: ParticipantDAO.participantDidChangeNotification, object: nil)
         center.addObserver(self, selector: #selector(didAddMessageOutOfBounds(_:)), name: ConversationDataSource.newMessageOutOfVisibleBoundsNotification, object: dataSource)
-        center.addObserver(self, selector: #selector(audioManagerWillPlayNextNode(_:)), name: AudioManager.willPlayNextNotification, object: nil)
+        center.addObserver(self, selector: #selector(audioMessagePlayingManagerWillPlayNextNode(_:)), name: AudioMessagePlayingManager.willPlayNextNotification, object: nil)
         center.addObserver(self, selector: #selector(willRecallMessage(_:)), name: SendMessageService.willRecallMessageNotification, object: nil)
         center.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         center.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -334,7 +334,7 @@ class ConversationViewController: UIViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        AudioManager.shared.stop()
+        AudioMessagePlayingManager.shared.stop()
         if let visibleIndexPaths = tableView.indexPathsForVisibleRows {
             if let lastIndexPath = dataSource?.lastIndexPath, visibleIndexPaths.contains(lastIndexPath), tableView.rectForRow(at: lastIndexPath).origin.y < tableView.contentOffset.y + tableView.frame.height - tableView.contentInset.bottom {
                 ConversationViewController.positions[conversationId] = nil
@@ -677,13 +677,13 @@ class ConversationViewController: UIViewController {
                     reloadWithMessageId(quoteMessageId, scrollUpwards: false)
                 }
             } else if message.category.hasSuffix("_AUDIO"), message.mediaStatus == MediaStatus.DONE.rawValue || message.mediaStatus == MediaStatus.READ.rawValue {
-                if AudioManager.shared.playingMessage?.messageId == message.messageId, AudioManager.shared.player?.status == .playing {
-                    AudioManager.shared.pause()
+                if AudioMessagePlayingManager.shared.playingMessage?.messageId == message.messageId, AudioMessagePlayingManager.shared.player?.status == .playing {
+                    AudioMessagePlayingManager.shared.pause()
                 } else if CallService.shared.hasCall {
                     alert(R.string.localizable.chat_voice_record_on_call())
                 } else {
                     (cell as? AudioMessageCell)?.updateUnreadStyle()
-                    AudioManager.shared.play(message: message)
+                    AudioMessagePlayingManager.shared.play(message: message)
                 }
             } else if (isImageOrVideo && mediaStatusIsReady) || message.category.hasSuffix("_LIVE"), let item = GalleryItem(message: message), let cell = cell as? PhotoRepresentableMessageCell {
                 adjustTableViewContentOffsetWhenInputWrapperHeightChanges = false
@@ -926,14 +926,14 @@ class ConversationViewController: UIViewController {
         }
     }
     
-    @objc func audioManagerWillPlayNextNode(_ notification: Notification) {
+    @objc func audioMessagePlayingManagerWillPlayNextNode(_ notification: Notification) {
         guard !tableView.isTracking else {
             return
         }
-        guard let conversationId = notification.userInfo?[AudioManager.conversationIdUserInfoKey] as? String, conversationId == dataSource.conversationId else {
+        guard let conversationId = notification.userInfo?[AudioMessagePlayingManager.conversationIdUserInfoKey] as? String, conversationId == dataSource.conversationId else {
             return
         }
-        guard let messageId = notification.userInfo?[AudioManager.messageIdUserInfoKey] as? String else {
+        guard let messageId = notification.userInfo?[AudioMessagePlayingManager.messageIdUserInfoKey] as? String else {
             return
         }
         if let indexPath = dataSource.indexPath(where: { $0.messageId == messageId }) {
@@ -1109,20 +1109,7 @@ class ConversationViewController: UIViewController {
         guard let ownerUser = dataSource.ownerUser else {
             return
         }
-        let conversationId = dataSource.conversationId
-        let service = CallService.shared
-        service.queue.async {
-            let activeCall = service.activeCall
-            DispatchQueue.main.sync {
-                if service.isMinimized, activeCall?.conversationId == conversationId {
-                    service.setInterfaceMinimized(false, animated: true)
-                } else if activeCall != nil {
-                    service.alert(error: CallError.busy)
-                } else {
-                    service.requestStartPeerToPeerCall(remoteUser: ownerUser)
-                }
-            }
-        }
+        CallService.shared.requestStartPeerToPeerCall(remoteUser: ownerUser)
     }
     
     func pickPhotoOrVideoAction() {
@@ -2350,8 +2337,8 @@ extension ConversationViewController {
     }
     
     private func deleteForMe(viewModels: [MessageViewModel]) {
-        if let playingMessageId = AudioManager.shared.playingMessage?.messageId, viewModels.contains(where: { $0.message.messageId == playingMessageId }) {
-            AudioManager.shared.stop()
+        if let playingMessageId = AudioMessagePlayingManager.shared.playingMessage?.messageId, viewModels.contains(where: { $0.message.messageId == playingMessageId }) {
+            AudioMessagePlayingManager.shared.stop()
         }
         for case let viewModel as AttachmentLoadingViewModel in viewModels {
             viewModel.cancelAttachmentLoading(isTriggeredByUser: true)
@@ -2376,8 +2363,8 @@ extension ConversationViewController {
     }
     
     private func deleteForEveryone(viewModels: [MessageViewModel]) {
-        if let playingMessageId = AudioManager.shared.playingMessage?.messageId, viewModels.contains(where: { $0.message.messageId == playingMessageId }) {
-            AudioManager.shared.stop()
+        if let playingMessageId = AudioMessagePlayingManager.shared.playingMessage?.messageId, viewModels.contains(where: { $0.message.messageId == playingMessageId }) {
+            AudioMessagePlayingManager.shared.stop()
         }
         for case let viewModel as AttachmentLoadingViewModel in viewModels {
             viewModel.cancelAttachmentLoading(isTriggeredByUser: true)

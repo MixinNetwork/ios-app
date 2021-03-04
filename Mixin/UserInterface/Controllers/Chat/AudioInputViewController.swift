@@ -42,7 +42,7 @@ class AudioInputViewController: UIViewController, ConversationInputAccessible {
     private var recordGestureBeganPoint = CGPoint.zero
     private var recordDurationTimer: Timer?
     private var recordDuration: TimeInterval = 0
-    private var recorder: AudioRecorder?
+    private var recorder: OggOpusRecorder?
     private var isShowingLockView = false
     private var isLocked = false {
         didSet {
@@ -75,7 +75,6 @@ class AudioInputViewController: UIViewController, ConversationInputAccessible {
         }
         switch recordGestureRecognizer.state {
         case .began:
-            AudioManager.shared.pause()
             isLocked = false
             lockView.progress = 0
             hideLongPressHint()
@@ -184,13 +183,13 @@ extension AudioInputViewController: UIGestureRecognizerDelegate {
     
 }
 
-extension AudioInputViewController: AudioRecorderDelegate {
+extension AudioInputViewController: OggOpusRecorderDelegate {
     
-    func audioRecorderIsWaitingForActivation(_ recorder: AudioRecorder) {
+    func oggOpusRecorderIsWaitingForActivation(_ recorder: OggOpusRecorder) {
         
     }
     
-    func audioRecorderDidStartRecording(_ recorder: AudioRecorder) {
+    func oggOpusRecorderDidStartRecording(_ recorder: OggOpusRecorder) {
         let timer = Timer(timeInterval: updateTimeLabelInterval,
                           target: self,
                           selector: #selector(AudioInputViewController.updateTimeLabelAction(_:)),
@@ -201,19 +200,19 @@ extension AudioInputViewController: AudioRecorderDelegate {
         startRedDotAnimation()
     }
     
-    func audioRecorder(_ recorder: AudioRecorder, didCancelRecordingForReason reason: AudioRecorder.CancelledReason, userInfo: [String : Any]?) {
+    func oggOpusRecorder(_ recorder: OggOpusRecorder, didCancelRecordingForReason reason: OggOpusRecorder.CancelledReason, userInfo: [String : Any]?) {
         resetTimerAndRecorder()
         layoutForStopping()
         stopRedDotAnimation()
         if reason != .userInitiated {
             var userInfo = userInfo ?? [:]
             userInfo["reason"] = reason.rawValue
-            Logger.write(errorMsg: "[AudioRecorderDidCancelRecording]...reason:\(reason.rawValue)")
+            Logger.write(errorMsg: "[OggOpusRecorderDidCancelRecording]...reason:\(reason.rawValue)")
             reporter.report(event: .cancelAudioRecording, userInfo: userInfo)
         }
     }
     
-    func audioRecorder(_ recorder: AudioRecorder, didFailRecordingWithError error: Error) {
+    func oggOpusRecorder(_ recorder: OggOpusRecorder, didFailRecordingWithError error: Error) {
         resetTimerAndRecorder()
         layoutForStopping()
         stopRedDotAnimation()
@@ -221,7 +220,7 @@ extension AudioInputViewController: AudioRecorderDelegate {
         Logger.write(error: error)
     }
     
-    func audioRecorder(_ recorder: AudioRecorder, didFinishRecordingWithMetadata metadata: AudioMetadata) {
+    func oggOpusRecorder(_ recorder: OggOpusRecorder, didFinishRecordingWithMetadata metadata: AudioMetadata) {
         resetTimerAndRecorder()
         layoutForStopping()
         stopRedDotAnimation()
@@ -234,8 +233,8 @@ extension AudioInputViewController: AudioRecorderDelegate {
         }
     }
     
-    func audioRecorderDidDetectAudioSessionInterruptionEnd(_ recorder: AudioRecorder) {
-        Logger.write(errorMsg: "[AudioRecorderDidCancelRecording]...detect interruption end")
+    func oggOpusRecorderDidDetectAudioSessionInterruptionEnd(_ recorder: OggOpusRecorder) {
+        Logger.write(errorMsg: "[OggOpusRecorderDidCancelRecording]...detect interruption end")
     }
     
 }
@@ -265,7 +264,7 @@ extension AudioInputViewController {
         setTimeLabelValue(0)
         let tempUrl = URL.createTempUrl(fileExtension: ExtensionName.ogg.rawValue)
         do {
-            let recorder = try AudioRecorder(path: tempUrl.path)
+            let recorder = try OggOpusRecorder(path: tempUrl.path)
             UIApplication.shared.isIdleTimerDisabled = true
             recorder.delegate = self
             recorder.record(for: AudioInputViewController.maxRecordDuration)

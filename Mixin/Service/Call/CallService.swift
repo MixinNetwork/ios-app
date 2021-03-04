@@ -208,10 +208,21 @@ class CallService: NSObject {
 extension CallService {
     
     func requestStartPeerToPeerCall(remoteUser: UserItem) {
-        self.log("[CallService] Request start p2p call with user: \(remoteUser.fullName)")
-        let handle = CXHandle(type: .generic, value: remoteUser.userId)
-        let call = PeerToPeerCall(uuid: UUID(), isOutgoing: true, remoteUser: remoteUser)
-        requestStartCall(call, handle: handle, playOutgoingRingtone: true)
+        queue.async {
+            let activeCall = self.activeCall
+            DispatchQueue.main.sync {
+                if self.isMinimized, let activeCallRemoteUserId = (activeCall as? PeerToPeerCall)?.remoteUserId, activeCallRemoteUserId == remoteUser.userId {
+                    self.setInterfaceMinimized(false, animated: true)
+                } else if activeCall != nil {
+                    self.alert(error: CallError.busy)
+                } else {
+                    self.log("[CallService] Request start p2p call with user: \(remoteUser.fullName)")
+                    let handle = CXHandle(type: .generic, value: remoteUser.userId)
+                    let call = PeerToPeerCall(uuid: UUID(), isOutgoing: true, remoteUser: remoteUser)
+                    self.requestStartCall(call, handle: handle, playOutgoingRingtone: true)
+                }
+            }
+        }
     }
     
     func requestStartGroupCall(conversation: ConversationItem, invitingMembers: [UserItem]) {
@@ -558,6 +569,7 @@ extension CallService {
         }
         updateCallKitAvailability()
         registerForPushKitNotificationsIfAvailable()
+        try? AudioSession.shared.deactivate(client: self, notifyOthersOnDeactivation: false)
     }
     
     func close(uuid: UUID) {
@@ -587,6 +599,7 @@ extension CallService {
             }
             updateCallKitAvailability()
             registerForPushKitNotificationsIfAvailable()
+            try? AudioSession.shared.deactivate(client: self, notifyOthersOnDeactivation: false)
         }
     }
     
@@ -756,6 +769,7 @@ extension CallService {
                     }
                 }
             } else {
+                try? AudioSession.shared.activate(client: self)
                 let call = PeerToPeerCall(uuid: uuid, isOutgoing: false, remoteUser: user)
                 pendingAnswerCalls[uuid] = call
                 pendingSDPs[uuid] = sdp
@@ -927,6 +941,7 @@ extension CallService {
             groupCallUUIDs[conversation.conversationId] = uuid
             self.log("[CallService] reporting incoming group call invitation: \(call.debugDescription), members: \(members.map(\.fullName))")
             pendingAnswerCalls[uuid] = call
+            try? AudioSession.shared.activate(client: self)
             DispatchQueue.main.sync {
                 NotificationCenter.default.post(name: Self.willStartCallNotification, object: self)
             }
@@ -1294,6 +1309,15 @@ extension CallService: RTCAudioSessionDelegate {
     
 }
 
+// MARK: - AudioSessionClient
+extension CallService: AudioSessionClient {
+    
+    var priority: AudioSessionClientPriority {
+        .voiceCall
+    }
+    
+}
+
 // MARK: - Workers
 extension CallService {
     
@@ -1505,6 +1529,7 @@ extension CallService {
             if let call = call as? GroupCall {
                 groupCallUUIDs[call.conversationId] = call.uuid
             }
+            try? AudioSession.shared.activate(client: self)
             callInterface.requestStartCall(uuid: call.uuid, handle: handle, playOutgoingRingtone: playOutgoingRingtone) { (error) in
                 guard let error = error else {
                     return

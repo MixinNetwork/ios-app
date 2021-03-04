@@ -4,7 +4,7 @@ import MixinServices
 
 fileprivate let audioQueueBufferSize: Int32 = 11520; // Should be smaller than AudioQueueBufferRef.mAudioDataByteSize
 
-class AudioPlayer {
+class OggOpusPlayer {
     
     enum Error: Swift.Error {
         case newOutput
@@ -21,7 +21,7 @@ class AudioPlayer {
         case didReachEnd
     }
     
-    var onStatusChanged: ((AudioPlayer) -> Void)?
+    var onStatusChanged: ((OggOpusPlayer) -> Void)?
     
     var currentTime: Float64 {
         var timeStamp = AudioTimeStamp()
@@ -147,7 +147,7 @@ fileprivate func aqBufferCallback(inUserData: UnsafeMutableRawPointer?, inAq: Au
     guard let ptr = inUserData else {
         return
     }
-    let player = Unmanaged<AudioPlayer>.fromOpaque(ptr).takeUnretainedValue()
+    let player = Unmanaged<OggOpusPlayer>.fromOpaque(ptr).takeUnretainedValue()
     guard player.status != .didReachEnd else {
         return
     }

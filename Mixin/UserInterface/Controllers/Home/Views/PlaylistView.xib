@@ -12,6 +12,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PlaylistViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
+                <outlet property="controlPanelBottomConstraint" destination="5ac-yr-S3I" id="gLl-do-St3"/>
                 <outlet property="controlPanelStackView" destination="1Ib-Sh-RaL" id="eiq-fG-S9g"/>
                 <outlet property="nextTrackButton" destination="fid-ba-XUU" id="6JA-an-js7"/>
                 <outlet property="nowPlayingInfoView" destination="VHT-PK-QYK" id="gEj-9V-NZs"/>
@@ -98,7 +99,7 @@
                             </constraints>
                         </view>
                         <stackView opaque="NO" contentMode="scaleToFill" spacing="17" translatesAutoresizingMaskIntoConstraints="NO" id="iB7-O5-R3q">
-                            <rect key="frame" x="20" y="65" width="374" height="30"/>
+                            <rect key="frame" x="20" y="57" width="374" height="30"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="0:00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KUH-8I-h6H">
                                     <rect key="frame" x="0.0" y="0.0" width="30.5" height="30"/>
@@ -127,7 +128,7 @@
                             </subviews>
                         </stackView>
                         <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="32" translatesAutoresizingMaskIntoConstraints="NO" id="1Ib-Sh-RaL" userLabel="Control Panel">
-                            <rect key="frame" x="33" y="124" width="348" height="44"/>
+                            <rect key="frame" x="33" y="116" width="348" height="44"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q7y-SB-WVR" customClass="BouncingButton" customModule="Mixin" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
@@ -204,7 +205,7 @@
             <constraints>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="N42-Gi-JCs" secondAttribute="top" constant="181" id="00E-ov-qbK"/>
                 <constraint firstAttribute="bottom" secondItem="N42-Gi-JCs" secondAttribute="bottom" id="3NZ-Sf-O4j"/>
-                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="1Ib-Sh-RaL" secondAttribute="bottom" constant="13" id="5ac-yr-S3I"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="1Ib-Sh-RaL" secondAttribute="bottom" constant="21" id="5ac-yr-S3I"/>
                 <constraint firstItem="0dj-uB-h9q" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="7Ir-iJ-sGr"/>
                 <constraint firstItem="3yQ-UO-4Qe" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="BTk-cJ-ugN"/>
                 <constraint firstItem="N42-Gi-JCs" firstAttribute="top" secondItem="0dj-uB-h9q" secondAttribute="bottom" id="Lr2-gC-kkj"/>
@@ -239,10 +240,10 @@
             <color red="0.18431372549019609" green="0.18823529411764706" blue="0.19607843137254902" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

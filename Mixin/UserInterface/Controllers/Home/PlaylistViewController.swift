@@ -21,6 +21,8 @@ class PlaylistViewController: ResizablePopupViewController {
     @IBOutlet weak var nextTrackButton: BouncingButton!
     @IBOutlet weak var playbackRateButton: BouncingButton!
     
+    @IBOutlet weak var controlPanelBottomConstraint: NSLayoutConstraint!
+    
     override var resizableScrollView: UIScrollView? {
         tableView
     }
@@ -48,6 +50,8 @@ class PlaylistViewController: ResizablePopupViewController {
         view.layer.cornerRadius = 13
         view.addGestureRecognizer(resizeRecognizer)
         resizeRecognizer.delegate = resizeRecognizerDelegate
+        
+        updateControlPanelBottomMargin()
         
         tableView.register(PlaylistItemCell.self, forCellReuseIdentifier: cellReuseId)
         tableView.dataSource = self
@@ -116,6 +120,11 @@ class PlaylistViewController: ResizablePopupViewController {
         case .compressed:
             return floor(window.bounds.height / 3 * 2)
         }
+    }
+    
+    override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+        updateControlPanelBottomMargin()
     }
     
     @IBAction func stop(_ sender: Any) {
@@ -319,6 +328,14 @@ extension PlaylistViewController {
 }
 
 extension PlaylistViewController {
+    
+    private func updateControlPanelBottomMargin() {
+        if view.safeAreaInsets.bottom > 6 {
+            controlPanelBottomConstraint.constant = 21
+        } else {
+            controlPanelBottomConstraint.constant = 27
+        }
+    }
     
     private func updateSliderPosition(time: CMTime, duration: CMTime) {
         guard duration.isValid else {

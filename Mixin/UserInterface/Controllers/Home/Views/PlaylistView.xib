@@ -83,7 +83,7 @@
                         <constraint firstItem="wg4-id-QuD" firstAttribute="centerY" secondItem="3yQ-UO-4Qe" secondAttribute="centerY" id="yx4-WF-4GS"/>
                     </constraints>
                 </view>
-                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="50" estimatedRowHeight="50" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="0dj-uB-h9q">
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="60" estimatedRowHeight="60" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="0dj-uB-h9q">
                     <rect key="frame" x="0.0" y="70" width="414" height="611"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                 </tableView>

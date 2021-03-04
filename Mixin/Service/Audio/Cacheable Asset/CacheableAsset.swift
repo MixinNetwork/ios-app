@@ -50,7 +50,7 @@ extension CacheableAsset {
             guard let scheme = components.scheme, supportedSchemes.contains(scheme) else {
                 return nil
             }
-            components.scheme = Self.urlSchemePrefix + scheme
+            components.scheme = urlSchemePrefix + scheme
             return components.url
         }
         
@@ -58,10 +58,10 @@ extension CacheableAsset {
             guard var components = URLComponents(url: cacheableURL, resolvingAgainstBaseURL: true) else {
                 return nil
             }
-            guard let scheme = components.scheme, scheme.hasPrefix(Self.urlSchemePrefix) else {
+            guard let scheme = components.scheme, scheme.hasPrefix(urlSchemePrefix) else {
                 return nil
             }
-            let start = scheme.index(scheme.startIndex, offsetBy: Self.urlSchemePrefix.count)
+            let start = scheme.index(scheme.startIndex, offsetBy: urlSchemePrefix.count)
             components.scheme = String(scheme[start...])
             return components.url
         }

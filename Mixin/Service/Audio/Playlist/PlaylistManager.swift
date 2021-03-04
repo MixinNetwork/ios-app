@@ -90,16 +90,29 @@ class PlaylistManager: NSObject {
         }
         switch repeatMode {
         case .repeatSingle:
-            if index > 0 {
-                return index - 1
+            var previousIndex = index
+            repeat {
+                previousIndex -= 1
+            } while previousIndex >= 0
+                && items[previousIndex].asset == nil
+            if previousIndex >= 0 && items[previousIndex].asset != nil {
+                return previousIndex
             } else {
                 return nil
             }
         case .repeatList:
-            if index > 0 {
-                return index - 1
+            var previousIndex = index
+            repeat {
+                previousIndex -= 1
+                if previousIndex == -1 {
+                    previousIndex = items.count - 1
+                }
+            } while previousIndex != index
+                && items[previousIndex].asset == nil
+            if previousIndex != index && items[previousIndex].asset != nil {
+                return previousIndex
             } else {
-                return items.count - 1
+                return nil
             }
         case .shuffle:
             return availableIndicesInShuffleMode.randomElement()
@@ -112,16 +125,29 @@ class PlaylistManager: NSObject {
         }
         switch repeatMode {
         case .repeatSingle:
-            if index < items.count - 1 {
-                return index + 1
+            var nextIndex = index
+            repeat {
+                nextIndex += 1
+            } while nextIndex < items.count
+                && items[nextIndex].asset == nil
+            if nextIndex < items.count && items[nextIndex].asset != nil {
+                return nextIndex
             } else {
                 return nil
             }
         case .repeatList:
-            if index < items.count - 1 {
-                return index + 1
+            var nextIndex = index
+            repeat {
+                nextIndex += 1
+                if nextIndex == items.count {
+                    nextIndex = 0
+                }
+            } while nextIndex != index
+                && items[nextIndex].asset == nil
+            if nextIndex != index && items[nextIndex].asset != nil {
+                return nextIndex
             } else {
-                return 0
+                return nil
             }
         case .shuffle:
             return availableIndicesInShuffleMode.randomElement()
@@ -388,13 +414,22 @@ extension PlaylistManager {
             case .repeatSingle:
                 player.seek(to: .zero)
                 player.play()
-            case .repeatList, .shuffle:
-                if let index = nextItemIndex, items[index].asset != nil {
+            case .repeatList:
+                if hasNextItem {
                     playNextItem()
                 } else {
+                    pause()
                     player.seek(to: .zero) { _ in
-                        self.pause()
+                        self.playOrPauseCurrentItem()
                     }
+                }
+            case .shuffle:
+                if hasNextItem {
+                    playNextItem()
+                } else {
+                    pause()
+                    rebuildAvailableIndicesForShuffleMode()
+                    playNextItem()
                 }
             }
         }
@@ -775,8 +810,11 @@ extension PlaylistManager {
                 }
                 if self.repeatMode == .shuffle {
                     self.availableIndicesInShuffleMode = Set(self.availableIndicesInShuffleMode.map { $0 + newItems.count })
-                    let newIndices = self.items.count..<(self.items.count + newItems.count)
-                    self.availableIndicesInShuffleMode.formUnion(newIndices)
+                    for (index, item) in newItems.enumerated() {
+                        if item.asset != nil {
+                            self.availableIndicesInShuffleMode.insert(index)
+                        }
+                    }
                 }
                 if let index = self.playingItemIndex {
                     self.playingItemIndex = index + newItems.count
@@ -810,8 +848,11 @@ extension PlaylistManager {
                     return
                 }
                 if self.repeatMode == .shuffle {
-                    let newIndices = self.items.count..<(self.items.count + newItems.count)
-                    self.availableIndicesInShuffleMode.formUnion(newIndices)
+                    for (index, item) in self.items.enumerated() {
+                        if item.asset != nil {
+                            self.availableIndicesInShuffleMode.insert(self.items.count + index)
+                        }
+                    }
                 }
                 self.items.append(contentsOf: newItems)
                 self.loadedItemIds.formUnion(newItemIds)
@@ -840,7 +881,7 @@ extension PlaylistManager {
         playerWillPlay(item: item)
         player.rate = playbackRate.avPlayerRate
         if repeatMode == .shuffle {
-            if rebuildAvailableIndicesForShuffleMode {
+            if rebuildAvailableIndicesForShuffleMode || availableIndicesInShuffleMode.isEmpty {
                 self.rebuildAvailableIndicesForShuffleMode()
             } else {
                 availableIndicesInShuffleMode.remove(index)
@@ -849,7 +890,12 @@ extension PlaylistManager {
     }
     
     private func rebuildAvailableIndicesForShuffleMode() {
-        availableIndicesInShuffleMode = Set(0..<items.count)
+        availableIndicesInShuffleMode = []
+        for (index, item) in items.enumerated() {
+            if item.asset != nil {
+                availableIndicesInShuffleMode.insert(index)
+            }
+        }
         if let index = playingItemIndex {
             availableIndicesInShuffleMode.remove(index)
         }

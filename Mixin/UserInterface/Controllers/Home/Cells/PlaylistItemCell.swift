@@ -52,22 +52,28 @@ class PlaylistItemCell: ModernSelectedBackgroundCell, AudioCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        statusImageView.contentMode = .center
-        statusImageView.tintColor = .white
-        statusImageView.layer.cornerRadius = 19
-        statusImageView.clipsToBounds = true
-        indicator.tintColor = UIColor(displayP3RgbValue: 0xBCBEC3)
+        
+        backgroundColor = .background
+        contentView.backgroundColor = .clear
+        
         contentView.addSubview(infoView)
-        contentView.addSubview(statusImageView)
-        contentView.addSubview(indicator)
         infoView.snp.makeConstraints { (make) in
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(38)
             make.centerY.equalToSuperview()
         }
+        
+        statusImageView.contentMode = .center
+        statusImageView.tintColor = .white
+        statusImageView.layer.cornerRadius = 19
+        statusImageView.clipsToBounds = true
+        contentView.addSubview(statusImageView)
         statusImageView.snp.makeConstraints { (make) in
             make.edges.equalTo(infoView.imageView)
         }
+        
+        indicator.tintColor = UIColor(displayP3RgbValue: 0xBCBEC3)
+        contentView.addSubview(indicator)
         indicator.snp.makeConstraints { (make) in
             make.edges.equalTo(infoView.imageView)
         }

@@ -6,7 +6,6 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -39,6 +38,7 @@
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zEf-bb-vQc">
                             <rect key="frame" x="10" y="13" width="44" height="44"/>
+                            <color key="backgroundColor" name="background"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="zEf-bb-vQc" secondAttribute="height" id="2B1-yZ-Vux"/>
                                 <constraint firstAttribute="width" constant="44" id="zzy-T2-k7A"/>
@@ -51,6 +51,7 @@
                         </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Playlist" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wg4-id-QuD">
                             <rect key="frame" x="74" y="24.5" width="266" height="21.5"/>
+                            <color key="backgroundColor" name="background"/>
                             <fontDescription key="fontDescription" type="system" pointSize="18"/>
                             <color key="textColor" name="text"/>
                             <nil key="highlightedColor"/>
@@ -61,6 +62,7 @@
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1mC-KJ-PkK">
                             <rect key="frame" x="360" y="13" width="44" height="44"/>
+                            <color key="backgroundColor" name="background"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="44" id="7zx-y8-pjl"/>
                                 <constraint firstAttribute="width" secondItem="1mC-KJ-PkK" secondAttribute="height" id="ygE-t9-Si6"/>
@@ -72,7 +74,7 @@
                             </connections>
                         </button>
                     </subviews>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <color key="backgroundColor" name="background"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="70" id="3qU-5g-SW9"/>
                         <constraint firstItem="zEf-bb-vQc" firstAttribute="top" secondItem="3yQ-UO-4Qe" secondAttribute="top" constant="13" id="LGT-JN-U3J"/>
@@ -86,14 +88,14 @@
                 </view>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="60" estimatedRowHeight="60" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="0dj-uB-h9q">
                     <rect key="frame" x="0.0" y="70" width="414" height="611"/>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <color key="backgroundColor" name="background"/>
                 </tableView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="N42-Gi-JCs" userLabel="Now Playing View">
                     <rect key="frame" x="0.0" y="681" width="414" height="215"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VHT-PK-QYK" customClass="MusicInfoView" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="16" width="414" height="38"/>
-                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            <color key="backgroundColor" name="background"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="38" id="POc-YB-Yra"/>
                             </constraints>
@@ -109,8 +111,8 @@
                                 </label>
                                 <slider opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="250" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="2lf-O2-VGE" customClass="PlaylistSlider" customModule="Mixin" customModuleProvider="target">
                                     <rect key="frame" x="45.5" y="0.0" width="283" height="31"/>
-                                    <color key="minimumTrackTintColor" name="icon_fill"/>
-                                    <color key="maximumTrackTintColor" name="background_secondary"/>
+                                    <color key="minimumTrackTintColor" name="min_track"/>
+                                    <color key="maximumTrackTintColor" name="max_track"/>
                                     <connections>
                                         <action selector="beginScrubbingAction:" destination="-1" eventType="touchDown" id="LaD-IQ-ZdX"/>
                                         <action selector="endScrubbingAction:" destination="-1" eventType="touchCancel" id="AjH-46-y8x"/>
@@ -136,6 +138,7 @@
                                     <constraints>
                                         <constraint firstAttribute="width" secondItem="Q7y-SB-WVR" secondAttribute="height" id="7I9-mX-Vgg"/>
                                     </constraints>
+                                    <color key="tintColor" name="text_accessory"/>
                                     <state key="normal" image="Playlist/ic_repeat_list"/>
                                     <connections>
                                         <action selector="switchRepeatMode:" destination="-1" eventType="touchUpInside" id="vMb-RU-zTO"/>
@@ -186,7 +189,7 @@
                             </constraints>
                         </stackView>
                     </subviews>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <color key="backgroundColor" name="background"/>
                     <constraints>
                         <constraint firstItem="1Ib-Sh-RaL" firstAttribute="top" secondItem="iB7-O5-R3q" secondAttribute="bottom" constant="29" id="GtB-Ge-NYk"/>
                         <constraint firstAttribute="trailing" secondItem="iB7-O5-R3q" secondAttribute="trailing" constant="20" id="S9z-kU-NGN"/>
@@ -230,13 +233,13 @@
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
-        <namedColor name="background_secondary">
+        <namedColor name="icon_tint">
+            <color red="0.18431372549019609" green="0.18823529411764706" blue="0.19607843137254902" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="max_track">
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
-        <namedColor name="icon_fill">
-            <color red="0.23137254901960785" green="0.23529411764705882" blue="0.24313725490196078" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
-        <namedColor name="icon_tint">
+        <namedColor name="min_track">
             <color red="0.18431372549019609" green="0.18823529411764706" blue="0.19607843137254902" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
@@ -245,8 +248,5 @@
         <namedColor name="text_accessory">
             <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
     </resources>
 </document>

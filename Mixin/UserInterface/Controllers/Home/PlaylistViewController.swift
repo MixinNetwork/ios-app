@@ -31,7 +31,7 @@ class PlaylistViewController: ResizablePopupViewController {
     private let manager = PlaylistManager.shared
     private let loadMoreThreshold = 5
     
-    private lazy var resizeRecognizerDelegate = PopupResizeGestureCoordinator(scrollView: resizableScrollView)
+    private var resizeRecognizerDelegate: GestureCoordinator!
     
     private var isSeeking = false
     private var sliderObserver: Any?
@@ -49,6 +49,9 @@ class PlaylistViewController: ResizablePopupViewController {
         view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         view.layer.cornerRadius = 13
         view.addGestureRecognizer(resizeRecognizer)
+        
+        resizeRecognizerDelegate = GestureCoordinator(scrollView: resizableScrollView)
+        resizeRecognizerDelegate.ignoreGestureRecognizerView = nowPlayingView
         resizeRecognizer.delegate = resizeRecognizerDelegate
         
         updateControlPanelBottomMargin()
@@ -323,6 +326,28 @@ extension PlaylistViewController {
             return
         }
         tableView.reloadRows(at: [IndexPath(row: row, section: 0)], with: .none)
+    }
+    
+}
+
+extension PlaylistViewController {
+    
+    private final class GestureCoordinator: PopupResizeGestureCoordinator {
+        
+        weak var ignoreGestureRecognizerView: UIView?
+        
+        override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+            guard let view = ignoreGestureRecognizerView else {
+                return super.gestureRecognizerShouldBegin(gestureRecognizer)
+            }
+            let location = gestureRecognizer.location(in: view)
+            if view.bounds.contains(location) {
+                return false
+            } else {
+                return super.gestureRecognizerShouldBegin(gestureRecognizer)
+            }
+        }
+        
     }
     
 }

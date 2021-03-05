@@ -5,14 +5,22 @@ import MixinServices
 
 final class PlaylistItem {
     
-    static let willDownloadAssetNotification = Notification.Name("one.mixin.messenger.PlaylistItem.willDownloadAsset")
-    static let didDownloadAssetNotification = Notification.Name("one.mixin.messenger.PlaylistItem.didDownloadAsset")
+    static let beginLoadingAssetNotification = Notification.Name("one.mixin.messenger.PlaylistItem.beginLoadingAsset")
+    static let finishLoadingAssetNotification = Notification.Name("one.mixin.messenger.PlaylistItem.finishLoadingAsset")
     
     let id: String
     
-    private(set) var isDownloading = false
     private(set) var metadata: Metadata
     private(set) var asset: AVURLAsset?
+    private(set) var isLoadingAsset = false {
+        didSet {
+            if isLoadingAsset {
+                notificationCenter.post(name: Self.beginLoadingAssetNotification, object: self)
+            } else {
+                notificationCenter.post(name: Self.finishLoadingAssetNotification, object: self)
+            }
+        }
+    }
     
     private let notificationCenter = NotificationCenter.default
     
@@ -53,14 +61,12 @@ final class PlaylistItem {
     }
     
     func downloadAttachment() {
-        guard asset == nil && !isDownloading else {
+        guard asset == nil && !isLoadingAsset else {
             return
         }
-        isDownloading = true
+        isLoadingAsset = true
         let job = FileDownloadJob(messageId: id)
         if ConcurrentJobQueue.shared.addJob(job: job) {
-            notificationCenter.post(name: Self.willDownloadAssetNotification,
-                                    object: self)
             notificationCenter.addObserver(self,
                                            selector: #selector(updateAsset(_:)),
                                            name: AttachmentDownloadJob.didFinishNotification,
@@ -77,8 +83,7 @@ final class PlaylistItem {
         self.metadata = Metadata(asset: asset, filename: url.lastPathComponent)
         self.asset = asset
         notificationCenter.removeObserver(self)
-        notificationCenter.post(name: Self.didDownloadAssetNotification, object: self)
-        isDownloading = false
+        isLoadingAsset = false
     }
     
 }
@@ -117,7 +122,7 @@ extension PlaylistItem: Decodable, DatabaseColumnConvertible, MixinFetchableReco
                                            selector: #selector(updateAsset(_:)),
                                            name: AttachmentDownloadJob.didFinishNotification,
                                            object: job)
-            isDownloading = true
+            isLoadingAsset = true
         }
     }
     

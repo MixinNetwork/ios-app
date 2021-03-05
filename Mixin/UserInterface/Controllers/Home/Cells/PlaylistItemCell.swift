@@ -21,17 +21,14 @@ class PlaylistItemCell: ModernSelectedBackgroundCell, AudioCell {
                 indicator.stopAnimating()
                 statusImageView.image = R.image.ic_file_download()
                 statusImageView.backgroundColor = UIColor.black.withAlphaComponent(0.2)
-                infoView.setImageViewBackground(isOpaque: true)
             case .downloading:
                 indicator.startAnimating()
                 statusImageView.image = nil
                 statusImageView.backgroundColor = .clear
-                infoView.setImageViewBackground(isOpaque: false)
             case .ready:
                 indicator.stopAnimating()
-                statusImageView.image = nil
+                setStatusImage(for: style)
                 statusImageView.backgroundColor = UIColor.black.withAlphaComponent(0.2)
-                infoView.setImageViewBackground(isOpaque: true)
             }
         }
     }
@@ -41,12 +38,7 @@ class PlaylistItemCell: ModernSelectedBackgroundCell, AudioCell {
             guard fileStatus == .ready else {
                 return
             }
-            switch style {
-            case .playing:
-                statusImageView.image = R.image.ic_pause()
-            case .stopped, .paused:
-                statusImageView.image = R.image.ic_play()
-            }
+            setStatusImage(for: style)
         }
     }
     
@@ -73,14 +65,27 @@ class PlaylistItemCell: ModernSelectedBackgroundCell, AudioCell {
         }
         
         indicator.tintColor = UIColor(displayP3RgbValue: 0xBCBEC3)
+        indicator.backgroundColor = .background
+        indicator.hidesWhenStopped = true
+        indicator.layer.cornerRadius = 20
+        indicator.clipsToBounds = true
         contentView.addSubview(indicator)
         indicator.snp.makeConstraints { (make) in
-            make.edges.equalTo(infoView.imageView)
+            make.edges.equalTo(infoView.imageView).inset(-1)
         }
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setStatusImage(for style: AudioCellStyle) {
+        switch style {
+        case .playing:
+            statusImageView.image = R.image.ic_pause()
+        case .stopped, .paused:
+            statusImageView.image = R.image.ic_play()
+        }
     }
     
 }

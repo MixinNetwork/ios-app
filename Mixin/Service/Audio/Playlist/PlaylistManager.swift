@@ -67,16 +67,17 @@ class PlaylistManager: NSObject {
     }
     
     private let queue = DispatchQueue(label: "one.mixin.messenger.PlaylistManager")
+    private let notificationCenter = NotificationCenter.default
     private let infoCenter = MPNowPlayingInfoCenter.default()
     private let commandCenter = MPRemoteCommandCenter.shared()
     
     private(set) var items: [PlaylistItem] = []
+    private(set) var source: ItemSource = .remote
     
     // becomes nil on stop
     private var playingItemIndex: Int?
     
     private var cells: [String: NSHashTable<UITableViewCell>] = [:]
-    private var source: ItemSource = .remote
     private var loadedItemIds: Set<String> = []
     private var loadingEarlierItemsPosition: String?
     private var loadingLaterItemsPosition: String?
@@ -156,31 +157,27 @@ class PlaylistManager: NSObject {
     
     override init() {
         super.init()
-        let center = NotificationCenter.default
-        center.addObserver(self,
-                           selector: #selector(playerDidPlayToEndTime(_:)),
-                           name: .AVPlayerItemDidPlayToEndTime,
-                           object: nil)
-        center.addObserver(self,
-                           selector: #selector(messageDAODidInsertMessage(_:)),
-                           name: MessageDAO.didInsertMessageNotification,
-                           object: nil)
-        center.addObserver(self,
-                           selector: #selector(messageDAOWillDeleteMessage(_:)),
-                           name: MessageDAO.willDeleteMessageNotification,
-                           object: nil)
-        center.addObserver(self,
-                           selector: #selector(conversationDAOWillClearConversation(_:)),
-                           name: ConversationDAO.willClearConversationNotification,
-                           object: nil)
-        center.addObserver(self,
-                           selector: #selector(messageServiceWillRecallMessage(_:)),
-                           name: SendMessageService.willRecallMessageNotification,
-                           object: nil)
+        player.automaticallyWaitsToMinimizeStalling = false
+        notificationCenter.addObserver(self,
+                                       selector: #selector(messageDAODidInsertMessage(_:)),
+                                       name: MessageDAO.didInsertMessageNotification,
+                                       object: nil)
+        notificationCenter.addObserver(self,
+                                       selector: #selector(messageDAOWillDeleteMessage(_:)),
+                                       name: MessageDAO.willDeleteMessageNotification,
+                                       object: nil)
+        notificationCenter.addObserver(self,
+                                       selector: #selector(conversationDAOWillClearConversation(_:)),
+                                       name: ConversationDAO.willClearConversationNotification,
+                                       object: nil)
+        notificationCenter.addObserver(self,
+                                       selector: #selector(messageServiceWillRecallMessage(_:)),
+                                       name: SendMessageService.willRecallMessageNotification,
+                                       object: nil)
     }
     
     deinit {
-        NotificationCenter.default.removeObserver(self)
+        notificationCenter.removeObserver(self)
     }
     
     func playOrPauseCurrentItem() {
@@ -217,9 +214,9 @@ class PlaylistManager: NSObject {
             }
         }
         
-        if let playingId = playingItem?.id {
-            if playingId == item.id, loadedItemIds.isSuperset(of: items.map(\.id)) {
-                setAudioCellStyle(.playing, forCellsRegisteredWith: playingId)
+        if let previousItem = playingItem {
+            if item.id == previousItem.id, loadedItemIds.isSuperset(of: items.map(\.id)) {
+                setAudioCellStyle(.playing, forCellsRegisteredWith: item.id)
                 queue.async {
                     guard activateAudioSession() else {
                         DispatchQueue.main.sync {
@@ -238,7 +235,7 @@ class PlaylistManager: NSObject {
                 }
                 return
             } else {
-                setAudioCellStyle(.stopped, forCellsRegisteredWith: playingId)
+                setAudioCellStyle(.stopped, forCellsRegisteredWith: previousItem.id)
             }
         }
         
@@ -274,6 +271,10 @@ class PlaylistManager: NSObject {
             }
             let playerItem = AVPlayerItem(asset: asset)
             DispatchQueue.main.sync {
+                if let item = self.player.currentItem {
+                    self.unregisterForPlayerItemNotifications(from: item)
+                }
+                self.registerForPlayerItemNotifications(from: playerItem)
                 self.player.replaceCurrentItem(with: playerItem)
                 self.playerWillPlay(item: item)
                 self.player.rate = self.playbackRate.avPlayerRate
@@ -298,6 +299,9 @@ class PlaylistManager: NSObject {
             setAudioCellStyle(.stopped, forCellsRegisteredWith: item.id)
         }
         playingItemIndex = nil
+        if let item = player.currentItem {
+            unregisterForPlayerItemNotifications(from: item)
+        }
         player.replaceCurrentItem(with: nil)
         playerDidEnd()
     }
@@ -405,10 +409,26 @@ extension PlaylistManager {
     
 }
 
-// MARK: - Player Callback
+// MARK: - PlayerItem Callback
 extension PlaylistManager {
     
-    @objc private func playerDidPlayToEndTime(_ notification: Notification) {
+    private func registerForPlayerItemNotifications(from item: AVPlayerItem) {
+        notificationCenter.addObserver(self,
+                                       selector: #selector(playerItemDidPlayToEndTime(_:)),
+                                       name: .AVPlayerItemDidPlayToEndTime,
+                                       object: item)
+        notificationCenter.addObserver(self,
+                                       selector: #selector(playerItemFailedToPlayToEndTime(_:)),
+                                       name: .AVPlayerItemFailedToPlayToEndTime,
+                                       object: item)
+    }
+    
+    private func unregisterForPlayerItemNotifications(from item: AVPlayerItem) {
+        notificationCenter.removeObserver(self, name: .AVPlayerItemDidPlayToEndTime, object: item)
+        notificationCenter.removeObserver(self, name: .AVPlayerItemFailedToPlayToEndTime, object: item)
+    }
+    
+    @objc private func playerItemDidPlayToEndTime(_ notification: Notification) {
         performSynchronouslyOnMainThread {
             switch repeatMode {
             case .repeatSingle:
@@ -431,6 +451,16 @@ extension PlaylistManager {
                     rebuildAvailableIndicesForShuffleMode()
                     playNextItem()
                 }
+            }
+        }
+    }
+    
+    @objc private func playerItemFailedToPlayToEndTime(_ notification: Notification) {
+        performSynchronouslyOnMainThread {
+            if hasNextItem {
+                playNextItem()
+            } else {
+                pause()
             }
         }
     }
@@ -872,11 +902,15 @@ extension PlaylistManager {
         guard let asset = item.asset else {
             return
         }
-        if let index = playingItemIndex {
-            setAudioCellStyle(.stopped, forCellsRegisteredWith: items[index].id)
+        if let item = playingItem {
+            setAudioCellStyle(.stopped, forCellsRegisteredWith: item.id)
         }
         let playerItem = AVPlayerItem(asset: asset)
         playingItemIndex = index
+        if let item = player.currentItem {
+            unregisterForPlayerItemNotifications(from: item)
+        }
+        registerForPlayerItemNotifications(from: playerItem)
         player.replaceCurrentItem(with: playerItem)
         playerWillPlay(item: item)
         player.rate = playbackRate.avPlayerRate

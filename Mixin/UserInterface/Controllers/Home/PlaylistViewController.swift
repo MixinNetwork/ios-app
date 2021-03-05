@@ -103,11 +103,11 @@ class PlaylistViewController: ResizablePopupViewController {
         let center = NotificationCenter.default
         center.addObserver(self,
                            selector: #selector(updateCell(_:)),
-                           name: PlaylistItem.willDownloadAssetNotification,
+                           name: PlaylistItem.beginLoadingAssetNotification,
                            object: nil)
         center.addObserver(self,
                            selector: #selector(updateCell(_:)),
-                           name: PlaylistItem.didDownloadAssetNotification,
+                           name: PlaylistItem.finishLoadingAssetNotification,
                            object: nil)
         center.addObserver(self,
                            selector: #selector(applicationDidEnterBackground(_:)),
@@ -129,6 +129,11 @@ class PlaylistViewController: ResizablePopupViewController {
         super.viewSafeAreaInsetsDidChange()
         updateControlPanelBottomMargin()
     }
+    
+}
+
+// MARK: - Actions
+extension PlaylistViewController {
     
     @IBAction func stop(_ sender: Any) {
         let alert = UIAlertController(title: R.string.localizable.playlist_stop_confirmation(), message: nil, preferredStyle: .actionSheet)
@@ -211,6 +216,7 @@ class PlaylistViewController: ResizablePopupViewController {
     
 }
 
+// MARK: - UITableViewDataSource
 extension PlaylistViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -224,16 +230,17 @@ extension PlaylistViewController: UITableViewDataSource {
         cell.infoView.imageView.image = item.metadata.image
         cell.infoView.titleLabel.text = item.metadata.title
         cell.infoView.subtitleLabel.text = item.metadata.subtitle
-        if item.asset != nil {
-            cell.fileStatus = .ready
+        if item.asset == nil {
+            cell.fileStatus = item.isLoadingAsset ? .downloading : .pending
         } else {
-            cell.fileStatus = item.isDownloading ? .downloading : .pending
+            cell.fileStatus = .ready
         }
         return cell
     }
     
 }
 
+// MARK: - UITableViewDelegate
 extension PlaylistViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -262,6 +269,7 @@ extension PlaylistViewController: UITableViewDelegate {
     
 }
 
+// MARK: - PlaylistManagerDelegate
 extension PlaylistViewController: PlaylistManagerDelegate {
     
     func playlistManager(_ manager: PlaylistManager, willPlay item: PlaylistItem) {
@@ -312,6 +320,7 @@ extension PlaylistViewController: PlaylistManagerDelegate {
     
 }
 
+// MARK: - Callbacks
 extension PlaylistViewController {
     
     @objc private func applicationDidEnterBackground(_ notification: Notification) {
@@ -330,6 +339,7 @@ extension PlaylistViewController {
     
 }
 
+// MARK: - GestureCoordinator
 extension PlaylistViewController {
     
     private final class GestureCoordinator: PopupResizeGestureCoordinator {
@@ -352,6 +362,47 @@ extension PlaylistViewController {
     
 }
 
+// MARK: - Time Observation
+extension PlaylistViewController {
+    
+    private func addTimeObservers() {
+        let player = manager.player
+        let timescale = CMTimeScale(600)
+        
+        let sliderInterval = CMTime(seconds: 0.1, preferredTimescale: timescale)
+        sliderObserver = player.addPeriodicTimeObserver(forInterval: sliderInterval, queue: .main) { [weak self] (time) in
+            guard let self = self else {
+                return
+            }
+            guard let asset = self.manager.playingItem?.asset else {
+                return
+            }
+            self.updateSliderPosition(time: time, duration: asset.duration)
+        }
+        
+        let timeLabelInterval = CMTime(seconds: 1, preferredTimescale: timescale)
+        timeLabelObserver = player.addPeriodicTimeObserver(forInterval: timeLabelInterval, queue: .main) { [weak self] (time) in
+            guard let self = self else {
+                return
+            }
+            guard let asset = self.manager.playingItem?.asset else {
+                return
+            }
+            self.updateTimeLabel(time: time, duration: asset.duration)
+        }
+    }
+    
+    private func removeTimeObservers() {
+        [sliderObserver, timeLabelObserver]
+            .compactMap { $0 }
+            .forEach(manager.player.removeTimeObserver)
+        sliderObserver = nil
+        timeLabelObserver = nil
+    }
+    
+}
+
+// MARK: - Interface
 extension PlaylistViewController {
     
     private func updateControlPanelBottomMargin() {
@@ -395,41 +446,6 @@ extension PlaylistViewController {
         } else {
             remainingTimeLabel.text = nil
         }
-    }
-    
-    private func addTimeObservers() {
-        let player = manager.player
-        let timescale = CMTimeScale(600)
-        
-        let sliderInterval = CMTime(seconds: 0.1, preferredTimescale: timescale)
-        sliderObserver = player.addPeriodicTimeObserver(forInterval: sliderInterval, queue: .main) { [weak self] (time) in
-            guard let self = self else {
-                return
-            }
-            guard let asset = self.manager.playingItem?.asset else {
-                return
-            }
-            self.updateSliderPosition(time: time, duration: asset.duration)
-        }
-        
-        let timeLabelInterval = CMTime(seconds: 1, preferredTimescale: timescale)
-        timeLabelObserver = player.addPeriodicTimeObserver(forInterval: timeLabelInterval, queue: .main) { [weak self] (time) in
-            guard let self = self else {
-                return
-            }
-            guard let asset = self.manager.playingItem?.asset else {
-                return
-            }
-            self.updateTimeLabel(time: time, duration: asset.duration)
-        }
-    }
-    
-    private func removeTimeObservers() {
-        [sliderObserver, timeLabelObserver]
-            .compactMap { $0 }
-            .forEach(manager.player.removeTimeObserver)
-        sliderObserver = nil
-        timeLabelObserver = nil
     }
     
     private func updateNowPlayingView(with item: PlaylistItem?) {

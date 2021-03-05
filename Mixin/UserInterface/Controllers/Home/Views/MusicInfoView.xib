@@ -52,7 +52,7 @@
                             <color key="textColor" name="text_desc"/>
                             <nil key="highlightedColor"/>
                             <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold12"/>
+                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular12"/>
                             </userDefinedRuntimeAttributes>
                         </label>
                     </subviews>

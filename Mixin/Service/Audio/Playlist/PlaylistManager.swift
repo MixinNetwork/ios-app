@@ -26,6 +26,8 @@ class PlaylistManager: NSObject {
             if repeatMode == .shuffle {
                 rebuildAvailableIndicesForShuffleMode()
             }
+            commandCenter.previousTrackCommand.isEnabled = hasPreviousItem
+            commandCenter.nextTrackCommand.isEnabled = hasNextItem
         }
     }
     
@@ -523,12 +525,7 @@ extension PlaylistManager {
 // MARK: - Now Playing Infos
 extension PlaylistManager {
     
-    private func resetPlayingInfoAndRemoteCommandTarget() {
-        guard let item = playingItem else {
-            removePlayingInfoAndRemoteCommandTarget()
-            return
-        }
-        
+    private func resetPlayingInfoAndRemoteCommandTarget(item: PlaylistItem) {
         infoCenter.nowPlayingInfo = {
             let duration = TimeInterval(CMTimeGetSeconds(item.metadata.duration))
             let rate = Double(playbackRate.avPlayerRate)
@@ -555,16 +552,23 @@ extension PlaylistManager {
             NSNumber(value: $0.avPlayerRate)
         }
         
-        func setCommandEnabled(_ command: MPRemoteCommand, with action: Selector) {
-            command.isEnabled = true
-            command.addTarget(self, action: action)
-        }
-        setCommandEnabled(commandCenter.playCommand, with: #selector(playCommand(_:)))
-        setCommandEnabled(commandCenter.pauseCommand, with: #selector(pauseCommand(_:)))
-        setCommandEnabled(commandCenter.nextTrackCommand, with: #selector(nextTrackCommand(_:)))
-        setCommandEnabled(commandCenter.previousTrackCommand, with: #selector(previousTrackCommand(_:)))
-        setCommandEnabled(commandCenter.changePlaybackPositionCommand, with: #selector(changePlaybackPositionCommand(_:)))
-        setCommandEnabled(commandCenter.changePlaybackRateCommand, with: #selector(changePlaybackRateCommand(_:)))
+        commandCenter.playCommand.addTarget(self, action: #selector(playCommand(_:)))
+        commandCenter.playCommand.isEnabled = true
+        
+        commandCenter.pauseCommand.addTarget(self, action: #selector(pauseCommand(_:)))
+        commandCenter.pauseCommand.isEnabled = true
+        
+        commandCenter.nextTrackCommand.addTarget(self, action: #selector(nextTrackCommand(_:)))
+        commandCenter.nextTrackCommand.isEnabled = hasNextItem
+        
+        commandCenter.previousTrackCommand.addTarget(self, action: #selector(previousTrackCommand(_:)))
+        commandCenter.previousTrackCommand.isEnabled = hasPreviousItem
+        
+        commandCenter.changePlaybackPositionCommand.addTarget(self, action: #selector(changePlaybackPositionCommand(_:)))
+        commandCenter.changePlaybackPositionCommand.isEnabled = true
+        
+        commandCenter.changePlaybackRateCommand.addTarget(self, action: #selector(changePlaybackRateCommand(_:)))
+        commandCenter.changePlaybackRateCommand.isEnabled = true
     }
     
     private func removePlayingInfoAndRemoteCommandTarget() {
@@ -726,7 +730,7 @@ extension PlaylistManager {
         if #available(iOS 13.0, *) {
             infoCenter.playbackState = .playing
         }
-        resetPlayingInfoAndRemoteCommandTarget()
+        resetPlayingInfoAndRemoteCommandTarget(item: item)
     }
     
     private func playerDidPause() {
@@ -856,6 +860,7 @@ extension PlaylistManager {
                 self.loadingEarlierItemsPosition = nil
                 self.didLoadEarliest = true
                 self.delegate?.playlistManager(self, didLoadEarlierItems: newItems)
+                self.commandCenter.previousTrackCommand.isEnabled = self.hasPreviousItem
             }
         }
     }
@@ -892,6 +897,7 @@ extension PlaylistManager {
                 self.didLoadLatest = true
                 self.delegate?.playlistManager(self, didLoadLaterItems: newItems)
                 self.downloadNextAttachmentIfNeeded()
+                self.commandCenter.previousTrackCommand.isEnabled = self.hasNextItem
             }
         }
     }

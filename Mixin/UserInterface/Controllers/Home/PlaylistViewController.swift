@@ -449,7 +449,7 @@ extension PlaylistViewController {
     }
     
     private func updateNowPlayingView(with item: PlaylistItem?) {
-        if let item = item, let asset = item.asset {
+        if let item = item {
             slider.isEnabled = true
             let player = manager.player
             updateSliderPosition(time: player.currentTime(), duration: item.metadata.duration)

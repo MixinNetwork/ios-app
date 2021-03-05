@@ -374,10 +374,10 @@ extension PlaylistViewController {
             guard let self = self else {
                 return
             }
-            guard let asset = self.manager.playingItem?.asset else {
+            guard let item = self.manager.playingItem else {
                 return
             }
-            self.updateSliderPosition(time: time, duration: asset.duration)
+            self.updateSliderPosition(time: time, duration: item.metadata.duration)
         }
         
         let timeLabelInterval = CMTime(seconds: 1, preferredTimescale: timescale)
@@ -385,10 +385,10 @@ extension PlaylistViewController {
             guard let self = self else {
                 return
             }
-            guard let asset = self.manager.playingItem?.asset else {
+            guard let item = self.manager.playingItem else {
                 return
             }
-            self.updateTimeLabel(time: time, duration: asset.duration)
+            self.updateTimeLabel(time: time, duration: item.metadata.duration)
         }
     }
     
@@ -452,8 +452,8 @@ extension PlaylistViewController {
         if let item = item, let asset = item.asset {
             slider.isEnabled = true
             let player = manager.player
-            updateSliderPosition(time: player.currentTime(), duration: asset.duration)
-            updateTimeLabel(time: player.currentTime(), duration: asset.duration)
+            updateSliderPosition(time: player.currentTime(), duration: item.metadata.duration)
+            updateTimeLabel(time: player.currentTime(), duration: item.metadata.duration)
             nowPlayingInfoView.imageView.image = item.metadata.image
             nowPlayingInfoView.titleLabel.text = item.metadata.title
             nowPlayingInfoView.subtitleLabel.text = item.metadata.subtitle

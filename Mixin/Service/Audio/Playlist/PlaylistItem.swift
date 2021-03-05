@@ -23,17 +23,18 @@ final class PlaylistItem {
     }
     
     private let notificationCenter = NotificationCenter.default
+    private let maxNumberOfTriesToFetchMetadata = 3
     
     convenience init(message: MessageItem) {
         if let mediaURL = message.mediaUrl, message.mediaStatus == MediaStatus.DONE.rawValue || message.mediaStatus == MediaStatus.READ.rawValue {
             let url = AttachmentContainer.url(for: .files, filename: mediaURL)
-            let asset = AVURLAsset(url: url)
-            let filename = message.name ?? message.mediaUrl ?? ""
-            let metadata = Metadata(asset: asset, filename: filename)
-            self.init(id: message.messageId, metadata: metadata, asset: asset)
+            self.init(id: message.messageId,
+                      asset: AVURLAsset(url: url),
+                      filename: message.name ?? message.mediaUrl ?? "")
         } else {
-            let metadata = Metadata(image: nil, title: message.name, subtitle: nil)
-            self.init(id: message.messageId, metadata: metadata, asset: nil)
+            self.init(id: message.messageId,
+                      asset: nil,
+                      filename: message.name)
         }
     }
     
@@ -50,14 +51,26 @@ final class PlaylistItem {
         } else {
             asset = AVURLAsset(url: url)
         }
-        let metadata = Metadata(asset: asset, filename: url.lastPathComponent)
-        self.init(id: id, metadata: metadata, asset: asset)
+        self.init(id: id,
+                  asset: asset,
+                  filename: url.lastPathComponent)
     }
     
-    private init(id: String, metadata: PlaylistItem.Metadata, asset: AVURLAsset?) {
+    private init(id: String, asset: AVURLAsset?, filename: String?) {
         self.id = id
-        self.metadata = metadata
         self.asset = asset
+        if let asset = asset {
+            let areValuesLoaded = asset.statusOfValue(forKey: #keyPath(AVAsset.commonMetadata), error: nil) == .loaded
+                && asset.statusOfValue(forKey: #keyPath(AVAsset.duration), error: nil) == .loaded
+            if areValuesLoaded {
+                self.metadata = Metadata(asset: asset, filename: filename)
+            } else {
+                self.metadata = Metadata(image: nil, title: filename, subtitle: nil, duration: .zero)
+                loadCommonMetadata(from: asset, filename: filename, numberOfTries: 0)
+            }
+        } else {
+            self.metadata = Metadata(image: nil, title: filename, subtitle: nil, duration: .zero)
+        }
     }
     
     func downloadAttachment() {
@@ -86,6 +99,35 @@ final class PlaylistItem {
         isLoadingAsset = false
     }
     
+    private func loadCommonMetadata(from asset: AVAsset, filename: String?, numberOfTries: UInt) {
+        guard numberOfTries < maxNumberOfTriesToFetchMetadata else {
+            return
+        }
+        let keys = [#keyPath(AVAsset.commonMetadata), #keyPath(AVAsset.duration)]
+        asset.loadValuesAsynchronously(forKeys: keys) { [weak self] in
+            let areValuesLoaded = keys.allSatisfy {
+                asset.statusOfValue(forKey: $0, error: nil) == .loaded
+            }
+            let areValuesLoadingFailed = keys.allSatisfy {
+                asset.statusOfValue(forKey: $0, error: nil) == .failed
+            }
+            if areValuesLoaded {
+                let metadata = Metadata(asset: asset, filename: filename)
+                DispatchQueue.main.async {
+                    guard let self = self else {
+                        return
+                    }
+                    self.metadata = metadata
+                    self.isLoadingAsset = false
+                }
+            } else if areValuesLoadingFailed {
+                DispatchQueue.global().asyncAfter(deadline: .now() + 3) { [weak self] in
+                    self?.loadCommonMetadata(from: asset, filename: filename, numberOfTries: numberOfTries + 1)
+                }
+            }
+        }
+    }
+    
 }
 
 extension PlaylistItem: TableRecord {
@@ -109,12 +151,13 @@ extension PlaylistItem: Decodable, DatabaseColumnConvertible, MixinFetchableReco
         let name = try container.decodeIfPresent(String.self, forKey: .name)
         if let mediaURL = try container.decodeIfPresent(String.self, forKey: .mediaURL), !mediaURL.isEmpty {
             let url = AttachmentContainer.url(for: .files, filename: mediaURL)
-            let asset = AVURLAsset(url: url)
-            let metadata = Metadata(asset: asset, filename: name ?? url.lastPathComponent)
-            self.init(id: messageId, metadata: metadata, asset: asset)
+            self.init(id: messageId,
+                      asset: AVURLAsset(url: url),
+                      filename: name ?? mediaURL)
         } else {
-            let metadata = Metadata(image: nil, title: name, subtitle: nil)
-            self.init(id: messageId, metadata: metadata, asset: nil)
+            self.init(id: messageId,
+                      asset: nil,
+                      filename: name)
         }
         let jobId = FileDownloadJob.jobId(messageId: messageId)
         if let job = ConcurrentJobQueue.shared.findJobById(jodId: jobId) as? FileDownloadJob {
@@ -130,19 +173,21 @@ extension PlaylistItem: Decodable, DatabaseColumnConvertible, MixinFetchableReco
 
 extension PlaylistItem {
     
-    final class Metadata {
+    struct Metadata {
         
         let image: UIImage?
         let title: String?
         let subtitle: String?
+        let duration: CMTime
         
-        init(image: UIImage?, title: String?, subtitle: String?) {
+        init(image: UIImage?, title: String?, subtitle: String?, duration: CMTime) {
             self.image = image
             self.title = title
             self.subtitle = subtitle
+            self.duration = duration
         }
         
-        init(asset: AVURLAsset, filename: String) {
+        init(asset: AVAsset, filename: String?) {
             var image: UIImage?
             var title: String?
             var subtitle: String?
@@ -160,9 +205,11 @@ extension PlaylistItem {
                     break
                 }
             }
-            self.image = image
-            self.title = title ?? filename
-            self.subtitle = subtitle ?? R.string.localizable.playlist_unknown_artist()
+            
+            self.init(image: image,
+                      title: title ?? filename,
+                      subtitle: subtitle ?? R.string.localizable.playlist_unknown_artist(),
+                      duration: asset.duration)
         }
         
     }

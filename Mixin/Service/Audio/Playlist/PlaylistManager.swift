@@ -523,18 +523,13 @@ extension PlaylistManager {
 extension PlaylistManager {
     
     private func resetPlayingInfoAndRemoteCommandTarget() {
-        guard let index = playingItemIndex else {
-            removePlayingInfoAndRemoteCommandTarget()
-            return
-        }
-        let item = items[index]
-        guard let asset = item.asset else {
+        guard let item = playingItem else {
             removePlayingInfoAndRemoteCommandTarget()
             return
         }
         
         infoCenter.nowPlayingInfo = {
-            let duration = TimeInterval(CMTimeGetSeconds(asset.duration))
+            let duration = TimeInterval(CMTimeGetSeconds(item.metadata.duration))
             let rate = Double(playbackRate.avPlayerRate)
             let elapsed = Double(CMTimeGetSeconds(player.currentTime()))
             

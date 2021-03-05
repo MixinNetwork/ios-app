@@ -33,6 +33,7 @@ class PlaylistManager: NSObject {
         didSet {
             if status == .playing {
                 player.rate = playbackRate.avPlayerRate
+                updateNowPlayingInfo(elapsedPlaybackTime: true, rate: true)
             }
         }
     }
@@ -360,7 +361,7 @@ class PlaylistManager: NSObject {
                             preferredTimescale: CMTimeScale(NSEC_PER_SEC))
         player.seek(to: cmTime) { (finished) in
             if finished {
-                self.updateNowPlayingInfoElapsedPlaybackTime()
+                self.updateNowPlayingInfo(elapsedPlaybackTime: true, rate: false)
             }
             completion(finished)
         }
@@ -582,12 +583,18 @@ extension PlaylistManager {
         }
     }
     
-    private func updateNowPlayingInfoElapsedPlaybackTime() {
+    private func updateNowPlayingInfo(elapsedPlaybackTime: Bool, rate: Bool) {
         guard var info = infoCenter.nowPlayingInfo else {
             return
         }
-        let elapsed = Double(CMTimeGetSeconds(player.currentTime()))
-        info[MPNowPlayingInfoPropertyElapsedPlaybackTime] = NSNumber(value: elapsed)
+        if elapsedPlaybackTime {
+            let elapsed = Double(CMTimeGetSeconds(player.currentTime()))
+            info[MPNowPlayingInfoPropertyElapsedPlaybackTime] = NSNumber(value: elapsed)
+        }
+        if rate {
+            let rate = Double(playbackRate.avPlayerRate)
+            info[MPNowPlayingInfoPropertyPlaybackRate] = NSNumber(value: rate)
+        }
         infoCenter.nowPlayingInfo = info
     }
     
@@ -730,7 +737,7 @@ extension PlaylistManager {
         if let mini = UIApplication.homeContainerViewController?.minimizedPlaylistViewController {
             mini.waveView.stopAnimating()
         }
-        updateNowPlayingInfoElapsedPlaybackTime()
+        updateNowPlayingInfo(elapsedPlaybackTime: true, rate: false)
     }
     
     private func playerDidEnd() {

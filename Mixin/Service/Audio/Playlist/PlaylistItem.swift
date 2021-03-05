@@ -16,21 +16,20 @@ final class PlaylistItem {
     
     private let notificationCenter = NotificationCenter.default
     
-    init(message: MessageItem) {
-        self.id = message.messageId
+    convenience init(message: MessageItem) {
         if let mediaURL = message.mediaUrl, message.mediaStatus == MediaStatus.DONE.rawValue || message.mediaStatus == MediaStatus.READ.rawValue {
             let url = AttachmentContainer.url(for: .files, filename: mediaURL)
             let asset = AVURLAsset(url: url)
-            self.asset = asset
             let filename = message.name ?? message.mediaUrl ?? ""
-            self.metadata = Metadata(asset: asset, filename: filename)
+            let metadata = Metadata(asset: asset, filename: filename)
+            self.init(id: message.messageId, metadata: metadata, asset: asset)
         } else {
-            self.asset = nil
-            self.metadata = Metadata(image: nil, title: message.name, subtitle: nil)
+            let metadata = Metadata(image: nil, title: message.name, subtitle: nil)
+            self.init(id: message.messageId, metadata: metadata, asset: nil)
         }
     }
     
-    init?(urlString: String) {
+    convenience init?(urlString: String) {
         guard let url = URL(string: urlString) else {
             return nil
         }
@@ -43,12 +42,11 @@ final class PlaylistItem {
         } else {
             asset = AVURLAsset(url: url)
         }
-        self.id = id
-        self.asset = asset
-        self.metadata = Metadata(asset: asset, filename: url.lastPathComponent)
+        let metadata = Metadata(asset: asset, filename: url.lastPathComponent)
+        self.init(id: id, metadata: metadata, asset: asset)
     }
     
-    internal init(id: String, metadata: PlaylistItem.Metadata, asset: AVURLAsset?) {
+    private init(id: String, metadata: PlaylistItem.Metadata, asset: AVURLAsset?) {
         self.id = id
         self.metadata = metadata
         self.asset = asset

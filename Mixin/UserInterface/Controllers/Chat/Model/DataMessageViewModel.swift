@@ -19,7 +19,7 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
     var downloadIsTriggeredByUser = false
     
     var showPlayIconOnMediaStatusDone: Bool {
-        message.isListPlayable
+        isListPlayable
     }
     
     var shouldAutoDownload: Bool {

@@ -299,7 +299,7 @@ class ConversationViewController: UIViewController {
         center.addObserver(self, selector: #selector(menuControllerDidHideMenu(_:)), name: UIMenuController.didHideMenuNotification, object: nil)
         center.addObserver(self, selector: #selector(participantDidChange(_:)), name: ParticipantDAO.participantDidChangeNotification, object: nil)
         center.addObserver(self, selector: #selector(didAddMessageOutOfBounds(_:)), name: ConversationDataSource.newMessageOutOfVisibleBoundsNotification, object: dataSource)
-        center.addObserver(self, selector: #selector(audioMessagePlayingManagerWillPlayNextNode(_:)), name: AudioMessagePlayingManager.willPlayNextNotification, object: nil)
+        center.addObserver(self, selector: #selector(audioMessagePlayingManagerWillPlayNextNode(_:)), name: AudioMessagePlayingManager.willPlayNextNotification, object: AudioMessagePlayingManager.shared)
         center.addObserver(self, selector: #selector(willRecallMessage(_:)), name: SendMessageService.willRecallMessageNotification, object: nil)
         center.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         center.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -697,7 +697,16 @@ class ConversationViewController: UIViewController {
                 if viewModel.mediaStatus == MediaStatus.DONE.rawValue || viewModel.mediaStatus == MediaStatus.READ.rawValue {
                     conversationInputViewController.dismiss()
                     UIApplication.homeContainerViewController?.pipController?.pauseAction(self)
-                    openDocumentAction(message: message)
+                    if viewModel.isListPlayable {
+                        if CallService.shared.hasCall {
+                            alert(R.string.localizable.chat_voice_record_on_call())
+                        } else {
+                            let item = PlaylistItem(message: message)
+                            PlaylistManager.shared.playOrPause(index: 0, in: [item], source: .conversation(message.conversationId))
+                        }
+                    } else {
+                        openDocumentAction(message: message)
+                    }
                 } else {
                     attachmentLoadingCellDidSelectNetworkOperation(cell)
                 }

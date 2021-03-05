@@ -11,11 +11,16 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         false
     }
     
+    let isListPlayable: Bool
+    
     var isLoading = false
     var progress: Double?
-    var showPlayIconOnMediaStatusDone: Bool = false
     var operationButtonStyle: NetworkOperationButton.Style = .finished(showPlayIcon: false)
     var downloadIsTriggeredByUser = false
+    
+    var showPlayIconOnMediaStatusDone: Bool {
+        isListPlayable
+    }
     
     var shouldAutoDownload: Bool {
         switch AppGroupUserDefaults.User.autoDownloadFiles {
@@ -33,6 +38,7 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
     }
     
     override init(message: MessageItem) {
+        isListPlayable = message.isListPlayable
         super.init(message: message)
         updateOperationButtonStyle()
     }

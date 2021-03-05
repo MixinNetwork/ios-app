@@ -838,6 +838,13 @@
 "report_compress_database"="压缩数据库";
 "report_compress_database_success"="已压缩";
 
+// Playlist
+"playlist" = "播放列表";
+"playlist_unknown_artist" = "未知艺术家";
+"playlist_not_playing" = "未在播放";
+"playlist_stop_confirmation" = "确定要停止并关闭播放列表？";
+"playlist_stop" = "停止并关闭";
+
 // Notification
 "notification_reply" = "回复";
 "notification_mute" = "屏蔽";

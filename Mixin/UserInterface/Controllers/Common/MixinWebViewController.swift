@@ -8,6 +8,7 @@ class MixinWebViewController: WebViewController {
     private enum HandlerName {
         static let mixinContext = "MixinContext"
         static let reloadTheme = "reloadTheme"
+        static let playlist = "playlist"
     }
     
     weak var associatedClip: Clip?
@@ -24,6 +25,7 @@ class MixinWebViewController: WebViewController {
         config.userContentController.addUserScript(Script.disableImageSelection)
         config.userContentController.add(self, name: HandlerName.mixinContext)
         config.userContentController.add(self, name: HandlerName.reloadTheme)
+        config.userContentController.add(self, name: HandlerName.playlist)
         config.applicationNameForUserAgent = "Mixin/\(Bundle.main.shortVersion)"
         return config
     }
@@ -117,6 +119,7 @@ class MixinWebViewController: WebViewController {
         if !isMessageHandlerAdded {
             webView.configuration.userContentController.add(self, name: HandlerName.mixinContext)
             webView.configuration.userContentController.add(self, name: HandlerName.reloadTheme)
+            webView.configuration.userContentController.add(self, name: HandlerName.playlist)
             isMessageHandlerAdded = true
         }
     }
@@ -125,6 +128,7 @@ class MixinWebViewController: WebViewController {
         super.viewDidDisappear(animated)
         webView.configuration.userContentController.removeScriptMessageHandler(forName: HandlerName.mixinContext)
         webView.configuration.userContentController.removeScriptMessageHandler(forName: HandlerName.reloadTheme)
+        webView.configuration.userContentController.removeScriptMessageHandler(forName: HandlerName.playlist)
         isMessageHandlerAdded = false
     }
 
@@ -348,8 +352,18 @@ extension MixinWebViewController: WKUIDelegate {
 extension MixinWebViewController: WKScriptMessageHandler {
     
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        if message.name == HandlerName.reloadTheme {
+        switch message.name {
+        case HandlerName.reloadTheme:
             reloadTheme(webView: webView)
+        case HandlerName.playlist:
+            if let body = message.body as? [String] {
+                let playlist = body.compactMap(PlaylistItem.init)
+                if !playlist.isEmpty {
+                    PlaylistManager.shared.play(index: 0, in: playlist, source: .remote)
+                }
+            }
+        default:
+            break
         }
     }
     

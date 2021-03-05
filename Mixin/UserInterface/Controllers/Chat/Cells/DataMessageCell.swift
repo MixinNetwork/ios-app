@@ -1,12 +1,43 @@
 import UIKit
 import MixinServices
 
-class DataMessageCell: CardMessageCell<DataMessageExtensionIconView, CardMessageTitleView>, AttachmentLoadingMessageCell {
+class DataMessageCell: CardMessageCell<DataMessageExtensionIconView, CardMessageTitleView>, AttachmentLoadingMessageCell, AudioCell {
     
     weak var attachmentLoadingDelegate: AttachmentLoadingMessageCellDelegate?
     
     var operationButton: NetworkOperationButton! {
         leftView.operationButton
+    }
+    
+    var style: AudioCellStyle = .stopped {
+        didSet {
+            guard let mediaStatus = (viewModel as? DataMessageViewModel)?.mediaStatus else {
+                return
+            }
+            guard mediaStatus == MediaStatus.DONE.rawValue || mediaStatus == MediaStatus.READ.rawValue else {
+                return
+            }
+            switch style {
+            case .playing:
+                operationButton.setImage(R.image.ic_pause(), for: .normal)
+            case .stopped, .paused:
+                operationButton.setImage(R.image.ic_play(), for: .normal)
+            }
+        }
+    }
+    
+    deinit {
+        if let viewModel = viewModel as? DataMessageViewModel, viewModel.isListPlayable {
+            PlaylistManager.shared.unregister(cell: self, for: viewModel.message.messageId)
+        }
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        style = .stopped
+        if let viewModel = viewModel as? DataMessageViewModel, viewModel.isListPlayable {
+            PlaylistManager.shared.unregister(cell: self, for: viewModel.message.messageId)
+        }
     }
     
     override func prepare() {
@@ -36,6 +67,9 @@ class DataMessageCell: CardMessageCell<DataMessageExtensionIconView, CardMessage
             titleLabel.text = viewModel.message.name ?? " "
             let mediaExpired = viewModel.mediaStatus == MediaStatus.EXPIRED.rawValue
             subtitleLabel.text =  mediaExpired ? Localized.CHAT_FILE_EXPIRED : viewModel.sizeRepresentation
+            if viewModel.isListPlayable {
+                PlaylistManager.shared.register(cell: self, for: viewModel.message.messageId)
+            }
         }
     }
     

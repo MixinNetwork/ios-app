@@ -301,4 +301,8 @@ extension MessageItem {
         return conversation.ownerId != userId && conversation.category == ConversationCategory.CONTACT.rawValue
     }
     
+    public var isListPlayable: Bool {
+        mediaMimeType == "audio/mpeg"
+    }
+    
 }

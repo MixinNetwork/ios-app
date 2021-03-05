@@ -29,6 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         SwiftyMarkdown.frontMatterRules = []
         _ = ReachabilityManger.shared
         _ = DarwinNotificationManager.shared
+        _ = CacheableAssetFileManager.shared
         UNUserNotificationCenter.current().setNotificationCategories([.message])
         UNUserNotificationCenter.current().delegate = NotificationManager.shared
         checkLogin()

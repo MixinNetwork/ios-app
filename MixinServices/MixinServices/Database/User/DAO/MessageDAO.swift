@@ -6,11 +6,13 @@ public final class MessageDAO: UserDatabaseDAO {
     public enum UserInfoKey {
         public static let conversationId = "conv_id"
         public static let message = "msg"
+        public static let messageId = "mid"
         public static let messsageSource = "msg_source"
     }
     
     public static let shared = MessageDAO()
     
+    public static let willDeleteMessageNotification = Notification.Name("one.mixin.services.MessageDAO.willDeleteMessage")
     public static let didInsertMessageNotification = Notification.Name("one.mixin.services.did.insert.msg")
     public static let didRedecryptMessageNotification = Notification.Name("one.mixin.services.did.redecrypt.msg")
     
@@ -627,6 +629,9 @@ public final class MessageDAO: UserDatabaseDAO {
     
     @discardableResult
     public func deleteMessage(id: String) -> Bool {
+        NotificationCenter.default.post(onMainThread: Self.willDeleteMessageNotification,
+                                        object: self,
+                                        userInfo: [UserInfoKey.messageId: id])
         var deleteCount = 0
         db.write { (db) in
             deleteCount = try Message

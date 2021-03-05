@@ -4,6 +4,9 @@ public final class ConversationDAO: UserDatabaseDAO {
     
     public static let shared = ConversationDAO()
     
+    public static let willClearConversationNotification = Notification.Name("one.mixin.service.ConversationDAO.willClearConversation")
+    public static let conversationIdUserInfoKey = "cid"
+    
     private static let sqlQueryColumns = """
     SELECT c.conversation_id as conversationId, c.owner_id as ownerId, c.icon_url as iconUrl,
     c.announcement as announcement, c.category as category, c.name as name, c.status as status,
@@ -210,6 +213,9 @@ public final class ConversationDAO: UserDatabaseDAO {
         let mediaUrls = MessageDAO.shared.getMediaUrls(conversationId: conversationId, categories: MessageCategory.allMediaCategories)
         
         db.write { db in
+            NotificationCenter.default.post(onMainThread: Self.willClearConversationNotification,
+                                            object: self,
+                                            userInfo: [Self.conversationIdUserInfoKey: conversationId])
             try Message
                 .filter(Message.column(of: .conversationId) == conversationId)
                 .deleteAll(db)

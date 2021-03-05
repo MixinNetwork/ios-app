@@ -20,29 +20,13 @@ class HomeContainerViewController: UIViewController {
     }()
     
     lazy var minimizedCallViewController: MinimizedCallViewController = {
-        let controller = MinimizedCallViewController()
-        controller.view.autoresizingMask = [.flexibleTopMargin, .flexibleLeftMargin]
-        addChild(controller)
-        view.addSubview(controller.view)
-        controller.didMove(toParent: self)
-        controller.updateViewSize()
-        controller.panningController.placeViewNextToLastOverlayOrTopRight()
-        overlaysCoordinator.register(overlay: controller.view)
+        let controller: MinimizedCallViewController = makeAndAddOverlay()
         minimizedCallViewControllerIfLoaded = controller
         return controller
     }()
     
-    lazy var minimizedClipSwitcherViewController: MinimizedClipSwitcherViewController = {
-        let controller = MinimizedClipSwitcherViewController()
-        controller.view.autoresizingMask = [.flexibleTopMargin, .flexibleLeftMargin]
-        addChild(controller)
-        view.addSubview(controller.view)
-        controller.didMove(toParent: self)
-        controller.updateViewSize()
-        controller.panningController.placeViewNextToLastOverlayOrTopRight()
-        overlaysCoordinator.register(overlay: controller.view)
-        return controller
-    }()
+    lazy var minimizedClipSwitcherViewController: MinimizedClipSwitcherViewController = makeAndAddOverlay()
+    lazy var minimizedPlaylistViewController: MinimizedPlaylistViewController = makeAndAddOverlay()
     
     override var childForStatusBarHidden: UIViewController? {
         topMostChild
@@ -152,6 +136,18 @@ extension HomeContainerViewController: GalleryViewControllerDelegate {
 }
 
 extension HomeContainerViewController {
+    
+    private func makeAndAddOverlay<Controller: HomeOverlayViewController>() -> Controller {
+        let controller = Controller()
+        controller.view.autoresizingMask = [.flexibleTopMargin, .flexibleLeftMargin]
+        addChild(controller)
+        view.addSubview(controller.view)
+        controller.didMove(toParent: self)
+        controller.updateViewSize()
+        controller.panningController.placeViewNextToLastOverlayOrTopRight()
+        overlaysCoordinator.register(overlay: controller.view)
+        return controller
+    }
     
     private func chainingDelegate(of conversationId: String) -> GalleryViewControllerDelegate? {
         let sharedMedia = homeNavigationController.viewControllers

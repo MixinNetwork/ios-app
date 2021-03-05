@@ -209,7 +209,7 @@ extension CacheableAssetLoader: URLSessionDataDelegate {
             debugInfo("[CacheableAssetLoader] ℹ️ first fragment: \(fragmentRange.lowerBound)~\(fragmentRange.upperBound)")
             fileOffset = UInt64(fragmentRange.lowerBound)
             receivedDataRange = fragmentRange.lowerBound...(fragmentRange.lowerBound + Int64(data.count) - 1)
-            if receivedDataRange.upperBound == fragmentRange.upperBound {
+            if receivedDataRange.upperBound >= fragmentRange.upperBound {
                 fragmentAfterUpdate = nil
             } else {
                 fragmentAfterUpdate = .remote((receivedDataRange.upperBound + 1)...fragmentRange.upperBound)

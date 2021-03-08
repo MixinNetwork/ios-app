@@ -95,10 +95,14 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
         }
         let mute: Bool
         do {
-            try AudioSession.shared.activate(client: self)
+            try AudioSession.shared.activate(client: self) { (session) in
+                try session.setCategory(.playback, mode: .default, options: .defaultToSpeaker)
+            }
             mute = false
-        } catch {
+        } catch AudioSession.Error.insufficientPriority {
             mute = true
+        } catch {
+            mute = false
         }
         videoView.player.isMuted = mute
         videoView.play()

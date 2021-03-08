@@ -301,10 +301,14 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         if item.category == .video || player.currentItem != nil {
             let mute: Bool
             do {
-                try AudioSession.shared.activate(client: self)
+                try AudioSession.shared.activate(client: self) { (session) in
+                    try session.setCategory(.playback, mode: .default, options: .defaultToSpeaker)
+                }
                 mute = false
-            } catch {
+            } catch AudioSession.Error.insufficientPriority {
                 mute = true
+            } catch {
+                mute = false
             }
             player.isMuted = mute
             addTimeObservers()
@@ -593,10 +597,14 @@ extension GalleryVideoItemViewController {
         if playAfterLoaded {
             let mute: Bool
             do {
-                try AudioSession.shared.activate(client: self)
+                try AudioSession.shared.activate(client: self) { (session) in
+                    try session.setCategory(.playback, mode: .default, options: .defaultToSpeaker)
+                }
                 mute = false
-            } catch {
+            } catch AudioSession.Error.insufficientPriority {
                 mute = true
+            } catch {
+                mute = false
             }
             player.isMuted = mute
             player.play()

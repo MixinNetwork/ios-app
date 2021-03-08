@@ -161,6 +161,7 @@ class PlaylistManager: NSObject {
     override init() {
         super.init()
         player.automaticallyWaitsToMinimizeStalling = false
+        player.actionAtItemEnd = .pause
         notificationCenter.addObserver(self,
                                        selector: #selector(messageDAODidInsertMessage(_:)),
                                        name: MessageDAO.didInsertMessageNotification,
@@ -441,7 +442,6 @@ extension PlaylistManager {
                 if hasNextItem {
                     playNextItem()
                 } else {
-                    pause()
                     player.seek(to: .zero) { _ in
                         self.playOrPauseCurrentItem()
                     }
@@ -450,7 +450,6 @@ extension PlaylistManager {
                 if hasNextItem {
                     playNextItem()
                 } else {
-                    pause()
                     rebuildAvailableIndicesForShuffleMode()
                     playNextItem()
                 }
@@ -938,7 +937,7 @@ extension PlaylistManager {
                 availableIndicesInShuffleMode.insert(index)
             }
         }
-        if let index = playingItemIndex {
+        if let index = playingItemIndex, availableIndicesInShuffleMode.count > 1 {
             availableIndicesInShuffleMode.remove(index)
         }
     }
@@ -961,10 +960,14 @@ extension PlaylistManager {
     
     private func removeItem(with id: String) {
         loadedItemIds.remove(id)
-        if playingItem?.id == id {
-            stop()
-        }
         if let index = items.firstIndex(where: { $0.id == id }) {
+            if let playingIndex = playingItemIndex {
+                if playingIndex == index {
+                    stop()
+                } else if playingIndex > index {
+                    playingItemIndex = playingIndex - 1
+                }
+            }
             availableIndicesInShuffleMode.remove(index)
             items.remove(at: index)
             delegate?.playlistManager(self, didRemoveItemAt: index)

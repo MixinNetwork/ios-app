@@ -960,10 +960,14 @@ extension PlaylistManager {
     
     private func removeItem(with id: String) {
         loadedItemIds.remove(id)
-        if playingItem?.id == id {
-            stop()
-        }
         if let index = items.firstIndex(where: { $0.id == id }) {
+            if let playingIndex = playingItemIndex {
+                if playingIndex == index {
+                    stop()
+                } else if playingIndex > index {
+                    playingItemIndex = playingIndex - 1
+                }
+            }
             availableIndicesInShuffleMode.remove(index)
             items.remove(at: index)
             delegate?.playlistManager(self, didRemoveItemAt: index)

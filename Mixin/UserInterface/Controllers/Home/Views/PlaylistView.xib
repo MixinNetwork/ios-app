@@ -87,11 +87,11 @@
                     </constraints>
                 </view>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="60" estimatedRowHeight="60" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="0dj-uB-h9q">
-                    <rect key="frame" x="0.0" y="70" width="414" height="611"/>
+                    <rect key="frame" x="0.0" y="70" width="414" height="590"/>
                     <color key="backgroundColor" name="background"/>
                 </tableView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="N42-Gi-JCs" userLabel="Now Playing View">
-                    <rect key="frame" x="0.0" y="681" width="414" height="215"/>
+                    <rect key="frame" x="0.0" y="660" width="414" height="236"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VHT-PK-QYK" customClass="MusicInfoView" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="16" width="414" height="38"/>
@@ -101,7 +101,7 @@
                             </constraints>
                         </view>
                         <stackView opaque="NO" contentMode="scaleToFill" spacing="17" translatesAutoresizingMaskIntoConstraints="NO" id="iB7-O5-R3q">
-                            <rect key="frame" x="20" y="57" width="374" height="30"/>
+                            <rect key="frame" x="20" y="78" width="374" height="30"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="0:00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KUH-8I-h6H">
                                     <rect key="frame" x="0.0" y="0.0" width="30.5" height="30"/>
@@ -129,23 +129,23 @@
                                 </label>
                             </subviews>
                         </stackView>
-                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="32" translatesAutoresizingMaskIntoConstraints="NO" id="1Ib-Sh-RaL" userLabel="Control Panel">
-                            <rect key="frame" x="33" y="116" width="348" height="44"/>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q7y-SB-WVR" customClass="BouncingButton" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="10" y="137" width="44" height="44"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="Q7y-SB-WVR" secondAttribute="height" id="7I9-mX-Vgg"/>
+                            </constraints>
+                            <color key="tintColor" name="text_accessory"/>
+                            <state key="normal" image="Playlist/ic_repeat_list"/>
+                            <connections>
+                                <action selector="switchRepeatMode:" destination="-1" eventType="touchUpInside" id="vMb-RU-zTO"/>
+                            </connections>
+                        </button>
+                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="48" translatesAutoresizingMaskIntoConstraints="NO" id="1Ib-Sh-RaL" userLabel="Control Panel">
+                            <rect key="frame" x="93" y="137" width="228" height="44"/>
                             <subviews>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q7y-SB-WVR" customClass="BouncingButton" customModule="Mixin" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
-                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <constraints>
-                                        <constraint firstAttribute="width" secondItem="Q7y-SB-WVR" secondAttribute="height" id="7I9-mX-Vgg"/>
-                                    </constraints>
-                                    <color key="tintColor" name="text_accessory"/>
-                                    <state key="normal" image="Playlist/ic_repeat_list"/>
-                                    <connections>
-                                        <action selector="switchRepeatMode:" destination="-1" eventType="touchUpInside" id="vMb-RU-zTO"/>
-                                    </connections>
-                                </button>
                                 <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rvg-6z-bnC" customClass="BouncingButton" customModule="Mixin" customModuleProvider="target">
-                                    <rect key="frame" x="76" y="0.0" width="44" height="44"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <color key="tintColor" name="icon_tint"/>
                                     <state key="normal" image="Playlist/ic_track_previous"/>
@@ -154,7 +154,7 @@
                                     </connections>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zf2-cq-c1b" customClass="BouncingButton" customModule="Mixin" customModuleProvider="target">
-                                    <rect key="frame" x="152" y="0.0" width="44" height="44"/>
+                                    <rect key="frame" x="92" y="0.0" width="44" height="44"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <state key="normal" image="Playlist/ic_pause"/>
                                     <connections>
@@ -162,7 +162,7 @@
                                     </connections>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fid-ba-XUU" customClass="BouncingButton" customModule="Mixin" customModuleProvider="target">
-                                    <rect key="frame" x="228" y="0.0" width="44" height="44"/>
+                                    <rect key="frame" x="184" y="0.0" width="44" height="44"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <color key="tintColor" name="icon_tint"/>
                                     <state key="normal" image="Playlist/ic_track_next"/>
@@ -170,33 +170,37 @@
                                         <action selector="playNext:" destination="-1" eventType="touchUpInside" id="5S1-0O-8YO"/>
                                     </connections>
                                 </button>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qHH-ub-xKK" customClass="BouncingButton" customModule="Mixin" customModuleProvider="target">
-                                    <rect key="frame" x="304" y="0.0" width="44" height="44"/>
-                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <color key="tintColor" name="text_accessory"/>
-                                    <state key="normal" image="Playlist/ic_rate_normal"/>
-                                    <connections>
-                                        <action selector="switchPlaybackRate:" destination="-1" eventType="touchUpInside" id="iTH-2b-Ojg"/>
-                                    </connections>
-                                </button>
                             </subviews>
                             <constraints>
                                 <constraint firstItem="zf2-cq-c1b" firstAttribute="width" secondItem="zf2-cq-c1b" secondAttribute="height" id="hp6-6R-ou7"/>
-                                <constraint firstItem="qHH-ub-xKK" firstAttribute="width" secondItem="qHH-ub-xKK" secondAttribute="height" id="pdc-HQ-x5i"/>
                                 <constraint firstAttribute="height" constant="44" id="xix-Y0-A6k"/>
                                 <constraint firstItem="rvg-6z-bnC" firstAttribute="width" secondItem="rvg-6z-bnC" secondAttribute="height" id="z3x-UQ-t1h"/>
                                 <constraint firstItem="fid-ba-XUU" firstAttribute="width" secondItem="fid-ba-XUU" secondAttribute="height" id="zbK-rd-7Cs"/>
                             </constraints>
                         </stackView>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qHH-ub-xKK" customClass="BouncingButton" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="360" y="137" width="44" height="44"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <color key="tintColor" name="text_accessory"/>
+                            <state key="normal" image="Playlist/ic_rate_normal"/>
+                            <connections>
+                                <action selector="switchPlaybackRate:" destination="-1" eventType="touchUpInside" id="iTH-2b-Ojg"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" name="background"/>
                     <constraints>
+                        <constraint firstAttribute="trailing" secondItem="qHH-ub-xKK" secondAttribute="trailing" constant="10" id="37z-Aa-dZx"/>
+                        <constraint firstItem="Q7y-SB-WVR" firstAttribute="leading" secondItem="N42-Gi-JCs" secondAttribute="leading" constant="10" id="EqY-vj-HD5"/>
                         <constraint firstItem="1Ib-Sh-RaL" firstAttribute="top" secondItem="iB7-O5-R3q" secondAttribute="bottom" constant="29" id="GtB-Ge-NYk"/>
+                        <constraint firstItem="iB7-O5-R3q" firstAttribute="top" secondItem="VHT-PK-QYK" secondAttribute="bottom" constant="24" id="J7q-I2-1q9"/>
                         <constraint firstAttribute="trailing" secondItem="iB7-O5-R3q" secondAttribute="trailing" constant="20" id="S9z-kU-NGN"/>
                         <constraint firstItem="VHT-PK-QYK" firstAttribute="top" secondItem="N42-Gi-JCs" secondAttribute="top" constant="16" id="UYO-sd-EgT"/>
+                        <constraint firstItem="Q7y-SB-WVR" firstAttribute="centerY" secondItem="1Ib-Sh-RaL" secondAttribute="centerY" id="Yow-nf-h89"/>
                         <constraint firstItem="iB7-O5-R3q" firstAttribute="leading" secondItem="N42-Gi-JCs" secondAttribute="leading" constant="20" id="biE-ln-gQO"/>
                         <constraint firstItem="1Ib-Sh-RaL" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="N42-Gi-JCs" secondAttribute="leading" id="g5s-M4-dV8"/>
                         <constraint firstItem="1Ib-Sh-RaL" firstAttribute="centerX" secondItem="N42-Gi-JCs" secondAttribute="centerX" id="lfe-RZ-0BS"/>
+                        <constraint firstItem="qHH-ub-xKK" firstAttribute="centerY" secondItem="1Ib-Sh-RaL" secondAttribute="centerY" id="mCm-0g-gKr"/>
                         <constraint firstItem="VHT-PK-QYK" firstAttribute="leading" secondItem="N42-Gi-JCs" secondAttribute="leading" id="p2V-qZ-Kc0"/>
                         <constraint firstAttribute="trailing" secondItem="VHT-PK-QYK" secondAttribute="trailing" id="r2B-ru-ijy"/>
                         <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="1Ib-Sh-RaL" secondAttribute="trailing" id="zM1-2O-vV9"/>
@@ -206,7 +210,6 @@
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" name="background"/>
             <constraints>
-                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="N42-Gi-JCs" secondAttribute="top" constant="181" id="00E-ov-qbK"/>
                 <constraint firstAttribute="bottom" secondItem="N42-Gi-JCs" secondAttribute="bottom" id="3NZ-Sf-O4j"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="1Ib-Sh-RaL" secondAttribute="bottom" constant="21" id="5ac-yr-S3I"/>
                 <constraint firstItem="0dj-uB-h9q" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="7Ir-iJ-sGr"/>
@@ -226,7 +229,7 @@
         <image name="Playlist/ic_pause" width="44" height="44"/>
         <image name="Playlist/ic_rate_normal" width="44" height="44"/>
         <image name="Playlist/ic_repeat_list" width="44" height="44"/>
-        <image name="Playlist/ic_stop" width="26" height="26"/>
+        <image name="Playlist/ic_stop" width="20" height="19"/>
         <image name="Playlist/ic_track_next" width="22" height="15"/>
         <image name="Playlist/ic_track_previous" width="22" height="15"/>
         <image name="ic_profile_expand" width="18" height="9"/>
@@ -243,7 +246,7 @@
             <color red="0.18431372549019609" green="0.18823529411764706" blue="0.19607843137254902" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
             <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

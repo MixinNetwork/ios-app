@@ -530,6 +530,7 @@
 "wallet_asset_is_hidden_prompt" = "该资产已隐藏。在钱包中显示？";
 "wallet_asset_is_unhidden" = "已显示";
 "wallet_store_encrypted_pin" = "启用%@支付";
+"wallet_store_encrypted_pin_tip" = "启用%@支付？";
 "wallet_touch_id" = "指纹";
 "wallet_face_id" = "面容";
 

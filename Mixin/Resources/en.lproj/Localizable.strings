@@ -529,6 +529,7 @@
 "wallet_asset_is_hidden_prompt" = "The asset is hidden from wallet. Unhide it?";
 "wallet_asset_is_unhidden" = "Unhidden";
 "wallet_store_encrypted_pin" = "Enable %@ Pay";
+"wallet_store_encrypted_pin_tip" = "Enable %@ Pay?";
 "wallet_touch_id" = "Touch ID";
 "wallet_face_id" = "Face ID";
 "wallet_header_recent_searches" = "Recent searches";

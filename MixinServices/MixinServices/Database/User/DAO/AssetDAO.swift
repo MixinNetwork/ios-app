@@ -94,4 +94,8 @@ public final class AssetDAO: UserDatabaseDAO {
         db.select(with: AssetDAO.sqlQueryAvailableList)
     }
     
+    public func getTotalUSDBalance() -> Int {
+        db.select(with: "SELECT SUM(balance * price_usd) FROM assets") ?? 0
+    }
+    
 }

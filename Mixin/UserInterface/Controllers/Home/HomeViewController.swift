@@ -17,15 +17,12 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var guideButton: UIButton!
     @IBOutlet weak var connectingView: ActivityIndicatorView!
     @IBOutlet weak var titleButton: HomeTitleButton!
-    @IBOutlet weak var bulletinContentView: UIView!
-    @IBOutlet weak var bulletinTitleLabel: UILabel!
-    @IBOutlet weak var bulletinDescriptionView: UILabel!
+    @IBOutlet weak var bulletinWrapperView: UIView!
     @IBOutlet weak var bottomBarView: UIView!
     @IBOutlet weak var appStackView: UIStackView!
     @IBOutlet weak var myAvatarImageView: AvatarImageView!
     
     @IBOutlet weak var bulletinWrapperViewHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var bulletinContentTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var searchContainerTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var bottomNavigationBottomConstraint: NSLayoutConstraint!
     
@@ -34,6 +31,11 @@ class HomeViewController: UIViewController {
     private let feedback = UISelectionFeedbackGenerator()
     private let messageCountPerPage = 30
     private let numberOfHomeApps = 3
+    private let bulletinContentTopMargin: CGFloat = 10
+    private let notificationAuthorizationAlertingInterval = 2 * secondsPerDay
+    private let emergencyContactAlertingInterval = 7 * secondsPerDay
+    private let emergencyContactAlertingUSDBalance = 100
+    private let insufficientBalanceForEmergencyContactBulletinReconfirmInterval = secondsPerHour
     
     private var conversations = [ConversationItem]()
     private var needRefresh = true
@@ -45,17 +47,32 @@ class HomeViewController: UIViewController {
     private var appButtons = [UIButton]()
     private var appActions: [(() -> Void)?] = []
     private var isEditingRow = false
+    private var insufficientBalanceForEmergencyContactBulletinConfirmedDate: Date?
     
-    private var isBulletinViewHidden = false {
+    private var bulletinContent: BulletinContent? = nil {
         didSet {
             layoutBulletinView()
         }
     }
+    
     private var topLeftTitle: String {
         AppGroupUserDefaults.User.circleName ?? R.string.localizable.app_name()
     }
     
+    private weak var bulletinContentViewIfLoaded: BulletinContentView?
+    
     private lazy var circlesViewController = R.storyboard.home.circles()!
+    private lazy var bulletinContentView: BulletinContentView = {
+        let view = R.nib.bulletinContentView(owner: self)!
+        bulletinWrapperView.addSubview(view)
+        view.snp.makeConstraints { (make) in
+            make.top.equalToSuperview().offset(bulletinContentTopMargin)
+            make.leading.equalToSuperview().offset(14)
+            make.trailing.equalToSuperview().offset(-14)
+        }
+        bulletinContentViewIfLoaded = view
+        return view
+    }()
     private lazy var deleteAction = UITableViewRowAction(style: .destructive, title: Localized.MENU_DELETE, handler: tableViewCommitDeleteAction)
     private lazy var pinAction: UITableViewRowAction = {
         let action = UITableViewRowAction(style: .normal, title: Localized.HOME_CELL_ACTION_PIN, handler: tableViewCommitPinAction)
@@ -85,7 +102,6 @@ class HomeViewController: UIViewController {
         if let account = LoginManager.shared.account {
             myAvatarImageView.setImage(with: account)
         }
-        isBulletinViewHidden = true
         updateBulletinView()
         searchContainerBeginTopConstant = searchContainerTopConstraint.constant
         searchViewController.cancelButton.addTarget(self, action: #selector(hideSearch), for: .touchUpInside)
@@ -213,13 +229,28 @@ class HomeViewController: UIViewController {
     }
     
     @IBAction func bulletinContinueAction(_ sender: Any) {
-        UIApplication.openAppSettings()
+        switch bulletinContent {
+        case .notification:
+            UIApplication.openAppSettings()
+        case .emergencyContact:
+            let vc = EmergencyContactViewController.instance()
+            navigationController?.pushViewController(vc, animated: true)
+        case .none:
+            break
+        }
     }
     
     @IBAction func bulletinDismissAction(_ sender: Any) {
-        AppGroupUserDefaults.notificationBulletinDismissalDate = Date()
+        switch bulletinContent {
+        case .notification:
+            AppGroupUserDefaults.notificationBulletinDismissalDate = Date()
+        case .emergencyContact:
+            AppGroupUserDefaults.User.emergencyContactBulletinDismissalDate = Date()
+        case .none:
+            break
+        }
         UIView.animate(withDuration: 0.3) {
-            self.isBulletinViewHidden = true
+            self.bulletinContent = nil
             self.view.layoutIfNeeded()
         }
     }
@@ -268,6 +299,9 @@ class HomeViewController: UIViewController {
         }
         DispatchQueue.main.async {
             self.myAvatarImageView.setImage(with: account)
+            if self.bulletinContent == .emergencyContact && account.has_emergency_contact {
+                self.bulletinContent = nil
+            }
         }
     }
 
@@ -765,35 +799,79 @@ extension HomeViewController {
     }
     
     private func layoutBulletinView() {
-        if isBulletinViewHidden {
+        if bulletinContent == nil {
             bulletinWrapperViewHeightConstraint.constant = 0
-            bulletinContentView.alpha = 0
+            bulletinContentViewIfLoaded?.alpha = 0
         } else {
             UIView.performWithoutAnimation(bulletinContentView.layoutIfNeeded)
-            bulletinWrapperViewHeightConstraint.constant = bulletinContentTopConstraint.constant + bulletinContentView.frame.height
+            bulletinWrapperViewHeightConstraint.constant = bulletinContentTopMargin + bulletinContentView.frame.height
             bulletinContentView.alpha = 1
         }
     }
     
     private func updateBulletinView() {
-        UNUserNotificationCenter.current().getNotificationSettings { (settings) in
-            let shouldHideBulletin: Bool
-            if settings.authorizationStatus == .denied {
-                if let date = AppGroupUserDefaults.notificationBulletinDismissalDate {
-                    let notificationAuthorizationAlertingPeriod: TimeInterval = 2 * 24 * 60 * 60
-                    shouldHideBulletin = -date.timeIntervalSinceNow < notificationAuthorizationAlertingPeriod
-                } else {
-                    shouldHideBulletin = false
-                }
-            } else {
-                shouldHideBulletin = true
+        func isDateNonNil(_ date: Date?, hasLessIntervalSinceNowThan interval: TimeInterval) -> Bool {
+            guard let date = date else {
+                return false
             }
-            DispatchQueue.main.async {
-                self.isBulletinViewHidden = shouldHideBulletin
-                if self.view.window != nil {
-                    self.view.layoutIfNeeded()
+            return -date.timeIntervalSinceNow < interval
+        }
+        
+        let userJustDismissedNotificationBulletin = isDateNonNil(AppGroupUserDefaults.notificationBulletinDismissalDate, hasLessIntervalSinceNowThan: notificationAuthorizationAlertingInterval)
+        let checkNotificationSettings = !userJustDismissedNotificationBulletin
+        
+        let checkWalletBalanceForEmergencyContactBulletin: Bool
+        let userJustDismissedEmergencyContactBulletin = isDateNonNil(AppGroupUserDefaults.User.emergencyContactBulletinDismissalDate, hasLessIntervalSinceNowThan: emergencyContactAlertingInterval)
+        let justConfirmedUserHasInsufficientBalanceForEmergencyContactBulletin = isDateNonNil(insufficientBalanceForEmergencyContactBulletinConfirmedDate, hasLessIntervalSinceNowThan: insufficientBalanceForEmergencyContactBulletinReconfirmInterval)
+        if bulletinContent == .notification
+            || userJustDismissedEmergencyContactBulletin
+            || justConfirmedUserHasInsufficientBalanceForEmergencyContactBulletin
+            || (LoginManager.shared.account?.has_emergency_contact ?? false)
+        {
+            checkWalletBalanceForEmergencyContactBulletin = false
+        } else {
+            checkWalletBalanceForEmergencyContactBulletin = true
+        }
+        
+        guard checkNotificationSettings || checkWalletBalanceForEmergencyContactBulletin else {
+            return
+        }
+        
+        func show(content: BulletinContent?) {
+            bulletinContentView.content = content
+            bulletinContent = content
+            if view.window != nil {
+                view.layoutIfNeeded()
+            }
+        }
+        
+        func showEmergencyContactBulletinIfNeeded() {
+            DispatchQueue.global().async {
+                let balance = AssetDAO.shared.getTotalUSDBalance()
+                DispatchQueue.main.async {
+                    if balance > self.emergencyContactAlertingUSDBalance {
+                        show(content: .emergencyContact)
+                    } else {
+                        self.insufficientBalanceForEmergencyContactBulletinConfirmedDate = Date()
+                    }
                 }
             }
+        }
+        
+        if checkNotificationSettings {
+            UNUserNotificationCenter.current().getNotificationSettings { (settings) in
+                DispatchQueue.main.async {
+                    if settings.authorizationStatus == .denied {
+                        show(content: .notification)
+                    } else if checkWalletBalanceForEmergencyContactBulletin {
+                        showEmergencyContactBulletinIfNeeded()
+                    } else {
+                        show(content: nil)
+                    }
+                }
+            }
+        } else if checkWalletBalanceForEmergencyContactBulletin {
+            showEmergencyContactBulletinIfNeeded()
         }
     }
     

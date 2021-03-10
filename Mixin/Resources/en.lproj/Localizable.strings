@@ -201,6 +201,7 @@
 "home_title" = "Chats";
 "home_bulletin_title_notification" = "Turn ON Notifications";
 "home_bulletin_description_notification" = "Don’t miss messages from your friends";
+"home_bulletin_title_emergency_contact" = "Emergency Contact";
 "home_bulletin_button_notification" = "Settings";
 "home_title_apps" = "Bots";
 "home_apps_candidate_empty" = "Please add your favorite bot first.";

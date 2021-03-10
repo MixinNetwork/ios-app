@@ -201,6 +201,7 @@
 "home_title" = "チャット";
 "home_bulletin_title_notification" = "通知をオンにする";
 "home_bulletin_description_notification" = "メッセージを確認する";
+"home_bulletin_title_emergency_contact" = "紧急联系人";
 "home_bulletin_button_notification" = "設定";
 "home_title_apps" = "ボット";
 "home_apps_candidate_empty" = "お気に入りのボットを追加してください";

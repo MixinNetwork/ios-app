@@ -63,8 +63,8 @@ public final class SignalDatabase: Database {
         return migrator
     }
     
-    public static func reloadCurrent() {
-        current = makeDatabaseWithDefaultLocation()
+    public static func reloadCurrent(with db: SignalDatabase? = nil) {
+        current = db ?? makeDatabaseWithDefaultLocation()
         current.migrate()
     }
     

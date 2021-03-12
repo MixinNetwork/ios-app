@@ -1,7 +1,0 @@
-"CFBundleDisplayName" = "Mixin";
-"NSContactsUsageDescription" = "Mixinはアドレス帳で連絡先と接続します。";
-"NSCameraUsageDescription" = "Mixinはカメラをでプロフィール写真を設定し、チャットであなたの連絡先に写真を送信します。";
-"NSPhotoLibraryUsageDescription" = "Mixinはフォトライブラリを使用してプロフィール写真を設定し、チャットであなたの連絡先に写真を送信します。";
-"NSMicrophoneUsageDescription" = "Mixinは、携帯のマイクを使ってボイスメッセージを録音し、あなたの連絡先と共有します。";
-"NSFaceIDUsageDescription" = "MixinはFace IDで支払承認をする。";
-"NSLocationWhenInUseUsageDescription" = "Mixinは位置情報を使用して連絡先と共有します。";

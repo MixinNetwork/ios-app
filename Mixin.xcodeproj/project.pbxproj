@@ -1389,7 +1389,6 @@
 		7BD3860324DC56DA00A3035C /* UNNotificationConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UNNotificationConstants.swift; sourceTree = "<group>"; };
 		7BD387F424DC591D00A3035C /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = "<group>"; };
 		7BD387FD24DC66F900A3035C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		7BD387FE24DC66F900A3035C /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		7BD387FF24DC66F900A3035C /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		7BD38B5F20BEA03200D06E5C /* WaveformView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveformView.swift; sourceTree = "<group>"; };
 		7BD38B6120BEA12800D06E5C /* AudioMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioMessageViewModel.swift; sourceTree = "<group>"; };
@@ -1635,7 +1634,6 @@
 		DF68CD71244EC1970059A678 /* Mixin-Keys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = "Mixin-Keys.plist"; path = "Mixin/Supporting Files/Mixin-Keys.plist"; sourceTree = SOURCE_ROOT; };
 		DF6ABB132295019C00A012B2 /* AddressWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddressWindow.xib; sourceTree = "<group>"; };
 		DF6ABB152295049E00A012B2 /* AddressWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressWindow.swift; sourceTree = "<group>"; };
-		DF6CF2E7221A801600B65294 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		DF6CF2E8221FDE5C00B65294 /* QrcodeWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QrcodeWindow.swift; sourceTree = "<group>"; };
 		DF754CB71FBC7F1200F2F2E5 /* WalletPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletPasswordViewController.swift; sourceTree = "<group>"; };
 		DF75FF4324FE61E1008A7CF3 /* UpdateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateViewController.swift; sourceTree = "<group>"; };
@@ -3563,7 +3561,6 @@
 				en,
 				Base,
 				"zh-Hans",
-				ja,
 			);
 			mainGroup = 277FF6F61F909A1200DBB2EB;
 			productRefGroup = 277FF7001F909A1200DBB2EB /* Products */;
@@ -4872,7 +4869,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				7BD387FD24DC66F900A3035C /* en */,
-				7BD387FE24DC66F900A3035C /* ja */,
 				7BD387FF24DC66F900A3035C /* zh-Hans */,
 			);
 			name = Localizable.strings;
@@ -4883,7 +4879,6 @@
 			children = (
 				DF8CECFE1FC58DBD00E40064 /* en */,
 				DF8CED001FC58DC000E40064 /* zh-Hans */,
-				DF6CF2E7221A801600B65294 /* ja */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";

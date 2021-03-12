@@ -14,6 +14,10 @@ class AudioMessagePlayingManager: NSObject, AudioSessionClient {
     static let conversationIdUserInfoKey = "conversation_id"
     static let messageIdUserInfoKey = "message_id"
     
+    var pausePlayingWhenAppEntersBackground: Bool {
+        true
+    }
+    
     private let queue = DispatchQueue(label: "one.mixin.messenger.AudioMessagePlayingManager")
     
     // These 2 vars below should be access from main queue
@@ -30,7 +34,7 @@ class AudioMessagePlayingManager: NSObject, AudioSessionClient {
                            name: SendMessageService.willRecallMessageNotification,
                            object: nil)
         center.addObserver(self,
-                           selector: #selector(pause),
+                           selector: #selector(appDidEnterBackgroundNotification(_:)),
                            name: UIApplication.didEnterBackgroundNotification,
                            object: nil)
     }
@@ -111,7 +115,7 @@ class AudioMessagePlayingManager: NSObject, AudioSessionClient {
         }
     }
     
-    @objc func pause() {
+    func pause() {
         guard let playingMessage = playingMessage else {
             return
         }
@@ -176,6 +180,12 @@ class AudioMessagePlayingManager: NSObject, AudioSessionClient {
         }
         let job = AudioDownloadJob(messageId: next.messageId)
         ConcurrentJobQueue.shared.addJob(job: job)
+    }
+    
+    @objc func appDidEnterBackgroundNotification(_ notification: Notification) {
+        if pausePlayingWhenAppEntersBackground {
+            pause()
+        }
     }
     
     @objc func willRecallMessage(_ notification: Notification) {

@@ -12,6 +12,10 @@ class SharedMediaAudioMessagePlayingManager: AudioMessagePlayingManager {
     
     weak var delegate: SharedMediaAudioMessagePlayingManagerDelegate?
     
+    override var pausePlayingWhenAppEntersBackground: Bool {
+        false
+    }
+    
     private var needsUpdatePlayingInfo = false
     
     deinit {

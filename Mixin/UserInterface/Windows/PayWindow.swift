@@ -548,7 +548,7 @@ extension PayWindow: PinFieldDelegate {
                 break
             }
             enableBiometricAuthButton.isHidden = false
-            successViewHeightConstraint.constant = 119 + 40 + 50
+            successViewHeightConstraint.constant = 119 + 10 + enableBiometricAuthButton.frame.height
         }
         successView.isHidden = false
         playSuccessSound()

@@ -884,7 +884,7 @@ extension PlaylistManager {
                     return
                 }
                 if self.repeatMode == .shuffle {
-                    for (index, item) in self.items.enumerated() {
+                    for (index, item) in newItems.enumerated() {
                         if item.asset != nil {
                             self.availableIndicesInShuffleMode.insert(self.items.count + index)
                         }
@@ -937,7 +937,7 @@ extension PlaylistManager {
                 availableIndicesInShuffleMode.insert(index)
             }
         }
-        if let index = playingItemIndex, availableIndicesInShuffleMode.count > 1 {
+        if let index = playingItemIndex {
             availableIndicesInShuffleMode.remove(index)
         }
     }
@@ -960,18 +960,29 @@ extension PlaylistManager {
     
     private func removeItem(with id: String) {
         loadedItemIds.remove(id)
-        if let index = items.firstIndex(where: { $0.id == id }) {
-            if let playingIndex = playingItemIndex {
-                if playingIndex == index {
-                    stop()
-                } else if playingIndex > index {
-                    playingItemIndex = playingIndex - 1
-                }
-            }
-            availableIndicesInShuffleMode.remove(index)
-            items.remove(at: index)
-            delegate?.playlistManager(self, didRemoveItemAt: index)
+        guard let index = items.firstIndex(where: { $0.id == id }) else {
+            return
         }
+        if let playingIndex = playingItemIndex {
+            if playingIndex == index {
+                stop()
+            } else if playingIndex > index {
+                playingItemIndex = playingIndex - 1
+            }
+        }
+        var newIndices: Set<Int> = []
+        for oldIndex in availableIndicesInShuffleMode {
+            if oldIndex < index {
+                newIndices.insert(oldIndex)
+            } else if oldIndex > index {
+                newIndices.insert(oldIndex - 1)
+            }
+        }
+        availableIndicesInShuffleMode = newIndices
+        items.remove(at: index)
+        delegate?.playlistManager(self, didRemoveItemAt: index)
+        commandCenter.previousTrackCommand.isEnabled = hasPreviousItem
+        commandCenter.nextTrackCommand.isEnabled = hasNextItem
     }
     
 }

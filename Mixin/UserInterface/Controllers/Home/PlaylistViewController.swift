@@ -79,8 +79,13 @@ class PlaylistViewController: ResizablePopupViewController {
             label.adjustsFontForContentSizeCategory = true
         }
         
-        if ScreenWidth.current <= .short {
+        switch ScreenWidth.current {
+        case .short:
             controlPanelStackView.spacing = 16
+        case .medium:
+            controlPanelStackView.spacing = 32
+        case .long:
+            controlPanelStackView.spacing = 48
         }
         if let item = manager.playingItem {
             updateNowPlayingView(with: item)

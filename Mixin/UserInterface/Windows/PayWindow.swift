@@ -30,6 +30,7 @@ class PayWindow: BottomSheetView {
     @IBOutlet weak var successView: UIView!
     @IBOutlet weak var loadingView: ActivityIndicatorView!
     @IBOutlet weak var paySuccessImageView: UIImageView!
+    @IBOutlet weak var enableBiometricAuthButton: UIButton!
     @IBOutlet weak var payLabel: UILabel!
     @IBOutlet weak var biometricButton: UIButton!
     @IBOutlet weak var multisigView: UIView!
@@ -52,7 +53,8 @@ class PayWindow: BottomSheetView {
 
     @IBOutlet weak var sendersButtonWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var receiversButtonWidthConstraint: NSLayoutConstraint!
-
+    @IBOutlet weak var successViewHeightConstraint: NSLayoutConstraint!
+    
     private lazy var context = LAContext()
     private weak var textfield: UITextField?
 
@@ -66,6 +68,7 @@ class PayWindow: BottomSheetView {
     private var processing = false
     private var isKeyboardAppear = false
     private var isMultisigUsersAppear = false
+    private var isDelayDismissCancelled = false
     private var isAllowBiometricPay: Bool {
         guard AppGroupUserDefaults.Wallet.payWithBiometricAuthentication else {
             return false
@@ -392,7 +395,26 @@ class PayWindow: BottomSheetView {
     @IBAction func dismissTipsAction(_ sender: Any) {
         dismissPopupControllerAnimated()
     }
-
+    
+    @IBAction func enableBiometricAuth(_ sender: Any) {
+        pinField.resignFirstResponder()
+        isDelayDismissCancelled = true
+        processing = false
+        dismissPopupControllerAnimated()
+        guard let navigationController = UIApplication.homeNavigationController else {
+            return
+        }
+        var viewControllers = navigationController.viewControllers.filter { (viewController) -> Bool in
+            if let container = viewController as? ContainerViewController {
+                return !(container.viewController is TransferOutViewController)
+            } else {
+                return true
+            }
+        }
+        viewControllers.append(PinSettingsViewController.instance())
+        navigationController.setViewControllers(viewControllers, animated: true)
+    }
+    
     static func instance() -> PayWindow {
         return Bundle.main.loadNibNamed("PayWindow", owner: nil, options: nil)?.first as! PayWindow
     }
@@ -501,9 +523,36 @@ extension PayWindow: PinFieldDelegate {
         }
         loadingView.stopAnimating()
         pinView.isHidden = true
+        var delay: TimeInterval = 2
+        if isAllowBiometricPay || biometryType == .none {
+            enableBiometricAuthButton.isHidden = true
+            successViewHeightConstraint.constant = 119
+        } else {
+            delay = 3
+            switch biometryType {
+            case .touchID:
+                let title = R.string.localizable.wallet_store_encrypted_pin_tip(R.string.localizable.wallet_touch_id())
+                UIView.performWithoutAnimation {
+                    enableBiometricAuthButton.setImage(R.image.ic_pay_touch(), for: .normal)
+                    enableBiometricAuthButton.setTitle(title, for: .normal)
+                    enableBiometricAuthButton.layoutIfNeeded()
+                }
+            case .faceID:
+                let title = R.string.localizable.wallet_store_encrypted_pin_tip(R.string.localizable.wallet_face_id())
+                UIView.performWithoutAnimation {
+                    enableBiometricAuthButton.setImage(R.image.ic_pay_face(), for: .normal)
+                    enableBiometricAuthButton.setTitle(title, for: .normal)
+                    enableBiometricAuthButton.layoutIfNeeded()
+                }
+            case .none:
+                break
+            }
+            enableBiometricAuthButton.isHidden = false
+            successViewHeightConstraint.constant = 119 + 10 + enableBiometricAuthButton.frame.height
+        }
         successView.isHidden = false
         playSuccessSound()
-        delayDismissWindow()
+        delayDismissWindow(delay: delay)
     }
 
     private func transferAction(pin: String) {
@@ -599,10 +648,10 @@ extension PayWindow: PinFieldDelegate {
         }
     }
 
-    private func delayDismissWindow() {
+    private func delayDismissWindow(delay: TimeInterval = 2) {
         pinField.resignFirstResponder()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
-            guard let weakSelf = self else {
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
+            guard let weakSelf = self, !weakSelf.isDelayDismissCancelled else {
                 return
             }
             weakSelf.processing = false

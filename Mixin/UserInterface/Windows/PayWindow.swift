@@ -523,10 +523,12 @@ extension PayWindow: PinFieldDelegate {
         }
         loadingView.stopAnimating()
         pinView.isHidden = true
+        var delay: TimeInterval = 2
         if isAllowBiometricPay || biometryType == .none {
             enableBiometricAuthButton.isHidden = true
             successViewHeightConstraint.constant = 119
         } else {
+            delay = 3
             switch biometryType {
             case .touchID:
                 let title = R.string.localizable.wallet_store_encrypted_pin_tip(R.string.localizable.wallet_touch_id())
@@ -550,7 +552,7 @@ extension PayWindow: PinFieldDelegate {
         }
         successView.isHidden = false
         playSuccessSound()
-        delayDismissWindow()
+        delayDismissWindow(delay: delay)
     }
 
     private func transferAction(pin: String) {
@@ -646,9 +648,9 @@ extension PayWindow: PinFieldDelegate {
         }
     }
 
-    private func delayDismissWindow() {
+    private func delayDismissWindow(delay: TimeInterval = 2) {
         pinField.resignFirstResponder()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
             guard let weakSelf = self, !weakSelf.isDelayDismissCancelled else {
                 return
             }

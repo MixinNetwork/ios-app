@@ -53,8 +53,6 @@ public struct Job {
     public var status: String?
     public var sessionId: String?
     
-    public var isAutoIncrement = true
-    
     init(jobId: String, action: JobAction, userId: String? = nil, conversationId: String? = nil, resendMessageId: String? = nil, sessionId: String? = nil, blazeMessage: BlazeMessage? = nil) {
         self.jobId = jobId
         switch action {

@@ -326,7 +326,7 @@ class UrlWindow {
     }
 
     class func checkPayUrl(url: String) -> Bool {
-        guard ["bitcoin:", "bitcoincash:", "bitcoinsv:", "ethereum:", "litecoin:", "dash:", "ripple:", "zcash:", "horizen:", "monero:", "binancecoin:", "stellar:", "dogecoin:"].contains(where: url.lowercased().hasPrefix) else {
+        guard ["bitcoin:", "bitcoincash:", "bitcoinsv:", "ethereum:", "litecoin:", "dash:", "ripple:", "zcash:", "horizen:", "monero:", "binancecoin:", "stellar:", "dogecoin:", "mobilecoin:"].contains(where: url.lowercased().hasPrefix) else {
             return false
         }
         guard let components = URLComponents(string: url.lowercased()) else {

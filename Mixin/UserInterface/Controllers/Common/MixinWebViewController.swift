@@ -578,7 +578,11 @@ extension MixinWebViewController {
         }
         
         init(conversationId: String, app: App, extraParams: [String: String] = [:]) {
-            self.conversationId = conversationId
+            if conversationId.isEmpty {
+                self.conversationId = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: app.appId)
+            } else {
+                self.conversationId = conversationId
+            }
             self.extraParams = extraParams
             style = .app(app: app, isHomeUrl: true)
             initialUrl = URL(string: app.homeUri) ?? .blank

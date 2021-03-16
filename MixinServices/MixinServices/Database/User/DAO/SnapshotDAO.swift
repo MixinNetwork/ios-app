@@ -28,20 +28,21 @@ public final class SnapshotDAO: UserDatabaseDAO {
     }
     
     public func getSnapshots(assetId: String? = nil, below location: SnapshotItem? = nil, sort: Snapshot.Sort, filter: Snapshot.Filter, limit: Int) -> [SnapshotItem] {
-        let additionalCondition: String?
-        var additionalArguments: [String: String] = [:]
         if let assetId = assetId {
-            additionalCondition = " AND s.asset_id = :asset_id"
-            additionalArguments["asset_id"] = assetId
+            return getSnapshotsAndRefreshCorrespondingAssetIfNeeded(below: location,
+                                                                    sort: sort,
+                                                                    filter: filter,
+                                                                    limit: limit,
+                                                                    additionalConditions: ["s.asset_id = :asset_id"],
+                                                                    additionalArguments: ["asset_id": assetId])
         } else {
-            additionalCondition = nil
+            return getSnapshotsAndRefreshCorrespondingAssetIfNeeded(below: location,
+                                                                    sort: sort,
+                                                                    filter: filter,
+                                                                    limit: limit,
+                                                                    additionalConditions: [],
+                                                                    additionalArguments: [:])
         }
-        return getSnapshotsAndRefreshCorrespondingAssetIfNeeded(below: location,
-                                                                sort: sort,
-                                                                filter: filter,
-                                                                limit: limit,
-                                                                additionalCondition: additionalCondition,
-                                                                additionalArguments: additionalArguments)
     }
     
     public func getSnapshots(opponentId: String, below location: SnapshotItem? = nil, sort: Snapshot.Sort, filter: Snapshot.Filter, limit: Int) -> [SnapshotItem] {
@@ -49,7 +50,7 @@ public final class SnapshotDAO: UserDatabaseDAO {
                                                          sort: sort,
                                                          filter: filter,
                                                          limit: limit,
-                                                         additionalCondition: " AND s.opponent_id = :opponent_id",
+                                                         additionalConditions: ["s.opponent_id = :opponent_id"],
                                                          additionalArguments: ["opponent_id": opponentId])
     }
     
@@ -118,7 +119,14 @@ public final class SnapshotDAO: UserDatabaseDAO {
 
 extension SnapshotDAO {
     
-    private func getSnapshotsAndRefreshCorrespondingAssetIfNeeded(below location: SnapshotItem? = nil, sort: Snapshot.Sort, filter: Snapshot.Filter, limit: Int, additionalCondition: String?, additionalArguments: [String: String]) -> [SnapshotItem] {
+    private func getSnapshotsAndRefreshCorrespondingAssetIfNeeded(
+        below location: SnapshotItem? = nil,
+        sort: Snapshot.Sort,
+        filter: Snapshot.Filter,
+        limit: Int,
+        additionalConditions: [String],
+        additionalArguments: [String: String]
+    ) -> [SnapshotItem] {
         var sql = """
         SELECT s.snapshot_id, s.type, s.asset_id, s.amount,
                 s.opponent_id, s.transaction_hash, s.sender, s.receiver,
@@ -127,36 +135,36 @@ extension SnapshotDAO {
         FROM snapshots s
         LEFT JOIN assets a ON s.asset_id = a.asset_id
         LEFT JOIN users u ON s.opponent_id = u.user_id
-        WHERE 1 = 1
+        
         """
         
-        var conditions: [String] = []
-        if let condition = additionalCondition {
-            sql += condition
-        }
+        var conditions = additionalConditions
         if let location = location {
             switch sort {
             case .createdAt:
-                sql += " AND s.created_at < :location_created_at"
+                conditions.append("s.created_at < :location_created_at")
             case .amount:
                 let absAmount = "ABS(s.amount)"
                 let locationAbsAmount = "ABS(:location_amount)"
-                sql += " AND (\(absAmount) < \(locationAbsAmount) OR (\(absAmount) = \(locationAbsAmount) AND s.created_at < :location_created_at))"
+                conditions.append("(\(absAmount) < \(locationAbsAmount) OR (\(absAmount) = \(locationAbsAmount) AND s.created_at < :location_created_at))")
             }
         }
         if filter != .all {
             let types = filter.snapshotTypes.map(\.rawValue).joined(separator: "', '")
-            sql += " AND s.type IN('\(types)')"
+            conditions.append("s.type IN('\(types)')")
+        }
+        if !conditions.isEmpty {
+            sql += "WHERE " + conditions.joined(separator: " AND ")
         }
         
         switch sort {
         case .createdAt:
-            sql += " ORDER BY s.created_at DESC"
+            sql += "\nORDER BY s.created_at DESC"
         case .amount:
-            sql += " ORDER BY ABS(s.amount) DESC, s.created_at DESC"
+            sql += "\nORDER BY ABS(s.amount) DESC, s.created_at DESC"
         }
         
-        sql += " LIMIT \(limit)"
+        sql += "\nLIMIT \(limit)"
         
         var arguments: [String: String] = [:]
         arguments["location_created_at"] = location?.createdAt
@@ -171,14 +179,6 @@ extension SnapshotDAO {
             ConcurrentJobQueue.shared.addJob(job: job)
         }
         return snapshots
-    }
-    
-    private func refreshAssetIfNeeded(_ snapshot: SnapshotItem) {
-        guard snapshot.assetSymbol == nil else {
-            return
-        }
-        let job = RefreshAssetsJob(assetId: snapshot.assetId)
-        ConcurrentJobQueue.shared.addJob(job: job)
     }
     
 }

@@ -651,13 +651,6 @@ public final class MessageDAO: UserDatabaseDAO {
         return db.recordExists(in: Message.self, where: condition)
     }
     
-    public func hasUnreadMessage(conversationId: String) -> Bool {
-        let condition: SQLSpecificExpressible = Message.column(of: .conversationId) == conversationId
-            && Message.column(of: .status) == MessageStatus.DELIVERED.rawValue
-            && Message.column(of: .userId) != myUserId
-        return db.recordExists(in: Message.self, where: condition)
-    }
-    
     public func hasMessage(id: String) -> Bool {
         db.recordExists(in: Message.self,
                         where: Message.column(of: .messageId) == id)
@@ -666,6 +659,13 @@ public final class MessageDAO: UserDatabaseDAO {
 }
 
 extension MessageDAO {
+    
+    private func hasUnreadMessage(conversationId: String) -> Bool {
+        let condition: SQLSpecificExpressible = Message.column(of: .conversationId) == conversationId
+            && Message.column(of: .status) == MessageStatus.DELIVERED.rawValue
+            && Message.column(of: .userId) != myUserId
+        return db.recordExists(in: Message.self, where: condition)
+    }
     
     private func updateRedecryptMessage(assignments: [ColumnAssignment], mention: MessageMention? = nil, messageId: String, category: String, conversationId: String, messageSource: String) {
         var newMessage: MessageItem?

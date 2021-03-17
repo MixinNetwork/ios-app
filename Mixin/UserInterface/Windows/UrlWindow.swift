@@ -9,7 +9,7 @@ class UrlWindow {
         if let mixinURL = MixinURL(url: url) {
             switch mixinURL {
             case let .codes(code):
-                return checkCodesUrl(code, clearNavigationStack: clearNavigationStack)
+                return checkCodesUrl(code, clearNavigationStack: clearNavigationStack, webContext: webContext)
             case .pay:
                 return checkPayUrl(url: url.absoluteString, query: url.getKeyVals())
             case .withdrawal:
@@ -557,7 +557,7 @@ class UrlWindow {
 
 extension UrlWindow {
 
-    private static func checkCodesUrl(_ codeId: String, clearNavigationStack: Bool) -> Bool {
+    private static func checkCodesUrl(_ codeId: String, clearNavigationStack: Bool, webContext: MixinWebViewController.Context? = nil) -> Bool {
         guard !codeId.isEmpty, UUID(uuidString: codeId) != nil else {
             return false
         }
@@ -571,7 +571,7 @@ extension UrlWindow {
                 if let user = code.user {
                     presentUser(user: user, hud: hud)
                 } else if let authorization = code.authorization {
-                    presentAuthorization(authorization: authorization, hud: hud)
+                    presentAuthorization(authorization: authorization, webContext: webContext, hud: hud)
                 } else if let conversation = code.conversation {
                     presentConversation(conversation: conversation, codeId: codeId, hud: hud)
                 } else if let multisig = code.multisig {
@@ -767,7 +767,18 @@ extension UrlWindow {
         }
     }
 
-    private static func presentAuthorization(authorization: AuthorizationResponse, hud: Hud) {
+    private static func presentAuthorization(authorization: AuthorizationResponse, webContext: MixinWebViewController.Context? = nil, hud: Hud) {
+        if let context = webContext,  case let .app(app, _) = context.style {
+            Logger.write(log: "[Authorization][WebContext][\(app.appNumber)][\(app.name)]...\(app.homeUri)")
+        } else {
+            Logger.write(log: "[Authorization][\(authorization.app.appNumber)][\(authorization.app.name)]...\(authorization.app.homeUri)")
+        }
+        
+        if let window = UIApplication.shared.keyWindow?.subviews.compactMap({ $0 as? AuthorizationWindow }).first, window.isShowing {
+            hud.hideInMainThread()
+            return
+        }
+        
         DispatchQueue.global().async {
             let assets = AssetDAO.shared.getAvailableAssets()
 

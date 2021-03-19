@@ -32,8 +32,8 @@ class NumberPadButton: UIControl, XibDesignable {
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        if traitCollection.userInterfaceStyle != previousTraitCollection?.userInterfaceStyle {
-            updateButtonBackground()
+        if #available(iOS 13.0, *), traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+            traitCollection.performAsCurrent(updateButtonBackground)
         }
     }
     

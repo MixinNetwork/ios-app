@@ -393,17 +393,15 @@ public final class MessageDAO: UserDatabaseDAO {
     public func getMessages(conversationId: String, aboveMessage location: MessageItem, count: Int) -> [MessageItem] {
         let sql = """
         \(Self.sqlQueryFullMessage)
-        WHERE m.conversation_id = ? AND m.ROWID < ?
+        WHERE m.conversation_id = ? AND m.created_at <= ? AND m.ROWID < ?
         ORDER BY m.created_at DESC
         LIMIT ?
         """
-        let rowId: Int? = db.select(column: .rowID,
-                                    from: Message.self,
-                                    where: Message.column(of: .messageId) == location.messageId)
-        if let id = rowId {
-            let messages: [MessageItem] = db.select(with: sql,
-                                                    arguments: [conversationId, id, count])
-            return messages.reversed()
+        let locationRowID: Int? = db.select(column: .rowID,
+                                            from: Message.self,
+                                            where: Message.column(of: .messageId) == location.messageId)
+        if let rowID = locationRowID {
+            return db.select(with: sql, arguments: [conversationId, location.createdAt, rowID, count]).reversed()
         } else {
             return []
         }
@@ -412,16 +410,15 @@ public final class MessageDAO: UserDatabaseDAO {
     public func getMessages(conversationId: String, belowMessage location: MessageItem, count: Int) -> [MessageItem] {
         let sql = """
         \(Self.sqlQueryFullMessage)
-        WHERE m.conversation_id = ? AND m.ROWID > ?
+        WHERE m.conversation_id = ? AND m.created_at >= ? AND m.ROWID > ?
         ORDER BY m.created_at ASC
         LIMIT ?
         """
-        let rowId: Int? = db.select(column: .rowID,
-                                    from: Message.self,
-                                    where: Message.column(of: .messageId) == location.messageId)
-        if let id = rowId {
-            return db.select(with: sql,
-                             arguments: [conversationId, id, count])
+        let locationRowID: Int? = db.select(column: .rowID,
+                                            from: Message.self,
+                                            where: Message.column(of: .messageId) == location.messageId)
+        if let rowID = locationRowID {
+            return db.select(with: sql, arguments: [conversationId, location.createdAt, rowID, count])
         } else {
             return []
         }
@@ -651,13 +648,6 @@ public final class MessageDAO: UserDatabaseDAO {
         return db.recordExists(in: Message.self, where: condition)
     }
     
-    public func hasUnreadMessage(conversationId: String) -> Bool {
-        let condition: SQLSpecificExpressible = Message.column(of: .conversationId) == conversationId
-            && Message.column(of: .status) == MessageStatus.DELIVERED.rawValue
-            && Message.column(of: .userId) != myUserId
-        return db.recordExists(in: Message.self, where: condition)
-    }
-    
     public func hasMessage(id: String) -> Bool {
         db.recordExists(in: Message.self,
                         where: Message.column(of: .messageId) == id)
@@ -666,6 +656,13 @@ public final class MessageDAO: UserDatabaseDAO {
 }
 
 extension MessageDAO {
+    
+    private func hasUnreadMessage(conversationId: String) -> Bool {
+        let condition: SQLSpecificExpressible = Message.column(of: .conversationId) == conversationId
+            && Message.column(of: .status) == MessageStatus.DELIVERED.rawValue
+            && Message.column(of: .userId) != myUserId
+        return db.recordExists(in: Message.self, where: condition)
+    }
     
     private func updateRedecryptMessage(assignments: [ColumnAssignment], mention: MessageMention? = nil, messageId: String, category: String, conversationId: String, messageSource: String) {
         var newMessage: MessageItem?

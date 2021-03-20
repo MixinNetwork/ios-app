@@ -2,7 +2,7 @@ import GRDB
 
 public final class UserDatabase: Database {
     
-    public private(set) static var current: UserDatabase! = loadCurrent()
+    public private(set) static var current: UserDatabase! = makeDatabaseWithDefaultLocation()
     
     public override class var config: Configuration {
         var config = super.config
@@ -352,8 +352,8 @@ public final class UserDatabase: Database {
 
 extension UserDatabase {
     
-    public static func reloadCurrent() {
-        current = loadCurrent()
+    public static func reloadCurrent(with db: UserDatabase? = nil) {
+        current = db ?? makeDatabaseWithDefaultLocation()
         current.migrate()
     }
     
@@ -363,7 +363,7 @@ extension UserDatabase {
         }
     }
     
-    private static func loadCurrent() -> UserDatabase {
+    private static func makeDatabaseWithDefaultLocation() -> UserDatabase {
         let db = try! UserDatabase(url: AppGroupContainer.userDatabaseUrl)
         if AppGroupUserDefaults.User.needsRebuildDatabase {
             try? db.pool.barrierWriteWithoutTransaction { (db) -> Void in

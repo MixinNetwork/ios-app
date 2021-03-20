@@ -89,11 +89,6 @@ public final class ConversationDAO: UserDatabaseDAO {
                         where: Conversation.column(of: .conversationId) == conversationId)
     }
     
-    public func hasValidConversation() -> Bool {
-        db.recordExists(in: Conversation.self,
-                        where: Conversation.column(of: .status) != ConversationStatus.QUIT.rawValue)
-    }
-    
     public func updateCodeUrl(conversation: ConversationResponse) {
         db.update(Conversation.self,
                   assignments: [Conversation.column(of: .codeUrl).set(to: conversation.codeUrl)],
@@ -249,10 +244,6 @@ public final class ConversationDAO: UserDatabaseDAO {
         }
         let keyword = "%\(keyword.sqlEscaped)%"
         return db.select(with: sql, arguments: [keyword, keyword])
-    }
-    
-    public func getOriginalConversation(conversationId: String) -> Conversation? {
-        db.select(where: Conversation.column(of: .conversationId) == conversationId)
     }
     
     public func getConversationStatus(conversationId: String) -> Int? {

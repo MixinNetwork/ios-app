@@ -3,55 +3,21 @@ import XCTest
 
 class SignalTests: XCTestCase {
     
-    override class func setUp() {
-        print("Testing with URL: \(AppGroupContainer.signalDatabaseUrl)")
-        let fileExists = FileManager.default.fileExists(atPath: AppGroupContainer.signalDatabaseUrl.path)
-        if fileExists {
-            assertionFailure("The test corrupts your existed app data. Test it with a fresh device.")
-        }
-    }
+    let url = FileManager.default
+        .urls(for: .cachesDirectory, in: .userDomainMask)
+        .first!
+        .appendingPathComponent("signal.db", isDirectory: false)
     
     override func setUpWithError() throws {
         try super.setUpWithError()
-        SignalDatabase.reloadCurrent()
+        print("Testing with URL: \(url)")
+        let db = try SignalDatabase(url: url)
+        SignalDatabase.reloadCurrent(with: db)
     }
     
     override func tearDownWithError() throws {
         SignalDatabase.closeCurrent()
-        let filenames = try FileManager.default.contentsOfDirectory(atPath: AppGroupContainer.documentsUrl.path)
-        for filename in filenames {
-            let url = AppGroupContainer.documentsUrl.appendingPathComponent(filename)
-            try FileManager.default.removeItem(at: url)
-        }
-    }
-    
-    func testTableMigration() {
-        var migrations = SignalDatabase.current.tableMigrations
-        let sqls = [
-            "CREATE TABLE identities(address TEXT, registrationId INTEGER, publicKey BLOB, privateKey BLOB, nextPreKeyId INTEGER, timestamp REAL)",
-            "CREATE TABLE prekeys(preKeyId INTEGER, record BLOB)",
-            "CREATE TABLE ratchet_sender_keys(groupId TEXT, senderId TEXT, status TEXT, PRIMARY KEY(groupId, senderId))",
-            "CREATE TABLE sender_keys(groupId TEXT, senderId TEXT, record BLOB, PRIMARY KEY(groupId, senderId))",
-            "CREATE TABLE sessions(address TEXT, device INTEGER, record BLOB, timestamp REAL)",
-            "CREATE TABLE signed_prekeys(preKeyId INTEGER, record BLOB, timestamp REAL)"
-        ]
-        XCTAssertEqual(migrations.count, sqls.count)
-        while !migrations.isEmpty {
-            guard let migration = migrations.last else {
-                break
-            }
-            let migrationSQL = migration.createTableSQL()
-            guard let originalSQL = sqls.first(where: { $0.hasPrefix("CREATE TABLE \(migration.tableName)") }) else {
-                XCTAssert(false)
-                return
-            }
-            if migrationSQL != originalSQL {
-                print("[NonEqual] m: \(migrationSQL)")
-                print("[NonEqual] o: \(originalSQL)")
-            }
-            XCTAssertEqual(migrationSQL, originalSQL)
-            migrations.removeLast()
-        }
+        try FileManager.default.removeItem(at: url)
     }
     
     func testMigration() throws {

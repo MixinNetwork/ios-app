@@ -297,17 +297,22 @@ public final class UserDatabase: Database {
                 try self.migrateTable(with: table, into: db)
             }
             
+            // Some of the indices needs renaming but we can't do it now.
+            // In some rare cases the database file corrupts, then we rebuild
+            // it by dropping the grdb_migrations table and migrate again.
+            // These indices can be renamed after a better repair method is implemented
+            
             try db.execute(sql: "CREATE INDEX IF NOT EXISTS conversations_indexs ON conversations(pin_time, last_message_created_at)")
+            
             try db.execute(sql: "CREATE UNIQUE INDEX IF NOT EXISTS jobs_index_id ON jobs(job_id)")
             try db.execute(sql: "CREATE INDEX IF NOT EXISTS jobs_next_indexs ON jobs(category, priority DESC, orderId ASC)")
-            try db.execute(sql: "CREATE INDEX IF NOT EXISTS message_mentions_conversation_indexs ON message_mentions(conversation_id, has_read)")
-            try db.execute(sql: "CREATE INDEX IF NOT EXISTS messages_category_indexs ON messages(category, status)")
+            
             try db.execute(sql: "CREATE INDEX IF NOT EXISTS messages_page_indexs ON messages(conversation_id, created_at)")
-            try db.execute(sql: "CREATE INDEX IF NOT EXISTS messages_pending_indexs ON messages(user_id, status, created_at)")
-            try db.execute(sql: "CREATE INDEX IF NOT EXISTS messages_unread_indexs ON messages(conversation_id, status, created_at)")
-            try db.execute(sql: "CREATE INDEX IF NOT EXISTS messages_user_indexs ON messages(conversation_id, user_id, created_at)")
-            try db.execute(sql: "CREATE INDEX IF NOT EXISTS users_app_indexs ON users(app_id)")
-            try db.execute(sql: "CREATE INDEX IF NOT EXISTS users_identity_number_indexs ON users(identity_number)")
+            try db.execute(sql: "CREATE INDEX IF NOT EXISTS index_messages_category ON messages(conversation_id, category)")
+            try db.execute(sql: "CREATE INDEX IF NOT EXISTS index_messages_quote ON messages(conversation_id, quote_message_id)")
+            try db.execute(sql: "CREATE INDEX IF NOT EXISTS index_messages_pick ON messages(conversation_id, status, user_id, created_at)")
+            
+            try db.execute(sql: "CREATE INDEX IF NOT EXISTS message_mentions_conversation_indexs ON message_mentions(conversation_id, has_read)")
             
             let lastMessageDelete = """
             CREATE TRIGGER IF NOT EXISTS conversation_last_message_delete AFTER DELETE ON messages
@@ -344,6 +349,24 @@ public final class UserDatabase: Database {
                 t.column("reserved2")
             }
         }
+        
+        migrator.registerMigration("index_optimization_1") { (db) in
+            try db.execute(sql: "DROP INDEX IF EXISTS users_app_indexs")
+            try db.execute(sql: "DROP INDEX IF EXISTS users_identity_number_indexs")
+            
+            try db.execute(sql: "DROP INDEX IF EXISTS messages_category_indexs")
+            try db.execute(sql: "DROP INDEX IF EXISTS messages_pending_indexs")
+            
+            try db.execute(sql: "CREATE INDEX IF NOT EXISTS index_messages_category ON messages(conversation_id, category)")
+            try db.execute(sql: "CREATE INDEX IF NOT EXISTS index_messages_quote ON messages(conversation_id, quote_message_id)")
+        }
+        
+        /* Remaining works:
+         try db.execute(sql: "DROP INDEX IF EXISTS messages_unread_indexs")
+         try db.execute(sql: "DROP INDEX IF EXISTS messages_user_indexs")
+         
+         try db.execute(sql: "CREATE INDEX IF NOT EXISTS index_messages_pick ON messages(conversation_id, status, user_id, created_at)")
+         */
         
         return migrator
     }

@@ -643,7 +643,14 @@ public final class MessageDAO: UserDatabaseDAO {
     }
     
     public func hasSentMessage(inConversationOf conversationId: String) -> Bool {
+        let possibleStatus = [
+            MessageStatus.SENDING.rawValue,
+            MessageStatus.SENT.rawValue,
+            MessageStatus.DELIVERED.rawValue,
+            MessageStatus.READ.rawValue,
+        ]
         let condition: SQLSpecificExpressible = Message.column(of: .conversationId) == conversationId
+            && possibleStatus.contains(Message.column(of: .status)) // Make use of index_messages_pick
             && Message.column(of: .userId) == myUserId
         return db.recordExists(in: Message.self, where: condition)
     }

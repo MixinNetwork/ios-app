@@ -302,7 +302,7 @@ extension MessageItem {
     }
     
     public var isListPlayable: Bool {
-        mediaMimeType == "audio/mpeg"
+        ["audio/mpeg", "audio/mp3"].contains(mediaMimeType)
     }
     
 }

@@ -179,7 +179,6 @@ public class SendMessageService: MixinService {
     }
     
     public func sendMentionMessageRead(conversationId: String, messageId: String) {
-        let blazeMessage = BlazeMessage(ackBlazeMessage: messageId, status: MessageMentionStatus.MENTION_READ.rawValue)
         UserDatabase.current.write { (db) in
             let condition: SQLSpecificExpressible = MessageMention.column(of: .messageId) == messageId
                 && !MessageMention.column(of: .hasRead)

@@ -15,4 +15,17 @@ public final class MessageMentionDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [conversationId])
     }
     
+    public func setMessageMentionHasRead(with messageId: String, onChange: @escaping () -> Void) {
+        db.write { (db) in
+            let changes = try MessageMention
+                .filter(MessageMention.column(of: .messageId) == messageId && !MessageMention.column(of: .hasRead))
+                .updateAll(db, [MessageMention.column(of: .hasRead).set(to: true)])
+            if changes > 0 {
+                db.afterNextTransactionCommit { (_) in
+                    onChange()
+                }
+            }
+        }
+    }
+    
 }

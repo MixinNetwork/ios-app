@@ -179,17 +179,13 @@ public class SendMessageService: MixinService {
     }
     
     public func sendMentionMessageRead(conversationId: String, messageId: String) {
-        let blazeMessage = BlazeMessage(ackBlazeMessage: messageId, status: MessageMentionStatus.MENTION_READ.rawValue)
-        UserDatabase.current.write { (db) in
-            let condition: SQLSpecificExpressible = MessageMention.column(of: .messageId) == messageId
-                && !MessageMention.column(of: .hasRead)
-            let changes = try MessageMention.filter(condition).updateAll(db, [MessageMention.column(of: .hasRead).set(to: true)])
-            
-            if changes > 0, AppGroupUserDefaults.Account.isDesktopLoggedIn {
-                let job = Job(sessionRead: conversationId, messageId: messageId, status: MessageMentionStatus.MENTION_READ.rawValue)
-                try job.save(db)
-            }
+        guard AppGroupUserDefaults.Account.isDesktopLoggedIn else {
+            return
         }
+        let job = Job(sessionRead: conversationId,
+                      messageId: messageId,
+                      status: MessageMentionStatus.MENTION_READ.rawValue)
+        UserDatabase.current.save(job)
     }
     
     public func sendAckMessage(messageId: String, status: MessageStatus) {

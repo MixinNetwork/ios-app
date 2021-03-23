@@ -129,6 +129,7 @@ class HomeViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: MessageDAO.didInsertMessageNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: MessageDAO.didRedecryptMessageNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: UserDAO.userDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: ConversationViewController.didReadMentionNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reloadAccount), name: LoginManager.accountDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(appDidChange(_:)), name: UserDAO.correspondingAppDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(circleConversationDidChange(_:)), name: CircleConversationDAO.circleConversationsDidChangeNotification, object: nil)

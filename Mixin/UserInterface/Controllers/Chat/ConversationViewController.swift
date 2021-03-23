@@ -7,9 +7,6 @@ import TexturedMaaku
 
 class ConversationViewController: UIViewController {
     
-    static let didReadMentionNotification = Notification.Name("one.mixin.messenger.ConversationViewController.didReadMention")
-    static let conversationIdUserInfoKey = "cid"
-    
     static var positions = [String: Position]()
     static var allowReportSingleMessage = false
     
@@ -1444,13 +1441,8 @@ extension ConversationViewController: UITableViewDelegate {
             mentionScrollingDestinations.removeAll(where: { $0 == message.messageId })
             DispatchQueue.global().async {
                 MessageMentionDAO.shared.setMessageMentionHasRead(with: message.messageId) {
-                    NotificationCenter.default.post(onMainThread: Self.didReadMentionNotification,
-                                                    object: self,
-                                                    userInfo: [Self.conversationIdUserInfoKey: message.conversationId])
-                    DispatchQueue.global().async {
-                        SendMessageService.shared.sendMentionMessageRead(conversationId: message.conversationId,
-                                                                         messageId: message.messageId)
-                    }
+                    SendMessageService.shared.sendMentionMessageRead(conversationId: message.conversationId,
+                                                                     messageId: message.messageId)
                 }
             }
         }

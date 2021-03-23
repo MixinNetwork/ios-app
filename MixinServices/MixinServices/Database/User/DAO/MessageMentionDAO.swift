@@ -4,6 +4,9 @@ public final class MessageMentionDAO: UserDatabaseDAO {
     
     public static let shared = MessageMentionDAO()
     
+    public static let didUpdateHasReadNotification = Notification.Name("one.mixin.messenger.MessageMentionDAO.didUpdateHasRead")
+    public static let messageIdUserInfoKey = "mid"
+    
     public func unreadMessageIds(conversationId: String) -> [String] {
         let sql = """
         SELECT mm.message_id
@@ -22,7 +25,12 @@ public final class MessageMentionDAO: UserDatabaseDAO {
                 .updateAll(db, [MessageMention.column(of: .hasRead).set(to: true)])
             if changes > 0 {
                 db.afterNextTransactionCommit { (_) in
-                    onChange()
+                    DispatchQueue.global().async {
+                        NotificationCenter.default.post(onMainThread: Self.didUpdateHasReadNotification,
+                                                        object: self,
+                                                        userInfo: [Self.messageIdUserInfoKey: messageId])
+                        onChange()
+                    }
                 }
             }
         }

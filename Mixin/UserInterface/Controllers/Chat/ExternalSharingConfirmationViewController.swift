@@ -298,7 +298,7 @@ extension ExternalSharingConfirmationViewController {
         guard let message = message, message.category == MessageCategory.SIGNAL_POST.rawValue else {
             return
         }
-        PostViewController.presentInstance(with: message, asChildOf: self)
+        
     }
     
 }

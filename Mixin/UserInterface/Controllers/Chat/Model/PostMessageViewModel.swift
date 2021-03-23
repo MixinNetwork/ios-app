@@ -4,6 +4,17 @@ import MixinServices
 
 class PostMessageViewModel: TextMessageViewModel, BackgroundedTrailingInfoViewModel {
     
+    private let numberOfMarkdownLines: Int = {
+        switch ScreenWidth.current {
+        case .short:
+            return 5
+        case .medium:
+            return 8
+        case .long:
+            return 10
+        }
+    }()
+    
     override var statusNormalTintColor: UIColor {
         .white
     }
@@ -26,19 +37,15 @@ class PostMessageViewModel: TextMessageViewModel, BackgroundedTrailingInfoViewMo
             }
         }
         let string = lines.joined(separator: "\n")
-        let md = SwiftyMarkdown(string: string)
-        md.link.color = .theme
-        let size = Counter(value: 15)
-        for style in [md.body, md.h6, md.h5, md.h4, md.h3, md.h2, md.h1] {
-            style.fontSize = CGFloat(size.advancedValue)
-        }
-        return md.attributedString()
+        return NSAttributedString(string: string, attributes: [.font: Self.font])
     }
     
     var trailingInfoBackgroundFrame = CGRect.zero
+    var html = ""
     
     override func layout(width: CGFloat, style: MessageViewModel.Style) {
         super.layout(width: width, style: style)
+        html = MarkdownConverter.htmlString(from: message.content ?? "")
         layoutTrailingInfoBackgroundFrame()
     }
     

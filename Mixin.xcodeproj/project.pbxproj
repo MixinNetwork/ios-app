@@ -578,6 +578,7 @@
 		9406978725E7F30800E7FDA0 /* PlaylistSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9406978625E7F30800E7FDA0 /* PlaylistSlider.swift */; };
 		94095BB725BE8BC100F44832 /* TextPreviewView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94095BB625BE8BC100F44832 /* TextPreviewView.xib */; };
 		94095BBC25BE8DCF00F44832 /* TextPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94095BBB25BE8DCF00F44832 /* TextPreviewView.swift */; };
+		940B67FD2609ECF6000E04E6 /* github-markdown.css in Resources */ = {isa = PBXBuildFile; fileRef = 940B67FC2609ECF6000E04E6 /* github-markdown.css */; };
 		940BAE222629741C00FFF753 /* AuthorizationsContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940BAE212629741C00FFF753 /* AuthorizationsContentViewController.swift */; };
 		9416548325CD2D9A007E76D0 /* OggOpusRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9416548225CD2D9A007E76D0 /* OggOpusRecorder.swift */; };
 		9416548B25CD7190007E76D0 /* AudioMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9416548A25CD7190007E76D0 /* AudioMetadata.swift */; };
@@ -1521,6 +1522,7 @@
 		9406978625E7F30800E7FDA0 /* PlaylistSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistSlider.swift; sourceTree = "<group>"; };
 		94095BB625BE8BC100F44832 /* TextPreviewView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TextPreviewView.xib; sourceTree = "<group>"; };
 		94095BBB25BE8DCF00F44832 /* TextPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextPreviewView.swift; sourceTree = "<group>"; };
+		940B67FC2609ECF6000E04E6 /* github-markdown.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = "github-markdown.css"; sourceTree = "<group>"; };
 		940BAE212629741C00FFF753 /* AuthorizationsContentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationsContentViewController.swift; sourceTree = "<group>"; };
 		9416548225CD2D9A007E76D0 /* OggOpusRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OggOpusRecorder.swift; sourceTree = "<group>"; };
 		9416548A25CD7190007E76D0 /* AudioMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioMetadata.swift; sourceTree = "<group>"; };
@@ -2910,6 +2912,7 @@
 				7BE73BFB230A8D0300B97FC6 /* group_separator_2.png */,
 				7BE73BF9230A8D0300B97FC6 /* group_separator_3.png */,
 				7BE73BFA230A8D0300B97FC6 /* group_separator_4.png */,
+				940B67FC2609ECF6000E04E6 /* github-markdown.css */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -3679,6 +3682,7 @@
 				7B7B5DB5230EBEBA00D0F463 /* TransferTypeCell.xib in Resources */,
 				E0BEB85D236C1C49001FE534 /* ProfileMenuItemView.xib in Resources */,
 				7BACA8D523602BF8007E3381 /* RecorderLongPressHintView.xib in Resources */,
+				940B67FD2609ECF6000E04E6 /* github-markdown.css in Resources */,
 				7B710DFE243637D9008F0D73 /* CirclesTableFooterView.xib in Resources */,
 				7B082D16242C9D5F00C5E163 /* MultipleSelectionActionView.xib in Resources */,
 				DF53BB6F202362E5002BF028 /* AuthorizationScopeCell.xib in Resources */,
@@ -4033,11 +4037,6 @@
 				"${BUILT_PRODUCTS_DIR}/GoogleDataTransport/GoogleDataTransport.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/GzipSwift/Gzip.framework",
-				"${BUILT_PRODUCTS_DIR}/Highlightr/Highlightr.framework",
-				"${BUILT_PRODUCTS_DIR}/Maaku/Maaku.framework",
-				"${BUILT_PRODUCTS_DIR}/PINCache/PINCache.framework",
-				"${BUILT_PRODUCTS_DIR}/PINOperation/PINOperation.framework",
-				"${BUILT_PRODUCTS_DIR}/PINRemoteImage/PINRemoteImage.framework",
 				"${BUILT_PRODUCTS_DIR}/PhoneNumberKit/PhoneNumberKit.framework",
 				"${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
@@ -4049,11 +4048,8 @@
 				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
 				"${BUILT_PRODUCTS_DIR}/SocketRocket/SocketRocket.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyMarkdown/SwiftyMarkdown.framework",
-				"${BUILT_PRODUCTS_DIR}/Texture/AsyncDisplayKit.framework",
-				"${BUILT_PRODUCTS_DIR}/TexturedMaaku/TexturedMaaku.framework",
 				"${BUILT_PRODUCTS_DIR}/YYImage/YYImage.framework",
 				"${BUILT_PRODUCTS_DIR}/Zip/Zip.framework",
-				"${BUILT_PRODUCTS_DIR}/libcmark_gfm/libcmark_gfm.framework",
 				"${BUILT_PRODUCTS_DIR}/libsignal-protocol-c/libsignal_protocol_c.framework",
 				"${BUILT_PRODUCTS_DIR}/lottie-ios/Lottie.framework",
 				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
@@ -4075,11 +4071,6 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleDataTransport.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Gzip.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Highlightr.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Maaku.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PINCache.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PINOperation.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PINRemoteImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PhoneNumberKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBLPromises.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
@@ -4091,11 +4082,8 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SocketRocket.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyMarkdown.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AsyncDisplayKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TexturedMaaku.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YYImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Zip.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libcmark_gfm.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libsignal_protocol_c.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Lottie.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",

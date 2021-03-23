@@ -9,24 +9,29 @@
 const char *header = R"(
 <!DOCTYPE html>
 <html>
- <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-   body {
-    font: 16px Arial, sans-serif;
-   }
-   img {
-    width:auto;
-    height:auto;
-    max-width:100%;
-    max-height:90vh;
-   }
-  </style>
- </head>
-<body>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="github-markdown.css">
+        <style>
+            .markdown-body {
+                box-sizing: border-box;
+                min-width: 200px;
+                max-width: 980px;
+                margin: 0 auto;
+                padding: 45px;
+            }
+            @media (max-width: 767px) {
+                .markdown-body {
+                    padding: 15px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+    <article class="markdown-body">
 )";
 
-NSString *const footer = @"</body></html>";
+NSString *const footer = @"</article></body></html>";
 
 void ProcessOutput(const MD_CHAR * output, MD_SIZE size, void *userData);
 

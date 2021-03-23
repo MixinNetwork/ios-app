@@ -46,6 +46,8 @@ extension AppGroupUserDefaults {
             case homeApp = "home_app"
             case clips = "clips"
             case assetSearchHistory = "asset_search_history"
+            
+            case emergencyContactBulletinDismissalDate = "emergency_contact_bulletin_dismissal_date"
         }
         
         public static let version = 25
@@ -173,6 +175,9 @@ extension AppGroupUserDefaults {
         // Stores asset id
         @Default(namespace: .user, key: Key.assetSearchHistory, defaultValue: [])
         public private(set) static var assetSearchHistory: [String]
+        
+        @Default(namespace: .user, key: Key.emergencyContactBulletinDismissalDate, defaultValue: nil)
+        public static var emergencyContactBulletinDismissalDate: Date?
         
         public static func insertRecentlyUsedAppId(id: String) {
             let maxNumberOfIds = 12

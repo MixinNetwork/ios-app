@@ -612,6 +612,9 @@
 		94B7643525EA8E9B00EDF9C6 /* CacheableAssetFileDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B7643425EA8E9B00EDF9C6 /* CacheableAssetFileDescription.swift */; };
 		94BE548E25D96932006575E2 /* OggOpusReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BE548D25D96932006575E2 /* OggOpusReader.swift */; };
 		94D1E28625EA36B100B58B82 /* CacheableAssetLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D1E28525EA36B100B58B82 /* CacheableAssetLoader.swift */; };
+		94D9DF5725F889BC00FC2F28 /* BulletinContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D9DF5625F889BC00FC2F28 /* BulletinContentView.swift */; };
+		94D9DF5C25F889C600FC2F28 /* BulletinContentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94D9DF5B25F889C600FC2F28 /* BulletinContentView.xib */; };
+		94D9DF6125F89D6E00FC2F28 /* BulletinContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D9DF6025F89D6E00FC2F28 /* BulletinContent.swift */; };
 		94DA83762588E595006B0F16 /* WebRTC.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94DA83722588E58B006B0F16 /* WebRTC.xcframework */; };
 		94DA83772588E595006B0F16 /* WebRTC.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 94DA83722588E58B006B0F16 /* WebRTC.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		94E8913925C019F000F1E5D4 /* Pods-Mixin-acknowledgements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 94E8913825C019F000F1E5D4 /* Pods-Mixin-acknowledgements.plist */; };
@@ -1545,6 +1548,9 @@
 		94B7643425EA8E9B00EDF9C6 /* CacheableAssetFileDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheableAssetFileDescription.swift; sourceTree = "<group>"; };
 		94BE548D25D96932006575E2 /* OggOpusReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OggOpusReader.swift; sourceTree = "<group>"; };
 		94D1E28525EA36B100B58B82 /* CacheableAssetLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheableAssetLoader.swift; sourceTree = "<group>"; };
+		94D9DF5625F889BC00FC2F28 /* BulletinContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulletinContentView.swift; sourceTree = "<group>"; };
+		94D9DF5B25F889C600FC2F28 /* BulletinContentView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BulletinContentView.xib; sourceTree = "<group>"; };
+		94D9DF6025F89D6E00FC2F28 /* BulletinContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulletinContent.swift; sourceTree = "<group>"; };
 		94DA83722588E58B006B0F16 /* WebRTC.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = WebRTC.xcframework; sourceTree = "<group>"; };
 		94E8913825C019F000F1E5D4 /* Pods-Mixin-acknowledgements.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = "Pods-Mixin-acknowledgements.plist"; path = "Pods/Target Support Files/Pods-Mixin/Pods-Mixin-acknowledgements.plist"; sourceTree = SOURCE_ROOT; };
 		9B748DCC1FA71CEF00BC009B /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
@@ -2143,6 +2149,7 @@
 				7B7D279F2528682B006BBFAB /* ClipSwitcherThumbnailFlowLayout.swift */,
 				7BA24D7225342575004906AD /* HomeOverlaysCoordinator.swift */,
 				7BA24D76253438B9004906AD /* ViewPanningController.swift */,
+				94D9DF6025F89D6E00FC2F28 /* BulletinContent.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -2243,6 +2250,8 @@
 				9427D51925E0D42E00B1EF0E /* MusicInfoView.swift */,
 				9406978625E7F30800E7FDA0 /* PlaylistSlider.swift */,
 				947B36B225DEB79100146111 /* PlaylistView.xib */,
+				94D9DF5B25F889C600FC2F28 /* BulletinContentView.xib */,
+				94D9DF5625F889BC00FC2F28 /* BulletinContentView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3685,6 +3694,7 @@
 				DFE356B51FB4990100E0E3A8 /* Setting.storyboard in Resources */,
 				7BB788B4216C5AA900EDE7B4 /* NoResultFooterView.xib in Resources */,
 				7BB06F45228EA7720048C2D6 /* NotificationView.xib in Resources */,
+				94D9DF5C25F889C600FC2F28 /* BulletinContentView.xib in Resources */,
 				7BE73BFC230A8D0300B97FC6 /* group_separator_3.png in Resources */,
 				9427D51525E0D31100B1EF0E /* MusicInfoView.xib in Resources */,
 				7B7B5DB7230EC16A00D0F463 /* CurrencyCell.xib in Resources */,
@@ -4111,6 +4121,7 @@
 				DF1F278621A59A60009A74C6 /* BackupJobQueue.swift in Sources */,
 				9427D52725E0EB5B00B1EF0E /* PlaylistItem.swift in Sources */,
 				DFFDCF8420AD8A7A00B4956E /* FileSendViewController.swift in Sources */,
+				94D9DF5725F889BC00FC2F28 /* BulletinContentView.swift in Sources */,
 				7B09E55A1FD157EB002E45D3 /* MessageViewModel.swift in Sources */,
 				7BF071C02244E6A1007240AD /* UploadContactCell.swift in Sources */,
 				7B7DACA823505B41006AA2AC /* SharedMediaAudioMessagePlayingManager.swift in Sources */,
@@ -4768,6 +4779,7 @@
 				7B9F8110222EA40F0012BFDD /* PopupPresentationController.swift in Sources */,
 				7B36920C233B36D4007321A7 /* MediaTypeOverlayView.swift in Sources */,
 				7BC2D27F21992FA9002FAC1D /* SnapshotCell.swift in Sources */,
+				94D9DF6125F89D6E00FC2F28 /* BulletinContent.swift in Sources */,
 				7B3CDA6824FFF2D8003A3E80 /* AnimatedStickerView.swift in Sources */,
 				DF1F278421A5637B009A74C6 /* BackupJob.swift in Sources */,
 				7B36919F233A1962007321A7 /* LocationPickerViewController.swift in Sources */,

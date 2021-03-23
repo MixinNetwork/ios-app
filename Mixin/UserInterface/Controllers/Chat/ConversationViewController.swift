@@ -1441,7 +1441,7 @@ extension ConversationViewController: UITableViewDelegate {
             mentionScrollingDestinations.removeAll(where: { $0 == message.messageId })
             dataSource.queue.async {
                 SendMessageService.shared.sendMentionMessageRead(conversationId: message.conversationId,
-                                                                                 messageId: message.messageId)
+                                                                 messageId: message.messageId)
             }
         }
     }

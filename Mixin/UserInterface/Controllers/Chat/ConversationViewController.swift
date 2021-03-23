@@ -1439,11 +1439,9 @@ extension ConversationViewController: UITableViewDelegate {
         if let message = message, let hasMentionRead = message.hasMentionRead, !hasMentionRead {
             message.hasMentionRead = true
             mentionScrollingDestinations.removeAll(where: { $0 == message.messageId })
-            DispatchQueue.global().async {
-                MessageMentionDAO.shared.setMessageMentionHasRead(with: message.messageId) {
-                    SendMessageService.shared.sendMentionMessageRead(conversationId: message.conversationId,
-                                                                     messageId: message.messageId)
-                }
+            dataSource.queue.async {
+                SendMessageService.shared.sendMentionMessageRead(conversationId: message.conversationId,
+                                                                                 messageId: message.messageId)
             }
         }
     }

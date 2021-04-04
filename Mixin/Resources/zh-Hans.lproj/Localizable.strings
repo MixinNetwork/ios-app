@@ -244,6 +244,7 @@
 "chat_message_menu_reply" = "回复";
 "chat_message_menu_forward" = "转发";
 "chat_message_menu_copy" = "复制";
+"chat_message_menu_copy_snapshot_amount" = "复制金额";
 "chat_message_open_url" = "打开链接";
 "chat_message_sticker" = "添加贴纸";
 "chat_cell_title_unread_messages" = "未读消息";

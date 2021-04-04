@@ -11,6 +11,8 @@ extension MessageAction {
             return #selector(ConversationTableView.forwardAction(_:))
         case .copy:
             return #selector(ConversationTableView.copyAction(_:))
+        case .copySnapshotAmount:
+            return #selector(ConversationTableView.copySnapshotAmountAction(_:))
         case .delete:
             return #selector(ConversationTableView.deleteAction(_:))
         case .addToStickers:
@@ -124,6 +126,10 @@ class ConversationTableView: UITableView {
     
     @objc func copyAction(_ sender: Any) {
         invokeDelegate(action: .copy)
+    }
+    
+    @objc func copySnapshotAmountAction(_ sender: Any) {
+        invokeDelegate(action: .copySnapshotAmount)
     }
     
     @objc func deleteAction(_ sender: Any) {

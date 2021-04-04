@@ -27,7 +27,7 @@ extension MessageItem {
         } else if category.hasSuffix("_LOCATION") {
             actions = [.forward, .reply, .delete]
         } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
-            actions = [.delete]
+            actions = [.copySnapshotAmount, .delete]
         } else if category == MessageCategory.APP_CARD.rawValue {
             actions = [.forward, .reply, .delete]
         } else if category == MessageCategory.APP_BUTTON_GROUP.rawValue {

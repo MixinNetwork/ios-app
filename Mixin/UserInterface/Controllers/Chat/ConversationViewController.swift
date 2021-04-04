@@ -1330,6 +1330,10 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
             if ["_TEXT", "_POST"].contains(where: message.category.hasSuffix(_:)) {
                 UIPasteboard.general.string = message.content
             }
+        case .copySnapshotAmount:
+            if message.category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
+                UIPasteboard.general.string = message.snapshotAmount
+            }
         case .delete:
             beginMultipleSelection(on: indexPath, intent: .delete)
         case .forward:

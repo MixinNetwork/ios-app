@@ -5,6 +5,7 @@ enum MessageAction {
     case reply
     case forward
     case copy
+    case copySnapshotAmount
     case delete
     case addToStickers
     case report
@@ -15,7 +16,7 @@ enum MessageAction {
             return R.image.conversation.ic_action_reply()
         case .forward:
             return R.image.conversation.ic_action_forward()
-        case .copy:
+        case .copy, .copySnapshotAmount:
             return R.image.conversation.ic_action_copy()
         case .delete:
             return R.image.conversation.ic_action_delete()
@@ -34,6 +35,8 @@ enum MessageAction {
             return R.string.localizable.chat_message_menu_forward()
         case .copy:
             return R.string.localizable.chat_message_menu_copy()
+        case .copySnapshotAmount:
+            return R.string.localizable.chat_message_menu_copy_snapshot_amount()
         case .delete:
             return R.string.localizable.menu_delete()
         case .addToStickers:

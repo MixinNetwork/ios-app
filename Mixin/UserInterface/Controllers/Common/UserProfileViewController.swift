@@ -36,7 +36,6 @@ final class UserProfileViewController: ProfileViewController {
     private var relationship = Relationship.ME
     private var developer: UserItem?
     private var avatarPreviewImageView: UIImageView?
-    private var menuDismissResponder: MenuDismissResponder?
     private var favoriteAppMenuItemViewIfLoaded: MyFavoriteAppProfileMenuItemView?
     private var favoriteAppViewIfLoaded: ProfileFavoriteAppsView?
     private var sharedAppUsers: [User]?
@@ -159,7 +158,6 @@ final class UserProfileViewController: ProfileViewController {
     }
     
     @objc func willHideMenu(_ notification: Notification) {
-        menuDismissResponder?.removeFromSuperview()
         subtitleLabel.highlightIdentityNumber = false
     }
     
@@ -181,14 +179,7 @@ final class UserProfileViewController: ProfileViewController {
             let menu = UIMenuController.shared
             menu.setTargetRect(highlightedRect, in: subtitleLabel)
             menu.setMenuVisible(true, animated: true)
-            let menuDismissResponder: MenuDismissResponder
-            if let responder = self.menuDismissResponder {
-                menuDismissResponder = responder
-            } else {
-                menuDismissResponder = MenuDismissResponder()
-                self.menuDismissResponder = menuDismissResponder
-            }
-            AppDelegate.current.mainWindow.addSubview(menuDismissResponder)
+            AppDelegate.current.mainWindow.addDismissMenuResponder()
         }
     }
     
@@ -552,21 +543,6 @@ extension UserProfileViewController {
         override var intrinsicContentSize: CGSize {
             let size = super.intrinsicContentSize
             return CGSize(width: size.width, height: size.height + 30)
-        }
-        
-    }
-    
-    class MenuDismissResponder: UIButton {
-        
-        convenience init() {
-            let frame = AppDelegate.current.mainWindow.bounds
-            self.init(frame: frame)
-            backgroundColor = .clear
-            addTarget(self, action: #selector(dismissMenu), for: .touchUpInside)
-        }
-        
-        @objc func dismissMenu() {
-            UIMenuController.shared.setMenuVisible(false, animated: true)
         }
         
     }

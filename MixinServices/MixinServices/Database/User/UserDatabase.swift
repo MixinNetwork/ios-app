@@ -52,7 +52,7 @@ public final class UserDatabase: Database {
             .init(key: .appNumber, constraints: "TEXT NOT NULL"),
             .init(key: .redirectUri, constraints: "TEXT NOT NULL"),
             .init(key: .name, constraints: "TEXT NOT NULL"),
-            .init(key: .category, constraints: "TEXT NOT NULL"),
+            .init(key: .category, constraints: "TEXT"),
             .init(key: .iconUrl, constraints: "TEXT NOT NULL"),
             .init(key: .capabilities, constraints: "BLOB"),
             .init(key: .resourcePatterns, constraints: "BLOB"),

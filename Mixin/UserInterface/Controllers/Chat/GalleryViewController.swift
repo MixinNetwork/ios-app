@@ -1,5 +1,6 @@
 import UIKit
 import Photos
+import AVKit
 import MixinServices
 
 protocol GalleryViewControllerDelegate: class {
@@ -63,6 +64,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
     
     private var transitionView: GalleryTransitionView?
     private var longPressRecognizer: UILongPressGestureRecognizer!
+    private var itemToShowAfterAvPipStops: (GalleryItem, GalleryTransitionSource)?
     
     private(set) var panRecognizer: UIPanGestureRecognizer!
     
@@ -140,13 +142,20 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
     }
     
     func show(item: GalleryItem, from source: GalleryTransitionSource) {
+        itemToShowAfterAvPipStops = nil
         modelController.direction = source.direction
         if let controller = UIApplication.homeContainerViewController?.pipController {
             if controller.item == item {
-                controller.pipAction()
+                controller.stopPipIfActive()
                 return
             } else if item.category == .video || item.category == .live {
-                controller.closeAction()
+                if controller.isAvPipActive {
+                    itemToShowAfterAvPipStops = (item, source)
+                    controller.stopAvPipAndHandoverDelegate(to: self)
+                    return
+                } else {
+                    controller.closeAction()
+                }
             }
         }
         UIApplication.shared.keyWindow?.endEditing(true)
@@ -383,6 +392,17 @@ extension GalleryViewController: GalleryItemModelControllerDelegate {
             return
         }
         pageViewController.setViewControllers([current], direction: .forward, animated: false, completion: nil)
+    }
+    
+}
+
+extension GalleryViewController: AVPictureInPictureControllerDelegate {
+    
+    func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        guard let item = itemToShowAfterAvPipStops else {
+            return
+        }
+        show(item: item.0, from: item.1)
     }
     
 }

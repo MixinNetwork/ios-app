@@ -1,5 +1,5 @@
 import UIKit
-import AVFoundation
+import AVKit
 import Photos
 import MixinServices
 
@@ -7,8 +7,8 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     
     let videoView = GalleryVideoView()
     
-    private let pipVideoInsets = UIEdgeInsets(top: 6, left: 10, bottom: 6, right: 10)
-    private let pipCornerRadius: CGFloat = 6
+    private let builtInPipVideoInsets = UIEdgeInsets(top: 6, left: 10, bottom: 6, right: 10)
+    private let builtInPipCornerRadius: CGFloat = 6
     
     private(set) var panningController: ViewPanningController?
     
@@ -23,11 +23,14 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     private var playerDidReachEnd = false
     private var playerDidFailedToPlay = false
     private var videoRatio: CGFloat = 1
-    private var isPipMode = false {
+    private var avPipController: AVPictureInPictureController?
+    private var isBuiltInPipActive = false {
         didSet {
-            panningController?.isEnabled = isPipMode
+            panningController?.isEnabled = isBuiltInPipActive
         }
     }
+    
+    private var avPipPossibilityObservation: NSKeyValueObservation?
     
     var hidePlayControlAfterPlaybackBegins = false
     
@@ -43,6 +46,10 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     
     var controlView: GalleryVideoControlView {
         return videoView.controlView
+    }
+    
+    var isAvPipActive: Bool {
+        avPipController?.isPictureInPictureActive ?? false
     }
     
     override var image: UIImage? {
@@ -126,7 +133,13 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        controlView.pipButton.addTarget(self, action: #selector(pipAction), for: .touchUpInside)
+        if AVPictureInPictureController.isPictureInPictureSupported() {
+            controlView.pipButton.addTarget(self, action: #selector(avPipAction), for: .touchUpInside)
+            controlView.pipButton.isHidden = true
+        } else {
+            controlView.pipButton.addTarget(self, action: #selector(builtInPipAction), for: .touchUpInside)
+            controlView.pipButton.isHidden = false
+        }
         controlView.closeButton.addTarget(self, action: #selector(closeAction), for: .touchUpInside)
         controlView.reloadButton.addTarget(self, action: #selector(reloadAction(_:)), for: .touchUpInside)
         controlView.playButton.addTarget(self, action: #selector(playAction(_:)), for: .touchUpInside)
@@ -140,7 +153,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         }
         
         let panningController = ViewPanningController(view: view)
-        panningController.isEnabled = isPipMode
+        panningController.isEnabled = isBuiltInPipActive
         self.panningController = panningController
         
         tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapAction(_:)))
@@ -153,13 +166,13 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        controlView.pipButton.isHidden = size.width > size.height
+        updatePipButtonVisibility(viewSize: size)
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
         videoRatio = 1
-        isPipMode = false
+        isBuiltInPipActive = false
         videoView.isPipMode = false
         controlView.style.remove(.loading)
         controlView.playControlStyle = .play
@@ -220,6 +233,23 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         if let url = item.url, item.category == .video {
             loadAssetIfPlayable(url: url, playAfterLoaded: false)
         }
+        
+        if AVPictureInPictureController.isPictureInPictureSupported(), let controller = avPipController ?? AVPictureInPictureController(playerLayer: videoView.playerView.layer) {
+            controller.delegate = self
+            if #available(iOS 14.2, *) {
+                // Seems not working here. Don't know the reason
+                controller.canStartPictureInPictureAutomaticallyFromInline = item.category == .live
+            }
+            if avPipPossibilityObservation == nil {
+                avPipPossibilityObservation = controller.observe(\.isPictureInPicturePossible, options: [.initial, .new]) { [weak self] (_, _) in
+                    guard let self = self else {
+                        return
+                    }
+                    self.updatePipButtonVisibility(viewSize: self.view.bounds.size)
+                }
+            }
+            avPipController = controller
+        }
     }
     
     override func saveToLibrary() {
@@ -252,42 +282,167 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         }
     }
     
-    @objc func pipAction() {
-        togglePipMode(completion: nil)
+    func stopPipIfActive() {
+        if isBuiltInPipActive {
+            togglePipMode(completion: nil)
+        } else if let controller = avPipController, controller.isPictureInPictureActive {
+            controller.stopPictureInPicture()
+        }
     }
     
-    @objc func closeAction() {
+    func togglePipMode(completion: (() -> Void)?) {
         executeInPortraitOrientation {
-            self.player.replaceCurrentItem(with: nil)
-            if self.isPipMode {
-                self.isPipMode = false
-                self.layoutFullsized()
-                self.willMove(toParent: nil)
-                self.view.removeFromSuperview()
-                self.removeFromParent()
+            self.isBuiltInPipActive.toggle()
+            if self.isBuiltInPipActive {
+                self.galleryViewController?.dismiss(pipController: self)
+                if let container = UIApplication.homeContainerViewController {
+                    container.pipController = self
+                    container.overlaysCoordinator.register(overlay: self.view)
+                }
+            } else {
+                self.galleryViewController?.show(itemViewController: self)
                 if let container = UIApplication.homeContainerViewController {
                     container.pipController = nil
                     container.overlaysCoordinator.unregister(overlay: self.view)
                 }
-            } else {
-                self.galleryViewController?.dismiss(transitionViewInitialOffsetY: 0)
             }
+            if self.player.timeControlStatus == .playing {
+                self.updateControlView(playControlsHidden: true, otherControlsHidden: true, animated: false)
+            }
+            self.animate(animations: {
+                self.videoView.isPipMode = self.isBuiltInPipActive
+                if self.isBuiltInPipActive {
+                    self.layoutPip()
+                } else {
+                    self.layoutFullsized()
+                }
+            }, completion: completion)
         }
     }
     
-    @objc func reloadAction(_ sender: Any) {
-        guard let url = item?.url else {
+    func layoutPip() {
+        controlView.pipButton.setImage(R.image.ic_maximize(), for: .normal)
+        guard let parentView = parent?.view else {
             return
         }
-        playerDidReachEnd = false
-        playerDidFailedToPlay = false
-        loadAssetIfPlayable(url: url, playAfterLoaded: true)
+        let size: CGSize
+        if videoRatio > 1 {
+            let width = parentView.bounds.width * (2 / 3)
+            size = CGSize(width: width, height: width / videoRatio)
+        } else {
+            let height = parentView.bounds.height / 3
+            let width = height * videoRatio
+            if width <= parentView.bounds.width / 2 {
+                size = CGSize(width: width, height: height)
+            } else {
+                let width = parentView.bounds.width / 2
+                let height = width / videoRatio
+                size = CGSize(width: width, height: height)
+            }
+        }
+        view.frame.size = CGSize(width: size.width + builtInPipVideoInsets.horizontal,
+                                 height: size.height + builtInPipVideoInsets.vertical)
+        videoView.frame = view.bounds.inset(by: builtInPipVideoInsets)
+        videoView.layer.cornerRadius = builtInPipCornerRadius
+        
+        view.layer.shadowOffset = CGSize(width: 0, height: 2)
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowRadius = 4
+        updateViewShadowOpacity(to: 0.14)
+        
+        panningController?.placeViewNextToLastOverlayOrTopRight()
     }
+    
+    func layoutFullsized() {
+        controlView.pipButton.setImage(R.image.ic_minimize(), for: .normal)
+        guard let parentView = parent?.view else {
+            return
+        }
+        view.frame = parentView.bounds
+        videoView.frame = view.bounds
+        videoView.layer.cornerRadius = 0
+        updateViewShadowOpacity(to: 0)
+    }
+    
+    func stopAvPipAndHandoverDelegate(to delegate: AVPictureInPictureControllerDelegate) {
+        if let controller = self.avPipController, controller.isPictureInPictureActive {
+            controller.delegate = delegate
+            controller.stopPictureInPicture()
+        }
+        restoreToFullsized()
+    }
+    
+}
+
+extension GalleryVideoItemViewController: AudioSessionClient {
+    
+    var priority: AudioSessionClientPriority {
+        .playback
+    }
+    
+    func audioSessionDidBeganInterruption(_ audioSession: AudioSession) {
+        pauseAction(audioSession)
+        controlView.set(playControlsHidden: false, otherControlsHidden: false, animated: true)
+    }
+    
+}
+
+extension GalleryVideoItemViewController: AVPictureInPictureControllerDelegate {
+    
+    func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        galleryViewController?.dismiss(pipController: self)
+        animate {
+            self.view.alpha = 0
+        }
+        updateControlView(playControlsHidden: true, otherControlsHidden: true, animated: true)
+        if let container = UIApplication.homeContainerViewController {
+            container.pipController = self
+        }
+    }
+    
+    func pictureInPictureControllerDidStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        
+    }
+    
+    func pictureInPictureController(_ pictureInPictureController: AVPictureInPictureController, failedToStartPictureInPictureWithError error: Error) {
+        
+    }
+    
+    func pictureInPictureControllerWillStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        updateControlView(playControlsHidden: true, otherControlsHidden: true, animated: false)
+    }
+    
+    func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        updateControlView(playControlsHidden: false, otherControlsHidden: false, animated: true)
+        if UIApplication.homeContainerViewController?.pipController == self {
+            UIApplication.homeContainerViewController?.pipController = nil
+        }
+        if let parent = parent, parent is HomeContainerViewController {
+            willMove(toParent: nil)
+            view.removeFromSuperview()
+            removeFromParent()
+        }
+        view.alpha = 1
+    }
+    
+    func pictureInPictureController(_ pictureInPictureController: AVPictureInPictureController, restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void) {
+        controlView.pipButton.setImage(R.image.ic_minimize(), for: .normal)
+        galleryViewController?.show(itemViewController: self)
+        animate {
+            self.view.alpha = 1
+        } completion: {
+            completionHandler(true)
+        }
+    }
+    
+}
+
+extension GalleryVideoItemViewController {
     
     @objc func playAction(_ sender: Any) {
         if let controller = UIApplication.homeContainerViewController?.pipController, controller != self {
             if controller.item == self.item {
-                controller.pipAction()
+                controller.stopPipIfActive()
                 return
             } else {
                 controller.closeAction()
@@ -328,7 +483,48 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         player.pause()
     }
     
-    @objc func tapAction(_ recognizer: UITapGestureRecognizer) {
+    @objc func closeAction() {
+        executeInPortraitOrientation {
+            if let controller = self.avPipController, controller.isPictureInPictureActive {
+                assertionFailure("AVPictureInPictureController is in active.")
+            } else if self.isBuiltInPipActive {
+                self.isBuiltInPipActive = false
+                self.restoreToFullsized()
+                self.player.replaceCurrentItem(with: nil)
+            } else {
+                self.galleryViewController?.dismiss(transitionViewInitialOffsetY: 0)
+                self.player.replaceCurrentItem(with: nil)
+            }
+        }
+    }
+    
+    @objc private func builtInPipAction() {
+        togglePipMode(completion: nil)
+    }
+    
+    @objc private func avPipAction() {
+        guard let controller = avPipController else {
+            return
+        }
+        executeInPortraitOrientation {
+            if controller.isPictureInPictureActive {
+                controller.stopPictureInPicture()
+            } else {
+                controller.startPictureInPicture()
+            }
+        }
+    }
+    
+    @objc private func reloadAction(_ sender: Any) {
+        guard let url = item?.url else {
+            return
+        }
+        playerDidReachEnd = false
+        playerDidFailedToPlay = false
+        loadAssetIfPlayable(url: url, playAfterLoaded: true)
+    }
+    
+    @objc private func tapAction(_ recognizer: UITapGestureRecognizer) {
         if player.timeControlStatus == .playing {
             let isShowingPlayControl = controlView.playControlWrapperView.alpha > 0
             updateControlView(playControlsHidden: isShowingPlayControl,
@@ -347,7 +543,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         }
     }
     
-    @objc func playerItemDidReachEnd(_ notification: Notification) {
+    @objc private func playerItemDidReachEnd(_ notification: Notification) {
         guard let item = item else {
             return
         }
@@ -362,7 +558,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         AudioSession.shared.deactivateAsynchronously(client: self, notifyOthersOnDeactivation: false)
     }
     
-    @objc func playerItemFailedToPlayToEndTime(_ notification: Notification) {
+    @objc private func playerItemFailedToPlayToEndTime(_ notification: Notification) {
         playerDidFailedToPlay = true
         controlView.playControlStyle = .reload
         controlView.style.remove(.loading)
@@ -371,13 +567,13 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         AudioSession.shared.deactivateAsynchronously(client: self, notifyOthersOnDeactivation: false)
     }
     
-    @objc func beginScrubbingAction(_ sender: Any) {
+    @objc private func beginScrubbingAction(_ sender: Any) {
         rateBeforeSeeking = player.rate
         player.rate = 0
         removeTimeObservers()
     }
     
-    @objc func scrubAction(_ sender: Any) {
+    @objc private func scrubAction(_ sender: Any) {
         guard !isSeeking else {
             return
         }
@@ -401,7 +597,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         }
     }
     
-    @objc func endScrubbingAction(_ sender: Any) {
+    @objc private func endScrubbingAction(_ sender: Any) {
         if sliderObserver == nil && timeLabelObserver == nil {
             addTimeObservers()
         }
@@ -409,93 +605,6 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
             player.rate = rate
         }
         rateBeforeSeeking = nil
-    }
-    
-    func togglePipMode(completion: (() -> Void)?) {
-        executeInPortraitOrientation {
-            self.isPipMode.toggle()
-            if self.isPipMode {
-                self.controlView.pipButton.setImage(R.image.ic_maximize(), for: .normal)
-                self.galleryViewController?.dismiss(pipController: self)
-                if let container = UIApplication.homeContainerViewController {
-                    container.pipController = self
-                    container.overlaysCoordinator.register(overlay: self.view)
-                }
-            } else {
-                self.controlView.pipButton.setImage(R.image.ic_minimize(), for: .normal)
-                self.galleryViewController?.show(itemViewController: self)
-                if let container = UIApplication.homeContainerViewController {
-                    container.pipController = nil
-                    container.overlaysCoordinator.unregister(overlay: self.view)
-                }
-            }
-            if self.player.timeControlStatus == .playing {
-                self.updateControlView(playControlsHidden: true, otherControlsHidden: true, animated: false)
-            }
-            self.animate(animations: {
-                self.videoView.isPipMode = self.isPipMode
-                if self.isPipMode {
-                    self.layoutPip()
-                } else {
-                    self.layoutFullsized()
-                }
-            }, completion: completion)
-        }
-    }
-    
-    func layoutPip() {
-        guard let parentView = parent?.view else {
-            return
-        }
-        let size: CGSize
-        if videoRatio > 1 {
-            let width = parentView.bounds.width * (2 / 3)
-            size = CGSize(width: width, height: width / videoRatio)
-        } else {
-            let height = parentView.bounds.height / 3
-            let width = height * videoRatio
-            if width <= parentView.bounds.width / 2 {
-                size = CGSize(width: width, height: height)
-            } else {
-                let width = parentView.bounds.width / 2
-                let height = width / videoRatio
-                size = CGSize(width: width, height: height)
-            }
-        }
-        view.frame.size = CGSize(width: size.width + pipVideoInsets.horizontal,
-                                 height: size.height + pipVideoInsets.vertical)
-        videoView.frame = view.bounds.inset(by: pipVideoInsets)
-        videoView.layer.cornerRadius = pipCornerRadius
-        
-        view.layer.shadowOffset = CGSize(width: 0, height: 2)
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowRadius = 4
-        updateViewShadowOpacity(to: 0.14)
-        
-        panningController?.placeViewNextToLastOverlayOrTopRight()
-    }
-    
-    func layoutFullsized() {
-        guard let parentView = parent?.view else {
-            return
-        }
-        view.frame = parentView.bounds
-        videoView.frame = view.bounds
-        videoView.layer.cornerRadius = 0
-        updateViewShadowOpacity(to: 0)
-    }
-    
-}
-
-extension GalleryVideoItemViewController: AudioSessionClient {
-    
-    var priority: AudioSessionClientPriority {
-        .playback
-    }
-    
-    func audioSessionDidBeganInterruption(_ audioSession: AudioSession) {
-        pauseAction(audioSession)
-        controlView.set(playControlsHidden: false, otherControlsHidden: false, animated: true)
     }
     
 }
@@ -646,7 +755,7 @@ extension GalleryVideoItemViewController {
         self.videoRatio = videoRatio
         videoView.videoRatio = videoRatio
         videoView.setNeedsLayout()
-        if isPipMode {
+        if isBuiltInPipActive {
             layoutPip()
         } else {
             layoutFullsized()
@@ -734,6 +843,28 @@ extension GalleryVideoItemViewController {
             return 1
         }
         return videoRatio
+    }
+    
+    private func updatePipButtonVisibility(viewSize: CGSize) {
+        let isDevicePortrait = viewSize.width < viewSize.height
+        var isPipAvailable = isDevicePortrait
+        if AVPictureInPictureController.isPictureInPictureSupported() {
+            let isAvPipPossible = avPipController?.isPictureInPicturePossible ?? false
+            isPipAvailable = isPipAvailable && isAvPipPossible
+        }
+        controlView.pipButton.isHidden = !isPipAvailable
+    }
+    
+    private func restoreToFullsized() {
+        layoutFullsized()
+        willMove(toParent: nil)
+        view.removeFromSuperview()
+        removeFromParent()
+        if let container = UIApplication.homeContainerViewController, container.pipController == self {
+            container.pipController = nil
+            container.overlaysCoordinator.unregister(overlay: self.view)
+        }
+        view.alpha = 1
     }
     
 }

@@ -28,6 +28,9 @@ class Window: UIWindow {
     @objc private func menuControllerWillHideMenu(_ notification: Notification) {
         dismissMenuResponder?.removeFromSuperview()
         dismissMenuResponder = nil
+        NotificationCenter.default.removeObserver(self,
+                                                  name: UIMenuController.willHideMenuNotification,
+                                                  object: nil)
     }
     
 }

@@ -618,6 +618,7 @@
 		94DA83762588E595006B0F16 /* WebRTC.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94DA83722588E58B006B0F16 /* WebRTC.xcframework */; };
 		94DA83772588E595006B0F16 /* WebRTC.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 94DA83722588E58B006B0F16 /* WebRTC.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		94E8913925C019F000F1E5D4 /* Pods-Mixin-acknowledgements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 94E8913825C019F000F1E5D4 /* Pods-Mixin-acknowledgements.plist */; };
+		94ECCCAB261A029F004E9E2A /* Window.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94ECCCAA261A029F004E9E2A /* Window.swift */; };
 		9B748DCD1FA71CEF00BC009B /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B748DCC1FA71CEF00BC009B /* CameraViewController.swift */; };
 		9B8D579A1F9F0ADA008A7957 /* Chat.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9B8D57991F9F0ADA008A7957 /* Chat.storyboard */; };
 		9BB351671FB19ECB00EDDD2C /* ConversationDateHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB351661FB19ECB00EDDD2C /* ConversationDateHeaderView.swift */; };
@@ -1553,6 +1554,7 @@
 		94D9DF6025F89D6E00FC2F28 /* BulletinContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulletinContent.swift; sourceTree = "<group>"; };
 		94DA83722588E58B006B0F16 /* WebRTC.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = WebRTC.xcframework; sourceTree = "<group>"; };
 		94E8913825C019F000F1E5D4 /* Pods-Mixin-acknowledgements.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = "Pods-Mixin-acknowledgements.plist"; path = "Pods/Target Support Files/Pods-Mixin/Pods-Mixin-acknowledgements.plist"; sourceTree = SOURCE_ROOT; };
+		94ECCCAA261A029F004E9E2A /* Window.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Window.swift; sourceTree = "<group>"; };
 		9B748DCC1FA71CEF00BC009B /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		9B8D57991F9F0ADA008A7957 /* Chat.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Chat.storyboard; sourceTree = "<group>"; };
 		9BB351661FB19ECB00EDDD2C /* ConversationDateHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationDateHeaderView.swift; sourceTree = "<group>"; };
@@ -1923,6 +1925,7 @@
 				DF8CECCE1FC2B1C900E40064 /* Mixin-Bridging-Header.h */,
 				9424C64A259246B600FFDAE0 /* main.swift */,
 				9424C6422592469500FFDAE0 /* Application.swift */,
+				94ECCCAA261A029F004E9E2A /* Window.swift */,
 				277FF7021F909A1200DBB2EB /* AppDelegate.swift */,
 				277FF70B1F909A1200DBB2EB /* Assets.xcassets */,
 				7B8BB58F234F36C000991ACB /* Colors.xcassets */,
@@ -4306,6 +4309,7 @@
 				DFB6CE2123C485AB00FB6615 /* SendMessageService+Sending.swift in Sources */,
 				94D1E28625EA36B100B58B82 /* CacheableAssetLoader.swift in Sources */,
 				7B9E7AC021E6F8F000012A28 /* DesktopViewController.swift in Sources */,
+				94ECCCAB261A029F004E9E2A /* Window.swift in Sources */,
 				DFF1AD7C22254C6F0087173D /* R.generated.swift in Sources */,
 				7BC96DE324176B390047471D /* FoursquareAPI.swift in Sources */,
 				7BDBDE6E22363E82006220DF /* SettingCell.swift in Sources */,

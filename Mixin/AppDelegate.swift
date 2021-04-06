@@ -15,7 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return UIApplication.shared.delegate as! AppDelegate
     }
     
-    lazy var mainWindow = UIWindow(frame: UIScreen.main.bounds)
+    lazy var mainWindow = Window(frame: UIScreen.main.bounds)
     
     private var pendingShortcutItem: UIApplicationShortcutItem?
     

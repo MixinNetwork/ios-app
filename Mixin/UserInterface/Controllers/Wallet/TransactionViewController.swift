@@ -18,6 +18,10 @@ class TransactionViewController: UIViewController {
     private var snapshot: SnapshotItem!
     private var contents: [(title: String, subtitle: String?)]!
     
+    override var canBecomeFirstResponder: Bool {
+        true
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         symbolLabel.contentInset = UIEdgeInsets(top: 2, left: 0, bottom: 0, right: 0)
@@ -80,6 +84,25 @@ class TransactionViewController: UIViewController {
                 self.tableView.tableHeaderView = self.tableHeaderView
             }
         }
+    }
+    
+    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        action == #selector(copy(_:))
+    }
+    
+    override func copy(_ sender: Any?) {
+        UIPasteboard.general.string = snapshot.amount
+    }
+    
+    @IBAction func longPressAmountAction(_ recognizer: UILongPressGestureRecognizer) {
+        guard recognizer.state == .began else {
+            return
+        }
+        becomeFirstResponder()
+        let menu = UIMenuController.shared
+        menu.setTargetRect(amountLabel.bounds, in: amountLabel)
+        menu.setMenuVisible(true, animated: true)
+        AppDelegate.current.mainWindow.addDismissMenuResponder()
     }
     
     class func instance(asset: AssetItem, snapshot: SnapshotItem) -> UIViewController {

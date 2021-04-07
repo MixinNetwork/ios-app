@@ -6,12 +6,15 @@
 @implementation MXMMarkdownConverter
 
 // NSString doesn't support multilined raw string literal, we borrow it from C++ 11
-const char *header = R"(
+const char *richHeader = R"(
 <!DOCTYPE html>
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="github-markdown.css">
+        <link rel="stylesheet" href="code.css">
+        <script src="highlight.js"></script>
+        <script>hljs.highlightAll();</script>
         <style>
             .markdown-body {
                 box-sizing: border-box;
@@ -31,12 +34,28 @@ const char *header = R"(
     <article class="markdown-body">
 )";
 
+const char *plainHeader = R"(
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="github-markdown.css">
+    </head>
+    <body>
+    <article class="markdown-body">
+)";
+
 NSString *const footer = @"</article></body></html>";
 
 void ProcessOutput(const MD_CHAR * output, MD_SIZE size, void *userData);
 
-+ (NSString *)htmlStringFromMarkdownString:(NSString *)markdownString {
-    NSMutableString *output = [[NSMutableString alloc] initWithCString:header encoding:NSUTF8StringEncoding];
++ (NSString *)htmlStringFromMarkdownString:(NSString *)markdownString richFormat:(BOOL)rich {
+    NSMutableString *output;
+    if (rich) {
+        output = [[NSMutableString alloc] initWithCString:richHeader encoding:NSUTF8StringEncoding];
+    } else {
+        output = [[NSMutableString alloc] initWithCString:plainHeader encoding:NSUTF8StringEncoding];
+    }
     const char *cMarkdown = [markdownString cStringUsingEncoding:NSUTF8StringEncoding];
     size_t length = strlen(cMarkdown);
     md_html(cMarkdown, (MD_SIZE)length, &ProcessOutput, (__bridge void *)(output), MD_DIALECT_GITHUB, 0);
@@ -44,7 +63,7 @@ void ProcessOutput(const MD_CHAR * output, MD_SIZE size, void *userData);
     return output;
 }
 
-void ProcessOutput(const MD_CHAR * output, MD_SIZE size, void *userData) {
+void ProcessOutput(const MD_CHAR *output, MD_SIZE size, void *userData) {
     if (!output) {
         return;
     }

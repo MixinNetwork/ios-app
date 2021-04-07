@@ -5,7 +5,9 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(MarkdownConverter)
 @interface MXMMarkdownConverter : NSObject
 
-+ (NSString *)htmlStringFromMarkdownString:(NSString *)markdownString NS_SWIFT_NAME(htmlString(from:));
++ (NSString *)htmlStringFromMarkdownString:(NSString *)markdownString
+                                richFormat:(BOOL)rich
+NS_SWIFT_NAME(htmlString(from:richFormat:));
 
 - (instancetype)init NS_UNAVAILABLE;
 

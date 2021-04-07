@@ -45,7 +45,7 @@ class PostMessageViewModel: TextMessageViewModel, BackgroundedTrailingInfoViewMo
     
     override func layout(width: CGFloat, style: MessageViewModel.Style) {
         super.layout(width: width, style: style)
-        html = MarkdownConverter.htmlString(from: message.content ?? "")
+        html = MarkdownConverter.htmlString(from: message.content ?? "", richFormat: false)
         layoutTrailingInfoBackgroundFrame()
     }
     

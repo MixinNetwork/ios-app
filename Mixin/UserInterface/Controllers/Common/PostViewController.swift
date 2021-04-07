@@ -14,7 +14,7 @@ class PostWebViewController: WebViewController {
             return
         }
         DispatchQueue.global().async {
-            let html = MarkdownConverter.htmlString(from: content)
+            let html = MarkdownConverter.htmlString(from: content, richFormat: true)
             DispatchQueue.main.async { [weak self] in
                 self?.webView.loadHTMLString(html, baseURL: Bundle.main.bundleURL)
             }

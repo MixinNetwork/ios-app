@@ -615,6 +615,7 @@
 		94904FD325912A2000F2FDE6 /* CaptchaToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94904FD225912A2000F2FDE6 /* CaptchaToken.swift */; };
 		9492285F25DFB7D60000A19F /* MinimizedPlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9492285E25DFB7D60000A19F /* MinimizedPlaylistViewController.swift */; };
 		9492286425DFB7EF0000A19F /* MinimizedPlaylistView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9492286325DFB7EF0000A19F /* MinimizedPlaylistView.xib */; };
+		949A3686261D9C5C004251B2 /* github-markdown.css in Resources */ = {isa = PBXBuildFile; fileRef = 949A3685261D9C5C004251B2 /* github-markdown.css */; };
 		94A1B1DF25BFD7CB0098586D /* LinkLocatingTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A1B1DE25BFD7CB0098586D /* LinkLocatingTextView.swift */; };
 		94B7643525EA8E9B00EDF9C6 /* CacheableAssetFileDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B7643425EA8E9B00EDF9C6 /* CacheableAssetFileDescription.swift */; };
 		94BE548E25D96932006575E2 /* OggOpusReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BE548D25D96932006575E2 /* OggOpusReader.swift */; };
@@ -624,6 +625,8 @@
 		94D9DF6125F89D6E00FC2F28 /* BulletinContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D9DF6025F89D6E00FC2F28 /* BulletinContent.swift */; };
 		94DA83762588E595006B0F16 /* WebRTC.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94DA83722588E58B006B0F16 /* WebRTC.xcframework */; };
 		94DA83772588E595006B0F16 /* WebRTC.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 94DA83722588E58B006B0F16 /* WebRTC.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		94E34123261D829200E2F9D3 /* code.css in Resources */ = {isa = PBXBuildFile; fileRef = 94E34120261D829200E2F9D3 /* code.css */; };
+		94E34124261D829200E2F9D3 /* highlight.js in Resources */ = {isa = PBXBuildFile; fileRef = 94E34121261D829200E2F9D3 /* highlight.js */; };
 		94E8913925C019F000F1E5D4 /* Pods-Mixin-acknowledgements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 94E8913825C019F000F1E5D4 /* Pods-Mixin-acknowledgements.plist */; };
 		94ECCCAB261A029F004E9E2A /* Window.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94ECCCAA261A029F004E9E2A /* Window.swift */; };
 		9B748DCD1FA71CEF00BC009B /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B748DCC1FA71CEF00BC009B /* CameraViewController.swift */; };
@@ -1563,6 +1566,7 @@
 		94904FD225912A2000F2FDE6 /* CaptchaToken.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CaptchaToken.swift; sourceTree = "<group>"; };
 		9492285E25DFB7D60000A19F /* MinimizedPlaylistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinimizedPlaylistViewController.swift; sourceTree = "<group>"; };
 		9492286325DFB7EF0000A19F /* MinimizedPlaylistView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MinimizedPlaylistView.xib; sourceTree = "<group>"; };
+		949A3685261D9C5C004251B2 /* github-markdown.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = "github-markdown.css"; sourceTree = "<group>"; };
 		94A1B1DE25BFD7CB0098586D /* LinkLocatingTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkLocatingTextView.swift; sourceTree = "<group>"; };
 		94B7643425EA8E9B00EDF9C6 /* CacheableAssetFileDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheableAssetFileDescription.swift; sourceTree = "<group>"; };
 		94BE548D25D96932006575E2 /* OggOpusReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OggOpusReader.swift; sourceTree = "<group>"; };
@@ -1571,6 +1575,8 @@
 		94D9DF5B25F889C600FC2F28 /* BulletinContentView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BulletinContentView.xib; sourceTree = "<group>"; };
 		94D9DF6025F89D6E00FC2F28 /* BulletinContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulletinContent.swift; sourceTree = "<group>"; };
 		94DA83722588E58B006B0F16 /* WebRTC.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = WebRTC.xcframework; sourceTree = "<group>"; };
+		94E34120261D829200E2F9D3 /* code.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = code.css; sourceTree = "<group>"; };
+		94E34121261D829200E2F9D3 /* highlight.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = highlight.js; sourceTree = "<group>"; };
 		94E8913825C019F000F1E5D4 /* Pods-Mixin-acknowledgements.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = "Pods-Mixin-acknowledgements.plist"; path = "Pods/Target Support Files/Pods-Mixin/Pods-Mixin-acknowledgements.plist"; sourceTree = SOURCE_ROOT; };
 		94ECCCAA261A029F004E9E2A /* Window.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Window.swift; sourceTree = "<group>"; };
 		9B748DCC1FA71CEF00BC009B /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
@@ -1900,6 +1906,7 @@
 			children = (
 				94DA83722588E58B006B0F16 /* WebRTC.xcframework */,
 				943E7FA125B871E10059CE97 /* md4c */,
+				94E3411E261D827300E2F9D3 /* highlight */,
 				DF0A09712444AD7600378B4F /* BlurHash */,
 				DF5D9F2F1F9C95270036D5FD /* CountryCode */,
 			);
@@ -2530,6 +2537,15 @@
 			path = "Cacheable Asset";
 			sourceTree = "<group>";
 		};
+		94E3411E261D827300E2F9D3 /* highlight */ = {
+			isa = PBXGroup;
+			children = (
+				94E34120261D829200E2F9D3 /* code.css */,
+				94E34121261D829200E2F9D3 /* highlight.js */,
+			);
+			path = highlight;
+			sourceTree = "<group>";
+		};
 		94F4289625E2DFC900B19DBF /* Playlist */ = {
 			isa = PBXGroup;
 			children = (
@@ -2912,7 +2928,7 @@
 				7BE73BFB230A8D0300B97FC6 /* group_separator_2.png */,
 				7BE73BF9230A8D0300B97FC6 /* group_separator_3.png */,
 				7BE73BFA230A8D0300B97FC6 /* group_separator_4.png */,
-				940B67FC2609ECF6000E04E6 /* github-markdown.css */,
+				949A3685261D9C5C004251B2 /* github-markdown.css */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -3682,7 +3698,6 @@
 				7B7B5DB5230EBEBA00D0F463 /* TransferTypeCell.xib in Resources */,
 				E0BEB85D236C1C49001FE534 /* ProfileMenuItemView.xib in Resources */,
 				7BACA8D523602BF8007E3381 /* RecorderLongPressHintView.xib in Resources */,
-				940B67FD2609ECF6000E04E6 /* github-markdown.css in Resources */,
 				7B710DFE243637D9008F0D73 /* CirclesTableFooterView.xib in Resources */,
 				7B082D16242C9D5F00C5E163 /* MultipleSelectionActionView.xib in Resources */,
 				DF53BB6F202362E5002BF028 /* AuthorizationScopeCell.xib in Resources */,
@@ -3702,7 +3717,9 @@
 				ABE865C123F260FE00C0167D /* PermissionsActionCell.xib in Resources */,
 				7B9650B024879B9000DE86B9 /* MinimizedCallView.xib in Resources */,
 				DFF44176223A035000DDD5F8 /* GoogleService-Info.plist in Resources */,
+				94E34123261D829200E2F9D3 /* code.css in Resources */,
 				7BEC4DF121A7D054003336F2 /* AssetCell.xib in Resources */,
+				949A3686261D9C5C004251B2 /* github-markdown.css in Resources */,
 				7B7E7144217D87860052C7DD /* CallView.xib in Resources */,
 				7B2A115D22C1EAC900AD029C /* GalleryVideoControlView.xib in Resources */,
 				7B9A18162428932A00187693 /* PageControlView.xib in Resources */,
@@ -3726,6 +3743,7 @@
 				7BD639CB2282B17B00B7B3A6 /* PeerView.xib in Resources */,
 				7BE73BFE230A8D0300B97FC6 /* group_separator_2.png in Resources */,
 				7BFD3754249366E7006D758F /* GroupCallIndicatorView.xib in Resources */,
+				94E34124261D829200E2F9D3 /* highlight.js in Resources */,
 				DF846CDB23694A4900AA1197 /* MultisigUsersWindow.xib in Resources */,
 				DF3F6D6920EF2618006D0CBC /* QrcodeWindow.xib in Resources */,
 				7B2E5882244F10FB0073102C /* EmergencyContactTableHeaderView.xib in Resources */,

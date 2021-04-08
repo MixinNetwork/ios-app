@@ -5,31 +5,7 @@ import WebKit
 class PostWebViewController: WebViewController {
     
     private var message: MessageItem!
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        showPageTitleConstraint.priority = .defaultLow
-        webView.navigationDelegate = self
-        guard let content = message.content else {
-            return
-        }
-        DispatchQueue.global().async {
-            let html = MarkdownConverter.htmlString(from: content, richFormat: true)
-            DispatchQueue.main.async { [weak self] in
-                self?.webView.loadHTMLString(html, baseURL: Bundle.main.bundleURL)
-            }
-        }
-    }
-    
-    override func moreAction(_ sender: Any) {
-        let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        controller.addAction(UIAlertAction(title: R.string.localizable.chat_message_menu_forward(), style: .default, handler: { (_) in
-            let vc = MessageReceiverViewController.instance(content: .messages([self.message]))
-            self.navigationController?.pushViewController(vc, animated: true)
-        }))
-        controller.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
-        present(controller, animated: true, completion: nil)
-    }
+    private var html: String?
     
     class func presentInstance(message: MessageItem, asChildOf parent: UIViewController) {
         let vc = PostWebViewController(nib: R.nib.webView)
@@ -47,6 +23,45 @@ class PostWebViewController: WebViewController {
         }
         
         AppDelegate.current.mainWindow.endEditing(true)
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        showPageTitleConstraint.priority = .defaultLow
+        webView.navigationDelegate = self
+        guard let content = message.content else {
+            return
+        }
+        DispatchQueue.global().async {
+            let html = MarkdownConverter.htmlString(from: content, richFormat: true)
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else {
+                    return
+                }
+                self.html = html
+                self.webView.loadHTMLString(html, baseURL: Bundle.main.bundleURL)
+            }
+        }
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if #available(iOS 13.0, *), traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+            updateBackground(pageThemeColor: .background)
+        }
+        if traitCollection.preferredContentSizeCategory != previousTraitCollection?.preferredContentSizeCategory, let html = html {
+            webView.loadHTMLString(html, baseURL: Bundle.main.bundleURL)
+        }
+    }
+    
+    override func moreAction(_ sender: Any) {
+        let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        controller.addAction(UIAlertAction(title: R.string.localizable.chat_message_menu_forward(), style: .default, handler: { (_) in
+            let vc = MessageReceiverViewController.instance(content: .messages([self.message]))
+            self.navigationController?.pushViewController(vc, animated: true)
+        }))
+        controller.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        present(controller, animated: true, completion: nil)
     }
     
 }

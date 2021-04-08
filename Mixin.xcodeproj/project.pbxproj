@@ -209,7 +209,7 @@
 		7B63C48F21A4333A0044C4BF /* DepositFieldView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B63C48E21A4333A0044C4BF /* DepositFieldView.xib */; };
 		7B63C49121A4334C0044C4BF /* DepositFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B63C49021A4334C0044C4BF /* DepositFieldView.swift */; };
 		7B65568324C8555D0038BC14 /* GroupCallMemberConnectingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B65568224C8555D0038BC14 /* GroupCallMemberConnectingView.swift */; };
-		7B66AC072428D72000869DBD /* PostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B66AC062428D72000869DBD /* PostViewController.swift */; };
+		7B66AC072428D72000869DBD /* PostWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B66AC062428D72000869DBD /* PostWebViewController.swift */; };
 		7B68F78B2191741300B79978 /* BiometryType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B68F78A2191741300B79978 /* BiometryType.swift */; };
 		7B6A4046228400AF0037C7E5 /* MessageReceiverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B6A4045228400AF0037C7E5 /* MessageReceiverViewController.swift */; };
 		7B6B07E824A88B7A001781F3 /* GroupCallMemberDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B6B07E724A88B7A001781F3 /* GroupCallMemberDataSource.swift */; };
@@ -1151,7 +1151,7 @@
 		7B63C48E21A4333A0044C4BF /* DepositFieldView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DepositFieldView.xib; sourceTree = "<group>"; };
 		7B63C49021A4334C0044C4BF /* DepositFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositFieldView.swift; sourceTree = "<group>"; };
 		7B65568224C8555D0038BC14 /* GroupCallMemberConnectingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCallMemberConnectingView.swift; sourceTree = "<group>"; };
-		7B66AC062428D72000869DBD /* PostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewController.swift; sourceTree = "<group>"; };
+		7B66AC062428D72000869DBD /* PostWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostWebViewController.swift; sourceTree = "<group>"; };
 		7B68F78A2191741300B79978 /* BiometryType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometryType.swift; sourceTree = "<group>"; };
 		7B6A4045228400AF0037C7E5 /* MessageReceiverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageReceiverViewController.swift; sourceTree = "<group>"; };
 		7B6B07E724A88B7A001781F3 /* GroupCallMemberDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCallMemberDataSource.swift; sourceTree = "<group>"; };
@@ -2339,7 +2339,7 @@
 				E09C5EB72370057B0095F729 /* UserProfileViewController.swift */,
 				E0A14D3B2372F0340044D131 /* GroupProfileViewController.swift */,
 				7B5E9B3F243700CD000AE24E /* ConversationCircleEditorViewController.swift */,
-				7B66AC062428D72000869DBD /* PostViewController.swift */,
+				7B66AC062428D72000869DBD /* PostWebViewController.swift */,
 				7BBCEC1725232A9800F270DF /* WebMoreMenuViewController.swift */,
 			);
 			path = Common;
@@ -4743,7 +4743,7 @@
 				DFB2062A21AC1771006E4341 /* RestoreJob.swift in Sources */,
 				7B9EDF101FB588D700D26989 /* UIImageExtension.swift in Sources */,
 				7B2636D5224E2A7E0057116D /* InfiniteTopView.swift in Sources */,
-				7B66AC072428D72000869DBD /* PostViewController.swift in Sources */,
+				7B66AC072428D72000869DBD /* PostWebViewController.swift in Sources */,
 				9492285F25DFB7D60000A19F /* MinimizedPlaylistViewController.swift in Sources */,
 				7BADC840204BFD040016B0FC /* ChangeNumberNewNumberViewController.swift in Sources */,
 				7BEED06F244D457000F3A2B9 /* SettingsDataSource.swift in Sources */,

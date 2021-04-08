@@ -1,5 +1,4 @@
 import Foundation
-import SwiftyMarkdown
 
 protocol MarkdownControlCodeRemovable {
     
@@ -28,8 +27,8 @@ extension MarkdownControlCodeRemovable {
             }
         }
         let fragment = String(content[content.startIndex..<endIndex])
-        let md = SwiftyMarkdown(string: fragment)
-        return md.attributedString().string + suffix
+        let text = MarkdownConverter.plainText(from: fragment)
+        return text + suffix
     }
     
 }

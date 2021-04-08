@@ -1,9 +1,9 @@
-#import "MXMMarkdownConverter.h"
+#import "MXSMarkdownConverter.h"
 #import "md4c.h"
 #import "md4c-html.h"
 
 // Swift doesn't work here because MD_DIALECT_GITHUB is not representable
-@implementation MXMMarkdownConverter
+@implementation MXSMarkdownConverter
 
 // NSString doesn't support multilined raw string literal, we borrow it from C++ 11
 const char *richHeader = R"(
@@ -47,7 +47,10 @@ const char *plainHeader = R"(
 
 NSString *const footer = @"</article></body></html>";
 
-void ProcessOutput(const MD_CHAR * output, MD_SIZE size, void *userData);
+void processHTMLOutput(const MD_CHAR *output, MD_SIZE size, void *userData);
+int processPlainTextOutput(MD_TEXTTYPE type, const MD_CHAR* text, MD_SIZE size, void* userdata);
+int processPlainTextBlock(MD_BLOCKTYPE type, void* detail, void* userdata);
+int processPlainTextSpan(MD_SPANTYPE type, void* detail, void* userdata);
 
 + (NSString *)htmlStringFromMarkdownString:(NSString *)markdownString richFormat:(BOOL)rich {
     NSMutableString *output;
@@ -58,12 +61,54 @@ void ProcessOutput(const MD_CHAR * output, MD_SIZE size, void *userData);
     }
     const char *cMarkdown = [markdownString cStringUsingEncoding:NSUTF8StringEncoding];
     size_t length = strlen(cMarkdown);
-    md_html(cMarkdown, (MD_SIZE)length, &ProcessOutput, (__bridge void *)(output), MD_DIALECT_GITHUB, 0);
+    md_html(cMarkdown, (MD_SIZE)length, &processHTMLOutput, (__bridge void *)(output), MD_DIALECT_GITHUB, 0);
     [output appendString:footer];
     return output;
 }
 
-void ProcessOutput(const MD_CHAR *output, MD_SIZE size, void *userData) {
++ (NSString *)plainTextFromMarkdownString:(NSString *)markdownString {
+    NSMutableString *output = [NSMutableString new];
+    const char* md = markdownString.UTF8String;
+    size_t size = strlen(md);
+    MD_PARSER parser = {
+        0,
+        MD_DIALECT_GITHUB,
+        processPlainTextBlock,
+        processPlainTextBlock,
+        processPlainTextSpan,
+        processPlainTextSpan,
+        processPlainTextOutput,
+        NULL,
+        NULL
+    };
+    md_parse(md, (MD_SIZE)size, &parser, (__bridge void *)(output));
+    return [output copy];
+}
+
+int processPlainTextOutput(MD_TEXTTYPE type, const MD_CHAR* text, MD_SIZE size, void* userdata) {
+    if (!text) {
+        return 0;
+    }
+    NSMutableString *writeBack = (__bridge NSMutableString *)(userdata);
+    NSString *newOutput = [[NSString alloc] initWithBytesNoCopy:(void *)text
+                                                         length:size
+                                                       encoding:NSUTF8StringEncoding
+                                                   freeWhenDone:NO];
+    if (newOutput) {
+        [writeBack appendString:newOutput];
+    }
+    return 0;
+}
+
+int processPlainTextBlock(MD_BLOCKTYPE type, void* detail, void* userdata) {
+    return 0;
+}
+
+int processPlainTextSpan(MD_SPANTYPE type, void* detail, void* userdata) {
+    return 0;
+}
+
+void processHTMLOutput(const MD_CHAR *output, MD_SIZE size, void *userData) {
     if (!output) {
         return;
     }

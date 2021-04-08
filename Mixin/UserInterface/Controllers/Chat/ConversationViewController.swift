@@ -1275,14 +1275,15 @@ extension ConversationViewController: UITableViewDataSource {
         }
         let cell = self.tableView.dequeueReusableCell(withMessage: viewModel.message, for: indexPath)
         if let cell = cell as? MessageCell {
-            UIView.performWithoutAnimation {
+            CATransaction.performWithoutAnimation {
                 cell.render(viewModel: viewModel)
-            }
-            if tableView.allowsMultipleSelection {
-                let intent = multipleSelectionActionView.intent
-                cell.setMultipleSelecting(true, intent: intent, animated: false)
-            } else {
-                cell.setMultipleSelecting(false, intent: nil, animated: false)
+                if tableView.allowsMultipleSelection {
+                    let intent = multipleSelectionActionView.intent
+                    cell.setMultipleSelecting(true, intent: intent, animated: false)
+                } else {
+                    cell.setMultipleSelecting(false, intent: nil, animated: false)
+                }
+                cell.layoutIfNeeded()
             }
         }
         return cell

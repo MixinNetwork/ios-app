@@ -68,35 +68,26 @@ class PostWebViewController: WebViewController {
 
 extension PostWebViewController: WKNavigationDelegate {
     
-//    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-//        guard let url = navigationAction.request.url else {
-//            decisionHandler(.allow)
-//            return
-//        }
-//        guard url != postContainerUrl else {
-//            decisionHandler(.allow)
-//            return
-//        }
-//        
-//        defer {
-//            decisionHandler(.cancel)
-//        }
-//        
-//        if UrlWindow.checkUrl(url: url, fromWeb: true) {
-//            return
-//        }
-//        guard let parent = parent else {
-//            return
-//        }
-//        MixinWebViewController.presentInstance(with: .init(conversationId: "", initialUrl: url), asChildOf: parent)
-//    }
-//    
-//    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-//        let markdown = message.content
-//        let isImageEnabled = "true"
-//        let escapedMarkdown = markdown.addingPercentEncoding(withAllowedCharacters: .alphanumerics) ?? markdown
-//        let script = "window.showMarkdown('\(escapedMarkdown)', \(isImageEnabled));"
-//        webView.evaluateJavaScript(script, completionHandler: nil)
-//    }
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        guard let url = navigationAction.request.url else {
+            decisionHandler(.allow)
+            return
+        }
+        if url == Bundle.main.bundleURL {
+            decisionHandler(.allow)
+            return
+        }
+        
+        defer {
+            decisionHandler(.cancel)
+        }
+        
+        if UrlWindow.checkUrl(url: url) {
+            return
+        }
+        if let parent = parent {
+            MixinWebViewController.presentInstance(with: .init(conversationId: "", initialUrl: url), asChildOf: parent)
+        }
+    }
     
 }

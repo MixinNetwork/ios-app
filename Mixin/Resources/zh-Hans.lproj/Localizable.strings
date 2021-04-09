@@ -899,7 +899,7 @@
 "error_no_connection" = "无网络连接";
 "error_network_connection_lost" = "网络连接超时，请检查网络稍后重试";
 "error_server_data_error" = "数据解析错误";
-"error_server_5xx" = "服务器出错";
+"error_server_5xx" = "服务器出错，请稍后重试";
 "error_not_found" = "没有找到相应的信息";
 "error_too_many_requests" = "请求太快啦";
 "error_unavailable_phone_number" = "此手机号已被使用";

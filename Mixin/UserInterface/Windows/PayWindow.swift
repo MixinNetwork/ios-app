@@ -487,7 +487,7 @@ extension PayWindow: PinFieldDelegate {
                 return
             }
             switch error {
-            case .malformedPin, .incorrectPin:
+            case .malformedPin, .incorrectPin, .insufficientPool, .internalServerError:
                 self.errorContinueAction = .retryPin
             default:
                 self.errorContinueAction = .close

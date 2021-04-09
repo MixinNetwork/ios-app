@@ -57,6 +57,7 @@ public enum MixinAPIError: Error {
     
     case chainNotInSync
     case malformedAddress
+    case insufficientPool
     
     case invalidParameters
     case invalidSDP
@@ -149,6 +150,8 @@ extension MixinAPIError {
             self = .chainNotInSync
         case (202, 30102):
             self = .malformedAddress
+        case (202, 30103):
+            self = .insufficientPool
             
         case (202, 5002000):
             self = .roomFull

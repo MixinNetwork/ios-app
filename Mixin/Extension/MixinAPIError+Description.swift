@@ -40,7 +40,7 @@ extension MixinAPIError {
         case .tooManyRequests:
             return R.string.localizable.error_too_many_requests()
             
-        case .internalServerError, .blazeServerError, .blazeOperationTimedOut:
+        case .internalServerError, .blazeServerError, .blazeOperationTimedOut, .insufficientPool:
             return R.string.localizable.error_server_5xx()
             
         case .invalidRequestData:

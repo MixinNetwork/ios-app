@@ -5,7 +5,7 @@ class StickerMessageViewModel: DetailInfoMessageViewModel {
     
     private enum SideLength {
         static let max: CGFloat = 120
-        static let min: CGFloat = 48
+        static let min: CGFloat = 64
     }
     
     override var contentMargin: Margin {
@@ -18,30 +18,41 @@ class StickerMessageViewModel: DetailInfoMessageViewModel {
     
     override init(message: MessageItem) {
         if let assetWidth = message.assetWidth, let assetHeight = message.assetHeight, assetWidth > 0, assetHeight > 0 {
-            let width = CGFloat(assetWidth / 2)
-            let height = CGFloat(assetHeight / 2)
-            let ratio = width / height
-            var targetSize = CGSize.zero
+            let assetSize = CGSize(width: assetWidth / 2, height: assetHeight / 2)
+            let ratio = assetSize.width / assetSize.height
             
-            if min(width, height) < SideLength.min {
-                if width > height {
-                    targetSize = CGSize(width: SideLength.min * ratio, height: SideLength.min)
-                } else {
-                    targetSize = CGSize(width: SideLength.min, height: SideLength.min / ratio)
-                }
-            }
-            
-            if max(width, height) > SideLength.max || max(targetSize.width, targetSize.height) > SideLength.max {
-                if width > height {
+            let contentSize: CGSize
+            if max(assetSize.width, assetSize.height) > SideLength.max {
+                if ratio > 1 {
                     contentSize = CGSize(width: SideLength.max, height: SideLength.max / ratio)
                 } else {
                     contentSize = CGSize(width: SideLength.max * ratio, height: SideLength.max)
                 }
+            } else if min(assetSize.width, assetSize.height) < SideLength.min {
+                let maxRatio = SideLength.max / SideLength.min
+                if ratio <= (1 / maxRatio) {
+                    // e.g. w*h is 1*100
+                    contentSize = CGSize(width: SideLength.max * ratio, height: SideLength.max)
+                } else if ratio < 1 {
+                    // e.g. w*h is 2*3
+                    contentSize = CGSize(width: SideLength.min, height: SideLength.min / ratio)
+                } else if ratio == 1 {
+                    // e.g. w*h is 2*2
+                    contentSize = CGSize(width: SideLength.min, height: SideLength.min)
+                } else if ratio < maxRatio {
+                    // e.g. w*h is 3*2
+                    contentSize = CGSize(width: SideLength.min * ratio, height: SideLength.min)
+                } else {
+                    // e.g. w*h is 100*1
+                    contentSize = CGSize(width: SideLength.max, height: SideLength.max / ratio)
+                }
             } else {
-                contentSize = CGSize(width: width, height: height)
+                contentSize = assetSize
             }
+            
+            self.contentSize = round(contentSize)
         } else {
-            contentSize = CGSize(width: SideLength.min, height: SideLength.min)
+            self.contentSize = CGSize(width: SideLength.min, height: SideLength.min)
         }
         super.init(message: message)
         backgroundImage = nil

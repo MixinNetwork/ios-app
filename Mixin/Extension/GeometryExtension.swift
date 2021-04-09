@@ -4,6 +4,10 @@ func ceil(_ size: CGSize) -> CGSize {
     return CGSize(width: ceil(size.width), height: ceil(size.height))
 }
 
+func round(_ size: CGSize) -> CGSize {
+    return CGSize(width: round(size.width), height: round(size.height))
+}
+
 func round(_ point: CGPoint) -> CGPoint {
     return CGPoint(x: round(point.x), y: round(point.y))
 }

@@ -6,7 +6,6 @@ import AVFoundation
 import WebKit
 import FirebaseCore
 import Lottie
-import SwiftyMarkdown
 import MixinServices
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -26,7 +25,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         reporter.configure()
         AppGroupUserDefaults.migrateIfNeeded()
         updateSharedImageCacheConfig()
-        SwiftyMarkdown.frontMatterRules = []
         _ = ReachabilityManger.shared
         _ = DarwinNotificationManager.shared
         _ = CacheableAssetFileManager.shared

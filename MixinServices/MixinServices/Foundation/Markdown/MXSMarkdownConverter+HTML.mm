@@ -15,6 +15,9 @@ const char *richHeader = R"(
         <script src="highlight.js"></script>
         <script>hljs.highlightAll();</script>
         <style>
+            body {
+              margin: 8px;
+            }
             .markdown-body {
                 box-sizing: border-box;
                 min-width: 200px;

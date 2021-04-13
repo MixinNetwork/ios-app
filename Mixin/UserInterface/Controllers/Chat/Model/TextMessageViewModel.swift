@@ -19,11 +19,6 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
     var contentLabelFrame = CGRect.zero
     var highlightPaths = [UIBezierPath]()
     
-    // When layout within message bubble, set this variable to false and use the maxContentWidth
-    // Set this variable to true will layout with raw width which passed to layout func
-    // e.g. when performing layout in SharedMediaPostTableViewController
-    var layoutWithRawWidth = false
-    
     private let trailingInfoLeftMargin: CGFloat = 20
     private let minimumTextSize = CGSize(width: 5, height: 17)
     private let linkColor = UIColor.systemTint
@@ -114,7 +109,7 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
         var (lines, lineOrigins, lineRanges, textSize, lastLineWidth) = { () -> ([CTLine], [CGPoint], [CFRange], CGSize, CGFloat) in
             let cfStr = attributedString as CFAttributedString
             let typesetter = CTTypesetterCreateWithAttributedString(cfStr)
-            let typesetWidth = layoutWithRawWidth ? Double(width) : Double(maxContentWidth)
+            let typesetWidth = Double(maxContentWidth)
             
             var lines = [CTLine]()
             var lineOrigins = [CGPoint]()

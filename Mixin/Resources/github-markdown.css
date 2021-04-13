@@ -2,6 +2,11 @@ html {
   font: -apple-system-subheadline !important;
 }
 
+body {
+  margin: 0;
+  padding: 0;
+}
+
 .markdown-body .octicon {
   display: inline-block;
   fill: currentColor;

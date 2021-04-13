@@ -1,19 +1,7 @@
 import UIKit
-import SwiftyMarkdown
 import MixinServices
 
-class PostMessageViewModel: TextMessageViewModel, BackgroundedTrailingInfoViewModel {
-    
-    private let numberOfMarkdownLines: Int = {
-        switch ScreenWidth.current {
-        case .short:
-            return 5
-        case .medium:
-            return 8
-        case .long:
-            return 10
-        }
-    }()
+class PostMessageViewModel: DetailInfoMessageViewModel, BackgroundedTrailingInfoViewModel {
     
     override var statusNormalTintColor: UIColor {
         .white
@@ -23,34 +11,89 @@ class PostMessageViewModel: TextMessageViewModel, BackgroundedTrailingInfoViewMo
         .white
     }
     
-    override var maxNumberOfLines: Int? {
-        10
-    }
+    let html: String // For display
+    let contentAttributedString: NSAttributedString // For estimating cell frame
     
-    override var contentAttributedString: NSAttributedString {
-        let maxNumberOfLines = self.maxNumberOfLines ?? 10
-        var lines = [String]()
-        rawContent.enumerateLines { (line, stop) in
-            lines.append(line)
-            if lines.count == maxNumberOfLines {
-                stop = true
-            }
+    var webViewFrame: CGRect = .zero
+    var trailingInfoBackgroundFrame: CGRect = .zero
+    
+    private let frameEstimatingMaxCharacterCount: UInt = 100
+    private let frameEstimationMaxLineCount: UInt = {
+        switch ScreenHeight.current {
+        case .short, .medium:
+            return 4
+        case .long:
+            return 6
+        case .extraLong:
+            return 8
         }
-        let string = lines.joined(separator: "\n")
-        return NSAttributedString(string: string, attributes: [.font: Self.font])
-    }
+    }()
     
-    var trailingInfoBackgroundFrame = CGRect.zero
-    var html = ""
+    override init(message: MessageItem) {
+        let previewableMarkdown: String = {
+            var lines = [String]()
+            (message.content ?? "").enumerateLines { (line, stop) in
+                lines.append(line)
+                if lines.count == 30 {
+                    stop = true
+                }
+            }
+            return lines.joined(separator: "\n")
+        }()
+        html = MarkdownConverter.htmlString(from: previewableMarkdown, richFormat: false)
+        contentAttributedString = MarkdownConverter.attributedString(from: previewableMarkdown,
+                                                                     maxNumberOfCharacters: frameEstimatingMaxCharacterCount,
+                                                                     maxNumberOfLines: frameEstimationMaxLineCount)
+        super.init(message: message)
+    }
     
     override func layout(width: CGFloat, style: MessageViewModel.Style) {
         super.layout(width: width, style: style)
-        html = MarkdownConverter.htmlString(from: message.content ?? "", richFormat: false)
+        let sizeToFit: CGSize = {
+            var width = layoutWidth
+                - DetailInfoMessageViewModel.bubbleMargin.horizontal
+                - contentMargin.horizontal
+            width = round(width)
+            return CGSize(width: width, height: UIView.layoutFittingExpandedSize.height)
+        }()
+        let textSize = contentAttributedString.boundingRect(with: sizeToFit,
+                                                            options: [.usesLineFragmentOrigin, .usesFontLeading],
+                                                            context: nil)
+        let bubbleMargin = DetailInfoMessageViewModel.bubbleMargin
+        let backgroundWidth = sizeToFit.width + contentMargin.horizontal
+        let contentLabelTopMargin: CGFloat = {
+            if style.contains(.fullname) {
+                return fullnameFrame.height
+            } else {
+                return contentMargin.top
+            }
+        }()
+        if style.contains(.received) {
+            backgroundImageFrame = CGRect(x: bubbleMargin.leading,
+                                          y: 0,
+                                          width: backgroundWidth,
+                                          height: textSize.height + contentLabelTopMargin + contentMargin.bottom)
+            webViewFrame = CGRect(x: ceil(backgroundImageFrame.origin.x + contentMargin.leading),
+                                  y: contentLabelTopMargin,
+                                  width: sizeToFit.width,
+                                  height: textSize.height)
+        } else {
+            backgroundImageFrame = CGRect(x: width - bubbleMargin.leading - backgroundWidth,
+                                          y: 0,
+                                          width: backgroundWidth,
+                                          height: textSize.height + contentLabelTopMargin + contentMargin.bottom)
+            webViewFrame = CGRect(x: ceil(backgroundImageFrame.origin.x + contentMargin.trailing),
+                                  y: contentLabelTopMargin,
+                                  width: sizeToFit.width,
+                                  height: textSize.height)
+        }
+        cellHeight = backgroundImageFrame.height + bottomSeparatorHeight
+        layoutDetailInfo(backgroundImageFrame: backgroundImageFrame)
+        if quotedMessageViewModel != nil && style.contains(.fullname) {
+            backgroundImageFrame.origin.y += fullnameFrame.height
+            backgroundImageFrame.size.height -= fullnameFrame.height
+        }
         layoutTrailingInfoBackgroundFrame()
-    }
-    
-    override func linkRanges(from string: String) -> [Link.Range] {
-        []
     }
     
 }

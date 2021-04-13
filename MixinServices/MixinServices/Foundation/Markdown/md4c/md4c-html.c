@@ -511,7 +511,7 @@ text_callback(MD_TEXTTYPE type, const MD_CHAR* text, MD_SIZE size, void* userdat
                                         ? ((r->flags & MD_HTML_FLAG_XHTML) ? "<br />\n" : "<br>\n")
                                         : " "));
                                 break;
-        case MD_TEXT_SOFTBR:    RENDER_VERBATIM(r, (r->image_nesting_level == 0 ? "\n" : " ")); break;
+        case MD_TEXT_SOFTBR:    RENDER_VERBATIM(r, "<br>\n"); break;
         case MD_TEXT_HTML:      render_verbatim(r, text, size); break;
         case MD_TEXT_ENTITY:    render_entity(r, text, size, render_html_escaped); break;
         default:                render_html_escaped(r, text, size); break;

@@ -131,7 +131,6 @@ PODS:
     - SDWebImageYYPlugin/YYImage
     - SocketRocket
     - SQLCipher (~> 4.0)
-    - SwiftyMarkdown
     - YYImage/WebP
     - Zip
   - MixinServices/DatabaseTests (0.1.0):
@@ -147,7 +146,6 @@ PODS:
     - SDWebImageYYPlugin/YYImage
     - SocketRocket
     - SQLCipher (~> 4.0)
-    - SwiftyMarkdown
     - YYImage/WebP
     - Zip
   - nanopb (2.30907.0):
@@ -180,7 +178,6 @@ PODS:
   - SQLCipher/common (4.4.3)
   - SQLCipher/standard (4.4.3):
     - SQLCipher/common
-  - SwiftyMarkdown (1.2.3)
   - YYImage (1.0.4):
     - YYImage/Core (= 1.0.4)
   - YYImage/Core (1.0.4)
@@ -205,7 +202,6 @@ DEPENDENCIES:
   - R.swift
   - RSKImageCropper
   - SnapKit
-  - SwiftyMarkdown (from `https://github.com/wuyuehyang/SwiftyMarkdown.git`)
   - YYImage (from `https://github.com/wuyuehyang/YYImage.git`)
 
 SPEC REPOS:
@@ -253,8 +249,6 @@ EXTERNAL SOURCES:
     :git: https://github.com/airbnb/lottie-ios.git
   MixinServices:
     :path: "./MixinServices"
-  SwiftyMarkdown:
-    :git: https://github.com/wuyuehyang/SwiftyMarkdown.git
   YYImage:
     :git: https://github.com/wuyuehyang/YYImage.git
 
@@ -265,9 +259,6 @@ CHECKOUT OPTIONS:
   lottie-ios:
     :commit: 44bda1253360b7ea5698f058f8483e42e26e65bd
     :git: https://github.com/airbnb/lottie-ios.git
-  SwiftyMarkdown:
-    :commit: 15669399eacbe689a6740726fd1c36dcad1ca85f
-    :git: https://github.com/wuyuehyang/SwiftyMarkdown.git
   YYImage:
     :commit: 7acf346c746f6685f46c2fbc3edb1a05a12be827
     :git: https://github.com/wuyuehyang/YYImage.git
@@ -296,7 +287,7 @@ SPEC CHECKSUMS:
   GzipSwift: 893f3e48e597a1a4f62fafcb6514220fcf8287fa
   libsignal-protocol-c: bf65792f9f777e7d54dfab84bba0379eba42044e
   lottie-ios: 0e760146411886f6104050c932a8e6964853267f
-  MixinServices: 2d7bcfecad2a93cb85d4952f583c93d4e495ef91
+  MixinServices: 1a27c4c5311b9abda9fa61475083b2417dbc13ee
   nanopb: 59221d7f958fb711001e6a449489542d92ae113e
   PhoneNumberKit: 4ce83273551c4d2ae10b7361162f4283dd02835f
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
@@ -309,10 +300,9 @@ SPEC CHECKSUMS:
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
   SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
   SQLCipher: 155ffeafc9ac102e5c9b68e3e9a1297a98a27096
-  SwiftyMarkdown: be01b2905694bd7bfd95330cd43704bfdb978aec
   YYImage: 6db68da66f20d9f169ceb94dfb9947c3867b9665
   Zip: 414f59909701fda9a84ab774ebe0f5449b1082cc
 
-PODFILE CHECKSUM: 08fc6b8fdfeae5ae947b8fa40b6f929ac7585d1f
+PODFILE CHECKSUM: c0ccd691e49a5538f15ae78e7cd8ec4bffeda079
 
 COCOAPODS: 1.10.1

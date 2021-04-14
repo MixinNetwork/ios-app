@@ -231,10 +231,8 @@ extension ExternalSharingConfirmationViewController {
         webView.loadHTMLString(html, baseURL: Bundle.main.bundleURL)
         previewWrapperView.addSubview(webView)
         webView.snp.makeConstraints { (make) in
-            make.center.equalToSuperview()
-            make.height.equalTo(200) // FIXME: Estimate a height
-            make.leading.equalToSuperview().offset(40)
-            make.trailing.equalToSuperview().offset(-40)
+            let inset = UIEdgeInsets(top: 60, left: 40, bottom: 60, right: 40)
+            make.edges.equalToSuperview().inset(inset)
         }
         
         imageView.image = R.image.ic_chat_bubble_right_white()

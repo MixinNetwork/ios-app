@@ -57,6 +57,11 @@ class NumberPadView: UIView, XibDesignable {
     
     private func prepare() {
         loadXib()
+        if #available(iOS 14.0, *) {
+            backgroundColor = R.color.keyboard_background_14()
+        } else {
+            backgroundColor = R.color.keyboard_background_13()
+        }
         var bounds = UIScreen.main.bounds
         bounds.size.height = contentHeight + bottomSafeAreaInset
         contentViewBottomConstraint.constant = contentBottomMargin + bottomSafeAreaInset

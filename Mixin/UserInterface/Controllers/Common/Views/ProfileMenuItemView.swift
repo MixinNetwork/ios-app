@@ -3,7 +3,7 @@ import UIKit
 class ProfileMenuItemView: UIView, XibDesignable {
     
     @IBOutlet weak var stackView: UIStackView!
-    @IBOutlet weak var button: UIButton!
+    @IBOutlet weak var button: HighlightableButton!
     @IBOutlet weak var label: ProfileMenuItemLabel!
     @IBOutlet weak var subtitleLabel: UILabel!
     
@@ -43,16 +43,8 @@ class ProfileMenuItemView: UIView, XibDesignable {
         self.init(frame: frame)
     }
     
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        if #available(iOS 13.0, *), traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
-            traitCollection.performAsCurrent(updateButtonBackground)
-        }
-    }
-    
     func prepare() {
         loadXib()
-        updateButtonBackground()
     }
     
     @IBAction func selectAction(_ sender: Any) {
@@ -60,11 +52,6 @@ class ProfileMenuItemView: UIView, XibDesignable {
             return
         }
         target.perform(item.action)
-    }
-    
-    private func updateButtonBackground() {
-        button.setBackgroundImage(UIColor.inputBackground.image, for: .normal)
-        button.setBackgroundImage(R.color.background_input_selected()!.image, for: .highlighted)
     }
     
 }

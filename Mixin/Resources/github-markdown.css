@@ -315,10 +315,6 @@ body {
   border: 0!important;
 }
 
-.markdown-body .border-bottom {
-  border-bottom: 1px solid #e1e4e8!important;
-}
-
 .markdown-body .rounded-1 {
   border-radius: 3px!important;
 }
@@ -687,12 +683,6 @@ body {
   font-size: 2em;
 }
 
-.markdown-body h1,
-.markdown-body h2 {
-  padding-bottom: .3em;
-  border-bottom: 1px solid #eaecef;
-}
-
 .markdown-body h2 {
   font-size: 1.5em;
 }
@@ -1017,9 +1007,6 @@ body {
   .markdown-body .border {
     border: 1px solid #30363d!important;
   }
-  .markdown-body .border-bottom {
-    border-bottom: 1px solid #30363d!important;
-  }
   .markdown-body .bg-white {
     background-color: #0d1117!important;
   }
@@ -1122,10 +1109,6 @@ body {
   .markdown-body blockquote {
     color: #8b949e;
     border-left: .25em solid #3b434b;
-  }
-  .markdown-body h1,
-  .markdown-body h2 {
-    border-bottom: 1px solid #21262d;
   }
   .markdown-body h6 {
     color: #8b949e;

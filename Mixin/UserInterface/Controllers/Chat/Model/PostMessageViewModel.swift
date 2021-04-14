@@ -17,7 +17,7 @@ class PostMessageViewModel: DetailInfoMessageViewModel, BackgroundedTrailingInfo
     var webViewFrame: CGRect = .zero
     var trailingInfoBackgroundFrame: CGRect = .zero
     
-    private let frameEstimatingMaxCharacterCount: UInt = 100
+    private let frameEstimatingMaxCharacterCount: UInt = 130
     private let frameEstimationMaxLineCount: UInt = {
         switch ScreenHeight.current {
         case .short, .medium:

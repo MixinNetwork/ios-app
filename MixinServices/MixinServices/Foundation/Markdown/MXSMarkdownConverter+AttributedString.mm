@@ -11,19 +11,19 @@ struct Context {
     const NSUInteger linesLimit;
     NSMutableAttributedString *const output;
     unsigned headerLevel;
-    unsigned numberOfLines;
+    unsigned indentationLevel;
     std::deque<MD_SPANTYPE> spanTypes;
-    std::deque<NSUInteger> indentationStartIndices;
+    unsigned numberOfLines;
     bool stop;
     
     Context(NSMutableAttributedString *o, NSUInteger cl, NSUInteger ll)
-    : charactersLimit(cl),
-    linesLimit(ll),
-    output(o),
-    headerLevel(plainTextHeaderLevel),
-    numberOfLines(0),
-    stop(false) {
-    }
+    : charactersLimit(cl)
+    , linesLimit(ll)
+    , output(o)
+    , headerLevel(plainTextHeaderLevel)
+    , indentationLevel(0)
+    , numberOfLines(0)
+    , stop(false) { }
     
     void detectLimit() {
         bool reaches = output.length >= charactersLimit || numberOfLines >= linesLimit;
@@ -58,11 +58,27 @@ struct Context {
     const size_t size = strlen(str);
     Context *const ctx = new Context(output, maxNumberOfCharacters, maxNumberOfLines);
     md_parse(str, (MD_SIZE)size, &parser, ctx);
+    NSDictionary *attributes = attributesFromContext(ctx, 1);
     delete ctx;
+    
+    NSString *plain = output.string;
+    const NSUInteger length = plain.length;
+    NSUInteger numberOfTrailingLinebreaks = 0;
+    while ([plain characterAtIndex:length - 1 - numberOfTrailingLinebreaks] == '\n') {
+        numberOfTrailingLinebreaks++;
+    }
+    if (numberOfTrailingLinebreaks == 0) {
+        auto linebreak = [[NSAttributedString alloc] initWithString:@"\n" attributes:attributes];
+        [output appendAttributedString:linebreak];
+    } else if (numberOfTrailingLinebreaks > 1) {
+        NSRange range = NSMakeRange(0, length - numberOfTrailingLinebreaks + 1);
+        output = [output attributedSubstringFromRange:range];
+    }
+    
     return [output copy];
 }
 
-NSDictionary *attributesFromContext(Context *ctx) {
+NSDictionary *attributesFromContext(Context *ctx, CGFloat lineHeightMultiple) {
     CGFloat fontSize = plainTextFontSize;
     if (ctx->headerLevel != plainTextHeaderLevel) {
         // Factors are from github-markdown.css
@@ -108,16 +124,29 @@ NSDictionary *attributesFromContext(Context *ctx) {
     font = [UIFont fontWithDescriptor:desc size:0];
     font = [UIFontMetrics.defaultMetrics scaledFontForFont:font];
     
+    NSMutableParagraphStyle *style = [NSMutableParagraphStyle new];
+    if (lineHeightMultiple != 1) {
+        style.lineHeightMultiple = lineHeightMultiple;
+    } else if (ctx->indentationLevel > 0) {
+        style.lineHeightMultiple = 1.1;
+    } else {
+        style.lineHeightMultiple = 1.2;
+    }
+    CGFloat margin = ctx->indentationLevel * 33;
+    style.headIndent = margin;
+    style.firstLineHeadIndent = margin;
+    
     return @{
         NSFontAttributeName : font,
+        NSParagraphStyleAttributeName : style,
         NSForegroundColorAttributeName : UIColor.labelColor // For debugging
     };
 }
 
-void appendLinebreak(Context *context) {
+void appendLinebreak(Context *context, CGFloat heightMultiple) {
     NSString *plain = context->output.string;
     NSUInteger length = plain.length;
-    NSDictionary *attributes = attributesFromContext(context);
+    NSDictionary *attributes = attributesFromContext(context, heightMultiple);
     NSAttributedString *linebreak;
     if (length >= 2 && [[plain substringFromIndex:length - 2] isEqualToString:@"\n\n"]) {
         return;
@@ -128,21 +157,6 @@ void appendLinebreak(Context *context) {
     }
     [context->output appendAttributedString:linebreak];
     context->numberOfLines++;
-}
-
-void addIndentation(Context *context) {
-    if (context->indentationStartIndices.empty()) {
-        return;
-    }
-    NSUInteger location = context->indentationStartIndices.back();
-    NSUInteger length = context->output.length - location;
-    NSMutableParagraphStyle *style = [NSMutableParagraphStyle new];
-    CGFloat margin = context->indentationStartIndices.size() * 18;
-    style.headIndent = margin;
-    style.firstLineHeadIndent = margin;
-    [context->output addAttribute:NSParagraphStyleAttributeName
-                            value:[style copy]
-                            range:NSMakeRange(location, length)];
 }
 
 int enterBlock(MD_BLOCKTYPE type, void* detail, void* userdata) {
@@ -157,11 +171,13 @@ int enterBlock(MD_BLOCKTYPE type, void* detail, void* userdata) {
             break;
         }
         case MD_BLOCK_QUOTE:
-        case MD_BLOCK_CODE: {
-            appendLinebreak(context);
-            context->indentationStartIndices.push_back(context->output.length);
-            addIndentation(context);
-        }
+        case MD_BLOCK_CODE:
+            appendLinebreak(context, 1);
+        case MD_BLOCK_UL:
+        case MD_BLOCK_OL:
+        case MD_BLOCK_LI:
+            context->indentationLevel++;
+            break;
         default:
             break;
     }
@@ -188,19 +204,23 @@ int leaveBlock(MD_BLOCKTYPE type, void* detail, void* userdata) {
                 context->numberOfLines++;
             }
             context->headerLevel = plainTextHeaderLevel;
+            break;
         }
         case MD_BLOCK_QUOTE:
         case MD_BLOCK_CODE: {
-            addIndentation(context);
-            if (!context->indentationStartIndices.empty()) {
-                context->indentationStartIndices.pop_back();
-            }
-            appendLinebreak(context);
+            context->indentationLevel--;
+            appendLinebreak(context, 1);
+            break;
         }
+        case MD_BLOCK_UL:
+        case MD_BLOCK_OL:
+        case MD_BLOCK_LI:
+            context->indentationLevel--;
+            break;
         default:
             break;
     }
-    appendLinebreak(context);
+    appendLinebreak(context, 0.7);
     
     context->detectLimit();
     return context->stop;
@@ -219,7 +239,7 @@ int enterSpan(MD_SPANTYPE type, void* detail, void* userdata) {
         auto *string = [NSAttributedString attributedStringWithAttachment:attachment];
         [context->output appendAttributedString:string];
         if (hasEnoughTextBeforeImage) {
-            appendLinebreak(context);
+            appendLinebreak(context, 0.7);
             context->stop = true;
             return -1;
         }
@@ -259,7 +279,7 @@ int enterText(MD_TEXTTYPE type, const MD_CHAR* text, MD_SIZE size, void* userdat
         }
     }
     
-    NSDictionary *attributes = attributesFromContext(context);
+    NSDictionary *attributes = attributesFromContext(context, 1);
     NSAttributedString *newOutput = [[NSAttributedString alloc] initWithString:string attributes:attributes];
     [context->output appendAttributedString:newOutput];
     context->numberOfLines += numberOfLines;

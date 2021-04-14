@@ -67,7 +67,7 @@ public final class UserDatabase: Database {
             .init(key: .name, constraints: "TEXT NOT NULL"),
             .init(key: .iconUrl, constraints: "TEXT NOT NULL"),
             .init(key: .balance, constraints: "TEXT NOT NULL"),
-            .init(key: .destination, constraints: "TEXT NOT NULL"),
+            .init(key: .destination, constraints: "TEXT"),
             .init(key: .tag, constraints: "TEXT"),
             .init(key: .priceBtc, constraints: "TEXT NOT NULL"),
             .init(key: .priceUsd, constraints: "TEXT NOT NULL"),

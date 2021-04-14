@@ -2,7 +2,7 @@ import UIKit
 
 class HighlightableButton: UIButton {
     
-    @IBInspectable var normalColor: UIColor = .background {
+    @IBInspectable var normalColor: UIColor? = nil {
         didSet {
             if !isHighlighted {
                 backgroundColor = normalColor
@@ -10,7 +10,7 @@ class HighlightableButton: UIButton {
         }
     }
     
-    @IBInspectable var highlightedColor: UIColor = .background {
+    @IBInspectable var highlightedColor: UIColor? = nil {
         didSet {
             if isHighlighted {
                 backgroundColor = highlightedColor

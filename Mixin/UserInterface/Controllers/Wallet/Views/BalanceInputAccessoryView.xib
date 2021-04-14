@@ -25,9 +25,6 @@
                                 <userDefinedRuntimeAttribute type="color" keyPath="normalColor">
                                     <color key="value" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </userDefinedRuntimeAttribute>
-                                <userDefinedRuntimeAttribute type="color" keyPath="highlightedColor">
-                                    <color key="value" name="keyboard_balance_highlighted"/>
-                                </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                         </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Balance" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1oR-ND-Hm2">
@@ -67,7 +64,6 @@
                     </userDefinedRuntimeAttributes>
                 </view>
             </subviews>
-            <color key="backgroundColor" name="keyboard_background"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="dWT-fq-4OQ" secondAttribute="trailing" constant="33" id="6RW-gv-mu2"/>
                 <constraint firstItem="dWT-fq-4OQ" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="TCM-Sc-uy0"/>
@@ -84,14 +80,8 @@
         </view>
     </objects>
     <resources>
-        <namedColor name="keyboard_background">
-            <color red="0.81960784313725488" green="0.82745098039215681" blue="0.85098039215686272" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
-        <namedColor name="keyboard_balance_highlighted">
-            <color red="0.96862745098039216" green="0.97254901960784312" blue="0.97647058823529409" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
         <namedColor name="text">
-            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

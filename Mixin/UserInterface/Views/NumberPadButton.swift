@@ -2,7 +2,7 @@ import UIKit
 
 class NumberPadButton: UIControl, XibDesignable {
     
-    @IBOutlet weak var button: UIButton!
+    @IBOutlet weak var button: HighlightableButton!
     
     @IBInspectable var number: Int = 0 {
         didSet {
@@ -30,23 +30,15 @@ class NumberPadButton: UIControl, XibDesignable {
         NotificationCenter.default.addObserver(self, selector: #selector(updateButtonBackground), name: UIScreen.capturedDidChangeNotification, object: nil)
     }
     
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        if #available(iOS 13.0, *), traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
-            traitCollection.performAsCurrent(updateButtonBackground)
-        }
-    }
-    
     @IBAction func touchUpInsideAction(_ sender: Any) {
         sendActions(for: .touchUpInside)
     }
     
     @objc private func updateButtonBackground() {
-        button.setBackgroundImage(R.color.keyboard_button_background()!.image, for: .normal)
         if UIScreen.main.isCaptured {
-            button.setBackgroundImage(R.color.keyboard_button_background()!.image, for: .highlighted)
+            button.highlightedColor = R.color.keyboard_button_background()!
         }else{
-            button.setBackgroundImage(R.color.keyboard_button_highlighted()!.image, for: .highlighted)
+            button.highlightedColor = R.color.keyboard_button_highlighted()!
         }
     }
     

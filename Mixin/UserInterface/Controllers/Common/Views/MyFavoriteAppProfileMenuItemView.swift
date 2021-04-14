@@ -2,7 +2,7 @@ import UIKit
 
 class MyFavoriteAppProfileMenuItemView: UIView, XibDesignable {
     
-    @IBOutlet weak var button: UIButton!
+    @IBOutlet weak var button: HighlightableButton!
     @IBOutlet weak var avatarStackView: UserAvatarStackView!
     
     var contentEdgeInsets: UIEdgeInsets {
@@ -24,22 +24,9 @@ class MyFavoriteAppProfileMenuItemView: UIView, XibDesignable {
         self.init(frame: frame)
     }
     
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        if #available(iOS 13.0, *), traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
-            traitCollection.performAsCurrent(updateButtonBackground)
-        }
-    }
-    
     private func prepare() {
         loadXib()
-        updateButtonBackground()
         avatarStackView.avatarBackgroundColor = .inputBackground
-    }
-    
-    private func updateButtonBackground() {
-        button.setBackgroundImage(UIColor.inputBackground.image, for: .normal)
-        button.setBackgroundImage(R.color.background_input_selected()!.image, for: .highlighted)
     }
     
 }

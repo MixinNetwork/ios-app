@@ -36,6 +36,7 @@ class AudioInputViewController: UIViewController, ConversationInputAccessible {
     private let longPressHintVisibleDuration: TimeInterval = 2
     private let longPressHintRightMargin: CGFloat = 10
     private let lockDistance: CGFloat = 100
+    private let feedback = UIImpactFeedbackGenerator(style: .medium)
     
     private(set) var isShowingLongPressHint = false
     
@@ -259,6 +260,7 @@ extension AudioInputViewController {
     }
     
     private func startRecording() {
+        feedback.prepare()
         layoutForRecording()
         recordDuration = 0
         setTimeLabelValue(0)
@@ -269,6 +271,7 @@ extension AudioInputViewController {
             recorder.delegate = self
             recorder.record(for: AudioInputViewController.maxRecordDuration)
             self.recorder = recorder
+            self.feedback.impactOccurred()
         } catch {
             reporter.report(error: error)
         }

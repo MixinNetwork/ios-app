@@ -5,7 +5,7 @@ enum PINVerificationFailureHandler {
     
     static func canHandle(error: MixinAPIError) -> Bool {
         switch error {
-        case .tooManyRequests, .incorrectPin:
+        case .tooManyRequests, .incorrectPin, .httpTransport(.sessionTaskFailed):
             return true
         default:
             return false
@@ -35,6 +35,8 @@ enum PINVerificationFailureHandler {
                     completion(R.string.localizable.error_pin_incorrect())
                 }
             }
+        case .httpTransport(.sessionTaskFailed):
+            completion(R.string.localizable.error_network_task_failed())
         default:
             completion(error.localizedDescription)
         }

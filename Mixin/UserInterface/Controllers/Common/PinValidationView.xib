@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -107,7 +107,7 @@
                                                 </userDefinedRuntimeAttribute>
                                             </userDefinedRuntimeAttributes>
                                         </label>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MOR-gR-Mjb">
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MOR-gR-Mjb">
                                             <rect key="frame" x="147.5" y="84" width="80" height="46"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                             <inset key="contentEdgeInsets" minX="20" minY="13" maxX="20" maxY="13"/>
@@ -127,7 +127,17 @@
                                         <constraint firstItem="MOR-gR-Mjb" firstAttribute="centerX" secondItem="wQB-vk-cAS" secondAttribute="centerX" id="Nhg-AX-iM6"/>
                                         <constraint firstItem="xKG-nW-kNh" firstAttribute="leading" secondItem="wQB-vk-cAS" secondAttribute="leading" constant="30" id="R9w-nq-ZX2"/>
                                         <constraint firstAttribute="trailing" secondItem="xKG-nW-kNh" secondAttribute="trailing" constant="30" id="SMA-Ji-IGa"/>
-                                        <constraint firstAttribute="bottom" secondItem="MOR-gR-Mjb" secondAttribute="bottom" constant="40" id="b2j-XK-ha4"/>
+                                        <constraint firstAttribute="bottom" secondItem="MOR-gR-Mjb" secondAttribute="bottom" priority="250" constant="40" id="b2j-XK-ha4" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
+                                                    <real key="value" value="20"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="mediumConstant">
+                                                    <real key="value" value="30"/>
+                                                </userDefinedRuntimeAttribute>
+                                            </userDefinedRuntimeAttributes>
+                                        </constraint>
+                                        <constraint firstItem="MOR-gR-Mjb" firstAttribute="top" relation="greaterThanOrEqual" secondItem="xKG-nW-kNh" secondAttribute="bottom" priority="750" constant="10" id="zx9-6M-7we"/>
                                     </constraints>
                                 </view>
                             </subviews>
@@ -160,6 +170,7 @@
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
             </subviews>
+            <viewLayoutGuide key="safeArea" id="oT6-Rh-8fB"/>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="YtT-Bw-bo1" secondAttribute="trailing" id="Gjv-Hy-OQo"/>
@@ -171,7 +182,6 @@
                 <constraint firstItem="YtT-Bw-bo1" firstAttribute="top" secondItem="Tgg-8p-q44" secondAttribute="bottom" priority="250" id="rkw-Jg-BAW"/>
                 <constraint firstItem="YtT-Bw-bo1" firstAttribute="leading" secondItem="jqr-Lo-whB" secondAttribute="leading" id="yVi-k3-eBM"/>
             </constraints>
-            <viewLayoutGuide key="safeArea" id="oT6-Rh-8fB"/>
             <point key="canvasLocation" x="138" y="155"/>
         </view>
     </objects>
@@ -183,7 +193,7 @@
             <color red="0.90980392156862744" green="0.41960784313725491" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="title">
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

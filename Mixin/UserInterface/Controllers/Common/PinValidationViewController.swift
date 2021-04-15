@@ -79,6 +79,7 @@ class PinValidationViewController: UIViewController {
         case .tooManyRequests:
             self.loadingIndicator.stopAnimating()
             limitationHintView.isHidden = false
+            descriptionLabel.isHidden = true
             numberPadViewBottomConstraint.constant = numberPadView.frame.height
             UIView.animate(withDuration: 0.5, animations: {
                 UIView.setAnimationCurve(.overdamped)

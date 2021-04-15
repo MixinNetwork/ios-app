@@ -92,8 +92,8 @@ class HomeContainerViewController: UIViewController {
     
     @objc private func applicationWillEnterForeground(_ notification: Notification) {
         if UIApplication.shared.statusBarOrientation.isLandscape, let controller = pipController, controller.isAvPipActive {
-            let protrait = Int(UIInterfaceOrientation.portrait.rawValue)
-            UIDevice.current.setValue(protrait, forKey: "orientation")
+            let portrait = Int(UIInterfaceOrientation.portrait.rawValue)
+            UIDevice.current.setValue(portrait, forKey: "orientation")
         }
     }
     

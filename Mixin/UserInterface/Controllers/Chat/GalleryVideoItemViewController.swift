@@ -620,8 +620,8 @@ extension GalleryVideoItemViewController {
     
     private func executeInPortraitOrientation(_ work: @escaping () -> Void) {
         if UIApplication.shared.statusBarOrientation.isLandscape {
-            let protrait = Int(UIInterfaceOrientation.portrait.rawValue)
-            UIDevice.current.setValue(protrait, forKey: "orientation")
+            let portrait = Int(UIInterfaceOrientation.portrait.rawValue)
+            UIDevice.current.setValue(portrait, forKey: "orientation")
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.33, execute: work)
         } else {
             work()

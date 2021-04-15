@@ -485,13 +485,11 @@ extension GalleryVideoItemViewController {
     
     @objc func closeAction() {
         executeInPortraitOrientation {
-            if let controller = self.avPipController, controller.isPictureInPictureActive {
-                assertionFailure("AVPictureInPictureController is in active.")
-            } else if self.isBuiltInPipActive {
+            if self.isBuiltInPipActive {
                 self.isBuiltInPipActive = false
                 self.restoreToFullsized()
                 self.player.replaceCurrentItem(with: nil)
-            } else {
+            } else if !self.isAvPipActive {
                 self.galleryViewController?.dismiss(transitionViewInitialOffsetY: 0)
                 self.player.replaceCurrentItem(with: nil)
             }

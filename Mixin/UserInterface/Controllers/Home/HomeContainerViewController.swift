@@ -61,12 +61,20 @@ class HomeContainerViewController: UIViewController {
         isShowingGallery && galleryViewController.parent != nil
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         addChild(homeNavigationController)
         view.addSubview(homeNavigationController.view)
         homeNavigationController.view.snp.makeEdgesEqualToSuperview()
         homeNavigationController.didMove(toParent: self)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(applicationWillEnterForeground(_:)),
+                                               name: UIApplication.willEnterForegroundNotification,
+                                               object: nil)
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -79,6 +87,13 @@ class HomeContainerViewController: UIViewController {
         overlays.forEach { $0.alpha = 0 }
         coordinator.animate(alongsideTransition: nil) { (context) in
             overlays.forEach { $0.alpha = 1 }
+        }
+    }
+    
+    @objc private func applicationWillEnterForeground(_ notification: Notification) {
+        if UIApplication.shared.statusBarOrientation.isLandscape, let controller = pipController, controller.isAvPipActive {
+            let protrait = Int(UIInterfaceOrientation.portrait.rawValue)
+            UIDevice.current.setValue(protrait, forKey: "orientation")
         }
     }
     

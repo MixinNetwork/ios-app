@@ -41,7 +41,6 @@ class AudioInputViewController: UIViewController, ConversationInputAccessible {
     private(set) var isShowingLongPressHint = false
     
     private var recordGestureBeganPoint = CGPoint.zero
-    private var recordDurationTimer: Timer?
     private var recordDuration: TimeInterval = 0
     private var recorder: OggOpusRecorder?
     private var isShowingLockView = false
@@ -52,9 +51,12 @@ class AudioInputViewController: UIViewController, ConversationInputAccessible {
         }
     }
     
+    private weak var recordDurationTimer: Timer?
+    
     private lazy var longPressHintView = R.nib.recorderLongPressHintView(owner: nil)!
     
     deinit {
+        recorder?.cancel(for: .userInitiated)
         NotificationCenter.default.removeObserver(self)
     }
     
@@ -132,11 +134,6 @@ class AudioInputViewController: UIViewController, ConversationInputAccessible {
         animateHideLockView()
     }
     
-    @objc func updateTimeLabelAction(_ sender: Any) {
-        recordDuration += 1
-        setTimeLabelValue(recordDuration)
-    }
-    
     @discardableResult @objc
     func hideLongPressHint() -> Bool {
         guard isShowingLongPressHint else {
@@ -191,11 +188,9 @@ extension AudioInputViewController: OggOpusRecorderDelegate {
     }
     
     func oggOpusRecorderDidStartRecording(_ recorder: OggOpusRecorder) {
-        let timer = Timer(timeInterval: updateTimeLabelInterval,
-                          target: self,
-                          selector: #selector(AudioInputViewController.updateTimeLabelAction(_:)),
-                          userInfo: nil,
-                          repeats: true)
+        let timer = Timer(timeInterval: updateTimeLabelInterval, repeats: true) { [weak self] (_) in
+            self?.updateTimeLabel()
+        }
         RunLoop.main.add(timer, forMode: .common)
         recordDurationTimer = timer
         startRedDotAnimation()
@@ -275,6 +270,11 @@ extension AudioInputViewController {
         } catch {
             reporter.report(error: error)
         }
+    }
+    
+    private func updateTimeLabel() {
+        recordDuration += 1
+        setTimeLabelValue(recordDuration)
     }
     
     private func resetTimerAndRecorder() {

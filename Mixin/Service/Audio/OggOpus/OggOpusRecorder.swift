@@ -85,7 +85,7 @@ final class OggOpusRecorder {
     
     deinit {
         #if DEBUG
-        print("\(self) deinitialized")
+        print("OggOpusRecroder \(Unmanaged<OggOpusRecorder>.passUnretained(self).toOpaque()) deinitialized")
         #endif
     }
     

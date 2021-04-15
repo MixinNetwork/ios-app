@@ -14,7 +14,7 @@ class AudioSession {
     
     private let lock = NSLock()
     
-    private var currentClient: AudioSessionClient?
+    private weak var currentClient: AudioSessionClient?
     
     init() {
         let center = NotificationCenter.default

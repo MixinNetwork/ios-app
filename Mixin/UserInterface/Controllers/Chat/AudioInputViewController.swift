@@ -36,11 +36,11 @@ class AudioInputViewController: UIViewController, ConversationInputAccessible {
     private let longPressHintVisibleDuration: TimeInterval = 2
     private let longPressHintRightMargin: CGFloat = 10
     private let lockDistance: CGFloat = 100
+    private let feedback = UIImpactFeedbackGenerator(style: .medium)
     
     private(set) var isShowingLongPressHint = false
     
     private var recordGestureBeganPoint = CGPoint.zero
-    private var recordDurationTimer: Timer?
     private var recordDuration: TimeInterval = 0
     private var recorder: OggOpusRecorder?
     private var isShowingLockView = false
@@ -51,9 +51,12 @@ class AudioInputViewController: UIViewController, ConversationInputAccessible {
         }
     }
     
+    private weak var recordDurationTimer: Timer?
+    
     private lazy var longPressHintView = R.nib.recorderLongPressHintView(owner: nil)!
     
     deinit {
+        recorder?.cancel(for: .userInitiated)
         NotificationCenter.default.removeObserver(self)
     }
     
@@ -131,11 +134,6 @@ class AudioInputViewController: UIViewController, ConversationInputAccessible {
         animateHideLockView()
     }
     
-    @objc func updateTimeLabelAction(_ sender: Any) {
-        recordDuration += 1
-        setTimeLabelValue(recordDuration)
-    }
-    
     @discardableResult @objc
     func hideLongPressHint() -> Bool {
         guard isShowingLongPressHint else {
@@ -190,11 +188,9 @@ extension AudioInputViewController: OggOpusRecorderDelegate {
     }
     
     func oggOpusRecorderDidStartRecording(_ recorder: OggOpusRecorder) {
-        let timer = Timer(timeInterval: updateTimeLabelInterval,
-                          target: self,
-                          selector: #selector(AudioInputViewController.updateTimeLabelAction(_:)),
-                          userInfo: nil,
-                          repeats: true)
+        let timer = Timer(timeInterval: updateTimeLabelInterval, repeats: true) { [weak self] (_) in
+            self?.updateTimeLabel()
+        }
         RunLoop.main.add(timer, forMode: .common)
         recordDurationTimer = timer
         startRedDotAnimation()
@@ -259,6 +255,7 @@ extension AudioInputViewController {
     }
     
     private func startRecording() {
+        feedback.prepare()
         layoutForRecording()
         recordDuration = 0
         setTimeLabelValue(0)
@@ -269,9 +266,15 @@ extension AudioInputViewController {
             recorder.delegate = self
             recorder.record(for: AudioInputViewController.maxRecordDuration)
             self.recorder = recorder
+            self.feedback.impactOccurred()
         } catch {
             reporter.report(error: error)
         }
+    }
+    
+    private func updateTimeLabel() {
+        recordDuration += 1
+        setTimeLabelValue(recordDuration)
     }
     
     private func resetTimerAndRecorder() {

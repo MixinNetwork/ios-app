@@ -1,5 +1,6 @@
 import Foundation
 import AVFoundation
+import MixinServices
 
 protocol OggOpusRecorderDelegate: class {
     func oggOpusRecorderIsWaitingForActivation(_ recorder: OggOpusRecorder)
@@ -10,26 +11,40 @@ protocol OggOpusRecorderDelegate: class {
     func oggOpusRecorderDidDetectAudioSessionInterruptionEnd(_ recorder: OggOpusRecorder)
 }
 
-fileprivate let bufferDuration: Double = 0.5
-fileprivate let numberOfAudioQueueBuffers = 3
 fileprivate let recordingSampleRate: Int32 = 16000
-fileprivate let millisecondsPerSecond: UInt = 1000
-fileprivate let waveformPeakSampleScope = 100
-fileprivate let numberOfWaveformIntensities = 63
+fileprivate let streamFormat: AudioStreamBasicDescription = {
+    let bitsPerChannel: UInt32 = 16
+    let channelsPerFrame: UInt32 = 1
+    let bytesPerFrame: UInt32 = (bitsPerChannel / 8) * channelsPerFrame;
+    return .init(mSampleRate: Float64(recordingSampleRate),
+                 mFormatID: kAudioFormatLinearPCM,
+                 mFormatFlags: kAudioFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked,
+                 mBytesPerPacket: bytesPerFrame,
+                 mFramesPerPacket: 1,
+                 mBytesPerFrame: bytesPerFrame,
+                 mChannelsPerFrame: channelsPerFrame,
+                 mBitsPerChannel: bitsPerChannel,
+                 mReserved: 0)
+}()
+
+// See kAudioUnitSubType_RemoteIO
+fileprivate enum RemoteIOBus {
+    static let output: UInt32 = 0
+    static let input: UInt32 = 1
+}
 
 final class OggOpusRecorder {
     
     enum Error: Swift.Error {
-        case audioQueueNewInput
-        case audioQueueGetStreamDescription
-        case audioQueueAllocateBuffer
-        case audioQueueEnqueueBuffer
-        case audioQueueStart
-        case audioQueueGetMaximumOutputPacketSize
-        case createAudioFile
-        case writeAudioFile
         case mediaServiceWereReset
-        case missingAudioQueue
+        case missingAudioComponent
+        case newAudioUnit(OSStatus)
+        case disableOutput(OSStatus)
+        case enableInput(OSStatus)
+        case setRecordingCallback(OSStatus)
+        case setStreamFormat(OSStatus)
+        case initializeAudioUnit(OSStatus)
+        case startAudioUnit(OSStatus)
     }
     
     enum CancelledReason: UInt {
@@ -41,29 +56,37 @@ final class OggOpusRecorder {
     
     let path: String
     
-    var vibratesAtBeginning = true
-    
     weak var delegate: OggOpusRecorderDelegate?
     
-    private(set) var isRecording = false
+    @Synchronized(value: false)
+    private(set) var isRecording: Bool
     
-    fileprivate let writer: OggOpusWriter
-    fileprivate let processingQueue = DispatchQueue(label: "one.mixin.messenger.OggOpusRecorder")
+    private let writer: OggOpusWriter
+    private let processingQueue = DispatchQueue(label: "one.mixin.messenger.OggOpusRecorder")
+    private let waveformPeakSampleScope = 100
+    private let numberOfWaveformIntensities = 63
     
-    fileprivate var audioQueue: AudioQueueRef?
-    fileprivate var waveformSamples = Data()
-    fileprivate var waveformPeak: Int16 = 0
-    fileprivate var waveformPeakCount = 0
-    fileprivate var numberOfEncodedSamples: UInt = 0
+    fileprivate var audioUnit: AudioUnit?
     
+    private var retainedSelf: Unmanaged<OggOpusRecorder>?
+    private var waveformSamples = Data()
+    private var waveformPeak: Int16 = 0
+    private var waveformPeakCount = 0
+    private var numberOfEncodedSamples: UInt = 0
     private var duration: TimeInterval = 0
-    private var buffers = [AudioQueueBufferRef?](repeating: nil, count: numberOfAudioQueueBuffers)
+    private var stopAfterNumberOfPackets: Int?
     
     private weak var timer: Timer?
     
     public init(path: String) throws {
         self.path = path
         self.writer = try OggOpusWriter(path: path, inputSampleRate: recordingSampleRate)
+    }
+    
+    deinit {
+        #if DEBUG
+        print("OggOpusRecroder \(Unmanaged<OggOpusRecorder>.passUnretained(self).toOpaque()) deinitialized")
+        #endif
     }
     
     func record(for duration: TimeInterval) {
@@ -84,6 +107,7 @@ final class OggOpusRecorder {
                     if #available(iOS 13.0, *) {
                         try session.setAllowHapticsAndSystemSoundsDuringRecording(true)
                     }
+                    try session.setPreferredIOBufferDuration(0.005)
                 }
             } catch {
                 DispatchQueue.main.async {
@@ -92,12 +116,10 @@ final class OggOpusRecorder {
                 return
             }
             
-            if self.vibratesAtBeginning {
-                AudioServicesPlaySystemSound(1519);
-            }
             do {
                 self.duration = duration
-                try self.performRecording()
+                self.stopAfterNumberOfPackets = nil
+                try self.startRecording()
                 DispatchQueue.main.async {
                     self.delegate?.oggOpusRecorderDidStartRecording(self)
                 }
@@ -112,16 +134,8 @@ final class OggOpusRecorder {
     
     func stop() {
         processingQueue.async {
-            guard self.isRecording else {
-                return
-            }
-            let waveform = self.makeWaveform()
-            let duration = self.numberOfEncodedSamples * millisecondsPerSecond / UInt(recordingSampleRate)
-            let metadata = AudioMetadata(duration: duration, waveform: waveform)
-            self.cleanUp()
-            DispatchQueue.main.async {
-                self.delegate?.oggOpusRecorder(self, didFinishRecordingWithMetadata: metadata)
-            }
+            let numberOfPackets = 0.1 / AVAudioSession.sharedInstance().ioBufferDuration
+            self.stopAfterNumberOfPackets = Int(ceil(numberOfPackets))
         }
     }
     
@@ -130,33 +144,10 @@ final class OggOpusRecorder {
             guard self.isRecording else {
                 return
             }
-            self.cleanUp()
+            self.close()
             try? FileManager.default.removeItem(atPath: self.path)
             DispatchQueue.main.async {
                 self.delegate?.oggOpusRecorder(self, didCancelRecordingForReason: reason, userInfo: userInfo)
-            }
-        }
-    }
-    
-    fileprivate func processWaveformSamples(with pcmData: Data) {
-        let numberOfSamples = pcmData.count / 2
-        guard numberOfSamples > 0 else {
-            return
-        }
-        pcmData.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) -> Void in
-            let samples = ptr.bindMemory(to: Int16.self)
-            for i in 0..<numberOfSamples {
-                let sample = abs(samples.baseAddress!.advanced(by: i).pointee)
-                waveformPeak = max(waveformPeak, sample)
-                waveformPeakCount += 1
-                if waveformPeakCount >= waveformPeakSampleScope {
-                    withUnsafeBytes(of: waveformPeak) { (peak) -> Void in
-                        let bytes = peak.bindMemory(to: UInt8.self).baseAddress!
-                        waveformSamples.append(bytes, count: 2)
-                    }
-                    waveformPeak = 0
-                    waveformPeakCount = 0
-                }
             }
         }
     }
@@ -176,7 +167,7 @@ extension OggOpusRecorder: AudioSessionClient {
     func audioSessionDidEndInterruption(_ audioSession: AudioSession) {
         delegate?.oggOpusRecorderDidDetectAudioSessionInterruptionEnd(self)
     }
- 
+    
     func audioSession(_ audioSession: AudioSession, didChangeRouteFrom previousRoute: AVAudioSessionRouteDescription, reason: AVAudioSession.RouteChangeReason) {
         let category = audioSession.avAudioSession.category
         let isCategoryAvailable = category == .record || category == .playAndRecord
@@ -197,89 +188,148 @@ extension OggOpusRecorder: AudioSessionClient {
 
 extension OggOpusRecorder {
     
-    private func performRecording() throws {
-        let bitsPerChannel: UInt32 = 16
-        let channelsPerFrame: UInt32 = 1
-        let bytesPerFrame: UInt32 = (bitsPerChannel / 8) * channelsPerFrame;
-        var format = AudioStreamBasicDescription(mSampleRate: Float64(recordingSampleRate),
-                                                 mFormatID: kAudioFormatLinearPCM,
-                                                 mFormatFlags: kAudioFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked,
-                                                 mBytesPerPacket: bytesPerFrame,
-                                                 mFramesPerPacket: 1,
-                                                 mBytesPerFrame: bytesPerFrame,
-                                                 mChannelsPerFrame: channelsPerFrame,
-                                                 mBitsPerChannel: bitsPerChannel,
-                                                 mReserved: 0)
-        let selfAsOpaquePointer = Unmanaged.passUnretained(self).toOpaque()
-        var result = withUnsafePointer(to: format) { (format) -> OSStatus in
-            AudioQueueNewInput(format, inputBufferHandler, selfAsOpaquePointer, nil, nil, 0, &audioQueue)
-        }
-        guard result == noErr, let audioQueue = audioQueue else {
-            throw Error.audioQueueNewInput
+    private func startRecording() throws {
+        var acd = AudioComponentDescription(componentType: kAudioUnitType_Output,
+                                            componentSubType: kAudioUnitSubType_RemoteIO,
+                                            componentManufacturer: kAudioUnitManufacturer_Apple,
+                                            componentFlags: 0,
+                                            componentFlagsMask: 0)
+        guard let component = AudioComponentFindNext(nil, &acd) else {
+            throw Error.missingAudioComponent
         }
         
-        var size = UInt32(MemoryLayout.size(ofValue: format))
-        result = AudioQueueGetProperty(audioQueue, kAudioQueueProperty_StreamDescription, &format, &size)
+        var result = AudioComponentInstanceNew(component, &audioUnit)
+        guard result == noErr, let audioUnit = audioUnit else {
+            throw Error.newAudioUnit(result)
+        }
+        
+        var disable: UInt32 = 0
+        result = AudioUnitSetProperty(audioUnit,
+                                      kAudioOutputUnitProperty_EnableIO,
+                                      kAudioUnitScope_Output,
+                                      RemoteIOBus.output,
+                                      &disable,
+                                      UInt32(MemoryLayout<UInt32>.size))
         guard result == noErr else {
-            throw Error.audioQueueGetStreamDescription
+            AudioComponentInstanceDispose(audioUnit)
+            throw Error.disableOutput(result)
         }
         
-        let bufferSize = try self.bufferSize(with: format, seconds: bufferDuration)
-        for i in 0..<numberOfAudioQueueBuffers {
-            result = AudioQueueAllocateBuffer(audioQueue, bufferSize, &buffers[i])
-            guard result == noErr else {
-                throw Error.audioQueueAllocateBuffer
-            }
-            result = AudioQueueEnqueueBuffer(audioQueue, buffers[i]!, 0, nil)
-            guard result == noErr else {
-                throw Error.audioQueueEnqueueBuffer
-            }
-        }
-        
-        result = AudioQueueStart(audioQueue, nil);
+        var enable: UInt32 = 1
+        result = AudioUnitSetProperty(audioUnit,
+                                      kAudioOutputUnitProperty_EnableIO,
+                                      kAudioUnitScope_Input,
+                                      RemoteIOBus.input,
+                                      &enable,
+                                      UInt32(MemoryLayout<UInt32>.size))
         guard result == noErr else {
-            throw Error.audioQueueStart
+            AudioComponentInstanceDispose(audioUnit)
+            throw Error.enableInput(result)
         }
         
-        let timer = Timer(timeInterval: duration, repeats: false, block: { (_) in
-            self.stop()
-        })
+        result = withUnsafePointer(to: streamFormat) { (format) -> OSStatus in
+            AudioUnitSetProperty(audioUnit,
+                                 kAudioUnitProperty_StreamFormat,
+                                 kAudioUnitScope_Output,
+                                 RemoteIOBus.input,
+                                 format,
+                                 UInt32(MemoryLayout<AudioStreamBasicDescription>.size))
+        }
+        guard result == noErr else {
+            AudioComponentInstanceDispose(audioUnit)
+            throw Error.setStreamFormat(result)
+        }
+        
+        let retainedSelf = Unmanaged.passRetained(self)
+        let callback = AURenderCallbackStruct(inputProc: recordingCallback(_:_:_:_:_:_:),
+                                              inputProcRefCon: retainedSelf.toOpaque())
+        result = withUnsafePointer(to: callback) { (callback) -> OSStatus in
+            AudioUnitSetProperty(audioUnit,
+                                 kAudioOutputUnitProperty_SetInputCallback,
+                                 kAudioUnitScope_Global,
+                                 RemoteIOBus.input,
+                                 callback,
+                                 UInt32(MemoryLayout<AURenderCallbackStruct>.size))
+        }
+        guard result == noErr else {
+            AudioComponentInstanceDispose(audioUnit)
+            retainedSelf.release()
+            throw Error.setRecordingCallback(result)
+        }
+        
+        result = AudioUnitInitialize(audioUnit)
+        guard result == noErr else {
+            AudioComponentInstanceDispose(audioUnit)
+            retainedSelf.release()
+            throw Error.initializeAudioUnit(result)
+        }
+        
+        result = AudioOutputUnitStart(audioUnit)
+        guard result == noErr else {
+            AudioComponentInstanceDispose(audioUnit)
+            retainedSelf.release()
+            throw Error.startAudioUnit(result)
+        }
+        
+        let timer = Timer(timeInterval: duration, repeats: false) { (_) in
+            self.stopRecording()
+        }
         RunLoop.main.add(timer, forMode: .common)
         self.timer = timer
         
-        isRecording = true
+        self.isRecording = true
+        self.retainedSelf = retainedSelf
     }
     
-    private func bufferSize(with format: AudioStreamBasicDescription, seconds: Double) throws -> UInt32 {
-        let bytes: UInt32
-        let frames = ceil(seconds * format.mSampleRate)
-        if format.mBytesPerFrame > 0 {
-            bytes = UInt32(frames) * format.mBytesPerPacket
-        } else {
-            var maxPacketSize: UInt32 = 0
-            var packets: Double
-            if format.mBytesPerPacket > 0 {
-                maxPacketSize = format.mBytesPerPacket
-            } else if let audioQueue = audioQueue {
-                var propertySize = UInt32(MemoryLayout.size(ofValue: maxPacketSize))
-                let result = AudioQueueGetProperty(audioQueue, kAudioQueueProperty_MaximumOutputPacketSize, &maxPacketSize, &propertySize)
-                guard result == noErr else {
-                    throw Error.audioQueueGetMaximumOutputPacketSize
-                }
-            } else {
-                throw Error.missingAudioQueue
+    private func stopRecording() {
+        processingQueue.async {
+            guard self.isRecording else {
+                return
             }
-            if format.mFramesPerPacket > 0 {
-                packets = frames / Double(format.mFramesPerPacket)
-            } else {
-                packets = frames
+            self.close()
+            let waveform = self.makeWaveform()
+            let duration = self.numberOfEncodedSamples * UInt(millisecondsPerSecond) / UInt(recordingSampleRate)
+            let metadata = AudioMetadata(duration: duration, waveform: waveform)
+            DispatchQueue.main.async {
+                self.delegate?.oggOpusRecorder(self, didFinishRecordingWithMetadata: metadata)
             }
-            if packets == 0 {
-                packets = 1
-            }
-            bytes = UInt32(packets) * maxPacketSize
+            try? AudioSession.shared.deactivate(client: self, notifyOthersOnDeactivation: true)
         }
-        return bytes
+    }
+    
+    private func close() {
+        self.timer?.invalidate()
+        self.retainedSelf?.release()
+        self.retainedSelf = nil
+        if let audioUnit = self.audioUnit {
+            AudioOutputUnitStop(audioUnit)
+            AudioComponentInstanceDispose(audioUnit)
+        }
+        self.writer.close()
+        self.isRecording = false
+    }
+    
+    private func processWaveformSamples(with pcmData: Data) {
+        let numberOfSamples = pcmData.count / 2
+        guard numberOfSamples > 0 else {
+            return
+        }
+        pcmData.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) -> Void in
+            let samples = ptr.bindMemory(to: Int16.self)
+            for i in 0..<numberOfSamples {
+                let sample = abs(samples.baseAddress!.advanced(by: i).pointee)
+                waveformPeak = max(waveformPeak, sample)
+                waveformPeakCount += 1
+                if waveformPeakCount >= waveformPeakSampleScope {
+                    withUnsafeBytes(of: waveformPeak) { (peak) -> Void in
+                        let bytes = peak.bindMemory(to: UInt8.self).baseAddress!
+                        waveformSamples.append(bytes, count: 2)
+                    }
+                    waveformPeak = 0
+                    waveformPeakCount = 0
+                }
+            }
+        }
     }
     
     private func makeWaveform() -> Data {
@@ -305,46 +355,55 @@ extension OggOpusRecorder {
         return Data(bytesNoCopy: intensities, count: numberOfWaveformIntensities, deallocator: .free)
     }
     
-    private func cleanUp() {
-        isRecording = false
-        timer?.invalidate()
-        timer = nil
-        if let audioQueue = audioQueue {
-            AudioQueueStop(audioQueue, true)
-            AudioQueueDispose(audioQueue, true)
+    fileprivate func process(size: Int, render: (inout AudioBufferList) -> OSStatus) -> OSStatus {
+        let pcmBytes = malloc(size)!
+        let buffer = AudioBuffer(mNumberChannels: 1,
+                                 mDataByteSize: UInt32(size),
+                                 mData: pcmBytes)
+        var bufferList = AudioBufferList(mNumberBuffers: 1,
+                                         mBuffers: buffer)
+        let result = render(&bufferList)
+        processingQueue.async { [weak self] in
+            guard let self = self, self.isRecording else {
+                return
+            }
+            if let number = self.stopAfterNumberOfPackets {
+                if number > 0 {
+                    self.stopAfterNumberOfPackets = number - 1
+                } else {
+                    self.stopRecording()
+                }
+            }
+            let pcmData = Data(bytesNoCopy: pcmBytes,
+                               count: size,
+                               deallocator: .free)
+            self.numberOfEncodedSamples += UInt(pcmData.count / 2)
+            self.writer.write(pcmData: pcmData)
+            self.processWaveformSamples(with: pcmData)
         }
-        writer.close()
-        try? AudioSession.shared.deactivate(client: self, notifyOthersOnDeactivation: true)
+        return result
     }
     
 }
 
-fileprivate func inputBufferHandler(
-    _ inUserData: UnsafeMutableRawPointer!,
-    _ inAQ: AudioQueueRef,
-    _ inBuffer: AudioQueueBufferRef,
-    _ inStartTime: UnsafePointer<AudioTimeStamp>,
-    _ inNumberPacketDescriptions: UInt32,
-    _ inPacketDescs: UnsafePointer<AudioStreamPacketDescription>?
-) {
-    let recorder = Unmanaged<OggOpusRecorder>.fromOpaque(inUserData).takeUnretainedValue()
-    if inNumberPacketDescriptions > 0 {
-        let pcmData = Data(bytes: inBuffer.pointee.mAudioData,
-                           count: Int(inBuffer.pointee.mAudioDataByteSize))
-        recorder.processingQueue.async { [weak recorder] in
-            guard let recorder = recorder, recorder.isRecording else {
-                return
-            }
-            recorder.numberOfEncodedSamples += UInt(pcmData.count / 2)
-            recorder.writer.write(pcmData: pcmData)
-            recorder.processWaveformSamples(with: pcmData)
-        }
+fileprivate func recordingCallback(
+    _ inRefCon: UnsafeMutableRawPointer,
+    _ ioActionFlags: UnsafeMutablePointer<AudioUnitRenderActionFlags>,
+    _ inTimeStamp: UnsafePointer<AudioTimeStamp>,
+    _ inBusNumber: UInt32,
+    _ inNumberFrames: UInt32,
+    _ ioData: UnsafeMutablePointer<AudioBufferList>?
+) -> OSStatus {
+    let recorder = Unmanaged<OggOpusRecorder>.fromOpaque(inRefCon).takeUnretainedValue()
+    guard let audioUnit = recorder.audioUnit else {
+        return noErr
     }
-    if recorder.isRecording {
-        let result = AudioQueueEnqueueBuffer(inAQ, inBuffer, 0, nil);
-        if result != noErr {
-            recorder.cancel(for: .bufferEnqueueFailed,
-                            userInfo: ["enqueue_buffer_result": result])
-        }
+    return recorder.process(size: Int(inNumberFrames) * 2) { (bufferList) -> OSStatus in
+        AudioUnitRender(audioUnit,
+                        ioActionFlags,
+                        inTimeStamp,
+                        RemoteIOBus.input,
+                        inNumberFrames,
+                        &bufferList)
     }
 }

@@ -196,7 +196,7 @@ class ConversationInputViewController: UIViewController {
     
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
-        guard let homeContainerVC = UIApplication.homeContainerViewController, !homeContainerVC.galleryIsOnTopMost else {
+        guard UIApplication.shared.statusBarOrientation.isPortrait else {
             return
         }
         let diff = view.safeAreaInsets.bottom - lastSafeAreaInsetsBottom

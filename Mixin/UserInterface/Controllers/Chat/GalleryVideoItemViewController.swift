@@ -485,13 +485,11 @@ extension GalleryVideoItemViewController {
     
     @objc func closeAction() {
         executeInPortraitOrientation {
-            if let controller = self.avPipController, controller.isPictureInPictureActive {
-                assertionFailure("AVPictureInPictureController is in active.")
-            } else if self.isBuiltInPipActive {
+            if self.isBuiltInPipActive {
                 self.isBuiltInPipActive = false
                 self.restoreToFullsized()
                 self.player.replaceCurrentItem(with: nil)
-            } else {
+            } else if !self.isAvPipActive {
                 self.galleryViewController?.dismiss(transitionViewInitialOffsetY: 0)
                 self.player.replaceCurrentItem(with: nil)
             }
@@ -622,8 +620,8 @@ extension GalleryVideoItemViewController {
     
     private func executeInPortraitOrientation(_ work: @escaping () -> Void) {
         if UIApplication.shared.statusBarOrientation.isLandscape {
-            let protrait = Int(UIInterfaceOrientation.portrait.rawValue)
-            UIDevice.current.setValue(protrait, forKey: "orientation")
+            let portrait = Int(UIInterfaceOrientation.portrait.rawValue)
+            UIDevice.current.setValue(portrait, forKey: "orientation")
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.33, execute: work)
         } else {
             work()

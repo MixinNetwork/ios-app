@@ -4,6 +4,9 @@ import MixinServices
 
 final class PermissionsViewController: UIViewController {
     
+    static let authorizationRevokedNotification = Notification.Name("one.mixin.messenger.PermissionsViewController.authorizationRevoked")
+    static let appIdUserInfoKey = "aid"
+    
     private let iconView = NavigationAvatarIconView()
     private let footerReuseId = "footer"
     private let tableView: UITableView = {
@@ -56,12 +59,16 @@ final class PermissionsViewController: UIViewController {
     
     private func removeAuthozationAction() {
         let appHomeUri = authorization.app.homeUri
+        let appId = self.authorization.app.appId
         let alert = UIAlertController(title: R.string.localizable.setting_revoke_confirmation(authorization.app.name), message: nil, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CONFIRM, style: .destructive, handler: { (action) in
-            AuthorizeAPI.cancel(clientId: self.authorization.app.appId) { [weak self](result) in
+            AuthorizeAPI.cancel(clientId: appId) { [weak self](result) in
                 switch result {
                 case .success:
+                    NotificationCenter.default.post(name: Self.authorizationRevokedNotification,
+                                                    object: self,
+                                                    userInfo: [Self.appIdUserInfoKey: appId])
                     if let appHost = URL(string: appHomeUri)?.host {
                         let dataStore = WKWebsiteDataStore.default()
                         let types = WKWebsiteDataStore.allWebsiteDataTypes()

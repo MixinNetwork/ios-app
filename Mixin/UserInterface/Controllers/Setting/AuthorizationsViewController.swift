@@ -32,24 +32,11 @@ class AuthorizationsViewController: UIViewController {
         searchBoxView.textField.placeholder = R.string.localizable.search_placeholder_authorization()
         searchBoxView.textField.rightViewMode = .always
         view.layoutIfNeeded()
-        AuthorizeAPI.authorizations { [weak self] (result) in
-            switch result {
-            case let .success(response):
-                if let self = self {
-                    self.contentViewController.authorizations = response
-                    self.networkIndicatorView.stopAnimating()
-                    self.networkIndicatorTopConstraint.constant = self.networkIndicatorHeightConstraint.constant
-                    UIView.animate(withDuration: 0.25, animations: self.view.layoutIfNeeded)
-                    self.contentViewController.tableView.checkEmpty(dataCount: response.count,
-                                                                    text: R.string.localizable.setting_no_authorizations(),
-                                                                    photo: R.image.emptyIndicator.ic_authorization()!)
-                    self.isDataLoaded = true
-                    self.search(self.searchBoxView.textField)
-                }
-            case let .failure(error):
-                showAutoHiddenHud(style: .error, text: error.localizedDescription)
-            }
-        }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        reloadData()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -77,6 +64,27 @@ class AuthorizationsViewController: UIViewController {
                                                                  photo: R.image.emptyIndicator.ic_search_result()!)
             }
             contentContainerView.bringSubviewToFront(searchContentViewController.view)
+        }
+    }
+    
+    private func reloadData() {
+        AuthorizeAPI.authorizations { [weak self] (result) in
+            switch result {
+            case let .success(response):
+                if let self = self {
+                    self.contentViewController.authorizations = response
+                    self.networkIndicatorView.stopAnimating()
+                    self.networkIndicatorTopConstraint.constant = self.networkIndicatorHeightConstraint.constant
+                    UIView.animate(withDuration: 0.25, animations: self.view.layoutIfNeeded)
+                    self.contentViewController.tableView.checkEmpty(dataCount: response.count,
+                                                                    text: R.string.localizable.setting_no_authorizations(),
+                                                                    photo: R.image.emptyIndicator.ic_authorization()!)
+                    self.isDataLoaded = true
+                    self.search(self.searchBoxView.textField)
+                }
+            case let .failure(error):
+                showAutoHiddenHud(style: .error, text: error.localizedDescription)
+            }
         }
     }
     

@@ -11,11 +11,28 @@ class AuthorizationsContentViewController: UIViewController {
         }
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.dataSource = self
         tableView.delegate = self
         tableView.tableFooterView = UIView()
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(removeAuthorization(_:)),
+                                               name: PermissionsViewController.authorizationRevokedNotification,
+                                               object: nil)
+    }
+    
+    @objc private func removeAuthorization(_ notification: Notification) {
+        guard let appId = notification.userInfo?[PermissionsViewController.appIdUserInfoKey] as? String else {
+            return
+        }
+        authorizations = authorizations.filter { (auth) -> Bool in
+            auth.app.appId != appId
+        }
     }
     
 }

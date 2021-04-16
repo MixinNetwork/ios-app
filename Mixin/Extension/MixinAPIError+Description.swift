@@ -21,6 +21,8 @@ extension MixinAPIError {
                 }
             } else if case .responseValidationFailed(reason: .unacceptableStatusCode) = error {
                 return R.string.localizable.error_server_5xx()
+            } else if case .sessionTaskFailed = error {
+                return R.string.localizable.error_network_task_failed()
             } else {
                 return error.localizedDescription
             }

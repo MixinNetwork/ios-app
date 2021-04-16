@@ -17,6 +17,7 @@ class PostMessageViewModel: DetailInfoMessageViewModel, BackgroundedTrailingInfo
     var webViewFrame: CGRect = .zero
     var trailingInfoBackgroundFrame: CGRect = .zero
     
+    private let additionalWebViewLeftMargin: CGFloat = 4
     private let frameEstimatingMaxCharacterCount: UInt = 130
     private let frameEstimationMaxLineCount: UInt = {
         switch ScreenHeight.current {
@@ -53,6 +54,7 @@ class PostMessageViewModel: DetailInfoMessageViewModel, BackgroundedTrailingInfo
             var width = layoutWidth
                 - DetailInfoMessageViewModel.bubbleMargin.horizontal
                 - contentMargin.horizontal
+                - additionalWebViewLeftMargin
             width = round(width)
             return CGSize(width: width, height: UIView.layoutFittingExpandedSize.height)
         }()
@@ -73,7 +75,7 @@ class PostMessageViewModel: DetailInfoMessageViewModel, BackgroundedTrailingInfo
                                           y: 0,
                                           width: backgroundWidth,
                                           height: textSize.height + contentLabelTopMargin + contentMargin.bottom)
-            webViewFrame = CGRect(x: ceil(backgroundImageFrame.origin.x + contentMargin.leading),
+            webViewFrame = CGRect(x: ceil(backgroundImageFrame.origin.x + contentMargin.leading) + additionalWebViewLeftMargin,
                                   y: contentLabelTopMargin,
                                   width: sizeToFit.width,
                                   height: textSize.height)
@@ -82,7 +84,7 @@ class PostMessageViewModel: DetailInfoMessageViewModel, BackgroundedTrailingInfo
                                           y: 0,
                                           width: backgroundWidth,
                                           height: textSize.height + contentLabelTopMargin + contentMargin.bottom)
-            webViewFrame = CGRect(x: ceil(backgroundImageFrame.origin.x + contentMargin.trailing),
+            webViewFrame = CGRect(x: ceil(backgroundImageFrame.origin.x + contentMargin.trailing + additionalWebViewLeftMargin),
                                   y: contentLabelTopMargin,
                                   width: sizeToFit.width,
                                   height: textSize.height)

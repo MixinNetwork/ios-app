@@ -63,12 +63,12 @@ class AuthorizationsViewController: UIViewController {
         guard textField.markedTextRange == nil else {
             return
         }
-        let keyword = (textField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+        let keyword = (textField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
         if keyword.isEmpty {
             contentContainerView.bringSubviewToFront(contentViewController.view)
         } else {
             let results = contentViewController.authorizations.filter { (auth) -> Bool in
-                auth.app.name.contains(keyword) || auth.app.appNumber.contains(keyword)
+                auth.app.name.lowercased().contains(keyword) || auth.app.appNumber.contains(keyword)
             }
             searchContentViewController.authorizations = results
             if isDataLoaded {

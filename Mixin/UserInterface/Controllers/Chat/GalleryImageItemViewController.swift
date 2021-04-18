@@ -12,6 +12,8 @@ final class GalleryImageItemViewController: GalleryItemViewController {
     
     private let maximumZoomScale: CGFloat = 3
     
+    private var needResetIdleTimerStatus = false
+    
     private lazy var tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapAction(_:)))
     private lazy var zoomRecognizer = UITapGestureRecognizer(target: self, action: #selector(zoomAction(_:)))
     
@@ -78,6 +80,14 @@ final class GalleryImageItemViewController: GalleryItemViewController {
         view.addGestureRecognizer(zoomRecognizer)
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        if self.needResetIdleTimerStatus {
+            self.needResetIdleTimerStatus = false
+            UIApplication.shared.isIdleTimerDisabled = false
+        }
+    }
+    
     override func prepareForReuse() {
         super.prepareForReuse()
         scrollView.zoomScale = 1
@@ -136,6 +146,8 @@ final class GalleryImageItemViewController: GalleryItemViewController {
                     self?.detectedUrl = url
                     break
                 }
+                
+                weakSelf.preventScreenDim()
             }
         }
         
@@ -198,6 +210,29 @@ final class GalleryImageItemViewController: GalleryItemViewController {
             UIView.animate(withDuration: 0.3) {
                 self.scrollView.zoomScale = self.scrollView.minimumZoomScale
             }
+        }
+    }
+    
+    
+    // When play long GIF and isIdleTimerDisapble equals false, change it to true,
+    // then, reset back after playing to the last frame or invoked viewDidDisappear
+    func preventScreenDim() {
+        guard let gif = self.imageView.image as? YYAnimatedImage, gif.animatedImageFrameCount() > 1 else {
+            return
+        }
+        let frameDuration = gif.animatedImageDuration(at: gif.animatedImageFrameCount() - 1)
+        let endTime = Int(ceil(frameDuration * Double(gif.animatedImageFrameCount())))
+        if endTime > 30 && !UIApplication.shared.isIdleTimerDisabled {
+            UIApplication.shared.isIdleTimerDisabled = true
+            self.needResetIdleTimerStatus = true
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + DispatchTimeInterval.seconds(endTime) , execute: { [weak self] in
+                guard let s = self, s.needResetIdleTimerStatus == true else {
+                    return
+                }
+                s.needResetIdleTimerStatus = false
+                UIApplication.shared.isIdleTimerDisabled = false
+            })
         }
     }
     

@@ -17,6 +17,7 @@ class PostMessageViewModel: DetailInfoMessageViewModel, BackgroundedTrailingInfo
     var webViewFrame: CGRect = .zero
     var trailingInfoBackgroundFrame: CGRect = .zero
     
+    private let minTextHeight: CGFloat = 40
     private let additionalWebViewLeftMargin: CGFloat = 4
     private let frameEstimatingMaxCharacterCount: UInt = 130
     private let frameEstimationMaxLineCount: UInt = {
@@ -61,6 +62,7 @@ class PostMessageViewModel: DetailInfoMessageViewModel, BackgroundedTrailingInfo
         let textSize = contentAttributedString.boundingRect(with: sizeToFit,
                                                             options: [.usesLineFragmentOrigin, .usesFontLeading],
                                                             context: nil)
+        let height = ceil(max(minTextHeight, textSize.height))
         let bubbleMargin = DetailInfoMessageViewModel.bubbleMargin
         let backgroundWidth = sizeToFit.width + contentMargin.horizontal
         let contentLabelTopMargin: CGFloat = {
@@ -74,20 +76,20 @@ class PostMessageViewModel: DetailInfoMessageViewModel, BackgroundedTrailingInfo
             backgroundImageFrame = CGRect(x: bubbleMargin.leading,
                                           y: 0,
                                           width: backgroundWidth,
-                                          height: textSize.height + contentLabelTopMargin + contentMargin.bottom)
+                                          height: height + contentLabelTopMargin + contentMargin.bottom)
             webViewFrame = CGRect(x: ceil(backgroundImageFrame.origin.x + contentMargin.leading) + additionalWebViewLeftMargin,
                                   y: contentLabelTopMargin,
                                   width: sizeToFit.width,
-                                  height: textSize.height)
+                                  height: height)
         } else {
             backgroundImageFrame = CGRect(x: width - bubbleMargin.leading - backgroundWidth,
                                           y: 0,
                                           width: backgroundWidth,
-                                          height: textSize.height + contentLabelTopMargin + contentMargin.bottom)
+                                          height: height + contentLabelTopMargin + contentMargin.bottom)
             webViewFrame = CGRect(x: ceil(backgroundImageFrame.origin.x + contentMargin.trailing + additionalWebViewLeftMargin),
                                   y: contentLabelTopMargin,
                                   width: sizeToFit.width,
-                                  height: textSize.height)
+                                  height: height)
         }
         cellHeight = backgroundImageFrame.height + bottomSeparatorHeight
         layoutDetailInfo(backgroundImageFrame: backgroundImageFrame)

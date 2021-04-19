@@ -25,6 +25,7 @@ class AudioMessagePlayingManager: NSObject, AudioSessionClient {
     private(set) var playingMessage: MessageItem?
     
     private var cells = [String: WeakCellBox]()
+    private var displayAwakeningToken: DisplayAwakener.Token?
     
     override init() {
         super.init()
@@ -199,7 +200,13 @@ class AudioMessagePlayingManager: NSObject, AudioSessionClient {
     }
     
     func handleStatusChange(player: OggOpusPlayer) {
-        UIApplication.shared.isIdleTimerDisabled = player.status == .playing
+        if let token = displayAwakeningToken {
+            DisplayAwakener.shared.release(token: token)
+            displayAwakeningToken = nil
+        }
+        if player.status == .playing {
+            displayAwakeningToken = DisplayAwakener.shared.retain()
+        }
         if player.status == .didReachEnd, let playingMessage = playingMessage {
             cells[playingMessage.messageId]?.cell?.style = .stopped
             DispatchQueue.global().async {

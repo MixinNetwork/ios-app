@@ -15,6 +15,9 @@ final class GalleryImageItemViewController: GalleryItemViewController {
     private lazy var tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapAction(_:)))
     private lazy var zoomRecognizer = UITapGestureRecognizer(target: self, action: #selector(zoomAction(_:)))
     
+    private var displayAwakeningToken: DisplayAwakener.Token?
+    private var animatedImageRepeatObserver: NSKeyValueObservation?
+    
     var relativeOffset: CGFloat {
         let maxRelativeOffset = (scrollView.contentSize.height / scrollView.zoomScale - scrollView.frame.height) / (scrollView.contentSize.height / scrollView.zoomScale)
         let offset = scrollView.contentOffset.y / scrollView.contentSize.height
@@ -54,6 +57,16 @@ final class GalleryImageItemViewController: GalleryItemViewController {
     
     override var canPerformInteractiveDismissal: Bool {
         return abs(scrollView.contentOffset.y + scrollView.adjustedContentInset.top) < 1
+    }
+    
+    override var isFocused: Bool {
+        didSet {
+            if isFocused, let image = imageView.image {
+                keepDisplayWakingUpIfNeeded(image: image)
+            } else if !isFocused {
+                stopAwakeningDisplay()
+            }
+        }
     }
     
     private var pageSize: CGSize {
@@ -122,20 +135,11 @@ final class GalleryImageItemViewController: GalleryItemViewController {
         
         if let url = item.url {
             imageView.sd_setImage(with: url, placeholderImage: imageView.image, context: localImageContext, progress: nil) { [weak self] (image, error, cacheType, url) in
-                guard let image = image, let weakSelf = self, weakSelf.item == item else {
+                guard let self = self, self.item == item, let image = image else {
                     return
                 }
-                guard let detector = qrCodeDetector, let cgImage = image.cgImage else {
-                    return
-                }
-                let ciImage = CIImage(cgImage: cgImage)
-                for case let feature as CIQRCodeFeature in detector.features(in: ciImage) {
-                    guard let string = feature.messageString, let url = URL(string: string) else {
-                        continue
-                    }
-                    self?.detectedUrl = url
-                    break
-                }
+                self.detectQRCode(image: image)
+                self.keepDisplayWakingUpIfNeeded(image: image)
             }
         }
         
@@ -221,6 +225,51 @@ extension GalleryImageItemViewController: UIScrollViewDelegate {
     
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return imageView
+    }
+    
+}
+
+extension GalleryImageItemViewController {
+    
+    private func detectQRCode(image: UIImage) {
+        guard let detector = qrCodeDetector, let cgImage = image.cgImage else {
+            return
+        }
+        let ciImage = CIImage(cgImage: cgImage)
+        for case let feature as CIQRCodeFeature in detector.features(in: ciImage) {
+            guard let string = feature.messageString, let url = URL(string: string) else {
+                continue
+            }
+            self.detectedUrl = url
+            return
+        }
+    }
+    
+    private func keepDisplayWakingUpIfNeeded(image: UIImage) {
+        guard isFocused else {
+            return
+        }
+        guard let image = image as? YYAnimatedImage, image.animatedImageFrameCount() > 1 else {
+            return
+        }
+        if displayAwakeningToken == nil {
+            displayAwakeningToken = DisplayAwakener.shared.retain()
+        }
+        if animatedImageRepeatObserver == nil {
+            animatedImageRepeatObserver = imageView.observe(\.currentAnimatedImageIndex) { (imageView, _) in
+                if imageView.currentAnimatedImageIndex == 0 {
+                    self.stopAwakeningDisplay()
+                }
+            }
+        }
+    }
+    
+    private func stopAwakeningDisplay() {
+        animatedImageRepeatObserver = nil
+        if let token = displayAwakeningToken {
+            DisplayAwakener.shared.release(token: token)
+            displayAwakeningToken = nil
+        }
     }
     
 }

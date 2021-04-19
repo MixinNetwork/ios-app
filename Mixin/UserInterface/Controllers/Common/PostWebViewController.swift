@@ -4,10 +4,10 @@ import WebKit
 
 class PostWebViewController: WebViewController {
     
-    private var message: MessageItem!
+    private var message: Message!
     private var html: String?
     
-    class func presentInstance(message: MessageItem, asChildOf parent: UIViewController) {
+    class func presentInstance(message: Message, asChildOf parent: UIViewController) {
         let vc = PostWebViewController(nib: R.nib.webView)
         vc.message = message
         vc.view.frame = parent.view.bounds
@@ -57,7 +57,7 @@ class PostWebViewController: WebViewController {
     override func moreAction(_ sender: Any) {
         let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         controller.addAction(UIAlertAction(title: R.string.localizable.chat_message_menu_forward(), style: .default, handler: { (_) in
-            let vc = MessageReceiverViewController.instance(content: .messages([self.message]))
+            let vc = MessageReceiverViewController.instance(content: .message(self.message))
             self.navigationController?.pushViewController(vc, animated: true)
         }))
         controller.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))

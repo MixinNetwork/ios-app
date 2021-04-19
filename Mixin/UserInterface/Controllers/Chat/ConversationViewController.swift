@@ -723,6 +723,7 @@ class ConversationViewController: UIViewController {
                     present(vc, animated: true, completion: nil)
                 }
             } else if message.category.hasSuffix("_POST") {
+                let message = Message.createMessage(message: message)
                 PostWebViewController.presentInstance(message: message, asChildOf: self)
             } else if message.category == MessageCategory.EXT_ENCRYPTION.rawValue {
                 conversationInputViewController.dismiss()

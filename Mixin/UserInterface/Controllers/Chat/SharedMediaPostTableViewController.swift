@@ -108,7 +108,8 @@ extension SharedMediaPostTableViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if let container = parent?.parent, let viewModel = dataSource.item(at: indexPath) {
-            PostWebViewController.presentInstance(message: viewModel.message, asChildOf: container)
+            let message = Message.createMessage(message: viewModel.message)
+            PostWebViewController.presentInstance(message: message, asChildOf: container)
         }
     }
     

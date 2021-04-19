@@ -303,7 +303,7 @@ extension ExternalSharingConfirmationViewController {
         guard let message = message, message.category == MessageCategory.SIGNAL_POST.rawValue else {
             return
         }
-        
+        PostWebViewController.presentInstance(message: message, asChildOf: self)
     }
     
 }

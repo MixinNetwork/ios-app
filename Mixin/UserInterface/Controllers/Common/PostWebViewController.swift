@@ -25,6 +25,12 @@ class PostWebViewController: WebViewController {
         AppDelegate.current.mainWindow.endEditing(true)
     }
     
+    override var config: WKWebViewConfiguration {
+        let config = WKWebViewConfiguration()
+        config.dataDetectorTypes = .link
+        return config
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         showPageTitleConstraint.priority = .defaultLow

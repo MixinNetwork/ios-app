@@ -1,5 +1,5 @@
 html {
-  font: -apple-system-subheadline !important;
+  font: -apple-system-body !important;
 }
 
 body {
@@ -66,8 +66,8 @@ body {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' version='1.1' width='16' height='16' aria-hidden='true'%3E%3Cpath fill-rule='evenodd' d='M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z'%3E%3C/path%3E%3C/svg%3E");
 }
 .markdown-body {
-  -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
+  font-size: 0.941em;
   line-height: 1.5;
   color: #24292e;
   font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji;
@@ -98,7 +98,6 @@ body {
 }
 
 .markdown-body h1 {
-  font-size: 2em;
   margin: .67em 0;
 }
 
@@ -212,21 +211,9 @@ body {
   margin-bottom: 0;
 }
 
-.markdown-body h1 {
-  font-size: 32px;
-}
-
 .markdown-body h1,
 .markdown-body h2 {
   font-weight: 600;
-}
-
-.markdown-body h2 {
-  font-size: 24px;
-}
-
-.markdown-body h3 {
-  font-size: 20px;
 }
 
 .markdown-body h3,
@@ -234,21 +221,9 @@ body {
   font-weight: 600;
 }
 
-.markdown-body h4 {
-  font-size: 16px;
-}
-
-.markdown-body h5 {
-  font-size: 14px;
-}
-
 .markdown-body h5,
 .markdown-body h6 {
   font-weight: 600;
-}
-
-.markdown-body h6 {
-  font-size: 12px;
 }
 
 .markdown-body p {
@@ -286,7 +261,6 @@ body {
 .markdown-body code,
 .markdown-body pre {
   font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;
-  font-size: 12px;
 }
 
 .markdown-body pre {
@@ -680,15 +654,15 @@ body {
 }
 
 .markdown-body h1 {
-  font-size: 2em;
+  font-size: 1.647em;
 }
 
 .markdown-body h2 {
-  font-size: 1.5em;
+  font-size: 1.294em;
 }
 
 .markdown-body h3 {
-  font-size: 1.25em;
+  font-size: 1.176em;
 }
 
 .markdown-body h4 {
@@ -696,11 +670,11 @@ body {
 }
 
 .markdown-body h5 {
-  font-size: .875em;
+  font-size: .882em;
 }
 
 .markdown-body h6 {
-  font-size: .85em;
+  font-size: .765em;
   color: #6a737d;
 }
 

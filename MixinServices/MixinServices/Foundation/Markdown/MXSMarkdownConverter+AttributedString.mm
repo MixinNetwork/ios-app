@@ -4,7 +4,7 @@
 #import "MXSMarkdownImageAttachment.h"
 
 static const unsigned int plainTextHeaderLevel = 0;
-static const CGFloat plainTextFontSize = 15;
+static const CGFloat plainTextFontSize = 17;
 
 struct Context {
     const NSUInteger charactersLimit;
@@ -84,26 +84,29 @@ NSDictionary *attributesFromContext(Context *ctx, CGFloat lineHeightMultiple) {
         // Factors are from github-markdown.css
         switch (ctx->headerLevel) {
             case 1: // <h1>
-                fontSize *= 2;
+                fontSize *= 1.647;
                 break;
             case 2: // <h2>
-                fontSize *= 1.5;
+                fontSize *= 1.294;
                 break;
             case 3: // <h3>
-                fontSize *= 1.25;
+                fontSize *= 1.176;
                 break;
             case 4: // <h4>
                 fontSize *= 1;
                 break;
             case 5: // <h5>
-                fontSize *= 0.875;
+                fontSize *= 0.882;
                 break;
             case 6: // <h6>
-                fontSize *= 0.85;
+                fontSize *= 0.765;
                 break;
             default:
+                fontSize *= 0.941;
                 break;
         }
+    } else {
+        fontSize *= 0.941;
     }
     
     UIFontDescriptorSymbolicTraits traits = 0;

@@ -161,7 +161,6 @@ body {
   overflow: hidden;
   background: transparent;
   border: 0;
-  border-bottom: 1px solid #dfe2e5;
 }
 
 .markdown-body hr:after,
@@ -965,8 +964,6 @@ body {
     color: #58a6ff;
   }
   .markdown-body hr {
-    border-bottom: 1px solid #21262d;
-    border-bottom-color: #21262d;
     background-color: #30363d;
   }
   .markdown-body kbd {

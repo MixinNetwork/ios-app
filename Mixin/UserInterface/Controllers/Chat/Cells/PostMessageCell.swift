@@ -6,7 +6,6 @@ class PostMessageCell: TextMessageCell {
     #if DEBUG_POST_LAYOUT
     let textView = UITextView()
     #endif
-    
     let webView = WKWebView()
     let expandImageView = UIImageView(image: R.image.conversation.ic_message_expand())
     let trailingInfoBackgroundView = TrailingInfoBackgroundView()
@@ -24,7 +23,6 @@ class PostMessageCell: TextMessageCell {
         webView.backgroundColor = .clear
         webView.isUserInteractionEnabled = false
         webView.scrollView.contentInsetAdjustmentBehavior = .never
-        
         #if DEBUG_POST_LAYOUT
         messageContentView.addSubview(textView)
         textView.isUserInteractionEnabled = false
@@ -32,6 +30,7 @@ class PostMessageCell: TextMessageCell {
         textView.textContainerInset = .zero
         textView.textContainer.lineFragmentPadding = 0
         textView.alpha = 0.15
+        textView.contentInsetAdjustmentBehavior = .never
         #endif
     }
     

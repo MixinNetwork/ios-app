@@ -84,7 +84,7 @@ NSDictionary *attributesFromContext(Context *ctx, CGFloat lineHeightMultiple) {
         // Factors are from github-markdown.css
         switch (ctx->headerLevel) {
             case 1: // <h1>
-                fontSize *= 1.647;
+                fontSize *= 1.58;
                 break;
             case 2: // <h2>
                 fontSize *= 1.294;
@@ -237,7 +237,7 @@ int enterSpan(MD_SPANTYPE type, void* detail, void* userdata) {
     
     context->spanTypes.push_back(type);
     if (type == MD_SPAN_IMG) {
-        bool hasEnoughTextBeforeImage = context->numberOfLines > 1 || context->output.length > 20;
+        bool hasEnoughTextBeforeImage = context->numberOfLines > 1 || context->output.length > 5;
         auto *attachment = [MXSMarkdownImageAttachment new];
         auto *string = [NSAttributedString attributedStringWithAttachment:attachment];
         [context->output appendAttributedString:string];

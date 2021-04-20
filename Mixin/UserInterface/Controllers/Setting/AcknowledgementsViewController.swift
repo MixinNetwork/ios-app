@@ -4,25 +4,25 @@ import AcknowList
 class AcknowledgementsViewController: AcknowListViewController {
     
     class func instance() -> UIViewController {
-        let urls = [
-            Bundle.main.url(forResource: "Pods-\(Bundle.main.bundleName)-acknowledgements", withExtension: "plist"),
-            Bundle.main.url(forResource: "Custom-acknowledgements", withExtension: "plist"),
-        ]
-        let paths = urls.compactMap { $0?.path }
-        let acknow = AcknowledgementsViewController(acknowledgementsPlistPaths: paths)
+        let customAcknows: [Acknow] = {
+            guard let url = Bundle.main.url(forResource: "Custom-acknowledgements", withExtension: "plist") else {
+                return []
+            }
+            let parser = AcknowParser(plistPath: url.path)
+            return parser.parseAcknowledgements()
+        }()
+        let controller = AcknowledgementsViewController()
+        controller.acknowledgements.append(contentsOf: customAcknows)
         let title = R.string.localizable.about_acknowledgements()
-        return ContainerViewController.instance(viewController: acknow, title: title)
+        return ContainerViewController.instance(viewController: controller, title: title)
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let acknowledgements = self.acknowledgements,
-           let acknowledgement = acknowledgements[(indexPath as NSIndexPath).row] as Acknow?,
-           let navigationController = self.navigationController {
-            let viewController = AcknowViewController(acknowledgement: acknowledgement)
-            let container = ContainerViewController.instance(viewController: viewController,
-                                                             title: viewController.title ?? "")
-            navigationController.pushViewController(container, animated: true)
-        }
+        let acknowledgement = acknowledgements[indexPath.row]
+        let viewController = AcknowViewController(acknowledgement: acknowledgement)
+        let container = ContainerViewController.instance(viewController: viewController,
+                                                         title: viewController.title ?? "")
+        navigationController?.pushViewController(container, animated: true)
     }
     
 }

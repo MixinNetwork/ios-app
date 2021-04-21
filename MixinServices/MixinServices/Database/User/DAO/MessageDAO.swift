@@ -277,11 +277,14 @@ public final class MessageDAO: UserDatabaseDAO {
                          completion: completion)
     }
     
-    public func updateMediaMessage(messageId: String, mediaUrl: String, status: MediaStatus, conversationId: String) {
-        let assignments = [
+    public func updateMediaMessage(messageId: String, mediaUrl: String, status: MediaStatus, conversationId: String, content: String? = nil) {
+        var assignments = [
             Message.column(of: .mediaUrl).set(to: mediaUrl),
             Message.column(of: .mediaStatus).set(to: status.rawValue)
         ]
+        if let content = content {
+            assignments.append(Message.column(of: .content).set(to: content))
+        }
         let condition: SQLSpecificExpressible = Message.column(of: .messageId) == messageId
             && Message.column(of: .category) != MessageCategory.MESSAGE_RECALL.rawValue
         db.update(Message.self, assignments: assignments, where: condition) { _ in

@@ -14,6 +14,7 @@ open class AttachmentDownloadJob: UploadOrDownloadJob {
     
     private var contentLength: Double?
     private var downloadedContentLength: Double = 0
+    private var attachResponse: AttachmentResponse?
     
     internal var fileName: String {
         
@@ -130,6 +131,7 @@ open class AttachmentDownloadJob: UploadOrDownloadJob {
         guard let viewUrl = attachResponse.viewUrl, let downloadUrl = URL(string: viewUrl) else {
             return false
         }
+        self.attachResponse = attachResponse
         
         if message.category.hasPrefix("SIGNAL_") {
             guard let key = message.mediaKey, let digest = message.mediaDigest else {
@@ -169,7 +171,32 @@ open class AttachmentDownloadJob: UploadOrDownloadJob {
             reporter.report(error: error)
             MessageDAO.shared.updateMediaMessage(messageId: messageId, mediaUrl: fileName, status: .CANCELED, conversationId: message.conversationId)
         } else {
-            MessageDAO.shared.updateMediaMessage(messageId: messageId, mediaUrl: fileName, status: .DONE, conversationId: message.conversationId)
+            let content: String? = {
+                guard let response = attachResponse else {
+                    return nil
+                }
+                let tad = TransferAttachmentData(key: nil,
+                                                 digest: nil,
+                                                 attachmentId: response.attachmentId,
+                                                 mimeType: nil,
+                                                 width: nil,
+                                                 height: nil,
+                                                 size: Int64(downloadedContentLength),
+                                                 thumbnail: nil,
+                                                 name: nil,
+                                                 duration: nil,
+                                                 waveform: nil,
+                                                 createdAt: response.createdAt)
+                guard let json = try? JSONEncoder.default.encode(tad) else {
+                    return nil
+                }
+                return json.base64EncodedString()
+            }()
+            MessageDAO.shared.updateMediaMessage(messageId: messageId,
+                                                 mediaUrl: fileName,
+                                                 status: .DONE,
+                                                 conversationId: message.conversationId,
+                                                 content: content)
             let userInfo = [
                 Self.UserInfoKey.messageId: messageId,
                 Self.UserInfoKey.mediaURL: fileName

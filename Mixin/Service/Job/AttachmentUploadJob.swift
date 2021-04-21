@@ -121,7 +121,10 @@ class AttachmentUploadJob: UploadOrDownloadJob {
         }
         let key = (stream as? AttachmentEncryptingInputStream)?.key
         let digest = (stream as? AttachmentEncryptingInputStream)?.digest
-        let content = getMediaDataText(attachmentId: attachResponse.attachmentId, key: key, digest: digest)
+        let content = getMediaDataText(attachmentId: attachResponse.attachmentId,
+                                       key: key,
+                                       digest: digest,
+                                       createdAt: attachResponse.createdAt)
         message.content = content
         MessageDAO.shared.updateMessageContentAndMediaStatus(content: content, mediaStatus: .DONE, messageId: message.messageId, conversationId: message.conversationId)
         
@@ -129,8 +132,19 @@ class AttachmentUploadJob: UploadOrDownloadJob {
         removeJob()
     }
     
-    func getMediaDataText(attachmentId: String, key: Data?, digest: Data?) -> String {
-        let transferMediaData = TransferAttachmentData(key: key, digest: digest, attachmentId: attachmentId, mimeType: message.mediaMimeType ?? "", width: message.mediaWidth, height: message.mediaHeight, size:message.mediaSize ?? 0, thumbnail: message.thumbImage, name: message.name, duration: message.mediaDuration, waveform: message.mediaWaveform)
+    func getMediaDataText(attachmentId: String, key: Data?, digest: Data?, createdAt: String?) -> String {
+        let transferMediaData = TransferAttachmentData(key: key,
+                                                       digest: digest,
+                                                       attachmentId: attachmentId,
+                                                       mimeType: message.mediaMimeType ?? "",
+                                                       width: message.mediaWidth,
+                                                       height: message.mediaHeight,
+                                                       size:message.mediaSize ?? 0,
+                                                       thumbnail: message.thumbImage,
+                                                       name: message.name,
+                                                       duration: message.mediaDuration,
+                                                       waveform: message.mediaWaveform,
+                                                       createdAt: createdAt)
         return (try? JSONEncoder.default.encode(transferMediaData).base64EncodedString()) ?? ""
     }
     

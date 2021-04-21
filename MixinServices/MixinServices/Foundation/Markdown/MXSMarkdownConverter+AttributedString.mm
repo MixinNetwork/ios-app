@@ -81,7 +81,7 @@ struct Context {
 NSDictionary *attributesFromContext(Context *ctx, CGFloat lineHeightMultiple) {
     CGFloat fontSize = plainTextFontSize;
     if (ctx->headerLevel != plainTextHeaderLevel) {
-        // Factors are from github-markdown.css
+        // Factors are from post.css
         switch (ctx->headerLevel) {
             case 1: // <h1>
                 fontSize *= 1.58;

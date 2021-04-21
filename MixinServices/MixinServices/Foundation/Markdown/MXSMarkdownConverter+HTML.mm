@@ -10,7 +10,7 @@ const char *richHeader = R"(
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="github-markdown.css">
+        <link rel="stylesheet" href="post.css">
         <link rel="stylesheet" href="code.css">
         <script src="highlight.js"></script>
         <script>hljs.highlightAll();</script>
@@ -18,7 +18,7 @@ const char *richHeader = R"(
             body {
               margin: 8px;
             }
-            .markdown-body {
+            .post {
                 box-sizing: border-box;
                 min-width: 200px;
                 max-width: 980px;
@@ -26,14 +26,14 @@ const char *richHeader = R"(
                 padding: 4px 15px 15px 15px;
             }
             @media (max-width: 767px) {
-                .markdown-body {
+                .post {
                     padding: 4px 15px 15px 15px;
                 }
             }
         </style>
     </head>
     <body>
-    <article class="markdown-body">
+    <article class="post">
 )";
 
 const char *plainHeader = R"(
@@ -41,10 +41,10 @@ const char *plainHeader = R"(
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="github-markdown.css">
+        <link rel="stylesheet" href="post.css">
     </head>
     <body>
-        <article class="markdown-body">
+        <article class="post">
 )";
 
 NSString *const footer = @"</article></body></html>";

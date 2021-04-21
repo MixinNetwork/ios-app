@@ -20,7 +20,7 @@ class PostMessageViewModel: DetailInfoMessageViewModel, BackgroundedTrailingInfo
     private let minTextHeight: CGFloat = 40
     private let webViewLeadingMargin: CGFloat = 4
     private let webViewTrailingMargin: CGFloat = 3
-    private let frameEstimatingMaxCharacterCount: UInt = 100
+    private let frameEstimatingMaxCharacterCount: UInt = 120
     private let frameEstimationMaxLineCount: UInt = {
         switch ScreenHeight.current {
         case .short, .medium:

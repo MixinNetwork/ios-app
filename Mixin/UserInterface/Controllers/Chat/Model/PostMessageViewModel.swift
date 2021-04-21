@@ -18,7 +18,8 @@ class PostMessageViewModel: DetailInfoMessageViewModel, BackgroundedTrailingInfo
     var trailingInfoBackgroundFrame: CGRect = .zero
     
     private let minTextHeight: CGFloat = 40
-    private let additionalWebViewLeftMargin: CGFloat = 4
+    private let webViewLeadingMargin: CGFloat = 4
+    private let webViewTrailingMargin: CGFloat = 3
     private let frameEstimatingMaxCharacterCount: UInt = 100
     private let frameEstimationMaxLineCount: UInt = {
         switch ScreenHeight.current {
@@ -51,20 +52,14 @@ class PostMessageViewModel: DetailInfoMessageViewModel, BackgroundedTrailingInfo
     
     override func layout(width: CGFloat, style: MessageViewModel.Style) {
         super.layout(width: width, style: style)
-        let sizeToFit: CGSize = {
-            var width = layoutWidth
-                - DetailInfoMessageViewModel.bubbleMargin.horizontal
-                - contentMargin.horizontal
-                - additionalWebViewLeftMargin
-            width = round(width)
-            return CGSize(width: width, height: UIView.layoutFittingExpandedSize.height)
-        }()
+        let backgroundWidth = layoutWidth - DetailInfoMessageViewModel.bubbleMargin.horizontal
+        let widthToFit = round(backgroundWidth - contentMargin.horizontal - webViewLeadingMargin - webViewTrailingMargin)
+        let sizeToFit = CGSize(width: widthToFit, height: UIView.layoutFittingExpandedSize.height)
         let textSize = contentAttributedString.boundingRect(with: sizeToFit,
                                                             options: [.usesLineFragmentOrigin, .usesFontLeading],
                                                             context: nil)
         let height = ceil(max(minTextHeight, textSize.height))
         let bubbleMargin = DetailInfoMessageViewModel.bubbleMargin
-        let backgroundWidth = sizeToFit.width + contentMargin.horizontal
         let contentLabelTopMargin: CGFloat = {
             if style.contains(.fullname) {
                 return fullnameFrame.height
@@ -77,7 +72,7 @@ class PostMessageViewModel: DetailInfoMessageViewModel, BackgroundedTrailingInfo
                                           y: 0,
                                           width: backgroundWidth,
                                           height: height + contentLabelTopMargin + contentMargin.bottom)
-            webViewFrame = CGRect(x: ceil(backgroundImageFrame.origin.x + contentMargin.leading) + additionalWebViewLeftMargin,
+            webViewFrame = CGRect(x: ceil(backgroundImageFrame.origin.x + contentMargin.leading) + webViewLeadingMargin,
                                   y: contentLabelTopMargin,
                                   width: sizeToFit.width,
                                   height: height)
@@ -86,7 +81,7 @@ class PostMessageViewModel: DetailInfoMessageViewModel, BackgroundedTrailingInfo
                                           y: 0,
                                           width: backgroundWidth,
                                           height: height + contentLabelTopMargin + contentMargin.bottom)
-            webViewFrame = CGRect(x: ceil(backgroundImageFrame.origin.x + contentMargin.trailing + additionalWebViewLeftMargin),
+            webViewFrame = CGRect(x: ceil(backgroundImageFrame.origin.x + contentMargin.trailing + webViewTrailingMargin),
                                   y: contentLabelTopMargin,
                                   width: sizeToFit.width,
                                   height: height)

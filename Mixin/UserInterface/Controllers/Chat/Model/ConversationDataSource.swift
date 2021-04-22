@@ -1055,8 +1055,9 @@ extension ConversationDataSource {
                 row = viewModels.count
                 style.insert(.tail)
             }
-            if row - 1 >= 0 {
-                let previousViewModel = viewModels[row - 1]
+            let previousRow = row - 1
+            if previousRow >= 0 {
+                let previousViewModel = viewModels[previousRow]
                 let previousViewModelIsFromDifferentUser = previousViewModel.message.userId != message.userId
                 if previousViewModel.message.isSystemMessage || message.isSystemMessage || message.isExtensionMessage {
                     if !messageIsSentByMe {
@@ -1078,7 +1079,8 @@ extension ConversationDataSource {
                     guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {
                         return
                     }
-                    if let previousIndexPath = self.lastIndexPath, let previousCell = tableView.cellForRow(at: previousIndexPath) as? MessageCell {
+                    let previousIndexPath = IndexPath(row: previousRow, section: section)
+                    if let previousCell = tableView.cellForRow(at: previousIndexPath) as? MessageCell {
                         previousCell.render(viewModel: previousViewModel)
                     }
                 }

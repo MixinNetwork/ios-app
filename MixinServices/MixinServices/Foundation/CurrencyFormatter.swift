@@ -1,9 +1,5 @@
 import Foundation
 
-public extension Locale {
-    static let us = Locale(identifier: "US")
-}
-
 public struct CurrencyFormatter {
     
     public enum Format {

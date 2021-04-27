@@ -1,4 +1,5 @@
 import UIKit
+import WebKit
 
 class SharedMediaPostCell: UITableViewCell {
     
@@ -8,7 +9,7 @@ class SharedMediaPostCell: UITableViewCell {
     static let backgroundVerticalMargin: CGFloat = 5
     
     @IBOutlet weak var solidBackgroundColoredView: SolidBackgroundColoredView!
-    @IBOutlet weak var label: TextMessageLabel!
+    @IBOutlet weak var webView: WKWebView!
     
     @IBOutlet weak var labelLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var labelTrailingConstraint: NSLayoutConstraint!
@@ -46,7 +47,7 @@ class SharedMediaPostCell: UITableViewCell {
                                                  withHorizontalFittingPriority: horizontalFittingPriority,
                                                  verticalFittingPriority: verticalFittingPriority)
         }
-        let height = viewModel.contentLabelFrame.height
+        let height = viewModel.webViewFrame.height
             + Self.labelVerticalMargin * 2
             + Self.backgroundVerticalMargin * 2
         return CGSize(width: targetSize.width, height: height)
@@ -54,8 +55,7 @@ class SharedMediaPostCell: UITableViewCell {
     
     func render(viewModel: PostMessageViewModel) {
         self.viewModel = viewModel
-        label.content = viewModel.content
-        label.setNeedsDisplay()
+        webView.loadHTMLString(viewModel.html, baseURL: Bundle.main.bundleURL)
     }
     
 }

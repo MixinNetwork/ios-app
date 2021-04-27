@@ -3,7 +3,6 @@ import MobileCoreServices
 import AVKit
 import Photos
 import MixinServices
-import TexturedMaaku
 
 class ConversationViewController: UIViewController {
     
@@ -724,7 +723,8 @@ class ConversationViewController: UIViewController {
                     present(vc, animated: true, completion: nil)
                 }
             } else if message.category.hasSuffix("_POST") {
-                PostViewController.presentInstance(with: message, asChildOf: self)
+                let message = Message.createMessage(message: message)
+                PostWebViewController.presentInstance(message: message, asChildOf: self)
             } else if message.category == MessageCategory.EXT_ENCRYPTION.rawValue {
                 conversationInputViewController.dismiss()
                 open(url: .aboutEncryption)
@@ -1276,14 +1276,15 @@ extension ConversationViewController: UITableViewDataSource {
         }
         let cell = self.tableView.dequeueReusableCell(withMessage: viewModel.message, for: indexPath)
         if let cell = cell as? MessageCell {
-            UIView.performWithoutAnimation {
+            CATransaction.performWithoutAnimation {
                 cell.render(viewModel: viewModel)
-            }
-            if tableView.allowsMultipleSelection {
-                let intent = multipleSelectionActionView.intent
-                cell.setMultipleSelecting(true, intent: intent, animated: false)
-            } else {
-                cell.setMultipleSelecting(false, intent: nil, animated: false)
+                if tableView.allowsMultipleSelection {
+                    let intent = multipleSelectionActionView.intent
+                    cell.setMultipleSelecting(true, intent: intent, animated: false)
+                } else {
+                    cell.setMultipleSelecting(false, intent: nil, animated: false)
+                }
+                cell.layoutIfNeeded()
             }
         }
         return cell

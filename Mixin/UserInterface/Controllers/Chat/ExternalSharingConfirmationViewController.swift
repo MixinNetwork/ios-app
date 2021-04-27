@@ -1,5 +1,5 @@
 import UIKit
-import SwiftyMarkdown
+import WebKit
 import YYImage
 import MixinServices
 
@@ -84,7 +84,8 @@ class ExternalSharingConfirmationViewController: UIViewController {
 
 extension ExternalSharingConfirmationViewController {
     
-    private func placePreviewViewsAsTextMessage() {
+    private func loadPreview(forTextMessageWith text: String) {
+        label.text = text
         label.setFont(scaledFor: .systemFont(ofSize: 16), adjustForContentSize: true)
         label.textColor = R.color.text()
         label.numberOfLines = 10
@@ -103,11 +104,6 @@ extension ExternalSharingConfirmationViewController {
         }
         
         sendButton.isEnabled = true
-    }
-    
-    private func loadPreview(forTextMessageWith text: String) {
-        label.text = text
-        placePreviewViewsAsTextMessage()
     }
     
     private func loadPreview(forImageWith url: URL) {
@@ -228,16 +224,25 @@ extension ExternalSharingConfirmationViewController {
             }
         }
         let string = lines.joined(separator: "\n")
-        let md = SwiftyMarkdown(string: string)
-        md.link.color = .theme
-        let size = Counter(value: 15)
-        for style in [md.body, md.h6, md.h5, md.h4, md.h3, md.h2, md.h1] {
-            style.fontSize = CGFloat(size.advancedValue)
+        let html = MarkdownConverter.htmlString(from: string, richFormat: false)
+        let webView = WKWebView()
+        webView.backgroundColor = .clear
+        webView.isOpaque = false
+        webView.loadHTMLString(html, baseURL: Bundle.main.bundleURL)
+        previewWrapperView.addSubview(webView)
+        webView.snp.makeConstraints { (make) in
+            let inset = UIEdgeInsets(top: 60, left: 40, bottom: 60, right: 40)
+            make.edges.equalToSuperview().inset(inset)
         }
-        label.numberOfLines = maxNumberOfLines
-        label.attributedText = md.attributedString()
-        placePreviewViewsAsTextMessage()
         
+        imageView.image = R.image.ic_chat_bubble_right_white()
+        previewWrapperView.insertSubview(imageView, belowSubview: webView)
+        imageView.snp.makeConstraints { (make) in
+            let inset = UIEdgeInsets(top: -9, left: -10, bottom: -11, right: -17)
+            make.edges.equalTo(webView).inset(inset)
+        }
+        
+        sendButton.isEnabled = true
         let postSuperscript = UIImageView(image: R.image.conversation.ic_message_expand())
         previewWrapperView.addSubview(postSuperscript)
         postSuperscript.snp.makeConstraints { (make) in
@@ -248,7 +253,7 @@ extension ExternalSharingConfirmationViewController {
         let recognizer = UITapGestureRecognizer(target: self, action: #selector(presentPostPreview))
         imageView.addGestureRecognizer(recognizer)
         imageView.isUserInteractionEnabled = true
-        for view in [label, postSuperscript] {
+        for view in [webView, postSuperscript] {
             view.isUserInteractionEnabled = false
         }
     }
@@ -298,7 +303,7 @@ extension ExternalSharingConfirmationViewController {
         guard let message = message, message.category == MessageCategory.SIGNAL_POST.rawValue else {
             return
         }
-        PostViewController.presentInstance(with: message, asChildOf: self)
+        PostWebViewController.presentInstance(message: message, asChildOf: self)
     }
     
 }

@@ -1,5 +1,4 @@
 import Foundation
-import SwiftyMarkdown
 
 protocol MarkdownControlCodeRemovable {
     
@@ -16,7 +15,7 @@ extension MarkdownControlCodeRemovable {
         }
         var endIndex = content.endIndex
         var suffix = ""
-        for (index, char) in content.enumerated() {
+        for (index, char) in content.enumerated().lazy {
             let didMeetLineBreak = char == "\n"
             let didReachMaxLength = index == 60
             if didMeetLineBreak || didReachMaxLength {
@@ -28,8 +27,8 @@ extension MarkdownControlCodeRemovable {
             }
         }
         let fragment = String(content[content.startIndex..<endIndex])
-        let md = SwiftyMarkdown(string: fragment)
-        return md.attributedString().string + suffix
+        let text = MarkdownConverter.plainText(from: fragment)
+        return text + suffix
     }
     
 }

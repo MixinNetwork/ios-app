@@ -5,7 +5,6 @@ platform :ios, '12.0'
 
 def mixin_services
   pod 'libsignal-protocol-c', :git => 'https://github.com/MixinNetwork/libsignal-protocol-c.git'
-  pod 'SwiftyMarkdown', :git => 'https://github.com/wuyuehyang/SwiftyMarkdown.git'
   pod 'lottie-ios', :git => 'https://github.com/airbnb/lottie-ios.git', :branch => 'lottie/objectiveC'
   pod 'YYImage', :git => 'https://github.com/wuyuehyang/YYImage.git'
   pod 'MixinServices', :path => './MixinServices', :testspecs => ['DatabaseTests']
@@ -24,10 +23,6 @@ target 'Mixin' do
   pod 'RSKImageCropper'
   pod 'AlignedCollectionViewFlowLayout'
   pod 'R.swift'
-  pod 'Highlightr', :git => 'https://github.com/wuyuehyang/Highlightr.git', :branch => 'master'
-  pod 'Texture', :git => 'https://github.com/TextureGroup/Texture.git', :branch => 'master'
-  pod 'TexturedMaaku', :git => 'https://github.com/wuyuehyang/TexturedMaaku.git', :branch => 'mixin'
-  pod 'TexturedMaaku/SyntaxColors', :git => 'https://github.com/wuyuehyang/TexturedMaaku.git', :branch => 'mixin'
   pod 'AcknowList'
   mixin_services
 end

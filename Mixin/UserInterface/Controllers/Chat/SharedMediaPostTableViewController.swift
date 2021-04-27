@@ -3,7 +3,7 @@ import MixinServices
 
 class SharedMediaPostTableViewController: SharedMediaTableViewController {
     
-    typealias ItemType = SharedMediaPost
+    typealias ItemType = PostMessageViewModel
     
     override var conversationId: String! {
         didSet {
@@ -33,14 +33,13 @@ extension SharedMediaPostTableViewController: SharedMediaDataSourceDelegate {
                                                      categoryIn: [.SIGNAL_POST, .PLAIN_POST],
                                                      earlierThan: location?.message,
                                                      count: count)
-        let items = messages.map { SharedMediaPost(message: $0) }
+        let items = messages.map { PostMessageViewModel(message: $0) }
         let layoutWidth = performSynchronouslyOnMainThread {
             tableView.bounds.width
                 - SharedMediaPostCell.backgroundHorizontalMargin * 2
                 - SharedMediaPostCell.labelHorizontalMargin * 2
         }
         for item in items {
-            item.layoutWithRawWidth = true
             item.layout(width: layoutWidth, style: [])
         }
         return items
@@ -50,7 +49,7 @@ extension SharedMediaPostTableViewController: SharedMediaDataSourceDelegate {
         guard let msg = MessageDAO.shared.getFullMessage(messageId: messageId) else {
             return nil
         }
-        return SharedMediaPost(message: msg)
+        return PostMessageViewModel(message: msg)
     }
     
     func sharedMediaDataSourceDidReload(_ dataSource: AnyObject) {
@@ -109,7 +108,8 @@ extension SharedMediaPostTableViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if let container = parent?.parent, let viewModel = dataSource.item(at: indexPath) {
-            PostViewController.presentInstance(with: viewModel.message, asChildOf: container)
+            let message = Message.createMessage(message: viewModel.message)
+            PostWebViewController.presentInstance(message: message, asChildOf: container)
         }
     }
     

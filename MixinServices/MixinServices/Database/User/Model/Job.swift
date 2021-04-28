@@ -107,6 +107,24 @@ extension Job: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEn
         case sessionId = "session_id"
     }
     
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        orderId = try container.decodeIfPresent(Int.self, forKey: .orderId)
+        jobId = try container.decode(String.self, forKey: .jobId)
+        priority = try container.decode(Int.self, forKey: .priority)
+        action = try container.decode(String.self, forKey: .action)
+        category = try container.decodeIfPresent(String.self, forKey: .category) ?? ""
+        
+        userId = try container.decodeIfPresent(String.self, forKey: .userId)
+        blazeMessage = try container.decodeIfPresent(Data.self, forKey: .blazeMessage)
+        blazeMessageData = try container.decodeIfPresent(Data.self, forKey: .blazeMessageData)
+        conversationId = try container.decodeIfPresent(String.self, forKey: .conversationId)
+        resendMessageId = try container.decodeIfPresent(String.self, forKey: .resendMessageId)
+        messageId = try container.decodeIfPresent(String.self, forKey: .messageId)
+        status = try container.decodeIfPresent(String.self, forKey: .status)
+        sessionId = try container.decodeIfPresent(String.self, forKey: .sessionId)
+    }
+    
 }
 
 extension Job: TableRecord, PersistableRecord {

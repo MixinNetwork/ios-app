@@ -118,7 +118,7 @@ public final class UserDatabase: Database {
             .init(key: .blazeMessage, constraints: "BLOB"),
             .init(key: .blazeMessageData, constraints: "BLOB"),
             .init(key: .action, constraints: "TEXT NOT NULL"),
-            .init(key: .category, constraints: "TEXT NOT NULL"),
+            .init(key: .category, constraints: "TEXT"),
             .init(key: .conversationId, constraints: "TEXT"),
             .init(key: .userId, constraints: "TEXT"),
             .init(key: .resendMessageId, constraints: "TEXT"),

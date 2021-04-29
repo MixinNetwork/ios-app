@@ -17,11 +17,11 @@ public class VideoDownloadJob: AttachmentDownloadJob {
     }
     
     override public func taskFinished() {
-        super.taskFinished()
         if stream?.streamError == nil {
             let thumbnail = UIImage(withFirstFrameOfVideoAtURL: fileUrl)
             thumbnail?.saveToFile(path: thumbnailUrl)
         }
+        super.taskFinished()
     }
     
 }

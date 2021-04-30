@@ -1,6 +1,6 @@
 import UIKit
 
-protocol ViewPanningControllerDelegate: class {
+protocol ViewPanningControllerDelegate: AnyObject {
     func animateAlongsideViewPanningControllerEdgeSticking(_ controller: ViewPanningController)
 }
 

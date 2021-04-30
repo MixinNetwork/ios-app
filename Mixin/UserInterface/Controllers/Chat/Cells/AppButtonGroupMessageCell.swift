@@ -1,6 +1,6 @@
 import UIKit
 
-protocol AppButtonGroupMessageCellDelegate: class {
+protocol AppButtonGroupMessageCellDelegate: AnyObject {
     
     func appButtonGroupMessageCell(_ cell: AppButtonGroupMessageCell, didSelectActionAt index: Int)
     

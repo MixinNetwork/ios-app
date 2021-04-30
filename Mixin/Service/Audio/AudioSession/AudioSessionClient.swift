@@ -1,7 +1,7 @@
 import Foundation
 import AVFoundation
 
-protocol AudioSessionClient: class {
+protocol AudioSessionClient: AnyObject {
     var priority: AudioSessionClientPriority { get }
     func audioSessionDidBeganInterruption(_ audioSession: AudioSession)
     func audioSessionDidEndInterruption(_ audioSession: AudioSession)

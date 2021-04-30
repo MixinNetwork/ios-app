@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-protocol FavoriteAppCellDelegate: class {
+protocol FavoriteAppCellDelegate: AnyObject {
     func favoriteAppCellDidSelectAccessoryButton(_ cell: FavoriteAppCell)
 }
 

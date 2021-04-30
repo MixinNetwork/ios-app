@@ -2,7 +2,7 @@ import Foundation
 import WebRTC
 import MixinServices
 
-protocol WebRTCClientDelegate: class {
+protocol WebRTCClientDelegate: AnyObject {
     func webRTCClient(_ client: WebRTCClient, didGenerateLocalCandidate candidate: RTCIceCandidate)
     func webRTCClientDidConnected(_ client: WebRTCClient)
     func webRTCClientDidDisconnected(_ client: WebRTCClient)

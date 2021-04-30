@@ -1,6 +1,6 @@
 import UIKit
 
-protocol DepositFieldViewDelegate: class {
+protocol DepositFieldViewDelegate: AnyObject {
     func depositFieldViewDidCopyContent(_ view: DepositFieldView)
     func depositFieldViewDidSelectShowQRCode(_ view: DepositFieldView)
 }

@@ -1,7 +1,7 @@
 import UIKit
 import Photos
 
-protocol PhotoAssetPickerDelegate: class {
+protocol PhotoAssetPickerDelegate: AnyObject {
     func pickerController(_ picker: PickerViewController, contentOffset: CGPoint, didFinishPickingMediaWithAsset asset: PHAsset)
 }
 

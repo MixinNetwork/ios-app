@@ -1,6 +1,6 @@
 import UIKit
 
-protocol BackgroundedTrailingInfoViewModel: class {
+protocol BackgroundedTrailingInfoViewModel: AnyObject {
     
     var trailingInfoBackgroundFrame: CGRect { get set }
     

@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-protocol TransferTypeViewControllerDelegate: class {
+protocol TransferTypeViewControllerDelegate: AnyObject {
     func transferTypeViewController(_ viewController: TransferTypeViewController, didSelectAsset asset: AssetItem)
 }
 

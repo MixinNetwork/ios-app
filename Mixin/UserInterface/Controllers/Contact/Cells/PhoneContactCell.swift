@@ -1,6 +1,6 @@
 import UIKit
 
-protocol PhoneContactCellDelegate: class {
+protocol PhoneContactCellDelegate: AnyObject {
     func phoneContactCellDidSelectInvite(_ cell: PhoneContactCell)
 }
 

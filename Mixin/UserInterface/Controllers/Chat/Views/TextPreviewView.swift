@@ -1,6 +1,6 @@
 import UIKit
 
-protocol TextPreviewViewDelegate: class {
+protocol TextPreviewViewDelegate: AnyObject {
     func textPreviewView(_ view: TextPreviewView, didSelectURL url: URL)
     func textPreviewView(_ view: TextPreviewView, didLongPressURL url: URL)
     func textPreviewViewDidFinishPreview(_ view: TextPreviewView)

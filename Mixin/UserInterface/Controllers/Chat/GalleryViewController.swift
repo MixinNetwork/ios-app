@@ -3,7 +3,7 @@ import Photos
 import AVKit
 import MixinServices
 
-protocol GalleryViewControllerDelegate: class {
+protocol GalleryViewControllerDelegate: AnyObject {
     func galleryViewController(_ viewController: GalleryViewController, cellFor item: GalleryItem) -> GalleryTransitionSource?
     func galleryViewController(_ viewController: GalleryViewController, willShow item: GalleryItem)
     func galleryViewController(_ viewController: GalleryViewController, didShow item: GalleryItem)

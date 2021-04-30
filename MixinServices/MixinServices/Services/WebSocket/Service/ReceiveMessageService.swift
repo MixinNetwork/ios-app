@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 import SDWebImage
 
-public protocol CallMessageCoordinator: class {
+public protocol CallMessageCoordinator: AnyObject {
     func shouldSendRtcBlazeMessage(with category: MessageCategory) -> Bool
     func handleIncomingBlazeMessageData(_ data: BlazeMessageData)
 }

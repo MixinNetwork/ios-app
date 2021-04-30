@@ -20,7 +20,7 @@ protocol WebSocketProvider {
 
 }
 
-protocol WebSocketProviderDelegate: class {
+protocol WebSocketProviderDelegate: AnyObject {
     func websocketDidConnect(socket: WebSocketProvider)
     func websocketDidDisconnect(socket: WebSocketProvider, isSwitchNetwork: Bool)
     func websocketDidReceiveData(socket: WebSocketProvider, data: Data)

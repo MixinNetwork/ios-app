@@ -3,7 +3,7 @@ import MobileCoreServices
 import RSKImageCropper
 import Photos
 
-protocol ImagePickerControllerDelegate: class {
+protocol ImagePickerControllerDelegate: AnyObject {
     func imagePickerController(_ controller: ImagePickerController, didPickImage image: UIImage)
 }
 

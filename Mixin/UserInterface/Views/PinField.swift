@@ -1,6 +1,6 @@
 import UIKit
 
-protocol PinFieldDelegate: class {
+protocol PinFieldDelegate: AnyObject {
     func inputFinished(pin: String)
 }
 

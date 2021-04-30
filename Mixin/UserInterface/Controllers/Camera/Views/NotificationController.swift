@@ -1,6 +1,6 @@
 import UIKit
 
-protocol NotificationControllerDelegate: class {
+protocol NotificationControllerDelegate: AnyObject {
     func notificationController(_ controller: NotificationController, didSelectNotificationWith localObject: Any?)
 }
 

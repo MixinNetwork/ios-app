@@ -1,6 +1,6 @@
 import UIKit
 
-protocol DetailInfoMessageCellDelegate: class {
+protocol DetailInfoMessageCellDelegate: AnyObject {
     func detailInfoMessageCellDidSelectFullname(_ cell: DetailInfoMessageCell)
 }
 

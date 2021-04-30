@@ -30,7 +30,7 @@ extension MessageItem {
     
 }
 
-protocol ConversationTableViewActionDelegate: class {
+protocol ConversationTableViewActionDelegate: AnyObject {
     func conversationTableViewCanBecomeFirstResponder(_ tableView: ConversationTableView) -> Bool
     func conversationTableViewLongPressWillBegan(_ tableView: ConversationTableView)
     func conversationTableView(_ tableView: ConversationTableView, hasActionsforIndexPath indexPath: IndexPath) -> Bool

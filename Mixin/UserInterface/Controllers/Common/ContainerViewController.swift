@@ -8,7 +8,7 @@ extension UIViewController {
 
 }
 
-protocol ContainerViewControllerDelegate: class {
+protocol ContainerViewControllerDelegate: AnyObject {
     
     func barLeftButtonTappedAction()
 

@@ -1,7 +1,7 @@
 import UIKit
 import Photos
 
-protocol AssetQrCodeScanningControllerDelegate: class {
+protocol AssetQrCodeScanningControllerDelegate: AnyObject {
     
     var previewImageViewContainer: UIView { get }
     

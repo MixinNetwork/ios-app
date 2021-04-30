@@ -1,6 +1,6 @@
 import UIKit
 
-protocol CoreTextLabelDelegate: class {
+protocol CoreTextLabelDelegate: AnyObject {
     func coreTextLabel(_ label: CoreTextLabel, didSelectURL url: URL)
     func coreTextLabel(_ label: CoreTextLabel, didLongPressOnURL url: URL)
 }

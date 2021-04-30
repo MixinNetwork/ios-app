@@ -361,6 +361,16 @@ class ConversationViewController: UIViewController {
         updateNavigationBarHeightAndTableViewTopInset()
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        let backgroundImageSize = R.image.conversation.bg_chat()!.size
+        let isBackgroundImageUndersized = backgroundImageView.frame.width > backgroundImageSize.width
+            || backgroundImageView.frame.height > backgroundImageSize.height
+        if isBackgroundImageUndersized {
+            backgroundImageView.contentMode = .scaleAspectFill
+        }
+    }
+    
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         guard let previous = previousTraitCollection, traitCollection.preferredContentSizeCategory != previous.preferredContentSizeCategory else {

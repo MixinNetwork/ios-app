@@ -17,7 +17,7 @@ class MixinCallInterface: NSObject {
     required init(service: CallService) {
         self.service = service
         super.init()
-        self.callObserver.setDelegate(self, queue: service.queue)
+        self.callObserver.setDelegate(self, queue: service.queue.dispatchQueue)
     }
     
     deinit {

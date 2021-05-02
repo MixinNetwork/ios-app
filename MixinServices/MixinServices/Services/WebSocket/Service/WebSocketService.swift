@@ -18,8 +18,7 @@ public class WebSocketService {
         return socket?.isConnected ?? false
     }
     
-    private let queue = DispatchQueue(label: "one.mixin.services.queue.websocket")
-    private let queueSpecificKey = DispatchSpecificKey<Void>()
+    private let queue = Queue(label: "one.mixin.services.queue.websocket")
     private let messageQueue = DispatchQueue(label: "one.mixin.services.queue.websocket.message")
     
     private var host: String?
@@ -32,7 +31,6 @@ public class WebSocketService {
     private var lastConnectionDate = Date()
 
     internal init() {
-        queue.setSpecific(key: queueSpecificKey, value: ())
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(networkChanged),
                                                name: ReachabilityManger.reachabilityDidChangeNotification,
@@ -44,7 +42,7 @@ public class WebSocketService {
     }
     
     public func connect(firstConnect: Bool = false) {
-        enqueueOperation {
+        queue.autoAsync {
             guard canProcessMessages else {
                 return
             }
@@ -70,7 +68,7 @@ public class WebSocketService {
             self.host = MixinHost.webSocket
             self.status = .connecting
 
-            let socket = RocketWebSocket(host: MixinHost.webSocket, queue: self.queue)
+            let socket = RocketWebSocket(host: MixinHost.webSocket, queue: self.queue.dispatchQueue)
             self.socket = socket
             self.socket?.delegate = self
 
@@ -95,7 +93,7 @@ public class WebSocketService {
     }
     
     public func disconnect() {
-        enqueueOperation {
+        queue.autoAsync {
             guard self.status == .connecting || self.status == .connected else {
                 return
             }
@@ -109,7 +107,7 @@ public class WebSocketService {
     }
 
     public func connectIfNeeded() {
-        enqueueOperation {
+        queue.autoAsync {
             guard canProcessMessages else {
                 return
             }
@@ -184,7 +182,7 @@ public class WebSocketService {
 extension WebSocketService: WebSocketProviderDelegate {
 
     func websocketDidReceivePong(socket: WebSocketProvider) {
-        enqueueOperation {
+        queue.autoAsync {
             self.heartbeat?.websocketDidReceivePong()
         }
     }
@@ -275,20 +273,12 @@ extension WebSocketService {
     
     private typealias IncomingMessageHandler = (MixinAPI.Result<BlazeMessage>) -> Void
     
-    private func enqueueOperation(_ closure: @escaping () -> Void) {
-        if DispatchQueue.getSpecific(key: queueSpecificKey) == nil {
-            queue.async(execute: closure)
-        } else {
-            closure()
-        }
-    }
-
     @objc private func networkChanged() {
         connectIfNeeded()
     }
     
     private func reconnect(sendDisconnectToRemote: Bool) {
-        enqueueOperation {
+        queue.autoAsync {
             ReceiveMessageService.shared.refreshRefreshOneTimePreKeys = [String: TimeInterval]()
             for handler in self.messageHandlers.values {
                 handler(.failure(.webSocketTimeOut))

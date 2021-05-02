@@ -23,9 +23,9 @@ class NativeCallInterface: NSObject {
         config.supportedHandleTypes = [.generic]
         config.includesCallsInRecents = false
         self.provider = CXProvider(configuration: config)
-        self.callController = CXCallController(queue: service.queue)
+        self.callController = CXCallController(queue: service.queue.dispatchQueue)
         super.init()
-        provider.setDelegate(self, queue: service.queue)
+        provider.setDelegate(self, queue: service.queue.dispatchQueue)
     }
     
     @available(*, unavailable)

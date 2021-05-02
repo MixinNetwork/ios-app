@@ -433,7 +433,7 @@ extension PlaylistManager {
     }
     
     @objc private func playerItemDidPlayToEndTime(_ notification: Notification) {
-        performSynchronouslyOnMainThread {
+        Queue.main.autoSync {
             switch repeatMode {
             case .repeatSingle:
                 player.seek(to: .zero)
@@ -458,7 +458,7 @@ extension PlaylistManager {
     }
     
     @objc private func playerItemFailedToPlayToEndTime(_ notification: Notification) {
-        performSynchronouslyOnMainThread {
+        Queue.main.autoSync {
             if hasNextItem {
                 playNextItem()
             } else {

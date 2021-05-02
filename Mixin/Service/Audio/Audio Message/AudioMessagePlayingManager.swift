@@ -52,7 +52,7 @@ class AudioMessagePlayingManager: NSObject, AudioSessionClient {
         cells[message.messageId]?.cell?.style = .playing
         
         func handle(error: Error) {
-            performSynchronouslyOnMainThread {
+            Queue.main.autoSync {
                 self.cells[message.messageId]?.cell?.style = .stopped
                 NotificationCenter.default.removeObserver(self)
             }

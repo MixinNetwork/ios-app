@@ -716,7 +716,7 @@ extension MessageDAO {
             MessageDAO.UserInfoKey.message: message,
             MessageDAO.UserInfoKey.messsageSource: messageSource
         ]
-        performSynchronouslyOnMainThread {
+        Queue.main.autoSync {
             NotificationCenter.default.post(name: MessageDAO.didRedecryptMessageNotification, object: self, userInfo: userInfo)
         }
     }

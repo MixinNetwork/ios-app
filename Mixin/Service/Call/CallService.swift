@@ -557,7 +557,7 @@ extension CallService {
         pendingCandidates = [:]
         pendingTrickles = [:]
         ringtonePlayer.stop()
-        performSynchronouslyOnMainThread {
+        Queue.main.autoSync {
             dismissCallingInterface()
         }
         isMuted = false
@@ -587,7 +587,7 @@ extension CallService {
         pendingTrickles.removeValue(forKey: uuid)
         if pendingAnswerCalls.isEmpty && activeCall == nil {
             ringtonePlayer.stop()
-            performSynchronouslyOnMainThread {
+            Queue.main.autoSync {
                 dismissCallingInterface()
             }
             isMuted = false

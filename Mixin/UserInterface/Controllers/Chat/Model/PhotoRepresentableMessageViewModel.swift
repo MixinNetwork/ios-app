@@ -10,7 +10,7 @@ class PhotoRepresentableMessageViewModel: ImageMessageViewModel {
     var expandIconOrigin: CGPoint?
     
     private var maxPresentationHeight: CGFloat {
-        return performSynchronouslyOnMainThread {
+        return Queue.main.autoSync {
             AppDelegate.current.mainWindow.bounds.height / 2
         }
     }

@@ -39,8 +39,7 @@ protocol ConversationTableViewActionDelegate: AnyObject {
 }
 
 class ConversationTableView: UITableView {
-
-    weak var viewController: ConversationViewController?
+    
     weak var actionDelegate: ConversationTableViewActionDelegate?
     
     override var canBecomeFirstResponder: Bool {
@@ -177,22 +176,9 @@ class ConversationTableView: UITableView {
     }
     
     func dequeueReusableCell(withReuseId reuseId: ReuseId, for indexPath: IndexPath) -> UITableViewCell {
-        let cell = dequeueReusableCell(withIdentifier: reuseId.rawValue, for: indexPath)
-        if let cell = cell as? DetailInfoMessageCell, cell.delegate == nil {
-            cell.delegate = viewController
-        }
-        if let cell = cell as? AttachmentLoadingMessageCell, cell.attachmentLoadingDelegate == nil {
-            cell.attachmentLoadingDelegate = viewController
-        }
-        if let cell = cell as? TextMessageCell, cell.contentLabel.delegate == nil {
-            cell.contentLabel.delegate = viewController
-        }
-        if let cell = cell as? AppButtonGroupMessageCell, cell.appButtonDelegate == nil {
-            cell.appButtonDelegate = viewController
-        }
-        return cell
+        dequeueReusableCell(withIdentifier: reuseId.rawValue, for: indexPath)
     }
-
+    
     func messageCellForRow(at point: CGPoint) -> MessageCell? {
         guard let indexPath = indexPathForRow(at: point), let cell = cellForRow(at: indexPath) as? MessageCell else {
             return nil

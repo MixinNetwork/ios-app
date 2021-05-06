@@ -285,7 +285,6 @@ class ConversationViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.actionDelegate = self
-        tableView.viewController = self
         if dataSource.category == .group {
             let hasUnreadAnnouncement = AppGroupUserDefaults.User.hasUnreadAnnouncement[conversationId] ?? false
             if hasUnreadAnnouncement {
@@ -1293,6 +1292,18 @@ extension ConversationViewController: UITableViewDataSource {
             return self.tableView.dequeueReusableCell(withReuseId: .unknown, for: indexPath)
         }
         let cell = self.tableView.dequeueReusableCell(withMessage: viewModel.message, for: indexPath)
+        if let cell = cell as? DetailInfoMessageCell {
+            cell.delegate = self
+        }
+        if let cell = cell as? AttachmentLoadingMessageCell {
+            cell.attachmentLoadingDelegate = self
+        }
+        if let cell = cell as? TextMessageCell {
+            cell.contentLabel.delegate = self
+        }
+        if let cell = cell as? AppButtonGroupMessageCell {
+            cell.appButtonDelegate = self
+        }
         if let cell = cell as? MessageCell {
             CATransaction.performWithoutAnimation {
                 cell.render(viewModel: viewModel)

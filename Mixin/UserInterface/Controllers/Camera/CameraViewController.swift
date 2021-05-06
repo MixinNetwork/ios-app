@@ -463,7 +463,7 @@ extension CameraViewController: AVCaptureFileOutputRecordingDelegate {
             return
         }
         
-        let vc = AssetSendViewController.instance(videoAsset: asset, dataSource: nil)
+        let vc = AssetSendViewController.instance(videoAsset: asset, composer: nil)
         vc.showSaveButton = true
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -664,7 +664,7 @@ extension CameraViewController: PhotoAssetPickerDelegate {
             assetQrCodeScanningController.delegate = self
             assetQrCodeScanningController.load(asset: asset)
         } else {
-            let vc = AssetSendViewController.instance(asset: asset, dataSource: nil)
+            let vc = AssetSendViewController.instance(asset: asset, composer: nil)
             vc.detectsQrCode = true
             navigationController?.pushViewController(vc, animated: true)
         }

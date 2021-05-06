@@ -16,8 +16,8 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
     var detectsQrCode = false
     var showSaveButton = false
     
-    private weak var dataSource: ConversationDataSource?
-
+    private weak var composer: ConversationMessageComposer?
+    
     private let rateKey = "rate"
 
     private var image: UIImage?
@@ -220,8 +220,8 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
                 }
                 DispatchQueue.main.async {
                     if exportSession.status == .completed {
-                        if let dataSource = weakSelf.dataSource {
-                            dataSource.sendMessage(type: .SIGNAL_VIDEO, messageId: messageId, value: outputURL)
+                        if let composer = weakSelf.composer {
+                            composer.sendMessage(type: .SIGNAL_VIDEO, messageId: messageId, value: outputURL)
                             weakSelf.navigationController?.popViewController(animated: true)
                         } else {
                             let vc = MessageReceiverViewController.instance(content: .video(outputURL))
@@ -234,8 +234,8 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
                 }
             }
         } else if let image = photoImageView.image {
-            if let dataSource = dataSource {
-                send(image: image, to: dataSource)
+            if let composer = composer {
+                send(image: image, to: composer)
             } else {
                 let vc = MessageReceiverViewController.instance(content: .photo(image))
                 navigationController?.pushViewController(vc, animated: true)
@@ -248,17 +248,19 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
         navigationController?.popViewController(animated: true)
     }
 
-    class func instance(image: UIImage? = nil, asset: PHAsset? = nil, videoAsset: AVAsset? = nil, dataSource: ConversationDataSource?) -> AssetSendViewController {
+    class func instance(image: UIImage? = nil, asset: PHAsset? = nil, videoAsset: AVAsset? = nil, composer: ConversationMessageComposer?) -> AssetSendViewController {
        let vc = R.storyboard.chat.send_asset()!
         vc.image = image
         vc.asset = asset
         vc.videoAsset = videoAsset
-        vc.dataSource = dataSource
+        vc.composer = composer
         return vc
     }
     
-    private func send(image: UIImage, to dataSource: ConversationDataSource) {
-        var message = Message.createMessage(category: MessageCategory.SIGNAL_IMAGE.rawValue, conversationId: dataSource.conversationId, userId: myUserId)
+    private func send(image: UIImage, to composer: ConversationMessageComposer) {
+        var message = Message.createMessage(category: MessageCategory.SIGNAL_IMAGE.rawValue,
+                                            conversationId: composer.conversationId,
+                                            userId: myUserId)
         message.mediaStatus = MediaStatus.PENDING.rawValue
         
         DispatchQueue.global().async { [weak self] in
@@ -317,7 +319,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
                     return
                 }
             }
-            SendMessageService.shared.sendMessage(message: message, ownerUser: dataSource.ownerUser, isGroupMessage: dataSource.category == .group)
+            SendMessageService.shared.sendMessage(message: message, ownerUser: composer.ownerUser, isGroupMessage: composer.isGroup)
             DispatchQueue.main.async {
                 self?.navigationController?.popViewController(animated: true)
             }

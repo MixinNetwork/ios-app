@@ -76,7 +76,7 @@ class GiphyViewController: StickersCollectionViewController, ConversationInputAc
         if indexPath.row == 0 {
             animated = false
             let vc = R.storyboard.chat.giphy_search()!
-            vc.dataSource = dataSource
+            vc.composer = composer
             vc.onDisappear = { [weak self] in
                 self?.animated = true
             }
@@ -84,7 +84,7 @@ class GiphyViewController: StickersCollectionViewController, ConversationInputAc
         } else {
             let image = images[indexPath.row - 1]
             let cell = collectionView.cellForItem(at: indexPath) as? StickerPreviewCell
-            dataSource?.send(image: image, thumbnail: cell?.image)
+            composer?.send(image: image, thumbnail: cell?.image)
         }
     }
     

@@ -42,6 +42,7 @@ class ConversationViewController: UIViewController {
     @IBOutlet weak var hideInputWrapperConstraint: NSLayoutConstraint!
     
     var dataSource: ConversationDataSource!
+    var composer: ConversationMessageComposer!
     var conversationId: String {
         return dataSource.conversationId
     }
@@ -210,12 +211,40 @@ class ConversationViewController: UIViewController {
         return statusBarHidden
     }
     
-    // MARK: - Life cycle
     deinit {
         AppGroupUserDefaults.User.currentConversationId = nil
         NotificationCenter.default.removeObserver(self)
     }
     
+    // MARK: - Factory
+    class func instance(conversation: ConversationItem, highlight: ConversationDataSource.Highlight? = nil) -> ConversationViewController {
+        let vc = R.storyboard.chat.conversation()!
+        let dataSource = ConversationDataSource(conversation: conversation, highlight: highlight)
+        let ownerUser: UserItem?
+        if dataSource.category == .contact {
+            ownerUser = UserDAO.shared.getUser(userId: dataSource.conversation.ownerId)
+        } else {
+            ownerUser = nil
+        }
+        vc.ownerUser = ownerUser
+        vc.dataSource = dataSource
+        vc.composer = ConversationMessageComposer(dataSource: dataSource, ownerUser: ownerUser)
+        return vc
+    }
+    
+    class func instance(ownerUser: UserItem) -> ConversationViewController {
+        let vc = R.storyboard.chat.conversation()!
+        vc.ownerUser = ownerUser
+        let conversationId = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: ownerUser.userId)
+        let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId)
+            ?? ConversationItem(ownerUser: ownerUser)
+        let dataSource = ConversationDataSource(conversation: conversation)
+        vc.dataSource = dataSource
+        vc.composer = ConversationMessageComposer(dataSource: dataSource, ownerUser: ownerUser)
+        return vc
+    }
+    
+    // MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         backgroundImageView.snp.makeConstraints { (make) in
@@ -639,7 +668,7 @@ class ConversationViewController: UIViewController {
     
     @objc func greetAppAction(_ sender: Any) {
         tableView.tableFooterView = nil
-        dataSource.sendMessage(type: .SIGNAL_TEXT, value: "Hi")
+        composer.sendMessage(type: .SIGNAL_TEXT, value: "Hi")
     }
     
     @objc func tapAction(_ recognizer: UIGestureRecognizer) {
@@ -1201,27 +1230,6 @@ class ConversationViewController: UIViewController {
         
     }
     
-    // MARK: - Class func
-    class func instance(conversation: ConversationItem, highlight: ConversationDataSource.Highlight? = nil) -> ConversationViewController {
-        let vc = R.storyboard.chat.conversation()!
-        let dataSource = ConversationDataSource(conversation: conversation, highlight: highlight)
-        if dataSource.category == .contact {
-            vc.ownerUser = UserDAO.shared.getUser(userId: dataSource.conversation.ownerId)
-        }
-        vc.dataSource = dataSource
-        return vc
-    }
-    
-    class func instance(ownerUser: UserItem) -> ConversationViewController {
-        let vc = R.storyboard.chat.conversation()!
-        vc.ownerUser = ownerUser
-        let conversationId = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: ownerUser.userId)
-        let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId)
-            ?? ConversationItem(ownerUser: ownerUser)
-        vc.dataSource = ConversationDataSource(conversation: conversation)
-        return vc
-    }
-    
 }
 
 // MARK: - UIGestureRecognizerDelegate
@@ -1615,7 +1623,7 @@ extension ConversationViewController: CoreTextLabelDelegate {
 extension ConversationViewController: ImagePickerControllerDelegate {
     
     func imagePickerController(_ controller: ImagePickerController, didPickImage image: UIImage) {
-        let previewViewController = AssetSendViewController.instance(image: image, dataSource: dataSource)
+        let previewViewController = AssetSendViewController.instance(image: image, composer: composer)
         navigationController?.pushViewController(previewViewController, animated: true)
     }
     
@@ -1693,7 +1701,7 @@ extension ConversationViewController: GalleryViewControllerDelegate {
 extension ConversationViewController: PhotoAssetPickerDelegate {
 
     func pickerController(_ picker: PickerViewController, contentOffset: CGPoint, didFinishPickingMediaWithAsset asset: PHAsset) {
-        navigationController?.pushViewController(AssetSendViewController.instance(asset: asset, dataSource: dataSource), animated: true)
+        navigationController?.pushViewController(AssetSendViewController.instance(asset: asset, composer: composer), animated: true)
     }
     
 }
@@ -2240,14 +2248,12 @@ extension ConversationViewController {
         guard action.hasPrefix("input:"), action.count > 6 else {
             return false
         }
-
         let inputAction = String(action.suffix(action.count - 6))
         if !inputAction.isEmpty {
-            dataSource.sendMessage(type: .SIGNAL_TEXT,
-                                   quote: nil,
-                                   value: inputAction)
+            composer.sendMessage(type: .SIGNAL_TEXT,
+                                 quote: nil,
+                                 value: inputAction)
         }
-
         return true
     }
 

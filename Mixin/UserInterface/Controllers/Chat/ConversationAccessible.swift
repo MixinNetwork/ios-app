@@ -23,8 +23,8 @@ extension ConversationAccessible where Self: UIViewController {
         }
     }
     
-    var dataSource: ConversationDataSource? {
-        return conversationViewController?.dataSource
+    var composer: ConversationMessageComposer? {
+        conversationViewController?.composer
     }
     
 }

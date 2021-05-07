@@ -142,7 +142,9 @@ NSDictionary *attributesFromContext(Context *ctx, CGFloat lineHeightMultiple) {
     return @{
         NSFontAttributeName : font,
         NSParagraphStyleAttributeName : style,
-        NSForegroundColorAttributeName : UIColor.labelColor // For debugging
+#if DEBUG_POST_LAYOUT
+        NSForegroundColorAttributeName : UIColor.labelColor
+#endif
     };
 }
 

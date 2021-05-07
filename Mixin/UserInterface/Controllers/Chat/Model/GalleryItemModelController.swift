@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-protocol GalleryItemModelControllerDelegate: class {
+protocol GalleryItemModelControllerDelegate: AnyObject {
     func modelController(_ controller: GalleryItemModelController, didLoadItemsBefore location: GalleryItem)
     func modelController(_ controller: GalleryItemModelController, didLoadItemsAfter location: GalleryItem)
 }

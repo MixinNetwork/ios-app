@@ -1,6 +1,6 @@
 import UIKit
 
-protocol SelectCountryViewControllerDelegate: class {
+protocol SelectCountryViewControllerDelegate: AnyObject {
     func selectCountryViewController(_ viewController: SelectCountryViewController, didSelectCountry country: Country)
 }
 

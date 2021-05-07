@@ -1,6 +1,6 @@
 import Foundation
 
-public protocol KrakenMessageRetrieverDelegate: class {
+public protocol KrakenMessageRetrieverDelegate: AnyObject {
     func krakenMessageRetriever(_ retriever: KrakenMessageRetriever, shouldRetryRequest request: KrakenRequest, error: Swift.Error, numberOfRetries: UInt) -> Bool
 }
 

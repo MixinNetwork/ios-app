@@ -1,6 +1,6 @@
 import UIKit
 
-protocol CircleCellDelegate: class {
+protocol CircleCellDelegate: AnyObject {
     func circleCellDidSelectEditingButton(_ cell: CircleCell)
 }
 

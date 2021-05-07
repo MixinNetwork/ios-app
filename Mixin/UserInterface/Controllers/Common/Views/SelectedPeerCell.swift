@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-protocol SelectedPeerCellDelegate: class {
+protocol SelectedPeerCellDelegate: AnyObject {
     func selectedPeerCellDidSelectRemove(_ cell: UICollectionViewCell)
 }
 

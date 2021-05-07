@@ -1,7 +1,7 @@
 import Foundation
 import MixinServices
 
-protocol AttachmentLoadingViewModel: class {
+protocol AttachmentLoadingViewModel: AnyObject {
     var isLoading: Bool { get set }
     var progress: Double? { get set }
     var showPlayIconOnMediaStatusDone: Bool { get }

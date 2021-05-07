@@ -9,7 +9,7 @@ protocol SharedMediaItem {
 extension MessageItem: SharedMediaItem { }
 extension GalleryItem: SharedMediaItem { }
 
-protocol SharedMediaDataSourceDelegate: class {
+protocol SharedMediaDataSourceDelegate: AnyObject {
     associatedtype ItemType: SharedMediaItem
     func sharedMediaDataSource(_ dataSource: AnyObject, itemsForConversationId conversationId: String, location: ItemType?, count: Int) -> [ItemType]
     func sharedMediaDataSource(_ dataSource: AnyObject, itemForMessageId messageId: String) -> ItemType?

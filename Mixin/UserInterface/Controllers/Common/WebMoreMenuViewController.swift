@@ -1,6 +1,6 @@
 import UIKit
 
-protocol WebMoreMenuControllerDelegate: class {
+protocol WebMoreMenuControllerDelegate: AnyObject {
     func webMoreMenuViewController(_ controller: WebMoreMenuViewController, didSelect item: WebMoreMenuViewController.MenuItem)
 }
 

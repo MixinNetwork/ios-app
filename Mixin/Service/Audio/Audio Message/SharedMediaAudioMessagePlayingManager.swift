@@ -3,7 +3,7 @@ import MediaPlayer
 import SDWebImage
 import MixinServices
 
-protocol SharedMediaAudioMessagePlayingManagerDelegate: class {
+protocol SharedMediaAudioMessagePlayingManagerDelegate: AnyObject {
     func sharedMediaAudioMessagePlayingManager(_ manager: SharedMediaAudioMessagePlayingManager, playableMessageNextTo message: MessageItem) -> MessageItem?
     func sharedMediaAudioMessagePlayingManager(_ manager: SharedMediaAudioMessagePlayingManager, playableMessagePreviousTo message: MessageItem) -> MessageItem?
 }

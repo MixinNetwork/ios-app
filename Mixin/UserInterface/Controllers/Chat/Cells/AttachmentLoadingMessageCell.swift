@@ -1,10 +1,10 @@
 import UIKit
 
-protocol AttachmentLoadingMessageCellDelegate: class {
+protocol AttachmentLoadingMessageCellDelegate: AnyObject {
     func attachmentLoadingCellDidSelectNetworkOperation(_ cell: UITableViewCell & AttachmentLoadingMessageCell)
 }
 
-protocol AttachmentLoadingMessageCell: class {
+protocol AttachmentLoadingMessageCell: AnyObject {
     var viewModel: MessageViewModel? { get }
     var operationButton: NetworkOperationButton! { get }
     var attachmentLoadingDelegate: AttachmentLoadingMessageCellDelegate? { get set }

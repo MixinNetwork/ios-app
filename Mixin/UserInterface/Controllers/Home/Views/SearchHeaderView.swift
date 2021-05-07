@@ -1,6 +1,6 @@
 import UIKit
 
-protocol SearchHeaderViewDelegate: class {
+protocol SearchHeaderViewDelegate: AnyObject {
     func searchHeaderViewDidSendMoreAction(_ view: SearchHeaderView)
 }
 

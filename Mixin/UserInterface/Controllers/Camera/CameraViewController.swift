@@ -4,7 +4,7 @@ import Photos
 import AVKit
 import MixinServices
 
-protocol CameraViewControllerDelegate: class {
+protocol CameraViewControllerDelegate: AnyObject {
     func cameraViewController(_ controller: CameraViewController, shouldRecognizeString string: String) -> Bool
 }
 

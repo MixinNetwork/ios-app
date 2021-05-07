@@ -1,6 +1,6 @@
 import UIKit
 
-protocol SharedMediaContentViewController: class {
+protocol SharedMediaContentViewController: AnyObject {
     var conversationId: String! { get set }
 }
 

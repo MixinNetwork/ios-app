@@ -2,7 +2,7 @@ import Foundation
 import AVFoundation
 import MixinServices
 
-protocol OggOpusRecorderDelegate: class {
+protocol OggOpusRecorderDelegate: AnyObject {
     func oggOpusRecorderIsWaitingForActivation(_ recorder: OggOpusRecorder)
     func oggOpusRecorderDidStartRecording(_ recorder: OggOpusRecorder)
     func oggOpusRecorder(_ recorder: OggOpusRecorder, didCancelRecordingForReason reason: OggOpusRecorder.CancelledReason, userInfo: [String : Any]?)

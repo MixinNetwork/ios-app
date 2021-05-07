@@ -111,15 +111,6 @@ class MessageViewModel: CustomDebugStringConvertible {
         viewModel.layout(width: width, style: style)
     }
     
-    func supportsMultipleSelection(with intent: MultipleSelectionIntent) -> Bool {
-        switch intent {
-        case .forward:
-            return message.allowedActions.contains(.forward)
-        case .delete:
-            return message.allowedActions.contains(.delete)
-        }
-    }
-    
     func updateKey(content: String, key: Data?, digest: Data?) {
         message.content = content
         message.mediaKey = key

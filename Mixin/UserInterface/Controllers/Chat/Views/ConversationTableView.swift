@@ -1,50 +1,7 @@
 import UIKit
 import MixinServices
 
-extension MessageAction {
-    
-    var selector: Selector {
-        switch self {
-        case .reply:
-            return #selector(ConversationTableView.replyAction(_:))
-        case .forward:
-            return #selector(ConversationTableView.forwardAction(_:))
-        case .copy:
-            return #selector(ConversationTableView.copyAction(_:))
-        case .delete:
-            return #selector(ConversationTableView.deleteAction(_:))
-        case .addToStickers:
-            return #selector(ConversationTableView.addToStickersAction(_:))
-        case .report:
-            return #selector(ConversationTableView.reportAction(_:))
-        }
-    }
-    
-}
-
-extension MessageItem {
-    
-    var allowedSelectors: Set<Selector> {
-        Set(allowedActions.map { $0.selector })
-    }
-    
-}
-
-protocol ConversationTableViewActionDelegate: AnyObject {
-    func conversationTableViewCanBecomeFirstResponder(_ tableView: ConversationTableView) -> Bool
-    func conversationTableViewLongPressWillBegan(_ tableView: ConversationTableView)
-    func conversationTableView(_ tableView: ConversationTableView, hasActionsforIndexPath indexPath: IndexPath) -> Bool
-    func conversationTableView(_ tableView: ConversationTableView, canPerformAction action: Selector, forIndexPath indexPath: IndexPath) -> Bool
-    func conversationTableView(_ tableView: ConversationTableView, didSelectAction action: MessageAction, forIndexPath indexPath: IndexPath)
-}
-
 class ConversationTableView: UITableView {
-    
-    weak var actionDelegate: ConversationTableViewActionDelegate?
-    
-    override var canBecomeFirstResponder: Bool {
-        return true
-    }
     
     override var tableFooterView: UIView? {
         get {
@@ -94,75 +51,12 @@ class ConversationTableView: UITableView {
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        prepare()
+        registerCells()
     }
     
     override init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: frame, style: style)
-        prepare()
-    }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-
-    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
-        guard let indexPath = indexPathForSelectedRow, let actionDelegate = actionDelegate else {
-            return false
-        }
-        return actionDelegate.conversationTableView(self, canPerformAction: action, forIndexPath: indexPath)
-    }
-    
-    @objc func replyAction(_ sender: Any) {
-        invokeDelegate(action: .reply)
-    }
-    
-    @objc func forwardAction(_ sender: Any) {
-        invokeDelegate(action: .forward)
-    }
-    
-    @objc func copyAction(_ sender: Any) {
-        invokeDelegate(action: .copy)
-    }
-    
-    @objc func deleteAction(_ sender: Any) {
-        invokeDelegate(action: .delete)
-    }
-
-    @objc func addToStickersAction(_ sender: Any) {
-        invokeDelegate(action: .addToStickers)
-    }
-
-    @objc func reportAction(_ sender: Any) {
-        invokeDelegate(action: .report)
-    }
-
-    @objc func longPressAction(_ recognizer: UIGestureRecognizer) {
-        guard !allowsMultipleSelection else {
-            return
-        }
-        guard recognizer.state == .began, let actionDelegate = actionDelegate else {
-            return
-        }
-        let location = recognizer.location(in: self)
-        if let cell = messageCellForRow(at: location), let indexPath = indexPathForRow(at: location), actionDelegate.conversationTableView(self, hasActionsforIndexPath: indexPath)  {
-            actionDelegate.conversationTableViewLongPressWillBegan(self)
-            selectRow(at: indexPath, animated: true, scrollPosition: .none)
-            if actionDelegate.conversationTableViewCanBecomeFirstResponder(self) {
-                becomeFirstResponder()
-            }
-            DispatchQueue.main.async {
-                UIMenuController.shared.setTargetRect(cell.contentFrame, in: cell)
-                UIMenuController.shared.setMenuVisible(true, animated: true)
-            }
-        }
-    }
-    
-    @objc func menuControllerWillHideMenu(_ notification: Notification) {
-        guard let indexPath = indexPathForSelectedRow else {
-            return
-        }
-        deselectRow(at: indexPath, animated: true)
+        registerCells()
     }
     
     func dequeueReusableCell(withMessage message: MessageItem, for indexPath: IndexPath) -> UITableViewCell {
@@ -249,14 +143,7 @@ class ConversationTableView: UITableView {
         }
     }
     
-    private func invokeDelegate(action: MessageAction) {
-        guard let indexPath = indexPathForSelectedRow else {
-            return
-        }
-        actionDelegate?.conversationTableView(self, didSelectAction: action, forIndexPath: indexPath)
-    }
-    
-    private func prepare() {
+    private func registerCells() {
         register(UINib(nibName: "ConversationDateHeaderView", bundle: .main),
                  forHeaderFooterViewReuseIdentifier: ReuseId.header.rawValue)
         register(SystemMessageCell.self, forCellReuseIdentifier: ReuseId.system.rawValue)
@@ -275,22 +162,6 @@ class ConversationTableView: UITableView {
         register(DataMessageCell.self, forCellReuseIdentifier: ReuseId.data.rawValue)
         register(AudioMessageCell.self, forCellReuseIdentifier: ReuseId.audio.rawValue)
         register(LocationMessageCell.self, forCellReuseIdentifier: ReuseId.location.rawValue)
-        if #available(iOS 13.0, *) {
-            // Leave it to context menu
-        } else {
-            let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction(_:)))
-            longPressRecognizer.delegate = TextMessageLabel.gestureRecognizerBypassingDelegateObject
-            addGestureRecognizer(longPressRecognizer)
-            UIMenuController.shared.menuItems = [
-                UIMenuItem(title: Localized.CHAT_MESSAGE_ADD, action: #selector(addToStickersAction(_:))),
-                UIMenuItem(title: Localized.CHAT_MESSAGE_MENU_REPLY, action: #selector(replyAction(_:))),
-                UIMenuItem(title: Localized.CHAT_MESSAGE_MENU_FORWARD, action: #selector(forwardAction(_:))),
-                UIMenuItem(title: Localized.CHAT_MESSAGE_MENU_COPY, action: #selector(copyAction(_:))),
-                UIMenuItem(title: Localized.MENU_DELETE, action: #selector(deleteAction(_:))),
-                UIMenuItem(title: R.string.localizable.menu_report(), action: #selector(reportAction(_:)))
-            ]
-            NotificationCenter.default.addObserver(self, selector: #selector(menuControllerWillHideMenu(_:)), name: UIMenuController.willHideMenuNotification, object: nil)
-        }
     }
     
 }

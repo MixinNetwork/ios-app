@@ -52,6 +52,14 @@ class ConversationViewController: UIViewController {
         }
     }
     
+    override var prefersStatusBarHidden: Bool {
+        return statusBarHidden
+    }
+    
+    override var canBecomeFirstResponder: Bool {
+        true
+    }
+    
     // Margin to navigation title bar
     private let minInputWrapperTopMargin: CGFloat = {
         if ScreenHeight.current <= .short {
@@ -60,6 +68,15 @@ class ConversationViewController: UIViewController {
             return 112
         }
     }()
+    
+    private let menuItems: [MessageAction: UIMenuItem] = [
+        .reply: UIMenuItem(title: R.string.localizable.chat_message_menu_reply(), action: #selector(replyMessage(_:))),
+        .forward: UIMenuItem(title: R.string.localizable.chat_message_menu_forward(), action: #selector(forwardMessage(_:))),
+        .copy: UIMenuItem(title: R.string.localizable.action_copy(), action: #selector(copyMessage(_:))),
+        .delete: UIMenuItem(title: R.string.localizable.menu_delete(), action: #selector(deleteMessage(_:))),
+        .addToStickers: UIMenuItem(title: R.string.localizable.chat_message_sticker(), action: #selector(addToStickers(_:))),
+        .report: UIMenuItem(title: R.string.localizable.menu_report(), action: #selector(reportMessage(_:))),
+    ]
     
     private let showScrollToBottomButtonThreshold: CGFloat = 150
     private let loadMoreMessageThreshold = 20
@@ -94,6 +111,7 @@ class ConversationViewController: UIViewController {
     private lazy var userHandleViewController = R.storyboard.chat.user_handle()!
     private lazy var multipleSelectionActionView = R.nib.multipleSelectionActionView(owner: self)!
     private lazy var announcementBadgeContentView = R.nib.announcementBadgeContentView(owner: self)!
+    private lazy var availableMessageActions = Set(menuItems.values.map({ $0.action }))
     
     private lazy var strangerHintView: StrangerHintView = {
         let view = R.nib.strangerHintView(owner: nil)!
@@ -207,10 +225,6 @@ class ConversationViewController: UIViewController {
         return (min, max)
     }
     
-    override var prefersStatusBarHidden: Bool {
-        return statusBarHidden
-    }
-    
     deinit {
         AppGroupUserDefaults.User.currentConversationId = nil
         NotificationCenter.default.removeObserver(self)
@@ -242,6 +256,10 @@ class ConversationViewController: UIViewController {
         vc.dataSource = dataSource
         vc.composer = ConversationMessageComposer(dataSource: dataSource, ownerUser: ownerUser)
         return vc
+    }
+    
+    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        availableMessageActions.contains(action)
     }
     
     // MARK: - Life cycle
@@ -283,8 +301,17 @@ class ConversationViewController: UIViewController {
         tableView.addGestureRecognizer(textPreviewRecognizer)
         
         tableView.dataSource = self
-        tableView.delegate = self
-        tableView.actionDelegate = self
+        if #available(iOS 13.0, *) {
+            // Use context menu managed by UITableViewDelegate
+            tableView.delegate = self
+        } else {
+            // Use UIMenuController on long press
+            tableView.delegate = self
+            let recognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction(_:)))
+            recognizer.delegate = TextMessageLabel.gestureRecognizerBypassingDelegateObject
+            tableView.addGestureRecognizer(recognizer)
+        }
+        
         if dataSource.category == .group {
             let hasUnreadAnnouncement = AppGroupUserDefaults.User.hasUnreadAnnouncement[conversationId] ?? false
             if hasUnreadAnnouncement {
@@ -322,8 +349,6 @@ class ConversationViewController: UIViewController {
         let center = NotificationCenter.default
         center.addObserver(self, selector: #selector(conversationDidChange(_:)), name: MixinServices.conversationDidChangeNotification, object: nil)
         center.addObserver(self, selector: #selector(userDidChange(_:)), name: UserDAO.userDidChangeNotification, object: nil)
-        center.addObserver(self, selector: #selector(menuControllerDidShowMenu(_:)), name: UIMenuController.didShowMenuNotification, object: nil)
-        center.addObserver(self, selector: #selector(menuControllerDidHideMenu(_:)), name: UIMenuController.didHideMenuNotification, object: nil)
         center.addObserver(self, selector: #selector(participantDidChange(_:)), name: ParticipantDAO.participantDidChangeNotification, object: nil)
         center.addObserver(self, selector: #selector(didAddMessageOutOfBounds(_:)), name: ConversationDataSource.newMessageOutOfVisibleBoundsNotification, object: dataSource)
         center.addObserver(self, selector: #selector(audioMessagePlayingManagerWillPlayNextNode(_:)), name: AudioMessagePlayingManager.willPlayNextNotification, object: AudioMessagePlayingManager.shared)
@@ -691,7 +716,7 @@ class ConversationViewController: UIViewController {
                 if let indexPaths = tableView.indexPathsForSelectedRows, indexPaths.contains(indexPath) {
                     tableView.deselectRow(at: indexPath, animated: true)
                     dataSource.selectedViewModels[viewModel.message.messageId] = nil
-                } else if viewModel.supportsMultipleSelection(with: multipleSelectionActionView.intent) {
+                } else if self.viewModel(viewModel, supportsMultipleSelectionWith: multipleSelectionActionView.intent) {
                     tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
                     dataSource.selectedViewModels[viewModel.message.messageId] = viewModel
                 }
@@ -889,6 +914,31 @@ class ConversationViewController: UIViewController {
         self.present(alc, animated: true, completion: nil)
     }
     
+    @objc func longPressAction(_ recognizer: UIGestureRecognizer) {
+        guard recognizer.state == .began, !tableView.allowsMultipleSelection else {
+            return
+        }
+        let location = recognizer.location(in: tableView)
+        guard
+            let indexPath = tableView.indexPathForRow(at: location),
+            let cell = tableView.cellForRow(at: indexPath) as? MessageCell,
+            let message = cell.viewModel?.message
+        else {
+            return
+        }
+        let actions = availableActions(for: message)
+        guard !actions.isEmpty else {
+            return
+        }
+        tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+        if conversationInputViewController.textView.isFirstResponder {
+            conversationInputViewController.textView.overrideNext = self
+        } else {
+            becomeFirstResponder()
+        }
+        showMenu(for: actions, targetRect: cell.contentFrame, in: cell)
+    }
+    
     // MARK: - Callbacks
     @objc func conversationDidChange(_ sender: Notification) {
         guard let change = sender.object as? ConversationChange, change.conversationId == conversationId else {
@@ -937,15 +987,6 @@ class ConversationViewController: UIViewController {
         dataSource?.ownerUser = ownerUser
         updateInvitationHintView()
         showScamAnnouncementIfNeeded()
-    }
-    
-    @objc func menuControllerDidShowMenu(_ notification: Notification) {
-        isShowingMenu = true
-    }
-    
-    @objc func menuControllerDidHideMenu(_ notification: Notification) {
-        isShowingMenu = false
-        conversationInputViewController.textView.overrideNext = nil
     }
     
     @objc func participantDidChange(_ notification: Notification) {
@@ -1008,7 +1049,7 @@ class ConversationViewController: UIViewController {
     @objc func endMultipleSelection() {
         dataSource.selectedViewModels.removeAll()
         for cell in tableView.visibleCells.compactMap({ $0 as? MessageCell }) {
-            cell.setMultipleSelecting(false, intent: nil, animated: true)
+            cell.setMultipleSelecting(false, animated: true)
         }
         tableView.indexPathsForSelectedRows?.forEach({ (indexPath) in
             tableView.deselectRow(at: indexPath, animated: true)
@@ -1249,7 +1290,7 @@ extension ConversationViewController: UIGestureRecognizerDelegate {
             guard let cell = tableView.cellForRow(at: indexPath) as? MessageCell else {
                 return false
             }
-            guard let viewModel = cell.viewModel, viewModel.message.allowedActions.contains(.reply) else {
+            guard let viewModel = cell.viewModel, availableActions(for: viewModel.message).contains(.reply) else {
                 return false
             }
             let velocity = fastReplyRecognizer.velocity(in: nil)
@@ -1307,11 +1348,11 @@ extension ConversationViewController: UITableViewDataSource {
         if let cell = cell as? MessageCell {
             CATransaction.performWithoutAnimation {
                 cell.render(viewModel: viewModel)
-                if tableView.allowsMultipleSelection {
-                    let intent = multipleSelectionActionView.intent
-                    cell.setMultipleSelecting(true, intent: intent, animated: false)
+                let intent = multipleSelectionActionView.intent
+                if tableView.allowsMultipleSelection, self.viewModel(viewModel, supportsMultipleSelectionWith: intent) {
+                    cell.setMultipleSelecting(true, animated: false)
                 } else {
-                    cell.setMultipleSelecting(false, intent: nil, animated: false)
+                    cell.setMultipleSelecting(false, animated: false)
                 }
                 cell.layoutIfNeeded()
             }
@@ -1323,70 +1364,6 @@ extension ConversationViewController: UITableViewDataSource {
         return dataSource?.dates.count ?? 0
     }
     
-}
-
-// MARK: - ConversationTableViewActionDelegate
-extension ConversationViewController: ConversationTableViewActionDelegate {
-    
-    func conversationTableViewCanBecomeFirstResponder(_ tableView: ConversationTableView) -> Bool {
-        return !conversationInputViewController.textView.isFirstResponder
-    }
-    
-    func conversationTableViewLongPressWillBegan(_ tableView: ConversationTableView) {
-        conversationInputViewController.textView.overrideNext = tableView
-    }
-    
-    func conversationTableView(_ tableView: ConversationTableView, hasActionsforIndexPath indexPath: IndexPath) -> Bool {
-        guard let message = dataSource?.viewModel(for: indexPath)?.message else {
-            return false
-        }
-        return !message.allowedActions.isEmpty
-    }
-    
-    func conversationTableView(_ tableView: ConversationTableView, canPerformAction action: Selector, forIndexPath indexPath: IndexPath) -> Bool {
-        guard let message = dataSource?.viewModel(for: indexPath)?.message else {
-            return false
-        }
-        return message.allowedSelectors.contains(action)
-    }
-    
-    func conversationTableView(_ tableView: ConversationTableView, didSelectAction action: MessageAction, forIndexPath indexPath: IndexPath) {
-        guard let viewModel = dataSource?.viewModel(for: indexPath) else {
-            return
-        }
-        let message = viewModel.message
-        switch action {
-        case .copy:
-            if ["_TEXT", "_POST"].contains(where: message.category.hasSuffix(_:)) {
-                UIPasteboard.general.string = message.content
-            }
-        case .delete:
-            beginMultipleSelection(on: indexPath, intent: .delete)
-        case .forward:
-            beginMultipleSelection(on: indexPath, intent: .forward)
-        case .reply:
-            conversationInputViewController.quote = (message, viewModel.thumbnail)
-        case .addToStickers:
-            if message.category.hasSuffix("_STICKER"), let stickerId = message.stickerId {
-                StickerAPI.addSticker(stickerId: stickerId, completion: { (result) in
-                    switch result {
-                    case let .success(sticker):
-                        DispatchQueue.global().async {
-                            StickerDAO.shared.insertOrUpdateFavoriteSticker(sticker: sticker)
-                            showAutoHiddenHud(style: .notification, text: Localized.TOAST_ADDED)
-                        }
-                    case let .failure(error):
-                        showAutoHiddenHud(style: .error, text: error.localizedDescription)
-                    }
-                })
-            } else {
-                let vc = StickerAddViewController.instance(source: .message(message))
-                navigationController?.pushViewController(vc, animated: true)
-            }
-        case .report:
-            report(conversationId: conversationId, message: message)
-        }
-    }
 }
 
 // MARK: - UIScrollViewDelegate
@@ -1739,6 +1716,176 @@ extension ConversationViewController: TextPreviewViewDelegate {
     
 }
 
+// MARK: - Message Actions
+extension ConversationViewController {
+    
+    private func availableActions(for message: MessageItem) -> [MessageAction] {
+        let status = message.status
+        let category = message.category
+        let mediaStatus = message.mediaStatus
+        
+        var actions: [MessageAction]
+        if status == MessageStatus.FAILED.rawValue || status == MessageStatus.UNKNOWN.rawValue || category.hasPrefix("WEBRTC_") {
+            actions = [.delete]
+        } else if category.hasSuffix("_TEXT") || category.hasSuffix("_POST") {
+            actions = [.reply, .forward, .copy, .delete]
+        } else if category.hasSuffix("_STICKER") {
+            actions = [.addToStickers, .reply, .forward, .delete]
+        } else if category.hasSuffix("_CONTACT") || category.hasSuffix("_LIVE") {
+            actions = [.reply, .forward, .delete]
+        } else if category.hasSuffix("_IMAGE") {
+            if mediaStatus == MediaStatus.DONE.rawValue || mediaStatus == MediaStatus.READ.rawValue {
+                actions = [.addToStickers, .reply, .forward, .delete]
+            } else {
+                actions = [.reply, .delete]
+            }
+        } else if category.hasSuffix("_DATA") || category.hasSuffix("_VIDEO") || category.hasSuffix("_AUDIO") {
+            if mediaStatus == MediaStatus.DONE.rawValue || mediaStatus == MediaStatus.READ.rawValue {
+                actions = [.reply, .forward, .delete]
+            } else {
+                actions = [.reply, .delete]
+            }
+        } else if category.hasSuffix("_LOCATION") {
+            actions = [.forward, .reply, .delete]
+        } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
+            actions = [.delete]
+        } else if category == MessageCategory.APP_CARD.rawValue {
+            actions = [.forward, .reply, .delete]
+        } else if category == MessageCategory.APP_BUTTON_GROUP.rawValue {
+            actions = [.delete]
+        } else if category == MessageCategory.MESSAGE_RECALL.rawValue {
+            actions = [.delete]
+        } else {
+            actions = []
+        }
+        if ConversationViewController.allowReportSingleMessage {
+            actions.append(.report)
+        }
+        
+        return actions
+    }
+    
+    private func performActionOnSelectedRow(_ action: MessageAction) {
+        guard let indexPath = tableView.indexPathForSelectedRow else {
+            return
+        }
+        perform(action: action, onRowAt: indexPath)
+    }
+    
+    private func perform(action: MessageAction, onRowAt indexPath: IndexPath) {
+        guard let viewModel = dataSource?.viewModel(for: indexPath) else {
+            return
+        }
+        let message = viewModel.message
+        switch action {
+        case .copy:
+            if ["_TEXT", "_POST"].contains(where: message.category.hasSuffix(_:)) {
+                UIPasteboard.general.string = message.content
+            }
+        case .delete:
+            beginMultipleSelection(on: indexPath, intent: .delete)
+        case .forward:
+            beginMultipleSelection(on: indexPath, intent: .forward)
+        case .reply:
+            conversationInputViewController.quote = (message, viewModel.thumbnail)
+        case .addToStickers:
+            if message.category.hasSuffix("_STICKER"), let stickerId = message.stickerId {
+                StickerAPI.addSticker(stickerId: stickerId, completion: { (result) in
+                    switch result {
+                    case let .success(sticker):
+                        DispatchQueue.global().async {
+                            StickerDAO.shared.insertOrUpdateFavoriteSticker(sticker: sticker)
+                            showAutoHiddenHud(style: .notification, text: Localized.TOAST_ADDED)
+                        }
+                    case let .failure(error):
+                        showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                    }
+                })
+            } else {
+                let vc = StickerAddViewController.instance(source: .message(message))
+                navigationController?.pushViewController(vc, animated: true)
+            }
+        case .report:
+            report(conversationId: conversationId, message: message)
+        }
+    }
+    
+}
+
+// MARK: - UIMenu Workers
+extension ConversationViewController {
+    
+    private func showMenu(for actions: [MessageAction], targetRect: CGRect, in view: UIView) {
+        let items = actions.compactMap { menuItems[$0] }
+        guard !items.isEmpty else {
+            return
+        }
+        let center = NotificationCenter.default
+        center.addObserver(self,
+                           selector: #selector(menuControllerDidShowMenu(_:)),
+                           name: UIMenuController.didShowMenuNotification,
+                           object: nil)
+        center.addObserver(self,
+                           selector: #selector(menuControllerWillHideMenu(_:)),
+                           name: UIMenuController.willHideMenuNotification,
+                           object: nil)
+        center.addObserver(self,
+                           selector: #selector(menuControllerDidHideMenu(_:)),
+                           name: UIMenuController.didHideMenuNotification,
+                           object: nil)
+        DispatchQueue.main.async {
+            UIMenuController.shared.menuItems = items
+            UIMenuController.shared.setTargetRect(targetRect, in: view)
+            UIMenuController.shared.setMenuVisible(true, animated: true)
+        }
+    }
+    
+    @objc private func copyMessage(_ sender: Any?) {
+        performActionOnSelectedRow(.copy)
+    }
+    
+    @objc private func deleteMessage(_ sender: Any?) {
+        performActionOnSelectedRow(.delete)
+    }
+    
+    @objc private func replyMessage(_ sender: Any?) {
+        performActionOnSelectedRow(.reply)
+    }
+    
+    @objc private func forwardMessage(_ sender: Any?) {
+        performActionOnSelectedRow(.forward)
+    }
+    
+    @objc private func addToStickers(_ sender: Any?) {
+        performActionOnSelectedRow(.addToStickers)
+    }
+    
+    @objc private func reportMessage(_ sender: Any?) {
+        performActionOnSelectedRow(.report)
+    }
+    
+    @objc private func menuControllerDidShowMenu(_ notification: Notification) {
+        isShowingMenu = true
+    }
+    
+    @objc private func menuControllerWillHideMenu(_ notification: Notification) {
+        if let indexPath = tableView.indexPathForSelectedRow {
+            tableView.deselectRow(at: indexPath, animated: true)
+        }
+    }
+    
+    @objc private func menuControllerDidHideMenu(_ notification: Notification) {
+        UIMenuController.shared.menuItems = nil
+        let center = NotificationCenter.default
+        center.removeObserver(self, name: UIMenuController.didShowMenuNotification, object: nil)
+        center.removeObserver(self, name: UIMenuController.willHideMenuNotification, object: nil)
+        center.removeObserver(self, name: UIMenuController.didHideMenuNotification, object: nil)
+        conversationInputViewController.textView.overrideNext = nil
+        isShowingMenu = false
+    }
+    
+}
+
 // MARK: - UI Related Helpers
 extension ConversationViewController {
     
@@ -2013,8 +2160,15 @@ extension ConversationViewController {
             navigationBarView.layoutIfNeeded()
         }
         tableView.allowsMultipleSelection = true
-        for cell in tableView.visibleCells.compactMap({ $0 as? MessageCell }) {
-            cell.setMultipleSelecting(true, intent: intent, animated: true)
+        for cell in tableView.visibleCells {
+            guard
+                let cell = cell as? MessageCell,
+                let viewModel = cell.viewModel,
+                self.viewModel(viewModel, supportsMultipleSelectionWith: intent)
+            else {
+                continue
+            }
+            cell.setMultipleSelecting(true, animated: true)
         }
         multipleSelectionActionView.intent = intent
         multipleSelectionActionView.numberOfSelection = 1
@@ -2474,6 +2628,16 @@ extension ConversationViewController {
         present(alert, animated: true, completion: nil)
     }
     
+    private func viewModel(_ viewModel: MessageViewModel, supportsMultipleSelectionWith intent: MultipleSelectionIntent) -> Bool {
+        let actions = availableActions(for: viewModel.message)
+        switch intent {
+        case .forward:
+            return actions.contains(.forward)
+        case .delete:
+            return actions.contains(.delete)
+        }
+    }
+    
 }
 
 // MARK: - Context menu configs
@@ -2481,16 +2645,10 @@ extension ConversationViewController {
 extension ConversationViewController {
     
     private func contextMenuConfigurationForRow(at indexPath: IndexPath) -> UIContextMenuConfiguration? {
-        guard !tableView.allowsMultipleSelection else {
+        guard !tableView.allowsMultipleSelection, let message = dataSource.viewModel(for: indexPath)?.message else {
             return nil
         }
-        guard conversationTableView(self.tableView, hasActionsforIndexPath: indexPath) else {
-            return nil
-        }
-        guard let message = dataSource?.viewModel(for: indexPath)?.message else {
-            return nil
-        }
-        let actions = message.allowedActions.map { (action) -> UIAction in
+        let menuChildren = availableActions(for: message).map { (action) -> UIAction in
             UIAction(title: action.title, image: action.image) { (_) in
                 guard let indexPath = self.dataSource.indexPath(where: { $0.messageId == message.messageId }) else {
                     return
@@ -2498,16 +2656,19 @@ extension ConversationViewController {
                 if action == .delete || action == .forward || action == .reply {
                     // Wait until context menu animation finished
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        self.conversationTableView(self.tableView, didSelectAction: action, forIndexPath: indexPath)
+                        self.perform(action: action, onRowAt: indexPath)
                     }
                 } else {
-                    self.conversationTableView(self.tableView, didSelectAction: action, forIndexPath: indexPath)
+                    self.perform(action: action, onRowAt: indexPath)
                 }
             }
         }
+        guard !menuChildren.isEmpty else {
+            return nil
+        }
         let identifier = message.messageId as NSString
         return UIContextMenuConfiguration(identifier: identifier, previewProvider: nil) { (elements) -> UIMenu? in
-            UIMenu(title: "", children: actions)
+            UIMenu(title: "", children: menuChildren)
         }
     }
     

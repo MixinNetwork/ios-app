@@ -2,7 +2,7 @@ import UIKit
 
 class FullscreenPopupViewController: UIViewController {
     
-    @IBOutlet weak var contentView: UIView!
+    @IBOutlet weak var contentView: SolidBackgroundColoredView!
     @IBOutlet weak var pageControlView: PageControlView!
     
     @IBOutlet weak var edgePanGestureRecognizer: FullScreenPopupEdgePanGestureRecognizer!
@@ -13,6 +13,7 @@ class FullscreenPopupViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        contentView.backgroundColorIgnoringSystemSettings = .background
         pageControlView.moreButton.addTarget(self, action: #selector(moreAction(_:)), for: .touchUpInside)
         pageControlView.dismissButton.addTarget(self, action: #selector(dismissAction(_:)), for: .touchUpInside)
     }

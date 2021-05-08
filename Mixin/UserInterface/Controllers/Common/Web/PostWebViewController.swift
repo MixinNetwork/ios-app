@@ -10,19 +10,7 @@ class PostWebViewController: WebViewController {
     class func presentInstance(message: Message, asChildOf parent: UIViewController) {
         let vc = PostWebViewController(nib: R.nib.fullscreenPopupView)
         vc.message = message
-        vc.view.frame = parent.view.bounds
-        vc.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        parent.addChild(vc)
-        parent.view.addSubview(vc.view)
-        vc.didMove(toParent: parent)
-        
-        vc.view.center.y = parent.view.bounds.height * 3 / 2
-        UIView.animate(withDuration: 0.5) {
-            UIView.setAnimationCurve(.overdamped)
-            vc.view.center.y = parent.view.bounds.height / 2
-        }
-        
-        AppDelegate.current.mainWindow.endEditing(true)
+        vc.presentAsChild(of: parent, completion: nil)
     }
     
     override func viewDidLoad() {

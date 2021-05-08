@@ -162,30 +162,6 @@ class MixinWebViewController: WebViewController {
         }
     }
     
-    func presentAsChild(of parent: UIViewController, completion: (() -> Void)?) {
-        view.frame = parent.view.bounds
-        view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        parent.addChild(self)
-        let parentView: UIView
-        if let view = parent.view as? UIVisualEffectView {
-            parentView = view.contentView
-        } else {
-            parentView = parent.view
-        }
-        parentView.addSubview(view)
-        didMove(toParent: parent)
-        
-        view.center.y = parent.view.bounds.height * 3 / 2
-        UIView.animate(withDuration: 0.5) {
-            UIView.setAnimationCurve(.overdamped)
-            self.view.center.y = parent.view.bounds.height / 2
-        } completion: { (_) in
-            completion?()
-        }
-        
-        AppDelegate.current.mainWindow.endEditing(true)
-    }
-    
     func removeAllMessageHandlers() {
         guard isViewLoaded && isMessageHandlerAdded else {
             return

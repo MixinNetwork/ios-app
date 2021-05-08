@@ -63,6 +63,28 @@ class FullscreenPopupViewController: UIViewController {
         
     }
     
+    func presentAsChild(of parent: UIViewController, completion: (() -> Void)?) {
+        AppDelegate.current.mainWindow.endEditing(true)
+        
+        view.frame = parent.view.bounds
+        view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        parent.addChild(self)
+        if let view = parent.view as? UIVisualEffectView {
+            view.contentView.addSubview(view)
+        } else {
+            parent.view.addSubview(view)
+        }
+        didMove(toParent: parent)
+        
+        view.center.y = parent.view.bounds.height * 3 / 2
+        UIView.animate(withDuration: 0.5) {
+            UIView.setAnimationCurve(.overdamped)
+            self.view.center.y = parent.view.bounds.height / 2
+        } completion: { (_) in
+            completion?()
+        }
+    }
+    
     func dismissAsChild(animated: Bool, completion: (() -> Void)? = nil) {
         guard let parent = parent else {
             return

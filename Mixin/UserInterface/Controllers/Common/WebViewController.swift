@@ -15,9 +15,6 @@ class WebViewController: UIViewController {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var webViewWrapperView: UIView!
     @IBOutlet weak var pageControlView: PageControlView!
-    @IBOutlet weak var loadFailView: UIView!
-    @IBOutlet weak var contactDeveloperButton: UIButton!
-    @IBOutlet weak var loadFailLabel: UILabel!
 
     @IBOutlet weak var edgePanGestureRecognizer: WebViewScreenEdgePanGestureRecognizer!
     
@@ -77,14 +74,6 @@ class WebViewController: UIViewController {
     @IBAction func dismissAction(_ sender: Any) {
         dismissAsChild(animated: true)
     }
-    
-    @IBAction func reloadAction(_ sender: Any) {
-
-    }
-
-    @IBAction func contactDeveloperAction(_ sender: Any) {
-    }
-    
     
     @IBAction func screenEdgePanAction(_ recognizer: WebViewScreenEdgePanGestureRecognizer) {
         switch recognizer.state {

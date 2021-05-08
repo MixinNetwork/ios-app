@@ -5,6 +5,9 @@ import MixinServices
 
 class MixinWebViewController: WebViewController {
     
+    @IBOutlet weak var loadFailLabel: UILabel!
+    @IBOutlet weak var contactDeveloperButton: UIButton!
+    
     private enum HandlerName {
         static let mixinContext = "MixinContext"
         static let reloadTheme = "reloadTheme"
@@ -35,6 +38,13 @@ class MixinWebViewController: WebViewController {
     private(set) var context: Context!
     
     private lazy var suspicousLinkView = R.nib.suspiciousLinkView(owner: self)!
+    private lazy var loadingFailureView: UIView = {
+        let view = R.nib.webLoadingFailureView(owner: self)!
+        loadingFailureViewIfLoaded = view
+        return view
+    }()
+    
+    private weak var loadingFailureViewIfLoaded: UIView?
     
     private var isMessageHandlerAdded = true
     private var webViewTitleObserver: NSKeyValueObservation?
@@ -87,34 +97,6 @@ class MixinWebViewController: WebViewController {
         }
     }
     
-    override func reloadAction(_ sender: Any) {
-        reloadWebView()
-    }
-    
-    override func contactDeveloperAction(_ sender: Any) {
-        guard case let .app(app, _) = context.style else {
-            return
-        }
-
-        let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-        DispatchQueue.global().async { [weak self] in
-            guard let developerUserId = Self.syncUser(userId: app.appId, hud: hud)?.appCreatorId else {
-                return
-            }
-            guard let developUser = Self.syncUser(userId: developerUserId, hud: hud) else {
-               return
-            }
-            DispatchQueue.main.async {
-                hud.hide()
-                UIApplication.homeNavigationController?.pushViewController(withBackRoot: ConversationViewController.instance(ownerUser: developUser))
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
-                    self?.dismissAsChild(animated: true)
-                }
-            }
-        }
-    }
-    
     override func moreAction(_ sender: Any) {
         let floatAction: WebMoreMenuViewController.MenuItem
         if associatedClip == nil {
@@ -148,6 +130,41 @@ class MixinWebViewController: WebViewController {
     @IBAction func continueAction(_ sender: Any) {
         suspicousLinkView.removeFromSuperview()
         loadNormalUrl()
+    }
+    
+    @IBAction func reloadAction(_ sender: Any) {
+        loadingFailureViewIfLoaded?.removeFromSuperview()
+        if let currentUrl = webView.url {
+            let request = URLRequest(url: currentUrl,
+                                     cachePolicy: .reloadIgnoringLocalCacheData,
+                                     timeoutInterval: 10)
+            self.webView.load(request)
+        } else {
+            loadWebView()
+        }
+    }
+    
+    @IBAction func contactDeveloperAction(_ sender: Any) {
+        guard case let .app(app, _) = context.style else {
+            return
+        }
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        DispatchQueue.global().async { [weak self] in
+            guard let developerUserId = Self.syncUser(userId: app.appId, hud: hud)?.appCreatorId else {
+                return
+            }
+            guard let developUser = Self.syncUser(userId: developerUserId, hud: hud) else {
+               return
+            }
+            DispatchQueue.main.async {
+                hud.hide()
+                UIApplication.homeNavigationController?.pushViewController(withBackRoot: ConversationViewController.instance(ownerUser: developUser))
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+                    self?.dismissAsChild(animated: true)
+                }
+            }
+        }
     }
     
     func presentAsChild(of parent: UIViewController, completion: (() -> Void)?) {
@@ -238,7 +255,13 @@ extension MixinWebViewController: WKNavigationDelegate {
         }
         switch nsError.code {
         case NSURLErrorNotConnectedToInternet, NSURLErrorTimedOut, NSURLErrorInternationalRoamingOff, NSURLErrorDataNotAllowed, NSURLErrorCannotFindHost, NSURLErrorCannotConnectToHost, NSURLErrorNetworkConnectionLost:
-            loadFailView.isHidden = false
+            if loadingFailureView.superview == nil {
+                contentView.insertSubview(loadingFailureView, belowSubview: pageControlView)
+                loadingFailureView.snp.makeConstraints { make in
+                    make.leading.trailing.equalToSuperview()
+                    make.top.bottom.equalTo(contentView.safeAreaLayoutGuide)
+                }
+            }
             loadFailLabel.text = R.string.localizable.web_cannot_reached_desc(host)
             if case .app = context.style {
                 contactDeveloperButton.isHidden = false
@@ -327,7 +350,7 @@ extension MixinWebViewController: WebMoreMenuControllerDelegate {
             case .copyLink:
                 copyAction(currentUrl: url)
             case .refresh:
-                reloadWebView()
+                reloadAction(controller)
             case .openInSafari:
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }
@@ -365,18 +388,6 @@ extension MixinWebViewController {
             webView.load(URLRequest(url: components.url ?? context.initialUrl))
         } else {
             webView.load(URLRequest(url: context.initialUrl))
-        }
-    }
-    
-    private func reloadWebView() {
-        loadFailView.isHidden = true
-        if let currentUrl = webView.url {
-            let request = URLRequest(url: currentUrl,
-                                     cachePolicy: .reloadIgnoringLocalCacheData,
-                                     timeoutInterval: 10)
-            self.webView.load(request)
-        } else {
-            loadWebView()
         }
     }
     

@@ -16,23 +16,6 @@ class MixinWebViewController: WebViewController {
     
     weak var associatedClip: Clip?
     
-    override var config: WKWebViewConfiguration {
-        let config = WKWebViewConfiguration()
-        config.dataDetectorTypes = .all
-        config.preferences = WKPreferences()
-        config.preferences.minimumFontSize = 12
-        config.preferences.javaScriptEnabled = true
-        config.allowsInlineMediaPlayback = true
-        config.mediaTypesRequiringUserActionForPlayback = .video
-        config.preferences.javaScriptCanOpenWindowsAutomatically = true
-        config.userContentController.addUserScript(Script.disableImageSelection)
-        config.userContentController.add(self, name: HandlerName.mixinContext)
-        config.userContentController.add(self, name: HandlerName.reloadTheme)
-        config.userContentController.add(self, name: HandlerName.playlist)
-        config.applicationNameForUserAgent = "Mixin/\(Bundle.main.shortVersion)"
-        return config
-    }
-    
     private let loadingIndicator = AppLoadingIndicatorView(frame: .zero)
     
     private(set) var context: Context!
@@ -68,7 +51,7 @@ class MixinWebViewController: WebViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        contentView.insertSubview(loadingIndicator, aboveSubview: webViewWrapperView)
+        contentView.insertSubview(loadingIndicator, aboveSubview: webContentView)
         loadingIndicator.snp.makeConstraints { (make) in
             make.center.equalToSuperview()
         }
@@ -76,6 +59,18 @@ class MixinWebViewController: WebViewController {
         showPageTitleConstraint.priority = context.isImmersive ? .defaultLow : .defaultHigh
         webView.navigationDelegate = self
         webView.uiDelegate = self
+        webView.configuration.dataDetectorTypes = .all
+        webView.configuration.preferences = WKPreferences()
+        webView.configuration.preferences.minimumFontSize = 12
+        webView.configuration.preferences.javaScriptEnabled = true
+        webView.configuration.allowsInlineMediaPlayback = true
+        webView.configuration.mediaTypesRequiringUserActionForPlayback = .video
+        webView.configuration.preferences.javaScriptCanOpenWindowsAutomatically = true
+        webView.configuration.userContentController.addUserScript(Script.disableImageSelection)
+        webView.configuration.userContentController.add(self, name: HandlerName.mixinContext)
+        webView.configuration.userContentController.add(self, name: HandlerName.reloadTheme)
+        webView.configuration.userContentController.add(self, name: HandlerName.playlist)
+        webView.configuration.applicationNameForUserAgent = "Mixin/\(Bundle.main.shortVersion)"
         loadWebView()
     }
     

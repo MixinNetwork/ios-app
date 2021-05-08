@@ -11,27 +11,21 @@ class WebViewController: UIViewController {
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var statusBarBackgroundView: UIView!
     @IBOutlet weak var titleWrapperView: UIView!
+    @IBOutlet weak var titleStackView: UIStackView!
     @IBOutlet weak var titleImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var webViewWrapperView: UIView!
+    @IBOutlet weak var webView: WKWebView!
     @IBOutlet weak var pageControlView: PageControlView!
-
+    
     @IBOutlet weak var edgePanGestureRecognizer: WebViewScreenEdgePanGestureRecognizer!
     
     @IBOutlet weak var showPageTitleConstraint: NSLayoutConstraint!
     
+    weak var webContentView: UIView!
+    
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return statusBarStyle
     }
-    
-    var config: WKWebViewConfiguration {
-        WKWebViewConfiguration()
-    }
-    
-    private(set) lazy var webView: WKWebView = {
-        let frame = CGRect(x: 0, y: 0, width: 375, height: 667)
-        return WKWebView(frame: frame, configuration: config)
-    }()
     
     private(set) var isBeingDismissedAsChild = false
     
@@ -42,13 +36,15 @@ class WebViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        webContentView = R.nib.webContentView(owner: self)!
+        contentView.insertSubview(webContentView, belowSubview: pageControlView)
+        webContentView.snp.makeEdgesEqualToSuperview()
+        titleStackView.snp.makeConstraints { make in
+            make.trailing.equalTo(pageControlView.snp.leading).offset(-20)
+        }
         pageControlView.moreButton.addTarget(self, action: #selector(moreAction(_:)), for: .touchUpInside)
         pageControlView.dismissButton.addTarget(self, action: #selector(dismissAction(_:)), for: .touchUpInside)
         updateBackground(pageThemeColor: .background)
-        webViewWrapperView.addSubview(webView)
-        webView.snp.makeEdgesEqualToSuperview()
-        webView.isOpaque = false
-        webView.allowsBackForwardNavigationGestures = true
         webView.scrollView.panGestureRecognizer.require(toFail: edgePanGestureRecognizer)
     }
     

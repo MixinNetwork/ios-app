@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MixinWebViewController" customModule="Mixin" customModuleProvider="target"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view opaque="NO" contentMode="scaleToFill" id="7L0-TY-CKh">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_suspicious" translatesAutoresizingMaskIntoConstraints="NO" id="FGk-nk-xX7">
+                    <rect key="frame" x="174" y="178" width="66" height="66"/>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" text="Suspicious Link" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M5N-dN-wQk">
+                    <rect key="frame" x="141.5" y="276" width="131" height="21.5"/>
+                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                    <color key="textColor" name="title"/>
+                    <nil key="highlightedColor"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="web_suspicious_link"/>
+                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
+                    </userDefinedRuntimeAttributes>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" text="The link is not in the corresponding resource patterns." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2UR-Aw-I1I">
+                    <rect key="frame" x="36" y="313.5" width="342" height="14.5"/>
+                    <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                    <color key="textColor" name="text_accessory"/>
+                    <nil key="highlightedColor"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="web_suspicious_link_tips"/>
+                    </userDefinedRuntimeAttributes>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4b1-Gh-yYG" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="143.5" y="746" width="127" height="39"/>
+                    <constraints>
+                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="116" id="lTU-vP-1x9"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                    <inset key="contentEdgeInsets" minX="26" minY="12" maxX="26" maxY="12"/>
+                    <state key="normal" title="Back To Chat"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="web_suspicious_back"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="dismissAction:" destination="-1" eventType="touchUpInside" id="e4A-Ag-kYJ"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z7l-pe-U3Y">
+                    <rect key="frame" x="132" y="817" width="150" height="39"/>
+                    <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                    <inset key="contentEdgeInsets" minX="20" minY="12" maxX="18" maxY="12"/>
+                    <state key="normal" title="Continue Open URL">
+                        <color key="titleColor" name="theme"/>
+                    </state>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="web_suspicious_continue"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="continueAction:" destination="-1" eventType="touchUpInside" id="awK-Vt-LTE"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" name="background"/>
+            <constraints>
+                <constraint firstItem="4b1-Gh-yYG" firstAttribute="centerX" secondItem="7L0-TY-CKh" secondAttribute="centerX" id="4Qt-1D-kge"/>
+                <constraint firstItem="M5N-dN-wQk" firstAttribute="top" secondItem="FGk-nk-xX7" secondAttribute="bottom" constant="32" id="5ib-MR-4YF"/>
+                <constraint firstItem="2UR-Aw-I1I" firstAttribute="leading" secondItem="7L0-TY-CKh" secondAttribute="leading" constant="36" id="DdF-CJ-lKY"/>
+                <constraint firstAttribute="bottom" secondItem="Z7l-pe-U3Y" secondAttribute="bottom" constant="40" id="SZw-Hl-em2"/>
+                <constraint firstAttribute="trailing" secondItem="2UR-Aw-I1I" secondAttribute="trailing" constant="36" id="TXd-Fy-0dO"/>
+                <constraint firstItem="M5N-dN-wQk" firstAttribute="centerX" secondItem="7L0-TY-CKh" secondAttribute="centerX" id="XX7-v5-sca"/>
+                <constraint firstItem="FGk-nk-xX7" firstAttribute="top" secondItem="7L0-TY-CKh" secondAttribute="top" constant="178" id="ZM0-wx-yrw"/>
+                <constraint firstItem="FGk-nk-xX7" firstAttribute="centerX" secondItem="7L0-TY-CKh" secondAttribute="centerX" id="ZsS-JV-Ztb"/>
+                <constraint firstItem="Z7l-pe-U3Y" firstAttribute="top" secondItem="4b1-Gh-yYG" secondAttribute="bottom" constant="32" id="svK-BO-X52"/>
+                <constraint firstItem="Z7l-pe-U3Y" firstAttribute="centerX" secondItem="7L0-TY-CKh" secondAttribute="centerX" id="vIW-LZ-SaK"/>
+                <constraint firstItem="2UR-Aw-I1I" firstAttribute="top" secondItem="M5N-dN-wQk" secondAttribute="bottom" constant="16" id="xm6-GS-UKi"/>
+            </constraints>
+            <point key="canvasLocation" x="-55" y="154"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="ic_suspicious" width="66" height="66"/>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_accessory">
+            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="theme">
+            <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="title">
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

@@ -15,7 +15,6 @@ class WebViewController: UIViewController {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var webViewWrapperView: UIView!
     @IBOutlet weak var pageControlView: PageControlView!
-    @IBOutlet weak var suspicionView: UIView!
     @IBOutlet weak var loadFailView: UIView!
     @IBOutlet weak var contactDeveloperButton: UIButton!
     @IBOutlet weak var loadFailLabel: UILabel!
@@ -75,10 +74,10 @@ class WebViewController: UIViewController {
         }
     }
     
-    @IBAction func continueAction(_ sender: Any) {
-        
+    @IBAction func dismissAction(_ sender: Any) {
+        dismissAsChild(animated: true)
     }
-
+    
     @IBAction func reloadAction(_ sender: Any) {
 
     }
@@ -138,10 +137,6 @@ class WebViewController: UIViewController {
     
     @objc func moreAction(_ sender: Any) {
         
-    }
-    
-    @objc func dismissAction(_ sender: Any) {
-        dismissAsChild(animated: true)
     }
     
     func updateBackground(pageThemeColor: UIColor) {

@@ -34,6 +34,8 @@ class MixinWebViewController: WebViewController {
     
     private(set) var context: Context!
     
+    private lazy var suspicousLinkView = R.nib.suspiciousLinkView(owner: self)!
+    
     private var isMessageHandlerAdded = true
     private var webViewTitleObserver: NSKeyValueObservation?
     
@@ -56,7 +58,7 @@ class MixinWebViewController: WebViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        contentView.insertSubview(loadingIndicator, belowSubview: suspicionView)
+        contentView.insertSubview(loadingIndicator, aboveSubview: webViewWrapperView)
         loadingIndicator.snp.makeConstraints { (make) in
             make.center.equalToSuperview()
         }
@@ -85,11 +87,6 @@ class MixinWebViewController: WebViewController {
         }
     }
     
-    override func continueAction(_ sender: Any) {
-        suspicionView.isHidden = true
-        loadNormalUrl()
-    }
-
     override func reloadAction(_ sender: Any) {
         reloadWebView()
     }
@@ -146,6 +143,11 @@ class MixinWebViewController: WebViewController {
         }
         more.delegate = self
         present(more, animated: true, completion: nil)
+    }
+    
+    @IBAction func continueAction(_ sender: Any) {
+        suspicousLinkView.removeFromSuperview()
+        loadNormalUrl()
     }
     
     func presentAsChild(of parent: UIViewController, completion: (() -> Void)?) {
@@ -398,17 +400,23 @@ extension MixinWebViewController {
                             app = response.app
                         }
                     }
-
                     DispatchQueue.main.async {
-                        guard let weakSelf = self else {
+                        guard let self = self else {
                             return
                         }
                         if app?.resourcePatterns?.contains(where: validUrl.hasPrefix) ?? false {
-                            weakSelf.loadAppUrl(title: title, iconUrl: iconUrl)
+                            self.loadAppUrl(title: title, iconUrl: iconUrl)
                         } else {
-                            weakSelf.suspicionView.isHidden = false
-                            weakSelf.context.style = .webPage
-                            weakSelf.context.isImmersive = false
+                            if self.suspicousLinkView.superview == nil {
+                                self.contentView.insertSubview(self.suspicousLinkView,
+                                                               belowSubview: self.pageControlView)
+                                self.suspicousLinkView.snp.makeConstraints { make in
+                                    make.leading.trailing.equalToSuperview()
+                                    make.top.bottom.equalTo(self.contentView.safeAreaLayoutGuide)
+                                }
+                            }
+                            self.context.style = .webPage
+                            self.context.isImmersive = false
                         }
                     }
                 }

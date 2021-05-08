@@ -27,6 +27,7 @@ class ConversationDataSource {
     private let numberOfMessagesOnPaging = 100
     private let numberOfMessagesOnReloading = 35
     private let me = LoginManager.shared.account!
+    private let factory = MessageViewModelFactory()
     
     private(set) var conversation: ConversationItem {
         didSet {
@@ -81,6 +82,7 @@ class ConversationDataSource {
         self.highlight = highlight
         self.ownerUser = ownerUser
         self.category = conversation.category == ConversationCategory.CONTACT.rawValue ? .contact : .group
+        factory.delegate = self
     }
     
     func initData(completion: @escaping () -> Void) {
@@ -134,7 +136,7 @@ class ConversationDataSource {
             self.firstUnreadMessageId = nil
             canInsertUnreadHint = false
         }
-        var (dates, viewModels) = self.viewModels(with: messages, fits: layoutSize.width)
+        var (dates, viewModels) = factory.viewModels(with: messages, fits: layoutSize.width)
         if canInsertEncryptionHint && didLoadEarliestMessage {
             let date: String
             if let firstDate = dates.first {
@@ -144,7 +146,7 @@ class ConversationDataSource {
                 dates.append(date)
             }
             let hint = MessageItem.encryptionHintMessage(conversationId: self.conversationId)
-            let viewModel = self.viewModel(withMessage: hint, style: .bottomSeparator, fits: layoutSize.width)
+            let viewModel = factory.viewModel(withMessage: hint, style: .bottomSeparator, fits: layoutSize.width)
             if viewModels[date] != nil {
                 viewModels[date]?.insert(viewModel, at: 0)
             } else {
@@ -293,11 +295,11 @@ class ConversationDataSource {
             let shouldInsertEncryptionHint = self.canInsertEncryptionHint && didLoadEarliestMessage
             messages = messages.filter{ !self.loadedMessageIds.contains($0.messageId) }
             self.loadedMessageIds.formUnion(messages.map({ $0.messageId }))
-            var (dates, viewModels) = self.viewModels(with: messages, fits: layoutWidth)
+            var (dates, viewModels) = self.factory.viewModels(with: messages, fits: layoutWidth)
             if shouldInsertEncryptionHint {
                 let hint = MessageItem.encryptionHintMessage(conversationId: conversationId)
                 messages.insert(hint, at: 0)
-                let encryptionHintViewModel = self.viewModel(withMessage: hint, style: .bottomSeparator, fits: layoutWidth)
+                let encryptionHintViewModel = self.factory.viewModel(withMessage: hint, style: .bottomSeparator, fits: layoutWidth)
                 if let firstDate = dates.first {
                     viewModels[firstDate]?.insert(encryptionHintViewModel, at: 0)
                 } else if let firstDate = self.dates.first {
@@ -311,7 +313,9 @@ class ConversationDataSource {
             if let lastDate = dates.last, let viewModelsBeforeInsertion = self.viewModels[lastDate] {
                 let messagesBeforeInsertion = Array(viewModelsBeforeInsertion.prefix(2)).map({ $0.message })
                 let messagesForTheDate = Array(messages.suffix(2)) + messagesBeforeInsertion
-                let styles = Array(0..<messagesForTheDate.count).map{ self.style(forIndex: $0, messages: messagesForTheDate)}
+                let styles = Array(0..<messagesForTheDate.count).map{
+                    self.factory.style(forIndex: $0, messages: messagesForTheDate)
+                }
                 viewModels[lastDate]?.last?.style = styles[styles.count - messagesBeforeInsertion.count - 1]
                 DispatchQueue.main.sync {
                     guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {
@@ -374,10 +378,12 @@ class ConversationDataSource {
                 messages.insert(hint, at: index)
                 self.canInsertUnreadHint = false
             }
-            let (dates, viewModels) = self.viewModels(with: messages, fits: layoutWidth)
+            let (dates, viewModels) = self.factory.viewModels(with: messages, fits: layoutWidth)
             if let firstDate = dates.first, let messagesBeforeAppend = self.viewModels[firstDate]?.suffix(2).map({ $0.message }) {
                 let messagesForTheDate = messagesBeforeAppend + messages.prefix(2)
-                let styles = Array(0..<messagesForTheDate.count).map{ self.style(forIndex: $0, messages: messagesForTheDate)}
+                let styles = Array(0..<messagesForTheDate.count).map {
+                    self.factory.style(forIndex: $0, messages: messagesForTheDate)
+                }
                 viewModels[firstDate]?.first?.style = styles[messagesBeforeAppend.count]
                 DispatchQueue.main.sync {
                     guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {
@@ -435,11 +441,11 @@ class ConversationDataSource {
             let indexBeforeDeletedMessage = indexPath.row - 1
             let indexAfterDeletedMessage = indexPath.row
             if indexBeforeDeletedMessage >= 0 {
-                let style = self.style(forIndex: indexBeforeDeletedMessage, viewModels: viewModels)
+                let style = factory.style(forIndex: indexBeforeDeletedMessage, viewModels: viewModels)
                 self.viewModels[date]?[indexBeforeDeletedMessage].style = style
             }
             if indexAfterDeletedMessage < viewModels.count {
-                let style = self.style(forIndex: indexAfterDeletedMessage, viewModels: viewModels)
+                let style = factory.style(forIndex: indexAfterDeletedMessage, viewModels: viewModels)
                 self.viewModels[date]?[indexAfterDeletedMessage].style = style
             }
         }
@@ -664,13 +670,33 @@ extension ConversationDataSource {
                 }
                 let date = DateFormatter.yyyymmdd.string(from: message.createdAt.toUTCDate())
                 if let style = self.viewModels[date]?[indexPath.row].style {
-                    let viewModel = self.viewModel(withMessage: message, style: style, fits: self.layoutSize.width)
+                    let viewModel = self.factory.viewModel(withMessage: message, style: style, fits: self.layoutSize.width)
                     self.viewModels[date]?[indexPath.row] = viewModel
                     tableView.reloadData()
                     self.selectTableViewRowsWithPreviousSelection()
                 }
             }
         }
+    }
+    
+}
+
+// MARK: - MessageViewModelFactoryDelegate
+extension ConversationDataSource: MessageViewModelFactoryDelegate {
+    
+    func messageViewModelFactory(_ factory: MessageViewModelFactory, isMessageRepresentative message: MessageItem) -> Bool {
+        message.isRepresentativeMessage(conversation: conversation)
+    }
+    
+    func messageViewModelFactory(_ factory: MessageViewModelFactory, isMessageForwardedByBot message: MessageItem) -> Bool {
+        isMessageForwardedByBot(message)
+    }
+    
+    func messageViewModelFactory(_ factory: MessageViewModelFactory, highlightTextMessageViewModel viewModel: TextMessageViewModel) {
+        guard let keyword = highlight?.keyword else {
+            return
+        }
+        viewModel.highlight(keyword: keyword)
     }
     
 }
@@ -721,126 +747,6 @@ extension ConversationDataSource {
         }
     }
     
-    typealias CategorizedViewModels = (dates: [String], viewModels: [String: [MessageViewModel]])
-    private func viewModels(with messages: [MessageItem], fits layoutWidth: CGFloat) -> CategorizedViewModels {
-        var dates = [String]()
-        var cataloguedMessages = [String: [MessageItem]]()
-        for i in 0..<messages.count {
-            let message = messages[i]
-            let date = DateFormatter.yyyymmdd.string(from: message.createdAt.toUTCDate())
-            if cataloguedMessages[date] != nil {
-                cataloguedMessages[date]!.append(message)
-            } else {
-                cataloguedMessages[date] = [message]
-            }
-        }
-        dates = cataloguedMessages.keys.sorted(by: <)
-        
-        var viewModels = [String: [MessageViewModel]]()
-        for date in dates {
-            let messages = cataloguedMessages[date] ?? []
-            for (row, message) in messages.enumerated() {
-                let style = self.style(forIndex: row, messages: messages)
-                let viewModel = self.viewModel(withMessage: message, style: style, fits: layoutWidth)
-                if viewModels[date] != nil {
-                    viewModels[date]!.append(viewModel)
-                } else {
-                    viewModels[date] = [viewModel]
-                }
-            }
-        }
-        return (dates: dates, viewModels: viewModels)
-    }
-    
-    private func viewModel(withMessage message: MessageItem, style: MessageViewModel.Style, fits layoutWidth: CGFloat) -> MessageViewModel {
-        let viewModel: MessageViewModel
-        if message.status == MessageStatus.FAILED.rawValue {
-            viewModel = DecryptionFailedMessageViewModel(message: message)
-        } else if message.status == MessageStatus.UNKNOWN.rawValue {
-            viewModel = UnknownMessageViewModel(message: message)
-        } else {
-            if message.category.hasSuffix("_TEXT") {
-                viewModel = TextMessageViewModel(message: message)
-            } else if message.category.hasSuffix("_IMAGE") {
-                viewModel = PhotoMessageViewModel(message: message)
-            } else if message.category.hasSuffix("_STICKER") {
-                viewModel = StickerMessageViewModel(message: message)
-            } else if message.category.hasSuffix("_DATA") {
-                viewModel = DataMessageViewModel(message: message)
-            } else if message.category.hasSuffix("_VIDEO") {
-                viewModel = VideoMessageViewModel(message: message)
-            } else if message.category.hasSuffix("_AUDIO") {
-                viewModel = AudioMessageViewModel(message: message)
-            } else if message.category.hasSuffix("_CONTACT") {
-                viewModel = ContactMessageViewModel(message: message)
-            } else if message.category.hasSuffix("_LIVE") {
-                viewModel = LiveMessageViewModel(message: message)
-            } else if message.category.hasSuffix("_POST") {
-                viewModel = PostMessageViewModel(message: message)
-            } else if message.category.hasSuffix("_LOCATION") {
-                viewModel = LocationMessageViewModel(message: message)
-            } else if message.category.hasPrefix("WEBRTC_") {
-                viewModel = CallMessageViewModel(message: message)
-            } else if message.category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
-                viewModel = TransferMessageViewModel(message: message)
-            } else if message.category == MessageCategory.SYSTEM_CONVERSATION.rawValue {
-                viewModel = SystemMessageViewModel(message: message)
-            } else if message.category == MessageCategory.APP_BUTTON_GROUP.rawValue {
-                viewModel = AppButtonGroupViewModel(message: message)
-            } else if message.category == MessageCategory.APP_CARD.rawValue {
-                viewModel = AppCardMessageViewModel(message: message)
-            } else if message.category == MessageCategory.MESSAGE_RECALL.rawValue {
-                viewModel = RecalledMessageViewModel(message: message)
-            } else if message.category == MessageCategory.EXT_UNREAD.rawValue {
-                viewModel = MessageViewModel(message: message)
-                viewModel.cellHeight = 38
-            } else if message.category == MessageCategory.EXT_ENCRYPTION.rawValue {
-                viewModel = EncryptionHintViewModel(message: message)
-            } else if MessageCategory.krakenCategories.contains(message.category) {
-                viewModel = SystemMessageViewModel(message: message)
-            } else {
-                viewModel = UnknownMessageViewModel(message: message)
-            }
-        }
-        viewModel.layout(width: layoutWidth, style: style)
-        if let viewModel = viewModel as? TextMessageViewModel, let keyword = highlight?.keyword {
-            viewModel.highlight(keyword: keyword)
-        }
-        return viewModel
-    }
-    
-    private func style(forIndex index: Int, isFirstMessage: Bool, isLastMessage: Bool, messageAtIndex: (Int) -> MessageItem) -> MessageViewModel.Style {
-        let message = messageAtIndex(index)
-        var style: MessageViewModel.Style = []
-        if message.userId != me.user_id {
-            style = .received
-        }
-        if isLastMessage
-            || messageAtIndex(index + 1).userId != message.userId
-            || messageAtIndex(index + 1).isExtensionMessage
-            || messageAtIndex(index + 1).isSystemMessage {
-            style.insert(.tail)
-        }
-        if message.category == MessageCategory.EXT_ENCRYPTION.rawValue {
-            style.insert(.bottomSeparator)
-        } else if !isLastMessage && (message.isSystemMessage
-            || messageAtIndex(index + 1).userId != message.userId
-            || messageAtIndex(index + 1).isSystemMessage
-            || messageAtIndex(index + 1).isExtensionMessage) {
-            style.insert(.bottomSeparator)
-        }
-        if message.isRepresentativeMessage(conversation: conversation) {
-            if (isFirstMessage && !message.isExtensionMessage && !message.isSystemMessage)
-                || (!isFirstMessage && (messageAtIndex(index - 1).userId != message.userId || messageAtIndex(index - 1).isExtensionMessage || messageAtIndex(index - 1).isSystemMessage)) {
-                style.insert(.fullname)
-            }
-        }
-        if isMessageForwardedByBot(message) {
-            style.insert(.forwardedByBot)
-        }
-        return style
-    }
-    
     private func isMessageForwardedByBot(_ message: MessageItem) -> Bool {
         if let ownerUser = ownerUser {
             return ownerUser.isBot
@@ -849,20 +755,6 @@ extension ConversationDataSource {
         } else {
             return false
         }
-    }
-    
-    private func style(forIndex index: Int, messages: [MessageItem]) -> MessageViewModel.Style {
-        return style(forIndex: index,
-                     isFirstMessage: index == 0,
-                     isLastMessage: index == messages.count - 1,
-                     messageAtIndex: { messages[$0] })
-    }
-    
-    private func style(forIndex index: Int, viewModels: [MessageViewModel]) -> MessageViewModel.Style {
-        return style(forIndex: index,
-                     isFirstMessage: index == 0,
-                     isLastMessage: index == viewModels.count - 1,
-                     messageAtIndex: { viewModels[$0].message })
     }
     
     private func addMessageAndDisplay(message: MessageItem) {
@@ -923,7 +815,7 @@ extension ConversationDataSource {
                     }
                 }
             }
-            viewModel = self.viewModel(withMessage: message, style: style, fits: layoutSize.width)
+            viewModel = factory.viewModel(withMessage: message, style: style, fits: layoutSize.width)
             if !isLastCell {
                 let nextViewModel = viewModels[row]
                 if viewModel.message.userId != nextViewModel.message.userId {
@@ -953,7 +845,7 @@ extension ConversationDataSource {
             if style.contains(.received) && message.isRepresentativeMessage(conversation: conversation) {
                 style.insert(.fullname)
             }
-            viewModel = self.viewModel(withMessage: message, style: style, fits: layoutSize.width)
+            viewModel = factory.viewModel(withMessage: message, style: style, fits: layoutSize.width)
         }
         DispatchQueue.main.sync {
             guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {

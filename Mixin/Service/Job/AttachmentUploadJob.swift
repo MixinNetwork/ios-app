@@ -28,6 +28,20 @@ class AttachmentUploadJob: UploadOrDownloadJob {
             removeJob()
             return false
         }
+        
+        if let content = message.content,
+           !content.isEmpty,
+           message.mediaKey != nil,
+           message.mediaDigest != nil,
+           let data = Data(base64Encoded: content),
+           let attachmentExtra = try? JSONDecoder.default.decode(AttachmentExtra.self, from: data),
+           UUID(uuidString: attachmentExtra.attachmentId) != nil,
+           !attachmentExtra.createdAt.isEmpty,
+           abs(attachmentExtra.createdAt.toUTCDate().timeIntervalSinceNow) < 86400 {
+            uploadFinished(attachmentId: attachmentExtra.attachmentId, key: message.mediaKey, digest: message.mediaDigest, createdAt: attachmentExtra.createdAt)
+            return true
+        }
+        
         repeat {
             switch MessageAPI.requestAttachment() {
             case let .success(attachResponse):
@@ -121,18 +135,10 @@ class AttachmentUploadJob: UploadOrDownloadJob {
         }
         let key = (stream as? AttachmentEncryptingInputStream)?.key
         let digest = (stream as? AttachmentEncryptingInputStream)?.digest
-        let content = getMediaDataText(attachmentId: attachResponse.attachmentId,
-                                       key: key,
-                                       digest: digest,
-                                       createdAt: attachResponse.createdAt)
-        message.content = content
-        MessageDAO.shared.updateMessageContentAndMediaStatus(content: content, mediaStatus: .DONE, messageId: message.messageId, conversationId: message.conversationId)
-        
-        SendMessageService.shared.sendMessage(message: message, data: content)
-        removeJob()
+        uploadFinished(attachmentId: attachResponse.attachmentId, key: key, digest: digest, createdAt: attachResponse.createdAt)
     }
     
-    func getMediaDataText(attachmentId: String, key: Data?, digest: Data?, createdAt: String?) -> String {
+    private func uploadFinished(attachmentId: String, key: Data?, digest: Data?, createdAt: String?) {
         let transferMediaData = TransferAttachmentData(key: key,
                                                        digest: digest,
                                                        attachmentId: attachmentId,
@@ -145,9 +151,15 @@ class AttachmentUploadJob: UploadOrDownloadJob {
                                                        duration: message.mediaDuration,
                                                        waveform: message.mediaWaveform,
                                                        createdAt: createdAt)
-        return (try? JSONEncoder.default.encode(transferMediaData).base64EncodedString()) ?? ""
+        let content = (try? JSONEncoder.default.encode(transferMediaData).base64EncodedString()) ?? ""
+        message.content = content
+        message.mediaKey = key
+        message.mediaDigest = digest
+        MessageDAO.shared.updateMessageContentAndMediaStatus(content: content, mediaStatus: .DONE, key: key, digest: digest, messageId: message.messageId, conversationId: message.conversationId)
+        
+        SendMessageService.shared.sendMessage(message: message, data: content)
+        removeJob()
     }
-    
 }
 
 extension AttachmentUploadJob: URLSessionTaskDelegate {

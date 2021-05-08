@@ -130,10 +130,12 @@ public final class MessageDAO: UserDatabaseDAO {
                          limit: 1000)
     }
     
-    public func updateMessageContentAndMediaStatus(content: String, mediaStatus: MediaStatus, messageId: String, conversationId: String) {
+    public func updateMessageContentAndMediaStatus(content: String, mediaStatus: MediaStatus, key: Data?, digest: Data?, messageId: String, conversationId: String) {
         let assignments = [
             Message.column(of: .content).set(to: content),
-            Message.column(of: .mediaStatus).set(to: mediaStatus.rawValue)
+            Message.column(of: .mediaStatus).set(to: mediaStatus.rawValue),
+            Message.column(of: .mediaKey).set(to: key),
+            Message.column(of: .mediaDigest).set(to: digest)
         ]
         let condition: SQLSpecificExpressible = Message.column(of: .messageId) == messageId
             && Message.column(of: .category) != MessageCategory.MESSAGE_RECALL.rawValue

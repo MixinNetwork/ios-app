@@ -162,7 +162,7 @@ extension MessageReceiverViewController: ContainerViewControllerDelegate {
         let selections = self.selections
         DispatchQueue.global().async { [weak self] in
             for receiver in selections {
-                let messages = MessageReceiverViewController.makeMessages(content: content, to: receiver.conversationId)
+                let messages = MessageReceiverViewController.makeMessages(item: receiver.item, content: content, to: receiver.conversationId)
                 guard !messages.isEmpty else {
                     continue
                 }
@@ -278,7 +278,7 @@ extension MessageReceiverViewController {
         case appCard(AppCardData)
     }
     
-    static func makeMessages(content: MessageContent, to conversationId: String) -> [Message] {
+    static func makeMessages(item: MessageReceiver.Item, content: MessageContent, to conversationId: String) -> [Message] {
         switch content {
         case .message(var message):
             message.messageId = UUID().uuidString.lowercased()
@@ -291,7 +291,7 @@ extension MessageReceiverViewController {
             return messages.compactMap({ (original) -> Message? in
                 let interval = TimeInterval(counter.advancedValue) / millisecondsPerSecond
                 let createdAt = date.addingTimeInterval(interval).toUTCString()
-                return makeMessage(message: original, to: conversationId, createdAt: createdAt)
+                return makeMessage(item: item, message: original, to: conversationId, createdAt: createdAt)
             })
         case .post(let text):
             return [makeMessage(post: text, to: conversationId)].compactMap({ $0 })
@@ -331,14 +331,24 @@ extension MessageReceiverViewController {
         return toUrl.lastPathComponent
     }
     
-    static func makeMessage(message: MessageItem, to conversationId: String, createdAt: String) -> Message? {
+    static func makeMessage(item: MessageReceiver.Item, message: MessageItem, to conversationId: String, createdAt: String) -> Message? {
         var newMessage = Message.createMessage(category: message.category,
                                                conversationId: conversationId,
                                                createdAt: createdAt,
                                                userId: myUserId)
+        var isSignalMessage = false
+        switch item {
+        case .group:
+            isSignalMessage = true
+        case .user(let user):
+            isSignalMessage = !user.isBot
+        }
         if message.category.hasSuffix("_TEXT") || message.category.hasSuffix("_POST") || message.category.hasSuffix("_LOCATION") || message.category == MessageCategory.APP_CARD.rawValue {
             newMessage.content = message.content
         } else if message.category.hasSuffix("_IMAGE") {
+            if isSignalMessage {
+                newMessage.category = MessageCategory.SIGNAL_IMAGE.rawValue
+            }
             newMessage.thumbImage = message.thumbImage
             newMessage.mediaSize = message.mediaSize
             newMessage.mediaWidth = message.mediaWidth
@@ -347,12 +357,18 @@ extension MessageReceiverViewController {
             newMessage.mediaUrl = mediaUrl(from: message, with: newMessage.messageId)
             newMessage.mediaStatus = MediaStatus.PENDING.rawValue
         } else if message.category.hasSuffix("_DATA") {
+            if isSignalMessage {
+                newMessage.category = MessageCategory.SIGNAL_DATA.rawValue
+            }
             newMessage.name = message.name
             newMessage.mediaSize = message.mediaSize
             newMessage.mediaMimeType = message.mediaMimeType
             newMessage.mediaUrl = mediaUrl(from: message, with: newMessage.messageId)
             newMessage.mediaStatus = MediaStatus.PENDING.rawValue
         } else if message.category.hasSuffix("_AUDIO") {
+            if isSignalMessage {
+                newMessage.category = MessageCategory.SIGNAL_AUDIO.rawValue
+            }
             newMessage.mediaSize = message.mediaSize
             newMessage.mediaMimeType = message.mediaMimeType
             newMessage.mediaUrl = mediaUrl(from: message, with: newMessage.messageId)
@@ -360,6 +376,9 @@ extension MessageReceiverViewController {
             newMessage.mediaDuration = message.mediaDuration
             newMessage.mediaStatus = MediaStatus.PENDING.rawValue
         } else if message.category.hasSuffix("_VIDEO") {
+            if isSignalMessage {
+                newMessage.category = MessageCategory.SIGNAL_VIDEO.rawValue
+            }
             newMessage.thumbImage = message.thumbImage
             newMessage.mediaSize = message.mediaSize
             newMessage.mediaWidth = message.mediaWidth
@@ -391,6 +410,24 @@ extension MessageReceiverViewController {
         } else {
             return nil
         }
+        
+        if (message.category.hasSuffix("_IMAGE") ||
+            message.category.hasSuffix("_VIDEO") ||
+            message.category.hasSuffix("_AUDIO") ||
+            message.category.hasSuffix("_DATA")) &&
+            !message.content.isNilOrEmpty &&
+            UUID(uuidString: message.content ?? "") == nil &&
+            newMessage.category == message.category && (
+                (message.category.hasPrefix("SIGNAL_") &&
+                    message.mediaKey != nil &&
+                    message.mediaDigest != nil) ||
+                message.category.hasPrefix("PLAIN_")
+            ) {
+            newMessage.content = message.content
+            newMessage.mediaKey = message.mediaKey
+            newMessage.mediaDigest = message.mediaDigest
+        }
+        
         return newMessage
     }
     

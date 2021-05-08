@@ -4,20 +4,16 @@ import Photos
 import Alamofire
 import MixinServices
 
-class WebViewController: UIViewController {
+class WebViewController: FullscreenPopupViewController {
     
     static let didDismissNotification = Notification.Name("one.mixin.messenger.WebViewController.didDismiss")
     
-    @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var statusBarBackgroundView: UIView!
     @IBOutlet weak var titleWrapperView: UIView!
     @IBOutlet weak var titleStackView: UIStackView!
     @IBOutlet weak var titleImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var webView: WKWebView!
-    @IBOutlet weak var pageControlView: PageControlView!
-    
-    @IBOutlet weak var edgePanGestureRecognizer: WebViewScreenEdgePanGestureRecognizer!
     
     @IBOutlet weak var showPageTitleConstraint: NSLayoutConstraint!
     
@@ -26,8 +22,6 @@ class WebViewController: UIViewController {
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return statusBarStyle
     }
-    
-    private(set) var isBeingDismissedAsChild = false
     
     private let textDarkColor = UIColor(displayP3RgbValue: 0x333333)
     
@@ -42,10 +36,13 @@ class WebViewController: UIViewController {
         titleStackView.snp.makeConstraints { make in
             make.trailing.equalTo(pageControlView.snp.leading).offset(-20)
         }
-        pageControlView.moreButton.addTarget(self, action: #selector(moreAction(_:)), for: .touchUpInside)
-        pageControlView.dismissButton.addTarget(self, action: #selector(dismissAction(_:)), for: .touchUpInside)
-        updateBackground(pageThemeColor: .background)
         webView.scrollView.panGestureRecognizer.require(toFail: edgePanGestureRecognizer)
+        
+        let extractImageRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(extractImage(_:)))
+        extractImageRecognizer.delegate = self
+        webContentView.addGestureRecognizer(extractImageRecognizer)
+        
+        updateBackground(pageThemeColor: .background)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -53,49 +50,28 @@ class WebViewController: UIViewController {
         imageRequest?.cancel()
     }
     
-    override func didMove(toParent parent: UIViewController?) {
-        super.didMove(toParent: parent)
-        parent?.setNeedsStatusBarAppearanceUpdate()
-        parent?.setNeedsUpdateOfHomeIndicatorAutoHidden()
+    override func popupDidDismissAsChild() {
+        NotificationCenter.default.post(name: Self.didDismissNotification, object: self)
     }
     
-    override func willMove(toParent parent: UIViewController?) {
-        super.willMove(toParent: parent)
-        if parent == nil {
-            self.parent?.setNeedsStatusBarAppearanceUpdate()
-            self.parent?.setNeedsUpdateOfHomeIndicatorAutoHidden()
+    func updateBackground(pageThemeColor: UIColor) {
+        statusBarBackgroundView.backgroundColor = pageThemeColor
+        titleWrapperView.backgroundColor = pageThemeColor
+        webView.backgroundColor = pageThemeColor
+        
+        let themeColorIsDark = pageThemeColor.w3cLightness < 0.5
+        titleLabel.textColor = themeColorIsDark ? .white : textDarkColor
+        pageControlView.style = themeColorIsDark ? .dark : .light
+        
+        if #available(iOS 13.0, *) {
+            statusBarStyle = themeColorIsDark ? .lightContent : .darkContent
+        } else {
+            statusBarStyle = themeColorIsDark ? .lightContent : .default
         }
+        setNeedsStatusBarAppearanceUpdate()
     }
     
-    @IBAction func dismissAction(_ sender: Any) {
-        dismissAsChild(animated: true)
-    }
-    
-    @IBAction func screenEdgePanAction(_ recognizer: WebViewScreenEdgePanGestureRecognizer) {
-        switch recognizer.state {
-        case .began:
-            if view.safeAreaInsets.top > 20 {
-                contentView.layer.cornerRadius = 39
-            } else {
-                contentView.layer.cornerRadius = 20
-            }
-        case .changed:
-            let scale = 1 - 0.2 * recognizer.fractionComplete
-            contentView.transform = CGAffineTransform(scaleX: scale, y: scale)
-        case .ended:
-            dismissAsChild(animated: true)
-        case .cancelled:
-            UIView.animate(withDuration: 0.25, animations: {
-                self.contentView.transform = .identity
-            }, completion: { _ in
-                self.contentView.layer.cornerRadius = 0
-            })
-        default:
-            break
-        }
-    }
-    
-    @IBAction func extractImageAction(_ recognizer: UILongPressGestureRecognizer) {
+    @objc private func extractImage(_ recognizer: UILongPressGestureRecognizer) {
         guard recognizer.state == .began else {
             return
         }
@@ -117,56 +93,6 @@ class WebViewController: UIViewController {
                     self?.presentAlertController(for: image)
                 }
             })
-        }
-    }
-    
-    @objc func moreAction(_ sender: Any) {
-        
-    }
-    
-    func updateBackground(pageThemeColor: UIColor) {
-        statusBarBackgroundView.backgroundColor = pageThemeColor
-        titleWrapperView.backgroundColor = pageThemeColor
-        webView.backgroundColor = pageThemeColor
-        
-        let themeColorIsDark = pageThemeColor.w3cLightness < 0.5
-        titleLabel.textColor = themeColorIsDark ? .white : textDarkColor
-        pageControlView.style = themeColorIsDark ? .dark : .light
-        
-        if #available(iOS 13.0, *) {
-            statusBarStyle = themeColorIsDark ? .lightContent : .darkContent
-        } else {
-            statusBarStyle = themeColorIsDark ? .lightContent : .default
-        }
-        setNeedsStatusBarAppearanceUpdate()
-    }
-    
-    func dismissAsChild(animated: Bool, completion: (() -> Void)? = nil) {
-        guard let parent = parent else {
-            return
-        }
-        isBeingDismissedAsChild = true
-        parent.setNeedsStatusBarAppearanceUpdate()
-        let animation = {
-            UIView.setAnimationCurve(.overdamped)
-            self.view.center.y = parent.view.bounds.height * 3 / 2
-        }
-        let animationCompletion = {
-            self.willMove(toParent: nil)
-            self.view.removeFromSuperview()
-            self.removeFromParent()
-            completion?()
-            self.contentView.transform = .identity
-            self.isBeingDismissedAsChild = false
-            NotificationCenter.default.post(name: Self.didDismissNotification, object: self)
-        }
-        if animated {
-            UIView.animate(withDuration: 0.5, animations: animation) { (_) in
-                animationCompletion()
-            }
-        } else {
-            animation()
-            animationCompletion()
         }
     }
     
@@ -193,7 +119,6 @@ class WebViewController: UIViewController {
                     if UrlWindow.checkPayUrl(url: string) {
                         return
                     }
-
                     RecognizeWindow.instance().presentWindow(text: string)
                 }))
                 break
@@ -209,7 +134,6 @@ class WebViewController: UIViewController {
 extension WebViewController: UIGestureRecognizerDelegate {
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        // Extract image recognizer
         return true
     }
     

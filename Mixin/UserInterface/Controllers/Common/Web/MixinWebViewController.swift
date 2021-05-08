@@ -39,7 +39,7 @@ class MixinWebViewController: WebViewController {
     }
     
     class func instance(with context: Context) -> MixinWebViewController {
-        let vc = MixinWebViewController(nib: R.nib.webView)
+        let vc = MixinWebViewController(nib: R.nib.fullscreenPopupView)
         vc.context = context
         return vc
     }

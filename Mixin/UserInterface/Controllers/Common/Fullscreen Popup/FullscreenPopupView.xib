@@ -9,7 +9,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WebViewController" customModule="Mixin" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="FullscreenPopupViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
                 <outlet property="contentView" destination="qfE-71-gkL" id="erb-sW-bho"/>
                 <outlet property="edgePanGestureRecognizer" destination="jJd-09-I6d" id="WyK-4B-JlT"/>
@@ -53,18 +53,12 @@
             </connections>
             <point key="canvasLocation" x="139" y="154"/>
         </view>
-        <screenEdgePanGestureRecognizer minimumNumberOfTouches="1" id="jJd-09-I6d" customClass="WebViewScreenEdgePanGestureRecognizer" customModule="Mixin" customModuleProvider="target">
+        <screenEdgePanGestureRecognizer minimumNumberOfTouches="1" id="jJd-09-I6d" customClass="FullScreenPopupEdgePanGestureRecognizer" customModule="Mixin" customModuleProvider="target">
             <rectEdge key="edges" left="YES"/>
             <connections>
                 <action selector="screenEdgePanAction:" destination="-1" id="Isb-yV-qhi"/>
             </connections>
         </screenEdgePanGestureRecognizer>
-        <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="rvV-eC-CSv">
-            <connections>
-                <action selector="extractImageAction:" destination="-1" id="ToJ-fH-aXh"/>
-                <outlet property="delegate" destination="-1" id="u5w-K8-WQp"/>
-            </connections>
-        </pongPressGestureRecognizer>
     </objects>
     <resources>
         <namedColor name="background">

@@ -140,9 +140,12 @@ public final class MessageDAO: UserDatabaseDAO {
         let condition: SQLSpecificExpressible = Message.column(of: .messageId) == messageId
             && Message.column(of: .category) != MessageCategory.MESSAGE_RECALL.rawValue
         db.update(Message.self, assignments: assignments, where: condition) { _ in
-            let change = ConversationChange(conversationId: conversationId,
+            let statusChange = ConversationChange(conversationId: conversationId,
                                             action: .updateMediaStatus(messageId: messageId, mediaStatus: mediaStatus))
-            NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: change)
+            let contentChange = ConversationChange(conversationId: conversationId,
+                                            action: .updateMediaKey(messageId: messageId, content: content, key: key, digest: digest))
+            NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: statusChange)
+            NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: contentChange)
         }
     }
     

@@ -91,7 +91,8 @@ struct GalleryItem: Equatable {
         self.size = CGSize(width: width, height: height)
         if let thumbUrl = thumbUrl, let url = URL(string: thumbUrl) {
             self.thumbnail = .url(url)
-        } else if self.category == .video, let url = url, let coverUrl = GalleryItem.videoCoverUrl(mediaUrl: url) {
+        } else if self.category == .video, let videoFilename = mediaUrl {
+            let coverUrl = AttachmentContainer.videoThumbnailURL(videoFilename: videoFilename)
             self.thumbnail = .url(coverUrl)
         } else if let image = UIImage.createImageFromString(thumbImage: thumbImage, width: mediaWidth, height: mediaHeight) {
             self.thumbnail = .image(image)
@@ -117,14 +118,6 @@ struct GalleryItem: Equatable {
                   thumbImage: m.thumbImage,
                   thumbUrl: m.thumbUrl,
                   createdAt: m.createdAt)
-    }
-    
-    static func videoCoverUrl(mediaUrl: URL) -> URL? {
-        guard let filename = mediaUrl.path.components(separatedBy: ".").first else {
-            return nil
-        }
-        let path = filename + ExtensionName.jpeg.withDot
-        return URL(fileURLWithPath: path)
     }
     
     static func ==(lhs: GalleryItem, rhs: GalleryItem) -> Bool {

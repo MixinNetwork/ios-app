@@ -310,11 +310,11 @@ extension MessageReceiverViewController {
     
     // Copy media file in case of deletion or recalling
     static func mediaUrl(from message: MessageItem, with newMessageId: String) -> String? {
-        guard let category = AttachmentContainer.Category(messageCategory: message.category), let mediaUrl = message.mediaUrl else {
+        guard let category = AttachmentContainer.Category(messageCategory: message.category), let videoFilename = message.mediaUrl else {
             return message.mediaUrl
         }
         
-        let fromUrl = AttachmentContainer.url(for: category, filename: mediaUrl)
+        let fromUrl = AttachmentContainer.url(for: category, filename: videoFilename)
         guard FileManager.default.fileExists(atPath: fromUrl.path) else {
             return message.mediaUrl
         }
@@ -323,9 +323,10 @@ extension MessageReceiverViewController {
         try? FileManager.default.copyItem(at: fromUrl, to: toUrl)
         
         if message.category.hasSuffix("_VIDEO") {
-            let fromThumbnailUrl = AttachmentContainer.url(for: .videos, filename: mediaUrl.substring(endChar: ".") + ExtensionName.jpeg.withDot)
-            let targetThumbnailUrl = AttachmentContainer.url(for: .videos, filename: newMessageId + ExtensionName.jpeg.withDot)
-            try? FileManager.default.copyItem(at: fromThumbnailUrl, to: targetThumbnailUrl)
+            // Copy video thumbnail
+            let source = AttachmentContainer.videoThumbnailURL(videoFilename: videoFilename)
+            let destination = AttachmentContainer.url(for: .videos, filename: newMessageId + ExtensionName.jpeg.withDot)
+            try? FileManager.default.copyItem(at: source, to: destination)
         }
         
         return toUrl.lastPathComponent
@@ -485,10 +486,8 @@ extension MessageReceiverViewController {
         var message = Message.createMessage(category: MessageCategory.SIGNAL_VIDEO.rawValue,
                                             conversationId: conversationId,
                                             userId: myUserId)
-        let filename = videoUrl.lastPathComponent.substring(endChar: ".")
-        let thumbnailFilename = filename + ExtensionName.jpeg.withDot
         if let thumbnail = UIImage(withFirstFrameOfVideoAtURL: videoUrl) {
-            let thumbnailURL = AttachmentContainer.url(for: .videos, filename: thumbnailFilename)
+            let thumbnailURL = AttachmentContainer.videoThumbnailURL(videoFilename: videoUrl.lastPathComponent)
             thumbnail.saveToFile(path: thumbnailURL)
             message.thumbImage = thumbnail.base64Thumbnail()
         } else {

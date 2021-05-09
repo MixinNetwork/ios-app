@@ -19,6 +19,16 @@ public enum AttachmentContainer {
         }
     }
     
+    public static func videoThumbnailURL(videoFilename: String) -> URL {
+        let filename: String
+        if let dotIndex = videoFilename.lastIndex(of: ".") {
+            filename = String(videoFilename[videoFilename.startIndex..<dotIndex])
+        } else {
+            filename = videoFilename
+        }
+        return url(for: .videos, filename: filename + ExtensionName.jpeg.withDot)
+    }
+    
     public static func removeMediaFiles(mediaUrl: String, category: String) {
         guard let messageCategory = AttachmentContainer.Category(messageCategory: category) else {
             return
@@ -29,8 +39,7 @@ public enum AttachmentContainer {
         let url = AttachmentContainer.url(for: messageCategory, filename: mediaUrl)
         try? FileManager.default.removeItem(at: url)
         if category.hasSuffix("_VIDEO") {
-            let thumbFilename = mediaUrl.substring(endChar: ".") + ExtensionName.jpeg.withDot
-            let thumbUrl = AttachmentContainer.url(for: .videos, filename: thumbFilename)
+            let thumbUrl = AttachmentContainer.videoThumbnailURL(videoFilename: mediaUrl)
             try? FileManager.default.removeItem(at: thumbUrl)
         }
     }

@@ -87,7 +87,7 @@ final class ConversationMessageComposer {
                     return
                 }
                 if let thumbnail = UIImage(withFirstFrameOfVideoAtURL: url) {
-                    let thumbnailURL = AttachmentContainer.url(for: .videos, filename: url.lastPathComponent.substring(endChar: ".") + ExtensionName.jpeg.withDot)
+                    let thumbnailURL = AttachmentContainer.videoThumbnailURL(videoFilename: url.lastPathComponent)
                     thumbnail.saveToFile(path: thumbnailURL)
                     message.thumbImage = thumbnail.base64Thumbnail()
                 } else {

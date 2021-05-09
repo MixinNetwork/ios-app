@@ -346,9 +346,7 @@ extension MessageReceiverViewController {
         if message.category.hasSuffix("_TEXT") || message.category.hasSuffix("_POST") || message.category.hasSuffix("_LOCATION") || message.category == MessageCategory.APP_CARD.rawValue {
             newMessage.content = message.content
         } else if message.category.hasSuffix("_IMAGE") {
-            if isSignalMessage {
-                newMessage.category = MessageCategory.SIGNAL_IMAGE.rawValue
-            }
+            newMessage.category = isSignalMessage ? MessageCategory.SIGNAL_IMAGE.rawValue : MessageCategory.PLAIN_IMAGE.rawValue
             newMessage.thumbImage = message.thumbImage
             newMessage.mediaSize = message.mediaSize
             newMessage.mediaWidth = message.mediaWidth
@@ -357,18 +355,14 @@ extension MessageReceiverViewController {
             newMessage.mediaUrl = mediaUrl(from: message, with: newMessage.messageId)
             newMessage.mediaStatus = MediaStatus.PENDING.rawValue
         } else if message.category.hasSuffix("_DATA") {
-            if isSignalMessage {
-                newMessage.category = MessageCategory.SIGNAL_DATA.rawValue
-            }
+            newMessage.category = isSignalMessage ? MessageCategory.SIGNAL_DATA.rawValue : MessageCategory.PLAIN_DATA.rawValue
             newMessage.name = message.name
             newMessage.mediaSize = message.mediaSize
             newMessage.mediaMimeType = message.mediaMimeType
             newMessage.mediaUrl = mediaUrl(from: message, with: newMessage.messageId)
             newMessage.mediaStatus = MediaStatus.PENDING.rawValue
         } else if message.category.hasSuffix("_AUDIO") {
-            if isSignalMessage {
-                newMessage.category = MessageCategory.SIGNAL_AUDIO.rawValue
-            }
+            newMessage.category = isSignalMessage ? MessageCategory.SIGNAL_AUDIO.rawValue : MessageCategory.PLAIN_AUDIO.rawValue
             newMessage.mediaSize = message.mediaSize
             newMessage.mediaMimeType = message.mediaMimeType
             newMessage.mediaUrl = mediaUrl(from: message, with: newMessage.messageId)
@@ -376,9 +370,7 @@ extension MessageReceiverViewController {
             newMessage.mediaDuration = message.mediaDuration
             newMessage.mediaStatus = MediaStatus.PENDING.rawValue
         } else if message.category.hasSuffix("_VIDEO") {
-            if isSignalMessage {
-                newMessage.category = MessageCategory.SIGNAL_VIDEO.rawValue
-            }
+            newMessage.category = isSignalMessage ? MessageCategory.SIGNAL_VIDEO.rawValue : MessageCategory.PLAIN_VIDEO.rawValue
             newMessage.thumbImage = message.thumbImage
             newMessage.mediaSize = message.mediaSize
             newMessage.mediaWidth = message.mediaWidth

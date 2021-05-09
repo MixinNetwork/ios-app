@@ -29,16 +29,18 @@ class AttachmentUploadJob: UploadOrDownloadJob {
             return false
         }
         
+        let isAttachmentMetadataReady = message.category.hasPrefix("PLAIN_")
+            || (message.category.hasPrefix("SIGNAL_") && message.mediaKey != nil && message.mediaDigest != nil)
         if let content = message.content,
            !content.isEmpty,
-           message.mediaKey != nil,
-           message.mediaDigest != nil,
+           isAttachmentMetadataReady,
            let data = Data(base64Encoded: content),
            let attachmentExtra = try? JSONDecoder.default.decode(AttachmentExtra.self, from: data),
            UUID(uuidString: attachmentExtra.attachmentId) != nil,
            !attachmentExtra.createdAt.isEmpty,
-           abs(attachmentExtra.createdAt.toUTCDate().timeIntervalSinceNow) < 86400 {
+           abs(attachmentExtra.createdAt.toUTCDate().timeIntervalSinceNow) < secondsPerDay {
             uploadFinished(attachmentId: attachmentExtra.attachmentId, key: message.mediaKey, digest: message.mediaDigest, createdAt: attachmentExtra.createdAt)
+            finishJob()
             return true
         }
         
@@ -145,7 +147,7 @@ class AttachmentUploadJob: UploadOrDownloadJob {
                                                        mimeType: message.mediaMimeType ?? "",
                                                        width: message.mediaWidth,
                                                        height: message.mediaHeight,
-                                                       size:message.mediaSize ?? 0,
+                                                       size: message.mediaSize ?? 0,
                                                        thumbnail: message.thumbImage,
                                                        name: message.name,
                                                        duration: message.mediaDuration,

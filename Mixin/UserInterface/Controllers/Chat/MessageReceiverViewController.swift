@@ -162,7 +162,7 @@ extension MessageReceiverViewController: ContainerViewControllerDelegate {
         let selections = self.selections
         DispatchQueue.global().async { [weak self] in
             for receiver in selections {
-                let messages = MessageReceiverViewController.makeMessages(item: receiver.item, content: content, to: receiver.conversationId)
+                let messages = MessageReceiverViewController.makeMessages(content: content, to: receiver)
                 guard !messages.isEmpty else {
                     continue
                 }
@@ -278,11 +278,11 @@ extension MessageReceiverViewController {
         case appCard(AppCardData)
     }
     
-    static func makeMessages(item: MessageReceiver.Item, content: MessageContent, to conversationId: String) -> [Message] {
+    static func makeMessages(content: MessageContent, to receiver: MessageReceiver) -> [Message] {
         switch content {
         case .message(var message):
             message.messageId = UUID().uuidString.lowercased()
-            message.conversationId = conversationId
+            message.conversationId = receiver.conversationId
             message.createdAt = Date().toUTCString()
             return [message]
         case .messages(let messages):
@@ -291,20 +291,20 @@ extension MessageReceiverViewController {
             return messages.compactMap({ (original) -> Message? in
                 let interval = TimeInterval(counter.advancedValue) / millisecondsPerSecond
                 let createdAt = date.addingTimeInterval(interval).toUTCString()
-                return makeMessage(item: item, message: original, to: conversationId, createdAt: createdAt)
+                return makeMessage(message: original, to: receiver, createdAt: createdAt)
             })
         case .post(let text):
-            return [makeMessage(post: text, to: conversationId)].compactMap({ $0 })
+            return [makeMessage(post: text, to: receiver.conversationId)].compactMap({ $0 })
         case .contact(let userId):
-            return [makeMessage(userId: userId, to: conversationId)].compactMap({ $0 })
+            return [makeMessage(userId: userId, to: receiver.conversationId)].compactMap({ $0 })
         case .photo(let image):
-            return [makeMessage(image: image, to: conversationId)].compactMap({ $0 })
+            return [makeMessage(image: image, to: receiver.conversationId)].compactMap({ $0 })
         case .text(let text):
-            return [makeMessage(text: text, to: conversationId)].compactMap({ $0 })
+            return [makeMessage(text: text, to: receiver.conversationId)].compactMap({ $0 })
         case .video(let url):
-            return [makeMessage(videoUrl: url, to: conversationId)].compactMap({ $0 })
+            return [makeMessage(videoUrl: url, to: receiver.conversationId)].compactMap({ $0 })
         case .appCard(let appCard):
-            return [makeMessage(appCard: appCard, to: conversationId)].compactMap({ $0 })
+            return [makeMessage(appCard: appCard, to: receiver.conversationId)].compactMap({ $0 })
         }
     }
     
@@ -331,13 +331,13 @@ extension MessageReceiverViewController {
         return toUrl.lastPathComponent
     }
     
-    static func makeMessage(item: MessageReceiver.Item, message: MessageItem, to conversationId: String, createdAt: String) -> Message? {
+    static func makeMessage(message: MessageItem, to receiver: MessageReceiver, createdAt: String) -> Message? {
         var newMessage = Message.createMessage(category: message.category,
-                                               conversationId: conversationId,
+                                               conversationId: receiver.conversationId,
                                                createdAt: createdAt,
                                                userId: myUserId)
-        var isSignalMessage = false
-        switch item {
+        let isSignalMessage: Bool
+        switch receiver.item {
         case .group:
             isSignalMessage = true
         case .user(let user):
@@ -411,18 +411,18 @@ extension MessageReceiverViewController {
             return nil
         }
         
-        if (message.category.hasSuffix("_IMAGE") ||
-            message.category.hasSuffix("_VIDEO") ||
-            message.category.hasSuffix("_AUDIO") ||
-            message.category.hasSuffix("_DATA")) &&
-            !message.content.isNilOrEmpty &&
-            UUID(uuidString: message.content ?? "") == nil &&
-            newMessage.category == message.category && (
-                (message.category.hasPrefix("SIGNAL_") &&
-                    message.mediaKey != nil &&
-                    message.mediaDigest != nil) ||
-                message.category.hasPrefix("PLAIN_")
-            ) {
+        let hasAttachment = message.category.hasSuffix("_IMAGE")
+            || message.category.hasSuffix("_VIDEO")
+            || message.category.hasSuffix("_AUDIO")
+            || message.category.hasSuffix("_DATA")
+        let isAttachmentMetadataReady = message.category.hasPrefix("PLAIN_")
+            || (message.category.hasPrefix("SIGNAL_") && message.mediaKey != nil && message.mediaDigest != nil)
+        let copyAttachmentMetadata = hasAttachment
+            && isAttachmentMetadataReady
+            && !message.content.isNilOrEmpty
+            && UUID(uuidString: message.content ?? "") == nil
+            && newMessage.category == message.category
+        if copyAttachmentMetadata {
             newMessage.content = message.content
             newMessage.mediaKey = message.mediaKey
             newMessage.mediaDigest = message.mediaDigest

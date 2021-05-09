@@ -483,7 +483,7 @@ public final class MessageDAO: UserDatabaseDAO {
         return db.select(with: MessageDAO.sqlQueryQuoteMessageById, arguments: [messageId])
     }
     
-    public func insertMessage(message: Message, messageSource: String) {
+    public func insertMessage(message: Message, messageSource: String, completion: (() -> Void)? = nil) {
         var message = message
         
         let quotedMessage: MessageItem?
@@ -498,11 +498,11 @@ public final class MessageDAO: UserDatabaseDAO {
             if let mention = MessageMention(message: message, quotedMessage: quotedMessage) {
                 try mention.save(db)
             }
-            try insertMessage(database: db, message: message, messageSource: messageSource)
+            try insertMessage(database: db, message: message, messageSource: messageSource, completion: completion)
         }
     }
     
-    public func insertMessage(database: GRDB.Database, message: Message, messageSource: String) throws {
+    public func insertMessage(database: GRDB.Database, message: Message, messageSource: String, completion: (() -> Void)? = nil) throws {
         if message.category.hasPrefix("SIGNAL_") {
             try message.insert(database)
         } else {
@@ -545,6 +545,7 @@ public final class MessageDAO: UserDatabaseDAO {
                     ]
                     NotificationCenter.default.post(onMainThread: MessageDAO.didInsertMessageNotification, object: self, userInfo: userInfo)
                 }
+                completion?()
             }
         }
     }

@@ -142,10 +142,10 @@ public final class MessageDAO: UserDatabaseDAO {
         db.update(Message.self, assignments: assignments, where: condition) { _ in
             let statusChange = ConversationChange(conversationId: conversationId,
                                             action: .updateMediaStatus(messageId: messageId, mediaStatus: mediaStatus))
-            let contentChange = ConversationChange(conversationId: conversationId,
+            let keyChange = ConversationChange(conversationId: conversationId,
                                             action: .updateMediaKey(messageId: messageId, content: content, key: key, digest: digest))
             NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: statusChange)
-            NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: contentChange)
+            NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: keyChange)
         }
     }
     

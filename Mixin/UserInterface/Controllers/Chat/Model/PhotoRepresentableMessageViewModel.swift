@@ -59,10 +59,4 @@ class PhotoRepresentableMessageViewModel: ImageMessageViewModel {
         message.mediaDuration = mediaDuration
     }
     
-    func update(content: String, key: Data?, digest: Data?) {
-        message.content = content
-        message.mediaKey = key
-        message.mediaDigest = digest
-    }
-    
 }

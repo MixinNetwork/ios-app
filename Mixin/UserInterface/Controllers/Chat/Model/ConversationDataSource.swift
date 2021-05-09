@@ -598,10 +598,10 @@ extension ConversationDataSource {
     }
     
     private func updateMediaKey(messageId: String, content: String, key: Data?, digest: Data?) {
-        guard let indexPath = indexPath(where: { $0.messageId == messageId }), let viewModel = viewModel(for: indexPath) as? PhotoRepresentableMessageViewModel else {
+        guard let indexPath = indexPath(where: { $0.messageId == messageId }), let viewModel = viewModel(for: indexPath) else {
             return
         }
-        viewModel.update(content: content,
+        viewModel.updateKey(content: content,
                          key: key,
                          digest: digest)
     }

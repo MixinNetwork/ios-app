@@ -55,24 +55,11 @@ open class AttachmentDownloadJob: UploadOrDownloadJob {
     }
 
     open class func jobId(messageId: String) -> String {
-        return "attachment-download-\(messageId)"
-    }
-    
-    open class func jobId(category: String, messageId: String) -> String {
-        if category.hasSuffix("_IMAGE") {
-            return AttachmentDownloadJob.jobId(messageId: messageId)
-        } else if category.hasSuffix("_DATA") {
-            return FileDownloadJob.jobId(messageId: messageId)
-        } else if category.hasSuffix("_AUDIO") {
-            return AudioDownloadJob.jobId(messageId: messageId)
-        } else if category.hasSuffix("_VIDEO") {
-            return VideoDownloadJob.jobId(messageId: messageId)
-        }
-        return ""
+        "attachment-download-\(messageId)"
     }
     
     override open func getJobId() -> String {
-        return AttachmentDownloadJob.jobId(messageId: messageId)
+        Self.jobId(messageId: messageId)
     }
     
     override open func execute() -> Bool {

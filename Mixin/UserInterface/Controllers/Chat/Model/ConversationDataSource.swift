@@ -503,6 +503,8 @@ extension ConversationDataSource {
             updateMessageMentionStatus(messageId: messageId, status: newStatus)
         case .updateMediaStatus(let messageId, let mediaStatus):
             updateMessageMediaStatus(messageId: messageId, mediaStatus: mediaStatus)
+        case .updateMediaKey(let messageId, let content, let key, let digest):
+            updateMediaKey(messageId: messageId, content: content, key: key, digest: digest)
         case .updateUploadProgress(let messageId, let progress):
             updateMediaProgress(messageId: messageId, progress: progress)
         case .updateDownloadProgress(let messageId, let progress):
@@ -593,6 +595,15 @@ extension ConversationDataSource {
             return
         }
         message.hasMentionRead = status == .MENTION_READ
+    }
+    
+    private func updateMediaKey(messageId: String, content: String, key: Data?, digest: Data?) {
+        guard let indexPath = indexPath(where: { $0.messageId == messageId }), let viewModel = viewModel(for: indexPath) else {
+            return
+        }
+        viewModel.updateKey(content: content,
+                         key: key,
+                         digest: digest)
     }
     
     private func updateMessageMediaStatus(messageId: String, mediaStatus: MediaStatus) {

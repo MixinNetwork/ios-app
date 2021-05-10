@@ -15,6 +15,7 @@ public struct ConversationChange {
         case updateMessageStatus(messageId: String, newStatus: MessageStatus)
         case updateMessageMentionStatus(messageId: String, newStatus: MessageMentionStatus)
         case updateMediaStatus(messageId: String, mediaStatus: MediaStatus)
+        case updateMediaKey(messageId: String, content: String, key: Data?, digest: Data?)
         case updateUploadProgress(messageId: String, progress: Double)
         case updateDownloadProgress(messageId: String, progress: Double)
         case updateMediaContent(messageId: String, message: Message)

@@ -130,17 +130,22 @@ public final class MessageDAO: UserDatabaseDAO {
                          limit: 1000)
     }
     
-    public func updateMessageContentAndMediaStatus(content: String, mediaStatus: MediaStatus, messageId: String, conversationId: String) {
+    public func updateMessageContentAndMediaStatus(content: String, mediaStatus: MediaStatus, key: Data?, digest: Data?, messageId: String, conversationId: String) {
         let assignments = [
             Message.column(of: .content).set(to: content),
-            Message.column(of: .mediaStatus).set(to: mediaStatus.rawValue)
+            Message.column(of: .mediaStatus).set(to: mediaStatus.rawValue),
+            Message.column(of: .mediaKey).set(to: key),
+            Message.column(of: .mediaDigest).set(to: digest)
         ]
         let condition: SQLSpecificExpressible = Message.column(of: .messageId) == messageId
             && Message.column(of: .category) != MessageCategory.MESSAGE_RECALL.rawValue
         db.update(Message.self, assignments: assignments, where: condition) { _ in
-            let change = ConversationChange(conversationId: conversationId,
+            let statusChange = ConversationChange(conversationId: conversationId,
                                             action: .updateMediaStatus(messageId: messageId, mediaStatus: mediaStatus))
-            NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: change)
+            let keyChange = ConversationChange(conversationId: conversationId,
+                                            action: .updateMediaKey(messageId: messageId, content: content, key: key, digest: digest))
+            NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: statusChange)
+            NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: keyChange)
         }
     }
     
@@ -277,11 +282,14 @@ public final class MessageDAO: UserDatabaseDAO {
                          completion: completion)
     }
     
-    public func updateMediaMessage(messageId: String, mediaUrl: String, status: MediaStatus, conversationId: String) {
-        let assignments = [
+    public func updateMediaMessage(messageId: String, mediaUrl: String, status: MediaStatus, conversationId: String, content: String? = nil) {
+        var assignments = [
             Message.column(of: .mediaUrl).set(to: mediaUrl),
             Message.column(of: .mediaStatus).set(to: status.rawValue)
         ]
+        if let content = content {
+            assignments.append(Message.column(of: .content).set(to: content))
+        }
         let condition: SQLSpecificExpressible = Message.column(of: .messageId) == messageId
             && Message.column(of: .category) != MessageCategory.MESSAGE_RECALL.rawValue
         db.update(Message.self, assignments: assignments, where: condition) { _ in
@@ -475,7 +483,7 @@ public final class MessageDAO: UserDatabaseDAO {
         return db.select(with: MessageDAO.sqlQueryQuoteMessageById, arguments: [messageId])
     }
     
-    public func insertMessage(message: Message, messageSource: String) {
+    public func insertMessage(message: Message, messageSource: String, completion: (() -> Void)? = nil) {
         var message = message
         
         let quotedMessage: MessageItem?
@@ -490,11 +498,11 @@ public final class MessageDAO: UserDatabaseDAO {
             if let mention = MessageMention(message: message, quotedMessage: quotedMessage) {
                 try mention.save(db)
             }
-            try insertMessage(database: db, message: message, messageSource: messageSource)
+            try insertMessage(database: db, message: message, messageSource: messageSource, completion: completion)
         }
     }
     
-    public func insertMessage(database: GRDB.Database, message: Message, messageSource: String) throws {
+    public func insertMessage(database: GRDB.Database, message: Message, messageSource: String, completion: (() -> Void)? = nil) throws {
         if message.category.hasPrefix("SIGNAL_") {
             try message.insert(database)
         } else {
@@ -537,6 +545,7 @@ public final class MessageDAO: UserDatabaseDAO {
                     ]
                     NotificationCenter.default.post(onMainThread: MessageDAO.didInsertMessageNotification, object: self, userInfo: userInfo)
                 }
+                completion?()
             }
         }
     }

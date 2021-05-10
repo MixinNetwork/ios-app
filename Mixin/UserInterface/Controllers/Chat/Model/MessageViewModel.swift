@@ -120,6 +120,12 @@ class MessageViewModel: CustomDebugStringConvertible {
         }
     }
     
+    func updateKey(content: String, key: Data?, digest: Data?) {
+        message.content = content
+        message.mediaKey = key
+        message.mediaDigest = digest
+    }
+    
 }
 
 extension MessageViewModel {

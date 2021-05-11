@@ -54,7 +54,9 @@ class ConversationDataSource {
     }
     
     var layoutSize: CGSize {
-        AppDelegate.current.mainWindow.bounds.inset(by: tableViewContentInset).size
+        Queue.main.autoSync {
+            AppDelegate.current.mainWindow.bounds.inset(by: tableViewContentInset).size
+        }
     }
     
     var conversationId: String {

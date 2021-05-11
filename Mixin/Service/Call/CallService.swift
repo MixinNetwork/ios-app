@@ -14,7 +14,7 @@ class CallService: NSObject {
     static let willDeactivateCallNotification = Notification.Name("one.mixin.messenger.CallService.WillDeactivateCall")
     static let callUserInfoKey = "call"
     
-    let queue = DispatchQueue(label: "one.mixin.messenger.CallService")
+    let queue = Queue(label: "one.mixin.messenger.CallService")
     
     var isMuted = false {
         didSet {
@@ -45,7 +45,7 @@ class CallService: NSObject {
     }
     
     private(set) lazy var ringtonePlayer = RingtonePlayer()
-    private(set) lazy var membersManager = GroupCallMembersManager(workingQueue: queue)
+    private(set) lazy var membersManager = GroupCallMembersManager(workingQueue: queue.dispatchQueue)
     
     private(set) var handledUUIDs = Set<UUID>() // Access from main queue
     private(set) var isMinimized = false
@@ -61,12 +61,11 @@ class CallService: NSObject {
         }
     }
     
-    private let queueSpecificKey = DispatchSpecificKey<Void>()
     private let listPendingCallDelay = DispatchTimeInterval.seconds(2)
     private let retryInterval = DispatchTimeInterval.seconds(3)
     private let isMainlandChina = false
     
-    private lazy var rtcClient = WebRTCClient(delegateQueue: queue)
+    private lazy var rtcClient = WebRTCClient(delegateQueue: queue.dispatchQueue)
     private lazy var nativeCallInterface = NativeCallInterface(service: self)
     private lazy var listPendingInvitationCounter = Counter(value: 0)
     
@@ -96,7 +95,6 @@ class CallService: NSObject {
     
     override init() {
         super.init()
-        queue.setSpecific(key: queueSpecificKey, value: ())
         rtcClient.delegate = self
         updateCallKitAvailability()
         KrakenMessageRetriever.shared.delegate = self
@@ -104,7 +102,7 @@ class CallService: NSObject {
     }
     
     func registerForPushKitNotificationsIfAvailable() {
-        dispatch {
+        queue.autoAsync {
             guard self.pushRegistry == nil else {
                 return
             }
@@ -112,7 +110,7 @@ class CallService: NSObject {
                 AccountAPI.updateSession(voipToken: voipTokenRemove)
                 return
             }
-            let registry = PKPushRegistry(queue: self.queue)
+            let registry = PKPushRegistry(queue: self.queue.dispatchQueue)
             registry.desiredPushTypes = [.voIP]
             registry.delegate = self
             if let token = registry.pushToken(for: .voIP)?.toHexString() {
@@ -415,7 +413,7 @@ extension CallService {
 extension CallService {
     
     func startCall(uuid: UUID, handle: CXHandle, completion: ((Bool) -> Void)?) {
-        dispatch {
+        queue.autoAsync {
             DispatchQueue.main.sync {
                 NotificationCenter.default.post(name: Self.willStartCallNotification, object: self)
             }
@@ -440,7 +438,7 @@ extension CallService {
     }
     
     func answerCall(uuid: UUID, completion: ((Bool) -> Void)?) {
-        dispatch {
+        queue.autoAsync {
             if let call = self.pendingAnswerCalls[uuid] as? PeerToPeerCall, call.status != .disconnecting, let sdp = self.pendingSDPs[uuid] {
                 self.log("[CallService] answer p2p call: \(call.debugDescription)")
                 call.timer?.invalidate()
@@ -465,7 +463,7 @@ extension CallService {
     }
     
     func endCall(uuid: UUID) {
-        dispatch {
+        queue.autoAsync {
             DispatchQueue.main.sync(execute: self.beginAutoCancellingBackgroundTaskIfNotActive)
             if let call = self.activeOrPendingAnswerCall(with: uuid) {
                 let callStatusWasIncoming = call.status == .incoming
@@ -557,7 +555,7 @@ extension CallService {
         pendingCandidates = [:]
         pendingTrickles = [:]
         ringtonePlayer.stop()
-        performSynchronouslyOnMainThread {
+        Queue.main.autoSync {
             dismissCallingInterface()
         }
         isMuted = false
@@ -587,7 +585,7 @@ extension CallService {
         pendingTrickles.removeValue(forKey: uuid)
         if pendingAnswerCalls.isEmpty && activeCall == nil {
             ringtonePlayer.stop()
-            performSynchronouslyOnMainThread {
+            Queue.main.autoSync {
                 dismissCallingInterface()
             }
             isMuted = false
@@ -638,7 +636,7 @@ extension CallService: CallMessageCoordinator {
             }
         }
         
-        dispatch {
+        queue.autoAsync {
             if data.source != BlazeMessageAction.listPendingMessages.rawValue {
                 handle(data: data)
             } else {
@@ -726,7 +724,7 @@ extension CallService {
                 }
             }
             
-            dispatch {
+            queue.autoAsync {
                 switch error {
                 case CallError.busy:
                     declineOffer(data: data, category: .WEBRTC_AUDIO_BUSY)
@@ -1375,14 +1373,6 @@ extension CallService {
         }
     }
     
-    private func dispatch(_ closure: @escaping () -> Void) {
-        if DispatchQueue.getSpecific(key: queueSpecificKey) == nil {
-            queue.async(execute: closure)
-        } else {
-            closure()
-        }
-    }
-    
     private func updateCallKitAvailability() {
         let usesCallKit = !isMainlandChina
             && AVAudioSession.sharedInstance().recordPermission == .granted
@@ -1547,7 +1537,7 @@ extension CallService {
         
         AVAudioSession.sharedInstance().requestRecordPermission { (isGranted) in
             if isGranted {
-                self.dispatch(performRequest)
+                self.queue.autoAsync(execute: performRequest)
             } else {
                 DispatchQueue.main.async {
                     self.alert(error: CallError.microphonePermissionDenied)

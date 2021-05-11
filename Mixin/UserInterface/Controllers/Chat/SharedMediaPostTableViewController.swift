@@ -34,7 +34,7 @@ extension SharedMediaPostTableViewController: SharedMediaDataSourceDelegate {
                                                      earlierThan: location?.message,
                                                      count: count)
         let items = messages.map { PostMessageViewModel(message: $0) }
-        let layoutWidth = performSynchronouslyOnMainThread {
+        let layoutWidth = Queue.main.autoSync {
             tableView.bounds.width
                 - SharedMediaPostCell.backgroundHorizontalMargin * 2
                 - SharedMediaPostCell.labelHorizontalMargin * 2

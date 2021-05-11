@@ -57,7 +57,7 @@ class ConversationDataSource {
     private var messageProcessingIsCancelled = false
     private var didInitializedData = false
     private var tableViewContentInset: UIEdgeInsets {
-        return performSynchronouslyOnMainThread {
+        return Queue.main.autoSync {
             self.tableView?.contentInset ?? .zero
         }
     }
@@ -181,7 +181,7 @@ class ConversationDataSource {
             }
             offset -= ConversationDateHeaderView.height
         }
-        performSynchronouslyOnMainThread {
+        Queue.main.autoSync {
             guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {
                 return
             }
@@ -533,7 +533,7 @@ extension ConversationDataSource {
         }
         let messageIsSentByMe = message.userId == me.user_id
         if !messageIsSentByMe && message.status == MessageStatus.DELIVERED.rawValue {
-            performSynchronouslyOnMainThread {
+            Queue.main.autoSync {
                 guard UIApplication.shared.applicationState == .active else {
                     return
                 }
@@ -660,7 +660,7 @@ extension ConversationDataSource {
             }
             
             if message.status == MessageStatus.DELIVERED.rawValue && message.userId != myUserId {
-                performSynchronouslyOnMainThread {
+                Queue.main.autoSync {
                     guard UIApplication.shared.applicationState == .active else {
                         return
                     }

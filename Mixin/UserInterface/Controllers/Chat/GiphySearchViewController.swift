@@ -7,7 +7,7 @@ class GiphySearchViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var collectionViewLayout: GiphyCollectionViewFlowLayout!
     
-    weak var dataSource: ConversationDataSource?
+    weak var composer: ConversationMessageComposer?
     
     var onDisappear: (() -> Void)?
     
@@ -147,7 +147,7 @@ extension GiphySearchViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let image = images[indexPath.row]
         let cell = collectionView.cellForItem(at: indexPath) as? StickerPreviewCell
-        dataSource?.send(image: image, thumbnail: cell?.image)
+        composer?.send(image: image, thumbnail: cell?.image)
         dismissAction(collectionView)
     }
     

@@ -120,8 +120,8 @@ class ConversationInputViewController: UIViewController {
         return parent as! ConversationViewController
     }
     
-    private var dataSource: ConversationDataSource {
-        return conversationViewController.dataSource
+    private var composer: ConversationMessageComposer {
+        return conversationViewController.composer
     }
     
     private var screenHeight: CGFloat {
@@ -169,7 +169,7 @@ class ConversationInputViewController: UIViewController {
         textView.delegate = self
         lastSafeAreaInsetsBottom = view.safeAreaInsets.bottom
         setPreferredContentHeight(minimizedHeight, animated: false)
-        if let draft = AppGroupUserDefaults.User.conversationDraft[dataSource.conversationId], !draft.isEmpty {
+        if let draft = AppGroupUserDefaults.User.conversationDraft[composer.conversationId], !draft.isEmpty {
             UIView.performWithoutAnimation {
                 layoutForTextViewIsEmpty(false, animated: false)
                 textView.text = draft
@@ -235,7 +235,7 @@ class ConversationInputViewController: UIViewController {
     
     // MARK: - Actions
     @IBAction func unblockAction(_ sender: Any) {
-        guard let user = dataSource.ownerUser else {
+        guard let user = composer.ownerUser else {
             return
         }
         unblockButton.isBusy = true
@@ -250,11 +250,11 @@ class ConversationInputViewController: UIViewController {
     }
     
     @IBAction func deleteConversationAction(_ sender: Any) {
-        guard !dataSource.conversationId.isEmpty else {
+        guard !composer.conversationId.isEmpty else {
             return
         }
         deleteConversationButton.isBusy = true
-        let conversationId = dataSource.conversationId
+        let conversationId = composer.conversationId
 
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: { (_) in
@@ -302,7 +302,7 @@ class ConversationInputViewController: UIViewController {
     
     // TODO: use view controller based web view and present it right here
     @IBAction func openOpponentAppAction(_ sender: Any) {
-        guard let user = dataSource.ownerUser, user.isBot, let app = opponentApp else {
+        guard let user = composer.ownerUser, user.isBot, let app = opponentApp else {
             return
         }
         dismiss()
@@ -319,9 +319,9 @@ class ConversationInputViewController: UIViewController {
         guard !trimmedMessageDraft.isEmpty else {
             return
         }
-        dataSource.sendMessage(type: .SIGNAL_TEXT,
-                               quote: quote?.message,
-                               value: trimmedMessageDraft)
+        composer.sendMessage(type: .SIGNAL_TEXT,
+                             quote: quote?.message,
+                             value: trimmedMessageDraft)
         mentionRanges.removeAll()
         textView.text = ""
         textViewDidChange(textView)
@@ -343,17 +343,17 @@ class ConversationInputViewController: UIViewController {
         stickersViewController.reload()
         
         extensionViewController.loadViewIfNeeded()
-        if dataSource.category == .group {
-            let conversationId = dataSource.conversationId
-            dataSource.queue.async {
+        if composer.isGroup {
+            let conversationId = composer.conversationId
+            composer.queue.async {
                 let apps = AppDAO.shared.getConversationBots(conversationId: conversationId)
                 DispatchQueue.main.async { [weak self] in
                     self?.extensionViewController.apps = apps.map { ($0, nil) }
                     self?.reloadFixedExtensions()
                 }
             }
-        } else if let ownerUser = dataSource.ownerUser {
-            dataSource.queue.async { [weak self] in
+        } else if let ownerUser = composer.ownerUser {
+            composer.queue.async { [weak self] in
                 let app = AppDAO.shared.getApp(ofUserId: ownerUser.userId)
                 DispatchQueue.main.async {
                     if let app = app {
@@ -427,24 +427,24 @@ class ConversationInputViewController: UIViewController {
     }
     
     func send(asset: PHAsset) {
-        dataSource.send(asset: asset, quoteMessageId: quote?.message.messageId)
+        composer.send(asset: asset, quoteMessageId: quote?.message.messageId)
         quote = nil
     }
     
     func sendAudio(url: URL, metadata: AudioMetadata) {
-        dataSource.sendMessage(type: .SIGNAL_AUDIO, quote: quote?.message, value: (url, metadata))
+        composer.sendMessage(type: .SIGNAL_AUDIO, quote: quote?.message, value: (url, metadata))
         quote = nil
     }
     
     func sendFile(url: URL) {
-        dataSource.sendMessage(type: .SIGNAL_DATA, quote: quote?.message, value: url)
+        composer.sendMessage(type: .SIGNAL_DATA, quote: quote?.message, value: url)
         quote = nil
     }
     
     func sendContact(userIds: [String], completion: @escaping () -> Void) {
-        let conversationId = dataSource.conversationId
-        let ownerUser = dataSource.ownerUser
-        let isGroup = dataSource.conversation.isGroup()
+        let conversationId = composer.conversationId
+        let ownerUser = composer.ownerUser
+        let isGroup = composer.isGroup
         var quoteMessageId = quote?.message.messageId
         quote = nil
         DispatchQueue.global().async {
@@ -469,20 +469,17 @@ class ConversationInputViewController: UIViewController {
     }
     
     func send(location: Location) throws {
-        let conversationId = dataSource.conversationId
-        let ownerUser = dataSource.ownerUser
-        let isGroup = dataSource.conversation.isGroup()
         let quoteMessageId = quote?.message.messageId
         quote = nil
         var message = Message.createMessage(category: MessageCategory.SIGNAL_LOCATION.rawValue,
-                                            conversationId: conversationId,
+                                            conversationId: composer.conversationId,
                                             userId: myUserId)
         let jsonData = try JSONEncoder().encode(location)
         message.content = String(data: jsonData, encoding: .utf8)
         message.quoteMessageId = quoteMessageId
         SendMessageService.shared.sendMessage(message: message,
-                                              ownerUser: ownerUser,
-                                              isGroupMessage: isGroup)
+                                              ownerUser: composer.ownerUser,
+                                              isGroupMessage: composer.isGroup)
     }
     
 }
@@ -537,7 +534,7 @@ extension ConversationInputViewController {
         guard parent != nil else {
             return
         }
-        AppGroupUserDefaults.User.conversationDraft[dataSource.conversationId] = trimmedMessageDraft
+        AppGroupUserDefaults.User.conversationDraft[composer.conversationId] = trimmedMessageDraft
     }
     
     @objc private func participantDidChange(_ notification: Notification) {
@@ -547,7 +544,7 @@ extension ConversationInputViewController {
         guard let conversationId = notification.userInfo?[ParticipantDAO.UserInfoKey.conversationId] as? String else {
             return
         }
-        guard dataSource.category == .group, dataSource.conversationId == conversationId else {
+        guard composer.isGroup, composer.conversationId == conversationId else {
             return
         }
         DispatchQueue.global().async { [weak self] in
@@ -818,11 +815,11 @@ extension ConversationInputViewController {
     }
     
     private func reloadFixedExtensions() {
-        if dataSource.category == .contact, let ownerUser = dataSource.ownerUser, !ownerUser.isBot {
+        if !composer.isGroup, let ownerUser = composer.ownerUser, !ownerUser.isBot {
             extensionViewController.fixedExtensions = [.transfer, .call, .camera, .file, .contact, .location]
         } else if let app = opponentApp, app.creatorId == myUserId {
             extensionViewController.fixedExtensions = [.transfer, .camera, .file, .contact, .location]
-        } else if dataSource.category == .group {
+        } else if composer.isGroup {
             extensionViewController.fixedExtensions = [.camera, .groupCall, .file, .contact, .location]
         } else {
             extensionViewController.fixedExtensions = [.camera, .file, .contact, .location]

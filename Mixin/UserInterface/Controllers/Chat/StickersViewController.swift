@@ -19,7 +19,7 @@ class StickersViewController: StickersCollectionViewController, ConversationInpu
     }
     
     func send(sticker: StickerItem) {
-        dataSource?.sendMessage(type: .SIGNAL_STICKER, value: sticker)
+        composer?.sendMessage(type: .SIGNAL_STICKER, value: sticker)
         if updateUsedAtAfterSent {
             DispatchQueue.global().async {
                 let newUsedAt = Date().toUTCString()

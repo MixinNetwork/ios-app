@@ -12,10 +12,6 @@ public class VideoDownloadJob: AttachmentDownloadJob {
         return "video-download-\(messageId)"
     }
     
-    override public func getJobId() -> String {
-        return VideoDownloadJob.jobId(messageId: messageId)
-    }
-    
     override public func taskFinished() {
         if stream?.streamError == nil {
             let thumbnail = UIImage(withFirstFrameOfVideoAtURL: fileUrl)

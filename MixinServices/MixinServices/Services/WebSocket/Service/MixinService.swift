@@ -326,8 +326,22 @@ public class MixinService {
             NotificationCenter.default.post(name: SendMessageService.willRecallMessageNotification, object: self, userInfo: userInfo)
         }
         
-        ConcurrentJobQueue.shared.cancelJob(jobId: AttachmentDownloadJob.jobId(category: category, messageId: messageId))
-
+        let jobId: String?
+        if category.hasSuffix("_IMAGE") {
+            jobId = AttachmentDownloadJob.jobId(messageId: messageId)
+        } else if category.hasSuffix("_DATA") {
+            jobId = FileDownloadJob.jobId(messageId: messageId)
+        } else if category.hasSuffix("_AUDIO") {
+            jobId = AudioDownloadJob.jobId(messageId: messageId)
+        } else if category.hasSuffix("_VIDEO") {
+            jobId = VideoDownloadJob.jobId(messageId: messageId)
+        } else {
+            jobId = nil
+        }
+        if let id = jobId {
+            ConcurrentJobQueue.shared.cancelJob(jobId: id)
+        }
+        
         if let mediaUrl = mediaUrl {
             AttachmentContainer.removeMediaFiles(mediaUrl: mediaUrl, category: category)
         }

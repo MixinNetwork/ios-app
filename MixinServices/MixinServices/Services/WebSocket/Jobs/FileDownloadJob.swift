@@ -10,8 +10,4 @@ public class FileDownloadJob: AttachmentDownloadJob {
         return "file-download-\(messageId)"
     }
     
-    override public func getJobId() -> String {
-        return FileDownloadJob.jobId(messageId: messageId)
-    }
-    
 }

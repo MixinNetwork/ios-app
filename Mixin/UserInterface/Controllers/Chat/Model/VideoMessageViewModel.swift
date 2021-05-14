@@ -67,9 +67,8 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
     override func update(mediaUrl: String?, mediaSize: Int64?, mediaDuration: Int64?) {
         super.update(mediaUrl: mediaUrl, mediaSize: mediaSize, mediaDuration: mediaDuration)
         (duration, fileSize) = VideoMessageViewModel.durationAndFileSizeRepresentation(ofMessage: message)
-        if let mediaUrl = mediaUrl, let filename = mediaUrl.components(separatedBy: ".").first {
-            let betterThumbnailFilename = filename + ExtensionName.jpeg.withDot
-            let betterThumbnailURL = AttachmentContainer.url(for: .videos, filename: betterThumbnailFilename)
+        if let videoFilename = mediaUrl {
+            let betterThumbnailURL = AttachmentContainer.videoThumbnailURL(videoFilename: videoFilename)
             if let betterThumbnail = UIImage(contentsOfFile: betterThumbnailURL.path) {
                 thumbnail = betterThumbnail
             }

@@ -68,8 +68,7 @@ class VideoUploadJob: AttachmentUploadJob {
             return
         }
         let thumbnail = UIImage(withFirstFrameOf: asset)
-        let thumbnailFilename = filename + ExtensionName.jpeg.withDot
-        let thumbnailUrl = AttachmentContainer.url(for: .videos, filename: thumbnailFilename)
+        let thumbnailUrl = AttachmentContainer.videoThumbnailURL(videoFilename: videoFilename)
         thumbnail?.saveToFile(path: thumbnailUrl)
         let mediaSize = FileManager.default.fileSize(videoUrl.path)
         let mediaDuration = Int64(phAsset.duration * 1000)

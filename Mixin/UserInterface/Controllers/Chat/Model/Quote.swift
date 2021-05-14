@@ -63,9 +63,8 @@ struct Quote {
                 if message.category.hasSuffix("_IMAGE"), let mediaUrl = message.mediaUrl, !mediaUrl.isEmpty {
                     let url = AttachmentContainer.url(for: .photos, filename: mediaUrl)
                     image = .local(url)
-                } else if message.category.hasSuffix("_VIDEO"), let mediaUrl = message.mediaUrl, let filename = mediaUrl.components(separatedBy: ".").first {
-                    let betterThumbnailFilename = filename + ExtensionName.jpeg.withDot
-                    let url = AttachmentContainer.url(for: .videos, filename: betterThumbnailFilename)
+                } else if message.category.hasSuffix("_VIDEO"), let videoFilename = message.mediaUrl {
+                    let url = AttachmentContainer.videoThumbnailURL(videoFilename: videoFilename)
                     image = .local(url)
                 }
             } else if message.category.hasSuffix("_LIVE"), let urlString = message.thumbUrl, let url = URL(string: urlString) {

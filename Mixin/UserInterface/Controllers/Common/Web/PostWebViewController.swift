@@ -8,33 +8,16 @@ class PostWebViewController: WebViewController {
     private var html: String?
     
     class func presentInstance(message: Message, asChildOf parent: UIViewController) {
-        let vc = PostWebViewController(nib: R.nib.webView)
+        let vc = PostWebViewController(nib: R.nib.fullscreenPopupView)
         vc.message = message
-        vc.view.frame = parent.view.bounds
-        vc.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        parent.addChild(vc)
-        parent.view.addSubview(vc.view)
-        vc.didMove(toParent: parent)
-        
-        vc.view.center.y = parent.view.bounds.height * 3 / 2
-        UIView.animate(withDuration: 0.5) {
-            UIView.setAnimationCurve(.overdamped)
-            vc.view.center.y = parent.view.bounds.height / 2
-        }
-        
-        AppDelegate.current.mainWindow.endEditing(true)
-    }
-    
-    override var config: WKWebViewConfiguration {
-        let config = WKWebViewConfiguration()
-        config.dataDetectorTypes = .link
-        return config
+        vc.presentAsChild(of: parent, completion: nil)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         showPageTitleConstraint.priority = .defaultLow
         webView.navigationDelegate = self
+        webView.configuration.dataDetectorTypes = .link
         guard let content = message.content else {
             return
         }

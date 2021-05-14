@@ -1,6 +1,6 @@
 import UIKit
 
-class WebViewScreenEdgePanGestureRecognizer: UIScreenEdgePanGestureRecognizer {
+class FullScreenPopupEdgePanGestureRecognizer: UIScreenEdgePanGestureRecognizer {
     
     static let decisionDistance: CGFloat = UIScreen.main.bounds.width / 4
     
@@ -16,8 +16,8 @@ class WebViewScreenEdgePanGestureRecognizer: UIScreenEdgePanGestureRecognizer {
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
         let translation = self.translation(in: view)
         var shouldEnd = false
-        fractionComplete = min(1, max(0, translation.x / WebViewScreenEdgePanGestureRecognizer.decisionDistance))
-        if translation.x > WebViewScreenEdgePanGestureRecognizer.decisionDistance {
+        fractionComplete = min(1, max(0, translation.x / FullScreenPopupEdgePanGestureRecognizer.decisionDistance))
+        if translation.x > FullScreenPopupEdgePanGestureRecognizer.decisionDistance {
             shouldEnd = true
         }
         super.touchesMoved(touches, with: event)

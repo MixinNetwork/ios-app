@@ -194,7 +194,6 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
         }
         sendButton.isHidden = isPlayingVideo
         dismissButton.isHidden = isPlayingVideo
-        UIApplication.shared.isIdleTimerDisabled = isPlayingVideo
     }
 
     deinit {

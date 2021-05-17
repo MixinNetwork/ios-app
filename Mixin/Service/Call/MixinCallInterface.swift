@@ -13,6 +13,7 @@ class MixinCallInterface: NSObject {
     private unowned let service: CallService
     
     private var pendingIncomingUuid: UUID?
+    private var displayAwakeningToken: DisplayAwakener.Token?
     
     required init(service: CallService) {
         self.service = service
@@ -22,6 +23,16 @@ class MixinCallInterface: NSObject {
     
     deinit {
         vibrator.stop()
+    }
+    
+    private func stopAwakeningDisplay() {
+        Queue.main.autoSync {
+            guard let token = displayAwakeningToken else {
+                return
+            }
+            DisplayAwakener.shared.release(token: token)
+            displayAwakeningToken = nil
+        }
     }
     
 }
@@ -56,9 +67,7 @@ extension MixinCallInterface: CallInterface {
     
     func requestAnswerCall(uuid: UUID) {
         vibrator.stop()
-        DispatchQueue.main.async {
-            UIApplication.shared.isIdleTimerDisabled = false
-        }
+        stopAwakeningDisplay()
         service.answerCall(uuid: uuid, completion: nil)
     }
     
@@ -68,9 +77,7 @@ extension MixinCallInterface: CallInterface {
             pendingIncomingUuid = nil
         }
         UNUserNotificationCenter.current().removeNotifications(withIdentifiers: [uuid.uuidString])
-        DispatchQueue.main.async {
-            UIApplication.shared.isIdleTimerDisabled = false
-        }
+        stopAwakeningDisplay()
         service.endCall(uuid: uuid)
         completion(nil)
     }
@@ -116,7 +123,9 @@ extension MixinCallInterface: CallInterface {
                     }
                     call.status = .incoming
                     self.service.showCallingInterface(call: call)
-                    UIApplication.shared.isIdleTimerDisabled = true
+                    if self.displayAwakeningToken == nil {
+                        self.displayAwakeningToken = DisplayAwakener.shared.retain()
+                    }
                 }
                 self.pendingIncomingUuid = call.uuid
                 completion(nil)
@@ -129,9 +138,7 @@ extension MixinCallInterface: CallInterface {
         if uuid == pendingIncomingUuid {
             pendingIncomingUuid = nil
         }
-        DispatchQueue.main.async {
-            UIApplication.shared.isIdleTimerDisabled = false
-        }
+        stopAwakeningDisplay()
         UNUserNotificationCenter.current().removeNotifications(withIdentifiers: [uuid.uuidString])
     }
     
@@ -139,9 +146,7 @@ extension MixinCallInterface: CallInterface {
         if uuid == pendingIncomingUuid {
             pendingIncomingUuid = nil
         }
-        DispatchQueue.main.async {
-            UIApplication.shared.isIdleTimerDisabled = false
-        }
+        stopAwakeningDisplay()
     }
     
     func reportOutgoingCall(uuid: UUID, connectedAtDate date: Date) {
@@ -149,9 +154,7 @@ extension MixinCallInterface: CallInterface {
     }
     
     func reportIncomingCall(_ call: Call, connectedAtDate date: Date) {
-        DispatchQueue.main.async {
-            UIApplication.shared.isIdleTimerDisabled = false
-        }
+        stopAwakeningDisplay()
     }
     
 }

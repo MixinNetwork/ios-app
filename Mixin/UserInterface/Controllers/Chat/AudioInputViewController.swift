@@ -43,6 +43,7 @@ class AudioInputViewController: UIViewController, ConversationInputAccessible {
     private var recordGestureBeganPoint = CGPoint.zero
     private var recordDuration: TimeInterval = 0
     private var recorder: OggOpusRecorder?
+    private var displayAwakeningToken: DisplayAwakener.Token?
     private var isShowingLockView = false
     private var isLocked = false {
         didSet {
@@ -57,6 +58,9 @@ class AudioInputViewController: UIViewController, ConversationInputAccessible {
     
     deinit {
         recorder?.cancel(for: .userInitiated)
+        if let token = displayAwakeningToken {
+            DisplayAwakener.shared.release(token: token)
+        }
         NotificationCenter.default.removeObserver(self)
     }
     
@@ -262,11 +266,13 @@ extension AudioInputViewController {
         let tempUrl = URL.createTempUrl(fileExtension: ExtensionName.ogg.rawValue)
         do {
             let recorder = try OggOpusRecorder(path: tempUrl.path)
-            UIApplication.shared.isIdleTimerDisabled = true
             recorder.delegate = self
             recorder.record(for: AudioInputViewController.maxRecordDuration)
             self.recorder = recorder
             self.feedback.impactOccurred()
+            if displayAwakeningToken == nil {
+                displayAwakeningToken = DisplayAwakener.shared.retain()
+            }
         } catch {
             reporter.report(error: error)
         }
@@ -278,7 +284,10 @@ extension AudioInputViewController {
     }
     
     private func resetTimerAndRecorder() {
-        UIApplication.shared.isIdleTimerDisabled = false
+        if let token = displayAwakeningToken {
+            DisplayAwakener.shared.release(token: token)
+            displayAwakeningToken = nil
+        }
         recordDurationTimer?.invalidate()
         recordDurationTimer = nil
         recorder = nil

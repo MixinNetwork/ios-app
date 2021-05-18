@@ -89,7 +89,7 @@ extension MixinAPI {
     }
     
     private static let session: Alamofire.Session = {
-        let config = URLSessionConfiguration.default.copy() as! URLSessionConfiguration
+        let config = URLSessionConfiguration.default
         config.timeoutIntervalForRequest = 10
         config.requestCachePolicy = .reloadIgnoringLocalCacheData
         let tokenInterceptor = AccessTokenInterceptor()

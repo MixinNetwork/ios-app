@@ -17,7 +17,15 @@ class StickerMessageViewModel: DetailInfoMessageViewModel {
     private let contentSize: CGSize
     
     override init(message: MessageItem) {
-        if let assetWidth = message.assetWidth, let assetHeight = message.assetHeight, assetWidth > 0, assetHeight > 0 {
+        let assetWidth, assetHeight: Int?
+        if let width = message.assetWidth, let height = message.assetHeight, width > 0, height > 0 {
+            (assetWidth, assetHeight) = (width, height)
+        } else if let width = message.mediaWidth, let height = message.mediaHeight, width > 0, height > 0 {
+            (assetWidth, assetHeight) = (width, height)
+        } else {
+            (assetWidth, assetHeight) = (nil, nil)
+        }
+        if let assetWidth = assetWidth, let assetHeight = assetHeight {
             let assetSize = CGSize(width: assetWidth / 2, height: assetHeight / 2)
             let ratio = assetSize.width / assetSize.height
             

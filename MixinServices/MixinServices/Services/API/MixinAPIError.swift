@@ -239,15 +239,7 @@ extension MixinAPIError {
         }
         switch self {
         case .httpTransport(let error):
-            guard let underlying = error.underlyingError as NSError?, underlying.domain == NSURLErrorDomain else {
-                return false
-            }
-            let codes = [
-                NSURLErrorNotConnectedToInternet,
-                NSURLErrorTimedOut,
-                NSURLErrorNetworkConnectionLost
-            ]
-            return codes.contains(underlying.code)
+            return error.worthRetrying
         case .webSocketTimeOut, .clockSkewDetected:
             return true
         default:

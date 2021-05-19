@@ -16,7 +16,7 @@ open class AttachmentDownloadJob: UploadOrDownloadJob {
     private var downloadedContentLength: Double = 0
     private var attachResponse: AttachmentResponse?
     
-    internal var fileName: String {
+    public var fileName: String {
         
         var originalPathExtension: String? {
             message.name?.pathExtension()?.lowercased()
@@ -156,7 +156,10 @@ open class AttachmentDownloadJob: UploadOrDownloadJob {
         if let error = stream.streamError {
             try? FileManager.default.removeItem(at: fileUrl)
             reporter.report(error: error)
-            MessageDAO.shared.updateMediaMessage(messageId: messageId, mediaUrl: fileName, status: .CANCELED, conversationId: message.conversationId)
+            updateMediaMessage(messageId: messageId,
+                               mediaUrl: fileName,
+                               status: .CANCELED,
+                               conversationId: message.conversationId)
         } else {
             let content: String? = {
                 guard let response = attachResponse else {
@@ -171,11 +174,11 @@ open class AttachmentDownloadJob: UploadOrDownloadJob {
                 }
                 return json.base64EncodedString()
             }()
-            MessageDAO.shared.updateMediaMessage(messageId: messageId,
-                                                 mediaUrl: fileName,
-                                                 status: .DONE,
-                                                 conversationId: message.conversationId,
-                                                 content: content)
+            updateMediaMessage(messageId: messageId,
+                               mediaUrl: fileName,
+                               status: .DONE,
+                               conversationId: message.conversationId,
+                               content: content)
             let userInfo = [
                 Self.UserInfoKey.messageId: messageId,
                 Self.UserInfoKey.mediaURL: fileName
@@ -188,6 +191,20 @@ open class AttachmentDownloadJob: UploadOrDownloadJob {
     override open func downloadExpired() {
         MessageDAO.shared.updateMediaStatus(messageId: messageId, status: .EXPIRED, conversationId: message.conversationId)
     }
+    
+    open func updateMediaMessage(
+        messageId: String,
+        mediaUrl: String,
+        status: MediaStatus,
+        conversationId: String,
+        content: String? = nil
+    ) {
+        MessageDAO.shared.updateMediaMessage(messageId: messageId,
+                                             mediaUrl: fileName,
+                                             status: status,
+                                             conversationId: message.conversationId)
+    }
+    
 }
 
 extension AttachmentDownloadJob: URLSessionDataDelegate {
@@ -203,10 +220,14 @@ extension AttachmentDownloadJob: URLSessionDataDelegate {
         }
         if let contentLength = contentLength {
             downloadedContentLength += Double(data.count)
-            let progress = downloadedContentLength / contentLength
-            let change = ConversationChange(conversationId: message.conversationId,
-                                            action: .updateDownloadProgress(messageId: messageId, progress: progress))
-            NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: change)
+            let userInfo: [String: Any] = [
+                UploadOrDownloadJob.UserInfoKey.progress: downloadedContentLength / contentLength,
+                UploadOrDownloadJob.UserInfoKey.conversationId: message.conversationId,
+                UploadOrDownloadJob.UserInfoKey.messageId: message.messageId
+            ]
+            NotificationCenter.default.post(onMainThread: Self.progressNotification,
+                                            object: self,
+                                            userInfo: userInfo)
         }
     }
     

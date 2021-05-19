@@ -221,7 +221,7 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
             return CGSize(width: width, height: 16)
         }()
         
-        var contentSize = textSize
+        contentSize = textSize
         let lastLineWithTrailingWidth = lastLineWidth + additionalTrailingSize.width
         if lastLineWithTrailingWidth > maxContentWidth {
             contentSize.height += additionalTrailingSize.height
@@ -239,7 +239,8 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
                 contentSize.width = min(maxContentWidth, max(contentSize.width, fullnameFrame.size.width))
             }
         }
-        self.contentSize = contentSize
+        contentSize = adjustedContentSize(contentSize)
+        
         let bubbleMargin = DetailInfoMessageViewModel.bubbleMargin
         if style.contains(.received) {
             backgroundImageFrame = CGRect(x: bubbleMargin.leading,
@@ -267,6 +268,10 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
             backgroundImageFrame.size.height -= fullnameFrame.height
         }
         layoutQuotedMessageIfPresent()
+    }
+    
+    func adjustedContentSize(_ raw: CGSize) -> CGSize {
+        raw
     }
     
     func highlight(keyword: String) {

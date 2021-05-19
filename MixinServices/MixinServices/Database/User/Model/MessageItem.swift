@@ -100,6 +100,16 @@ public final class MessageItem {
         return try? JSONDecoder.default.decode(Location.self, from: json)
     }()
     
+    public lazy var transcriptMessages: [MessageBrief]? = {
+        guard
+            category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue,
+            let json = content?.data(using: .utf8)
+        else {
+            return nil
+        }
+        return try? JSONDecoder.snakeCase.decode([MessageBrief].self, from: json)
+    }()
+    
     public init(messageId: String, conversationId: String, userId: String, category: String, content: String? = nil, mediaUrl: String? = nil, mediaMimeType: String? = nil, mediaSize: Int64? = nil, mediaDuration: Int64? = nil, mediaWidth: Int? = nil, mediaHeight: Int? = nil, mediaHash: String? = nil, mediaKey: Data? = nil, mediaDigest: Data? = nil, mediaStatus: String? = nil, mediaWaveform: Data? = nil, mediaLocalIdentifier: String? = nil, thumbImage: String? = nil, thumbUrl: String? = nil, status: String, participantId: String? = nil, snapshotId: String? = nil, name: String? = nil, stickerId: String? = nil, createdAt: String, actionName: String? = nil, userFullName: String? = nil, userIdentityNumber: String? = nil, userAvatarUrl: String? = nil, appId: String? = nil, snapshotAmount: String? = nil, snapshotAssetId: String? = nil, snapshotType: String? = nil, participantFullName: String? = nil, participantUserId: String? = nil, assetUrl: String? = nil, assetType: String? = nil, assetSymbol: String? = nil, assetIcon: String? = nil, assetWidth: Int? = nil, assetHeight: Int? = nil, assetCategory: String? = nil, sharedUserId: String? = nil, sharedUserFullName: String? = nil, sharedUserIdentityNumber: String? = nil, sharedUserAvatarUrl: String? = nil, sharedUserAppId: String? = nil, sharedUserIsVerified: Bool? = nil, quoteMessageId: String? = nil, quoteContent: Data? = nil, mentionsJson: Data? = nil, hasMentionRead: Bool? = nil) {
         self.messageId = messageId
         self.conversationId = conversationId
@@ -162,6 +172,67 @@ public final class MessageItem {
                   category: category,
                   status: MessageStatus.SENDING.rawValue,
                   createdAt: createdAt)
+    }
+    
+    public convenience init(messageBrief b: MessageBrief) {
+        let content: String?
+        if b.category == .appCard {
+            content = AppCardContentConverter.localAppCard(from: b.content)
+        } else {
+            content = b.content
+        }
+        self.init(messageId: b.messageId,
+                  conversationId: "",
+                  userId: b.userId ?? "",
+                  category: b.category.rawValue,
+                  content: content,
+                  mediaUrl: b.mediaUrl,
+                  mediaMimeType: b.mediaMimeType,
+                  mediaSize: b.mediaSize,
+                  mediaDuration: b.mediaDuration,
+                  mediaWidth: b.mediaWidth,
+                  mediaHeight: b.mediaHeight,
+                  mediaHash: nil,
+                  mediaKey: b.mediaKey,
+                  mediaDigest: b.mediaDigest,
+                  mediaStatus: b.mediaStatus,
+                  mediaWaveform: b.mediaWaveform,
+                  mediaLocalIdentifier: nil,
+                  thumbImage: b.thumbImage,
+                  thumbUrl: b.thumbUrl,
+                  status: MessageStatus.READ.rawValue,
+                  participantId: nil,
+                  snapshotId: nil,
+                  name: b.mediaName,
+                  stickerId: b.stickerId,
+                  createdAt: b.createdAt,
+                  actionName: nil,
+                  userFullName: b.userFullName,
+                  userIdentityNumber: nil,
+                  userAvatarUrl: nil,
+                  appId: nil,
+                  snapshotAmount: nil,
+                  snapshotAssetId: nil,
+                  snapshotType: nil,
+                  participantFullName: nil,
+                  participantUserId: nil,
+                  assetUrl: nil,
+                  assetType: nil,
+                  assetSymbol: nil,
+                  assetIcon: nil,
+                  assetWidth: nil,
+                  assetHeight: nil,
+                  assetCategory: nil,
+                  sharedUserId: b.sharedUserId,
+                  sharedUserFullName: b.sharedUserFullName,
+                  sharedUserIdentityNumber: b.sharedUserIdentityNumber,
+                  sharedUserAvatarUrl: b.sharedUserAvatarUrl,
+                  sharedUserAppId: b.sharedUserAppId,
+                  sharedUserIsVerified: b.sharedUserIsVerified,
+                  quoteMessageId: b.quoteId,
+                  quoteContent: QuoteContentConverter.localQuoteContent(from: b.quoteContent),
+                  mentionsJson: MentionConverter.localMention(from: b.mentions),
+                  hasMentionRead: nil)
     }
     
 }

@@ -16,7 +16,7 @@ final class GalleryItemModelController: NSObject {
     weak var delegate: GalleryItemModelControllerDelegate?
     
     var direction = Direction.forward
-    var conversationId = "" {
+    var conversationId: String? {
         didSet {
             didLoadEarliestItem = false
             didLoadLatestItem = false
@@ -38,17 +38,18 @@ final class GalleryItemModelController: NSObject {
     override init() {
         super.init()
         NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: MixinServices.conversationDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateDownloadProgress(_:)), name: UploadOrDownloadJob.progressNotification, object: nil)
     }
     
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
     
-    func dequeueReusableViewController(with item: GalleryItem) -> GalleryItemViewController {
-        items = [item]
+    func dequeueReusableViewController(with items: [GalleryItem], index: Int) -> GalleryItemViewController {
+        self.items = items
         fetchMoreItemsAfter()
         fetchMoreItemsBefore()
-        return dequeueReusableViewController(of: 0)!
+        return dequeueReusableViewController(of: index)!
     }
     
     func dequeueReusableViewController(of index: Int) -> GalleryItemViewController? {
@@ -90,8 +91,6 @@ final class GalleryItemModelController: NSObject {
         switch change.action {
         case .updateMessage(let messageId):
             updateMessage(messageId: messageId)
-        case .updateDownloadProgress(let messageId, let progress):
-            updateDownloadProgress(messageId: messageId, progress: progress)
         case .updateMediaStatus(let messageId, let mediaStatus):
             updateMediaStatus(messageId: messageId, mediaStatus: mediaStatus)
         case .recallMessage(let messageId):
@@ -101,7 +100,22 @@ final class GalleryItemModelController: NSObject {
         }
     }
     
+    @objc private func updateDownloadProgress(_ notification: Notification) {
+        guard
+            let userInfo = notification.userInfo,
+            let messageId = userInfo[UploadOrDownloadJob.UserInfoKey.messageId] as? String,
+            let progress = userInfo[UploadOrDownloadJob.UserInfoKey.progress] as? Double,
+            let vc = reusableViewController(of: messageId)
+        else {
+            return
+        }
+        vc.operationButton.style = .busy(progress: progress)
+    }
+    
     private func fetchMoreItemsBefore() {
+        guard let conversationId = conversationId else {
+            return
+        }
         guard !didLoadEarliestItem && !isLoadingBefore else {
             return
         }
@@ -109,7 +123,6 @@ final class GalleryItemModelController: NSObject {
             return
         }
         isLoadingBefore = true
-        let conversationId = self.conversationId
         let fetchItemsCount = self.fetchItemsCount
         queue.async { [weak self] in
             let items = MessageDAO.shared.getGalleryItems(conversationId: conversationId, location: location, count: -fetchItemsCount)
@@ -126,6 +139,9 @@ final class GalleryItemModelController: NSObject {
     }
     
     private func fetchMoreItemsAfter() {
+        guard let conversationId = conversationId else {
+            return
+        }
         guard !didLoadLatestItem && !isLoadingAfter else {
             return
         }
@@ -133,7 +149,6 @@ final class GalleryItemModelController: NSObject {
             return
         }
         isLoadingAfter = true
-        let conversationId = self.conversationId
         let fetchItemsCount = self.fetchItemsCount
         queue.async { [weak self] in
             let items = MessageDAO.shared.getGalleryItems(conversationId: conversationId, location: location, count: fetchItemsCount)
@@ -179,13 +194,6 @@ final class GalleryItemModelController: NSObject {
                 }
             }
         }
-    }
-    
-    private func updateDownloadProgress(messageId: String, progress: Double) {
-        guard let vc = reusableViewController(of: messageId) else {
-            return
-        }
-        vc.operationButton.style = .busy(progress: progress)
     }
     
     private func updateMediaStatus(messageId: String, mediaStatus: MediaStatus) {

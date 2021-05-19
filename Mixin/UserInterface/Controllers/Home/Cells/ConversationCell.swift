@@ -151,6 +151,8 @@ class ConversationCell: ModernSelectedBackgroundCell {
                 contentLabel.text = R.string.localizable.group_call_invite(senderName)
             } else if category == MessageCategory.KRAKEN_END.rawValue {
                 contentLabel.text = R.string.localizable.group_call_end()
+            } else if category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue {
+                contentLabel.text = R.string.localizable.notification_content_transcript()
             } else {
                 if item.contentType.hasPrefix("SYSTEM_") {
                     contentLabel.text = SystemConversationAction.getSystemMessage(actionName: item.actionName, userId: item.senderId, userFullName: item.senderFullName, participantId: item.participantUserId, participantFullName: item.participantFullName, content: item.content)

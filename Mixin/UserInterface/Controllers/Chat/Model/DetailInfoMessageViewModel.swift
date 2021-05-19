@@ -39,7 +39,12 @@ class DetailInfoMessageViewModel: MessageViewModel {
     }
     
     var showStatusImage: Bool {
-        return !style.contains(.received) || message.status == MessageStatus.FAILED.rawValue
+        if style.contains(.noStatus) {
+            return false
+        } else {
+            return !style.contains(.received)
+                || message.status == MessageStatus.FAILED.rawValue
+        }
     }
     
     var status: String {

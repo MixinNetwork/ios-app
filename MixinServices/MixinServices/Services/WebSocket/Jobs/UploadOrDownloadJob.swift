@@ -2,6 +2,14 @@ import Foundation
 
 open class UploadOrDownloadJob: AsynchronousJob {
     
+    public enum UserInfoKey {
+        public static let progress = "prog"
+        public static let conversationId = "cid"
+        public static let messageId = "mid"
+    }
+    
+    public static let progressNotification = Notification.Name("one.mixin.messenger.AttachmentUploadJob.Progress")
+    
     public let messageId: String
     public var message: Message!
     public var task: URLSessionTask?

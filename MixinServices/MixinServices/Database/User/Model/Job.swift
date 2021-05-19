@@ -26,6 +26,7 @@ public enum JobAction: String {
     
     case RECOVER_ATTACHMENT
     case UPLOAD_ATTACHMENT
+    case UPLOAD_TRANSCRIPT_ATTACHMENT
     
     case PENDING_WEBRTC
 }

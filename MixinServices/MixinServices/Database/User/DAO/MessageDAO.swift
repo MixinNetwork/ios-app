@@ -101,6 +101,14 @@ public final class MessageDAO: UserDatabaseDAO {
                          where: condition)
     }
     
+    public func getTranscriptMessageIds(conversationId: String) -> [String] {
+        let condition: SQLSpecificExpressible = Message.column(of: .conversationId) == conversationId
+            && Message.column(of: .category) == MessageCategory.SIGNAL_TRANSCRIPT.rawValue
+        return db.select(column: Message.column(of: .messageId),
+                         from: Message.self,
+                         where: condition)
+    }
+    
     public func getDownloadedMediaUrls(categories: [MessageCategory], offset: Int, limit: Int) -> [String: String] {
         let condition: SQLSpecificExpressible = categories.map(\.rawValue).contains(Message.column(of: .category))
             && Message.column(of: .mediaStatus) == MediaStatus.DONE.rawValue
@@ -147,6 +155,15 @@ public final class MessageDAO: UserDatabaseDAO {
             NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: statusChange)
             NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: keyChange)
         }
+    }
+    
+    public func update(content: String, forMessageWith messageId: String) {
+        let assignments = [
+            Message.column(of: .content).set(to: content)
+        ]
+        let condition: SQLSpecificExpressible = Message.column(of: .messageId) == messageId
+            && Message.column(of: .category) != MessageCategory.MESSAGE_RECALL.rawValue
+        db.update(Message.self, assignments: assignments, where: condition)
     }
     
     public func update(quoteContent: Data, for messageId: String) {
@@ -550,9 +567,9 @@ public final class MessageDAO: UserDatabaseDAO {
         }
     }
     
-    public func recallMessage(message: Message) {
+    public func recallMessage(message: MessageItem) {
         let messageId = message.messageId
-        ReceiveMessageService.shared.stopRecallMessage(messageId: messageId, category: message.category, conversationId: message.conversationId, mediaUrl: message.mediaUrl)
+        ReceiveMessageService.shared.stopRecallMessage(item: message)
         
         let condition = Message.column(of: .conversationId) == message.conversationId
             && Message.column(of: .quoteMessageId) == messageId

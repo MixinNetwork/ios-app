@@ -91,6 +91,7 @@ class ConversationDataSource {
         NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: MixinServices.conversationDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(messageDaoDidInsertMessage(_:)), name: MessageDAO.didInsertMessageNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(messageDaoDidRedecryptMessage(_:)), name: MessageDAO.didRedecryptMessageNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateMediaProgress(_:)), name: UploadOrDownloadJob.progressNotification, object: nil)
         reload(completion: completion)
     }
     
@@ -503,10 +504,6 @@ extension ConversationDataSource {
             updateMessageMediaStatus(messageId: messageId, mediaStatus: mediaStatus)
         case .updateMediaKey(let messageId, let content, let key, let digest):
             updateMediaKey(messageId: messageId, content: content, key: key, digest: digest)
-        case .updateUploadProgress(let messageId, let progress):
-            updateMediaProgress(messageId: messageId, progress: progress)
-        case .updateDownloadProgress(let messageId, let progress):
-            updateMediaProgress(messageId: messageId, progress: progress)
         case .updateMediaContent(let messageId, let message):
             updateMediaContent(messageId: messageId, message: message)
         case .recallMessage(let messageId):
@@ -575,6 +572,24 @@ extension ConversationDataSource {
         updateMessage(messageId: message.messageId)
     }
     
+    @objc private func updateMediaProgress(_ notification: Notification) {
+        guard
+            let userInfo = notification.userInfo,
+            let conversationId = userInfo[UploadOrDownloadJob.UserInfoKey.conversationId] as? String,
+            let messageId = userInfo[UploadOrDownloadJob.UserInfoKey.messageId] as? String,
+            let progress = userInfo[UploadOrDownloadJob.UserInfoKey.progress] as? Double,
+            conversationId == self.conversationId,
+            let indexPath = indexPath(where: { $0.messageId == messageId }),
+            let viewModel = viewModel(for: indexPath) as? MessageViewModel & AttachmentLoadingViewModel
+        else {
+            return
+        }
+        viewModel.progress = progress
+        if let cell = tableView?.cellForRow(at: indexPath) as? AttachmentLoadingMessageCell {
+            cell.updateProgress()
+        }
+    }
+    
     private func updateMessageStatus(messageId: String, status: MessageStatus) {
         guard let indexPath = indexPath(where: { $0.messageId == messageId }), let viewModel = viewModel(for: indexPath) as? DetailInfoMessageViewModel else {
             return
@@ -617,19 +632,11 @@ extension ConversationDataSource {
             } else if let cell = cell as? AttachmentLoadingMessageCell {
                 cell.updateOperationButtonStyle()
             }
+        } else {
+            viewModel?.message.mediaStatus = mediaStatus.rawValue
         }
         if let cell = cell as? AudioMessageCell {
             cell.updateUnreadStyle()
-        }
-    }
-    
-    private func updateMediaProgress(messageId: String, progress: Double) {
-        guard let indexPath = indexPath(where: { $0.messageId == messageId }), let viewModel = viewModel(for: indexPath) as? MessageViewModel & AttachmentLoadingViewModel else {
-            return
-        }
-        viewModel.progress = progress
-        if let cell = tableView?.cellForRow(at: indexPath) as? AttachmentLoadingMessageCell {
-            cell.updateProgress()
         }
     }
     
@@ -686,7 +693,7 @@ extension ConversationDataSource {
 // MARK: - MessageViewModelFactoryDelegate
 extension ConversationDataSource: MessageViewModelFactoryDelegate {
     
-    func messageViewModelFactory(_ factory: MessageViewModelFactory, isMessageRepresentative message: MessageItem) -> Bool {
+    func messageViewModelFactory(_ factory: MessageViewModelFactory, showUsernameForMessageIfNeeded message: MessageItem) -> Bool {
         message.isRepresentativeMessage(conversation: conversation)
     }
     
@@ -694,11 +701,10 @@ extension ConversationDataSource: MessageViewModelFactoryDelegate {
         isMessageForwardedByBot(message)
     }
     
-    func messageViewModelFactory(_ factory: MessageViewModelFactory, highlightTextMessageViewModel viewModel: TextMessageViewModel) {
-        guard let keyword = highlight?.keyword else {
-            return
+    func messageViewModelFactory(_ factory: MessageViewModelFactory, updateViewModelForPresentation viewModel: MessageViewModel) {
+        if let viewModel = viewModel as? TextMessageViewModel, let keyword = highlight?.keyword {
+            viewModel.highlight(keyword: keyword)
         }
-        viewModel.highlight(keyword: keyword)
     }
     
 }

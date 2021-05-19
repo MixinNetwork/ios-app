@@ -179,7 +179,7 @@ public final class ConversationDAO: UserDatabaseDAO {
     
     public func deleteChat(conversationId: String) {
         let mediaUrls = MessageDAO.shared.getMediaUrls(conversationId: conversationId, categories: MessageCategory.allMediaCategories)
-        
+        let transcriptMessageIds = MessageDAO.shared.getTranscriptMessageIds(conversationId: conversationId)
         db.write { db in
             try Message
                 .filter(Message.column(of: .conversationId) == conversationId)
@@ -198,7 +198,10 @@ public final class ConversationDAO: UserDatabaseDAO {
                 .deleteAll(db)
             try deleteFTSContent(with: conversationId, from: db)
             db.afterNextTransactionCommit { (_) in
-                ConcurrentJobQueue.shared.addJob(job: AttachmentCleanUpJob(conversationId: conversationId, mediaUrls: mediaUrls))
+                let job = AttachmentCleanUpJob(conversationId: conversationId,
+                                               mediaUrls: mediaUrls,
+                                               transcriptMessageIds: transcriptMessageIds)
+                ConcurrentJobQueue.shared.addJob(job: job)
                 NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: nil)
             }
         }
@@ -206,7 +209,7 @@ public final class ConversationDAO: UserDatabaseDAO {
     
     public func clearChat(conversationId: String) {
         let mediaUrls = MessageDAO.shared.getMediaUrls(conversationId: conversationId, categories: MessageCategory.allMediaCategories)
-        
+        let transcriptMessageIds = MessageDAO.shared.getTranscriptMessageIds(conversationId: conversationId)
         db.write { db in
             NotificationCenter.default.post(onMainThread: Self.willClearConversationNotification,
                                             object: self,
@@ -222,7 +225,10 @@ public final class ConversationDAO: UserDatabaseDAO {
                 .updateAll(db, [Conversation.column(of: .unseenMessageCount).set(to: 0)])
             try deleteFTSContent(with: conversationId, from: db)
             db.afterNextTransactionCommit { (_) in
-                ConcurrentJobQueue.shared.addJob(job: AttachmentCleanUpJob(conversationId: conversationId, mediaUrls: mediaUrls))
+                let job = AttachmentCleanUpJob(conversationId: conversationId,
+                                               mediaUrls: mediaUrls,
+                                               transcriptMessageIds: transcriptMessageIds)
+                ConcurrentJobQueue.shared.addJob(job: job)
                 let change = ConversationChange(conversationId: conversationId, action: .reload)
                 NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: change)
             }

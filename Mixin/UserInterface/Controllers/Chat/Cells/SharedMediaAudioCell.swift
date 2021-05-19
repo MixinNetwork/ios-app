@@ -72,7 +72,7 @@ class SharedMediaAudioCell: UITableViewCell, AudioCell {
         highlightedWaveformView.waveform = audio.mediaWaveform
         update(with: audio.mediaStatus)
         updateUnreadStyle()
-        NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: MixinServices.conversationDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateDownloadProgress(_:)), name: UploadOrDownloadJob.progressNotification, object: nil)
     }
     
     func update(with mediaStatus: MediaStatus) {
@@ -105,14 +105,14 @@ class SharedMediaAudioCell: UITableViewCell, AudioCell {
         }
     }
     
-    @objc func conversationDidChange(_ notification: Notification) {
-        guard let change = notification.object as? ConversationChange else {
-            return
-        }
-        guard case let .updateDownloadProgress(messageId, progress) = change.action else {
-            return
-        }
-        guard let audio = audio, audio.messageId == messageId else {
+    @objc func updateDownloadProgress(_ notification: Notification) {
+        guard
+            let userInfo = notification.userInfo,
+            let messageId = userInfo[UploadOrDownloadJob.UserInfoKey.messageId] as? String,
+            let progress = userInfo[UploadOrDownloadJob.UserInfoKey.progress] as? Double,
+            let audio = audio,
+            audio.messageId == messageId
+        else {
             return
         }
         audio.progress = progress

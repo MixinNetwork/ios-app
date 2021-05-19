@@ -330,7 +330,7 @@ public class ReceiveMessageService: MixinService {
         updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
         MessageHistoryDAO.shared.replaceMessageHistory(messageId: data.messageId)
 
-        if let base64Data = Data(base64Encoded: data.data), let plainData = (try? JSONDecoder.default.decode(TransferRecallData.self, from: base64Data)), !plainData.messageId.isEmpty, let message = MessageDAO.shared.getMessage(messageId: plainData.messageId) {
+        if let base64Data = Data(base64Encoded: data.data), let plainData = (try? JSONDecoder.default.decode(TransferRecallData.self, from: base64Data)), !plainData.messageId.isEmpty, let message = MessageDAO.shared.getFullMessage(messageId: plainData.messageId) {
             MessageDAO.shared.recallMessage(message: message)
         }
     }
@@ -574,6 +574,18 @@ public class ReceiveMessageService: MixinService {
             }
             let message = Message.createLocationMessage(content: content, data: data)
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
+        } else if data.category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue {
+            guard let (briefs, hasAttachment) = parseTranscript(data: data, plainText: plainText) else {
+                ReceiveMessageService.shared.processUnknownMessage(data: data)
+                return
+            }
+            guard let json = try? JSONEncoder.snakeCase.encode(briefs), let content = String(data: json, encoding: .utf8) else {
+                return
+            }
+            let message = Message.createTranscriptMessage(content: content,
+                                                          mediaStatus: hasAttachment ? .PENDING : .DONE,
+                                                          data: data)
+            MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
         }
     }
     
@@ -695,6 +707,20 @@ public class ReceiveMessageService: MixinService {
                 return
             }
             MessageDAO.shared.updateContactMessage(transferData: transferData, status: Message.getStatus(data: data), messageId: messageId, category: data.category, conversationId: data.conversationId, messageSource: data.source)
+        case MessageCategory.SIGNAL_TRANSCRIPT.rawValue:
+            guard let (briefs, hasAttachment) = parseTranscript(data: data, plainText: plainText) else {
+                ReceiveMessageService.shared.processUnknownMessage(data: data)
+                return
+            }
+            guard let json = try? JSONEncoder.snakeCase.encode(briefs), let content = String(data: json, encoding: .utf8) else {
+                return
+            }
+            MessageDAO.shared.updateMessageContentAndMediaStatus(content: content,
+                                                                 mediaStatus: hasAttachment ? .PENDING : .DONE,
+                                                                 key: nil,
+                                                                 digest: nil,
+                                                                 messageId: messageId,
+                                                                 conversationId: data.conversationId)
         default:
             break
         }
@@ -741,7 +767,48 @@ public class ReceiveMessageService: MixinService {
         }
         return nil
     }
-
+    
+    private func parseTranscript(data: BlazeMessageData, plainText: String) -> (briefs: [MessageBrief], hasAttachment: Bool)? {
+        guard let jsonData = plainText.data(using: .utf8), let briefs = try? JSONDecoder.snakeCase.decode([MessageBrief].self, from: jsonData) else {
+            return nil
+        }
+        var hasAttachment = false
+        for brief in briefs {
+            switch brief.category {
+            case .data, .image, .video, .audio:
+                hasAttachment = true
+                brief.mediaStatus = MediaStatus.PENDING.rawValue
+            case .sticker:
+                guard let stickerId = brief.stickerId, UUID(uuidString: stickerId) != nil else {
+                    brief.stickerId = nil
+                    continue
+                }
+                if StickerDAO.shared.isExist(stickerId: stickerId) {
+                    continue
+                }
+                stickerLoading: repeat {
+                    switch StickerAPI.sticker(stickerId: stickerId) {
+                    case let .success(response):
+                        brief.mediaUrl = response.assetUrl
+                        StickerDAO.shared.insertOrUpdateSticker(sticker: response)
+                        if let sticker = StickerDAO.shared.getSticker(stickerId: stickerId) {
+                            StickerPrefetcher.prefetch(stickers: [sticker])
+                        }
+                        break stickerLoading
+                    case .failure(.notFound):
+                        brief.stickerId = nil
+                        break stickerLoading
+                    case let .failure(error):
+                        checkNetworkAndWebSocket()
+                    }
+                } while LoginManager.shared.isLoggedIn
+            default:
+                break
+            }
+        }
+        return (briefs, hasAttachment)
+    }
+    
     private func syncConversation(data: BlazeMessageData) {
         guard data.conversationId != User.systemUser && data.conversationId != myUserId else {
             return

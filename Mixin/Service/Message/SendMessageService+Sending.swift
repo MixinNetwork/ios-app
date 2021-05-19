@@ -74,6 +74,11 @@ extension SendMessageService {
                     } else if msg.category.hasSuffix("_AUDIO") {
                         let jobId = SendMessageService.shared.saveUploadJob(message: msg)
                         UploaderQueue.shared.addJob(job: AudioUploadJob(message: msg, jobId: jobId))
+                    } else if msg.category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue {
+                        let jobId = SendMessageService.shared.saveUploadJob(message: msg)
+                        let job = TranscriptAttachmentUploadJob(message: msg,
+                                                                jobIdToRemoveAfterFinished: jobId)
+                        TranscriptAttachmentLoadingQueue.shared.addJob(job: job)
                     }
                 }
             }

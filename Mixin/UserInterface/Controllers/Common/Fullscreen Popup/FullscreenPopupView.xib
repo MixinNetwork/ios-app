@@ -42,11 +42,12 @@
             <gestureRecognizers/>
             <constraints>
                 <constraint firstItem="qfE-71-gkL" firstAttribute="top" secondItem="aTq-9R-NxD" secondAttribute="top" id="4Oe-NX-hN6"/>
-                <constraint firstItem="qgI-3r-2Us" firstAttribute="top" secondItem="cqB-gA-yky" secondAttribute="top" id="9Yh-4c-qu9"/>
+                <constraint firstItem="qgI-3r-2Us" firstAttribute="top" secondItem="cqB-gA-yky" secondAttribute="top" priority="750" id="9Yh-4c-qu9"/>
                 <constraint firstItem="cqB-gA-yky" firstAttribute="trailing" secondItem="qgI-3r-2Us" secondAttribute="trailing" constant="10" id="MqL-uW-xwL"/>
                 <constraint firstAttribute="bottom" secondItem="qfE-71-gkL" secondAttribute="bottom" id="Th2-7B-F67"/>
                 <constraint firstItem="qfE-71-gkL" firstAttribute="leading" secondItem="aTq-9R-NxD" secondAttribute="leading" id="d2o-o1-uOv"/>
                 <constraint firstAttribute="trailing" secondItem="qfE-71-gkL" secondAttribute="trailing" id="nNy-Fh-qVy"/>
+                <constraint firstItem="qgI-3r-2Us" firstAttribute="top" relation="greaterThanOrEqual" secondItem="aTq-9R-NxD" secondAttribute="top" constant="20" id="v5x-Sm-rOl"/>
             </constraints>
             <connections>
                 <outletCollection property="gestureRecognizers" destination="jJd-09-I6d" appends="YES" id="fgn-n0-MXW"/>

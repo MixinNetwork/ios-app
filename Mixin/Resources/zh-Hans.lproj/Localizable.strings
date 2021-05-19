@@ -263,6 +263,8 @@
 "chat_message_sent" = "消息已发送";
 "chat_cell_title_encryption" = "此对话中的消息使用端对端加密。点击了解更多。";
 "chat_cell_title_unknown_category" = "不支持此类型消息。请升级 Mixin 查看。";
+"chat_forward_one_by_one" = "逐条转发";
+"chat_forward_combined" = "合并转发";
 "chat_forward_title" = "转发";
 "chat_forward_chats" = "最近聊天";
 "chat_forward_contacts" = "联系人";
@@ -337,6 +339,7 @@
 "chat_external_sharing_category_contact" = "联系人";
 "chat_external_sharing_category_post" = "文章";
 "chat_external_sharing_category_app_card" = "卡片";
+"chat_transcript" = "聊天记录";
 
 // Web
 "web_suspicious_link" = "可疑链接";
@@ -866,6 +869,7 @@
 "notification_content_live" = "[直播]";
 "notification_content_voice_call" = "[语音通话]";
 "notification_content_location" = "[位置]";
+"notification_content_transcript" = "[聊天记录]";
 
 "alert_key_contact_message" = "发来一条信息";
 "alert_key_contact_text_message" = "发来一条信息";

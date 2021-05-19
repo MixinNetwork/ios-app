@@ -276,6 +276,7 @@ extension MessageReceiverViewController {
         case post(String)
         case video(URL)
         case appCard(AppCardData)
+        case transcript([MessageItem])
     }
     
     static func makeMessages(content: MessageContent, to receiver: MessageReceiver) -> [Message] {
@@ -305,6 +306,8 @@ extension MessageReceiverViewController {
             return [makeMessage(videoUrl: url, to: receiver.conversationId)].compactMap({ $0 })
         case .appCard(let appCard):
             return [makeMessage(appCard: appCard, to: receiver.conversationId)].compactMap({ $0 })
+        case .transcript(let messages):
+            return [makeTranscriptMessage(messages: messages, to: receiver.conversationId)].compactMap({ $0 })
         }
     }
     
@@ -344,7 +347,7 @@ extension MessageReceiverViewController {
         case .user(let user):
             isSignalMessage = !user.isBot
         }
-        if message.category.hasSuffix("_TEXT") || message.category.hasSuffix("_POST") || message.category.hasSuffix("_LOCATION") || message.category == MessageCategory.APP_CARD.rawValue {
+        if ["_TEXT", "_POST", "_LOCATION"].contains(where: message.category.hasSuffix) || ["APP_CARD", "SIGNAL_TRANSCRIPT"].contains(message.category) {
             newMessage.content = message.content
         } else if message.category.hasSuffix("_IMAGE") {
             newMessage.category = isSignalMessage ? MessageCategory.SIGNAL_IMAGE.rawValue : MessageCategory.PLAIN_IMAGE.rawValue
@@ -502,6 +505,55 @@ extension MessageReceiverViewController {
         message.mediaUrl = videoUrl.lastPathComponent
         message.mediaStatus = MediaStatus.PENDING.rawValue
         return message
+    }
+    
+    static func makeTranscriptMessage(messages: [MessageItem], to conversationId: String) -> Message? {
+        let transcriptMessageId = UUID().uuidString.lowercased()
+        let categoriesWithAttachment = Set(AttachmentContainer.Category.allCases.flatMap { $0.messageCategory }.map { $0.rawValue })
+        let briefs: [MessageBrief] = messages.compactMap { item in
+            let mediaUrl: String?
+            if categoriesWithAttachment.contains(item.category),
+               let category = AttachmentContainer.Category(messageCategory: item.category),
+               let sourceFilename = item.mediaUrl
+            {
+                do {
+                    let extensionName: String
+                    if let lastComponent = sourceFilename.components(separatedBy: ".").lazy.last {
+                        extensionName = lastComponent
+                    } else {
+                        extensionName = ""
+                    }
+                    let destinationFilename = item.messageId + "." + extensionName
+                    let source = AttachmentContainer.url(for: category,
+                                                         filename: sourceFilename)
+                    let destination = AttachmentContainer.url(forTranscriptMessageWith: transcriptMessageId,
+                                                              filename: destinationFilename)
+                    try FileManager.default.copyItem(at: source, to: destination)
+                    if category == .videos {
+                        let source = AttachmentContainer.videoThumbnailURL(videoFilename: sourceFilename)
+                        let destination = AttachmentContainer.videoThumbnailURL(forTranscriptMessageWith: transcriptMessageId,
+                                                                                videoFilename: destinationFilename)
+                        try? FileManager.default.copyItem(at: source, to: destination)
+                    }
+                    mediaUrl = destinationFilename
+                } catch {
+                    mediaUrl = nil
+                }
+            } else {
+                mediaUrl = nil
+            }
+            return MessageBrief(messageItem: item, mediaUrl: mediaUrl)
+        }
+        guard let json = try? JSONEncoder.snakeCase.encode(briefs), let content = String(data: json, encoding: .utf8) else {
+            return nil
+        }
+        return Message.createMessage(messageId: transcriptMessageId,
+                                     conversationId: conversationId,
+                                     userId: myUserId,
+                                     category: MessageCategory.SIGNAL_TRANSCRIPT.rawValue,
+                                     content: content,
+                                     status: MessageStatus.SENDING.rawValue,
+                                     createdAt: Date().toUTCString())
     }
     
 }

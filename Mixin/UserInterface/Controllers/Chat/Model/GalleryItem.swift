@@ -46,6 +46,7 @@ struct GalleryItem: Equatable {
         MessageCategory.PLAIN_LIVE.rawValue
     ]
     
+    let transcriptMessageId: String?
     let category: Category
     let conversationId: String
     let messageId: String
@@ -58,19 +59,42 @@ struct GalleryItem: Equatable {
     let shouldLayoutAsArticle: Bool
     var mediaStatus: MediaStatus?
     
-    init?(conversationId: String, messageId: String, category: String, mediaUrl: String?, mediaMimeType: String?, mediaWidth: Int?, mediaHeight: Int?, mediaStatus: String?, mediaDuration: Int64?, thumbImage: String?, thumbUrl: String?, createdAt: String) {
+    init?(
+        transcriptMessageId: String?,
+        conversationId: String,
+        messageId: String,
+        category: String,
+        mediaUrl: String?,
+        mediaMimeType: String?,
+        mediaWidth: Int?,
+        mediaHeight: Int?,
+        mediaStatus: String?,
+        mediaDuration: Int64?,
+        thumbImage: String?,
+        thumbUrl: String?,
+        createdAt: String
+    ) {
+        self.transcriptMessageId = transcriptMessageId
         self.conversationId = conversationId
         if GalleryItem.imageCategories.contains(category) {
             self.category = .image
             if let mediaUrl = mediaUrl {
-                self.url = AttachmentContainer.url(for: .photos, filename: mediaUrl)
+                if let id = transcriptMessageId {
+                    self.url = AttachmentContainer.url(forTranscriptMessageWith: id, filename: mediaUrl)
+                } else {
+                    self.url = AttachmentContainer.url(for: .photos, filename: mediaUrl)
+                }
             } else {
                 self.url = nil
             }
         } else if GalleryItem.videoCategories.contains(category) {
             self.category = .video
             if let mediaUrl = mediaUrl {
-                self.url = AttachmentContainer.url(for: .videos, filename: mediaUrl)
+                if let id = transcriptMessageId {
+                    self.url = AttachmentContainer.url(forTranscriptMessageWith: id, filename: mediaUrl)
+                } else {
+                    self.url = AttachmentContainer.url(for: .videos, filename: mediaUrl)
+                }
             } else {
                 self.url = nil
             }
@@ -92,7 +116,12 @@ struct GalleryItem: Equatable {
         if let thumbUrl = thumbUrl, let url = URL(string: thumbUrl) {
             self.thumbnail = .url(url)
         } else if self.category == .video, let videoFilename = mediaUrl {
-            let coverUrl = AttachmentContainer.videoThumbnailURL(videoFilename: videoFilename)
+            let coverUrl: URL
+            if let id = transcriptMessageId {
+                coverUrl = AttachmentContainer.videoThumbnailURL(forTranscriptMessageWith: id, videoFilename: videoFilename)
+            } else {
+                coverUrl = AttachmentContainer.videoThumbnailURL(videoFilename: videoFilename)
+            }
             self.thumbnail = .url(coverUrl)
         } else if let image = UIImage.createImageFromString(thumbImage: thumbImage, width: mediaWidth, height: mediaHeight) {
             self.thumbnail = .image(image)
@@ -106,7 +135,8 @@ struct GalleryItem: Equatable {
     }
     
     init?(message m: GalleryItemRepresentable) {
-        self.init(conversationId: m.conversationId,
+        self.init(transcriptMessageId: nil,
+                  conversationId: m.conversationId,
                   messageId: m.messageId,
                   category: m.category,
                   mediaUrl: m.mediaUrl,
@@ -118,6 +148,22 @@ struct GalleryItem: Equatable {
                   thumbImage: m.thumbImage,
                   thumbUrl: m.thumbUrl,
                   createdAt: m.createdAt)
+    }
+    
+    init?(viewModel v: MessageViewModel) {
+        self.init(transcriptMessageId: (v as? AttachmentLoadingViewModel)?.transcriptMessageId,
+                  conversationId: v.message.conversationId,
+                  messageId: v.message.messageId,
+                  category: v.message.category,
+                  mediaUrl: v.message.mediaUrl,
+                  mediaMimeType: v.message.mediaMimeType,
+                  mediaWidth: v.message.mediaWidth,
+                  mediaHeight: v.message.mediaHeight,
+                  mediaStatus: v.message.mediaStatus,
+                  mediaDuration: v.message.mediaDuration,
+                  thumbImage: v.message.thumbImage,
+                  thumbUrl: v.message.thumbUrl,
+                  createdAt: v.message.createdAt)
     }
     
     static func ==(lhs: GalleryItem, rhs: GalleryItem) -> Bool {

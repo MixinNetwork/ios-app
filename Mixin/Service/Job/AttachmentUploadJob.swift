@@ -167,10 +167,14 @@ class AttachmentUploadJob: UploadOrDownloadJob {
 extension AttachmentUploadJob: URLSessionTaskDelegate {
     
     func urlSession(_ session: URLSession, task: URLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) {
-        let progress = Double(totalBytesSent) / Double(totalBytesExpectedToSend)
-        let change = ConversationChange(conversationId: message.conversationId,
-                                        action: .updateUploadProgress(messageId: message.messageId, progress: progress))
-        NotificationCenter.default.post(onMainThread: MixinServices.conversationDidChangeNotification, object: change)
+        let userInfo: [String: Any] = [
+            Self.UserInfoKey.progress: Double(totalBytesSent) / Double(totalBytesExpectedToSend),
+            Self.UserInfoKey.conversationId: message.conversationId,
+            Self.UserInfoKey.messageId: message.messageId
+        ]
+        NotificationCenter.default.post(onMainThread: Self.progressNotification,
+                                        object: self,
+                                        userInfo: userInfo)
     }
     
 }

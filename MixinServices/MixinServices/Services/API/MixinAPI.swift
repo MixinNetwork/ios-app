@@ -8,9 +8,16 @@ open class MixinAPI {
     public typealias Result<Response: Decodable> = Swift.Result<Response, MixinAPIError>
     
     @discardableResult
-    public static func request<Parameters: Encodable, Response>(method: HTTPMethod, path: String, parameters: Parameters, requiresLogin: Bool = true, completion: @escaping (MixinAPI.Result<Response>) -> Void) -> Request? {
+    public static func request<Parameters: Encodable, Response>(
+        method: HTTPMethod,
+        path: String,
+        parameters: Parameters,
+        requiresLogin: Bool = true,
+        queue: DispatchQueue = .main,
+        completion: @escaping (MixinAPI.Result<Response>) -> Void
+    ) -> Request? {
         guard let url = url(with: path) else {
-            DispatchQueue.main.async {
+            queue.async {
                 completion(.failure(.invalidPath))
             }
             return nil
@@ -21,9 +28,16 @@ open class MixinAPI {
     }
     
     @discardableResult
-    public static func request<Response>(method: HTTPMethod, path: String, parameters: [String: Any]? = nil, requiresLogin: Bool = true, completion: @escaping (MixinAPI.Result<Response>) -> Void) -> Request? {
+    public static func request<Response>(
+        method: HTTPMethod,
+        path: String,
+        parameters: [String: Any]? = nil,
+        requiresLogin: Bool = true,
+        queue: DispatchQueue = .main,
+        completion: @escaping (MixinAPI.Result<Response>) -> Void
+    ) -> Request? {
         guard let url = url(with: path) else {
-            DispatchQueue.main.async {
+            queue.async {
                 completion(.failure(.invalidPath))
             }
             return nil
@@ -34,7 +48,11 @@ open class MixinAPI {
     }
     
     @discardableResult
-    public static func request<Parameters: Encodable, Response>(method: HTTPMethod, path: String, parameters: Parameters) -> MixinAPI.Result<Response> {
+    public static func request<Parameters: Encodable, Response>(
+        method: HTTPMethod,
+        path: String,
+        parameters: Parameters
+    ) -> MixinAPI.Result<Response> {
         guard let url = url(with: path) else {
             return .failure(.invalidPath)
         }
@@ -46,7 +64,11 @@ open class MixinAPI {
     }
     
     @discardableResult
-    public static func request<Response>(method: HTTPMethod, path: String, parameters: [String: Any]? = nil) -> MixinAPI.Result<Response> {
+    public static func request<Response>(
+        method: HTTPMethod,
+        path: String,
+        parameters: [String: Any]? = nil
+    ) -> MixinAPI.Result<Response> {
         guard let url = url(with: path) else {
             return .failure(.invalidPath)
         }
@@ -67,7 +89,7 @@ extension MixinAPI {
     }
     
     private static let session: Alamofire.Session = {
-        let config = URLSessionConfiguration.default.copy() as! URLSessionConfiguration
+        let config = URLSessionConfiguration.default
         config.timeoutIntervalForRequest = 10
         config.requestCachePolicy = .reloadIgnoringLocalCacheData
         let tokenInterceptor = AccessTokenInterceptor()
@@ -80,7 +102,10 @@ extension MixinAPI {
         return URL(string: string)
     }
     
-    private static func request<Response>(makeRequest: @escaping (Alamofire.Session) -> DataRequest, debugDescription: String) -> MixinAPI.Result<Response> {
+    private static func request<Response>(
+        makeRequest: @escaping (Alamofire.Session) -> DataRequest,
+        debugDescription: String
+    ) -> MixinAPI.Result<Response> {
         let semaphore = DispatchSemaphore(value: 0)
         var result: MixinAPI.Result<Response> = .failure(.foundNilResult)
         
@@ -100,7 +125,13 @@ extension MixinAPI {
     }
     
     @discardableResult
-    private static func request<Response>(makeRequest: @escaping (Alamofire.Session) -> DataRequest, requiresLogin: Bool = true, isAsync: Bool, completion: @escaping (MixinAPI.Result<Response>) -> Void) -> Request? {
+    private static func request<Response>(
+        makeRequest: @escaping (Alamofire.Session) -> DataRequest,
+        requiresLogin: Bool = true,
+        isAsync: Bool,
+        queue: DispatchQueue = .main,
+        completion: @escaping (MixinAPI.Result<Response>) -> Void
+    ) -> Request? {
         if requiresLogin && !LoginManager.shared.isLoggedIn {
             return nil
         }
@@ -130,7 +161,7 @@ extension MixinAPI {
         
         return makeRequest(session)
             .validate(statusCode: 200...299)
-            .responseData(completionHandler: { (response) in
+            .responseData(queue: queue, completionHandler: { (response) in
                 switch response.result {
                 case .success(let data):
                     if let requestId = response.request?.allHTTPHeaderFields?["X-Request-Id"], !requestId.isEmpty {

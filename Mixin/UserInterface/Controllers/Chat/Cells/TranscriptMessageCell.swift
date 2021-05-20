@@ -27,7 +27,7 @@ class TranscriptMessageCell: TextMessageCell {
             }
             transcriptBackgroundLayer.frame = viewModel.transcriptBackgroundFrame
             transcriptStackView.frame = viewModel.transcriptFrame
-            let diff = viewModel.briefDigests.count - transcriptStackView.arrangedSubviews.count
+            let diff = viewModel.digests.count - transcriptStackView.arrangedSubviews.count
             if diff > 0 {
                 for _ in 0..<diff {
                     let label = UILabel()
@@ -42,7 +42,7 @@ class TranscriptMessageCell: TextMessageCell {
                     transcriptStackView.arrangedSubviews[index].isHidden = true
                 }
             }
-            for (index, digest) in viewModel.briefDigests.enumerated() {
+            for (index, digest) in viewModel.digests.enumerated() {
                 let label = transcriptStackView.arrangedSubviews[index] as! UILabel
                 label.text = digest
                 label.isHidden = false

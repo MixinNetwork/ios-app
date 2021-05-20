@@ -224,42 +224,42 @@ extension Message {
         return Message(messageId: message.messageId, conversationId: message.conversationId, userId: message.userId, category: message.category, content: message.content, mediaUrl: message.mediaUrl, mediaMimeType: message.mediaMimeType, mediaSize: message.mediaSize, mediaDuration: message.mediaDuration, mediaWidth: message.mediaWidth, mediaHeight: message.mediaHeight, mediaHash: message.mediaHash, mediaKey: message.mediaKey, mediaDigest: message.mediaDigest, mediaStatus: message.mediaStatus, mediaWaveform: message.mediaWaveform, mediaLocalIdentifier: message.mediaLocalIdentifier, thumbImage: message.thumbImage, thumbUrl: message.thumbUrl, status: message.status, action: message.actionName, participantId: message.participantId, snapshotId: message.snapshotId, name: message.name, stickerId: message.stickerId, sharedUserId: message.sharedUserId, quoteMessageId: message.quoteMessageId, quoteContent: message.quoteContent, createdAt: message.createdAt)
     }
     
-    public static func createMessage(messageBrief b: MessageBrief) -> Message {
+    public static func createMessage(transcriptMessage t: TranscriptMessage) -> Message {
         let content: String?
-        if b.category == .appCard {
-            content = AppCardContentConverter.localAppCard(from: b.content)
+        if t.category == .appCard {
+            content = AppCardContentConverter.localAppCard(from: t.content)
         } else {
-            content = b.content
+            content = t.content
         }
-        return Message(messageId: b.messageId,
+        return Message(messageId: t.messageId,
                        conversationId: "",
-                       userId: b.userId ?? "",
-                       category: b.category.rawValue,
+                       userId: t.userId ?? "",
+                       category: t.category.rawValue,
                        content: content,
-                       mediaUrl: b.mediaUrl,
-                       mediaMimeType: b.mediaMimeType,
-                       mediaSize: b.mediaSize,
-                       mediaDuration: b.mediaDuration,
-                       mediaWidth: b.mediaWidth,
-                       mediaHeight: b.mediaHeight,
+                       mediaUrl: t.mediaUrl,
+                       mediaMimeType: t.mediaMimeType,
+                       mediaSize: t.mediaSize,
+                       mediaDuration: t.mediaDuration,
+                       mediaWidth: t.mediaWidth,
+                       mediaHeight: t.mediaHeight,
                        mediaHash: nil,
-                       mediaKey: b.mediaKey,
-                       mediaDigest: b.mediaDigest,
-                       mediaStatus: b.mediaStatus,
-                       mediaWaveform: b.mediaWaveform,
+                       mediaKey: t.mediaKey,
+                       mediaDigest: t.mediaDigest,
+                       mediaStatus: t.mediaStatus,
+                       mediaWaveform: t.mediaWaveform,
                        mediaLocalIdentifier: nil,
-                       thumbImage: b.thumbImage,
-                       thumbUrl: b.thumbUrl,
+                       thumbImage: t.thumbImage,
+                       thumbUrl: t.thumbUrl,
                        status: MediaStatus.READ.rawValue,
                        action: nil,
                        participantId: nil,
                        snapshotId: nil,
-                       name: b.mediaName,
-                       stickerId: b.stickerId,
-                       sharedUserId: b.sharedUserId,
-                       quoteMessageId: b.quoteId,
-                       quoteContent: QuoteContentConverter.localQuoteContent(from: b.quoteContent),
-                       createdAt: b.createdAt)
+                       name: t.mediaName,
+                       stickerId: t.stickerId,
+                       sharedUserId: t.sharedUserId,
+                       quoteMessageId: t.quoteId,
+                       quoteContent: QuoteContentConverter.localQuoteContent(from: t.quoteContent),
+                       createdAt: t.createdAt)
     }
     
 }

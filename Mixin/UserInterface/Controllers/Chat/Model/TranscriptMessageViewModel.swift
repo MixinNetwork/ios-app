@@ -7,15 +7,15 @@ class TranscriptMessageViewModel: TextMessageViewModel {
     static let transcriptBackgroundMargin = Margin(leading: -6, trailing: -6, top: 4, bottom: 2)
     static let transcriptInterlineSpacing: CGFloat = 4
     
-    let briefs: [MessageBrief]
-    let briefDigests: [String]
+    let children: [TranscriptMessage]
+    let digests: [String]
     
     private let transcriptInset = UIEdgeInsets(top: 4, left: 6, bottom: 4, right: 6)
     
     private(set) var transcriptBackgroundFrame: CGRect = .zero
     private(set) var transcriptFrame: CGRect = .zero
     
-    private var briefDigestHeight: CGFloat = 0
+    private var digestsHeight: CGFloat = 0
     
     override var rawContent: String {
         R.string.localizable.chat_transcript()
@@ -26,8 +26,8 @@ class TranscriptMessageViewModel: TextMessageViewModel {
     }
     
     override init(message: MessageItem) {
-        self.briefs = message.transcriptMessages ?? []
-        self.briefDigests = self.briefs
+        self.children = message.transcriptMessages ?? []
+        self.digests = self.children
             .prefix(Self.maxNumberOfDigestLines)
             .map(Self.digest(of:))
         super.init(message: message)
@@ -38,36 +38,36 @@ class TranscriptMessageViewModel: TextMessageViewModel {
     }
     
     override func layout(width: CGFloat, style: MessageViewModel.Style) {
-        briefDigestHeight = Self.transcriptBackgroundMargin.vertical
-            + CGFloat(briefDigests.count - 1) * Self.transcriptInterlineSpacing
-            + CGFloat(briefDigests.count) * MessageFontSet.transcriptDigest.scaled.lineHeight
+        digestsHeight = Self.transcriptBackgroundMargin.vertical
+            + CGFloat(digests.count - 1) * Self.transcriptInterlineSpacing
+            + CGFloat(digests.count) * MessageFontSet.transcriptDigest.scaled.lineHeight
             + transcriptInset.vertical
         super.layout(width: width, style: style)
         transcriptBackgroundFrame = CGRect(x: contentLabelFrame.origin.x + Self.transcriptBackgroundMargin.leading,
                                            y: contentLabelFrame.maxY + Self.transcriptBackgroundMargin.top,
                                            width: backgroundWidth - contentAdditionalLeadingMargin - contentMargin.horizontal - Self.transcriptBackgroundMargin.horizontal,
-                                           height: briefDigestHeight - Self.transcriptBackgroundMargin.bottom)
+                                           height: digestsHeight - Self.transcriptBackgroundMargin.bottom)
         transcriptFrame = transcriptBackgroundFrame.inset(by: transcriptInset)
     }
     
     override func adjustedContentSize(_ raw: CGSize) -> CGSize {
-        return CGSize(width: raw.width, height: raw.height + briefDigestHeight)
+        return CGSize(width: raw.width, height: raw.height + digestsHeight)
     }
     
 }
 
 extension TranscriptMessageViewModel  {
     
-    private static func digest(of brief: MessageBrief) -> String {
+    private static func digest(of child: TranscriptMessage) -> String {
         var digest: String
-        if let username = brief.userFullName {
+        if let username = child.userFullName {
             digest = username + ": "
         } else {
             digest = ""
         }
-        switch brief.category {
+        switch child.category {
         case .text:
-            digest += brief.content ?? " "
+            digest += child.content ?? " "
         case .image:
             digest += R.string.localizable.notification_content_photo()
         case .video:
@@ -83,11 +83,11 @@ extension TranscriptMessageViewModel  {
         case .live:
             digest += R.string.localizable.notification_content_live()
         case .post:
-            digest += brief.content ?? " "
+            digest += child.content ?? " "
         case .location:
             digest += R.string.localizable.notification_content_location()
         case .appCard:
-            if let json = brief.content?.data(using: .utf8), let card = try? JSONDecoder.default.decode(AppCardData.self, from: json) {
+            if let json = child.content?.data(using: .utf8), let card = try? JSONDecoder.default.decode(AppCardData.self, from: json) {
                 digest += "[\(card.title)]"
             }
         case .transcript:

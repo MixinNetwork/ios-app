@@ -510,7 +510,7 @@ extension MessageReceiverViewController {
     static func makeTranscriptMessage(messages: [MessageItem], to conversationId: String) -> Message? {
         let transcriptMessageId = UUID().uuidString.lowercased()
         let categoriesWithAttachment = Set(AttachmentContainer.Category.allCases.flatMap { $0.messageCategory }.map { $0.rawValue })
-        let briefs: [MessageBrief] = messages.compactMap { item in
+        let children: [TranscriptMessage] = messages.compactMap { item in
             let mediaUrl: String?
             if categoriesWithAttachment.contains(item.category),
                let category = AttachmentContainer.Category(messageCategory: item.category),
@@ -542,9 +542,9 @@ extension MessageReceiverViewController {
             } else {
                 mediaUrl = nil
             }
-            return MessageBrief(messageItem: item, mediaUrl: mediaUrl)
+            return TranscriptMessage(messageItem: item, mediaUrl: mediaUrl)
         }
-        guard let json = try? JSONEncoder.snakeCase.encode(briefs), let content = String(data: json, encoding: .utf8) else {
+        guard let json = try? JSONEncoder.snakeCase.encode(children), let content = String(data: json, encoding: .utf8) else {
             return nil
         }
         return Message.createMessage(messageId: transcriptMessageId,

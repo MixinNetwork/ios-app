@@ -4,7 +4,7 @@ import MixinServices
 class TranscriptPreviewViewController: FullscreenPopupViewController {
     
     let transcriptMessage: MessageItem
-    let briefs: [MessageBrief]
+    let childMessages: [TranscriptMessage]
     let backgroundView = UIVisualEffectView(effect: .lightBlur)
     let tableView = ConversationTableView()
     
@@ -24,7 +24,7 @@ class TranscriptPreviewViewController: FullscreenPopupViewController {
     
     init(transcriptMessage: MessageItem) {
         self.transcriptMessage = transcriptMessage
-        self.briefs = transcriptMessage.transcriptMessages ?? []
+        self.childMessages = transcriptMessage.transcriptMessages ?? []
         self.factory = ViewModelFactory()
         self.queue = Queue(label: "one.mixin.messenger.TranscriptPreviewViewController-\(transcriptMessage.messageId)")
         let nib = R.nib.fullscreenPopupView
@@ -79,7 +79,7 @@ class TranscriptPreviewViewController: FullscreenPopupViewController {
         
         let layoutWidth = AppDelegate.current.mainWindow.bounds.width
         queue.async { [weak self] in
-            guard let items = self?.briefs.map(MessageItem.init) else {
+            guard let items = self?.childMessages.map(MessageItem.init) else {
                 return
             }
             for item in items where item.category == MessageCategory.SIGNAL_STICKER.rawValue {
@@ -488,17 +488,17 @@ extension TranscriptPreviewViewController {
     }
     
     private func updateMediaStatus(notification: Notification, status: MediaStatus) {
-        guard let briefId = notification.userInfo?[AttachmentDownloadJob.UserInfoKey.messageId] as? String else {
+        guard let messageId = notification.userInfo?[AttachmentDownloadJob.UserInfoKey.messageId] as? String else {
             return
         }
-        guard let brief = briefs.first(where: { $0.messageId == briefId }) else {
+        guard let child = childMessages.first(where: { $0.messageId == messageId }) else {
             return
         }
-        brief.mediaStatus = status.rawValue
+        child.mediaStatus = status.rawValue
         if let filename = notification.userInfo?[AttachmentDownloadJob.UserInfoKey.mediaURL] as? String {
-            brief.mediaUrl = filename
+            child.mediaUrl = filename
         }
-        if let indexPath = self.indexPath(where: { $0.messageId == briefId }) {
+        if let indexPath = self.indexPath(where: { $0.messageId == messageId }) {
             let viewModel = self.viewModel(at: indexPath)
             let cell = tableView.cellForRow(at: indexPath)
             if let viewModel = viewModel as? AttachmentLoadingViewModel {
@@ -508,7 +508,7 @@ extension TranscriptPreviewViewController {
                 }
             }
             if let viewModel = viewModel as? PhotoRepresentableMessageViewModel {
-                viewModel.update(mediaUrl: brief.mediaUrl,
+                viewModel.update(mediaUrl: child.mediaUrl,
                                  mediaSize: viewModel.message.mediaSize,
                                  mediaDuration: viewModel.message.mediaDuration)
                 if let cell = cell as? PhotoRepresentableMessageCell {
@@ -519,15 +519,15 @@ extension TranscriptPreviewViewController {
         
         let transcriptMessageId = self.transcriptMessage.messageId
         let transcriptConversationId = self.transcriptMessage.conversationId
-        let briefs = self.briefs
+        let children = self.childMessages
         queue.async {
-            if let json = try? JSONEncoder.snakeCase.encode(briefs), let content = String(data: json, encoding: .utf8) {
+            if let json = try? JSONEncoder.snakeCase.encode(children), let content = String(data: json, encoding: .utf8) {
                 DispatchQueue.main.sync {
                     self.transcriptMessage.content = content
                 }
                 MessageDAO.shared.update(content: content, forMessageWith: transcriptMessageId)
             }
-            let areAllAttachmentsDownloaded = briefs.filter({ $0.category.includesAttachment })
+            let areAllAttachmentsDownloaded = children.filter({ $0.category.includesAttachment })
                 .allSatisfy({ $0.mediaStatus == MediaStatus.DONE.rawValue })
             if areAllAttachmentsDownloaded {
                 MessageDAO.shared.updateMediaStatus(messageId: transcriptMessageId,

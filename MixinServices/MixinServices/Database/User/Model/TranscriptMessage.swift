@@ -1,6 +1,6 @@
 import Foundation
 
-public class MessageBrief: Codable {
+public class TranscriptMessage: Codable {
     
     public let messageId: String
     public let userId: String?
@@ -75,7 +75,7 @@ public class MessageBrief: Codable {
     
 }
 
-extension MessageBrief {
+extension TranscriptMessage {
     
     public enum Category: String, Codable {
         

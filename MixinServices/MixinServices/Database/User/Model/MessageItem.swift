@@ -100,14 +100,14 @@ public final class MessageItem {
         return try? JSONDecoder.default.decode(Location.self, from: json)
     }()
     
-    public lazy var transcriptMessages: [MessageBrief]? = {
+    public lazy var transcriptMessages: [TranscriptMessage]? = {
         guard
             category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue,
             let json = content?.data(using: .utf8)
         else {
             return nil
         }
-        return try? JSONDecoder.snakeCase.decode([MessageBrief].self, from: json)
+        return try? JSONDecoder.snakeCase.decode([TranscriptMessage].self, from: json)
     }()
     
     public init(messageId: String, conversationId: String, userId: String, category: String, content: String? = nil, mediaUrl: String? = nil, mediaMimeType: String? = nil, mediaSize: Int64? = nil, mediaDuration: Int64? = nil, mediaWidth: Int? = nil, mediaHeight: Int? = nil, mediaHash: String? = nil, mediaKey: Data? = nil, mediaDigest: Data? = nil, mediaStatus: String? = nil, mediaWaveform: Data? = nil, mediaLocalIdentifier: String? = nil, thumbImage: String? = nil, thumbUrl: String? = nil, status: String, participantId: String? = nil, snapshotId: String? = nil, name: String? = nil, stickerId: String? = nil, createdAt: String, actionName: String? = nil, userFullName: String? = nil, userIdentityNumber: String? = nil, userAvatarUrl: String? = nil, appId: String? = nil, snapshotAmount: String? = nil, snapshotAssetId: String? = nil, snapshotType: String? = nil, participantFullName: String? = nil, participantUserId: String? = nil, assetUrl: String? = nil, assetType: String? = nil, assetSymbol: String? = nil, assetIcon: String? = nil, assetWidth: Int? = nil, assetHeight: Int? = nil, assetCategory: String? = nil, sharedUserId: String? = nil, sharedUserFullName: String? = nil, sharedUserIdentityNumber: String? = nil, sharedUserAvatarUrl: String? = nil, sharedUserAppId: String? = nil, sharedUserIsVerified: Bool? = nil, quoteMessageId: String? = nil, quoteContent: Data? = nil, mentionsJson: Data? = nil, hasMentionRead: Bool? = nil) {
@@ -174,40 +174,40 @@ public final class MessageItem {
                   createdAt: createdAt)
     }
     
-    public convenience init(messageBrief b: MessageBrief) {
+    public convenience init(transcriptMessage t: TranscriptMessage) {
         let content: String?
-        if b.category == .appCard {
-            content = AppCardContentConverter.localAppCard(from: b.content)
+        if t.category == .appCard {
+            content = AppCardContentConverter.localAppCard(from: t.content)
         } else {
-            content = b.content
+            content = t.content
         }
-        self.init(messageId: b.messageId,
+        self.init(messageId: t.messageId,
                   conversationId: "",
-                  userId: b.userId ?? "",
-                  category: b.category.rawValue,
+                  userId: t.userId ?? "",
+                  category: t.category.rawValue,
                   content: content,
-                  mediaUrl: b.mediaUrl,
-                  mediaMimeType: b.mediaMimeType,
-                  mediaSize: b.mediaSize,
-                  mediaDuration: b.mediaDuration,
-                  mediaWidth: b.mediaWidth,
-                  mediaHeight: b.mediaHeight,
+                  mediaUrl: t.mediaUrl,
+                  mediaMimeType: t.mediaMimeType,
+                  mediaSize: t.mediaSize,
+                  mediaDuration: t.mediaDuration,
+                  mediaWidth: t.mediaWidth,
+                  mediaHeight: t.mediaHeight,
                   mediaHash: nil,
-                  mediaKey: b.mediaKey,
-                  mediaDigest: b.mediaDigest,
-                  mediaStatus: b.mediaStatus,
-                  mediaWaveform: b.mediaWaveform,
+                  mediaKey: t.mediaKey,
+                  mediaDigest: t.mediaDigest,
+                  mediaStatus: t.mediaStatus,
+                  mediaWaveform: t.mediaWaveform,
                   mediaLocalIdentifier: nil,
-                  thumbImage: b.thumbImage,
-                  thumbUrl: b.thumbUrl,
+                  thumbImage: t.thumbImage,
+                  thumbUrl: t.thumbUrl,
                   status: MessageStatus.READ.rawValue,
                   participantId: nil,
                   snapshotId: nil,
-                  name: b.mediaName,
-                  stickerId: b.stickerId,
-                  createdAt: b.createdAt,
+                  name: t.mediaName,
+                  stickerId: t.stickerId,
+                  createdAt: t.createdAt,
                   actionName: nil,
-                  userFullName: b.userFullName,
+                  userFullName: t.userFullName,
                   userIdentityNumber: nil,
                   userAvatarUrl: nil,
                   appId: nil,
@@ -223,15 +223,15 @@ public final class MessageItem {
                   assetWidth: nil,
                   assetHeight: nil,
                   assetCategory: nil,
-                  sharedUserId: b.sharedUserId,
-                  sharedUserFullName: b.sharedUserFullName,
-                  sharedUserIdentityNumber: b.sharedUserIdentityNumber,
-                  sharedUserAvatarUrl: b.sharedUserAvatarUrl,
-                  sharedUserAppId: b.sharedUserAppId,
-                  sharedUserIsVerified: b.sharedUserIsVerified,
-                  quoteMessageId: b.quoteId,
-                  quoteContent: QuoteContentConverter.localQuoteContent(from: b.quoteContent),
-                  mentionsJson: MentionConverter.localMention(from: b.mentions),
+                  sharedUserId: t.sharedUserId,
+                  sharedUserFullName: t.sharedUserFullName,
+                  sharedUserIdentityNumber: t.sharedUserIdentityNumber,
+                  sharedUserAvatarUrl: t.sharedUserAvatarUrl,
+                  sharedUserAppId: t.sharedUserAppId,
+                  sharedUserIsVerified: t.sharedUserIsVerified,
+                  quoteMessageId: t.quoteId,
+                  quoteContent: QuoteContentConverter.localQuoteContent(from: t.quoteContent),
+                  mentionsJson: MentionConverter.localMention(from: t.mentions),
                   hasMentionRead: nil)
     }
     

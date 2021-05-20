@@ -575,11 +575,11 @@ public class ReceiveMessageService: MixinService {
             let message = Message.createLocationMessage(content: content, data: data)
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
         } else if data.category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue {
-            guard let (briefs, hasAttachment) = parseTranscript(data: data, plainText: plainText) else {
+            guard let (children, hasAttachment) = parseTranscript(data: data, plainText: plainText) else {
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }
-            guard let json = try? JSONEncoder.snakeCase.encode(briefs), let content = String(data: json, encoding: .utf8) else {
+            guard let json = try? JSONEncoder.snakeCase.encode(children), let content = String(data: json, encoding: .utf8) else {
                 return
             }
             let message = Message.createTranscriptMessage(content: content,
@@ -708,11 +708,11 @@ public class ReceiveMessageService: MixinService {
             }
             MessageDAO.shared.updateContactMessage(transferData: transferData, status: Message.getStatus(data: data), messageId: messageId, category: data.category, conversationId: data.conversationId, messageSource: data.source)
         case MessageCategory.SIGNAL_TRANSCRIPT.rawValue:
-            guard let (briefs, hasAttachment) = parseTranscript(data: data, plainText: plainText) else {
+            guard let (children, hasAttachment) = parseTranscript(data: data, plainText: plainText) else {
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }
-            guard let json = try? JSONEncoder.snakeCase.encode(briefs), let content = String(data: json, encoding: .utf8) else {
+            guard let json = try? JSONEncoder.snakeCase.encode(children), let content = String(data: json, encoding: .utf8) else {
                 return
             }
             MessageDAO.shared.updateMessageContentAndMediaStatus(content: content,
@@ -768,19 +768,19 @@ public class ReceiveMessageService: MixinService {
         return nil
     }
     
-    private func parseTranscript(data: BlazeMessageData, plainText: String) -> (briefs: [MessageBrief], hasAttachment: Bool)? {
-        guard let jsonData = plainText.data(using: .utf8), let briefs = try? JSONDecoder.snakeCase.decode([MessageBrief].self, from: jsonData) else {
+    private func parseTranscript(data: BlazeMessageData, plainText: String) -> (children: [TranscriptMessage], hasAttachment: Bool)? {
+        guard let jsonData = plainText.data(using: .utf8), let children = try? JSONDecoder.snakeCase.decode([TranscriptMessage].self, from: jsonData) else {
             return nil
         }
         var hasAttachment = false
-        for brief in briefs {
-            switch brief.category {
+        for child in children {
+            switch child.category {
             case .data, .image, .video, .audio:
                 hasAttachment = true
-                brief.mediaStatus = MediaStatus.PENDING.rawValue
+                child.mediaStatus = MediaStatus.PENDING.rawValue
             case .sticker:
-                guard let stickerId = brief.stickerId, UUID(uuidString: stickerId) != nil else {
-                    brief.stickerId = nil
+                guard let stickerId = child.stickerId, UUID(uuidString: stickerId) != nil else {
+                    child.stickerId = nil
                     continue
                 }
                 if StickerDAO.shared.isExist(stickerId: stickerId) {
@@ -789,14 +789,14 @@ public class ReceiveMessageService: MixinService {
                 stickerLoading: repeat {
                     switch StickerAPI.sticker(stickerId: stickerId) {
                     case let .success(response):
-                        brief.mediaUrl = response.assetUrl
+                        child.mediaUrl = response.assetUrl
                         StickerDAO.shared.insertOrUpdateSticker(sticker: response)
                         if let sticker = StickerDAO.shared.getSticker(stickerId: stickerId) {
                             StickerPrefetcher.prefetch(stickers: [sticker])
                         }
                         break stickerLoading
                     case .failure(.notFound):
-                        brief.stickerId = nil
+                        child.stickerId = nil
                         break stickerLoading
                     case let .failure(error):
                         checkNetworkAndWebSocket()
@@ -806,7 +806,7 @@ public class ReceiveMessageService: MixinService {
                 break
             }
         }
-        return (briefs, hasAttachment)
+        return (children, hasAttachment)
     }
     
     private func syncConversation(data: BlazeMessageData) {

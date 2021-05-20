@@ -12,10 +12,12 @@ class OggOpusReader {
     
     init(fileAtPath path: String) throws {
         var result: Int32 = 0
-        file = path.withCString { (cPath) -> OpaquePointer in
+        let file = path.withCString { (cPath) -> OpaquePointer? in
             op_open_file(cPath, &result)
         }
-        if result != 0 {
+        if result == 0, let file = file {
+            self.file = file
+        } else {
             throw Error.openFile(result)
         }
     }

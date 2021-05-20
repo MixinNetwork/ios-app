@@ -78,7 +78,7 @@ extension SendMessageService {
                         let jobId = SendMessageService.shared.saveUploadJob(message: msg)
                         let job = TranscriptAttachmentUploadJob(message: msg,
                                                                 jobIdToRemoveAfterFinished: jobId)
-                        TranscriptAttachmentLoadingQueue.shared.addJob(job: job)
+                        UploaderQueue.shared.addJob(job: job)
                     }
                 }
             }

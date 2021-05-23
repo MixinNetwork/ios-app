@@ -786,22 +786,7 @@ public class ReceiveMessageService: MixinService {
                 if StickerDAO.shared.isExist(stickerId: stickerId) {
                     continue
                 }
-                stickerLoading: repeat {
-                    switch StickerAPI.sticker(stickerId: stickerId) {
-                    case let .success(response):
-                        child.mediaUrl = response.assetUrl
-                        StickerDAO.shared.insertOrUpdateSticker(sticker: response)
-                        if let sticker = StickerDAO.shared.getSticker(stickerId: stickerId) {
-                            StickerPrefetcher.prefetch(stickers: [sticker])
-                        }
-                        break stickerLoading
-                    case .failure(.notFound):
-                        child.stickerId = nil
-                        break stickerLoading
-                    case let .failure(error):
-                        checkNetworkAndWebSocket()
-                    }
-                } while LoginManager.shared.isLoggedIn
+                ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob(stickerId: stickerId))
             default:
                 break
             }

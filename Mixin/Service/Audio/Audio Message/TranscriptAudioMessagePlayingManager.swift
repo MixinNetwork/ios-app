@@ -7,12 +7,12 @@ protocol TranscriptAudioMessagePlayingManagerDelegate: AnyObject {
 
 class TranscriptAudioMessagePlayingManager: AudioMessagePlayingManager {
     
-    let transcriptId: String
+    let transcriptMessage: MessageItem
     
     weak var delegate: TranscriptAudioMessagePlayingManagerDelegate?
     
-    init(transcriptId: String) {
-        self.transcriptId = transcriptId
+    init(transcriptMessage: MessageItem) {
+        self.transcriptMessage = transcriptMessage
     }
     
     override func playableMessage(nextTo message: MessageItem) -> MessageItem? {
@@ -27,7 +27,7 @@ class TranscriptAudioMessagePlayingManager: AudioMessagePlayingManager {
             return
         }
         let message = Message.createMessage(message: message)
-        let job = TranscriptAttachmentDownloadJob(transcriptId: transcriptId, message: message)
+        let job = TranscriptAttachmentDownloadJob(transcriptMessage: transcriptMessage, message: message)
         ConcurrentJobQueue.shared.addJob(job: job)
     }
     

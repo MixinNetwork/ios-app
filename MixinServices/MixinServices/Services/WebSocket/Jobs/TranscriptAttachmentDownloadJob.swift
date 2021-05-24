@@ -2,15 +2,16 @@ import UIKit
 
 public class TranscriptAttachmentDownloadJob: AttachmentDownloadJob {
     
-    let transcriptId: String
+    let transcriptMessage: MessageItem
     
     override var fileUrl: URL {
-        AttachmentContainer.url(transcriptId: transcriptId,
+        AttachmentContainer.url(conversationId: transcriptMessage.conversationId,
+                                transcriptId: transcriptMessage.messageId,
                                 filename: fileName)
     }
     
-    public init(transcriptId: String, message: Message) {
-        self.transcriptId = transcriptId
+    public init(transcriptMessage: MessageItem, message: Message) {
+        self.transcriptMessage = transcriptMessage
         super.init(message: message)
     }
     
@@ -21,7 +22,8 @@ public class TranscriptAttachmentDownloadJob: AttachmentDownloadJob {
     public override func taskFinished() {
         if message.category == MessageCategory.SIGNAL_VIDEO.rawValue, stream?.streamError == nil {
             let thumbnail = UIImage(withFirstFrameOfVideoAtURL: fileUrl)
-            let url = AttachmentContainer.videoThumbnailURL(transcriptId: transcriptId,
+            let url = AttachmentContainer.videoThumbnailURL(conversationId: transcriptMessage.conversationId,
+                                                            transcriptId: transcriptMessage.messageId,
                                                             videoFilename: fileName)
             thumbnail?.saveToFile(path: url)
         }
@@ -35,7 +37,7 @@ public class TranscriptAttachmentDownloadJob: AttachmentDownloadJob {
         conversationId: String,
         content: String? = nil
     ) {
-        TranscriptMessageDAO.shared.update(transcriptId: transcriptId,
+        TranscriptMessageDAO.shared.update(transcriptId: transcriptMessage.messageId,
                                            messageId: message.messageId,
                                            mediaStatus: status,
                                            mediaUrl: fileName)

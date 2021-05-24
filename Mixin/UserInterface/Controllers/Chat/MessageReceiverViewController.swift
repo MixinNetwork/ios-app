@@ -547,12 +547,14 @@ extension MessageReceiverViewController {
                         let destinationFilename = item.messageId + "." + extensionName
                         let source = AttachmentContainer.url(for: category,
                                                              filename: sourceFilename)
-                        let destination = AttachmentContainer.url(transcriptId: transcriptId,
+                        let destination = AttachmentContainer.url(conversationId: conversationId,
+                                                                  transcriptId: transcriptId,
                                                                   filename: destinationFilename)
                         try FileManager.default.copyItem(at: source, to: destination)
                         if category == .videos {
                             let source = AttachmentContainer.videoThumbnailURL(videoFilename: sourceFilename)
-                            let destination = AttachmentContainer.videoThumbnailURL(transcriptId: transcriptId,
+                            let destination = AttachmentContainer.videoThumbnailURL(conversationId: conversationId,
+                                                                                    transcriptId: transcriptId,
                                                                                     videoFilename: destinationFilename)
                             try? FileManager.default.copyItem(at: source, to: destination)
                         }

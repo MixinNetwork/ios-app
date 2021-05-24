@@ -11,7 +11,7 @@ class TranscriptPreviewViewController: FullscreenPopupViewController {
     private let queue: Queue
     
     private lazy var audioManager: TranscriptAudioMessagePlayingManager = {
-        let manager = TranscriptAudioMessagePlayingManager(transcriptId: transcriptMessage.messageId)
+        let manager = TranscriptAudioMessagePlayingManager(transcriptMessage: transcriptMessage)
         manager.delegate = self
         return manager
     }()
@@ -168,7 +168,9 @@ class TranscriptPreviewViewController: FullscreenPopupViewController {
             } else if message.category.hasSuffix("_DATA"), let viewModel = viewModel as? DataMessageViewModel, let cell = cell as? DataMessageCell {
                 if viewModel.mediaStatus == MediaStatus.DONE.rawValue || viewModel.mediaStatus == MediaStatus.READ.rawValue {
                     if let filename = message.mediaUrl {
-                        let url = AttachmentContainer.url(transcriptId: transcriptMessage.messageId, filename: filename)
+                        let url = AttachmentContainer.url(conversationId: transcriptMessage.conversationId,
+                                                          transcriptId: transcriptMessage.messageId,
+                                                          filename: filename)
                         if FileManager.default.fileExists(atPath: url.path) {
                             let controller = UIDocumentInteractionController(url: url)
                             controller.delegate = self
@@ -243,7 +245,7 @@ extension TranscriptPreviewViewController: MessageViewModelFactoryDelegate {
     
     func messageViewModelFactory(_ factory: MessageViewModelFactory, updateViewModelForPresentation viewModel: MessageViewModel) {
         if let viewModel = viewModel as? AttachmentLoadingViewModel {
-            viewModel.transcriptId = self.transcriptMessage.messageId
+            viewModel.transcriptMessage = self.transcriptMessage
         }
     }
     

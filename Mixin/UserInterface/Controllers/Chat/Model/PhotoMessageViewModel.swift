@@ -3,7 +3,7 @@ import MixinServices
 
 class PhotoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadingViewModel {
     
-    var transcriptId: String?
+    var transcriptMessage: MessageItem?
     var isLoading = false
     var progress: Double?
     var downloadIsTriggeredByUser = false
@@ -29,8 +29,10 @@ class PhotoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
     
     var attachmentURL: URL? {
         if let mediaUrl = message.mediaUrl, !mediaUrl.isEmpty {
-            if let transcriptId = transcriptId {
-                return AttachmentContainer.url(transcriptId: transcriptId, filename: mediaUrl)
+            if let transcriptMessage = transcriptMessage {
+                return AttachmentContainer.url(conversationId: transcriptMessage.conversationId,
+                                               transcriptId: transcriptMessage.messageId,
+                                               filename: mediaUrl)
             } else if !mediaUrl.hasPrefix("http") {
                 return AttachmentContainer.url(for: .photos, filename: mediaUrl)
             } else {
@@ -58,7 +60,7 @@ class PhotoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
         updateMediaStatus(message: message, status: .PENDING)
         let message = Message.createMessage(message: self.message)
         if shouldUpload {
-            if transcriptId != nil {
+            if transcriptMessage != nil {
                 assertionFailure()
             } else {
                 let job = ImageUploadJob(message: message)
@@ -66,8 +68,8 @@ class PhotoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
             }
         } else {
             let job: BaseJob
-            if let transcriptId = transcriptId {
-                job = TranscriptAttachmentDownloadJob(transcriptId: transcriptId, message: message)
+            if let transcriptMessage = transcriptMessage {
+                job = TranscriptAttachmentDownloadJob(transcriptMessage: transcriptMessage, message: message)
             } else {
                 job = AttachmentDownloadJob(messageId: message.messageId)
             }
@@ -84,7 +86,7 @@ class PhotoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
             return
         }
         if shouldUpload {
-            if transcriptId != nil {
+            if transcriptMessage != nil {
                 assertionFailure()
             } else {
                 let id = ImageUploadJob.jobId(messageId: message.messageId)
@@ -92,7 +94,7 @@ class PhotoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
             }
         } else {
             let id: String
-            if transcriptId != nil {
+            if transcriptMessage != nil {
                 id = TranscriptAttachmentDownloadJob.jobId(messageId: message.messageId)
             } else {
                 id = AttachmentDownloadJob.jobId(messageId: message.messageId)

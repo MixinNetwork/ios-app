@@ -2,7 +2,7 @@ import Foundation
 import MixinServices
 
 protocol AttachmentLoadingViewModel: AnyObject {
-    var transcriptId: String? { get set }
+    var transcriptMessage: MessageItem? { get set }
     var isLoading: Bool { get set }
     var progress: Double? { get set }
     var showPlayIconOnMediaStatusDone: Bool { get }
@@ -24,7 +24,7 @@ extension AttachmentLoadingViewModel where Self: MessageViewModel {
         guard message.mediaStatus != status.rawValue else {
             return
         }
-        guard transcriptId == nil else {
+        guard transcriptMessage == nil else {
             return
         }
         MessageDAO.shared.updateMediaStatus(messageId: message.messageId, status: status, conversationId: message.conversationId)
@@ -58,7 +58,7 @@ extension AttachmentLoadingViewModel where Self: MessageViewModel {
         let hasLocalIdentifier = message.mediaLocalIdentifier != nil
         return (message.userId == myUserId)
             && (hasMediaUrl || hasLocalIdentifier)
-            && (transcriptId == nil)
+            && (transcriptMessage == nil)
     }
     
     var mediaStatus: String? {

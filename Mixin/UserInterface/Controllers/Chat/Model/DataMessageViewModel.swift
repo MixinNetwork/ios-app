@@ -13,7 +13,7 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
     
     let isListPlayable: Bool
     
-    var transcriptId: String? {
+    var transcriptMessage: MessageItem? {
         didSet {
             updateOperationButtonStyle()
         }
@@ -24,7 +24,7 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
     var downloadIsTriggeredByUser = false
     
     var showPlayIconOnMediaStatusDone: Bool {
-        isListPlayable && transcriptId == nil
+        isListPlayable && transcriptMessage == nil
     }
     
     var shouldAutoDownload: Bool {
@@ -65,7 +65,7 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         updateMediaStatus(message: message, status: .PENDING)
         let message = Message.createMessage(message: self.message)
         if shouldUpload {
-            if transcriptId != nil {
+            if transcriptMessage != nil {
                 assertionFailure()
             } else {
                 let job = FileUploadJob(message: message)
@@ -73,8 +73,8 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
             }
         } else {
             let job: BaseJob
-            if let transcriptId = transcriptId {
-                job = TranscriptAttachmentDownloadJob(transcriptId: transcriptId, message: message)
+            if let transcriptMessage = transcriptMessage {
+                job = TranscriptAttachmentDownloadJob(transcriptMessage: transcriptMessage, message: message)
             } else {
                 job = FileDownloadJob(messageId: message.messageId)
             }
@@ -91,7 +91,7 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
             return
         }
         if shouldUpload {
-            if transcriptId != nil {
+            if transcriptMessage != nil {
                 assertionFailure()
             } else {
                 let id = FileUploadJob.jobId(messageId: message.messageId)
@@ -99,7 +99,7 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
             }
         } else {
             let id: String
-            if transcriptId != nil {
+            if transcriptMessage != nil {
                 id = TranscriptAttachmentDownloadJob.jobId(messageId: message.messageId)
             } else {
                 id = FileDownloadJob.jobId(messageId: message.messageId)

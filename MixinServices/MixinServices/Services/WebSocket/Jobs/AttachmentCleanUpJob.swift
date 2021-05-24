@@ -28,7 +28,7 @@ public class AttachmentCleanUpJob: BaseJob {
             AttachmentContainer.removeMediaFiles(mediaUrl: mediaUrl, category: category)
         }
         for id in transcriptMessageIds {
-            AttachmentContainer.removeAll(ofTranscriptMessageWith: id)
+            AttachmentContainer.removeAll(conversationId: conversationId, transcriptId: id)
         }
         NotificationCenter.default.post(onMainThread: storageUsageDidChangeNotification, object: self)
     }

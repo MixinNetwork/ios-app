@@ -72,7 +72,7 @@ class SharedMediaAudioCell: UITableViewCell, AudioCell {
         highlightedWaveformView.waveform = audio.mediaWaveform
         update(with: audio.mediaStatus)
         updateUnreadStyle()
-        NotificationCenter.default.addObserver(self, selector: #selector(updateDownloadProgress(_:)), name: UploadOrDownloadJob.progressNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateDownloadProgress(_:)), name: AttachmentLoadingJob.progressNotification, object: nil)
     }
     
     func update(with mediaStatus: MediaStatus) {
@@ -108,8 +108,8 @@ class SharedMediaAudioCell: UITableViewCell, AudioCell {
     @objc func updateDownloadProgress(_ notification: Notification) {
         guard
             let userInfo = notification.userInfo,
-            let messageId = userInfo[UploadOrDownloadJob.UserInfoKey.messageId] as? String,
-            let progress = userInfo[UploadOrDownloadJob.UserInfoKey.progress] as? Double,
+            let messageId = userInfo[AttachmentLoadingJob.UserInfoKey.messageId] as? String,
+            let progress = userInfo[AttachmentLoadingJob.UserInfoKey.progress] as? Double,
             let audio = audio,
             audio.messageId == messageId
         else {

@@ -61,7 +61,7 @@ class TranscriptPreviewViewController: FullscreenPopupViewController {
         let center = NotificationCenter.default
         center.addObserver(self,
                            selector: #selector(updateAttachmentProgress(_:)),
-                           name: UploadOrDownloadJob.progressNotification,
+                           name: AttachmentLoadingJob.progressNotification,
                            object: nil)
         center.addObserver(self,
                            selector: #selector(mediaStatusDidUpdate(_:)),
@@ -455,8 +455,8 @@ extension TranscriptPreviewViewController {
     @objc private func updateAttachmentProgress(_ notification: Notification) {
         guard
             let userInfo = notification.userInfo,
-            let messageId = userInfo[UploadOrDownloadJob.UserInfoKey.messageId] as? String,
-            let progress = userInfo[UploadOrDownloadJob.UserInfoKey.progress] as? Double,
+            let messageId = userInfo[AttachmentLoadingJob.UserInfoKey.messageId] as? String,
+            let progress = userInfo[AttachmentLoadingJob.UserInfoKey.progress] as? Double,
             let indexPath = self.indexPath(where: { $0.messageId == messageId })
         else {
             return

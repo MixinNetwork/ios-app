@@ -91,7 +91,7 @@ class ConversationDataSource {
         NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: MixinServices.conversationDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(messageDaoDidInsertMessage(_:)), name: MessageDAO.didInsertMessageNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(messageDaoDidRedecryptMessage(_:)), name: MessageDAO.didRedecryptMessageNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(updateMediaProgress(_:)), name: UploadOrDownloadJob.progressNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateMediaProgress(_:)), name: AttachmentLoadingJob.progressNotification, object: nil)
         reload(completion: completion)
     }
     
@@ -575,9 +575,9 @@ extension ConversationDataSource {
     @objc private func updateMediaProgress(_ notification: Notification) {
         guard
             let userInfo = notification.userInfo,
-            let conversationId = userInfo[UploadOrDownloadJob.UserInfoKey.conversationId] as? String,
-            let messageId = userInfo[UploadOrDownloadJob.UserInfoKey.messageId] as? String,
-            let progress = userInfo[UploadOrDownloadJob.UserInfoKey.progress] as? Double,
+            let conversationId = userInfo[AttachmentLoadingJob.UserInfoKey.conversationId] as? String,
+            let messageId = userInfo[AttachmentLoadingJob.UserInfoKey.messageId] as? String,
+            let progress = userInfo[AttachmentLoadingJob.UserInfoKey.progress] as? Double,
             conversationId == self.conversationId,
             let indexPath = indexPath(where: { $0.messageId == messageId }),
             let viewModel = viewModel(for: indexPath) as? MessageViewModel & AttachmentLoadingViewModel

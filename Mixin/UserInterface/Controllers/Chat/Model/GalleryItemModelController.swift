@@ -38,7 +38,7 @@ final class GalleryItemModelController: NSObject {
     override init() {
         super.init()
         NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: MixinServices.conversationDidChangeNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(updateDownloadProgress(_:)), name: UploadOrDownloadJob.progressNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateDownloadProgress(_:)), name: AttachmentLoadingJob.progressNotification, object: nil)
     }
     
     deinit {
@@ -103,8 +103,8 @@ final class GalleryItemModelController: NSObject {
     @objc private func updateDownloadProgress(_ notification: Notification) {
         guard
             let userInfo = notification.userInfo,
-            let messageId = userInfo[UploadOrDownloadJob.UserInfoKey.messageId] as? String,
-            let progress = userInfo[UploadOrDownloadJob.UserInfoKey.progress] as? Double,
+            let messageId = userInfo[AttachmentLoadingJob.UserInfoKey.messageId] as? String,
+            let progress = userInfo[AttachmentLoadingJob.UserInfoKey.progress] as? Double,
             let vc = reusableViewController(of: messageId)
         else {
             return

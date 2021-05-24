@@ -1,6 +1,6 @@
 import Foundation
 
-open class UploadOrDownloadJob: AsynchronousJob {
+open class AttachmentLoadingJob: AsynchronousJob {
     
     public enum UserInfoKey {
         public static let progress = "prog"
@@ -8,7 +8,7 @@ open class UploadOrDownloadJob: AsynchronousJob {
         public static let messageId = "mid"
     }
     
-    public static let progressNotification = Notification.Name("one.mixin.messenger.AttachmentUploadJob.Progress")
+    public static let progressNotification = Notification.Name("one.mixin.messenger.AttachmentLoadingJob.Progress")
     
     public let messageId: String
     public var message: Message!

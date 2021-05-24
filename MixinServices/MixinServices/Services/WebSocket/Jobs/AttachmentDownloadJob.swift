@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 
-open class AttachmentDownloadJob: UploadOrDownloadJob {
+open class AttachmentDownloadJob: AttachmentLoadingJob {
     
     public enum UserInfoKey {
         public static let messageId = "mid"
@@ -222,9 +222,9 @@ extension AttachmentDownloadJob: URLSessionDataDelegate {
         if let contentLength = contentLength {
             downloadedContentLength += Double(data.count)
             let userInfo: [String: Any] = [
-                UploadOrDownloadJob.UserInfoKey.progress: downloadedContentLength / contentLength,
-                UploadOrDownloadJob.UserInfoKey.conversationId: message.conversationId,
-                UploadOrDownloadJob.UserInfoKey.messageId: message.messageId
+                AttachmentLoadingJob.UserInfoKey.progress: downloadedContentLength / contentLength,
+                AttachmentLoadingJob.UserInfoKey.conversationId: message.conversationId,
+                AttachmentLoadingJob.UserInfoKey.messageId: message.messageId
             ]
             NotificationCenter.default.post(onMainThread: Self.progressNotification,
                                             object: self,

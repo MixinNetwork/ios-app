@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 import MixinServices
 
-class AttachmentUploadJob: UploadOrDownloadJob {
+class AttachmentUploadJob: AttachmentLoadingJob {
 
     private var stream: InputStream?
 

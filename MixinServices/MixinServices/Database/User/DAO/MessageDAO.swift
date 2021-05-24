@@ -515,6 +515,19 @@ public final class MessageDAO: UserDatabaseDAO {
             if let mention = MessageMention(message: message, quotedMessage: quotedMessage) {
                 try mention.save(db)
             }
+            if message.category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue && message.status != MessageStatus.FAILED.rawValue, let data = message.content?.data(using: .utf8), let children = try? JSONDecoder.default.decode([TranscriptMessage].self, from: data) {
+                let localContents = children.map { t in
+                    TranscriptMessage.LocalContent(name: t.userFullName,
+                                                   category: t.category,
+                                                   content: t.content)
+                }
+                if let data = try? JSONEncoder.default.encode(localContents), let content = String(data: data, encoding: .utf8) {
+                    message.content = content
+                } else {
+                    message.content = ""
+                }
+                try children.save(db)
+            }
             try insertMessage(database: db, message: message, messageSource: messageSource, completion: completion)
         }
     }
@@ -625,8 +638,13 @@ public final class MessageDAO: UserDatabaseDAO {
         try MessageMention
             .filter(MessageMention.column(of: .messageId) == messageId)
             .deleteAll(database)
-        if let category = MessageCategory(rawValue: category), MessageCategory.ftsAvailable.contains(category) {
-            try deleteFTSContent(database, messageId: messageId)
+        if let category = MessageCategory(rawValue: category) {
+            if MessageCategory.ftsAvailable.contains(category) {
+                try deleteFTSContent(database, messageId: messageId)
+            }
+            if category == .SIGNAL_TRANSCRIPT {
+                try deleteTranscriptChildren(database, transcriptId: messageId)
+            }
         }
         
         if status == MessageStatus.FAILED.rawValue {
@@ -664,6 +682,7 @@ public final class MessageDAO: UserDatabaseDAO {
                 .filter(MessageMention.column(of: .messageId) == id)
                 .deleteAll(db)
             try deleteFTSContent(db, messageId: id)
+            try deleteTranscriptChildren(db, transcriptId: id)
         }
         return deleteCount > 0
     }
@@ -697,7 +716,7 @@ extension MessageDAO {
         return db.recordExists(in: Message.self, where: condition)
     }
     
-    private func updateRedecryptMessage(assignments: [ColumnAssignment], mention: MessageMention? = nil, messageId: String, category: String, conversationId: String, messageSource: String) {
+    private func updateRedecryptMessage(assignments: [ColumnAssignment], mention: MessageMention? = nil, messageId: String, category: String, conversationId: String, messageSource: String, transcriptChildren: [TranscriptMessage]? = nil) {
         var newMessage: MessageItem?
         
         db.write { (db) in
@@ -722,6 +741,10 @@ extension MessageDAO {
                     nil
                 ])
                 try db.execute(sql: "INSERT INTO \(Message.ftsTableName) VALUES (?, ?, ?, ?, ?, ?, ?)", arguments: arguments)
+            }
+            
+            if let children = transcriptChildren {
+                try children.save(db)
             }
         }
         
@@ -813,6 +836,20 @@ extension MessageDAO {
                                messageSource: messageSource)
     }
     
+    public func updateTranscriptMessage(children: [TranscriptMessage], status: String, mediaStatus: MediaStatus, content: String, messageId: String, category: String, conversationId: String, messageSource: String) {
+        let assignments = [
+            Message.column(of: .status).set(to: status),
+            Message.column(of: .content).set(to: content),
+            Message.column(of: .mediaStatus).set(to: mediaStatus.rawValue)
+        ]
+        updateRedecryptMessage(assignments: assignments,
+                               messageId: messageId,
+                               category: category,
+                               conversationId: conversationId,
+                               messageSource: messageSource,
+                               transcriptChildren: children)
+    }
+    
 }
 
 extension MessageDAO {
@@ -820,6 +857,11 @@ extension MessageDAO {
     private func deleteFTSContent(_ db: GRDB.Database, messageId: String) throws {
         let sql = "DELETE FROM \(Message.ftsTableName) WHERE id MATCH ?"
         try db.execute(sql: sql, arguments: [uuidTokenString(uuidString: messageId)])
+    }
+    
+    private func deleteTranscriptChildren(_ db: GRDB.Database, transcriptId: String) throws {
+        let sql = "DELETE FROM \(TranscriptMessage.databaseTableName) WHERE transcript_id = ?"
+        try db.execute(sql: sql, arguments: [transcriptId])
     }
     
 }

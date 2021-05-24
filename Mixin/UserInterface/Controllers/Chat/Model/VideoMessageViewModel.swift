@@ -9,7 +9,7 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
     private(set) var fileSize: String?
     private(set) var durationLabelOrigin = CGPoint.zero
     
-    var transcriptMessageId: String?
+    var transcriptId: String?
     var isLoading = false
     var progress: Double?
     var downloadIsTriggeredByUser = false
@@ -70,8 +70,8 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
         (duration, fileSize) = VideoMessageViewModel.durationAndFileSizeRepresentation(ofMessage: message)
         if let videoFilename = mediaUrl {
             let betterThumbnailURL: URL
-            if let transcriptMessageId = transcriptMessageId {
-                betterThumbnailURL = AttachmentContainer.videoThumbnailURL(forTranscriptMessageWith: transcriptMessageId, videoFilename: videoFilename)
+            if let transcriptId = transcriptId {
+                betterThumbnailURL = AttachmentContainer.videoThumbnailURL(transcriptId: transcriptId, videoFilename: videoFilename)
             } else {
                 betterThumbnailURL = AttachmentContainer.videoThumbnailURL(videoFilename: videoFilename)
             }
@@ -92,7 +92,7 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
         updateMediaStatus(message: message, status: .PENDING)
         let message = Message.createMessage(message: self.message)
         if shouldUpload {
-            if transcriptMessageId != nil {
+            if transcriptId != nil {
                 assertionFailure()
             } else {
                 let job = VideoUploadJob(message: message)
@@ -100,8 +100,8 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
             }
         } else {
             let job: BaseJob
-            if let transcriptMessageId = transcriptMessageId {
-                job = TranscriptAttachmentDownloadJob(transcriptMessageId: transcriptMessageId, message: message)
+            if let transcriptId = transcriptId {
+                job = TranscriptAttachmentDownloadJob(transcriptId: transcriptId, message: message)
             } else {
                 job = VideoDownloadJob(messageId: message.messageId)
             }
@@ -118,7 +118,7 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
             return
         }
         if shouldUpload {
-            if transcriptMessageId != nil {
+            if transcriptId != nil {
                 assertionFailure()
             } else {
                 let id = VideoUploadJob.jobId(messageId: message.messageId)
@@ -126,7 +126,7 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
             }
         } else {
             let id: String
-            if transcriptMessageId != nil {
+            if transcriptId != nil {
                 id = TranscriptAttachmentDownloadJob.jobId(messageId: message.messageId)
             } else {
                 id = VideoDownloadJob.jobId(messageId: message.messageId)

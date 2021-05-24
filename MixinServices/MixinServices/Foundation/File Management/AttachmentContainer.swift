@@ -29,9 +29,9 @@ public enum AttachmentContainer {
         return url(for: .videos, filename: filename + ExtensionName.jpeg.withDot)
     }
     
-    public static func url(forTranscriptMessageWith id: String, filename: String?) -> URL {
+    public static func url(transcriptId: String, filename: String?) -> URL {
         let url = Self.url.appendingPathComponent("Transcript", isDirectory: true)
-            .appendingPathComponent(id, isDirectory: true)
+            .appendingPathComponent(transcriptId, isDirectory: true)
         try? FileManager.default.createDirectoryIfNotExists(atPath: url.path)
         if let filename = filename {
             assert(!filename.isEmpty)
@@ -41,14 +41,14 @@ public enum AttachmentContainer {
         }
     }
     
-    public static func videoThumbnailURL(forTranscriptMessageWith id: String, videoFilename: String) -> URL {
+    public static func videoThumbnailURL(transcriptId: String, videoFilename: String) -> URL {
         let filename: String
         if let dotIndex = videoFilename.lastIndex(of: ".") {
             filename = String(videoFilename[videoFilename.startIndex..<dotIndex])
         } else {
             filename = videoFilename
         }
-        return url(forTranscriptMessageWith: id, filename: filename + ExtensionName.jpeg.withDot)
+        return url(transcriptId: transcriptId, filename: filename + ExtensionName.jpeg.withDot)
     }
     
     public static func removeMediaFiles(mediaUrl: String, category: String) {
@@ -67,7 +67,7 @@ public enum AttachmentContainer {
     }
     
     public static func removeAll(ofTranscriptMessageWith messageId: String) {
-        let url = Self.url(forTranscriptMessageWith: messageId, filename: nil)
+        let url = Self.url(transcriptId: messageId, filename: nil)
         try? FileManager.default.removeItem(at: url)
     }
     

@@ -7,7 +7,7 @@ class TranscriptMessageViewModel: TextMessageViewModel {
     static let transcriptBackgroundMargin = Margin(leading: -6, trailing: -6, top: 4, bottom: 2)
     static let transcriptInterlineSpacing: CGFloat = 4
     
-    let children: [TranscriptMessage]
+    let contents: [TranscriptMessage.LocalContent]
     let digests: [String]
     
     private let transcriptInset = UIEdgeInsets(top: 4, left: 6, bottom: 4, right: 6)
@@ -26,8 +26,12 @@ class TranscriptMessageViewModel: TextMessageViewModel {
     }
     
     override init(message: MessageItem) {
-        self.children = message.transcriptMessages ?? []
-        self.digests = self.children
+        if let data = message.content?.data(using: .utf8), let contents = try? JSONDecoder.default.decode([TranscriptMessage.LocalContent].self, from: data) {
+            self.contents = contents
+        } else {
+            self.contents = []
+        }
+        self.digests = self.contents
             .prefix(Self.maxNumberOfDigestLines)
             .map(Self.digest(of:))
         super.init(message: message)
@@ -58,16 +62,16 @@ class TranscriptMessageViewModel: TextMessageViewModel {
 
 extension TranscriptMessageViewModel  {
     
-    private static func digest(of child: TranscriptMessage) -> String {
+    private static func digest(of content: TranscriptMessage.LocalContent) -> String {
         var digest: String
-        if let username = child.userFullName {
+        if let username = content.name {
             digest = username + ": "
         } else {
             digest = ""
         }
-        switch child.category {
+        switch content.category {
         case .text:
-            digest += child.content ?? " "
+            digest += content.content ?? " "
         case .image:
             digest += R.string.localizable.notification_content_photo()
         case .video:
@@ -83,11 +87,11 @@ extension TranscriptMessageViewModel  {
         case .live:
             digest += R.string.localizable.notification_content_live()
         case .post:
-            digest += child.content ?? " "
+            digest += content.content ?? " "
         case .location:
             digest += R.string.localizable.notification_content_location()
         case .appCard:
-            if let json = child.content?.data(using: .utf8), let card = try? JSONDecoder.default.decode(AppCardData.self, from: json) {
+            if let json = content.content?.data(using: .utf8), let card = try? JSONDecoder.default.decode(AppCardData.self, from: json) {
                 digest += "[\(card.title)]"
             }
         case .transcript:

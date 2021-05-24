@@ -4,7 +4,6 @@ import MixinServices
 class TranscriptPreviewViewController: FullscreenPopupViewController {
     
     let transcriptMessage: MessageItem
-    let childMessages: [TranscriptMessage]
     let backgroundView = UIVisualEffectView(effect: .lightBlur)
     let tableView = ConversationTableView()
     
@@ -12,11 +11,12 @@ class TranscriptPreviewViewController: FullscreenPopupViewController {
     private let queue: Queue
     
     private lazy var audioManager: TranscriptAudioMessagePlayingManager = {
-        let manager = TranscriptAudioMessagePlayingManager(transcriptMessageId: transcriptMessage.messageId)
+        let manager = TranscriptAudioMessagePlayingManager(transcriptId: transcriptMessage.messageId)
         manager.delegate = self
         return manager
     }()
     
+    private var childMessages: [TranscriptMessage] = []
     private var dates: [String] = []
     private var viewModels: [String: [MessageViewModel]] = [:]
     private var indexPathToFlashAfterAnimationFinished: IndexPath?
@@ -24,7 +24,6 @@ class TranscriptPreviewViewController: FullscreenPopupViewController {
     
     init(transcriptMessage: MessageItem) {
         self.transcriptMessage = transcriptMessage
-        self.childMessages = transcriptMessage.transcriptMessages ?? []
         self.factory = ViewModelFactory()
         self.queue = Queue(label: "one.mixin.messenger.TranscriptPreviewViewController-\(transcriptMessage.messageId)")
         let nib = R.nib.fullscreenPopupView
@@ -65,23 +64,15 @@ class TranscriptPreviewViewController: FullscreenPopupViewController {
                            name: UploadOrDownloadJob.progressNotification,
                            object: nil)
         center.addObserver(self,
-                           selector: #selector(attachmentDownloadJobDidFinish(_:)),
-                           name: AttachmentDownloadJob.didFinishNotification,
-                           object: nil)
-        center.addObserver(self,
-                           selector: #selector(attachmentDownloadJobDidCancel(_:)),
-                           name: TranscriptAttachmentDownloadJob.didCancelNotification,
-                           object: nil)
-        center.addObserver(self,
-                           selector: #selector(attachmentDownloadJobFileExpired(_:)),
-                           name: TranscriptAttachmentDownloadJob.fileExpiredNotification,
+                           selector: #selector(mediaStatusDidUpdate(_:)),
+                           name: TranscriptMessageDAO.mediaStatusDidUpdateNotification,
                            object: nil)
         
         let layoutWidth = AppDelegate.current.mainWindow.bounds.width
+        let transcriptId = transcriptMessage.messageId
         queue.async { [weak self] in
-            guard let items = self?.childMessages.map(MessageItem.init) else {
-                return
-            }
+            let children = TranscriptMessageDAO.shared.transcriptMessages(transcriptId: transcriptId)
+            let items = children.map(MessageItem.init)
             for item in items where item.category == MessageCategory.SIGNAL_STICKER.rawValue {
                 if item.stickerId == nil {
                     item.category = MessageCategory.SIGNAL_TEXT.rawValue
@@ -95,6 +86,7 @@ class TranscriptPreviewViewController: FullscreenPopupViewController {
                 guard let self = self else {
                     return
                 }
+                self.childMessages = children
                 self.dates = dates
                 self.viewModels = viewModels
                 self.tableView.reloadData()
@@ -176,7 +168,7 @@ class TranscriptPreviewViewController: FullscreenPopupViewController {
             } else if message.category.hasSuffix("_DATA"), let viewModel = viewModel as? DataMessageViewModel, let cell = cell as? DataMessageCell {
                 if viewModel.mediaStatus == MediaStatus.DONE.rawValue || viewModel.mediaStatus == MediaStatus.READ.rawValue {
                     if let filename = message.mediaUrl {
-                        let url = AttachmentContainer.url(forTranscriptMessageWith: transcriptMessage.messageId, filename: filename)
+                        let url = AttachmentContainer.url(transcriptId: transcriptMessage.messageId, filename: filename)
                         if FileManager.default.fileExists(atPath: url.path) {
                             let controller = UIDocumentInteractionController(url: url)
                             controller.delegate = self
@@ -251,7 +243,7 @@ extension TranscriptPreviewViewController: MessageViewModelFactoryDelegate {
     
     func messageViewModelFactory(_ factory: MessageViewModelFactory, updateViewModelForPresentation viewModel: MessageViewModel) {
         if let viewModel = viewModel as? AttachmentLoadingViewModel {
-            viewModel.transcriptMessageId = self.transcriptMessage.messageId
+            viewModel.transcriptId = self.transcriptMessage.messageId
         }
     }
     
@@ -475,34 +467,24 @@ extension TranscriptPreviewViewController {
         }
     }
     
-    @objc private func attachmentDownloadJobDidFinish(_ notification: Notification) {
-        updateMediaStatus(notification: notification, status: .DONE)
-    }
-    
-    @objc private func attachmentDownloadJobDidCancel(_ notification: Notification) {
-        updateMediaStatus(notification: notification, status: .CANCELED)
-    }
-    
-    @objc private func attachmentDownloadJobFileExpired(_ notification: Notification) {
-        updateMediaStatus(notification: notification, status: .EXPIRED)
-    }
-    
-    private func updateMediaStatus(notification: Notification, status: MediaStatus) {
-        guard let messageId = notification.userInfo?[AttachmentDownloadJob.UserInfoKey.messageId] as? String else {
+    @objc private func mediaStatusDidUpdate(_ notification: Notification) {
+        guard
+            let transcriptId = notification.userInfo?[TranscriptMessageDAO.UserInfoKey.transcriptId] as? String,
+            let messageId = notification.userInfo?[TranscriptMessageDAO.UserInfoKey.messageId] as? String,
+            let mediaStatus = notification.userInfo?[TranscriptMessageDAO.UserInfoKey.mediaStatus] as? MediaStatus,
+            let mediaUrl = notification.userInfo?[TranscriptMessageDAO.UserInfoKey.mediaUrl] as? String,
+            transcriptId == self.transcriptMessage.messageId,
+            let child = childMessages.first(where: { $0.messageId == messageId })
+        else {
             return
         }
-        guard let child = childMessages.first(where: { $0.messageId == messageId }) else {
-            return
-        }
-        child.mediaStatus = status.rawValue
-        if let filename = notification.userInfo?[AttachmentDownloadJob.UserInfoKey.mediaURL] as? String {
-            child.mediaUrl = filename
-        }
+        child.mediaStatus = mediaStatus.rawValue
+        child.mediaUrl = mediaUrl
         if let indexPath = self.indexPath(where: { $0.messageId == messageId }) {
             let viewModel = self.viewModel(at: indexPath)
             let cell = tableView.cellForRow(at: indexPath)
             if let viewModel = viewModel as? AttachmentLoadingViewModel {
-                viewModel.mediaStatus = status.rawValue
+                viewModel.mediaStatus = mediaStatus.rawValue
                 if let cell = cell as? AttachmentLoadingMessageCell {
                     cell.updateOperationButtonStyle()
                 }
@@ -514,25 +496,6 @@ extension TranscriptPreviewViewController {
                 if let cell = cell as? PhotoRepresentableMessageCell {
                     cell.reloadMedia(viewModel: viewModel)
                 }
-            }
-        }
-        
-        let transcriptMessageId = self.transcriptMessage.messageId
-        let transcriptConversationId = self.transcriptMessage.conversationId
-        let children = self.childMessages
-        queue.async {
-            if let json = try? JSONEncoder.snakeCase.encode(children), let content = String(data: json, encoding: .utf8) {
-                DispatchQueue.main.sync {
-                    self.transcriptMessage.content = content
-                }
-                MessageDAO.shared.update(content: content, forMessageWith: transcriptMessageId)
-            }
-            let areAllAttachmentsDownloaded = children.filter({ $0.category.includesAttachment })
-                .allSatisfy({ $0.mediaStatus == MediaStatus.DONE.rawValue })
-            if areAllAttachmentsDownloaded {
-                MessageDAO.shared.updateMediaStatus(messageId: transcriptMessageId,
-                                                    status: .DONE,
-                                                    conversationId: transcriptConversationId)
             }
         }
     }

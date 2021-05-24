@@ -338,9 +338,8 @@ public class MixinService {
         } else if category.hasSuffix("_VIDEO") {
             jobIds = [VideoDownloadJob.jobId(messageId: messageId)]
         } else if category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue {
-            jobIds = (item.transcriptMessages ?? []).map { brief in
-                TranscriptAttachmentDownloadJob.jobId(messageId: brief.messageId)
-            }
+            let childrenId = TranscriptMessageDAO.shared.messageIds(transcriptId: messageId)
+            jobIds = childrenId.map(TranscriptAttachmentDownloadJob.jobId(messageId:))
         } else {
             jobIds = []
         }

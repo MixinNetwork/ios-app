@@ -44,13 +44,12 @@ class JobService {
             ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: participantIds, updateParticipantStatus: true))
         }
     }
-
+    
     func restoreUploadJobs() {
-        let jobs = JobDAO.shared.nextJobs(category: .Task, action: .UPLOAD_ATTACHMENT)
-        for (jobId, messageId) in jobs {
+        func upload(jobId: String, messageId: String) {
             guard let message = MessageDAO.shared.getMessage(messageId: messageId) else {
                 JobDAO.shared.removeJob(jobId: jobId)
-                continue
+                return
             }
             if message.category.hasSuffix("_IMAGE") {
                 UploaderQueue.shared.addJob(job: ImageUploadJob(message: message, jobId: jobId))
@@ -60,10 +59,22 @@ class JobService {
                 UploaderQueue.shared.addJob(job: VideoUploadJob(message: message, jobId: jobId))
             } else if message.category.hasSuffix("_AUDIO") {
                 UploaderQueue.shared.addJob(job: AudioUploadJob(message: message, jobId: jobId))
+            } else if message.category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue {
+                let job = TranscriptAttachmentUploadJob(message: message, jobIdToRemoveAfterFinished: jobId)
+                UploaderQueue.shared.addJob(job: job)
             }
         }
+        
+        let attachmentJobs = JobDAO.shared.nextJobs(category: .Task, action: .UPLOAD_ATTACHMENT)
+        for (jobId, messageId) in attachmentJobs {
+            upload(jobId: jobId, messageId: messageId)
+        }
+        let transcriptJobs = JobDAO.shared.nextJobs(category: .Task, action: .UPLOAD_TRANSCRIPT_ATTACHMENT)
+        for (jobId, messageId) in transcriptJobs {
+            upload(jobId: jobId, messageId: messageId)
+        }
     }
-
+    
     public func processDownloadJobs() {
         DispatchQueue.global().async {
             guard JobService.canBatchProcessMessages else {

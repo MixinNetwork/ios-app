@@ -242,7 +242,7 @@ extension Message {
                        mediaDuration: t.mediaDuration,
                        mediaWidth: t.mediaWidth,
                        mediaHeight: t.mediaHeight,
-                       mediaHash: nil,
+                       mediaHash: t.mediaHash,
                        mediaKey: t.mediaKey,
                        mediaDigest: t.mediaDigest,
                        mediaStatus: t.mediaStatus,
@@ -254,10 +254,10 @@ extension Message {
                        action: nil,
                        participantId: nil,
                        snapshotId: nil,
-                       name: t.mediaName,
+                       name: t.name,
                        stickerId: t.stickerId,
                        sharedUserId: t.sharedUserId,
-                       quoteMessageId: t.quoteId,
+                       quoteMessageId: t.quoteMessageId,
                        quoteContent: QuoteContentConverter.localQuoteContent(from: t.quoteContent),
                        createdAt: t.createdAt)
     }

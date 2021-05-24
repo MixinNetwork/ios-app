@@ -14,7 +14,7 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
     let length: String
     let waveform: Waveform
     
-    var transcriptMessageId: String?
+    var transcriptId: String?
     var isLoading = false
     var progress: Double?
     var showPlayIconOnMediaStatusDone: Bool = true
@@ -82,7 +82,7 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         updateMediaStatus(message: message, status: .PENDING)
         let message = Message.createMessage(message: self.message)
         if shouldUpload {
-            if transcriptMessageId != nil {
+            if transcriptId != nil {
                 assertionFailure()
             } else {
                 let job = AudioUploadJob(message: message)
@@ -90,8 +90,8 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
             }
         } else {
             let job: BaseJob
-            if let transcriptMessageId = transcriptMessageId {
-                job = TranscriptAttachmentDownloadJob(transcriptMessageId: transcriptMessageId, message: message)
+            if let transcriptId = transcriptId {
+                job = TranscriptAttachmentDownloadJob(transcriptId: transcriptId, message: message)
             } else {
                 job = AudioDownloadJob(messageId: message.messageId)
             }
@@ -108,7 +108,7 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
             return
         }
         if shouldUpload {
-            if transcriptMessageId != nil {
+            if transcriptId != nil {
                 assertionFailure()
             } else {
                 let id = AudioUploadJob.jobId(messageId: message.messageId)
@@ -116,7 +116,7 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
             }
         } else {
             let id: String
-            if transcriptMessageId != nil {
+            if transcriptId != nil {
                 id = TranscriptAttachmentDownloadJob.jobId(messageId: message.messageId)
             } else {
                 id = AudioDownloadJob.jobId(messageId: message.messageId)

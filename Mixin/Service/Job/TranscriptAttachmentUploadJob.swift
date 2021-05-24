@@ -6,9 +6,9 @@ final class TranscriptAttachmentUploadJob: AsynchronousJob {
     
     enum Error: Swift.Error {
         case invalidUploadURL(String?)
-        case streamFailed(Swift.Error)
+        case requestFailed(Swift.Error)
         case missingMetadata(hasKey: Bool, hasDigest: Bool)
-        case encodeAttachmentContent(Swift.Error)
+        case invalidJSON
     }
     
     private struct Metadata {
@@ -36,20 +36,25 @@ final class TranscriptAttachmentUploadJob: AsynchronousJob {
     }
     
     override func execute() -> Bool {
-        guard
-            let json = message.content?.data(using: .utf8),
-            let children = try? JSONDecoder.snakeCase.decode([TranscriptMessage].self, from: json)
-        else {
+        let children = TranscriptMessageDAO.shared.transcriptMessages(transcriptId: message.messageId)
+        guard !children.isEmpty else {
             return false
         }
         for (index, child) in children.enumerated() {
             guard child.category.includesAttachment else {
                 continue
             }
-            if let createdAt = child.attachmentCreatedAt?.toUTCDate(), abs(createdAt.timeIntervalSinceNow) < secondsPerDay {
+            if let content = child.content,
+               UUID(uuidString: content) != nil,
+               child.mediaKey != nil,
+               child.mediaDigest != nil,
+               child.mediaStatus == MediaStatus.DONE.rawValue,
+               let createdAt = child.mediaCreatedAt?.toUTCDate(),
+               abs(createdAt.timeIntervalSinceNow) < secondsPerDay
+            {
                 continue
             } else if let mediaUrl = child.mediaUrl {
-                let url = AttachmentContainer.url(forTranscriptMessageWith: message.messageId, filename: mediaUrl)
+                let url = AttachmentContainer.url(transcriptId: message.messageId, filename: mediaUrl)
                 if let stream = AttachmentEncryptingInputStream(url: url), stream.streamError == nil {
                     let request = Request(childIndex: index, stream: stream)
                     if loadingRequests.count < maxNumberOfConcurrentUploadTask {
@@ -95,24 +100,21 @@ final class TranscriptAttachmentUploadJob: AsynchronousJob {
         child.mediaKey = metadata.mediaKey
         child.mediaDigest = metadata.mediaDigest
         child.mediaStatus = MediaStatus.DONE.rawValue
-        child.attachmentCreatedAt = createdAt
+        child.mediaCreatedAt = createdAt
         loadingRequests[child.messageId] = nil
-        do {
-            let json = try JSONEncoder.snakeCase.encode(children)
-            let content = String(data: json, encoding: .utf8) ?? ""
-            message.content = content
-            MessageDAO.shared.update(content: content,
-                                     forMessageWith: message.messageId)
-            if pendingRequests.isEmpty {
-                finishMessageSending()
-            } else {
-                let (id, request) = pendingRequests.remove(at: pendingRequests.startIndex)
-                loadingRequests[id] = request
-                request.start()
-            }
-        } catch {
-            reporter.report(error: Error.encodeAttachmentContent(error))
-            finishJob()
+        TranscriptMessageDAO.shared.update(transcriptId: message.messageId,
+                                           messageId: child.messageId,
+                                           content: child.content,
+                                           mediaKey: child.mediaKey,
+                                           mediaDigest: child.mediaDigest,
+                                           mediaStatus: child.mediaStatus,
+                                           mediaCreatedAt: child.mediaCreatedAt)
+        if pendingRequests.isEmpty {
+            finishMessageSending()
+        } else {
+            let (id, request) = pendingRequests.remove(at: pendingRequests.startIndex)
+            loadingRequests[id] = request
+            request.start()
         }
     }
     
@@ -121,7 +123,7 @@ final class TranscriptAttachmentUploadJob: AsynchronousJob {
         defer {
             lock.unlock()
         }
-        reporter.report(error: Error.encodeAttachmentContent(error))
+        reporter.report(error: Error.requestFailed(error))
         finishJob()
     }
     
@@ -129,7 +131,16 @@ final class TranscriptAttachmentUploadJob: AsynchronousJob {
         MessageDAO.shared.updateMediaStatus(messageId: message.messageId,
                                             status: .DONE,
                                             conversationId: message.conversationId)
-        SendMessageService.shared.sendMessage(message: message, data: message.content)
+        do {
+            let data = try JSONEncoder.default.encode(children)
+            guard let content = String(data: data, encoding: .utf8) else {
+                throw Error.invalidJSON
+            }
+            SendMessageService.shared.sendMessage(message: message, data: content)
+        } catch {
+            Logger.write(error: error)
+            reporter.report(error: error)
+        }
         finishJob()
         JobDAO.shared.removeJob(jobId: jobIdToRemove)
     }

@@ -2,18 +2,15 @@ import UIKit
 
 public class TranscriptAttachmentDownloadJob: AttachmentDownloadJob {
     
-    public static let fileExpiredNotification = Notification.Name("one.mixin.services.TranscriptAttachmentDownloadJob.FileExpired")
-    public static let didCancelNotification = Notification.Name("one.mixin.services.TranscriptAttachmentDownloadJob.DidCancel")
-    
-    let transcriptMessageId: String
+    let transcriptId: String
     
     override var fileUrl: URL {
-        AttachmentContainer.url(forTranscriptMessageWith: transcriptMessageId,
+        AttachmentContainer.url(transcriptId: transcriptId,
                                 filename: fileName)
     }
     
-    public init(transcriptMessageId: String, message: Message) {
-        self.transcriptMessageId = transcriptMessageId
+    public init(transcriptId: String, message: Message) {
+        self.transcriptId = transcriptId
         super.init(message: message)
     }
     
@@ -24,17 +21,11 @@ public class TranscriptAttachmentDownloadJob: AttachmentDownloadJob {
     public override func taskFinished() {
         if message.category == MessageCategory.SIGNAL_VIDEO.rawValue, stream?.streamError == nil {
             let thumbnail = UIImage(withFirstFrameOfVideoAtURL: fileUrl)
-            let url = AttachmentContainer.videoThumbnailURL(forTranscriptMessageWith: transcriptMessageId,
+            let url = AttachmentContainer.videoThumbnailURL(transcriptId: transcriptId,
                                                             videoFilename: fileName)
             thumbnail?.saveToFile(path: url)
         }
         super.taskFinished()
-    }
-    
-    public override func downloadExpired() {
-        NotificationCenter.default.post(onMainThread: Self.fileExpiredNotification,
-                                        object: self,
-                                        userInfo: [Self.UserInfoKey.messageId: message.messageId])
     }
     
     public override func updateMediaMessage(
@@ -44,11 +35,10 @@ public class TranscriptAttachmentDownloadJob: AttachmentDownloadJob {
         conversationId: String,
         content: String? = nil
     ) {
-        if status == .CANCELED {
-            NotificationCenter.default.post(onMainThread: Self.didCancelNotification,
-                                            object: self,
-                                            userInfo: [Self.UserInfoKey.messageId: message.messageId])
-        }
+        TranscriptMessageDAO.shared.update(transcriptId: transcriptId,
+                                           messageId: message.messageId,
+                                           mediaStatus: status,
+                                           mediaUrl: fileName)
     }
     
 }

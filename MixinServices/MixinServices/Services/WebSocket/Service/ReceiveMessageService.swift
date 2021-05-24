@@ -579,7 +579,7 @@ public class ReceiveMessageService: MixinService {
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }
-            guard let json = try? JSONEncoder.snakeCase.encode(children), let content = String(data: json, encoding: .utf8) else {
+            guard let json = try? JSONEncoder.default.encode(children), let content = String(data: json, encoding: .utf8) else {
                 return
             }
             let message = Message.createTranscriptMessage(content: content,
@@ -712,15 +712,25 @@ public class ReceiveMessageService: MixinService {
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }
-            guard let json = try? JSONEncoder.snakeCase.encode(children), let content = String(data: json, encoding: .utf8) else {
-                return
+            let localContents = children.map { t in
+                TranscriptMessage.LocalContent(name: t.userFullName,
+                                               category: t.category,
+                                               content: t.content)
             }
-            MessageDAO.shared.updateMessageContentAndMediaStatus(content: content,
-                                                                 mediaStatus: hasAttachment ? .PENDING : .DONE,
-                                                                 key: nil,
-                                                                 digest: nil,
-                                                                 messageId: messageId,
-                                                                 conversationId: data.conversationId)
+            let localContent: String
+            if let data = try? JSONEncoder.default.encode(localContents), let content = String(data: data, encoding: .utf8) {
+                localContent = content
+            } else {
+                localContent = ""
+            }
+            MessageDAO.shared.updateTranscriptMessage(children: children,
+                                                      status: Message.getStatus(data: data),
+                                                      mediaStatus: hasAttachment ? .PENDING : .DONE,
+                                                      content: localContent,
+                                                      messageId: messageId,
+                                                      category: data.category,
+                                                      conversationId: data.conversationId,
+                                                      messageSource: data.source)
         default:
             break
         }
@@ -769,11 +779,28 @@ public class ReceiveMessageService: MixinService {
     }
     
     private func parseTranscript(data: BlazeMessageData, plainText: String) -> (children: [TranscriptMessage], hasAttachment: Bool)? {
-        guard let jsonData = plainText.data(using: .utf8), let children = try? JSONDecoder.snakeCase.decode([TranscriptMessage].self, from: jsonData) else {
+        guard let jsonData = plainText.data(using: .utf8), let children = try? JSONDecoder.default.decode([TranscriptMessage].self, from: jsonData) else {
             return nil
         }
         var hasAttachment = false
         for child in children {
+            if let id = child.userId {
+                if let fullname = UserDAO.shared.getFullname(userId: id) {
+                    child.userFullName = fullname
+                } else {
+                    fetchUser: repeat {
+                        switch UserSessionAPI.showUser(userId: id) {
+                        case let .success(response):
+                            UserDAO.shared.updateUsers(users: [response], sendNotificationAfterFinished: false)
+                            child.userFullName = response.fullName
+                        case .failure(.notFound):
+                            break fetchUser
+                        case let .failure(error):
+                            checkNetworkAndWebSocket()
+                        }
+                    } while LoginManager.shared.isLoggedIn
+                }
+            }
             switch child.category {
             case .data, .image, .video, .audio:
                 hasAttachment = true

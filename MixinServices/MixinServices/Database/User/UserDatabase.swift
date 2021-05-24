@@ -361,6 +361,43 @@ public final class UserDatabase: Database {
             try db.execute(sql: "CREATE INDEX IF NOT EXISTS index_messages_quote ON messages(conversation_id, quote_message_id)")
         }
         
+        migrator.registerMigration("transcript") { (db) in
+            let sql = """
+                CREATE TABLE message_transcripts(
+                    transcript_id TEXT NOT NULL,
+                    message_id TEXT NOT NULL,
+                    user_id TEXT,
+                    user_full_name TEXT,
+                    category TEXT NOT NULL,
+                    content TEXT,
+                    media_url TEXT,
+                    media_mime_type TEXT,
+                    media_size INTEGER,
+                    media_duration INTEGER,
+                    media_width INTEGER,
+                    media_height INTEGER,
+                    media_hash TEXT,
+                    media_key BLOB,
+                    media_digest BLOB,
+                    media_status TEXT,
+                    media_waveform BLOB,
+                    media_created_at TEXT,
+                    thumb_image TEXT,
+                    thumb_url TEXT,
+                    name TEXT,
+                    caption TEXT,
+                    sticker_id TEXT,
+                    shared_user_id TEXT,
+                    quote_message_id TEXT,
+                    quote_content BLOB,
+                    mentions TEXT,
+                    created_at TEXT NOT NULL,
+                    PRIMARY KEY (transcript_id, message_id)
+                )
+            """
+            try db.execute(sql: sql)
+        }
+        
         /* Remaining works:
          try db.execute(sql: "DROP INDEX IF EXISTS messages_unread_indexs")
          try db.execute(sql: "DROP INDEX IF EXISTS messages_user_indexs")

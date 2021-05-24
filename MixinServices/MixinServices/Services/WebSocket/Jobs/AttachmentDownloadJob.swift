@@ -14,7 +14,8 @@ open class AttachmentDownloadJob: UploadOrDownloadJob {
     
     private var contentLength: Double?
     private var downloadedContentLength: Double = 0
-    private var attachResponse: AttachmentResponse?
+    
+    var attachResponse: AttachmentResponse?
     
     public var fileName: String {
         

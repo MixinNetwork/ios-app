@@ -4,7 +4,7 @@ import MixinServices
 
 fileprivate let audioQueueBufferSize: Int32 = 11520; // Should be smaller than AudioQueueBufferRef.mAudioDataByteSize
 
-class OggOpusPlayer {
+final class OggOpusPlayer {
     
     enum Error: Swift.Error {
         case newOutput
@@ -15,15 +15,15 @@ class OggOpusPlayer {
     }
     
     enum Status {
+        case stopped
         case playing
         case paused
-        case readyToPlay
-        case didReachEnd
     }
     
     var onStatusChanged: ((OggOpusPlayer) -> Void)?
     
     var currentTime: Float64 {
+        assert(Queue.main.isCurrent)
         var timeStamp = AudioTimeStamp()
         let status = AudioQueueGetCurrentTime(audioQueue, nil, &timeStamp, nil)
         if status == noErr {
@@ -35,12 +35,10 @@ class OggOpusPlayer {
     
     fileprivate let reader: OggOpusReader
     
-    @Synchronized(value: .readyToPlay)
+    @Synchronized(value: .stopped)
     fileprivate(set) var status: Status {
         didSet {
-            DispatchQueue.main.async {
-                self.onStatusChanged?(self)
-            }
+            self.onStatusChanged?(self)
         }
     }
     
@@ -79,10 +77,25 @@ class OggOpusPlayer {
         var status: OSStatus = noErr
         
         var audioQueue: AudioQueueRef!
-        status = AudioQueueNewOutput(&format, aqBufferCallback, selfAsRawPointer, CFRunLoopGetMain(), CFRunLoopMode.commonModes.rawValue, 0, &audioQueue)
-        guard status == noErr else {
+        status = AudioQueueNewOutput(&format,
+                                     bufferCallback,
+                                     selfAsRawPointer,
+                                     CFRunLoopGetMain(),
+                                     CFRunLoopMode.commonModes.rawValue,
+                                     0,
+                                     &audioQueue)
+        guard status == noErr, let audioQueue = audioQueue else {
             throw Error.newOutput
         }
+        
+        status = AudioQueueAddPropertyListener(audioQueue,
+                                               kAudioQueueProperty_IsRunning,
+                                               runningChangedCallback(_:_:_:),
+                                               selfAsRawPointer)
+        guard status == noErr else {
+            throw Error.addPropertyListener
+        }
+        
         self.audioQueue = audioQueue
         
         buffers.reserveCapacity(numberOfBuffers)
@@ -104,25 +117,30 @@ class OggOpusPlayer {
             stop()
         }
         dispose()
+        #if DEBUG
+        print("OggOpusPlayer \(Unmanaged<OggOpusPlayer>.passUnretained(self).toOpaque()) deinitialized")
+        #endif
     }
     
     func play() {
+        assert(Queue.main.isCurrent)
         switch status {
+        case .stopped:
+            status = .playing
+            for i in 0..<numberOfBuffers {
+                bufferCallback(inUserData: selfAsRawPointer, inAQ: audioQueue, inBuffer: buffers[i])
+            }
+            AudioQueueStart(audioQueue, nil)
         case .playing:
             break
         case .paused:
             status = .playing
             AudioQueueStart(audioQueue, nil)
-        case .readyToPlay, .didReachEnd:
-            status = .playing
-            for i in 0..<numberOfBuffers {
-                aqBufferCallback(inUserData: selfAsRawPointer, inAq: audioQueue, inBuffer: buffers[i])
-            }
-            AudioQueueStart(audioQueue, nil)
         }
     }
     
     func pause() {
+        assert(Queue.main.isCurrent)
         guard status == .playing else {
             return
         }
@@ -131,11 +149,16 @@ class OggOpusPlayer {
     }
     
     func stop() {
+        assert(Queue.main.isCurrent)
+        guard status != .stopped else {
+            return
+        }
         AudioQueueStop(audioQueue, true)
-        status = .readyToPlay
+        status = .stopped
     }
     
     func dispose() {
+        assert(Queue.main.isCurrent)
         if let audioQueue = audioQueue {
             AudioQueueDispose(audioQueue, true)
         }
@@ -143,12 +166,16 @@ class OggOpusPlayer {
     
 }
 
-fileprivate func aqBufferCallback(inUserData: UnsafeMutableRawPointer?, inAq: AudioQueueRef, inBuffer: AudioQueueBufferRef) {
+fileprivate func bufferCallback(
+    inUserData: UnsafeMutableRawPointer?,
+    inAQ: AudioQueueRef,
+    inBuffer: AudioQueueBufferRef
+) {
     guard let ptr = inUserData else {
         return
     }
     let player = Unmanaged<OggOpusPlayer>.fromOpaque(ptr).takeUnretainedValue()
-    guard player.status != .didReachEnd else {
+    guard player.status == .playing else {
         return
     }
     if let pcmData = try? player.reader.pcmData(maxLength: audioQueueBufferSize), pcmData.count > 0 {
@@ -157,7 +184,20 @@ fileprivate func aqBufferCallback(inUserData: UnsafeMutableRawPointer?, inAq: Au
                           count: pcmData.count)
         AudioQueueEnqueueBuffer(player.audioQueue, inBuffer, 0, nil)
     } else {
-        AudioQueueStop(player.audioQueue, true)
-        player.status = .didReachEnd
+        AudioQueueStop(player.audioQueue, false)
+    }
+}
+
+fileprivate func runningChangedCallback(
+    _ inUserData: UnsafeMutableRawPointer?,
+    _ inAQ: AudioQueueRef,
+    _ inID: AudioQueuePropertyID
+) {
+    guard let ptr = inUserData else {
+        return
+    }
+    let player = Unmanaged<OggOpusPlayer>.fromOpaque(ptr).takeUnretainedValue()
+    if player.reader.didReachEnd {
+        player.status = .stopped
     }
 }

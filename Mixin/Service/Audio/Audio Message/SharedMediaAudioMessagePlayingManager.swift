@@ -53,9 +53,7 @@ class SharedMediaAudioMessagePlayingManager: AudioMessagePlayingManager {
                 center.playbackState = .playing
             case .paused:
                 center.playbackState = .paused
-            case .readyToPlay:
-                break
-            case .didReachEnd:
+            case .stopped:
                 center.playbackState = .stopped
             }
         }
@@ -67,10 +65,8 @@ class SharedMediaAudioMessagePlayingManager: AudioMessagePlayingManager {
             }
         case .paused:
             updateNowPlayingInfoElapsedPlaybackTime()
-        case .didReachEnd:
+        case .stopped:
             removePlayingInfoAndRemoteCommandTarget()
-        default:
-            break
         }
     }
     

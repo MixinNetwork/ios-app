@@ -8,6 +8,8 @@ class OggOpusReader {
         case read(Int32)
     }
     
+    private(set) var didReachEnd = false
+    
     private let file: OpaquePointer
     
     init(fileAtPath path: String) throws {
@@ -24,10 +26,6 @@ class OggOpusReader {
     
     deinit {
         op_free(file)
-    }
-    
-    func seekToZero() {
-        op_raw_seek(file, 0)
     }
     
     func pcmData(maxLength: Int32) throws -> Data {
@@ -52,7 +50,13 @@ class OggOpusReader {
         if result < 0 {
             throw Error.read(result)
         } else {
-            return Data(bytes: buffer, count: Int(outputLength - remainingOutputLength) * 2)
+            let count = Int(outputLength - remainingOutputLength) * 2
+            if count == 0 {
+                didReachEnd = true
+                return Data()
+            } else {
+                return Data(bytes: buffer, count: count)
+            }
         }
     }
     

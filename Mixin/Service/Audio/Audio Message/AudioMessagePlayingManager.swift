@@ -147,7 +147,7 @@ class AudioMessagePlayingManager: NSObject, AudioSessionClient {
                 cell.style = .playing
             case .paused:
                 cell.style = .paused
-            case .readyToPlay, .didReachEnd:
+            case .stopped:
                 cell.style = .stopped
             }
         } else {
@@ -207,7 +207,7 @@ class AudioMessagePlayingManager: NSObject, AudioSessionClient {
         if player.status == .playing {
             displayAwakeningToken = DisplayAwakener.shared.retain()
         }
-        if player.status == .didReachEnd, let playingMessage = playingMessage {
+        if player.status == .stopped, let playingMessage = playingMessage {
             cells[playingMessage.messageId]?.cell?.style = .stopped
             DispatchQueue.global().async {
                 if let next = self.playableMessage(nextTo: playingMessage) {

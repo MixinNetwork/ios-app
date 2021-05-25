@@ -31,16 +31,24 @@ public final class TranscriptMessage {
     public let quoteContent: String?
     public let caption: String?
     
-    public init?(
-        transcriptId: String,
-        messageItem item: MessageItem,
-        content: String?,
-        mediaUrl: String?,
-        mediaCreatedAt: String?
-    ) {
+    public init?(transcriptId: String, messageItem item: MessageItem, mediaUrl: String?) {
         guard let category = Category(messageCategoryString: item.category) else {
             return nil
         }
+        let (content, mediaCreatedAt) = { () -> (String?, String?) in
+            switch item.category {
+            case MessageCategory.APP_CARD.rawValue:
+                return (AppCardContentConverter.transcriptAppCard(from: item.content), nil)
+            case MessageCategory.SIGNAL_VIDEO.rawValue, MessageCategory.PLAIN_VIDEO.rawValue:
+                if let data = item.content?.data(using: .utf8), let tad = try? JSONDecoder.default.decode(TransferAttachmentData.self, from: data) {
+                    return (tad.attachmentId, tad.createdAt)
+                } else {
+                    return (nil, nil)
+                }
+            default:
+                return (item.content, nil)
+            }
+        }()
         self.transcriptId = transcriptId
         self.messageId = item.messageId
         self.userId = item.userId

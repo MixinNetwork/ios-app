@@ -71,8 +71,10 @@ class TranscriptPreviewViewController: FullscreenPopupViewController {
         let layoutWidth = AppDelegate.current.mainWindow.bounds.width
         let transcriptId = transcriptMessage.messageId
         queue.async { [weak self] in
-            let children = TranscriptMessageDAO.shared.transcriptMessages(transcriptId: transcriptId)
-            let items = children.map(MessageItem.init)
+            let items = TranscriptMessageDAO.shared.messageItems(transcriptId: transcriptId)
+            let children = items.compactMap { item in
+                TranscriptMessage(transcriptId: transcriptId, messageItem: item, mediaUrl: item.mediaUrl)
+            }
             for item in items where item.category == MessageCategory.SIGNAL_STICKER.rawValue {
                 if item.stickerId == nil {
                     item.category = MessageCategory.SIGNAL_TEXT.rawValue

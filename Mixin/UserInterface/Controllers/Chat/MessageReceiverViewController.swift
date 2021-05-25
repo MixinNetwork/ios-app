@@ -515,20 +515,6 @@ extension MessageReceiverViewController {
                 one.createdAt < another.createdAt
             }
             .compactMap { item in
-                let (content, mediaCreatedAt) = { () -> (String?, String?) in
-                    switch item.category {
-                    case MessageCategory.APP_CARD.rawValue:
-                        return (AppCardContentConverter.transcriptAppCard(from: item.content), nil)
-                    case MessageCategory.SIGNAL_VIDEO.rawValue, MessageCategory.PLAIN_VIDEO.rawValue:
-                        if let data = item.content?.data(using: .utf8), let tad = try? JSONDecoder.default.decode(TransferAttachmentData.self, from: data) {
-                            return (tad.attachmentId, tad.createdAt)
-                        } else {
-                            return (nil, nil)
-                        }
-                    default:
-                        return (item.content, nil)
-                    }
-                }()
                 let mediaUrl: String? = {
                     guard
                         categoriesWithAttachment.contains(item.category),
@@ -565,9 +551,7 @@ extension MessageReceiverViewController {
                 }()
                 return TranscriptMessage(transcriptId: transcriptId,
                                          messageItem: item,
-                                         content: content,
-                                         mediaUrl: mediaUrl,
-                                         mediaCreatedAt: mediaCreatedAt)
+                                         mediaUrl: mediaUrl)
             }
         guard let json = try? JSONEncoder.snakeCase.encode(children), let content = String(data: json, encoding: .utf8) else {
             return nil

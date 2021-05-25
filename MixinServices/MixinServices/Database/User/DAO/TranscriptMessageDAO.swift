@@ -18,6 +18,34 @@ public final class TranscriptMessageDAO: UserDatabaseDAO {
                   order: [TranscriptMessage.column(of: .createdAt)])
     }
     
+    public func messageItems(transcriptId: String) -> [MessageItem] {
+        let sql = """
+            SELECT m.message_id AS id, '' AS conversation_id, m.user_id, m.category, m.content, m.media_url,
+                m.media_mime_type, m.media_size, m.media_duration, m.media_width, m.media_height, NULL AS media_hash,
+                m.media_key, m.media_digest, m.media_status, m.media_waveform, NULL AS media_local_id, m.thumb_image,
+                m.thumb_url, 'READ' AS status, NULL AS participant_id, NULL AS snapshot_id, m.media_name,
+                m.sticker_id, m.created_at, IFNULL(u.full_name, m.user_full_name) as userFullName,
+                u.identity_number as userIdentityNumber, u.avatar_url as userAvatarUrl,
+                u.app_id as appId, NULL AS participantFullName, NULL AS participantUserId, NULL AS snapshotAmount,
+                NULL AS snapshotAssetId, NULL AS snapshotType, NULL AS assetSymbol, NULL AS assetIcon,
+                st.asset_width as assetWidth, st.asset_height as assetHeight, st.asset_url as assetUrl,
+                st.asset_type as assetType, alb.category as assetCategory, NULL AS actionName,
+                m.shared_user_id as sharedUserId, su.full_name as sharedUserFullName,
+                su.identity_number as sharedUserIdentityNumber, su.avatar_url as sharedUserAvatarUrl,
+                su.app_id as sharedUserAppId, su.is_verified as sharedUserIsVerified, m.quote_id AS quote_message_id,
+                m.quote_content, m.mentions, 1 AS hasMentionRead
+            FROM transcript_messages m
+            LEFT JOIN users u ON m.user_id = u.user_id
+            LEFT JOIN stickers st ON m.sticker_id = st.sticker_id
+            LEFT JOIN albums alb ON alb.album_id = (
+                SELECT album_id FROM sticker_relationships sr WHERE sr.sticker_id = m.sticker_id LIMIT 1
+            )
+            LEFT JOIN users su ON m.shared_user_id = su.user_id
+            WHERE m.transcript_id = ?
+        """
+        return db.select(with: sql, arguments: [transcriptId])
+    }
+    
     public func messageIds(transcriptId: String) -> [String] {
         db.select(column: TranscriptMessage.column(of: .messageId),
                   from: TranscriptMessage.self,

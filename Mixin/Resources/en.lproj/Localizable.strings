@@ -869,6 +869,7 @@
 "notification_content_voice_call" = "[Voice Call]";
 "notification_content_location" = "[Location]";
 "notification_content_transcript" = "[Transcript]";
+"notification_content_unknown" = "[Unknown]";
 
 "alert_key_contact_message" = "send you a message";
 "alert_key_contact_text_message" = "send you a message";

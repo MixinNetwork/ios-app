@@ -870,6 +870,7 @@
 "notification_content_voice_call" = "[语音通话]";
 "notification_content_location" = "[位置]";
 "notification_content_transcript" = "[聊天记录]";
+"notification_content_unknown" = "[未知消息]";
 
 "alert_key_contact_message" = "发来一条信息";
 "alert_key_contact_text_message" = "发来一条信息";

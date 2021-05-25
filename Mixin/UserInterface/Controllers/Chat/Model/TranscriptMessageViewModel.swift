@@ -96,6 +96,8 @@ extension TranscriptMessageViewModel  {
             }
         case .transcript:
             digest += R.string.localizable.notification_content_transcript()
+        case .unknown:
+            digest += R.string.localizable.notification_content_unknown()
         }
         return digest
     }

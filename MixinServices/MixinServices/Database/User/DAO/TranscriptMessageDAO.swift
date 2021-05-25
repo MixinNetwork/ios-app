@@ -55,11 +55,11 @@ public final class TranscriptMessageDAO: UserDatabaseDAO {
     public func update(
         transcriptId: String,
         messageId: String,
-        content: String?,
-        mediaKey: Data?,
-        mediaDigest: Data?,
-        mediaStatus: String?,
-        mediaCreatedAt: String?
+        content: String,
+        mediaKey: Data,
+        mediaDigest: Data,
+        mediaStatus: String,
+        mediaCreatedAt: String
     ) {
         let assignments = [
             TranscriptMessage.column(of: .content).set(to: content),

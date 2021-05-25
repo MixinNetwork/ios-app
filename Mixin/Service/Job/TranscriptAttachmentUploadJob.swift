@@ -101,16 +101,15 @@ final class TranscriptAttachmentUploadJob: AsynchronousJob {
         child.content = metadata.attachmentId
         child.mediaKey = metadata.mediaKey
         child.mediaDigest = metadata.mediaDigest
-        child.mediaStatus = MediaStatus.DONE.rawValue
         child.mediaCreatedAt = createdAt
         loadingRequests[child.messageId] = nil
         TranscriptMessageDAO.shared.update(transcriptId: message.messageId,
                                            messageId: child.messageId,
-                                           content: child.content,
-                                           mediaKey: child.mediaKey,
-                                           mediaDigest: child.mediaDigest,
-                                           mediaStatus: child.mediaStatus,
-                                           mediaCreatedAt: child.mediaCreatedAt)
+                                           content: metadata.attachmentId,
+                                           mediaKey: metadata.mediaKey,
+                                           mediaDigest: metadata.mediaDigest,
+                                           mediaStatus: MediaStatus.DONE.rawValue,
+                                           mediaCreatedAt: createdAt)
         if pendingRequests.isEmpty {
             finishMessageSending()
         } else {
@@ -133,6 +132,10 @@ final class TranscriptAttachmentUploadJob: AsynchronousJob {
         MessageDAO.shared.updateMediaStatus(messageId: message.messageId,
                                             status: .DONE,
                                             conversationId: message.conversationId)
+        for child in children {
+            child.mediaUrl = nil
+            child.mediaStatus = nil
+        }
         do {
             let data = try JSONEncoder.default.encode(children)
             guard let content = String(data: data, encoding: .utf8) else {

@@ -8,28 +8,28 @@ public final class TranscriptMessage {
     public let userId: String?
     public var userFullName: String?
     public let category: Category
+    public let createdAt: String
     public var content: String?
     public var mediaUrl: String?
-    public let mediaMimeType: String?
+    public let mediaName: String?
     public let mediaSize: Int64?
-    public let mediaDuration: Int64?
     public var mediaWidth: Int?
     public var mediaHeight: Int?
-    public var mediaKey: Data?
-    public var mediaDigest: Data?
+    public let mediaMimeType: String?
+    public let mediaDuration: Int64?
     public var mediaStatus: String?
     public let mediaWaveform: Data?
-    public var mediaCreatedAt: String?
     public let thumbImage: String?
     public let thumbUrl: String?
-    public let name: String?
-    public let caption: String?
+    public var mediaKey: Data?
+    public var mediaDigest: Data?
+    public var mediaCreatedAt: String?
     public var stickerId: String?
     public let sharedUserId: String?
+    public let mentions: String?
     public let quoteMessageId: String?
     public let quoteContent: String?
-    public let mentions: String?
-    public let createdAt: String
+    public let caption: String?
     
     public init?(
         transcriptId: String,
@@ -60,7 +60,7 @@ public final class TranscriptMessage {
         self.mediaCreatedAt = mediaCreatedAt
         self.thumbImage = item.thumbImage
         self.thumbUrl = item.thumbUrl
-        self.name = item.name
+        self.mediaName = item.name
         self.caption = nil
         self.stickerId = item.stickerId
         self.sharedUserId = item.sharedUserId
@@ -90,28 +90,28 @@ extension TranscriptMessage: Codable, DatabaseColumnConvertible, MixinFetchableR
         case userId = "user_id"
         case userFullName = "user_full_name"
         case category
+        case createdAt = "created_at"
         case content
         case mediaUrl = "media_url"
-        case mediaMimeType = "media_mime_type"
+        case mediaName = "media_name"
         case mediaSize = "media_size"
-        case mediaDuration = "media_duration"
         case mediaWidth = "media_width"
         case mediaHeight = "media_height"
-        case mediaKey = "media_key"
-        case mediaDigest = "media_digest"
+        case mediaMimeType = "media_mime_type"
+        case mediaDuration = "media_duration"
         case mediaStatus = "media_status"
         case mediaWaveform = "media_waveform"
-        case mediaCreatedAt = "media_created_at"
         case thumbImage = "thumb_image"
         case thumbUrl = "thumb_url"
-        case name
-        case caption
+        case mediaKey = "media_key"
+        case mediaDigest = "media_digest"
+        case mediaCreatedAt = "media_created_at"
         case stickerId = "sticker_id"
         case sharedUserId = "shared_user_id"
-        case quoteMessageId = "quote_message_id"
-        case quoteContent = "quote_content"
         case mentions
-        case createdAt = "created_at"
+        case quoteMessageId = "quote_id"
+        case quoteContent = "quote_content"
+        case caption
     }
     
 }

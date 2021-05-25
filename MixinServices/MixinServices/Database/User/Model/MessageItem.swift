@@ -193,7 +193,7 @@ public final class MessageItem {
                   status: MessageStatus.READ.rawValue,
                   participantId: nil,
                   snapshotId: nil,
-                  name: t.name,
+                  name: t.mediaName,
                   stickerId: t.stickerId,
                   createdAt: t.createdAt,
                   actionName: nil,

@@ -254,7 +254,7 @@ extension Message {
                        action: nil,
                        participantId: nil,
                        snapshotId: nil,
-                       name: t.name,
+                       name: t.mediaName,
                        stickerId: t.stickerId,
                        sharedUserId: t.sharedUserId,
                        quoteMessageId: t.quoteMessageId,

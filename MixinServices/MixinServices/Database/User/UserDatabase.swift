@@ -363,7 +363,7 @@ public final class UserDatabase: Database {
         
         migrator.registerMigration("transcript") { (db) in
             let sql = """
-                CREATE TABLE message_transcripts(
+                CREATE TABLE transcript_messages(
                     transcript_id TEXT NOT NULL,
                     message_id TEXT NOT NULL,
                     user_id TEXT,
@@ -376,7 +376,6 @@ public final class UserDatabase: Database {
                     media_duration INTEGER,
                     media_width INTEGER,
                     media_height INTEGER,
-                    media_hash TEXT,
                     media_key BLOB,
                     media_digest BLOB,
                     media_status TEXT,
@@ -384,7 +383,7 @@ public final class UserDatabase: Database {
                     media_created_at TEXT,
                     thumb_image TEXT,
                     thumb_url TEXT,
-                    name TEXT,
+                    media_name TEXT,
                     caption TEXT,
                     sticker_id TEXT,
                     shared_user_id TEXT,

@@ -182,7 +182,7 @@ public final class MessageItem {
                   mediaDuration: t.mediaDuration,
                   mediaWidth: t.mediaWidth,
                   mediaHeight: t.mediaHeight,
-                  mediaHash: t.mediaHash,
+                  mediaHash: nil,
                   mediaKey: t.mediaKey,
                   mediaDigest: t.mediaDigest,
                   mediaStatus: t.mediaStatus,

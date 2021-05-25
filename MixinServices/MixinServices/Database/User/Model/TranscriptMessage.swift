@@ -15,7 +15,6 @@ public final class TranscriptMessage {
     public let mediaDuration: Int64?
     public var mediaWidth: Int?
     public var mediaHeight: Int?
-    public var mediaHash: String?
     public var mediaKey: Data?
     public var mediaDigest: Data?
     public var mediaStatus: String?
@@ -54,7 +53,6 @@ public final class TranscriptMessage {
         self.mediaDuration = item.mediaDuration
         self.mediaWidth = item.mediaWidth ?? item.assetWidth
         self.mediaHeight = item.mediaHeight ?? item.assetHeight
-        self.mediaHash = item.mediaHash
         self.mediaKey = item.mediaKey
         self.mediaDigest = item.mediaDigest
         self.mediaStatus = item.mediaStatus
@@ -156,7 +154,6 @@ extension TranscriptMessage: Codable, DatabaseColumnConvertible, MixinFetchableR
         case mediaDuration = "media_duration"
         case mediaWidth = "media_width"
         case mediaHeight = "media_height"
-        case mediaHash = "media_hash"
         case mediaKey = "media_key"
         case mediaDigest = "media_digest"
         case mediaStatus = "media_status"
@@ -178,6 +175,6 @@ extension TranscriptMessage: Codable, DatabaseColumnConvertible, MixinFetchableR
 
 extension TranscriptMessage: TableRecord, PersistableRecord {
     
-    public static let databaseTableName = "message_transcripts"
+    public static let databaseTableName = "transcript_messages"
     
 }

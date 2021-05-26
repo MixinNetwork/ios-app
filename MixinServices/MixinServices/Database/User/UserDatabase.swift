@@ -10,9 +10,10 @@ public final class UserDatabase: Database {
         config.foreignKeysEnabled = false
         config.prepareDatabase { (db) in
             db.add(tokenizer: MixinTokenizer.self)
-            db.add(function: uuidToToken)
-            db.add(function: tokenToUUID)
-            db.add(function: iso8601ToUnixTime)
+            db.add(function: .uuidToToken)
+            db.add(function: .tokenToUUID)
+            db.add(function: .iso8601ToUnixTime)
+            db.add(function: .ftsContent)
         }
         return config
     }

@@ -7,7 +7,7 @@ class PeerInfoView: UIView, XibDesignable {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var badgeImageView: UIImageView!
     @IBOutlet weak var superscriptLabel: UILabel!
-    @IBOutlet weak var fileIcon: UIImageView!
+    @IBOutlet weak var prefixIconImageView: UIImageView!
     @IBOutlet weak var descriptionLabel: UILabel!
     
     private var defaultTitleFont: UIFont!
@@ -36,7 +36,7 @@ class PeerInfoView: UIView, XibDesignable {
     }
     
     func render(result: SearchResult) {
-        var isDataMessage = false
+        var specializedCategory: MessageSearchResult.SpecializedCategory?
         switch result {
         case let result as UserSearchResult:
             let user = result.user
@@ -55,7 +55,7 @@ class PeerInfoView: UIView, XibDesignable {
         case let result as MessagesWithGroupSearchResult:
             avatarImageView.setGroupImage(with: result.iconUrl)
         case let result as MessageSearchResult:
-            isDataMessage = result.isData
+            specializedCategory = result.specializedCategory
             avatarImageView.setImage(with: result.iconUrl, userId: result.userId, name: result.userFullname)
         case let result as MessageReceiverSearchResult:
             switch result.receiver.item {
@@ -78,7 +78,17 @@ class PeerInfoView: UIView, XibDesignable {
         badgeImageView.image = result.badgeImage
         badgeImageView.isHidden = badgeImageView.image == nil
         superscriptLabel.text = result.superscript
-        fileIcon.isHidden = !isDataMessage
+        if let category = specializedCategory {
+            prefixIconImageView.isHidden = false
+            switch category {
+            case .data:
+                prefixIconImageView.image = R.image.ic_message_file()
+            case .transcript:
+                prefixIconImageView.image = R.image.ic_message_transcript()
+            }
+        } else {
+            prefixIconImageView.isHidden = true
+        }
         if let description = result.description {
             descriptionLabel.attributedText = description
             descriptionLabel.isHidden = false
@@ -93,7 +103,7 @@ class PeerInfoView: UIView, XibDesignable {
         badgeImageView.image = SearchResult.userBadgeImage(isVerified: user.isVerified, appId: user.appId)
         badgeImageView.isHidden = badgeImageView.image == nil
         superscriptLabel.text = nil
-        fileIcon.isHidden = true
+        prefixIconImageView.isHidden = true
         descriptionLabel.isHidden = true
     }
     
@@ -103,7 +113,7 @@ class PeerInfoView: UIView, XibDesignable {
         badgeImageView.image = SearchResult.userBadgeImage(isVerified: user.isVerified, appId: user.appId)
         badgeImageView.isHidden = badgeImageView.image == nil
         superscriptLabel.text = nil
-        fileIcon.isHidden = true
+        prefixIconImageView.isHidden = true
         if userBiographyAsSubtitle {
             descriptionLabel.isHidden = false
             descriptionLabel.text = user.biography
@@ -123,7 +133,7 @@ class PeerInfoView: UIView, XibDesignable {
         badgeImageView.image = receiver.badgeImage
         badgeImageView.isHidden = badgeImageView.image == nil
         superscriptLabel.text = nil
-        fileIcon.isHidden = true
+        prefixIconImageView.isHidden = true
         descriptionLabel.isHidden = true
     }
     
@@ -139,7 +149,7 @@ class PeerInfoView: UIView, XibDesignable {
         badgeImageView.image = member.badgeImage
         badgeImageView.isHidden = badgeImageView.image == nil
         superscriptLabel.text = nil
-        fileIcon.isHidden = true
+        prefixIconImageView.isHidden = true
         descriptionLabel.isHidden = true
     }
     

@@ -360,7 +360,8 @@ public enum MessageCategory: String, Decodable {
     public static let ftsAvailable: Set<Self> = [
         .SIGNAL_TEXT, .PLAIN_TEXT,
         .SIGNAL_POST, .PLAIN_POST,
-        .SIGNAL_DATA, .PLAIN_DATA
+        .SIGNAL_DATA, .PLAIN_DATA,
+        .SIGNAL_TRANSCRIPT
     ]
     
     public static let ftsAvailableCategoryStrings: Set<String> = Set(ftsAvailable.map(\.rawValue))

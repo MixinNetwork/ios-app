@@ -515,7 +515,14 @@ public final class MessageDAO: UserDatabaseDAO {
             if let mention = MessageMention(message: message, quotedMessage: quotedMessage) {
                 try mention.save(db)
             }
-            if message.category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue && message.status != MessageStatus.FAILED.rawValue, let data = message.content?.data(using: .utf8), let children = try? JSONDecoder.default.decode([TranscriptMessage].self, from: data) {
+            let children: [TranscriptMessage]? = try {
+                guard
+                    message.category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue && message.status != MessageStatus.FAILED.rawValue,
+                    let data = message.content?.data(using: .utf8),
+                    let children = try? JSONDecoder.default.decode([TranscriptMessage].self, from: data)
+                else {
+                    return nil
+                }
                 let localContents = children.map { t in
                     TranscriptMessage.LocalContent(name: t.userFullName,
                                                    category: t.category,
@@ -527,12 +534,13 @@ public final class MessageDAO: UserDatabaseDAO {
                     message.content = ""
                 }
                 try children.save(db)
-            }
-            try insertMessage(database: db, message: message, messageSource: messageSource, completion: completion)
+                return children
+            }()
+            try insertMessage(database: db, message: message, messageSource: messageSource, children: children, completion: completion)
         }
     }
     
-    public func insertMessage(database: GRDB.Database, message: Message, messageSource: String, completion: (() -> Void)? = nil) throws {
+    public func insertMessage(database: GRDB.Database, message: Message, messageSource: String, children: [TranscriptMessage]? = nil, completion: (() -> Void)? = nil) throws {
         if message.category.hasPrefix("SIGNAL_") {
             try message.insert(database)
         } else {
@@ -542,16 +550,7 @@ public final class MessageDAO: UserDatabaseDAO {
             && message.status != MessageStatus.FAILED.rawValue
             && MessageCategory.ftsAvailableCategoryStrings.contains(message.category)
         if shouldInsertIntoFTSTable {
-            let arguments = StatementArguments([
-                uuidTokenString(uuidString: message.conversationId),
-                uuidTokenString(uuidString: message.userId),
-                uuidTokenString(uuidString: message.messageId),
-                message.category.hasSuffix("DATA") ? message.name : message.content,
-                unixTimeInMilliseconds(iso8601: message.createdAt),
-                nil,
-                nil
-            ])
-            try database.execute(sql: "INSERT INTO \(Message.ftsTableName) VALUES (?, ?, ?, ?, ?, ?, ?)", arguments: arguments)
+            try insertFTSContent(database, message: message, children: children)
         }
         try MessageDAO.shared.updateUnseenMessageCount(database: database, conversationId: message.conversationId)
         
@@ -730,17 +729,9 @@ extension MessageDAO {
             }
             
             // isFTSInitialized is wrote inside a write block, checking it within a write block keeps the value in sync
-            if MessageCategory.ftsAvailableCategoryStrings.contains(category), AppGroupUserDefaults.Database.isFTSInitialized, let message = newMessage {
-                let arguments = StatementArguments([
-                    uuidTokenString(uuidString: message.conversationId),
-                    uuidTokenString(uuidString: message.userId),
-                    uuidTokenString(uuidString: message.messageId),
-                    message.category.hasSuffix("DATA") ? message.name : message.content,
-                    unixTimeInMilliseconds(iso8601: message.createdAt),
-                    nil,
-                    nil
-                ])
-                try db.execute(sql: "INSERT INTO \(Message.ftsTableName) VALUES (?, ?, ?, ?, ?, ?, ?)", arguments: arguments)
+            if MessageCategory.ftsAvailableCategoryStrings.contains(category), AppGroupUserDefaults.Database.isFTSInitialized, let item = newMessage {
+                let message = Message.createMessage(message: item)
+                try insertFTSContent(db, message: message, children: transcriptChildren)
             }
             
             if let children = transcriptChildren {
@@ -853,6 +844,29 @@ extension MessageDAO {
 }
 
 extension MessageDAO {
+    
+    private func insertFTSContent(_ db: GRDB.Database, message: Message, children: [TranscriptMessage]?) throws {
+        let shouldInsertIntoFTSTable = AppGroupUserDefaults.Database.isFTSInitialized
+            && message.status != MessageStatus.FAILED.rawValue
+            && MessageCategory.ftsAvailableCategoryStrings.contains(message.category)
+        if shouldInsertIntoFTSTable {
+            let content = ftsContent(messageId: message.messageId,
+                                     category: message.category,
+                                     content: message.content,
+                                     name: message.name,
+                                     children: children)
+            let arguments = StatementArguments([
+                uuidTokenString(uuidString: message.conversationId),
+                uuidTokenString(uuidString: message.userId),
+                uuidTokenString(uuidString: message.messageId),
+                content,
+                unixTimeInMilliseconds(iso8601: message.createdAt),
+                nil,
+                nil
+            ])
+            try db.execute(sql: "INSERT INTO \(Message.ftsTableName) VALUES (?, ?, ?, ?, ?, ?, ?)", arguments: arguments)
+        }
+    }
     
     private func deleteFTSContent(_ db: GRDB.Database, messageId: String) throws {
         let sql = "DELETE FROM \(Message.ftsTableName) WHERE id MATCH ?"

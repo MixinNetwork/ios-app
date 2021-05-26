@@ -3,9 +3,14 @@ import MixinServices
 
 class MessageSearchResult: SearchResult {
     
+    enum SpecializedCategory {
+        case data
+        case transcript
+    }
+    
     let conversationId: String
     let messageId: String
-    let isData: Bool
+    let specializedCategory: SpecializedCategory?
     let userId: String
     let userFullname: String
     let createdAt: String
@@ -16,7 +21,13 @@ class MessageSearchResult: SearchResult {
     init(conversationId: String, messageId: String, category: String, content: String, createdAt: String, userId: String, fullname: String, avatarUrl: String, isVerified: Bool, appId: String?, keyword: String) {
         self.conversationId = conversationId
         self.messageId = messageId
-        self.isData = category.hasSuffix("_DATA")
+        if category.hasSuffix("_DATA") {
+            self.specializedCategory = .data
+        } else if category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue {
+            self.specializedCategory = .transcript
+        } else {
+            self.specializedCategory = nil
+        }
         self.content = content
         self.userId = userId
         self.userFullname = fullname
@@ -36,9 +47,15 @@ class MessageSearchResult: SearchResult {
                                             keyword: keyword,
                                             keywordAttributes: SearchResult.highlightedTitleAttributes)
         
-        if isData {
-            description = NSAttributedString(string: R.string.localizable.notification_content_file(),
-                                             attributes: SearchResult.normalDescriptionAttributes)
+        if let category = specializedCategory {
+            switch category {
+            case .data:
+                description = NSAttributedString(string: R.string.localizable.notification_content_file(),
+                                                 attributes: SearchResult.normalDescriptionAttributes)
+            case .transcript:
+                description = NSAttributedString(string: R.string.localizable.notification_content_transcript(),
+                                                 attributes: SearchResult.normalDescriptionAttributes)
+            }
         } else {
             // TODO: Tokenize
             description = SearchResult.attributedText(text: content,

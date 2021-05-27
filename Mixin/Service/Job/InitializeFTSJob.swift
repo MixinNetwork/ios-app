@@ -3,10 +3,6 @@ import MixinServices
 
 class InitializeFTSJob: BaseJob {
     
-    enum Error: Swift.Error {
-        case mismatchedFTSTable
-    }
-    
     private static let insertionLimit: Int = {
         switch DevicePerformance.current {
         case .low:
@@ -37,7 +33,6 @@ class InitializeFTSJob: BaseJob {
         guard !AppGroupUserDefaults.Database.isFTSInitialized else {
             return
         }
-        
         let messageCount = UserDatabase.current.count(in: Message.self)
         Logger.writeDatabase(log: "[FTS] Database file size \(AppGroupContainer.userDatabaseUrl.fileSize.sizeRepresentation())")
         Logger.writeDatabase(log: "[FTS] Make fts content with \(messageCount) messages")
@@ -52,19 +47,25 @@ class InitializeFTSJob: BaseJob {
             }
             do {
                 try UserDatabase.current.pool.write { (db) -> Void in
-                    let lastInitializedRowID: Int?
-                    let lastFTSMessageIDSQL = "SELECT ttou(id) FROM \(Message.ftsTableName) ORDER BY rowid DESC LIMIT 1"
-                    if let lastFTSMessageID = try String.fetchOne(db, sql: lastFTSMessageIDSQL) {
-                        lastInitializedRowID = try Int.fetchOne(db,
-                                                                sql: "SELECT rowid FROM messages WHERE id=?",
-                                                                arguments: [lastFTSMessageID])
+                    let lastInitializedRowID: Int
+                    let lastFTSMessageIDSQL = "SELECT id FROM \(Message.ftsTableName) ORDER BY rowid DESC LIMIT 1"
+                    let lastFTSMessageIDToken: String? = try String.fetchOne(db, sql: lastFTSMessageIDSQL)
+                    if let token = lastFTSMessageIDToken {
+                        let messageId = uuidString(uuidTokenString: token)
+                        let rowID: Int? = try Int.fetchOne(db,
+                                                           sql: "SELECT rowid FROM messages WHERE id=?",
+                                                           arguments: [messageId])
+                        if let rowID = rowID {
+                            lastInitializedRowID = rowID
+                        } else {
+                            try db.execute(sql: "DELETE FROM \(Message.ftsTableName) WHERE id MATCH ?", arguments: ["\"\(token)\""])
+                            Logger.writeDatabase(log: "[FTS] A mismatched record is detected and removed")
+                            return
+                        }
                     } else {
                         lastInitializedRowID = -1
                     }
-                    guard let rowID = lastInitializedRowID else {
-                        throw Error.mismatchedFTSTable
-                    }
-                    try db.execute(sql: insertionSQL, arguments: [rowID])
+                    try db.execute(sql: insertionSQL, arguments: [lastInitializedRowID])
                     let numberOfChanges = db.changesCount
                     numberOfMessagesProcessed += numberOfChanges
                     Logger.writeDatabase(log: "[FTS] \(numberOfChanges) messages are wrote into FTS table")

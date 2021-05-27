@@ -6,7 +6,7 @@ char *utot(const char *uuid) {
     for (uint8_t i = 0; i < 36; i++) {
         if (token[i] == '-') {
             token[i] = 'z';
-        } else if (token[i] < 'a') {
+        } else if (token[i] >= '0' && token[i] <= '9') {
             token[i] += 55;
         }
     }

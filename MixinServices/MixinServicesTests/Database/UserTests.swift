@@ -32,10 +32,13 @@ class UserTests: XCTestCase {
             UUID().uuidString,
         ]
         let uppercasedUUIDs = uuids.map { $0.uppercased() }
-        let lowercasedUUIDs = uuids.map { $0.lowercased() }
         let uppercasedTokens = uppercasedUUIDs.map(uuidTokenString(uuidString:))
-        let lowercasedTokens = lowercasedUUIDs.map(uuidTokenString(uuidString:))
+        XCTAssert(uppercasedTokens.allSatisfy { $0.allSatisfy { $0.isLetter } })
         XCTAssertEqual(uppercasedUUIDs, uppercasedTokens.map(uuidString(uuidTokenString:)))
+        
+        let lowercasedUUIDs = uuids.map { $0.lowercased() }
+        let lowercasedTokens = lowercasedUUIDs.map(uuidTokenString(uuidString:))
+        XCTAssert(lowercasedTokens.allSatisfy { $0.allSatisfy { $0.isLetter } })
         XCTAssertEqual(lowercasedUUIDs, lowercasedTokens.map(uuidString(uuidTokenString:)))
         
         let invalidUUID = "828514A6-7EEF-4545-BF18-8E136E7F11-5"

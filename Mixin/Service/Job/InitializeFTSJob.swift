@@ -58,7 +58,7 @@ class InitializeFTSJob: BaseJob {
                         if let rowID = rowID {
                             lastInitializedRowID = rowID
                         } else {
-                            try db.execute(sql: "DELETE FROM \(Message.ftsTableName) WHERE id MATCH ?", arguments: [token])
+                            try db.execute(sql: "DELETE FROM \(Message.ftsTableName) WHERE id MATCH ?", arguments: ["\"\(token)\""])
                             Logger.writeDatabase(log: "[FTS] A mismatched record is detected and removed")
                             return
                         }

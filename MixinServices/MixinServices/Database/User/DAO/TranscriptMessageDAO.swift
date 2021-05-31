@@ -42,8 +42,16 @@ public final class TranscriptMessageDAO: UserDatabaseDAO {
             )
             LEFT JOIN users su ON m.shared_user_id = su.user_id
             WHERE m.transcript_id = ?
+            ORDER BY m.created_at
         """
-        return db.select(with: sql, arguments: [transcriptId])
+        let items: [MessageItem] = db.select(with: sql, arguments: [transcriptId])
+        for item in items {
+            guard let content = item.quoteContent, let string = String(data: content, encoding: .utf8) else {
+                continue
+            }
+            item.quoteContent = QuoteContentConverter.localQuoteContent(from: string)
+        }
+        return items
     }
     
     public func messageIds(transcriptId: String) -> [String] {

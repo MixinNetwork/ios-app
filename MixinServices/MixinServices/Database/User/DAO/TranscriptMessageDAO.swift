@@ -52,6 +52,11 @@ public final class TranscriptMessageDAO: UserDatabaseDAO {
                   where: TranscriptMessage.column(of: .transcriptId) == transcriptId)
     }
     
+    public func hasTranscriptMessage(withMessageId id: String) -> Bool {
+        db.recordExists(in: TranscriptMessage.self,
+                        where: TranscriptMessage.column(of: .messageId) == id)
+    }
+    
     public func update(
         transcriptId: String,
         messageId: String,

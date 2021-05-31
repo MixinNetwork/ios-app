@@ -492,14 +492,14 @@ class ConversationViewController: UIViewController {
             let messages = self.dataSource.selectedViewModels.values
                 .map({ $0.message })
                 .sorted(by: { $0.createdAt < $1.createdAt })
-            let containsTranscriptMessage = messages.contains {
-                $0.category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue
+            let containsUnfinishedTranscriptMessage = messages.contains {
+                $0.category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue && $0.mediaStatus != MediaStatus.DONE.rawValue
             }
             alert.addAction(UIAlertAction(title: R.string.localizable.chat_forward_one_by_one(), style: .default, handler: { (_) in
                 let vc = MessageReceiverViewController.instance(content: .messages(messages))
                 self.navigationController?.pushViewController(vc, animated: true)
             }))
-            if !containsTranscriptMessage {
+            if !containsUnfinishedTranscriptMessage {
                 alert.addAction(UIAlertAction(title: R.string.localizable.chat_forward_combined(), style: .default, handler: { (_) in
                     let vc = MessageReceiverViewController.instance(content: .transcript(messages))
                     self.navigationController?.pushViewController(vc, animated: true)

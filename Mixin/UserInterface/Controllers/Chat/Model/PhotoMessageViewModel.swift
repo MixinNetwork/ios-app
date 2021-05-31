@@ -30,9 +30,7 @@ class PhotoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
     var attachmentURL: URL? {
         if let mediaUrl = message.mediaUrl, !mediaUrl.isEmpty {
             if let transcriptMessage = transcriptMessage {
-                return AttachmentContainer.url(conversationId: transcriptMessage.conversationId,
-                                               transcriptId: transcriptMessage.messageId,
-                                               filename: mediaUrl)
+                return AttachmentContainer.url(transcriptId: transcriptMessage.messageId, filename: mediaUrl)
             } else if !mediaUrl.hasPrefix("http") {
                 return AttachmentContainer.url(for: .photos, filename: mediaUrl)
             } else {

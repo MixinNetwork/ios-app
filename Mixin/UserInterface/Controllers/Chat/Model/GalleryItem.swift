@@ -80,9 +80,7 @@ struct GalleryItem: Equatable {
             self.category = .image
             if let mediaUrl = mediaUrl {
                 if let transcriptMessage = transcriptMessage {
-                    self.url = AttachmentContainer.url(conversationId: transcriptMessage.conversationId,
-                                                       transcriptId: transcriptMessage.messageId,
-                                                       filename: mediaUrl)
+                    self.url = AttachmentContainer.url(transcriptId: transcriptMessage.messageId, filename: mediaUrl)
                 } else {
                     self.url = AttachmentContainer.url(for: .photos, filename: mediaUrl)
                 }
@@ -93,9 +91,7 @@ struct GalleryItem: Equatable {
             self.category = .video
             if let mediaUrl = mediaUrl {
                 if let transcriptMessage = transcriptMessage {
-                    self.url = AttachmentContainer.url(conversationId: transcriptMessage.conversationId,
-                                                       transcriptId: transcriptMessage.messageId,
-                                                       filename: mediaUrl)
+                    self.url = AttachmentContainer.url(transcriptId: transcriptMessage.messageId, filename: mediaUrl)
                 } else {
                     self.url = AttachmentContainer.url(for: .videos, filename: mediaUrl)
                 }
@@ -122,9 +118,7 @@ struct GalleryItem: Equatable {
         } else if self.category == .video, let videoFilename = mediaUrl {
             let coverUrl: URL
             if let transcriptMessage = transcriptMessage {
-                coverUrl = AttachmentContainer.videoThumbnailURL(conversationId: transcriptMessage.conversationId,
-                                                                 transcriptId: transcriptMessage.messageId,
-                                                                 videoFilename: videoFilename)
+                coverUrl = AttachmentContainer.videoThumbnailURL(transcriptId: transcriptMessage.messageId, videoFilename: videoFilename)
             } else {
                 coverUrl = AttachmentContainer.videoThumbnailURL(videoFilename: videoFilename)
             }

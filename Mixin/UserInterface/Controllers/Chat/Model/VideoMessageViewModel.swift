@@ -71,9 +71,7 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
         if let videoFilename = mediaUrl {
             let betterThumbnailURL: URL
             if let transcriptMessage = transcriptMessage {
-                betterThumbnailURL = AttachmentContainer.videoThumbnailURL(conversationId: transcriptMessage.conversationId,
-                                                                           transcriptId: transcriptMessage.messageId,
-                                                                           videoFilename: videoFilename)
+                betterThumbnailURL = AttachmentContainer.videoThumbnailURL(transcriptId: transcriptMessage.messageId, videoFilename: videoFilename)
             } else {
                 betterThumbnailURL = AttachmentContainer.videoThumbnailURL(videoFilename: videoFilename)
             }

@@ -5,9 +5,7 @@ public class TranscriptAttachmentDownloadJob: AttachmentDownloadJob {
     let transcriptMessage: MessageItem
     
     override var fileUrl: URL {
-        AttachmentContainer.url(conversationId: transcriptMessage.conversationId,
-                                transcriptId: transcriptMessage.messageId,
-                                filename: fileName)
+        AttachmentContainer.url(transcriptId: transcriptMessage.messageId, filename: fileName)
     }
     
     public init(transcriptMessage: MessageItem, message: Message) {
@@ -22,9 +20,7 @@ public class TranscriptAttachmentDownloadJob: AttachmentDownloadJob {
     public override func taskFinished() {
         if message.category == MessageCategory.SIGNAL_VIDEO.rawValue, stream?.streamError == nil {
             let thumbnail = UIImage(withFirstFrameOfVideoAtURL: fileUrl)
-            let url = AttachmentContainer.videoThumbnailURL(conversationId: transcriptMessage.conversationId,
-                                                            transcriptId: transcriptMessage.messageId,
-                                                            videoFilename: fileName)
+            let url = AttachmentContainer.videoThumbnailURL(transcriptId: transcriptMessage.messageId, videoFilename: fileName)
             thumbnail?.saveToFile(path: url)
         }
         super.taskFinished()

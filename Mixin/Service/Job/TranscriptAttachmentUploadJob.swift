@@ -54,9 +54,7 @@ final class TranscriptAttachmentUploadJob: AsynchronousJob {
             {
                 continue
             } else if let mediaUrl = child.mediaUrl {
-                let url = AttachmentContainer.url(conversationId: message.conversationId,
-                                                  transcriptId: message.messageId,
-                                                  filename: mediaUrl)
+                let url = AttachmentContainer.url(transcriptId: message.messageId, filename: mediaUrl)
                 if let stream = AttachmentEncryptingInputStream(url: url), stream.streamError == nil {
                     let request = Request(childIndex: index, stream: stream)
                     if loadingRequests.count < maxNumberOfConcurrentUploadTask {

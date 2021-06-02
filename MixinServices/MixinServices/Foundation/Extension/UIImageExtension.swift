@@ -32,7 +32,27 @@ public extension UIImage {
         let asset = AVURLAsset(url: url)
         self.init(withFirstFrameOf: asset)
     }
+    
+    public static func createImageFromString(thumbImage: String?, width: Int?, height: Int?) -> UIImage? {
+        guard let thumb = thumbImage else {
+            return nil
+        }
 
+        let width = width ?? 1
+        let height = height ?? 1
+        let scale = CGFloat(width) / CGFloat(height)
+        let targetWidth: CGFloat = width > height ? maxThumbnailSize.width : maxThumbnailSize.width * scale
+        let targetHeight: CGFloat = width > height ? maxThumbnailSize.height / scale : maxThumbnailSize.height
+
+        if let image = UIImage(blurHash: thumb, size: CGSize(width: targetWidth, height: targetHeight)) {
+            return image
+        } else if let imageData = Data(base64Encoded: thumb) {
+            return UIImage(data: imageData)
+        }
+
+        return nil
+    }
+    
     @discardableResult
     func saveToFile(path: URL, quality: CGFloat = 0.75) -> Bool {
         guard let data = self.jpegData(compressionQuality: quality) else {

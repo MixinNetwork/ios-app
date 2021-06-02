@@ -14,3 +14,5 @@ public enum JPEGCompressionQuality {
     public static let medium: CGFloat = 0.75
     public static let low: CGFloat = 0.6
 }
+
+public let maxThumbnailSize = CGSize(width: 48, height: 48)

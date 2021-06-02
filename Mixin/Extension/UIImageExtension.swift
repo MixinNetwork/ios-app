@@ -2,9 +2,7 @@ import UIKit
 import CoreGraphics
 
 extension UIImage {
-
-    private static let thumbnailMaxWH: CGFloat = 48
-
+    
     convenience init?(qrcode: String, size: CGSize, foregroundColor: UIColor? = nil) {
         guard let filter = CIFilter(name: "CIQRCodeGenerator"), !qrcode.isEmpty else {
             return nil
@@ -35,30 +33,6 @@ extension UIImage {
         } else {
             return nil
         }
-    }
-    
-}
-
-extension UIImage {
-
-    static func createImageFromString(thumbImage: String?, width: Int?, height: Int?) -> UIImage? {
-        guard let thumb = thumbImage else {
-            return nil
-        }
-
-        let width = width ?? 1
-        let height = height ?? 1
-        let scale = CGFloat(width) / CGFloat(height)
-        let targetWidth: CGFloat = width > height ? Self.thumbnailMaxWH : Self.thumbnailMaxWH * scale
-        let targetHeight: CGFloat = width > height ? Self.thumbnailMaxWH / scale : Self.thumbnailMaxWH
-
-        if let image = UIImage(blurHash: thumb, size: CGSize(width: targetWidth, height: targetHeight)) {
-            return image
-        } else if let imageData = Data(base64Encoded: thumb) {
-            return UIImage(data: imageData)
-        }
-
-        return nil
     }
     
 }

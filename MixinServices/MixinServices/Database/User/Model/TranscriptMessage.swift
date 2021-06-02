@@ -70,7 +70,11 @@ public final class TranscriptMessage {
         self.mediaStatus = item.mediaStatus
         self.mediaWaveform = item.mediaWaveform
         self.mediaCreatedAt = mediaCreatedAt
-        self.thumbImage = item.thumbImage
+        if let blurHashString = UIImage(thumbnailString: item.thumbImage)?.blurHash() {
+            self.thumbImage = blurHashString
+        } else {
+            self.thumbImage = item.thumbImage
+        }
         self.thumbUrl = item.thumbUrl
         self.mediaName = item.name
         self.caption = nil

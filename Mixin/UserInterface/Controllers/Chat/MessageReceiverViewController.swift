@@ -292,8 +292,7 @@ extension MessageReceiverViewController {
             return messages.compactMap({ (original) -> (Message, [TranscriptMessage]?)? in
                 let interval = TimeInterval(counter.advancedValue) / millisecondsPerSecond
                 let createdAt = date.addingTimeInterval(interval).toUTCString()
-                let messages = makeMessage(message: original, to: receiver, createdAt: createdAt)
-                return messages.map { ($0, nil) }
+                return makeMessage(message: original, to: receiver, createdAt: createdAt)
             })
         case .post(let text):
             return [makeMessage(post: text, to: receiver.conversationId)].compactMap({ $0 }).map { ($0, nil) }
@@ -336,7 +335,7 @@ extension MessageReceiverViewController {
         return toUrl.lastPathComponent
     }
     
-    static func makeMessage(message: MessageItem, to receiver: MessageReceiver, createdAt: String) -> Message? {
+    static func makeMessage(message: MessageItem, to receiver: MessageReceiver, createdAt: String) -> (Message, [TranscriptMessage]?)? {
         var newMessage = Message.createMessage(category: message.category,
                                                conversationId: receiver.conversationId,
                                                createdAt: createdAt,
@@ -348,7 +347,7 @@ extension MessageReceiverViewController {
         case .user(let user):
             isSignalMessage = !user.isBot
         }
-        if ["_TEXT", "_POST", "_LOCATION"].contains(where: message.category.hasSuffix) || ["APP_CARD", "SIGNAL_TRANSCRIPT"].contains(message.category) {
+        if ["_TEXT", "_POST", "_LOCATION"].contains(where: message.category.hasSuffix) || ["APP_CARD"].contains(message.category) {
             newMessage.content = message.content
         } else if message.category.hasSuffix("_IMAGE") {
             newMessage.category = isSignalMessage ? MessageCategory.SIGNAL_IMAGE.rawValue : MessageCategory.PLAIN_IMAGE.rawValue
@@ -404,6 +403,13 @@ extension MessageReceiverViewController {
             newMessage.thumbUrl = message.thumbUrl
             let liveData = TransferLiveData(width: width, height: height, thumbUrl: thumbUrl, url: mediaUrl)
             newMessage.content = try! JSONEncoder.default.encode(liveData).base64EncodedString()
+        } else if message.category == "SIGNAL_TRANSCRIPT" {
+            let children = TranscriptMessageDAO.shared.messageItems(transcriptId: message.messageId)
+            if children.isEmpty {
+                return nil
+            } else {
+                return makeTranscriptMessage(messages: children, to: receiver.conversationId)
+            }
         } else {
             return nil
         }
@@ -425,7 +431,7 @@ extension MessageReceiverViewController {
             newMessage.mediaDigest = message.mediaDigest
         }
         
-        return newMessage
+        return (newMessage, nil)
     }
     
     static func makeMessage(userId: String, to conversationId: String) -> Message? {

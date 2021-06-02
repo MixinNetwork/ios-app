@@ -123,7 +123,7 @@ struct GalleryItem: Equatable {
                 coverUrl = AttachmentContainer.videoThumbnailURL(videoFilename: videoFilename)
             }
             self.thumbnail = .url(coverUrl)
-        } else if let image = UIImage.createImageFromString(thumbImage: thumbImage, width: mediaWidth, height: mediaHeight) {
+        } else if let image = UIImage(thumbnailString: thumbImage) {
             self.thumbnail = .image(image)
         } else {
             self.thumbnail = .none

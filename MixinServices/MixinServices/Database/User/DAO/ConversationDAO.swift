@@ -179,8 +179,8 @@ public final class ConversationDAO: UserDatabaseDAO {
     
     public func deleteChat(conversationId: String) {
         let mediaUrls = MessageDAO.shared.getMediaUrls(conversationId: conversationId, categories: MessageCategory.allMediaCategories)
-        let transcriptMessageIds = MessageDAO.shared.getTranscriptMessageIds(conversationId: conversationId)
         db.write { db in
+            let deletedTranscriptIds = try deleteTranscriptDescendantWhichOnlyReferenced(within: conversationId, from: db)
             try Message
                 .filter(Message.column(of: .conversationId) == conversationId)
                 .deleteAll(db)
@@ -198,9 +198,9 @@ public final class ConversationDAO: UserDatabaseDAO {
                 .deleteAll(db)
             try deleteFTSContent(with: conversationId, from: db)
             db.afterNextTransactionCommit { (_) in
+                deletedTranscriptIds.forEach(AttachmentContainer.removeAll(transcriptId:))
                 let job = AttachmentCleanUpJob(conversationId: conversationId,
-                                               mediaUrls: mediaUrls,
-                                               transcriptMessageIds: transcriptMessageIds)
+                                               mediaUrls: mediaUrls)
                 ConcurrentJobQueue.shared.addJob(job: job)
                 NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: nil)
             }
@@ -209,8 +209,8 @@ public final class ConversationDAO: UserDatabaseDAO {
     
     public func clearChat(conversationId: String) {
         let mediaUrls = MessageDAO.shared.getMediaUrls(conversationId: conversationId, categories: MessageCategory.allMediaCategories)
-        let transcriptMessageIds = MessageDAO.shared.getTranscriptMessageIds(conversationId: conversationId)
         db.write { db in
+            let deletedTranscriptIds = try deleteTranscriptDescendantWhichOnlyReferenced(within: conversationId, from: db)
             NotificationCenter.default.post(onMainThread: Self.willClearConversationNotification,
                                             object: self,
                                             userInfo: [Self.conversationIdUserInfoKey: conversationId])
@@ -225,9 +225,9 @@ public final class ConversationDAO: UserDatabaseDAO {
                 .updateAll(db, [Conversation.column(of: .unseenMessageCount).set(to: 0)])
             try deleteFTSContent(with: conversationId, from: db)
             db.afterNextTransactionCommit { (_) in
+                deletedTranscriptIds.forEach(AttachmentContainer.removeAll(transcriptId:))
                 let job = AttachmentCleanUpJob(conversationId: conversationId,
-                                               mediaUrls: mediaUrls,
-                                               transcriptMessageIds: transcriptMessageIds)
+                                               mediaUrls: mediaUrls)
                 ConcurrentJobQueue.shared.addJob(job: job)
                 let change = ConversationChange(conversationId: conversationId, action: .reload)
                 NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: change)
@@ -534,6 +534,43 @@ extension ConversationDAO {
     private func deleteFTSContent(with conversationId: String, from db: GRDB.Database) throws {
         let sql = "DELETE FROM \(Message.ftsTableName) WHERE conversation_id MATCH ?"
         try db.execute(sql: sql, arguments: [uuidTokenString(uuidString: conversationId)])
+    }
+    
+    private func deleteTranscriptDescendantWhichOnlyReferenced(within conversationId: String, from db: GRDB.Database) throws -> Set<String> {
+        var deleted: Set<String> = []
+        let transcriptMessageIds = try MessageDAO.shared.getTranscriptMessageIds(conversationId: conversationId, database: db)
+        let descendantTranscriptIds = try TranscriptMessageDAO.shared.descendantTranscriptIds(with: transcriptMessageIds, database: db)
+        for id in descendantTranscriptIds {
+            // Check if the transcript id is referenced by a message of another conversation
+            let isReferencedByMessageOfAnotherConversation: Bool
+            let referencingMessageId: String? = try Message
+                .select(Message.column(of: .messageId))
+                .filter(Message.column(of: .messageId) == id)
+                .fetchOne(db)
+            if let id = referencingMessageId {
+                let referencingConversationId: String? = try Message
+                    .select(Message.column(of: .conversationId))
+                    .filter(Message.column(of: .messageId) == id)
+                    .fetchOne(db)
+                isReferencedByMessageOfAnotherConversation = referencingConversationId != conversationId
+            } else {
+                isReferencedByMessageOfAnotherConversation = false
+            }
+            guard !isReferencedByMessageOfAnotherConversation else {
+                continue
+            }
+            
+            // Check if the transcript id is referenced by a transcript of another conversation
+            let ascendantTranscriptIds = try TranscriptMessageDAO.shared.ascendantTranscriptIds(of: id, database: db)
+            let hasAscendantOfAnotherConversation = !descendantTranscriptIds.isSuperset(of: ascendantTranscriptIds)
+            if !hasAscendantOfAnotherConversation {
+                deleted.insert(id)
+                try TranscriptMessage
+                    .filter(TranscriptMessage.column(of: .transcriptId) == id)
+                    .deleteAll(db)
+            }
+        }
+        return deleted
     }
     
 }

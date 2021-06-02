@@ -3,7 +3,7 @@ import MixinServices
 
 extension SendMessageService {
     
-    func sendMessage(message: Message, ownerUser: UserItem?, isGroupMessage: Bool) {
+    func sendMessage(message: Message, descendants: [TranscriptMessage]? = nil, ownerUser: UserItem?, isGroupMessage: Bool) {
         guard let account = LoginManager.shared.account else {
             return
         }
@@ -59,7 +59,7 @@ extension SendMessageService {
                 if let content = msg.content, ["_TEXT", "_POST"].contains(where: msg.category.hasSuffix), content.utf8.count > maxTextMessageContentLength {
                     msg.content = String(content.prefix(maxTextMessageContentLength))
                 }
-                MessageDAO.shared.insertMessage(message: msg, messageSource: "") {
+                MessageDAO.shared.insertMessage(message: msg, descendants: descendants, messageSource: "") {
                     if ["_TEXT", "_POST", "_STICKER", "_CONTACT", "_LIVE", "_LOCATION"].contains(where: msg.category.hasSuffix) || msg.category == MessageCategory.APP_CARD.rawValue {
                         SendMessageService.shared.sendMessage(message: msg, data: msg.content)
                     } else if msg.category.hasSuffix("_IMAGE") {

@@ -1,7 +1,7 @@
 import Foundation
 import GRDB
 
-public func ftsContent(messageId: String, category: String, content: String?, name: String?, children: [TranscriptMessage]? = nil) -> String? {
+public func ftsContent(messageId: String, category: String, content: String?, name: String?, descendants: [TranscriptMessage]? = nil) -> String? {
     guard let category = MessageCategory(rawValue: category) else {
         return nil
     }
@@ -11,12 +11,16 @@ public func ftsContent(messageId: String, category: String, content: String?, na
     case .SIGNAL_TEXT, .PLAIN_TEXT, .SIGNAL_POST, .PLAIN_POST:
         return content
     case .SIGNAL_TRANSCRIPT:
-        let children = children ?? TranscriptMessageDAO.shared.transcriptMessages(transcriptId: messageId)
-        let ftsContents = children.compactMap { child in
-            ftsContent(messageId: child.messageId,
-                       category: child.category.rawValue,
-                       content: child.content,
-                       name: child.mediaName)
+        let descendants = descendants ?? TranscriptMessageDAO.shared.descendantMessages(with: messageId)
+        let ftsContents: [String] = descendants.compactMap { descendant in
+            if descendant.category == .transcript {
+                return nil
+            } else {
+                return ftsContent(messageId: descendant.messageId,
+                                  category: descendant.category.rawValue,
+                                  content: descendant.content,
+                                  name: descendant.mediaName)
+            }
         }
         return ftsContents.joined(separator: " ")
     default:
@@ -40,7 +44,7 @@ extension DatabaseFunction {
                                         category: category,
                                         content: content,
                                         name: name,
-                                        children: nil)
+                                        descendants: nil)
     }
     
 }

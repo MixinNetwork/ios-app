@@ -67,11 +67,6 @@ public enum AttachmentContainer {
     }
     
     public static func removeAll(transcriptId: String) {
-        guard !TranscriptMessageDAO.shared.hasTranscriptMessage(withMessageId: transcriptId) else {
-            // This situation reveals that this transcript message is referenced by another
-            // transcript message, in other words, it has a nested structure.
-            return
-        }
         let url = Self.url(transcriptId: transcriptId, filename: nil)
         try? FileManager.default.removeItem(at: url)
     }

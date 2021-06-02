@@ -31,6 +31,8 @@ public final class TranscriptMessage {
     public let quoteContent: String?
     public let caption: String?
     
+    public lazy var hasher = Hasher(transcriptId: transcriptId, messageId: messageId)
+    
     public init?(transcriptId: String, messageItem item: MessageItem, mediaUrl: String?) {
         guard let category = Category(messageCategoryString: item.category) else {
             return nil
@@ -39,11 +41,13 @@ public final class TranscriptMessage {
             switch item.category {
             case MessageCategory.APP_CARD.rawValue:
                 return (AppCardContentConverter.transcriptAppCard(from: item.content), nil)
-            case MessageCategory.SIGNAL_VIDEO.rawValue, MessageCategory.PLAIN_VIDEO.rawValue:
+            case MessageCategory.SIGNAL_VIDEO.rawValue, MessageCategory.PLAIN_VIDEO.rawValue, MessageCategory.SIGNAL_IMAGE.rawValue, MessageCategory.PLAIN_IMAGE.rawValue:
                 if let data = item.content?.data(using: .utf8), let tad = try? JSONDecoder.default.decode(TransferAttachmentData.self, from: data) {
                     return (tad.attachmentId, tad.createdAt)
+                } else if let data = Data(base64Encoded: item.content ?? ""), let tad = try? JSONDecoder.default.decode(TransferAttachmentData.self, from: data) {
+                    return (tad.attachmentId, tad.createdAt)
                 } else {
-                    return (nil, nil)
+                    return (item.content, nil)
                 }
             default:
                 return (item.content, nil)
@@ -83,9 +87,34 @@ public final class TranscriptMessage {
 extension TranscriptMessage {
     
     public struct LocalContent: Codable {
+        
         public let name: String?
         public let category: Category
         public let content: String?
+        
+        public init(transcriptMessage t: TranscriptMessage) {
+            let content = t.category == .transcript ? nil : t.content
+            self.name = t.userFullName
+            self.category = t.category
+            self.content = content
+        }
+        
+        public init?(messageItem m: MessageItem) {
+            guard let category = TranscriptMessage.Category(messageCategoryString: m.category) else {
+                return nil
+            }
+            self.name = m.userFullName
+            self.category = category
+            self.content = m.content
+        }
+        
+    }
+    
+    public struct Hasher: Hashable {
+        
+        public let transcriptId: String
+        public let messageId: String
+        
     }
     
 }

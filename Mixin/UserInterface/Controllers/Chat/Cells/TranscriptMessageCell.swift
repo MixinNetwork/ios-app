@@ -2,15 +2,15 @@ import UIKit
 
 class TranscriptMessageCell: TextMessageCell {
     
-    let transcriptBackgroundLayer = CALayer()
+    let transcriptBackgroundView = UIView()
     let transcriptStackView = UIStackView()
     
     override func prepare() {
         super.prepare()
-        transcriptBackgroundLayer.masksToBounds = true
-        transcriptBackgroundLayer.cornerRadius = 7
-        messageContentView.layer.insertSublayer(transcriptBackgroundLayer,
-                                                below: contentLabel.layer)
+        transcriptBackgroundView.clipsToBounds = true
+        transcriptBackgroundView.layer.cornerRadius = 7
+        messageContentView.insertSubview(transcriptBackgroundView, belowSubview: contentLabel)
+        
         transcriptStackView.axis = .vertical
         transcriptStackView.alignment = .fill
         transcriptStackView.spacing = TranscriptMessageViewModel.transcriptInterlineSpacing
@@ -21,11 +21,11 @@ class TranscriptMessageCell: TextMessageCell {
         super.render(viewModel: viewModel)
         if let viewModel = viewModel as? TranscriptMessageViewModel {
             if viewModel.style.contains(.received) {
-                transcriptBackgroundLayer.backgroundColor = UIColor.secondaryBackground.cgColor
+                transcriptBackgroundView.backgroundColor = .secondaryBackground
             } else {
-                transcriptBackgroundLayer.backgroundColor = UIColor.black.withAlphaComponent(0.04).cgColor
+                transcriptBackgroundView.backgroundColor = .black.withAlphaComponent(0.04)
             }
-            transcriptBackgroundLayer.frame = viewModel.transcriptBackgroundFrame
+            transcriptBackgroundView.frame = viewModel.transcriptBackgroundFrame
             transcriptStackView.frame = viewModel.transcriptFrame
             let diff = viewModel.digests.count - transcriptStackView.arrangedSubviews.count
             if diff > 0 {

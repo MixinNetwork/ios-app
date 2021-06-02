@@ -89,13 +89,11 @@ class AudioMessagePlayingManager: NSObject, AudioSessionClient {
         
         queue.async {
             if shouldUpdateMediaStatus {
-                MessageDAO.shared.updateMediaStatus(messageId: message.messageId,
-                                                    status: .READ,
-                                                    conversationId: message.conversationId)
+                self.updateMediaStatusToRead(message: message)
             }
             
             activateAudioSession()
-            let path = AttachmentContainer.url(for: .audios, filename: mediaUrl).path
+            let path = self.filePath(message: message, mediaUrl: mediaUrl)
             DispatchQueue.main.sync {
                 guard self.playingMessage?.messageId == message.messageId else {
                     return
@@ -157,6 +155,16 @@ class AudioMessagePlayingManager: NSObject, AudioSessionClient {
     
     func unregister(cell: AudioCell, forMessageId messageId: String) {
         cells[messageId] = nil
+    }
+    
+    func updateMediaStatusToRead(message: MessageItem) {
+        MessageDAO.shared.updateMediaStatus(messageId: message.messageId,
+                                            status: .READ,
+                                            conversationId: message.conversationId)
+    }
+    
+    func filePath(message: MessageItem, mediaUrl: String) -> String {
+        AttachmentContainer.url(for: .audios, filename: mediaUrl).path
     }
     
     func playableMessage(nextTo message: MessageItem) -> MessageItem? {

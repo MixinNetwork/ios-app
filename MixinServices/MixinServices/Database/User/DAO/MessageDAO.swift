@@ -101,12 +101,14 @@ public final class MessageDAO: UserDatabaseDAO {
                          where: condition)
     }
     
-    public func getTranscriptMessageIds(conversationId: String) -> [String] {
+    public func getTranscriptMessageIds(conversationId: String, database: GRDB.Database) throws -> [String] {
         let condition: SQLSpecificExpressible = Message.column(of: .conversationId) == conversationId
             && Message.column(of: .category) == MessageCategory.SIGNAL_TRANSCRIPT.rawValue
-        return db.select(column: Message.column(of: .messageId),
-                         from: Message.self,
-                         where: condition)
+        return try Message
+            .select(Message.column(of: .messageId))
+            .filter(condition)
+            .order(Message.column(of: .createdAt).asc)
+            .fetchAll(database)
     }
     
     public func getDownloadedMediaUrls(categories: [MessageCategory], offset: Int, limit: Int) -> [String: String] {
@@ -500,7 +502,12 @@ public final class MessageDAO: UserDatabaseDAO {
         return db.select(with: MessageDAO.sqlQueryQuoteMessageById, arguments: [messageId])
     }
     
-    public func insertMessage(message: Message, messageSource: String, completion: (() -> Void)? = nil) {
+    public func insertMessage(
+        message: Message,
+        descendants: [TranscriptMessage]? = nil,
+        messageSource: String,
+        completion: (() -> Void)? = nil
+    ) {
         var message = message
         
         let quotedMessage: MessageItem?
@@ -515,28 +522,22 @@ public final class MessageDAO: UserDatabaseDAO {
             if let mention = MessageMention(message: message, quotedMessage: quotedMessage) {
                 try mention.save(db)
             }
-            let children: [TranscriptMessage]? = try {
-                guard
-                    message.category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue && message.status != MessageStatus.FAILED.rawValue,
-                    let data = message.content?.data(using: .utf8),
-                    let children = try? JSONDecoder.default.decode([TranscriptMessage].self, from: data)
-                else {
-                    return nil
+            for descendant in descendants ?? [] {
+                let condition = TranscriptMessage.column(of: .messageId) == descendant.messageId
+                    && TranscriptMessage.column(of: .transcriptId) == descendant.transcriptId
+                let existedRowID: Int? = try TranscriptMessage
+                    .select(Column.rowID)
+                    .filter(condition)
+                    .fetchOne(db)
+                if existedRowID == nil {
+                    try descendant.save(db)
                 }
-                let localContents = children.map { t in
-                    TranscriptMessage.LocalContent(name: t.userFullName,
-                                                   category: t.category,
-                                                   content: t.content)
-                }
-                if let data = try? JSONEncoder.default.encode(localContents), let content = String(data: data, encoding: .utf8) {
-                    message.content = content
-                } else {
-                    message.content = ""
-                }
-                try children.save(db)
-                return children
-            }()
-            try insertMessage(database: db, message: message, messageSource: messageSource, children: children, completion: completion)
+            }
+            try insertMessage(database: db,
+                              message: message,
+                              messageSource: messageSource,
+                              children: descendants,
+                              completion: completion)
         }
     }
     
@@ -599,6 +600,8 @@ public final class MessageDAO: UserDatabaseDAO {
     }
     
     public func recallMessage(database: GRDB.Database, messageId: String, conversationId: String, category: String, status: String, quoteMessageIds: [String]) throws {
+        var deletedTranscriptIds: Set<String> = []
+        
         var assignments: [ColumnAssignment] = [
             Message.column(of: .category).set(to: MessageCategory.MESSAGE_RECALL.rawValue)
         ]
@@ -642,7 +645,7 @@ public final class MessageDAO: UserDatabaseDAO {
                 try deleteFTSContent(database, messageId: messageId)
             }
             if category == .SIGNAL_TRANSCRIPT {
-                try deleteTranscriptChildren(database, transcriptId: messageId)
+                deletedTranscriptIds = try deleteTranscriptDescendantWhichOnlyReferencedBy(messageId: messageId, database: database)
             }
         }
         
@@ -659,6 +662,7 @@ public final class MessageDAO: UserDatabaseDAO {
         
         let messageIds = quoteMessageIds + [messageId]
         database.afterNextTransactionCommit { (_) in
+            deletedTranscriptIds.forEach(AttachmentContainer.removeAll(transcriptId:))
             for messageId in messageIds {
                 let change = ConversationChange(conversationId: conversationId,
                                                 action: .recallMessage(messageId: messageId))
@@ -681,7 +685,10 @@ public final class MessageDAO: UserDatabaseDAO {
                 .filter(MessageMention.column(of: .messageId) == id)
                 .deleteAll(db)
             try deleteFTSContent(db, messageId: id)
-            try deleteTranscriptChildren(db, transcriptId: id)
+            let deletedTranscriptIds = try deleteTranscriptDescendantWhichOnlyReferencedBy(messageId: id, database: db)
+            db.afterNextTransactionCommit { _ in
+                deletedTranscriptIds.forEach(AttachmentContainer.removeAll(transcriptId:))
+            }
         }
         return deleteCount > 0
     }
@@ -715,7 +722,7 @@ extension MessageDAO {
         return db.recordExists(in: Message.self, where: condition)
     }
     
-    private func updateRedecryptMessage(assignments: [ColumnAssignment], mention: MessageMention? = nil, messageId: String, category: String, conversationId: String, messageSource: String, transcriptChildren: [TranscriptMessage]? = nil) {
+    private func updateRedecryptMessage(assignments: [ColumnAssignment], mention: MessageMention? = nil, messageId: String, category: String, conversationId: String, messageSource: String, descendants: [TranscriptMessage]? = nil) {
         var newMessage: MessageItem?
         
         db.write { (db) in
@@ -731,11 +738,19 @@ extension MessageDAO {
             // isFTSInitialized is wrote inside a write block, checking it within a write block keeps the value in sync
             if MessageCategory.ftsAvailableCategoryStrings.contains(category), AppGroupUserDefaults.Database.isFTSInitialized, let item = newMessage {
                 let message = Message.createMessage(message: item)
-                try insertFTSContent(db, message: message, children: transcriptChildren)
+                try insertFTSContent(db, message: message, children: descendants)
             }
             
-            if let children = transcriptChildren {
-                try children.save(db)
+            for child in descendants ?? [] {
+                let condition = TranscriptMessage.column(of: .messageId) == child.messageId
+                    && TranscriptMessage.column(of: .transcriptId) == child.transcriptId
+                let existedChildRowID: Int? = try TranscriptMessage
+                    .select(Column.rowID)
+                    .filter(condition)
+                    .fetchOne(db)
+                if existedChildRowID == nil {
+                    try child.save(db)
+                }
             }
         }
         
@@ -827,7 +842,7 @@ extension MessageDAO {
                                messageSource: messageSource)
     }
     
-    public func updateTranscriptMessage(children: [TranscriptMessage], status: String, mediaStatus: MediaStatus, content: String, messageId: String, category: String, conversationId: String, messageSource: String) {
+    public func updateTranscriptMessage(descendants: [TranscriptMessage], status: String, mediaStatus: MediaStatus, content: String, messageId: String, category: String, conversationId: String, messageSource: String) {
         let assignments = [
             Message.column(of: .status).set(to: status),
             Message.column(of: .content).set(to: content),
@@ -838,7 +853,7 @@ extension MessageDAO {
                                category: category,
                                conversationId: conversationId,
                                messageSource: messageSource,
-                               transcriptChildren: children)
+                               descendants: descendants)
     }
     
 }
@@ -854,7 +869,7 @@ extension MessageDAO {
                                      category: message.category,
                                      content: message.content,
                                      name: message.name,
-                                     children: children)
+                                     descendants: children)
             let arguments = StatementArguments([
                 uuidTokenString(uuidString: message.conversationId),
                 uuidTokenString(uuidString: message.userId),
@@ -873,9 +888,36 @@ extension MessageDAO {
         try db.execute(sql: sql, arguments: [uuidTokenString(uuidString: messageId)])
     }
     
-    private func deleteTranscriptChildren(_ db: GRDB.Database, transcriptId: String) throws {
-        let sql = "DELETE FROM \(TranscriptMessage.databaseTableName) WHERE transcript_id = ?"
-        try db.execute(sql: sql, arguments: [transcriptId])
+    private func deleteTranscriptDescendantWhichOnlyReferencedBy(messageId: String, database: GRDB.Database) throws -> Set<String> {
+        let descendantTranscriptIds = try TranscriptMessageDAO.shared.descendantTranscriptIds(with: messageId, database: database)
+        var deleted: Set<String> = []
+        for id in descendantTranscriptIds {
+            // Check if the transcript id is referenced by a message of another conversation
+            let isReferencedByAnotherMessage: Bool
+            let referencingMessageId: String? = try Message
+                .select(Message.column(of: .messageId))
+                .filter(Message.column(of: .messageId) == id)
+                .fetchOne(database)
+            if let id = referencingMessageId {
+                isReferencedByAnotherMessage = id != messageId
+            } else {
+                isReferencedByAnotherMessage = false
+            }
+            guard !isReferencedByAnotherMessage else {
+                continue
+            }
+            
+            // Check if the transcript id is referenced by a transcript of another conversation
+            let ascendantTranscriptIds = try TranscriptMessageDAO.shared.ascendantTranscriptIds(of: id, database: database)
+            let hasAscendantOfAnotherMessage = !descendantTranscriptIds.isSuperset(of: ascendantTranscriptIds)
+            if !hasAscendantOfAnotherMessage {
+                deleted.insert(id)
+                try TranscriptMessage
+                    .filter(TranscriptMessage.column(of: .transcriptId) == id)
+                    .deleteAll(database)
+            }
+        }
+        return deleted
     }
     
 }

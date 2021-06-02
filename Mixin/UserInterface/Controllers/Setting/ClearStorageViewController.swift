@@ -125,7 +125,7 @@ extension ClearStorageViewController: ContainerViewControllerDelegate {
             }
 
             let mediaUrls = MessageDAO.shared.getMediaUrls(conversationId: conversationId, categories: categories)
-            let job = AttachmentCleanUpJob(conversationId: conversationId, mediaUrls: mediaUrls, transcriptMessageIds: [])
+            let job = AttachmentCleanUpJob(conversationId: conversationId, mediaUrls: mediaUrls)
             ConcurrentJobQueue.shared.addJob(job: job)
             MessageDAO.shared.deleteMediaMessages(conversationId: conversationId, categories: categories)
 

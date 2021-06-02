@@ -348,9 +348,7 @@ public class MixinService {
             ConcurrentJobQueue.shared.cancelJob(jobId: id)
         }
         
-        if category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue {
-            AttachmentContainer.removeAll(transcriptId: item.messageId)
-        } else if let mediaUrl = item.mediaUrl {
+        if let mediaUrl = item.mediaUrl {
             AttachmentContainer.removeMediaFiles(mediaUrl: mediaUrl, category: category)
         }
     }

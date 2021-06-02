@@ -15,6 +15,16 @@ class TranscriptAudioMessagePlayingManager: AudioMessagePlayingManager {
         self.transcriptMessage = transcriptMessage
     }
     
+    override func updateMediaStatusToRead(message: MessageItem) {
+        TranscriptMessageDAO.shared.updateMediaStatus(.READ,
+                                                      transcriptId: transcriptMessage.messageId,
+                                                      messageId: message.messageId)
+    }
+    
+    override func filePath(message: MessageItem, mediaUrl: String) -> String {
+        AttachmentContainer.url(transcriptId: transcriptMessage.messageId, filename: mediaUrl).path
+    }
+    
     override func playableMessage(nextTo message: MessageItem) -> MessageItem? {
         return delegate?.transcriptAudioMessagePlayingManager(self, playableMessageNextTo: message)
     }

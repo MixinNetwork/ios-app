@@ -8,6 +8,7 @@ class MessageReceiverViewController: PeerViewController<[MessageReceiver], Check
         true
     }
     
+    private var hideApps = false
     private var messageContent: MessageContent!
     private var selections = [MessageReceiver]() {
         didSet {
@@ -15,9 +16,10 @@ class MessageReceiverViewController: PeerViewController<[MessageReceiver], Check
         }
     }
     
-    class func instance(content: MessageContent) -> UIViewController {
+    class func instance(content: MessageContent, hideApps: Bool = false) -> UIViewController {
         let vc = MessageReceiverViewController()
         vc.messageContent = content
+        vc.hideApps = hideApps
         return ContainerViewController.instance(viewController: vc, title: Localized.ACTION_SHARE_TO)
     }
     
@@ -32,7 +34,9 @@ class MessageReceiverViewController: PeerViewController<[MessageReceiver], Check
         var apps = [UserItem]()
         for user in users {
             if user.isBot {
-                apps.append(user)
+                if !hideApps {
+                    apps.append(user)
+                }
             } else {
                 contacts.append(user)
             }

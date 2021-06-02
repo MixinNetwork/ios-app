@@ -501,7 +501,7 @@ class ConversationViewController: UIViewController {
             }))
             if !containsTranscriptMessage {
                 alert.addAction(UIAlertAction(title: R.string.localizable.chat_forward_combined(), style: .default, handler: { (_) in
-                    let vc = MessageReceiverViewController.instance(content: .transcript(messages))
+                    let vc = MessageReceiverViewController.instance(content: .transcript(messages), hideApps: true)
                     self.navigationController?.pushViewController(vc, animated: true)
                 }))
             }

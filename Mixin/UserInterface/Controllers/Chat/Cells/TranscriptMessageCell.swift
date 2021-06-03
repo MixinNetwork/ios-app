@@ -4,6 +4,10 @@ class TranscriptMessageCell: TextMessageCell {
     
     let transcriptBackgroundView = UIView()
     let transcriptStackView = UIStackView()
+    let trailingInfoPlaceholder = UIView()
+    
+    private var digestStackViews: [UIStackView] = []
+    private var digestLabels: [UILabel] = []
     
     override func prepare() {
         super.prepare()
@@ -13,8 +17,11 @@ class TranscriptMessageCell: TextMessageCell {
         
         transcriptStackView.axis = .vertical
         transcriptStackView.alignment = .fill
+        transcriptStackView.distribution = .fill
         transcriptStackView.spacing = TranscriptMessageViewModel.transcriptInterlineSpacing
         messageContentView.addSubview(transcriptStackView)
+        
+        trailingInfoPlaceholder.setContentCompressionResistancePriority(.required, for: .horizontal)
     }
     
     override func render(viewModel: MessageViewModel) {
@@ -27,25 +34,42 @@ class TranscriptMessageCell: TextMessageCell {
             }
             transcriptBackgroundView.frame = viewModel.transcriptBackgroundFrame
             transcriptStackView.frame = viewModel.transcriptFrame
-            let diff = viewModel.digests.count - transcriptStackView.arrangedSubviews.count
+            let diff = viewModel.digests.count - digestStackViews.count
             if diff > 0 {
                 for _ in 0..<diff {
                     let label = UILabel()
                     label.font = MessageFontSet.transcriptDigest.scaled
                     label.textColor = R.color.text_accessory()
                     label.numberOfLines = 1
-                    transcriptStackView.addArrangedSubview(label)
+                    label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+                    digestLabels.append(label)
+                    let stackView = UIStackView()
+                    stackView.axis = .horizontal
+                    stackView.distribution = .fill
+                    stackView.alignment = .fill
+                    stackView.addArrangedSubview(label)
+                    digestStackViews.append(stackView)
+                    transcriptStackView.addArrangedSubview(stackView)
                 }
             } else if diff < 0 {
                 for i in diff..<0 {
-                    let index = transcriptStackView.arrangedSubviews.count + i
-                    transcriptStackView.arrangedSubviews[index].isHidden = true
+                    let index = digestStackViews.count + i
+                    digestStackViews[index].isHidden = true
                 }
             }
             for (index, digest) in viewModel.digests.enumerated() {
-                let label = transcriptStackView.arrangedSubviews[index] as! UILabel
+                let stackView = digestStackViews[index]
+                let label = digestLabels[index]
+                stackView.isHidden = false
                 label.text = digest
-                label.isHidden = false
+                if index == viewModel.digests.count - 1 {
+                    if trailingInfoPlaceholder.superview != stackView {
+                        trailingInfoPlaceholder.removeFromSuperview()
+                        stackView.addArrangedSubview(trailingInfoPlaceholder)
+                        let placeholderWidth = statusImageView.frame.maxX - encryptedImageView.frame.minX
+                        trailingInfoPlaceholder.widthAnchor.constraint(equalToConstant: placeholderWidth).isActive = true
+                    }
+                }
             }
         }
     }

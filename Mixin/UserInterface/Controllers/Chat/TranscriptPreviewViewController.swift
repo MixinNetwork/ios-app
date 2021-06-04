@@ -474,12 +474,12 @@ extension TranscriptPreviewViewController {
             let transcriptId = notification.userInfo?[TranscriptMessageDAO.UserInfoKey.transcriptId] as? String,
             let messageId = notification.userInfo?[TranscriptMessageDAO.UserInfoKey.messageId] as? String,
             let mediaStatus = notification.userInfo?[TranscriptMessageDAO.UserInfoKey.mediaStatus] as? MediaStatus,
-            let mediaUrl = notification.userInfo?[TranscriptMessageDAO.UserInfoKey.mediaUrl] as? String,
             transcriptId == self.transcriptMessage.messageId,
             let child = childMessages.first(where: { $0.messageId == messageId })
         else {
             return
         }
+        let mediaUrl = notification.userInfo?[TranscriptMessageDAO.UserInfoKey.mediaUrl] as? String
         child.mediaStatus = mediaStatus.rawValue
         child.mediaUrl = mediaUrl
         if let indexPath = self.indexPath(where: { $0.messageId == messageId }), let viewModel = self.viewModel(at: indexPath) {

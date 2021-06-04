@@ -9,7 +9,11 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
     private(set) var fileSize: String?
     private(set) var durationLabelOrigin = CGPoint.zero
     
-    var transcriptId: String?
+    var transcriptId: String? {
+        didSet {
+            loadBetterThumbnailIfNeeded()
+        }
+    }
     var isLoading = false
     var progress: Double?
     var downloadIsTriggeredByUser = false
@@ -48,6 +52,8 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
         }
     }
     
+    private var isBetterThumbnailLoaded = false
+    
     override init(message: MessageItem) {
         super.init(message: message)
         update(mediaUrl: message.mediaUrl, mediaSize: message.mediaSize, mediaDuration: message.mediaDuration)
@@ -68,17 +74,7 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
     override func update(mediaUrl: String?, mediaSize: Int64?, mediaDuration: Int64?) {
         super.update(mediaUrl: mediaUrl, mediaSize: mediaSize, mediaDuration: mediaDuration)
         (duration, fileSize) = VideoMessageViewModel.durationAndFileSizeRepresentation(ofMessage: message)
-        if let videoFilename = mediaUrl {
-            let betterThumbnailURL: URL
-            if let transcriptId = transcriptId {
-                betterThumbnailURL = AttachmentContainer.videoThumbnailURL(transcriptId: transcriptId, videoFilename: videoFilename)
-            } else {
-                betterThumbnailURL = AttachmentContainer.videoThumbnailURL(videoFilename: videoFilename)
-            }
-            if let betterThumbnail = UIImage(contentsOfFile: betterThumbnailURL.path) {
-                thumbnail = betterThumbnail
-            }
-        }
+        loadBetterThumbnailIfNeeded()
     }
     
     func beginAttachmentLoading(isTriggeredByUser: Bool) {
@@ -140,6 +136,22 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
         }
         
         return (duration, fileSize)
+    }
+    
+    private func loadBetterThumbnailIfNeeded() {
+        guard !isBetterThumbnailLoaded, let videoFilename = message.mediaUrl else {
+            return
+        }
+        let betterThumbnailURL: URL
+        if let transcriptId = transcriptId {
+            betterThumbnailURL = AttachmentContainer.videoThumbnailURL(transcriptId: transcriptId, videoFilename: videoFilename)
+        } else {
+            betterThumbnailURL = AttachmentContainer.videoThumbnailURL(videoFilename: videoFilename)
+        }
+        if let betterThumbnail = UIImage(contentsOfFile: betterThumbnailURL.path) {
+            thumbnail = betterThumbnail
+            isBetterThumbnailLoaded = true
+        }
     }
     
 }

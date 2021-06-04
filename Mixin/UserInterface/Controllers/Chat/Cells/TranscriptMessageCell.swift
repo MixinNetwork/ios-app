@@ -48,6 +48,7 @@ class TranscriptMessageCell: TextMessageCell {
                     stackView.distribution = .fill
                     stackView.alignment = .fill
                     stackView.addArrangedSubview(label)
+                    stackView.spacing = 8
                     digestStackViews.append(stackView)
                     transcriptStackView.addArrangedSubview(stackView)
                 }
@@ -65,9 +66,11 @@ class TranscriptMessageCell: TextMessageCell {
                 if index == viewModel.digests.count - 1 {
                     if trailingInfoPlaceholder.superview != stackView {
                         trailingInfoPlaceholder.removeFromSuperview()
-                        stackView.addArrangedSubview(trailingInfoPlaceholder)
-                        let placeholderWidth = statusImageView.frame.maxX - encryptedImageView.frame.minX
-                        trailingInfoPlaceholder.widthAnchor.constraint(equalToConstant: placeholderWidth).isActive = true
+                        if !viewModel.style.contains(.received) {
+                            stackView.addArrangedSubview(trailingInfoPlaceholder)
+                            let placeholderWidth = statusImageView.frame.maxX - encryptedImageView.frame.minX
+                            trailingInfoPlaceholder.widthAnchor.constraint(equalToConstant: placeholderWidth).isActive = true
+                        }
                     }
                 }
             }

@@ -3,9 +3,10 @@ import UIKit
 import MixinServices
 
 class AttachmentUploadJob: AttachmentLoadingJob {
-
+    
     private var stream: InputStream?
-
+    
+    var message: Message!
     var attachResponse: AttachmentResponse?
     
     var fileUrl: URL? {
@@ -13,6 +14,14 @@ class AttachmentUploadJob: AttachmentLoadingJob {
             return nil
         }
         return AttachmentContainer.url(for: .photos, filename: mediaUrl)
+    }
+    
+    public init(message: Message, jobId: String? = nil) {
+        self.message = message
+        super.init(transcriptId: nil,
+                   messageId: message.messageId,
+                   jobId: jobId,
+                   isRecoverAttachment: false)
     }
     
     class func jobId(messageId: String) -> String {

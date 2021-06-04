@@ -329,17 +329,13 @@ public class MixinService {
         }
         
         let jobIds: [String]
-        if category.hasSuffix("_IMAGE") {
-            jobIds = [AttachmentDownloadJob.jobId(messageId: messageId)]
-        } else if category.hasSuffix("_DATA") {
-            jobIds = [FileDownloadJob.jobId(messageId: messageId)]
-        } else if category.hasSuffix("_AUDIO") {
-            jobIds = [AudioDownloadJob.jobId(messageId: messageId)]
-        } else if category.hasSuffix("_VIDEO") {
-            jobIds = [VideoDownloadJob.jobId(messageId: messageId)]
+        if ["_IMAGE", "_DATA", "_AUDIO", "_VIDEO"].contains(where: category.hasSuffix) {
+            jobIds = [AttachmentDownloadJob.jobId(transcriptId: nil, messageId: item.messageId)]
         } else if category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue {
-            let childrenId = TranscriptMessageDAO.shared.messageIds(transcriptId: messageId)
-            jobIds = childrenId.map(TranscriptAttachmentDownloadJob.jobId(messageId:))
+            let childrenMessageIds = TranscriptMessageDAO.shared.childrenMessageIds(transcriptId: messageId)
+            jobIds = childrenMessageIds.map { transcriptMessageId in
+                AttachmentDownloadJob.jobId(transcriptId: messageId, messageId: transcriptMessageId)
+            }
         } else {
             jobIds = []
         }

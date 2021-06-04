@@ -529,7 +529,7 @@ public class ReceiveMessageService: MixinService {
             }
             let message = Message.createMessage(mediaData: transferMediaData, data: data)
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
-            let job = AudioDownloadJob(messageId: message.messageId)
+            let job = AttachmentDownloadJob(message: message)
             ConcurrentJobQueue.shared.addJob(job: job)
         } else if data.category.hasSuffix("_STICKER") {
             guard let transferStickerData = parseSticker(data: data, stickerText: plainText) else {
@@ -681,7 +681,7 @@ public class ReceiveMessageService: MixinService {
                 return
             }
             MessageDAO.shared.updateMediaMessage(mediaData: transferMediaData, status: Message.getStatus(data: data), messageId: messageId, category: data.category, conversationId: data.conversationId, mediaStatus: .PENDING, messageSource: data.source)
-            let job = AudioDownloadJob(messageId: messageId)
+            let job = AttachmentDownloadJob(messageId: messageId)
             ConcurrentJobQueue.shared.addJob(job: job)
         case MessageCategory.SIGNAL_LIVE.rawValue:
             guard let base64Data = Data(base64Encoded: plainText), let liveData = (try? JSONDecoder.default.decode(TransferLiveData.self, from: base64Data)) else {

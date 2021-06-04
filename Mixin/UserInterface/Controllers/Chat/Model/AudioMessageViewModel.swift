@@ -14,7 +14,7 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
     let length: String
     let waveform: Waveform
     
-    var transcriptMessage: MessageItem?
+    var transcriptId: String?
     var isLoading = false
     var progress: Double?
     var showPlayIconOnMediaStatusDone: Bool = true
@@ -82,19 +82,14 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         updateMediaStatus(message: message, status: .PENDING)
         let message = Message.createMessage(message: self.message)
         if shouldUpload {
-            if transcriptMessage != nil {
+            if transcriptId != nil {
                 assertionFailure()
             } else {
                 let job = AudioUploadJob(message: message)
                 UploaderQueue.shared.addJob(job: job)
             }
         } else {
-            let job: BaseJob
-            if let transcriptMessage = transcriptMessage {
-                job = TranscriptAttachmentDownloadJob(transcriptMessage: transcriptMessage, message: message)
-            } else {
-                job = AudioDownloadJob(messageId: message.messageId)
-            }
+            let job = AttachmentDownloadJob(transcriptId: transcriptId, messageId: message.messageId)
             ConcurrentJobQueue.shared.addJob(job: job)
         }
         isLoading = true
@@ -108,19 +103,14 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
             return
         }
         if shouldUpload {
-            if transcriptMessage != nil {
+            if transcriptId != nil {
                 assertionFailure()
             } else {
                 let id = AudioUploadJob.jobId(messageId: message.messageId)
                 UploaderQueue.shared.cancelJob(jobId: id)
             }
         } else {
-            let id: String
-            if transcriptMessage != nil {
-                id = TranscriptAttachmentDownloadJob.jobId(messageId: message.messageId)
-            } else {
-                id = AudioDownloadJob.jobId(messageId: message.messageId)
-            }
+            let id = AttachmentDownloadJob.jobId(transcriptId: transcriptId, messageId: message.messageId)
             ConcurrentJobQueue.shared.cancelJob(jobId: id)
         }
         if isTriggeredByUser {

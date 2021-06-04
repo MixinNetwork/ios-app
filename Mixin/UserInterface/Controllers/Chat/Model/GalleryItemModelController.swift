@@ -39,6 +39,8 @@ final class GalleryItemModelController: NSObject {
         super.init()
         NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: MixinServices.conversationDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateDownloadProgress(_:)), name: AttachmentLoadingJob.progressNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateMessageMediaStatus(_:)), name: MessageDAO.messageMediaStatusDidUpdateNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateTranscriptMessageMediaStatus(_:)), name: TranscriptMessageDAO.mediaStatusDidUpdateNotification, object: nil)
     }
     
     deinit {
@@ -91,8 +93,6 @@ final class GalleryItemModelController: NSObject {
         switch change.action {
         case .updateMessage(let messageId):
             updateMessage(messageId: messageId)
-        case .updateMediaStatus(let messageId, let mediaStatus):
-            updateMediaStatus(messageId: messageId, mediaStatus: mediaStatus)
         case .recallMessage(let messageId):
             removeItem(messageId: messageId)
         default:
@@ -110,6 +110,63 @@ final class GalleryItemModelController: NSObject {
             return
         }
         vc.operationButton.style = .busy(progress: progress)
+    }
+    
+    @objc private func updateTranscriptMessageMediaStatus(_ notification: Notification) {
+        guard
+            let userInfo = notification.userInfo,
+            let transcriptId = userInfo[TranscriptMessageDAO.UserInfoKey.transcriptId] as? String,
+            let messageId = userInfo[TranscriptMessageDAO.UserInfoKey.messageId] as? String,
+            let mediaStatus = userInfo[TranscriptMessageDAO.UserInfoKey.mediaStatus] as? MediaStatus,
+            let index = items.firstIndex(where: { $0.transcriptId == transcriptId && $0.messageId == messageId })
+        else {
+            return
+        }
+        items[index].mediaStatus = mediaStatus
+        if let vc = reusableViewController(of: messageId) {
+            vc.item = items[index]
+        }
+        if mediaStatus == .DONE {
+            queue.async { [weak self] in
+                guard
+                    let message = TranscriptMessageDAO.shared.messageItem(transcriptId: transcriptId, messageId: messageId),
+                    let item = GalleryItem(transcriptId: transcriptId, message: message)
+                else {
+                    return
+                }
+                DispatchQueue.main.sync {
+                    guard let self = self else {
+                        return
+                    }
+                    guard let index = self.items.firstIndex(where: { $0.messageId == message.messageId }) else {
+                        return
+                    }
+                    let previousItem = self.items[index]
+                    self.items[index] = item
+                    if let vc = self.reusableViewController(of: messageId) {
+                        vc.item = item
+                        if previousItem.mediaStatus != .DONE && item.mediaStatus == .DONE, let controlView = (vc as? GalleryVideoItemViewController)?.controlView {
+                            controlView.set(playControlsHidden: false, otherControlsHidden: true, animated: true)
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    @objc private func updateMessageMediaStatus(_ notification: Notification) {
+        guard
+            let userInfo = notification.userInfo,
+            let messageId = userInfo[MessageDAO.UserInfoKey.messageId] as? String,
+            let mediaStatus = userInfo[MessageDAO.UserInfoKey.mediaStatus] as? MediaStatus,
+            let index = items.firstIndex(where: { $0.messageId == messageId })
+        else {
+            return
+        }
+        items[index].mediaStatus = mediaStatus
+        if let vc = reusableViewController(of: messageId) {
+            vc.item = items[index]
+        }
     }
     
     private func fetchMoreItemsBefore() {
@@ -193,16 +250,6 @@ final class GalleryItemModelController: NSObject {
                     }
                 }
             }
-        }
-    }
-    
-    private func updateMediaStatus(messageId: String, mediaStatus: MediaStatus) {
-        guard let index = items.firstIndex(where: { $0.messageId == messageId }) else {
-            return
-        }
-        items[index].mediaStatus = mediaStatus
-        if let vc = reusableViewController(of: messageId) {
-            vc.item = items[index]
         }
     }
     

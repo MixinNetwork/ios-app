@@ -8,6 +8,7 @@ public final class MessageDAO: UserDatabaseDAO {
         public static let message = "msg"
         public static let messageId = "mid"
         public static let messsageSource = "msg_source"
+        public static let mediaStatus = "ms"
     }
     
     public static let shared = MessageDAO()
@@ -15,6 +16,7 @@ public final class MessageDAO: UserDatabaseDAO {
     public static let willDeleteMessageNotification = Notification.Name("one.mixin.services.MessageDAO.willDeleteMessage")
     public static let didInsertMessageNotification = Notification.Name("one.mixin.services.did.insert.msg")
     public static let didRedecryptMessageNotification = Notification.Name("one.mixin.services.did.redecrypt.msg")
+    public static let messageMediaStatusDidUpdateNotification = Notification.Name("one.mixin.services.MessageDAO.MessageMediaStatusDidUpdate")
     
     static let sqlQueryLastUnreadMessageTime = """
         SELECT created_at FROM messages
@@ -150,11 +152,16 @@ public final class MessageDAO: UserDatabaseDAO {
         let condition: SQLSpecificExpressible = Message.column(of: .messageId) == messageId
             && Message.column(of: .category) != MessageCategory.MESSAGE_RECALL.rawValue
         db.update(Message.self, assignments: assignments, where: condition) { _ in
-            let statusChange = ConversationChange(conversationId: conversationId,
-                                            action: .updateMediaStatus(messageId: messageId, mediaStatus: mediaStatus))
+            let mediaStatusUserInfo: [String: Any] = [
+                UserInfoKey.messageId: messageId,
+                UserInfoKey.mediaStatus: mediaStatus
+            ]
+            NotificationCenter.default.post(onMainThread: Self.messageMediaStatusDidUpdateNotification,
+                                            object: self,
+                                            userInfo: mediaStatusUserInfo)
+            
             let keyChange = ConversationChange(conversationId: conversationId,
                                             action: .updateMediaKey(messageId: messageId, content: content, key: key, digest: digest))
-            NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: statusChange)
             NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: keyChange)
         }
     }
@@ -340,8 +347,13 @@ public final class MessageDAO: UserDatabaseDAO {
                     .filter(updateCondition)
                     .updateAll(db, [Message.column(of: .mediaStatus).set(to: targetStatus.rawValue)])
                 if numberOfChanges > 0 {
-                    let change = ConversationChange(conversationId: conversationId, action: .updateMediaStatus(messageId: messageId, mediaStatus: targetStatus))
-                    NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: change)
+                    let userInfo: [String: Any] = [
+                        UserInfoKey.messageId: messageId,
+                        UserInfoKey.mediaStatus: status
+                    ]
+                    NotificationCenter.default.post(onMainThread: Self.messageMediaStatusDidUpdateNotification,
+                                                    object: self,
+                                                    userInfo: userInfo)
                 }
             }
         }

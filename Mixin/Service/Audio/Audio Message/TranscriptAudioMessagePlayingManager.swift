@@ -7,22 +7,22 @@ protocol TranscriptAudioMessagePlayingManagerDelegate: AnyObject {
 
 class TranscriptAudioMessagePlayingManager: AudioMessagePlayingManager {
     
-    let transcriptMessage: MessageItem
+    let transcriptId: String
     
     weak var delegate: TranscriptAudioMessagePlayingManagerDelegate?
     
-    init(transcriptMessage: MessageItem) {
-        self.transcriptMessage = transcriptMessage
+    init(transcriptId: String) {
+        self.transcriptId = transcriptId
     }
     
     override func updateMediaStatusToRead(message: MessageItem) {
         TranscriptMessageDAO.shared.updateMediaStatus(.READ,
-                                                      transcriptId: transcriptMessage.messageId,
+                                                      transcriptId: transcriptId,
                                                       messageId: message.messageId)
     }
     
     override func filePath(message: MessageItem, mediaUrl: String) -> String {
-        AttachmentContainer.url(transcriptId: transcriptMessage.messageId, filename: mediaUrl).path
+        AttachmentContainer.url(transcriptId: transcriptId, filename: mediaUrl).path
     }
     
     override func playableMessage(nextTo message: MessageItem) -> MessageItem? {
@@ -36,8 +36,7 @@ class TranscriptAudioMessagePlayingManager: AudioMessagePlayingManager {
         guard next.category.hasSuffix("_AUDIO"), next.mediaStatus == MediaStatus.CANCELED.rawValue || next.mediaStatus == MediaStatus.PENDING.rawValue else {
             return
         }
-        let message = Message.createMessage(message: message)
-        let job = TranscriptAttachmentDownloadJob(transcriptMessage: transcriptMessage, message: message)
+        let job = AttachmentDownloadJob(transcriptId: transcriptId, messageId: message.messageId)
         ConcurrentJobQueue.shared.addJob(job: job)
     }
     

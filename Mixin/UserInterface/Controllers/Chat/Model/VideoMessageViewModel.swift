@@ -9,7 +9,7 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
     private(set) var fileSize: String?
     private(set) var durationLabelOrigin = CGPoint.zero
     
-    var transcriptMessage: MessageItem?
+    var transcriptId: String?
     var isLoading = false
     var progress: Double?
     var downloadIsTriggeredByUser = false
@@ -70,8 +70,8 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
         (duration, fileSize) = VideoMessageViewModel.durationAndFileSizeRepresentation(ofMessage: message)
         if let videoFilename = mediaUrl {
             let betterThumbnailURL: URL
-            if let transcriptMessage = transcriptMessage {
-                betterThumbnailURL = AttachmentContainer.videoThumbnailURL(transcriptId: transcriptMessage.messageId, videoFilename: videoFilename)
+            if let transcriptId = transcriptId {
+                betterThumbnailURL = AttachmentContainer.videoThumbnailURL(transcriptId: transcriptId, videoFilename: videoFilename)
             } else {
                 betterThumbnailURL = AttachmentContainer.videoThumbnailURL(videoFilename: videoFilename)
             }
@@ -92,19 +92,14 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
         updateMediaStatus(message: message, status: .PENDING)
         let message = Message.createMessage(message: self.message)
         if shouldUpload {
-            if transcriptMessage != nil {
+            if transcriptId != nil {
                 assertionFailure()
             } else {
                 let job = VideoUploadJob(message: message)
                 UploaderQueue.shared.addJob(job: job)
             }
         } else {
-            let job: BaseJob
-            if let transcriptMessage = transcriptMessage {
-                job = TranscriptAttachmentDownloadJob(transcriptMessage: transcriptMessage, message: message)
-            } else {
-                job = VideoDownloadJob(messageId: message.messageId)
-            }
+            let job = AttachmentDownloadJob(transcriptId: transcriptId, messageId: message.messageId)
             ConcurrentJobQueue.shared.addJob(job: job)
         }
         isLoading = true
@@ -118,19 +113,14 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
             return
         }
         if shouldUpload {
-            if transcriptMessage != nil {
+            if transcriptId != nil {
                 assertionFailure()
             } else {
                 let id = VideoUploadJob.jobId(messageId: message.messageId)
                 UploaderQueue.shared.cancelJob(jobId: id)
             }
         } else {
-            let id: String
-            if transcriptMessage != nil {
-                id = TranscriptAttachmentDownloadJob.jobId(messageId: message.messageId)
-            } else {
-                id = VideoDownloadJob.jobId(messageId: message.messageId)
-            }
+            let id = AttachmentDownloadJob.jobId(transcriptId: transcriptId, messageId: message.messageId)
             ConcurrentJobQueue.shared.cancelJob(jobId: id)
         }
         if isTriggeredByUser {

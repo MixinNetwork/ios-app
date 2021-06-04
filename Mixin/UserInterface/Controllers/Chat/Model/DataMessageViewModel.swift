@@ -13,7 +13,7 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
     
     let isListPlayable: Bool
     
-    var transcriptMessage: MessageItem? {
+    var transcriptId: String? {
         didSet {
             updateOperationButtonStyle()
         }
@@ -24,7 +24,7 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
     var downloadIsTriggeredByUser = false
     
     var showPlayIconOnMediaStatusDone: Bool {
-        isListPlayable && transcriptMessage == nil
+        isListPlayable && transcriptId == nil
     }
     
     var shouldAutoDownload: Bool {
@@ -65,19 +65,14 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         updateMediaStatus(message: message, status: .PENDING)
         let message = Message.createMessage(message: self.message)
         if shouldUpload {
-            if transcriptMessage != nil {
+            if transcriptId != nil {
                 assertionFailure()
             } else {
                 let job = FileUploadJob(message: message)
                 UploaderQueue.shared.addJob(job: job)
             }
         } else {
-            let job: BaseJob
-            if let transcriptMessage = transcriptMessage {
-                job = TranscriptAttachmentDownloadJob(transcriptMessage: transcriptMessage, message: message)
-            } else {
-                job = FileDownloadJob(messageId: message.messageId)
-            }
+            let job = AttachmentDownloadJob(transcriptId: transcriptId, messageId: message.messageId)
             ConcurrentJobQueue.shared.addJob(job: job)
         }
         isLoading = true
@@ -91,19 +86,14 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
             return
         }
         if shouldUpload {
-            if transcriptMessage != nil {
+            if transcriptId != nil {
                 assertionFailure()
             } else {
                 let id = FileUploadJob.jobId(messageId: message.messageId)
                 UploaderQueue.shared.cancelJob(jobId: id)
             }
         } else {
-            let id: String
-            if transcriptMessage != nil {
-                id = TranscriptAttachmentDownloadJob.jobId(messageId: message.messageId)
-            } else {
-                id = FileDownloadJob.jobId(messageId: message.messageId)
-            }
+            let id = AttachmentDownloadJob.jobId(transcriptId: transcriptId, messageId: message.messageId)
             ConcurrentJobQueue.shared.cancelJob(jobId: id)
         }
         if isTriggeredByUser {

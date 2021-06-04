@@ -46,7 +46,7 @@ struct GalleryItem: Equatable {
         MessageCategory.PLAIN_LIVE.rawValue
     ]
     
-    let transcriptMessage: MessageItem?
+    let transcriptId: String?
     let category: Category
     let conversationId: String
     let messageId: String
@@ -60,7 +60,7 @@ struct GalleryItem: Equatable {
     var mediaStatus: MediaStatus?
     
     init?(
-        transcriptMessage: MessageItem?,
+        transcriptId: String?,
         conversationId: String,
         messageId: String,
         category: String,
@@ -74,13 +74,13 @@ struct GalleryItem: Equatable {
         thumbUrl: String?,
         createdAt: String
     ) {
-        self.transcriptMessage = transcriptMessage
+        self.transcriptId = transcriptId
         self.conversationId = conversationId
         if GalleryItem.imageCategories.contains(category) {
             self.category = .image
             if let mediaUrl = mediaUrl {
-                if let transcriptMessage = transcriptMessage {
-                    self.url = AttachmentContainer.url(transcriptId: transcriptMessage.messageId, filename: mediaUrl)
+                if let tid = transcriptId {
+                    self.url = AttachmentContainer.url(transcriptId: tid, filename: mediaUrl)
                 } else {
                     self.url = AttachmentContainer.url(for: .photos, filename: mediaUrl)
                 }
@@ -90,8 +90,8 @@ struct GalleryItem: Equatable {
         } else if GalleryItem.videoCategories.contains(category) {
             self.category = .video
             if let mediaUrl = mediaUrl {
-                if let transcriptMessage = transcriptMessage {
-                    self.url = AttachmentContainer.url(transcriptId: transcriptMessage.messageId, filename: mediaUrl)
+                if let tid = transcriptId {
+                    self.url = AttachmentContainer.url(transcriptId: tid, filename: mediaUrl)
                 } else {
                     self.url = AttachmentContainer.url(for: .videos, filename: mediaUrl)
                 }
@@ -117,8 +117,8 @@ struct GalleryItem: Equatable {
             self.thumbnail = .url(url)
         } else if self.category == .video, let videoFilename = mediaUrl {
             let coverUrl: URL
-            if let transcriptMessage = transcriptMessage {
-                coverUrl = AttachmentContainer.videoThumbnailURL(transcriptId: transcriptMessage.messageId, videoFilename: videoFilename)
+            if let tid = transcriptId {
+                coverUrl = AttachmentContainer.videoThumbnailURL(transcriptId: tid, videoFilename: videoFilename)
             } else {
                 coverUrl = AttachmentContainer.videoThumbnailURL(videoFilename: videoFilename)
             }
@@ -134,8 +134,8 @@ struct GalleryItem: Equatable {
         self.mediaDuration = mediaDuration ?? 0
     }
     
-    init?(message m: GalleryItemRepresentable) {
-        self.init(transcriptMessage: nil,
+    init?(transcriptId: String? = nil, message m: GalleryItemRepresentable) {
+        self.init(transcriptId: transcriptId,
                   conversationId: m.conversationId,
                   messageId: m.messageId,
                   category: m.category,
@@ -151,7 +151,7 @@ struct GalleryItem: Equatable {
     }
     
     init?(viewModel v: MessageViewModel) {
-        self.init(transcriptMessage: (v as? AttachmentLoadingViewModel)?.transcriptMessage,
+        self.init(transcriptId: (v as? AttachmentLoadingViewModel)?.transcriptId,
                   conversationId: v.message.conversationId,
                   messageId: v.message.messageId,
                   category: v.message.category,

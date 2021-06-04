@@ -97,13 +97,7 @@ class JobService {
                 continue
             }
             let downloadJob: AttachmentDownloadJob
-            if message.category.hasSuffix("_VIDEO") {
-                downloadJob = VideoDownloadJob(message: message, jobId: jobId, isRecoverAttachment: true)
-            } else if message.category.hasSuffix("_DATA") {
-                downloadJob = FileDownloadJob(message: message, jobId: jobId, isRecoverAttachment: true)
-            } else if message.category.hasSuffix("_AUDIO") {
-                downloadJob = AudioDownloadJob(message: message, jobId: jobId, isRecoverAttachment: true)
-            } else if message.category.hasSuffix("_IMAGE") {
+            if ["_VIDEO", "_DATA", "_AUDIO", "_IMAGE"].contains(where: message.category.hasSuffix) {
                 downloadJob = AttachmentDownloadJob(message: message, jobId: jobId, isRecoverAttachment: true)
             } else {
                 JobDAO.shared.removeJob(jobId: jobId)

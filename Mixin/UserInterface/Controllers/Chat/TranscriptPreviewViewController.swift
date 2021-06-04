@@ -11,7 +11,7 @@ class TranscriptPreviewViewController: FullscreenPopupViewController {
     private let queue: Queue
     
     private lazy var audioManager: TranscriptAudioMessagePlayingManager = {
-        let manager = TranscriptAudioMessagePlayingManager(transcriptMessage: transcriptMessage)
+        let manager = TranscriptAudioMessagePlayingManager(transcriptId: transcriptMessage.messageId)
         manager.delegate = self
         return manager
     }()
@@ -245,7 +245,7 @@ extension TranscriptPreviewViewController: MessageViewModelFactoryDelegate {
     
     func messageViewModelFactory(_ factory: MessageViewModelFactory, updateViewModelForPresentation viewModel: MessageViewModel) {
         if let viewModel = viewModel as? AttachmentLoadingViewModel {
-            viewModel.transcriptMessage = self.transcriptMessage
+            viewModel.transcriptId = self.transcriptMessage.messageId
         }
     }
     

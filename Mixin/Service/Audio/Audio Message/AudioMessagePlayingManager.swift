@@ -187,7 +187,7 @@ class AudioMessagePlayingManager: NSObject, AudioSessionClient {
         guard next.category.hasSuffix("_AUDIO"), next.mediaStatus != MediaStatus.DONE.rawValue && next.mediaStatus != MediaStatus.READ.rawValue else {
             return
         }
-        let job = AudioDownloadJob(messageId: next.messageId)
+        let job = AttachmentDownloadJob(messageId: next.messageId)
         ConcurrentJobQueue.shared.addJob(job: job)
     }
     

@@ -92,6 +92,7 @@ class ConversationDataSource {
         NotificationCenter.default.addObserver(self, selector: #selector(messageDaoDidInsertMessage(_:)), name: MessageDAO.didInsertMessageNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(messageDaoDidRedecryptMessage(_:)), name: MessageDAO.didRedecryptMessageNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateMediaProgress(_:)), name: AttachmentLoadingJob.progressNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateMessageMediaStatus(_:)), name: MessageDAO.messageMediaStatusDidUpdateNotification, object: nil)
         reload(completion: completion)
     }
     
@@ -500,8 +501,6 @@ extension ConversationDataSource {
             updateMessageStatus(messageId: messageId, status: newStatus)
         case .updateMessageMentionStatus(let messageId, let newStatus):
             updateMessageMentionStatus(messageId: messageId, status: newStatus)
-        case .updateMediaStatus(let messageId, let mediaStatus):
-            updateMessageMediaStatus(messageId: messageId, mediaStatus: mediaStatus)
         case .updateMediaKey(let messageId, let content, let key, let digest):
             updateMediaKey(messageId: messageId, content: content, key: key, digest: digest)
         case .updateMediaContent(let messageId, let message):
@@ -590,6 +589,32 @@ extension ConversationDataSource {
         }
     }
     
+    @objc private func updateMessageMediaStatus(_ notification: Notification) {
+        guard
+            let userInfo = notification.userInfo,
+            let messageId = userInfo[MessageDAO.UserInfoKey.messageId] as? String,
+            let mediaStatus = userInfo[MessageDAO.UserInfoKey.mediaStatus] as? MediaStatus,
+            let indexPath = indexPath(where: { $0.messageId == messageId })
+        else {
+            return
+        }
+        let viewModel = self.viewModel(for: indexPath)
+        let cell = tableView?.cellForRow(at: indexPath)
+        if let viewModel = viewModel as? AttachmentLoadingViewModel {
+            viewModel.mediaStatus = mediaStatus.rawValue
+            if let cell = cell as? (PhotoRepresentableMessageCell & AttachmentExpirationHintingMessageCell) {
+                cell.updateOperationButtonAndExpiredHintLabel()
+            } else if let cell = cell as? AttachmentLoadingMessageCell {
+                cell.updateOperationButtonStyle()
+            }
+        } else {
+            viewModel?.message.mediaStatus = mediaStatus.rawValue
+        }
+        if let cell = cell as? AudioMessageCell {
+            cell.updateUnreadStyle()
+        }
+    }
+    
     private func updateMessageStatus(messageId: String, status: MessageStatus) {
         guard let indexPath = indexPath(where: { $0.messageId == messageId }), let viewModel = viewModel(for: indexPath) as? DetailInfoMessageViewModel else {
             return
@@ -617,27 +642,6 @@ extension ConversationDataSource {
         viewModel.updateKey(content: content,
                          key: key,
                          digest: digest)
-    }
-    
-    private func updateMessageMediaStatus(messageId: String, mediaStatus: MediaStatus) {
-        guard let indexPath = indexPath(where: { $0.messageId == messageId }) else {
-            return
-        }
-        let viewModel = self.viewModel(for: indexPath)
-        let cell = tableView?.cellForRow(at: indexPath)
-        if let viewModel = viewModel as? AttachmentLoadingViewModel {
-            viewModel.mediaStatus = mediaStatus.rawValue
-            if let cell = cell as? (PhotoRepresentableMessageCell & AttachmentExpirationHintingMessageCell) {
-                cell.updateOperationButtonAndExpiredHintLabel()
-            } else if let cell = cell as? AttachmentLoadingMessageCell {
-                cell.updateOperationButtonStyle()
-            }
-        } else {
-            viewModel?.message.mediaStatus = mediaStatus.rawValue
-        }
-        if let cell = cell as? AudioMessageCell {
-            cell.updateUnreadStyle()
-        }
     }
     
     private func updateMediaContent(messageId: String, message: Message) {

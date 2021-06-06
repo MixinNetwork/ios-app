@@ -5,7 +5,11 @@ public class SendMessageService: MixinService {
     
     public static let shared = SendMessageService()
     
-    internal static let recallableSuffices = ["_TEXT", "_STICKER", "_CONTACT", "_IMAGE", "_DATA", "_AUDIO", "_VIDEO", "_LIVE", "_POST", "_LOCATION"]
+    internal static let recallableSuffices = [
+        "_TEXT", "_STICKER", "_CONTACT", "_IMAGE", "_DATA",
+        "_AUDIO", "_VIDEO", "_LIVE", "_POST", "_LOCATION",
+        MessageCategory.SIGNAL_TRANSCRIPT.rawValue
+    ]
     
     public let jobCreationQueue = DispatchQueue(label: "one.mixin.services.queue.send.message.job.creation")
     

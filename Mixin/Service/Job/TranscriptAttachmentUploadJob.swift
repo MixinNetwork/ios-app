@@ -32,7 +32,7 @@ final class TranscriptAttachmentUploadJob: AsynchronousJob {
     }
     
     override func getJobId() -> String {
-        return "transcript-atmt-\(message.messageId)"
+        return "transcript-upload-\(message.messageId)"
     }
     
     override func execute() -> Bool {

@@ -4,6 +4,11 @@ import MixinServices
 
 class MessageReceiverViewController: PeerViewController<[MessageReceiver], CheckmarkPeerCell, MessageReceiverSearchResult> {
     
+    private struct ComposedMessage {
+        let message: Message
+        let descendants: [TranscriptMessage]?
+    }
+    
     override class var showSelectionsOnTop: Bool {
         true
     }
@@ -172,12 +177,18 @@ extension MessageReceiverViewController: ContainerViewControllerDelegate {
                 }
                 switch receiver.item {
                 case .group:
-                    for (message, descendants) in messages {
-                        SendMessageService.shared.sendMessage(message: message, descendants: descendants, ownerUser: nil, isGroupMessage: true)
+                    for m in messages {
+                        SendMessageService.shared.sendMessage(message: m.message,
+                                                              descendants: m.descendants,
+                                                              ownerUser: nil,
+                                                              isGroupMessage: true)
                     }
                 case .user(let user):
-                    for (message, descendants) in messages {
-                        SendMessageService.shared.sendMessage(message: message, descendants: descendants, ownerUser: user, isGroupMessage: false)
+                    for m in messages {
+                        SendMessageService.shared.sendMessage(message: m.message,
+                                                              descendants: m.descendants,
+                                                              ownerUser: user,
+                                                              isGroupMessage: false)
                     }
                 }
             }
@@ -283,40 +294,53 @@ extension MessageReceiverViewController {
         case transcript([MessageItem])
     }
     
-    static func makeMessages(content: MessageContent, to receiver: MessageReceiver) -> [(Message, [TranscriptMessage]?)] {
+    private static func makeMessages(content: MessageContent, to receiver: MessageReceiver) -> [ComposedMessage] {
         switch content {
         case .message(var message):
             message.messageId = UUID().uuidString.lowercased()
             message.conversationId = receiver.conversationId
             message.createdAt = Date().toUTCString()
-            return [(message, nil)]
+            return [ComposedMessage(message: message, descendants: nil)]
         case .messages(let messages):
             let date = Date()
             let counter = Counter(value: -1)
-            return messages.compactMap({ (original) -> (Message, [TranscriptMessage]?)? in
+            return messages.compactMap({ (original) -> ComposedMessage? in
                 let interval = TimeInterval(counter.advancedValue) / millisecondsPerSecond
                 let createdAt = date.addingTimeInterval(interval).toUTCString()
                 return makeMessage(message: original, to: receiver, createdAt: createdAt)
             })
         case .post(let text):
-            return [makeMessage(post: text, to: receiver.conversationId)].compactMap({ $0 }).map { ($0, nil) }
+            return [makeMessage(post: text, to: receiver.conversationId)]
+                .compactMap { $0 }
+                .map { ComposedMessage(message: $0, descendants: nil) }
         case .contact(let userId):
-            return [makeMessage(userId: userId, to: receiver.conversationId)].compactMap({ $0 }).map { ($0, nil) }
+            return [makeMessage(userId: userId, to: receiver.conversationId)]
+                .compactMap { $0 }
+                .map { ComposedMessage(message: $0, descendants: nil) }
         case .photo(let image):
-            return [makeMessage(image: image, to: receiver.conversationId)].compactMap({ $0 }).map { ($0, nil) }
+            return [makeMessage(image: image, to: receiver.conversationId)]
+                .compactMap { $0 }
+                .map { ComposedMessage(message: $0, descendants: nil) }
         case .text(let text):
-            return [makeMessage(text: text, to: receiver.conversationId)].compactMap({ $0 }).map { ($0, nil) }
+            return [makeMessage(text: text, to: receiver.conversationId)]
+                .compactMap { $0 }
+                .map { ComposedMessage(message: $0, descendants: nil) }
         case .video(let url):
-            return [makeMessage(videoUrl: url, to: receiver.conversationId)].compactMap({ $0 }).map { ($0, nil) }
+            return [makeMessage(videoUrl: url, to: receiver.conversationId)]
+                .compactMap { $0 }
+                .map { ComposedMessage(message: $0, descendants: nil) }
         case .appCard(let appCard):
-            return [makeMessage(appCard: appCard, to: receiver.conversationId)].compactMap({ $0 }).map { ($0, nil) }
+            return [makeMessage(appCard: appCard, to: receiver.conversationId)]
+                .compactMap { $0 }
+                .map { ComposedMessage(message: $0, descendants: nil) }
         case .transcript(let messages):
-            return [makeTranscriptMessage(messages: messages, to: receiver.conversationId)].compactMap({ $0 })
+            return [makeTranscriptMessage(messages: messages, to: receiver.conversationId)]
+                .compactMap { $0 }
         }
     }
     
     // Copy media file in case of deletion or recalling
-    static func mediaUrl(from message: MessageItem, with newMessageId: String) -> String? {
+    private static func mediaUrl(from message: MessageItem, with newMessageId: String) -> String? {
         guard let category = AttachmentContainer.Category(messageCategory: message.category), let videoFilename = message.mediaUrl else {
             return message.mediaUrl
         }
@@ -339,7 +363,7 @@ extension MessageReceiverViewController {
         return toUrl.lastPathComponent
     }
     
-    static func makeMessage(message: MessageItem, to receiver: MessageReceiver, createdAt: String) -> (Message, [TranscriptMessage]?)? {
+    private static func makeMessage(message: MessageItem, to receiver: MessageReceiver, createdAt: String) -> ComposedMessage? {
         var newMessage = Message.createMessage(category: message.category,
                                                conversationId: receiver.conversationId,
                                                createdAt: createdAt,
@@ -435,10 +459,10 @@ extension MessageReceiverViewController {
             newMessage.mediaDigest = message.mediaDigest
         }
         
-        return (newMessage, nil)
+        return ComposedMessage(message: newMessage, descendants: nil)
     }
     
-    static func makeMessage(userId: String, to conversationId: String) -> Message? {
+    private static func makeMessage(userId: String, to conversationId: String) -> Message? {
         var message = Message.createMessage(category: MessageCategory.SIGNAL_CONTACT.rawValue,
                                             conversationId: conversationId,
                                             userId: myUserId)
@@ -448,7 +472,7 @@ extension MessageReceiverViewController {
         return message
     }
 
-    static func makeMessage(appCard: AppCardData, to conversationId: String) -> Message? {
+    private static func makeMessage(appCard: AppCardData, to conversationId: String) -> Message? {
         var message = Message.createMessage(category: MessageCategory.APP_CARD.rawValue,
                                             conversationId: conversationId,
                                             userId: myUserId)
@@ -456,7 +480,7 @@ extension MessageReceiverViewController {
         return message
     }
     
-    static func makeMessage(image: UIImage, to conversationId: String) -> Message? {
+    private static func makeMessage(image: UIImage, to conversationId: String) -> Message? {
         var message = Message.createMessage(category: MessageCategory.SIGNAL_IMAGE.rawValue,
                                             conversationId: conversationId,
                                             userId: myUserId)
@@ -476,7 +500,7 @@ extension MessageReceiverViewController {
         return message
     }
     
-    static func makeMessage(text: String, to conversationId: String) -> Message {
+    private static func makeMessage(text: String, to conversationId: String) -> Message {
         var message = Message.createMessage(category: MessageCategory.SIGNAL_TEXT.rawValue,
                                             conversationId: conversationId,
                                             userId: myUserId)
@@ -484,7 +508,7 @@ extension MessageReceiverViewController {
         return message
     }
     
-    static func makeMessage(post: String, to conversationId: String) -> Message {
+    private static func makeMessage(post: String, to conversationId: String) -> Message {
         var message = Message.createMessage(category: MessageCategory.SIGNAL_POST.rawValue,
                                             conversationId: conversationId,
                                             userId: myUserId)
@@ -492,7 +516,7 @@ extension MessageReceiverViewController {
         return message
     }
     
-    static func makeMessage(videoUrl: URL, to conversationId: String) -> Message? {
+    private static func makeMessage(videoUrl: URL, to conversationId: String) -> Message? {
         let asset = AVAsset(url: videoUrl)
         guard asset.duration.isValid, let videoTrack = asset.tracks(withMediaType: .video).first else {
             return nil
@@ -518,7 +542,7 @@ extension MessageReceiverViewController {
         return message
     }
     
-    static func makeTranscriptMessage(messages: [MessageItem], to conversationId: String) -> (Message, [TranscriptMessage])? {
+    private static func makeTranscriptMessage(messages: [MessageItem], to conversationId: String) -> ComposedMessage {
         let transcriptId = UUID().uuidString.lowercased()
         let sortedMessageItems = messages.sorted(by: { $0.createdAt < $1.createdAt })
         let descendants = makeTranscriptDescendants(with: transcriptId, from: sortedMessageItems)
@@ -536,7 +560,7 @@ extension MessageReceiverViewController {
                                             content: content,
                                             status: MessageStatus.SENDING.rawValue,
                                             createdAt: Date().toUTCString())
-        return (message, descendants)
+        return ComposedMessage(message: message, descendants: descendants)
     }
     
 }

@@ -787,22 +787,13 @@ public class ReceiveMessageService: MixinService {
             content = ""
         }
         
+        var absentUserIds: Set<String> = []
         for descendant in descendants {
             if let id = descendant.userId {
                 if let fullname = UserDAO.shared.getFullname(userId: id) {
                     descendant.userFullName = fullname
                 } else {
-                    fetchUser: repeat {
-                        switch UserSessionAPI.showUser(userId: id) {
-                        case let .success(response):
-                            UserDAO.shared.updateUsers(users: [response], sendNotificationAfterFinished: false)
-                            descendant.userFullName = response.fullName
-                        case .failure(.notFound):
-                            break fetchUser
-                        case let .failure(error):
-                            checkNetworkAndWebSocket()
-                        }
-                    } while LoginManager.shared.isLoggedIn
+                    absentUserIds.insert(id)
                 }
             }
             switch descendant.category {
@@ -821,6 +812,10 @@ public class ReceiveMessageService: MixinService {
             default:
                 break
             }
+        }
+        if !absentUserIds.isEmpty {
+            let job = RefreshUserJob(userIds: Array(absentUserIds))
+            ConcurrentJobQueue.shared.addJob(job: job)
         }
         
         return (content, descendants, hasAttachment)

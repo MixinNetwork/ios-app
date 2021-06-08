@@ -580,6 +580,7 @@ public class ReceiveMessageService: MixinService {
                 return
             }
             guard !descendants.isEmpty else {
+                ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }
             let message = Message.createTranscriptMessage(content: content,
@@ -709,6 +710,10 @@ public class ReceiveMessageService: MixinService {
             MessageDAO.shared.updateContactMessage(transferData: transferData, status: Message.getStatus(data: data), messageId: messageId, category: data.category, conversationId: data.conversationId, messageSource: data.source)
         case MessageCategory.SIGNAL_TRANSCRIPT.rawValue:
             guard let (content, descendants, hasAttachment) = parseTranscript(plainText: plainText, outMostTranscriptId: messageId) else {
+                ReceiveMessageService.shared.processUnknownMessage(data: data)
+                return
+            }
+            guard !descendants.isEmpty else {
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }

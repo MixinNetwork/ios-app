@@ -133,7 +133,7 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (7.4.0):
     - GoogleUtilities/Logger
-  - GRDB.swift/SQLCipher (5.7.4):
+  - GRDB.swift/SQLCipher (5.8.0):
     - SQLCipher (>= 3.4.0)
   - GzipSwift (5.1.1)
   - libsignal-protocol-c (2.3.2)
@@ -303,7 +303,7 @@ SPEC CHECKSUMS:
   GoogleAppMeasurement: fd19169c3034975cb934e865e5667bfdce59df7f
   GoogleDataTransport: cd9db2180fcecd8da1b561aea31e3e56cf834aa7
   GoogleUtilities: 284cddc7fffc14ae1907efb6f78ab95c1fccaedc
-  GRDB.swift: 2064e726141f130d0b8bd819b29086f2b1157597
+  GRDB.swift: 9b9beec114435e1d852ad68c136cff4c71134627
   GzipSwift: 893f3e48e597a1a4f62fafcb6514220fcf8287fa
   libsignal-protocol-c: bf65792f9f777e7d54dfab84bba0379eba42044e
   lottie-ios: 0e760146411886f6104050c932a8e6964853267f

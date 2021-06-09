@@ -53,6 +53,13 @@ final class TranscriptAttachmentUploadJob: AsynchronousJob {
                abs(createdAt.timeIntervalSinceNow) < secondsPerDay
             {
                 continue
+            } else if let content = descendant.content,
+                      let data = Data(base64Encoded: content),
+                      let extra = try? JSONDecoder.default.decode(AttachmentExtra.self, from: data),
+                      abs(extra.createdAt.toUTCDate().timeIntervalSinceNow) < secondsPerDay
+            {
+                descendant.content = extra.attachmentId
+                continue
             } else if let mediaUrl = descendant.mediaUrl {
                 let url = AttachmentContainer.url(transcriptId: message.messageId, filename: mediaUrl)
                 if let stream = AttachmentEncryptingInputStream(url: url), stream.streamError == nil {

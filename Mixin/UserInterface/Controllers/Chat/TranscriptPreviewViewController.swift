@@ -493,22 +493,18 @@ extension TranscriptPreviewViewController {
         child.mediaStatus = mediaStatus.rawValue
         child.mediaUrl = mediaUrl
         if let indexPath = self.indexPath(where: { $0.messageId == messageId }), let viewModel = self.viewModel(at: indexPath) {
-            let cell = tableView.cellForRow(at: indexPath)
             if let viewModel = viewModel as? AttachmentLoadingViewModel {
                 viewModel.mediaStatus = mediaStatus.rawValue
-                if let cell = cell as? AttachmentLoadingMessageCell {
-                    cell.updateOperationButtonStyle()
-                }
             }
             if let viewModel = viewModel as? PhotoRepresentableMessageViewModel {
                 viewModel.update(mediaUrl: child.mediaUrl,
                                  mediaSize: viewModel.message.mediaSize,
                                  mediaDuration: viewModel.message.mediaDuration)
-                if let cell = cell as? PhotoRepresentableMessageCell {
-                    cell.reloadMedia(viewModel: viewModel)
-                }
             } else if viewModel is AudioMessageViewModel || viewModel is DataMessageViewModel {
                 viewModel.message.mediaUrl = mediaUrl
+            }
+            if let cell = tableView.cellForRow(at: indexPath) as? MessageCell {
+                cell.render(viewModel: viewModel)
             }
         }
     }

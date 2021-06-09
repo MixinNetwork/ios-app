@@ -16,9 +16,7 @@ class TranscriptAudioMessagePlayingManager: AudioMessagePlayingManager {
     }
     
     override func updateMediaStatusToRead(message: MessageItem) {
-        TranscriptMessageDAO.shared.updateMediaStatus(.READ,
-                                                      transcriptId: transcriptId,
-                                                      messageId: message.messageId)
+        // Do nothing. There's no read indication for audio messages inside a transcript
     }
     
     override func filePath(message: MessageItem, mediaUrl: String) -> String {

@@ -499,7 +499,9 @@ extension TranscriptPreviewViewController {
         }
         let mediaUrl = notification.userInfo?[TranscriptMessageDAO.UserInfoKey.mediaUrl] as? String
         child.mediaStatus = mediaStatus.rawValue
-        child.mediaUrl = mediaUrl
+        if let mediaUrl = mediaUrl {
+            child.mediaUrl = mediaUrl
+        }
         if let indexPath = self.indexPath(where: { $0.messageId == messageId }), let viewModel = self.viewModel(at: indexPath) {
             if let viewModel = viewModel as? AttachmentLoadingViewModel {
                 viewModel.mediaStatus = mediaStatus.rawValue
@@ -509,7 +511,9 @@ extension TranscriptPreviewViewController {
                                  mediaSize: viewModel.message.mediaSize,
                                  mediaDuration: viewModel.message.mediaDuration)
             } else if viewModel is AudioMessageViewModel || viewModel is DataMessageViewModel {
-                viewModel.message.mediaUrl = mediaUrl
+                if let mediaUrl = mediaUrl {
+                    viewModel.message.mediaUrl = mediaUrl
+                }
             }
             if let cell = tableView.cellForRow(at: indexPath) as? MessageCell {
                 cell.render(viewModel: viewModel)

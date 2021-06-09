@@ -68,10 +68,12 @@ public final class TranscriptMessageDAO: UserDatabaseDAO {
         """
         let items: [MessageItem] = db.select(with: sql, arguments: [transcriptId])
         for item in items {
-            guard let content = item.quoteContent, let string = String(data: content, encoding: .utf8) else {
-                continue
+            if let content = item.quoteContent, let string = String(data: content, encoding: .utf8) {
+                item.quoteContent = QuoteContentConverter.localQuoteContent(from: string)
             }
-            item.quoteContent = QuoteContentConverter.localQuoteContent(from: string)
+            if let json = item.mentionsJson, let transcriptMentions = String(data: json, encoding: .utf8) {
+                item.mentionsJson = MentionConverter.localMention(from: transcriptMentions)
+            }
         }
         return items
     }

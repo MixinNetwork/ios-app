@@ -74,6 +74,9 @@ public final class TranscriptMessageDAO: UserDatabaseDAO {
             if let json = item.mentionsJson, let transcriptMentions = String(data: json, encoding: .utf8) {
                 item.mentionsJson = MentionConverter.localMention(from: transcriptMentions)
             }
+            if item.category == MessageCategory.APP_CARD.rawValue {
+                item.content = AppCardContentConverter.localAppCard(from: item.content)
+            }
         }
         return items
     }

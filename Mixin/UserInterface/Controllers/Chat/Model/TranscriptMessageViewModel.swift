@@ -4,7 +4,7 @@ import MixinServices
 class TranscriptMessageViewModel: TextMessageViewModel {
     
     static let maxNumberOfDigestLines = 4
-    static let transcriptBackgroundMargin = Margin(leading: -6, trailing: -6, top: 4, bottom: 2)
+    static let transcriptBackgroundMargin = Margin(leading: -6, trailing: -5, top: 4, bottom: 2)
     static let transcriptInterlineSpacing: CGFloat = 4
     
     let contents: [TranscriptMessage.LocalContent]

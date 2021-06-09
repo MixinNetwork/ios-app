@@ -340,6 +340,7 @@
 "chat_external_sharing_category_post" = "文章";
 "chat_external_sharing_category_app_card" = "卡片";
 "chat_transcript" = "聊天记录";
+"chat_transcript_forward_invalid_media_status" = "请下载全部附件后转发";
 
 // Web
 "web_suspicious_link" = "可疑链接";

@@ -115,8 +115,16 @@ class TranscriptPreviewViewController: FullscreenPopupViewController {
     override func moreAction(_ sender: Any) {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: R.string.localizable.chat_message_menu_forward(), style: .default, handler: { _ in
-            let picker = MessageReceiverViewController.instance(content: .messages([self.transcriptMessage]))
-            self.navigationController?.pushViewController(picker, animated: true)
+            let isTranscriptAttachmentDownloaded = self.transcriptMessage.mediaStatus == MediaStatus.DONE.rawValue
+                || self.transcriptMessage.mediaStatus == MediaStatus.READ.rawValue
+            if isTranscriptAttachmentDownloaded {
+                let picker = MessageReceiverViewController.instance(content: .messages([self.transcriptMessage]))
+                self.navigationController?.pushViewController(picker, animated: true)
+            } else {
+                let alert = UIAlertController(title: R.string.localizable.chat_transcript_forward_invalid_media_status(), message: nil, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_ok(), style: .cancel, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            }
         }))
         alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
         present(alert, animated: true, completion: nil)

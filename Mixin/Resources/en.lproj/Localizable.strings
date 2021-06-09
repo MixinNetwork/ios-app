@@ -340,6 +340,7 @@
 "chat_external_sharing_category_post" = "post";
 "chat_external_sharing_category_app_card" = "card";
 "chat_transcript" = "Transcript";
+"chat_transcript_forward_invalid_media_status" = "Forwarding transcript requires all attachments are downloaded";
 
 // Web
 "web_suspicious_link" = "Suspicious Link";

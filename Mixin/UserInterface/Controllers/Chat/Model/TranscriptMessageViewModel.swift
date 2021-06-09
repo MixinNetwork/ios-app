@@ -22,7 +22,7 @@ class TranscriptMessageViewModel: TextMessageViewModel {
     }
     
     override var backgroundWidth: CGFloat {
-        220
+        layoutWidth - DetailInfoMessageViewModel.bubbleMargin.horizontal
     }
     
     override init(message: MessageItem) {

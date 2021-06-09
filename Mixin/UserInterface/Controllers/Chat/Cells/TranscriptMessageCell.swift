@@ -17,7 +17,7 @@ class TranscriptMessageCell: TextMessageCell {
         
         transcriptStackView.axis = .vertical
         transcriptStackView.alignment = .fill
-        transcriptStackView.distribution = .fill
+        transcriptStackView.distribution = .equalSpacing
         transcriptStackView.spacing = TranscriptMessageViewModel.transcriptInterlineSpacing
         messageContentView.addSubview(transcriptStackView)
         

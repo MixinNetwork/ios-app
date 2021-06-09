@@ -13,7 +13,7 @@ class TranscriptMessageCell: TextMessageCell {
         super.prepare()
         transcriptBackgroundView.clipsToBounds = true
         transcriptBackgroundView.layer.cornerRadius = 7
-        messageContentView.insertSubview(transcriptBackgroundView, belowSubview: contentLabel)
+        messageContentView.insertSubview(transcriptBackgroundView, aboveSubview: backgroundImageView)
         
         transcriptStackView.axis = .vertical
         transcriptStackView.alignment = .fill
@@ -63,15 +63,11 @@ class TranscriptMessageCell: TextMessageCell {
                 let label = digestLabels[index]
                 stackView.isHidden = false
                 label.text = digest
-                if index == viewModel.digests.count - 1 {
-                    if trailingInfoPlaceholder.superview != stackView {
-                        trailingInfoPlaceholder.removeFromSuperview()
-                        if !viewModel.style.contains(.received) {
-                            stackView.addArrangedSubview(trailingInfoPlaceholder)
-                            let placeholderWidth = statusImageView.frame.maxX - encryptedImageView.frame.minX
-                            trailingInfoPlaceholder.widthAnchor.constraint(equalToConstant: placeholderWidth).isActive = true
-                        }
-                    }
+                if index == viewModel.digests.count - 1, trailingInfoPlaceholder.superview != stackView {
+                    trailingInfoPlaceholder.removeFromSuperview()
+                    stackView.addArrangedSubview(trailingInfoPlaceholder)
+                    let placeholderWidth = statusImageView.frame.maxX - encryptedImageView.frame.minX
+                    trailingInfoPlaceholder.widthAnchor.constraint(equalToConstant: placeholderWidth).isActive = true
                 }
             }
         }

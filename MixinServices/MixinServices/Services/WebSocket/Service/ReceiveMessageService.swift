@@ -783,7 +783,8 @@ public class ReceiveMessageService: MixinService {
         }
         
         let localContents = descendants
-            .filter { $0.transcriptId == transcriptId}
+            .filter { $0.transcriptId == transcriptId }
+            .sorted { $0.createdAt < $1.createdAt }
             .map(TranscriptMessage.LocalContent.init)
         let content: String
         if let data = try? JSONEncoder.default.encode(localContents), let localContent = String(data: data, encoding: .utf8) {

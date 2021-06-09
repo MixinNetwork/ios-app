@@ -488,25 +488,30 @@ class ConversationViewController: UIViewController {
     @IBAction func multipleSelectionAction(_ sender: Any) {
         switch multipleSelectionActionView.intent {
         case .forward:
-            let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-            let messages = self.dataSource.selectedViewModels.values
+            let messages = dataSource.selectedViewModels.values
                 .map({ $0.message })
                 .sorted(by: { $0.createdAt < $1.createdAt })
-            let containsTranscriptMessage = messages.contains {
-                $0.category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue
-            }
-            alert.addAction(UIAlertAction(title: R.string.localizable.chat_forward_one_by_one(), style: .default, handler: { (_) in
+            if messages.count == 1 {
                 let vc = MessageReceiverViewController.instance(content: .messages(messages))
-                self.navigationController?.pushViewController(vc, animated: true)
-            }))
-            if !containsTranscriptMessage {
-                alert.addAction(UIAlertAction(title: R.string.localizable.chat_forward_combined(), style: .default, handler: { (_) in
-                    let vc = MessageReceiverViewController.instance(content: .transcript(messages), hideApps: true)
+                navigationController?.pushViewController(vc, animated: true)
+            } else {
+                let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+                let containsTranscriptMessage = messages.contains {
+                    $0.category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue
+                }
+                alert.addAction(UIAlertAction(title: R.string.localizable.chat_forward_one_by_one(), style: .default, handler: { (_) in
+                    let vc = MessageReceiverViewController.instance(content: .messages(messages))
                     self.navigationController?.pushViewController(vc, animated: true)
                 }))
+                if !containsTranscriptMessage {
+                    alert.addAction(UIAlertAction(title: R.string.localizable.chat_forward_combined(), style: .default, handler: { (_) in
+                        let vc = MessageReceiverViewController.instance(content: .transcript(messages), hideApps: true)
+                        self.navigationController?.pushViewController(vc, animated: true)
+                    }))
+                }
+                alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
+                present(alert, animated: true, completion: nil)
             }
-            alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
-            present(alert, animated: true, completion: nil)
         case .delete:
             let viewModels = dataSource.selectedViewModels.values.map({ $0 })
             let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)

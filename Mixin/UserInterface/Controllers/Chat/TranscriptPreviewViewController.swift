@@ -112,6 +112,16 @@ class TranscriptPreviewViewController: FullscreenPopupViewController {
         super.dismissAsChild(animated: animated, completion: completion)
     }
     
+    override func moreAction(_ sender: Any) {
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: R.string.localizable.chat_message_menu_forward(), style: .default, handler: { _ in
+            let picker = MessageReceiverViewController.instance(content: .messages([self.transcriptMessage]))
+            self.navigationController?.pushViewController(picker, animated: true)
+        }))
+        alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
+    
     @objc private func tapAction(_ recognizer: UIGestureRecognizer) {
         if UIMenuController.shared.isMenuVisible {
             UIMenuController.shared.setMenuVisible(false, animated: true)

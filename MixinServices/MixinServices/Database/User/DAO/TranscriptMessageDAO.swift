@@ -185,7 +185,7 @@ public final class TranscriptMessageDAO: UserDatabaseDAO {
                                                 userInfo: userInfo)
                 if isTranscriptMessageFinished {
                     let userInfo: [String: Any] = [
-                        Self.UserInfoKey.messageId: messageId,
+                        Self.UserInfoKey.messageId: transcriptId,
                         Self.UserInfoKey.mediaStatus: MediaStatus.DONE,
                     ]
                     NotificationCenter.default.post(onMainThread: MessageDAO.messageMediaStatusDidUpdateNotification,

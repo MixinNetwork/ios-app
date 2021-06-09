@@ -334,7 +334,7 @@ extension MessageReceiverViewController {
                 .compactMap { $0 }
                 .map { ComposedMessage(message: $0, descendants: nil) }
         case .transcript(let messages):
-            return [makeTranscriptMessage(messages: messages, to: receiver.conversationId)]
+            return [makeTranscriptMessage(messages: messages, ofTranscriptWith: nil, to: receiver.conversationId)]
                 .compactMap { $0 }
         }
     }
@@ -432,11 +432,15 @@ extension MessageReceiverViewController {
             let liveData = TransferLiveData(width: width, height: height, thumbUrl: thumbUrl, url: mediaUrl)
             newMessage.content = try! JSONEncoder.default.encode(liveData).base64EncodedString()
         } else if message.category == "SIGNAL_TRANSCRIPT" {
+            // FIXME: Forward message by treating it like a MessageItem will wipe the value of media_created_at,
+            // which prevents us from detect and forbid duplicated attachment uploading
             let children = TranscriptMessageDAO.shared.messageItems(transcriptId: message.messageId)
             if children.isEmpty {
                 return nil
             } else {
-                return makeTranscriptMessage(messages: children, to: receiver.conversationId)
+                return makeTranscriptMessage(messages: children,
+                                             ofTranscriptWith: message.messageId,
+                                             to: receiver.conversationId)
             }
         } else {
             return nil
@@ -542,10 +546,16 @@ extension MessageReceiverViewController {
         return message
     }
     
-    private static func makeTranscriptMessage(messages: [MessageItem], to conversationId: String) -> ComposedMessage {
+    private static func makeTranscriptMessage(
+        messages: [MessageItem],
+        ofTranscriptWith originalTranscriptId: String?,
+        to conversationId: String
+    ) -> ComposedMessage {
         let transcriptId = UUID().uuidString.lowercased()
         let sortedMessageItems = messages.sorted(by: { $0.createdAt < $1.createdAt })
-        let descendants = makeTranscriptDescendants(with: transcriptId, from: sortedMessageItems)
+        let descendants = makeTranscriptDescendants(with: transcriptId,
+                                                    from: sortedMessageItems,
+                                                    ofTranscriptWith: originalTranscriptId)
         let localContents = sortedMessageItems.compactMap(TranscriptMessage.LocalContent.init)
         let content: String
         if let data = try? JSONEncoder.default.encode(localContents), let localContent = String(data: data, encoding: .utf8) {
@@ -567,7 +577,11 @@ extension MessageReceiverViewController {
 
 extension MessageReceiverViewController {
     
-    private static func makeTranscriptDescendants(with transcriptId: String, from messages: [MessageItem]) -> [TranscriptMessage] {
+    private static func makeTranscriptDescendants(
+        with transcriptId: String,
+        from messages: [MessageItem],
+        ofTranscriptWith originalTranscriptId: String?
+    ) -> [TranscriptMessage] {
         let categoriesWithAttachment = Set(AttachmentContainer.Category.allCases.flatMap { $0.messageCategory }.map { $0.rawValue })
         var insertedHashers: Set<TranscriptMessage.Hasher> = []
         return messages.flatMap { item -> [TranscriptMessage] in
@@ -587,7 +601,12 @@ extension MessageReceiverViewController {
                         extensionName = ""
                     }
                     let destinationFilename = item.messageId + "." + extensionName
-                    let source = AttachmentContainer.url(for: category, filename: sourceFilename)
+                    let source: URL
+                    if let tid = originalTranscriptId {
+                        source = AttachmentContainer.url(transcriptId: tid, filename: sourceFilename)
+                    } else {
+                        source = AttachmentContainer.url(for: category, filename: sourceFilename)
+                    }
                     let destination = AttachmentContainer.url(transcriptId: transcriptId, filename: destinationFilename)
                     try FileManager.default.copyItem(at: source, to: destination)
                     if category == .videos {
@@ -606,7 +625,9 @@ extension MessageReceiverViewController {
             var descendants: [TranscriptMessage] = [child]
             if child.category == .transcript {
                 let nestedMessageItems = TranscriptMessageDAO.shared.messageItems(transcriptId: child.messageId)
-                let nestedDescendants = makeTranscriptDescendants(with: child.messageId, from: nestedMessageItems)
+                let nestedDescendants = makeTranscriptDescendants(with: child.messageId,
+                                                                  from: nestedMessageItems,
+                                                                  ofTranscriptWith: child.messageId)
                 for descendant in nestedDescendants {
                     let (inserted, _) = insertedHashers.insert(descendant.hasher)
                     if inserted {

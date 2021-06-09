@@ -36,6 +36,7 @@ final class UserProfileViewController: ProfileViewController {
     private var relationship = Relationship.ME
     private var developer: UserItem?
     private var avatarPreviewImageView: UIImageView?
+    private var avatarPreviewWrapperView: UIView?
     private var favoriteAppMenuItemViewIfLoaded: MyFavoriteAppProfileMenuItemView?
     private var favoriteAppViewIfLoaded: ProfileFavoriteAppsView?
     private var sharedAppUsers: [User]?
@@ -85,11 +86,13 @@ final class UserProfileViewController: ProfileViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        if let coordinator = transitionCoordinator, let imageView = avatarPreviewImageView {
+        if let coordinator = transitionCoordinator, let imageView = avatarPreviewImageView, let wrapperView = avatarPreviewWrapperView {
             coordinator.animate(alongsideTransition: { (context) in
                 imageView.frame.origin.y = AppDelegate.current.mainWindow.bounds.height
+                wrapperView.alpha = 0
             }) { (_) in
                 imageView.removeFromSuperview()
+                wrapperView.removeFromSuperview()
             }
         }
     }
@@ -108,6 +111,30 @@ final class UserProfileViewController: ProfileViewController {
         }
         let window = AppDelegate.current.mainWindow
         let initialFrame = avatarImageView.convert(avatarImageView.bounds, to: window)
+        
+        let wrapperView = UIView(frame: window.bounds)
+        wrapperView.backgroundColor = UIColor.background.withAlphaComponent(0.8)
+        wrapperView.alpha = 0
+        wrapperView.isUserInteractionEnabled = false
+        window.addSubview(wrapperView)
+        avatarPreviewWrapperView = wrapperView
+
+        let effect = UIVisualEffect.lightBlur
+        let effectView = UIVisualEffectView(effect: effect)
+        effectView.frame = window.bounds
+        wrapperView.addSubview(effectView)
+        
+        let dismissButton = UIButton()
+        dismissButton.tintColor = R.color.icon_tint()
+        dismissButton.setImage(R.image.ic_title_close(), for: .normal)
+        dismissButton.isUserInteractionEnabled = false
+        wrapperView.addSubview(dismissButton)
+        dismissButton.snp.makeConstraints { (make) in
+            make.width.height.equalTo(24)
+            make.top.equalTo(window.safeAreaInsets.top + 10)
+            make.left.equalTo(20)
+        }
+        
         let imageView = UIImageView(frame: initialFrame)
         imageView.layer.cornerRadius = initialFrame.height / 2
         imageView.clipsToBounds = true
@@ -121,9 +148,11 @@ final class UserProfileViewController: ProfileViewController {
         UIView.animate(withDuration: 0.5, animations: {
             UIView.setAnimationCurve(.overdamped)
             self.view.layoutIfNeeded()
-            imageView.bounds = CGRect(x: 0, y: 0, width: window.bounds.width, height: window.bounds.width)
+            let imgWH = window.bounds.width - 27.5 * 2
+            imageView.bounds = CGRect(x: 0, y: 0, width: imgWH, height: imgWH)
             imageView.center = CGPoint(x: window.bounds.midX, y: window.bounds.midY)
-            imageView.layer.cornerRadius = 0
+            imageView.layer.cornerRadius = imgWH / 2
+            wrapperView.alpha = 1
         })
     }
     
@@ -899,3 +928,4 @@ extension UserProfileViewController {
     }
     
 }
+

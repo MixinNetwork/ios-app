@@ -610,7 +610,12 @@ extension MessageReceiverViewController {
                     let destination = AttachmentContainer.url(transcriptId: transcriptId, filename: destinationFilename)
                     try FileManager.default.copyItem(at: source, to: destination)
                     if category == .videos {
-                        let source = AttachmentContainer.videoThumbnailURL(videoFilename: sourceFilename)
+                        let source: URL
+                        if let tid = originalTranscriptId {
+                            source = AttachmentContainer.videoThumbnailURL(transcriptId: tid, videoFilename: sourceFilename)
+                        } else {
+                            source = AttachmentContainer.videoThumbnailURL(videoFilename: sourceFilename)
+                        }
                         let destination = AttachmentContainer.videoThumbnailURL(transcriptId: transcriptId, videoFilename: destinationFilename)
                         try? FileManager.default.copyItem(at: source, to: destination)
                     }

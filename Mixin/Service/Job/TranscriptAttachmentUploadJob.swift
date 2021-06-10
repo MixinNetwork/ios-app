@@ -22,7 +22,7 @@ final class TranscriptAttachmentUploadJob: AsynchronousJob {
     private let lock = NSLock()
     
     private var message: Message
-    private var descendants: [TranscriptMessage] = []
+    private var childMessages: [TranscriptMessage] = []
     private var pendingRequests: [String: Request] = [:]
     private var loadingRequests: [String: Request] = [:]
     
@@ -36,48 +36,48 @@ final class TranscriptAttachmentUploadJob: AsynchronousJob {
     }
     
     override func execute() -> Bool {
-        let descendants = TranscriptMessageDAO.shared.descendantMessages(with: message.messageId)
-        guard !descendants.isEmpty else {
+        let children = TranscriptMessageDAO.shared.childMessages(with: message.messageId)
+        guard !children.isEmpty else {
             return false
         }
-        for (index, descendant) in descendants.enumerated() {
-            guard descendant.category.includesAttachment else {
+        for (index, child) in children.enumerated() {
+            guard child.category.includesAttachment else {
                 continue
             }
-            if let content = descendant.content,
+            if let content = child.content,
                UUID(uuidString: content) != nil,
-               descendant.mediaKey != nil,
-               descendant.mediaDigest != nil,
-               descendant.mediaStatus == MediaStatus.DONE.rawValue,
-               let createdAt = descendant.mediaCreatedAt?.toUTCDate(),
+               child.mediaKey != nil,
+               child.mediaDigest != nil,
+               child.mediaStatus == MediaStatus.DONE.rawValue,
+               let createdAt = child.mediaCreatedAt?.toUTCDate(),
                abs(createdAt.timeIntervalSinceNow) < secondsPerDay
             {
                 continue
-            } else if let content = descendant.content,
+            } else if let content = child.content,
                       let data = Data(base64Encoded: content),
                       let extra = try? JSONDecoder.default.decode(AttachmentExtra.self, from: data),
                       abs(extra.createdAt.toUTCDate().timeIntervalSinceNow) < secondsPerDay
             {
-                descendant.content = extra.attachmentId
+                child.content = extra.attachmentId
                 continue
-            } else if let mediaUrl = descendant.mediaUrl {
+            } else if let mediaUrl = child.mediaUrl {
                 let url = AttachmentContainer.url(transcriptId: message.messageId, filename: mediaUrl)
                 if let stream = AttachmentEncryptingInputStream(url: url), stream.streamError == nil {
-                    let request = Request(descendantIndex: index, stream: stream)
+                    let request = Request(childIndex: index, stream: stream)
                     if loadingRequests.count < maxNumberOfConcurrentUploadTask {
-                        loadingRequests[descendant.messageId] = request
+                        loadingRequests[child.messageId] = request
                     } else {
-                        pendingRequests[descendant.messageId] = request
+                        pendingRequests[child.messageId] = request
                     }
                     request.job = self
                 } else {
-                    descendant.content = nil
+                    child.content = nil
                 }
             } else {
-                descendant.content = nil
+                child.content = nil
             }
         }
-        self.descendants = descendants
+        self.childMessages = children
         if loadingRequests.isEmpty {
             finishMessageSending()
         } else {
@@ -102,14 +102,14 @@ final class TranscriptAttachmentUploadJob: AsynchronousJob {
         defer {
             lock.unlock()
         }
-        let descendant = descendants[request.descendantIndex]
-        descendant.content = metadata.attachmentId
-        descendant.mediaKey = metadata.mediaKey
-        descendant.mediaDigest = metadata.mediaDigest
-        descendant.mediaCreatedAt = createdAt
-        loadingRequests[descendant.messageId] = nil
+        let child = childMessages[request.childIndex]
+        child.content = metadata.attachmentId
+        child.mediaKey = metadata.mediaKey
+        child.mediaDigest = metadata.mediaDigest
+        child.mediaCreatedAt = createdAt
+        loadingRequests[child.messageId] = nil
         TranscriptMessageDAO.shared.update(transcriptId: message.messageId,
-                                           messageId: descendant.messageId,
+                                           messageId: child.messageId,
                                            content: metadata.attachmentId,
                                            mediaKey: metadata.mediaKey,
                                            mediaDigest: metadata.mediaDigest,
@@ -137,12 +137,12 @@ final class TranscriptAttachmentUploadJob: AsynchronousJob {
         MessageDAO.shared.updateMediaStatus(messageId: message.messageId,
                                             status: .DONE,
                                             conversationId: message.conversationId)
-        for descendant in descendants {
-            descendant.mediaUrl = nil
-            descendant.mediaStatus = nil
+        for child in childMessages {
+            child.mediaUrl = nil
+            child.mediaStatus = nil
         }
         do {
-            let data = try JSONEncoder.default.encode(descendants)
+            let data = try JSONEncoder.default.encode(childMessages)
             guard let content = String(data: data, encoding: .utf8) else {
                 throw Error.invalidJSON
             }
@@ -161,7 +161,7 @@ extension TranscriptAttachmentUploadJob {
     
     private final class Request {
         
-        let descendantIndex: Int
+        let childIndex: Int
         let stream: AttachmentEncryptingInputStream
         
         weak var job: TranscriptAttachmentUploadJob?
@@ -171,8 +171,8 @@ extension TranscriptAttachmentUploadJob {
         @Synchronized(value: nil)
         private var uploadRequest: Alamofire.Request?
         
-        init(descendantIndex: Int, stream: AttachmentEncryptingInputStream) {
-            self.descendantIndex = descendantIndex
+        init(childIndex: Int, stream: AttachmentEncryptingInputStream) {
+            self.childIndex = childIndex
             self.stream = stream
         }
         

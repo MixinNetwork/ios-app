@@ -94,8 +94,6 @@ extension TranscriptMessageViewModel  {
             if let json = content.content?.data(using: .utf8), let card = try? JSONDecoder.default.decode(AppCardData.self, from: json) {
                 digest += "[\(card.title)]"
             }
-        case .transcript:
-            digest += R.string.localizable.notification_content_transcript()
         case .unknown:
             digest += R.string.localizable.notification_content_unknown()
         }

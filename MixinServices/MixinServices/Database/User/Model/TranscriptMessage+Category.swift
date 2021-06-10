@@ -17,7 +17,6 @@ extension TranscriptMessage {
         case post
         case location
         case appCard
-        case transcript
         case unknown(String)
         
         public var rawValue: String {
@@ -44,8 +43,6 @@ extension TranscriptMessage {
                 return "SIGNAL_LOCATION"
             case .appCard:
                 return "APP_CARD"
-            case .transcript:
-                return "SIGNAL_TRANSCRIPT"
             case .unknown(let value):
                 return value
             }
@@ -79,8 +76,6 @@ extension TranscriptMessage {
                 self = .location
             case "APP_CARD":
                 self = .appCard
-            case "SIGNAL_TRANSCRIPT":
-                self = .transcript
             default:
                 self = .unknown(rawValue)
             }
@@ -114,8 +109,6 @@ extension TranscriptMessage {
                 self = .location
             case .APP_CARD:
                 self = .appCard
-            case .SIGNAL_TRANSCRIPT:
-                self = .transcript
             default:
                 return nil
             }

@@ -92,36 +92,8 @@ public final class TranscriptMessageDAO: UserDatabaseDAO {
                         where: TranscriptMessage.column(of: .messageId) == id)
     }
     
-    // Includes the parameter of transcriptId itself
-    public func descendantTranscriptIds(with transcriptId: String, database: GRDB.Database) throws -> Set<String> {
-        var result: Set<String> = [transcriptId]
-        let ids: [String] = try TranscriptMessage
-            .select(TranscriptMessage.column(of: .messageId))
-            .filter(TranscriptMessage.column(of: .transcriptId) == transcriptId
-                        && TranscriptMessage.column(of: .category) == TranscriptMessage.Category.transcript.rawValue)
-            .fetchAll(database)
-        for id in ids {
-            let nestedIds = try descendantTranscriptIds(with: id, database: database)
-            result.formUnion(nestedIds)
-        }
-        return result
-    }
-    
-    public func descendantMessages(with outMostTranscriptId: String) -> [TranscriptMessage] {
-        let messages: [TranscriptMessage]? = try? db.pool.read { db in
-            let ids = try descendantTranscriptIds(with: outMostTranscriptId, database: db)
-            return try TranscriptMessage
-                .filter(ids.contains(TranscriptMessage.column(of: .transcriptId)))
-                .fetchAll(db)
-        }
-        return messages ?? []
-    }
-    
-    public func descendantTranscriptIds(with transcriptIds: [String]) -> Set<String> {
-        let ids: Set<String>? = try? db.pool.read { db in
-            try descendantTranscriptIds(with: transcriptIds, database: db)
-        }
-        return ids ?? []
+    public func childMessages(with transcriptId: String) -> [TranscriptMessage] {
+        db.select(where: TranscriptMessage.column(of: .transcriptId) == transcriptId)
     }
     
     public func update(
@@ -215,32 +187,6 @@ public final class TranscriptMessageDAO: UserDatabaseDAO {
                                                 userInfo: userInfo)
             }
         }
-    }
-    
-}
-
-extension TranscriptMessageDAO {
-    
-    func descendantTranscriptIds(with transcriptIds: [String], database: GRDB.Database) throws -> Set<String> {
-        var ids: Set<String> = []
-        for id in transcriptIds {
-            let descendantIds = try descendantTranscriptIds(with: id, database: database)
-            ids.formUnion(descendantIds)
-        }
-        return ids
-    }
-    
-    func ascendantTranscriptIds(of transcriptId: String, database: GRDB.Database) throws -> Set<String> {
-        var all: Set<String> = [transcriptId]
-        let parentTranscriptIds: [String] = try TranscriptMessage
-            .select(TranscriptMessage.column(of: .transcriptId))
-            .filter(TranscriptMessage.column(of: .messageId) == transcriptId)
-            .fetchAll(database)
-        for id in parentTranscriptIds {
-            let parents = try self.ascendantTranscriptIds(of: id, database: database)
-            all.formUnion(parents)
-        }
-        return all
     }
     
 }

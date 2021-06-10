@@ -31,8 +31,6 @@ public final class TranscriptMessage {
     public let quoteContent: String?
     public let caption: String?
     
-    public lazy var hasher = Hasher(transcriptId: transcriptId, messageId: messageId)
-    
     public init?(transcriptId: String, messageItem item: MessageItem, mediaUrl: String?) {
         guard let category = Category(messageCategoryString: item.category) else {
             return nil
@@ -97,10 +95,9 @@ extension TranscriptMessage {
         public let content: String?
         
         public init(transcriptMessage t: TranscriptMessage) {
-            let content = t.category == .transcript ? nil : t.content
             self.name = t.userFullName
             self.category = t.category
-            self.content = content
+            self.content = t.content
         }
         
         public init?(messageItem m: MessageItem) {
@@ -111,13 +108,6 @@ extension TranscriptMessage {
             self.category = category
             self.content = m.content
         }
-        
-    }
-    
-    public struct Hasher: Hashable {
-        
-        public let transcriptId: String
-        public let messageId: String
         
     }
     

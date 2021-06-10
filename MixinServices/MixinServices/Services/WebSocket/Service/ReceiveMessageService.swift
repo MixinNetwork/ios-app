@@ -575,18 +575,18 @@ public class ReceiveMessageService: MixinService {
             let message = Message.createLocationMessage(content: content, data: data)
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
         } else if data.category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue {
-            guard let (content, descendants, hasAttachment) = parseTranscript(plainText: plainText, outMostTranscriptId: data.messageId) else {
+            guard let (content, children, hasAttachment) = parseTranscript(plainText: plainText, transcriptId: data.messageId) else {
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }
-            guard !descendants.isEmpty else {
+            guard !children.isEmpty else {
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }
             let message = Message.createTranscriptMessage(content: content,
                                                           mediaStatus: hasAttachment ? .PENDING : .DONE,
                                                           data: data)
-            MessageDAO.shared.insertMessage(message: message, descendants: descendants, messageSource: data.source)
+            MessageDAO.shared.insertMessage(message: message, children: children, messageSource: data.source)
         }
     }
     
@@ -709,15 +709,15 @@ public class ReceiveMessageService: MixinService {
             }
             MessageDAO.shared.updateContactMessage(transferData: transferData, status: Message.getStatus(data: data), messageId: messageId, category: data.category, conversationId: data.conversationId, messageSource: data.source)
         case MessageCategory.SIGNAL_TRANSCRIPT.rawValue:
-            guard let (content, descendants, hasAttachment) = parseTranscript(plainText: plainText, outMostTranscriptId: messageId) else {
+            guard let (content, children, hasAttachment) = parseTranscript(plainText: plainText, transcriptId: messageId) else {
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }
-            guard !descendants.isEmpty else {
+            guard !children.isEmpty else {
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }
-            MessageDAO.shared.updateTranscriptMessage(descendants: descendants,
+            MessageDAO.shared.updateTranscriptMessage(children: children,
                                                       status: Message.getStatus(data: data),
                                                       mediaStatus: hasAttachment ? .PENDING : .DONE,
                                                       content: content,
@@ -772,7 +772,7 @@ public class ReceiveMessageService: MixinService {
         return nil
     }
     
-    private func parseTranscript(plainText: String, outMostTranscriptId transcriptId: String) -> (content: String, descendants: [TranscriptMessage], hasAttachment: Bool)? {
+    private func parseTranscript(plainText: String, transcriptId: String) -> (content: String, children: [TranscriptMessage], hasAttachment: Bool)? {
         var hasAttachment = false
         
         guard
@@ -782,8 +782,8 @@ public class ReceiveMessageService: MixinService {
             return nil
         }
         
-        let localContents = descendants
-            .filter { $0.transcriptId == transcriptId }
+        let children = descendants.filter { $0.transcriptId == transcriptId }
+        let localContents = children
             .sorted { $0.createdAt < $1.createdAt }
             .map(TranscriptMessage.LocalContent.init)
         let content: String
@@ -794,21 +794,21 @@ public class ReceiveMessageService: MixinService {
         }
         
         var absentUserIds: Set<String> = []
-        for descendant in descendants {
-            if let id = descendant.userId {
+        for child in children {
+            if let id = child.userId {
                 if let fullname = UserDAO.shared.getFullname(userId: id) {
-                    descendant.userFullName = fullname
+                    child.userFullName = fullname
                 } else {
                     absentUserIds.insert(id)
                 }
             }
-            switch descendant.category {
+            switch child.category {
             case .data, .image, .video, .audio:
                 hasAttachment = true
-                descendant.mediaStatus = MediaStatus.PENDING.rawValue
+                child.mediaStatus = MediaStatus.PENDING.rawValue
             case .sticker:
-                guard let stickerId = descendant.stickerId, UUID(uuidString: stickerId) != nil else {
-                    descendant.stickerId = nil
+                guard let stickerId = child.stickerId, UUID(uuidString: stickerId) != nil else {
+                    child.stickerId = nil
                     continue
                 }
                 if StickerDAO.shared.isExist(stickerId: stickerId) {
@@ -824,7 +824,7 @@ public class ReceiveMessageService: MixinService {
             ConcurrentJobQueue.shared.addJob(job: job)
         }
         
-        return (content, descendants, hasAttachment)
+        return (content, children, hasAttachment)
     }
     
     private func syncConversation(data: BlazeMessageData) {

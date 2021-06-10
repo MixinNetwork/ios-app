@@ -174,14 +174,14 @@ extension MessageReceiverViewController: ContainerViewControllerDelegate {
                 case .group:
                     for m in messages {
                         SendMessageService.shared.sendMessage(message: m.message,
-                                                              descendants: m.descendants,
+                                                              children: m.children,
                                                               ownerUser: nil,
                                                               isGroupMessage: true)
                     }
                 case .user(let user):
                     for m in messages {
                         SendMessageService.shared.sendMessage(message: m.message,
-                                                              descendants: m.descendants,
+                                                              children: m.children,
                                                               ownerUser: user,
                                                               isGroupMessage: false)
                     }
@@ -292,14 +292,14 @@ extension MessageReceiverViewController {
     private struct ComposedMessage {
         
         let message: Message
-        let descendants: [TranscriptMessage]?
+        let children: [TranscriptMessage]?
         
-        init?(message: Message?, descendants: [TranscriptMessage]?) {
+        init?(message: Message?, children: [TranscriptMessage]?) {
             guard let message = message else {
                 return nil
             }
             self.message = message
-            self.descendants = descendants
+            self.children = children
         }
         
     }
@@ -310,7 +310,7 @@ extension MessageReceiverViewController {
             message.messageId = UUID().uuidString.lowercased()
             message.conversationId = receiver.conversationId
             message.createdAt = Date().toUTCString()
-            return [ComposedMessage(message: message, descendants: nil)].compactMap { $0 }
+            return [ComposedMessage(message: message, children: nil)].compactMap { $0 }
         case .messages(let messages):
             let date = Date()
             let counter = Counter(value: -1)
@@ -321,22 +321,22 @@ extension MessageReceiverViewController {
             })
         case .post(let text):
             return [makeMessage(post: text, to: receiver.conversationId)]
-                .compactMap { ComposedMessage(message: $0, descendants: nil) }
+                .compactMap { ComposedMessage(message: $0, children: nil) }
         case .contact(let userId):
             return [makeMessage(userId: userId, to: receiver.conversationId)]
-                .compactMap { ComposedMessage(message: $0, descendants: nil) }
+                .compactMap { ComposedMessage(message: $0, children: nil) }
         case .photo(let image):
             return [makeMessage(image: image, to: receiver.conversationId)]
-                .compactMap { ComposedMessage(message: $0, descendants: nil) }
+                .compactMap { ComposedMessage(message: $0, children: nil) }
         case .text(let text):
             return [makeMessage(text: text, to: receiver.conversationId)]
-                .compactMap { ComposedMessage(message: $0, descendants: nil) }
+                .compactMap { ComposedMessage(message: $0, children: nil) }
         case .video(let url):
             return [makeMessage(videoUrl: url, to: receiver.conversationId)]
-                .compactMap { ComposedMessage(message: $0, descendants: nil) }
+                .compactMap { ComposedMessage(message: $0, children: nil) }
         case .appCard(let appCard):
             return [makeMessage(appCard: appCard, to: receiver.conversationId)]
-                .compactMap { ComposedMessage(message: $0, descendants: nil) }
+                .compactMap { ComposedMessage(message: $0, children: nil) }
         case .transcript(let messages):
             return [makeTranscriptMessage(messages: messages, ofTranscriptWith: nil, to: receiver.conversationId)]
                 .compactMap { $0 }
@@ -467,7 +467,7 @@ extension MessageReceiverViewController {
             newMessage.mediaDigest = message.mediaDigest
         }
         
-        return ComposedMessage(message: newMessage, descendants: nil)
+        return ComposedMessage(message: newMessage, children: nil)
     }
     
     private static func makeMessage(userId: String, to conversationId: String) -> Message? {
@@ -479,7 +479,7 @@ extension MessageReceiverViewController {
         message.content = try! JSONEncoder().encode(transferData).base64EncodedString()
         return message
     }
-
+    
     private static func makeMessage(appCard: AppCardData, to conversationId: String) -> Message? {
         var message = Message.createMessage(category: MessageCategory.APP_CARD.rawValue,
                                             conversationId: conversationId,
@@ -557,9 +557,9 @@ extension MessageReceiverViewController {
     ) -> ComposedMessage? {
         let transcriptId = UUID().uuidString.lowercased()
         let sortedMessageItems = messages.sorted(by: { $0.createdAt < $1.createdAt })
-        let descendants = makeTranscriptDescendants(with: transcriptId,
-                                                    from: sortedMessageItems,
-                                                    ofTranscriptWith: originalTranscriptId)
+        let children = makeTranscriptChildren(with: transcriptId,
+                                              from: sortedMessageItems,
+                                              ofTranscriptWith: originalTranscriptId)
         let localContents = sortedMessageItems.compactMap(TranscriptMessage.LocalContent.init)
         let content: String
         if let data = try? JSONEncoder.default.encode(localContents), let localContent = String(data: data, encoding: .utf8) {
@@ -574,21 +574,20 @@ extension MessageReceiverViewController {
                                             content: content,
                                             status: MessageStatus.SENDING.rawValue,
                                             createdAt: Date().toUTCString())
-        return ComposedMessage(message: message, descendants: descendants)
+        return ComposedMessage(message: message, children: children)
     }
     
 }
 
 extension MessageReceiverViewController {
     
-    private static func makeTranscriptDescendants(
+    private static func makeTranscriptChildren(
         with transcriptId: String,
         from messages: [MessageItem],
         ofTranscriptWith originalTranscriptId: String?
     ) -> [TranscriptMessage] {
         let categoriesWithAttachment = Set(AttachmentContainer.Category.allCases.flatMap { $0.messageCategory }.map { $0.rawValue })
-        var insertedHashers: Set<TranscriptMessage.Hasher> = []
-        return messages.flatMap { item -> [TranscriptMessage] in
+        return messages.compactMap { item -> TranscriptMessage? in
             let mediaUrl: String? = {
                 guard
                     categoriesWithAttachment.contains(item.category),
@@ -628,23 +627,9 @@ extension MessageReceiverViewController {
                     return nil
                 }
             }()
-            guard let child = TranscriptMessage(transcriptId: transcriptId, messageItem: item, mediaUrl: mediaUrl) else {
-                return []
-            }
-            var descendants: [TranscriptMessage] = [child]
-            if child.category == .transcript {
-                let nestedMessageItems = TranscriptMessageDAO.shared.messageItems(transcriptId: child.messageId)
-                let nestedDescendants = makeTranscriptDescendants(with: child.messageId,
-                                                                  from: nestedMessageItems,
-                                                                  ofTranscriptWith: child.messageId)
-                for descendant in nestedDescendants {
-                    let (inserted, _) = insertedHashers.insert(descendant.hasher)
-                    if inserted {
-                        descendants.append(descendant)
-                    }
-                }
-            }
-            return descendants
+            
+            let child = TranscriptMessage(transcriptId: transcriptId, messageItem: item, mediaUrl: mediaUrl)
+            return child
         }
     }
     

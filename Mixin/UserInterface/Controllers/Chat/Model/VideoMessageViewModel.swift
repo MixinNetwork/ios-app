@@ -65,9 +65,15 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
         if style.contains(.received) {
             durationLabelOrigin = CGPoint(x: photoFrame.origin.x + 16,
                                           y: photoFrame.origin.y + 8)
+            if quotedMessageViewModel != nil {
+                durationLabelOrigin.x -= 9
+            }
         } else {
             durationLabelOrigin = CGPoint(x: photoFrame.origin.x + 10,
                                           y: photoFrame.origin.y + 8)
+            if quotedMessageViewModel != nil {
+                durationLabelOrigin.x -= 2
+            }
         }
     }
     

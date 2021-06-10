@@ -338,7 +338,7 @@ extension MessageReceiverViewController {
             return [makeMessage(appCard: appCard, to: receiver.conversationId)]
                 .compactMap { ComposedMessage(message: $0, children: nil) }
         case .transcript(let messages):
-            return [makeTranscriptMessage(messages: messages, ofTranscriptWith: nil, to: receiver.conversationId)]
+            return [makeTranscriptMessage(messages: messages, to: receiver.conversationId)]
                 .compactMap { $0 }
         }
     }
@@ -435,17 +435,44 @@ extension MessageReceiverViewController {
             newMessage.thumbUrl = message.thumbUrl
             let liveData = TransferLiveData(width: width, height: height, thumbUrl: thumbUrl, url: mediaUrl)
             newMessage.content = try! JSONEncoder.default.encode(liveData).base64EncodedString()
-        } else if message.category == "SIGNAL_TRANSCRIPT" {
-            // FIXME: Forward message by treating it like a MessageItem will wipe the value of media_created_at,
-            // which prevents us from detect and forbid duplicated attachment uploading
-            let children = TranscriptMessageDAO.shared.messageItems(transcriptId: message.messageId)
-            if children.isEmpty {
-                return nil
-            } else {
-                return makeTranscriptMessage(messages: children,
-                                             ofTranscriptWith: message.messageId,
-                                             to: receiver.conversationId)
+        } else if message.category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue {
+            let transcriptId = UUID().uuidString.lowercased()
+            let children: [TranscriptMessage] = TranscriptMessageDAO.shared.childMessages(with: message.messageId).map { original in
+                let mediaUrl: String?
+                if original.category.includesAttachment, let sourceFilename = original.mediaUrl {
+                    do {
+                        let extensionName: String
+                        if let lastComponent = sourceFilename.components(separatedBy: ".").lazy.last {
+                            extensionName = lastComponent
+                        } else {
+                            extensionName = ""
+                        }
+                        let destinationFilename = original.messageId + "." + extensionName
+                        let source = AttachmentContainer.url(transcriptId: message.messageId, filename: sourceFilename)
+                        let destination = AttachmentContainer.url(transcriptId: transcriptId, filename: destinationFilename)
+                        try FileManager.default.copyItem(at: source, to: destination)
+                        if original.category == .video {
+                            let source = AttachmentContainer.videoThumbnailURL(transcriptId: message.messageId, videoFilename: sourceFilename)
+                            let destination = AttachmentContainer.videoThumbnailURL(transcriptId: transcriptId, videoFilename: destinationFilename)
+                            try? FileManager.default.copyItem(at: source, to: destination)
+                        }
+                        mediaUrl = destinationFilename
+                    } catch {
+                        mediaUrl = nil
+                    }
+                } else {
+                    mediaUrl = nil
+                }
+                return TranscriptMessage(transcriptId: transcriptId, mediaUrl: mediaUrl, message: original)
             }
+            let message = Message.createMessage(messageId: transcriptId,
+                                                conversationId: receiver.conversationId,
+                                                userId: myUserId,
+                                                category: MessageCategory.SIGNAL_TRANSCRIPT.rawValue,
+                                                content: message.content,
+                                                status: MessageStatus.SENDING.rawValue,
+                                                createdAt: Date().toUTCString())
+            return ComposedMessage(message: message, children: children)
         } else {
             return nil
         }
@@ -550,16 +577,11 @@ extension MessageReceiverViewController {
         return message
     }
     
-    private static func makeTranscriptMessage(
-        messages: [MessageItem],
-        ofTranscriptWith originalTranscriptId: String?,
-        to conversationId: String
-    ) -> ComposedMessage? {
+    private static func makeTranscriptMessage(messages: [MessageItem], to conversationId: String) -> ComposedMessage? {
         let transcriptId = UUID().uuidString.lowercased()
         let sortedMessageItems = messages.sorted(by: { $0.createdAt < $1.createdAt })
         let children = makeTranscriptChildren(with: transcriptId,
-                                              from: sortedMessageItems,
-                                              ofTranscriptWith: originalTranscriptId)
+                                              from: sortedMessageItems)
         let localContents = sortedMessageItems.compactMap(TranscriptMessage.LocalContent.init)
         let content: String
         if let data = try? JSONEncoder.default.encode(localContents), let localContent = String(data: data, encoding: .utf8) {
@@ -581,11 +603,7 @@ extension MessageReceiverViewController {
 
 extension MessageReceiverViewController {
     
-    private static func makeTranscriptChildren(
-        with transcriptId: String,
-        from messages: [MessageItem],
-        ofTranscriptWith originalTranscriptId: String?
-    ) -> [TranscriptMessage] {
+    private static func makeTranscriptChildren(with transcriptId: String, from messages: [MessageItem]) -> [TranscriptMessage] {
         let categoriesWithAttachment = Set(AttachmentContainer.Category.allCases.flatMap { $0.messageCategory }.map { $0.rawValue })
         return messages.compactMap { item -> TranscriptMessage? in
             let mediaUrl: String? = {
@@ -604,21 +622,11 @@ extension MessageReceiverViewController {
                         extensionName = ""
                     }
                     let destinationFilename = item.messageId + "." + extensionName
-                    let source: URL
-                    if let tid = originalTranscriptId {
-                        source = AttachmentContainer.url(transcriptId: tid, filename: sourceFilename)
-                    } else {
-                        source = AttachmentContainer.url(for: category, filename: sourceFilename)
-                    }
+                    let source = AttachmentContainer.url(for: category, filename: sourceFilename)
                     let destination = AttachmentContainer.url(transcriptId: transcriptId, filename: destinationFilename)
                     try FileManager.default.copyItem(at: source, to: destination)
                     if category == .videos {
-                        let source: URL
-                        if let tid = originalTranscriptId {
-                            source = AttachmentContainer.videoThumbnailURL(transcriptId: tid, videoFilename: sourceFilename)
-                        } else {
-                            source = AttachmentContainer.videoThumbnailURL(videoFilename: sourceFilename)
-                        }
+                        let source = AttachmentContainer.videoThumbnailURL(videoFilename: sourceFilename)
                         let destination = AttachmentContainer.videoThumbnailURL(transcriptId: transcriptId, videoFilename: destinationFilename)
                         try? FileManager.default.copyItem(at: source, to: destination)
                     }

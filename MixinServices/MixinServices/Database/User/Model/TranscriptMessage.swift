@@ -31,6 +31,36 @@ public final class TranscriptMessage {
     public let quoteContent: String?
     public let caption: String?
     
+    public init(transcriptId: String, mediaUrl: String?, message m: TranscriptMessage) {
+        self.transcriptId = transcriptId
+        self.messageId = m.messageId
+        self.userId = m.userId
+        self.userFullName = m.userFullName
+        self.category = m.category
+        self.createdAt = m.createdAt
+        self.content = m.content
+        self.mediaUrl = mediaUrl
+        self.mediaName = m.mediaName
+        self.mediaSize = m.mediaSize
+        self.mediaWidth = m.mediaWidth
+        self.mediaHeight = m.mediaHeight
+        self.mediaMimeType = m.mediaMimeType
+        self.mediaDuration = m.mediaDuration
+        self.mediaStatus = m.mediaStatus
+        self.mediaWaveform = m.mediaWaveform
+        self.thumbImage = m.thumbImage
+        self.thumbUrl = m.thumbUrl
+        self.mediaKey = m.mediaKey
+        self.mediaDigest = m.mediaDigest
+        self.mediaCreatedAt = m.mediaCreatedAt
+        self.stickerId = m.stickerId
+        self.sharedUserId = m.sharedUserId
+        self.mentions = m.mentions
+        self.quoteMessageId = m.quoteMessageId
+        self.quoteContent = m.quoteContent
+        self.caption = m.caption
+    }
+    
     public init?(transcriptId: String, messageItem item: MessageItem, mediaUrl: String?) {
         guard let category = Category(messageCategoryString: item.category) else {
             return nil

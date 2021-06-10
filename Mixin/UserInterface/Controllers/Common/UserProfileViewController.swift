@@ -36,7 +36,7 @@ final class UserProfileViewController: ProfileViewController {
     private var relationship = Relationship.ME
     private var developer: UserItem?
     private var avatarPreviewImageView: UIImageView?
-    private var avatarPreviewWrapperView: UIView?
+    private var avatarPreviewVisualEffectView: UIView?
     private var favoriteAppMenuItemViewIfLoaded: MyFavoriteAppProfileMenuItemView?
     private var favoriteAppViewIfLoaded: ProfileFavoriteAppsView?
     private var sharedAppUsers: [User]?
@@ -86,13 +86,12 @@ final class UserProfileViewController: ProfileViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        if let coordinator = transitionCoordinator, let imageView = avatarPreviewImageView, let wrapperView = avatarPreviewWrapperView {
+        if let coordinator = transitionCoordinator, let imageView = avatarPreviewImageView, let effectView = avatarPreviewVisualEffectView {
             coordinator.animate(alongsideTransition: { (context) in
                 imageView.frame.origin.y = AppDelegate.current.mainWindow.bounds.height
-                wrapperView.alpha = 0
+                effectView.alpha = 0
             }) { (_) in
-                imageView.removeFromSuperview()
-                wrapperView.removeFromSuperview()
+                effectView.removeFromSuperview()
             }
         }
     }
@@ -111,24 +110,21 @@ final class UserProfileViewController: ProfileViewController {
         }
         let window = AppDelegate.current.mainWindow
         let initialFrame = avatarImageView.convert(avatarImageView.bounds, to: window)
-        
-        let wrapperView = UIView(frame: window.bounds)
-        wrapperView.backgroundColor = UIColor.background.withAlphaComponent(0.8)
-        wrapperView.alpha = 0
-        wrapperView.isUserInteractionEnabled = false
-        window.addSubview(wrapperView)
-        avatarPreviewWrapperView = wrapperView
-
+    
         let effect = UIVisualEffect.lightBlur
         let effectView = UIVisualEffectView(effect: effect)
         effectView.frame = window.bounds
-        wrapperView.addSubview(effectView)
-        
+        effectView.alpha = 0
+        effectView.isUserInteractionEnabled = false
+        effectView.backgroundColor = UIColor.background.withAlphaComponent(0.8)
+        window.addSubview(effectView)
+        avatarPreviewVisualEffectView = effectView
+
         let dismissButton = UIButton()
         dismissButton.tintColor = R.color.icon_tint()
         dismissButton.setImage(R.image.ic_title_close(), for: .normal)
         dismissButton.isUserInteractionEnabled = false
-        wrapperView.addSubview(dismissButton)
+        effectView.contentView.addSubview(dismissButton)
         dismissButton.snp.makeConstraints { (make) in
             make.width.height.equalTo(24)
             make.top.equalTo(window.safeAreaInsets.top + 10)
@@ -141,7 +137,7 @@ final class UserProfileViewController: ProfileViewController {
         imageView.contentMode = .scaleAspectFit
         imageView.isUserInteractionEnabled = false
         imageView.image = image
-        window.addSubview(imageView)
+        effectView.contentView.addSubview(imageView)
         avatarPreviewImageView = imageView
         view.isUserInteractionEnabled = false
         hideContentConstraint.priority = .defaultHigh
@@ -152,7 +148,7 @@ final class UserProfileViewController: ProfileViewController {
             imageView.bounds = CGRect(x: 0, y: 0, width: imgWH, height: imgWH)
             imageView.center = CGPoint(x: window.bounds.midX, y: window.bounds.midY)
             imageView.layer.cornerRadius = imgWH / 2
-            wrapperView.alpha = 1
+            effectView.alpha = 1
         })
     }
     

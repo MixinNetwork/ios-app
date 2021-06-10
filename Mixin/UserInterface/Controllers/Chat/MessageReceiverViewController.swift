@@ -4,11 +4,6 @@ import MixinServices
 
 class MessageReceiverViewController: PeerViewController<[MessageReceiver], CheckmarkPeerCell, MessageReceiverSearchResult> {
     
-    private struct ComposedMessage {
-        let message: Message
-        let descendants: [TranscriptMessage]?
-    }
-    
     override class var showSelectionsOnTop: Bool {
         true
     }
@@ -294,13 +289,28 @@ extension MessageReceiverViewController {
         case transcript([MessageItem])
     }
     
+    private struct ComposedMessage {
+        
+        let message: Message
+        let descendants: [TranscriptMessage]?
+        
+        init?(message: Message?, descendants: [TranscriptMessage]?) {
+            guard let message = message else {
+                return nil
+            }
+            self.message = message
+            self.descendants = descendants
+        }
+        
+    }
+    
     private static func makeMessages(content: MessageContent, to receiver: MessageReceiver) -> [ComposedMessage] {
         switch content {
         case .message(var message):
             message.messageId = UUID().uuidString.lowercased()
             message.conversationId = receiver.conversationId
             message.createdAt = Date().toUTCString()
-            return [ComposedMessage(message: message, descendants: nil)]
+            return [ComposedMessage(message: message, descendants: nil)].compactMap { $0 }
         case .messages(let messages):
             let date = Date()
             let counter = Counter(value: -1)
@@ -311,28 +321,22 @@ extension MessageReceiverViewController {
             })
         case .post(let text):
             return [makeMessage(post: text, to: receiver.conversationId)]
-                .compactMap { $0 }
-                .map { ComposedMessage(message: $0, descendants: nil) }
+                .compactMap { ComposedMessage(message: $0, descendants: nil) }
         case .contact(let userId):
             return [makeMessage(userId: userId, to: receiver.conversationId)]
-                .compactMap { $0 }
-                .map { ComposedMessage(message: $0, descendants: nil) }
+                .compactMap { ComposedMessage(message: $0, descendants: nil) }
         case .photo(let image):
             return [makeMessage(image: image, to: receiver.conversationId)]
-                .compactMap { $0 }
-                .map { ComposedMessage(message: $0, descendants: nil) }
+                .compactMap { ComposedMessage(message: $0, descendants: nil) }
         case .text(let text):
             return [makeMessage(text: text, to: receiver.conversationId)]
-                .compactMap { $0 }
-                .map { ComposedMessage(message: $0, descendants: nil) }
+                .compactMap { ComposedMessage(message: $0, descendants: nil) }
         case .video(let url):
             return [makeMessage(videoUrl: url, to: receiver.conversationId)]
-                .compactMap { $0 }
-                .map { ComposedMessage(message: $0, descendants: nil) }
+                .compactMap { ComposedMessage(message: $0, descendants: nil) }
         case .appCard(let appCard):
             return [makeMessage(appCard: appCard, to: receiver.conversationId)]
-                .compactMap { $0 }
-                .map { ComposedMessage(message: $0, descendants: nil) }
+                .compactMap { ComposedMessage(message: $0, descendants: nil) }
         case .transcript(let messages):
             return [makeTranscriptMessage(messages: messages, ofTranscriptWith: nil, to: receiver.conversationId)]
                 .compactMap { $0 }
@@ -550,7 +554,7 @@ extension MessageReceiverViewController {
         messages: [MessageItem],
         ofTranscriptWith originalTranscriptId: String?,
         to conversationId: String
-    ) -> ComposedMessage {
+    ) -> ComposedMessage? {
         let transcriptId = UUID().uuidString.lowercased()
         let sortedMessageItems = messages.sorted(by: { $0.createdAt < $1.createdAt })
         let descendants = makeTranscriptDescendants(with: transcriptId,

@@ -593,7 +593,8 @@ public class ReceiveMessageService: MixinService {
     private func insertFailedMessage(data: BlazeMessageData) {
         let availableCategories: [MessageCategory] = [
             .SIGNAL_TEXT, .SIGNAL_IMAGE, .SIGNAL_DATA, .SIGNAL_VIDEO, .SIGNAL_LIVE,
-            .SIGNAL_AUDIO, .SIGNAL_CONTACT, .SIGNAL_STICKER, .SIGNAL_POST, .SIGNAL_LOCATION
+            .SIGNAL_AUDIO, .SIGNAL_CONTACT, .SIGNAL_STICKER, .SIGNAL_POST, .SIGNAL_LOCATION,
+            .SIGNAL_TRANSCRIPT
         ]
         guard availableCategories.contains(where: { data.category == $0.rawValue }) else {
             return

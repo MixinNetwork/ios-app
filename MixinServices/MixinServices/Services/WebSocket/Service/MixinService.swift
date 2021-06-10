@@ -347,7 +347,9 @@ public class MixinService {
         if let mediaUrl = item.mediaUrl {
             AttachmentContainer.removeMediaFiles(mediaUrl: mediaUrl, category: category)
         }
-        AttachmentContainer.removeAll(transcriptId: messageId)
+        if category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue {
+            AttachmentContainer.removeAll(transcriptId: messageId)
+        }
     }
     
 }

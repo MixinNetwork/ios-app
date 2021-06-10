@@ -673,11 +673,12 @@ public final class MessageDAO: UserDatabaseDAO {
     }
     
     @discardableResult
-    public func deleteMessage(id: String) -> Bool {
+    public func deleteMessage(id: String) -> (deleted: Bool, childMessageIds: [String]) {
         NotificationCenter.default.post(onMainThread: Self.willDeleteMessageNotification,
                                         object: self,
                                         userInfo: [UserInfoKey.messageId: id])
         var deleteCount = 0
+        var childMessageIds: [String] = []
         db.write { (db) in
             deleteCount = try Message
                 .filter(Message.column(of: .messageId) == id)
@@ -686,11 +687,15 @@ public final class MessageDAO: UserDatabaseDAO {
                 .filter(MessageMention.column(of: .messageId) == id)
                 .deleteAll(db)
             try deleteFTSContent(db, messageId: id)
+            childMessageIds = try TranscriptMessage
+                .select(TranscriptMessage.column(of: .messageId))
+                .filter(TranscriptMessage.column(of: .transcriptId) == id)
+                .fetchAll(db)
             try TranscriptMessage
                 .filter(TranscriptMessage.column(of: .transcriptId) == id)
                 .deleteAll(db)
         }
-        return deleteCount > 0
+        return (deleteCount > 0, childMessageIds)
     }
     
     public func hasSentMessage(inConversationOf conversationId: String) -> Bool {

@@ -317,7 +317,7 @@ public class MixinService {
         } while LoginManager.shared.isLoggedIn && !MixinService.isStopProcessMessages && !ReachabilityManger.shared.isReachable
     }
     
-    public func stopRecallMessage(item: MessageItem) {
+    public func stopRecallMessage(item: MessageItem, childMessageIds: [String]? = nil) {
         let messageId = item.messageId
         let category = item.category
         UNUserNotificationCenter.current().removeNotifications(withIdentifiers: [messageId])
@@ -332,8 +332,8 @@ public class MixinService {
         if ["_IMAGE", "_DATA", "_AUDIO", "_VIDEO"].contains(where: category.hasSuffix) {
             jobIds = [AttachmentDownloadJob.jobId(transcriptId: nil, messageId: item.messageId)]
         } else if category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue {
-            let childrenMessageIds = TranscriptMessageDAO.shared.childrenMessageIds(transcriptId: messageId)
-            jobIds = childrenMessageIds.map { transcriptMessageId in
+            let childMessageIds = childMessageIds ?? TranscriptMessageDAO.shared.childrenMessageIds(transcriptId: messageId)
+            jobIds = childMessageIds.map { transcriptMessageId in
                 AttachmentDownloadJob.jobId(transcriptId: messageId, messageId: transcriptMessageId)
             }
         } else {

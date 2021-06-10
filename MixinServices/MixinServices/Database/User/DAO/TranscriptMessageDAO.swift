@@ -55,8 +55,8 @@ public final class TranscriptMessageDAO: UserDatabaseDAO {
     public func messageItem(transcriptId: String, messageId: String) -> MessageItem? {
         let sql = Self.messageItemQuery + "\nWHERE m.transcript_id = ? AND m.message_id = ?"
         let item: MessageItem? = db.select(with: sql, arguments: [transcriptId, messageId])
-        if let item = item, let content = item.quoteContent, let string = String(data: content, encoding: .utf8) {
-            item.quoteContent = QuoteContentConverter.localQuoteContent(from: string)
+        if let item = item {
+            updatePseudoMessageItemForPresentation(item)
         }
         return item
     }
@@ -67,17 +67,7 @@ public final class TranscriptMessageDAO: UserDatabaseDAO {
             ORDER BY m.created_at
         """
         let items: [MessageItem] = db.select(with: sql, arguments: [transcriptId])
-        for item in items {
-            if let content = item.quoteContent, let string = String(data: content, encoding: .utf8) {
-                item.quoteContent = QuoteContentConverter.localQuoteContent(from: string)
-            }
-            if let json = item.mentionsJson, let transcriptMentions = String(data: json, encoding: .utf8) {
-                item.mentionsJson = MentionConverter.localMention(from: transcriptMentions)
-            }
-            if item.category == MessageCategory.APP_CARD.rawValue {
-                item.content = AppCardContentConverter.localAppCard(from: item.content)
-            }
-        }
+        items.forEach(updatePseudoMessageItemForPresentation(_:))
         return items
     }
     
@@ -186,6 +176,24 @@ public final class TranscriptMessageDAO: UserDatabaseDAO {
                                                 object: self,
                                                 userInfo: userInfo)
             }
+        }
+    }
+    
+    private func updatePseudoMessageItemForPresentation(_ item: MessageItem) {
+        if let content = item.quoteContent, let string = String(data: content, encoding: .utf8) {
+            item.quoteContent = QuoteContentConverter.localQuoteContent(from: string)
+        }
+        if let json = item.mentionsJson, let transcriptMentions = String(data: json, encoding: .utf8) {
+            item.mentionsJson = MentionConverter.localMention(from: transcriptMentions)
+        }
+        if item.category == MessageCategory.APP_CARD.rawValue {
+            item.content = AppCardContentConverter.localAppCard(from: item.content)
+        }
+        switch TranscriptMessage.Category(messageCategoryString: item.category) {
+        case .unknown, .none:
+            item.category = MessageCategory.UNKNOWN.rawValue
+        default:
+            break
         }
     }
     

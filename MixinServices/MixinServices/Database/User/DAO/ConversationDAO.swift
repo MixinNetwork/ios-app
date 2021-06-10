@@ -198,9 +198,9 @@ public final class ConversationDAO: UserDatabaseDAO {
                 .deleteAll(db)
             try deleteFTSContent(with: conversationId, from: db)
             db.afterNextTransactionCommit { (_) in
-                deletedTranscriptIds.forEach(AttachmentContainer.removeAll(transcriptId:))
                 let job = AttachmentCleanUpJob(conversationId: conversationId,
-                                               mediaUrls: mediaUrls)
+                                               mediaUrls: mediaUrls,
+                                               transcriptIds: deletedTranscriptIds)
                 ConcurrentJobQueue.shared.addJob(job: job)
                 NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: nil)
             }
@@ -225,9 +225,9 @@ public final class ConversationDAO: UserDatabaseDAO {
                 .updateAll(db, [Conversation.column(of: .unseenMessageCount).set(to: 0)])
             try deleteFTSContent(with: conversationId, from: db)
             db.afterNextTransactionCommit { (_) in
-                deletedTranscriptIds.forEach(AttachmentContainer.removeAll(transcriptId:))
                 let job = AttachmentCleanUpJob(conversationId: conversationId,
-                                               mediaUrls: mediaUrls)
+                                               mediaUrls: mediaUrls,
+                                               transcriptIds: deletedTranscriptIds)
                 ConcurrentJobQueue.shared.addJob(job: job)
                 let change = ConversationChange(conversationId: conversationId, action: .reload)
                 NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: change)

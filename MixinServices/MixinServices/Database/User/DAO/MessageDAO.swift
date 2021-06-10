@@ -664,7 +664,6 @@ public final class MessageDAO: UserDatabaseDAO {
         
         let messageIds = quoteMessageIds + [messageId]
         database.afterNextTransactionCommit { (_) in
-            AttachmentContainer.removeAll(transcriptId: messageId)
             for messageId in messageIds {
                 let change = ConversationChange(conversationId: conversationId,
                                                 action: .recallMessage(messageId: messageId))
@@ -690,9 +689,6 @@ public final class MessageDAO: UserDatabaseDAO {
             try TranscriptMessage
                 .filter(TranscriptMessage.column(of: .transcriptId) == id)
                 .deleteAll(db)
-            db.afterNextTransactionCommit { _ in
-                AttachmentContainer.removeAll(transcriptId: id)
-            }
         }
         return deleteCount > 0
     }

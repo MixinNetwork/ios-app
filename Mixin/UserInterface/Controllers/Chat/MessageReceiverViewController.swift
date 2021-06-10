@@ -635,8 +635,11 @@ extension MessageReceiverViewController {
                     return nil
                 }
             }()
-            
-            let child = TranscriptMessage(transcriptId: transcriptId, messageItem: item, mediaUrl: mediaUrl)
+            let thumbImage = UIImage(thumbnailString: item.thumbImage)?.blurHash()
+            let child = TranscriptMessage(transcriptId: transcriptId,
+                                          mediaUrl: mediaUrl,
+                                          thumbImage: thumbImage, 
+                                          messageItem: item)
             return child
         }
     }

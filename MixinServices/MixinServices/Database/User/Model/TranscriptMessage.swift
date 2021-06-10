@@ -61,7 +61,7 @@ public final class TranscriptMessage {
         self.caption = m.caption
     }
     
-    public init?(transcriptId: String, messageItem item: MessageItem, mediaUrl: String?) {
+    public init?(transcriptId: String, mediaUrl: String?, thumbImage: String?, messageItem item: MessageItem) {
         guard let category = Category(messageCategoryString: item.category) else {
             return nil
         }
@@ -98,11 +98,7 @@ public final class TranscriptMessage {
         self.mediaStatus = item.mediaStatus
         self.mediaWaveform = item.mediaWaveform
         self.mediaCreatedAt = mediaCreatedAt
-        if let blurHashString = UIImage(thumbnailString: item.thumbImage)?.blurHash() {
-            self.thumbImage = blurHashString
-        } else {
-            self.thumbImage = item.thumbImage
-        }
+        self.thumbImage = thumbImage
         self.thumbUrl = item.thumbUrl
         self.mediaName = item.name
         self.caption = nil

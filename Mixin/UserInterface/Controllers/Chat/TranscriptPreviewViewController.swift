@@ -77,7 +77,7 @@ class TranscriptPreviewViewController: FullscreenPopupViewController {
         queue.async { [weak self] in
             let items = TranscriptMessageDAO.shared.messageItems(transcriptId: transcriptId)
             let children = items.compactMap { item in
-                TranscriptMessage(transcriptId: transcriptId, messageItem: item, mediaUrl: item.mediaUrl)
+                TranscriptMessage(transcriptId: transcriptId, mediaUrl: item.mediaUrl, thumbImage: item.thumbImage, messageItem: item)
             }
             for item in items where item.category == MessageCategory.SIGNAL_STICKER.rawValue {
                 if item.stickerId == nil {

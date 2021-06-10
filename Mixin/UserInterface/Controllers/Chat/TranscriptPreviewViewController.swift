@@ -67,6 +67,10 @@ class TranscriptPreviewViewController: FullscreenPopupViewController {
                            selector: #selector(mediaStatusDidUpdate(_:)),
                            name: TranscriptMessageDAO.mediaStatusDidUpdateNotification,
                            object: nil)
+        center.addObserver(self,
+                           selector: #selector(conversationDidChange(_:)),
+                           name: MixinServices.conversationDidChangeNotification,
+                           object: nil)
         
         let layoutWidth = AppDelegate.current.mainWindow.bounds.width
         let transcriptId = transcriptMessage.messageId
@@ -246,6 +250,17 @@ class TranscriptPreviewViewController: FullscreenPopupViewController {
                 vc.presentAsChild(of: self, completion: nil)
             }
         }
+    }
+    
+    @objc private func conversationDidChange(_ sender: Notification) {
+        guard
+            let change = sender.object as? ConversationChange,
+            case .recallMessage(let messageId) = change.action,
+            messageId == transcriptMessage.messageId
+        else {
+            return
+        }
+        dismissAsChild(animated: true)
     }
     
 }

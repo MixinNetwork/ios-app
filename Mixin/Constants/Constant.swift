@@ -38,3 +38,5 @@ let backupDatabaseName = "mixin.db"
 let voipTokenRemove = "REMOVE"
 
 let maxTextMessageContentLength = 64 * 1024
+
+let maxNumberOfTranscriptChildren = 99

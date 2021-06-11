@@ -491,8 +491,25 @@ class ConversationViewController: UIViewController {
             let messages = dataSource.selectedViewModels.values
                 .map({ $0.message })
                 .sorted(by: { $0.createdAt < $1.createdAt })
-            let vc = MessageReceiverViewController.instance(content: .messages(messages))
-            navigationController?.pushViewController(vc, animated: true)
+            let containsTranscriptMessage = messages.contains {
+                $0.category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue
+            }
+            if messages.count == 1 || containsTranscriptMessage {
+                let vc = MessageReceiverViewController.instance(content: .messages(messages))
+                navigationController?.pushViewController(vc, animated: true)
+            } else {
+                let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+                alert.addAction(UIAlertAction(title: R.string.localizable.chat_forward_one_by_one(), style: .default, handler: { (_) in
+                    let vc = MessageReceiverViewController.instance(content: .messages(messages))
+                    self.navigationController?.pushViewController(vc, animated: true)
+                }))
+                alert.addAction(UIAlertAction(title: R.string.localizable.chat_forward_combined(), style: .default, handler: { (_) in
+                    let vc = MessageReceiverViewController.instance(content: .transcript(messages), hideApps: true)
+                    self.navigationController?.pushViewController(vc, animated: true)
+                }))
+                alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
+                present(alert, animated: true, completion: nil)
+            }
         case .delete:
             let viewModels = dataSource.selectedViewModels.values.map({ $0 })
             let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
@@ -808,6 +825,9 @@ class ConversationViewController: UIViewController {
                 let vc = LocationPreviewViewController(location: location)
                 let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.chat_menu_location())
                 navigationController?.pushViewController(container, animated: true)
+            } else if message.category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue {
+                let vc = TranscriptPreviewViewController(transcriptMessage: message)
+                vc.presentAsChild(of: self, completion: nil)
             } else {
                 conversationInputViewController.dismiss()
             }
@@ -1345,6 +1365,9 @@ extension ConversationViewController: UITableViewDataSource {
         if let cell = cell as? AppButtonGroupMessageCell {
             cell.appButtonDelegate = self
         }
+        if let cell = cell as? AudioMessageCell {
+            cell.audioMessagePlayingManager = AudioMessagePlayingManager.shared
+        }
         if let cell = cell as? MessageCell {
             CATransaction.performWithoutAnimation {
                 cell.render(viewModel: viewModel)
@@ -1755,6 +1778,11 @@ extension ConversationViewController {
             actions = [.delete]
         } else if category == MessageCategory.MESSAGE_RECALL.rawValue {
             actions = [.delete]
+        } else if category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue {
+            actions = [.reply, .delete]
+            if message.mediaStatus == MediaStatus.DONE.rawValue {
+                actions.insert(.forward, at: 0)
+            }
         } else {
             actions = []
         }
@@ -2540,8 +2568,9 @@ extension ConversationViewController {
                 guard let weakSelf = self, let indexPath = weakSelf.dataSource.indexPath(where: { $0.messageId == message.messageId }) else {
                     return
                 }
-                if MessageDAO.shared.deleteMessage(id: message.messageId) {
-                    ReceiveMessageService.shared.stopRecallMessage(messageId: message.messageId, category: message.category, conversationId: message.conversationId, mediaUrl: message.mediaUrl)
+                let (deleted, childMessageIds) = MessageDAO.shared.deleteMessage(id: message.messageId)
+                if deleted {
+                    ReceiveMessageService.shared.stopRecallMessage(item: message, childMessageIds: childMessageIds)
                 }
                 DispatchQueue.main.sync {
                     _ = weakSelf.dataSource?.removeViewModel(at: indexPath)
@@ -2562,12 +2591,7 @@ extension ConversationViewController {
         }
         DispatchQueue.global().async {
             for viewModel in viewModels {
-                let message = viewModel.message
-                SendMessageService.shared.recallMessage(messageId: message.messageId,
-                                                        category: message.category,
-                                                        mediaUrl: message.mediaUrl,
-                                                        conversationId: message.conversationId,
-                                                        status: message.status)
+                SendMessageService.shared.recallMessage(item: viewModel.message)
             }
         }
         endMultipleSelection()

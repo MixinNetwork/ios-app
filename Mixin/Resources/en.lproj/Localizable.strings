@@ -263,6 +263,8 @@
 "chat_message_sent" = "Message sent.";
 "chat_cell_title_encryption" = "Messages to this conversation are encrypted end-to-end, click for more information";
 "chat_cell_title_unknown_category" = "This type of message is not supported, please upgrade Mixin to the latest version.";
+"chat_forward_one_by_one" = "One-by-One Forward";
+"chat_forward_combined" = "Combine and Forward";
 "chat_forward_title" = "Forward";
 "chat_forward_chats" = "CHATS";
 "chat_forward_contacts" = "CONTACTS";
@@ -337,6 +339,8 @@
 "chat_external_sharing_category_contact" = "contact";
 "chat_external_sharing_category_post" = "post";
 "chat_external_sharing_category_app_card" = "card";
+"chat_transcript" = "Transcript";
+"chat_transcript_forward_invalid_media_status" = "Forwarding transcript requires all attachments are downloaded";
 
 // Web
 "web_suspicious_link" = "Suspicious Link";
@@ -865,6 +869,8 @@
 "notification_content_audio" = "[Audio]";
 "notification_content_voice_call" = "[Voice Call]";
 "notification_content_location" = "[Location]";
+"notification_content_transcript" = "[Transcript]";
+"notification_content_unknown" = "[Unknown]";
 
 "alert_key_contact_message" = "send you a message";
 "alert_key_contact_text_message" = "send you a message";
@@ -880,6 +886,7 @@
 "alert_key_contact_audio_call_cancelled_message" = "voice call cancelled";
 "alert_key_contact_post_message" = "send you a post";
 "alert_key_contact_location_message" = "send you a location";
+"alert_key_contact_transcript_message" = "send you a transcript";
 
 "alert_key_group_message" = "%@ send a message";
 "alert_key_group_text_message" = "%@ send a message";
@@ -892,6 +899,7 @@
 "alert_key_group_audio_message" = "%@ send an audio";
 "alert_key_group_post_message" = "%@ send a post";
 "alert_key_group_location_message" = "%@ send a location";
+"alert_key_group_transcript_message" = "%@ send a transcript";
 "alert_key_group_audio_invite_message" = "%@ invites you to a voice call";
 
 // Error

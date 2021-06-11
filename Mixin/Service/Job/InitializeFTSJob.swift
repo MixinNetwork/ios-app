@@ -17,7 +17,7 @@ class InitializeFTSJob: BaseJob {
     private let insertionSQL = """
         INSERT INTO \(Message.ftsTableName)
         SELECT utot(conversation_id), utot(user_id), utot(id), content, i8tout(created_at), NULL, NULL FROM (
-            SELECT conversation_id, user_id, id, CASE WHEN category = 'SIGNAL_DATA' OR category = 'PLAIN_DATA' THEN name ELSE content END AS content, created_at
+            SELECT conversation_id, user_id, id, fts_content(id, category, content, name) AS content, created_at
             FROM \(Message.databaseTableName)
             WHERE category in \(MessageCategory.ftsAvailableCategorySequence) AND status != 'FAILED' AND rowid > ?
             ORDER BY rowid ASC

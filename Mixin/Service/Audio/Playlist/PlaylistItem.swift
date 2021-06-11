@@ -78,7 +78,7 @@ final class PlaylistItem {
             return
         }
         isLoadingAsset = true
-        let job = FileDownloadJob(messageId: id)
+        let job = AttachmentDownloadJob(messageId: id)
         if ConcurrentJobQueue.shared.addJob(job: job) {
             notificationCenter.addObserver(self,
                                            selector: #selector(updateAsset(_:)),
@@ -159,8 +159,8 @@ extension PlaylistItem: Decodable, DatabaseColumnConvertible, MixinFetchableReco
                       asset: nil,
                       filename: name)
         }
-        let jobId = FileDownloadJob.jobId(messageId: messageId)
-        if let job = ConcurrentJobQueue.shared.findJobById(jodId: jobId) as? FileDownloadJob {
+        let jobId = AttachmentDownloadJob.jobId(transcriptId: nil, messageId: messageId)
+        if let job = ConcurrentJobQueue.shared.findJobById(jodId: jobId) as? AttachmentDownloadJob {
             notificationCenter.addObserver(self,
                                            selector: #selector(updateAsset(_:)),
                                            name: AttachmentDownloadJob.didFinishNotification,

@@ -1,18 +1,6 @@
 import Foundation
 
-fileprivate protocol QueueProtocol {
-    // Emulates the behavior of objc's class cluster
-}
-
-fileprivate extension QueueProtocol {
-    
-    init(instance: Self) {
-        self = instance
-    }
-    
-}
-
-public class Queue: QueueProtocol {
+public class Queue: InstanceInitializable {
     
     public static let main: Queue = MainQueue()
     

@@ -30,6 +30,8 @@ extension MessageCategory {
             return R.image.ic_message_recalled()
         } else if category == MessageCategory.APP_BUTTON_GROUP.rawValue || category == MessageCategory.APP_CARD.rawValue {
             return #imageLiteral(resourceName: "ic_message_bot_menu")
+        } else if category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue {
+            return R.image.ic_message_transcript()
         } else {
             return nil
         }

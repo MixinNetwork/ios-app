@@ -263,6 +263,8 @@
 "chat_message_sent" = "消息已发送";
 "chat_cell_title_encryption" = "此对话中的消息使用端对端加密。点击了解更多。";
 "chat_cell_title_unknown_category" = "不支持此类型消息。请升级 Mixin 查看。";
+"chat_forward_one_by_one" = "逐条转发";
+"chat_forward_combined" = "合并转发";
 "chat_forward_title" = "转发";
 "chat_forward_chats" = "最近聊天";
 "chat_forward_contacts" = "联系人";
@@ -337,6 +339,8 @@
 "chat_external_sharing_category_contact" = "联系人";
 "chat_external_sharing_category_post" = "文章";
 "chat_external_sharing_category_app_card" = "卡片";
+"chat_transcript" = "聊天记录";
+"chat_transcript_forward_invalid_media_status" = "请下载全部附件后转发";
 
 // Web
 "web_suspicious_link" = "可疑链接";
@@ -866,6 +870,8 @@
 "notification_content_live" = "[直播]";
 "notification_content_voice_call" = "[语音通话]";
 "notification_content_location" = "[位置]";
+"notification_content_transcript" = "[聊天记录]";
+"notification_content_unknown" = "[未知消息]";
 
 "alert_key_contact_message" = "发来一条信息";
 "alert_key_contact_text_message" = "发来一条信息";
@@ -881,6 +887,7 @@
 "alert_key_contact_audio_call_cancelled_message" = "对方已取消语音通话";
 "alert_key_contact_post_message" = "发来一篇文章";
 "alert_key_contact_location_message" = "发来一处位置";
+"alert_key_contact_transcript_message" = "发来一个聊天记录";
 
 "alert_key_group_message" = "%@发来一条信息";
 "alert_key_group_text_message" = "%@发来一条信息";
@@ -893,6 +900,7 @@
 "alert_key_group_audio_message" = "%@发来了一个语音";
 "alert_key_group_post_message" = "%@发来了一篇文章";
 "alert_key_group_location_message" = "%@发来一处位置";
+"alert_key_group_transcript_message" = "%@发来一个聊天记录";
 "alert_key_group_audio_invite_message" = "%@邀请你进行语音通话";
 
 // Error

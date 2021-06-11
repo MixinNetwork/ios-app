@@ -42,7 +42,7 @@ open class JobQueue {
             return false
         }
         return queue.operations.contains(where: { (operation) -> Bool in
-            (operation as? UploadOrDownloadJob)?.isRecoverAttachment ?? false
+            (operation as? AttachmentLoadingJob)?.isRecoverAttachment ?? false
         })
     }
     

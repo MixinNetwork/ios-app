@@ -30,7 +30,7 @@ class SharedMediaDataCell: ModernSelectedBackgroundCell, AttachmentLoadingMessag
         let mediaExpired = viewModel.message.mediaStatus == MediaStatus.EXPIRED.rawValue
         subtitleLabel.text = mediaExpired ? Localized.CHAT_FILE_EXPIRED : viewModel.sizeRepresentation
         updateOperationButtonStyle()
-        NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: MixinServices.conversationDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateDownloadProgress(_:)), name: AttachmentLoadingJob.progressNotification, object: nil)
     }
     
     func updateProgress() {
@@ -56,14 +56,14 @@ class SharedMediaDataCell: ModernSelectedBackgroundCell, AttachmentLoadingMessag
         attachmentLoadingDelegate?.attachmentLoadingCellDidSelectNetworkOperation(self)
     }
     
-    @objc func conversationDidChange(_ notification: Notification) {
-        guard let change = notification.object as? ConversationChange else {
-            return
-        }
-        guard case let .updateDownloadProgress(messageId, progress) = change.action else {
-            return
-        }
-        guard let viewModel = viewModel as? (MessageViewModel & AttachmentLoadingViewModel), messageId == viewModel.message.messageId else {
+    @objc func updateDownloadProgress(_ notification: Notification) {
+        guard
+            let userInfo = notification.userInfo,
+            let messageId = userInfo[AttachmentLoadingJob.UserInfoKey.messageId] as? String,
+            let progress = userInfo[AttachmentLoadingJob.UserInfoKey.progress] as? Double,
+            let viewModel = viewModel as? (MessageViewModel & AttachmentLoadingViewModel),
+            messageId == viewModel.message.messageId
+        else {
             return
         }
         viewModel.progress = progress

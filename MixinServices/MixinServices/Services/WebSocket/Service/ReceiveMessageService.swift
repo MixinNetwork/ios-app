@@ -330,7 +330,7 @@ public class ReceiveMessageService: MixinService {
         updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
         MessageHistoryDAO.shared.replaceMessageHistory(messageId: data.messageId)
 
-        if let base64Data = Data(base64Encoded: data.data), let plainData = (try? JSONDecoder.default.decode(TransferRecallData.self, from: base64Data)), !plainData.messageId.isEmpty, let message = MessageDAO.shared.getMessage(messageId: plainData.messageId) {
+        if let base64Data = Data(base64Encoded: data.data), let plainData = (try? JSONDecoder.default.decode(TransferRecallData.self, from: base64Data)), !plainData.messageId.isEmpty, let message = MessageDAO.shared.getFullMessage(messageId: plainData.messageId) {
             MessageDAO.shared.recallMessage(message: message)
         }
     }
@@ -529,7 +529,7 @@ public class ReceiveMessageService: MixinService {
             }
             let message = Message.createMessage(mediaData: transferMediaData, data: data)
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
-            let job = AudioDownloadJob(messageId: message.messageId)
+            let job = AttachmentDownloadJob(message: message)
             ConcurrentJobQueue.shared.addJob(job: job)
         } else if data.category.hasSuffix("_STICKER") {
             guard let transferStickerData = parseSticker(data: data, stickerText: plainText) else {
@@ -574,13 +574,27 @@ public class ReceiveMessageService: MixinService {
             }
             let message = Message.createLocationMessage(content: content, data: data)
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
+        } else if data.category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue {
+            guard let (content, children, hasAttachment) = parseTranscript(plainText: plainText, transcriptId: data.messageId) else {
+                ReceiveMessageService.shared.processUnknownMessage(data: data)
+                return
+            }
+            guard !children.isEmpty else {
+                ReceiveMessageService.shared.processUnknownMessage(data: data)
+                return
+            }
+            let message = Message.createTranscriptMessage(content: content,
+                                                          mediaStatus: hasAttachment ? .PENDING : .DONE,
+                                                          data: data)
+            MessageDAO.shared.insertMessage(message: message, children: children, messageSource: data.source)
         }
     }
     
     private func insertFailedMessage(data: BlazeMessageData) {
         let availableCategories: [MessageCategory] = [
             .SIGNAL_TEXT, .SIGNAL_IMAGE, .SIGNAL_DATA, .SIGNAL_VIDEO, .SIGNAL_LIVE,
-            .SIGNAL_AUDIO, .SIGNAL_CONTACT, .SIGNAL_STICKER, .SIGNAL_POST, .SIGNAL_LOCATION
+            .SIGNAL_AUDIO, .SIGNAL_CONTACT, .SIGNAL_STICKER, .SIGNAL_POST, .SIGNAL_LOCATION,
+            .SIGNAL_TRANSCRIPT
         ]
         guard availableCategories.contains(where: { data.category == $0.rawValue }) else {
             return
@@ -669,7 +683,7 @@ public class ReceiveMessageService: MixinService {
                 return
             }
             MessageDAO.shared.updateMediaMessage(mediaData: transferMediaData, status: Message.getStatus(data: data), messageId: messageId, category: data.category, conversationId: data.conversationId, mediaStatus: .PENDING, messageSource: data.source)
-            let job = AudioDownloadJob(messageId: messageId)
+            let job = AttachmentDownloadJob(messageId: messageId)
             ConcurrentJobQueue.shared.addJob(job: job)
         case MessageCategory.SIGNAL_LIVE.rawValue:
             guard let base64Data = Data(base64Encoded: plainText), let liveData = (try? JSONDecoder.default.decode(TransferLiveData.self, from: base64Data)) else {
@@ -695,6 +709,23 @@ public class ReceiveMessageService: MixinService {
                 return
             }
             MessageDAO.shared.updateContactMessage(transferData: transferData, status: Message.getStatus(data: data), messageId: messageId, category: data.category, conversationId: data.conversationId, messageSource: data.source)
+        case MessageCategory.SIGNAL_TRANSCRIPT.rawValue:
+            guard let (content, children, hasAttachment) = parseTranscript(plainText: plainText, transcriptId: messageId) else {
+                ReceiveMessageService.shared.processUnknownMessage(data: data)
+                return
+            }
+            guard !children.isEmpty else {
+                ReceiveMessageService.shared.processUnknownMessage(data: data)
+                return
+            }
+            MessageDAO.shared.updateTranscriptMessage(children: children,
+                                                      status: Message.getStatus(data: data),
+                                                      mediaStatus: hasAttachment ? .PENDING : .DONE,
+                                                      content: content,
+                                                      messageId: messageId,
+                                                      category: data.category,
+                                                      conversationId: data.conversationId,
+                                                      messageSource: data.source)
         default:
             break
         }
@@ -741,7 +772,62 @@ public class ReceiveMessageService: MixinService {
         }
         return nil
     }
-
+    
+    private func parseTranscript(plainText: String, transcriptId: String) -> (content: String, children: [TranscriptMessage], hasAttachment: Bool)? {
+        var hasAttachment = false
+        
+        guard
+            let jsonData = plainText.data(using: .utf8),
+            let descendants = try? JSONDecoder.default.decode([TranscriptMessage].self, from: jsonData)
+        else {
+            return nil
+        }
+        
+        let children = descendants.filter { $0.transcriptId == transcriptId }
+        let localContents = children
+            .sorted { $0.createdAt < $1.createdAt }
+            .map(TranscriptMessage.LocalContent.init)
+        let content: String
+        if let data = try? JSONEncoder.default.encode(localContents), let localContent = String(data: data, encoding: .utf8) {
+            content = localContent
+        } else {
+            content = ""
+        }
+        
+        var absentUserIds: Set<String> = []
+        for child in children {
+            if let id = child.userId {
+                if let fullname = UserDAO.shared.getFullname(userId: id) {
+                    child.userFullName = fullname
+                } else {
+                    absentUserIds.insert(id)
+                }
+            }
+            switch child.category {
+            case .data, .image, .video, .audio:
+                hasAttachment = true
+                child.mediaStatus = MediaStatus.PENDING.rawValue
+            case .sticker:
+                guard let stickerId = child.stickerId, UUID(uuidString: stickerId) != nil else {
+                    child.stickerId = nil
+                    continue
+                }
+                if StickerDAO.shared.isExist(stickerId: stickerId) {
+                    continue
+                }
+                ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob(stickerId: stickerId))
+            default:
+                break
+            }
+        }
+        if !absentUserIds.isEmpty {
+            let job = RefreshUserJob(userIds: Array(absentUserIds))
+            ConcurrentJobQueue.shared.addJob(job: job)
+        }
+        
+        return (content, children, hasAttachment)
+    }
+    
     private func syncConversation(data: BlazeMessageData) {
         guard data.conversationId != User.systemUser && data.conversationId != myUserId else {
             return

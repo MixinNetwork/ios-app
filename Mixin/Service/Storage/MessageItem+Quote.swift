@@ -34,6 +34,8 @@ extension MessageItem {
             return appCard?.description ?? ""
         } else if category == MessageCategory.APP_BUTTON_GROUP.rawValue {
             return appButtons?.first?.label ?? ""
+        } else if category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue {
+            return R.string.localizable.chat_transcript()
         } else {
             return ""
         }

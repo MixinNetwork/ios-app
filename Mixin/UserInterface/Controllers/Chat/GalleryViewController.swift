@@ -48,7 +48,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
     
     weak var delegate: GalleryViewControllerDelegate?
     
-    var conversationId: String {
+    var conversationId: String? {
         get {
             return modelController.conversationId
         }
@@ -142,8 +142,13 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
     }
     
     func show(item: GalleryItem, from source: GalleryTransitionSource) {
+        show(items: [item], index: 0, from: source)
+    }
+    
+    func show(items: [GalleryItem], index: Int, from source: GalleryTransitionSource) {
         itemToShowAfterAvPipStops = nil
         modelController.direction = source.direction
+        let item = items[index]
         if let controller = UIApplication.homeContainerViewController?.pipController {
             if controller.item == item {
                 controller.stopPipIfActive()
@@ -171,7 +176,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         view.addSubview(transitionView!)
         transitionView!.transition(to: view)
         
-        let viewController = modelController.dequeueReusableViewController(with: item)
+        let viewController = modelController.dequeueReusableViewController(with: items, index: index)
         viewController.isFocused = true
         if let viewController = viewController as? GalleryImageItemViewController, case let .relativeOffset(offset) = source.imageWrapperView.position {
             viewController.scrollView.contentOffset.y = -offset * viewController.scrollView.contentSize.height

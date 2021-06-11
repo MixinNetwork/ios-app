@@ -28,7 +28,7 @@ final class GalleryImageItemViewController: GalleryItemViewController {
         guard let item = item else {
             return false
         }
-        let jobId = AttachmentDownloadJob.jobId(messageId: item.messageId)
+        let jobId = AttachmentDownloadJob.jobId(transcriptId: item.transcriptId, messageId: item.messageId)
         return ConcurrentJobQueue.shared.isExistJob(jodId: jobId)
     }
     
@@ -103,7 +103,8 @@ final class GalleryImageItemViewController: GalleryItemViewController {
         guard let item = item else {
             return
         }
-        ConcurrentJobQueue.shared.addJob(job: AttachmentDownloadJob(messageId: item.messageId))
+        let job = AttachmentDownloadJob(transcriptId: item.transcriptId, messageId: item.messageId)
+        ConcurrentJobQueue.shared.addJob(job: job)
         layout(mediaStatus: .PENDING)
     }
     
@@ -111,7 +112,7 @@ final class GalleryImageItemViewController: GalleryItemViewController {
         guard let item = item else {
             return
         }
-        let jobId = AttachmentDownloadJob.jobId(messageId: item.messageId)
+        let jobId = AttachmentDownloadJob.jobId(transcriptId: item.transcriptId, messageId: item.messageId)
         ConcurrentJobQueue.shared.cancelJob(jobId: jobId)
         layout(mediaStatus: .CANCELED)
     }

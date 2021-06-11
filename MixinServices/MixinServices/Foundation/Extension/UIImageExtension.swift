@@ -32,7 +32,7 @@ public extension UIImage {
         let asset = AVURLAsset(url: url)
         self.init(withFirstFrameOf: asset)
     }
-
+    
     @discardableResult
     func saveToFile(path: URL, quality: CGFloat = 0.75) -> Bool {
         guard let data = self.jpegData(compressionQuality: quality) else {

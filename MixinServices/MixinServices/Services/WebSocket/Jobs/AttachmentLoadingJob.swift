@@ -1,12 +1,23 @@
 import Foundation
 
-open class UploadOrDownloadJob: AsynchronousJob {
+open class AttachmentLoadingJob: AsynchronousJob {
     
+    public enum UserInfoKey {
+        public static let progress = "prog"
+        public static let conversationId = "cid"
+        public static let transcriptId = "tid"
+        public static let messageId = "mid"
+        public static let mediaURL = "url"
+    }
+    
+    public static let progressNotification = Notification.Name("one.mixin.messenger.AttachmentLoadingJob.Progress")
+    
+    public let transcriptId: String?
     public let messageId: String
-    public var message: Message!
+    public let isRecoverAttachment: Bool
+    
     public var task: URLSessionTask?
-    internal var jobId: String?
-    public private(set) var isRecoverAttachment = false
+    public var jobId: String?
     
     public lazy var completionHandler = { [weak self] (data: Any?, response: URLResponse?, error: Error?) in
         guard let weakSelf = self else {
@@ -46,13 +57,14 @@ open class UploadOrDownloadJob: AsynchronousJob {
         weakSelf.finishJob()
     }
     
-    public init(messageId: String) {
+    public init(
+        transcriptId: String? = nil,
+        messageId: String,
+        jobId: String? = nil,
+        isRecoverAttachment: Bool = false
+    ) {
+        self.transcriptId = transcriptId
         self.messageId = messageId
-    }
-
-    public init(message: Message, jobId: String? = nil, isRecoverAttachment: Bool = false) {
-        self.messageId = message.messageId
-        self.message = message
         self.jobId = jobId
         self.isRecoverAttachment = isRecoverAttachment
     }

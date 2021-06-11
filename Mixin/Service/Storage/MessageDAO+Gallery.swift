@@ -31,7 +31,8 @@ extension MessageDAO {
                 let rows = try Row.fetchCursor(db, sql: sql, arguments: [conversationId, myUserId], adapter: nil)
                 while let row = try rows.next() {
                     let counter = Counter(value: -1)
-                    let item = GalleryItem(conversationId: row[counter.advancedValue] ?? "",
+                    let item = GalleryItem(transcriptId: nil,
+                                           conversationId: row[counter.advancedValue] ?? "",
                                            messageId: row[counter.advancedValue] ?? "",
                                            category: row[counter.advancedValue] ?? "",
                                            mediaUrl: row[counter.advancedValue],

@@ -60,7 +60,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         guard let item = item else {
             return false
         }
-        let jobId = VideoDownloadJob.jobId(messageId: item.messageId)
+        let jobId = AttachmentDownloadJob.jobId(transcriptId: item.transcriptId, messageId: item.messageId)
         return ConcurrentJobQueue.shared.isExistJob(jodId: jobId)
     }
     
@@ -188,7 +188,8 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         guard let item = item, item.category == .video else {
             return
         }
-        ConcurrentJobQueue.shared.addJob(job: VideoDownloadJob(messageId: item.messageId))
+        let job = AttachmentDownloadJob(transcriptId: item.transcriptId, messageId: item.messageId)
+        ConcurrentJobQueue.shared.addJob(job: job)
         layout(mediaStatus: .PENDING)
     }
     
@@ -196,7 +197,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         guard let item = item else {
             return
         }
-        let jobId = VideoDownloadJob.jobId(messageId: item.messageId)
+        let jobId = AttachmentDownloadJob.jobId(transcriptId: item.transcriptId, messageId: item.messageId)
         ConcurrentJobQueue.shared.cancelJob(jobId: jobId)
         layout(mediaStatus: .CANCELED)
     }

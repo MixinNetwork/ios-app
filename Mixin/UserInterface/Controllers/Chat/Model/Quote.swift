@@ -80,7 +80,7 @@ struct Quote {
                               userId: message.sharedUserId ?? "",
                               name: message.sharedUserFullName ?? "")
             }
-            if image == nil, let thumbnail = UIImage.createImageFromString(thumbImage: message.thumbImage, width: message.mediaWidth, height: message.mediaHeight) {
+            if image == nil, let thumbnail = UIImage(thumbnailString: message.thumbImage) {
                 image = .thumbnail(thumbnail)
             }
             self.image = image

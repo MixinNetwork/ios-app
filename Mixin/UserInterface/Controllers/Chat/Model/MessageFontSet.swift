@@ -23,6 +23,7 @@ class MessageFontSet {
         let font = UIFont(descriptor: descriptor, size: 14)
         return MessageFontSet(font: font)
     }()
+    static let transcriptDigest = MessageFontSet(style: .caption1)
     
     enum FontDescription {
         case font(UIFont)

@@ -162,6 +162,7 @@ class ConversationTableView: UITableView {
         register(DataMessageCell.self, forCellReuseIdentifier: ReuseId.data.rawValue)
         register(AudioMessageCell.self, forCellReuseIdentifier: ReuseId.audio.rawValue)
         register(LocationMessageCell.self, forCellReuseIdentifier: ReuseId.location.rawValue)
+        register(TranscriptMessageCell.self, forCellReuseIdentifier: ReuseId.transcript.rawValue)
     }
     
 }
@@ -200,6 +201,7 @@ extension ConversationTableView {
         case post = "PostMessageCell"
         case location = "LocationMessageCell"
         case iconPrefixedText = "IconPrefixedTextMessageCell"
+        case transcript = "TranscriptMessageCell"
         case header = "DateHeader"
         
         init(category: String) {
@@ -235,6 +237,8 @@ extension ConversationTableView {
                 self = .appButtonGroup
             } else if category == MessageCategory.APP_CARD.rawValue {
                 self = .appCard
+            } else if category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue {
+                self = .transcript
             } else {
                 self = .unknown
             }

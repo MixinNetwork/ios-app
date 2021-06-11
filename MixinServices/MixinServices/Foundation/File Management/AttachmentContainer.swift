@@ -29,26 +29,53 @@ public enum AttachmentContainer {
         return url(for: .videos, filename: filename + ExtensionName.jpeg.withDot)
     }
     
+    public static func url(transcriptId: String, filename: String?) -> URL {
+        let url = Self.url.appendingPathComponent("Transcript", isDirectory: true)
+            .appendingPathComponent(transcriptId, isDirectory: true)
+        try? FileManager.default.createDirectoryIfNotExists(atPath: url.path)
+        if let filename = filename {
+            assert(!filename.isEmpty)
+            return url.appendingPathComponent(filename)
+        } else {
+            return url
+        }
+    }
+    
+    public static func videoThumbnailURL(transcriptId: String, videoFilename: String) -> URL {
+        let filename: String
+        if let dotIndex = videoFilename.lastIndex(of: ".") {
+            filename = String(videoFilename[videoFilename.startIndex..<dotIndex])
+        } else {
+            filename = videoFilename
+        }
+        return url(transcriptId: transcriptId, filename: filename + ExtensionName.jpeg.withDot)
+    }
+    
     public static func removeMediaFiles(mediaUrl: String, category: String) {
-        guard let messageCategory = AttachmentContainer.Category(messageCategory: category) else {
+        guard let category = AttachmentContainer.Category(messageCategory: category) else {
             return
         }
         guard !mediaUrl.isEmpty else {
             return
         }
-        let url = AttachmentContainer.url(for: messageCategory, filename: mediaUrl)
+        let url = AttachmentContainer.url(for: category, filename: mediaUrl)
         try? FileManager.default.removeItem(at: url)
-        if category.hasSuffix("_VIDEO") {
+        if category == .videos {
             let thumbUrl = AttachmentContainer.videoThumbnailURL(videoFilename: mediaUrl)
             try? FileManager.default.removeItem(at: thumbUrl)
         }
+    }
+    
+    public static func removeAll(transcriptId: String) {
+        let url = Self.url(transcriptId: transcriptId, filename: nil)
+        try? FileManager.default.removeItem(at: url)
     }
     
 }
 
 public extension AttachmentContainer {
     
-    enum Category {
+    enum Category: CaseIterable {
         
         case audios
         case files

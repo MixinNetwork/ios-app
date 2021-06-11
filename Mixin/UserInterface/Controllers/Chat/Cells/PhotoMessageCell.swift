@@ -22,9 +22,10 @@ class PhotoMessageCell: PhotoRepresentableMessageCell, AttachmentExpirationHinti
     }
     
     override func reloadMedia(viewModel: PhotoRepresentableMessageViewModel) {
-        if let mediaUrl = viewModel.message.mediaUrl, !mediaUrl.isEmpty, !mediaUrl.hasPrefix("http") {
-            let url = AttachmentContainer.url(for: .photos, filename: mediaUrl)
-            contentImageView.sd_setImage(with: url, placeholderImage: viewModel.thumbnail, context: localImageContext)
+        if let url = (viewModel as? PhotoMessageViewModel)?.attachmentURL {
+            contentImageView.sd_setImage(with: url,
+                                         placeholderImage: viewModel.thumbnail,
+                                         context: localImageContext)
         } else {
             contentImageView.image = viewModel.thumbnail
         }

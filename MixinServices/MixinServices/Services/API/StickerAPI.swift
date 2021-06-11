@@ -40,6 +40,10 @@ public class StickerAPI : MixinAPI {
         return request(method: .get, path: Path.stickers(id: stickerId))
     }
     
+    public static func sticker(stickerId: String, completion: @escaping (MixinAPI.Result<StickerResponse>) -> Void) {
+        request(method: .get, path: Path.stickers(id: stickerId), completion: completion)
+    }
+    
     public static func removeSticker(stickerIds: [String], completion: @escaping (MixinAPI.Result<Empty>) -> Void) {
         request(method: .post, path: Path.remove, parameters: stickerIds, completion: completion)
     }

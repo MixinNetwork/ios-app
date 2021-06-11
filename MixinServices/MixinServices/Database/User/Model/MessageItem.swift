@@ -164,6 +164,67 @@ public final class MessageItem {
                   createdAt: createdAt)
     }
     
+    public convenience init(transcriptMessage t: TranscriptMessage) {
+        let content: String?
+        if t.category == .appCard {
+            content = AppCardContentConverter.localAppCard(from: t.content)
+        } else {
+            content = t.content
+        }
+        self.init(messageId: t.messageId,
+                  conversationId: "",
+                  userId: t.userId ?? "",
+                  category: t.category.rawValue,
+                  content: content,
+                  mediaUrl: t.mediaUrl,
+                  mediaMimeType: t.mediaMimeType,
+                  mediaSize: t.mediaSize,
+                  mediaDuration: t.mediaDuration,
+                  mediaWidth: t.mediaWidth,
+                  mediaHeight: t.mediaHeight,
+                  mediaHash: nil,
+                  mediaKey: t.mediaKey,
+                  mediaDigest: t.mediaDigest,
+                  mediaStatus: t.mediaStatus,
+                  mediaWaveform: t.mediaWaveform,
+                  mediaLocalIdentifier: nil,
+                  thumbImage: t.thumbImage,
+                  thumbUrl: t.thumbUrl,
+                  status: MessageStatus.READ.rawValue,
+                  participantId: nil,
+                  snapshotId: nil,
+                  name: t.mediaName,
+                  stickerId: t.stickerId,
+                  createdAt: t.createdAt,
+                  actionName: nil,
+                  userFullName: t.userFullName,
+                  userIdentityNumber: nil,
+                  userAvatarUrl: nil,
+                  appId: nil,
+                  snapshotAmount: nil,
+                  snapshotAssetId: nil,
+                  snapshotType: nil,
+                  participantFullName: nil,
+                  participantUserId: nil,
+                  assetUrl: nil,
+                  assetType: nil,
+                  assetSymbol: nil,
+                  assetIcon: nil,
+                  assetWidth: nil,
+                  assetHeight: nil,
+                  assetCategory: nil,
+                  sharedUserId: t.sharedUserId,
+                  sharedUserFullName: nil,
+                  sharedUserIdentityNumber: nil,
+                  sharedUserAvatarUrl: nil,
+                  sharedUserAppId: nil,
+                  sharedUserIsVerified: nil,
+                  quoteMessageId: t.quoteMessageId,
+                  quoteContent: QuoteContentConverter.localQuoteContent(from: t.quoteContent),
+                  mentionsJson: MentionConverter.localMention(from: t.mentions),
+                  hasMentionRead: nil)
+    }
+    
 }
 
 extension MessageItem: Codable, MixinFetchableRecord {

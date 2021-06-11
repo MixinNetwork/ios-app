@@ -19,19 +19,30 @@ class MultipleSelectionActionView: UIView {
                 image = R.image.conversation.ic_selection_action_delete()
             }
             button.setImage(image, for: .normal)
+            updateButtonAvailability()
         }
     }
     
     var numberOfSelection = 0 {
         didSet {
             label.text = R.string.localizable.chat_number_of_selection("\(numberOfSelection)")
-            button.isEnabled = numberOfSelection > 0
+            updateButtonAvailability()
         }
     }
     
     override func safeAreaInsetsDidChange() {
         super.safeAreaInsetsDidChange()
         frame.size.height = preferredHeight
+    }
+    
+    private func updateButtonAvailability() {
+        switch intent {
+        case .forward:
+            button.isEnabled = numberOfSelection > 0
+                && numberOfSelection <= maxNumberOfTranscriptChildren
+        case .delete:
+            button.isEnabled = numberOfSelection > 0
+        }
     }
     
 }

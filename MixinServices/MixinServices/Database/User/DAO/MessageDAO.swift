@@ -8,6 +8,7 @@ public final class MessageDAO: UserDatabaseDAO {
         public static let message = "msg"
         public static let messageId = "mid"
         public static let messsageSource = "msg_source"
+        public static let mediaStatus = "ms"
     }
     
     public static let shared = MessageDAO()
@@ -15,6 +16,7 @@ public final class MessageDAO: UserDatabaseDAO {
     public static let willDeleteMessageNotification = Notification.Name("one.mixin.services.MessageDAO.willDeleteMessage")
     public static let didInsertMessageNotification = Notification.Name("one.mixin.services.did.insert.msg")
     public static let didRedecryptMessageNotification = Notification.Name("one.mixin.services.did.redecrypt.msg")
+    public static let messageMediaStatusDidUpdateNotification = Notification.Name("one.mixin.services.MessageDAO.MessageMediaStatusDidUpdate")
     
     static let sqlQueryLastUnreadMessageTime = """
         SELECT created_at FROM messages
@@ -101,6 +103,16 @@ public final class MessageDAO: UserDatabaseDAO {
                          where: condition)
     }
     
+    public func getTranscriptMessageIds(conversationId: String, database: GRDB.Database) throws -> [String] {
+        let condition: SQLSpecificExpressible = Message.column(of: .conversationId) == conversationId
+            && Message.column(of: .category) == MessageCategory.SIGNAL_TRANSCRIPT.rawValue
+        return try Message
+            .select(Message.column(of: .messageId))
+            .filter(condition)
+            .order(Message.column(of: .createdAt).asc)
+            .fetchAll(database)
+    }
+    
     public func getDownloadedMediaUrls(categories: [MessageCategory], offset: Int, limit: Int) -> [String: String] {
         let condition: SQLSpecificExpressible = categories.map(\.rawValue).contains(Message.column(of: .category))
             && Message.column(of: .mediaStatus) == MediaStatus.DONE.rawValue
@@ -140,13 +152,27 @@ public final class MessageDAO: UserDatabaseDAO {
         let condition: SQLSpecificExpressible = Message.column(of: .messageId) == messageId
             && Message.column(of: .category) != MessageCategory.MESSAGE_RECALL.rawValue
         db.update(Message.self, assignments: assignments, where: condition) { _ in
-            let statusChange = ConversationChange(conversationId: conversationId,
-                                            action: .updateMediaStatus(messageId: messageId, mediaStatus: mediaStatus))
+            let mediaStatusUserInfo: [String: Any] = [
+                UserInfoKey.messageId: messageId,
+                UserInfoKey.mediaStatus: mediaStatus
+            ]
+            NotificationCenter.default.post(onMainThread: Self.messageMediaStatusDidUpdateNotification,
+                                            object: self,
+                                            userInfo: mediaStatusUserInfo)
+            
             let keyChange = ConversationChange(conversationId: conversationId,
                                             action: .updateMediaKey(messageId: messageId, content: content, key: key, digest: digest))
-            NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: statusChange)
             NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: keyChange)
         }
+    }
+    
+    public func update(content: String, forMessageWith messageId: String) {
+        let assignments = [
+            Message.column(of: .content).set(to: content)
+        ]
+        let condition: SQLSpecificExpressible = Message.column(of: .messageId) == messageId
+            && Message.column(of: .category) != MessageCategory.MESSAGE_RECALL.rawValue
+        db.update(Message.self, assignments: assignments, where: condition)
     }
     
     public func update(quoteContent: Data, for messageId: String) {
@@ -321,8 +347,13 @@ public final class MessageDAO: UserDatabaseDAO {
                     .filter(updateCondition)
                     .updateAll(db, [Message.column(of: .mediaStatus).set(to: targetStatus.rawValue)])
                 if numberOfChanges > 0 {
-                    let change = ConversationChange(conversationId: conversationId, action: .updateMediaStatus(messageId: messageId, mediaStatus: targetStatus))
-                    NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: change)
+                    let userInfo: [String: Any] = [
+                        UserInfoKey.messageId: messageId,
+                        UserInfoKey.mediaStatus: status
+                    ]
+                    NotificationCenter.default.post(onMainThread: Self.messageMediaStatusDidUpdateNotification,
+                                                    object: self,
+                                                    userInfo: userInfo)
                 }
             }
         }
@@ -483,7 +514,12 @@ public final class MessageDAO: UserDatabaseDAO {
         return db.select(with: MessageDAO.sqlQueryQuoteMessageById, arguments: [messageId])
     }
     
-    public func insertMessage(message: Message, messageSource: String, completion: (() -> Void)? = nil) {
+    public func insertMessage(
+        message: Message,
+        children: [TranscriptMessage]? = nil,
+        messageSource: String,
+        completion: (() -> Void)? = nil
+    ) {
         var message = message
         
         let quotedMessage: MessageItem?
@@ -498,11 +534,16 @@ public final class MessageDAO: UserDatabaseDAO {
             if let mention = MessageMention(message: message, quotedMessage: quotedMessage) {
                 try mention.save(db)
             }
-            try insertMessage(database: db, message: message, messageSource: messageSource, completion: completion)
+            try children?.save(db)
+            try insertMessage(database: db,
+                              message: message,
+                              messageSource: messageSource,
+                              children: children,
+                              completion: completion)
         }
     }
     
-    public func insertMessage(database: GRDB.Database, message: Message, messageSource: String, completion: (() -> Void)? = nil) throws {
+    public func insertMessage(database: GRDB.Database, message: Message, messageSource: String, children: [TranscriptMessage]? = nil, completion: (() -> Void)? = nil) throws {
         if message.category.hasPrefix("SIGNAL_") {
             try message.insert(database)
         } else {
@@ -512,16 +553,7 @@ public final class MessageDAO: UserDatabaseDAO {
             && message.status != MessageStatus.FAILED.rawValue
             && MessageCategory.ftsAvailableCategoryStrings.contains(message.category)
         if shouldInsertIntoFTSTable {
-            let arguments = StatementArguments([
-                uuidTokenString(uuidString: message.conversationId),
-                uuidTokenString(uuidString: message.userId),
-                uuidTokenString(uuidString: message.messageId),
-                message.category.hasSuffix("DATA") ? message.name : message.content,
-                unixTimeInMilliseconds(iso8601: message.createdAt),
-                nil,
-                nil
-            ])
-            try database.execute(sql: "INSERT INTO \(Message.ftsTableName) VALUES (?, ?, ?, ?, ?, ?, ?)", arguments: arguments)
+            try insertFTSContent(database, message: message, children: children)
         }
         try MessageDAO.shared.updateUnseenMessageCount(database: database, conversationId: message.conversationId)
         
@@ -550,9 +582,9 @@ public final class MessageDAO: UserDatabaseDAO {
         }
     }
     
-    public func recallMessage(message: Message) {
+    public func recallMessage(message: MessageItem) {
         let messageId = message.messageId
-        ReceiveMessageService.shared.stopRecallMessage(messageId: messageId, category: message.category, conversationId: message.conversationId, mediaUrl: message.mediaUrl)
+        ReceiveMessageService.shared.stopRecallMessage(item: message)
         
         let condition = Message.column(of: .conversationId) == message.conversationId
             && Message.column(of: .quoteMessageId) == messageId
@@ -608,8 +640,15 @@ public final class MessageDAO: UserDatabaseDAO {
         try MessageMention
             .filter(MessageMention.column(of: .messageId) == messageId)
             .deleteAll(database)
-        if let category = MessageCategory(rawValue: category), MessageCategory.ftsAvailable.contains(category) {
-            try deleteFTSContent(database, messageId: messageId)
+        if let category = MessageCategory(rawValue: category) {
+            if MessageCategory.ftsAvailable.contains(category) {
+                try deleteFTSContent(database, messageId: messageId)
+            }
+            if category == .SIGNAL_TRANSCRIPT {
+                try TranscriptMessage
+                    .filter(TranscriptMessage.column(of: .transcriptId) == messageId)
+                    .deleteAll(database)
+            }
         }
         
         if status == MessageStatus.FAILED.rawValue {
@@ -634,11 +673,12 @@ public final class MessageDAO: UserDatabaseDAO {
     }
     
     @discardableResult
-    public func deleteMessage(id: String) -> Bool {
+    public func deleteMessage(id: String) -> (deleted: Bool, childMessageIds: [String]) {
         NotificationCenter.default.post(onMainThread: Self.willDeleteMessageNotification,
                                         object: self,
                                         userInfo: [UserInfoKey.messageId: id])
         var deleteCount = 0
+        var childMessageIds: [String] = []
         db.write { (db) in
             deleteCount = try Message
                 .filter(Message.column(of: .messageId) == id)
@@ -647,8 +687,15 @@ public final class MessageDAO: UserDatabaseDAO {
                 .filter(MessageMention.column(of: .messageId) == id)
                 .deleteAll(db)
             try deleteFTSContent(db, messageId: id)
+            childMessageIds = try TranscriptMessage
+                .select(TranscriptMessage.column(of: .messageId))
+                .filter(TranscriptMessage.column(of: .transcriptId) == id)
+                .fetchAll(db)
+            try TranscriptMessage
+                .filter(TranscriptMessage.column(of: .transcriptId) == id)
+                .deleteAll(db)
         }
-        return deleteCount > 0
+        return (deleteCount > 0, childMessageIds)
     }
     
     public func hasSentMessage(inConversationOf conversationId: String) -> Bool {
@@ -680,7 +727,7 @@ extension MessageDAO {
         return db.recordExists(in: Message.self, where: condition)
     }
     
-    private func updateRedecryptMessage(assignments: [ColumnAssignment], mention: MessageMention? = nil, messageId: String, category: String, conversationId: String, messageSource: String) {
+    private func updateRedecryptMessage(assignments: [ColumnAssignment], mention: MessageMention? = nil, messageId: String, category: String, conversationId: String, messageSource: String, children: [TranscriptMessage]? = nil) {
         var newMessage: MessageItem?
         
         db.write { (db) in
@@ -694,18 +741,12 @@ extension MessageDAO {
             }
             
             // isFTSInitialized is wrote inside a write block, checking it within a write block keeps the value in sync
-            if MessageCategory.ftsAvailableCategoryStrings.contains(category), AppGroupUserDefaults.Database.isFTSInitialized, let message = newMessage {
-                let arguments = StatementArguments([
-                    uuidTokenString(uuidString: message.conversationId),
-                    uuidTokenString(uuidString: message.userId),
-                    uuidTokenString(uuidString: message.messageId),
-                    message.category.hasSuffix("DATA") ? message.name : message.content,
-                    unixTimeInMilliseconds(iso8601: message.createdAt),
-                    nil,
-                    nil
-                ])
-                try db.execute(sql: "INSERT INTO \(Message.ftsTableName) VALUES (?, ?, ?, ?, ?, ?, ?)", arguments: arguments)
+            if MessageCategory.ftsAvailableCategoryStrings.contains(category), AppGroupUserDefaults.Database.isFTSInitialized, let item = newMessage {
+                let message = Message.createMessage(message: item)
+                try insertFTSContent(db, message: message, children: children)
             }
+            
+            try children?.save(db)
         }
         
         guard let message = newMessage else {
@@ -796,9 +837,46 @@ extension MessageDAO {
                                messageSource: messageSource)
     }
     
+    public func updateTranscriptMessage(children: [TranscriptMessage], status: String, mediaStatus: MediaStatus, content: String, messageId: String, category: String, conversationId: String, messageSource: String) {
+        let assignments = [
+            Message.column(of: .status).set(to: status),
+            Message.column(of: .content).set(to: content),
+            Message.column(of: .mediaStatus).set(to: mediaStatus.rawValue)
+        ]
+        updateRedecryptMessage(assignments: assignments,
+                               messageId: messageId,
+                               category: category,
+                               conversationId: conversationId,
+                               messageSource: messageSource,
+                               children: children)
+    }
+    
 }
 
 extension MessageDAO {
+    
+    private func insertFTSContent(_ db: GRDB.Database, message: Message, children: [TranscriptMessage]?) throws {
+        let shouldInsertIntoFTSTable = AppGroupUserDefaults.Database.isFTSInitialized
+            && message.status != MessageStatus.FAILED.rawValue
+            && MessageCategory.ftsAvailableCategoryStrings.contains(message.category)
+        if shouldInsertIntoFTSTable {
+            let content = ftsContent(messageId: message.messageId,
+                                     category: message.category,
+                                     content: message.content,
+                                     name: message.name,
+                                     children: children)
+            let arguments = StatementArguments([
+                uuidTokenString(uuidString: message.conversationId),
+                uuidTokenString(uuidString: message.userId),
+                uuidTokenString(uuidString: message.messageId),
+                content,
+                unixTimeInMilliseconds(iso8601: message.createdAt),
+                nil,
+                nil
+            ])
+            try db.execute(sql: "INSERT INTO \(Message.ftsTableName) VALUES (?, ?, ?, ?, ?, ?, ?)", arguments: arguments)
+        }
+    }
     
     private func deleteFTSContent(_ db: GRDB.Database, messageId: String) throws {
         let sql = "DELETE FROM \(Message.ftsTableName) WHERE id MATCH ?"

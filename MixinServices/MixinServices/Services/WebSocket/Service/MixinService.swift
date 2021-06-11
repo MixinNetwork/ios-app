@@ -317,33 +317,38 @@ public class MixinService {
         } while LoginManager.shared.isLoggedIn && !MixinService.isStopProcessMessages && !ReachabilityManger.shared.isReachable
     }
     
-    public func stopRecallMessage(messageId: String, category: String, conversationId: String, mediaUrl: String?) {
+    public func stopRecallMessage(item: MessageItem, childMessageIds: [String]? = nil) {
+        let messageId = item.messageId
+        let category = item.category
         UNUserNotificationCenter.current().removeNotifications(withIdentifiers: [messageId])
         
-        let userInfo = [SendMessageService.UserInfoKey.conversationId: conversationId,
+        let userInfo = [SendMessageService.UserInfoKey.conversationId: item.conversationId,
                         SendMessageService.UserInfoKey.messageId: messageId]
         DispatchQueue.main.sync {
             NotificationCenter.default.post(name: SendMessageService.willRecallMessageNotification, object: self, userInfo: userInfo)
         }
         
-        let jobId: String?
-        if category.hasSuffix("_IMAGE") {
-            jobId = AttachmentDownloadJob.jobId(messageId: messageId)
-        } else if category.hasSuffix("_DATA") {
-            jobId = FileDownloadJob.jobId(messageId: messageId)
-        } else if category.hasSuffix("_AUDIO") {
-            jobId = AudioDownloadJob.jobId(messageId: messageId)
-        } else if category.hasSuffix("_VIDEO") {
-            jobId = VideoDownloadJob.jobId(messageId: messageId)
+        let jobIds: [String]
+        if ["_IMAGE", "_DATA", "_AUDIO", "_VIDEO"].contains(where: category.hasSuffix) {
+            jobIds = [AttachmentDownloadJob.jobId(transcriptId: nil, messageId: item.messageId)]
+        } else if category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue {
+            let childMessageIds = childMessageIds ?? TranscriptMessageDAO.shared.childrenMessageIds(transcriptId: messageId)
+            jobIds = childMessageIds.map { transcriptMessageId in
+                AttachmentDownloadJob.jobId(transcriptId: messageId, messageId: transcriptMessageId)
+            }
         } else {
-            jobId = nil
+            jobIds = []
         }
-        if let id = jobId {
+        
+        for id in jobIds {
             ConcurrentJobQueue.shared.cancelJob(jobId: id)
         }
         
-        if let mediaUrl = mediaUrl {
+        if let mediaUrl = item.mediaUrl {
             AttachmentContainer.removeMediaFiles(mediaUrl: mediaUrl, category: category)
+        }
+        if category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue {
+            AttachmentContainer.removeAll(transcriptId: messageId)
         }
     }
     

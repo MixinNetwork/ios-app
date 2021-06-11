@@ -8,6 +8,7 @@ class MessageReceiverViewController: PeerViewController<[MessageReceiver], Check
         true
     }
     
+    private var hideApps = false
     private var messageContent: MessageContent!
     private var selections = [MessageReceiver]() {
         didSet {
@@ -15,9 +16,10 @@ class MessageReceiverViewController: PeerViewController<[MessageReceiver], Check
         }
     }
     
-    class func instance(content: MessageContent) -> UIViewController {
+    class func instance(content: MessageContent, hideApps: Bool = false) -> UIViewController {
         let vc = MessageReceiverViewController()
         vc.messageContent = content
+        vc.hideApps = hideApps
         return ContainerViewController.instance(viewController: vc, title: Localized.ACTION_SHARE_TO)
     }
     
@@ -32,7 +34,9 @@ class MessageReceiverViewController: PeerViewController<[MessageReceiver], Check
         var apps = [UserItem]()
         for user in users {
             if user.isBot {
-                apps.append(user)
+                if !hideApps {
+                    apps.append(user)
+                }
             } else {
                 contacts.append(user)
             }
@@ -168,12 +172,18 @@ extension MessageReceiverViewController: ContainerViewControllerDelegate {
                 }
                 switch receiver.item {
                 case .group:
-                    for msg in messages {
-                        SendMessageService.shared.sendMessage(message: msg, ownerUser: nil, isGroupMessage: true)
+                    for m in messages {
+                        SendMessageService.shared.sendMessage(message: m.message,
+                                                              children: m.children,
+                                                              ownerUser: nil,
+                                                              isGroupMessage: true)
                     }
                 case .user(let user):
-                    for msg in messages {
-                        SendMessageService.shared.sendMessage(message: msg, ownerUser: user, isGroupMessage: false)
+                    for m in messages {
+                        SendMessageService.shared.sendMessage(message: m.message,
+                                                              children: m.children,
+                                                              ownerUser: user,
+                                                              isGroupMessage: false)
                     }
                 }
             }
@@ -276,40 +286,65 @@ extension MessageReceiverViewController {
         case post(String)
         case video(URL)
         case appCard(AppCardData)
+        case transcript([MessageItem])
     }
     
-    static func makeMessages(content: MessageContent, to receiver: MessageReceiver) -> [Message] {
+    private struct ComposedMessage {
+        
+        let message: Message
+        let children: [TranscriptMessage]?
+        
+        init?(message: Message?, children: [TranscriptMessage]?) {
+            guard let message = message else {
+                return nil
+            }
+            self.message = message
+            self.children = children
+        }
+        
+    }
+    
+    private static func makeMessages(content: MessageContent, to receiver: MessageReceiver) -> [ComposedMessage] {
         switch content {
         case .message(var message):
             message.messageId = UUID().uuidString.lowercased()
             message.conversationId = receiver.conversationId
             message.createdAt = Date().toUTCString()
-            return [message]
+            return [ComposedMessage(message: message, children: nil)].compactMap { $0 }
         case .messages(let messages):
             let date = Date()
             let counter = Counter(value: -1)
-            return messages.compactMap({ (original) -> Message? in
+            return messages.compactMap({ (original) -> ComposedMessage? in
                 let interval = TimeInterval(counter.advancedValue) / millisecondsPerSecond
                 let createdAt = date.addingTimeInterval(interval).toUTCString()
                 return makeMessage(message: original, to: receiver, createdAt: createdAt)
             })
         case .post(let text):
-            return [makeMessage(post: text, to: receiver.conversationId)].compactMap({ $0 })
+            return [makeMessage(post: text, to: receiver.conversationId)]
+                .compactMap { ComposedMessage(message: $0, children: nil) }
         case .contact(let userId):
-            return [makeMessage(userId: userId, to: receiver.conversationId)].compactMap({ $0 })
+            return [makeMessage(userId: userId, to: receiver.conversationId)]
+                .compactMap { ComposedMessage(message: $0, children: nil) }
         case .photo(let image):
-            return [makeMessage(image: image, to: receiver.conversationId)].compactMap({ $0 })
+            return [makeMessage(image: image, to: receiver.conversationId)]
+                .compactMap { ComposedMessage(message: $0, children: nil) }
         case .text(let text):
-            return [makeMessage(text: text, to: receiver.conversationId)].compactMap({ $0 })
+            return [makeMessage(text: text, to: receiver.conversationId)]
+                .compactMap { ComposedMessage(message: $0, children: nil) }
         case .video(let url):
-            return [makeMessage(videoUrl: url, to: receiver.conversationId)].compactMap({ $0 })
+            return [makeMessage(videoUrl: url, to: receiver.conversationId)]
+                .compactMap { ComposedMessage(message: $0, children: nil) }
         case .appCard(let appCard):
-            return [makeMessage(appCard: appCard, to: receiver.conversationId)].compactMap({ $0 })
+            return [makeMessage(appCard: appCard, to: receiver.conversationId)]
+                .compactMap { ComposedMessage(message: $0, children: nil) }
+        case .transcript(let messages):
+            return [makeTranscriptMessage(messages: messages, to: receiver.conversationId)]
+                .compactMap { $0 }
         }
     }
     
     // Copy media file in case of deletion or recalling
-    static func mediaUrl(from message: MessageItem, with newMessageId: String) -> String? {
+    private static func mediaUrl(from message: MessageItem, with newMessageId: String) -> String? {
         guard let category = AttachmentContainer.Category(messageCategory: message.category), let videoFilename = message.mediaUrl else {
             return message.mediaUrl
         }
@@ -332,7 +367,7 @@ extension MessageReceiverViewController {
         return toUrl.lastPathComponent
     }
     
-    static func makeMessage(message: MessageItem, to receiver: MessageReceiver, createdAt: String) -> Message? {
+    private static func makeMessage(message: MessageItem, to receiver: MessageReceiver, createdAt: String) -> ComposedMessage? {
         var newMessage = Message.createMessage(category: message.category,
                                                conversationId: receiver.conversationId,
                                                createdAt: createdAt,
@@ -344,7 +379,7 @@ extension MessageReceiverViewController {
         case .user(let user):
             isSignalMessage = !user.isBot
         }
-        if message.category.hasSuffix("_TEXT") || message.category.hasSuffix("_POST") || message.category.hasSuffix("_LOCATION") || message.category == MessageCategory.APP_CARD.rawValue {
+        if ["_TEXT", "_POST", "_LOCATION"].contains(where: message.category.hasSuffix) || ["APP_CARD"].contains(message.category) {
             newMessage.content = message.content
         } else if message.category.hasSuffix("_IMAGE") {
             newMessage.category = isSignalMessage ? MessageCategory.SIGNAL_IMAGE.rawValue : MessageCategory.PLAIN_IMAGE.rawValue
@@ -400,6 +435,44 @@ extension MessageReceiverViewController {
             newMessage.thumbUrl = message.thumbUrl
             let liveData = TransferLiveData(width: width, height: height, thumbUrl: thumbUrl, url: mediaUrl)
             newMessage.content = try! JSONEncoder.default.encode(liveData).base64EncodedString()
+        } else if message.category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue {
+            let transcriptId = UUID().uuidString.lowercased()
+            let children: [TranscriptMessage] = TranscriptMessageDAO.shared.childMessages(with: message.messageId).map { original in
+                let mediaUrl: String?
+                if original.category.includesAttachment, let sourceFilename = original.mediaUrl {
+                    do {
+                        let extensionName: String
+                        if let lastComponent = sourceFilename.components(separatedBy: ".").lazy.last {
+                            extensionName = lastComponent
+                        } else {
+                            extensionName = ""
+                        }
+                        let destinationFilename = original.messageId + "." + extensionName
+                        let source = AttachmentContainer.url(transcriptId: message.messageId, filename: sourceFilename)
+                        let destination = AttachmentContainer.url(transcriptId: transcriptId, filename: destinationFilename)
+                        try FileManager.default.copyItem(at: source, to: destination)
+                        if original.category == .video {
+                            let source = AttachmentContainer.videoThumbnailURL(transcriptId: message.messageId, videoFilename: sourceFilename)
+                            let destination = AttachmentContainer.videoThumbnailURL(transcriptId: transcriptId, videoFilename: destinationFilename)
+                            try? FileManager.default.copyItem(at: source, to: destination)
+                        }
+                        mediaUrl = destinationFilename
+                    } catch {
+                        mediaUrl = nil
+                    }
+                } else {
+                    mediaUrl = nil
+                }
+                return TranscriptMessage(transcriptId: transcriptId, mediaUrl: mediaUrl, message: original)
+            }
+            let message = Message.createMessage(messageId: transcriptId,
+                                                conversationId: receiver.conversationId,
+                                                userId: myUserId,
+                                                category: MessageCategory.SIGNAL_TRANSCRIPT.rawValue,
+                                                content: message.content,
+                                                status: MessageStatus.SENDING.rawValue,
+                                                createdAt: Date().toUTCString())
+            return ComposedMessage(message: message, children: children)
         } else {
             return nil
         }
@@ -421,10 +494,10 @@ extension MessageReceiverViewController {
             newMessage.mediaDigest = message.mediaDigest
         }
         
-        return newMessage
+        return ComposedMessage(message: newMessage, children: nil)
     }
     
-    static func makeMessage(userId: String, to conversationId: String) -> Message? {
+    private static func makeMessage(userId: String, to conversationId: String) -> Message? {
         var message = Message.createMessage(category: MessageCategory.SIGNAL_CONTACT.rawValue,
                                             conversationId: conversationId,
                                             userId: myUserId)
@@ -433,8 +506,8 @@ extension MessageReceiverViewController {
         message.content = try! JSONEncoder().encode(transferData).base64EncodedString()
         return message
     }
-
-    static func makeMessage(appCard: AppCardData, to conversationId: String) -> Message? {
+    
+    private static func makeMessage(appCard: AppCardData, to conversationId: String) -> Message? {
         var message = Message.createMessage(category: MessageCategory.APP_CARD.rawValue,
                                             conversationId: conversationId,
                                             userId: myUserId)
@@ -442,7 +515,7 @@ extension MessageReceiverViewController {
         return message
     }
     
-    static func makeMessage(image: UIImage, to conversationId: String) -> Message? {
+    private static func makeMessage(image: UIImage, to conversationId: String) -> Message? {
         var message = Message.createMessage(category: MessageCategory.SIGNAL_IMAGE.rawValue,
                                             conversationId: conversationId,
                                             userId: myUserId)
@@ -462,7 +535,7 @@ extension MessageReceiverViewController {
         return message
     }
     
-    static func makeMessage(text: String, to conversationId: String) -> Message {
+    private static func makeMessage(text: String, to conversationId: String) -> Message {
         var message = Message.createMessage(category: MessageCategory.SIGNAL_TEXT.rawValue,
                                             conversationId: conversationId,
                                             userId: myUserId)
@@ -470,7 +543,7 @@ extension MessageReceiverViewController {
         return message
     }
     
-    static func makeMessage(post: String, to conversationId: String) -> Message {
+    private static func makeMessage(post: String, to conversationId: String) -> Message {
         var message = Message.createMessage(category: MessageCategory.SIGNAL_POST.rawValue,
                                             conversationId: conversationId,
                                             userId: myUserId)
@@ -478,7 +551,7 @@ extension MessageReceiverViewController {
         return message
     }
     
-    static func makeMessage(videoUrl: URL, to conversationId: String) -> Message? {
+    private static func makeMessage(videoUrl: URL, to conversationId: String) -> Message? {
         let asset = AVAsset(url: videoUrl)
         guard asset.duration.isValid, let videoTrack = asset.tracks(withMediaType: .video).first else {
             return nil
@@ -502,6 +575,73 @@ extension MessageReceiverViewController {
         message.mediaUrl = videoUrl.lastPathComponent
         message.mediaStatus = MediaStatus.PENDING.rawValue
         return message
+    }
+    
+    private static func makeTranscriptMessage(messages: [MessageItem], to conversationId: String) -> ComposedMessage? {
+        let transcriptId = UUID().uuidString.lowercased()
+        let sortedMessageItems = messages.sorted(by: { $0.createdAt < $1.createdAt })
+        let children = makeTranscriptChildren(with: transcriptId,
+                                              from: sortedMessageItems)
+        let localContents = sortedMessageItems.compactMap(TranscriptMessage.LocalContent.init)
+        let content: String
+        if let data = try? JSONEncoder.default.encode(localContents), let localContent = String(data: data, encoding: .utf8) {
+            content = localContent
+        } else {
+            content = ""
+        }
+        let message = Message.createMessage(messageId: transcriptId,
+                                            conversationId: conversationId,
+                                            userId: myUserId,
+                                            category: MessageCategory.SIGNAL_TRANSCRIPT.rawValue,
+                                            content: content,
+                                            status: MessageStatus.SENDING.rawValue,
+                                            createdAt: Date().toUTCString())
+        return ComposedMessage(message: message, children: children)
+    }
+    
+}
+
+extension MessageReceiverViewController {
+    
+    private static func makeTranscriptChildren(with transcriptId: String, from messages: [MessageItem]) -> [TranscriptMessage] {
+        let categoriesWithAttachment = Set(AttachmentContainer.Category.allCases.flatMap { $0.messageCategory }.map { $0.rawValue })
+        return messages.compactMap { item -> TranscriptMessage? in
+            let mediaUrl: String? = {
+                guard
+                    categoriesWithAttachment.contains(item.category),
+                    let category = AttachmentContainer.Category(messageCategory: item.category),
+                    let sourceFilename = item.mediaUrl
+                else {
+                    return nil
+                }
+                do {
+                    let extensionName: String
+                    if let lastComponent = sourceFilename.components(separatedBy: ".").lazy.last {
+                        extensionName = lastComponent
+                    } else {
+                        extensionName = ""
+                    }
+                    let destinationFilename = item.messageId + "." + extensionName
+                    let source = AttachmentContainer.url(for: category, filename: sourceFilename)
+                    let destination = AttachmentContainer.url(transcriptId: transcriptId, filename: destinationFilename)
+                    try FileManager.default.copyItem(at: source, to: destination)
+                    if category == .videos {
+                        let source = AttachmentContainer.videoThumbnailURL(videoFilename: sourceFilename)
+                        let destination = AttachmentContainer.videoThumbnailURL(transcriptId: transcriptId, videoFilename: destinationFilename)
+                        try? FileManager.default.copyItem(at: source, to: destination)
+                    }
+                    return destinationFilename
+                } catch {
+                    return nil
+                }
+            }()
+            let thumbImage = UIImage(thumbnailString: item.thumbImage)?.blurHash()
+            let child = TranscriptMessage(transcriptId: transcriptId,
+                                          mediaUrl: mediaUrl,
+                                          thumbImage: thumbImage, 
+                                          messageItem: item)
+            return child
+        }
     }
     
 }

@@ -70,23 +70,35 @@ public final class StickerDAO: UserDatabaseDAO {
         db.select(with: StickerDAO.sqlQueryRecentUsedStickers, arguments: [limit])
     }
     
-    public func insertOrUpdateSticker(sticker: StickerResponse) {
+    public func insertOrUpdateSticker(sticker: StickerResponse) -> StickerItem? {
+        var stickerItem: StickerItem?
         db.write { (db) in
             try insertOrUpdateSticker(into: db, with: sticker)
+            db.afterNextTransactionCommit { (db) in
+                stickerItem = try? StickerItem.fetchOne(db,
+                                                        sql: StickerDAO.sqlQueryStickerByStickerId,
+                                                        arguments: [sticker.stickerId])
+            }
         }
+        return stickerItem
     }
     
-    public func insertOrUpdateStickers(stickers: [StickerResponse], albumId: String) {
+    public func insertOrUpdateStickers(stickers: [StickerResponse], albumId: String) -> [StickerItem] {
+        var stickerItems: [StickerItem] = []
         db.write { (db) in
             for response in stickers {
                 let relationship = StickerRelationship(albumId: albumId, stickerId: response.stickerId, createdAt: response.createdAt)
                 try relationship.save(db)
                 try insertOrUpdateSticker(into: db, with: response)
             }
-            db.afterNextTransactionCommit { (_) in
+            db.afterNextTransactionCommit { (db) in
                 NotificationCenter.default.post(onMainThread: Self.favoriteStickersDidChangeNotification, object: self)
+                stickerItems = (try? StickerItem.fetchAll(db,
+                                                          sql: StickerDAO.sqlQueryStickersByAlbum,
+                                                          arguments: [albumId])) ?? []
             }
         }
+        return stickerItems
     }
     
     public func insertOrUpdateFavoriteSticker(sticker: StickerResponse) {

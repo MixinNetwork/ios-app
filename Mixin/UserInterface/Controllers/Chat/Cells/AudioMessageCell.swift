@@ -4,6 +4,7 @@ import MixinServices
 class AudioMessageCell: CardMessageCell<AudioMessageActionView, AudioMessageProgressView>, AttachmentLoadingMessageCell, AudioCell {
     
     weak var attachmentLoadingDelegate: AttachmentLoadingMessageCellDelegate?
+    weak var audioMessagePlayingManager: AudioMessagePlayingManager?
     
     var operationButton: NetworkOperationButton! {
         leftView.operationButton
@@ -61,7 +62,7 @@ class AudioMessageCell: CardMessageCell<AudioMessageActionView, AudioMessageProg
         timer?.invalidate()
         timer = nil
         if let messageId = viewModel?.message.messageId {
-            AudioMessagePlayingManager.shared.unregister(cell: self, forMessageId: messageId)
+            audioMessagePlayingManager?.unregister(cell: self, forMessageId: messageId)
         }
     }
     
@@ -78,7 +79,7 @@ class AudioMessageCell: CardMessageCell<AudioMessageActionView, AudioMessageProg
         timer?.invalidate()
         timer = nil
         if let messageId = viewModel?.message.messageId {
-            AudioMessagePlayingManager.shared.unregister(cell: self, forMessageId: messageId)
+            audioMessagePlayingManager?.unregister(cell: self, forMessageId: messageId)
         }
     }
 
@@ -94,7 +95,7 @@ class AudioMessageCell: CardMessageCell<AudioMessageActionView, AudioMessageProg
             duration = Float64(viewModel.message.mediaDuration ?? 0)
             updateUnreadStyle()
         }
-        AudioMessagePlayingManager.shared.register(cell: self, forMessageId: viewModel.message.messageId)
+        audioMessagePlayingManager?.register(cell: self, forMessageId: viewModel.message.messageId)
     }
     
     @IBAction func operationAction(_ sender: Any) {
@@ -124,7 +125,11 @@ class AudioMessageCell: CardMessageCell<AudioMessageActionView, AudioMessageProg
     }
     
     private func updateWaveformProgress() {
-        guard let player = AudioMessagePlayingManager.shared.player, AudioMessagePlayingManager.shared.playingMessage?.messageId == viewModel?.message.messageId else {
+        guard
+            let manager = audioMessagePlayingManager,
+            let player = manager.player,
+            manager.playingMessage?.messageId == viewModel?.message.messageId
+        else {
             return
         }
         let progress = player.currentTime * millisecondsPerSecond / (duration - waveformUpdateInterval * millisecondsPerSecond)

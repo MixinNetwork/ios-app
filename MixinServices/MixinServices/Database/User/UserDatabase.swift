@@ -10,9 +10,10 @@ public final class UserDatabase: Database {
         config.foreignKeysEnabled = false
         config.prepareDatabase { (db) in
             db.add(tokenizer: MixinTokenizer.self)
-            db.add(function: uuidToToken)
-            db.add(function: tokenToUUID)
-            db.add(function: iso8601ToUnixTime)
+            db.add(function: .uuidToToken)
+            db.add(function: .tokenToUUID)
+            db.add(function: .iso8601ToUnixTime)
+            db.add(function: .ftsContent)
         }
         return config
     }
@@ -359,6 +360,42 @@ public final class UserDatabase: Database {
             
             try db.execute(sql: "CREATE INDEX IF NOT EXISTS index_messages_category ON messages(conversation_id, category)")
             try db.execute(sql: "CREATE INDEX IF NOT EXISTS index_messages_quote ON messages(conversation_id, quote_message_id)")
+        }
+        
+        migrator.registerMigration("transcript") { (db) in
+            let sql = """
+                CREATE TABLE transcript_messages(
+                    transcript_id TEXT NOT NULL,
+                    message_id TEXT NOT NULL,
+                    user_id TEXT,
+                    user_full_name TEXT,
+                    category TEXT NOT NULL,
+                    created_at TEXT NOT NULL,
+                    content TEXT,
+                    media_url TEXT,
+                    media_name TEXT,
+                    media_size INTEGER,
+                    media_width INTEGER,
+                    media_height INTEGER,
+                    media_mime_type TEXT,
+                    media_duration INTEGER,
+                    media_status TEXT,
+                    media_waveform BLOB,
+                    thumb_image TEXT,
+                    thumb_url TEXT,
+                    media_key BLOB,
+                    media_digest BLOB,
+                    media_created_at TEXT,
+                    sticker_id TEXT,
+                    shared_user_id TEXT,
+                    mentions TEXT,
+                    quote_id TEXT,
+                    quote_content TEXT,
+                    caption TEXT,
+                    PRIMARY KEY (transcript_id, message_id)
+                )
+            """
+            try db.execute(sql: sql)
         }
         
         /* Remaining works:

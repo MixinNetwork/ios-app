@@ -79,7 +79,12 @@ class AnimatedStickerView: UIView {
     }
     
     func load(message: MessageItem) {
-        guard let assetUrl = message.assetUrl, let url = URL(string: assetUrl) else {
+        let url: URL
+        if let assetUrl = message.assetUrl, let u = URL(string: assetUrl) {
+            url = u
+        } else if let mediaURL = message.mediaUrl, let u = URL(string: mediaURL) {
+            url = u
+        } else {
             return
         }
         if message.assetTypeIsJSON {
@@ -88,7 +93,7 @@ class AnimatedStickerView: UIView {
             animationViewIfLoaded?.isHidden = true
             imageView.isHidden = false
             let context = stickerLoadContext(category: message.assetCategory)
-            imageView.sd_setImage(with: URL(string: assetUrl),
+            imageView.sd_setImage(with: url,
                                   placeholderImage: nil,
                                   context: context)
         }

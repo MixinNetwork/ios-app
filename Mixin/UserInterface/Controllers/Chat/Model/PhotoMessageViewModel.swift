@@ -3,6 +3,7 @@ import MixinServices
 
 class PhotoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadingViewModel {
     
+    var transcriptId: String?
     var isLoading = false
     var progress: Double?
     var downloadIsTriggeredByUser = false
@@ -26,6 +27,20 @@ class PhotoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
         return false
     }
     
+    var attachmentURL: URL? {
+        if let mediaUrl = message.mediaUrl, !mediaUrl.isEmpty {
+            if let tid = transcriptId {
+                return AttachmentContainer.url(transcriptId: tid, filename: mediaUrl)
+            } else if !mediaUrl.hasPrefix("http") {
+                return AttachmentContainer.url(for: .photos, filename: mediaUrl)
+            } else {
+                return nil
+            }
+        } else {
+            return nil
+        }
+    }
+    
     override init(message: MessageItem) {
         super.init(message: message)
         updateOperationButtonStyle()
@@ -41,12 +56,18 @@ class PhotoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
             return
         }
         updateMediaStatus(message: message, status: .PENDING)
+        let message = Message.createMessage(message: self.message)
         if shouldUpload {
-            UploaderQueue.shared.addJob(job: ImageUploadJob(message: Message.createMessage(message: message)))
+            if transcriptId != nil {
+                assertionFailure()
+            } else {
+                let job = ImageUploadJob(message: message)
+                UploaderQueue.shared.addJob(job: job)
+            }
         } else {
-            ConcurrentJobQueue.shared.addJob(job: AttachmentDownloadJob(messageId: message.messageId))
+            let job = AttachmentDownloadJob(transcriptId: transcriptId, messageId: message.messageId)
+            ConcurrentJobQueue.shared.addJob(job: job)
         }
-
         isLoading = true
     }
     
@@ -58,9 +79,15 @@ class PhotoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
             return
         }
         if shouldUpload {
-            UploaderQueue.shared.cancelJob(jobId: ImageUploadJob.jobId(messageId: message.messageId))
+            if transcriptId != nil {
+                assertionFailure()
+            } else {
+                let id = ImageUploadJob.jobId(messageId: message.messageId)
+                UploaderQueue.shared.cancelJob(jobId: id)
+            }
         } else {
-            ConcurrentJobQueue.shared.cancelJob(jobId: AttachmentDownloadJob.jobId(messageId: message.messageId))
+            let id = AttachmentDownloadJob.jobId(transcriptId: transcriptId, messageId: message.messageId)
+            ConcurrentJobQueue.shared.cancelJob(jobId: id)
         }
         if isTriggeredByUser {
             updateMediaStatus(message: message, status: .CANCELED)

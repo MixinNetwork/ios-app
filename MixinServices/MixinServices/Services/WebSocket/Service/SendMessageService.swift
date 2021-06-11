@@ -5,7 +5,11 @@ public class SendMessageService: MixinService {
     
     public static let shared = SendMessageService()
     
-    internal static let recallableSuffices = ["_TEXT", "_STICKER", "_CONTACT", "_IMAGE", "_DATA", "_AUDIO", "_VIDEO", "_LIVE", "_POST", "_LOCATION"]
+    internal static let recallableSuffices = [
+        "_TEXT", "_STICKER", "_CONTACT", "_IMAGE", "_DATA",
+        "_AUDIO", "_VIDEO", "_LIVE", "_POST", "_LOCATION",
+        MessageCategory.SIGNAL_TRANSCRIPT.rawValue
+    ]
     
     public let jobCreationQueue = DispatchQueue(label: "one.mixin.services.queue.send.message.job.creation")
     
@@ -16,7 +20,10 @@ public class SendMessageService: MixinService {
     private let httpDispatchQueue = DispatchQueue(label: "one.mixin.services.queue.send.http.messages")
     private var httpProcessing = false
     
-    public func recallMessage(messageId: String, category: String, mediaUrl: String?, conversationId: String, status: String) {
+    public func recallMessage(item: MessageItem) {
+        let category = item.category
+        let conversationId = item.conversationId
+        let messageId = item.messageId
         guard category == MessageCategory.APP_CARD.rawValue || SendMessageService.recallableSuffices.contains(where: category.hasSuffix) else {
             return
         }
@@ -24,7 +31,7 @@ public class SendMessageService: MixinService {
         let blazeMessage = BlazeMessage(recallMessageId: messageId, conversationId: conversationId)
         let job = Job(jobId: UUID().uuidString.lowercased(), action: JobAction.SEND_MESSAGE, conversationId: conversationId, blazeMessage: blazeMessage)
         
-        ReceiveMessageService.shared.stopRecallMessage(messageId: messageId, category: category, conversationId: conversationId, mediaUrl: mediaUrl)
+        ReceiveMessageService.shared.stopRecallMessage(item: item)
         
         let database: Database = UserDatabase.current
         let quoteCondition: SQLSpecificExpressible = Message.column(of: .conversationId) == conversationId
@@ -34,7 +41,12 @@ public class SendMessageService: MixinService {
                                                         where: quoteCondition)
         database.write { (db) in
             try job.save(db)
-            try MessageDAO.shared.recallMessage(database: db, messageId: messageId, conversationId: conversationId, category: category, status: status, quoteMessageIds: quoteMessageIds)
+            try MessageDAO.shared.recallMessage(database: db,
+                                                messageId: messageId,
+                                                conversationId: conversationId,
+                                                category: category,
+                                                status: item.status,
+                                                quoteMessageIds: quoteMessageIds)
         }
         SendMessageService.shared.processMessages()
     }
@@ -53,7 +65,12 @@ public class SendMessageService: MixinService {
     
     @discardableResult
     public func saveUploadJob(message: Message) -> String {
-        let job = Job(attachmentMessage: message.messageId, action: .UPLOAD_ATTACHMENT)
+        let job: Job
+        if message.category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue {
+            job = Job(attachmentMessage: message.messageId, action: .UPLOAD_TRANSCRIPT_ATTACHMENT)
+        } else {
+            job = Job(attachmentMessage: message.messageId, action: .UPLOAD_ATTACHMENT)
+        }
         UserDatabase.current.save(job)
         return job.jobId
     }

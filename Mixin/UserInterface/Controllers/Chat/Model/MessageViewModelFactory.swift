@@ -2,9 +2,9 @@ import Foundation
 import MixinServices
 
 protocol MessageViewModelFactoryDelegate: AnyObject {
-    func messageViewModelFactory(_ factory: MessageViewModelFactory, isMessageRepresentative message: MessageItem) -> Bool
+    func messageViewModelFactory(_ factory: MessageViewModelFactory, showUsernameForMessageIfNeeded message: MessageItem) -> Bool
     func messageViewModelFactory(_ factory: MessageViewModelFactory, isMessageForwardedByBot message: MessageItem) -> Bool
-    func messageViewModelFactory(_ factory: MessageViewModelFactory, highlightTextMessageViewModel viewModel: TextMessageViewModel)
+    func messageViewModelFactory(_ factory: MessageViewModelFactory, updateViewModelForPresentation viewModel: MessageViewModel)
 }
 
 class MessageViewModelFactory {
@@ -82,10 +82,18 @@ class MessageViewModelFactory {
                                         || messageAtIndex(index + 1).isExtensionMessage) {
             style.insert(.bottomSeparator)
         }
-        if delegate?.messageViewModelFactory(self, isMessageRepresentative: message) ?? false {
-            if (isFirstMessage && !message.isExtensionMessage && !message.isSystemMessage)
-                || (!isFirstMessage && (messageAtIndex(index - 1).userId != message.userId || messageAtIndex(index - 1).isExtensionMessage || messageAtIndex(index - 1).isSystemMessage)) {
-                style.insert(.fullname)
+        if delegate?.messageViewModelFactory(self, showUsernameForMessageIfNeeded: message) ?? false {
+            if isFirstMessage {
+                if !message.isExtensionMessage && !message.isSystemMessage {
+                    style.insert(.fullname)
+                }
+            } else {
+                let previousMessageFromDifferentUser = messageAtIndex(index - 1).userId != message.userId
+                    || messageAtIndex(index - 1).isExtensionMessage
+                    || messageAtIndex(index - 1).isSystemMessage
+                if previousMessageFromDifferentUser {
+                    style.insert(.fullname)
+                }
             }
         }
         if delegate?.messageViewModelFactory(self, isMessageForwardedByBot: message) ?? false {
@@ -144,14 +152,14 @@ class MessageViewModelFactory {
                 viewModel = EncryptionHintViewModel(message: message)
             } else if MessageCategory.krakenCategories.contains(message.category) {
                 viewModel = SystemMessageViewModel(message: message)
+            } else if message.category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue {
+                viewModel = TranscriptMessageViewModel(message: message)
             } else {
                 viewModel = UnknownMessageViewModel(message: message)
             }
         }
         viewModel.layout(width: layoutWidth, style: style)
-        if let viewModel = viewModel as? TextMessageViewModel {
-            delegate?.messageViewModelFactory(self, highlightTextMessageViewModel: viewModel)
-        }
+        delegate?.messageViewModelFactory(self, updateViewModelForPresentation: viewModel)
         return viewModel
     }
     

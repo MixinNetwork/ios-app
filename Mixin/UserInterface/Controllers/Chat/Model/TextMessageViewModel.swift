@@ -15,6 +15,8 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
         return .chatText
     }
     
+    private static let appIdentityNumberRegex = try? NSRegularExpression(pattern: #"7000\d{6}"#, options: [])
+    
     var content: CoreTextLabel.Content?
     var contentLabelFrame = CGRect.zero
     var highlightPaths = [UIBezierPath]()
@@ -319,12 +321,13 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
             ranges.append(range)
         })
         
-        let str = string as NSString
+        let nsString = string as NSString
+        let fullRange = NSRange(location: 0, length: nsString.length)
         for mention in message.sortedMentions {
-            var searchingRange = NSRange(location: 0, length: str.length)
+            var searchingRange = fullRange
             var range: NSRange
-            while searchingRange.location < str.length {
-                range = str.range(of: "\(Mention.prefix)\(mention.value)", range: searchingRange)
+            while searchingRange.location < nsString.length {
+                range = nsString.range(of: "\(Mention.prefix)\(mention.value)", range: searchingRange)
                 guard range.location != NSNotFound else {
                     break
                 }
@@ -340,6 +343,24 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
                 let linkRange = Link.Range(range: range, url: url)
                 ranges.append(linkRange)
             }
+        }
+        
+        Self.appIdentityNumberRegex?.enumerateMatches(in: string, options: [], range: fullRange) { result, _, _ in
+            guard let range = result?.range else {
+                return
+            }
+            guard range.location != NSNotFound else {
+                return
+            }
+            guard !ranges.contains(where: { $0.range.intersection(range) != nil }) else {
+                return
+            }
+            let identityNumber = nsString.substring(with: range)
+            guard let url = MixinInternalURL.identityNumber(identityNumber).url else {
+                return
+            }
+            let linkRange = Link.Range(range: range, url: url)
+            ranges.append(linkRange)
         }
         
         return ranges

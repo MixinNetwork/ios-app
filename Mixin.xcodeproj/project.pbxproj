@@ -12,6 +12,10 @@
 		277FF7031F909A1200DBB2EB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277FF7021F909A1200DBB2EB /* AppDelegate.swift */; };
 		277FF70C1F909A1200DBB2EB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 277FF70B1F909A1200DBB2EB /* Assets.xcassets */; };
 		277FF70F1F909A1200DBB2EB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 277FF70D1F909A1200DBB2EB /* LaunchScreen.storyboard */; };
+		5E5CA7872674AC8E00C1E113 /* ScreenLockView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5E5CA7842674AC8D00C1E113 /* ScreenLockView.xib */; };
+		5E5CA7882674AC8E00C1E113 /* ScreenLockManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E5CA7852674AC8E00C1E113 /* ScreenLockManager.swift */; };
+		5E5CA7892674AC8F00C1E113 /* ScreenLockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E5CA7862674AC8E00C1E113 /* ScreenLockView.swift */; };
+		5E5CA86D2674B09100C1E113 /* ScreenLockSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E5CA86C2674B09100C1E113 /* ScreenLockSettingViewController.swift */; };
 		6E01B01F201DC896B6A8B1BE /* Pods_MixinNotificationService.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD2C79AAFC0C43AD7C5C9B4D /* Pods_MixinNotificationService.framework */; };
 		7B015D7F21A81C81000C9F1E /* SearchBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B015D7E21A81C81000C9F1E /* SearchBoxView.swift */; };
 		7B015D8121A81C8D000C9F1E /* SearchBoxView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B015D8021A81C8D000C9F1E /* SearchBoxView.xib */; };
@@ -954,6 +958,10 @@
 		4A8D4E34146BCC9F9DFC5D60 /* Pods-MixinNotificationService.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MixinNotificationService.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MixinNotificationService/Pods-MixinNotificationService.debug.xcconfig"; sourceTree = "<group>"; };
 		4C7439A7A6C05D54835A2461 /* Pods-MixinAppGroupAccess.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MixinAppGroupAccess.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MixinAppGroupAccess/Pods-MixinAppGroupAccess.debug.xcconfig"; sourceTree = "<group>"; };
 		4DEF1DAAD7BD26CE1E41669D /* Pods-mixin.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mixin.debug.xcconfig"; path = "Pods/Target Support Files/Pods-mixin/Pods-mixin.debug.xcconfig"; sourceTree = "<group>"; };
+		5E5CA7842674AC8D00C1E113 /* ScreenLockView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ScreenLockView.xib; sourceTree = "<group>"; };
+		5E5CA7852674AC8E00C1E113 /* ScreenLockManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenLockManager.swift; sourceTree = "<group>"; };
+		5E5CA7862674AC8E00C1E113 /* ScreenLockView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenLockView.swift; sourceTree = "<group>"; };
+		5E5CA86C2674B09100C1E113 /* ScreenLockSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenLockSettingViewController.swift; sourceTree = "<group>"; };
 		60A0F3EECBE8095220D78A70 /* Pods-MixinShare.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MixinShare.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MixinShare/Pods-MixinShare.debug.xcconfig"; sourceTree = "<group>"; };
 		621D5146A79BB7A673B026F9 /* Pods-mixin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mixin.release.xcconfig"; path = "Pods/Target Support Files/Pods-mixin/Pods-mixin.release.xcconfig"; sourceTree = "<group>"; };
 		67A8E0E9B65F16ADB27E6F25 /* Pods_MixinShare.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MixinShare.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1978,6 +1986,16 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		5E5CA7832674AC4100C1E113 /* ScreenLock */ = {
+			isa = PBXGroup;
+			children = (
+				5E5CA7852674AC8E00C1E113 /* ScreenLockManager.swift */,
+				5E5CA7862674AC8E00C1E113 /* ScreenLockView.swift */,
+				5E5CA7842674AC8D00C1E113 /* ScreenLockView.xib */,
+			);
+			path = ScreenLock;
+			sourceTree = "<group>";
+		};
 		7B04FAB6226832B1004F8F04 /* Search Result */ = {
 			isa = PBXGroup;
 			children = (
@@ -2312,6 +2330,7 @@
 		7BA4E091219D999500A2176D /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				5E5CA7832674AC4100C1E113 /* ScreenLock */,
 				7B9F810A222EA30A0012BFDD /* Popup Presentation */,
 				94FCB5FD26466E8500CCC8FD /* Fullscreen Popup */,
 				E0FE4CCC237421CE009A14F6 /* Model */,
@@ -3369,6 +3388,7 @@
 				DFA063D122B0D0E70031E151 /* PrivacyViewController.swift */,
 				DFB19001233219650021CAF3 /* LogViewController.swift */,
 				7B2E56B1244EC44E0073102C /* PinSettingsViewController.swift */,
+				5E5CA86C2674B09100C1E113 /* ScreenLockSettingViewController.swift */,
 				7BB78729245149040057B4ED /* Emergency Contact */,
 				DF8CECEE1FC4240500E40064 /* BlockedUsersViewController.swift */,
 				DF8CECEC1FC41A9A00E40064 /* ConversationSettingViewController.swift */,
@@ -3661,6 +3681,7 @@
 				DFE1F9831FAB51DA00537D43 /* Common.storyboard in Resources */,
 				7BFE47E32284394000FC4379 /* CheckmarkPeerCell.xib in Resources */,
 				DF846CDF2369551D00AA1197 /* MultisigUserCell.xib in Resources */,
+				5E5CA7872674AC8E00C1E113 /* ScreenLockView.xib in Resources */,
 				7BB0F9162434B03300BEDA97 /* SelectedPeerCell.xib in Resources */,
 				E041064E23C6076F00A6F08E /* FullscreenPopupView.xib in Resources */,
 				DF8A7523236301DB00765A82 /* AuthorizationWindow.xib in Resources */,
@@ -4360,6 +4381,7 @@
 				7BC96DE324176B390047471D /* FoursquareAPI.swift in Sources */,
 				7BDBDE6E22363E82006220DF /* SettingCell.swift in Sources */,
 				7BB20A8C207B5F0C007ACFEE /* ContactMessageViewModel.swift in Sources */,
+				5E5CA7882674AC8E00C1E113 /* ScreenLockManager.swift in Sources */,
 				DF6CF2E9221FDE5D00B65294 /* QrcodeWindow.swift in Sources */,
 				7B894CD620D24BE2004FA5A8 /* RecorderLockView.swift in Sources */,
 				DFB9B39A1FAB01E6009503CE /* HomeNavigationController.swift in Sources */,
@@ -4372,6 +4394,7 @@
 				7B915F74215FB0C100A562C6 /* GiphySearchViewController.swift in Sources */,
 				7B7DACA623505793006AA2AC /* AudioCell.swift in Sources */,
 				DFC0ED0223BB611E0091E7AC /* WithdrawalAPI.swift in Sources */,
+				5E5CA86D2674B09100C1E113 /* ScreenLockSettingViewController.swift in Sources */,
 				DF5D9F251F9C79E10036D5FD /* LocalizedExtension.swift in Sources */,
 				7B4FCCE02440A66600360F65 /* SolidBackgroundColorImageView.swift in Sources */,
 				DF1A2C60219BCACC004EFD68 /* ClockSkewViewController.swift in Sources */,
@@ -4719,6 +4742,7 @@
 				7B86B1EF23F6A70300C80AD9 /* AudioMessageActionView.swift in Sources */,
 				947B36A925DEB72A00146111 /* PlaylistManager.swift in Sources */,
 				7BA9D9C4226DCFFC00255943 /* SearchConversationViewController.swift in Sources */,
+				5E5CA7892674AC8F00C1E113 /* ScreenLockView.swift in Sources */,
 				DFB2062821ABC088006E4341 /* RestoreViewController.swift in Sources */,
 				7B04FAB822684242004F8F04 /* AssetSearchResult.swift in Sources */,
 				7BEB97182366CF42002DB190 /* MessageFontSet.swift in Sources */,

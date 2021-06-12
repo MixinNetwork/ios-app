@@ -249,6 +249,7 @@ extension AppDelegate {
         mainWindow.backgroundColor = .black
         if LoginManager.shared.isLoggedIn {
             mainWindow.rootViewController = makeInitialViewController()
+            ScreenLockManager.shared.checkIfNeedLockScreen()
             if ContactsManager.shared.authorization == .authorized && AppGroupUserDefaults.User.autoUploadsContacts {
                 DispatchQueue.global().asyncAfter(deadline: .now() + 2, execute: {
                     PhoneContactAPI.upload(contacts: ContactsManager.shared.contacts)

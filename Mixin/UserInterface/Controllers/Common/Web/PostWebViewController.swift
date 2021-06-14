@@ -7,6 +7,12 @@ class PostWebViewController: WebViewController {
     private var message: Message!
     private var html: String?
     
+    override var webViewConfiguration: WKWebViewConfiguration {
+        let config = WKWebViewConfiguration()
+        config.dataDetectorTypes = .link
+        return config
+    }
+    
     class func presentInstance(message: Message, asChildOf parent: UIViewController) {
         let vc = PostWebViewController(nib: R.nib.fullscreenPopupView)
         vc.message = message
@@ -17,7 +23,6 @@ class PostWebViewController: WebViewController {
         super.viewDidLoad()
         showPageTitleConstraint.priority = .defaultLow
         webView.navigationDelegate = self
-        webView.configuration.dataDetectorTypes = .link
         guard let content = message.content else {
             return
         }

@@ -733,9 +733,17 @@ class ConversationViewController: UIViewController {
                 if let indexPaths = tableView.indexPathsForSelectedRows, indexPaths.contains(indexPath) {
                     tableView.deselectRow(at: indexPath, animated: true)
                     dataSource.selectedViewModels[viewModel.message.messageId] = nil
-                } else if self.viewModel(viewModel, supportsMultipleSelectionWith: multipleSelectionActionView.intent) {
-                    tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
-                    dataSource.selectedViewModels[viewModel.message.messageId] = viewModel
+                } else {
+                    let availability = self.viewModel(viewModel, availabilityForMultipleSelectionWith: multipleSelectionActionView.intent)
+                    switch availability {
+                    case .available:
+                        tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+                        dataSource.selectedViewModels[viewModel.message.messageId] = viewModel
+                    case let .visibleButUnavailable(reason):
+                        presentGotItAlertController(title: reason)
+                    case .invisible:
+                        break
+                    }
                 }
             }
             multipleSelectionActionView.numberOfSelection = dataSource.selectedViewModels.count
@@ -1371,9 +1379,18 @@ extension ConversationViewController: UITableViewDataSource {
         if let cell = cell as? MessageCell {
             CATransaction.performWithoutAnimation {
                 cell.render(viewModel: viewModel)
-                let intent = multipleSelectionActionView.intent
-                if tableView.allowsMultipleSelection, self.viewModel(viewModel, supportsMultipleSelectionWith: intent) {
-                    cell.setMultipleSelecting(true, animated: false)
+                if tableView.allowsMultipleSelection {
+                    let intent = multipleSelectionActionView.intent
+                    let availability = self.viewModel(viewModel, availabilityForMultipleSelectionWith: intent)
+                    switch availability {
+                    case .available:
+                        cell.setMultipleSelecting(true, animated: false)
+                    case .visibleButUnavailable:
+                        cell.setMultipleSelecting(true, animated: false)
+                        cell.checkmarkView.status = .nonSelectable
+                    case .invisible:
+                        cell.setMultipleSelecting(false, animated: false)
+                    }
                 } else {
                     cell.setMultipleSelecting(false, animated: false)
                 }
@@ -2189,17 +2206,21 @@ extension ConversationViewController {
         }
         tableView.allowsMultipleSelection = true
         for cell in tableView.visibleCells {
-            guard
-                let cell = cell as? MessageCell,
-                let viewModel = cell.viewModel,
-                self.viewModel(viewModel, supportsMultipleSelectionWith: intent)
-            else {
+            guard let cell = cell as? MessageCell, let viewModel = cell.viewModel else {
                 continue
             }
-            cell.setMultipleSelecting(true, animated: true)
+            let availability = self.viewModel(viewModel, availabilityForMultipleSelectionWith: intent)
+            switch availability {
+            case .available:
+                cell.setMultipleSelecting(true, animated: true)
+            case .visibleButUnavailable:
+                cell.setMultipleSelecting(true, animated: true)
+                cell.checkmarkView.status = .nonSelectable
+            case .invisible:
+                cell.setMultipleSelecting(false, animated: true)
+            }
         }
         multipleSelectionActionView.intent = intent
-        multipleSelectionActionView.numberOfSelection = 1
         multipleSelectionActionView.frame = CGRect(x: 0, y: view.bounds.height, width: view.bounds.width, height: multipleSelectionActionView.preferredHeight)
         multipleSelectionActionView.autoresizingMask = [.flexibleWidth]
         view.addSubview(multipleSelectionActionView)
@@ -2221,9 +2242,20 @@ extension ConversationViewController {
             }
         }, completion: nil)
         DispatchQueue.main.async {
-            self.tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
-            if let viewModel = self.dataSource.viewModel(for: indexPath) {
+            guard let viewModel = self.dataSource.viewModel(for: indexPath) else {
+                return
+            }
+            let availability = self.viewModel(viewModel, availabilityForMultipleSelectionWith: intent)
+            switch availability {
+            case .available:
+                self.multipleSelectionActionView.numberOfSelection = 1
+                self.tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
                 self.dataSource.selectedViewModels[viewModel.message.messageId] = viewModel
+            case let .visibleButUnavailable(reason):
+                self.multipleSelectionActionView.numberOfSelection = 0
+                self.presentGotItAlertController(title: reason)
+            case .invisible:
+                break
             }
         }
     }
@@ -2403,7 +2435,13 @@ extension ConversationViewController {
                 }
 
                 DispatchQueue.main.async {
-                    self?.open(url: appCard.action, app: app)
+                    let nonShareableAppCardURL: URL?
+                    if appCard.isShareable ?? true {
+                        nonShareableAppCardURL = nil
+                    } else {
+                        nonShareableAppCardURL = appCard.action
+                    }
+                    self?.open(url: appCard.action, app: app, nonShareableAppCardURL: nonShareableAppCardURL)
                 }
             }
         } else {
@@ -2450,7 +2488,7 @@ extension ConversationViewController {
         return true
     }
 
-    private func open(url: URL, app: App? = nil) {
+    private func open(url: URL, app: App? = nil, nonShareableAppCardURL: URL? = nil) {
         guard !UrlWindow.checkUrl(url: url) else {
             return
         }
@@ -2459,7 +2497,9 @@ extension ConversationViewController {
         }
 
         if let app = app {
-            MixinWebViewController.presentInstance(with: .init(conversationId: conversationId, url: url, app: app), asChildOf: self)
+            let web = MixinWebViewController.instance(with: .init(conversationId: conversationId, url: url, app: app))
+            web.nonShareableAppCardURL = nonShareableAppCardURL
+            web.presentAsChild(of: self, completion: nil)
         } else {
             MixinWebViewController.presentInstance(with: .init(conversationId: conversationId, initialUrl: url), asChildOf: self)
         }
@@ -2652,13 +2692,26 @@ extension ConversationViewController {
         present(alert, animated: true, completion: nil)
     }
     
-    private func viewModel(_ viewModel: MessageViewModel, supportsMultipleSelectionWith intent: MultipleSelectionIntent) -> Bool {
+    private func viewModel(_ viewModel: MessageViewModel, availabilityForMultipleSelectionWith intent: MultipleSelectionIntent) -> SelectionAvailability {
         let actions = availableActions(for: viewModel.message)
         switch intent {
         case .forward:
-            return actions.contains(.forward)
+            if actions.contains(.forward) {
+                if viewModel.message.category == MessageCategory.APP_CARD.rawValue {
+                    if viewModel.message.appCard?.isShareable ?? true {
+                        return .available
+                    } else {
+                        let reason = R.string.localizable.chat_transcript_forward_invalid_app_card_not_shareable()
+                        return .visibleButUnavailable(reason: reason)
+                    }
+                } else {
+                    return .available
+                }
+            } else {
+                return .invisible
+            }
         case .delete:
-            return actions.contains(.delete)
+            return actions.contains(.delete) ? .available : .invisible
         }
     }
     
@@ -2736,6 +2789,12 @@ extension ConversationViewController {
 
 // MARK: - Embedded classes
 extension ConversationViewController {
+    
+    private enum SelectionAvailability {
+        case available
+        case visibleButUnavailable(reason: String)
+        case invisible
+    }
     
     struct Position: CustomDebugStringConvertible {
         let messageId: String

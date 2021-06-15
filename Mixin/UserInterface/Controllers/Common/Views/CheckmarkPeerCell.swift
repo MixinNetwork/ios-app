@@ -22,7 +22,7 @@ class CheckmarkPeerCell: PeerCell {
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         if isForceSelected {
-            checkmarkView.status = .forceSelected
+            checkmarkView.status = .nonSelectable
         } else {
             checkmarkView.status = selected ? .selected : .deselected
         }

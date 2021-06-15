@@ -16,6 +16,8 @@ class MixinWebViewController: WebViewController {
     
     weak var associatedClip: Clip?
     
+    var nonShareableAppCardURL: URL?
+    
     override var webViewConfiguration: WKWebViewConfiguration {
         let config = WKWebViewConfiguration()
         config.dataDetectorTypes = .all
@@ -299,7 +301,11 @@ extension MixinWebViewController: WebMoreMenuControllerDelegate {
             case .share:
                 switch context.style {
                 case .app:
-                    shareAppCardAction(currentUrl: url)
+                    if url == nonShareableAppCardURL {
+                        presentGotItAlertController(title: R.string.localizable.chat_transcript_forward_invalid_link_not_shareable())
+                    } else {
+                        shareAppCardAction(currentUrl: url)
+                    }
                 case .webPage:
                     shareUrlAction(currentUrl: url)
                 }
@@ -474,7 +480,13 @@ extension MixinWebViewController {
             DispatchQueue.main.async {
                 let validUrl = currentUrl.absoluteString + "/"
                 if let app = app, let iconUrl = URL(string: app.iconUrl), app.resourcePatterns?.contains(where: validUrl.hasPrefix) ?? false {
-                    let appCard = AppCardData(appId: app.appId, iconUrl: iconUrl, title: String(cardTitle.prefix(32)), description: String(app.name.prefix(64)), action: currentUrl, updatedAt: nil)
+                    let appCard = AppCardData(appId: app.appId,
+                                              iconUrl: iconUrl,
+                                              title: String(cardTitle.prefix(32)),
+                                              description: String(app.name.prefix(64)),
+                                              action: currentUrl,
+                                              updatedAt: nil,
+                                              isShareable: true)
                     let vc = MessageReceiverViewController.instance(content: .appCard(appCard))
                     self?.navigationController?.pushViewController(vc, animated: true)
                 } else {

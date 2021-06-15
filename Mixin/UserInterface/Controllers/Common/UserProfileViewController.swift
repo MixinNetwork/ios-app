@@ -36,7 +36,7 @@ final class UserProfileViewController: ProfileViewController {
     private var relationship = Relationship.ME
     private var developer: UserItem?
     private var avatarPreviewImageView: UIImageView?
-    private var avatarPreviewVisualEffectView: UIView?
+    private var avatarPreviewBackgroundView: UIVisualEffectView?
     private var favoriteAppMenuItemViewIfLoaded: MyFavoriteAppProfileMenuItemView?
     private var favoriteAppViewIfLoaded: ProfileFavoriteAppsView?
     private var sharedAppUsers: [User]?
@@ -86,13 +86,23 @@ final class UserProfileViewController: ProfileViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        if let coordinator = transitionCoordinator, let imageView = avatarPreviewImageView, let effectView = avatarPreviewVisualEffectView {
+        if let coordinator = transitionCoordinator, let imageView = avatarPreviewImageView, let backgroundView = avatarPreviewBackgroundView {
             coordinator.animate(alongsideTransition: { (context) in
                 imageView.frame.origin.y = AppDelegate.current.mainWindow.bounds.height
-                effectView.alpha = 0
+                backgroundView.effect = nil
+                for view in backgroundView.contentView.subviews {
+                    view.alpha = 0
+                }
             }) { (_) in
-                effectView.removeFromSuperview()
+                backgroundView.removeFromSuperview()
             }
+        }
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if traitCollection.userInterfaceStyle != previousTraitCollection?.userInterfaceStyle {
+            updateAvatarPreviewBackgroundViewEffect()
         }
     }
     
@@ -111,20 +121,18 @@ final class UserProfileViewController: ProfileViewController {
         let window = AppDelegate.current.mainWindow
         let initialFrame = avatarImageView.convert(avatarImageView.bounds, to: window)
     
-        let effect = UIVisualEffect.lightBlur
-        let effectView = UIVisualEffectView(effect: effect)
-        effectView.frame = window.bounds
-        effectView.alpha = 0
-        effectView.isUserInteractionEnabled = false
-        effectView.backgroundColor = UIColor.background.withAlphaComponent(0.8)
-        window.addSubview(effectView)
-        avatarPreviewVisualEffectView = effectView
-
+        let backgroundView = UIVisualEffectView(effect: nil)
+        backgroundView.frame = window.bounds
+        backgroundView.isUserInteractionEnabled = false
+        window.addSubview(backgroundView)
+        avatarPreviewBackgroundView = backgroundView
+             
         let dismissButton = UIButton()
         dismissButton.tintColor = R.color.icon_tint()
         dismissButton.setImage(R.image.ic_title_close(), for: .normal)
         dismissButton.isUserInteractionEnabled = false
-        effectView.contentView.addSubview(dismissButton)
+        dismissButton.alpha = 0
+        backgroundView.contentView.addSubview(dismissButton)
         dismissButton.snp.makeConstraints { (make) in
             make.width.height.equalTo(24)
             make.top.equalTo(window.safeAreaInsets.top + 10)
@@ -137,18 +145,21 @@ final class UserProfileViewController: ProfileViewController {
         imageView.contentMode = .scaleAspectFit
         imageView.isUserInteractionEnabled = false
         imageView.image = image
-        effectView.contentView.addSubview(imageView)
+        imageView.alpha = 0
+        backgroundView.contentView.addSubview(imageView)
         avatarPreviewImageView = imageView
         view.isUserInteractionEnabled = false
         hideContentConstraint.priority = .defaultHigh
         UIView.animate(withDuration: 0.5, animations: {
             UIView.setAnimationCurve(.overdamped)
             self.view.layoutIfNeeded()
-            let imgWH = window.bounds.width - 27.5 * 2
-            imageView.bounds = CGRect(x: 0, y: 0, width: imgWH, height: imgWH)
+            let width = window.bounds.width - 28 * 2
+            imageView.bounds = CGRect(x: 0, y: 0, width: width, height: width)
             imageView.center = CGPoint(x: window.bounds.midX, y: window.bounds.midY)
-            imageView.layer.cornerRadius = imgWH / 2
-            effectView.alpha = 1
+            imageView.layer.cornerRadius = width / 2
+            self.updateAvatarPreviewBackgroundViewEffect()
+            dismissButton.alpha = 1
+            imageView.alpha = 1
         })
     }
     
@@ -921,6 +932,13 @@ extension UserProfileViewController {
             view.layoutIfNeeded()
             updatePreferredContentSizeHeight(size: size)
         }
+    }
+    
+    private func updateAvatarPreviewBackgroundViewEffect() {
+        guard let backgroundView = avatarPreviewBackgroundView else {
+            return
+        }
+        backgroundView.effect = UserInterfaceStyle.current == .light ? .lightBlur : .darkBlur
     }
     
 }

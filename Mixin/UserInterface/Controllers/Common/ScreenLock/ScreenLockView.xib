@@ -10,9 +10,10 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ScreenLockView" customModule="Mixin" customModuleProvider="target">
             <connections>
+                <outlet property="backgroundView" destination="w0N-Rz-Hqg" id="Ral-ta-qT0"/>
+                <outlet property="contentView" destination="grD-vx-I7W" id="Zhd-dC-Ka4"/>
                 <outlet property="unlockButton" destination="A2X-t5-b95" id="WgG-c4-j9S"/>
                 <outlet property="unlockTipLabel" destination="GEQ-Jy-AgV" id="CmA-c7-OsY"/>
-                <outlet property="wrapperView" destination="grD-vx-I7W" id="Zhd-dC-Ka4"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>

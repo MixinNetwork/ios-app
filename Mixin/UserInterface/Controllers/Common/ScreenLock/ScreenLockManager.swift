@@ -26,24 +26,24 @@ final class ScreenLockManager: NSObject {
 
     override init() {
         super.init()
-
-        if let controller = AppDelegate.current.mainWindow.rootViewController {
-            controller.view.addSubview(screenLockView)
-            screenLockView.snp.makeEdgesEqualToSuperview()
-            screenLockView.isHidden = true
-            screenLockView.tapUnlockAction = { [weak self] in
-                guard let self = self else { return }
-                self.validateBiometricAuthentication()
-            }
+        
+        guard let controller = AppDelegate.current.mainWindow.rootViewController else {
+            return
         }
-
+        controller.view.addSubview(screenLockView)
+        screenLockView.snp.makeEdgesEqualToSuperview()
+        screenLockView.isHidden = true
+        screenLockView.tapUnlockAction = { [weak self] in
+            guard let self = self else { return }
+            self.validateBiometricAuthentication()
+        }
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillResignActive), name: UIApplication.willResignActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
     }
 
     class func checkIfNeedLockScreen() {
-        guard Self.shared.isEnableBiometricAuthentication() else {
+        guard Self.shared.shouldValidateBiometricAuthentication() else {
             return
         }
         Self.shared.showScreenLockView()
@@ -58,16 +58,12 @@ extension ScreenLockManager {
         let context = LAContext()
         context.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: R.string.localizable.screen_lock_unlock_description(biometryType.localizedName)) { success, error in
             DispatchQueue.main.async {
-                if success {
-                    self.state = .validAuthenticationSuccess
-                } else {
-                    self.state = .validAuthenticationFailed
-                }
+                self.state = success ? .validAuthenticationSuccess : .validAuthenticationFailed
             }
         }
     }
     
-    private func shouldValidateBiometricAuthentication()  -> Bool {
+    private func shouldValidateBiometricAuthentication() -> Bool {
         guard isEnableBiometricAuthentication() else {
             return false
         }
@@ -112,7 +108,7 @@ extension ScreenLockManager {
 }
 
 extension ScreenLockManager {
-
+    
     private func updateState(from: ScreenLockState, to: ScreenLockState) {
         switch to {
         case .willResignActive:
@@ -147,7 +143,7 @@ extension ScreenLockManager {
             break
         }
     }
-
+    
 }
 
 

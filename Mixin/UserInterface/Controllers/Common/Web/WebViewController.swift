@@ -13,14 +13,19 @@ class WebViewController: FullscreenPopupViewController {
     @IBOutlet weak var titleStackView: UIStackView!
     @IBOutlet weak var titleImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var webView: WKWebView!
+    @IBOutlet weak var webViewWrapperView: UIView!
     
     @IBOutlet weak var showPageTitleConstraint: NSLayoutConstraint!
     
     weak var webContentView: UIView!
+    weak var webView: WKWebView!
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return statusBarStyle
+    }
+    
+    var webViewConfiguration: WKWebViewConfiguration {
+        return WKWebViewConfiguration()
     }
     
     private let textDarkColor = UIColor(displayP3RgbValue: 0x333333)
@@ -36,7 +41,14 @@ class WebViewController: FullscreenPopupViewController {
         titleStackView.snp.makeConstraints { make in
             make.trailing.equalTo(pageControlView.snp.leading).offset(-20)
         }
+        
+        let webView = WKWebView(frame: webViewWrapperView.bounds, configuration: webViewConfiguration)
+        webView.backgroundColor = .clear
+        webView.isOpaque = false
+        webViewWrapperView.addSubview(webView)
+        webView.snp.makeEdgesEqualToSuperview()
         webView.scrollView.panGestureRecognizer.require(toFail: edgePanGestureRecognizer)
+        self.webView = webView
         
         let extractImageRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(extractImage(_:)))
         extractImageRecognizer.delegate = self

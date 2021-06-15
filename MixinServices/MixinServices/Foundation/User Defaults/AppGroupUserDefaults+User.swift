@@ -152,7 +152,7 @@ extension AppGroupUserDefaults {
         @Default(namespace: .user, key: Key.circleId, defaultValue: nil)
         public static var circleId: String?
 
-        @Default(namespace: .user, key: Key.isCircleSynchronized, defaultValue: true)
+        @Default(namespace: .user, key: Key.isCircleSynchronized, defaultValue: false)
         public static var isCircleSynchronized: Bool
         
         @Default(namespace: .user, key: Key.circleName, defaultValue: nil)

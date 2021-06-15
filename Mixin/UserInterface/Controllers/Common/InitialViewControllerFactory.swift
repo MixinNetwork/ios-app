@@ -18,7 +18,7 @@ func makeInitialViewController() -> UIViewController {
         return RestoreViewController.instance()
     } else if DatabaseUpgradeViewController.needsUpgrade {
         return DatabaseUpgradeViewController.instance()
-    } else if !AppGroupUserDefaults.Crypto.isPrekeyLoaded || !AppGroupUserDefaults.Crypto.isSessionSynchronized {
+    } else if !AppGroupUserDefaults.Crypto.isPrekeyLoaded || !AppGroupUserDefaults.Crypto.isSessionSynchronized || !AppGroupUserDefaults.User.isCircleSynchronized {
         return SignalLoadingViewController.instance()
     } else {
         return HomeContainerViewController()

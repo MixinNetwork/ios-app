@@ -1,6 +1,5 @@
 import Foundation
 import Alamofire
-import Goutils
 import UIKit
 
 open class MixinAPI {

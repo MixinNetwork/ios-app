@@ -16,7 +16,7 @@ final class ScreenLockManager: NSObject {
 
     static let shared = ScreenLockManager()
 
-    private lazy var screenLockView = ScreenLockView()
+    private let screenLockView = ScreenLockView()
     private var pendingValidBiometricAuthentication = false
     private var state: ScreenLockState = .none {
         didSet {
@@ -42,12 +42,12 @@ final class ScreenLockManager: NSObject {
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
     }
 
-    func checkIfNeedLockScreen() {
-        guard isEnableBiometricAuthentication() else {
+    class func checkIfNeedLockScreen() {
+        guard Self.shared.isEnableBiometricAuthentication() else {
             return
         }
-        showScreenLockView()
-        validateBiometricAuthentication()
+        Self.shared.showScreenLockView()
+        Self.shared.validateBiometricAuthentication()
     }
 
 }
@@ -90,7 +90,7 @@ extension ScreenLockManager {
     }
     
     private func hideScreenLockView() {
-        self.screenLockView.isHidden = true
+        screenLockView.isHidden = true
     }
 
 }

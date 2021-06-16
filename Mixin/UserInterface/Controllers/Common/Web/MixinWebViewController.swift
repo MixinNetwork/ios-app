@@ -585,23 +585,23 @@ extension MixinWebViewController {
             }
         }
         
-        init(conversationId: String, app: App, extraParams: [String: String] = [:]) {
+        init(conversationId: String, app: App, shareable: Bool = true, extraParams: [String: String] = [:]) {
             if conversationId.isEmpty {
                 self.conversationId = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: app.appId)
             } else {
                 self.conversationId = conversationId
             }
             self.initialUrl = URL(string: app.homeUri) ?? .blank
-            self.isShareable = true
+            self.isShareable = shareable
             self.style = .app(app: app, isHomeUrl: true)
             self.isImmersive = app.capabilities?.contains("IMMERSIVE") ?? false
             self.extraParams = extraParams
         }
         
-        init(conversationId: String, initialUrl: URL) {
+        init(conversationId: String, initialUrl: URL, shareable: Bool = true) {
             self.conversationId = conversationId
             self.initialUrl = initialUrl
-            self.isShareable = true
+            self.isShareable = shareable
             self.style = .webPage
             self.isImmersive = false
         }

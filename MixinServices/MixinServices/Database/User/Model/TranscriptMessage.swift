@@ -132,7 +132,11 @@ extension TranscriptMessage {
             }
             self.name = m.userFullName
             self.category = category
-            self.content = m.content
+            if category == .appCard {
+                self.content = AppCardContentConverter.transcriptAppCard(from: m.content)
+            } else {
+                self.content = m.content
+            }
         }
         
     }

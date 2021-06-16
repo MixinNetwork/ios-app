@@ -2424,6 +2424,7 @@ extension ConversationViewController {
 
     private func openAppCard(appCard: AppCardData, sendUserId: String) {
         let action = appCard.action.absoluteString
+        let isShareable = appCard.isShareable ?? true
         if let appId = appCard.appId, !appId.isEmpty {
             DispatchQueue.global().async { [weak self] in
                 var app = AppDAO.shared.getApp(appId: appId)
@@ -2435,21 +2436,15 @@ extension ConversationViewController {
                 }
 
                 DispatchQueue.main.async {
-                    let nonShareableAppCardURL: URL?
-                    if appCard.isShareable ?? true {
-                        nonShareableAppCardURL = nil
-                    } else {
-                        nonShareableAppCardURL = appCard.action
-                    }
-                    self?.open(url: appCard.action, app: app, nonShareableAppCardURL: nonShareableAppCardURL)
+                    self?.open(url: appCard.action, app: app, shareable: isShareable)
                 }
             }
         } else {
-            openAction(action: action, sendUserId: sendUserId)
+            openAction(action: action, sendUserId: sendUserId, shareable: isShareable)
         }
     }
 
-    private func openAction(action: String, sendUserId: String) {
+    private func openAction(action: String, sendUserId: String, shareable: Bool = true) {
         guard !openInputAction(action: action) else {
             return
         }
@@ -2458,7 +2453,7 @@ extension ConversationViewController {
         }
 
         if let app = conversationInputViewController?.opponentApp, app.appId == sendUserId {
-            open(url: url, app: app)
+            open(url: url, app: app, shareable: shareable)
         } else {
             DispatchQueue.global().async { [weak self] in
                 var app = AppDAO.shared.getApp(ofUserId: sendUserId)
@@ -2469,7 +2464,7 @@ extension ConversationViewController {
                     }
                 }
                 DispatchQueue.main.async {
-                    self?.open(url: url, app: app)
+                    self?.open(url: url, app: app, shareable: shareable)
                 }
             }
         }
@@ -2488,21 +2483,20 @@ extension ConversationViewController {
         return true
     }
 
-    private func open(url: URL, app: App? = nil, nonShareableAppCardURL: URL? = nil) {
+    private func open(url: URL, app: App? = nil, shareable: Bool = true) {
         guard !UrlWindow.checkUrl(url: url) else {
             return
         }
         guard !conversationId.isEmpty else {
             return
         }
-
+        let context: MixinWebViewController.Context
         if let app = app {
-            let web = MixinWebViewController.instance(with: .init(conversationId: conversationId, url: url, app: app))
-            web.nonShareableAppCardURL = nonShareableAppCardURL
-            web.presentAsChild(of: self, completion: nil)
+            context = .init(conversationId: conversationId, url: url, app: app, shareable: shareable)
         } else {
-            MixinWebViewController.presentInstance(with: .init(conversationId: conversationId, initialUrl: url), asChildOf: self)
+            context = .init(conversationId: conversationId, initialUrl: url)
         }
+        MixinWebViewController.presentInstance(with: context, asChildOf: self)
     }
     
     private func reportAirDop(conversationId: String) {

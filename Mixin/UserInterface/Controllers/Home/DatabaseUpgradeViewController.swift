@@ -56,6 +56,9 @@ class DatabaseUpgradeViewController: UIViewController {
             if localVersion < 25 {
                 EdDSAMigration.migrate()
             }
+            if localVersion < 26 {
+                AppGroupUserDefaults.User.isCircleSynchronized = true
+            }
             
             AppGroupUserDefaults.User.needsRebuildDatabase = false
             AppGroupUserDefaults.User.localVersion = AppGroupUserDefaults.User.version

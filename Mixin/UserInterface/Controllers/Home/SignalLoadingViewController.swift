@@ -188,6 +188,9 @@ class SignalLoadingViewController: UIViewController {
             guard LoginManager.shared.isLoggedIn else {
                 return
             }
+            guard !ConversationDAO.shared.isExist(conversationId: conversationId) else {
+                return
+            }
             switch ConversationAPI.getConversation(conversationId: conversationId) {
             case let .success(response):
                 ConversationDAO.shared.createConversation(conversation: response, targetStatus: .SUCCESS)

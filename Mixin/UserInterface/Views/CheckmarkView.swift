@@ -5,7 +5,7 @@ class CheckmarkView: UIView {
     enum Status {
         case selected
         case deselected
-        case forceSelected
+        case nonSelectable
         case hidden
     }
     
@@ -22,7 +22,7 @@ class CheckmarkView: UIView {
                 imageView.image = usesHighContrastDeselectedIcon
                     ? R.image.ic_deselected_high_contrast()
                     : R.image.ic_deselected()
-            case .forceSelected:
+            case .nonSelectable:
                 imageView.image = R.image.ic_force_selected()
             case .hidden:
                 imageView.image = nil

@@ -6,6 +6,7 @@ final class Clip: Codable {
     
     enum CodingKeys: String, CodingKey {
         case id, app, title, url
+        case isShareable = "shareable"
         case conversationId = "conversation_id"
     }
     
@@ -21,6 +22,7 @@ final class Clip: Codable {
     let id: UUID
     let conversationId: String
     let app: App?
+    let isShareable: Bool?
     
     private(set) var title: String
     private(set) var url: URL
@@ -43,10 +45,14 @@ final class Clip: Codable {
         let controller: MixinWebViewController = {
             if let controller = controllerIfLoaded {
                 return controller
-            } else if let app = app {
-                return MixinWebViewController.instance(with: .init(conversationId: conversationId, app: app))
             } else {
-                return MixinWebViewController.instance(with: .init(conversationId: conversationId, initialUrl: url))
+                let context: MixinWebViewController.Context
+                if let app = app {
+                    context = .init(conversationId: conversationId, app: app, shareable: isShareable)
+                } else {
+                    context = .init(conversationId: conversationId, initialUrl: url, shareable: isShareable)
+                }
+                return MixinWebViewController.instance(with: context)
             }
         }()
         controller.associatedClip = self
@@ -64,6 +70,7 @@ final class Clip: Codable {
         self.id = UUID()
         self.conversationId = controller.context.conversationId
         self.app = app
+        self.isShareable = controller.context.isShareable
         if let app = app {
             self.title = app.name
         } else {
@@ -80,6 +87,7 @@ final class Clip: Codable {
         self.id = try container.decode(UUID.self, forKey: .id)
         self.conversationId = (try? container.decodeIfPresent(String.self, forKey: .conversationId)) ?? ""
         self.app = try container.decodeIfPresent(App.self, forKey: .app)
+        self.isShareable = (try? container.decodeIfPresent(Bool.self, forKey: .isShareable)) ?? true
         self.title = try container.decode(String.self, forKey: .title)
         self.url = try container.decode(URL.self, forKey: .url)
         addObservers()
@@ -103,6 +111,7 @@ final class Clip: Codable {
         try container.encode(id, forKey: .id)
         try container.encode(conversationId, forKey: .conversationId)
         try container.encode(app, forKey: .app)
+        try container.encode(isShareable, forKey: .isShareable)
         try container.encode(title, forKey: .title)
         try container.encode(url, forKey: .url)
     }

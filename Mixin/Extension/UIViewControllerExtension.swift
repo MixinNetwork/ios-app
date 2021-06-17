@@ -50,4 +50,10 @@ extension UIViewController {
         return controller
     }
     
+    func presentGotItAlertController(title: String) {
+        let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_got_it(), style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
+    
 }

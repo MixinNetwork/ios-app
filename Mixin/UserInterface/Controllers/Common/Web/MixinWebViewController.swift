@@ -299,7 +299,11 @@ extension MixinWebViewController: WebMoreMenuControllerDelegate {
             case .share:
                 switch context.style {
                 case .app:
-                    shareAppCardAction(currentUrl: url)
+                    if context.isShareable ?? true {
+                        shareAppCardAction(currentUrl: url)
+                    } else {
+                        presentGotItAlertController(title: R.string.localizable.chat_transcript_forward_invalid_link_not_shareable())
+                    }
                 case .webPage:
                     shareUrlAction(currentUrl: url)
                 }
@@ -457,6 +461,7 @@ extension MixinWebViewController {
             return
         }
         let appId = app.appId
+        let isShareable = context.isShareable
         var cardTitle = app.name
         if let webTitle = webView.title, !webTitle.trim().isEmpty {
             cardTitle = webTitle.trim()
@@ -474,7 +479,13 @@ extension MixinWebViewController {
             DispatchQueue.main.async {
                 let validUrl = currentUrl.absoluteString + "/"
                 if let app = app, let iconUrl = URL(string: app.iconUrl), app.resourcePatterns?.contains(where: validUrl.hasPrefix) ?? false {
-                    let appCard = AppCardData(appId: app.appId, iconUrl: iconUrl, title: String(cardTitle.prefix(32)), description: String(app.name.prefix(64)), action: currentUrl, updatedAt: nil)
+                    let appCard = AppCardData(appId: app.appId,
+                                              iconUrl: iconUrl,
+                                              title: String(cardTitle.prefix(32)),
+                                              description: String(app.name.prefix(64)),
+                                              action: currentUrl,
+                                              updatedAt: nil,
+                                              isShareable: isShareable)
                     let vc = MessageReceiverViewController.instance(content: .appCard(appCard))
                     self?.navigationController?.pushViewController(vc, animated: true)
                 } else {
@@ -551,8 +562,10 @@ extension MixinWebViewController {
         }
         
         let conversationId: String
-        var style: Style
         let initialUrl: URL
+        let isShareable: Bool?
+
+        var style: Style
         var isImmersive: Bool
         var extraParams: [String: String] = [:]
         
@@ -573,30 +586,33 @@ extension MixinWebViewController {
             }
         }
         
-        init(conversationId: String, app: App, extraParams: [String: String] = [:]) {
+        init(conversationId: String, app: App, shareable: Bool? = nil, extraParams: [String: String] = [:]) {
             if conversationId.isEmpty {
                 self.conversationId = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: app.appId)
             } else {
                 self.conversationId = conversationId
             }
+            self.initialUrl = URL(string: app.homeUri) ?? .blank
+            self.isShareable = shareable
+            self.style = .app(app: app, isHomeUrl: true)
+            self.isImmersive = app.capabilities?.contains("IMMERSIVE") ?? false
             self.extraParams = extraParams
-            style = .app(app: app, isHomeUrl: true)
-            initialUrl = URL(string: app.homeUri) ?? .blank
-            isImmersive = app.capabilities?.contains("IMMERSIVE") ?? false
         }
         
-        init(conversationId: String, initialUrl: URL) {
+        init(conversationId: String, initialUrl: URL, shareable: Bool? = nil) {
             self.conversationId = conversationId
-            style = .webPage
             self.initialUrl = initialUrl
-            isImmersive = false
+            self.isShareable = shareable
+            self.style = .webPage
+            self.isImmersive = false
         }
         
-        init(conversationId: String, url: URL, app: App) {
+        init(conversationId: String, url: URL, app: App, shareable: Bool? = nil) {
             self.conversationId = conversationId
-            style = .app(app: app, isHomeUrl: false)
-            initialUrl = url
-            isImmersive = app.capabilities?.contains("IMMERSIVE") ?? false
+            self.initialUrl = url
+            self.isShareable = shareable
+            self.style = .app(app: app, isHomeUrl: false)
+            self.isImmersive = app.capabilities?.contains("IMMERSIVE") ?? false
         }
         
     }

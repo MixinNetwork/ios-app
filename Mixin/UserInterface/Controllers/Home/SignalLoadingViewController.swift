@@ -174,6 +174,8 @@ class SignalLoadingViewController: UIViewController {
                 if conversations.count < 500 {
                     return conversationIds
                 }
+            case .failure(.notFound):
+                return []
             case let .failure(error) where error.worthRetrying:
                 Thread.sleep(forTimeInterval: 2)
             case let .failure(error):
@@ -194,7 +196,8 @@ class SignalLoadingViewController: UIViewController {
             switch ConversationAPI.getConversation(conversationId: conversationId) {
             case let .success(response):
                 ConversationDAO.shared.createConversation(conversation: response, targetStatus: .SUCCESS)
-                CircleConversationDAO.shared.update(conversation: response)
+                return
+            case .failure(.notFound):
                 return
             case let .failure(error) where error.worthRetrying:
                 Thread.sleep(forTimeInterval: 2)

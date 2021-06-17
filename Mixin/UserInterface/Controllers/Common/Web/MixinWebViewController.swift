@@ -299,7 +299,7 @@ extension MixinWebViewController: WebMoreMenuControllerDelegate {
             case .share:
                 switch context.style {
                 case .app:
-                    if context.isShareable {
+                    if context.isShareable ?? true {
                         shareAppCardAction(currentUrl: url)
                     } else {
                         presentGotItAlertController(title: R.string.localizable.chat_transcript_forward_invalid_link_not_shareable())
@@ -461,6 +461,7 @@ extension MixinWebViewController {
             return
         }
         let appId = app.appId
+        let isShareable = context.isShareable
         var cardTitle = app.name
         if let webTitle = webView.title, !webTitle.trim().isEmpty {
             cardTitle = webTitle.trim()
@@ -484,7 +485,7 @@ extension MixinWebViewController {
                                               description: String(app.name.prefix(64)),
                                               action: currentUrl,
                                               updatedAt: nil,
-                                              isShareable: true)
+                                              isShareable: isShareable)
                     let vc = MessageReceiverViewController.instance(content: .appCard(appCard))
                     self?.navigationController?.pushViewController(vc, animated: true)
                 } else {
@@ -562,7 +563,7 @@ extension MixinWebViewController {
         
         let conversationId: String
         let initialUrl: URL
-        let isShareable: Bool
+        let isShareable: Bool?
 
         var style: Style
         var isImmersive: Bool
@@ -585,7 +586,7 @@ extension MixinWebViewController {
             }
         }
         
-        init(conversationId: String, app: App, shareable: Bool = true, extraParams: [String: String] = [:]) {
+        init(conversationId: String, app: App, shareable: Bool? = nil, extraParams: [String: String] = [:]) {
             if conversationId.isEmpty {
                 self.conversationId = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: app.appId)
             } else {
@@ -598,7 +599,7 @@ extension MixinWebViewController {
             self.extraParams = extraParams
         }
         
-        init(conversationId: String, initialUrl: URL, shareable: Bool = true) {
+        init(conversationId: String, initialUrl: URL, shareable: Bool? = nil) {
             self.conversationId = conversationId
             self.initialUrl = initialUrl
             self.isShareable = shareable
@@ -606,7 +607,7 @@ extension MixinWebViewController {
             self.isImmersive = false
         }
         
-        init(conversationId: String, url: URL, app: App, shareable: Bool = true) {
+        init(conversationId: String, url: URL, app: App, shareable: Bool? = nil) {
             self.conversationId = conversationId
             self.initialUrl = url
             self.isShareable = shareable

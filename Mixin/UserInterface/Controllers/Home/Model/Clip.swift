@@ -22,7 +22,7 @@ final class Clip: Codable {
     let id: UUID
     let conversationId: String
     let app: App?
-    let isShareable: Bool
+    let isShareable: Bool?
     
     private(set) var title: String
     private(set) var url: URL

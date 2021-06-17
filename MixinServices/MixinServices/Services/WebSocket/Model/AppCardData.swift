@@ -20,7 +20,7 @@ public struct AppCardData: Codable {
         case isShareable = "shareable"
     }
 
-    public init(appId: String?, iconUrl: URL, title: String, description: String, action: URL, updatedAt: String?, isShareable: Bool) {
+    public init(appId: String?, iconUrl: URL, title: String, description: String, action: URL, updatedAt: String?, isShareable: Bool?) {
         self.appId = appId
         self.iconUrl = iconUrl
         self.title = title

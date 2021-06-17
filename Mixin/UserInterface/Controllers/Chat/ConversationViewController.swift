@@ -2424,7 +2424,7 @@ extension ConversationViewController {
 
     private func openAppCard(appCard: AppCardData, sendUserId: String) {
         let action = appCard.action.absoluteString
-        let isShareable = appCard.isShareable ?? true
+        let isShareable = appCard.isShareable
         if let appId = appCard.appId, !appId.isEmpty {
             DispatchQueue.global().async { [weak self] in
                 var app = AppDAO.shared.getApp(appId: appId)
@@ -2444,7 +2444,7 @@ extension ConversationViewController {
         }
     }
 
-    private func openAction(action: String, sendUserId: String, shareable: Bool = true) {
+    private func openAction(action: String, sendUserId: String, shareable: Bool? = nil) {
         guard !openInputAction(action: action) else {
             return
         }
@@ -2483,7 +2483,7 @@ extension ConversationViewController {
         return true
     }
 
-    private func open(url: URL, app: App? = nil, shareable: Bool = true) {
+    private func open(url: URL, app: App? = nil, shareable: Bool? = nil) {
         guard !UrlWindow.checkUrl(url: url) else {
             return
         }

@@ -58,53 +58,7 @@ class SignalLoadingViewController: UIViewController {
             }
         } while true
     }
-
-    private func syncCircles() {
-        guard !AppGroupUserDefaults.User.isCircleSynchronized else {
-            return
-        }
-        repeat {
-            guard LoginManager.shared.isLoggedIn else {
-                return
-            }
-            switch CircleAPI.circles() {
-            case let .success(response):
-                let circles = response.map { Circle(circleId: $0.circleId, name: $0.name, createdAt: $0.createdAt) }
-                UserDatabase.current.save(circles)
-                
-                for circle in circles {
-                    syncCircleConversations(circleId: circle.circleId)
-                }
-                AppGroupUserDefaults.User.isCircleSynchronized = true
-                return
-            case let .failure(error):
-                Thread.sleep(forTimeInterval: 2)
-                reporter.report(error: error)
-            }
-        } while true
-    }
-
-    private func syncCircleConversations(circleId: String) {
-        var offset: String?
-        repeat {
-            guard LoginManager.shared.isLoggedIn else {
-                return
-            }
-
-            switch CircleAPI.circleConversations(circleId: circleId, offset: offset, limit: 500) {
-            case let .success(conversations):
-                UserDatabase.current.save(conversations)
-                offset = conversations.last?.createdAt
-                if conversations.count < 500 {
-                    return
-                }
-            case let .failure(error):
-                Thread.sleep(forTimeInterval: 2)
-                reporter.report(error: error)
-            }
-        } while true
-    }
-
+    
     private func syncSession() {
         guard !AppGroupUserDefaults.Crypto.isSessionSynchronized else {
             return
@@ -171,6 +125,85 @@ class SignalLoadingViewController: UIViewController {
             case let .failure(error):
                 Thread.sleep(forTimeInterval: 2)
                 reporter.report(error: error)
+            }
+        } while true
+    }
+    
+    private func syncCircles() {
+        guard !AppGroupUserDefaults.User.isCircleSynchronized else {
+            return
+        }
+        repeat {
+            guard LoginManager.shared.isLoggedIn else {
+                return
+            }
+            switch CircleAPI.circles() {
+            case let .success(response):
+                let circles = response.map { Circle(circleId: $0.circleId, name: $0.name, createdAt: $0.createdAt) }
+                UserDatabase.current.save(circles)
+                
+                var allConversationIds: Set<String> = []
+                for circle in circles {
+                    let conversationIds = syncCircleConversations(circleId: circle.circleId)
+                    allConversationIds.formUnion(conversationIds)
+                }
+                allConversationIds.forEach(syncConversation(conversationId:))
+                
+                AppGroupUserDefaults.User.isCircleSynchronized = true
+                return
+            case let .failure(error):
+                Thread.sleep(forTimeInterval: 2)
+                reporter.report(error: error)
+            }
+        } while true
+    }
+    
+    // Returns conversations' id
+    private func syncCircleConversations(circleId: String) -> Set<String> {
+        var offset: String?
+        var conversationIds: Set<String> = []
+        repeat {
+            guard LoginManager.shared.isLoggedIn else {
+                return []
+            }
+            switch CircleAPI.circleConversations(circleId: circleId, offset: offset, limit: 500) {
+            case let .success(conversations):
+                UserDatabase.current.save(conversations)
+                offset = conversations.last?.createdAt
+                conversationIds.formUnion(conversations.map(\.conversationId))
+                if conversations.count < 500 {
+                    return conversationIds
+                }
+            case .failure(.notFound):
+                return []
+            case let .failure(error) where error.worthRetrying:
+                Thread.sleep(forTimeInterval: 2)
+            case let .failure(error):
+                reporter.report(error: error)
+                return []
+            }
+        } while true
+    }
+    
+    private func syncConversation(conversationId: String) {
+        repeat {
+            guard LoginManager.shared.isLoggedIn else {
+                return
+            }
+            guard !ConversationDAO.shared.isExist(conversationId: conversationId) else {
+                return
+            }
+            switch ConversationAPI.getConversation(conversationId: conversationId) {
+            case let .success(response):
+                ConversationDAO.shared.createConversation(conversation: response, targetStatus: .SUCCESS)
+                return
+            case .failure(.notFound):
+                return
+            case let .failure(error) where error.worthRetrying:
+                Thread.sleep(forTimeInterval: 2)
+            case let .failure(error):
+                reporter.report(error: error)
+                return
             }
         } while true
     }

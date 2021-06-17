@@ -50,7 +50,7 @@ extension AppGroupUserDefaults {
             case emergencyContactBulletinDismissalDate = "emergency_contact_bulletin_dismissal_date"
         }
         
-        public static let version = 25
+        public static let version = 26
         public static let uninitializedVersion = -1
         
         public static let didChangeRecentlyUsedAppIdsNotification = Notification.Name(rawValue: "one.mixin.services.recently.used.app.ids.change")
@@ -152,7 +152,7 @@ extension AppGroupUserDefaults {
         @Default(namespace: .user, key: Key.circleId, defaultValue: nil)
         public static var circleId: String?
 
-        @Default(namespace: .user, key: Key.isCircleSynchronized, defaultValue: true)
+        @Default(namespace: .user, key: Key.isCircleSynchronized, defaultValue: false)
         public static var isCircleSynchronized: Bool
         
         @Default(namespace: .user, key: Key.circleName, defaultValue: nil)

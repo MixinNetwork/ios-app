@@ -3,30 +3,28 @@ import SnapKit
 import LocalAuthentication
 import MixinServices
 
-fileprivate enum ScreenLockState: String {
-    case none
-    case validAuthenticationFailed
-    case validAuthenticationSuccess
-    case didEnterBackground
-    case willResignActive
-    case didBecomeActive
-}
-
-final class ScreenLockManager: NSObject {
-
+final class ScreenLockManager {
+    
+    private enum State: String {
+        case none
+        case authenticationFailed
+        case authenticationSucceed
+        case didEnterBackground
+        case willResignActive
+        case didBecomeActive
+    }
+    
     static let shared = ScreenLockManager()
-
+    
     private let screenLockView = ScreenLockView()
-    private var pendingValidBiometricAuthentication = false
-    private var state: ScreenLockState = .none {
+    private var hasLastBiometricAuthenticationFailed = false
+    private var state: State = .none {
         didSet {
             updateState(from: oldValue, to: state)
         }
     }
-
-    override init() {
-        super.init()
-        
+    
+    private init() {
         guard let controller = AppDelegate.current.mainWindow.rootViewController else {
             return
         }
@@ -34,50 +32,47 @@ final class ScreenLockManager: NSObject {
         screenLockView.snp.makeEdgesEqualToSuperview()
         screenLockView.isHidden = true
         screenLockView.tapUnlockAction = { [weak self] in
-            guard let self = self else { return }
-            self.validateBiometricAuthentication()
+            self?.performBiometricAuthentication()
         }
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillResignActive), name: UIApplication.willResignActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
     }
-
-    class func checkIfNeedLockScreen() {
-        guard Self.shared.shouldValidateBiometricAuthentication() else {
+    
+    func lockScreenIfNeeded() {
+        guard needsBiometricAuthentication else {
             return
         }
-        Self.shared.showScreenLockView()
-        Self.shared.validateBiometricAuthentication()
+        showScreenLockView()
+        performBiometricAuthentication()
     }
-
+    
 }
 
 extension ScreenLockManager {
-
-    private func validateBiometricAuthentication() {
-        let context = LAContext()
-        context.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: R.string.localizable.screen_lock_unlock_description(biometryType.localizedName)) { success, error in
-            DispatchQueue.main.async {
-                self.state = success ? .validAuthenticationSuccess : .validAuthenticationFailed
-            }
+    
+    private var needsBiometricAuthentication: Bool {
+        guard isBiometricAuthenticationEnabled else {
+            return false
+        }
+        if let date = AppGroupUserDefaults.User.lastLockScreenBiometricVerifiedDate {
+            return -date.timeIntervalSinceNow > AppGroupUserDefaults.User.lockScreenTimeoutInterval
+        } else {
+            return true
         }
     }
     
-    private func shouldValidateBiometricAuthentication() -> Bool {
-        guard isEnableBiometricAuthentication() else {
-            return false
-        }
-        let shouldValidateBiometric: Bool
-        if let date = AppGroupUserDefaults.User.lastLockScreenBiometricVerifiedDate {
-            shouldValidateBiometric = -date.timeIntervalSinceNow > AppGroupUserDefaults.User.lockScreenTimeoutInterval
-        } else {
-            shouldValidateBiometric = true
-        }
-        return shouldValidateBiometric
+    private var isBiometricAuthenticationEnabled: Bool {
+        biometryType != .none && AppGroupUserDefaults.User.lockScreenWithBiometricAuthentication
     }
-
-    private func isEnableBiometricAuthentication() -> Bool {
-        return biometryType != .none && AppGroupUserDefaults.User.lockScreenWithBiometricAuthentication
+    
+    private func performBiometricAuthentication() {
+        let context = LAContext()
+        context.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: R.string.localizable.screen_lock_unlock_description(biometryType.localizedName)) { success, error in
+            DispatchQueue.main.async {
+                self.state = success ? .authenticationSucceed : .authenticationFailed
+            }
+        }
     }
     
     private func showScreenLockView() {
@@ -88,56 +83,56 @@ extension ScreenLockManager {
     private func hideScreenLockView() {
         screenLockView.isHidden = true
     }
-
-}
-
-extension ScreenLockManager {
-
-    @objc private func applicationWillResignActive() {
-        state = .willResignActive
-    }
-
-    @objc private func applicationDidBecomeActive() {
-        state = .didBecomeActive
-    }
-
-    @objc private func applicationDidEnterBackground() {
-        state = .didEnterBackground
-    }
-
+    
 }
 
 extension ScreenLockManager {
     
-    private func updateState(from: ScreenLockState, to: ScreenLockState) {
+    @objc private func applicationWillResignActive() {
+        state = .willResignActive
+    }
+    
+    @objc private func applicationDidBecomeActive() {
+        state = .didBecomeActive
+    }
+    
+    @objc private func applicationDidEnterBackground() {
+        state = .didEnterBackground
+    }
+    
+}
+
+extension ScreenLockManager {
+    
+    private func updateState(from: State, to: State) {
         switch to {
         case .willResignActive:
-            if isEnableBiometricAuthentication() && !pendingValidBiometricAuthentication {
+            if isBiometricAuthenticationEnabled && !hasLastBiometricAuthenticationFailed {
                 showScreenLockView()
             }
         case .didBecomeActive:
             if from == .didEnterBackground {
-                if shouldValidateBiometricAuthentication() {
+                if needsBiometricAuthentication {
                     showScreenLockView()
-                    validateBiometricAuthentication()
+                    performBiometricAuthentication()
                 } else {
                     hideScreenLockView()
                 }
             } else if from == .willResignActive {
-                if !pendingValidBiometricAuthentication {
+                if !hasLastBiometricAuthenticationFailed {
                     hideScreenLockView()
                 }
             }
         case .didEnterBackground:
-            if shouldValidateBiometricAuthentication() {
+            if needsBiometricAuthentication {
                 screenLockView.showUnlockOption(false)
             }
-        case .validAuthenticationSuccess:
-            pendingValidBiometricAuthentication = false
+        case .authenticationSucceed:
+            hasLastBiometricAuthenticationFailed = false
             hideScreenLockView()
             AppGroupUserDefaults.User.lastLockScreenBiometricVerifiedDate = Date()
-        case .validAuthenticationFailed:
-            pendingValidBiometricAuthentication = true
+        case .authenticationFailed:
+            hasLastBiometricAuthenticationFailed = true
             screenLockView.showUnlockOption(true)
         default:
             break

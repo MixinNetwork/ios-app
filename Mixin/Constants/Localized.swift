@@ -458,11 +458,10 @@ public class Localized {
     // Screen lock
     public static func SCREEN_LOCK_TIMEOUT_INTERVAL(_ seconds: Double) -> String {
         if seconds == 0 {
-            return LocalizedString("setting_screen_lock_timeout_immediately", comment: "Immediately")
+            return R.string.localizable.setting_screen_lock_timeout_immediately()
         } else if seconds == 60 * 60 {
-            return LocalizedString("setting_screen_lock_timeout_hour", comment: "1 hour")
+            return R.string.localizable.setting_screen_lock_timeout_hour()
         } else {
-            return String(format: LocalizedString("setting_screen_lock_timeout_minutes", comment: "%@ Minutes"), "\(Int(seconds / 60))")
-        }
+            return R.string.localizable.setting_screen_lock_timeout_minutes("\(Int(seconds / 60))")        }
     }
 }

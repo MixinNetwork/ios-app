@@ -2,20 +2,20 @@ import UIKit
 import MixinServices
 
 final class ScreenLockSettingViewController: SettingsTableViewController {
-
+    
     static let screenLockTimeoutDidUpdateNotification = Notification.Name("one.mixin.messenger.setting.ScreenLockSettingViewController.screenLockTimeoutDidUpdate")
     
     private let timeoutIntervals: [Double] = [60 * 0, 60 * 1, 60 * 5, 60 * 15, 60 * 60]
     
     private let dataSource = SettingsDataSource(sections: [])
-        
+    
     private lazy var biometricSwitchRow = SettingsRow(title: R.string.localizable.setting_screen_lock_enable_biometric_title(biometryType.localizedName),
                                                       accessory: .switch(isOn: AppGroupUserDefaults.User.lockScreenWithBiometricAuthentication))
     
     private lazy var timeoutIntervalRow = SettingsRow(title: R.string.localizable.setting_screen_lock_enable_biometric_timeout(),
                                                       subtitle: Localized.SCREEN_LOCK_TIMEOUT_INTERVAL(AppGroupUserDefaults.User.lockScreenTimeoutInterval),
                                                       accessory: .disclosure)
-            
+    
     class func instance() -> UIViewController {
         let vc = ScreenLockSettingViewController()
         let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.setting_screen_lock_title())
@@ -38,14 +38,14 @@ final class ScreenLockSettingViewController: SettingsTableViewController {
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
     }
-
+    
 }
 
 extension ScreenLockSettingViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if indexPath.section == 0 && indexPath.row == 1{
+        if indexPath.section == 0 && indexPath.row == 1 {
             let alert = UIAlertController(title: nil, message: R.string.localizable.setting_screen_lock_timeout_tip(), preferredStyle: .actionSheet)
             for interval in timeoutIntervals {
                 alert.addAction(UIAlertAction(title: Localized.SCREEN_LOCK_TIMEOUT_INTERVAL(interval), style: .default, handler: { (_) in
@@ -83,6 +83,6 @@ extension ScreenLockSettingViewController {
         timeoutIntervalRow.subtitle = Localized.SCREEN_LOCK_TIMEOUT_INTERVAL(AppGroupUserDefaults.User.lockScreenTimeoutInterval)
         NotificationCenter.default.post(name: Self.screenLockTimeoutDidUpdateNotification, object: nil)
     }
-
+    
 }
 

@@ -1,14 +1,14 @@
 import UIKit
 
 final class ScreenLockView: UIView, XibDesignable {
-        
+    
     @IBOutlet weak var unlockTipLabel: UILabel!
     @IBOutlet weak var unlockButton: UIButton!
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var backgroundView: UIVisualEffectView!
     
     var tapUnlockAction: (() -> Void)?
-
+    
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         loadXib()

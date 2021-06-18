@@ -1,7 +1,7 @@
 import UIKit
 
-final class ScreenLockView: UIView, XibDesignable {
-    
+class ScreenLockViewController: UIViewController {
+
     @IBOutlet weak var unlockTipLabel: UILabel!
     @IBOutlet weak var unlockButton: UIButton!
     @IBOutlet weak var contentView: UIView!
@@ -9,18 +9,14 @@ final class ScreenLockView: UIView, XibDesignable {
     
     var tapUnlockAction: (() -> Void)?
     
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        loadXib()
-        updateUI()
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        updateBackgroundViewEffect()
+        contentView.isHidden = true
+        unlockTipLabel.text = R.string.localizable.screen_lock_unlock_tip(biometryType.localizedName)
+        unlockButton.setTitle(R.string.localizable.screen_lock_unlock_button_title(biometryType.localizedName), for: .normal)
     }
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        loadXib()
-        updateUI()
-    }
-    
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         if previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle {
@@ -30,13 +26,6 @@ final class ScreenLockView: UIView, XibDesignable {
     
     func showUnlockOption(_ show: Bool) {
         contentView.isHidden = !show
-    }
-    
-    private func updateUI() {
-        updateBackgroundViewEffect()
-        contentView.isHidden = true
-        unlockTipLabel.text = R.string.localizable.screen_lock_unlock_tip(biometryType.localizedName)
-        unlockButton.setTitle(R.string.localizable.screen_lock_unlock_button_title(biometryType.localizedName), for: .normal)
     }
     
     private func updateBackgroundViewEffect() {

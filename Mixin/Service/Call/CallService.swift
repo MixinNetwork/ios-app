@@ -83,7 +83,7 @@ class CallService: NSObject {
     // We map conversation id with uuid here
     private var groupCallUUIDs = [String: UUID]()
     
-    private var window: CallWindow?
+    private(set) var window: CallWindow?
     private var viewController: CallViewController?
     
     // Access from CallService.queue
@@ -395,7 +395,11 @@ extension CallService {
     }
     
     func dismissCallingInterface() {
-        AppDelegate.current.mainWindow.makeKeyAndVisible()
+        if !ScreenLockManager.shared.validAfterLastAuthentication && ScreenLockManager.shared.needsBiometricAuthentication {
+            ScreenLockManager.shared.showUnlockScreenView()
+        } else {
+            AppDelegate.current.mainWindow.makeKeyAndVisible()
+        }
         if let mini = UIApplication.homeContainerViewController?.minimizedCallViewControllerIfLoaded {
             mini.view.alpha = 0
             mini.updateViewSize()

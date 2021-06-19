@@ -127,7 +127,7 @@ extension ScreenLockManager {
             if from == .didBecomeActive && CallService.shared.hasCall && !CallService.shared.isMinimized {
                 return
             }
-            if isBiometricAuthenticationEnabled && !hasLastBiometricAuthenticationFailed {
+            if isBiometricAuthenticationEnabled {
                 showScreenLockView()
             }
         case .didBecomeActive:
@@ -154,9 +154,7 @@ extension ScreenLockManager {
             }
         case .didEnterBackground:
             validAfterLastAuthentication = false
-            if needsBiometricAuthentication {
-                viewController?.showUnlockOption(false)
-            }
+            viewController?.showUnlockOption(false)
         case .authenticationSucceed:
             validAfterLastAuthentication = true
             hasLastBiometricAuthenticationFailed = false

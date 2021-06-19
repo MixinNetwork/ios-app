@@ -24,7 +24,7 @@ final class PrivacyViewController: SettingsTableViewController {
         ])
     ])
     
-    private lazy var screenLockRow = SettingsRow(title: R.string.localizable.setting_screen_lock_title(), subtitle: screenLockTimeoutInterval(), accessory: .disclosure)
+    private lazy var screenLockRow = SettingsRow(title: R.string.localizable.setting_screen_lock_title(), subtitle: screenLockTimeoutInterval, accessory: .disclosure)
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -79,10 +79,10 @@ extension PrivacyViewController {
     @objc private func updateScreenLockRow() {
         let indexPath = IndexPath(row: 2, section: 0)
         let row = dataSource.row(at: indexPath)
-        row.subtitle = screenLockTimeoutInterval()
+        row.subtitle = screenLockTimeoutInterval
     }
     
-    private func screenLockTimeoutInterval() -> String {
+    private var screenLockTimeoutInterval: String {
         if AppGroupUserDefaults.User.lockScreenWithBiometricAuthentication {
             let timeInterval = AppGroupUserDefaults.User.lockScreenTimeoutInterval
             return Localized.SCREEN_LOCK_TIMEOUT_INTERVAL(timeInterval)

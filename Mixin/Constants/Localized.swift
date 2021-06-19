@@ -462,6 +462,7 @@ public class Localized {
         } else if seconds == 60 * 60 {
             return R.string.localizable.setting_screen_lock_timeout_hour()
         } else {
-            return R.string.localizable.setting_screen_lock_timeout_minutes("\(Int(seconds / 60))")        }
+            return R.string.localizable.setting_screen_lock_timeout_minutes("\(Int(seconds / 60))")
+        }
     }
 }

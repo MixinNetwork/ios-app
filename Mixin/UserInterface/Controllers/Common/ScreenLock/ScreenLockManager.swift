@@ -16,7 +16,7 @@ final class ScreenLockManager {
     
     static let shared = ScreenLockManager()
     
-    private(set) var validAfterLastAuthentication = false
+    private(set) var isLastAuthenticationStillValid = false
     private(set) var window: UIWindow?
     
     private var viewController: ScreenLockViewController?
@@ -153,10 +153,10 @@ extension ScreenLockManager {
                 }
             }
         case .didEnterBackground:
-            validAfterLastAuthentication = false
+            isLastAuthenticationStillValid = false
             viewController?.showUnlockOption(false)
         case .authenticationSucceed:
-            validAfterLastAuthentication = true
+            isLastAuthenticationStillValid = true
             hasLastBiometricAuthenticationFailed = false
             hideScreenLockView()
             AppGroupUserDefaults.User.lastLockScreenBiometricVerifiedDate = Date()

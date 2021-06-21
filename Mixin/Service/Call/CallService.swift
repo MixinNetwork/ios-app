@@ -395,7 +395,7 @@ extension CallService {
     }
     
     func dismissCallingInterface() {
-        if !ScreenLockManager.shared.validAfterLastAuthentication && ScreenLockManager.shared.needsBiometricAuthentication {
+        if !ScreenLockManager.shared.isLastAuthenticationStillValid && ScreenLockManager.shared.needsBiometricAuthentication {
             ScreenLockManager.shared.showUnlockScreenView()
         } else {
             AppDelegate.current.mainWindow.makeKeyAndVisible()

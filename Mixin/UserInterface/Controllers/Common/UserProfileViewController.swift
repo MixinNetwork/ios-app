@@ -99,13 +99,6 @@ final class UserProfileViewController: ProfileViewController {
         }
     }
     
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        if traitCollection.userInterfaceStyle != previousTraitCollection?.userInterfaceStyle {
-            updateAvatarPreviewBackgroundViewEffect()
-        }
-    }
-    
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         return action == #selector(copy(_:))
     }
@@ -157,7 +150,7 @@ final class UserProfileViewController: ProfileViewController {
             imageView.bounds = CGRect(x: 0, y: 0, width: width, height: width)
             imageView.center = CGPoint(x: window.bounds.midX, y: window.bounds.midY)
             imageView.layer.cornerRadius = width / 2
-            self.updateAvatarPreviewBackgroundViewEffect()
+            backgroundView.effect = .regularBlur
             dismissButton.alpha = 1
             imageView.alpha = 1
         })
@@ -934,13 +927,4 @@ extension UserProfileViewController {
         }
     }
     
-    private func updateAvatarPreviewBackgroundViewEffect() {
-        guard let backgroundView = avatarPreviewBackgroundView else {
-            return
-        }
-        backgroundView.effect = UserInterfaceStyle.current == .light ? .lightBlur : .darkBlur
-    }
-    
 }
-
-

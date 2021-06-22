@@ -20,6 +20,8 @@ class UrlWindow {
                 return checkUser(id, clearNavigationStack: clearNavigationStack)
             case .snapshots:
                 return checkSnapshot(url: url)
+            case let .conversations(conversationId):
+                return checkConversation(url: url, conversationId: conversationId)
             case let .apps(userId):
                 return checkApp(url: url, userId: userId)
             case let .transfer(id):
@@ -176,6 +178,46 @@ class UrlWindow {
                     }
                 } else {
                     push()
+                }
+            }
+        }
+        return true
+    }
+    
+    class func checkConversation(url: URL, conversationId: String) -> Bool {
+        guard !conversationId.isEmpty, UUID(uuidString: conversationId) != nil else {
+            return false
+        }
+        
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        DispatchQueue.global().async {
+            if let userId = url.getKeyVals()["user"].uuidString,
+               conversationId == ConversationDAO.shared.makeConversationId(userId: userId, ownerUserId: myUserId) {
+                guard let (user, _) = syncUser(userId: userId, hud: hud) else {
+                    return
+                }
+                guard user.isCreatedByMessenger else {
+                    hud.hideInMainThread()
+                    return
+                }
+                
+                DispatchQueue.main.async {
+                    hud.hide()
+                    
+                    let vc = ConversationViewController.instance(ownerUser: user)
+                    UIApplication.homeNavigationController?.pushViewController(withBackRoot: vc)
+                }
+            } else {
+                guard let conversationItem = syncConversation(conversationId: conversationId, hud: hud) else {
+                    return
+                }
+                
+                DispatchQueue.main.async {
+                    hud.hide()
+                    
+                    let vc = ConversationViewController.instance(conversation: conversationItem)
+                    UIApplication.homeNavigationController?.pushViewController(withBackRoot: vc)
                 }
             }
         }
@@ -617,6 +659,32 @@ extension UrlWindow {
         return address
     }
 
+    private static func syncConversation(conversationId: String, hud: Hud) -> ConversationItem? {
+        var conversation = ConversationDAO.shared.getConversation(conversationId: conversationId)
+        if conversation == nil {
+            switch ConversationAPI.getConversation(conversationId: conversationId) {
+            case let .success(response):
+                conversation = ConversationDAO.shared.createConversation(conversation: response, targetStatus: .SUCCESS)
+            case let .failure(error):
+                let text = error.localizedDescription(overridingNotFoundDescriptionWith: R.string.localizable.conversation_not_found())
+                DispatchQueue.main.async {
+                    hud.set(style: .error, text: text)
+                    hud.scheduleAutoHidden()
+                }
+                return nil
+            }
+        }
+
+        if conversation == nil {
+            DispatchQueue.main.async {
+                hud.set(style: .error, text: R.string.localizable.conversation_not_found())
+                hud.scheduleAutoHidden()
+            }
+        }
+
+        return conversation
+    }
+    
     private static func syncAsset(assetId: String, hud: Hud) -> AssetItem? {
         var asset = AssetDAO.shared.getAsset(assetId: assetId)
         if asset == nil {

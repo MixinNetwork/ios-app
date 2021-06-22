@@ -42,7 +42,7 @@ class NotificationController: NSObject {
     func presentQrCodeDetection(_ string: String) {
         if let url = MixinURL(string: string) {
             switch url {
-            case .codes, .pay, .users, .apps, .transfer, .withdrawal, .address, .snapshots, .device:
+            case .codes, .pay, .users, .apps, .transfer, .withdrawal, .address, .snapshots, .device, .conversations:
                 present(text: R.string.localizable.camera_qrcode_codes(), localObject: string)
             case .send, .unknown:
                 present(text: string, localObject: string)

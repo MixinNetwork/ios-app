@@ -452,7 +452,7 @@ public final class ConversationDAO: UserDatabaseDAO {
                 ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: userIds))
             }
             
-            resultConversation = try ConversationItem.fetchOne(db, sql: ParticipantDAO.sqlUpdateStatus, arguments: [conversationId], adapter: nil)
+            resultConversation = try ConversationItem.fetchOne(db, sql: ConversationDAO.sqlQueryConversationByCoversationId, arguments: [conversationId], adapter: nil)
             
             db.afterNextTransactionCommit { (_) in
                 let change = ConversationChange(conversationId: conversationId,

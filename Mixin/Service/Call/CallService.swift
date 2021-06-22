@@ -303,6 +303,7 @@ extension CallService {
         self.window = window
         
         UIView.performWithoutAnimation(controller.view.layoutIfNeeded)
+        controller.showContentViewIfNeeded()
     }
     
     func showCallingInterface(call: Call) {
@@ -337,6 +338,7 @@ extension CallService {
         } else {
             UIView.performWithoutAnimation(updateInterface)
         }
+        viewController.showContentViewIfNeeded()
     }
     
     func showCallingInterfaceIfHasCall(with uuid: UUID) {
@@ -360,27 +362,18 @@ extension CallService {
         if minimized {
             min.call = activeCall
             min.view.alpha = 0
-            let scaleX = min.contentView.frame.width / max.view.frame.width
-            let scaleY = min.contentView.frame.height / max.view.frame.height
             updateViews = {
+                max.hideContentView(completion: nil)
                 min.view.alpha = 1
-                max.view.transform = CGAffineTransform(scaleX: scaleX, y: scaleY)
-                max.view.center = min.view.center
-                max.view.alpha = 0
-                max.setNeedsStatusBarAppearanceUpdate()
             }
             completion = { (_) in
                 AppDelegate.current.mainWindow.makeKeyAndVisible()
             }
         } else {
             callWindow.makeKeyAndVisible()
-            max.view.center = min.view.center
             updateViews = {
                 min.view.alpha = 0
-                max.view.transform = .identity
-                max.view.center = CGPoint(x: callWindow.bounds.midX, y: callWindow.bounds.midY)
-                max.view.alpha = 1
-                max.setNeedsStatusBarAppearanceUpdate()
+                max.showContentViewIfNeeded()
             }
             completion = { (_) in
                 min.call = nil
@@ -389,25 +382,33 @@ extension CallService {
         if animated {
             UIView.animate(withDuration: duration, animations: updateViews, completion: completion)
         } else {
-            updateViews()
-            completion(true)
+            UIView.performWithoutAnimation {
+                updateViews()
+                completion(true)
+            }
         }
     }
     
     func dismissCallingInterface() {
         if !ScreenLockManager.shared.isLastAuthenticationStillValid && ScreenLockManager.shared.needsBiometricAuthentication {
             ScreenLockManager.shared.showUnlockScreenView()
-        } else {
-            AppDelegate.current.mainWindow.makeKeyAndVisible()
         }
+        viewController?.disableConnectionDurationTimer()
+        viewController?.hideContentView(completion: {
+            guard self.viewController == nil else {
+                return
+            }
+            if ScreenLockManager.shared.isLastAuthenticationStillValid || !ScreenLockManager.shared.needsBiometricAuthentication {
+                AppDelegate.current.mainWindow.makeKeyAndVisible()
+            }
+        })
+        viewController = nil
+        window = nil
         if let mini = UIApplication.homeContainerViewController?.minimizedCallViewControllerIfLoaded {
             mini.view.alpha = 0
             mini.updateViewSize()
             mini.panningController.placeViewNextToLastOverlayOrTopRight()
         }
-        viewController?.disableConnectionDurationTimer()
-        viewController = nil
-        window = nil
         self.log("[CallService] calling interface dismissed")
     }
     
@@ -1133,23 +1134,10 @@ extension CallService: WebRTCClientDelegate {
             }
             updateAudioSessionConfiguration()
         }
-        DispatchQueue.main.async {
-            UIView.performWithoutAnimation {
-                self.viewController?.unstableConnectionLabel.isHidden = true
-            }
-        }
     }
     
     func webRTCClientDidDisconnected(_ client: WebRTCClient) {
         self.log("[CallService] RTC Disconnected")
-        guard let call = activeCall, call.status == .connected else {
-            return
-        }
-        DispatchQueue.main.async {
-            UIView.performWithoutAnimation {
-                self.viewController?.unstableConnectionLabel.isHidden = false
-            }
-        }
     }
     
     func webRTCClient(_ client: WebRTCClient, didChangeIceConnectionStateTo newState: RTCIceConnectionState) {

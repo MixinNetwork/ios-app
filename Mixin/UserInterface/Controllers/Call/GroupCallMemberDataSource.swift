@@ -132,10 +132,12 @@ extension GroupCallMemberDataSource: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.group_call_member, for: indexPath)!
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.call_member, for: indexPath)!
         let member = members[indexPath.item]
         cell.avatarImageView.setImage(with: member)
         cell.connectingView.isHidden = !invitingMemberUserIds.contains(member.userId)
+        cell.label.text = member.fullName
+        cell.hasBiggerLayout = false
         return cell
     }
     

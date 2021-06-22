@@ -2,19 +2,17 @@ import UIKit
 import AVFoundation.AVFAudio
 import MixinServices
 
-class CallViewController: UIViewController {
+class CallViewController: ResizablePopupViewController {
     
+    @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var minimizeButton: UIButton!
     @IBOutlet weak var inviteButton: UIButton!
-    @IBOutlet weak var nameLabel: UILabel!
-    @IBOutlet weak var peerToPeerCallRemoteUserStackView: UIStackView!
-    @IBOutlet weak var avatarImageView: AvatarImageView!
-    @IBOutlet weak var groupCallMembersCollectionView: GroupCallMembersCollectionView!
-    @IBOutlet weak var groupCallMembersCollectionLayout: GroupCallMembersFlowLayout!
-    @IBOutlet weak var unstableConnectionLabel: UILabel!
-    @IBOutlet weak var statusLabel: UILabel!
-    @IBOutlet weak var muteSwitch: CallSwitch!
-    @IBOutlet weak var speakerSwitch: CallSwitch!
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var membersCollectionView: UICollectionView!
+    @IBOutlet weak var membersCollectionLayout: UICollectionViewFlowLayout!
+    @IBOutlet weak var trayView: UIView!
+    @IBOutlet weak var muteSwitch: UIButton!
+    @IBOutlet weak var speakerSwitch: UIButton!
     @IBOutlet weak var hangUpStackView: UIStackView!
     @IBOutlet weak var hangUpButton: UIButton!
     @IBOutlet weak var acceptStackView: UIStackView!
@@ -22,18 +20,26 @@ class CallViewController: UIViewController {
     @IBOutlet weak var muteStackView: UIStackView!
     @IBOutlet weak var speakerStackView: UIStackView!
     
-    @IBOutlet weak var topSafeAreaPlaceholderHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var groupCallMembersCollectionViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var hideContentViewConstraint: NSLayoutConstraint!
+    @IBOutlet weak var showContentViewConstraint: NSLayoutConstraint!
+    @IBOutlet weak var contentViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var hangUpButtonLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var hangUpButtonCenterXConstraint: NSLayoutConstraint!
     @IBOutlet weak var acceptButtonTrailingConstraint: NSLayoutConstraint!
     @IBOutlet weak var acceptButtonCenterXConstraint: NSLayoutConstraint!
-    @IBOutlet weak var bottomSafeAreaPlaceholderHeightConstraint: NSLayoutConstraint!
+    
+    var members: [UserItem] = []
     
     private unowned let service: CallService
     
+    private let numberOfGroupCallMembersPerRow: CGFloat = 4
+    
+    private lazy var resizeRecognizerDelegate = PopupResizeGestureCoordinator(scrollView: resizableScrollView)
+    
     private weak var call: Call?
     private weak var timer: Timer?
+    
+    private var isShowingContentView = false
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         if service.isMinimized {
@@ -41,6 +47,10 @@ class CallViewController: UIViewController {
         } else {
             return .lightContent
         }
+    }
+    
+    override var resizableScrollView: UIScrollView? {
+        membersCollectionView
     }
     
     init(service: CallService) {
@@ -59,11 +69,25 @@ class CallViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        muteSwitch.iconPath = CallIconPath.mute
-        speakerSwitch.iconPath = CallIconPath.speaker
-        statusLabel.setFont(scaledFor: .monospacedDigitSystemFont(ofSize: 14, weight: .regular),
-                            adjustForContentSize: true)
-        groupCallMembersCollectionView.register(R.nib.groupCallMemberCell)
+        resizeRecognizer.delegate = resizeRecognizerDelegate
+        view.addGestureRecognizer(resizeRecognizer)
+        view.layer.cornerRadius = 0
+        view.layer.maskedCorners = []
+        for button in [hangUpButton, acceptButton, muteSwitch, speakerSwitch] {
+            button!.imageView?.contentMode = .center
+        }
+        contentView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        contentView.layer.cornerRadius = 13
+        hideContentViewConstraint.priority = .defaultHigh
+        showContentViewConstraint.priority = .defaultLow
+        let titleFont = UIFont.monospacedDigitSystemFont(ofSize: 18, weight: .semibold)
+        titleLabel.setFont(scaledFor: titleFont, adjustForContentSize: true)
+        membersCollectionView.register(R.nib.callMemberCell)
+        membersCollectionView.dataSource = self
+        trayView.layer.shadowColor = UIColor.black.withAlphaComponent(0.2).cgColor
+        trayView.layer.shadowOpacity = 1
+        trayView.layer.shadowRadius = 10
+        trayView.layer.shadowOffset = CGSize(width: 0, height: 2)
         let center = NotificationCenter.default
         center.addObserver(self,
                            selector: #selector(callServiceMutenessDidChange),
@@ -83,56 +107,85 @@ class CallViewController: UIViewController {
                            object: nil)
     }
     
-    override func viewSafeAreaInsetsDidChange() {
-        super.viewSafeAreaInsetsDidChange()
-        let topHeight = max(topSafeAreaPlaceholderHeightConstraint.constant, view.safeAreaInsets.top)
-        topSafeAreaPlaceholderHeightConstraint.constant = topHeight
-        let bottomHeight = max(bottomSafeAreaPlaceholderHeightConstraint.constant, view.safeAreaInsets.bottom)
-        bottomSafeAreaPlaceholderHeightConstraint.constant = bottomHeight
-    }
-    
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        guard let dataSource = groupCallMembersCollectionView.dataSource else {
+        let labelHeight: CGFloat = ceil(CallMemberCell.labelFont.lineHeight)
+        if let call = call, call is PeerToPeerCall {
+            let itemSize = CGSize(width: CallMemberCell.Layout.bigger.avatarWrapperWidth,
+                                  height: CallMemberCell.Layout.bigger.avatarWrapperWidth + labelHeight + CallMemberCell.Layout.bigger.labelTopMargin)
+            membersCollectionLayout.itemSize = itemSize
+            membersCollectionLayout.minimumInteritemSpacing = 0
+            membersCollectionLayout.minimumLineSpacing = 0
+            let horizontalInset = floor((view.bounds.width - itemSize.width) / 2)
+            membersCollectionLayout.sectionInset = UIEdgeInsets(top: 88, left: horizontalInset, bottom: 0, right: horizontalInset)
+        } else {
+            var horizontalInset = view.bounds.width - numberOfGroupCallMembersPerRow * CallMemberCell.Layout.normal.avatarWrapperWidth
+            horizontalInset /= 2 + 2 * numberOfGroupCallMembersPerRow
+            horizontalInset = floor(horizontalInset)
+            let verticalInset = round(horizontalInset / 2 * 3)
+            let itemSize = CGSize(width: CallMemberCell.Layout.normal.avatarWrapperWidth + horizontalInset * 2,
+                                  height: CallMemberCell.Layout.normal.avatarWrapperWidth + labelHeight + CallMemberCell.Layout.normal.labelTopMargin)
+            membersCollectionLayout.itemSize = itemSize
+            membersCollectionLayout.minimumInteritemSpacing = 0
+            membersCollectionLayout.minimumLineSpacing = 16
+            membersCollectionLayout.sectionInset = UIEdgeInsets(top: verticalInset, left: horizontalInset, bottom: verticalInset, right: horizontalInset)
+        }
+    }
+    
+    override func preferredContentHeight(forSize size: Size) -> CGFloat {
+        let window = AppDelegate.current.mainWindow
+        let maxHeight = window.bounds.height - window.safeAreaInsets.top
+        switch size {
+        case .expanded, .unavailable:
+            return maxHeight
+        case .compressed:
+            switch ScreenHeight.current {
+            case .short, .medium:
+                return round(maxHeight * 0.8)
+            case .long, .extraLong:
+                return round(maxHeight * 0.6)
+            }
+        }
+    }
+    
+    override func updatePreferredContentSizeHeight(size: Size) {
+        if size == .expanded {
+            // XXX: Remove the weird animation added to avatar image when resizing to expanded size
+            UIView.performWithoutAnimation {
+                let diff = preferredContentHeight(forSize: .expanded) - preferredContentHeight(forSize: .compressed)
+                membersCollectionView.frame.size.height += diff
+                membersCollectionView.layoutIfNeeded()
+            }
+        }
+        contentViewHeightConstraint.constant = preferredContentHeight(forSize: size)
+        view.layoutIfNeeded()
+    }
+    
+    func showContentViewIfNeeded() {
+        guard !isShowingContentView else {
             return
         }
-        let sectionsCount = dataSource.numberOfSections?(in: groupCallMembersCollectionView) ?? 1
-        let allMembersCount = (0..<sectionsCount)
-            .map({ dataSource.collectionView(groupCallMembersCollectionView, numberOfItemsInSection: $0) })
-            .reduce(0, +)
-        if allMembersCount <= 9 {
-            let itemLength: CGFloat = 76
-            groupCallMembersCollectionLayout.itemSize = CGSize(width: itemLength, height: itemLength)
-            let totalSpacing = view.bounds.width - itemLength * 3
-            let interitemSpacing = floor(totalSpacing / 6)
-            let sectionInset = interitemSpacing * 2
-            groupCallMembersCollectionLayout.minimumInteritemSpacing = interitemSpacing
-            groupCallMembersCollectionLayout.minimumLineSpacing = round(interitemSpacing / 3 * 4)
-            groupCallMembersCollectionLayout.sectionInset = UIEdgeInsets(top: 0, left: sectionInset, bottom: 0, right: sectionInset)
-        } else {
-            let itemLength: CGFloat = 64
-            groupCallMembersCollectionLayout.itemSize = CGSize(width: itemLength, height: itemLength)
-            let totalSpacing = view.bounds.width - itemLength * 4
-            let interitemSpacing = floor(totalSpacing / 6)
-            let sectionInset = floor(interitemSpacing / 2 * 3)
-            groupCallMembersCollectionLayout.minimumInteritemSpacing = interitemSpacing
-            groupCallMembersCollectionLayout.minimumLineSpacing = interitemSpacing
-            groupCallMembersCollectionLayout.sectionInset = UIEdgeInsets(top: 0, left: sectionInset, bottom: 0, right: sectionInset)
+        isShowingContentView = true
+        hideContentViewConstraint.priority = .defaultLow
+        showContentViewConstraint.priority = .defaultHigh
+        UIView.animate(withDuration: 0.5) {
+            UIView.setAnimationCurve(.overdamped)
+            self.view.layoutIfNeeded()
+            self.view.backgroundColor = .black.withAlphaComponent(0.4)
         }
-        let numberOfLines: Int
-        switch allMembersCount {
-        case 0...3:
-            numberOfLines = 1
-        case 4...6:
-            numberOfLines = 2
-        case 7...12:
-            numberOfLines = 3
-        default:
-            numberOfLines = 4
+    }
+    
+    func hideContentView(completion: (() -> Void)?) {
+        isShowingContentView = false
+        hideContentViewConstraint.priority = .defaultHigh
+        showContentViewConstraint.priority = .defaultLow
+        UIView.animate(withDuration: 0.5) {
+            UIView.setAnimationCurve(.overdamped)
+            self.view.layoutIfNeeded()
+            self.view.backgroundColor = .black.withAlphaComponent(0)
+        } completion: { _ in
+            completion?()
         }
-        let itemsHeight = CGFloat(numberOfLines) * groupCallMembersCollectionLayout.itemSize.height
-        let separatorsHeight = CGFloat(numberOfLines - 1) * groupCallMembersCollectionLayout.minimumLineSpacing
-        groupCallMembersCollectionViewHeightConstraint.constant = itemsHeight + separatorsHeight
     }
     
     func disableConnectionDurationTimer() {
@@ -142,32 +195,27 @@ class CallViewController: UIViewController {
     func reload(call: Call?) {
         self.call = call
         
-        avatarImageView.prepareForReuse()
         if let call = call as? PeerToPeerCall {
+            updateTitle(isPeerToPeerCall: true, status: nil)
             inviteButton.isHidden = true
-            peerToPeerCallRemoteUserStackView.isHidden = false
-            groupCallMembersCollectionView.isHidden = true
             if let user = call.remoteUser {
-                nameLabel.text = user.fullName
-                avatarImageView.setImage(with: user)
+                members = [user]
             } else {
-                nameLabel.text = call.remoteUsername
-                avatarImageView.setImage(userId: call.remoteUserId,
-                                         name: call.remoteUsername)
+                let item = UserItem.createUser(userId: call.remoteUserId, fullName: call.remoteUsername, identityNumber: "", avatarUrl: "", appId: nil)
+                members = [item]
             }
-            updateViews(status: call.status)
+            membersCollectionView.reloadData()
+            updateViews(isPeerToPeerCall: true, status: call.status)
         } else if let call = call as? GroupCall {
-            nameLabel.text = call.conversationName
+            titleLabel.text = R.string.localizable.chat_menu_group_call()
             inviteButton.isHidden = call.status != .connected
             inviteButton.isEnabled = call.membersDataSource.members.count < GroupCall.maxNumberOfMembers
-            peerToPeerCallRemoteUserStackView.isHidden = true
-            groupCallMembersCollectionView.isHidden = false
-            updateViews(status: call.status)
-            call.membersDataSource.collectionView = groupCallMembersCollectionView
+            membersCollectionView.isHidden = false
+            updateViews(isPeerToPeerCall: false, status: call.status)
+            call.membersDataSource.collectionView = membersCollectionView
         }
-        unstableConnectionLabel.isHidden = true
-        muteSwitch.isOn = service.isMuted
-        speakerSwitch.isOn = service.usesSpeaker
+        setMuteSwitchSelected(service.isMuted)
+        setSpeakerSwitchSelected(service.usesSpeaker)
     }
     
     @IBAction func minimizeAction(_ sender: Any) {
@@ -218,7 +266,9 @@ class CallViewController: UIViewController {
     
     @IBAction func hangUpAction(_ sender: Any) {
         // Signaling may take a while, update views first
-        updateViews(status: .disconnecting)
+        if let call = call {
+            updateViews(isPeerToPeerCall: call is PeerToPeerCall, status: .disconnecting)
+        }
         service.requestEndCall()
     }
     
@@ -227,11 +277,33 @@ class CallViewController: UIViewController {
     }
     
     @IBAction func setMuteAction(_ sender: Any) {
-        service.requestSetMute(muteSwitch.isOn)
+        setMuteSwitchSelected(!muteSwitch.isSelected)
+        service.requestSetMute(muteSwitch.isSelected)
     }
     
     @IBAction func setSpeakerAction(_ sender: Any) {
-        service.usesSpeaker = speakerSwitch.isOn
+        setSpeakerSwitchSelected(!speakerSwitch.isSelected)
+        service.usesSpeaker = speakerSwitch.isSelected
+    }
+    
+}
+
+extension CallViewController: UICollectionViewDataSource {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        members.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.call_member, for: indexPath)!
+        let member = members[indexPath.row]
+        if let call = call {
+            cell.hasBiggerLayout = call is PeerToPeerCall
+        }
+        cell.avatarImageView.setImage(with: member)
+        cell.connectingView.isHidden = true
+        cell.label.text = member.fullName
+        return cell
     }
     
 }
@@ -239,7 +311,7 @@ class CallViewController: UIViewController {
 extension CallViewController {
     
     @objc private func callServiceMutenessDidChange() {
-        muteSwitch.isOn = service.isMuted
+        setMuteSwitchSelected(service.isMuted)
     }
     
     @objc private func groupCallMembersDidChange(_ notification: Notification) {
@@ -268,32 +340,32 @@ extension CallViewController {
                 self.service.usesSpeaker = self.service.usesSpeaker
                 
                 self.speakerSwitch.isEnabled = true
-                self.speakerSwitch.isOn = self.service.usesSpeaker
+                self.setSpeakerSwitchSelected(self.service.usesSpeaker)
             } else {
                 self.speakerSwitch.isEnabled = true
-                self.speakerSwitch.isOn = routeContainsBuiltInSpeaker
+                self.setSpeakerSwitchSelected(routeContainsBuiltInSpeaker)
             }
         }
     }
     
     @objc private func callStatusDidChange(_ notification: Notification) {
-        guard (notification.object as? Call) == self.call else {
+        guard let call = (notification.object as? Call), call == self.call else {
             return
         }
         guard let status = notification.userInfo?[Call.statusUserInfoKey] as? Call.Status else {
             return
         }
         DispatchQueue.main.async {
-            self.updateViews(status: status)
+            self.updateViews(isPeerToPeerCall: call is PeerToPeerCall, status: status)
         }
     }
     
-    private func updateViews(status: Call.Status) {
+    private func updateViews(isPeerToPeerCall: Bool, status: Call.Status) {
         let animationDuration: TimeInterval = 0.3
         if status == .connected {
-            statusLabel.text = CallService.shared.connectionDuration
+            updateTitle(isPeerToPeerCall: isPeerToPeerCall, status: CallService.shared.connectionDuration)
         } else {
-            statusLabel.text = status.localizedDescription
+            updateTitle(isPeerToPeerCall: isPeerToPeerCall, status: status.localizedDescription)
         }
         switch status {
         case .incoming:
@@ -319,11 +391,7 @@ extension CallViewController {
             }
         case .connected:
             minimizeButton.isHidden = false
-            if let call = call, call is GroupCall {
-                inviteButton.isHidden = false
-            } else {
-                inviteButton.isHidden = true
-            }
+            inviteButton.isHidden = call is PeerToPeerCall
             UIView.animate(withDuration: animationDuration) {
                 self.setAcceptButtonHidden(true)
                 self.setFunctionSwitchesHidden(false)
@@ -366,15 +434,49 @@ extension CallViewController {
         speakerStackView.alpha = alpha
     }
     
+    func updateTitle(isPeerToPeerCall: Bool, status: String?) {
+        if let status = status {
+            if isPeerToPeerCall {
+                titleLabel.text = R.string.localizable.call_p2p_title_with_status(status)
+            } else {
+                titleLabel.text = R.string.localizable.call_group_title_with_status(status)
+            }
+        } else {
+            if isPeerToPeerCall {
+                titleLabel.text = R.string.localizable.chat_menu_call()
+            } else {
+                titleLabel.text = R.string.localizable.chat_menu_group_call()
+            }
+        }
+    }
+    
     private func setConnectionDurationTimerEnabled(_ enabled: Bool) {
         timer?.invalidate()
         if enabled {
             let timer = Timer(timeInterval: 1, repeats: true) { (_) in
-                self.statusLabel.text = CallService.shared.connectionDuration
+                guard let call = self.call else {
+                    return
+                }
+                self.updateTitle(isPeerToPeerCall: call is PeerToPeerCall,
+                                 status: self.service.connectionDuration)
             }
             RunLoop.main.add(timer, forMode: .default)
             self.timer = timer
         }
+    }
+    
+}
+
+extension CallViewController {
+    
+    private func setMuteSwitchSelected(_ selected: Bool) {
+        muteSwitch.isSelected = selected
+        muteSwitch.tintColor = selected ? .theme : R.color.icon_tint()
+    }
+    
+    private func setSpeakerSwitchSelected(_ selected: Bool) {
+        speakerSwitch.isSelected = selected
+        speakerSwitch.tintColor = selected ? .theme : R.color.icon_tint()
     }
     
 }

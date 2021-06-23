@@ -246,7 +246,7 @@
                     </constraints>
                 </view>
             </subviews>
-            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="DGO-cU-Jif" firstAttribute="leading" secondItem="bL8-4H-NX8" secondAttribute="leading" id="HHf-80-VQi"/>
                 <constraint firstAttribute="trailing" secondItem="DGO-cU-Jif" secondAttribute="trailing" id="KIr-Ht-2nu"/>

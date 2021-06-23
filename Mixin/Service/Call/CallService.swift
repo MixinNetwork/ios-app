@@ -390,20 +390,25 @@ extension CallService {
     }
     
     func dismissCallingInterface() {
-        if !ScreenLockManager.shared.isLastAuthenticationStillValid && ScreenLockManager.shared.needsBiometricAuthentication {
+        var needsLockScreen: Bool {
+            !ScreenLockManager.shared.isLastAuthenticationStillValid && ScreenLockManager.shared.needsBiometricAuthentication
+        }
+        if needsLockScreen {
             ScreenLockManager.shared.showUnlockScreenView()
         }
         viewController?.disableConnectionDurationTimer()
         viewController?.hideContentView(completion: {
-            guard self.viewController == nil else {
+            guard self.activeCall == nil else {
                 return
             }
-            if ScreenLockManager.shared.isLastAuthenticationStillValid || !ScreenLockManager.shared.needsBiometricAuthentication {
+            self.viewController = nil
+            self.window = nil
+            if needsLockScreen {
+                ScreenLockManager.shared.showUnlockScreenView()
+            } else {
                 AppDelegate.current.mainWindow.makeKeyAndVisible()
             }
         })
-        viewController = nil
-        window = nil
         if let mini = UIApplication.homeContainerViewController?.minimizedCallViewControllerIfLoaded {
             mini.view.alpha = 0
             mini.updateViewSize()

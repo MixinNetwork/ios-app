@@ -4,7 +4,7 @@ import MixinServices
 class TranscriptPreviewViewController: FullscreenPopupViewController {
     
     let transcriptMessage: MessageItem
-    let backgroundView = UIVisualEffectView(effect: .lightBlur)
+    let backgroundView = UIVisualEffectView(effect: .prominentBlur)
     let tableView = ConversationTableView()
     
     private let factory: ViewModelFactory

@@ -40,5 +40,7 @@ extension UIVisualEffect {
     static let extraLightBlur = UIBlurEffect(style: .extraLight)
     static let lightBlur = UIBlurEffect(style: .light)
     static let darkBlur = UIBlurEffect(style: .dark)
+    static let regularBlur = UIBlurEffect(style: .regular)
+    static let prominentBlur = UIBlurEffect(style: .prominent)
     
 }

@@ -18,7 +18,15 @@ extension SendMessageService {
         }
 
         if msg.category.hasSuffix("_TEXT") {
-            msg.category = isSignalMessage ? MessageCategory.SIGNAL_TEXT.rawValue :  MessageCategory.PLAIN_TEXT.rawValue
+            if isSignalMessage {
+                if let content = msg.content, willTextMessageWithContentSendDirectlyToApp(content, conversationId: msg.conversationId, inGroup: isGroupMessage) {
+                    msg.category = MessageCategory.PLAIN_TEXT.rawValue
+                } else {
+                    msg.category = MessageCategory.SIGNAL_TEXT.rawValue
+                }
+            } else {
+                msg.category = MessageCategory.PLAIN_TEXT.rawValue
+            }
         } else if msg.category.hasSuffix("_IMAGE") {
             msg.category = isSignalMessage ? MessageCategory.SIGNAL_IMAGE.rawValue :  MessageCategory.PLAIN_IMAGE.rawValue
         } else if msg.category.hasSuffix("_VIDEO") {

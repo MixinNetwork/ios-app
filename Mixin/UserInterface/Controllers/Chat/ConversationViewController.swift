@@ -298,6 +298,7 @@ class ConversationViewController: UIViewController {
         
         textPreviewRecognizer = UITapGestureRecognizer(target: self, action: #selector(presentTextPreviewAction(_:)))
         textPreviewRecognizer.numberOfTapsRequired = 2
+        textPreviewRecognizer.delegate = self
         tableView.addGestureRecognizer(textPreviewRecognizer)
         
         tableView.dataSource = self
@@ -1323,6 +1324,8 @@ extension ConversationViewController: UIGestureRecognizerDelegate {
             }
             let velocity = fastReplyRecognizer.velocity(in: nil)
             return velocity.x < 0 && abs(velocity.x) > abs(velocity.y) * 2
+        case textPreviewRecognizer:
+            return !tableView.allowsMultipleSelection
         default:
             return true
         }

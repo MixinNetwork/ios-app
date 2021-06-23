@@ -209,7 +209,37 @@ class UrlWindow {
                     UIApplication.homeNavigationController?.pushViewController(withBackRoot: vc)
                 }
             } else {
-                guard let conversationItem = syncConversation(conversationId: conversationId, hud: hud) else {
+                var conversation = ConversationDAO.shared.getConversation(conversationId: conversationId)
+                var isMember = false
+                if conversation == nil {
+                    switch ConversationAPI.getConversation(conversationId: conversationId) {
+                    case let .success(response):
+                        guard response.participants.first(where: { $0.userId == myUserId }) != nil else {
+                            DispatchQueue.main.async {
+                                hud.set(style: .error, text: R.string.localizable.conversation_not_found())
+                                hud.scheduleAutoHidden()
+                            }
+                            return
+                        }
+                        isMember = true
+                        conversation = ConversationDAO.shared.createConversation(conversation: response, targetStatus: .SUCCESS)
+                    case let .failure(error):
+                        let text = error.localizedDescription(overridingNotFoundDescriptionWith: R.string.localizable.conversation_not_found())
+                        DispatchQueue.main.async {
+                            hud.set(style: .error, text: text)
+                            hud.scheduleAutoHidden()
+                        }
+                        return
+                    }
+                } else {
+                    isMember = ParticipantDAO.shared.userId(myUserId, isParticipantOfConversationId: conversationId)
+                }
+                
+                guard let conversationItem = conversation, isMember else {
+                    DispatchQueue.main.async {
+                        hud.set(style: .error, text: R.string.localizable.conversation_not_found())
+                        hud.scheduleAutoHidden()
+                    }
                     return
                 }
                 
@@ -657,32 +687,6 @@ extension UrlWindow {
         }
 
         return address
-    }
-
-    private static func syncConversation(conversationId: String, hud: Hud) -> ConversationItem? {
-        var conversation = ConversationDAO.shared.getConversation(conversationId: conversationId)
-        if conversation == nil {
-            switch ConversationAPI.getConversation(conversationId: conversationId) {
-            case let .success(response):
-                conversation = ConversationDAO.shared.createConversation(conversation: response, targetStatus: .SUCCESS)
-            case let .failure(error):
-                let text = error.localizedDescription(overridingNotFoundDescriptionWith: R.string.localizable.conversation_not_found())
-                DispatchQueue.main.async {
-                    hud.set(style: .error, text: text)
-                    hud.scheduleAutoHidden()
-                }
-                return nil
-            }
-        }
-
-        if conversation == nil {
-            DispatchQueue.main.async {
-                hud.set(style: .error, text: R.string.localizable.conversation_not_found())
-                hud.scheduleAutoHidden()
-            }
-        }
-
-        return conversation
     }
     
     private static func syncAsset(assetId: String, hud: Hud) -> AssetItem? {

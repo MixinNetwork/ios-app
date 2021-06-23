@@ -133,11 +133,7 @@ class MessageReceiverViewController: PeerViewController<[MessageReceiver], Check
     
     override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         let receiver = messageReceiver(at: indexPath)
-        if let index = selections.firstIndex(of: receiver) {
-            selections.remove(at: index)
-            let indexPath = IndexPath(item: index, section: 0)
-            collectionView.deleteItems(at: [indexPath])
-        }
+        remove(selection: receiver)
         if !isSearching {
             var counterSections = Array(0..<numberOfSections(in: tableView))
             counterSections.removeAll(where: { $0 == indexPath.section })
@@ -149,7 +145,6 @@ class MessageReceiverViewController: PeerViewController<[MessageReceiver], Check
                 }
             }
         }
-        setCollectionViewHidden(selections.isEmpty, animated: true)
     }
     
 }
@@ -223,6 +218,8 @@ extension MessageReceiverViewController: SelectedPeerCellDelegate {
                 let indexPath = IndexPath(item: item, section: 0)
                 tableView.deselectRow(at: indexPath, animated: true)
                 tableView(tableView, didDeselectRowAt: indexPath)
+            } else {
+                remove(selection: deselected)
             }
         } else {
             for section in 0..<models.count {
@@ -271,6 +268,15 @@ extension MessageReceiverViewController {
         } else {
             navigationController?.popViewController(animated: true)
         }
+    }
+    
+    private func remove(selection: MessageReceiver) {
+        if let index = selections.firstIndex(of: selection) {
+            selections.remove(at: index)
+            let indexPath = IndexPath(item: index, section: 0)
+            collectionView.deleteItems(at: [indexPath])
+        }
+        setCollectionViewHidden(selections.isEmpty, animated: true)
     }
     
 }

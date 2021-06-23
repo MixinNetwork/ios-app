@@ -491,6 +491,27 @@ public class SendMessageService: MixinService {
 
 extension SendMessageService {
     
+    // When a text message is sent to group with format "^@700\d* ", it will be send directly to the app if the app is in the group
+    public func willTextMessageWithContentSendDirectlyToApp(_ content: String, conversationId: String, inGroup: Bool) -> Bool {
+        guard inGroup else {
+            return false
+        }
+        guard let identityNumber = prefixMentionedAppIdentityNumberFromMessage(with: content) else {
+            return false
+        }
+        if let recipientId = ParticipantDAO.shared.getParticipantId(conversationId: conversationId, identityNumber: identityNumber) {
+            return !recipientId.isEmpty
+        } else {
+            return false
+        }
+    }
+    
+    private func prefixMentionedAppIdentityNumberFromMessage(with content: String) -> String? {
+        guard content.hasPrefix("@700"), let botNumberRange = content.range(of: #"^@700\d* "#, options: .regularExpression) else {
+            return nil
+        }
+        return content[botNumberRange].dropFirstAndLast()
+    }
     
     private func resendMessage(job: Job) throws {
         var blazeMessage = job.toBlazeMessage()
@@ -529,12 +550,12 @@ extension SendMessageService {
         }
         
         if message.category.hasSuffix("_TEXT"), let text = message.content {
-            if conversation.category == ConversationCategory.GROUP.rawValue, text.hasPrefix("@700"), let botNumberRange = text.range(of: #"^@700\d* "#, options: .regularExpression) {
-                let identityNumber = text[botNumberRange].dropFirstAndLast()
+            if conversation.category == ConversationCategory.GROUP.rawValue, let identityNumber = prefixMentionedAppIdentityNumberFromMessage(with: text) {
                 if let recipientId = ParticipantDAO.shared.getParticipantId(conversationId: conversation.conversationId, identityNumber: identityNumber), !recipientId.isEmpty {
-                    message.category = MessageCategory.PLAIN_TEXT.rawValue
                     blazeMessage.params?.recipientId = recipientId
                     blazeMessage.params?.data = nil
+                } else {
+                    message.category = MessageCategory.SIGNAL_TEXT.rawValue
                 }
             } else {
                 let numbers = MessageMentionDetector.identityNumbers(from: text).filter { $0 != myIdentityNumber }

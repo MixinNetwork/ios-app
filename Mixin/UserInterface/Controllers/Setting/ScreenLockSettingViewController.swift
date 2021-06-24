@@ -46,7 +46,7 @@ extension ScreenLockSettingViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.section == 0 && indexPath.row == 1 {
-            let alert = UIAlertController(title: nil, message: R.string.localizable.setting_screen_lock_timeout_tip(), preferredStyle: .actionSheet)
+            let alert = UIAlertController(title: nil, message: R.string.localizable.setting_screen_lock_enable_biometric_timeout(), preferredStyle: .actionSheet)
             for interval in timeoutIntervals {
                 alert.addAction(UIAlertAction(title: Localized.SCREEN_LOCK_TIMEOUT_INTERVAL(interval), style: .default, handler: { (_) in
                     self.setNewTimeoutInterval(interval)

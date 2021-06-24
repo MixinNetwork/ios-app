@@ -830,13 +830,12 @@
 "setting_share_this_app_content" = "快来 Mixin 与我聊天！简单、安全好用还支持比特币、以太坊等加密货币，下载 https://mixin.one/messenger 后搜索 %@ 加我好友。";
 "setting_screen_lock_title" = "锁定屏幕";
 "setting_screen_lock_enable_biometric_title" = "%@锁定";
-"setting_screen_lock_enable_biometric_timeout" = "锁定间隔";
+"setting_screen_lock_enable_biometric_timeout" = "自动锁定";
 "setting_screen_lock_enable_biometric_tip" = "您需要使用 %@ 来解锁 Mixin。如果 Mixin 已锁定，您仍然可以回复来自通知的消息和接听通话。";
 "setting_screen_lock_timeout_immediately" = "立即启动";
 "setting_screen_lock_timeout_minutes" = "%@ 分钟";
 "setting_screen_lock_timeout_hour" = "1 小时";
 "setting_screen_lock_timeout_off" = "关闭";
-"setting_screen_lock_timeout_tip" = "屏幕锁定间隔";
 
 // ScreenLock
 "screen_lock_locked" = "Mixin 已锁定";

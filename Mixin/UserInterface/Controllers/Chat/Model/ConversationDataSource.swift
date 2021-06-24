@@ -645,14 +645,24 @@ extension ConversationDataSource {
     }
     
     private func updateMediaContent(messageId: String, message: Message) {
-        guard let indexPath = indexPath(where: { $0.messageId == messageId }), let viewModel = viewModel(for: indexPath) as? PhotoRepresentableMessageViewModel else {
-            return
-        }
-        viewModel.update(mediaUrl: message.mediaUrl,
-                         mediaSize: message.mediaSize,
-                         mediaDuration: message.mediaDuration)
-        if let cell = tableView?.cellForRow(at: indexPath) as? PhotoRepresentableMessageCell {
-            cell.reloadMedia(viewModel: viewModel)
+        queue.async {
+            // Dispatch view model's processing synchornously inside processing queue
+            // to prevent the "missing view model" problem
+            DispatchQueue.main.sync {
+                guard
+                    !self.messageProcessingIsCancelled,
+                    let indexPath = self.indexPath(where: { $0.messageId == messageId }),
+                    let viewModel = self.viewModel(for: indexPath) as? PhotoRepresentableMessageViewModel
+                else {
+                    return
+                }
+                viewModel.update(mediaUrl: message.mediaUrl,
+                                 mediaSize: message.mediaSize,
+                                 mediaDuration: message.mediaDuration)
+                if let cell = self.tableView?.cellForRow(at: indexPath) as? PhotoRepresentableMessageCell {
+                    cell.reloadMedia(viewModel: viewModel)
+                }
+            }
         }
     }
     

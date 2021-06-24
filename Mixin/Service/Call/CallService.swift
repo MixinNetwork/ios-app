@@ -1139,10 +1139,19 @@ extension CallService: WebRTCClientDelegate {
             }
             updateAudioSessionConfiguration()
         }
+        DispatchQueue.main.async {
+            self.viewController?.isConnectionUnstable = false
+        }
     }
     
     func webRTCClientDidDisconnected(_ client: WebRTCClient) {
         self.log("[CallService] RTC Disconnected")
+        guard let call = activeCall, call.status == .connected else {
+            return
+        }
+        DispatchQueue.main.async {
+            self.viewController?.isConnectionUnstable = true
+        }
     }
     
     func webRTCClient(_ client: WebRTCClient, didChangeIceConnectionStateTo newState: RTCIceConnectionState) {

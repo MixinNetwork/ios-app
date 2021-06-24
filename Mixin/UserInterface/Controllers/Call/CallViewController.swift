@@ -29,6 +29,14 @@ class CallViewController: ResizablePopupViewController {
     @IBOutlet weak var acceptButtonCenterXConstraint: NSLayoutConstraint!
     
     var members: [UserItem] = []
+    var isConnectionUnstable = false {
+        didSet {
+            guard let call = call else {
+                return
+            }
+            updateTitle(call: call)
+        }
+    }
     
     private unowned let service: CallService
     
@@ -191,9 +199,9 @@ class CallViewController: ResizablePopupViewController {
     
     func reload(call: Call?) {
         self.call = call
+        isConnectionUnstable = false
         
         if let call = call as? PeerToPeerCall {
-            updateTitle(isPeerToPeerCall: true, status: nil)
             if let user = call.remoteUser {
                 members = [user]
             } else {
@@ -201,13 +209,15 @@ class CallViewController: ResizablePopupViewController {
                 members = [item]
             }
             membersCollectionView.reloadData()
-            updateViews(isPeerToPeerCall: true, status: call.status)
         } else if let call = call as? GroupCall {
             titleLabel.text = R.string.localizable.chat_menu_group_call()
             membersCollectionView.isHidden = false
-            updateViews(isPeerToPeerCall: false, status: call.status)
             call.membersDataSource.collectionView = membersCollectionView
         }
+        if let call = call {
+            updateViews(call: call)
+        }
+        
         setMuteSwitchSelected(service.isMuted)
         setSpeakerSwitchSelected(service.usesSpeaker)
     }
@@ -244,7 +254,7 @@ class CallViewController: ResizablePopupViewController {
     @IBAction func hangUpAction(_ sender: Any) {
         // Signaling may take a while, update views first
         if let call = call {
-            updateViews(isPeerToPeerCall: call is PeerToPeerCall, status: .disconnecting)
+            updateViews(call: call)
         }
         service.requestEndCall()
     }
@@ -349,22 +359,46 @@ extension CallViewController {
         guard let call = (notification.object as? Call), call == self.call else {
             return
         }
-        guard let status = notification.userInfo?[Call.statusUserInfoKey] as? Call.Status else {
-            return
-        }
         DispatchQueue.main.async {
-            self.updateViews(isPeerToPeerCall: call is PeerToPeerCall, status: status)
+            self.updateViews(call: call)
         }
     }
     
-    private func updateViews(isPeerToPeerCall: Bool, status: Call.Status) {
-        let animationDuration: TimeInterval = 0.3
-        if status == .connected {
-            updateTitle(isPeerToPeerCall: isPeerToPeerCall, status: CallService.shared.connectionDuration)
+    private func updateTitle(call: Call) {
+        if isConnectionUnstable {
+            let description = R.string.localizable.group_call_bad_network()
+            if call is PeerToPeerCall {
+                titleLabel.text = R.string.localizable.call_p2p_title_with_status(description)
+            } else {
+                titleLabel.text = R.string.localizable.call_group_title_with_status(description)
+            }
         } else {
-            updateTitle(isPeerToPeerCall: isPeerToPeerCall, status: status.localizedDescription)
+            let status: String?
+            if call.status == .connected {
+                status = service.connectionDuration
+            } else {
+                status = call.status.localizedDescription
+            }
+            if call is PeerToPeerCall {
+                if let status = status {
+                    titleLabel.text = R.string.localizable.call_p2p_title_with_status(status)
+                } else {
+                    titleLabel.text = R.string.localizable.chat_menu_call()
+                }
+            } else {
+                if let status = status {
+                    titleLabel.text = R.string.localizable.call_group_title_with_status(status)
+                } else {
+                    titleLabel.text = R.string.localizable.chat_menu_group_call()
+                }
+            }
         }
-        switch status {
+    }
+    
+    private func updateViews(call: Call) {
+        updateTitle(call: call)
+        let animationDuration: TimeInterval = 0.3
+        switch call.status {
         case .incoming:
             minimizeButton.isHidden = true
             setFunctionSwitchesHidden(true)
@@ -426,22 +460,6 @@ extension CallViewController {
         speakerStackView.alpha = alpha
     }
     
-    func updateTitle(isPeerToPeerCall: Bool, status: String?) {
-        if let status = status {
-            if isPeerToPeerCall {
-                titleLabel.text = R.string.localizable.call_p2p_title_with_status(status)
-            } else {
-                titleLabel.text = R.string.localizable.call_group_title_with_status(status)
-            }
-        } else {
-            if isPeerToPeerCall {
-                titleLabel.text = R.string.localizable.chat_menu_call()
-            } else {
-                titleLabel.text = R.string.localizable.chat_menu_group_call()
-            }
-        }
-    }
-    
     private func setConnectionDurationTimerEnabled(_ enabled: Bool) {
         timer?.invalidate()
         if enabled {
@@ -449,8 +467,7 @@ extension CallViewController {
                 guard let call = self.call else {
                     return
                 }
-                self.updateTitle(isPeerToPeerCall: call is PeerToPeerCall,
-                                 status: self.service.connectionDuration)
+                self.updateTitle(call: call)
             }
             RunLoop.main.add(timer, forMode: .default)
             self.timer = timer

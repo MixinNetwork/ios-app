@@ -20,7 +20,7 @@ class GroupCallConfirmationViewController: CallViewController {
         setConnectionButtonsEnabled(true)
         minimizeButton.setImage(R.image.ic_title_close(), for: .normal)
         minimizeButton.tintColor = .white
-        updateTitle(isPeerToPeerCall: false, status: Call.Status.incoming.localizedDescription)
+        titleLabel.text = R.string.localizable.call_p2p_title_with_status(Call.Status.incoming.localizedDescription ?? "")
         membersCollectionView.isHidden = false
         hangUpStackView.alpha = 0
         acceptStackView.alpha = 1

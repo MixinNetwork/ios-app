@@ -8,19 +8,6 @@ class GroupCallMemberDataSource: NSObject {
     // That is to say, a member which is invited but not yet connected, needs to be shown in the grid, but
     // he's not in the call, therefore you won't find him in GroupCallMembersManager
     
-    static let membersDidChangeNotification = Notification.Name("one.mixin.messenger.GroupCallMemberDataSource.MembersDidChange")
-    
-    private(set) var members: [UserItem] {
-        didSet {
-            NotificationCenter.default.post(name: Self.membersDidChangeNotification, object: self)
-        }
-    }
-    
-    // This var is in sync with members
-    private(set) var memberUserIds: Set<String>
-    
-    private(set) var invitingMemberUserIds: Set<String>
-    
     weak var collectionView: UICollectionView? {
         didSet {
             oldValue?.dataSource = nil
@@ -32,6 +19,11 @@ class GroupCallMemberDataSource: NSObject {
     }
     
     private let conversationId: String
+    
+    // This var is in sync with members
+    private(set) var memberUserIds: Set<String>
+    private(set) var members: [UserItem]
+    private(set) var invitingMemberUserIds: Set<String>
     
     init(conversationId: String, members: [UserItem], invitingMemberUserIds: Set<String>) {
         CallService.shared.log("[GroupCallMemberDataSource] init with members: \(members.map(\.fullName)), inviting: \(invitingMemberUserIds)")
@@ -61,7 +53,7 @@ class GroupCallMemberDataSource: NSObject {
         }
         if !filtered.isEmpty {
             let indexPaths = (self.members.count..<(self.members.count + filtered.count))
-                .map({ IndexPath(item: $0, section: 0) })
+                .map(self.indexPath(forMemberAt:))
             self.members.append(contentsOf: filtered)
             collectionView?.insertItems(at: indexPaths)
         }
@@ -70,13 +62,13 @@ class GroupCallMemberDataSource: NSObject {
     func reportMemberDidConnected(_ member: UserItem) {
         CallService.shared.log("[GroupCallMemberDataSource] \(member.fullName) did connected")
         invitingMemberUserIds.remove(member.userId)
-        if let item = members.firstIndex(where: { $0.userId == member.userId }) {
-            let indexPath = IndexPath(item: item, section: 0)
+        if let index = members.firstIndex(where: { $0.userId == member.userId }) {
+            let indexPath = self.indexPath(forMemberAt: index)
             UIView.performWithoutAnimation {
                 collectionView?.reloadItems(at: [indexPath])
             }
         } else {
-            let indexPath = IndexPath(item: members.count, section: 0)
+            let indexPath = self.indexPath(forMemberAt: members.count)
             members.append(member)
             memberUserIds.insert(member.userId)
             collectionView?.insertItems(at: [indexPath])
@@ -87,9 +79,9 @@ class GroupCallMemberDataSource: NSObject {
         CallService.shared.log("[GroupCallMemberDataSource] \(id) did disconnected")
         invitingMemberUserIds.remove(id)
         memberUserIds.remove(id)
-        if let item = members.firstIndex(where: { $0.userId == id }) {
-            let indexPath = IndexPath(item: item, section: 0)
-            members.remove(at: item)
+        if let index = members.firstIndex(where: { $0.userId == id }) {
+            let indexPath = self.indexPath(forMemberAt: index)
+            members.remove(at: index)
             collectionView?.deleteItems(at: [indexPath])
         }
     }
@@ -117,10 +109,14 @@ class GroupCallMemberDataSource: NSObject {
                 self.invitingMemberUserIds.remove(member.userId)
                 self.memberUserIds.remove(member.userId)
                 self.members.remove(at: index)
-                let indexPath = IndexPath(item: index, section: 0)
+                let indexPath = self.indexPath(forMemberAt: index)
                 self.collectionView?.deleteItems(at: [indexPath])
             }
         }
+    }
+    
+    private func indexPath(forMemberAt index: Int) -> IndexPath {
+        IndexPath(item: index + 1, section: 0) // +1 for the add button
     }
     
 }
@@ -128,15 +124,25 @@ class GroupCallMemberDataSource: NSObject {
 extension GroupCallMemberDataSource: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        members.count
+        members.count + 1
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.call_member, for: indexPath)!
-        let member = members[indexPath.item]
-        cell.avatarImageView.setImage(with: member)
-        cell.connectingView.isHidden = !invitingMemberUserIds.contains(member.userId)
-        cell.label.text = member.fullName
+        if indexPath.item == 0 {
+            cell.avatarWrapperView.backgroundColor = R.color.button_background_secondary()
+            cell.avatarImageView.imageView.contentMode = .center
+            cell.avatarImageView.image = R.image.ic_title_add()
+            cell.connectingView.isHidden = true
+            cell.label.text = R.string.localizable.action_add()
+        } else {
+            cell.avatarWrapperView.backgroundColor = .background
+            cell.avatarImageView.imageView.contentMode = .scaleAspectFill
+            let member = members[indexPath.item - 1]
+            cell.avatarImageView.setImage(with: member)
+            cell.connectingView.isHidden = !invitingMemberUserIds.contains(member.userId)
+            cell.label.text = member.fullName
+        }
         cell.hasBiggerLayout = false
         return cell
     }

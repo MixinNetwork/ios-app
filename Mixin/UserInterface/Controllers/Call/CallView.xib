@@ -22,12 +22,12 @@
                 <outlet property="hangUpButtonLeadingConstraint" destination="rS5-an-9kh" id="pcw-tZ-gS6"/>
                 <outlet property="hangUpStackView" destination="TQI-9I-kWd" id="VfY-N6-OxZ"/>
                 <outlet property="hideContentViewConstraint" destination="mI3-P4-4D2" id="gdY-gB-Efs"/>
-                <outlet property="inviteButton" destination="CPG-77-gPe" id="9PC-1f-QGC"/>
                 <outlet property="membersCollectionLayout" destination="Ge5-Xe-Grf" id="YYY-YS-dga"/>
                 <outlet property="membersCollectionView" destination="wM3-bs-IJ8" id="xDc-gL-RHw"/>
                 <outlet property="minimizeButton" destination="c10-IX-mVV" id="ZHY-P9-Bbn"/>
                 <outlet property="muteStackView" destination="XCJ-TX-CRZ" id="PEE-We-eaJ"/>
                 <outlet property="muteSwitch" destination="TLo-dV-Hyh" id="Tzb-Iq-Wg8"/>
+                <outlet property="settingsButton" destination="CPG-77-gPe" id="9PC-1f-QGC"/>
                 <outlet property="showContentViewConstraint" destination="oYL-ZJ-XYN" id="Z9K-CY-OWq"/>
                 <outlet property="speakerStackView" destination="Ff2-j4-HiN" id="aSj-Hs-aNB"/>
                 <outlet property="speakerSwitch" destination="taT-k8-v1D" id="Zhy-bp-ISn"/>
@@ -63,7 +63,6 @@
                                 <constraint firstAttribute="width" constant="44" id="bRw-DG-BbT"/>
                             </constraints>
                             <color key="tintColor" name="icon_tint"/>
-                            <state key="normal" image="ic_title_add"/>
                             <connections>
                                 <action selector="addMemberAction:" destination="-1" eventType="touchUpInside" id="Bem-zU-iww"/>
                             </connections>
@@ -265,7 +264,6 @@
         <image name="Call/ic_speaker_off" width="24" height="24"/>
         <image name="Call/ic_speaker_on" width="24" height="24"/>
         <image name="ic_minimize" width="24" height="24"/>
-        <image name="ic_title_add" width="16" height="16"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

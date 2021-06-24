@@ -6,7 +6,7 @@ class CallViewController: ResizablePopupViewController {
     
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var minimizeButton: UIButton!
-    @IBOutlet weak var inviteButton: UIButton!
+    @IBOutlet weak var settingsButton: UIButton! // Preserved
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var membersCollectionView: UICollectionView!
     @IBOutlet weak var membersCollectionLayout: UICollectionViewFlowLayout!
@@ -84,6 +84,7 @@ class CallViewController: ResizablePopupViewController {
         titleLabel.setFont(scaledFor: titleFont, adjustForContentSize: true)
         membersCollectionView.register(R.nib.callMemberCell)
         membersCollectionView.dataSource = self
+        membersCollectionView.delegate = self
         trayView.layer.shadowColor = UIColor.black.withAlphaComponent(0.2).cgColor
         trayView.layer.shadowOpacity = 1
         trayView.layer.shadowRadius = 10
@@ -96,10 +97,6 @@ class CallViewController: ResizablePopupViewController {
         center.addObserver(self,
                            selector: #selector(audioSessionRouteChange(_:)),
                            name: AVAudioSession.routeChangeNotification,
-                           object: nil)
-        center.addObserver(self,
-                           selector: #selector(groupCallMembersDidChange),
-                           name: GroupCallMemberDataSource.membersDidChangeNotification,
                            object: nil)
         center.addObserver(self,
                            selector: #selector(callStatusDidChange(_:)),
@@ -197,7 +194,6 @@ class CallViewController: ResizablePopupViewController {
         
         if let call = call as? PeerToPeerCall {
             updateTitle(isPeerToPeerCall: true, status: nil)
-            inviteButton.isHidden = true
             if let user = call.remoteUser {
                 members = [user]
             } else {
@@ -208,8 +204,6 @@ class CallViewController: ResizablePopupViewController {
             updateViews(isPeerToPeerCall: true, status: call.status)
         } else if let call = call as? GroupCall {
             titleLabel.text = R.string.localizable.chat_menu_group_call()
-            inviteButton.isHidden = call.status != .connected
-            inviteButton.isEnabled = call.membersDataSource.members.count < GroupCall.maxNumberOfMembers
             membersCollectionView.isHidden = false
             updateViews(isPeerToPeerCall: false, status: call.status)
             call.membersDataSource.collectionView = membersCollectionView
@@ -233,24 +227,7 @@ class CallViewController: ResizablePopupViewController {
     }
     
     @IBAction func addMemberAction(_ sender: Any) {
-        guard let call = self.call as? GroupCall else {
-            return
-        }
-        let picker = GroupCallMemberPickerViewController(conversation: call.conversation)
-        picker.appearance = .appendToExistedCall
-        picker.fixedSelections = call.membersDataSource.members
-        picker.onConfirmation = { members in
-            let inCallUserIds = call.membersDataSource.memberUserIds
-            CallService.shared.queue.async {
-                let filteredMembers = members.filter { (member) -> Bool in
-                    !inCallUserIds.contains(member.userId)
-                }
-                if !filteredMembers.isEmpty {
-                    call.invite(members: filteredMembers)
-                }
-            }
-        }
-        present(picker, animated: true, completion: nil)
+        
     }
     
     @IBAction func showEncryptionHintAction(_ sender: Any) {
@@ -308,20 +285,40 @@ extension CallViewController: UICollectionViewDataSource {
     
 }
 
+extension CallViewController: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard indexPath.item == 0, let call = call as? GroupCall else {
+            return
+        }
+        if call.membersDataSource.members.count < GroupCall.maxNumberOfMembers {
+            let picker = GroupCallMemberPickerViewController(conversation: call.conversation)
+            picker.appearance = .appendToExistedCall
+            picker.fixedSelections = call.membersDataSource.members
+            picker.onConfirmation = { members in
+                let inCallUserIds = call.membersDataSource.memberUserIds
+                CallService.shared.queue.async {
+                    let filteredMembers = members.filter { (member) -> Bool in
+                        !inCallUserIds.contains(member.userId)
+                    }
+                    if !filteredMembers.isEmpty {
+                        call.invite(members: filteredMembers)
+                    }
+                }
+            }
+            present(picker, animated: true, completion: nil)
+        } else {
+            let message = R.string.localizable.group_call_selections_reach_limit("\(GroupCall.maxNumberOfMembers)")
+            alert(message)
+        }
+    }
+    
+}
+
 extension CallViewController {
     
     @objc private func callServiceMutenessDidChange() {
         setMuteSwitchSelected(service.isMuted)
-    }
-    
-    @objc private func groupCallMembersDidChange(_ notification: Notification) {
-        guard let dataSource = notification.object as? GroupCallMemberDataSource else {
-            return
-        }
-        guard dataSource == (call as? GroupCall)?.membersDataSource else {
-            return
-        }
-        inviteButton.isEnabled = dataSource.members.count < GroupCall.maxNumberOfMembers
     }
     
     @objc private func audioSessionRouteChange(_ notification: Notification) {
@@ -370,19 +367,16 @@ extension CallViewController {
         switch status {
         case .incoming:
             minimizeButton.isHidden = true
-            inviteButton.isHidden = true
             setFunctionSwitchesHidden(true)
             setAcceptButtonHidden(false)
             setConnectionButtonsEnabled(true)
         case .outgoing:
             minimizeButton.isHidden = false
-            inviteButton.isHidden = true
             setFunctionSwitchesHidden(false)
             setAcceptButtonHidden(true)
             setConnectionButtonsEnabled(true)
         case .connecting:
             minimizeButton.isHidden = false
-            inviteButton.isHidden = true
             UIView.animate(withDuration: animationDuration) {
                 self.setFunctionSwitchesHidden(false)
                 self.setAcceptButtonHidden(true)
@@ -391,7 +385,6 @@ extension CallViewController {
             }
         case .connected:
             minimizeButton.isHidden = false
-            inviteButton.isHidden = call is PeerToPeerCall
             UIView.animate(withDuration: animationDuration) {
                 self.setAcceptButtonHidden(true)
                 self.setFunctionSwitchesHidden(false)
@@ -401,7 +394,6 @@ extension CallViewController {
             setConnectionDurationTimerEnabled(true)
         case .disconnecting:
             minimizeButton.isHidden = true
-            inviteButton.isHidden = true
             setAcceptButtonHidden(true)
             setConnectionButtonsEnabled(false)
             setConnectionDurationTimerEnabled(false)

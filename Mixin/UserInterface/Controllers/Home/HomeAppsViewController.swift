@@ -48,8 +48,6 @@ final class HomeAppsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        updatePreferredContentSizeHeight()
-        
         pinnedAppModelController = PinnedHomeAppsModelController(collectionView: pinnedCollectionView)
         pinnedCollectionView.dataSource = pinnedAppModelController
         pinnedCollectionView.delegate = self
@@ -80,6 +78,8 @@ final class HomeAppsViewController: UIViewController {
         })
         candidateCollectionViewHeightConstraint.constant = candidateCollectionCellSize.height * CGFloat(cellCount.perColumn)
         
+        updatePreferredContentSizeHeight()
+
         NotificationCenter.default.addObserver(self, selector: #selector(updateNoPinnedHint), name: AppGroupUserDefaults.User.homeAppIdsDidChangeNotification, object: nil)
     }
     

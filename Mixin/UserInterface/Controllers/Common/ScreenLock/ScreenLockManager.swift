@@ -129,6 +129,9 @@ extension ScreenLockManager {
             }
             if isBiometricAuthenticationEnabled {
                 showScreenLockView()
+                if !hasLastBiometricAuthenticationFailed {
+                    viewController?.showUnlockOption(false)
+                }
             }
         case .didBecomeActive:
             if from == .didEnterBackground {

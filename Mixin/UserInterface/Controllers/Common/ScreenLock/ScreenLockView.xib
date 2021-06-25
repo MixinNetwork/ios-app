@@ -11,8 +11,11 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ScreenLockViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
                 <outlet property="backgroundView" destination="w0N-Rz-Hqg" id="Ral-ta-qT0"/>
-                <outlet property="contentView" destination="grD-vx-I7W" id="Zhd-dC-Ka4"/>
+                <outlet property="logoContentView" destination="a97-0V-Q9l" id="amp-od-1JW"/>
+                <outlet property="logoImageViewHeightConstraint" destination="fb2-47-KGk" id="Exp-W3-XZu"/>
+                <outlet property="logoImageViewTopSpaceConstraint" destination="aq2-g5-aE9" id="Qx3-pp-DlT"/>
                 <outlet property="unlockButton" destination="A2X-t5-b95" id="WgG-c4-j9S"/>
+                <outlet property="unlockContentView" destination="grD-vx-I7W" id="Zhd-dC-Ka4"/>
                 <outlet property="unlockTipLabel" destination="GEQ-Jy-AgV" id="CmA-c7-OsY"/>
                 <outlet property="view" destination="iN0-l3-epB" id="bwc-aw-biv"/>
             </connections>
@@ -80,21 +83,42 @@
                         <constraint firstItem="7Hs-AZ-5cu" firstAttribute="top" secondItem="grD-vx-I7W" secondAttribute="top" id="rC5-tZ-lBX"/>
                     </constraints>
                 </view>
+                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="a97-0V-Q9l">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                    <subviews>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Setting/ic_about_app" translatesAutoresizingMaskIntoConstraints="NO" id="mbO-TU-TQD">
+                            <rect key="frame" x="167" y="300" width="80" height="60"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="60" id="fb2-47-KGk"/>
+                            </constraints>
+                        </imageView>
+                    </subviews>
+                    <color key="backgroundColor" name="background"/>
+                    <constraints>
+                        <constraint firstItem="mbO-TU-TQD" firstAttribute="centerX" secondItem="a97-0V-Q9l" secondAttribute="centerX" id="31J-O2-BEP"/>
+                        <constraint firstItem="mbO-TU-TQD" firstAttribute="top" secondItem="a97-0V-Q9l" secondAttribute="top" constant="300" id="aq2-g5-aE9"/>
+                    </constraints>
+                </view>
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
+                <constraint firstItem="a97-0V-Q9l" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="AfR-th-bbA"/>
                 <constraint firstAttribute="trailing" secondItem="grD-vx-I7W" secondAttribute="trailing" constant="20" id="Jb6-l6-kXn"/>
+                <constraint firstAttribute="trailing" secondItem="a97-0V-Q9l" secondAttribute="trailing" id="NQ1-QG-run"/>
                 <constraint firstAttribute="trailing" secondItem="w0N-Rz-Hqg" secondAttribute="trailing" id="UdY-ZR-bMa"/>
                 <constraint firstItem="grD-vx-I7W" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="20" id="aCR-QQ-hKT"/>
+                <constraint firstAttribute="bottom" secondItem="a97-0V-Q9l" secondAttribute="bottom" id="c9t-jD-f3o"/>
                 <constraint firstItem="w0N-Rz-Hqg" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="dT5-M3-bhf"/>
                 <constraint firstItem="w0N-Rz-Hqg" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="id3-x0-xlb"/>
                 <constraint firstItem="grD-vx-I7W" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="net-rd-2Mv"/>
                 <constraint firstAttribute="bottom" secondItem="w0N-Rz-Hqg" secondAttribute="bottom" id="sbJ-NY-Qrq"/>
+                <constraint firstItem="a97-0V-Q9l" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="uqN-Ya-Tuf"/>
             </constraints>
             <point key="canvasLocation" x="71.014492753623188" y="-46.205357142857139"/>
         </view>
     </objects>
     <resources>
+        <image name="Setting/ic_about_app" width="80" height="80"/>
         <image name="ic_screen_lock" width="72" height="72"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

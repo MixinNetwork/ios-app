@@ -20,8 +20,8 @@ class UrlWindow {
                 return checkUser(id, clearNavigationStack: clearNavigationStack)
             case .snapshots:
                 return checkSnapshot(url: url)
-            case let .conversations(conversationId):
-                return checkConversation(url: url, conversationId: conversationId)
+            case let .conversations(conversationId, userId):
+                return checkConversation(conversationId: conversationId, userId: userId)
             case let .apps(userId):
                 return checkApp(url: url, userId: userId)
             case let .transfer(id):
@@ -184,7 +184,7 @@ class UrlWindow {
         return true
     }
     
-    class func checkConversation(url: URL, conversationId: String) -> Bool {
+    class func checkConversation(conversationId: String, userId: String?) -> Bool {
         guard !conversationId.isEmpty, UUID(uuidString: conversationId) != nil else {
             return false
         }
@@ -192,8 +192,7 @@ class UrlWindow {
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         DispatchQueue.global().async {
-            if let userId = url.getKeyVals()["user"].uuidString,
-               conversationId == ConversationDAO.shared.makeConversationId(userId: userId, ownerUserId: myUserId) {
+            if let userId = userId, conversationId == ConversationDAO.shared.makeConversationId(userId: userId, ownerUserId: myUserId) {
                 guard let (user, _) = syncUser(userId: userId, hud: hud) else {
                     return
                 }
@@ -201,10 +200,8 @@ class UrlWindow {
                     hud.hideInMainThread()
                     return
                 }
-                
                 DispatchQueue.main.async {
                     hud.hide()
-                    
                     let vc = ConversationViewController.instance(ownerUser: user)
                     UIApplication.homeNavigationController?.pushViewController(withBackRoot: vc)
                 }
@@ -214,7 +211,7 @@ class UrlWindow {
                 if conversation == nil {
                     switch ConversationAPI.getConversation(conversationId: conversationId) {
                     case let .success(response):
-                        guard response.participants.first(where: { $0.userId == myUserId }) != nil else {
+                        guard response.participants.contains(where: { $0.userId == myUserId }) else {
                             DispatchQueue.main.async {
                                 hud.set(style: .error, text: R.string.localizable.conversation_not_found())
                                 hud.scheduleAutoHidden()
@@ -235,7 +232,7 @@ class UrlWindow {
                     isMember = ParticipantDAO.shared.userId(myUserId, isParticipantOfConversationId: conversationId)
                 }
                 
-                guard let conversationItem = conversation, isMember else {
+                guard let conversation = conversation, isMember else {
                     DispatchQueue.main.async {
                         hud.set(style: .error, text: R.string.localizable.conversation_not_found())
                         hud.scheduleAutoHidden()
@@ -245,8 +242,7 @@ class UrlWindow {
                 
                 DispatchQueue.main.async {
                     hud.hide()
-                    
-                    let vc = ConversationViewController.instance(conversation: conversationItem)
+                    let vc = ConversationViewController.instance(conversation: conversation)
                     UIApplication.homeNavigationController?.pushViewController(withBackRoot: vc)
                 }
             }

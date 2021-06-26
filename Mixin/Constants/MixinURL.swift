@@ -19,12 +19,14 @@ enum MixinURL {
         static let address = "address"
         static let apps = "apps"
         static let snapshots = "snapshots"
+        static let conversations = "conversations"
     }
     
     case codes(String)
     case users(String)
     case apps(String)
     case snapshots
+    case conversations(conversationId: String, userId: String?)
     case pay
     case transfer(String)
     case send(ExternalSharingContext)
@@ -42,8 +44,11 @@ enum MixinURL {
                 self = .pay
             } else if url.host == Host.users && url.pathComponents.count == 2 {
                 self = .users(url.pathComponents[1])
-            } else if url.host == Host.snapshots{
+            } else if url.host == Host.snapshots {
                 self = .snapshots
+            } else if url.host == Host.conversations && url.pathComponents.count == 2 {
+                self = .conversations(conversationId: url.pathComponents[1],
+                                      userId: url.getKeyVals()["user"].uuidString)
             } else if url.host == Host.apps && url.pathComponents.count == 2 {
                 self = .apps(url.pathComponents[1])
             } else if url.host == Host.transfer && url.pathComponents.count == 2 {
@@ -76,6 +81,9 @@ enum MixinURL {
                 self = .users(url.pathComponents[2])
             } else if url.pathComponents.count > 1 && url.pathComponents[1] == Path.snapshots {
                 self = .snapshots
+            } else if url.pathComponents.count == 3 && url.pathComponents[1] == Path.conversations {
+                self = .conversations(conversationId: url.pathComponents[2],
+                                      userId: url.getKeyVals()["user"].uuidString)
             } else if url.pathComponents.count == 3 && url.pathComponents[1] == Path.apps {
                 self = .apps(url.pathComponents[2])
             } else if url.pathComponents.count == 3 && url.pathComponents[1] == Path.transfer {

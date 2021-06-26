@@ -582,6 +582,7 @@
 
 "asset_not_found" = "Asset not found.";
 "snapshot_not_found" = "Snapshot not found.";
+"conversation_not_found" = "Conversation not found.";
 
 // Transfer
 "transfer_title" = "Transfer";

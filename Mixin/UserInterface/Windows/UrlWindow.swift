@@ -20,6 +20,8 @@ class UrlWindow {
                 return checkUser(id, clearNavigationStack: clearNavigationStack)
             case .snapshots:
                 return checkSnapshot(url: url)
+            case let .conversations(conversationId, userId):
+                return checkConversation(conversationId: conversationId, userId: userId)
             case let .apps(userId):
                 return checkApp(url: url, userId: userId)
             case let .transfer(id):
@@ -176,6 +178,72 @@ class UrlWindow {
                     }
                 } else {
                     push()
+                }
+            }
+        }
+        return true
+    }
+    
+    class func checkConversation(conversationId: String, userId: String?) -> Bool {
+        guard !conversationId.isEmpty, UUID(uuidString: conversationId) != nil else {
+            return false
+        }
+        
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        DispatchQueue.global().async {
+            if let userId = userId, conversationId == ConversationDAO.shared.makeConversationId(userId: userId, ownerUserId: myUserId) {
+                guard let (user, _) = syncUser(userId: userId, hud: hud) else {
+                    return
+                }
+                guard user.isCreatedByMessenger else {
+                    hud.hideInMainThread()
+                    return
+                }
+                DispatchQueue.main.async {
+                    hud.hide()
+                    let vc = ConversationViewController.instance(ownerUser: user)
+                    UIApplication.homeNavigationController?.pushViewController(withBackRoot: vc)
+                }
+            } else {
+                var conversation = ConversationDAO.shared.getConversation(conversationId: conversationId)
+                var isMember = false
+                if conversation == nil {
+                    switch ConversationAPI.getConversation(conversationId: conversationId) {
+                    case let .success(response):
+                        guard response.participants.contains(where: { $0.userId == myUserId }) else {
+                            DispatchQueue.main.async {
+                                hud.set(style: .error, text: R.string.localizable.conversation_not_found())
+                                hud.scheduleAutoHidden()
+                            }
+                            return
+                        }
+                        isMember = true
+                        conversation = ConversationDAO.shared.createConversation(conversation: response, targetStatus: .SUCCESS)
+                    case let .failure(error):
+                        let text = error.localizedDescription(overridingNotFoundDescriptionWith: R.string.localizable.conversation_not_found())
+                        DispatchQueue.main.async {
+                            hud.set(style: .error, text: text)
+                            hud.scheduleAutoHidden()
+                        }
+                        return
+                    }
+                } else {
+                    isMember = ParticipantDAO.shared.userId(myUserId, isParticipantOfConversationId: conversationId)
+                }
+                
+                guard let conversation = conversation, isMember else {
+                    DispatchQueue.main.async {
+                        hud.set(style: .error, text: R.string.localizable.conversation_not_found())
+                        hud.scheduleAutoHidden()
+                    }
+                    return
+                }
+                
+                DispatchQueue.main.async {
+                    hud.hide()
+                    let vc = ConversationViewController.instance(conversation: conversation)
+                    UIApplication.homeNavigationController?.pushViewController(withBackRoot: vc)
                 }
             }
         }
@@ -616,7 +684,7 @@ extension UrlWindow {
 
         return address
     }
-
+    
     private static func syncAsset(assetId: String, hud: Hud) -> AssetItem? {
         var asset = AssetDAO.shared.getAsset(assetId: assetId)
         if asset == nil {

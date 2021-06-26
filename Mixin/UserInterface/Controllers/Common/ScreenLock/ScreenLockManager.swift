@@ -66,7 +66,7 @@ extension ScreenLockManager {
     
     func performBiometricAuthentication(completion: ((Bool) -> Void)? = nil) {
         let context = LAContext()
-        context.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: R.string.localizable.screen_lock_unlock_description(biometryType.localizedName)) { success, error in
+        context.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: R.string.localizable.screen_lock_unlock_tip(biometryType.localizedName)) { success, error in
             DispatchQueue.main.async {
                 self.state = success ? .authenticationSucceed : .authenticationFailed
                 completion?(success)

@@ -832,15 +832,15 @@
 "setting_screen_lock_enable_biometric_timeout" = "Auto-Lock";
 "setting_screen_lock_enable_biometric_tip" = "You’ll need to user %@ to unlock Mixin. you can still reply to messages from notifications and anwser calls if Mixin is locked.";
 "setting_screen_lock_timeout_immediately" = "Immediately";
+"setting_screen_lock_timeout_one_minute" = "1 Minute";
 "setting_screen_lock_timeout_minutes" = "%@ Minutes";
 "setting_screen_lock_timeout_hour" = "1 Hour";
 "setting_screen_lock_timeout_off" = "Off";
 
 // ScreenLock
 "screen_lock_locked" = "Mixin Locked";
-"screen_lock_unlock_tip" = "Unlock with %@ to open Mixin";
+"screen_lock_unlock_tip" = "Use %@ to unlock Mixin";
 "screen_lock_unlock_button_title" = "Use %@";
-"screen_lock_unlock_description" = "%@ is required to use Mixin";
 
 // About
 "about_twitter" = "Follow us on Twitter";

@@ -48,6 +48,7 @@ class WebViewController: FullscreenPopupViewController {
         webViewWrapperView.addSubview(webView)
         webView.snp.makeEdgesEqualToSuperview()
         webView.scrollView.panGestureRecognizer.require(toFail: edgePanGestureRecognizer)
+        webView.allowsBackForwardNavigationGestures = true
         self.webView = webView
         
         let extractImageRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(extractImage(_:)))

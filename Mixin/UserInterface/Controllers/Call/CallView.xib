@@ -160,7 +160,7 @@
                                             </subviews>
                                         </stackView>
                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="13" translatesAutoresizingMaskIntoConstraints="NO" id="XCJ-TX-CRZ" userLabel="Mute Stack View">
-                                            <rect key="frame" x="32" y="11" width="44" height="44"/>
+                                            <rect key="frame" x="10" y="11" width="44" height="44"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TLo-dV-Hyh">
                                                     <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
@@ -179,7 +179,7 @@
                                             </subviews>
                                         </stackView>
                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="13" translatesAutoresizingMaskIntoConstraints="NO" id="Ff2-j4-HiN" userLabel="Speaker Stack View">
-                                            <rect key="frame" x="314" y="11" width="44" height="44"/>
+                                            <rect key="frame" x="336" y="11" width="44" height="44"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="taT-k8-v1D">
                                                     <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
@@ -200,7 +200,7 @@
                                     </subviews>
                                     <color key="backgroundColor" name="background"/>
                                     <constraints>
-                                        <constraint firstAttribute="trailing" secondItem="Ff2-j4-HiN" secondAttribute="trailing" constant="32" id="3Zl-T0-rDR"/>
+                                        <constraint firstAttribute="trailing" secondItem="Ff2-j4-HiN" secondAttribute="trailing" constant="10" id="3Zl-T0-rDR"/>
                                         <constraint firstAttribute="height" constant="66" id="DcG-ru-Zfz"/>
                                         <constraint firstItem="TQI-9I-kWd" firstAttribute="centerX" secondItem="PGR-fd-qeK" secondAttribute="centerX" priority="250" id="GiG-fq-UMt"/>
                                         <constraint firstItem="CLO-8P-tgo" firstAttribute="centerY" secondItem="PGR-fd-qeK" secondAttribute="centerY" id="Lid-lz-a4J"/>
@@ -208,7 +208,7 @@
                                         <constraint firstItem="TQI-9I-kWd" firstAttribute="centerY" secondItem="PGR-fd-qeK" secondAttribute="centerY" id="ama-tW-Tyy"/>
                                         <constraint firstItem="XCJ-TX-CRZ" firstAttribute="centerY" secondItem="PGR-fd-qeK" secondAttribute="centerY" id="i83-42-yQU"/>
                                         <constraint firstItem="Ff2-j4-HiN" firstAttribute="centerY" secondItem="PGR-fd-qeK" secondAttribute="centerY" id="nX8-Gh-edv"/>
-                                        <constraint firstItem="XCJ-TX-CRZ" firstAttribute="leading" secondItem="PGR-fd-qeK" secondAttribute="leading" constant="32" id="rBr-IE-nKA"/>
+                                        <constraint firstItem="XCJ-TX-CRZ" firstAttribute="leading" secondItem="PGR-fd-qeK" secondAttribute="leading" constant="10" id="rBr-IE-nKA"/>
                                         <constraint firstItem="TQI-9I-kWd" firstAttribute="leading" secondItem="PGR-fd-qeK" secondAttribute="leading" priority="750" constant="32" id="rS5-an-9kh"/>
                                         <constraint firstAttribute="trailing" secondItem="CLO-8P-tgo" secondAttribute="trailing" priority="750" constant="32" id="zpq-vh-a5v"/>
                                     </constraints>

@@ -218,8 +218,8 @@ class CallViewController: ResizablePopupViewController {
             updateViews(call: call)
         }
         
-        setMuteSwitchSelected(service.isMuted)
-        setSpeakerSwitchSelected(service.usesSpeaker)
+        muteSwitch.isSelected = service.isMuted
+        speakerSwitch.isSelected = service.usesSpeaker
     }
     
     @IBAction func minimizeAction(_ sender: Any) {
@@ -264,12 +264,12 @@ class CallViewController: ResizablePopupViewController {
     }
     
     @IBAction func setMuteAction(_ sender: Any) {
-        setMuteSwitchSelected(!muteSwitch.isSelected)
+        muteSwitch.isSelected = !muteSwitch.isSelected
         service.requestSetMute(muteSwitch.isSelected)
     }
     
     @IBAction func setSpeakerAction(_ sender: Any) {
-        setSpeakerSwitchSelected(!speakerSwitch.isSelected)
+        speakerSwitch.isSelected = !speakerSwitch.isSelected
         service.usesSpeaker = speakerSwitch.isSelected
     }
     
@@ -328,7 +328,7 @@ extension CallViewController: UICollectionViewDelegate {
 extension CallViewController {
     
     @objc private func callServiceMutenessDidChange() {
-        setMuteSwitchSelected(service.isMuted)
+        muteSwitch.isSelected = service.isMuted
     }
     
     @objc private func audioSessionRouteChange(_ notification: Notification) {
@@ -347,10 +347,10 @@ extension CallViewController {
                 self.service.usesSpeaker = self.service.usesSpeaker
                 
                 self.speakerSwitch.isEnabled = true
-                self.setSpeakerSwitchSelected(self.service.usesSpeaker)
+                self.speakerSwitch.isSelected = self.service.usesSpeaker
             } else {
                 self.speakerSwitch.isEnabled = true
-                self.setSpeakerSwitchSelected(routeContainsBuiltInSpeaker)
+                self.speakerSwitch.isSelected = routeContainsBuiltInSpeaker
             }
         }
     }
@@ -472,20 +472,6 @@ extension CallViewController {
             RunLoop.main.add(timer, forMode: .default)
             self.timer = timer
         }
-    }
-    
-}
-
-extension CallViewController {
-    
-    private func setMuteSwitchSelected(_ selected: Bool) {
-        muteSwitch.isSelected = selected
-        muteSwitch.tintColor = selected ? .theme : R.color.icon_tint()
-    }
-    
-    private func setSpeakerSwitchSelected(_ selected: Bool) {
-        speakerSwitch.isSelected = selected
-        speakerSwitch.tintColor = selected ? .theme : R.color.icon_tint()
     }
     
 }

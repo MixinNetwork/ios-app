@@ -127,7 +127,7 @@ class CallViewController: ResizablePopupViewController {
             var horizontalInset = view.bounds.width - numberOfGroupCallMembersPerRow * CallMemberCell.Layout.normal.avatarWrapperWidth
             horizontalInset /= 2 + 2 * numberOfGroupCallMembersPerRow
             horizontalInset = floor(horizontalInset)
-            let verticalInset = round(horizontalInset / 2 * 3)
+            let verticalInset = round(horizontalInset * 3)
             let itemSize = CGSize(width: CallMemberCell.Layout.normal.avatarWrapperWidth + horizontalInset * 2,
                                   height: CallMemberCell.Layout.normal.avatarWrapperWidth + labelHeight + CallMemberCell.Layout.normal.labelTopMargin)
             membersCollectionLayout.itemSize = itemSize

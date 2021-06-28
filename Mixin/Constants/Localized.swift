@@ -454,4 +454,17 @@ public class Localized {
     
     public static let REPORT_TITLE = LocalizedString("report_title", comment: "Send the conversation log to developers?")
     public static let REPORT_BUTTON = LocalizedString("report_button", comment: "Send")
+    
+    // Screen lock
+    public static func SCREEN_LOCK_TIMEOUT_INTERVAL(_ seconds: Double) -> String {
+        if seconds == 0 {
+            return R.string.localizable.setting_screen_lock_timeout_immediately()
+        } else if seconds == 60 * 60 {
+            return R.string.localizable.setting_screen_lock_timeout_hour()
+        } else if seconds == 60 {
+            return R.string.localizable.setting_screen_lock_timeout_one_minute()
+        } else {
+            return R.string.localizable.setting_screen_lock_timeout_minutes("\(Int(seconds / 60))")
+        }
+    }
 }

@@ -19,7 +19,7 @@ extension AppGroupUserDefaults {
             case backupFiles = "backup_files"
             case lastBackupDate = "last_backup_date"
             case lastBackupSize = "last_backup_size"
-			
+            
             case lastAttachmentCleanUpDate = "last_attachment_cleanup_date"
             
             case showMessagePreviewInNotification = "show_message_preview_in_notification"
@@ -48,6 +48,10 @@ extension AppGroupUserDefaults {
             case assetSearchHistory = "asset_search_history"
             
             case emergencyContactBulletinDismissalDate = "emergency_contact_bulletin_dismissal_date"
+            
+            case lockScreenTimeout = "lock_screen_timeout_interval"
+            case lockScreenWithBiometricAuthentication = "lock_screen_with_biometric_authentication"
+            case lastLockScreenBiometricVerifiedDate = "last_lock_screen_biometric_verified_date"
         }
         
         public static let version = 26
@@ -102,7 +106,7 @@ extension AppGroupUserDefaults {
         
         @Default(namespace: .user, key: Key.lastBackupSize, defaultValue: nil)
         public static var lastBackupSize: Int64?
-		
+        
         @Default(namespace: .user, key: Key.lastAttachmentCleanUpDate, defaultValue: Date())
         public static var lastAttachmentCleanUpDate: Date
         
@@ -178,6 +182,15 @@ extension AppGroupUserDefaults {
         
         @Default(namespace: .user, key: Key.emergencyContactBulletinDismissalDate, defaultValue: nil)
         public static var emergencyContactBulletinDismissalDate: Date?
+        
+        @Default(namespace: .user, key: Key.lockScreenWithBiometricAuthentication, defaultValue: false)
+        public static var lockScreenWithBiometricAuthentication: Bool
+        
+        @Default(namespace: .user, key: Key.lockScreenTimeout, defaultValue: 60 * 5)
+        public static var lockScreenTimeoutInterval: TimeInterval
+           
+        @Default(namespace: .user, key: Key.lastLockScreenBiometricVerifiedDate, defaultValue: nil)
+        public static var lastLockScreenBiometricVerifiedDate: Date?
         
         public static func insertRecentlyUsedAppId(id: String) {
             let maxNumberOfIds = 12

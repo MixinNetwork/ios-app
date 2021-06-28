@@ -24,6 +24,8 @@ final class PrivacyViewController: SettingsTableViewController {
         ])
     ])
     
+    private lazy var screenLockRow = SettingsRow(title: R.string.localizable.setting_screen_lock_title(), subtitle: screenLockTimeoutInterval, accessory: .disclosure)
+    
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
@@ -36,6 +38,9 @@ final class PrivacyViewController: SettingsTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        if biometryType != .none {
+            dataSource.appendRows([screenLockRow], into: 0, animation: .none)
+        }
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
         NotificationCenter.default.addObserver(self,
@@ -43,7 +48,15 @@ final class PrivacyViewController: SettingsTableViewController {
                                                name: UserDAO.userDidChangeNotification,
                                                object: nil)
         updateBlockedUserCell()
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(updateScreenLockRow),
+                                               name: ScreenLockSettingViewController.screenLockTimeoutDidUpdateNotification,
+                                               object: nil)
     }
+    
+}
+
+extension PrivacyViewController {
     
     @objc func updateBlockedUserCell() {
         DispatchQueue.global().async {
@@ -63,6 +76,21 @@ final class PrivacyViewController: SettingsTableViewController {
         }
     }
     
+    @objc private func updateScreenLockRow() {
+        let indexPath = IndexPath(row: 2, section: 0)
+        let row = dataSource.row(at: indexPath)
+        row.subtitle = screenLockTimeoutInterval
+    }
+    
+    private var screenLockTimeoutInterval: String {
+        if AppGroupUserDefaults.User.lockScreenWithBiometricAuthentication {
+            let timeInterval = AppGroupUserDefaults.User.lockScreenTimeoutInterval
+            return Localized.SCREEN_LOCK_TIMEOUT_INTERVAL(timeInterval)
+        } else {
+            return R.string.localizable.setting_screen_lock_timeout_off();
+        }
+    }
+    
 }
 
 extension PrivacyViewController: UITableViewDelegate {
@@ -75,8 +103,10 @@ extension PrivacyViewController: UITableViewDelegate {
             if LoginManager.shared.account?.has_pin ?? false {
                 if indexPath.row == 0 {
                     vc = PinSettingsViewController.instance()
-                } else {
+                } else if indexPath.row == 1 {
                     vc = EmergencyContactViewController.instance()
+                } else {
+                    vc = ScreenLockSettingViewController.instance()
                 }
             } else {
                 vc = WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil)

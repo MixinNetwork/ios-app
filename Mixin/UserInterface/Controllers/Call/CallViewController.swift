@@ -171,7 +171,17 @@ class CallViewController: UIViewController {
     }
     
     @IBAction func minimizeAction(_ sender: Any) {
-        service.setInterfaceMinimized(!service.isMinimized, animated: true)
+        if !ScreenLockManager.shared.isLastAuthenticationStillValid &&
+            ScreenLockManager.shared.needsBiometricAuthentication &&
+            !service.isMinimized {
+            ScreenLockManager.shared.performBiometricAuthentication { success in
+                if success {
+                    self.service.setInterfaceMinimized(true, animated: true)
+                }
+            }
+        } else {
+            service.setInterfaceMinimized(!service.isMinimized, animated: true)
+        }
     }
     
     @IBAction func addMemberAction(_ sender: Any) {

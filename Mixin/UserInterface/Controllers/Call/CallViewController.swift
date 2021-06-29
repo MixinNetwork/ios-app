@@ -27,6 +27,7 @@ class CallViewController: ResizablePopupViewController {
     @IBOutlet weak var hangUpButtonCenterXConstraint: NSLayoutConstraint!
     @IBOutlet weak var acceptButtonTrailingConstraint: NSLayoutConstraint!
     @IBOutlet weak var acceptButtonCenterXConstraint: NSLayoutConstraint!
+    @IBOutlet weak var trayContentViewBottomConstraint: NSLayoutConstraint!
     
     var members: [UserItem] = []
     var isConnectionUnstable = false {
@@ -135,6 +136,11 @@ class CallViewController: ResizablePopupViewController {
             membersCollectionLayout.minimumLineSpacing = 16
             membersCollectionLayout.sectionInset = UIEdgeInsets(top: verticalInset, left: horizontalInset, bottom: verticalInset, right: horizontalInset)
         }
+    }
+    
+    override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+        trayContentViewBottomConstraint.constant = max(20, view.safeAreaInsets.bottom + 8)
     }
     
     override func preferredContentHeight(forSize size: Size) -> CGFloat {

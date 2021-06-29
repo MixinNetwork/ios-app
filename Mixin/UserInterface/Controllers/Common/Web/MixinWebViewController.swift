@@ -90,8 +90,8 @@ class MixinWebViewController: WebViewController {
         }
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
+    override func popupDidDismissAsChild() {
+        super.popupDidDismissAsChild()
         if associatedClip == nil {
             removeAllMessageHandlers()
         }

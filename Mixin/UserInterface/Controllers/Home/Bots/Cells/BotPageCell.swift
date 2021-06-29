@@ -1,0 +1,194 @@
+import UIKit
+
+enum BotPageMode {
+    case regular
+    case folder
+    case pinned
+    
+    var sectionInset: UIEdgeInsets {
+        switch self {
+        case .regular:
+            return UIEdgeInsets(top: 10, left: 10, bottom: 0, right: 10)
+        case .pinned:
+            return UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        default:
+            return UIEdgeInsets.zero
+        }
+    }
+    
+    var minimumLineSpacing: CGFloat {
+        switch self {
+        case .regular:
+            return 20
+        case .pinned:
+            return 20
+        default:
+            return 0
+        }
+    }
+    
+    var itemSize: CGSize {
+        return CGSize(width: 80, height: 100)
+    }
+    
+}
+
+protocol BotPageCellDelegate: AnyObject {
+    
+    func didSelect(cell: BotItemCell, on pageCell: BotPageCell)
+    
+}
+
+class BotPageCell: UICollectionViewCell {
+    
+    @IBOutlet weak var collectionView: UICollectionView!
+    weak var delegate: BotPageCellDelegate?
+    
+    var mode: BotPageMode = .regular {
+        didSet {
+            updateLayout()
+        }
+    }
+    var items: [BotItem] = []
+    var draggedItem: BotItem?
+    
+    private var isEditing = false
+    
+}
+
+extension BotPageCell {
+    
+    func enterEditingMode() {
+        guard !isEditing else { return }
+        isEditing = true
+        for cell in collectionView.visibleCells {
+            guard let cell = cell as? BotItemCell else { return }
+            cell.startShaking()
+            cell.enterEditingMode()
+            if let cell = cell as? BotFolderCell {
+                cell.moveToFirstAvailablePage()
+            }
+        }
+    }
+    
+    func leaveEditingMode() {
+        guard isEditing else { return }
+        isEditing = false
+        for cell in collectionView.visibleCells {
+            guard let cell = cell as? BotItemCell else { return }
+            cell.stopShaking()
+            cell.leaveEditingMode()
+            if let cell = cell as? BotFolderCell {
+                cell.move(to: 0, animated: true)
+            }
+        }
+    }
+    
+    func delete(item: BotItem) {
+        guard let index = items.firstIndex(where: { $0 === item }), let cell = collectionView.cellForItem(at: IndexPath(item: index, section: 0)) else {
+            return
+        }
+        UIView.animate(withDuration: 0.25, animations: {
+            cell.contentView.transform = CGAffineTransform.identity.scaledBy(x: 0.0001, y: 0.0001)
+        }, completion: { _ in
+            self.items.remove(at: index)
+            self.collectionView.performBatchUpdates({
+                self.collectionView.deleteItems(at: [IndexPath(item: index, section: 0)])
+            }, completion: { _ in
+                cell.contentView.transform = .identity
+            })
+        })
+    }
+    
+}
+
+extension BotPageCell {
+    
+    private func updateLayout() {
+        guard let flowLayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else {
+            return
+        }
+        flowLayout.itemSize = mode.itemSize
+        flowLayout.minimumLineSpacing = 26//mode.minimumLineSpacing
+        flowLayout.minimumInteritemSpacing = 30
+        //flowLayout.sectionInset = UIEdgeInsets(top: 11, left: 16, bottom: 11, right: 16)
+        //updateSectionInset()
+    }
+    
+    // todo: update this
+    private func updateSectionInset() {
+        guard let flowLayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else { return }
+        
+        let newHorizontalSectionInset: CGFloat
+        let appsPerRow = CGFloat(4)
+        let interitemSpacing = (frame.width - (10 * 2) - (appsPerRow * flowLayout.itemSize.width)) / (appsPerRow - 1)
+        
+        let count = CGFloat(items.count)
+        let totalSpace = (flowLayout.itemSize.width * count) + (interitemSpacing * (count - 1))
+        newHorizontalSectionInset = (frame.size.width - totalSpace) / 2
+        
+        collectionView.performBatchUpdates({
+            flowLayout.sectionInset = UIEdgeInsets(top: 0, left: newHorizontalSectionInset, bottom: 0, right: newHorizontalSectionInset)
+        }, completion: nil)
+    }
+
+}
+
+extension BotPageCell: UICollectionViewDelegate, UICollectionViewDataSource {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return items.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard indexPath.item < items.count else {
+            return UICollectionViewCell(frame: .zero)
+        }
+        if let botFolder = items[indexPath.item] as? BotFolder {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.bot_folder, for: indexPath)!
+            cell.item = botFolder
+            if isEditing {
+                cell.startShaking()
+                cell.enterEditingMode()
+                cell.moveToFirstAvailablePage(animated: false)
+            } else {
+                cell.stopShaking()
+                cell.leaveEditingMode()
+            }
+            if let draggedItem = draggedItem, draggedItem === botFolder {
+                cell.contentView.isHidden = true
+            } else {
+                cell.contentView.isHidden = false
+            }
+            return cell
+        } else if let botItem = items[indexPath.item] as? Bot {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.bot_item, for: indexPath)!
+            cell.item = botItem
+            if isEditing {
+                cell.startShaking()
+                cell.enterEditingMode()
+            } else {
+                cell.stopShaking()
+                cell.leaveEditingMode()
+            }
+            if let draggedItem = draggedItem, draggedItem === botItem {
+                cell.contentView.isHidden = true
+            } else {
+                cell.contentView.isHidden = false
+            }
+            if mode == .pinned {
+                cell.label?.isHidden = true
+            }
+            return cell
+        }
+        return UICollectionViewCell(frame: .zero)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let cell = collectionView.cellForItem(at: indexPath) else {
+            return
+        }
+        delegate?.didSelect(cell: cell as! BotItemCell, on: self)
+    }
+    
+}

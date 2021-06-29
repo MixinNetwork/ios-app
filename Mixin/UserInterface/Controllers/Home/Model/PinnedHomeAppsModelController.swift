@@ -4,7 +4,8 @@ import MixinServices
 class PinnedHomeAppsModelController: HomeAppsModelController {
     
     override var cellReuseIdentifier: String {
-        R.reuseIdentifier.home_app_selected.identifier
+        //R.reuseIdentifier.home_app_selected.identifier
+        return ""
     }
     
     override func collectionView(_ collectionView: UICollectionView, dragSessionDidEnd session: UIDragSession) {

@@ -6,7 +6,8 @@ class CandidateHomeAppsModelController: HomeAppsModelController {
     private(set) lazy var dropInteraction = UIDropInteraction(delegate: self)
     
     override var cellReuseIdentifier: String {
-        R.reuseIdentifier.home_app.identifier
+        //R.reuseIdentifier.home_app.identifier
+        return ""
     }
     
     func reloadData(completion: @escaping (_ apps: [HomeApp]) -> Void) {

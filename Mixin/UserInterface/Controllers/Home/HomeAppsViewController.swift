@@ -42,59 +42,74 @@ final class HomeAppsViewController: UIViewController {
     private var candidateAppModelController: CandidateHomeAppsModelController!
     private var candidateEmptyHintLabelIfLoaded: UILabel?
     
+    private var appsManager: HomeAppsManager!
+
     class func instance() -> HomeAppsViewController {
         R.storyboard.home.apps()!
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        pinnedAppModelController = PinnedHomeAppsModelController(collectionView: pinnedCollectionView)
-        pinnedCollectionView.dataSource = pinnedAppModelController
-        pinnedCollectionView.delegate = self
-        pinnedCollectionView.dragInteractionEnabled = true
-        pinnedCollectionView.dragDelegate = pinnedAppModelController
-        pinnedCollectionView.dropDelegate = pinnedAppModelController
-        pinnedAppModelController.reloadData(completion: { [weak self] apps in
-            self?.noPinnedHintLabel.isHidden = !apps.isEmpty
-        })
+//        pinnedAppModelController = PinnedHomeAppsModelController(collectionView: pinnedCollectionView)
+//        pinnedCollectionView.dataSource = pinnedAppModelController
+//        pinnedCollectionView.delegate = self
+//        pinnedCollectionView.dragInteractionEnabled = true
+//        pinnedCollectionView.dragDelegate = pinnedAppModelController
+//        pinnedCollectionView.dropDelegate = pinnedAppModelController
+//        pinnedAppModelController.reloadData(completion: { [weak self] apps in
+//            self?.noPinnedHintLabel.isHidden = !apps.isEmpty
+//        })
+//
+//        let pageInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+//        let spacing: CGFloat = {
+//            let cellsWidth = candidateCollectionCellSize.width * CGFloat(cellCount.perRow)
+//            let totalSpacing = AppDelegate.current.mainWindow.bounds.width - pageInset.horizontal - cellsWidth
+//            return floor(totalSpacing / CGFloat(cellCount.perRow - 1))
+//        }()
+//        candidateCollectionLayout = HomeAppsFlowLayout(lineSpacing: 0, interitemSpacing: spacing, numberOfRows: cellCount.perColumn, numberOfColumns: cellCount.perRow, cellSize: candidateCollectionCellSize, pageInset: pageInset)
+//        candidateCollectionView.collectionViewLayout = candidateCollectionLayout
+//        candidateAppModelController = CandidateHomeAppsModelController(collectionView: candidateCollectionView)
+//        candidateCollectionView.dataSource = candidateAppModelController
+//        candidateCollectionView.delegate = self
+//        candidateCollectionView.dragInteractionEnabled = true
+//        candidateCollectionView.dragDelegate = candidateAppModelController
+//        candidateCollectionView.addInteraction(candidateAppModelController.dropInteraction)
+//        candidateAppModelController.reloadData(completion: { [weak self] (apps) in
+//            self?.setCandidateEmptyHintHidden(!apps.isEmpty)
+//            self?.updateNumberOfPagesForPageControl(with: apps.count)
+//        })
+        
+        noPinnedHintLabel.isHidden = true
+        setCandidateEmptyHintHidden(true)
         
         let pageInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-        let spacing: CGFloat = {
-            let cellsWidth = candidateCollectionCellSize.width * CGFloat(cellCount.perRow)
-            let totalSpacing = AppDelegate.current.mainWindow.bounds.width - pageInset.horizontal - cellsWidth
-            return floor(totalSpacing / CGFloat(cellCount.perRow - 1))
-        }()
-        candidateCollectionLayout = HomeAppsFlowLayout(lineSpacing: 0, interitemSpacing: spacing, numberOfRows: cellCount.perColumn, numberOfColumns: cellCount.perRow, cellSize: candidateCollectionCellSize, pageInset: pageInset)
-        candidateCollectionView.collectionViewLayout = candidateCollectionLayout
-        candidateAppModelController = CandidateHomeAppsModelController(collectionView: candidateCollectionView)
-        candidateCollectionView.dataSource = candidateAppModelController
-        candidateCollectionView.delegate = self
-        candidateCollectionView.dragInteractionEnabled = true
-        candidateCollectionView.dragDelegate = candidateAppModelController
-        candidateCollectionView.addInteraction(candidateAppModelController.dropInteraction)
-        candidateAppModelController.reloadData(completion: { [weak self] (apps) in
-            self?.setCandidateEmptyHintHidden(!apps.isEmpty)
-            self?.updateNumberOfPagesForPageControl(with: apps.count)
-        })
-        candidateCollectionViewHeightConstraint.constant = candidateCollectionCellSize.height * CGFloat(cellCount.perColumn)
+        var flowLayout = pinnedCollectionView.collectionViewLayout as! UICollectionViewFlowLayout
+        flowLayout.itemSize = CGSize(width: AppDelegate.current.mainWindow.bounds.width - pageInset.horizontal, height: 82)
         
+        flowLayout = candidateCollectionView.collectionViewLayout as! UICollectionViewFlowLayout
+        flowLayout.itemSize = CGSize(width: AppDelegate.current.mainWindow.bounds.width, height: candidateCollectionCellSize.height * CGFloat(cellCount.perColumn))
+        
+        appsManager = HomeAppsManager(viewController: self, candidateCollectionView: candidateCollectionView, pinnedCollectionView: pinnedCollectionView)
+        
+        candidateCollectionViewHeightConstraint.constant = candidateCollectionCellSize.height * CGFloat(cellCount.perColumn)
         updatePreferredContentSizeHeight()
 
         NotificationCenter.default.addObserver(self, selector: #selector(updateNoPinnedHint), name: AppGroupUserDefaults.User.homeAppIdsDidChangeNotification, object: nil)
     }
-    
+
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        let pinnedSpacing: CGFloat = {
-            let cellsWidth = pinnedCollectionLayout.itemSize.width * CGFloat(cellCount.perRow)
-            let totalSpacing = view.bounds.width
-                - pinnedCollectionViewLeadingConstraint.constant
-                - pinnedCollectionViewTrailingConstraint.constant
-                - pinnedCollectionLayout.sectionInset.horizontal
-                - cellsWidth
-            return floor(totalSpacing / CGFloat(cellCount.perRow - 1))
-        }()
-        pinnedCollectionLayout.minimumInteritemSpacing = pinnedSpacing
+//        let pinnedSpacing: CGFloat = {
+//            let cellsWidth = pinnedCollectionLayout.itemSize.width * CGFloat(cellCount.perRow)
+//            let totalSpacing = view.bounds.width
+//                - pinnedCollectionViewLeadingConstraint.constant
+//                - pinnedCollectionViewTrailingConstraint.constant
+//                - pinnedCollectionLayout.sectionInset.horizontal
+//                - cellsWidth
+//            return floor(totalSpacing / CGFloat(cellCount.perRow - 1))
+//        }()
+//        pinnedCollectionLayout.minimumInteritemSpacing = pinnedSpacing
+        
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

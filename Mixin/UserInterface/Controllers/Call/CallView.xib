@@ -131,11 +131,12 @@
                                             <subviews>
                                                 <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Eu-3w-9KA">
                                                     <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
-                                                    <color key="backgroundColor" name="background"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="44" id="HlB-nO-7gA"/>
                                                         <constraint firstAttribute="width" secondItem="8Eu-3w-9KA" secondAttribute="height" id="POh-Hh-eQp"/>
                                                     </constraints>
+                                                    <color key="tintColor" name="icon_tint"/>
                                                     <state key="normal" image="Call/ic_drop"/>
                                                     <connections>
                                                         <action selector="hangUpAction:" destination="-1" eventType="touchUpInside" id="fb8-yn-uMo"/>
@@ -148,11 +149,12 @@
                                             <subviews>
                                                 <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dFe-fP-bsd">
                                                     <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
-                                                    <color key="backgroundColor" name="background"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="dFe-fP-bsd" secondAttribute="height" id="6jJ-WA-KgB"/>
                                                         <constraint firstAttribute="width" constant="44" id="rjD-3V-ccn"/>
                                                     </constraints>
+                                                    <color key="tintColor" name="icon_tint"/>
                                                     <state key="normal" image="Call/ic_call"/>
                                                     <connections>
                                                         <action selector="acceptAction:" destination="-1" eventType="touchUpInside" id="HE9-t0-k8R"/>

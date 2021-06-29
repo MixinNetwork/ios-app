@@ -42,6 +42,13 @@
             <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9Wc-AF-U2E">
+                    <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <connections>
+                        <action selector="minimizeAction:" destination="-1" eventType="touchUpInside" id="CvX-Hq-jz8"/>
+                    </connections>
+                </button>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DGO-cU-Jif">
                     <rect key="frame" x="0.0" y="338" width="390" height="506"/>
                     <subviews>
@@ -249,10 +256,14 @@
             <viewLayoutGuide key="safeArea" id="8sr-3s-PHH"/>
             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
+                <constraint firstAttribute="trailing" secondItem="9Wc-AF-U2E" secondAttribute="trailing" id="4ht-P0-uuD"/>
                 <constraint firstItem="DGO-cU-Jif" firstAttribute="leading" secondItem="bL8-4H-NX8" secondAttribute="leading" id="HHf-80-VQi"/>
                 <constraint firstAttribute="trailing" secondItem="DGO-cU-Jif" secondAttribute="trailing" id="KIr-Ht-2nu"/>
+                <constraint firstAttribute="bottom" secondItem="9Wc-AF-U2E" secondAttribute="bottom" id="Zco-ja-j2b"/>
+                <constraint firstItem="9Wc-AF-U2E" firstAttribute="leading" secondItem="bL8-4H-NX8" secondAttribute="leading" id="lZx-i0-HtR"/>
                 <constraint firstItem="DGO-cU-Jif" firstAttribute="top" secondItem="bL8-4H-NX8" secondAttribute="bottom" priority="250" id="mI3-P4-4D2"/>
                 <constraint firstAttribute="bottom" secondItem="DGO-cU-Jif" secondAttribute="bottom" priority="750" id="oYL-ZJ-XYN"/>
+                <constraint firstItem="9Wc-AF-U2E" firstAttribute="top" secondItem="bL8-4H-NX8" secondAttribute="top" id="qso-i6-Ead"/>
             </constraints>
             <point key="canvasLocation" x="141.53846153846155" y="154.26540284360189"/>
         </view>

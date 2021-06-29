@@ -349,6 +349,9 @@ extension CallService {
     }
     
     func setInterfaceMinimized(_ minimized: Bool, animated: Bool) {
+        guard self.isMinimized != minimized else {
+            return
+        }
         self.isMinimized = minimized
         guard let min = UIApplication.homeContainerViewController?.minimizedCallViewController else {
             return
@@ -367,7 +370,9 @@ extension CallService {
                 min.view.alpha = 1
             }
             completion = { (_) in
-                AppDelegate.current.mainWindow.makeKeyAndVisible()
+                if self.isMinimized {
+                    AppDelegate.current.mainWindow.makeKeyAndVisible()
+                }
             }
         } else {
             callWindow.makeKeyAndVisible()

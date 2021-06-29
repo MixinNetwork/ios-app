@@ -238,7 +238,7 @@ class CallViewController: ResizablePopupViewController {
                 }
             }
         } else {
-            service.setInterfaceMinimized(!service.isMinimized, animated: true)
+            service.setInterfaceMinimized(true, animated: true)
         }
     }
     

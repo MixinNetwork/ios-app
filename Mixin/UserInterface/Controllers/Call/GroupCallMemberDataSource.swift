@@ -19,6 +19,7 @@ class GroupCallMemberDataSource: NSObject {
     }
     
     private let conversationId: String
+    private let debugWithNumerousMembers = false
     
     // This var is in sync with members
     private(set) var memberUserIds: Set<String>
@@ -124,7 +125,11 @@ class GroupCallMemberDataSource: NSObject {
 extension GroupCallMemberDataSource: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        members.count + 1
+        if debugWithNumerousMembers {
+            return (members.count * 10) + 1
+        } else {
+            return members.count + 1
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -138,7 +143,12 @@ extension GroupCallMemberDataSource: UICollectionViewDataSource {
         } else {
             cell.avatarWrapperView.backgroundColor = .background
             cell.avatarImageView.imageView.contentMode = .scaleAspectFill
-            let member = members[indexPath.item - 1]
+            let member: UserItem
+            if debugWithNumerousMembers {
+                member = members[(indexPath.item - 1) % members.count]
+            } else {
+                member = members[indexPath.item - 1]
+            }
             cell.avatarImageView.setImage(with: member)
             cell.connectingView.isHidden = !invitingMemberUserIds.contains(member.userId)
             cell.label.text = member.fullName

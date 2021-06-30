@@ -62,6 +62,10 @@ class CallViewController: ResizablePopupViewController {
         membersCollectionView
     }
     
+    override var automaticallyAdjustsResizableScrollViewBottomInset: Bool {
+        false
+    }
+    
     init(service: CallService) {
         self.service = service
         let nib = R.nib.callView

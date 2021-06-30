@@ -83,7 +83,6 @@ class CallService: NSObject {
     // We map conversation id with uuid here
     private var groupCallUUIDs = [String: UUID]()
     
-    private(set) var window: CallWindow?
     private var viewController: CallViewController?
     
     // Access from CallService.queue
@@ -296,12 +295,7 @@ extension CallService {
     func showJoinGroupCallConfirmation(conversation: ConversationItem, memberIds ids: [String]) {
         let controller = GroupCallConfirmationViewController(conversation: conversation, service: self)
         controller.loadMembers(with: ids)
-        
-        let window = self.window ?? CallWindow(frame: UIScreen.main.bounds)
-        window.rootViewController = controller
-        window.makeKeyAndVisible()
-        self.window = window
-        
+        addViewControllerAsContainersChildIfNeeded(controller)
         UIView.performWithoutAnimation(controller.view.layoutIfNeeded)
         controller.showContentViewIfNeeded()
     }
@@ -321,22 +315,11 @@ extension CallService {
         }
         
         let viewController = self.viewController ?? makeViewController()
-        let window = self.window ?? CallWindow(frame: UIScreen.main.bounds)
-        let animated = window.rootViewController == viewController
-        window.rootViewController = viewController
-        window.makeKeyAndVisible()
-        self.window = window
+        addViewControllerAsContainersChildIfNeeded(viewController)
         
-        UIView.performWithoutAnimation(viewController.view.layoutIfNeeded)
-        
-        let updateInterface = {
+        UIView.performWithoutAnimation {
             viewController.reload(call: call)
             viewController.view.layoutIfNeeded()
-        }
-        if animated {
-            UIView.animate(withDuration: 0.3, animations: updateInterface)
-        } else {
-            UIView.performWithoutAnimation(updateInterface)
         }
         viewController.showContentViewIfNeeded()
     }
@@ -356,7 +339,7 @@ extension CallService {
         guard let min = UIApplication.homeContainerViewController?.minimizedCallViewController else {
             return
         }
-        guard let max = self.viewController, let callWindow = self.window else {
+        guard let max = self.viewController else {
             return
         }
         let duration: TimeInterval = 0.3
@@ -371,11 +354,11 @@ extension CallService {
             }
             completion = { (_) in
                 if self.isMinimized {
-                    AppDelegate.current.mainWindow.makeKeyAndVisible()
+                    self.removeViewControllerAsContainersChildIfNeeded(max)
                 }
             }
         } else {
-            callWindow.makeKeyAndVisible()
+            addViewControllerAsContainersChildIfNeeded(max)
             updateViews = {
                 min.view.alpha = 0
                 max.showContentViewIfNeeded()
@@ -406,12 +389,12 @@ extension CallService {
             guard self.activeCall == nil else {
                 return
             }
-            self.viewController = nil
-            self.window = nil
+            if let viewController = self.viewController {
+                self.removeViewControllerAsContainersChildIfNeeded(viewController)
+                self.viewController = nil
+            }
             if needsLockScreen {
                 ScreenLockManager.shared.showUnlockScreenView()
-            } else {
-                AppDelegate.current.mainWindow.makeKeyAndVisible()
             }
         })
         if let mini = UIApplication.homeContainerViewController?.minimizedCallViewControllerIfLoaded {
@@ -1899,6 +1882,33 @@ extension CallService {
                 self.rtcClient.setFrameEncryptorKey(frameKey)
             }
         }
+    }
+    
+}
+
+// MARK: - UI Workers
+extension CallService {
+    
+    private func addViewControllerAsContainersChildIfNeeded(_ viewController: CallViewController) {
+        guard let container = UIApplication.homeContainerViewController else {
+            return
+        }
+        guard viewController.parent == nil else {
+            return
+        }
+        container.addChild(viewController)
+        container.view.addSubview(viewController.view)
+        viewController.view.snp.makeEdgesEqualToSuperview()
+        viewController.didMove(toParent: container)
+    }
+    
+    private func removeViewControllerAsContainersChildIfNeeded(_ viewController: CallViewController) {
+        guard viewController.parent != nil else {
+            return
+        }
+        viewController.willMove(toParent: nil)
+        viewController.view.removeFromSuperview()
+        viewController.removeFromParent()
     }
     
 }

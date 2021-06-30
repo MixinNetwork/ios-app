@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="call_member" id="gTV-IL-0wX" customClass="CallMemberCell" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="78" height="101"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="78" height="101"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KQu-Yg-AQ6">
+                        <rect key="frame" x="7" y="0.0" width="64" height="64"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SfM-tv-lye" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZMG-m3-cmP" customClass="GroupCallMemberConnectingView" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.40000000000000002" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" name="background"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="64" id="1Og-BG-cGW"/>
+                            <constraint firstItem="SfM-tv-lye" firstAttribute="top" secondItem="KQu-Yg-AQ6" secondAttribute="top" id="33h-I5-smm"/>
+                            <constraint firstAttribute="bottom" secondItem="ZMG-m3-cmP" secondAttribute="bottom" id="I7e-ke-HKS"/>
+                            <constraint firstAttribute="bottom" secondItem="SfM-tv-lye" secondAttribute="bottom" id="JAN-Ld-qsW"/>
+                            <constraint firstAttribute="trailing" secondItem="ZMG-m3-cmP" secondAttribute="trailing" id="XIM-YX-qrL"/>
+                            <constraint firstItem="ZMG-m3-cmP" firstAttribute="top" secondItem="KQu-Yg-AQ6" secondAttribute="top" id="e9U-xR-kvF"/>
+                            <constraint firstAttribute="width" secondItem="KQu-Yg-AQ6" secondAttribute="height" id="eUT-wX-Olj"/>
+                            <constraint firstItem="ZMG-m3-cmP" firstAttribute="leading" secondItem="KQu-Yg-AQ6" secondAttribute="leading" id="g2b-d9-fh5"/>
+                            <constraint firstAttribute="trailing" secondItem="SfM-tv-lye" secondAttribute="trailing" id="hDw-AQ-pI9"/>
+                            <constraint firstItem="SfM-tv-lye" firstAttribute="leading" secondItem="KQu-Yg-AQ6" secondAttribute="leading" id="pVT-sz-1Iy"/>
+                        </constraints>
+                    </view>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PuW-9X-yWL">
+                        <rect key="frame" x="5" y="72" width="68" height="17"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <color key="textColor" name="text"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+            </view>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="PuW-9X-yWL" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="5" id="Cgs-xe-jBh"/>
+                <constraint firstItem="KQu-Yg-AQ6" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="K2L-tl-Fpv"/>
+                <constraint firstAttribute="trailing" secondItem="PuW-9X-yWL" secondAttribute="trailing" constant="5" id="Lf3-os-7pO"/>
+                <constraint firstItem="KQu-Yg-AQ6" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="XGX-dI-gRs"/>
+                <constraint firstItem="PuW-9X-yWL" firstAttribute="top" secondItem="KQu-Yg-AQ6" secondAttribute="bottom" constant="8" id="cfp-TH-qxv"/>
+            </constraints>
+            <size key="customSize" width="82" height="101"/>
+            <connections>
+                <outlet property="avatarImageView" destination="SfM-tv-lye" id="yPx-2L-7rj"/>
+                <outlet property="avatarWrapperView" destination="KQu-Yg-AQ6" id="Irf-7E-yVm"/>
+                <outlet property="avatarWrapperWidthConstraint" destination="1Og-BG-cGW" id="YJ1-BN-Ntl"/>
+                <outlet property="connectingView" destination="ZMG-m3-cmP" id="SLL-Kb-ZPu"/>
+                <outlet property="label" destination="PuW-9X-yWL" id="Thr-4I-8l7"/>
+                <outlet property="labelTopConstraint" destination="cfp-TH-qxv" id="Jlx-Ys-kdJ"/>
+            </connections>
+            <point key="canvasLocation" x="140.57971014492756" y="161.71875"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

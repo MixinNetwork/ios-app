@@ -5,8 +5,6 @@ class GroupCallConfirmationViewController: CallViewController {
     
     private let conversation: ConversationItem
     
-    private var members = [UserItem]()
-    
     init(conversation: ConversationItem, service: CallService) {
         self.conversation = conversation
         super.init(service: service)
@@ -22,29 +20,22 @@ class GroupCallConfirmationViewController: CallViewController {
         setConnectionButtonsEnabled(true)
         minimizeButton.setImage(R.image.ic_title_close(), for: .normal)
         minimizeButton.tintColor = .white
-        inviteButton.isHidden = true
-        nameLabel.text = conversation.getConversationName()
-        peerToPeerCallRemoteUserStackView.isHidden = true
-        groupCallMembersCollectionView.isHidden = false
-        
-        // A CallViewController is shown when user picks the accept button, nearly identical
-        // to this ViewController but with text in status label. If we don't put a placeholder
-        // here, the avatar group jitters on interface switching
-        statusLabel.text = " "
-        
+        titleLabel.text = R.string.localizable.chat_menu_group_call()
+        membersCollectionView.isHidden = false
         hangUpStackView.alpha = 0
         acceptStackView.alpha = 1
         acceptButtonTrailingConstraint.priority = .defaultLow
         acceptButtonCenterXConstraint.priority = .defaultHigh
-        groupCallMembersCollectionView.dataSource = self
     }
     
     override func minimizeAction(_ sender: Any) {
-        CallService.shared.dismissCallingInterface()
+        hideContentView {
+            CallService.shared.removeViewControllerAsContainersChildIfNeeded(self)
+        }
     }
     
     override func acceptAction(_ sender: Any) {
-        CallService.shared.requestStartGroupCall(conversation: conversation, invitingMembers: [])
+        CallService.shared.requestStartGroupCall(conversation: conversation, invitingMembers: [], animated: false)
     }
     
     func loadMembers(with userIds: [String]) {
@@ -53,26 +44,10 @@ class GroupCallConfirmationViewController: CallViewController {
             DispatchQueue.main.async {
                 self.members = members
                 if self.isViewLoaded {
-                    self.groupCallMembersCollectionView.reloadData()
+                    self.membersCollectionView.reloadData()
                 }
             }
         }
-    }
-    
-}
-
-extension GroupCallConfirmationViewController: UICollectionViewDataSource {
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        members.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.group_call_member, for: indexPath)!
-        let member = members[indexPath.row]
-        cell.avatarImageView.setImage(with: member)
-        cell.connectingView.isHidden = true
-        return cell
     }
     
 }

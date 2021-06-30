@@ -92,11 +92,7 @@ extension ScreenLockManager {
     }
     
     private func hideScreenLockView() {
-        if CallService.shared.hasCall && !CallService.shared.isMinimized {
-            CallService.shared.window?.makeKeyAndVisible()
-        } else {
-            AppDelegate.current.mainWindow.makeKeyAndVisible()
-        }
+        AppDelegate.current.mainWindow.makeKeyAndVisible()
         viewController = nil
         window = nil
     }

@@ -29,6 +29,10 @@ class ResizablePopupViewController: UIViewController {
         nil
     }
     
+    var automaticallyAdjustsResizableScrollViewBottomInset: Bool {
+        true
+    }
+    
     lazy var resizeRecognizer = UIPanGestureRecognizer(target: self, action: #selector(changeSizeAction(_:)))
     
     override func viewDidLoad() {
@@ -124,6 +128,9 @@ class ResizablePopupViewController: UIViewController {
     }
     
     func updateBottomInset() {
+        guard automaticallyAdjustsResizableScrollViewBottomInset else {
+            return
+        }
         guard let scrollView = resizableScrollView else {
             return
         }

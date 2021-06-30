@@ -83,7 +83,6 @@ class CallService: NSObject {
     // We map conversation id with uuid here
     private var groupCallUUIDs = [String: UUID]()
     
-    private(set) var window: CallWindow?
     private var viewController: CallViewController?
     
     // Access from CallService.queue
@@ -223,7 +222,7 @@ extension CallService {
         }
     }
     
-    func requestStartGroupCall(conversation: ConversationItem, invitingMembers: [UserItem]) {
+    func requestStartGroupCall(conversation: ConversationItem, invitingMembers: [UserItem], animated: Bool) {
         self.log("[CallService] Request start group call with conversation: \(conversation.getConversationName())")
         guard var members = self.membersManager.members(inConversationWith: conversation.conversationId) else {
             alert(error: CallError.networkFailure)
@@ -233,8 +232,12 @@ extension CallService {
             let me = UserItem.createUser(from: account)
             members.append(me)
         }
-        if let uuid = groupCallUUIDs[conversation.conversationId], hasCall(with: uuid) {
+        if let confirmation = UIApplication.homeContainerViewController?.children.compactMap({ $0 as? GroupCallConfirmationViewController }).first {
+            removeViewControllerAsContainersChildIfNeeded(confirmation)
+        }
+        if let uuid = groupCallUUIDs[conversation.conversationId], let call = activeOrPendingAnswerCall(with: uuid) {
             self.log("[CallService] Request to start but we found existed group call: \(uuid)")
+            showCallingInterface(call: call, animated: animated)
             callInterface.requestAnswerCall(uuid: uuid)
         } else {
             self.log("[CallService] Making call with members: \(members.map(\.fullName))")
@@ -243,6 +246,7 @@ extension CallService {
                                  conversation: conversation,
                                  members: members,
                                  invitingMembers: invitingMembers)
+            showCallingInterface(call: call, animated: animated)
             let handle = CXHandle(type: .generic, value: conversation.conversationId)
             requestStartCall(call, handle: handle, playOutgoingRingtone: false)
         }
@@ -296,20 +300,16 @@ extension CallService {
     func showJoinGroupCallConfirmation(conversation: ConversationItem, memberIds ids: [String]) {
         let controller = GroupCallConfirmationViewController(conversation: conversation, service: self)
         controller.loadMembers(with: ids)
-        
-        let window = self.window ?? CallWindow(frame: UIScreen.main.bounds)
-        window.rootViewController = controller
-        window.makeKeyAndVisible()
-        self.window = window
-        
+        addViewControllerAsContainersChildIfNeeded(controller)
         UIView.performWithoutAnimation(controller.view.layoutIfNeeded)
+        controller.showContentViewIfNeeded(animated: true)
     }
     
-    func showCallingInterface(call: Call) {
+    func showCallingInterface(call: Call, animated: Bool) {
         self.log("[CallService] show calling interface for call: \(call.debugDescription)")
         
         if isMinimized {
-            setInterfaceMinimized(false, animated: false)
+            setInterfaceMinimized(false, animated: animated)
         }
         
         func makeViewController() -> CallViewController {
@@ -320,94 +320,97 @@ extension CallService {
         }
         
         let viewController = self.viewController ?? makeViewController()
-        let window = self.window ?? CallWindow(frame: UIScreen.main.bounds)
-        let animated = window.rootViewController == viewController
-        window.rootViewController = viewController
-        window.makeKeyAndVisible()
-        self.window = window
+        addViewControllerAsContainersChildIfNeeded(viewController)
         
-        UIView.performWithoutAnimation(viewController.view.layoutIfNeeded)
-        
-        let updateInterface = {
+        UIView.performWithoutAnimation {
             viewController.reload(call: call)
             viewController.view.layoutIfNeeded()
         }
-        if animated {
-            UIView.animate(withDuration: 0.3, animations: updateInterface)
-        } else {
-            UIView.performWithoutAnimation(updateInterface)
-        }
+        viewController.showContentViewIfNeeded(animated: animated)
     }
     
     func showCallingInterfaceIfHasCall(with uuid: UUID) {
         guard let call = activeOrPendingAnswerCall(with: uuid) else {
             return
         }
-        showCallingInterface(call: call)
+        showCallingInterface(call: call, animated: true)
     }
     
-    func setInterfaceMinimized(_ minimized: Bool, animated: Bool) {
+    func setInterfaceMinimized(_ minimized: Bool, animated: Bool, completion: (() -> Void)? = nil) {
+        guard self.isMinimized != minimized else {
+            return
+        }
         self.isMinimized = minimized
         guard let min = UIApplication.homeContainerViewController?.minimizedCallViewController else {
             return
         }
-        guard let max = self.viewController, let callWindow = self.window else {
+        guard let max = self.viewController else {
             return
         }
         let duration: TimeInterval = 0.3
         let updateViews: () -> Void
-        let completion: (Bool) -> Void
+        let animationCompletion: (Bool) -> Void
         if minimized {
             min.call = activeCall
             min.view.alpha = 0
-            let scaleX = min.contentView.frame.width / max.view.frame.width
-            let scaleY = min.contentView.frame.height / max.view.frame.height
             updateViews = {
+                max.hideContentView(completion: nil)
                 min.view.alpha = 1
-                max.view.transform = CGAffineTransform(scaleX: scaleX, y: scaleY)
-                max.view.center = min.view.center
-                max.view.alpha = 0
-                max.setNeedsStatusBarAppearanceUpdate()
             }
-            completion = { (_) in
-                AppDelegate.current.mainWindow.makeKeyAndVisible()
+            animationCompletion = { (_) in
+                if self.isMinimized {
+                    self.removeViewControllerAsContainersChildIfNeeded(max)
+                }
+                completion?()
             }
         } else {
-            callWindow.makeKeyAndVisible()
-            max.view.center = min.view.center
+            addViewControllerAsContainersChildIfNeeded(max)
             updateViews = {
                 min.view.alpha = 0
-                max.view.transform = .identity
-                max.view.center = CGPoint(x: callWindow.bounds.midX, y: callWindow.bounds.midY)
-                max.view.alpha = 1
-                max.setNeedsStatusBarAppearanceUpdate()
+                max.showContentViewIfNeeded(animated: true)
             }
-            completion = { (_) in
+            animationCompletion = { (_) in
                 min.call = nil
+                completion?()
             }
         }
         if animated {
-            UIView.animate(withDuration: duration, animations: updateViews, completion: completion)
+            UIView.animate(withDuration: duration,
+                           animations: updateViews,
+                           completion: animationCompletion)
         } else {
-            updateViews()
-            completion(true)
+            UIView.performWithoutAnimation {
+                updateViews()
+                animationCompletion(true)
+            }
         }
     }
     
     func dismissCallingInterface() {
-        if !ScreenLockManager.shared.isLastAuthenticationStillValid && ScreenLockManager.shared.needsBiometricAuthentication {
-            ScreenLockManager.shared.showUnlockScreenView()
-        } else {
-            AppDelegate.current.mainWindow.makeKeyAndVisible()
+        var needsLockScreen: Bool {
+            !ScreenLockManager.shared.isLastAuthenticationStillValid && ScreenLockManager.shared.needsBiometricAuthentication
         }
+        if needsLockScreen {
+            ScreenLockManager.shared.showUnlockScreenView()
+        }
+        viewController?.disableConnectionDurationTimer()
+        viewController?.hideContentView(completion: {
+            guard self.activeCall == nil else {
+                return
+            }
+            if let viewController = self.viewController {
+                self.removeViewControllerAsContainersChildIfNeeded(viewController)
+                self.viewController = nil
+            }
+            if needsLockScreen {
+                ScreenLockManager.shared.showUnlockScreenView()
+            }
+        })
         if let mini = UIApplication.homeContainerViewController?.minimizedCallViewControllerIfLoaded {
             mini.view.alpha = 0
             mini.updateViewSize()
             mini.panningController.placeViewNextToLastOverlayOrTopRight()
         }
-        viewController?.disableConnectionDurationTimer()
-        viewController = nil
-        window = nil
         self.log("[CallService] calling interface dismissed")
     }
     
@@ -1134,9 +1137,7 @@ extension CallService: WebRTCClientDelegate {
             updateAudioSessionConfiguration()
         }
         DispatchQueue.main.async {
-            UIView.performWithoutAnimation {
-                self.viewController?.unstableConnectionLabel.isHidden = true
-            }
+            self.viewController?.isConnectionUnstable = false
         }
     }
     
@@ -1146,9 +1147,7 @@ extension CallService: WebRTCClientDelegate {
             return
         }
         DispatchQueue.main.async {
-            UIView.performWithoutAnimation {
-                self.viewController?.unstableConnectionLabel.isHidden = false
-            }
+            self.viewController?.isConnectionUnstable = true
         }
     }
     
@@ -1565,7 +1564,7 @@ extension CallService {
         }
         call.remoteUser = remoteUser
         DispatchQueue.main.sync {
-            self.showCallingInterface(call: call)
+            self.showCallingInterface(call: call, animated: true)
         }
         beginUnanswerCountDown(for: call)
         rtcClient.offer(key: nil, withIceRestartConstraint: false) { (result) in
@@ -1591,7 +1590,7 @@ extension CallService {
         self.activeCall = call
         call.status = .connecting
         DispatchQueue.main.sync {
-            self.showCallingInterface(call: call)
+            self.showCallingInterface(call: call, animated: true)
         }
         
         for uuid in pendingAnswerCalls.keys {
@@ -1699,7 +1698,7 @@ extension CallService {
     private func startGroupCall(_ call: GroupCall, isRestarting: Bool, completion: ((Bool) -> Void)?) {
         self.log("[CallService] start group call impl \(call.debugDescription), isRestarting: \(isRestarting)")
         DispatchQueue.main.sync {
-            self.showCallingInterface(call: call)
+            self.showCallingInterface(call: call, animated: true)
         }
         let frameKey: Data?
         if isRestarting {
@@ -1892,6 +1891,33 @@ extension CallService {
                 self.rtcClient.setFrameEncryptorKey(frameKey)
             }
         }
+    }
+    
+}
+
+// MARK: - UI Workers
+extension CallService {
+    
+    func addViewControllerAsContainersChildIfNeeded(_ viewController: CallViewController) {
+        guard let container = UIApplication.homeContainerViewController else {
+            return
+        }
+        guard viewController.parent == nil else {
+            return
+        }
+        container.addChild(viewController)
+        container.view.addSubview(viewController.view)
+        viewController.view.snp.makeEdgesEqualToSuperview()
+        viewController.didMove(toParent: container)
+    }
+    
+    func removeViewControllerAsContainersChildIfNeeded(_ viewController: CallViewController) {
+        guard viewController.parent != nil else {
+            return
+        }
+        viewController.willMove(toParent: nil)
+        viewController.view.removeFromSuperview()
+        viewController.removeFromParent()
     }
     
 }

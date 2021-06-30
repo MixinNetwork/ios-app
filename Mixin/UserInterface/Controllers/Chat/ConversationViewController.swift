@@ -1274,8 +1274,7 @@ class ConversationViewController: UIViewController {
                                 let picker = GroupCallMemberPickerViewController(conversation: conversation)
                                 picker.appearance = .startNewCall
                                 picker.onConfirmation = { (members) in
-                                    service.requestStartGroupCall(conversation: conversation,
-                                                                  invitingMembers: members)
+                                    service.requestStartGroupCall(conversation: conversation, invitingMembers: members, animated: true)
                                 }
                                 self?.present(picker, animated: true, completion: nil)
                             } else {

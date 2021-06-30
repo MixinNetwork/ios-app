@@ -4,7 +4,7 @@ import MixinServices
 
 class GroupCall: Call {
     
-    static let maxNumberOfMembers = 16
+    static let maxNumberOfMembers = 256
     
     let conversation: ConversationItem
     let conversationName: String

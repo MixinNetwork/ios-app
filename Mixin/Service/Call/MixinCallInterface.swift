@@ -122,7 +122,7 @@ extension MixinCallInterface: CallInterface {
                         }
                     }
                     call.status = .incoming
-                    self.service.showCallingInterface(call: call)
+                    self.service.showCallingInterface(call: call, animated: true)
                     if self.displayAwakeningToken == nil {
                         self.displayAwakeningToken = DisplayAwakener.shared.retain()
                     }

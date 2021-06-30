@@ -29,11 +29,13 @@ class GroupCallConfirmationViewController: CallViewController {
     }
     
     override func minimizeAction(_ sender: Any) {
-        CallService.shared.dismissCallingInterface()
+        hideContentView {
+            CallService.shared.removeViewControllerAsContainersChildIfNeeded(self)
+        }
     }
     
     override func acceptAction(_ sender: Any) {
-        CallService.shared.requestStartGroupCall(conversation: conversation, invitingMembers: [])
+        CallService.shared.requestStartGroupCall(conversation: conversation, invitingMembers: [], animated: false)
     }
     
     func loadMembers(with userIds: [String]) {

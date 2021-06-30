@@ -8,6 +8,7 @@ class CallViewController: ResizablePopupViewController {
     @IBOutlet weak var minimizeButton: UIButton!
     @IBOutlet weak var settingsButton: UIButton! // Preserved
     @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var subtitleButton: UIButton!
     @IBOutlet weak var membersCollectionView: UICollectionView!
     @IBOutlet weak var membersCollectionLayout: UICollectionViewFlowLayout!
     @IBOutlet weak var trayView: UIView!
@@ -95,6 +96,7 @@ class CallViewController: ResizablePopupViewController {
         showContentViewConstraint.priority = .defaultLow
         let titleFont = UIFont.monospacedDigitSystemFont(ofSize: 18, weight: .semibold)
         titleLabel.setFont(scaledFor: titleFont, adjustForContentSize: true)
+        UIView.performWithoutAnimation(subtitleButton.layoutIfNeeded) // Remove the animation by setText:
         membersCollectionView.register(R.nib.callMemberCell)
         membersCollectionView.dataSource = self
         membersCollectionView.delegate = self
@@ -176,7 +178,7 @@ class CallViewController: ResizablePopupViewController {
         view.layoutIfNeeded()
     }
     
-    func showContentViewIfNeeded() {
+    func showContentViewIfNeeded(animated: Bool) {
         guard !isShowingContentView else {
             return
         }
@@ -184,10 +186,17 @@ class CallViewController: ResizablePopupViewController {
         isShowingContentView = true
         hideContentViewConstraint.priority = .defaultLow
         showContentViewConstraint.priority = .defaultHigh
-        UIView.animate(withDuration: 0.5) {
-            UIView.setAnimationCurve(.overdamped)
+        let layout = {
             self.view.layoutIfNeeded()
             self.view.backgroundColor = .black.withAlphaComponent(0.4)
+        }
+        if animated {
+            UIView.animate(withDuration: 0.5) {
+                UIView.setAnimationCurve(.overdamped)
+                layout()
+            }
+        } else {
+            layout()
         }
     }
     

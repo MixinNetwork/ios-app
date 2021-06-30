@@ -222,7 +222,7 @@ extension CallService {
         }
     }
     
-    func requestStartGroupCall(conversation: ConversationItem, invitingMembers: [UserItem]) {
+    func requestStartGroupCall(conversation: ConversationItem, invitingMembers: [UserItem], animated: Bool) {
         self.log("[CallService] Request start group call with conversation: \(conversation.getConversationName())")
         guard var members = self.membersManager.members(inConversationWith: conversation.conversationId) else {
             alert(error: CallError.networkFailure)
@@ -232,8 +232,12 @@ extension CallService {
             let me = UserItem.createUser(from: account)
             members.append(me)
         }
-        if let uuid = groupCallUUIDs[conversation.conversationId], hasCall(with: uuid) {
+        if let confirmation = UIApplication.homeContainerViewController?.children.compactMap({ $0 as? GroupCallConfirmationViewController }).first {
+            removeViewControllerAsContainersChildIfNeeded(confirmation)
+        }
+        if let uuid = groupCallUUIDs[conversation.conversationId], let call = activeOrPendingAnswerCall(with: uuid) {
             self.log("[CallService] Request to start but we found existed group call: \(uuid)")
+            showCallingInterface(call: call, animated: animated)
             callInterface.requestAnswerCall(uuid: uuid)
         } else {
             self.log("[CallService] Making call with members: \(members.map(\.fullName))")
@@ -242,6 +246,7 @@ extension CallService {
                                  conversation: conversation,
                                  members: members,
                                  invitingMembers: invitingMembers)
+            showCallingInterface(call: call, animated: animated)
             let handle = CXHandle(type: .generic, value: conversation.conversationId)
             requestStartCall(call, handle: handle, playOutgoingRingtone: false)
         }
@@ -297,14 +302,14 @@ extension CallService {
         controller.loadMembers(with: ids)
         addViewControllerAsContainersChildIfNeeded(controller)
         UIView.performWithoutAnimation(controller.view.layoutIfNeeded)
-        controller.showContentViewIfNeeded()
+        controller.showContentViewIfNeeded(animated: true)
     }
     
-    func showCallingInterface(call: Call) {
+    func showCallingInterface(call: Call, animated: Bool) {
         self.log("[CallService] show calling interface for call: \(call.debugDescription)")
         
         if isMinimized {
-            setInterfaceMinimized(false, animated: false)
+            setInterfaceMinimized(false, animated: animated)
         }
         
         func makeViewController() -> CallViewController {
@@ -321,14 +326,14 @@ extension CallService {
             viewController.reload(call: call)
             viewController.view.layoutIfNeeded()
         }
-        viewController.showContentViewIfNeeded()
+        viewController.showContentViewIfNeeded(animated: animated)
     }
     
     func showCallingInterfaceIfHasCall(with uuid: UUID) {
         guard let call = activeOrPendingAnswerCall(with: uuid) else {
             return
         }
-        showCallingInterface(call: call)
+        showCallingInterface(call: call, animated: true)
     }
     
     func setInterfaceMinimized(_ minimized: Bool, animated: Bool, completion: (() -> Void)? = nil) {
@@ -362,7 +367,7 @@ extension CallService {
             addViewControllerAsContainersChildIfNeeded(max)
             updateViews = {
                 min.view.alpha = 0
-                max.showContentViewIfNeeded()
+                max.showContentViewIfNeeded(animated: true)
             }
             animationCompletion = { (_) in
                 min.call = nil
@@ -1559,7 +1564,7 @@ extension CallService {
         }
         call.remoteUser = remoteUser
         DispatchQueue.main.sync {
-            self.showCallingInterface(call: call)
+            self.showCallingInterface(call: call, animated: true)
         }
         beginUnanswerCountDown(for: call)
         rtcClient.offer(key: nil, withIceRestartConstraint: false) { (result) in
@@ -1585,7 +1590,7 @@ extension CallService {
         self.activeCall = call
         call.status = .connecting
         DispatchQueue.main.sync {
-            self.showCallingInterface(call: call)
+            self.showCallingInterface(call: call, animated: true)
         }
         
         for uuid in pendingAnswerCalls.keys {
@@ -1693,7 +1698,7 @@ extension CallService {
     private func startGroupCall(_ call: GroupCall, isRestarting: Bool, completion: ((Bool) -> Void)?) {
         self.log("[CallService] start group call impl \(call.debugDescription), isRestarting: \(isRestarting)")
         DispatchQueue.main.sync {
-            self.showCallingInterface(call: call)
+            self.showCallingInterface(call: call, animated: true)
         }
         let frameKey: Data?
         if isRestarting {
@@ -1893,7 +1898,7 @@ extension CallService {
 // MARK: - UI Workers
 extension CallService {
     
-    private func addViewControllerAsContainersChildIfNeeded(_ viewController: CallViewController) {
+    func addViewControllerAsContainersChildIfNeeded(_ viewController: CallViewController) {
         guard let container = UIApplication.homeContainerViewController else {
             return
         }
@@ -1906,7 +1911,7 @@ extension CallService {
         viewController.didMove(toParent: container)
     }
     
-    private func removeViewControllerAsContainersChildIfNeeded(_ viewController: CallViewController) {
+    func removeViewControllerAsContainersChildIfNeeded(_ viewController: CallViewController) {
         guard viewController.parent != nil else {
             return
         }

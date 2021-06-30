@@ -180,6 +180,7 @@ class CallViewController: ResizablePopupViewController {
         guard !isShowingContentView else {
             return
         }
+        AppDelegate.current.mainWindow.endEditing(true)
         isShowingContentView = true
         hideContentViewConstraint.priority = .defaultLow
         showContentViewConstraint.priority = .defaultHigh
@@ -233,17 +234,7 @@ class CallViewController: ResizablePopupViewController {
     }
     
     @IBAction func minimizeAction(_ sender: Any) {
-        if !ScreenLockManager.shared.isLastAuthenticationStillValid &&
-            ScreenLockManager.shared.needsBiometricAuthentication &&
-            !service.isMinimized {
-            ScreenLockManager.shared.performBiometricAuthentication { success in
-                if success {
-                    self.service.setInterfaceMinimized(true, animated: true)
-                }
-            }
-        } else {
-            service.setInterfaceMinimized(true, animated: true)
-        }
+        minimize(completion: nil)
     }
     
     @IBAction func addMemberAction(_ sender: Any) {
@@ -308,28 +299,42 @@ extension CallViewController: UICollectionViewDataSource {
 extension CallViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard indexPath.item == 0, let call = call as? GroupCall else {
-            return
-        }
-        if call.membersDataSource.members.count < GroupCall.maxNumberOfMembers {
-            let picker = GroupCallMemberPickerViewController(conversation: call.conversation)
-            picker.appearance = .appendToExistedCall
-            picker.fixedSelections = call.membersDataSource.members
-            picker.onConfirmation = { members in
-                let inCallUserIds = call.membersDataSource.memberUserIds
-                CallService.shared.queue.async {
-                    let filteredMembers = members.filter { (member) -> Bool in
-                        !inCallUserIds.contains(member.userId)
+        if let call = call as? PeerToPeerCall {
+            guard let user = call.remoteUser else {
+                return
+            }
+            minimize {
+                let profile = UserProfileViewController(user: user)
+                UIApplication.homeContainerViewController?.present(profile, animated: true, completion: nil)
+            }
+        } else if let call = call as? GroupCall {
+            if indexPath.item == 0 {
+                if call.membersDataSource.members.count < GroupCall.maxNumberOfMembers {
+                    let picker = GroupCallMemberPickerViewController(conversation: call.conversation)
+                    picker.appearance = .appendToExistedCall
+                    picker.fixedSelections = call.membersDataSource.members
+                    picker.onConfirmation = { members in
+                        let inCallUserIds = call.membersDataSource.memberUserIds
+                        CallService.shared.queue.async {
+                            let filteredMembers = members.filter { (member) -> Bool in
+                                !inCallUserIds.contains(member.userId)
+                            }
+                            if !filteredMembers.isEmpty {
+                                call.invite(members: filteredMembers)
+                            }
+                        }
                     }
-                    if !filteredMembers.isEmpty {
-                        call.invite(members: filteredMembers)
-                    }
+                    present(picker, animated: true, completion: nil)
+                } else {
+                    let message = R.string.localizable.group_call_selections_reach_limit("\(GroupCall.maxNumberOfMembers)")
+                    alert(message)
+                }
+            } else if let member = call.membersDataSource.member(at: indexPath) {
+                minimize {
+                    let profile = UserProfileViewController(user: member)
+                    UIApplication.homeContainerViewController?.present(profile, animated: true, completion: nil)
                 }
             }
-            present(picker, animated: true, completion: nil)
-        } else {
-            let message = R.string.localizable.group_call_selections_reach_limit("\(GroupCall.maxNumberOfMembers)")
-            alert(message)
         }
     }
     
@@ -481,6 +486,21 @@ extension CallViewController {
             }
             RunLoop.main.add(timer, forMode: .default)
             self.timer = timer
+        }
+    }
+    
+    private func minimize(completion: (() -> Void)?) {
+        let needsAuthentication = !ScreenLockManager.shared.isLastAuthenticationStillValid &&
+            ScreenLockManager.shared.needsBiometricAuthentication &&
+            !service.isMinimized
+        if needsAuthentication {
+            ScreenLockManager.shared.performBiometricAuthentication { success in
+                if success {
+                    self.service.setInterfaceMinimized(true, animated: true, completion: completion)
+                }
+            }
+        } else {
+            service.setInterfaceMinimized(true, animated: true, completion: completion)
         }
     }
     

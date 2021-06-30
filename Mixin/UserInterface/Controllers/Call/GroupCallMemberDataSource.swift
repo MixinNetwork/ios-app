@@ -87,6 +87,24 @@ class GroupCallMemberDataSource: NSObject {
         }
     }
     
+    func indexPath(forMemberAt index: Int) -> IndexPath {
+        IndexPath(item: index + 1, section: 0) // +1 for the add button
+    }
+    
+    func member(at indexPath: IndexPath) -> UserItem? {
+        let index: Int
+        if debugWithNumerousMembers {
+            index = (indexPath.item - 1) % members.count
+        } else {
+            index = indexPath.item - 1
+        }
+        if index < members.count {
+            return members[indexPath.item - 1]
+        } else {
+            return nil
+        }
+    }
+    
     @objc private func updateWithPolledPeers(_ notification: Notification) {
         guard let userInfo = notification.userInfo else {
             return
@@ -116,10 +134,6 @@ class GroupCallMemberDataSource: NSObject {
         }
     }
     
-    private func indexPath(forMemberAt index: Int) -> IndexPath {
-        IndexPath(item: index + 1, section: 0) // +1 for the add button
-    }
-    
 }
 
 extension GroupCallMemberDataSource: UICollectionViewDataSource {
@@ -143,15 +157,11 @@ extension GroupCallMemberDataSource: UICollectionViewDataSource {
         } else {
             cell.avatarWrapperView.backgroundColor = .background
             cell.avatarImageView.imageView.contentMode = .scaleAspectFill
-            let member: UserItem
-            if debugWithNumerousMembers {
-                member = members[(indexPath.item - 1) % members.count]
-            } else {
-                member = members[indexPath.item - 1]
+            if let member = self.member(at: indexPath) {
+                cell.avatarImageView.setImage(with: member)
+                cell.connectingView.isHidden = !invitingMemberUserIds.contains(member.userId)
+                cell.label.text = member.fullName
             }
-            cell.avatarImageView.setImage(with: member)
-            cell.connectingView.isHidden = !invitingMemberUserIds.contains(member.userId)
-            cell.label.text = member.fullName
         }
         cell.hasBiggerLayout = false
         return cell

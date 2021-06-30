@@ -364,7 +364,7 @@ public final class UserDatabase: Database {
         
         migrator.registerMigration("transcript") { (db) in
             let sql = """
-                CREATE TABLE transcript_messages(
+                CREATE TABLE IF NOT EXISTS transcript_messages(
                     transcript_id TEXT NOT NULL,
                     message_id TEXT NOT NULL,
                     user_id TEXT,

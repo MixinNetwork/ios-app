@@ -16,6 +16,7 @@
 		5E5CA7882674AC8E00C1E113 /* ScreenLockManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E5CA7852674AC8E00C1E113 /* ScreenLockManager.swift */; };
 		5E5CA86D2674B09100C1E113 /* ScreenLockSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E5CA86C2674B09100C1E113 /* ScreenLockSettingViewController.swift */; };
 		5EBD8CD1267B37D20026A248 /* ScreenLockViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EBD8CD0267B37D20026A248 /* ScreenLockViewController.swift */; };
+		5EF90905268C92B900B934AF /* HomeBots.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF90904268C92B900B934AF /* HomeBots.swift */; };
 		6E01B01F201DC896B6A8B1BE /* Pods_MixinNotificationService.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD2C79AAFC0C43AD7C5C9B4D /* Pods_MixinNotificationService.framework */; };
 		7B015D7F21A81C81000C9F1E /* SearchBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B015D7E21A81C81000C9F1E /* SearchBoxView.swift */; };
 		7B015D8121A81C8D000C9F1E /* SearchBoxView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B015D8021A81C8D000C9F1E /* SearchBoxView.xib */; };
@@ -974,6 +975,7 @@
 		5E5CA7852674AC8E00C1E113 /* ScreenLockManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenLockManager.swift; sourceTree = "<group>"; };
 		5E5CA86C2674B09100C1E113 /* ScreenLockSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenLockSettingViewController.swift; sourceTree = "<group>"; };
 		5EBD8CD0267B37D20026A248 /* ScreenLockViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenLockViewController.swift; sourceTree = "<group>"; };
+		5EF90904268C92B900B934AF /* HomeBots.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeBots.swift; sourceTree = "<group>"; };
 		60A0F3EECBE8095220D78A70 /* Pods-MixinShare.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MixinShare.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MixinShare/Pods-MixinShare.debug.xcconfig"; sourceTree = "<group>"; };
 		621D5146A79BB7A673B026F9 /* Pods-mixin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mixin.release.xcconfig"; path = "Pods/Target Support Files/Pods-mixin/Pods-mixin.release.xcconfig"; sourceTree = "<group>"; };
 		67A8E0E9B65F16ADB27E6F25 /* Pods_MixinShare.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MixinShare.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2555,6 +2557,7 @@
 				7C66F1A8268AB40A006D8462 /* BotItem.swift */,
 				7C66F1AE268ABE3F006D8462 /* Bot.swift */,
 				7C66F1AC268ABE1F006D8462 /* BotFolder.swift */,
+				5EF90904268C92B900B934AF /* HomeBots.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -4542,6 +4545,7 @@
 				7B93CAA5222963120053AE90 /* PhotoInputGridViewController.swift in Sources */,
 				DF3D191A24EA1E44000BFE53 /* AssetConfirmationWindow.swift in Sources */,
 				DF768569200687010055F3FF /* PreviewView.swift in Sources */,
+				5EF90905268C92B900B934AF /* HomeBots.swift in Sources */,
 				7B9C642F2240B62600465A6A /* SolidBackgroundColoredView.swift in Sources */,
 				DF0A713B22D5E94D00E69C50 /* WithdrawalTipWindow.swift in Sources */,
 				E090B91123B0B2F20012C7E9 /* MessageDAO+Search.swift in Sources */,

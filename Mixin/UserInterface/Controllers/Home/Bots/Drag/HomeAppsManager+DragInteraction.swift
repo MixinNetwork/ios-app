@@ -17,8 +17,9 @@ extension HomeAppsManager {
     private func beginDragInteraction(_ gestureRecognizer: UILongPressGestureRecognizer) {
         feedback.prepare()
         var touchPoint = gestureRecognizer.location(in: viewController.view)
-        guard let view = viewController.view.hitTest(touchPoint, with: nil), view.bounds.size.equalTo(pinnedAppSize) else { return }
         let (collectionView, pageCell) = touchedViewInfos(at: touchPoint)
+        let cellSize = collectionView == candidateCollectionView ? appSize : pinnedAppSize
+        guard let view = viewController.view.hitTest(touchPoint, with: nil), view.bounds.size.equalTo(cellSize) else { return }
         touchPoint = gestureRecognizer.location(in: collectionView)
         touchPoint.x -= collectionView.contentOffset.x
         
@@ -75,7 +76,7 @@ extension HomeAppsManager {
         folderRemovalTimer?.invalidate()
         folderRemovalTimer = nil
         
-        var destinationIndexPath = IndexPath()
+        var destinationIndexPath: IndexPath
         let flowLayout = pageCell.collectionView.collectionViewLayout as! UICollectionViewFlowLayout
         var isEdgeCell = false
         let appsPerRow = pinnedCollectionView == nil ? appsRowsOnFolder : appsPerRow
@@ -114,6 +115,7 @@ extension HomeAppsManager {
                 destinationIndexPath = IndexPath(item: 0, section: 0)
             } else if !(pageTimer?.isValid ?? false) && collectionView == candidateCollectionView {
                 pageTimer = Timer.scheduledTimer(timeInterval: 0.7, target: self, selector: #selector(pageTimerHandler(_:)), userInfo: -1, repeats: false)
+                return
             } else {
                 return
             }
@@ -126,6 +128,7 @@ extension HomeAppsManager {
                 }
             } else if !(pageTimer?.isValid ?? false) && collectionView == candidateCollectionView {
                 pageTimer = Timer.scheduledTimer(timeInterval: 0.7, target: self, selector: #selector(pageTimerHandler(_:)), userInfo: 1, repeats: false)
+                return
             } else {
                 return
             }

@@ -59,7 +59,7 @@ class HomeAppsManager: NSObject {
             delegate?.didUpdateItems(on: self)
         }
     }
-    let pinnedAppSize = CGSize(width: 50, height: 50)
+    let pinnedAppSize = CGSize(width: 60, height: 60)
     let appSize = CGSize(width: 80, height: 100)
     var currentDragInteraction: HomeAppsDragInteraction?
     var currentFolderInteraction: HomeAppsFolderInteraction?
@@ -77,8 +77,8 @@ class HomeAppsManager: NSObject {
         self.pinnedCollectionView = pinnedCollectionView
         
         items = [
-            [Bot(id: "1", name: "1"), Bot(id: "2", name: "2"), Bot(id: "3", name: "3"), Bot(id: "4", name: "4")],
-            [Bot(id: "5", name: "5"), Bot(id: "6", name: "6"), Bot(id: "7", name: "7"), Bot(id: "8", name: "8")]
+            [Bot(id: "1", name: "1"), Bot(id: "2", name: "2"), Bot(id: "3", name: "3"), Bot(id: "4", name: "4"), Bot(id: "44", name: "44"), ],
+            [Bot(id: "5", name: "5"), Bot(id: "6", name: "6"), Bot(id: "7", name: "7"), Bot(id: "8", name: "8"), Bot(id: "13", name: "13")]
         ]
         pinnedItems = [Bot(id: "9", name: "9"), Bot(id: "10", name: "10"), Bot(id: "11", name: "11"), Bot(id: "12", name: "12")]
         longPressRecognizer = UILongPressGestureRecognizer()

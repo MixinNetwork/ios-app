@@ -1,38 +1,5 @@
 import UIKit
 
-enum BotPageMode {
-    case regular
-    case folder
-    case pinned
-    
-    var sectionInset: UIEdgeInsets {
-        switch self {
-        case .regular:
-            return UIEdgeInsets(top: 10, left: 10, bottom: 0, right: 10)
-        case .pinned:
-            return UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-        default:
-            return UIEdgeInsets.zero
-        }
-    }
-    
-    var minimumLineSpacing: CGFloat {
-        switch self {
-        case .regular:
-            return 20
-        case .pinned:
-            return 20
-        default:
-            return 0
-        }
-    }
-    
-    var itemSize: CGSize {
-        return CGSize(width: 80, height: 100)
-    }
-    
-}
-
 protocol BotPageCellDelegate: AnyObject {
     
     func didSelect(cell: BotItemCell, on pageCell: BotPageCell)
@@ -44,7 +11,7 @@ class BotPageCell: UICollectionViewCell {
     @IBOutlet weak var collectionView: UICollectionView!
     weak var delegate: BotPageCellDelegate?
     
-    var mode: BotPageMode = .regular {
+    var mode: HomeBots = .regular {
         didSet {
             updateLayout()
         }
@@ -109,29 +76,10 @@ extension BotPageCell {
             return
         }
         flowLayout.itemSize = mode.itemSize
-        flowLayout.minimumLineSpacing = 26//mode.minimumLineSpacing
-        flowLayout.minimumInteritemSpacing = 30
-        //flowLayout.sectionInset = UIEdgeInsets(top: 11, left: 16, bottom: 11, right: 16)
-        //updateSectionInset()
+        flowLayout.minimumInteritemSpacing = mode.minimumInteritemSpacing
+        flowLayout.sectionInset = mode.sectionInset
     }
     
-    // todo: update this
-    private func updateSectionInset() {
-        guard let flowLayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else { return }
-        
-        let newHorizontalSectionInset: CGFloat
-        let appsPerRow = CGFloat(4)
-        let interitemSpacing = (frame.width - (10 * 2) - (appsPerRow * flowLayout.itemSize.width)) / (appsPerRow - 1)
-        
-        let count = CGFloat(items.count)
-        let totalSpace = (flowLayout.itemSize.width * count) + (interitemSpacing * (count - 1))
-        newHorizontalSectionInset = (frame.size.width - totalSpace) / 2
-        
-        collectionView.performBatchUpdates({
-            flowLayout.sectionInset = UIEdgeInsets(top: 0, left: newHorizontalSectionInset, bottom: 0, right: newHorizontalSectionInset)
-        }, completion: nil)
-    }
-
 }
 
 extension BotPageCell: UICollectionViewDelegate, UICollectionViewDataSource {

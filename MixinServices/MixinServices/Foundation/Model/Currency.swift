@@ -35,15 +35,16 @@ public extension Currency {
     private(set) static var all: [Currency] = {
         let currencies = [
             Currency(code: "USD", symbol: "$", rate: 1),
-            Currency(code: "CNY", symbol: "¥", rate: 7.159817),
-            Currency(code: "JPY", symbol: "¥", rate: 106.1796608),
-            Currency(code: "EUR", symbol: "€", rate: 0.909926),
-            Currency(code: "KRW", symbol: "₩", rate: 1210.86),
-            Currency(code: "HKD", symbol: "HK$", rate: 7.842744),
-            Currency(code: "GBP", symbol: "£", rate: 0.821636),
-            Currency(code: "AUD", symbol: "A$", rate: 1.485802),
-            Currency(code: "SGD", symbol: "S$", rate: 1.389179),
-            Currency(code: "MYR", symbol: "RM", rate: 4.205481)
+            Currency(code: "CNY", symbol: "¥", rate: 6.49),
+            Currency(code: "JPY", symbol: "¥", rate: 111.01),
+            Currency(code: "EUR", symbol: "€", rate: 0.843867),
+            Currency(code: "KRW", symbol: "₩", rate: 1136.81),
+            Currency(code: "HKD", symbol: "HK$", rate: 7.79),
+            Currency(code: "GBP", symbol: "£", rate: 0.72548),
+            Currency(code: "AUD", symbol: "A$", rate: 1.33),
+            Currency(code: "SGD", symbol: "S$", rate: 1.35),
+            Currency(code: "MYR", symbol: "RM", rate: 4.16),
+            Currency(code: "PHP", symbol: "₱", rate: 48.78),
         ]
         let rates = AppGroupUserDefaults.currencyRates
         for currency in currencies {

@@ -89,7 +89,7 @@ final class HomeAppsViewController: UIViewController {
         flowLayout = candidateCollectionView.collectionViewLayout as! UICollectionViewFlowLayout
         flowLayout.itemSize = CGSize(width: AppDelegate.current.mainWindow.bounds.width, height: candidateCollectionCellSize.height * CGFloat(cellCount.perColumn))
         
-        appsManager = HomeAppsManager(viewController: self, candidateCollectionView: candidateCollectionView, pinnedCollectionView: pinnedCollectionView)
+        appsManager = HomeAppsManager(isHome: true, viewController: self, candidateCollectionView: candidateCollectionView, pinnedCollectionView: pinnedCollectionView)
         
         candidateCollectionViewHeightConstraint.constant = candidateCollectionCellSize.height * CGFloat(cellCount.perColumn)
         updatePreferredContentSizeHeight()

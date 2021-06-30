@@ -11,7 +11,7 @@ class BotPageCell: UICollectionViewCell {
     @IBOutlet weak var collectionView: UICollectionView!
     weak var delegate: BotPageCellDelegate?
     
-    var mode: HomeBots = .regular {
+    var mode: HomeAppsMode = .regular {
         didSet {
             updateLayout()
         }

@@ -16,7 +16,8 @@ class HomeAppsManager: NSObject {
     unowned var viewController: UIViewController
     unowned var candidateCollectionView: UICollectionView
     unowned var pinnedCollectionView: UICollectionView? // folderVC use this manager
-    
+    var isHome: Bool
+
     var currentPage: Int {
         guard candidateCollectionView.frame.size.width != 0 else {
             return 0
@@ -32,21 +33,9 @@ class HomeAppsManager: NSObject {
             return visibleCells[0] as! BotPageCell
         }
     }
-    
-    private var longPressRecognizer: UILongPressGestureRecognizer
-    private let tapRecognizer = UITapGestureRecognizer()
-    let feedback = UIImpactFeedbackGenerator()
-    
-    let appsPerRow = 4
-    let appsRowsOnFolder = 3
-    let appsPerRowOnFolder: Int = 3
-    var appsPerPage: Int {
-        return appsPerRow * (ScreenHeight.current == .medium ? 3 : 4)
+    var mode: HomeAppsMode {
+        return isHome ? .regular : .folder
     }
-    var appsPerPageOnFolder: Int {
-        return appsPerRowOnFolder * appsRowsOnFolder
-    }
-    
     var isEditing = false
     var items: [[BotItem]] {
         didSet {
@@ -59,6 +48,7 @@ class HomeAppsManager: NSObject {
             delegate?.didUpdateItems(on: self)
         }
     }
+    let feedback = UIImpactFeedbackGenerator()
     let pinnedAppSize = CGSize(width: 60, height: 60)
     let appSize = CGSize(width: 80, height: 100)
     var currentDragInteraction: HomeAppsDragInteraction?
@@ -71,7 +61,11 @@ class HomeAppsManager: NSObject {
     var ignoreDragOutOnTop = false
     var ignoreDragOutOnBottom = false
     
-    init(viewController: UIViewController, candidateCollectionView: UICollectionView, pinnedCollectionView: UICollectionView) {
+    private var longPressRecognizer = UILongPressGestureRecognizer()
+    private let tapRecognizer = UITapGestureRecognizer()
+    
+    init(isHome: Bool, viewController: UIViewController, candidateCollectionView: UICollectionView, pinnedCollectionView: UICollectionView) {
+        self.isHome = isHome
         self.viewController = viewController
         self.candidateCollectionView = candidateCollectionView
         self.pinnedCollectionView = pinnedCollectionView
@@ -81,7 +75,6 @@ class HomeAppsManager: NSObject {
             [Bot(id: "5", name: "5"), Bot(id: "6", name: "6"), Bot(id: "7", name: "7"), Bot(id: "8", name: "8"), Bot(id: "13", name: "13")]
         ]
         pinnedItems = [Bot(id: "9", name: "9"), Bot(id: "10", name: "10"), Bot(id: "11", name: "11"), Bot(id: "12", name: "12")]
-        longPressRecognizer = UILongPressGestureRecognizer()
         
         super.init()
         
@@ -93,7 +86,6 @@ class HomeAppsManager: NSObject {
         
         longPressRecognizer.addTarget(self, action: #selector(handleLongPressGesture(_:)))
         self.viewController.view.addGestureRecognizer(longPressRecognizer)
-        
         tapRecognizer.addTarget(self, action: #selector(handleTapGesture))
         self.viewController.view.addGestureRecognizer(tapRecognizer)
     }
@@ -108,19 +100,25 @@ extension HomeAppsManager {
         }
         leaveEditingMode()
     }
-    
-    func touchedViewInfos(at point: CGPoint) -> (collectionView: UICollectionView, cell: BotPageCell) {
+        
+    func touchedViewInfos(at point: CGPoint) -> (collectionView: UICollectionView, cell: BotPageCell, itemSize: CGSize) {
         let collectionView: UICollectionView
+        var itemSize: CGSize
         if let pinnedCollectionView = pinnedCollectionView, pinnedCollectionView.frame.contains(viewController.view.convert(point, to: pinnedCollectionView)) {
             collectionView = pinnedCollectionView
+            itemSize = HomeAppsMode.pinned.itemSize
         } else {
             collectionView = candidateCollectionView
+            itemSize = HomeAppsMode.regular.itemSize
+        }
+        if !isHome {
+            itemSize = HomeAppsMode.folder.itemSize
         }
         let convertedPoint = viewController.view.convert(point, to: collectionView)
         if let indexPath = collectionView.indexPathForItem(at: convertedPoint), let cell = collectionView.cellForItem(at: indexPath) as? BotPageCell {
-            return (collectionView, cell)
+            return (collectionView, cell, itemSize)
         } else {
-            return (collectionView, collectionView.visibleCells[0] as! BotPageCell)
+            return (collectionView, collectionView.visibleCells[0] as! BotPageCell, itemSize)
         }
     }
     
@@ -188,8 +186,7 @@ extension HomeAppsManager {
         var currentPageItems = items[page + 1]
         currentPageItems.insert(items[page].removeLast(), at: 0)
         items[page + 1] = currentPageItems
-        let appsPerPage = pinnedCollectionView == nil ? appsPerPageOnFolder : appsPerPage
-        if currentPageItems.count > appsPerPage {
+        if currentPageItems.count >  mode.appsPerPage {
             moveLastItem(inPage: page + 1)
         }
     }

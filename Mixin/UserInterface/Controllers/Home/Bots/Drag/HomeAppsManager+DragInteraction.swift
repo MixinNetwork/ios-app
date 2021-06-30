@@ -17,9 +17,8 @@ extension HomeAppsManager {
     private func beginDragInteraction(_ gestureRecognizer: UILongPressGestureRecognizer) {
         feedback.prepare()
         var touchPoint = gestureRecognizer.location(in: viewController.view)
-        let (collectionView, pageCell) = touchedViewInfos(at: touchPoint)
-        let cellSize = collectionView == candidateCollectionView ? appSize : pinnedAppSize
-        guard let view = viewController.view.hitTest(touchPoint, with: nil), view.bounds.size.equalTo(cellSize) else { return }
+        let (collectionView, pageCell, itemSize) = touchedViewInfos(at: touchPoint)
+        guard let view = viewController.view.hitTest(touchPoint, with: nil), view.bounds.size.equalTo(itemSize) else { return }
         touchPoint = gestureRecognizer.location(in: collectionView)
         touchPoint.x -= collectionView.contentOffset.x
         
@@ -47,7 +46,7 @@ extension HomeAppsManager {
     private func updateDragInteraction(_ gestureRecognizer: UILongPressGestureRecognizer) {
         var touchPoint = gestureRecognizer.location(in: viewController.view)
         guard let currentInteraction = currentDragInteraction else { return }
-        let (collectionView, pageCell) = touchedViewInfos(at: touchPoint)
+        let (collectionView, pageCell, _) = touchedViewInfos(at: touchPoint)
         touchPoint = gestureRecognizer.location(in: collectionView)
         
         let convertedTouchPoint = viewController.view.convert(touchPoint, from: collectionView)
@@ -79,8 +78,7 @@ extension HomeAppsManager {
         var destinationIndexPath: IndexPath
         let flowLayout = pageCell.collectionView.collectionViewLayout as! UICollectionViewFlowLayout
         var isEdgeCell = false
-        let appsPerRow = pinnedCollectionView == nil ? appsRowsOnFolder : appsPerRow
-        
+        let appsPerRow = mode.appsPerRow
         if let indexPath = pageCell.collectionView.indexPathForItem(at: touchPoint), pageCell == currentInteraction.currentPageCell {
             guard let itemCell = pageCell.collectionView.cellForItem(at: indexPath) as? BotItemCell else {
                 return
@@ -138,7 +136,7 @@ extension HomeAppsManager {
             if let indexPath = pageCell.collectionView.indexPathForItem(at: touchPoint) {
                 destinationIndexPath = indexPath
             } else if let pinnedCollectionView = pinnedCollectionView, collectionView == candidateCollectionView && pinnedCollectionView.visibleCells.contains(currentInteraction.currentPageCell) {
-                if items[currentPage].count < appsPerPage - 1 {
+                if items[currentPage].count < mode.appsPerPage - 1 {
                     destinationIndexPath = IndexPath(item: items[currentPage].count + 1, section: 0)
                 } else {
                     return
@@ -225,7 +223,7 @@ extension HomeAppsManager {
     }
     
     private func moveToPinned(interaction: HomeAppsDragInteraction, pageCell: BotPageCell, destinationIndexPath: IndexPath) {
-        guard pinnedItems.count < appsPerRow else {
+        guard pinnedItems.count < mode.appsPerRow else {
             return
         }
         guard interaction.item is Bot else {
@@ -252,7 +250,7 @@ extension HomeAppsManager {
         currentPageCell.collectionView.performBatchUpdates({
             currentPageCell.collectionView.deleteItems(at: [interaction.currentIndexPath])
             if didRestoreSavedState {
-                let indexPath = IndexPath(item: appsPerPage - 1, section: 0)
+                let indexPath = IndexPath(item: mode.appsPerPage - 1, section: 0)
                 currentPageCell.collectionView.insertItems(at: [indexPath])
             }
         }, completion: nil)
@@ -263,7 +261,7 @@ extension HomeAppsManager {
     
     private func moveFromPinned(interaction: HomeAppsDragInteraction, pageCell: BotPageCell, destinationIndexPath: IndexPath) {
         var didMoveLastItem = false
-        if items[currentPage].count == appsPerPage {
+        if items[currentPage].count == mode.appsPerPage {
             didMoveLastItem = true
             interaction.savedState = items
             moveLastItem(inPage: currentPage)
@@ -322,8 +320,7 @@ extension HomeAppsManager {
         } else {
             items[currentPage].remove(at: currentIndex)
         }
-        let appsPerPage = pinnedCollectionView == nil ? appsPerPageOnFolder : appsPerPage
-        if items[nextPage].count == appsPerPage {
+        if items[nextPage].count == mode.appsPerPage {
             currentInteraction.savedState = items
             moveLastItem(inPage: nextPage)
         }

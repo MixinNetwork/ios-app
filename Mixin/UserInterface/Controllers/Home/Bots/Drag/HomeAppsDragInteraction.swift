@@ -10,13 +10,13 @@ class HomeAppsDragInteraction {
     var currentPageCell: BotPageCell
     var currentIndexPath: IndexPath
     
-    let liftView: UIView
+    let liftView: HomeAppSnapshotView
     let dragOffset: CGSize
     
     var needsUpdate = false
     var savedState: [[BotItem]]?
     
-    required init(liftView: UIView, dragOffset: CGSize, item: BotItem, originalPageCell: BotPageCell, originalIndexPath: IndexPath) {
+    required init(liftView: HomeAppSnapshotView, dragOffset: CGSize, item: BotItem, originalPageCell: BotPageCell, originalIndexPath: IndexPath) {
         self.liftView = liftView
         self.dragOffset = dragOffset
         self.item = item
@@ -40,6 +40,17 @@ class HomeAppsDragInteraction {
         return interaction
     }
     
+    func transitionToFolderWrapperView() {
+        UIView.animate(withDuration: 0.2) {
+            self.liftView.nameView.alpha = 0
+        }
+    }
+    
+    func transitionFromFolderWrapperView() {
+        UIView.animate(withDuration: 0.2) {
+            self.liftView.nameView.alpha = 1
+        }
+    }
 }
 
 struct HomeAppsDragInteractionTransfer {

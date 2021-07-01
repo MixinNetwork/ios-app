@@ -1,35 +1,37 @@
 import Foundation
 
 protocol HomeAppsFolderInteraction {
+    
     var dragInteraction: HomeAppsDragInteraction { get set }
     var item: BotItem { get set }
     var isDismissing: Bool { get set }
-    var placeholderView: UIView { get set }
+    var wrapperView: UIView { get set }
+    
 }
 
-class HomeAppsFolderCreation: HomeAppsFolderInteraction {
-    
+class HomeAppsFolderCreationInteraction: HomeAppsFolderInteraction {
+
     var dragInteraction: HomeAppsDragInteraction
     var destinationApp: Bot
-    var placeholderView: UIView
+    var wrapperView: UIView
     var isDismissing: Bool = false
     
     var item: BotItem
     
-    required init(dragInteraction: HomeAppsDragInteraction, destinationApp: Bot, placeholderView: UIView) {
+    required init(dragInteraction: HomeAppsDragInteraction, destinationApp: Bot, wrapperView: UIView) {
         self.dragInteraction = dragInteraction
         self.destinationApp = destinationApp
         self.item = destinationApp
-        self.placeholderView = placeholderView
+        self.wrapperView = wrapperView
     }
     
 }
 
-class HomeAppsFolderDrop: HomeAppsFolderInteraction {
+class HomeAppsFolderDropInteraction: HomeAppsFolderInteraction {
     
     var dragInteraction: HomeAppsDragInteraction
     var folder: BotFolder
-    var placeholderView: UIView
+    var wrapperView: UIView
     var isDismissing: Bool = false
     
     var item: BotItem
@@ -38,7 +40,22 @@ class HomeAppsFolderDrop: HomeAppsFolderInteraction {
         self.dragInteraction = dragInteraction
         self.folder = folder
         self.item = folder
-        self.placeholderView = placeholderView
+        self.wrapperView = placeholderView
+    }
+    
+}
+
+class HomeAppsOpenFolderInfo {
+    
+    var folder: BotFolder
+    var cell: BotFolderCell
+    var isNewFolder: Bool
+    var shouldCancelCreation = false
+    
+    required init(cell: BotFolderCell, isNewFolder: Bool) {
+        self.cell = cell
+        self.folder = cell.item as! BotFolder
+        self.isNewFolder = isNewFolder
     }
     
 }

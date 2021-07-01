@@ -6,7 +6,6 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -900,14 +899,12 @@
                                                                         <subviews>
                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eId-0l-p9C" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
                                                                                 <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
-                                                                                <color key="backgroundColor" name="background_secondary"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="width" constant="60" id="SeW-CP-GXC"/>
                                                                                     <constraint firstAttribute="height" constant="60" id="i1T-es-iMd"/>
                                                                                 </constraints>
                                                                             </view>
                                                                         </subviews>
-                                                                        <color key="backgroundColor" name="background"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="trailing" secondItem="eId-0l-p9C" secondAttribute="trailing" id="6kn-yn-kjG"/>
                                                                             <constraint firstAttribute="bottom" secondItem="eId-0l-p9C" secondAttribute="bottom" id="Chg-sN-zNe"/>
@@ -915,8 +912,8 @@
                                                                             <constraint firstItem="eId-0l-p9C" firstAttribute="leading" secondItem="eLK-uf-mi4" secondAttribute="leading" id="wa9-hp-RYZ"/>
                                                                         </constraints>
                                                                     </collectionViewCellContentView>
-                                                                    <color key="backgroundColor" name="background"/>
                                                                     <connections>
+                                                                        <outlet property="imageContainerView" destination="eId-0l-p9C" id="lRN-5M-bLE"/>
                                                                         <outlet property="imageView" destination="eId-0l-p9C" id="jMm-QI-8wW"/>
                                                                     </connections>
                                                                 </collectionViewCell>
@@ -934,7 +931,6 @@
                                                         <constraint firstItem="jp6-5U-Xwh" firstAttribute="top" secondItem="bqi-4X-YlJ" secondAttribute="top" id="iUH-Yp-wCl"/>
                                                     </constraints>
                                                 </collectionViewCellContentView>
-                                                <color key="backgroundColor" name="background_secondary"/>
                                                 <connections>
                                                     <outlet property="collectionView" destination="jp6-5U-Xwh" id="GED-HG-HoB"/>
                                                 </connections>
@@ -1007,12 +1003,20 @@
                                                                 <rect key="frame" x="0.0" y="0.0" width="80" height="100"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                 <subviews>
+                                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DvM-IY-875">
+                                                                        <rect key="frame" x="10" y="12" width="60" height="60"/>
+                                                                        <color key="backgroundColor" name="background_secondary"/>
+                                                                        <userDefinedRuntimeAttributes>
+                                                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                                <integer key="value" value="12"/>
+                                                                            </userDefinedRuntimeAttribute>
+                                                                        </userDefinedRuntimeAttributes>
+                                                                    </view>
                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yHi-Eb-Tqz">
                                                                         <rect key="frame" x="10" y="12" width="60" height="60"/>
                                                                         <subviews>
                                                                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="KIb-yL-9Fc">
                                                                                 <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
-                                                                                <color key="backgroundColor" name="background_secondary"/>
                                                                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="DbA-0o-mYb">
                                                                                     <size key="itemSize" width="60" height="60"/>
                                                                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -1060,6 +1064,7 @@
                                                                                                                 </constraints>
                                                                                                             </collectionViewCellContentView>
                                                                                                             <connections>
+                                                                                                                <outlet property="imageContainerView" destination="lsl-DP-VGw" id="Gp7-AV-qsi"/>
                                                                                                                 <outlet property="imageView" destination="lsl-DP-VGw" id="Och-UB-ojx"/>
                                                                                                             </connections>
                                                                                                         </collectionViewCell>
@@ -1088,7 +1093,6 @@
                                                                                 </connections>
                                                                             </collectionView>
                                                                         </subviews>
-                                                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="trailing" secondItem="KIb-yL-9Fc" secondAttribute="trailing" id="KoA-bU-iGV"/>
                                                                             <constraint firstAttribute="width" constant="60" id="S00-fK-Yi6"/>
@@ -1110,18 +1114,21 @@
                                                                 </subviews>
                                                                 <constraints>
                                                                     <constraint firstItem="yHi-Eb-Tqz" firstAttribute="leading" secondItem="iQi-6y-Vfr" secondAttribute="leading" constant="10" id="0ZE-p9-C0A"/>
+                                                                    <constraint firstItem="DvM-IY-875" firstAttribute="trailing" secondItem="yHi-Eb-Tqz" secondAttribute="trailing" id="ASw-3p-NGy"/>
+                                                                    <constraint firstItem="DvM-IY-875" firstAttribute="leading" secondItem="yHi-Eb-Tqz" secondAttribute="leading" id="Jv2-Gv-WhS"/>
                                                                     <constraint firstItem="yHi-Eb-Tqz" firstAttribute="top" secondItem="iQi-6y-Vfr" secondAttribute="top" constant="12" id="Mn0-Qg-hXt"/>
                                                                     <constraint firstAttribute="trailing" secondItem="xpc-bE-lHe" secondAttribute="trailing" id="Pdq-9X-uBp"/>
                                                                     <constraint firstItem="xpc-bE-lHe" firstAttribute="top" secondItem="yHi-Eb-Tqz" secondAttribute="bottom" constant="8" id="bvj-5x-NSt"/>
+                                                                    <constraint firstItem="DvM-IY-875" firstAttribute="top" secondItem="yHi-Eb-Tqz" secondAttribute="top" id="dsV-8u-fC2"/>
                                                                     <constraint firstItem="xpc-bE-lHe" firstAttribute="leading" secondItem="iQi-6y-Vfr" secondAttribute="leading" id="e9X-u0-GHu"/>
-                                                                    <constraint firstItem="yHi-Eb-Tqz" firstAttribute="centerX" secondItem="iQi-6y-Vfr" secondAttribute="centerX" id="niQ-J9-Juu"/>
+                                                                    <constraint firstItem="DvM-IY-875" firstAttribute="bottom" secondItem="yHi-Eb-Tqz" secondAttribute="bottom" id="iuy-DS-Tm8"/>
                                                                     <constraint firstAttribute="trailing" secondItem="yHi-Eb-Tqz" secondAttribute="trailing" constant="10" id="uzo-lO-gMG"/>
                                                                 </constraints>
                                                             </collectionViewCellContentView>
-                                                            <color key="backgroundColor" name="background"/>
                                                             <connections>
                                                                 <outlet property="collectionView" destination="KIb-yL-9Fc" id="Lzz-i4-7WY"/>
-                                                                <outlet property="iconContainerView" destination="yHi-Eb-Tqz" id="Dn8-3p-u80"/>
+                                                                <outlet property="folderWrapperView" destination="DvM-IY-875" id="CXU-9T-KAG"/>
+                                                                <outlet property="imageContainerView" destination="yHi-Eb-Tqz" id="2OD-pT-CBW"/>
                                                                 <outlet property="label" destination="xpc-bE-lHe" id="h0b-Uc-BBU"/>
                                                             </connections>
                                                         </collectionViewCell>
@@ -1149,7 +1156,6 @@
                                                                         </userDefinedRuntimeAttributes>
                                                                     </label>
                                                                 </subviews>
-                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <constraints>
                                                                     <constraint firstItem="fcQ-WF-KHU" firstAttribute="top" secondItem="ETx-y6-dPR" secondAttribute="bottom" constant="8" id="1Yr-Ba-D7D"/>
                                                                     <constraint firstItem="ETx-y6-dPR" firstAttribute="top" secondItem="pbD-ME-YPI" secondAttribute="top" constant="12" id="3bq-lc-IjJ"/>
@@ -1160,8 +1166,8 @@
                                                                     <constraint firstItem="ETx-y6-dPR" firstAttribute="leading" secondItem="pbD-ME-YPI" secondAttribute="leading" constant="10" id="yob-Y7-iX9"/>
                                                                 </constraints>
                                                             </collectionViewCellContentView>
-                                                            <color key="backgroundColor" name="background"/>
                                                             <connections>
+                                                                <outlet property="imageContainerView" destination="ETx-y6-dPR" id="NIg-rG-WDn"/>
                                                                 <outlet property="imageView" destination="ETx-y6-dPR" id="0pN-D6-Pvj"/>
                                                                 <outlet property="label" destination="fcQ-WF-KHU" id="RAI-Qc-kh8"/>
                                                             </connections>
@@ -1313,6 +1319,7 @@
                                                                     </collectionViewCellContentView>
                                                                     <size key="customSize" width="80" height="100"/>
                                                                     <connections>
+                                                                        <outlet property="imageContainerView" destination="S4Z-Z9-u5O" id="KRf-0l-cEB"/>
                                                                         <outlet property="imageView" destination="S4Z-Z9-u5O" id="X0g-Ut-0Jr"/>
                                                                         <outlet property="label" destination="QBm-GL-jr4" id="iHV-CE-j6m"/>
                                                                     </connections>
@@ -2114,10 +2121,10 @@ chat history from icloud</string>
             <color red="0.89803921568627454" green="0.9137254901960784" blue="0.94117647058823528" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="theme">
             <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -2125,8 +2132,5 @@ chat history from icloud</string>
         <namedColor name="title">
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
     </resources>
 </document>

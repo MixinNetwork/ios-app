@@ -8,8 +8,9 @@ protocol BotPageCellDelegate: AnyObject {
 
 class BotPageCell: UICollectionViewCell {
     
-    @IBOutlet weak var collectionView: UICollectionView!
     weak var delegate: BotPageCellDelegate?
+
+    @IBOutlet weak var collectionView: UICollectionView!
     
     var mode: HomeAppsMode = .regular {
         didSet {

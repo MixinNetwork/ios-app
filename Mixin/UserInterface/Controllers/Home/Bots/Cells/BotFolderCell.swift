@@ -3,6 +3,7 @@ import UIKit
 class BotFolderCell: BotItemCell {
     
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var folderWrapperView: UIView!
     
     var currentPage: Int {
         guard collectionView.frame.size.width != 0 else {
@@ -29,7 +30,7 @@ class BotFolderCell: BotItemCell {
             return
         }
         placeholderView?.removeFromSuperview()
-        imageView.transform = .identity
+        imageContainerView.transform = .identity
         
         bots = folder.pages
         collectionView.reloadData()
@@ -95,20 +96,19 @@ extension BotFolderCell {
               let botCell = currentPageCell.collectionView.cellForItem(at: IndexPath(item: 0, section: 0)) as? BotCell else {
             return
         }
-        let convertedRect1 = currentPageCell.convert(botCell.imageView.frame, from: botCell)
+        let convertedRect1 = currentPageCell.convert(botCell.imageView!.frame, from: botCell)
         let convertedRect2 = convert(convertedRect1, from: currentPageCell)
-        // todo: fix corner ??
         let imageView = UIImageView(frame: convertedRect2)
-        imageView.image = botCell.imageView.image
+        imageView.image = botCell.imageView!.image
         contentView.addSubview(imageView)
-        botCell.imageView.isHidden = true
+        botCell.imageView!.isHidden = true
         UIView.animate(withDuration: 0.55, animations: {
             imageView.transform = .transform(rect: imageView.frame, to: self.contentView.frame)
             self.contentView.transform = CGAffineTransform.identity.scaledBy(x: 0.01, y: 0.01)
             self.label?.alpha = 0
         }, completion: { _ in
             self.placeholderView = imageView
-            botCell.imageView.isHidden = false
+            botCell.imageView!.isHidden = false
             completion()
         })
     }

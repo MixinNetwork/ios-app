@@ -2,9 +2,9 @@ import UIKit
 
 class BotItemCell: UICollectionViewCell {
     
-    @IBOutlet weak var imageView: AvatarImageView!
+    @IBOutlet weak var imageView: AvatarImageView?
     @IBOutlet weak var label: UILabel?
-    @IBOutlet weak var iconContainerView: UIView?
+    @IBOutlet weak var imageContainerView: UIView!
     
     var isShaking = false
     
@@ -14,8 +14,12 @@ class BotItemCell: UICollectionViewCell {
         }
     }
     
-    var snapshotView: UIView {
-        return contentView.snapshotView(afterScreenUpdates: true) ?? UIView()
+    var snapshotView: HomeAppSnapshotView {
+        let iconView = imageContainerView.snapshotView(afterScreenUpdates: true)!
+        iconView.frame = imageContainerView.frame
+        let nameView = label!.snapshotView(afterScreenUpdates: true)!
+        nameView.frame = label!.frame
+        return HomeAppSnapshotView(frame: bounds, iconView: iconView, nameView: nameView)
     }
     
     func enterEditingMode() {
@@ -30,7 +34,7 @@ class BotItemCell: UICollectionViewCell {
         guard let item = item else { return }
         label?.text = item.name
         label?.isHidden = false
-        if let item = item as? Bot {
+        if let item = item as? Bot, let imageView = imageView {
             //imageView.setImage(app: <#T##App#>)
             //TODO: ‼️ fix
             imageView.image = UIImage(named: "ic_camera_send")

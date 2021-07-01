@@ -83,7 +83,7 @@ extension HomeAppsManager {
             guard let itemCell = pageCell.collectionView.cellForItem(at: indexPath) as? BotItemCell else {
                 return
             }
-            let iconCenter = itemCell.imageView.center
+            let iconCenter = itemCell.imageContainerView.center
             let offset = 20 as CGFloat
             let targetRect = CGRect(x: iconCenter.x - offset, y: iconCenter.y - offset, width: offset * 2, height: offset * 2)
             let convertedPoint = itemCell.convert(touchPoint, from: pageCell.collectionView)
@@ -94,9 +94,9 @@ extension HomeAppsManager {
                 pageTimer?.invalidate()
                 startFolderOperation(for: itemCell)
                 return
-            } else if convertedPoint.x < itemCell.imageView.frame.minX {
+            } else if convertedPoint.x < itemCell.imageContainerView.frame.minX {
                 destinationIndexPath = indexPath
-            } else if convertedPoint.x > itemCell.imageView.frame.maxX {
+            } else if convertedPoint.x > itemCell.imageContainerView.frame.maxX {
                 if (indexPath.row + 1) % appsPerRow == 0 {
                     destinationIndexPath = indexPath
                     isEdgeCell = true

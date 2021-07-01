@@ -12,6 +12,7 @@
 		277FF7031F909A1200DBB2EB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277FF7021F909A1200DBB2EB /* AppDelegate.swift */; };
 		277FF70C1F909A1200DBB2EB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 277FF70B1F909A1200DBB2EB /* Assets.xcassets */; };
 		277FF70F1F909A1200DBB2EB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 277FF70D1F909A1200DBB2EB /* LaunchScreen.storyboard */; };
+		5E3725BA268D4E0400269FE7 /* HomeAppSnapshotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E3725B9268D4E0400269FE7 /* HomeAppSnapshotView.swift */; };
 		5E5CA7872674AC8E00C1E113 /* ScreenLockView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5E5CA7842674AC8D00C1E113 /* ScreenLockView.xib */; };
 		5E5CA7882674AC8E00C1E113 /* ScreenLockManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E5CA7852674AC8E00C1E113 /* ScreenLockManager.swift */; };
 		5E5CA86D2674B09100C1E113 /* ScreenLockSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E5CA86C2674B09100C1E113 /* ScreenLockSettingViewController.swift */; };
@@ -971,6 +972,7 @@
 		4A8D4E34146BCC9F9DFC5D60 /* Pods-MixinNotificationService.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MixinNotificationService.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MixinNotificationService/Pods-MixinNotificationService.debug.xcconfig"; sourceTree = "<group>"; };
 		4C7439A7A6C05D54835A2461 /* Pods-MixinAppGroupAccess.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MixinAppGroupAccess.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MixinAppGroupAccess/Pods-MixinAppGroupAccess.debug.xcconfig"; sourceTree = "<group>"; };
 		4DEF1DAAD7BD26CE1E41669D /* Pods-mixin.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mixin.debug.xcconfig"; path = "Pods/Target Support Files/Pods-mixin/Pods-mixin.debug.xcconfig"; sourceTree = "<group>"; };
+		5E3725B9268D4E0400269FE7 /* HomeAppSnapshotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppSnapshotView.swift; sourceTree = "<group>"; };
 		5E5CA7842674AC8D00C1E113 /* ScreenLockView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ScreenLockView.xib; sourceTree = "<group>"; };
 		5E5CA7852674AC8E00C1E113 /* ScreenLockManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenLockManager.swift; sourceTree = "<group>"; };
 		5E5CA86C2674B09100C1E113 /* ScreenLockSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenLockSettingViewController.swift; sourceTree = "<group>"; };
@@ -2546,6 +2548,7 @@
 				7C66F0212689C9D7006D8462 /* Model */,
 				7C35D1CF2689C04F002B5BBC /* Cells */,
 				7C5823D4268966A1003AA142 /* HomeAppsFolderViewController.swift */,
+				5E3725B9268D4E0400269FE7 /* HomeAppSnapshotView.swift */,
 				7C66F1B2268B0B11006D8462 /* BotsExtension.swift */,
 			);
 			path = Bots;
@@ -4666,6 +4669,7 @@
 				DF2A245E1FCC5D15003A8C1E /* GroupAddMemberCell.swift in Sources */,
 				DFB6CE1E23C4805B00FB6615 /* KeychainExtension.swift in Sources */,
 				7B2E3E5A1FA0816D00DDDDEB /* LoginContinueButton.swift in Sources */,
+				5E3725BA268D4E0400269FE7 /* HomeAppSnapshotView.swift in Sources */,
 				277FF7031F909A1200DBB2EB /* AppDelegate.swift in Sources */,
 				7B2E3E4D1FA07F5D00DDDDEB /* HairlineLayoutConstraint.swift in Sources */,
 				7B4ADAA7243C7C8400F04CA6 /* HomeAppsViewController.swift in Sources */,

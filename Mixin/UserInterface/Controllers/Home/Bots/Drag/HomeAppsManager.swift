@@ -17,14 +17,14 @@ class HomeAppsManager: NSObject {
     unowned var candidateCollectionView: UICollectionView
     unowned var pinnedCollectionView: UICollectionView? // folderVC use this manager
     var isHome: Bool
-
+    
+    var isEditing = false
     var currentPage: Int {
         guard candidateCollectionView.frame.size.width != 0 else {
             return 0
         }
         return Int(candidateCollectionView.contentOffset.x) / Int(candidateCollectionView.frame.size.width)
     }
-    
     var currentPageCell: BotPageCell {
         let visibleCells = candidateCollectionView.visibleCells
         if visibleCells.count == 0 {
@@ -36,7 +36,6 @@ class HomeAppsManager: NSObject {
     var mode: HomeAppsMode {
         return isHome ? .regular : .folder
     }
-    var isEditing = false
     var items: [[BotItem]] {
         didSet {
             delegate?.didUpdate(pageCount: items.count, on: self)
@@ -49,11 +48,10 @@ class HomeAppsManager: NSObject {
         }
     }
     let feedback = UIImpactFeedbackGenerator()
-    let pinnedAppSize = CGSize(width: 60, height: 60)
-    let appSize = CGSize(width: 80, height: 100)
     var currentDragInteraction: HomeAppsDragInteraction?
     var currentFolderInteraction: HomeAppsFolderInteraction?
-    
+    var openFolderInfo: HomeAppsOpenFolderInfo?
+
     var pageTimer: Timer?
     var folderTimer: Timer?
     var folderRemovalTimer: Timer?
@@ -61,8 +59,8 @@ class HomeAppsManager: NSObject {
     var ignoreDragOutOnTop = false
     var ignoreDragOutOnBottom = false
     
-    private var longPressRecognizer = UILongPressGestureRecognizer()
-    private let tapRecognizer = UITapGestureRecognizer()
+    var longPressRecognizer = UILongPressGestureRecognizer()
+    let tapRecognizer = UITapGestureRecognizer()
     
     init(isHome: Bool, viewController: UIViewController, candidateCollectionView: UICollectionView, pinnedCollectionView: UICollectionView) {
         self.isHome = isHome
@@ -100,7 +98,7 @@ extension HomeAppsManager {
         }
         leaveEditingMode()
     }
-        
+    
     func touchedViewInfos(at point: CGPoint) -> (collectionView: UICollectionView, cell: BotPageCell, itemSize: CGSize) {
         let collectionView: UICollectionView
         var itemSize: CGSize

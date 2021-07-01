@@ -18,12 +18,7 @@ class BotFolderCell: BotItemCell {
             self.collectionView.reloadData()
         }
     }
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        collectionView.layer.cornerRadius = 12
-    }
-    
+        
     override func updateUI() {
         super.updateUI()
         guard let folder = item as? BotFolder else {
@@ -129,6 +124,7 @@ extension BotFolderCell: UICollectionViewDataSource, UICollectionViewDelegate {
         cell.draggedItem = nil
         cell.items = bots[indexPath.item]
         cell.collectionView.reloadData()
+        cell.mode = .nestedFolder
         return cell
     }
     

@@ -39,6 +39,15 @@ enum HomeAppsMode {
         return floor(totalSpacing / CGFloat(appsPerRow - 1))
     }
     
+    var minimumLineSpacing: CGFloat {
+        switch self {
+        case .nestedFolder:
+            return 2
+        default:
+            return 0
+        }
+    }
+    
     var itemSize: CGSize {
         switch self {
         case .regular:

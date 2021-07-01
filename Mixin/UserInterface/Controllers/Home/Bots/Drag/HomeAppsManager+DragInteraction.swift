@@ -18,7 +18,9 @@ extension HomeAppsManager {
         feedback.prepare()
         var touchPoint = gestureRecognizer.location(in: viewController.view)
         let (collectionView, pageCell, itemSize) = touchedViewInfos(at: touchPoint)
-        guard let view = viewController.view.hitTest(touchPoint, with: nil), view.bounds.size.equalTo(itemSize) else { return }
+        guard let view = viewController.view.hitTest(touchPoint, with: nil), view.bounds.size.equalTo(itemSize) else {
+            return
+        }
         touchPoint = gestureRecognizer.location(in: collectionView)
         touchPoint.x -= collectionView.contentOffset.x
         
@@ -83,16 +85,16 @@ extension HomeAppsManager {
             guard let itemCell = pageCell.collectionView.cellForItem(at: indexPath) as? BotItemCell else {
                 return
             }
-            let iconCenter = itemCell.imageContainerView.center
+            let imageCenter = itemCell.imageContainerView.center
             let offset = 20 as CGFloat
-            let targetRect = CGRect(x: iconCenter.x - offset, y: iconCenter.y - offset, width: offset * 2, height: offset * 2)
+            let targetRect = CGRect(x: imageCenter.x - offset, y: imageCenter.y - offset, width: offset * 2, height: offset * 2)
             let convertedPoint = itemCell.convert(touchPoint, from: pageCell.collectionView)
             if targetRect.contains(convertedPoint) && indexPath.row != currentInteraction.currentIndexPath.row && collectionView == candidateCollectionView {
                 if currentFolderInteraction != nil || currentInteraction.item is BotFolder || pinnedCollectionView == nil {
                     return
                 }
                 pageTimer?.invalidate()
-                startFolderOperation(for: itemCell)
+                startFolderInteraction(for: itemCell)
                 return
             } else if convertedPoint.x < itemCell.imageContainerView.frame.minX {
                 destinationIndexPath = indexPath
@@ -104,11 +106,11 @@ extension HomeAppsManager {
                     destinationIndexPath = IndexPath(item: indexPath.row + 1, section: 0)
                 }
             } else {
-                cancelFolderOperation()
+                cancelFolderInteraction()
                 return
             }
         } else if touchPoint.x <= flowLayout.sectionInset.left { // move to previous page
-            cancelFolderOperation()
+            cancelFolderInteraction()
             if collectionView == pinnedCollectionView {
                 destinationIndexPath = IndexPath(item: 0, section: 0)
             } else if !(pageTimer?.isValid ?? false) && collectionView == candidateCollectionView {
@@ -142,7 +144,7 @@ extension HomeAppsManager {
                     return
                 }
             } else {
-                cancelFolderOperation()
+                cancelFolderInteraction()
                 pageTimer?.invalidate()
                 return
             }
@@ -150,7 +152,7 @@ extension HomeAppsManager {
         
         ignoreDragOutOnTop = false
         ignoreDragOutOnBottom = false
-        cancelFolderOperation()
+        cancelFolderInteraction()
         pageTimer?.invalidate()
         pageTimer = nil
         folderTimer?.invalidate()
@@ -194,7 +196,7 @@ extension HomeAppsManager {
         if currentFolderInteraction != nil {
             folderTimer?.invalidate()
             folderTimer = nil
-            commitFolderOperation(didDrop: true)
+            commitFolderInteraction(didDrop: true)
             return
         }
         guard let currentInteraction = currentDragInteraction, let cell = currentInteraction.currentPageCell.collectionView.cellForItem(at: currentInteraction.currentIndexPath) as? BotItemCell else {

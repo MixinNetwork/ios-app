@@ -78,6 +78,7 @@ extension BotPageCell {
         }
         flowLayout.itemSize = mode.itemSize
         flowLayout.minimumInteritemSpacing = mode.minimumInteritemSpacing
+        flowLayout.minimumLineSpacing = mode.minimumLineSpacing
         flowLayout.sectionInset = mode.sectionInset
     }
     

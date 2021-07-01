@@ -36,11 +36,11 @@ class HomeAppsFolderDropInteraction: HomeAppsFolderInteraction {
     
     var item: BotItem
     
-    required init(dragInteraction: HomeAppsDragInteraction, folder: BotFolder, placeholderView: UIView) {
+    required init(dragInteraction: HomeAppsDragInteraction, folder: BotFolder, wrapperView: UIView) {
         self.dragInteraction = dragInteraction
         self.folder = folder
         self.item = folder
-        self.wrapperView = placeholderView
+        self.wrapperView = wrapperView
     }
     
 }

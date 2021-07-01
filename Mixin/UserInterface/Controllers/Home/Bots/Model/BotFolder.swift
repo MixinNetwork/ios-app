@@ -5,7 +5,9 @@ class BotFolder: BotItem {
     var id: String
     var name: String
     var pages: [[Bot]]
-    
+
+    var isNewFolder = false
+
     init(id: String, name: String, pages: [[Bot]]) {
         self.id = id
         self.name = name

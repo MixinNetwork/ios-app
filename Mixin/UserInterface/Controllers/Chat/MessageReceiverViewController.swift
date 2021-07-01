@@ -441,7 +441,7 @@ extension MessageReceiverViewController {
             newMessage.thumbUrl = message.thumbUrl
             let liveData = TransferLiveData(width: width, height: height, thumbUrl: thumbUrl, url: mediaUrl)
             newMessage.content = try! JSONEncoder.default.encode(liveData).base64EncodedString()
-        } else if message.category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue {
+        } else if message.category.hasSuffix("_TRANSCRIPT") {
             let transcriptId = UUID().uuidString.lowercased()
             let children: [TranscriptMessage] = TranscriptMessageDAO.shared.childMessages(with: message.messageId).map { original in
                 let mediaUrl: String?
@@ -474,7 +474,7 @@ extension MessageReceiverViewController {
             let message = Message.createMessage(messageId: transcriptId,
                                                 conversationId: receiver.conversationId,
                                                 userId: myUserId,
-                                                category: MessageCategory.SIGNAL_TRANSCRIPT.rawValue,
+                                                category: message.category,
                                                 content: message.content,
                                                 status: MessageStatus.SENDING.rawValue,
                                                 createdAt: Date().toUTCString())

@@ -121,7 +121,7 @@ public extension UNMutableNotificationContent {
             return R.string.localizable.alert_key_contact_audio_call_message()
         } else if message.category == MessageCategory.WEBRTC_AUDIO_CANCEL.rawValue {
             return R.string.localizable.alert_key_contact_audio_call_cancelled_message()
-        } else if message.category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue {
+        } else if message.category.hasSuffix("_TRANSCRIPT") {
             if conversationIsGroup || isRepresentativeMessage {
                 return R.string.localizable.alert_key_group_transcript_message(userFullName)
             } else {

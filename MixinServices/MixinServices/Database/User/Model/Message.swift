@@ -277,6 +277,7 @@ public enum MessageCategory: String, Decodable {
     case SIGNAL_LIVE
     case SIGNAL_POST
     case SIGNAL_LOCATION
+    case SIGNAL_TRANSCRIPT
     case PLAIN_TEXT
     case PLAIN_IMAGE
     case PLAIN_VIDEO
@@ -288,6 +289,7 @@ public enum MessageCategory: String, Decodable {
     case PLAIN_LIVE
     case PLAIN_POST
     case PLAIN_LOCATION
+    case PLAIN_TRANSCRIPT
     case APP_CARD
     case APP_BUTTON_GROUP
     case SYSTEM_CONVERSATION
@@ -313,7 +315,6 @@ public enum MessageCategory: String, Decodable {
     case KRAKEN_CANCEL
     case KRAKEN_DECLINE
     case KRAKEN_RESTART
-    case SIGNAL_TRANSCRIPT
     case EXT_UNREAD
     case EXT_ENCRYPTION
     case UNKNOWN
@@ -361,7 +362,7 @@ public enum MessageCategory: String, Decodable {
         .SIGNAL_TEXT, .PLAIN_TEXT,
         .SIGNAL_POST, .PLAIN_POST,
         .SIGNAL_DATA, .PLAIN_DATA,
-        .SIGNAL_TRANSCRIPT
+        .SIGNAL_TRANSCRIPT, .PLAIN_TRANSCRIPT
     ]
     
     public static let ftsAvailableCategoryStrings: Set<String> = Set(ftsAvailable.map(\.rawValue))

@@ -245,7 +245,7 @@ class TranscriptPreviewViewController: FullscreenPopupViewController {
                         }
                     }
                 }
-            } else if message.category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue {
+            } else if message.category.hasSuffix("_TRANSCRIPT") {
                 let vc = TranscriptPreviewViewController(transcriptMessage: message)
                 vc.presentAsChild(of: self, completion: nil)
             }

@@ -45,6 +45,8 @@ extension SendMessageService {
             msg.category = isSignalMessage ? MessageCategory.SIGNAL_POST.rawValue :  MessageCategory.PLAIN_POST.rawValue
         } else if msg.category.hasSuffix("_LOCATION") {
             msg.category = isSignalMessage ? MessageCategory.SIGNAL_LOCATION.rawValue :  MessageCategory.PLAIN_LOCATION.rawValue
+        } else if msg.category.hasSuffix("_TRANSCRIPT") {
+            msg.category = isSignalMessage ? MessageCategory.SIGNAL_TRANSCRIPT.rawValue :  MessageCategory.PLAIN_TRANSCRIPT.rawValue
         }
 
         jobCreationQueue.async {
@@ -82,7 +84,7 @@ extension SendMessageService {
                     } else if msg.category.hasSuffix("_AUDIO") {
                         let jobId = SendMessageService.shared.saveUploadJob(message: msg)
                         UploaderQueue.shared.addJob(job: AudioUploadJob(message: msg, jobId: jobId))
-                    } else if msg.category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue {
+                    } else if msg.category.hasSuffix("_TRANSCRIPT") {
                         let jobId = SendMessageService.shared.saveUploadJob(message: msg)
                         let job = TranscriptAttachmentUploadJob(message: msg,
                                                                 jobIdToRemoveAfterFinished: jobId)

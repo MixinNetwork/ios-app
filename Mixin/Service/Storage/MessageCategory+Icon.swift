@@ -22,6 +22,8 @@ extension MessageCategory {
             return R.image.ic_message_post()
         } else if category.hasSuffix("_LOCATION") {
             return R.image.ic_message_location()
+        } else if category.hasSuffix("_TRANSCRIPT") {
+            return R.image.ic_message_transcript()
         } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
             return #imageLiteral(resourceName: "ic_message_transfer")
         } else if ["WEBRTC_", "KRAKEN_"].contains(where: category.hasPrefix(_:)) {
@@ -30,8 +32,6 @@ extension MessageCategory {
             return R.image.ic_message_recalled()
         } else if category == MessageCategory.APP_BUTTON_GROUP.rawValue || category == MessageCategory.APP_CARD.rawValue {
             return #imageLiteral(resourceName: "ic_message_bot_menu")
-        } else if category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue {
-            return R.image.ic_message_transcript()
         } else {
             return nil
         }

@@ -105,7 +105,7 @@ public final class MessageDAO: UserDatabaseDAO {
     
     public func getTranscriptMessageIds(conversationId: String, database: GRDB.Database) throws -> [String] {
         let condition: SQLSpecificExpressible = Message.column(of: .conversationId) == conversationId
-            && Message.column(of: .category) == MessageCategory.SIGNAL_TRANSCRIPT.rawValue
+            && [MessageCategory.SIGNAL_TRANSCRIPT.rawValue, MessageCategory.PLAIN_TRANSCRIPT.rawValue].contains(Message.column(of: .category))
         return try Message
             .select(Message.column(of: .messageId))
             .filter(condition)
@@ -640,14 +640,15 @@ public final class MessageDAO: UserDatabaseDAO {
         try MessageMention
             .filter(MessageMention.column(of: .messageId) == messageId)
             .deleteAll(database)
+        
+        if category.hasSuffix("_TRANSCRIPT") {
+            try TranscriptMessage
+                .filter(TranscriptMessage.column(of: .transcriptId) == messageId)
+                .deleteAll(database)
+        }
         if let category = MessageCategory(rawValue: category) {
             if MessageCategory.ftsAvailable.contains(category) {
                 try deleteFTSContent(database, messageId: messageId)
-            }
-            if category == .SIGNAL_TRANSCRIPT {
-                try TranscriptMessage
-                    .filter(TranscriptMessage.column(of: .transcriptId) == messageId)
-                    .deleteAll(database)
             }
         }
         

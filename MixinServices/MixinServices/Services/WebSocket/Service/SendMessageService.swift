@@ -8,7 +8,7 @@ public class SendMessageService: MixinService {
     internal static let recallableSuffices = [
         "_TEXT", "_STICKER", "_CONTACT", "_IMAGE", "_DATA",
         "_AUDIO", "_VIDEO", "_LIVE", "_POST", "_LOCATION",
-        MessageCategory.SIGNAL_TRANSCRIPT.rawValue
+        "_TRANSCRIPT"
     ]
     
     public let jobCreationQueue = DispatchQueue(label: "one.mixin.services.queue.send.message.job.creation")
@@ -66,7 +66,7 @@ public class SendMessageService: MixinService {
     @discardableResult
     public func saveUploadJob(message: Message) -> String {
         let job: Job
-        if message.category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue {
+        if message.category.hasSuffix("_TRANSCRIPT") {
             job = Job(attachmentMessage: message.messageId, action: .UPLOAD_TRANSCRIPT_ATTACHMENT)
         } else {
             job = Job(attachmentMessage: message.messageId, action: .UPLOAD_ATTACHMENT)

@@ -62,18 +62,15 @@ struct Context {
     delete ctx;
     
     NSString *plain = output.string;
-    const NSUInteger length = plain.length;
-    NSUInteger numberOfTrailingLinebreaks = 0;
-    while ([plain characterAtIndex:length - 1 - numberOfTrailingLinebreaks] == '\n') {
-        numberOfTrailingLinebreaks++;
+    NSRange range = [plain rangeOfCharacterFromSet:NSCharacterSet.whitespaceAndNewlineCharacterSet
+                                           options:NSBackwardsSearch];
+    while (range.length != 0 && NSMaxRange(range) == plain.length) {
+        [output replaceCharactersInRange:range withString:@""];
+        range = [plain rangeOfCharacterFromSet:NSCharacterSet.whitespaceAndNewlineCharacterSet
+                                       options:NSBackwardsSearch];
     }
-    if (numberOfTrailingLinebreaks == 0) {
-        auto linebreak = [[NSAttributedString alloc] initWithString:@"\n" attributes:attributes];
-        [output appendAttributedString:linebreak];
-    } else if (numberOfTrailingLinebreaks > 1) {
-        NSRange range = NSMakeRange(0, length - numberOfTrailingLinebreaks + 1);
-        output = [output attributedSubstringFromRange:range];
-    }
+    auto linebreak = [[NSAttributedString alloc] initWithString:@"\n" attributes:attributes];
+    [output appendAttributedString:linebreak];
     
     return [output copy];
 }

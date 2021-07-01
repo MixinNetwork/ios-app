@@ -502,6 +502,7 @@ extension MixinWebViewController {
         }
         
         let vc = MessageReceiverViewController.instance(content: .text(currentUrl.absoluteString))
+        let navigationController = self.navigationController ?? UIApplication.homeNavigationController
         navigationController?.pushViewController(vc, animated: true)
     }
     

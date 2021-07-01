@@ -256,7 +256,12 @@ class CallViewController: ResizablePopupViewController {
                                       preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: R.string.localizable.action_learn_more(), style: .default, handler: { (_) in
-            MixinWebViewController.presentInstance(with: .init(conversationId: "", initialUrl: .aboutEncryption), asChildOf: self)
+            guard let container = UIApplication.homeContainerViewController else {
+                return
+            }
+            self.minimize {
+                MixinWebViewController.presentInstance(with: .init(conversationId: "", initialUrl: .aboutEncryption), asChildOf: container)
+            }
         }))
         present(alert, animated: true, completion: nil)
     }

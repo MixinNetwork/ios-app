@@ -38,6 +38,16 @@ class GroupCallConfirmationViewController: CallViewController {
         CallService.shared.requestStartGroupCall(conversation: conversation, invitingMembers: [], animated: false)
     }
     
+    override func learnMoreAboutEncryption() {
+        guard let container = UIApplication.currentActivity() else {
+            return
+        }
+        hideContentView {
+            CallService.shared.removeViewControllerAsContainersChildIfNeeded(self)
+            MixinWebViewController.presentInstance(with: .init(conversationId: "", initialUrl: .aboutEncryption), asChildOf: container)
+        }
+    }
+    
     func loadMembers(with userIds: [String]) {
         DispatchQueue.global().async {
             let members = UserDAO.shared.getUsers(with: userIds)

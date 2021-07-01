@@ -134,7 +134,7 @@ class CallViewController: ResizablePopupViewController {
             var horizontalInset = view.bounds.width - numberOfGroupCallMembersPerRow * CallMemberCell.Layout.normal.avatarWrapperWidth
             horizontalInset /= 2 + 2 * numberOfGroupCallMembersPerRow
             horizontalInset = floor(horizontalInset)
-            let verticalInset = round(horizontalInset * 3)
+            let verticalInset = round(horizontalInset * 2)
             let itemSize = CGSize(width: CallMemberCell.Layout.normal.avatarWrapperWidth + horizontalInset * 2,
                                   height: CallMemberCell.Layout.normal.avatarWrapperWidth + labelHeight + CallMemberCell.Layout.normal.labelTopMargin)
             membersCollectionLayout.itemSize = itemSize
@@ -242,6 +242,37 @@ class CallViewController: ResizablePopupViewController {
         speakerSwitch.isSelected = service.usesSpeaker
     }
     
+    func setAcceptButtonHidden(_ hidden: Bool) {
+        acceptStackView.alpha = hidden ? 0 : 1
+        if hidden {
+            hangUpButtonLeadingConstraint.priority = .defaultLow
+            hangUpButtonCenterXConstraint.priority = .defaultHigh
+        } else {
+            hangUpButtonLeadingConstraint.priority = .defaultHigh
+            hangUpButtonCenterXConstraint.priority = .defaultLow
+        }
+    }
+    
+    func setConnectionButtonsEnabled(_ enabled: Bool) {
+        acceptButton.isEnabled = enabled
+        hangUpButton.isEnabled = enabled
+    }
+    
+    func setFunctionSwitchesHidden(_ hidden: Bool) {
+        let alpha: CGFloat = hidden ? 0 : 1
+        muteStackView.alpha = alpha
+        speakerStackView.alpha = alpha
+    }
+    
+    func learnMoreAboutEncryption() {
+        guard let container = UIApplication.currentActivity() else {
+            return
+        }
+        self.minimize {
+            MixinWebViewController.presentInstance(with: .init(conversationId: "", initialUrl: .aboutEncryption), asChildOf: container)
+        }
+    }
+    
     @IBAction func minimizeAction(_ sender: Any) {
         minimize(completion: nil)
     }
@@ -256,7 +287,7 @@ class CallViewController: ResizablePopupViewController {
                                       preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: R.string.localizable.action_learn_more(), style: .default, handler: { (_) in
-            MixinWebViewController.presentInstance(with: .init(conversationId: "", initialUrl: .aboutEncryption), asChildOf: self)
+            self.learnMoreAboutEncryption()
         }))
         present(alert, animated: true, completion: nil)
     }
@@ -461,28 +492,6 @@ extension CallViewController {
 }
 
 extension CallViewController {
-    
-    func setAcceptButtonHidden(_ hidden: Bool) {
-        acceptStackView.alpha = hidden ? 0 : 1
-        if hidden {
-            hangUpButtonLeadingConstraint.priority = .defaultLow
-            hangUpButtonCenterXConstraint.priority = .defaultHigh
-        } else {
-            hangUpButtonLeadingConstraint.priority = .defaultHigh
-            hangUpButtonCenterXConstraint.priority = .defaultLow
-        }
-    }
-    
-    func setConnectionButtonsEnabled(_ enabled: Bool) {
-        acceptButton.isEnabled = enabled
-        hangUpButton.isEnabled = enabled
-    }
-    
-    func setFunctionSwitchesHidden(_ hidden: Bool) {
-        let alpha: CGFloat = hidden ? 0 : 1
-        muteStackView.alpha = alpha
-        speakerStackView.alpha = alpha
-    }
     
     private func setConnectionDurationTimerEnabled(_ enabled: Bool) {
         timer?.invalidate()

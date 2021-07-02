@@ -95,6 +95,7 @@ extension ScreenLockManager {
         AppDelegate.current.mainWindow.makeKeyAndVisible()
         viewController = nil
         window = nil
+        AppGroupUserDefaults.User.lastLockScreenBiometricVerifiedDate = Date()
     }
     
 }
@@ -158,7 +159,6 @@ extension ScreenLockManager {
             isLastAuthenticationStillValid = true
             hasLastBiometricAuthenticationFailed = false
             hideScreenLockView()
-            AppGroupUserDefaults.User.lastLockScreenBiometricVerifiedDate = Date()
         case .authenticationFailed:
             hasLastBiometricAuthenticationFailed = true
             viewController?.showUnlockOption(true)

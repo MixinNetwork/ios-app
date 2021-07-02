@@ -90,8 +90,8 @@ public final class TranscriptMessageDAO: UserDatabaseDAO {
         transcriptId: String,
         messageId: String,
         content: String,
-        mediaKey: Data,
-        mediaDigest: Data,
+        mediaKey: Data?,
+        mediaDigest: Data?,
         mediaStatus: String,
         mediaCreatedAt: String
     ) {

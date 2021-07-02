@@ -502,7 +502,7 @@ class ConversationViewController: UIViewController {
                     self.navigationController?.pushViewController(vc, animated: true)
                 }))
                 alert.addAction(UIAlertAction(title: R.string.localizable.chat_forward_combined(), style: .default, handler: { (_) in
-                    let vc = MessageReceiverViewController.instance(content: .transcript(messages), hideApps: true)
+                    let vc = MessageReceiverViewController.instance(content: .transcript(messages))
                     self.navigationController?.pushViewController(vc, animated: true)
                 }))
                 alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
@@ -831,7 +831,7 @@ class ConversationViewController: UIViewController {
                 let vc = LocationPreviewViewController(location: location)
                 let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.chat_menu_location())
                 navigationController?.pushViewController(container, animated: true)
-            } else if  message.category.hasSuffix("_TRANSCRIPT") {
+            } else if message.category.hasSuffix("_TRANSCRIPT") {
                 let vc = TranscriptPreviewViewController(transcriptMessage: message)
                 vc.presentAsChild(of: self, completion: nil)
             } else {

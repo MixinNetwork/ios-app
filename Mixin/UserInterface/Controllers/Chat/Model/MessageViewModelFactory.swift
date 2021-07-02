@@ -133,7 +133,7 @@ class MessageViewModelFactory {
                 viewModel = PostMessageViewModel(message: message)
             } else if message.category.hasSuffix("_LOCATION") {
                 viewModel = LocationMessageViewModel(message: message)
-            } else if message.category.hasPrefix("_TRANSCRIPT") {
+            } else if message.category.hasSuffix("_TRANSCRIPT") {
                 viewModel = TranscriptMessageViewModel(message: message)
             } else if message.category.hasPrefix("WEBRTC_") {
                 viewModel = CallMessageViewModel(message: message)

@@ -12,14 +12,15 @@ final class TranscriptAttachmentUploadJob: AsynchronousJob {
     }
     
     private struct Metadata {
-        let mediaKey: Data
-        let mediaDigest: Data
+        let mediaKey: Data?
+        let mediaDigest: Data?
         let attachmentId: String
     }
     
     private let jobIdToRemove: String
     private let maxNumberOfConcurrentUploadTask = 3
     private let lock = NSLock()
+    private let isPlainTranscript: Bool
     
     private var message: Message
     private var childMessages: [TranscriptMessage] = []
@@ -28,6 +29,7 @@ final class TranscriptAttachmentUploadJob: AsynchronousJob {
     
     init(message: Message, jobIdToRemoveAfterFinished jobId: String) {
         self.message = message
+        self.isPlainTranscript = message.category.hasPrefix("PLAIN_")
         self.jobIdToRemove = jobId
     }
     
@@ -44,10 +46,10 @@ final class TranscriptAttachmentUploadJob: AsynchronousJob {
             guard child.category.includesAttachment else {
                 continue
             }
+            let areKeyDigestReady = isPlainTranscript || (child.mediaKey != nil && child.mediaDigest != nil)
             if let content = child.content,
                UUID(uuidString: content) != nil,
-               child.mediaKey != nil,
-               child.mediaDigest != nil,
+               areKeyDigestReady,
                child.mediaStatus == MediaStatus.DONE.rawValue,
                let createdAt = child.mediaCreatedAt?.toUTCDate(),
                abs(createdAt.timeIntervalSinceNow) < secondsPerDay
@@ -62,8 +64,20 @@ final class TranscriptAttachmentUploadJob: AsynchronousJob {
                 continue
             } else if let mediaUrl = child.mediaUrl {
                 let url = AttachmentContainer.url(transcriptId: message.messageId, filename: mediaUrl)
-                if let stream = AttachmentEncryptingInputStream(url: url), stream.streamError == nil {
-                    let request = Request(childIndex: index, stream: stream)
+                let stream: InputStream?
+                if isPlainTranscript {
+                    stream = InputStream(url: url)
+                } else {
+                    stream = AttachmentEncryptingInputStream(url: url)
+                }
+                if let stream = stream, stream.streamError == nil {
+                    let contentLength: Int
+                    if let stream = stream as? AttachmentEncryptingInputStream {
+                        contentLength = stream.contentLength
+                    } else {
+                        contentLength = Int(FileManager.default.fileSize(url.path))
+                    }
+                    let request = Request(childIndex: index, stream: stream, contentLength: contentLength)
                     if loadingRequests.count < maxNumberOfConcurrentUploadTask {
                         loadingRequests[child.messageId] = request
                     } else {
@@ -162,7 +176,8 @@ extension TranscriptAttachmentUploadJob {
     private final class Request {
         
         let childIndex: Int
-        let stream: AttachmentEncryptingInputStream
+        let stream: InputStream
+        let contentLength: Int
         
         weak var job: TranscriptAttachmentUploadJob?
         
@@ -171,9 +186,10 @@ extension TranscriptAttachmentUploadJob {
         @Synchronized(value: nil)
         private var uploadRequest: Alamofire.Request?
         
-        init(childIndex: Int, stream: AttachmentEncryptingInputStream) {
+        init(childIndex: Int, stream: InputStream, contentLength: Int) {
             self.childIndex = childIndex
             self.stream = stream
+            self.contentLength = contentLength
         }
         
         func start() {
@@ -212,7 +228,7 @@ extension TranscriptAttachmentUploadJob {
                 return
             }
             request.setValue("application/octet-stream", forHTTPHeaderField: "Content-Type")
-            request.setValue("\(stream.contentLength)", forHTTPHeaderField: "Content-Length")
+            request.setValue("\(contentLength)", forHTTPHeaderField: "Content-Length")
             request.setValue("public-read", forHTTPHeaderField: "x-amz-acl")
             request.setValue("Connection", forHTTPHeaderField: "close")
             request.cachePolicy = .reloadIgnoringCacheData
@@ -225,16 +241,24 @@ extension TranscriptAttachmentUploadJob {
                 case .success:
                     if let error = self.stream.streamError {
                         self.job?.request(self, failedWith: error)
-                    } else if let key = self.stream.key, let digest = self.stream.digest {
-                        let metadata = Metadata(mediaKey: key,
-                                                mediaDigest: digest,
+                    } else if let stream = self.stream as? AttachmentEncryptingInputStream {
+                        if let key = stream.key, let digest = stream.digest {
+                            let metadata = Metadata(mediaKey: key,
+                                                    mediaDigest: digest,
+                                                    attachmentId: attachmentResponse.attachmentId)
+                            let createdAt = attachmentResponse.createdAt ?? Date().toUTCString()
+                            self.job?.request(self, succeedWith: metadata, createdAt: createdAt)
+                        } else {
+                            let error = Error.missingMetadata(hasKey: stream.key != nil,
+                                                              hasDigest: stream.digest != nil)
+                            self.job?.request(self, failedWith: error)
+                        }
+                    } else {
+                        let metadata = Metadata(mediaKey: nil,
+                                                mediaDigest: nil,
                                                 attachmentId: attachmentResponse.attachmentId)
                         let createdAt = attachmentResponse.createdAt ?? Date().toUTCString()
                         self.job?.request(self, succeedWith: metadata, createdAt: createdAt)
-                    } else {
-                        let error = Error.missingMetadata(hasKey: self.stream.key != nil,
-                                                          hasDigest: self.stream.digest != nil)
-                        self.job?.request(self, failedWith: error)
                     }
                 case .failure(let error):
                     switch error {

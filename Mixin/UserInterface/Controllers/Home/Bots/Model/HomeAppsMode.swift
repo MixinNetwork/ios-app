@@ -7,6 +7,8 @@ enum HomeAppsMode {
     case folder
     case nestedFolder
     
+    static let nestedFolderSize = CGSize(width: 60, height: 60)
+    
     var sectionInset: UIEdgeInsets {
         switch self {
         case .regular:
@@ -22,7 +24,7 @@ enum HomeAppsMode {
     
     var minimumInteritemSpacing: CGFloat {
         var margin: CGFloat = 0
-        var width = AppDelegate.current.mainWindow.bounds.width
+        var totalWidth = AppDelegate.current.mainWindow.bounds.width
         switch self {
         case .regular:
             margin = 0
@@ -32,10 +34,10 @@ enum HomeAppsMode {
             margin = 32
         case .nestedFolder:
             margin = 0
-            width = 60
+            totalWidth = 60
         }
         let cellsWidth = itemSize.width * CGFloat(appsPerRow)
-        let totalSpacing = width - margin * 2 - sectionInset.horizontal - cellsWidth
+        let totalSpacing = totalWidth - margin * 2 - sectionInset.horizontal - cellsWidth
         return floor(totalSpacing / CGFloat(appsPerRow - 1))
     }
     
@@ -58,6 +60,20 @@ enum HomeAppsMode {
             return CGSize(width: 80, height: 100)
         case .nestedFolder:
             return CGSize(width: 14, height: 14)
+        }
+    }
+    
+    var pageSize: CGSize {
+        let screenWidth = AppDelegate.current.mainWindow.bounds.width
+        switch self {
+        case .regular:
+            return CGSize(width: screenWidth, height: itemSize.height * CGFloat(rowsPerPage))
+        case .pinned:
+            return CGSize(width: screenWidth - 20 * 2, height: 82)
+        case .folder:
+            return CGSize(width: screenWidth - 32 * 2, height: 328)
+        case .nestedFolder:
+            return CGSize(width: 60, height: 60)
         }
     }
     

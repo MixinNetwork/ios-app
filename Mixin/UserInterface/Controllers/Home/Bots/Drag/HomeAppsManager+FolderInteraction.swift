@@ -6,13 +6,13 @@ extension HomeAppsManager {
     func showFolder(from cell: BotFolderCell, isNewFolder: Bool = false, startInRename: Bool = false) -> HomeAppsFolderViewController {
         openFolderInfo = HomeAppsOpenFolderInfo(cell: cell, isNewFolder: isNewFolder)
         cell.stopShaking()
-        let convertedFrame = cell.convert(cell.contentView.frame, to: self.viewController.view)
-        let folderViewController = HomeAppsFolderViewController()
+        let convertedFrame = cell.convert(cell.contentView.frame, to: AppDelegate.current.mainWindow)
+        let folderViewController = HomeAppsFolderViewController.instance()
         folderViewController.modalPresentationStyle = .overFullScreen
         folderViewController.isEditing = self.isEditing
         folderViewController.folder = cell.item as? BotFolder
         folderViewController.currentPage = cell.currentPage
-        folderViewController.sourcePoint = convertedFrame.origin
+        folderViewController.sourceFrame = CGRect(origin: convertedFrame.origin, size: HomeAppsMode.nestedFolderSize)
         folderViewController.startInRename = startInRename
         folderViewController.delegate = self
         if let dragInteraction = currentDragInteraction {
@@ -51,7 +51,7 @@ extension HomeAppsManager {
     
     func cancelFolderInteraction() {
         guard var folderInteraction = currentFolderInteraction, let index = folderInteraction.dragInteraction.currentPageCell.items.firstIndex(where: { $0 === folderInteraction.item }), let cell = folderInteraction.dragInteraction.currentPageCell.collectionView.cellForItem(at: IndexPath(item: index, section: 0)) as? BotItemCell,
-            !folderInteraction.isDismissing else { return }
+              !folderInteraction.isDismissing else { return }
         
         folderInteraction.dragInteraction.transitionFromFolderWrapperView()
         folderTimer?.invalidate()
@@ -131,7 +131,7 @@ extension HomeAppsManager {
                     newFolder.isNewFolder = false
                 }
             }
-
+            
         }
     }
     
@@ -209,7 +209,7 @@ extension HomeAppsManager {
                 folderCell.folderWrapperView.isHidden = false
                 folderCell.startShaking()
             }
-
+            
         }
     }
     
@@ -224,8 +224,8 @@ extension HomeAppsManager {
                 interaction.dragInteraction.currentPageCell.collectionView.deleteItems(at: [IndexPath(item: sourceIndex, section: 0)])
             } completion: { _ in
                 folderCell.stopShaking()
-                let convertedFrame = folderCell.convert(folderCell.imageContainerView.frame, to: self.viewController.view)
-                folderViewController.sourcePoint = convertedFrame.origin
+                let convertedFrame = folderCell.convert(folderCell.imageContainerView.frame, to: AppDelegate.current.mainWindow)
+                folderViewController.sourceFrame = CGRect(origin: convertedFrame.origin, size: HomeAppsMode.nestedFolderSize)
                 if !isNewFolder {
                     folderCell.folderWrapperView.isHidden = false
                 }
@@ -280,5 +280,124 @@ extension HomeAppsManager {
 }
 
 extension HomeAppsManager: HomeAppsFolderViewControllerDelegate {
+    
+    func openAnimationWillStart(on viewController: HomeAppsFolderViewController) {
+        guard let info = openFolderInfo else { return }
+        info.cell.imageContainerView?.isHidden = true
+        info.cell.folderWrapperView.isHidden = true
+    }
+    
+    func didChange(name: String, on viewController: HomeAppsFolderViewController) {
+        guard let info = openFolderInfo else { return }
+        info.cell.label?.text = name
+    }
+    
+    func didSelect(app: Bot, on viewController: HomeAppsFolderViewController) {
+        delegate?.didSelect(app: app, on: self)
+    }
+    
+    func didEnterEditingMode(on viewController: HomeAppsFolderViewController) {
+        enterEditingMode()
+    }
+    
+    func didBeginFolderDragOut(withTransfer transfer: HomeAppsDragInteractionTransfer, on viewController: HomeAppsFolderViewController) {
+        guard let info = openFolderInfo else { return }
+        let folderIndex = items[currentPage].firstIndex(where: { $0 === info.folder })!
+        let pageCell = currentPageCell
+        if info.folder.pages.flatMap({ $0 }).count == 0 {
+            items[currentPage].append(transfer.interaction.item)
+            items[currentPage].remove(at: folderIndex)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.45, execute: {
+                self.perform(transfer: transfer)
+                pageCell.draggedItem = transfer.interaction.item
+                pageCell.items = self.items[self.currentPage]
+                
+                self.currentDragInteraction?.currentPageCell = pageCell
+                self.currentDragInteraction?.currentIndexPath = IndexPath(item: pageCell.collectionView(pageCell.collectionView, numberOfItemsInSection: 0) - 1, section: 0)
+                self.currentDragInteraction?.needsUpdate = false
+                pageCell.collectionView.performBatchUpdates({
+                    pageCell.collectionView.deleteItems(at: [IndexPath(item: folderIndex, section: 0)])
+                    pageCell.collectionView.insertItems(at: [IndexPath(item: self.items[self.currentPage].count - 1, section: 0)])
+                }, completion: { _ in
+                    // force end the operation.
+                    if self.longPressRecognizer.state == .possible {
+                        self.endDragInteraction(self.longPressRecognizer)
+                    }
+                })
+            })
+        } else {
+            perform(transfer: transfer)
+            currentDragInteraction?.currentPageCell = pageCell
+            if items[currentPage].count == mode.appsPerPage {
+                currentDragInteraction?.savedState = items
+                moveLastItem(inPage: currentPage)
+            }
+            items[currentPage].append(transfer.interaction.item)
+            pageCell.draggedItem = transfer.interaction.item
+            var indexPathRow = pageCell.collectionView(pageCell.collectionView, numberOfItemsInSection: 0)
+            if indexPathRow == mode.appsPerPage {
+                indexPathRow -= 1
+            }
+            let indexPath = IndexPath(item: indexPathRow, section: 0)
+            currentDragInteraction?.currentIndexPath = indexPath
+            currentDragInteraction?.needsUpdate = false
+            pageCell.items = items[currentPage]
+            pageCell.collectionView.performBatchUpdates({
+                if self.currentDragInteraction?.savedState == nil {
+                    pageCell.collectionView.insertItems(at: [indexPath])
+                } else {
+                    pageCell.collectionView.reloadItems(at: [indexPath])
+                }
+            }, completion: { _ in
+                if self.longPressRecognizer.state == .possible {
+                    self.endDragInteraction(self.longPressRecognizer)
+                }
+            })
+        }
+        if info.isNewFolder {
+            info.shouldCancelCreation = true
+        }
+    }
+    
+    func dismissAnimationWillStart(currentPage: Int, updatedPages: [[Bot]], on viewController: HomeAppsFolderViewController) {
+        guard let info = openFolderInfo else { return }
+        info.folder.pages = updatedPages
+        info.cell.item = info.folder
+        info.cell.move(to: currentPage, animated: false)
+        delegate?.didUpdateItems(on: self)
+    }
+    
+    func dismissAnimationDidFinish(on viewController: HomeAppsFolderViewController) {
+        guard let info = openFolderInfo else { return }
+        viewController.dismiss(animated: false, completion: {
+            self.openFolderInfo = nil
+            info.cell.imageContainerView?.isHidden = false
+            info.cell.folderWrapperView.isHidden = false
+            if self.isEditing {
+                info.cell.startShaking()
+            }
+        })
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
+            if self.isEditing {
+                info.cell.moveToFirstAvailablePage()
+            } else {
+                info.cell.move(to: 0, animated: true)
+            }
+        })
+        guard let folderIndex = items[currentPage].firstIndex(where: { $0 === info.folder }) else { return }
+        if info.shouldCancelCreation {
+            let cell = currentPageCell.collectionView.cellForItem(at: IndexPath(item: folderIndex, section: 0)) as! BotFolderCell
+            cell.revokeFolderCreation {
+                self.items[self.currentPage][folderIndex] = info.folder.pages[0][0]
+                self.currentPageCell.items = self.items[self.currentPage]
+                self.currentPageCell.collectionView.performBatchUpdates({
+                    self.currentPageCell.collectionView.reloadItems(at: [IndexPath(item: folderIndex, section: 0)])
+                }, completion: nil)
+            }
+        } else if info.folder.pages.reduce(0, { $0 + $1.count }) == 0 {
+            items[currentPage].remove(at: folderIndex)
+            currentPageCell.delete(item: info.folder)
+        }
+    }
     
 }

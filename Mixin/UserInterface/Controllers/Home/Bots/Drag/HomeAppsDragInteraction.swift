@@ -42,13 +42,13 @@ class HomeAppsDragInteraction {
     
     func transitionToFolderWrapperView() {
         UIView.animate(withDuration: 0.2) {
-            self.liftView.nameView.alpha = 0
+            self.liftView.nameView?.alpha = 0
         }
     }
     
     func transitionFromFolderWrapperView() {
         UIView.animate(withDuration: 0.2) {
-            self.liftView.nameView.alpha = 1
+            self.liftView.nameView?.alpha = 1
         }
     }
 }

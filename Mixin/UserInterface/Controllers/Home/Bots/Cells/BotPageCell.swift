@@ -22,6 +22,10 @@ class BotPageCell: UICollectionViewCell {
     
     private var isEditing = false
     
+    override func awakeFromNib() {
+        super.awakeFromNib()
+    }
+    
 }
 
 extension BotPageCell {

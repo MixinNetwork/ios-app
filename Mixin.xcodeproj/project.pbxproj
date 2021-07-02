@@ -581,8 +581,6 @@
 		7C66F1AF268ABE3F006D8462 /* Bot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1AE268ABE3F006D8462 /* Bot.swift */; };
 		7C66F1B1268AF52C006D8462 /* BotCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1B0268AF52C006D8462 /* BotCell.swift */; };
 		7C66F1B3268B0B11006D8462 /* BotsExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1B2268B0B11006D8462 /* BotsExtension.swift */; };
-		7C66F1B5268B1AEC006D8462 /* BotsDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1B4268B1AEC006D8462 /* BotsDataManager.swift */; };
-		7C66F1B8268B1C5A006D8462 /* BotsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1B7268B1C5A006D8462 /* BotsData.swift */; };
 		7C66F1BB268B2CE5006D8462 /* HomeAppsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1BA268B2CE5006D8462 /* HomeAppsManager.swift */; };
 		7C66F1BD268B2F23006D8462 /* HomeAppsManager+DragInteraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1BC268B2F23006D8462 /* HomeAppsManager+DragInteraction.swift */; };
 		7C66F1BF268B3514006D8462 /* HomeAppsManager+FolderInteraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1BE268B3514006D8462 /* HomeAppsManager+FolderInteraction.swift */; };
@@ -1550,8 +1548,6 @@
 		7C66F1AE268ABE3F006D8462 /* Bot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bot.swift; sourceTree = "<group>"; };
 		7C66F1B0268AF52C006D8462 /* BotCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BotCell.swift; sourceTree = "<group>"; };
 		7C66F1B2268B0B11006D8462 /* BotsExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BotsExtension.swift; sourceTree = "<group>"; };
-		7C66F1B4268B1AEC006D8462 /* BotsDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BotsDataManager.swift; sourceTree = "<group>"; };
-		7C66F1B7268B1C5A006D8462 /* BotsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BotsData.swift; sourceTree = "<group>"; };
 		7C66F1BA268B2CE5006D8462 /* HomeAppsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeAppsManager.swift; sourceTree = "<group>"; };
 		7C66F1BC268B2F23006D8462 /* HomeAppsManager+DragInteraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeAppsManager+DragInteraction.swift"; sourceTree = "<group>"; };
 		7C66F1BE268B3514006D8462 /* HomeAppsManager+FolderInteraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeAppsManager+FolderInteraction.swift"; sourceTree = "<group>"; };
@@ -2544,7 +2540,6 @@
 			isa = PBXGroup;
 			children = (
 				7C66F1B9268B2CC2006D8462 /* Drag */,
-				7C66F1B6268B1C2A006D8462 /* Database */,
 				7C66F0212689C9D7006D8462 /* Model */,
 				7C35D1CF2689C04F002B5BBC /* Cells */,
 				7C5823D4268966A1003AA142 /* HomeAppsFolderViewController.swift */,
@@ -2563,15 +2558,6 @@
 				5EF90904268C92B900B934AF /* HomeAppsMode.swift */,
 			);
 			path = Model;
-			sourceTree = "<group>";
-		};
-		7C66F1B6268B1C2A006D8462 /* Database */ = {
-			isa = PBXGroup;
-			children = (
-				7C66F1B7268B1C5A006D8462 /* BotsData.swift */,
-				7C66F1B4268B1AEC006D8462 /* BotsDataManager.swift */,
-			);
-			path = Database;
 			sourceTree = "<group>";
 		};
 		7C66F1B9268B2CC2006D8462 /* Drag */ = {
@@ -4587,7 +4573,6 @@
 				7B51DDB5223A489F008ACDBB /* LoginContext.swift in Sources */,
 				DFC0ECFB23BB610C0091E7AC /* ProvisioningAPI.swift in Sources */,
 				DF5D9F281F9C79E10036D5FD /* UIApplicationExtension.swift in Sources */,
-				7C66F1B5268B1AEC006D8462 /* BotsDataManager.swift in Sources */,
 				DF7A4B4A1FCE6EE200F21BCB /* UIViewExtension.swift in Sources */,
 				7C5823D5268966A1003AA142 /* HomeAppsFolderViewController.swift in Sources */,
 				7BD00F1E2559711A004D8814 /* WalletSearchResultsViewController.swift in Sources */,
@@ -4927,7 +4912,6 @@
 				7B2C8B2D2524D26900347AC3 /* ClipSwitcherViewController.swift in Sources */,
 				7B34A19722C0B59200665F41 /* MixinNavigationAnimating.swift in Sources */,
 				DFE1F9811FAB40A800537D43 /* CornerButton.swift in Sources */,
-				7C66F1B8268B1C5A006D8462 /* BotsData.swift in Sources */,
 				DF846CD923694A2E00AA1197 /* MultisigUsersWindow.swift in Sources */,
 				DFC0ECE223BB60DE0091E7AC /* EmergencyResponse.swift in Sources */,
 				7B81DD6822EACF7500A36186 /* GalleryView.swift in Sources */,

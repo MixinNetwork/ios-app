@@ -17,8 +17,11 @@ class BotItemCell: UICollectionViewCell {
     var snapshotView: HomeAppSnapshotView {
         let iconView = imageContainerView.snapshotView(afterScreenUpdates: true)!
         iconView.frame = imageContainerView.frame
-        let nameView = label!.snapshotView(afterScreenUpdates: true)!
-        nameView.frame = label!.frame
+        guard let label = label else {
+            return HomeAppSnapshotView(frame: bounds, iconView: iconView)
+        }
+        let nameView = label.snapshotView(afterScreenUpdates: true)!
+        nameView.frame = label.frame
         return HomeAppSnapshotView(frame: bounds, iconView: iconView, nameView: nameView)
     }
     

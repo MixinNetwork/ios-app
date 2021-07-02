@@ -10,7 +10,7 @@ protocol HomeAppsFolderInteraction {
 }
 
 class HomeAppsFolderCreationInteraction: HomeAppsFolderInteraction {
-
+    
     var dragInteraction: HomeAppsDragInteraction
     var destinationApp: Bot
     var wrapperView: UIView

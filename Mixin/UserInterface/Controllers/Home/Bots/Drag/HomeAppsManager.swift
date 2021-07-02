@@ -4,6 +4,8 @@ protocol HomeAppsManagerDelegate: AnyObject {
     
     func didUpdateItems(on manager: HomeAppsManager)
     func didUpdate(pageCount: Int, on manager: HomeAppsManager)
+    func didMove(toPage page: Int, on manager: HomeAppsManager)
+    func collectionViewDidScroll(_ collectionView: UICollectionView, on manager: HomeAppsManager)
     func didEnterEditingMode(on manager: HomeAppsManager)
     func didBeginFolderDragOut(transfer: HomeAppsDragInteractionTransfer, on manager: HomeAppsManager)
     func didSelect(app: Bot, on manager: HomeAppsManager)
@@ -16,7 +18,7 @@ class HomeAppsManager: NSObject {
     
     unowned var viewController: UIViewController
     unowned var candidateCollectionView: UICollectionView
-    unowned var pinnedCollectionView: UICollectionView? // folderVC use this manager
+    unowned var pinnedCollectionView: UICollectionView?
     var isHome: Bool
     
     var isEditing = false
@@ -52,7 +54,7 @@ class HomeAppsManager: NSObject {
     var currentDragInteraction: HomeAppsDragInteraction?
     var currentFolderInteraction: HomeAppsFolderInteraction?
     var openFolderInfo: HomeAppsOpenFolderInfo?
-
+    
     var pageTimer: Timer?
     var folderTimer: Timer?
     var folderRemovalTimer: Timer?
@@ -63,22 +65,22 @@ class HomeAppsManager: NSObject {
     var longPressRecognizer = UILongPressGestureRecognizer()
     let tapRecognizer = UITapGestureRecognizer()
     
-    init(isHome: Bool, viewController: UIViewController, candidateCollectionView: UICollectionView, pinnedCollectionView: UICollectionView? = nil) {
+    init(isHome: Bool, viewController: UIViewController, candidateCollectionView: UICollectionView, items: [[BotItem]], pinnedCollectionView: UICollectionView? = nil, pinnedItems:[BotItem] = []) {
         self.isHome = isHome
         self.viewController = viewController
         self.candidateCollectionView = candidateCollectionView
         self.pinnedCollectionView = pinnedCollectionView
-        
-        items = [
-            [Bot(id: "1", name: "1"), Bot(id: "2", name: "2"), Bot(id: "3", name: "3"), Bot(id: "4", name: "4"), Bot(id: "44", name: "44"),
-             BotFolder(id: "111", name: "111", pages: [
-                [Bot(id: "1111", name: "1111"), Bot(id: "2222", name: "22222"), Bot(id: "3333", name: "33333"), Bot(id: "4444", name: "44444"),  Bot(id: "5555", name: "55555"),  Bot(id: "6666", name: "66666"),  Bot(id: "7777", name: "77777"),  Bot(id: "8888", name: "88888"),  Bot(id: "9999", name: "99999")]
-             ])],
-            [Bot(id: "5", name: "5"), Bot(id: "6", name: "6"), Bot(id: "7", name: "7"), Bot(id: "8", name: "8"), Bot(id: "13", name: "13")]
-        ]
-        pinnedItems = [Bot(id: "9", name: "9"), Bot(id: "10", name: "10"), Bot(id: "11", name: "11"), Bot(id: "12", name: "12")]
+        self.items = items
+        self.pinnedItems = pinnedItems
         
         super.init()
+        
+        if let flowLayout = candidateCollectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+            flowLayout.itemSize = isHome ? HomeAppsMode.regular.pageSize : HomeAppsMode.folder.pageSize
+        }
+        if let flowLayout = pinnedCollectionView?.collectionViewLayout as? UICollectionViewFlowLayout {
+            flowLayout.itemSize = HomeAppsMode.pinned.pageSize
+        }
         
         self.candidateCollectionView.dataSource = self
         self.candidateCollectionView.delegate = self
@@ -88,8 +90,10 @@ class HomeAppsManager: NSObject {
         
         longPressRecognizer.addTarget(self, action: #selector(handleLongPressGesture(_:)))
         self.viewController.view.addGestureRecognizer(longPressRecognizer)
-        tapRecognizer.addTarget(self, action: #selector(handleTapGesture))
-        self.viewController.view.addGestureRecognizer(tapRecognizer)
+        
+        //tapRecognizer.cancelsTouchesInView = false
+        //tapRecognizer.addTarget(self, action: #selector(handleTapGesture))
+        //self.viewController.view.addGestureRecognizer(tapRecognizer)
     }
     
 }
@@ -259,6 +263,16 @@ extension HomeAppsManager: UICollectionViewDataSource, UICollectionViewDelegate 
         if isEditing {
             cell.leaveEditingMode()
         }
+    }
+    
+}
+
+extension HomeAppsManager: UIScrollViewDelegate {
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let page = scrollView.contentOffset.x / scrollView.frame.width
+        delegate?.didMove(toPage: Int(roundf(Float(page))), on: self)
+        delegate?.collectionViewDidScroll(candidateCollectionView, on: self)
     }
     
 }

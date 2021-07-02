@@ -16,8 +16,6 @@ final class HomeAppsViewController: UIViewController {
     @IBOutlet weak var candidateCollectionViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var pageControlTopConstraint: NSLayoutConstraint!
     
-    private let cellCount = (perRow: 4, perColumn: ScreenHeight.current == .medium ? 3 : 4)
-    private let candidateCollectionCellSize = CGSize(width: 80, height: 100)
     private var candidateCollectionLayout: HomeAppsFlowLayout!
     
     private lazy var candidateEmptyHintLabel: UILabel = {
@@ -79,37 +77,29 @@ final class HomeAppsViewController: UIViewController {
 //            self?.updateNumberOfPagesForPageControl(with: apps.count)
 //        })
         
+        //TODO: ‼️ fix this after updating data
         noPinnedHintLabel.isHidden = true
         setCandidateEmptyHintHidden(true)
+        //TODO: ‼️ remove mock data
+        let items: [[BotItem]] = [
+            [Bot(id: "1", name: "1"), Bot(id: "2", name: "2"), Bot(id: "3", name: "3"), Bot(id: "4", name: "4"), Bot(id: "44", name: "44"),
+             BotFolder(id: "111", name: "111", pages: [
+                [Bot(id: "1111", name: "1111"), Bot(id: "2222", name: "22222"), Bot(id: "3333", name: "33333"), Bot(id: "4444", name: "44444"),  Bot(id: "5555", name: "55555"),  Bot(id: "6666", name: "66666"),  Bot(id: "7777", name: "77777"),  Bot(id: "8888", name: "88888"),  Bot(id: "9999", name: "99999")]
+             ])],
+            [Bot(id: "5", name: "5"), Bot(id: "6", name: "6"), Bot(id: "7", name: "7"), Bot(id: "8", name: "8"), Bot(id: "13", name: "13")]
+        ]
+        let pinnedItems = [Bot(id: "9", name: "9"), Bot(id: "10", name: "10"), Bot(id: "11", name: "11"), Bot(id: "12", name: "12")]
         
-        let pageInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-        var flowLayout = pinnedCollectionView.collectionViewLayout as! UICollectionViewFlowLayout
-        flowLayout.itemSize = CGSize(width: AppDelegate.current.mainWindow.bounds.width - pageInset.horizontal, height: 82)
+        appsManager = HomeAppsManager(isHome: true, viewController: self, candidateCollectionView: candidateCollectionView, items: items, pinnedCollectionView: pinnedCollectionView, pinnedItems: pinnedItems)
+        appsManager.delegate = self
         
-        flowLayout = candidateCollectionView.collectionViewLayout as! UICollectionViewFlowLayout
-        flowLayout.itemSize = CGSize(width: AppDelegate.current.mainWindow.bounds.width, height: candidateCollectionCellSize.height * CGFloat(cellCount.perColumn))
+        pageControl.numberOfPages = appsManager.items.count
+        pageControl.currentPage = 0
         
-        appsManager = HomeAppsManager(isHome: true, viewController: self, candidateCollectionView: candidateCollectionView, pinnedCollectionView: pinnedCollectionView)
-        
-        candidateCollectionViewHeightConstraint.constant = candidateCollectionCellSize.height * CGFloat(cellCount.perColumn)
+        candidateCollectionViewHeightConstraint.constant = HomeAppsMode.regular.itemSize.height * CGFloat(HomeAppsMode.regular.rowsPerPage)
         updatePreferredContentSizeHeight()
 
         NotificationCenter.default.addObserver(self, selector: #selector(updateNoPinnedHint), name: AppGroupUserDefaults.User.homeAppIdsDidChangeNotification, object: nil)
-    }
-
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-//        let pinnedSpacing: CGFloat = {
-//            let cellsWidth = pinnedCollectionLayout.itemSize.width * CGFloat(cellCount.perRow)
-//            let totalSpacing = view.bounds.width
-//                - pinnedCollectionViewLeadingConstraint.constant
-//                - pinnedCollectionViewTrailingConstraint.constant
-//                - pinnedCollectionLayout.sectionInset.horizontal
-//                - cellsWidth
-//            return floor(totalSpacing / CGFloat(cellCount.perRow - 1))
-//        }()
-//        pinnedCollectionLayout.minimumInteritemSpacing = pinnedSpacing
-        
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -211,12 +201,6 @@ extension HomeAppsViewController {
         noPinnedHintLabel.isHidden = !AppGroupUserDefaults.User.homeAppIds.isEmpty
     }
     
-    private func updateNumberOfPagesForPageControl(with dataCount: Int) {
-        let itemsPerPage = cellCount.perColumn * cellCount.perRow
-        let numberOfPages = ceil(Double(dataCount) / Double(itemsPerPage))
-        pageControl.numberOfPages = Int(numberOfPages)
-    }
-    
     private func updatePreferredContentSizeHeight() {
         guard !isBeingDismissed else {
             return
@@ -255,5 +239,29 @@ extension HomeAppsViewController {
             }
         }
     }
+    
+}
+
+extension HomeAppsViewController: HomeAppsManagerDelegate {
+    
+    func didUpdateItems(on manager: HomeAppsManager) {
+        //TODO: ‼️ uddate data
+    }
+    
+    func didUpdate(pageCount: Int, on manager: HomeAppsManager) {
+        pageControl.numberOfPages = pageCount
+    }
+    
+    func didMove(toPage page: Int, on manager: HomeAppsManager) {
+        pageControl.currentPage = page
+    }
+    
+    func collectionViewDidScroll(_ collectionView: UICollectionView, on manager: HomeAppsManager) {}
+    
+    func didEnterEditingMode(on manager: HomeAppsManager) {}
+    
+    func didBeginFolderDragOut(transfer: HomeAppsDragInteractionTransfer, on manager: HomeAppsManager) {}
+    
+    func didSelect(app: Bot, on manager: HomeAppsManager) {}
     
 }

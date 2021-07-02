@@ -133,8 +133,8 @@ extension HomeAppsManager {
                 return
             }
         } else {
-            //TODO: ‼️ fix this
-            touchPoint.x += 15 // maximum spacing between cells
+            //TODO: ‼️ fix this value
+            touchPoint.x += 40
             if let indexPath = pageCell.collectionView.indexPathForItem(at: touchPoint) {
                 destinationIndexPath = indexPath
             } else if let pinnedCollectionView = pinnedCollectionView, collectionView == candidateCollectionView && pinnedCollectionView.visibleCells.contains(currentInteraction.currentPageCell) {
@@ -192,7 +192,7 @@ extension HomeAppsManager {
         
     }
     
-    private func endDragInteraction(_ gestureRecognizer: UILongPressGestureRecognizer) {
+    func endDragInteraction(_ gestureRecognizer: UILongPressGestureRecognizer) {
         if currentFolderInteraction != nil {
             folderTimer?.invalidate()
             folderTimer = nil

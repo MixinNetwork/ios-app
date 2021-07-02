@@ -152,6 +152,9 @@ extension ScreenLockManager {
                 }
             }
         case .didEnterBackground:
+            if !hasLastBiometricAuthenticationFailed {
+                AppGroupUserDefaults.User.lastLockScreenBiometricVerifiedDate = Date()
+            }
             isLastAuthenticationStillValid = false
             viewController?.showUnlockOption(false)
         case .authenticationSucceed:

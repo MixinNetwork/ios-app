@@ -55,6 +55,7 @@ class PayWindow: BottomSheetView {
     @IBOutlet weak var receiversButtonWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var successViewHeightConstraint: NSLayoutConstraint!
     
+    private lazy var biometricAuthQueue = DispatchQueue(label: "one.mixin.messenger.PayWindow.BioAuth")
     private lazy var context = LAContext()
     private weak var textfield: UITextField?
 
@@ -372,11 +373,18 @@ class PayWindow: BottomSheetView {
         }
 
         let prompt = Localized.WALLET_BIOMETRIC_PAY_PROMPT(biometricType: biometryType.localizedName)
-        DispatchQueue.global().async { [weak self] in
+        biometricAuthQueue.async { [weak self] in
+            DispatchQueue.main.sync {
+                ScreenLockManager.shared.hasOtherBiometricAuthInProgress = true
+            }
             guard let pin = Keychain.shared.getPIN(prompt: prompt) else {
+                DispatchQueue.main.sync {
+                    ScreenLockManager.shared.hasOtherBiometricAuthInProgress = false
+                }
                 return
             }
-            DispatchQueue.main.async {
+            DispatchQueue.main.sync {
+                ScreenLockManager.shared.hasOtherBiometricAuthInProgress = false
                 self?.isAutoFillPIN = true
                 self?.pinField.clear()
                 self?.pinField.insertText(pin)

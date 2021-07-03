@@ -16,6 +16,8 @@ final class ScreenLockManager {
     
     static let shared = ScreenLockManager()
     
+    var hasOtherBiometricAuthInProgress = false
+    
     private(set) var isLastAuthenticationStillValid = false
     private(set) var window: UIWindow?
     
@@ -102,6 +104,9 @@ extension ScreenLockManager {
 extension ScreenLockManager {
     
     @objc private func applicationWillResignActive() {
+        guard !hasOtherBiometricAuthInProgress else {
+            return
+        }
         state = .willResignActive
     }
     
@@ -152,6 +157,9 @@ extension ScreenLockManager {
                 }
             }
         case .didEnterBackground:
+            if !hasLastBiometricAuthenticationFailed {
+                AppGroupUserDefaults.User.lastLockScreenBiometricVerifiedDate = Date()
+            }
             isLastAuthenticationStillValid = false
             viewController?.showUnlockOption(false)
         case .authenticationSucceed:

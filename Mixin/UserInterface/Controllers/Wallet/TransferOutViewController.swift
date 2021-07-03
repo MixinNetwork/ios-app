@@ -39,7 +39,9 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
     private var chainAsset: AssetItem?
     private var isInputAssetAmount = true
     private var adjustBottomConstraintWhenKeyboardFrameChanges = true
-
+    
+    private weak var payWindowIfLoaded: PayWindow?
+    
     private lazy var traceId = UUID().uuidString.lowercased()
     private lazy var balanceInputAccessoryView: BalanceInputAccessoryView = {
         let view = R.nib.balanceInputAccessoryView(owner: nil)!
@@ -94,6 +96,13 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         amountTextField.adjustsFontForContentSizeCategory = true
         amountTextField.becomeFirstResponder()
         amountTextField.delegate = self
+        
+        NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main) { [weak self] _ in
+            guard let self = self, self.payWindowIfLoaded == nil else {
+                return
+            }
+            self.amountTextField.becomeFirstResponder()
+        }
     }
 
     deinit {
@@ -197,7 +206,8 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         payWindow.onDismiss = { [weak self] in
             self?.adjustBottomConstraintWhenKeyboardFrameChanges = true
         }
-
+        self.payWindowIfLoaded = payWindow
+        
         switch opponent! {
         case .contact(let user):
             DispatchQueue.global().async { [weak self] in

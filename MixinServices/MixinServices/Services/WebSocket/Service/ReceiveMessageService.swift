@@ -575,7 +575,15 @@ public class ReceiveMessageService: MixinService {
             let message = Message.createLocationMessage(content: content, data: data)
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
         } else if data.category.hasSuffix("_TRANSCRIPT") {
-            guard let (content, children, hasAttachment) = parseTranscript(plainText: plainText, transcriptId: data.messageId) else {
+            var content = plainText
+            if data.category.hasPrefix("PLAIN_") {
+                guard let decoded = plainText.base64Decoded() else {
+                    ReceiveMessageService.shared.processUnknownMessage(data: data)
+                    return
+                }
+                content = decoded
+            }
+            guard let (content, children, hasAttachment) = parseTranscript(plainText: content, transcriptId: data.messageId) else {
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }
@@ -778,13 +786,14 @@ public class ReceiveMessageService: MixinService {
         
         guard
             let jsonData = plainText.data(using: .utf8),
-            let descendants = try? JSONDecoder.default.decode([TranscriptMessage].self, from: jsonData)
+            var descendants = try? JSONDecoder.default.decode([TranscriptMessage].self, from: jsonData)
         else {
             return nil
         }
         
-        let children = descendants.filter { $0.transcriptId == transcriptId }
-        let localContents = children
+        descendants.forEach { $0.transcriptId = transcriptId }
+        
+        let localContents = descendants
             .sorted { $0.createdAt < $1.createdAt }
             .map(TranscriptMessage.LocalContent.init)
         let content: String
@@ -795,7 +804,7 @@ public class ReceiveMessageService: MixinService {
         }
         
         var absentUserIds: Set<String> = []
-        for child in children {
+        for child in descendants {
             if let id = child.userId {
                 if let fullname = UserDAO.shared.getFullname(userId: id) {
                     child.userFullName = fullname
@@ -825,7 +834,7 @@ public class ReceiveMessageService: MixinService {
             ConcurrentJobQueue.shared.addJob(job: job)
         }
         
-        return (content, children, hasAttachment)
+        return (content, descendants, hasAttachment)
     }
     
     private func syncConversation(data: BlazeMessageData) {

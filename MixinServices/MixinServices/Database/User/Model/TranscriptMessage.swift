@@ -3,7 +3,7 @@ import GRDB
 
 public final class TranscriptMessage {
     
-    public let transcriptId: String
+    public var transcriptId: String
     public let messageId: String
     public let userId: String?
     public var userFullName: String?

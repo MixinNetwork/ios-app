@@ -3,13 +3,18 @@ import UIKit
 class Bot: BotItem {
     
     var id: String
-    var name: String
-    
-    init(id: String, name: String) {
-        self.id = id
-        self.name = name
+    var app: HomeApp? {
+        return HomeApp(id: id)
     }
     
+    init(id: String) {
+        self.id = id
+    }
+    
+    func toDictionary() -> [String : Any] {
+        return ["type": HomeAppItemType.app.rawValue, "id": id] as [String: Any]
+    }
+
 }
 
 extension Bot: Equatable {

@@ -9,9 +9,7 @@ protocol BotPageCellDelegate: AnyObject {
 class BotPageCell: UICollectionViewCell {
     
     weak var delegate: BotPageCellDelegate?
-
     @IBOutlet weak var collectionView: UICollectionView!
-    
     var mode: HomeAppsMode = .regular {
         didSet {
             updateLayout()
@@ -19,16 +17,7 @@ class BotPageCell: UICollectionViewCell {
     }
     var items: [BotItem] = []
     var draggedItem: BotItem?
-    
     private var isEditing = false
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
-    
-}
-
-extension BotPageCell {
     
     func enterEditingMode() {
         guard !isEditing else { return }
@@ -36,7 +25,6 @@ extension BotPageCell {
         for cell in collectionView.visibleCells {
             guard let cell = cell as? BotItemCell else { return }
             cell.startShaking()
-            cell.enterEditingMode()
             if let cell = cell as? BotFolderCell {
                 cell.moveToFirstAvailablePage()
             }
@@ -49,15 +37,16 @@ extension BotPageCell {
         for cell in collectionView.visibleCells {
             guard let cell = cell as? BotItemCell else { return }
             cell.stopShaking()
-            cell.leaveEditingMode()
             if let cell = cell as? BotFolderCell {
+                cell.leaveEditingMode()
                 cell.move(to: 0, animated: true)
             }
         }
     }
     
     func delete(item: BotItem) {
-        guard let index = items.firstIndex(where: { $0 === item }), let cell = collectionView.cellForItem(at: IndexPath(item: index, section: 0)) else {
+        guard let index = items.firstIndex(where: { $0 === item }),
+              let cell = collectionView.cellForItem(at: IndexPath(item: index, section: 0)) else {
             return
         }
         UIView.animate(withDuration: 0.25, animations: {
@@ -103,7 +92,6 @@ extension BotPageCell: UICollectionViewDelegate, UICollectionViewDataSource {
             cell.item = botFolder
             if isEditing {
                 cell.startShaking()
-                cell.enterEditingMode()
                 cell.moveToFirstAvailablePage(animated: false)
             } else {
                 cell.stopShaking()
@@ -120,19 +108,15 @@ extension BotPageCell: UICollectionViewDelegate, UICollectionViewDataSource {
             cell.item = botItem
             if isEditing {
                 cell.startShaking()
-                cell.enterEditingMode()
             } else {
                 cell.stopShaking()
-                cell.leaveEditingMode()
             }
             if let draggedItem = draggedItem, draggedItem === botItem {
                 cell.contentView.isHidden = true
             } else {
                 cell.contentView.isHidden = false
             }
-            if mode == .pinned {
-                cell.label?.isHidden = true
-            }
+            cell.label?.isHidden = mode == .pinned
             return cell
         }
         return UICollectionViewCell(frame: .zero)

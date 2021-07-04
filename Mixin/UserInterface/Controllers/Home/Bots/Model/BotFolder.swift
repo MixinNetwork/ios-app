@@ -2,16 +2,20 @@ import UIKit
 
 class BotFolder: BotItem {
     
-    var id: String
     var name: String
     var pages: [[Bot]]
-
     var isNewFolder = false
 
-    init(id: String, name: String, pages: [[Bot]]) {
-        self.id = id
+    init(name: String, pages: [[Bot]]) {
         self.name = name
         self.pages = pages
+    }
+    
+    func toDictionary() -> [String : Any] {
+        let apps = self.pages.map { page -> [[String : Any]] in
+            return page.map { $0.toDictionary() }
+        }
+        return ["type": HomeAppItemType.folder.rawValue, "name": name, "apps": apps]
     }
     
 }

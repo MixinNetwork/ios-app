@@ -6,14 +6,11 @@ class BotItemCell: UICollectionViewCell {
     @IBOutlet weak var label: UILabel?
     @IBOutlet weak var imageContainerView: UIView!
     
-    var isShaking = false
-    
     var item: BotItem? {
         didSet {
             updateUI()
         }
     }
-    
     var snapshotView: HomeAppSnapshotView {
         let iconView = imageContainerView.snapshotView(afterScreenUpdates: true)!
         iconView.frame = imageContainerView.frame
@@ -25,28 +22,21 @@ class BotItemCell: UICollectionViewCell {
         return HomeAppSnapshotView(frame: bounds, iconView: iconView, nameView: nameView)
     }
     
-    func enterEditingMode() {
-        
-    }
-    
-    func leaveEditingMode() {
-        
-    }
+    private var isShaking = false
     
     func updateUI() {
-        guard let item = item else { return }
-        label?.text = item.name
-        label?.isHidden = false
-        if let item = item as? Bot, let imageView = imageView {
-            //imageView.setImage(app: <#T##App#>)
-            //TODO: ‼️ fix
-            imageView.image = UIImage(named: "ic_camera_send")
+        guard let item = item as? Bot else { return }
+        guard let app = item.app else { return }
+        switch app {
+        case .embedded(let embedded):
+            label?.text = embedded.name
+            imageView?.image = embedded.icon
+        case .external(let user):
+            label?.text = user.fullName
+            imageView?.setImage(with: user)
         }
+        label?.isHidden = false
     }
-    
-}
-
-extension BotItemCell {
     
     func startShaking() {
         guard !isShaking else { return }
@@ -83,5 +73,4 @@ extension BotItemCell {
         contentView.layer.removeAllAnimations()
         contentView.transform = .identity
     }
-    
 }

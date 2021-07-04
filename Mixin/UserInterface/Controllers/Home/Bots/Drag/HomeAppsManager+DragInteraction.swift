@@ -17,7 +17,7 @@ extension HomeAppsManager {
     private func beginDragInteraction(_ gestureRecognizer: UILongPressGestureRecognizer) {
         feedback.prepare()
         var touchPoint = gestureRecognizer.location(in: viewController.view)
-        let (collectionView, pageCell, itemSize) = touchedViewInfos(at: touchPoint)
+        let (collectionView, pageCell, itemSize) = viewInfos(at: touchPoint)
         guard let view = viewController.view.hitTest(touchPoint, with: nil), view.bounds.size.equalTo(itemSize) else {
             return
         }
@@ -48,7 +48,7 @@ extension HomeAppsManager {
     private func updateDragInteraction(_ gestureRecognizer: UILongPressGestureRecognizer) {
         var touchPoint = gestureRecognizer.location(in: viewController.view)
         guard let currentInteraction = currentDragInteraction else { return }
-        let (collectionView, pageCell, _) = touchedViewInfos(at: touchPoint)
+        let (collectionView, pageCell, _) = viewInfos(at: touchPoint)
         touchPoint = gestureRecognizer.location(in: collectionView)
         
         let convertedTouchPoint = viewController.view.convert(touchPoint, from: collectionView)
@@ -215,11 +215,11 @@ extension HomeAppsManager {
             }
         }
         UIView.animate(withDuration: 0.25) {
-            currentInteraction.liftView.transform = .identity
-            currentInteraction.liftView.frame = convertedRect
+            currentInteraction.placeholderView.transform = .identity
+            currentInteraction.placeholderView.frame = convertedRect
         } completion: { _ in
             cell.contentView.isHidden = false
-            currentInteraction.liftView.removeFromSuperview()
+            currentInteraction.placeholderView.removeFromSuperview()
             self.currentDragInteraction = nil
         }
     }

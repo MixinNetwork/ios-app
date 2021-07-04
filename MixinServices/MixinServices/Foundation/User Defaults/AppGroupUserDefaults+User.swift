@@ -52,6 +52,8 @@ extension AppGroupUserDefaults {
             case lockScreenTimeout = "lock_screen_timeout_interval"
             case lockScreenWithBiometricAuthentication = "lock_screen_with_biometric_authentication"
             case lastLockScreenBiometricVerifiedDate = "last_lock_screen_biometric_verified_date"
+            
+            case homeAppsFolder = "home_apps_folder"
         }
         
         public static let version = 26
@@ -191,6 +193,9 @@ extension AppGroupUserDefaults {
            
         @Default(namespace: .user, key: Key.lastLockScreenBiometricVerifiedDate, defaultValue: nil)
         public static var lastLockScreenBiometricVerifiedDate: Date?
+        
+        @Default(namespace: .user, key: Key.homeAppsFolder, defaultValue: nil)
+        public static var homeAppsFolder: Data?
         
         public static func insertRecentlyUsedAppId(id: String) {
             let maxNumberOfIds = 12

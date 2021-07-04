@@ -1,11 +1,11 @@
 import UIKit
+import MixinServices
 
 protocol HomeAppsManagerDelegate: AnyObject {
     
     func didUpdateItems(on manager: HomeAppsManager)
     func didUpdate(pageCount: Int, on manager: HomeAppsManager)
     func didMove(toPage page: Int, on manager: HomeAppsManager)
-    func collectionViewDidScroll(_ collectionView: UICollectionView, on manager: HomeAppsManager)
     func didEnterEditingMode(on manager: HomeAppsManager)
     func didBeginFolderDragOut(transfer: HomeAppsDragInteractionTransfer, on manager: HomeAppsManager)
     func didSelect(app: Bot, on manager: HomeAppsManager)
@@ -107,7 +107,7 @@ extension HomeAppsManager {
         leaveEditingMode()
     }
     
-    func touchedViewInfos(at point: CGPoint) -> (collectionView: UICollectionView, cell: BotPageCell, itemSize: CGSize) {
+    func viewInfos(at point: CGPoint) -> (collectionView: UICollectionView, cell: BotPageCell, itemSize: CGSize) {
         let collectionView: UICollectionView
         var itemSize: CGSize
         if let pinnedCollectionView = pinnedCollectionView, pinnedCollectionView.frame.contains(viewController.view.convert(point, to: pinnedCollectionView)) {
@@ -207,7 +207,7 @@ extension HomeAppsManager {
         
         currentDragInteraction = transfer.interaction.copy()
         currentDragInteraction?.needsUpdate = true
-        UIApplication.shared.keyWindow!.addSubview(transfer.interaction.liftView)
+        UIApplication.shared.keyWindow!.addSubview(transfer.interaction.placeholderView)
     }
     
 }
@@ -272,7 +272,6 @@ extension HomeAppsManager: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let page = scrollView.contentOffset.x / scrollView.frame.width
         delegate?.didMove(toPage: Int(roundf(Float(page))), on: self)
-        delegate?.collectionViewDidScroll(candidateCollectionView, on: self)
     }
     
 }

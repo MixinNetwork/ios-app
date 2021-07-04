@@ -10,14 +10,14 @@ class HomeAppsDragInteraction {
     var currentPageCell: BotPageCell
     var currentIndexPath: IndexPath
     
-    let liftView: HomeAppSnapshotView
+    let placeholderView: HomeAppSnapshotView
     let dragOffset: CGSize
     
     var needsUpdate = false
     var savedState: [[BotItem]]?
     
     required init(liftView: HomeAppSnapshotView, dragOffset: CGSize, item: BotItem, originalPageCell: BotPageCell, originalIndexPath: IndexPath) {
-        self.liftView = liftView
+        self.placeholderView = liftView
         self.dragOffset = dragOffset
         self.item = item
         self.originalPageCell = originalPageCell
@@ -30,11 +30,11 @@ class HomeAppsDragInteraction {
         var offsettedTouchPoint = point
         offsettedTouchPoint.x += dragOffset.width
         offsettedTouchPoint.y += dragOffset.height
-        liftView.center = offsettedTouchPoint
+        placeholderView.center = offsettedTouchPoint
     }
     
     func copy() -> HomeAppsDragInteraction {
-        let interaction = HomeAppsDragInteraction(liftView: liftView, dragOffset: dragOffset, item: item, originalPageCell: originalPageCell, originalIndexPath: originalIndexPath)
+        let interaction = HomeAppsDragInteraction(liftView: placeholderView, dragOffset: dragOffset, item: item, originalPageCell: originalPageCell, originalIndexPath: originalIndexPath)
         interaction.currentPageCell = currentPageCell
         interaction.currentIndexPath = currentIndexPath
         return interaction
@@ -42,13 +42,13 @@ class HomeAppsDragInteraction {
     
     func transitionToFolderWrapperView() {
         UIView.animate(withDuration: 0.2) {
-            self.liftView.nameView?.alpha = 0
+            self.placeholderView.nameView?.alpha = 0
         }
     }
     
     func transitionFromFolderWrapperView() {
         UIView.animate(withDuration: 0.2) {
-            self.liftView.nameView?.alpha = 1
+            self.placeholderView.nameView?.alpha = 1
         }
     }
 }

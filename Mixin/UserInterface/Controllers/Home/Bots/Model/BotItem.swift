@@ -1,8 +1,12 @@
 import UIKit
 
+enum HomeAppItemType: Int {
+    case app
+    case folder
+}
+
 protocol BotItem: AnyObject {
     
-    var id: String { get }
-    var name: String { get set }
+    func toDictionary() -> [String: Any]
     
 }

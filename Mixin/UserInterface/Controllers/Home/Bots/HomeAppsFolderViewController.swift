@@ -65,6 +65,7 @@ class HomeAppsFolderViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        delegate?.openAnimationWillStart(on: self)
         animateIn()
         if isEditing {
             homeAppsManager.enterEditingMode(suppressHaptic: true)
@@ -104,7 +105,6 @@ extension HomeAppsFolderViewController {
     }
     
     private func animateIn() {
-        delegate?.openAnimationWillStart(on: self)
         UIView.animate(withDuration: 0.5) {
             UIView.setAnimationCurve(.overdamped)
             self.view.layoutIfNeeded()
@@ -179,7 +179,6 @@ extension HomeAppsFolderViewController: HomeAppsManagerDelegate {
     }
     
     func didUpdateItems(on manager: HomeAppsManager) {}
-    func collectionViewDidScroll(_ collectionView: UICollectionView, on manager: HomeAppsManager) {}
     
 }
 
@@ -188,7 +187,7 @@ extension HomeAppsFolderViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         if !textField.hasText {
-            textField.text = self.folder.name
+            textField.text = folder.name
         } else if let text = textField.text {
             folder.name = text
             delegate?.didChange(name: text, on: self)

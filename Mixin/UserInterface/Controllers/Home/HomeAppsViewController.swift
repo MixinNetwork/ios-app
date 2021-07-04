@@ -41,64 +41,28 @@ final class HomeAppsViewController: UIViewController {
     private var candidateEmptyHintLabelIfLoaded: UILabel?
     
     private var appsManager: HomeAppsManager!
-
+    private var appsItemManager: HomeAppsItemManager!
+    
     class func instance() -> HomeAppsViewController {
         R.storyboard.home.apps()!
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        pinnedAppModelController = PinnedHomeAppsModelController(collectionView: pinnedCollectionView)
-//        pinnedCollectionView.dataSource = pinnedAppModelController
-//        pinnedCollectionView.delegate = self
-//        pinnedCollectionView.dragInteractionEnabled = true
-//        pinnedCollectionView.dragDelegate = pinnedAppModelController
-//        pinnedCollectionView.dropDelegate = pinnedAppModelController
-//        pinnedAppModelController.reloadData(completion: { [weak self] apps in
-//            self?.noPinnedHintLabel.isHidden = !apps.isEmpty
-//        })
-//
-//        let pageInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-//        let spacing: CGFloat = {
-//            let cellsWidth = candidateCollectionCellSize.width * CGFloat(cellCount.perRow)
-//            let totalSpacing = AppDelegate.current.mainWindow.bounds.width - pageInset.horizontal - cellsWidth
-//            return floor(totalSpacing / CGFloat(cellCount.perRow - 1))
-//        }()
-//        candidateCollectionLayout = HomeAppsFlowLayout(lineSpacing: 0, interitemSpacing: spacing, numberOfRows: cellCount.perColumn, numberOfColumns: cellCount.perRow, cellSize: candidateCollectionCellSize, pageInset: pageInset)
-//        candidateCollectionView.collectionViewLayout = candidateCollectionLayout
-//        candidateAppModelController = CandidateHomeAppsModelController(collectionView: candidateCollectionView)
-//        candidateCollectionView.dataSource = candidateAppModelController
-//        candidateCollectionView.delegate = self
-//        candidateCollectionView.dragInteractionEnabled = true
-//        candidateCollectionView.dragDelegate = candidateAppModelController
-//        candidateCollectionView.addInteraction(candidateAppModelController.dropInteraction)
-//        candidateAppModelController.reloadData(completion: { [weak self] (apps) in
-//            self?.setCandidateEmptyHintHidden(!apps.isEmpty)
-//            self?.updateNumberOfPagesForPageControl(with: apps.count)
-//        })
-        
-        //TODO: ‼️ fix this after updating data
-        noPinnedHintLabel.isHidden = true
-        setCandidateEmptyHintHidden(true)
-        //TODO: ‼️ remove mock data
-        let items: [[BotItem]] = [
-            [Bot(id: "1", name: "1"), Bot(id: "2", name: "2"), Bot(id: "3", name: "3"), Bot(id: "4", name: "4"), Bot(id: "44", name: "44"),
-             BotFolder(id: "111", name: "111", pages: [
-                [Bot(id: "1111", name: "1111"), Bot(id: "2222", name: "22222"), Bot(id: "3333", name: "33333"), Bot(id: "4444", name: "44444"),  Bot(id: "5555", name: "55555"),  Bot(id: "6666", name: "66666"),  Bot(id: "7777", name: "77777"),  Bot(id: "8888", name: "88888"),  Bot(id: "9999", name: "99999")]
-             ])],
-            [Bot(id: "5", name: "5"), Bot(id: "6", name: "6"), Bot(id: "7", name: "7"), Bot(id: "8", name: "8"), Bot(id: "13", name: "13")]
-        ]
-        let pinnedItems = [Bot(id: "9", name: "9"), Bot(id: "10", name: "10"), Bot(id: "11", name: "11"), Bot(id: "12", name: "12")]
-        
-        appsManager = HomeAppsManager(isHome: true, viewController: self, candidateCollectionView: candidateCollectionView, items: items, pinnedCollectionView: pinnedCollectionView, pinnedItems: pinnedItems)
+        appsItemManager = HomeAppsItemManager()
+        noPinnedHintLabel.isHidden = !appsItemManager.pinnedItems.isEmpty
+        setCandidateEmptyHintHidden(!appsItemManager.candidateItems.isEmpty)
+        appsManager = HomeAppsManager(isHome: true,
+                                      viewController: self,
+                                      candidateCollectionView: candidateCollectionView,
+                                      items: appsItemManager.candidateItems,
+                                      pinnedCollectionView: pinnedCollectionView,
+                                      pinnedItems: appsItemManager.pinnedItems)
         appsManager.delegate = self
-        
         pageControl.numberOfPages = appsManager.items.count
         pageControl.currentPage = 0
-        
         candidateCollectionViewHeightConstraint.constant = HomeAppsMode.regular.itemSize.height * CGFloat(HomeAppsMode.regular.rowsPerPage)
         updatePreferredContentSizeHeight()
-
         NotificationCenter.default.addObserver(self, selector: #selector(updateNoPinnedHint), name: AppGroupUserDefaults.User.homeAppIdsDidChangeNotification, object: nil)
     }
     
@@ -245,7 +209,9 @@ extension HomeAppsViewController {
 extension HomeAppsViewController: HomeAppsManagerDelegate {
     
     func didUpdateItems(on manager: HomeAppsManager) {
-        //TODO: ‼️ uddate data
+        appsItemManager.candidateItems = manager.items
+        appsItemManager.pinnedItems = manager.pinnedItems
+        appsItemManager.save()
     }
     
     func didUpdate(pageCount: Int, on manager: HomeAppsManager) {
@@ -256,12 +222,22 @@ extension HomeAppsViewController: HomeAppsManagerDelegate {
         pageControl.currentPage = page
     }
     
-    func collectionViewDidScroll(_ collectionView: UICollectionView, on manager: HomeAppsManager) {}
+    func didSelect(app: Bot, on manager: HomeAppsManager) {
+        guard let app = app.app else {
+            return
+        }
+        switch app {
+        case let .embedded(app):
+            dismissAsChild(completion: app.action)
+        case let .external(user):
+            let item = UserItem.createUser(from: user)
+            let vc = UserProfileViewController(user: item)
+            present(vc, animated: true, completion: nil)
+        }
+    }
     
     func didEnterEditingMode(on manager: HomeAppsManager) {}
     
     func didBeginFolderDragOut(transfer: HomeAppsDragInteractionTransfer, on manager: HomeAppsManager) {}
-    
-    func didSelect(app: Bot, on manager: HomeAppsManager) {}
     
 }

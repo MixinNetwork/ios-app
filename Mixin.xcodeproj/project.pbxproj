@@ -579,13 +579,13 @@
 		7C66F1AB268ABABE006D8462 /* BotFolderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1AA268ABABE006D8462 /* BotFolderCell.swift */; };
 		7C66F1AD268ABE1F006D8462 /* BotFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1AC268ABE1F006D8462 /* BotFolder.swift */; };
 		7C66F1AF268ABE3F006D8462 /* Bot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1AE268ABE3F006D8462 /* Bot.swift */; };
-		7C66F1B1268AF52C006D8462 /* BotCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1B0268AF52C006D8462 /* BotCell.swift */; };
 		7C66F1B3268B0B11006D8462 /* BotsExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1B2268B0B11006D8462 /* BotsExtension.swift */; };
 		7C66F1BB268B2CE5006D8462 /* HomeAppsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1BA268B2CE5006D8462 /* HomeAppsManager.swift */; };
 		7C66F1BD268B2F23006D8462 /* HomeAppsManager+DragInteraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1BC268B2F23006D8462 /* HomeAppsManager+DragInteraction.swift */; };
 		7C66F1BF268B3514006D8462 /* HomeAppsManager+FolderInteraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1BE268B3514006D8462 /* HomeAppsManager+FolderInteraction.swift */; };
 		7C66F1C1268C0250006D8462 /* HomeAppsFolderInteraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1C0268C0250006D8462 /* HomeAppsFolderInteraction.swift */; };
 		7C7825BD268184E4006FE1F0 /* HomeAppsFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7825BC268184E4006FE1F0 /* HomeAppsFlowLayout.swift */; };
+		7CBD2EFA268FF6BB00AA0847 /* HomeAppsItemManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBD2EF9268FF6BB00AA0847 /* HomeAppsItemManager.swift */; };
 		811C8154F03C8CBB72DBA1F4 /* Pods_MixinShare.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67A8E0E9B65F16ADB27E6F25 /* Pods_MixinShare.framework */; };
 		84A10E96256B63B4006AC741 /* AssetAPI+Ticker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A10E95256B63B4006AC741 /* AssetAPI+Ticker.swift */; };
 		84A10E9A256B6416006AC741 /* TickerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A10E99256B6416006AC741 /* TickerResponse.swift */; };
@@ -1546,13 +1546,13 @@
 		7C66F1AA268ABABE006D8462 /* BotFolderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BotFolderCell.swift; sourceTree = "<group>"; };
 		7C66F1AC268ABE1F006D8462 /* BotFolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BotFolder.swift; sourceTree = "<group>"; };
 		7C66F1AE268ABE3F006D8462 /* Bot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bot.swift; sourceTree = "<group>"; };
-		7C66F1B0268AF52C006D8462 /* BotCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BotCell.swift; sourceTree = "<group>"; };
 		7C66F1B2268B0B11006D8462 /* BotsExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BotsExtension.swift; sourceTree = "<group>"; };
 		7C66F1BA268B2CE5006D8462 /* HomeAppsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeAppsManager.swift; sourceTree = "<group>"; };
 		7C66F1BC268B2F23006D8462 /* HomeAppsManager+DragInteraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeAppsManager+DragInteraction.swift"; sourceTree = "<group>"; };
 		7C66F1BE268B3514006D8462 /* HomeAppsManager+FolderInteraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeAppsManager+FolderInteraction.swift"; sourceTree = "<group>"; };
 		7C66F1C0268C0250006D8462 /* HomeAppsFolderInteraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsFolderInteraction.swift; sourceTree = "<group>"; };
 		7C7825BC268184E4006FE1F0 /* HomeAppsFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsFlowLayout.swift; sourceTree = "<group>"; };
+		7CBD2EF9268FF6BB00AA0847 /* HomeAppsItemManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsItemManager.swift; sourceTree = "<group>"; };
 		84A10E95256B63B4006AC741 /* AssetAPI+Ticker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AssetAPI+Ticker.swift"; sourceTree = "<group>"; };
 		84A10E99256B6416006AC741 /* TickerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TickerResponse.swift; sourceTree = "<group>"; };
 		8C43D9D96FCB101481DFD90F /* Pods-Mixin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mixin.release.xcconfig"; path = "Pods/Target Support Files/Pods-Mixin/Pods-Mixin.release.xcconfig"; sourceTree = "<group>"; };
@@ -2530,7 +2530,6 @@
 			children = (
 				7C66F028268A0384006D8462 /* BotPageCell.swift */,
 				7C66F02A268A0431006D8462 /* BotItemCell.swift */,
-				7C66F1B0268AF52C006D8462 /* BotCell.swift */,
 				7C66F1AA268ABABE006D8462 /* BotFolderCell.swift */,
 			);
 			path = Cells;
@@ -2556,6 +2555,7 @@
 				7C66F1AE268ABE3F006D8462 /* Bot.swift */,
 				7C66F1AC268ABE1F006D8462 /* BotFolder.swift */,
 				5EF90904268C92B900B934AF /* HomeAppsMode.swift */,
+				7CBD2EF9268FF6BB00AA0847 /* HomeAppsItemManager.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -4363,7 +4363,6 @@
 				DFC0ECF523BB610C0091E7AC /* PaymentAPI.swift in Sources */,
 				DF17B51520525B47006447C2 /* ArrayExtension.swift in Sources */,
 				DFD294351FA6EC0D00FADAAD /* ContactViewController.swift in Sources */,
-				7C66F1B1268AF52C006D8462 /* BotCell.swift in Sources */,
 				7B8871A025061577001FB418 /* PINEncryptor.swift in Sources */,
 				7BA9F32024A22EC200D7C091 /* CallMemberCell.swift in Sources */,
 				7BBAE9DA244ADB3800CC8670 /* AssetQrCodeScanningController.swift in Sources */,
@@ -4595,6 +4594,7 @@
 				7B0B01921FEA19BA000EEE4F /* DecryptionFailedMessageViewModel.swift in Sources */,
 				7B2E3E4B1FA07F4500DDDDEB /* SelectCountryViewController.swift in Sources */,
 				7BA931F51FC08DF4005DF478 /* TextMessageCell.swift in Sources */,
+				7CBD2EFA268FF6BB00AA0847 /* HomeAppsItemManager.swift in Sources */,
 				7B34A19F22C0E73D00665F41 /* GalleryVideoView.swift in Sources */,
 				7BFD3458228589ED00524EA0 /* ContactSelectorViewController.swift in Sources */,
 				7BD38B6220BEA12800D06E5C /* AudioMessageViewModel.swift in Sources */,

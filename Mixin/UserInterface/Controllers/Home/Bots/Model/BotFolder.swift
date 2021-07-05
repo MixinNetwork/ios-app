@@ -12,7 +12,7 @@ class BotFolder: BotItem {
     }
     
     func toDictionary() -> [String : Any] {
-        let apps = self.pages.map { page -> [[String : Any]] in
+        let apps = pages.map { page -> [[String : Any]] in
             return page.map { $0.toDictionary() }
         }
         return ["type": HomeAppItemType.folder.rawValue, "name": name, "apps": apps]

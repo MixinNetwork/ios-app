@@ -43,7 +43,7 @@ class HomeAppsFolderViewController: UIViewController {
         super.viewDidLoad()
         textField.text = folder.name
         leaveTextFieldEditingMode()
-        homeAppsManager = HomeAppsManager(isHome: false, viewController: self, candidateCollectionView: collectionView, items: folder.pages)
+        homeAppsManager = HomeAppsManager(viewController: self, candidateCollectionView: collectionView, items: folder.pages)
         homeAppsManager.delegate = self
         if homeAppsManager.items.count == 1 {
             pageControl.isHidden = true

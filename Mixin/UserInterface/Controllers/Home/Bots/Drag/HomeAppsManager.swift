@@ -19,7 +19,6 @@ class HomeAppsManager: NSObject {
     unowned var viewController: UIViewController
     unowned var candidateCollectionView: UICollectionView
     unowned var pinnedCollectionView: UICollectionView?
-    var isHome: Bool
     
     var isEditing = false
     var currentPage: Int {
@@ -36,9 +35,6 @@ class HomeAppsManager: NSObject {
             return visibleCells[0] as! BotPageCell
         }
     }
-    var mode: HomeAppsMode {
-        return isHome ? .regular : .folder
-    }
     var items: [[BotItem]] {
         didSet {
             delegate?.didUpdate(pageCount: items.count, on: self)
@@ -51,6 +47,7 @@ class HomeAppsManager: NSObject {
         }
     }
     let feedback = UIImpactFeedbackGenerator()
+    
     var currentDragInteraction: HomeAppsDragInteraction?
     var currentFolderInteraction: HomeAppsFolderInteraction?
     var openFolderInfo: HomeAppsOpenFolderInfo?
@@ -65,8 +62,7 @@ class HomeAppsManager: NSObject {
     var longPressRecognizer = UILongPressGestureRecognizer()
     let tapRecognizer = UITapGestureRecognizer()
     
-    init(isHome: Bool, viewController: UIViewController, candidateCollectionView: UICollectionView, items: [[BotItem]], pinnedCollectionView: UICollectionView? = nil, pinnedItems:[BotItem] = []) {
-        self.isHome = isHome
+    init(viewController: UIViewController, candidateCollectionView: UICollectionView, items: [[BotItem]], pinnedCollectionView: UICollectionView? = nil, pinnedItems:[BotItem] = []) {
         self.viewController = viewController
         self.candidateCollectionView = candidateCollectionView
         self.pinnedCollectionView = pinnedCollectionView
@@ -76,7 +72,7 @@ class HomeAppsManager: NSObject {
         super.init()
         
         if let flowLayout = candidateCollectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-            flowLayout.itemSize = isHome ? HomeAppsMode.regular.pageSize : HomeAppsMode.folder.pageSize
+            flowLayout.itemSize = pinnedCollectionView != nil ? HomeAppsMode.regular.pageSize : HomeAppsMode.folder.pageSize
         }
         if let flowLayout = pinnedCollectionView?.collectionViewLayout as? UICollectionViewFlowLayout {
             flowLayout.itemSize = HomeAppsMode.pinned.pageSize
@@ -117,7 +113,7 @@ extension HomeAppsManager {
             collectionView = candidateCollectionView
             itemSize = HomeAppsMode.regular.itemSize
         }
-        if !isHome {
+        if pinnedCollectionView == nil {
             itemSize = HomeAppsMode.folder.itemSize
         }
         let convertedPoint = viewController.view.convert(point, to: collectionView)
@@ -139,6 +135,7 @@ extension HomeAppsManager {
                 cell.enterEditingMode()
             }
         }
+        // add an empty page
         if items[items.count - 1].count > 0 {
             items.append([])
             candidateCollectionView.insertItems(at: [IndexPath(item: items.count - 1, section: 0)])
@@ -154,6 +151,7 @@ extension HomeAppsManager {
                 cell.leaveEditingMode()
             }
         }
+        // remove empty page
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
             if self.items[self.items.count - 1].count == 0 {
                 self.items.removeLast()
@@ -169,22 +167,22 @@ extension HomeAppsManager {
         } else {
             collectionView = candidateCollectionView
         }
-        var items: [BotItem] = []
+        var updateItems: [BotItem] = []
         for i in 0..<pageCell.collectionView.visibleCells.count {
             let indexPath = IndexPath(item: i, section: 0)
             if let cell = pageCell.collectionView.cellForItem(at: indexPath) as? BotItemCell, let item = cell.item {
-                items.append(item)
+                updateItems.append(item)
             }
         }
         if collectionView == candidateCollectionView {
             guard let pageIndexPath = collectionView.indexPath(for: pageCell) else {
                 return
             }
-            self.items[pageIndexPath.row] = items
+            items[pageIndexPath.row] = updateItems
         } else {
-            pinnedItems = items
+            pinnedItems = updateItems
         }
-        pageCell.items = items
+        pageCell.items = updateItems
     }
     
     // moves last item in page to next and rearranges next pages if needed
@@ -192,22 +190,21 @@ extension HomeAppsManager {
         var currentPageItems = items[page + 1]
         currentPageItems.insert(items[page].removeLast(), at: 0)
         items[page + 1] = currentPageItems
-        if currentPageItems.count >  mode.appsPerPage {
+        let appsPerPage = pinnedCollectionView == nil ? HomeAppsMode.folder.appsPerPage : HomeAppsMode.regular.appsPerPage
+        if currentPageItems.count >  appsPerPage {
             moveLastItem(inPage: page + 1)
         }
     }
     
     func perform(transfer: HomeAppsDragInteractionTransfer) {
         viewController.view.removeGestureRecognizer(longPressRecognizer)
-        
         longPressRecognizer = transfer.gestureRecognizer
         longPressRecognizer.removeTarget(nil, action: nil)
         longPressRecognizer.addTarget(self, action: #selector(handleLongPressGesture(_:)))
         viewController.view.addGestureRecognizer(longPressRecognizer)
-        
         currentDragInteraction = transfer.interaction.copy()
         currentDragInteraction?.needsUpdate = true
-        UIApplication.shared.keyWindow!.addSubview(transfer.interaction.placeholderView)
+        AppDelegate.current.mainWindow.addSubview(transfer.interaction.placeholderView)
     }
     
 }

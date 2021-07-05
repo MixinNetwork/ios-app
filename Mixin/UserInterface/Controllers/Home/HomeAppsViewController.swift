@@ -52,8 +52,7 @@ final class HomeAppsViewController: UIViewController {
         appsItemManager = HomeAppsItemManager()
         noPinnedHintLabel.isHidden = !appsItemManager.pinnedItems.isEmpty
         setCandidateEmptyHintHidden(!appsItemManager.candidateItems.isEmpty)
-        appsManager = HomeAppsManager(isHome: true,
-                                      viewController: self,
+        appsManager = HomeAppsManager(viewController: self,
                                       candidateCollectionView: candidateCollectionView,
                                       items: appsItemManager.candidateItems,
                                       pinnedCollectionView: pinnedCollectionView,
@@ -158,7 +157,11 @@ extension HomeAppsViewController {
     }
     
     @objc private func backgroundTappingAction() {
-        dismissAsChild(completion: nil)
+        if appsManager.isEditing {
+            appsManager.leaveEditingMode()
+        } else {
+            dismissAsChild(completion: nil)
+        }
     }
     
     @objc private func updateNoPinnedHint() {
@@ -212,6 +215,7 @@ extension HomeAppsViewController: HomeAppsManagerDelegate {
         appsItemManager.candidateItems = manager.items
         appsItemManager.pinnedItems = manager.pinnedItems
         appsItemManager.save()
+        print("saveeeeed")
     }
     
     func didUpdate(pageCount: Int, on manager: HomeAppsManager) {

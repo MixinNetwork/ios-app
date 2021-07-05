@@ -28,6 +28,7 @@ class HomeAppsItemManager {
                 return page.map { $0.toDictionary() }
             }
             let dictionary = ["pages": pages, "pinned": pinnedItems] as JSONDictionary
+            print(dictionary)
             let jsonData = try! JSONSerialization.data(withJSONObject: dictionary, options: [])
             AppGroupUserDefaults.User.homeAppsFolder = jsonData
         }
@@ -76,10 +77,18 @@ extension HomeAppsItemManager {
                 }
                 return Bot(id: id)
             case .folder:
-                guard let name = item["name"] as? String, let apps = item["apps"] as? [[Bot]] else {
+                guard let name = item["name"] as? String, let apps = item["apps"] as? [[JSONDictionary]] else {
                     return nil
                 }
-                return BotFolder(name: name, pages: apps)
+                let pages = apps.map { itemArray in
+                    return itemArray.compactMap { item -> Bot? in
+                        guard let id = item["id"] as? String else {
+                            return nil
+                        }
+                        return Bot(id: id)
+                    }
+                }
+                return BotFolder(name: name, pages: pages)
             }
         }
     }
@@ -89,5 +98,4 @@ extension HomeAppsItemManager {
     }
     
 }
-
 

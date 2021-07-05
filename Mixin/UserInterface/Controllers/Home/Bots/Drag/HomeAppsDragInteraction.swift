@@ -16,8 +16,8 @@ class HomeAppsDragInteraction {
     var needsUpdate = false
     var savedState: [[BotItem]]?
     
-    required init(liftView: HomeAppSnapshotView, dragOffset: CGSize, item: BotItem, originalPageCell: BotPageCell, originalIndexPath: IndexPath) {
-        self.placeholderView = liftView
+    required init(placeholderView: HomeAppSnapshotView, dragOffset: CGSize, item: BotItem, originalPageCell: BotPageCell, originalIndexPath: IndexPath) {
+        self.placeholderView = placeholderView
         self.dragOffset = dragOffset
         self.item = item
         self.originalPageCell = originalPageCell
@@ -26,7 +26,7 @@ class HomeAppsDragInteraction {
         currentIndexPath = originalIndexPath
     }
     
-    func moveLiftView(to point: CGPoint) {
+    func movePlaceholderView(to point: CGPoint) {
         var offsettedTouchPoint = point
         offsettedTouchPoint.x += dragOffset.width
         offsettedTouchPoint.y += dragOffset.height
@@ -34,7 +34,7 @@ class HomeAppsDragInteraction {
     }
     
     func copy() -> HomeAppsDragInteraction {
-        let interaction = HomeAppsDragInteraction(liftView: placeholderView, dragOffset: dragOffset, item: item, originalPageCell: originalPageCell, originalIndexPath: originalIndexPath)
+        let interaction = HomeAppsDragInteraction(placeholderView: placeholderView, dragOffset: dragOffset, item: item, originalPageCell: originalPageCell, originalIndexPath: originalIndexPath)
         interaction.currentPageCell = currentPageCell
         interaction.currentIndexPath = currentIndexPath
         return interaction

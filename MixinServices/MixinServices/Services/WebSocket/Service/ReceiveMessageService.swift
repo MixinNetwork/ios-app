@@ -812,11 +812,10 @@ public class ReceiveMessageService: MixinService {
                     absentUserIds.insert(id)
                 }
             }
-            switch child.category {
-            case .data, .image, .video, .audio:
+            if MessageCategory.allMediaCategoriesString.contains(child.category) {
                 hasAttachment = true
                 child.mediaStatus = MediaStatus.PENDING.rawValue
-            case .sticker:
+            } else if child.category.hasSuffix("_STICKER") {
                 guard let stickerId = child.stickerId, UUID(uuidString: stickerId) != nil else {
                     child.stickerId = nil
                     continue
@@ -825,8 +824,6 @@ public class ReceiveMessageService: MixinService {
                     continue
                 }
                 ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob(stickerId: stickerId))
-            default:
-                break
             }
         }
         if !absentUserIds.isEmpty {

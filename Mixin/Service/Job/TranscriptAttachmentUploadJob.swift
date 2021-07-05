@@ -43,7 +43,7 @@ final class TranscriptAttachmentUploadJob: AsynchronousJob {
             return false
         }
         for (index, child) in children.enumerated() {
-            guard child.category.includesAttachment else {
+            guard MessageCategory.allMediaCategoriesString.contains(child.category) else {
                 continue
             }
             let areKeyDigestReady = isPlainTranscript || (child.mediaKey != nil && child.mediaDigest != nil)

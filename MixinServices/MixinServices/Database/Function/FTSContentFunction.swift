@@ -14,7 +14,7 @@ public func ftsContent(messageId: String, category: String, content: String?, na
         let children = children ?? TranscriptMessageDAO.shared.childMessages(with: messageId)
         let ftsContents: [String] = children.compactMap { child in
             ftsContent(messageId: child.messageId,
-                       category: child.category.rawValue,
+                       category: child.category,
                        content: child.content,
                        name: child.mediaName)
         }

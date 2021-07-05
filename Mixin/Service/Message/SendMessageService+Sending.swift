@@ -47,6 +47,16 @@ extension SendMessageService {
             msg.category = isSignalMessage ? MessageCategory.SIGNAL_LOCATION.rawValue :  MessageCategory.PLAIN_LOCATION.rawValue
         } else if msg.category.hasSuffix("_TRANSCRIPT") {
             msg.category = isSignalMessage ? MessageCategory.SIGNAL_TRANSCRIPT.rawValue :  MessageCategory.PLAIN_TRANSCRIPT.rawValue
+            for child in children ?? [] {
+                let category = child.category
+                if isSignalMessage, category.hasPrefix("PLAIN_") {
+                    let range = category.startIndex...category.index(category.startIndex, offsetBy: 5)
+                    child.category.replaceSubrange(range, with: "SIGNAL_")
+                } else if !isSignalMessage, category.hasPrefix("SIGNAL_") {
+                    let range = category.startIndex...category.index(category.startIndex, offsetBy: 6)
+                    child.category.replaceSubrange(range, with: "PLAIN_")
+                }
+            }
         }
 
         jobCreationQueue.async {

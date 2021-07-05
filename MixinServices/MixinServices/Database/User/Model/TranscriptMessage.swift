@@ -7,7 +7,7 @@ public final class TranscriptMessage {
     public let messageId: String
     public let userId: String?
     public var userFullName: String?
-    public let category: Category
+    public var category: String
     public let createdAt: String
     public var content: String?
     public var mediaUrl: String?
@@ -62,9 +62,6 @@ public final class TranscriptMessage {
     }
     
     public init?(transcriptId: String, mediaUrl: String?, thumbImage: String?, messageItem item: MessageItem) {
-        guard let category = Category(messageCategoryString: item.category) else {
-            return nil
-        }
         let (content, mediaCreatedAt) = { () -> (String?, String?) in
             switch item.category {
             case MessageCategory.APP_CARD.rawValue:
@@ -85,7 +82,7 @@ public final class TranscriptMessage {
         self.messageId = item.messageId
         self.userId = item.userId
         self.userFullName = item.userFullName
-        self.category = category
+        self.category = item.category
         self.content = content
         self.mediaUrl = mediaUrl ?? item.assetUrl
         self.mediaMimeType = item.mediaMimeType
@@ -117,7 +114,7 @@ extension TranscriptMessage {
     public struct LocalContent: Codable {
         
         public let name: String?
-        public let category: Category
+        public let category: String
         public let content: String?
         
         public init(transcriptMessage t: TranscriptMessage) {
@@ -127,12 +124,9 @@ extension TranscriptMessage {
         }
         
         public init?(messageItem m: MessageItem) {
-            guard let category = TranscriptMessage.Category(messageCategoryString: m.category) else {
-                return nil
-            }
             self.name = m.userFullName
-            self.category = category
-            if category == .appCard {
+            self.category = m.category
+            if category == MessageCategory.APP_CARD.rawValue {
                 self.content = AppCardContentConverter.transcriptAppCard(from: m.content)
             } else {
                 self.content = m.content

@@ -123,9 +123,8 @@ public final class TranscriptMessageDAO: UserDatabaseDAO {
             try TranscriptMessage.filter(updateCondition).updateAll(db, assignments)
             
             var isTranscriptMessageFinished = false
-            let categories = TranscriptMessage.Category.attachmentIncludedCategories.map(\.rawValue)
             let unfinishedChildCondition = TranscriptMessage.column(of: .transcriptId) == transcriptId
-                && categories.contains(TranscriptMessage.column(of: .category))
+                && MessageCategory.allMediaCategoriesString.contains(TranscriptMessage.column(of: .category))
                 && TranscriptMessage.column(of: .mediaStatus) != MediaStatus.DONE.rawValue
             let unfinishedChild: Int? = try TranscriptMessage.select(Column.rowID).filter(unfinishedChildCondition).fetchOne(db)
             if unfinishedChild == nil {
@@ -188,12 +187,6 @@ public final class TranscriptMessageDAO: UserDatabaseDAO {
         }
         if item.category == MessageCategory.APP_CARD.rawValue {
             item.content = AppCardContentConverter.localAppCard(from: item.content)
-        }
-        switch TranscriptMessage.Category(messageCategoryString: item.category) {
-        case .unknown, .none:
-            item.category = MessageCategory.UNKNOWN.rawValue
-        default:
-            break
         }
     }
     

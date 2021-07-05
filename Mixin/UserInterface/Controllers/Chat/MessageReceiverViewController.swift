@@ -441,7 +441,7 @@ extension MessageReceiverViewController {
             let transcriptId = UUID().uuidString.lowercased()
             let children: [TranscriptMessage] = TranscriptMessageDAO.shared.childMessages(with: message.messageId).map { original in
                 let mediaUrl: String?
-                if original.category.includesAttachment, let sourceFilename = original.mediaUrl {
+                if MessageCategory.allMediaCategoriesString.contains(original.category), let sourceFilename = original.mediaUrl {
                     do {
                         let extensionName: String
                         if let lastComponent = sourceFilename.components(separatedBy: ".").lazy.last {
@@ -453,7 +453,7 @@ extension MessageReceiverViewController {
                         let source = AttachmentContainer.url(transcriptId: message.messageId, filename: sourceFilename)
                         let destination = AttachmentContainer.url(transcriptId: transcriptId, filename: destinationFilename)
                         try FileManager.default.copyItem(at: source, to: destination)
-                        if original.category == .video {
+                        if original.category.hasSuffix("_VIDEO") {
                             let source = AttachmentContainer.videoThumbnailURL(transcriptId: message.messageId, videoFilename: sourceFilename)
                             let destination = AttachmentContainer.videoThumbnailURL(transcriptId: transcriptId, videoFilename: destinationFilename)
                             try? FileManager.default.copyItem(at: source, to: destination)

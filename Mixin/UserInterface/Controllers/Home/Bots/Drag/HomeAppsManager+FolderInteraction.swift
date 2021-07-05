@@ -36,7 +36,7 @@ extension HomeAppsManager {
         cancelFolderInteraction()
         if let folder = itemCell.item as? BotFolder, let folderCell = itemCell as? BotFolderCell {
             currentFolderInteraction = HomeAppsFolderDropInteraction(dragInteraction: dragInteraction, folder: folder, wrapperView: folderWrapperView)
-            folderCell.wrapperView.isHidden = true
+            folderCell.wrapperView.isHidden = false
         } else if let app = itemCell.item as? Bot {
             currentFolderInteraction = HomeAppsFolderCreationInteraction(dragInteraction: dragInteraction, destinationApp: app, wrapperView: folderWrapperView)
         }

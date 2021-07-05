@@ -28,7 +28,6 @@ class HomeAppsItemManager {
                 return page.map { $0.toDictionary() }
             }
             let dictionary = ["pages": pages, "pinned": pinnedItems] as JSONDictionary
-            print(dictionary)
             let jsonData = try! JSONSerialization.data(withJSONObject: dictionary, options: [])
             AppGroupUserDefaults.User.homeAppsFolder = jsonData
         }

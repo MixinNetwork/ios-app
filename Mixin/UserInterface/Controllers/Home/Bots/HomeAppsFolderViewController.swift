@@ -68,8 +68,13 @@ class HomeAppsFolderViewController: UIViewController {
         delegate?.openAnimationWillStart(on: self)
         animateIn()
         if isEditing {
-            homeAppsManager.enterEditingMode(suppressHaptic: true)
+            homeAppsManager.enterEditingMode(occurHaptic: false)
         }
+    }
+    
+    @IBAction func clearTextField(_ sender: UIButton) {
+        textField.text = ""
+        textField.becomeFirstResponder()
     }
     
     @IBAction func dismiss() {
@@ -167,6 +172,13 @@ extension HomeAppsFolderViewController: HomeAppsManagerDelegate {
             self.pageControl.numberOfPages = self.homeAppsManager.items.count
             self.pageControl.alpha = 1
         }
+    }
+    
+    func didLeaveEditingMode(on manager: HomeAppsManager) {
+        if !textField.hasText {
+            textField.text = folder.name
+        }
+        leaveTextFieldEditingMode()
     }
     
     func didBeginFolderDragOut(transfer: HomeAppsDragInteractionTransfer, on manager: HomeAppsManager) {

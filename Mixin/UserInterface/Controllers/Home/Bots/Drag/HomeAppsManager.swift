@@ -7,6 +7,7 @@ protocol HomeAppsManagerDelegate: AnyObject {
     func didUpdate(pageCount: Int, on manager: HomeAppsManager)
     func didMove(toPage page: Int, on manager: HomeAppsManager)
     func didEnterEditingMode(on manager: HomeAppsManager)
+    func didLeaveEditingMode(on manager: HomeAppsManager)
     func didBeginFolderDragOut(transfer: HomeAppsDragInteractionTransfer, on manager: HomeAppsManager)
     func didSelect(app: Bot, on manager: HomeAppsManager)
     
@@ -87,47 +88,49 @@ class HomeAppsManager: NSObject {
         longPressRecognizer.addTarget(self, action: #selector(handleLongPressGesture(_:)))
         self.viewController.view.addGestureRecognizer(longPressRecognizer)
         
-        //tapRecognizer.cancelsTouchesInView = false
-        //tapRecognizer.addTarget(self, action: #selector(handleTapGesture))
-        //self.viewController.view.addGestureRecognizer(tapRecognizer)
+        tapRecognizer.isEnabled = false
+        tapRecognizer.delegate = self
+        tapRecognizer.cancelsTouchesInView = false
+        tapRecognizer.addTarget(self, action: #selector(handleTapGesture(gestureRecognizer:)))
+        self.viewController.view.addGestureRecognizer(tapRecognizer)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(leaveEditingMode), name: UIApplication.willResignActiveNotification, object: nil)
     }
     
 }
 
 extension HomeAppsManager {
-    
-    @objc func handleTapGesture() {
-        guard isEditing else {
-            return
+
+    @objc func handleTapGesture(gestureRecognizer: UITapGestureRecognizer) {
+        guard isEditing else { return }
+        var touchPoint = gestureRecognizer.location(in: viewController.view)
+        let (collectionView, pageCell) = viewInfos(at: touchPoint)
+        touchPoint = gestureRecognizer.location(in: collectionView)
+        touchPoint.x -= collectionView.contentOffset.x
+        if pageCell.collectionView.indexPathForItem(at: touchPoint) == nil {
+            leaveEditingMode()
         }
-        leaveEditingMode()
     }
     
-    func viewInfos(at point: CGPoint) -> (collectionView: UICollectionView, cell: BotPageCell, itemSize: CGSize) {
+    func viewInfos(at point: CGPoint) -> (collectionView: UICollectionView, cell: BotPageCell) {
         let collectionView: UICollectionView
-        var itemSize: CGSize
         if let pinnedCollectionView = pinnedCollectionView, pinnedCollectionView.frame.contains(viewController.view.convert(point, to: pinnedCollectionView)) {
             collectionView = pinnedCollectionView
-            itemSize = HomeAppsMode.pinned.itemSize
         } else {
             collectionView = candidateCollectionView
-            itemSize = HomeAppsMode.regular.itemSize
-        }
-        if pinnedCollectionView == nil {
-            itemSize = HomeAppsMode.folder.itemSize
         }
         let convertedPoint = viewController.view.convert(point, to: collectionView)
         if let indexPath = collectionView.indexPathForItem(at: convertedPoint), let cell = collectionView.cellForItem(at: indexPath) as? BotPageCell {
-            return (collectionView, cell, itemSize)
+            return (collectionView, cell)
         } else {
-            return (collectionView, collectionView.visibleCells[0] as! BotPageCell, itemSize)
+            return (collectionView, collectionView.visibleCells[0] as! BotPageCell)
         }
     }
     
-    func enterEditingMode(suppressHaptic: Bool = false) {
+    func enterEditingMode(occurHaptic: Bool = true) {
         guard !isEditing else { return }
         isEditing = true
-        if !suppressHaptic {
+        if occurHaptic {
             feedback.impactOccurred()
         }
         for cell in candidateCollectionView.visibleCells + (pinnedCollectionView?.visibleCells ?? []) {
@@ -140,10 +143,11 @@ extension HomeAppsManager {
             items.append([])
             candidateCollectionView.insertItems(at: [IndexPath(item: items.count - 1, section: 0)])
         }
+        tapRecognizer.isEnabled = true
         delegate?.didEnterEditingMode(on: self)
     }
     
-    func leaveEditingMode() {
+    @objc func leaveEditingMode() {
         guard isEditing else { return }
         isEditing = false
         for cell in candidateCollectionView.visibleCells + (pinnedCollectionView?.visibleCells ?? []) {
@@ -158,6 +162,8 @@ extension HomeAppsManager {
                 self.candidateCollectionView.deleteItems(at: [IndexPath(item: self.items.count, section: 0)])
             }
         }
+        tapRecognizer.isEnabled = false
+        delegate?.didLeaveEditingMode(on: self)
     }
     
     func updateState(forPageCell pageCell: BotPageCell) {
@@ -273,8 +279,6 @@ extension HomeAppsManager: UIScrollViewDelegate {
     
 }
 
-// MARK: - Page cell delegate
-
 extension HomeAppsManager: BotPageCellDelegate {
     
     func didSelect(cell: BotItemCell, on pageCell: BotPageCell) {
@@ -283,6 +287,17 @@ extension HomeAppsManager: BotPageCellDelegate {
         } else if let item = cell.item as? Bot, !isEditing {
             delegate?.didSelect(app: item, on: self)
         }
+    }
+    
+}
+
+extension HomeAppsManager: UIGestureRecognizerDelegate {
+    // handle Gesture for clear button in folder controller
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        if touch.view is UIButton {
+            return false
+        }
+        return true
     }
     
 }

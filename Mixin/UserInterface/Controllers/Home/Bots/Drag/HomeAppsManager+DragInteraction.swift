@@ -17,15 +17,13 @@ extension HomeAppsManager {
     private func beginDragInteraction(_ gestureRecognizer: UILongPressGestureRecognizer) {
         feedback.prepare()
         var touchPoint = gestureRecognizer.location(in: viewController.view)
-        let (collectionView, pageCell, itemSize) = viewInfos(at: touchPoint)
-        guard let view = viewController.view.hitTest(touchPoint, with: nil), view.bounds.size.equalTo(itemSize) else {
-            return
-        }
+        let (collectionView, pageCell) = viewInfos(at: touchPoint)
         touchPoint = gestureRecognizer.location(in: collectionView)
         touchPoint.x -= collectionView.contentOffset.x
         guard let indexPath = pageCell.collectionView.indexPathForItem(at: touchPoint),
               let cell = pageCell.collectionView.cellForItem(at: indexPath) as? BotItemCell,
               let item = cell.item else {
+            enterEditingMode()
             return
         }
         let dragOffset = CGSize(width: cell.center.x - touchPoint.x, height: cell.center.y - touchPoint.y)
@@ -49,7 +47,7 @@ extension HomeAppsManager {
     private func updateDragInteraction(_ gestureRecognizer: UILongPressGestureRecognizer) {
         guard let currentInteraction = currentDragInteraction else { return }
         var touchPoint = gestureRecognizer.location(in: viewController.view)
-        let (collectionView, pageCell, _) = viewInfos(at: touchPoint)
+        let (collectionView, pageCell) = viewInfos(at: touchPoint)
         touchPoint = gestureRecognizer.location(in: collectionView)
         // move snapshot of touched cell
         let convertedTouchPoint = viewController.view.convert(touchPoint, from: collectionView)

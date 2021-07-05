@@ -5,18 +5,14 @@ final class HomeAppsViewController: UIViewController {
     
     @IBOutlet weak var noPinnedHintLabel: UILabel!
     @IBOutlet weak var pinnedCollectionView: UICollectionView!
-    @IBOutlet weak var pinnedCollectionLayout: UICollectionViewFlowLayout!
     @IBOutlet weak var candidateCollectionView: UICollectionView!
+    @IBOutlet weak var candidateCollectionLayout: UICollectionViewFlowLayout!
     @IBOutlet weak var pageControl: UIPageControl!
     
     @IBOutlet weak var titleBarHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var pinnedCollectionViewLeadingConstraint: NSLayoutConstraint!
-    @IBOutlet weak var pinnedCollectionViewTrailingConstraint: NSLayoutConstraint!
     @IBOutlet weak var pinnedWrapperHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var candidateCollectionViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var pageControlTopConstraint: NSLayoutConstraint!
-    
-    private var candidateCollectionLayout: HomeAppsFlowLayout!
     
     private lazy var candidateEmptyHintLabel: UILabel = {
         let label = UILabel()
@@ -82,31 +78,7 @@ final class HomeAppsViewController: UIViewController {
     }
     
     @IBAction func dismissAction(_ sender: Any) {
-        dismissAsChild(completion: nil)
-    }
-    
-}
-
-extension HomeAppsViewController: UICollectionViewDelegate {
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        collectionView.deselectItem(at: indexPath, animated: true)
-        let app: HomeApp
-        if collectionView == pinnedCollectionView {
-            app = pinnedAppModelController.apps[indexPath.row]
-        } else if collectionView == candidateCollectionView {
-            app = candidateAppModelController.apps[indexPath.row]
-        } else {
-            return
-        }
-        switch app {
-        case let .embedded(app):
-            dismissAsChild(completion: app.action)
-        case let .external(user):
-            let item = UserItem.createUser(from: user)
-            let vc = UserProfileViewController(user: item)
-            present(vc, animated: true, completion: nil)
-        }
+        dismiss()
     }
     
 }
@@ -157,6 +129,10 @@ extension HomeAppsViewController {
     }
     
     @objc private func backgroundTappingAction() {
+        dismiss()
+    }
+    
+    private func dismiss() {
         if appsManager.isEditing {
             appsManager.leaveEditingMode()
         } else {
@@ -215,7 +191,6 @@ extension HomeAppsViewController: HomeAppsManagerDelegate {
         appsItemManager.candidateItems = manager.items
         appsItemManager.pinnedItems = manager.pinnedItems
         appsItemManager.save()
-        print("saveeeeed")
     }
     
     func didUpdate(pageCount: Int, on manager: HomeAppsManager) {
@@ -241,6 +216,8 @@ extension HomeAppsViewController: HomeAppsManagerDelegate {
     }
     
     func didEnterEditingMode(on manager: HomeAppsManager) {}
+    
+    func didLeaveEditingMode(on manager: HomeAppsManager) {}
     
     func didBeginFolderDragOut(transfer: HomeAppsDragInteractionTransfer, on manager: HomeAppsManager) {}
     

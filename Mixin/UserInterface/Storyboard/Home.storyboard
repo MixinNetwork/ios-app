@@ -1219,15 +1219,13 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="candidateCollectionLayout" destination="gFE-uW-e9b" id="mFZ-BG-Zse"/>
                         <outlet property="candidateCollectionView" destination="LDb-PZ-N3K" id="8KB-Ur-3tv"/>
                         <outlet property="candidateCollectionViewHeightConstraint" destination="QTq-YP-lKy" id="Thn-L8-DbJ"/>
                         <outlet property="noPinnedHintLabel" destination="6Nf-kR-8cU" id="qw3-hx-gcC"/>
                         <outlet property="pageControl" destination="0Nz-k8-cp3" id="hkM-9W-tNV"/>
                         <outlet property="pageControlTopConstraint" destination="Xp9-eM-1Gn" id="bUi-Tw-Gpy"/>
-                        <outlet property="pinnedCollectionLayout" destination="AbY-x2-upI" id="I0h-xe-XA8"/>
                         <outlet property="pinnedCollectionView" destination="kTb-Tu-KFj" id="KhN-k7-OIj"/>
-                        <outlet property="pinnedCollectionViewLeadingConstraint" destination="RoT-v5-GG6" id="4Ga-za-gwa"/>
-                        <outlet property="pinnedCollectionViewTrailingConstraint" destination="e0G-bz-rGL" id="uuW-dg-xjP"/>
                         <outlet property="pinnedWrapperHeightConstraint" destination="jdA-qv-Lse" id="YaL-Nr-ZLf"/>
                         <outlet property="titleBarHeightConstraint" destination="oec-ry-GMg" id="wdi-DW-2bh"/>
                     </connections>
@@ -1375,12 +1373,14 @@
                             <view alpha="0.40000000000000002" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zw9-y5-ZGU">
                                 <rect key="frame" x="62" y="179" width="290" height="54"/>
                                 <subviews>
-                                    <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Title" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="DTR-qv-VcP">
-                                        <rect key="frame" x="25.5" y="-0.5" width="238" height="54"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" text="Folder" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="DTR-qv-VcP">
+                                        <rect key="frame" x="40" y="12" width="210" height="30.5"/>
                                         <color key="textColor" name="title"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                         <textInputTraits key="textInputTraits"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="aRa-wQ-N2z" id="h9g-bc-Lm9"/>
+                                        </connections>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yN6-7t-pgX">
                                         <rect key="frame" x="254" y="19" width="16" height="16"/>
@@ -1388,14 +1388,21 @@
                                             <constraint firstAttribute="height" constant="16" id="Raw-ZN-e5b"/>
                                             <constraint firstAttribute="width" constant="16" id="ZY4-FP-ZID"/>
                                         </constraints>
-                                        <state key="normal" title="Button" image="ic_reply_close"/>
+                                        <state key="normal" title="Button" image="ic_dialog_close"/>
+                                        <connections>
+                                            <action selector="clearTextField:" destination="aRa-wQ-N2z" eventType="touchUpInside" id="yOg-Ml-fcZ"/>
+                                        </connections>
                                     </button>
                                 </subviews>
-                                <color key="backgroundColor" name="background"/>
+                                <color key="backgroundColor" name="background_load"/>
+                                <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="yN6-7t-pgX" secondAttribute="trailing" constant="20" id="3zv-5w-Sid"/>
                                     <constraint firstItem="yN6-7t-pgX" firstAttribute="centerY" secondItem="Zw9-y5-ZGU" secondAttribute="centerY" id="9Ze-gH-InR"/>
+                                    <constraint firstItem="DTR-qv-VcP" firstAttribute="leading" secondItem="Zw9-y5-ZGU" secondAttribute="leading" constant="40" id="CBG-Ou-39i"/>
+                                    <constraint firstItem="DTR-qv-VcP" firstAttribute="centerY" secondItem="Zw9-y5-ZGU" secondAttribute="centerY" id="TpO-3B-aRr"/>
                                     <constraint firstAttribute="height" constant="54" id="bXH-u1-SkW"/>
+                                    <constraint firstAttribute="trailing" secondItem="DTR-qv-VcP" secondAttribute="trailing" constant="40" id="gfK-mb-7Cf"/>
                                     <constraint firstAttribute="width" constant="290" id="jfw-hh-kkk"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
@@ -2143,12 +2150,14 @@ chat history from icloud</string>
         <image name="ic_dialog_close" width="26" height="26"/>
         <image name="ic_home_app_add" width="24" height="24"/>
         <image name="ic_message_photo" width="14" height="12"/>
-        <image name="ic_reply_close" width="44" height="44"/>
         <image name="ic_title_add" width="16" height="16"/>
         <image name="ic_title_search" width="28.5" height="28"/>
         <image name="ic_user_bot" width="14" height="11"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="background_load">
+            <color red="0.0" green="0.0" blue="0.0" alpha="0.40000000596046448" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_secondary">
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

@@ -1,12 +1,12 @@
 import UIKit
 
-class BotFolder: BotItem {
+class AppFolderModel: AppItem {
     
     var name: String
-    var pages: [[Bot]]
+    var pages: [[AppModel]]
     var isNewFolder = false
 
-    init(name: String, pages: [[Bot]]) {
+    init(name: String, pages: [[AppModel]]) {
         self.name = name
         self.pages = pages
     }
@@ -20,9 +20,9 @@ class BotFolder: BotItem {
     
 }
 
-extension BotFolder: Equatable {
+extension AppFolderModel: Equatable {
     
-    static func == (lhs: BotFolder, rhs: BotFolder) -> Bool {
+    static func == (lhs: AppFolderModel, rhs: AppFolderModel) -> Bool {
         return lhs === rhs
     }
     

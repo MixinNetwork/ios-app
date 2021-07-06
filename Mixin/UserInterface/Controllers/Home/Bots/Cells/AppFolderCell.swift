@@ -1,6 +1,6 @@
 import UIKit
 
-class BotFolderCell: BotItemCell {
+class AppFolderCell: AppCell {
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var wrapperView: UIView!
@@ -10,7 +10,7 @@ class BotFolderCell: BotItemCell {
     }
     
     private var placeholderView: UIView?
-    private var bots: [[Bot]] = [] {
+    private var apps: [[AppModel]] = [] {
         didSet {
             collectionView.reloadData()
         }
@@ -18,8 +18,8 @@ class BotFolderCell: BotItemCell {
     
     override func updateUI() {
         super.updateUI()
-        guard let folder = item as? BotFolder else { return }
-        bots = folder.pages
+        guard let folder = item as? AppFolderModel else { return }
+        apps = folder.pages
         label?.text = folder.name
         placeholderView?.removeFromSuperview()
         imageContainerView.transform = .identity
@@ -27,26 +27,26 @@ class BotFolderCell: BotItemCell {
     }
     
     func leaveEditingMode() {
-        guard let folder = item as? BotFolder, bots[bots.count - 1].count == 0 else {
+        guard let folder = item as? AppFolderModel, apps[apps.count - 1].count == 0 else {
             return
         }
-        bots.removeLast()
-        folder.pages = bots
+        apps.removeLast()
+        folder.pages = apps
         collectionView.reloadData()
     }
     
 }
 
-extension BotFolderCell {
+extension AppFolderCell {
     
     func moveToFirstAvailablePage(animated: Bool = true) {
-        if let folder = item as? BotFolder, bots[bots.count - 1].count > 0 {
+        if let folder = item as? AppFolderModel, apps[apps.count - 1].count > 0 {
             folder.pages.append([])
-            bots.append([])
+            apps.append([])
         }
         let appsPerPage = HomeAppsMode.nestedFolder.appsPerPage
-        for (page, botsInPage) in bots.enumerated() {
-            if botsInPage.count < appsPerPage {
+        for (page, appsInPage) in apps.enumerated() {
+            if appsInPage.count < appsPerPage {
                 if page != currentPage {
                     move(to: page, animated: animated)
                 }
@@ -56,13 +56,13 @@ extension BotFolderCell {
     }
     
     func move(to page: Int, animated: Bool) {
-        guard page < bots.count else { return }
+        guard page < apps.count else { return }
         let indexPath = IndexPath(item: page, section: 0)
         collectionView.scrollToItem(at: indexPath, at: .left, animated: animated)
     }
     
     func move(view: UIView, toCellPositionAtIndex index: Int, completion: (() -> Void)? = nil) {
-        guard let currentPageCell = collectionView.cellForItem(at: IndexPath(item: currentPage, section: 0)) as? BotPageCell,
+        guard let currentPageCell = collectionView.cellForItem(at: IndexPath(item: currentPage, section: 0)) as? AppPageCell,
               let flowLayout = currentPageCell.collectionView.collectionViewLayout as? UICollectionViewFlowLayout,
               let layoutAttributes = flowLayout.layoutAttributesForItem(at: IndexPath(item: index, section: 0)) else {
             return
@@ -81,43 +81,43 @@ extension BotFolderCell {
     }
     
     func revokeFolderCreation(completion: @escaping () -> Void) {
-        guard let currentPageCell = collectionView.cellForItem(at: IndexPath(item: currentPage, section: 0)) as? BotPageCell,
-              let botCell = currentPageCell.collectionView.cellForItem(at: IndexPath(item: 0, section: 0)) as? BotItemCell else {
+        guard let currentPageCell = collectionView.cellForItem(at: IndexPath(item: currentPage, section: 0)) as? AppPageCell,
+              let appCell = currentPageCell.collectionView.cellForItem(at: IndexPath(item: 0, section: 0)) as? AppCell else {
             return
         }
-        let convertedRect1 = currentPageCell.convert(botCell.imageView!.frame, from: botCell)
+        let convertedRect1 = currentPageCell.convert(appCell.imageView!.frame, from: appCell)
         let convertedRect2 = convert(convertedRect1, from: currentPageCell)
         let imageView = UIImageView(frame: convertedRect2)
-        imageView.image = botCell.imageView!.image
+        imageView.image = appCell.imageView!.image
         contentView.addSubview(imageView)
-        botCell.imageView!.isHidden = true
+        appCell.imageView!.isHidden = true
         UIView.animate(withDuration: 0.55, animations: {
             imageView.transform = .transform(rect: imageView.frame, to: self.imageContainerView.frame)
             self.imageContainerView.transform = CGAffineTransform.identity.scaledBy(x: 0.01, y: 0.01)
             self.label?.alpha = 0
         }, completion: { _ in
             self.placeholderView = imageView
-            botCell.imageView!.isHidden = false
+            appCell.imageView!.isHidden = false
             completion()
         })
     }
     
 }
 
-extension BotFolderCell: UICollectionViewDataSource, UICollectionViewDelegate {
+extension AppFolderCell: UICollectionViewDataSource, UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return bots.count
+        return apps.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard indexPath.item < bots.count else {
+        guard indexPath.item < apps.count else {
             return UICollectionViewCell()
         }
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.bot_page, for: indexPath)!
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.app_page, for: indexPath)!
         cell.mode = .nestedFolder
         cell.draggedItem = nil
-        cell.items = bots[indexPath.item]
+        cell.items = apps[indexPath.item]
         cell.collectionView.reloadData()
         return cell
     }

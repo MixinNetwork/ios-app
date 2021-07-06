@@ -21,7 +21,7 @@ extension HomeAppsManager {
         touchPoint = gestureRecognizer.location(in: collectionView)
         touchPoint.x -= collectionView.contentOffset.x
         guard let indexPath = pageCell.collectionView.indexPathForItem(at: touchPoint),
-              let cell = pageCell.collectionView.cellForItem(at: indexPath) as? BotItemCell,
+              let cell = pageCell.collectionView.cellForItem(at: indexPath) as? AppCell,
               let item = cell.item else {
             enterEditingMode()
             return
@@ -79,7 +79,7 @@ extension HomeAppsManager {
         let flowLayout = pageCell.collectionView.collectionViewLayout as! UICollectionViewFlowLayout
         let appsPerRow = pinnedCollectionView == nil ? HomeAppsMode.folder.appsPerRow : HomeAppsMode.regular.appsPerRow
         if let indexPath = pageCell.collectionView.indexPathForItem(at: touchPoint), pageCell == currentInteraction.currentPageCell { // move to valid indexPath
-            guard let itemCell = pageCell.collectionView.cellForItem(at: indexPath) as? BotItemCell else {
+            guard let itemCell = pageCell.collectionView.cellForItem(at: indexPath) as? AppCell else {
                 return
             }
             let imageCenter = itemCell.imageContainerView.center
@@ -88,7 +88,7 @@ extension HomeAppsManager {
             let convertedPoint = itemCell.convert(touchPoint, from: pageCell.collectionView)
             let validOverlap = targetRect.contains(convertedPoint)
             if validOverlap && indexPath.row != currentInteraction.currentIndexPath.row && collectionView == candidateCollectionView { // move to create folder
-                if currentFolderInteraction != nil || currentInteraction.item is BotFolder || pinnedCollectionView == nil {
+                if currentFolderInteraction != nil || currentInteraction.item is AppFolderModel || pinnedCollectionView == nil {
                     return
                 }
                 pageTimer?.invalidate()
@@ -195,17 +195,17 @@ extension HomeAppsManager {
             commitFolderInteraction(didDrop: true)
             return
         }
-        guard let currentInteraction = currentDragInteraction, let cell = currentInteraction.currentPageCell.collectionView.cellForItem(at: currentInteraction.currentIndexPath) as? BotItemCell else {
+        guard let currentInteraction = currentDragInteraction, let cell = currentInteraction.currentPageCell.collectionView.cellForItem(at: currentInteraction.currentIndexPath) as? AppCell else {
             return
         }
         updateState(forPageCell: currentInteraction.currentPageCell)
         let convertedRect = currentInteraction.currentPageCell.collectionView.convert(cell.frame, to: viewController.view)
         var visiblePageCells = [currentPageCell]
-        if let pinnedCollectionView = pinnedCollectionView, let pageCell = pinnedCollectionView.visibleCells[0] as? BotPageCell {
+        if let pinnedCollectionView = pinnedCollectionView, let pageCell = pinnedCollectionView.visibleCells[0] as? AppPageCell {
             visiblePageCells.append(pageCell)
         }
         for cell in visiblePageCells.reduce([], { $0 + $1.collectionView.visibleCells }) {
-            if let cell = cell as? BotItemCell {
+            if let cell = cell as? AppCell {
                 cell.label?.alpha = 1
                 cell.startShaking()
             }
@@ -220,11 +220,11 @@ extension HomeAppsManager {
         }
     }
     
-    private func moveToPinned(interaction: HomeAppsDragInteraction, pageCell: BotPageCell, destinationIndexPath: IndexPath) {
+    private func moveToPinned(interaction: HomeAppsDragInteraction, pageCell: AppPageCell, destinationIndexPath: IndexPath) {
         guard pinnedItems.count < HomeAppsMode.pinned.appsPerPage else {
             return
         }
-        guard interaction.item is Bot else {
+        guard interaction.item is AppModel else {
             return
         }
         pinnedItems.insert(interaction.item, at: destinationIndexPath.row)
@@ -256,7 +256,7 @@ extension HomeAppsManager {
         interaction.currentIndexPath = destinationIndexPath
     }
     
-    private func moveFromPinned(interaction: HomeAppsDragInteraction, pageCell: BotPageCell, destinationIndexPath: IndexPath) {
+    private func moveFromPinned(interaction: HomeAppsDragInteraction, pageCell: AppPageCell, destinationIndexPath: IndexPath) {
         var didMoveLastItem = false
         // need to move last item to next page
         if items[currentPage].count == HomeAppsMode.regular.appsPerPage {

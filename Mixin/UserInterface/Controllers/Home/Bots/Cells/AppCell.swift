@@ -1,12 +1,12 @@
 import UIKit
 
-class BotItemCell: UICollectionViewCell {
+class AppCell: UICollectionViewCell {
     
     @IBOutlet weak var imageView: AvatarImageView?
     @IBOutlet weak var label: UILabel?
     @IBOutlet weak var imageContainerView: UIView!
     
-    var item: BotItem? {
+    var item: AppItem? {
         didSet {
             updateUI()
         }
@@ -30,7 +30,7 @@ class BotItemCell: UICollectionViewCell {
     }
     
     func updateUI() {
-        guard let item = item as? Bot else { return }
+        guard let item = item as? AppModel else { return }
         guard let app = item.app else { return }
         switch app {
         case .embedded(let embedded):

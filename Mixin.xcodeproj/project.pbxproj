@@ -566,12 +566,12 @@
 		7BFE47E722845DE100FC4379 /* MessageReceiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFE47E622845DE100FC4379 /* MessageReceiver.swift */; };
 		7C5823D5268966A1003AA142 /* HomeAppsFolderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5823D4268966A1003AA142 /* HomeAppsFolderViewController.swift */; };
 		7C66F0272689D1FE006D8462 /* HomeAppsDragInteraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F0262689D1FE006D8462 /* HomeAppsDragInteraction.swift */; };
-		7C66F029268A0384006D8462 /* BotPageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F028268A0384006D8462 /* BotPageCell.swift */; };
-		7C66F02B268A0431006D8462 /* BotItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F02A268A0431006D8462 /* BotItemCell.swift */; };
-		7C66F1A9268AB40A006D8462 /* BotItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1A8268AB40A006D8462 /* BotItem.swift */; };
-		7C66F1AB268ABABE006D8462 /* BotFolderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1AA268ABABE006D8462 /* BotFolderCell.swift */; };
-		7C66F1AD268ABE1F006D8462 /* BotFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1AC268ABE1F006D8462 /* BotFolder.swift */; };
-		7C66F1AF268ABE3F006D8462 /* Bot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1AE268ABE3F006D8462 /* Bot.swift */; };
+		7C66F029268A0384006D8462 /* AppPageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F028268A0384006D8462 /* AppPageCell.swift */; };
+		7C66F02B268A0431006D8462 /* AppCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F02A268A0431006D8462 /* AppCell.swift */; };
+		7C66F1A9268AB40A006D8462 /* AppItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1A8268AB40A006D8462 /* AppItem.swift */; };
+		7C66F1AB268ABABE006D8462 /* AppFolderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1AA268ABABE006D8462 /* AppFolderCell.swift */; };
+		7C66F1AD268ABE1F006D8462 /* AppFolderModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1AC268ABE1F006D8462 /* AppFolderModel.swift */; };
+		7C66F1AF268ABE3F006D8462 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1AE268ABE3F006D8462 /* AppModel.swift */; };
 		7C66F1B3268B0B11006D8462 /* HomeAppsExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1B2268B0B11006D8462 /* HomeAppsExtension.swift */; };
 		7C66F1BB268B2CE5006D8462 /* HomeAppsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1BA268B2CE5006D8462 /* HomeAppsManager.swift */; };
 		7C66F1BD268B2F23006D8462 /* HomeAppsManager+DragInteraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1BC268B2F23006D8462 /* HomeAppsManager+DragInteraction.swift */; };
@@ -1526,12 +1526,12 @@
 		7BFE47E622845DE100FC4379 /* MessageReceiver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageReceiver.swift; sourceTree = "<group>"; };
 		7C5823D4268966A1003AA142 /* HomeAppsFolderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsFolderViewController.swift; sourceTree = "<group>"; };
 		7C66F0262689D1FE006D8462 /* HomeAppsDragInteraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsDragInteraction.swift; sourceTree = "<group>"; };
-		7C66F028268A0384006D8462 /* BotPageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BotPageCell.swift; sourceTree = "<group>"; };
-		7C66F02A268A0431006D8462 /* BotItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BotItemCell.swift; sourceTree = "<group>"; };
-		7C66F1A8268AB40A006D8462 /* BotItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BotItem.swift; sourceTree = "<group>"; };
-		7C66F1AA268ABABE006D8462 /* BotFolderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BotFolderCell.swift; sourceTree = "<group>"; };
-		7C66F1AC268ABE1F006D8462 /* BotFolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BotFolder.swift; sourceTree = "<group>"; };
-		7C66F1AE268ABE3F006D8462 /* Bot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bot.swift; sourceTree = "<group>"; };
+		7C66F028268A0384006D8462 /* AppPageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppPageCell.swift; sourceTree = "<group>"; };
+		7C66F02A268A0431006D8462 /* AppCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCell.swift; sourceTree = "<group>"; };
+		7C66F1A8268AB40A006D8462 /* AppItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppItem.swift; sourceTree = "<group>"; };
+		7C66F1AA268ABABE006D8462 /* AppFolderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFolderCell.swift; sourceTree = "<group>"; };
+		7C66F1AC268ABE1F006D8462 /* AppFolderModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFolderModel.swift; sourceTree = "<group>"; };
+		7C66F1AE268ABE3F006D8462 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
 		7C66F1B2268B0B11006D8462 /* HomeAppsExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsExtension.swift; sourceTree = "<group>"; };
 		7C66F1BA268B2CE5006D8462 /* HomeAppsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeAppsManager.swift; sourceTree = "<group>"; };
 		7C66F1BC268B2F23006D8462 /* HomeAppsManager+DragInteraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeAppsManager+DragInteraction.swift"; sourceTree = "<group>"; };
@@ -2510,9 +2510,9 @@
 		7C35D1CF2689C04F002B5BBC /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				7C66F028268A0384006D8462 /* BotPageCell.swift */,
-				7C66F02A268A0431006D8462 /* BotItemCell.swift */,
-				7C66F1AA268ABABE006D8462 /* BotFolderCell.swift */,
+				7C66F028268A0384006D8462 /* AppPageCell.swift */,
+				7C66F02A268A0431006D8462 /* AppCell.swift */,
+				7C66F1AA268ABABE006D8462 /* AppFolderCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -2534,9 +2534,9 @@
 		7C66F0212689C9D7006D8462 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				7C66F1A8268AB40A006D8462 /* BotItem.swift */,
-				7C66F1AE268ABE3F006D8462 /* Bot.swift */,
-				7C66F1AC268ABE1F006D8462 /* BotFolder.swift */,
+				7C66F1A8268AB40A006D8462 /* AppItem.swift */,
+				7C66F1AE268ABE3F006D8462 /* AppModel.swift */,
+				7C66F1AC268ABE1F006D8462 /* AppFolderModel.swift */,
 				5EF90904268C92B900B934AF /* HomeAppsMode.swift */,
 			);
 			path = Model;
@@ -4262,7 +4262,7 @@
 				7B3FD4EC241965AB00B58006 /* LocationViewController.swift in Sources */,
 				7BD97DD72179DDD600FAE490 /* IceServer.swift in Sources */,
 				7BB0F9152434B03300BEDA97 /* SelectedPeerCell.swift in Sources */,
-				7C66F1AF268ABE3F006D8462 /* Bot.swift in Sources */,
+				7C66F1AF268ABE3F006D8462 /* AppModel.swift in Sources */,
 				7B1C8B992513265200F7A817 /* ExternalSharingPreviewWrapperView.swift in Sources */,
 				E081796A23C32ACA005FEEAC /* PostMessageCell.swift in Sources */,
 				DFD089E21FE4041400A7D815 /* AttachmentUploadJob.swift in Sources */,
@@ -4312,7 +4312,7 @@
 				7B04FABA22684F51004F8F04 /* SearchResult.swift in Sources */,
 				DF46B4071FA9E78A00243A8B /* PhoneContactCell.swift in Sources */,
 				7BF3F67A22AE4733007B6C77 /* IdentityNumberLabel.swift in Sources */,
-				7C66F02B268A0431006D8462 /* BotItemCell.swift in Sources */,
+				7C66F02B268A0431006D8462 /* AppCell.swift in Sources */,
 				7B97BA0E2019F1A90013D58F /* StickerPreviewCell.swift in Sources */,
 				7B9650AE248794FD00DE86B9 /* MinimizedCallViewController.swift in Sources */,
 				7BDBDE6C223636B8006220DF /* ShadowImageView.swift in Sources */,
@@ -4488,7 +4488,7 @@
 				DFC0ECFC23BB610C0091E7AC /* PhoneContactAPI.swift in Sources */,
 				E0D4F5F523A9D803008F0189 /* NotificationManager.swift in Sources */,
 				7BADC842204C20820016B0FC /* ChangeNumberVerificationCodeViewController.swift in Sources */,
-				7C66F029268A0384006D8462 /* BotPageCell.swift in Sources */,
+				7C66F029268A0384006D8462 /* AppPageCell.swift in Sources */,
 				7B2A116122C20F5F00AD029C /* PlayerView.swift in Sources */,
 				7BB3855821E770BE0070FF8F /* ProvisionMessage.swift in Sources */,
 				7B9863931FA3141F00D4B16C /* XibDesignable.swift in Sources */,
@@ -4658,7 +4658,7 @@
 				DFC0ECD023BB5FDE0091E7AC /* AccountRequest.swift in Sources */,
 				7B8A6A6D2456C39F00ADC9EB /* SharedMediaPostTableViewController.swift in Sources */,
 				E0A14D3C2372F0340044D131 /* GroupProfileViewController.swift in Sources */,
-				7C66F1A9268AB40A006D8462 /* BotItem.swift in Sources */,
+				7C66F1A9268AB40A006D8462 /* AppItem.swift in Sources */,
 				7B7FBF8F2282D75400644693 /* RecalledMessageViewModel.swift in Sources */,
 				7B9D825A22F1BFEA0099381E /* NormalNetworkOperationIconSet.swift in Sources */,
 				7B6E5503223F69D90060E6FC /* KeyboardBasedLayoutViewController.swift in Sources */,
@@ -4669,7 +4669,7 @@
 				94BE548E25D96932006575E2 /* OggOpusReader.swift in Sources */,
 				7B2A116322C2269800AD029C /* EmergencyContactViewController.swift in Sources */,
 				7B35AF74228A948A00E8101D /* UserSearchResult.swift in Sources */,
-				7C66F1AB268ABABE006D8462 /* BotFolderCell.swift in Sources */,
+				7C66F1AB268ABABE006D8462 /* AppFolderCell.swift in Sources */,
 				DFC0ECFA23BB610C0091E7AC /* GiphyAPI.swift in Sources */,
 				7B3887BE22E1AD74002B0864 /* HomeContainerViewController.swift in Sources */,
 				DF6ABB162295049E00A012B2 /* AddressWindow.swift in Sources */,
@@ -4827,7 +4827,7 @@
 				7B2636D5224E2A7E0057116D /* InfiniteTopView.swift in Sources */,
 				7B66AC072428D72000869DBD /* PostWebViewController.swift in Sources */,
 				9492285F25DFB7D60000A19F /* MinimizedPlaylistViewController.swift in Sources */,
-				7C66F1AD268ABE1F006D8462 /* BotFolder.swift in Sources */,
+				7C66F1AD268ABE1F006D8462 /* AppFolderModel.swift in Sources */,
 				7BADC840204BFD040016B0FC /* ChangeNumberNewNumberViewController.swift in Sources */,
 				7BEED06F244D457000F3A2B9 /* SettingsDataSource.swift in Sources */,
 				7BADC83E204BD01D0016B0FC /* ChangeNumberViewController.swift in Sources */,

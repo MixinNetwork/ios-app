@@ -1,31 +1,31 @@
 import UIKit
 
-protocol BotPageCellDelegate: AnyObject {
+protocol AppPageCellDelegate: AnyObject {
     
-    func didSelect(cell: BotItemCell, on pageCell: BotPageCell)
+    func didSelect(cell: AppCell, on pageCell: AppPageCell)
     
 }
 
-class BotPageCell: UICollectionViewCell {
+class AppPageCell: UICollectionViewCell {
     
-    weak var delegate: BotPageCellDelegate?
+    weak var delegate: AppPageCellDelegate?
     @IBOutlet weak var collectionView: UICollectionView!
     var mode: HomeAppsMode = .regular {
         didSet {
             updateLayout()
         }
     }
-    var items: [BotItem] = []
-    var draggedItem: BotItem?
+    var items: [AppItem] = []
+    var draggedItem: AppItem?
     private var isEditing = false
     
     func enterEditingMode() {
         guard !isEditing else { return }
         isEditing = true
         for cell in collectionView.visibleCells {
-            guard let cell = cell as? BotItemCell else { return }
+            guard let cell = cell as? AppCell else { return }
             cell.startShaking()
-            if let cell = cell as? BotFolderCell {
+            if let cell = cell as? AppFolderCell {
                 cell.moveToFirstAvailablePage()
             }
         }
@@ -35,16 +35,16 @@ class BotPageCell: UICollectionViewCell {
         guard isEditing else { return }
         isEditing = false
         for cell in collectionView.visibleCells {
-            guard let cell = cell as? BotItemCell else { return }
+            guard let cell = cell as? AppCell else { return }
             cell.stopShaking()
-            if let cell = cell as? BotFolderCell {
+            if let cell = cell as? AppFolderCell {
                 cell.leaveEditingMode()
                 cell.move(to: 0, animated: true)
             }
         }
     }
     
-    func delete(item: BotItem) {
+    func delete(item: AppItem) {
         guard let index = items.firstIndex(where: { $0 === item }),
               let cell = collectionView.cellForItem(at: IndexPath(item: index, section: 0)) else {
             return
@@ -63,7 +63,7 @@ class BotPageCell: UICollectionViewCell {
     
 }
 
-extension BotPageCell {
+extension AppPageCell {
     
     private func updateLayout() {
         guard let flowLayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else {
@@ -77,7 +77,7 @@ extension BotPageCell {
     
 }
 
-extension BotPageCell: UICollectionViewDelegate, UICollectionViewDataSource {
+extension AppPageCell: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return items.count
@@ -87,9 +87,9 @@ extension BotPageCell: UICollectionViewDelegate, UICollectionViewDataSource {
         guard indexPath.item < items.count else {
             return UICollectionViewCell(frame: .zero)
         }
-        if let botFolder = items[indexPath.item] as? BotFolder {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.bot_folder, for: indexPath)!
-            cell.item = botFolder
+        if let folder = items[indexPath.item] as? AppFolderModel {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.app_folder, for: indexPath)!
+            cell.item = folder
             if isEditing {
                 cell.startShaking()
                 cell.moveToFirstAvailablePage(animated: false)
@@ -97,21 +97,21 @@ extension BotPageCell: UICollectionViewDelegate, UICollectionViewDataSource {
                 cell.stopShaking()
                 cell.leaveEditingMode()
             }
-            if let draggedItem = draggedItem, draggedItem === botFolder {
+            if let draggedItem = draggedItem, draggedItem === folder {
                 cell.contentView.isHidden = true
             } else {
                 cell.contentView.isHidden = false
             }
             return cell
-        } else if let botItem = items[indexPath.item] as? Bot {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.bot_item, for: indexPath)!
-            cell.item = botItem
+        } else if let app = items[indexPath.item] as? AppModel {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.app, for: indexPath)!
+            cell.item = app
             if isEditing {
                 cell.startShaking()
             } else {
                 cell.stopShaking()
             }
-            if let draggedItem = draggedItem, draggedItem === botItem {
+            if let draggedItem = draggedItem, draggedItem === app {
                 cell.contentView.isHidden = true
             } else {
                 cell.contentView.isHidden = false
@@ -126,7 +126,7 @@ extension BotPageCell: UICollectionViewDelegate, UICollectionViewDataSource {
         guard let cell = collectionView.cellForItem(at: indexPath) else {
             return
         }
-        delegate?.didSelect(cell: cell as! BotItemCell, on: self)
+        delegate?.didSelect(cell: cell as! AppCell, on: self)
     }
     
 }

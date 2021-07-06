@@ -6,8 +6,8 @@ class HomeAppsItemManager {
     typealias JSONDictionary = [String: Any]
     typealias JSONArray = [JSONDictionary]
     
-    private(set) var candidateItems: [[BotItem]] = []
-    private(set) var pinnedItems: [BotItem] = []
+    private(set) var candidateItems: [[AppItem]] = []
+    private(set) var pinnedItems: [AppItem] = []
     private var existsItemIds: [String] = []
     
     init() {
@@ -19,7 +19,7 @@ class HomeAppsItemManager {
         saveItems()
     }
         
-    func updateItems(_ pinnedItems: [BotItem], _ candidateItems: [[BotItem]]) {
+    func updateItems(_ pinnedItems: [AppItem], _ candidateItems: [[AppItem]]) {
         self.pinnedItems = pinnedItems
         self.candidateItems = candidateItems
         saveItems()
@@ -31,7 +31,7 @@ extension HomeAppsItemManager {
     
     private func initItems() {
         let pinnedIds = Set(AppGroupUserDefaults.User.homeAppIds)
-        pinnedItems = pinnedIds.compactMap({ return Bot(id: $0) })
+        pinnedItems = pinnedIds.compactMap({ return AppModel(id: $0) })
         var candidateEmbeddedApps = EmbeddedApp.all
         candidateEmbeddedApps.removeAll(where: {
             pinnedIds.contains($0.id)
@@ -46,7 +46,7 @@ extension HomeAppsItemManager {
         }
         candidateItems = {
             let itemIds = candidateEmbeddedApps.map({ $0.id }) + candidateAppUsers.compactMap({ $0.appId })
-            let items = itemIds.map({ Bot(id: $0) })
+            let items = itemIds.map({ AppModel(id: $0) })
             return items.splitInPages(ofSize: HomeAppsMode.regular.appsPerPage)
         }()
     }
@@ -59,13 +59,13 @@ extension HomeAppsItemManager {
                let pinnedJSONArray = parsedDict["pinned"] as? JSONArray,
                let pagesJSONArray = parsedDict["pages"] as? [JSONArray] {
                 pinnedItems = appItems(from: pinnedJSONArray, allAppIds: allAppIds)
-                candidateItems = pagesJSONArray.compactMap({ jsonArray -> [BotItem]? in
+                candidateItems = pagesJSONArray.compactMap({ jsonArray -> [AppItem]? in
                     let page = appItems(from: jsonArray, allAppIds: allAppIds)
                     return page.count > 0 ? page : nil
                 })
                 // apped newly added apps
                 let newlyAddedItemIds = Set(allAppIds).subtracting(Set(existsItemIds))
-                let newlyAddedItems = newlyAddedItemIds.map( { Bot(id: $0) })
+                let newlyAddedItems = newlyAddedItemIds.map( { AppModel(id: $0) })
                 let newlyAddedItemPages = newlyAddedItems.splitInPages(ofSize: HomeAppsMode.regular.appsPerPage)
                 candidateItems += newlyAddedItemPages
             } else {
@@ -76,8 +76,8 @@ extension HomeAppsItemManager {
         }
     }
     
-    private func appItems(from jsonArray: JSONArray, allAppIds: [String]) -> [BotItem] {
-        return jsonArray.compactMap { item -> BotItem? in
+    private func appItems(from jsonArray: JSONArray, allAppIds: [String]) -> [AppItem] {
+        return jsonArray.compactMap { item -> AppItem? in
             guard let typeID = item["type"] as? Int, let type = HomeAppItemType(rawValue: typeID) else {
                 return nil
             }
@@ -87,22 +87,22 @@ extension HomeAppsItemManager {
                     return nil
                 }
                 existsItemIds.append(id)
-                return Bot(id: id)
+                return AppModel(id: id)
             case .folder:
                 guard let name = item["name"] as? String, let apps = item["apps"] as? [[JSONDictionary]] else {
                     return nil
                 }
-                let pages = apps.compactMap { pageItems -> [Bot]? in
-                    let page = pageItems.compactMap { item -> Bot? in
+                let pages = apps.compactMap { pageItems -> [AppModel]? in
+                    let page = pageItems.compactMap { item -> AppModel? in
                         guard let id = item["id"] as? String, allAppIds.contains(id) else {
                             return nil
                         }
                         existsItemIds.append(id)
-                        return Bot(id: id)
+                        return AppModel(id: id)
                     }
                     return page.count > 0 ? page : nil
                 }
-                return pages.count > 0 ? BotFolder(name: name, pages: pages) : nil
+                return pages.count > 0 ? AppFolderModel(name: name, pages: pages) : nil
             }
         }
     }

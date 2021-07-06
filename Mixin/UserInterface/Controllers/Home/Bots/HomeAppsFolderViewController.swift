@@ -4,10 +4,10 @@ protocol HomeAppsFolderViewControllerDelegate: AnyObject {
     
     func openAnimationWillStart(on viewController: HomeAppsFolderViewController)
     func didChange(name: String, on viewController: HomeAppsFolderViewController)
-    func didSelect(app: Bot, on viewController: HomeAppsFolderViewController)
+    func didSelect(app: AppModel, on viewController: HomeAppsFolderViewController)
     func didEnterEditingMode(on viewController: HomeAppsFolderViewController)
     func didBeginFolderDragOut(withTransfer transfer: HomeAppsDragInteractionTransfer, on viewController: HomeAppsFolderViewController)
-    func dismissAnimationWillStart(currentPage: Int, updatedPages: [[Bot]], on viewController: HomeAppsFolderViewController)
+    func dismissAnimationWillStart(currentPage: Int, updatedPages: [[AppModel]], on viewController: HomeAppsFolderViewController)
     func dismissAnimationDidFinish(on viewController: HomeAppsFolderViewController)
     
 }
@@ -26,7 +26,7 @@ class HomeAppsFolderViewController: UIViewController {
     @IBOutlet weak var pageControl: UIPageControl!
     
     var openAnimationDidEnd: (() -> Void)?
-    var folder: BotFolder!
+    var folder: AppFolderModel!
     var sourceFrame: CGRect!
     var startInRename: Bool = false
     var currentPage: Int = 0
@@ -80,7 +80,7 @@ class HomeAppsFolderViewController: UIViewController {
     @IBAction func dismiss() {
         textField.resignFirstResponder()
         homeAppsManager.leaveEditingMode()
-        delegate?.dismissAnimationWillStart(currentPage: pageControl.currentPage, updatedPages: homeAppsManager.items as! [[Bot]], on: self)
+        delegate?.dismissAnimationWillStart(currentPage: pageControl.currentPage, updatedPages: homeAppsManager.items as! [[AppModel]], on: self)
         animateOut()
     }
     
@@ -189,7 +189,7 @@ extension HomeAppsFolderViewController: HomeAppsManagerDelegate {
         delegate?.didBeginFolderDragOut(withTransfer: transfer, on: self)
     }
     
-    func didSelect(app: Bot, on manager: HomeAppsManager) {
+    func didSelect(app: AppModel, on manager: HomeAppsManager) {
         delegate?.didSelect(app: app, on: self)
     }
     

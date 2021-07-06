@@ -1,6 +1,6 @@
 import UIKit
 
-class Bot: BotItem {
+class AppModel: AppItem {
     
     var id: String
     var app: HomeApp? {
@@ -17,9 +17,9 @@ class Bot: BotItem {
 
 }
 
-extension Bot: Equatable {
+extension AppModel: Equatable {
     
-    static func == (lhs: Bot, rhs: Bot) -> Bool {
+    static func == (lhs: AppModel, rhs: AppModel) -> Bool {
         return lhs === rhs
     }
     

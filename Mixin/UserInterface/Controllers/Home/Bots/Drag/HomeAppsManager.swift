@@ -9,7 +9,7 @@ protocol HomeAppsManagerDelegate: AnyObject {
     func didEnterEditingMode(on manager: HomeAppsManager)
     func didLeaveEditingMode(on manager: HomeAppsManager)
     func didBeginFolderDragOut(transfer: HomeAppsDragInteractionTransfer, on manager: HomeAppsManager)
-    func didSelect(app: Bot, on manager: HomeAppsManager)
+    func didSelect(app: AppModel, on manager: HomeAppsManager)
     
 }
 
@@ -28,21 +28,21 @@ class HomeAppsManager: NSObject {
         }
         return Int(candidateCollectionView.contentOffset.x) / Int(candidateCollectionView.frame.size.width)
     }
-    var currentPageCell: BotPageCell {
+    var currentPageCell: AppPageCell {
         let visibleCells = candidateCollectionView.visibleCells
         if visibleCells.count == 0 {
-            return candidateCollectionView.subviews[0] as! BotPageCell
+            return candidateCollectionView.subviews[0] as! AppPageCell
         } else {
-            return visibleCells[0] as! BotPageCell
+            return visibleCells[0] as! AppPageCell
         }
     }
-    var items: [[BotItem]] {
+    var items: [[AppItem]] {
         didSet {
             delegate?.didUpdate(pageCount: items.count, on: self)
             delegate?.didUpdateItems(on: self)
         }
     }
-    var pinnedItems: [BotItem] {
+    var pinnedItems: [AppItem] {
         didSet {
             delegate?.didUpdateItems(on: self)
         }
@@ -63,7 +63,7 @@ class HomeAppsManager: NSObject {
     var longPressRecognizer = UILongPressGestureRecognizer()
     let tapRecognizer = UITapGestureRecognizer()
     
-    init(viewController: UIViewController, candidateCollectionView: UICollectionView, items: [[BotItem]], pinnedCollectionView: UICollectionView? = nil, pinnedItems:[BotItem] = []) {
+    init(viewController: UIViewController, candidateCollectionView: UICollectionView, items: [[AppItem]], pinnedCollectionView: UICollectionView? = nil, pinnedItems:[AppItem] = []) {
         self.viewController = viewController
         self.candidateCollectionView = candidateCollectionView
         self.pinnedCollectionView = pinnedCollectionView
@@ -112,7 +112,7 @@ extension HomeAppsManager {
         }
     }
     
-    func viewInfos(at point: CGPoint) -> (collectionView: UICollectionView, cell: BotPageCell) {
+    func viewInfos(at point: CGPoint) -> (collectionView: UICollectionView, cell: AppPageCell) {
         let collectionView: UICollectionView
         if let pinnedCollectionView = pinnedCollectionView, pinnedCollectionView.frame.contains(viewController.view.convert(point, to: pinnedCollectionView)) {
             collectionView = pinnedCollectionView
@@ -120,10 +120,10 @@ extension HomeAppsManager {
             collectionView = candidateCollectionView
         }
         let convertedPoint = viewController.view.convert(point, to: collectionView)
-        if let indexPath = collectionView.indexPathForItem(at: convertedPoint), let cell = collectionView.cellForItem(at: indexPath) as? BotPageCell {
+        if let indexPath = collectionView.indexPathForItem(at: convertedPoint), let cell = collectionView.cellForItem(at: indexPath) as? AppPageCell {
             return (collectionView, cell)
         } else {
-            return (collectionView, collectionView.visibleCells[0] as! BotPageCell)
+            return (collectionView, collectionView.visibleCells[0] as! AppPageCell)
         }
     }
     
@@ -134,7 +134,7 @@ extension HomeAppsManager {
             feedback.impactOccurred()
         }
         for cell in candidateCollectionView.visibleCells + (pinnedCollectionView?.visibleCells ?? []) {
-            if let cell = cell as? BotPageCell {
+            if let cell = cell as? AppPageCell {
                 cell.enterEditingMode()
             }
         }
@@ -151,7 +151,7 @@ extension HomeAppsManager {
         guard isEditing else { return }
         isEditing = false
         for cell in candidateCollectionView.visibleCells + (pinnedCollectionView?.visibleCells ?? []) {
-            if let cell = cell as? BotPageCell {
+            if let cell = cell as? AppPageCell {
                 cell.leaveEditingMode()
             }
         }
@@ -165,17 +165,17 @@ extension HomeAppsManager {
         delegate?.didLeaveEditingMode(on: self)
     }
     
-    func updateState(forPageCell pageCell: BotPageCell) {
+    func updateState(forPageCell pageCell: AppPageCell) {
         var collectionView: UICollectionView
         if let pinnedCollectionView = pinnedCollectionView, pinnedCollectionView.visibleCells.contains(pageCell) {
             collectionView = pinnedCollectionView
         } else {
             collectionView = candidateCollectionView
         }
-        var updateItems: [BotItem] = []
+        var updateItems: [AppItem] = []
         for i in 0..<pageCell.collectionView.visibleCells.count {
             let indexPath = IndexPath(item: i, section: 0)
-            if let cell = pageCell.collectionView.cellForItem(at: indexPath) as? BotItemCell, let item = cell.item {
+            if let cell = pageCell.collectionView.cellForItem(at: indexPath) as? AppCell, let item = cell.item {
                 updateItems.append(item)
             }
         }
@@ -226,7 +226,7 @@ extension HomeAppsManager: UICollectionViewDataSource, UICollectionViewDelegate 
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let items = collectionView == candidateCollectionView ? items[indexPath.row] : pinnedItems
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.bot_page, for: indexPath)!
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.app_page, for: indexPath)!
         cell.items = items
         cell.draggedItem = currentDragInteraction?.item
         cell.delegate = self
@@ -240,7 +240,7 @@ extension HomeAppsManager: UICollectionViewDataSource, UICollectionViewDelegate 
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        guard let cell = cell as? BotPageCell else {
+        guard let cell = cell as? AppPageCell else {
             return
         }
         if let currentInteraction = currentDragInteraction, currentInteraction.needsUpdate {
@@ -259,7 +259,7 @@ extension HomeAppsManager: UICollectionViewDataSource, UICollectionViewDelegate 
     }
     
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        guard let cell = cell as? BotPageCell else {
+        guard let cell = cell as? AppPageCell else {
             return
         }
         if isEditing {
@@ -278,12 +278,12 @@ extension HomeAppsManager: UIScrollViewDelegate {
     
 }
 
-extension HomeAppsManager: BotPageCellDelegate {
+extension HomeAppsManager: AppPageCellDelegate {
     
-    func didSelect(cell: BotItemCell, on pageCell: BotPageCell) {
-        if let cell = cell as? BotFolderCell {
+    func didSelect(cell: AppCell, on pageCell: AppPageCell) {
+        if let cell = cell as? AppFolderCell {
             showFolder(from: cell)
-        } else if let item = cell.item as? Bot, !isEditing {
+        } else if let item = cell.item as? AppModel, !isEditing {
             delegate?.didSelect(app: item, on: self)
         }
     }

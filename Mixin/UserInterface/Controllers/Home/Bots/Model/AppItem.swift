@@ -5,7 +5,7 @@ enum HomeAppItemType: Int {
     case folder
 }
 
-protocol BotItem: AnyObject {
+protocol AppItem: AnyObject {
     
     func toDictionary() -> [String: Any]
     

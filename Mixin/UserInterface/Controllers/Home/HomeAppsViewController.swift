@@ -198,7 +198,7 @@ extension HomeAppsViewController: HomeAppsManagerDelegate {
         pageControl.currentPage = page
     }
     
-    func didSelect(app: Bot, on manager: HomeAppsManager) {
+    func didSelect(app: AppModel, on manager: HomeAppsManager) {
         guard let app = app.app else {
             return
         }

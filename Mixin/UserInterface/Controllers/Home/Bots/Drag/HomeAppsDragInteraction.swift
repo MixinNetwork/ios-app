@@ -10,13 +10,13 @@ class HomeAppsDragInteraction {
     var currentPageCell: BotPageCell
     var currentIndexPath: IndexPath
     
-    let placeholderView: HomeAppSnapshotView
+    let placeholderView: HomeAppsSnapshotView
     let dragOffset: CGSize
     
     var needsUpdate = false
     var savedState: [[BotItem]]?
     
-    required init(placeholderView: HomeAppSnapshotView, dragOffset: CGSize, item: BotItem, originalPageCell: BotPageCell, originalIndexPath: IndexPath) {
+    required init(placeholderView: HomeAppsSnapshotView, dragOffset: CGSize, item: BotItem, originalPageCell: BotPageCell, originalIndexPath: IndexPath) {
         self.placeholderView = placeholderView
         self.dragOffset = dragOffset
         self.item = item

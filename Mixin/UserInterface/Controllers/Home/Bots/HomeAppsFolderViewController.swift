@@ -177,6 +177,9 @@ extension HomeAppsFolderViewController: HomeAppsManagerDelegate {
     func didLeaveEditingMode(on manager: HomeAppsManager) {
         if !textField.hasText {
             textField.text = folder.name
+        } else if let text = textField.text {
+            folder.name = text
+            delegate?.didChange(name: text, on: self)
         }
         leaveTextFieldEditingMode()
     }

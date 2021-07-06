@@ -1348,7 +1348,7 @@
                                             </collectionViewCell>
                                         </cells>
                                     </collectionView>
-                                    <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="qYd-Be-nmm">
+                                    <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" hidesForSinglePage="YES" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="qYd-Be-nmm">
                                         <rect key="frame" x="94.5" y="300" width="122" height="28"/>
                                         <color key="pageIndicatorTintColor" name="indicator_tint"/>
                                         <color key="currentPageIndicatorTintColor" name="theme"/>
@@ -1375,7 +1375,7 @@
                                 <subviews>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" text="Folder" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="DTR-qv-VcP">
                                         <rect key="frame" x="40" y="12" width="210" height="30.5"/>
-                                        <color key="textColor" name="title"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                         <textInputTraits key="textInputTraits"/>
                                         <connections>
@@ -1388,13 +1388,13 @@
                                             <constraint firstAttribute="height" constant="16" id="Raw-ZN-e5b"/>
                                             <constraint firstAttribute="width" constant="16" id="ZY4-FP-ZID"/>
                                         </constraints>
-                                        <state key="normal" title="Button" image="ic_dialog_close"/>
+                                        <state key="normal" title="Button" image="ic_app_clear"/>
                                         <connections>
                                             <action selector="clearTextField:" destination="aRa-wQ-N2z" eventType="touchUpInside" id="yOg-Ml-fcZ"/>
                                         </connections>
                                     </button>
                                 </subviews>
-                                <color key="backgroundColor" name="background_load"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="yN6-7t-pgX" secondAttribute="trailing" constant="20" id="3zv-5w-Sid"/>
@@ -2142,6 +2142,7 @@ chat history from icloud</string>
         <image name="Setting/ic_backup" width="88" height="58"/>
         <image name="bg_home_bottom" width="375" height="120"/>
         <image name="ic_announcement_close" width="12" height="12"/>
+        <image name="ic_app_clear" width="16" height="16"/>
         <image name="ic_chat_mute" width="14" height="14"/>
         <image name="ic_chat_pin" width="14" height="14"/>
         <image name="ic_chat_time" width="9" height="9"/>
@@ -2156,9 +2157,6 @@ chat history from icloud</string>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
-        <namedColor name="background_load">
-            <color red="0.0" green="0.0" blue="0.0" alpha="0.40000000596046448" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
         <namedColor name="background_secondary">
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
@@ -2172,7 +2170,7 @@ chat history from icloud</string>
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="theme">
             <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

@@ -157,10 +157,9 @@ extension HomeAppsManager {
         }
         // remove empty page
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-            if self.items[self.items.count - 1].count == 0 {
-                self.items.removeLast()
-                self.candidateCollectionView.deleteItems(at: [IndexPath(item: self.items.count, section: 0)])
-            }
+            let emptyIndex = self.items.enumerated().compactMap( { $1.count == 0 ? $0 : nil })
+            self.items.remove(at: emptyIndex)
+            self.candidateCollectionView.deleteItems(at: emptyIndex.map({ IndexPath(item: $0, section: 0) }))
         }
         tapRecognizer.isEnabled = false
         delegate?.didLeaveEditingMode(on: self)
@@ -292,7 +291,7 @@ extension HomeAppsManager: BotPageCellDelegate {
 }
 
 extension HomeAppsManager: UIGestureRecognizerDelegate {
-    // handle Gesture for clear button in folder controller
+    // disable tag when clear button tapped in folder controller
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         if touch.view is UIButton {
             return false

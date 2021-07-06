@@ -12,7 +12,7 @@
 		277FF7031F909A1200DBB2EB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277FF7021F909A1200DBB2EB /* AppDelegate.swift */; };
 		277FF70C1F909A1200DBB2EB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 277FF70B1F909A1200DBB2EB /* Assets.xcassets */; };
 		277FF70F1F909A1200DBB2EB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 277FF70D1F909A1200DBB2EB /* LaunchScreen.storyboard */; };
-		5E3725BA268D4E0400269FE7 /* HomeAppSnapshotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E3725B9268D4E0400269FE7 /* HomeAppSnapshotView.swift */; };
+		5E3725BA268D4E0400269FE7 /* HomeAppsSnapshotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E3725B9268D4E0400269FE7 /* HomeAppsSnapshotView.swift */; };
 		5E5CA7872674AC8E00C1E113 /* ScreenLockView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5E5CA7842674AC8D00C1E113 /* ScreenLockView.xib */; };
 		5E5CA7882674AC8E00C1E113 /* ScreenLockManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E5CA7852674AC8E00C1E113 /* ScreenLockManager.swift */; };
 		5E5CA86D2674B09100C1E113 /* ScreenLockSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E5CA86C2674B09100C1E113 /* ScreenLockSettingViewController.swift */; };
@@ -579,7 +579,7 @@
 		7C66F1AB268ABABE006D8462 /* BotFolderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1AA268ABABE006D8462 /* BotFolderCell.swift */; };
 		7C66F1AD268ABE1F006D8462 /* BotFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1AC268ABE1F006D8462 /* BotFolder.swift */; };
 		7C66F1AF268ABE3F006D8462 /* Bot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1AE268ABE3F006D8462 /* Bot.swift */; };
-		7C66F1B3268B0B11006D8462 /* BotsExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1B2268B0B11006D8462 /* BotsExtension.swift */; };
+		7C66F1B3268B0B11006D8462 /* HomeAppsExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1B2268B0B11006D8462 /* HomeAppsExtension.swift */; };
 		7C66F1BB268B2CE5006D8462 /* HomeAppsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1BA268B2CE5006D8462 /* HomeAppsManager.swift */; };
 		7C66F1BD268B2F23006D8462 /* HomeAppsManager+DragInteraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1BC268B2F23006D8462 /* HomeAppsManager+DragInteraction.swift */; };
 		7C66F1BF268B3514006D8462 /* HomeAppsManager+FolderInteraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1BE268B3514006D8462 /* HomeAppsManager+FolderInteraction.swift */; };
@@ -970,7 +970,7 @@
 		4A8D4E34146BCC9F9DFC5D60 /* Pods-MixinNotificationService.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MixinNotificationService.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MixinNotificationService/Pods-MixinNotificationService.debug.xcconfig"; sourceTree = "<group>"; };
 		4C7439A7A6C05D54835A2461 /* Pods-MixinAppGroupAccess.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MixinAppGroupAccess.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MixinAppGroupAccess/Pods-MixinAppGroupAccess.debug.xcconfig"; sourceTree = "<group>"; };
 		4DEF1DAAD7BD26CE1E41669D /* Pods-mixin.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mixin.debug.xcconfig"; path = "Pods/Target Support Files/Pods-mixin/Pods-mixin.debug.xcconfig"; sourceTree = "<group>"; };
-		5E3725B9268D4E0400269FE7 /* HomeAppSnapshotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppSnapshotView.swift; sourceTree = "<group>"; };
+		5E3725B9268D4E0400269FE7 /* HomeAppsSnapshotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsSnapshotView.swift; sourceTree = "<group>"; };
 		5E5CA7842674AC8D00C1E113 /* ScreenLockView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ScreenLockView.xib; sourceTree = "<group>"; };
 		5E5CA7852674AC8E00C1E113 /* ScreenLockManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenLockManager.swift; sourceTree = "<group>"; };
 		5E5CA86C2674B09100C1E113 /* ScreenLockSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenLockSettingViewController.swift; sourceTree = "<group>"; };
@@ -1546,7 +1546,7 @@
 		7C66F1AA268ABABE006D8462 /* BotFolderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BotFolderCell.swift; sourceTree = "<group>"; };
 		7C66F1AC268ABE1F006D8462 /* BotFolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BotFolder.swift; sourceTree = "<group>"; };
 		7C66F1AE268ABE3F006D8462 /* Bot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bot.swift; sourceTree = "<group>"; };
-		7C66F1B2268B0B11006D8462 /* BotsExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BotsExtension.swift; sourceTree = "<group>"; };
+		7C66F1B2268B0B11006D8462 /* HomeAppsExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsExtension.swift; sourceTree = "<group>"; };
 		7C66F1BA268B2CE5006D8462 /* HomeAppsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeAppsManager.swift; sourceTree = "<group>"; };
 		7C66F1BC268B2F23006D8462 /* HomeAppsManager+DragInteraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeAppsManager+DragInteraction.swift"; sourceTree = "<group>"; };
 		7C66F1BE268B3514006D8462 /* HomeAppsManager+FolderInteraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeAppsManager+FolderInteraction.swift"; sourceTree = "<group>"; };
@@ -2541,9 +2541,10 @@
 				7C66F1B9268B2CC2006D8462 /* Drag */,
 				7C66F0212689C9D7006D8462 /* Model */,
 				7C35D1CF2689C04F002B5BBC /* Cells */,
+				5E3725B9268D4E0400269FE7 /* HomeAppsSnapshotView.swift */,
+				7C66F1B2268B0B11006D8462 /* HomeAppsExtension.swift */,
+				7CBD2EF9268FF6BB00AA0847 /* HomeAppsItemManager.swift */,
 				7C5823D4268966A1003AA142 /* HomeAppsFolderViewController.swift */,
-				5E3725B9268D4E0400269FE7 /* HomeAppSnapshotView.swift */,
-				7C66F1B2268B0B11006D8462 /* BotsExtension.swift */,
 			);
 			path = Bots;
 			sourceTree = "<group>";
@@ -2555,7 +2556,6 @@
 				7C66F1AE268ABE3F006D8462 /* Bot.swift */,
 				7C66F1AC268ABE1F006D8462 /* BotFolder.swift */,
 				5EF90904268C92B900B934AF /* HomeAppsMode.swift */,
-				7CBD2EF9268FF6BB00AA0847 /* HomeAppsItemManager.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -4236,7 +4236,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7C66F1B3268B0B11006D8462 /* BotsExtension.swift in Sources */,
+				7C66F1B3268B0B11006D8462 /* HomeAppsExtension.swift in Sources */,
 				7BF49DD320C3DBAC00A8510E /* CaptchaManager.swift in Sources */,
 				DF8CECE11FC3054700E40064 /* TransferTypeCell.swift in Sources */,
 				7BCB8C8422BB56B8002A13CC /* DataAndStorageSettingsViewController.swift in Sources */,
@@ -4654,7 +4654,7 @@
 				DF2A245E1FCC5D15003A8C1E /* GroupAddMemberCell.swift in Sources */,
 				DFB6CE1E23C4805B00FB6615 /* KeychainExtension.swift in Sources */,
 				7B2E3E5A1FA0816D00DDDDEB /* LoginContinueButton.swift in Sources */,
-				5E3725BA268D4E0400269FE7 /* HomeAppSnapshotView.swift in Sources */,
+				5E3725BA268D4E0400269FE7 /* HomeAppsSnapshotView.swift in Sources */,
 				277FF7031F909A1200DBB2EB /* AppDelegate.swift in Sources */,
 				7B2E3E4D1FA07F5D00DDDDEB /* HairlineLayoutConstraint.swift in Sources */,
 				7B4ADAA7243C7C8400F04CA6 /* HomeAppsViewController.swift in Sources */,

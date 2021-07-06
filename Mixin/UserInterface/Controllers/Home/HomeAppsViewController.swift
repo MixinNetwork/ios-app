@@ -141,7 +141,7 @@ extension HomeAppsViewController {
     }
     
     @objc private func updateNoPinnedHint() {
-        noPinnedHintLabel.isHidden = !AppGroupUserDefaults.User.homeAppIds.isEmpty
+        noPinnedHintLabel.isHidden = !appsManager.pinnedItems.isEmpty
     }
     
     private func updatePreferredContentSizeHeight() {
@@ -188,9 +188,9 @@ extension HomeAppsViewController {
 extension HomeAppsViewController: HomeAppsManagerDelegate {
     
     func didUpdateItems(on manager: HomeAppsManager) {
-        appsItemManager.candidateItems = manager.items
-        appsItemManager.pinnedItems = manager.pinnedItems
-        appsItemManager.save()
+        appsItemManager.updateItems(manager.pinnedItems, manager.items)
+        setCandidateEmptyHintHidden(!manager.items.isEmpty)
+        updateNoPinnedHint()
     }
     
     func didUpdate(pageCount: Int, on manager: HomeAppsManager) {

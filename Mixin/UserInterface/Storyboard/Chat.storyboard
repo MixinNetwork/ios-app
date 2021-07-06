@@ -197,10 +197,6 @@
                                     <constraint firstItem="tke-V3-5nw" firstAttribute="top" secondItem="Zve-bN-jsA" secondAttribute="top" constant="20" id="HAZ-9r-SfD"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iIH-3a-OFE" customClass="UserHandleWrapperView" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="76" width="375" height="541"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="syC-xp-0cA" customClass="HittestBypassWrapperView" customModule="Mixin" customModuleProvider="target">
                                 <rect key="frame" x="320" y="601" width="44" height="8"/>
                                 <subviews>
@@ -308,6 +304,10 @@
                                     <constraint firstAttribute="height" priority="100" id="fNa-UK-4dk"/>
                                 </constraints>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iIH-3a-OFE" customClass="UserHandleWrapperView" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="76" width="375" height="541"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6MP-pq-xci">
                                 <rect key="frame" x="0.0" y="617" width="375" height="50"/>
                                 <subviews>
@@ -363,7 +363,6 @@
                         <outlet property="accessoryButtonsWrapperBottomConstraint" destination="Lb1-1l-uNl" id="sO1-Ul-Qbx"/>
                         <outlet property="accessoryButtonsWrapperTopConstraint" destination="0Te-zN-D54" id="ony-z9-PZI"/>
                         <outlet property="accessoryButtonsWrapperView" destination="syC-xp-0cA" id="8Sm-AZ-vw3"/>
-                        <outlet property="announcementBadgeBottomConstraint" destination="lL1-Ex-KBa" id="9Aj-mk-5PV"/>
                         <outlet property="announcementBadgeHeightConstraint" destination="fNa-UK-4dk" id="3T6-Do-mP6"/>
                         <outlet property="announcementBadgeView" destination="AxI-2v-IFd" id="eDf-wQ-CGR"/>
                         <outlet property="avatarImageView" destination="tCB-t3-VXy" id="tSV-HN-6ST"/>
@@ -2062,7 +2061,7 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_input">
-            <color red="0.96100002527236938" green="0.96899998188018799" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_secondary">
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

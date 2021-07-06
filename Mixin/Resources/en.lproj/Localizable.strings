@@ -853,6 +853,11 @@
 "about_privacy_policy" = "Privacy Policy";
 "about_acknowledgements" = "Acknowledgements";
 "about_app_upgrade" = "Version Update";
+"about_diagnose" = "Diagnose";
+
+// Diagnose
+"diagnose_warning" = "⚠️Use these functions under instructions from the Mixin team only";
+"diagnose_database_access" = "Database access";
 
 "report_title"="Send the conversation log to developers?";
 "report_button"="Send to Developer";
@@ -869,6 +874,10 @@
 "playlist_not_playing" = "Not playing";
 "playlist_stop_confirmation" = "Stop playing this list？";
 "playlist_stop" = "Stop Playing";
+
+// Diagnose
+"diagnose_database" = "Database Diagnostics";
+"diagnose_database_description" = "Database Diagnostics";
 
 // Notifications
 "notification_reply" = "Reply";

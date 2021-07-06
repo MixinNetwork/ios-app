@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DatabaseDiagnosticViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="inputTextView" destination="6Xy-6B-HGH" id="s2M-tX-yhJ"/>
+                <outlet property="outputTextView" destination="amz-rh-cDb" id="cHt-gn-7GE"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bYi-xr-8ed">
+                    <rect key="frame" x="0.0" y="44" width="414" height="185"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EX9-NX-UEd">
+                            <rect key="frame" x="292" y="0.0" width="114" height="42"/>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xuj-ng-kb2">
+                                    <rect key="frame" x="0.0" y="0.0" width="51" height="42"/>
+                                    <color key="backgroundColor" name="background"/>
+                                    <inset key="contentEdgeInsets" minX="12" minY="12" maxX="12" maxY="12"/>
+                                    <state key="normal" title="Run"/>
+                                    <connections>
+                                        <action selector="run:" destination="-1" eventType="touchUpInside" id="yXF-Au-pc1"/>
+                                    </connections>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UKN-un-OOw">
+                                    <rect key="frame" x="51" y="0.0" width="63" height="42"/>
+                                    <color key="backgroundColor" name="background"/>
+                                    <inset key="contentEdgeInsets" minX="12" minY="12" maxX="12" maxY="12"/>
+                                    <state key="normal" title="Paste"/>
+                                    <connections>
+                                        <action selector="pasteInput:" destination="-1" eventType="touchUpInside" id="0Mp-3t-Dwk"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                        </stackView>
+                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="SELECT * FROM users LIMIT 10" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="6Xy-6B-HGH">
+                            <rect key="frame" x="8" y="42" width="398" height="143"/>
+                            <color key="backgroundColor" name="button_background_secondary"/>
+                            <color key="textColor" systemColor="labelColor"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <integer key="value" value="8"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </textView>
+                    </subviews>
+                    <color key="backgroundColor" name="background"/>
+                    <constraints>
+                        <constraint firstItem="6Xy-6B-HGH" firstAttribute="leading" secondItem="bYi-xr-8ed" secondAttribute="leading" constant="8" id="BWE-RX-nBi"/>
+                        <constraint firstItem="6Xy-6B-HGH" firstAttribute="top" secondItem="EX9-NX-UEd" secondAttribute="bottom" id="JzP-OM-Ksn"/>
+                        <constraint firstAttribute="trailing" secondItem="EX9-NX-UEd" secondAttribute="trailing" constant="8" id="LIx-DD-ayw"/>
+                        <constraint firstItem="EX9-NX-UEd" firstAttribute="top" secondItem="bYi-xr-8ed" secondAttribute="top" id="SKy-42-fKh"/>
+                        <constraint firstAttribute="trailing" secondItem="6Xy-6B-HGH" secondAttribute="trailing" constant="8" id="TCz-jp-PZI"/>
+                        <constraint firstAttribute="bottom" secondItem="6Xy-6B-HGH" secondAttribute="bottom" id="afe-uW-OOv"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jtp-59-v6Q">
+                    <rect key="frame" x="0.0" y="237" width="414" height="617"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ESN-Qd-JWk">
+                            <rect key="frame" x="346" y="0.0" width="60" height="42"/>
+                            <color key="backgroundColor" name="background"/>
+                            <inset key="contentEdgeInsets" minX="12" minY="12" maxX="12" maxY="12"/>
+                            <state key="normal" title="Copy"/>
+                            <connections>
+                                <action selector="copyOutput:" destination="-1" eventType="touchUpInside" id="5h7-Gd-CY7"/>
+                            </connections>
+                        </button>
+                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Output" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="amz-rh-cDb">
+                            <rect key="frame" x="8" y="42" width="398" height="575"/>
+                            <color key="backgroundColor" name="button_background_secondary"/>
+                            <color key="textColor" systemColor="labelColor"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <integer key="value" value="8"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </textView>
+                    </subviews>
+                    <color key="backgroundColor" name="background"/>
+                    <constraints>
+                        <constraint firstItem="ESN-Qd-JWk" firstAttribute="top" secondItem="Jtp-59-v6Q" secondAttribute="top" id="1PI-AT-STo"/>
+                        <constraint firstAttribute="trailing" secondItem="amz-rh-cDb" secondAttribute="trailing" constant="8" id="E2z-NY-7aj"/>
+                        <constraint firstAttribute="trailing" secondItem="ESN-Qd-JWk" secondAttribute="trailing" constant="8" id="QID-Hj-2ee"/>
+                        <constraint firstAttribute="bottom" secondItem="amz-rh-cDb" secondAttribute="bottom" id="Uy8-wC-SA9"/>
+                        <constraint firstItem="amz-rh-cDb" firstAttribute="leading" secondItem="Jtp-59-v6Q" secondAttribute="leading" constant="8" id="nwQ-cZ-YK5"/>
+                        <constraint firstItem="amz-rh-cDb" firstAttribute="top" secondItem="ESN-Qd-JWk" secondAttribute="bottom" id="rth-zU-61A"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <color key="backgroundColor" name="background"/>
+            <constraints>
+                <constraint firstItem="Jtp-59-v6Q" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="1Pc-6X-yFj"/>
+                <constraint firstItem="Jtp-59-v6Q" firstAttribute="top" secondItem="bYi-xr-8ed" secondAttribute="bottom" constant="8" id="EH3-ha-4lu"/>
+                <constraint firstItem="bYi-xr-8ed" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="K2D-9w-n2h"/>
+                <constraint firstItem="bYi-xr-8ed" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="SLF-rf-UXf"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="bYi-xr-8ed" secondAttribute="trailing" id="YmE-ry-3jB"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="Jtp-59-v6Q" secondAttribute="trailing" id="ZgH-bU-pbv"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="Jtp-59-v6Q" secondAttribute="bottom" constant="8" id="h7D-aW-R8d"/>
+                <constraint firstItem="bYi-xr-8ed" firstAttribute="height" secondItem="Jtp-59-v6Q" secondAttribute="height" multiplier="0.3" id="vWf-aQ-3Di"/>
+            </constraints>
+            <point key="canvasLocation" x="137.68115942028987" y="153.34821428571428"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="button_background_secondary">
+            <color red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

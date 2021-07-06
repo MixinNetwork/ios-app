@@ -31,9 +31,6 @@ final class HomeAppsViewController: UIViewController {
         button.addTarget(self, action: #selector(backgroundTappingAction), for: .touchUpInside)
         return button
     }()
-    
-    private var pinnedAppModelController: PinnedHomeAppsModelController!
-    private var candidateAppModelController: CandidateHomeAppsModelController!
     private var candidateEmptyHintLabelIfLoaded: UILabel?
     
     private var appsManager: HomeAppsManager!

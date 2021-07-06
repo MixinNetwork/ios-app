@@ -602,7 +602,7 @@
                                                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                         </collectionViewFlowLayout>
                                                         <cells>
-                                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="recent_app" id="hDP-Tv-XXM" customClass="AppCell" customModule="Mixin" customModuleProvider="target">
+                                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="recent_app" id="hDP-Tv-XXM" customClass="BotItemCell" customModule="Mixin" customModuleProvider="target">
                                                                 <rect key="frame" x="0.0" y="0.0" width="60" height="109"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
@@ -635,8 +635,9 @@
                                                                     <constraint firstItem="cpS-4e-0xb" firstAttribute="top" secondItem="hDP-Tv-XXM" secondAttribute="top" id="n3s-9L-VOD"/>
                                                                 </constraints>
                                                                 <connections>
-                                                                    <outlet property="imageView" destination="cpS-4e-0xb" id="qs2-Eh-saz"/>
-                                                                    <outlet property="label" destination="aEA-e7-GQV" id="7dP-Y4-pkf"/>
+                                                                    <outlet property="imageContainerView" destination="cpS-4e-0xb" id="b8J-7q-TXQ"/>
+                                                                    <outlet property="imageView" destination="cpS-4e-0xb" id="gxY-2C-pEo"/>
+                                                                    <outlet property="label" destination="aEA-e7-GQV" id="I3c-Nh-LmG"/>
                                                                 </connections>
                                                             </collectionViewCell>
                                                         </cells>

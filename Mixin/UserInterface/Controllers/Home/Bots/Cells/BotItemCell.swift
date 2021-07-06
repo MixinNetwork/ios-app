@@ -24,6 +24,11 @@ class BotItemCell: UICollectionViewCell {
     
     private var isShaking = false
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        imageView?.prepareForReuse()
+    }
+    
     func updateUI() {
         guard let item = item as? Bot else { return }
         guard let app = item.app else { return }

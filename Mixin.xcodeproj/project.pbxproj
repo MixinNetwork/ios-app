@@ -139,7 +139,6 @@
 		7B49E01F22DC5D9700807F70 /* VerticalPositioningImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B49E01E22DC5D9700807F70 /* VerticalPositioningImageView.swift */; };
 		7B4ADA97243C633B00F04CA6 /* ResizablePopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4ADA96243C633B00F04CA6 /* ResizablePopupViewController.swift */; };
 		7B4ADAA7243C7C8400F04CA6 /* HomeAppsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4ADAA6243C7C8400F04CA6 /* HomeAppsViewController.swift */; };
-		7B4BE55D243E0F3400198EE9 /* CandidateHomeAppsModelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4BE55C243E0F3400198EE9 /* CandidateHomeAppsModelController.swift */; };
 		7B4BE55F243E0FEC00198EE9 /* HomeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4BE55E243E0FEC00198EE9 /* HomeApp.swift */; };
 		7B4BE561243E105000198EE9 /* EmbeddedApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4BE560243E105000198EE9 /* EmbeddedApp.swift */; };
 		7B4C656F242354AE003B78F9 /* LocationSearchNoResultView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B4C656E242354AE003B78F9 /* LocationSearchNoResultView.xib */; };
@@ -163,7 +162,6 @@
 		7B51DDB9223A50D5008ACDBB /* VerificationCodeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B51DDB7223A50D5008ACDBB /* VerificationCodeView.xib */; };
 		7B51DDBB223A52A0008ACDBB /* LoginVerificationCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B51DDBA223A52A0008ACDBB /* LoginVerificationCodeViewController.swift */; };
 		7B5281742265D7E30023616D /* RecentAppsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5281732265D7E30023616D /* RecentAppsViewController.swift */; };
-		7B5281762265F1730023616D /* AppCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5281752265F1730023616D /* AppCell.swift */; };
 		7B54F95022B22E2900908A9D /* VerifyPinView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B54F94F22B22E2900908A9D /* VerifyPinView.xib */; };
 		7B54F95222B22EA600908A9D /* ChangeNumberVerifyPinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B54F95122B22EA600908A9D /* ChangeNumberVerifyPinViewController.swift */; };
 		7B54F95422B23A5600908A9D /* EmergencyContactSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B54F95322B23A5600908A9D /* EmergencyContactSelectorViewController.swift */; };
@@ -549,11 +547,6 @@
 		7BF5EE4F2497A55700DDD9CC /* GroupCallMemberPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF5EE4E2497A55700DDD9CC /* GroupCallMemberPickerViewController.swift */; };
 		7BF7837B2179D1AF00BECB4B /* Call.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF7837A2179D1AF00BECB4B /* Call.swift */; };
 		7BF8AD83244050EE0038D293 /* PopupResizeGestureCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF8AD82244050EE0038D293 /* PopupResizeGestureCoordinator.swift */; };
-		7BF8AD85244051680038D293 /* HomeAppResizeGestureCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF8AD84244051680038D293 /* HomeAppResizeGestureCoordinator.swift */; };
-		7BF8AD87244053F10038D293 /* PinnedHomeAppCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF8AD86244053F10038D293 /* PinnedHomeAppCell.swift */; };
-		7BF8AD892440545C0038D293 /* PinnedHomeAppsModelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF8AD882440545C0038D293 /* PinnedHomeAppsModelController.swift */; };
-		7BF8ADC1244060A60038D293 /* HomeAppsModelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF8ADC0244060A60038D293 /* HomeAppsModelController.swift */; };
-		7BF8ADC3244061EE0038D293 /* HomeAppCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF8ADC2244061EE0038D293 /* HomeAppCell.swift */; };
 		7BF9969520CA6F3800FD948F /* Waveform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF9969420CA6F3800FD948F /* Waveform.swift */; };
 		7BFA9B702229810A00C88625 /* PhotoInputGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFA9B6F2229810A00C88625 /* PhotoInputGridCell.swift */; };
 		7BFCB7762419FC5B00E7BC43 /* LocationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BFCB7752419FC5B00E7BC43 /* LocationCell.xib */; };
@@ -1098,7 +1091,6 @@
 		7B49E01E22DC5D9700807F70 /* VerticalPositioningImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalPositioningImageView.swift; sourceTree = "<group>"; };
 		7B4ADA96243C633B00F04CA6 /* ResizablePopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResizablePopupViewController.swift; sourceTree = "<group>"; };
 		7B4ADAA6243C7C8400F04CA6 /* HomeAppsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsViewController.swift; sourceTree = "<group>"; };
-		7B4BE55C243E0F3400198EE9 /* CandidateHomeAppsModelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CandidateHomeAppsModelController.swift; sourceTree = "<group>"; };
 		7B4BE55E243E0FEC00198EE9 /* HomeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeApp.swift; sourceTree = "<group>"; };
 		7B4BE560243E105000198EE9 /* EmbeddedApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbeddedApp.swift; sourceTree = "<group>"; };
 		7B4C656E242354AE003B78F9 /* LocationSearchNoResultView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LocationSearchNoResultView.xib; sourceTree = "<group>"; };
@@ -1122,7 +1114,6 @@
 		7B51DDB7223A50D5008ACDBB /* VerificationCodeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VerificationCodeView.xib; sourceTree = "<group>"; };
 		7B51DDBA223A52A0008ACDBB /* LoginVerificationCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVerificationCodeViewController.swift; sourceTree = "<group>"; };
 		7B5281732265D7E30023616D /* RecentAppsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentAppsViewController.swift; sourceTree = "<group>"; };
-		7B5281752265F1730023616D /* AppCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCell.swift; sourceTree = "<group>"; };
 		7B54F94F22B22E2900908A9D /* VerifyPinView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VerifyPinView.xib; sourceTree = "<group>"; };
 		7B54F95122B22EA600908A9D /* ChangeNumberVerifyPinViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeNumberVerifyPinViewController.swift; sourceTree = "<group>"; };
 		7B54F95322B23A5600908A9D /* EmergencyContactSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyContactSelectorViewController.swift; sourceTree = "<group>"; };
@@ -1516,11 +1507,6 @@
 		7BF5EE4E2497A55700DDD9CC /* GroupCallMemberPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCallMemberPickerViewController.swift; sourceTree = "<group>"; };
 		7BF7837A2179D1AF00BECB4B /* Call.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Call.swift; sourceTree = "<group>"; };
 		7BF8AD82244050EE0038D293 /* PopupResizeGestureCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupResizeGestureCoordinator.swift; sourceTree = "<group>"; };
-		7BF8AD84244051680038D293 /* HomeAppResizeGestureCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppResizeGestureCoordinator.swift; sourceTree = "<group>"; };
-		7BF8AD86244053F10038D293 /* PinnedHomeAppCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinnedHomeAppCell.swift; sourceTree = "<group>"; };
-		7BF8AD882440545C0038D293 /* PinnedHomeAppsModelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinnedHomeAppsModelController.swift; sourceTree = "<group>"; };
-		7BF8ADC0244060A60038D293 /* HomeAppsModelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsModelController.swift; sourceTree = "<group>"; };
-		7BF8ADC2244061EE0038D293 /* HomeAppCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeAppCell.swift; sourceTree = "<group>"; };
 		7BF9969420CA6F3800FD948F /* Waveform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Waveform.swift; sourceTree = "<group>"; };
 		7BFA9B6F2229810A00C88625 /* PhotoInputGridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoInputGridCell.swift; sourceTree = "<group>"; };
 		7BFCB7752419FC5B00E7BC43 /* LocationCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LocationCell.xib; sourceTree = "<group>"; };
@@ -2216,10 +2202,6 @@
 			children = (
 				7B4BE560243E105000198EE9 /* EmbeddedApp.swift */,
 				7B4BE55E243E0FEC00198EE9 /* HomeApp.swift */,
-				7BF8ADC0244060A60038D293 /* HomeAppsModelController.swift */,
-				7BF8AD882440545C0038D293 /* PinnedHomeAppsModelController.swift */,
-				7B4BE55C243E0F3400198EE9 /* CandidateHomeAppsModelController.swift */,
-				7BF8AD84244051680038D293 /* HomeAppResizeGestureCoordinator.swift */,
 				94438D56252DAD73005760AF /* Clip.swift */,
 				7B4CBDC12528533600BA66D0 /* ClipSwitcher.swift */,
 				7B7D279F2528682B006BBFAB /* ClipSwitcherThumbnailFlowLayout.swift */,
@@ -3435,9 +3417,6 @@
 			isa = PBXGroup;
 			children = (
 				DF121F301FA1C767000F701D /* ConversationCell.swift */,
-				7BF8ADC2244061EE0038D293 /* HomeAppCell.swift */,
-				7B5281752265F1730023616D /* AppCell.swift */,
-				7BF8AD86244053F10038D293 /* PinnedHomeAppCell.swift */,
 				7B59535022672D3500D59DB4 /* SearchNumberCell.swift */,
 				7B2C8B302524D6C100347AC3 /* ClipThumbnailCell.swift */,
 				9427D52125E0E8DE00B1EF0E /* PlaylistItemCell.swift */,
@@ -4275,7 +4254,6 @@
 				E0A70A14238250EF003C3B96 /* InvitationHintView.swift in Sources */,
 				7BB12FA72192C8DB009BEECF /* BarChartView.swift in Sources */,
 				949569A6263B12FE00E043FE /* TranscriptMessageCell.swift in Sources */,
-				7BF8AD87244053F10038D293 /* PinnedHomeAppCell.swift in Sources */,
 				E09C5EB82370057B0095F729 /* UserProfileViewController.swift in Sources */,
 				7B9A2BD12023729E00135DA4 /* AppButtonGroupViewModel.swift in Sources */,
 				9489E3A025C5B150000319F8 /* AcknowledgementsViewController.swift in Sources */,
@@ -4304,7 +4282,6 @@
 				7B7CBBB020BBCD7E005DF80A /* AudioInputViewController.swift in Sources */,
 				9419374525DFBE7D00F81A9C /* MinimizedPlaylistWaveView.swift in Sources */,
 				7B6351D52410F2430034D9F8 /* ImageMessageViewModel.swift in Sources */,
-				7B4BE55D243E0F3400198EE9 /* CandidateHomeAppsModelController.swift in Sources */,
 				7BF196BA241209A900CC8325 /* ImageMessageCell.swift in Sources */,
 				DFD15C701FB5ACE7004B45CE /* UICollationExtension.swift in Sources */,
 				7B95860F2369599800F1F6E1 /* ProfileViewController.swift in Sources */,
@@ -4343,7 +4320,6 @@
 				DFD93F1E2111C0030013401A /* UIDeviceExtension.swift in Sources */,
 				7B35AF78228AA3BD00E8101D /* MessagesWithUserSearchResult.swift in Sources */,
 				7B61B9CA2538E1C8001F94A3 /* ScreenHeightCompatibleLayoutConstraint.swift in Sources */,
-				7BF8AD85244051680038D293 /* HomeAppResizeGestureCoordinator.swift in Sources */,
 				7B2A115F22C1ECB100AD029C /* RoundedBlurButton.swift in Sources */,
 				7BEB423622EAD20A003B4479 /* ModernNetworkOperationButton.swift in Sources */,
 				7BC98FA721EF5B8C004A5D79 /* AudioMessagePlayingManager.swift in Sources */,
@@ -4463,7 +4439,6 @@
 				7BCAF54A216B0C3700D6564A /* GiphyCollectionViewFlowLayout.swift in Sources */,
 				DF5D9F241F9C79E10036D5FD /* Constant.swift in Sources */,
 				E041064B23C5C3BC00A6F08E /* CoreTextLabelDelegate.swift in Sources */,
-				7BF8AD892440545C0038D293 /* PinnedHomeAppsModelController.swift in Sources */,
 				7B915F74215FB0C100A562C6 /* GiphySearchViewController.swift in Sources */,
 				7B7DACA623505793006AA2AC /* AudioCell.swift in Sources */,
 				DFC0ED0223BB611E0091E7AC /* WithdrawalAPI.swift in Sources */,
@@ -4590,7 +4565,6 @@
 				7B5A748F230274E200C6107E /* GroupIconMaker.swift in Sources */,
 				DFC0ECEA23BB60DE0091E7AC /* MultisigResponse.swift in Sources */,
 				DFC0ED0923BB7D990091E7AC /* GiphyImage.swift in Sources */,
-				7B5281762265F1730023616D /* AppCell.swift in Sources */,
 				7B0B01921FEA19BA000EEE4F /* DecryptionFailedMessageViewModel.swift in Sources */,
 				7B2E3E4B1FA07F4500DDDDEB /* SelectCountryViewController.swift in Sources */,
 				7BA931F51FC08DF4005DF478 /* TextMessageCell.swift in Sources */,
@@ -4746,7 +4720,6 @@
 				DF1A9A7A1FF206F500A95188 /* RefreshSnapshotsJob.swift in Sources */,
 				7B3D46B62088BCA300A0C19C /* GroupAnnouncementViewController.swift in Sources */,
 				7BF42E3522DCAC93005066E6 /* GalleryVideoItemViewController.swift in Sources */,
-				7BF8ADC1244060A60038D293 /* HomeAppsModelController.swift in Sources */,
 				7B7264F0209C56E500F234BE /* ProfileDescriptionLabel.swift in Sources */,
 				7B04142B240FA09F00BE8D73 /* LocationCell.swift in Sources */,
 				7B869C72202D7FC8009930BA /* NumberPadButton.swift in Sources */,
@@ -4920,7 +4893,6 @@
 				7B1F5371219D3B90006D6983 /* RoundCornerSelectionView.swift in Sources */,
 				947B36AE25DEB75A00146111 /* PlaylistViewController.swift in Sources */,
 				7B49E01F22DC5D9700807F70 /* VerticalPositioningImageView.swift in Sources */,
-				7BF8ADC3244061EE0038D293 /* HomeAppCell.swift in Sources */,
 				7BEED892246D0C6C00387EAE /* NativeCallInterface.swift in Sources */,
 				7BA41A9324E123F50042ED03 /* MentionToken.swift in Sources */,
 				7B92F82B1FA1BCD5000B838B /* StateResponsiveButton.swift in Sources */,

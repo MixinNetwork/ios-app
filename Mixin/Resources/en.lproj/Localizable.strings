@@ -193,6 +193,21 @@
 
 // Apps
 "app_not_found" = "App not found.";
+"app_category_wallet" = "Wallet";
+"app_category_trading" = "Trading";
+"app_category_business" = "Business";
+"app_category_social" = "Social";
+"app_category_shopping" = "Shopping";
+"app_category_education" = "Education";
+"app_category_news" = "News";
+"app_category_tools" = "Tools";
+"app_category_games" = "Games";
+"app_category_books" = "Books";
+"app_category_music" = "Music";
+"app_category_photo" = "Photo";
+"app_category_video" = "Video";
+"app_category_camera" = "Camera";
+"app_category_other" = "Other";
 
 // Home
 "home_start_messaging_guide" = "You can chat with contacts who have Mixin installed on their phone.";

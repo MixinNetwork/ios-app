@@ -132,7 +132,7 @@ extension HomeAppsManager {
               let sourceApp = interaction.dragInteraction.item as? AppModel else {
             return
         }
-        let folderName = sourceApp.app?.category ?? "Folder"
+        let folderName = sourceApp.app?.category ?? R.string.localizable.app_category_other()
         let newFolder = AppFolderModel(name: folderName, pages: [[interaction.destinationApp, sourceApp]])
         newFolder.isNewFolder = true
         items[page][destinationIndex] = newFolder

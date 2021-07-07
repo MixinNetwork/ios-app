@@ -64,6 +64,16 @@ enum HomeApp {
             }
         }
     }
+    
+    var category: String {
+        switch self {
+        case .embedded(let app):
+            return AppCategory.OTHER.rawValue
+        case .external(let user):
+            return user.app?.category ?? AppCategory.OTHER.rawValue
+        }
+    }
+    
 }
 
 extension HomeApp: Equatable {

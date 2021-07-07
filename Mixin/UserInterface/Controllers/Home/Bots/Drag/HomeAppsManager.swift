@@ -21,7 +21,19 @@ class HomeAppsManager: NSObject {
     unowned var candidateCollectionView: UICollectionView
     unowned var pinnedCollectionView: UICollectionView?
     
+    var items: [[AppItem]] {
+        didSet {
+            delegate?.didUpdate(pageCount: items.count, on: self)
+            delegate?.didUpdateItems(on: self)
+        }
+    }
+    var pinnedItems: [AppItem] {
+        didSet {
+            delegate?.didUpdateItems(on: self)
+        }
+    }
     var isEditing = false
+    var isInAppsFolderViewController: Bool { pinnedCollectionView == nil }
     var currentPage: Int {
         guard candidateCollectionView.frame.size.width != 0 else {
             return 0
@@ -36,18 +48,6 @@ class HomeAppsManager: NSObject {
             return visibleCells[0] as! AppPageCell
         }
     }
-    var items: [[AppItem]] {
-        didSet {
-            delegate?.didUpdate(pageCount: items.count, on: self)
-            delegate?.didUpdateItems(on: self)
-        }
-    }
-    var pinnedItems: [AppItem] {
-        didSet {
-            delegate?.didUpdateItems(on: self)
-        }
-    }
-    let feedback = UIImpactFeedbackGenerator()
     
     var currentDragInteraction: HomeAppsDragInteraction?
     var currentFolderInteraction: HomeAppsFolderInteraction?
@@ -62,7 +62,8 @@ class HomeAppsManager: NSObject {
     
     var longPressRecognizer = UILongPressGestureRecognizer()
     let tapRecognizer = UITapGestureRecognizer()
-    
+    let feedback = UIImpactFeedbackGenerator()
+
     init(viewController: UIViewController, candidateCollectionView: UICollectionView, items: [[AppItem]], pinnedCollectionView: UICollectionView? = nil, pinnedItems:[AppItem] = []) {
         self.viewController = viewController
         self.candidateCollectionView = candidateCollectionView
@@ -157,9 +158,16 @@ extension HomeAppsManager {
         }
         // remove empty page
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-            let emptyIndex = self.items.enumerated().compactMap( { $1.count == 0 ? $0 : nil })
-            self.items.remove(at: emptyIndex)
-            self.candidateCollectionView.deleteItems(at: emptyIndex.map({ IndexPath(item: $0, section: 0) }))
+            if self.isInAppsFolderViewController {
+                if self.items[self.items.count - 1].count == 0 {
+                    self.items.removeLast()
+                    self.candidateCollectionView.deleteItems(at: [IndexPath(item: self.items.count, section: 0)])
+                }
+            } else {
+                let emptyIndex = self.items.enumerated().compactMap( { $1.count == 0 ? $0 : nil })
+                self.items.remove(at: emptyIndex)
+                self.candidateCollectionView.deleteItems(at: emptyIndex.map({ IndexPath(item: $0, section: 0) }))
+            }
         }
         tapRecognizer.isEnabled = false
         delegate?.didLeaveEditingMode(on: self)
@@ -195,7 +203,7 @@ extension HomeAppsManager {
         var currentPageItems = items[page + 1]
         currentPageItems.insert(items[page].removeLast(), at: 0)
         items[page + 1] = currentPageItems
-        let appsPerPage = pinnedCollectionView == nil ? HomeAppsMode.folder.appsPerPage : HomeAppsMode.regular.appsPerPage
+        let appsPerPage = isInAppsFolderViewController ? HomeAppsMode.folder.appsPerPage : HomeAppsMode.regular.appsPerPage
         if currentPageItems.count >  appsPerPage {
             moveLastItem(inPage: page + 1)
         }
@@ -209,7 +217,7 @@ extension HomeAppsManager {
         viewController.view.addGestureRecognizer(longPressRecognizer)
         currentDragInteraction = transfer.interaction.copy()
         currentDragInteraction?.needsUpdate = true
-        AppDelegate.current.mainWindow.addSubview(transfer.interaction.placeholderView)
+        viewController.view.addSubview(transfer.interaction.placeholderView)
     }
     
 }
@@ -231,7 +239,7 @@ extension HomeAppsManager: UICollectionViewDataSource, UICollectionViewDelegate 
         cell.draggedItem = currentDragInteraction?.item
         cell.delegate = self
         cell.collectionView.reloadData()
-        if pinnedCollectionView == nil {
+        if isInAppsFolderViewController {
             cell.mode = .folder
         } else {
             cell.mode = collectionView == candidateCollectionView ? .regular : .pinned

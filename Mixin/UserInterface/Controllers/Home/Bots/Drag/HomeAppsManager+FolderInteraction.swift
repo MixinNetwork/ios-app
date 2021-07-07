@@ -63,13 +63,21 @@ extension HomeAppsManager {
         UIView.animate(withDuration: 0.25, animations: {
             folderInteraction.wrapperView.transform = .identity
             self.currentDragInteraction?.placeholderView.transform = CGAffineTransform.identity.scaledBy(x: 1.3, y: 1.3)
-            cell.label?.alpha = 1
+            folderInteraction.dragInteraction.currentPageCell.collectionView.visibleCells.forEach { cell in
+                if let cell = cell as? AppCell {
+                    cell.label?.alpha = 1
+                }
+            }
         }, completion: { _ in
             if let folderCell = cell as? AppFolderCell {
                 folderCell.wrapperView.isHidden = false
             }
             folderInteraction.wrapperView.removeFromSuperview()
-            cell.startShaking()
+            folderInteraction.dragInteraction.currentPageCell.collectionView.visibleCells.forEach { cell in
+                if let cell = cell as? AppCell {
+                    cell.startShaking()
+                }
+            }
         })
     }
     
@@ -78,7 +86,7 @@ extension HomeAppsManager {
         interaction.dragInteraction.currentPageCell.items = items[page]
         let folderCell = interaction.dragInteraction.currentPageCell.collectionView.cellForItem(at: folderIndexPath) as! AppFolderCell
         let folderViewController = showFolder(from: folderCell, isNewFolder: isNewFolder)
-        folderViewController.openAnimationDidEnd = { [unowned folderViewController] in
+        folderViewController.openAnimationDidEnd = { [weak folderViewController] in
             self.items[page].remove(at: sourceIndex)
             interaction.dragInteraction.currentPageCell.items = self.items[page]
             interaction.dragInteraction.currentPageCell.collectionView.performBatchUpdates {
@@ -86,9 +94,10 @@ extension HomeAppsManager {
             } completion: { _ in
                 folderCell.stopShaking()
                 let convertedFrame = folderCell.convert(folderCell.imageContainerView.frame, to: AppDelegate.current.mainWindow)
-                folderViewController.sourceFrame = convertedFrame
+                folderViewController?.sourceFrame = convertedFrame
                 folderCell.wrapperView.isHidden = isNewFolder
                 interaction.wrapperView.removeFromSuperview()
+                interaction.dragInteraction.placeholderView.removeFromSuperview()
                 self.currentFolderInteraction = nil
             }
         }
@@ -123,8 +132,8 @@ extension HomeAppsManager {
               let sourceApp = interaction.dragInteraction.item as? AppModel else {
             return
         }
-        //TODO: ‼️ fix name
-        let newFolder = AppFolderModel(name: "Folder", pages: [[interaction.destinationApp, sourceApp]])
+        let folderName = sourceApp.app?.category ?? "Folder"
+        let newFolder = AppFolderModel(name: folderName, pages: [[interaction.destinationApp, sourceApp]])
         newFolder.isNewFolder = true
         items[page][destinationIndex] = newFolder
         let folderIndexPath = IndexPath(item: destinationIndex, section: 0)
@@ -302,14 +311,13 @@ extension HomeAppsManager: HomeAppsFolderViewControllerDelegate {
             return
         }
         let pageCell = currentPageCell
-        if info.folder.pages.flatMap({ $0 }).count == 0 {
+        if info.folder.pages.flatMap({ $0 }).count == 0 { // last app dragged out then remove folder
             items[currentPage].append(transfer.interaction.item)
             items[currentPage].remove(at: folderIndex)
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.45, execute: {
                 self.perform(transfer: transfer)
                 pageCell.draggedItem = transfer.interaction.item
                 pageCell.items = self.items[self.currentPage]
-                
                 self.currentDragInteraction?.currentPageCell = pageCell
                 self.currentDragInteraction?.currentIndexPath = IndexPath(item: pageCell.collectionView(pageCell.collectionView, numberOfItemsInSection: 0) - 1, section: 0)
                 self.currentDragInteraction?.needsUpdate = false
@@ -323,7 +331,7 @@ extension HomeAppsManager: HomeAppsFolderViewControllerDelegate {
                     }
                 })
             })
-        } else {
+        } else { // drag out app, folder still remain more than one apps
             perform(transfer: transfer)
             currentDragInteraction?.currentPageCell = pageCell
             if items[currentPage].count == HomeAppsMode.regular.appsPerPage {
@@ -357,6 +365,10 @@ extension HomeAppsManager: HomeAppsFolderViewControllerDelegate {
     
     func dismissAnimationWillStart(currentPage: Int, updatedPages: [[AppModel]], on viewController: HomeAppsFolderViewController) {
         guard let info = openFolderInfo else { return }
+        UIView.animate(withDuration: 0.5) {
+            info.cell.imageContainerView?.isHidden = false
+            info.cell.wrapperView.isHidden = false
+        }
         info.folder.pages = updatedPages
         info.cell.item = info.folder
         info.cell.move(to: currentPage, animated: false)
@@ -367,8 +379,6 @@ extension HomeAppsManager: HomeAppsFolderViewControllerDelegate {
         guard let info = openFolderInfo else { return }
         viewController.dismiss(animated: false, completion: {
             self.openFolderInfo = nil
-            info.cell.imageContainerView?.isHidden = false
-            info.cell.wrapperView.isHidden = false
             if self.isEditing {
                 info.cell.startShaking()
             }

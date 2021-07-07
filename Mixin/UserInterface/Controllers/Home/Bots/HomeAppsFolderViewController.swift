@@ -52,15 +52,15 @@ class HomeAppsFolderViewController: UIViewController {
             pageControl.isHidden = false
             pageControl.numberOfPages = homeAppsManager.items.count
         }
-        if let transfer = dragInteractionTransfer {
-            homeAppsManager.perform(transfer: transfer)
-        }
         if isEditing {
             let indexPath = IndexPath(item: currentPage, section: 0)
             collectionView.scrollToItem(at: indexPath, at: .centeredVertically, animated: false)
         }
         dragInteractionTransfer = nil
         prepareForAnimateIn()
+        if let transfer = dragInteractionTransfer {
+            homeAppsManager.perform(transfer: transfer)
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -110,40 +110,44 @@ extension HomeAppsFolderViewController {
     }
     
     private func animateIn() {
-        UIView.animate(withDuration: 0.5) {
-            UIView.setAnimationCurve(.overdamped)
+        let animation = UIViewPropertyAnimator(duration: 0.35, controlPoint1: CGPoint(x: 0.37, y: 0.31), controlPoint2: CGPoint(x: 0, y: 1)) {
             self.view.layoutIfNeeded()
             self.textField.alpha = 1
             self.containerView.transform = CGAffineTransform.identity
             self.containerView.alpha = 1
             self.homeAppsManager.updateFolderDragOutFlags()
             self.backgroundView.effect = .regularBlur
-        } completion: { _ in
-            self.openAnimationDidEnd?()
-            self.pageControl.alpha = 1
-            if self.isEditing {
-                self.enterTextFieldEditingMode()
-                if self.startInRename {
-                    self.textField.becomeFirstResponder()
-                    self.textField.selectAll(nil)
-                }
-            }
         }
+        animation.addCompletion { _ in
+            self.openAnimationDidEnd?()
+            UIViewPropertyAnimator(duration: 0.5, curve: .easeOut) {
+                self.pageControl.alpha = 1
+                if self.isEditing {
+                    self.enterTextFieldEditingMode()
+                    if self.startInRename {
+                        self.textField.becomeFirstResponder()
+                        self.textField.selectAll(nil)
+                    }
+                }
+            }.startAnimation()
+        }
+        animation.startAnimation()
     }
     
     private func animateOut() {
-        UIView.animate(withDuration: 0.5) {
-            UIView.setAnimationCurve(.overdamped)
+        let animation = UIViewPropertyAnimator(duration: 0.35, controlPoint1: CGPoint(x: 0.37, y: 0.13), controlPoint2: CGPoint(x: 0, y: 1)) {
             self.view.layoutIfNeeded()
             self.textField.alpha = 0
             self.leaveTextFieldEditingMode()
             self.containerView.transform = CGAffineTransform.transform(rect: self.containerView.frame, to: self.sourceFrame)
             self.containerView.alpha = 0
             self.backgroundView.effect = nil
-        } completion: { _ in
+        }
+        animation.addCompletion { _ in
             self.delegate?.dismissAnimationDidFinish(on: self)
             self.homeAppsManager = nil
         }
+        animation.startAnimation()
     }
     
 }

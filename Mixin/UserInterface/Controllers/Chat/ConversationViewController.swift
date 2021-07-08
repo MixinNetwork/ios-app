@@ -13,7 +13,6 @@ class ConversationViewController: UIViewController {
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var tableView: ConversationTableView!
-    @IBOutlet weak var userHandleWrapperView: UserHandleWrapperView!
     @IBOutlet weak var accessoryButtonsWrapperView: HittestBypassWrapperView!
     @IBOutlet weak var mentionWrapperView: UIView!
     @IBOutlet weak var mentionCountLabel: InsetLabel!
@@ -1144,21 +1143,9 @@ class ConversationViewController: UIViewController {
         updateTableViewBottomInsetWithBottomBarHeight(old: oldHeight, new: newHeight, animated: animated)
     }
     
-    func updateUserHandleMask() {
-        if isUserHandleHidden {
-            userHandleWrapperView.maskHeight = 0
-        } else {
-            userHandleWrapperView.maskHeight = userHandleWrapperView.bounds.height
-                - userHandleViewController.tableHeaderHeight
-                + UserHandleTableHeaderView.decorationHeight
-                + userHandleViewController.tableView.contentOffset.y
-        }
-    }
-    
     func inputTextViewDidInputMentionCandidate(_ keyword: String?) {
         userHandleViewController.reload(with: keyword) { (hasContent) in
             self.isUserHandleHidden = !hasContent
-            self.updateUserHandleMask()
         }
     }
     
@@ -2162,7 +2149,12 @@ extension ConversationViewController {
             return
         }
         addChild(userHandleViewController)
-        userHandleWrapperView.addUserHandleView(userHandleViewController.view)
+        view.insertSubview(userHandleViewController.view, belowSubview: inputWrapperView)
+        userHandleViewController.view.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.top.equalTo(navigationBarView.snp.bottom)
+            make.bottom.equalTo(inputWrapperView.snp.top)
+        }
         userHandleViewController.didMove(toParent: self)
     }
     
@@ -2262,7 +2254,6 @@ extension ConversationViewController {
         }
         if view.window != nil {
             view.layoutIfNeeded()
-            updateUserHandleMask()
         }
         if animated {
             UIView.commitAnimations()
@@ -2359,7 +2350,6 @@ extension ConversationViewController {
                         let keyword = self.conversationInputViewController.textView.inputingMentionToken
                         self.userHandleViewController.reload(with: keyword) { (hasContent) in
                             self.isUserHandleHidden = !hasContent
-                            self.updateUserHandleMask()
                         }
                     }
                     ids.removeAll(where: self.dataSource.visibleMessageIds.contains)

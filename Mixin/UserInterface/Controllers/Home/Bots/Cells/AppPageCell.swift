@@ -61,6 +61,28 @@ class AppPageCell: UICollectionViewCell {
         })
     }
     
+    func updateSectionInset(animated: Bool = true) {
+        guard mode == .pinned, let flowLayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else {
+            return
+        }
+        let newHorizontalSectionInset: CGFloat
+        let interitemSpacing = mode.minimumInteritemSpacing
+        if items.count < mode.appsPerRow {
+            let count = CGFloat(items.count)
+            let totalSpace = (flowLayout.itemSize.width * count) + (interitemSpacing * (count - 1))
+            newHorizontalSectionInset = (frame.size.width - totalSpace) / 2
+        } else {
+            newHorizontalSectionInset = mode.sectionInset.left
+        }
+        if animated {
+            collectionView.performBatchUpdates({
+                flowLayout.sectionInset = UIEdgeInsets(top: mode.sectionInset.top, left: newHorizontalSectionInset, bottom: mode.sectionInset.bottom, right: newHorizontalSectionInset)
+            }, completion: nil)
+        } else {
+            flowLayout.sectionInset = UIEdgeInsets(top: mode.sectionInset.top, left: newHorizontalSectionInset, bottom: mode.sectionInset.bottom, right: newHorizontalSectionInset)
+        }
+    }
+    
 }
 
 extension AppPageCell {
@@ -73,6 +95,7 @@ extension AppPageCell {
         flowLayout.minimumInteritemSpacing = mode.minimumInteritemSpacing
         flowLayout.minimumLineSpacing = mode.minimumLineSpacing
         flowLayout.sectionInset = mode.sectionInset
+        updateSectionInset(animated: false)
     }
     
 }

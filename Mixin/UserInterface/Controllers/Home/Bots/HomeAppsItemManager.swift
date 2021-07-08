@@ -8,17 +8,17 @@ class HomeAppsItemManager {
     
     private(set) var candidateItems: [[AppItem]] = []
     private(set) var pinnedItems: [AppItem] = []
-    private var existsItemIds: [String] = []
+    private var existsItemIds: Set<String> = []
     
     init() {
         if let jsonData = AppGroupUserDefaults.User.homeAppsFolder {
             setupItems(with: jsonData)
         } else {
             initItems()
+            saveItems()
         }
-        saveItems()
     }
-        
+    
     func updateItems(_ pinnedItems: [AppItem], _ candidateItems: [[AppItem]]) {
         self.pinnedItems = pinnedItems
         self.candidateItems = candidateItems
@@ -54,7 +54,7 @@ extension HomeAppsItemManager {
     private func setupItems(with jsonData: Data) {
         existsItemIds.removeAll()
         let embeddedAppIds = EmbeddedApp.all.map({ $0.id })
-        let appUserIds = UserDAO.shared.getAppUsers().compactMap({ $0.appId }).filter({ !embeddedAppIds.contains($0) })
+        let appUserIds = UserDAO.shared.getAppUsers().compactMap({ $0.appId })
         let allAppIds = embeddedAppIds + appUserIds
         do {
             if let parsedDict = try JSONSerialization.jsonObject(with: jsonData, options: []) as? JSONDictionary,
@@ -66,10 +66,12 @@ extension HomeAppsItemManager {
                     return page.count > 0 ? page : nil
                 })
                 // apped newly added apps
-                let newlyAddedItemIds = Set(allAppIds).subtracting(Set(existsItemIds))
-                let newlyAddedItems = newlyAddedItemIds.map( { AppModel(id: $0) })
-                let newlyAddedItemPages = newlyAddedItems.splitInPages(ofSize: HomeAppsMode.regular.appsPerPage)
-                candidateItems += newlyAddedItemPages
+                let newlyAddedItemIds = Set(allAppIds).subtracting(existsItemIds)
+                if newlyAddedItemIds.count > 0 {
+                    let newlyAddedItems = newlyAddedItemIds.map( { AppModel(id: $0) })
+                    let newlyAddedItemPages = newlyAddedItems.splitInPages(ofSize: HomeAppsMode.regular.appsPerPage)
+                    candidateItems += newlyAddedItemPages
+                }
             } else {
                 initItems()
             }
@@ -85,10 +87,10 @@ extension HomeAppsItemManager {
             }
             switch type {
             case .app:
-                guard let id = item["id"] as? String, allAppIds.contains(id) else {
+                guard let id = item["id"] as? String, allAppIds.contains(id), !existsItemIds.contains(id) else {
                     return nil
                 }
-                existsItemIds.append(id)
+                existsItemIds.insert(id)
                 return AppModel(id: id)
             case .folder:
                 guard let name = item["name"] as? String, let apps = item["apps"] as? [[JSONDictionary]] else {
@@ -96,10 +98,10 @@ extension HomeAppsItemManager {
                 }
                 let pages = apps.compactMap { pageItems -> [AppModel]? in
                     let page = pageItems.compactMap { item -> AppModel? in
-                        guard let id = item["id"] as? String, allAppIds.contains(id) else {
+                        guard let id = item["id"] as? String, allAppIds.contains(id), !existsItemIds.contains(id) else {
                             return nil
                         }
-                        existsItemIds.append(id)
+                        existsItemIds.insert(id)
                         return AppModel(id: id)
                     }
                     return page.count > 0 ? page : nil
@@ -110,7 +112,7 @@ extension HomeAppsItemManager {
     }
     
     private func saveItems() {
-        DispatchQueue.global(qos: .utility).async {
+        DispatchQueue.global().async {
             let pinnedItems = self.pinnedItems.map { $0.toDictionary() }
             let pages = self.candidateItems.map { page -> [JSONDictionary] in
                 return page.map { $0.toDictionary() }
@@ -118,6 +120,7 @@ extension HomeAppsItemManager {
             let dictionary = ["pages": pages, "pinned": pinnedItems] as JSONDictionary
             let jsonData = try! JSONSerialization.data(withJSONObject: dictionary, options: [])
             AppGroupUserDefaults.User.homeAppsFolder = jsonData
+            AppGroupUserDefaults.User.homeAppIds = self.pinnedItems.compactMap({ ($0 as? AppModel)?.id })
         }
     }
     

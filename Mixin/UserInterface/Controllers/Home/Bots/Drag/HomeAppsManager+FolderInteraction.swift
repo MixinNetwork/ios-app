@@ -307,15 +307,14 @@ extension HomeAppsManager: HomeAppsFolderViewControllerDelegate {
     }
     
     func didBeginFolderDragOut(withTransfer transfer: HomeAppsDragInteractionTransfer, on viewController: HomeAppsFolderViewController) {
-        guard let info = openFolderInfo, let folderIndex = items[currentPage].firstIndex(where: { $0 === info.folder }) else {
+        guard let info = openFolderInfo, let folderIndex = items[currentPage].firstIndex(where: { $0 === info.folder }), let pageCell = currentPageCell else {
             return
         }
-        let pageCell = currentPageCell
         if info.folder.pages.flatMap({ $0 }).count == 0 { // last app dragged out then remove folder
             items[currentPage].append(transfer.interaction.item)
             items[currentPage].remove(at: folderIndex)
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.45, execute: {
-                self.perform(transfer: transfer)
+                self.perform(transfer: transfer, showPlaceholder: true)
                 pageCell.draggedItem = transfer.interaction.item
                 pageCell.items = self.items[self.currentPage]
                 self.currentDragInteraction?.currentPageCell = pageCell
@@ -332,7 +331,7 @@ extension HomeAppsManager: HomeAppsFolderViewControllerDelegate {
                 })
             })
         } else { // drag out app, folder still remain more than one apps
-            perform(transfer: transfer)
+            perform(transfer: transfer, showPlaceholder: true)
             currentDragInteraction?.currentPageCell = pageCell
             if items[currentPage].count == HomeAppsMode.regular.appsPerPage {
                 currentDragInteraction?.savedState = items
@@ -390,21 +389,22 @@ extension HomeAppsManager: HomeAppsFolderViewControllerDelegate {
                 info.cell.move(to: 0, animated: true)
             }
         })
-        guard let folderIndex = items[currentPage].firstIndex(where: { $0 === info.folder }) else {
+        guard let folderIndex = items[currentPage].firstIndex(where: { $0 === info.folder }), let pageCell = currentPageCell else {
             return
         }
         if info.shouldCancelCreation {
-            let cell = currentPageCell.collectionView.cellForItem(at: IndexPath(item: folderIndex, section: 0)) as! AppFolderCell
-            cell.revokeFolderCreation {
-                self.items[self.currentPage][folderIndex] = info.folder.pages[0][0]
-                self.currentPageCell.items = self.items[self.currentPage]
-                self.currentPageCell.collectionView.performBatchUpdates({
-                    self.currentPageCell.collectionView.reloadItems(at: [IndexPath(item: folderIndex, section: 0)])
-                }, completion: nil)
+            if let cell = pageCell.collectionView.cellForItem(at: IndexPath(item: folderIndex, section: 0)) as? AppFolderCell {
+                cell.revokeFolderCreation {
+                    self.items[self.currentPage][folderIndex] = info.folder.pages[0][0]
+                    pageCell.items = self.items[self.currentPage]
+                    pageCell.collectionView.performBatchUpdates({
+                        pageCell.collectionView.reloadItems(at: [IndexPath(item: folderIndex, section: 0)])
+                    }, completion: nil)
+                }
             }
         } else if info.folder.pages.reduce(0, { $0 + $1.count }) == 0 {
             items[currentPage].remove(at: folderIndex)
-            currentPageCell.delete(item: info.folder)
+            pageCell.delete(item: info.folder)
         }
     }
     

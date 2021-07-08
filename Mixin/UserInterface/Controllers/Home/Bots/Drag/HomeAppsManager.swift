@@ -40,12 +40,12 @@ class HomeAppsManager: NSObject {
         }
         return Int(candidateCollectionView.contentOffset.x) / Int(candidateCollectionView.frame.size.width)
     }
-    var currentPageCell: AppPageCell {
+    var currentPageCell: AppPageCell? {
         let visibleCells = candidateCollectionView.visibleCells
         if visibleCells.count == 0 {
-            return candidateCollectionView.subviews[0] as! AppPageCell
+            return candidateCollectionView.subviews[0] as? AppPageCell
         } else {
-            return visibleCells[0] as! AppPageCell
+            return visibleCells[0] as? AppPageCell
         }
     }
     
@@ -209,7 +209,7 @@ extension HomeAppsManager {
         }
     }
     
-    func perform(transfer: HomeAppsDragInteractionTransfer) {
+    func perform(transfer: HomeAppsDragInteractionTransfer, showPlaceholder: Bool = false) {
         viewController.view.removeGestureRecognizer(longPressRecognizer)
         longPressRecognizer = transfer.gestureRecognizer
         longPressRecognizer.removeTarget(nil, action: nil)
@@ -217,7 +217,11 @@ extension HomeAppsManager {
         viewController.view.addGestureRecognizer(longPressRecognizer)
         currentDragInteraction = transfer.interaction.copy()
         currentDragInteraction?.needsUpdate = true
-        viewController.view.addSubview(transfer.interaction.placeholderView)
+        if showPlaceholder {
+            let placeholderView = transfer.interaction.placeholderView
+            placeholderView.center = viewController.view.convert(placeholderView.center, from: placeholderView.superview)
+            viewController.view.addSubview(placeholderView)
+        }
     }
     
 }

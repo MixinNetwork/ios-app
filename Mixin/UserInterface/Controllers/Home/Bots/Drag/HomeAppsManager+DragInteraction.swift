@@ -195,7 +195,10 @@ extension HomeAppsManager {
         }
         updateState(forPageCell: currentInteraction.currentPageCell)
         let convertedRect = currentInteraction.currentPageCell.collectionView.convert(cell.frame, to: viewController.view)
-        var visiblePageCells = [currentPageCell]
+        var visiblePageCells: [AppPageCell] = [] 
+        if let pageCell = currentPageCell {
+            visiblePageCells.append(pageCell)
+        }
         if let pinnedCollectionView = pinnedCollectionView, let pageCell = pinnedCollectionView.visibleCells[0] as? AppPageCell {
             visiblePageCells.append(pageCell)
         }

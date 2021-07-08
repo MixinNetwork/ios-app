@@ -231,10 +231,7 @@ public final class UserDAO: UserDatabaseDAO {
                 try app.save(db)
             }
             db.afterNextTransactionCommit { (_) in
-                userItem = try! UserItem.fetchOne(db,
-                                                    sql: "\(Self.sqlQueryColumns) WHERE u.user_id = ?",
-                                                    arguments: [user.userId],
-                                                    adapter: nil)
+                userItem = self.getUser(userId: user.userId)
             }
         }
         return userItem

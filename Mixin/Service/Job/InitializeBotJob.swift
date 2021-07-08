@@ -4,11 +4,11 @@ import MixinServices
 class InitializeBotJob: BaseJob {
     
     let botUserId: String
-
+    
     init(botUserId: String) {
         self.botUserId = botUserId
     }
-
+    
     override func getJobId() -> String {
         return "initialize-bot"
     }
@@ -17,7 +17,6 @@ class InitializeBotJob: BaseJob {
         guard !botUserId.isEmpty, UUID(uuidString: botUserId) != nil else {
             return
         }
-        
         switch UserAPI.addFriend(userId: botUserId) {
         case let .success(botUser):
             guard let botUserItem = UserDAO.shared.saveUser(user: botUser) else {
@@ -33,4 +32,5 @@ class InitializeBotJob: BaseJob {
             throw error
         }
     }
+    
 }

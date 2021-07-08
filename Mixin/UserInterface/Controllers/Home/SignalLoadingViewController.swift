@@ -209,7 +209,13 @@ class SignalLoadingViewController: UIViewController {
     }
     
     private func dismiss() {
-        AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
+        let vc = makeInitialViewController()
+        AppDelegate.current.mainWindow.rootViewController = vc
+        
+//        // For other messenger client
+//        if vc is HomeContainerViewController {
+//            ConcurrentJobQueue.shared.addJob(job: InitializeBotJob(botUserId: ""))
+//        }
     }
     
 }

@@ -60,8 +60,13 @@ final class UserAPI: UserSessionAPI {
         return request(method: .get, path: Path.search(keyword: keyword))
     }
     
-    static func addFriend(userId: String, full_name: String, completion: @escaping (MixinAPI.Result<UserResponse>) -> Void) {
-        let relationshipRequest = RelationshipRequest(user_id: userId, full_name: full_name, action: .ADD)
+    static func addFriend(userId: String) -> MixinAPI.Result<UserResponse> {
+        let relationshipRequest = RelationshipRequest(user_id: userId, full_name: nil, action: .ADD)
+        return request(method: .post, path: Path.relationships, parameters: relationshipRequest)
+    }
+    
+    static func addFriend(userId: String, completion: @escaping (MixinAPI.Result<UserResponse>) -> Void) {
+        let relationshipRequest = RelationshipRequest(user_id: userId, full_name: nil, action: .ADD)
         request(method: .post, path: Path.relationships, parameters: relationshipRequest, completion: completion)
     }
     

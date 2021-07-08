@@ -9,7 +9,9 @@ protocol AppPageCellDelegate: AnyObject {
 class AppPageCell: UICollectionViewCell {
     
     weak var delegate: AppPageCellDelegate?
+    
     @IBOutlet weak var collectionView: UICollectionView!
+    
     var mode: HomeAppsMode = .regular {
         didSet {
             updateLayout()
@@ -17,6 +19,7 @@ class AppPageCell: UICollectionViewCell {
     }
     var items: [AppItem] = []
     var draggedItem: AppItem?
+    
     private var isEditing = false
     
     func enterEditingMode() {
@@ -146,10 +149,10 @@ extension AppPageCell: UICollectionViewDelegate, UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let cell = collectionView.cellForItem(at: indexPath) else {
+        guard let cell = collectionView.cellForItem(at: indexPath) as? AppCell else {
             return
         }
-        delegate?.didSelect(cell: cell as! AppCell, on: self)
+        delegate?.didSelect(cell: cell, on: self)
     }
     
 }

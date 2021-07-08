@@ -16,6 +16,19 @@ class AppFolderCell: AppCell {
         }
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        wrapperView.isHidden = false
+    }
+    
+    override var snapshotView: HomeAppsSnapshotView {
+        let snapshotView = super.snapshotView
+        let wrapperView = wrapperView.snapshotView(afterScreenUpdates: true)!
+        wrapperView.frame = snapshotView.iconView.frame
+        snapshotView.insertSubview(wrapperView, belowSubview: snapshotView.iconView)
+        return snapshotView
+    }
+    
     override func updateUI() {
         super.updateUI()
         guard let folder = item as? AppFolderModel else { return }
@@ -27,7 +40,7 @@ class AppFolderCell: AppCell {
     }
     
     func leaveEditingMode() {
-        guard let folder = item as? AppFolderModel, apps[apps.count - 1].count == 0 else {
+        guard let folder = item as? AppFolderModel, let last = apps.last, last.count == 0 else {
             return
         }
         apps.removeLast()
@@ -40,7 +53,7 @@ class AppFolderCell: AppCell {
 extension AppFolderCell {
     
     func moveToFirstAvailablePage(animated: Bool = true) {
-        if let folder = item as? AppFolderModel, apps[apps.count - 1].count > 0 {
+        if let folder = item as? AppFolderModel, (apps.last?.count ?? 0) > 0 {
             folder.pages.append([])
             apps.append([])
         }
@@ -84,19 +97,19 @@ extension AppFolderCell {
               let appCell = currentPageCell.collectionView.cellForItem(at: IndexPath(item: 0, section: 0)) as? AppCell else {
             return
         }
-        let convertedRect1 = currentPageCell.convert(appCell.imageView!.frame, from: appCell)
+        let convertedRect1 = currentPageCell.convert(appCell.imageView?.frame ?? .zero, from: appCell)
         let convertedRect2 = convert(convertedRect1, from: currentPageCell)
         let imageView = UIImageView(frame: convertedRect2)
-        imageView.image = appCell.imageView!.image
+        imageView.image = appCell.imageView?.image
         contentView.addSubview(imageView)
-        appCell.imageView!.isHidden = true
+        appCell.imageView?.isHidden = true
         UIView.animate(withDuration: 0.55, animations: {
             imageView.transform = .transform(rect: imageView.frame, to: self.imageContainerView.frame)
             self.imageContainerView.transform = CGAffineTransform.identity.scaledBy(x: 0.01, y: 0.01)
             self.label?.alpha = 0
         }, completion: { _ in
             self.placeholderView = imageView
-            appCell.imageView!.isHidden = false
+            appCell.imageView?.isHidden = false
             completion()
         })
     }

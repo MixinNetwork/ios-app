@@ -79,22 +79,17 @@ class HomeAppsManager: NSObject {
         if let flowLayout = pinnedCollectionView?.collectionViewLayout as? UICollectionViewFlowLayout {
             flowLayout.itemSize = HomeAppsMode.pinned.pageSize
         }
-        
         self.candidateCollectionView.dataSource = self
         self.candidateCollectionView.delegate = self
-        
         self.pinnedCollectionView?.dataSource = self
         self.pinnedCollectionView?.delegate = self
-        
         longPressRecognizer.addTarget(self, action: #selector(handleLongPressGesture(_:)))
         self.viewController.view.addGestureRecognizer(longPressRecognizer)
-        
         tapRecognizer.isEnabled = false
         tapRecognizer.delegate = self
         tapRecognizer.cancelsTouchesInView = false
         tapRecognizer.addTarget(self, action: #selector(handleTapGesture(gestureRecognizer:)))
         self.viewController.view.addGestureRecognizer(tapRecognizer)
-        
         NotificationCenter.default.addObserver(self, selector: #selector(leaveEditingMode), name: UIApplication.willResignActiveNotification, object: nil)
     }
     
@@ -161,7 +156,7 @@ extension HomeAppsManager {
             }
         }
         // remove empty page
-        DispatchQueue.main.async {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
             let emptyIndex = self.items.enumerated().compactMap( { $1.count == 0 ? $0 : nil })
             self.items.remove(at: emptyIndex)
             self.candidateCollectionView.deleteItems(at: emptyIndex.map({ IndexPath(item: $0, section: 0) }))

@@ -106,25 +106,25 @@ extension HomeAppsManager {
                 cancelFolderInteraction()
                 return
             }
-        } else if touchPoint.x <= flowLayout.sectionInset.left { // move to previous page
+        } else if touchPoint.x <= flowLayout.sectionInset.left {
             cancelFolderInteraction()
-            if collectionView == pinnedCollectionView {
+            if collectionView == pinnedCollectionView { // move to pin
                 destinationIndexPath = IndexPath(item: 0, section: 0)
-            } else if !(pageTimer?.isValid ?? false) && collectionView == candidateCollectionView {
+            } else if !(pageTimer?.isValid ?? false) && collectionView == candidateCollectionView { // move to previous page
                 pageTimer = Timer.scheduledTimer(timeInterval: 0.7, target: self, selector: #selector(pageTimerHandler(_:)), userInfo: -1, repeats: false)
                 return
             } else {
                 return
             }
-        } else if touchPoint.x > collectionView.frame.size.width - flowLayout.sectionInset.right { // move to next page
+        } else if touchPoint.x > collectionView.frame.size.width - flowLayout.sectionInset.right {
             cancelFolderInteraction()
-            if collectionView == pinnedCollectionView {
+            if collectionView == pinnedCollectionView { // move to pin
                 if pinnedItems.count == 0 {
                     destinationIndexPath = IndexPath(item: 0, section: 0)
                 } else {
                     destinationIndexPath = IndexPath(item: pinnedItems.count - 1, section: 0)
                 }
-            } else if !(pageTimer?.isValid ?? false) && collectionView == candidateCollectionView {
+            } else if !(pageTimer?.isValid ?? false) && collectionView == candidateCollectionView { // move to next page
                 pageTimer = Timer.scheduledTimer(timeInterval: 0.7, target: self, selector: #selector(pageTimerHandler(_:)), userInfo: 1, repeats: false)
                 return
             } else {
@@ -166,7 +166,7 @@ extension HomeAppsManager {
         } else if destinationIndexPath.row == -1 {
             destinationIndexPath = IndexPath(item: 0, section: 0)
         }
-        // should move item
+        // move item
         if destinationIndexPath.row != currentInteraction.currentIndexPath.row {
             if let pinnedCollectionView = pinnedCollectionView {
                 if collectionView == pinnedCollectionView && !pinnedCollectionView.visibleCells.contains(currentInteraction.currentPageCell) { // pin

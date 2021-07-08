@@ -171,7 +171,6 @@ extension HomeAppsManager {
                     newFolder.isNewFolder = false
                 }
             }
-            
         }
     }
     
@@ -184,8 +183,10 @@ extension HomeAppsManager {
             return
         }
         let folderIndexPath = IndexPath(item: destinationIndex, section: 0)
-        let folderCell = interaction.dragInteraction.currentPageCell.collectionView.cellForItem(at: folderIndexPath) as! AppFolderCell
-        let item = folderCell.item as! AppFolderModel
+        guard let folderCell = interaction.dragInteraction.currentPageCell.collectionView.cellForItem(at: folderIndexPath) as? AppFolderCell,
+              let item = folderCell.item as? AppFolderModel else {
+            return
+        }
         item.pages[folderCell.currentPage].append(sourceApp)
         if !didDrop {
             showFolderInteraction(interaction, page: page, sourceIndex: sourceIndex, destinationIndex: destinationIndex, folderIndexPath: folderIndexPath)
@@ -237,7 +238,6 @@ extension HomeAppsManager {
                     }
                 }
             }
-            
             UIView.animate(withDuration: 0.35) {
                 interaction.wrapperView.transform = .identity
                 folderCell.label?.alpha = 1
@@ -246,18 +246,19 @@ extension HomeAppsManager {
                 folderCell.wrapperView.isHidden = false
                 folderCell.startShaking()
             }
-            
         }
     }
-        
+    
 }
 
 extension HomeAppsManager {
     
     @objc func folderRemoveTimerHandler() {
-        guard let dragInteraction = currentDragInteraction else { return }
+        guard let dragInteraction = currentDragInteraction,
+              let pageCellIndexPath = candidateCollectionView.indexPath(for: dragInteraction.currentPageCell) else {
+            return
+        }
         updateState(forPageCell: dragInteraction.currentPageCell)
-        let pageCellIndexPath = candidateCollectionView.indexPath(for: dragInteraction.currentPageCell)!
         items[pageCellIndexPath.row].remove(at: dragInteraction.currentIndexPath.row)
         dragInteraction.currentPageCell.items = items[pageCellIndexPath.row]
         dragInteraction.currentPageCell.collectionView.deleteItems(at: [dragInteraction.currentIndexPath])
@@ -368,7 +369,7 @@ extension HomeAppsManager: HomeAppsFolderViewControllerDelegate {
             info.cell.imageContainerView?.isHidden = false
             info.cell.wrapperView.isHidden = false
         }
-        info.folder.pages = updatedPages
+        info.folder.pages = updatedPages.filter({ $0.count != 0 })
         info.cell.item = info.folder
         info.cell.move(to: currentPage, animated: false)
         delegate?.didUpdateItems(on: self)

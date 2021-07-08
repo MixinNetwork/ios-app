@@ -1,11 +1,11 @@
-import UIKit
+import Foundation
 
 class AppFolderModel: AppItem {
     
     var name: String
     var pages: [[AppModel]]
     var isNewFolder = false
-
+    
     init(name: String, pages: [[AppModel]]) {
         self.name = name
         self.pages = pages

@@ -67,7 +67,6 @@ extension AppFolderCell {
               let layoutAttributes = flowLayout.layoutAttributesForItem(at: IndexPath(item: index, section: 0)) else {
             return
         }
-        // todo: ??
         if layoutAttributes.frame.minX == 0 {
             layoutAttributes.frame.origin.x = flowLayout.sectionInset.left
         }

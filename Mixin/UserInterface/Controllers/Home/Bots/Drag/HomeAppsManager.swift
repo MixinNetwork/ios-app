@@ -63,7 +63,7 @@ class HomeAppsManager: NSObject {
     var longPressRecognizer = UILongPressGestureRecognizer()
     let tapRecognizer = UITapGestureRecognizer()
     let feedback = UIImpactFeedbackGenerator()
-
+    
     init(viewController: UIViewController, candidateCollectionView: UICollectionView, items: [[AppItem]], pinnedCollectionView: UICollectionView? = nil, pinnedItems:[AppItem] = []) {
         self.viewController = viewController
         self.candidateCollectionView = candidateCollectionView
@@ -101,11 +101,13 @@ class HomeAppsManager: NSObject {
 }
 
 extension HomeAppsManager {
-
+    
     @objc func handleTapGesture(gestureRecognizer: UITapGestureRecognizer) {
         guard isEditing else { return }
         var touchPoint = gestureRecognizer.location(in: viewController.view)
-        let (collectionView, pageCell) = viewInfos(at: touchPoint)
+        guard let (collectionView, pageCell) = viewInfos(at: touchPoint) else {
+            return
+        }
         touchPoint = gestureRecognizer.location(in: collectionView)
         touchPoint.x -= collectionView.contentOffset.x
         if pageCell.collectionView.indexPathForItem(at: touchPoint) == nil {
@@ -113,7 +115,7 @@ extension HomeAppsManager {
         }
     }
     
-    func viewInfos(at point: CGPoint) -> (collectionView: UICollectionView, cell: AppPageCell) {
+    func viewInfos(at point: CGPoint) -> (collectionView: UICollectionView, cell: AppPageCell)? {
         let collectionView: UICollectionView
         if let pinnedCollectionView = pinnedCollectionView, pinnedCollectionView.frame.contains(viewController.view.convert(point, to: pinnedCollectionView)) {
             collectionView = pinnedCollectionView
@@ -123,8 +125,10 @@ extension HomeAppsManager {
         let convertedPoint = viewController.view.convert(point, to: collectionView)
         if let indexPath = collectionView.indexPathForItem(at: convertedPoint), let cell = collectionView.cellForItem(at: indexPath) as? AppPageCell {
             return (collectionView, cell)
+        } else if let cell = collectionView.visibleCells.first as? AppPageCell {
+            return (collectionView, cell)
         } else {
-            return (collectionView, collectionView.visibleCells[0] as! AppPageCell)
+            return nil
         }
     }
     
@@ -157,17 +161,10 @@ extension HomeAppsManager {
             }
         }
         // remove empty page
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-            if self.isInAppsFolderViewController {
-                if self.items[self.items.count - 1].count == 0 {
-                    self.items.removeLast()
-                    self.candidateCollectionView.deleteItems(at: [IndexPath(item: self.items.count, section: 0)])
-                }
-            } else {
-                let emptyIndex = self.items.enumerated().compactMap( { $1.count == 0 ? $0 : nil })
-                self.items.remove(at: emptyIndex)
-                self.candidateCollectionView.deleteItems(at: emptyIndex.map({ IndexPath(item: $0, section: 0) }))
-            }
+        DispatchQueue.main.async {
+            let emptyIndex = self.items.enumerated().compactMap( { $1.count == 0 ? $0 : nil })
+            self.items.remove(at: emptyIndex)
+            self.candidateCollectionView.deleteItems(at: emptyIndex.map({ IndexPath(item: $0, section: 0) }))
         }
         tapRecognizer.isEnabled = false
         delegate?.didLeaveEditingMode(on: self)

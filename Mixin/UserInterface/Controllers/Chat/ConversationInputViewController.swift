@@ -310,7 +310,12 @@ class ConversationInputViewController: UIViewController {
     }
     
     @IBAction func showPhotosAction(_ sender: Any) {
-        let status = PHPhotoLibrary.authorizationStatus()
+        let status: PHAuthorizationStatus
+        if #available(iOS 14.0, *) {
+            status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
+        } else {
+            status = PHPhotoLibrary.authorizationStatus()
+        }
         handlePhotoAuthorizationStatus(status)
     }
     
@@ -431,6 +436,11 @@ class ConversationInputViewController: UIViewController {
         quote = nil
     }
     
+    func send(image: UIImage) {
+        composer.send(image: image, quoteMessageId: quote?.message.messageId)
+        quote = nil
+    }
+    
     func sendAudio(url: URL, metadata: AudioMetadata) {
         composer.sendMessage(type: .SIGNAL_AUDIO, quote: quote?.message, value: (url, metadata))
         quote = nil
@@ -438,6 +448,16 @@ class ConversationInputViewController: UIViewController {
     
     func sendFile(url: URL) {
         composer.sendMessage(type: .SIGNAL_DATA, quote: quote?.message, value: url)
+        quote = nil
+    }
+    
+    func moveAndSendVideo(at source: URL) {
+        composer.moveAndSendVideo(at: source, quoteMessageId: quote?.message.messageId)
+        quote = nil
+    }
+    
+    func moveAndSendGifImage(at source: URL, image: UIImage) {
+        composer.moveAndSendGifImage(at: source, image: image, quoteMessageId: quote?.message.messageId)
         quote = nil
     }
     
@@ -987,17 +1007,21 @@ extension ConversationInputViewController {
     
     private func handlePhotoAuthorizationStatus(_ status: PHAuthorizationStatus) {
         switch status {
-        case .authorized, .limited:
+        case .limited:
+            photoViewController.isAuthorizationLimited = true
+            Queue.main.autoSync(execute: loadPhotoInput)
+        case .authorized:
+            photoViewController.isAuthorizationLimited = false
             Queue.main.autoSync(execute: loadPhotoInput)
         case .notDetermined:
             PHPhotoLibrary.requestAuthorization(handlePhotoAuthorizationStatus)
         case .denied, .restricted:
             DispatchQueue.main.async {
-                self.alertSettings(Localized.PERMISSION_DENIED_PHOTO_LIBRARY)
+                self.alertSettings(R.string.localizable.permission_denied_photo_library())
             }
         @unknown default:
             DispatchQueue.main.async {
-                self.alertSettings(Localized.PERMISSION_DENIED_PHOTO_LIBRARY)
+                self.alertSettings(R.string.localizable.permission_denied_photo_library())
             }
         }
     }

@@ -158,6 +158,94 @@ final class ConversationMessageComposer {
         }
     }
     
+    func send(image: UIImage, quoteMessageId: String?) {
+        let conversationId = self.conversationId
+        let ownerUser = self.ownerUser
+        let isGroupMessage = self.isGroup
+        queue.async {
+            var message = Message.createMessage(category: MessageCategory.SIGNAL_IMAGE.rawValue,
+                                                conversationId: conversationId,
+                                                userId: myUserId)
+            let url = AttachmentContainer.url(for: .photos, filename: message.messageId)
+            guard image.saveToFile(path: url) else {
+                return
+            }
+            message.mediaStatus = MediaStatus.PENDING.rawValue
+            message.mediaUrl = url.lastPathComponent
+            message.mediaWidth = Int(image.size.width)
+            message.mediaHeight = Int(image.size.height)
+            message.quoteMessageId = quoteMessageId
+            message.thumbImage = image.base64Thumbnail()
+            message.mediaMimeType = "image/jpeg"
+            SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
+        }
+    }
+    
+    func moveAndSendVideo(at source: URL, quoteMessageId: String?) {
+        let conversationId = self.conversationId
+        let ownerUser = self.ownerUser
+        let isGroupMessage = self.isGroup
+        queue.async {
+            var message = Message.createMessage(category: MessageCategory.SIGNAL_VIDEO.rawValue,
+                                                conversationId: conversationId,
+                                                userId: myUserId)
+            let url = AttachmentContainer.url(for: .videos, filename: message.messageId + "." + source.pathExtension)
+            do {
+                try FileManager.default.moveItem(at: source, to: url)
+                let asset = AVAsset(url: url)
+                guard asset.duration.isValid, let videoTrack = asset.tracks(withMediaType: .video).first else {
+                    showAutoHiddenHud(style: .error, text: R.string.localizable.error_operation_failed())
+                    return
+                }
+                if let thumbnail = UIImage(withFirstFrameOfVideoAtURL: url) {
+                    let thumbnailURL = AttachmentContainer.videoThumbnailURL(videoFilename: url.lastPathComponent)
+                    thumbnail.saveToFile(path: thumbnailURL)
+                    message.thumbImage = thumbnail.base64Thumbnail()
+                } else {
+                    showAutoHiddenHud(style: .error, text: R.string.localizable.error_operation_failed())
+                    return
+                }
+                message.mediaDuration = Int64(asset.duration.seconds * millisecondsPerSecond)
+                let size = videoTrack.naturalSize.applying(videoTrack.preferredTransform)
+                message.mediaWidth = Int(abs(size.width))
+                message.mediaHeight = Int(abs(size.height))
+                message.mediaSize = FileManager.default.fileSize(url.path)
+                message.mediaMimeType = FileManager.default.mimeType(ext: url.pathExtension)
+                message.mediaUrl = url.lastPathComponent
+                message.mediaStatus = MediaStatus.PENDING.rawValue
+                message.quoteMessageId = quoteMessageId
+                SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
+            } catch {
+                showAutoHiddenHud(style: .error, text: R.string.localizable.error_operation_failed())
+            }
+        }
+    }
+    
+    func moveAndSendGifImage(at source: URL, image: UIImage, quoteMessageId: String?) {
+        let conversationId = self.conversationId
+        let ownerUser = self.ownerUser
+        let isGroupMessage = self.isGroup
+        queue.async {
+            var message = Message.createMessage(category: MessageCategory.SIGNAL_IMAGE.rawValue,
+                                                conversationId: conversationId,
+                                                userId: myUserId)
+            let filename = message.messageId + ".gif"
+            let url = AttachmentContainer.url(for: .photos, filename: filename)
+            do {
+                try FileManager.default.moveItem(at: source, to: url)
+                message.mediaStatus = MediaStatus.PENDING.rawValue
+                message.mediaUrl = filename
+                message.mediaWidth = Int(image.size.width * image.scale)
+                message.mediaHeight = Int(image.size.height * image.scale)
+                message.thumbImage = image.base64Thumbnail()
+                message.mediaMimeType = "image/gif"
+                SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
+            } catch {
+                showAutoHiddenHud(style: .error, text: R.string.localizable.error_operation_failed())
+            }
+        }
+    }
+    
     func send(asset: PHAsset, quoteMessageId: String?) {
         let conversationId = self.conversationId
         let ownerUser = self.ownerUser

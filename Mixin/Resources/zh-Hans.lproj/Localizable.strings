@@ -51,6 +51,7 @@
 "action_cancel_float" = "关闭浮窗";
 "action_remove_all" = "全部删除";
 "action_close" = "关闭";
+"action_change_settings" = "更改设置";
 "menu_delete" = "删除";
 "menu_edit" = "编辑";
 "menu_report" = "上报";
@@ -94,6 +95,7 @@
 "toast_authorized" = "已授权";
 "toast_changed" = "已修改";
 "toast_blocked" = "已屏蔽";
+"toast_unable_to_share" = "无法分享此内容";
 "permission_denied_photo_library" = "Mixin 需要相册权限，请点击'设置'打开系统授权。";
 "permission_denied_network" = "Mixin 需要无线数据权限，请点击'设置'打开系统授权。";
 "biometry_suggestion" = "建议使用%@支付";
@@ -343,6 +345,9 @@
 "chat_transcript_forward_invalid_media_status" = "请下载全部附件后转发";
 "chat_transcript_forward_invalid_app_card_not_shareable" = "该卡片已被设置为不允许转发";
 "chat_transcript_forward_invalid_link_not_shareable" = "该链接已被设置为不允许分享";
+"chat_pick_from_library" = "打开相册";
+"chat_manage_photo_auth" = "更改设置";
+"chat_photo_select_more" = "选择更多照片";
 
 // Web
 "web_suspicious_link" = "可疑链接";

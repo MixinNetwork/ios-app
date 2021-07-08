@@ -51,6 +51,7 @@
 "action_cancel_float" = "Cancel Floating";
 "action_remove_all" = "Remove All";
 "action_close" = "Close";
+"action_change_settings" = "Change Settings";
 "menu_delete" = "Delete";
 "menu_edit" = "Edit";
 "menu_report" = "Report";
@@ -94,6 +95,7 @@
 "toast_authorized" = "Authorized";
 "toast_changed" = "Changed";
 "toast_blocked" = "Blocked";
+"toast_unable_to_share" = "Unable to share this content";
 "permission_denied_photo_library" = "Mixin doesn't have permission to use your photo library. Please tap Setting to open system settings.";
 "permission_denied_network" = "Mixin doesn't have permission to use wireless data. Please tap Setting to open system settings.";
 "biometry_suggestion" = " %@ is suggested.";
@@ -343,6 +345,9 @@
 "chat_transcript_forward_invalid_media_status" = "Forwarding transcript requires all attachments are downloaded";
 "chat_transcript_forward_invalid_app_card_not_shareable" = "The card has been set to not allow sharing";
 "chat_transcript_forward_invalid_link_not_shareable" = "The link has been set to not allow sharing";
+"chat_pick_from_library" = "Pick from Library";
+"chat_manage_photo_auth" = "Manage";
+"chat_photo_select_more" = "Select More Photos";
 
 // Web
 "web_suspicious_link" = "Suspicious Link";

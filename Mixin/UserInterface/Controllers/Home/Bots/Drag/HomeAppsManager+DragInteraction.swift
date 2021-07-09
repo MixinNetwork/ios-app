@@ -257,6 +257,7 @@ extension HomeAppsManager {
         }, completion: nil)
         interaction.currentPageCell = pageCell
         interaction.currentIndexPath = destinationIndexPath
+        resetCurrentPageItems()
     }
     
     private func moveFromPinned(interaction: HomeAppsDragInteraction, pageCell: AppPageCell, destinationIndexPath: IndexPath) {
@@ -293,9 +294,31 @@ extension HomeAppsManager {
                 pageCell.collectionView.deleteItems(at: [IndexPath(item: items[currentPage].count - 1, section: 0)])
             }
         }, completion: nil)
-        
         interaction.currentPageCell = pageCell
         interaction.currentIndexPath = IndexPath(item: destinationIndexPath.row, section: 0)
+        resetCurrentPageItems()
+    }
+    
+    private func resetCurrentPageItems() {
+        if let pageCell = candidateCollectionView.visibleCells.first as? AppPageCell, let pageItems = currenItems(in: pageCell) {
+            items[currentPage] = pageItems
+        }
+        if let pageCell = pinnedCollectionView?.visibleCells.first as? AppPageCell, let pageItems = currenItems(in: pageCell) {
+            pinnedItems = pageItems
+        }
+    }
+    
+    private func currenItems(in pageCell: AppPageCell) -> [AppItem]? {
+        var items = [AppItem]()
+        for index in 0..<pageCell.collectionView.visibleCells.count {
+            let cell = pageCell.collectionView.cellForItem(at: IndexPath(item: index, section: 0))
+            if let cell = cell as? AppCell, let item = cell.item {
+                items.append(item)
+            } else if let cell = cell as? AppFolderCell, let item = cell.item {
+                items.append(item)
+            }
+        }
+        return items.count > 0 ? items : nil
     }
     
 }

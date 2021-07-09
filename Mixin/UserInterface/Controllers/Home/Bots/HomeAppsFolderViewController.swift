@@ -77,16 +77,20 @@ class HomeAppsFolderViewController: UIViewController {
         textField.becomeFirstResponder()
     }
     
-    @IBAction func dismiss() {
-        textField.resignFirstResponder()
-        homeAppsManager.leaveEditingMode()
-        delegate?.dismissAnimationWillStart(currentPage: pageControl.currentPage, updatedPages: homeAppsManager.items as! [[AppModel]], on: self)
-        animateOut()
+    @IBAction func dismissAction() {
+        dismiss()
     }
     
 }
 
 extension HomeAppsFolderViewController {
+    
+    private func dismiss(completion: (() -> Void)? = nil) {
+        textField.resignFirstResponder()
+        homeAppsManager.leaveEditingMode()
+        delegate?.dismissAnimationWillStart(currentPage: pageControl.currentPage, updatedPages: homeAppsManager.items as! [[AppModel]], on: self)
+        animateOut(completion: completion)
+    }
     
     private func leaveTextFieldEditingMode() {
         textField.isEnabled = false
@@ -134,7 +138,7 @@ extension HomeAppsFolderViewController {
         animation.startAnimation()
     }
     
-    private func animateOut() {
+    private func animateOut(completion: (() -> Void)?) {
         let animation = UIViewPropertyAnimator(duration: 0.35, controlPoint1: CGPoint(x: 0.37, y: 0.13), controlPoint2: CGPoint(x: 0, y: 1)) {
             self.view.layoutIfNeeded()
             self.textField.alpha = 0
@@ -146,6 +150,7 @@ extension HomeAppsFolderViewController {
         animation.addCompletion { _ in
             self.delegate?.dismissAnimationDidFinish(on: self)
             self.homeAppsManager = nil
+            completion?()
         }
         animation.startAnimation()
     }
@@ -189,12 +194,15 @@ extension HomeAppsFolderViewController: HomeAppsManagerDelegate {
     }
     
     func didBeginFolderDragOut(transfer: HomeAppsDragInteractionTransfer, on manager: HomeAppsManager) {
-        dismiss()
+        dismissAction()
         delegate?.didBeginFolderDragOut(withTransfer: transfer, on: self)
     }
     
     func didSelect(app: AppModel, on manager: HomeAppsManager) {
-        delegate?.didSelect(app: app, on: self)
+        dismiss { [weak self] in
+            guard let self = self else { return }
+            self.delegate?.didSelect(app: app, on: self)
+        }
     }
     
     func didUpdateItems(on manager: HomeAppsManager) {}

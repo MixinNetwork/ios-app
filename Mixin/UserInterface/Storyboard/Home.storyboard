@@ -1445,7 +1445,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UEg-gC-CiI" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <tapGestureRecognizer id="A7P-cU-XXZ">
                     <connections>
-                        <action selector="dismiss" destination="aRa-wQ-N2z" id="FlS-FT-a0a"/>
+                        <action selector="dismissAction" destination="aRa-wQ-N2z" id="FlS-FT-a0a"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>

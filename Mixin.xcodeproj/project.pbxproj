@@ -616,6 +616,9 @@
 		949A3686261D9C5C004251B2 /* post.css in Resources */ = {isa = PBXBuildFile; fileRef = 949A3685261D9C5C004251B2 /* post.css */; };
 		94A1B1DF25BFD7CB0098586D /* LinkLocatingTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A1B1DE25BFD7CB0098586D /* LinkLocatingTextView.swift */; };
 		94B7643525EA8E9B00EDF9C6 /* CacheableAssetFileDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B7643425EA8E9B00EDF9C6 /* CacheableAssetFileDescription.swift */; };
+		94B8D185266E37ED00F43CBB /* DiagnoseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B8D184266E37ED00F43CBB /* DiagnoseViewController.swift */; };
+		94B8D189266E41D300F43CBB /* DatabaseDiagnosticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B8D187266E41D300F43CBB /* DatabaseDiagnosticViewController.swift */; };
+		94B8D18A266E41D300F43CBB /* DatabaseDiagnosticView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B8D188266E41D300F43CBB /* DatabaseDiagnosticView.xib */; };
 		94BE548E25D96932006575E2 /* OggOpusReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BE548D25D96932006575E2 /* OggOpusReader.swift */; };
 		94D1E28625EA36B100B58B82 /* CacheableAssetLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D1E28525EA36B100B58B82 /* CacheableAssetLoader.swift */; };
 		94D63DD62646C29100FD7EE8 /* MessageViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D63DD52646C29100FD7EE8 /* MessageViewModelFactory.swift */; };
@@ -1566,6 +1569,9 @@
 		949A3685261D9C5C004251B2 /* post.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = post.css; sourceTree = "<group>"; };
 		94A1B1DE25BFD7CB0098586D /* LinkLocatingTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkLocatingTextView.swift; sourceTree = "<group>"; };
 		94B7643425EA8E9B00EDF9C6 /* CacheableAssetFileDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheableAssetFileDescription.swift; sourceTree = "<group>"; };
+		94B8D184266E37ED00F43CBB /* DiagnoseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnoseViewController.swift; sourceTree = "<group>"; };
+		94B8D187266E41D300F43CBB /* DatabaseDiagnosticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseDiagnosticViewController.swift; sourceTree = "<group>"; };
+		94B8D188266E41D300F43CBB /* DatabaseDiagnosticView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DatabaseDiagnosticView.xib; sourceTree = "<group>"; };
 		94BE548D25D96932006575E2 /* OggOpusReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OggOpusReader.swift; sourceTree = "<group>"; };
 		94D1E28525EA36B100B58B82 /* CacheableAssetLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheableAssetLoader.swift; sourceTree = "<group>"; };
 		94D63DD52646C29100FD7EE8 /* MessageViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageViewModelFactory.swift; sourceTree = "<group>"; };
@@ -2528,6 +2534,16 @@
 			path = "Cacheable Asset";
 			sourceTree = "<group>";
 		};
+		94B8D186266E412B00F43CBB /* Diagnose */ = {
+			isa = PBXGroup;
+			children = (
+				94B8D184266E37ED00F43CBB /* DiagnoseViewController.swift */,
+				94B8D188266E41D300F43CBB /* DatabaseDiagnosticView.xib */,
+				94B8D187266E41D300F43CBB /* DatabaseDiagnosticViewController.swift */,
+			);
+			path = Diagnose;
+			sourceTree = "<group>";
+		};
 		94E3411E261D827300E2F9D3 /* highlight */ = {
 			isa = PBXGroup;
 			children = (
@@ -3391,6 +3407,7 @@
 				7B9E7ABF21E6F8F000012A28 /* DesktopViewController.swift */,
 				7BC1466C230D12680060FE19 /* CurrencySelectorViewController.swift */,
 				ABCB87DC23F18A3D00780E60 /* PermissionsViewController.swift */,
+				94B8D186266E412B00F43CBB /* Diagnose */,
 			);
 			path = Setting;
 			sourceTree = "<group>";
@@ -3686,6 +3703,7 @@
 				277FF70C1F909A1200DBB2EB /* Assets.xcassets in Resources */,
 				7BF19C20241D40FA00B192D5 /* LocationSearchView.xib in Resources */,
 				7B8BB590234F36C000991ACB /* Colors.xcassets in Resources */,
+				94B8D18A266E41D300F43CBB /* DatabaseDiagnosticView.xib in Resources */,
 				7BFCB7762419FC5B00E7BC43 /* LocationCell.xib in Resources */,
 				DFD294491FA7145F00FADAAD /* Contact.storyboard in Resources */,
 				94E8913925C019F000F1E5D4 /* Pods-Mixin-acknowledgements.plist in Resources */,
@@ -4300,6 +4318,7 @@
 				7BD00F222559716C004D8814 /* WalletSearchRecommendationViewController.swift in Sources */,
 				7BCA3A572057F08E007617C1 /* CATransactionExtension.swift in Sources */,
 				7BB0B2A025022FA7006D2C20 /* EdDSAMigration+Migrate.swift in Sources */,
+				94B8D189266E41D300F43CBB /* DatabaseDiagnosticViewController.swift in Sources */,
 				7BB0F9122434ADBA00BEDA97 /* CircleAPI.swift in Sources */,
 				DFC0ECD123BB5FDE0091E7AC /* WithdrawalRequest.swift in Sources */,
 				7BEED0D7244D74FC00F3A2B9 /* SettingsSection.swift in Sources */,
@@ -4505,6 +4524,7 @@
 				7B34A19F22C0E73D00665F41 /* GalleryVideoView.swift in Sources */,
 				7BFD3458228589ED00524EA0 /* ContactSelectorViewController.swift in Sources */,
 				7BD38B6220BEA12800D06E5C /* AudioMessageViewModel.swift in Sources */,
+				94B8D185266E37ED00F43CBB /* DiagnoseViewController.swift in Sources */,
 				7B075CCF1FC0A98B005315A2 /* ConversationTableView.swift in Sources */,
 				7BE036842337AB36003F4241 /* UserHandleTableHeaderView.swift in Sources */,
 				7B5E5D971FCE9CAA00F6048D /* ConversationInputTextView.swift in Sources */,

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -18,14 +18,18 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="223"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="750" image="Setting/ic_about_app" translatesAutoresizingMaskIntoConstraints="NO" id="zij-hH-E3Y">
+                <imageView contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="750" image="Setting/ic_about_app" translatesAutoresizingMaskIntoConstraints="NO" id="zij-hH-E3Y">
                     <rect key="frame" x="147.5" y="60" width="80" height="60"/>
+                    <gestureRecognizers/>
                     <constraints>
                         <constraint firstAttribute="height" constant="60" id="yAv-8U-5hq"/>
                     </constraints>
+                    <connections>
+                        <outletCollection property="gestureRecognizers" destination="Dgj-pt-pUx" appends="YES" id="2DC-vq-FGE"/>
+                    </connections>
                 </imageView>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="t5G-pK-Sf3">
-                    <rect key="frame" x="0.0" y="144" width="375" height="49"/>
+                    <rect key="frame" x="0.0" y="144" width="375" height="45.5"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="500" text="Mixin Messenger" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qdl-ca-egz">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="21.5"/>
@@ -37,7 +41,7 @@
                             </userDefinedRuntimeAttributes>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0.9.2(164)" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rQD-9B-2U1">
-                            <rect key="frame" x="0.0" y="29.5" width="375" height="19.5"/>
+                            <rect key="frame" x="0.0" y="29.5" width="375" height="16"/>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                             <color key="textColor" name="text_accessory"/>
                             <nil key="highlightedColor"/>
@@ -56,6 +60,11 @@
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <point key="canvasLocation" x="31" y="33"/>
         </view>
+        <tapGestureRecognizer numberOfTapsRequired="5" id="Dgj-pt-pUx">
+            <connections>
+                <action selector="showDiagnoseRow:" destination="-1" id="ebV-e0-PvO"/>
+            </connections>
+        </tapGestureRecognizer>
     </objects>
     <resources>
         <image name="Setting/ic_about_app" width="80" height="80"/>

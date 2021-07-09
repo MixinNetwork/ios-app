@@ -16,6 +16,10 @@ class AboutViewController: SettingsTableViewController {
         ])
     ])
     
+    private lazy var diagnoseRow = SettingsRow(title: R.string.localizable.about_diagnose(), accessory: .disclosure)
+    
+    private var isShowingDiagnoseRow = false
+    
     class func instance() -> UIViewController {
         let vc = AboutViewController()
         return ContainerViewController.instance(viewController: vc, title: "")
@@ -27,6 +31,14 @@ class AboutViewController: SettingsTableViewController {
         versionLabel.text = Bundle.main.shortVersion + "(\(Bundle.main.bundleVersion))"
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
+    }
+    
+    @IBAction func showDiagnoseRow(_ sender: Any) {
+        guard !isShowingDiagnoseRow else {
+            return
+        }
+        dataSource.appendRows([diagnoseRow], into: 0, animation: .automatic)
+        isShowingDiagnoseRow = true
     }
     
 }
@@ -51,8 +63,12 @@ extension AboutViewController: UITableViewDelegate {
             navigationController?.pushViewController(acknow, animated: true)
         case 6:
             UIApplication.shared.openURL(url: "itms-apps://itunes.apple.com/us/app/id1322324266")
+        case 7:
+            let diagnose = DiagnoseViewController()
+            let container = ContainerViewController.instance(viewController: diagnose, title: R.string.localizable.about_diagnose())
+            navigationController?.pushViewController(container, animated: true)
         default:
-            UIApplication.shared.openURL(url: "https://mixin.one")
+            break
         }
     }
     

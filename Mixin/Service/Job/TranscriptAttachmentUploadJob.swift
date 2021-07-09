@@ -129,9 +129,9 @@ final class TranscriptAttachmentUploadJob: AsynchronousJob {
                                            mediaDigest: metadata.mediaDigest,
                                            mediaStatus: MediaStatus.DONE.rawValue,
                                            mediaCreatedAt: createdAt)
-        if pendingRequests.isEmpty {
+        if loadingRequests.isEmpty && pendingRequests.isEmpty {
             finishMessageSending()
-        } else {
+        } else if !pendingRequests.isEmpty {
             let (id, request) = pendingRequests.remove(at: pendingRequests.startIndex)
             loadingRequests[id] = request
             request.start()

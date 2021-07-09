@@ -5,6 +5,9 @@ import AudioToolbox
 extension UIDevice {
 
     static let isJailbreak: Bool = {
+        #if DEBUG
+        return false
+        #else
         if FileManager.default.fileExists(atPath: "/Applications/Cydia.app") ||
             FileManager.default.fileExists(atPath: "/Library/MobileSubstrate/MobileSubstrate.dylib") ||
             FileManager.default.fileExists(atPath: "/bin/bash") ||
@@ -27,6 +30,7 @@ extension UIDevice {
         } catch {
             return false
         }
+        #endif
     }()
     
     func playInputDelete() {

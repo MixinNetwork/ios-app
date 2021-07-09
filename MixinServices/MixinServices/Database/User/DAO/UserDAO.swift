@@ -222,4 +222,19 @@ public final class UserDAO: UserDatabaseDAO {
         }
     }
     
+    public func saveUser(user response: UserResponse) -> UserItem? {
+        var userItem: UserItem?
+        db.write { (db) in
+            let user = User.createUser(from: response)
+            try user.save(db)
+            if let app = user.app {
+                try app.save(db)
+            }
+            db.afterNextTransactionCommit { (_) in
+                userItem = self.getUser(userId: user.userId)
+            }
+        }
+        return userItem
+    }
+    
 }

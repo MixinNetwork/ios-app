@@ -4,6 +4,9 @@ import MixinServices
 
 class SignalLoadingViewController: UIViewController {
     
+    private let userIdToGreetAfterLoaded: String? = nil
+    private let userFullnameToGreetAfterLoaded: String? = nil
+    
     class func instance() -> SignalLoadingViewController {
         return R.storyboard.home.signal()!
     }
@@ -209,7 +212,11 @@ class SignalLoadingViewController: UIViewController {
     }
     
     private func dismiss() {
-        AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
+        let vc = makeInitialViewController()
+        AppDelegate.current.mainWindow.rootViewController = vc
+        if vc is HomeContainerViewController, let userId = userIdToGreetAfterLoaded, let fullname = userFullnameToGreetAfterLoaded {
+            ConcurrentJobQueue.shared.addJob(job: InitializeBotJob(botUserId: userId, botFullname: fullname))
+        }
     }
     
 }

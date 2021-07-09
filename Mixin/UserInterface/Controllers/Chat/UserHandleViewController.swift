@@ -9,8 +9,6 @@ class UserHandleViewController: UITableViewController {
         let identityNumberKeywordRange: NSRange?
     }
     
-    var tableHeaderPlaceholderHeight: CGFloat = 0
-    
     var users = [UserItem]() {
         didSet {
             guard let keyword = keyword else {
@@ -26,8 +24,6 @@ class UserHandleViewController: UITableViewController {
     
     private let initialVisibleCellsCount: CGFloat = {
         if ScreenHeight.current <= .short {
-            return 1.5
-        } else if ScreenHeight.current <= .medium {
             return 2.5
         } else {
             return 3.5
@@ -74,10 +70,7 @@ class UserHandleViewController: UITableViewController {
         super.viewWillLayoutSubviews()
         let contentHeight = min(CGFloat(searchResults.count), initialVisibleCellsCount) * tableView.rowHeight
             + UserHandleTableHeaderView.decorationHeight
-        var tableHeaderHeight = tableView.frame.height
-            - contentHeight
-            + tableHeaderPlaceholderHeight
-        tableHeaderHeight = max(0, tableHeaderHeight)
+        let tableHeaderHeight = max(0, tableView.frame.height - contentHeight)
         if tableHeaderView.frame.height != tableHeaderHeight {
             tableHeaderView.frame.size.height = tableHeaderHeight
             tableView.tableHeaderView = tableHeaderView
@@ -106,10 +99,6 @@ class UserHandleViewController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
         let result = searchResults[indexPath.row]
         conversationViewController?.inputUserHandle(with: result.user)
-    }
-    
-    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        conversationViewController?.updateOverlays()
     }
     
     override func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {

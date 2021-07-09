@@ -84,10 +84,20 @@ class ImageUploadJob: AttachmentUploadJob {
             PHImageManager.default().requestImageData(for: asset, options: options) { (data, uti, orientation, info) in
                 imageData = data
             }
-        } else if UTTypeConformsTo(uti, kUTTypeJPEG) && imageWithRatioMaybeAnArticle(CGSize(width: asset.pixelWidth, height: asset.pixelHeight)) {
+        } else if imageWithRatioMaybeAnArticle(CGSize(width: asset.pixelWidth, height: asset.pixelHeight)) {
             extensionName = ExtensionName.jpeg.rawValue
-            PHImageManager.default().requestImageData(for: asset, options: options) { (data, _, _, _) in
-                imageData = data
+            if UTTypeConformsTo(uti, kUTTypeJPEG) {
+                PHImageManager.default().requestImageData(for: asset, options: options) { (data, _, _, _) in
+                    imageData = data
+                }
+            } else {
+                options.deliveryMode = .highQualityFormat
+                PHImageManager.default().requestImage(for: asset, targetSize: PHImageManagerMaximumSize, contentMode: .aspectFit, options: options) { (rawImage, _) in
+                    guard let rawImage = rawImage else {
+                        return
+                    }
+                    (image, imageData) = ImageUploadSanitizer.sanitizedImage(from: rawImage)
+                }
             }
         } else {
             extensionName = ExtensionName.jpeg.rawValue

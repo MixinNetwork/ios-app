@@ -1503,70 +1503,127 @@
                                     <segue destination="SbT-mw-qT6" kind="embed" id="W09-GN-aSV"/>
                                 </connections>
                             </containerView>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" prefetchingEnabled="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Tc-9y-fxw">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bZR-Um-dfI">
                                 <rect key="frame" x="0.0" y="232" width="375" height="64"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="64" id="Wda-0K-PpV"/>
-                                </constraints>
-                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="Dug-6r-qaU">
-                                    <size key="itemSize" width="110" height="60"/>
-                                    <size key="estimatedItemSize" width="110" height="60"/>
-                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                </collectionViewFlowLayout>
-                                <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="photo_album" id="Sw1-NR-Rbg" customClass="PhotoInputAlbumCell" customModule="Mixin" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="2" width="110" height="60"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                                            <rect key="frame" x="0.0" y="0.0" width="110" height="60"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="All Photos" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EtX-tR-AXd">
-                                                    <rect key="frame" x="20" y="0.0" width="70" height="60"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="60" id="18A-Vt-tpS"/>
-                                                    </constraints>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <color key="textColor" name="text_accessory"/>
-                                                    <nil key="highlightedColor"/>
-                                                    <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
-                                                    </userDefinedRuntimeAttributes>
-                                                </label>
-                                            </subviews>
-                                        </view>
+                                <subviews>
+                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" prefetchingEnabled="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Tc-9y-fxw">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="64"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="Dug-6r-qaU">
+                                            <size key="itemSize" width="110" height="60"/>
+                                            <size key="estimatedItemSize" width="110" height="60"/>
+                                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        </collectionViewFlowLayout>
+                                        <cells>
+                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="photo_album" id="Sw1-NR-Rbg" customClass="PhotoInputAlbumCell" customModule="Mixin" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="2" width="110" height="60"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                                    <rect key="frame" x="0.0" y="0.0" width="110" height="60"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="All Photos" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EtX-tR-AXd">
+                                                            <rect key="frame" x="20" y="0.0" width="70" height="60"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="height" constant="60" id="18A-Vt-tpS"/>
+                                                            </constraints>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                            <color key="textColor" name="text_accessory"/>
+                                                            <nil key="highlightedColor"/>
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                                                            </userDefinedRuntimeAttributes>
+                                                        </label>
+                                                    </subviews>
+                                                </view>
+                                                <constraints>
+                                                    <constraint firstAttribute="bottom" secondItem="EtX-tR-AXd" secondAttribute="bottom" id="9bb-KE-sDJ"/>
+                                                    <constraint firstItem="EtX-tR-AXd" firstAttribute="top" secondItem="Sw1-NR-Rbg" secondAttribute="top" id="BtK-FW-EZn"/>
+                                                    <constraint firstItem="EtX-tR-AXd" firstAttribute="leading" secondItem="Sw1-NR-Rbg" secondAttribute="leading" constant="20" id="DHB-ac-ei7"/>
+                                                    <constraint firstAttribute="trailing" secondItem="EtX-tR-AXd" secondAttribute="trailing" constant="20" id="MGn-fR-T3T"/>
+                                                </constraints>
+                                                <connections>
+                                                    <outlet property="textLabel" destination="EtX-tR-AXd" id="3iI-fs-TiE"/>
+                                                </connections>
+                                            </collectionViewCell>
+                                        </cells>
+                                    </collectionView>
+                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wcO-wB-3tD">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="64"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YMw-Ab-RwQ">
+                                                <rect key="frame" x="0.0" y="0.0" width="164" height="64"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                <inset key="contentEdgeInsets" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
+                                                <state key="normal" title="Pick from Library"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="chat_pick_from_library"/>
+                                                    <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
+                                                    <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
+                                                </userDefinedRuntimeAttributes>
+                                                <connections>
+                                                    <action selector="pickFromLibrary:" destination="xow-an-dxR" eventType="touchUpInside" id="Pkd-7u-lF1"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VtI-qD-KOS">
+                                                <rect key="frame" x="277" y="0.0" width="98" height="64"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                <inset key="contentEdgeInsets" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
+                                                <state key="normal" title="Manage"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="chat_manage_photo_auth"/>
+                                                    <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
+                                                    <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
+                                                </userDefinedRuntimeAttributes>
+                                                <connections>
+                                                    <action selector="managePhotoAuthorization:" destination="xow-an-dxR" eventType="touchUpInside" id="fOl-yT-TTv"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" name="background"/>
                                         <constraints>
-                                            <constraint firstAttribute="bottom" secondItem="EtX-tR-AXd" secondAttribute="bottom" id="9bb-KE-sDJ"/>
-                                            <constraint firstItem="EtX-tR-AXd" firstAttribute="top" secondItem="Sw1-NR-Rbg" secondAttribute="top" id="BtK-FW-EZn"/>
-                                            <constraint firstItem="EtX-tR-AXd" firstAttribute="leading" secondItem="Sw1-NR-Rbg" secondAttribute="leading" constant="20" id="DHB-ac-ei7"/>
-                                            <constraint firstAttribute="trailing" secondItem="EtX-tR-AXd" secondAttribute="trailing" constant="20" id="MGn-fR-T3T"/>
+                                            <constraint firstItem="YMw-Ab-RwQ" firstAttribute="leading" secondItem="wcO-wB-3tD" secondAttribute="leading" id="AlR-GJ-FZv"/>
+                                            <constraint firstAttribute="bottom" secondItem="YMw-Ab-RwQ" secondAttribute="bottom" id="SSB-oV-E7Q"/>
+                                            <constraint firstItem="VtI-qD-KOS" firstAttribute="top" secondItem="wcO-wB-3tD" secondAttribute="top" id="UIS-oi-P4v"/>
+                                            <constraint firstItem="YMw-Ab-RwQ" firstAttribute="top" secondItem="wcO-wB-3tD" secondAttribute="top" id="Zvf-CR-Va7"/>
+                                            <constraint firstAttribute="bottom" secondItem="VtI-qD-KOS" secondAttribute="bottom" id="f0v-vL-MgC"/>
+                                            <constraint firstAttribute="trailing" secondItem="VtI-qD-KOS" secondAttribute="trailing" id="mSb-ey-lE0"/>
                                         </constraints>
-                                        <connections>
-                                            <outlet property="textLabel" destination="EtX-tR-AXd" id="3iI-fs-TiE"/>
-                                        </connections>
-                                    </collectionViewCell>
-                                </cells>
-                            </collectionView>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" name="background"/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="wcO-wB-3tD" secondAttribute="bottom" id="0Lb-T2-9cn"/>
+                                    <constraint firstAttribute="bottom" secondItem="8Tc-9y-fxw" secondAttribute="bottom" id="29C-pX-KpN"/>
+                                    <constraint firstAttribute="trailing" secondItem="8Tc-9y-fxw" secondAttribute="trailing" id="6p8-8n-1y9"/>
+                                    <constraint firstAttribute="trailing" secondItem="wcO-wB-3tD" secondAttribute="trailing" id="DN1-aL-8Kc"/>
+                                    <constraint firstItem="8Tc-9y-fxw" firstAttribute="leading" secondItem="bZR-Um-dfI" secondAttribute="leading" id="ZIq-No-Duy"/>
+                                    <constraint firstItem="8Tc-9y-fxw" firstAttribute="top" secondItem="bZR-Um-dfI" secondAttribute="top" id="eKQ-ZH-s5t"/>
+                                    <constraint firstItem="wcO-wB-3tD" firstAttribute="leading" secondItem="bZR-Um-dfI" secondAttribute="leading" id="gWX-1z-2Pw"/>
+                                    <constraint firstAttribute="height" constant="64" id="kg8-hZ-Ruw"/>
+                                    <constraint firstItem="wcO-wB-3tD" firstAttribute="top" secondItem="bZR-Um-dfI" secondAttribute="top" id="ydu-Id-L9f"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="FXQ-wT-AVH"/>
                         <color key="backgroundColor" name="background"/>
                         <constraints>
+                            <constraint firstItem="FXQ-wT-AVH" firstAttribute="bottom" secondItem="bZR-Um-dfI" secondAttribute="bottom" id="AAv-NQ-1CC"/>
                             <constraint firstAttribute="trailing" secondItem="z5h-qz-w1E" secondAttribute="trailing" id="Cox-i9-6Lu"/>
-                            <constraint firstAttribute="trailing" secondItem="8Tc-9y-fxw" secondAttribute="trailing" id="F02-V2-bix"/>
                             <constraint firstItem="z5h-qz-w1E" firstAttribute="leading" secondItem="0La-NZ-Z4B" secondAttribute="leading" id="JGA-V3-vS9"/>
+                            <constraint firstAttribute="trailing" secondItem="bZR-Um-dfI" secondAttribute="trailing" id="Jf8-2H-knV"/>
                             <constraint firstAttribute="topMargin" secondItem="z5h-qz-w1E" secondAttribute="top" id="PfW-Fl-pEq"/>
-                            <constraint firstItem="FXQ-wT-AVH" firstAttribute="bottom" secondItem="8Tc-9y-fxw" secondAttribute="bottom" id="X6f-XR-vT4"/>
-                            <constraint firstItem="8Tc-9y-fxw" firstAttribute="top" secondItem="z5h-qz-w1E" secondAttribute="bottom" id="l6B-9L-jLS"/>
-                            <constraint firstItem="8Tc-9y-fxw" firstAttribute="leading" secondItem="0La-NZ-Z4B" secondAttribute="leading" id="otK-uj-UxE"/>
+                            <constraint firstItem="bZR-Um-dfI" firstAttribute="top" secondItem="z5h-qz-w1E" secondAttribute="bottom" id="XBG-je-SA3"/>
+                            <constraint firstItem="bZR-Um-dfI" firstAttribute="leading" secondItem="0La-NZ-Z4B" secondAttribute="leading" id="nLt-DL-8iv"/>
                         </constraints>
                     </view>
                     <size key="freeformSize" width="375" height="296"/>
                     <connections>
                         <outlet property="albumsCollectionLayout" destination="Dug-6r-qaU" id="7gX-eY-9ET"/>
                         <outlet property="albumsCollectionView" destination="8Tc-9y-fxw" id="A1f-V0-kiT"/>
+                        <outlet property="limitedAuthorizationControlWrapperView" destination="wcO-wB-3tD" id="WIh-8e-2ys"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dSl-te-5pE" userLabel="First Responder" sceneMemberID="firstResponder"/>

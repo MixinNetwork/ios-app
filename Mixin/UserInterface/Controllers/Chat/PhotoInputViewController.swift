@@ -1,7 +1,8 @@
 import UIKit
 import Photos
+import PhotosUI
 
-class PhotoInputViewController: UIViewController {
+class PhotoInputViewController: UIViewController, ConversationInputAccessible {
     
     enum Section: Int, CaseIterable {
         case allPhotos = 0
@@ -11,6 +12,14 @@ class PhotoInputViewController: UIViewController {
     
     @IBOutlet weak var albumsCollectionView: UICollectionView!
     @IBOutlet weak var albumsCollectionLayout: UICollectionViewFlowLayout!
+    @IBOutlet weak var limitedAuthorizationControlWrapperView: UIView!
+    
+    var isAuthorizationLimited = false {
+        didSet {
+            loadViewIfNeeded()
+            limitedAuthorizationControlWrapperView.isHidden = !isAuthorizationLimited
+        }
+    }
     
     private var allPhotos: PHFetchResult<PHAsset>?
     private var smartAlbums: PHFetchResult<PHAssetCollection>?
@@ -71,6 +80,32 @@ class PhotoInputViewController: UIViewController {
         }
         albumsCollectionLayout.invalidateLayout()
         albumsCollectionView.reloadData()
+    }
+    
+    @IBAction func pickFromLibrary(_ sender: Any) {
+        guard #available(iOS 14, *) else {
+            return
+        }
+        var config = PHPickerConfiguration(photoLibrary: .shared())
+        config.preferredAssetRepresentationMode = .current
+        config.selectionLimit = 1
+        let picker = PHPickerViewController(configuration: config)
+        picker.delegate = self
+        present(picker, animated: true, completion: nil)
+    }
+    
+    @IBAction func managePhotoAuthorization(_ sender: Any) {
+        let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        if #available(iOS 14, *) {
+            sheet.addAction(UIAlertAction(title: R.string.localizable.chat_photo_select_more(), style: .default, handler: { _ in
+                PHPhotoLibrary.shared().presentLimitedLibraryPicker(from: self)
+            }))
+        }
+        sheet.addAction(UIAlertAction(title: R.string.localizable.action_change_settings(), style: .default, handler: { _ in
+            UIApplication.openAppSettings()
+        }))
+        sheet.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
+        present(sheet, animated: true, completion: nil)
     }
     
     private func reloadGrid(at indexPath: IndexPath) {
@@ -157,6 +192,29 @@ extension PhotoInputViewController: PHPhotoLibraryChangeObserver {
             if let userCollections = self.userCollections, let changeDetails = changeInstance.changeDetails(for: userCollections) {
                 self.userCollections = changeDetails.fetchResultAfterChanges
             }
+        }
+    }
+    
+}
+
+@available(iOS 14, *)
+extension PhotoInputViewController: PHPickerViewControllerDelegate {
+    
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        dismiss(animated: true) {
+            guard let provider = results.first?.itemProvider else {
+                return
+            }
+            let vc = R.storyboard.chat.media_preview()!
+            guard vc.canLoad(itemProvider: provider) else {
+                showAutoHiddenHud(style: .error, text: R.string.localizable.toast_unable_to_share())
+                return
+            }
+            vc.load(itemProvider: provider)
+            vc.conversationInputViewController = self.conversationInputViewController
+            vc.transitioningDelegate = PopupPresentationManager.shared
+            vc.modalPresentationStyle = .custom
+            self.present(vc, animated: true, completion: nil)
         }
     }
     

@@ -101,10 +101,6 @@ class UserHandleViewController: UITableViewController {
         conversationViewController?.inputUserHandle(with: result.user)
     }
     
-    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        conversationViewController?.updateUserHandleMask()
-    }
-    
     override func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
         onScrollingAnimationEnd?()
         onScrollingAnimationEnd = nil

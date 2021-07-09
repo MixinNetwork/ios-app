@@ -12,6 +12,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DatabaseDiagnosticViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
+                <outlet property="databaseSwitcher" destination="7CO-9D-3sK" id="thY-RJ-n74"/>
                 <outlet property="inputTextView" destination="6Xy-6B-HGH" id="s2M-tX-yhJ"/>
                 <outlet property="outputTextView" destination="amz-rh-cDb" id="cHt-gn-7GE"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
@@ -22,8 +23,19 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="7CO-9D-3sK">
+                    <rect key="frame" x="120.5" y="44" width="173" height="32"/>
+                    <segments>
+                        <segment title="Signal"/>
+                        <segment title="User"/>
+                        <segment title="Task"/>
+                    </segments>
+                    <connections>
+                        <action selector="changeDatabase:" destination="-1" eventType="valueChanged" id="w9r-IJ-EQ5"/>
+                    </connections>
+                </segmentedControl>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bYi-xr-8ed">
-                    <rect key="frame" x="0.0" y="44" width="414" height="185"/>
+                    <rect key="frame" x="0.0" y="75" width="414" height="178"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EX9-NX-UEd">
                             <rect key="frame" x="292" y="0.0" width="114" height="42"/>
@@ -48,11 +60,11 @@
                                 </button>
                             </subviews>
                         </stackView>
-                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="SELECT * FROM users LIMIT 10" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="6Xy-6B-HGH">
-                            <rect key="frame" x="8" y="42" width="398" height="143"/>
+                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="6Xy-6B-HGH">
+                            <rect key="frame" x="8" y="42" width="398" height="136"/>
                             <color key="backgroundColor" name="button_background_secondary"/>
                             <color key="textColor" systemColor="labelColor"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
                             <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -72,7 +84,7 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jtp-59-v6Q">
-                    <rect key="frame" x="0.0" y="237" width="414" height="617"/>
+                    <rect key="frame" x="0.0" y="261" width="414" height="593"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ESN-Qd-JWk">
                             <rect key="frame" x="346" y="0.0" width="60" height="42"/>
@@ -84,10 +96,10 @@
                             </connections>
                         </button>
                         <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Output" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="amz-rh-cDb">
-                            <rect key="frame" x="8" y="42" width="398" height="575"/>
+                            <rect key="frame" x="8" y="42" width="398" height="551"/>
                             <color key="backgroundColor" name="button_background_secondary"/>
                             <color key="textColor" systemColor="labelColor"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
                             <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -112,11 +124,13 @@
             <constraints>
                 <constraint firstItem="Jtp-59-v6Q" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="1Pc-6X-yFj"/>
                 <constraint firstItem="Jtp-59-v6Q" firstAttribute="top" secondItem="bYi-xr-8ed" secondAttribute="bottom" constant="8" id="EH3-ha-4lu"/>
-                <constraint firstItem="bYi-xr-8ed" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="K2D-9w-n2h"/>
                 <constraint firstItem="bYi-xr-8ed" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="SLF-rf-UXf"/>
+                <constraint firstItem="7CO-9D-3sK" firstAttribute="bottom" secondItem="bYi-xr-8ed" secondAttribute="top" id="XMu-CZ-mhJ"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="bYi-xr-8ed" secondAttribute="trailing" id="YmE-ry-3jB"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="Jtp-59-v6Q" secondAttribute="trailing" id="ZgH-bU-pbv"/>
+                <constraint firstItem="7CO-9D-3sK" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="ciP-B4-6ex"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="Jtp-59-v6Q" secondAttribute="bottom" constant="8" id="h7D-aW-R8d"/>
+                <constraint firstItem="7CO-9D-3sK" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="qOP-az-cpZ"/>
                 <constraint firstItem="bYi-xr-8ed" firstAttribute="height" secondItem="Jtp-59-v6Q" secondAttribute="height" multiplier="0.3" id="vWf-aQ-3Di"/>
             </constraints>
             <point key="canvasLocation" x="137.68115942028987" y="153.34821428571428"/>

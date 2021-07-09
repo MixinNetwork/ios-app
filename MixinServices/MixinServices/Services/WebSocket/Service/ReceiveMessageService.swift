@@ -786,14 +786,13 @@ public class ReceiveMessageService: MixinService {
         
         guard
             let jsonData = plainText.data(using: .utf8),
-            var descendants = try? JSONDecoder.default.decode([TranscriptMessage].self, from: jsonData)
+            let descendants = try? JSONDecoder.default.decode([TranscriptMessage].self, from: jsonData)
         else {
             return nil
         }
         
-        descendants.forEach { $0.transcriptId = transcriptId }
-        
-        let localContents = descendants
+        let children = descendants.filter { $0.transcriptId == transcriptId }
+        let localContents = children
             .sorted { $0.createdAt < $1.createdAt }
             .map(TranscriptMessage.LocalContent.init)
         let content: String
@@ -804,7 +803,7 @@ public class ReceiveMessageService: MixinService {
         }
         
         var absentUserIds: Set<String> = []
-        for child in descendants {
+        for child in children {
             if let id = child.userId {
                 if let fullname = UserDAO.shared.getFullname(userId: id) {
                     child.userFullName = fullname
@@ -831,7 +830,7 @@ public class ReceiveMessageService: MixinService {
             ConcurrentJobQueue.shared.addJob(job: job)
         }
         
-        return (content, descendants, hasAttachment)
+        return (content, children, hasAttachment)
     }
     
     private func syncConversation(data: BlazeMessageData) {

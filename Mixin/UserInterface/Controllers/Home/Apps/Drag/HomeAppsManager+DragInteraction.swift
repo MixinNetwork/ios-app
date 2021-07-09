@@ -17,9 +17,7 @@ extension HomeAppsManager {
     private func beginDragInteraction(_ gestureRecognizer: UILongPressGestureRecognizer) {
         feedback.prepare()
         var touchPoint = gestureRecognizer.location(in: viewController.view)
-        guard let (collectionView, pageCell) = viewInfos(at: touchPoint) else {
-            return
-        }
+        guard let (collectionView, pageCell) = viewInfos(at: touchPoint) else { return }
         touchPoint = gestureRecognizer.location(in: collectionView)
         touchPoint.x -= collectionView.contentOffset.x
         guard let indexPath = pageCell.collectionView.indexPathForItem(at: touchPoint),
@@ -48,15 +46,11 @@ extension HomeAppsManager {
     private func updateDragInteraction(_ gestureRecognizer: UILongPressGestureRecognizer) {
         guard let currentInteraction = currentDragInteraction else { return }
         var touchPoint = gestureRecognizer.location(in: viewController.view)
-        guard let (collectionView, pageCell) = viewInfos(at: touchPoint) else {
-            return
-        }
+        guard let (collectionView, pageCell) = viewInfos(at: touchPoint) else { return }
         touchPoint = gestureRecognizer.location(in: collectionView)
         let convertedTouchPoint = viewController.view.convert(touchPoint, from: collectionView)
         currentInteraction.movePlaceholderView(to: convertedTouchPoint)
-        guard !currentInteraction.needsUpdate else {
-            return
-        }
+        guard !currentInteraction.needsUpdate else { return }
         touchPoint.x -= collectionView.contentOffset.x
         if isInAppsFolderViewController {
             var shouldStartDragOutTimer = false
@@ -67,17 +61,16 @@ extension HomeAppsManager {
             }
             if shouldStartDragOutTimer {
                 guard folderRemovalTimer == nil else { return }
-                folderRemovalTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(folderRemoveTimerHandler), userInfo: nil, repeats: false)
+                folderRemovalTimer = Timer.scheduledTimer(timeInterval: HomeAppsMode.folderRemovalInterval, target: self, selector: #selector(folderRemoveTimerHandler), userInfo: nil, repeats: false)
                 return
             }
         }
         folderRemovalTimer?.invalidate()
         folderRemovalTimer = nil
         var destinationIndexPath: IndexPath
-        var isEdgeCell = false
         let flowLayout = pageCell.collectionView.collectionViewLayout as! UICollectionViewFlowLayout
         let appsPerRow = isInAppsFolderViewController ? HomeAppsMode.folder.appsPerRow : HomeAppsMode.regular.appsPerRow
-        if let indexPath = pageCell.collectionView.indexPathForItem(at: touchPoint), pageCell == currentInteraction.currentPageCell { // move to valid indexPath
+        if let indexPath = pageCell.collectionView.indexPathForItem(at: touchPoint), pageCell == currentInteraction.currentPageCell { // move in same collection view
             guard let itemCell = pageCell.collectionView.cellForItem(at: indexPath) as? AppCell else {
                 return
             }
@@ -85,8 +78,8 @@ extension HomeAppsManager {
             let offset = 20 as CGFloat
             let targetRect = CGRect(x: imageCenter.x - offset, y: imageCenter.y - offset, width: offset * 2, height: offset * 2)
             let convertedPoint = itemCell.convert(touchPoint, from: pageCell.collectionView)
-            let validOverlap = targetRect.contains(convertedPoint)
-            if validOverlap && indexPath.row != currentInteraction.currentIndexPath.row && collectionView == candidateCollectionView { // move to create folder
+            let canCreateFolder = targetRect.contains(convertedPoint)
+            if canCreateFolder && indexPath.row != currentInteraction.currentIndexPath.row && collectionView == candidateCollectionView { // create folder
                 if currentFolderInteraction != nil || currentInteraction.item is AppFolderModel || isInAppsFolderViewController {
                     return
                 }
@@ -98,7 +91,6 @@ extension HomeAppsManager {
             } else if convertedPoint.x > itemCell.imageContainerView.frame.maxX { // move to next of item
                 if (indexPath.row + 1) % appsPerRow == 0 {
                     destinationIndexPath = indexPath
-                    isEdgeCell = true
                 } else {
                     destinationIndexPath = IndexPath(item: indexPath.row + 1, section: 0)
                 }
@@ -106,17 +98,17 @@ extension HomeAppsManager {
                 cancelFolderInteraction()
                 return
             }
-        } else if touchPoint.x <= flowLayout.sectionInset.left {
+        } else if touchPoint.x <= flowLayout.sectionInset.left { // move to left edge
             cancelFolderInteraction()
             if collectionView == pinnedCollectionView { // move to pin
                 destinationIndexPath = IndexPath(item: 0, section: 0)
             } else if !(pageTimer?.isValid ?? false) && collectionView == candidateCollectionView { // move to previous page
-                pageTimer = Timer.scheduledTimer(timeInterval: 0.7, target: self, selector: #selector(pageTimerHandler(_:)), userInfo: -1, repeats: false)
+                pageTimer = Timer.scheduledTimer(timeInterval: HomeAppsMode.pageInterval, target: self, selector: #selector(pageTimerHandler(_:)), userInfo: -1, repeats: false)
                 return
             } else {
                 return
             }
-        } else if touchPoint.x > collectionView.frame.size.width - flowLayout.sectionInset.right {
+        } else if touchPoint.x > collectionView.frame.size.width - flowLayout.sectionInset.right { // mvoe to right edge
             cancelFolderInteraction()
             if collectionView == pinnedCollectionView { // move to pin
                 if pinnedItems.count == 0 {
@@ -125,7 +117,7 @@ extension HomeAppsManager {
                     destinationIndexPath = IndexPath(item: pinnedItems.count - 1, section: 0)
                 }
             } else if !(pageTimer?.isValid ?? false) && collectionView == candidateCollectionView { // move to next page
-                pageTimer = Timer.scheduledTimer(timeInterval: 0.7, target: self, selector: #selector(pageTimerHandler(_:)), userInfo: 1, repeats: false)
+                pageTimer = Timer.scheduledTimer(timeInterval: HomeAppsMode.pageInterval, target: self, selector: #selector(pageTimerHandler(_:)), userInfo: 1, repeats: false)
                 return
             } else {
                 return
@@ -134,16 +126,21 @@ extension HomeAppsManager {
             touchPoint.x += 22
             if let indexPath = pageCell.collectionView.indexPathForItem(at: touchPoint) {
                 destinationIndexPath = indexPath
-            } else if let pinnedCollectionView = pinnedCollectionView, collectionView == candidateCollectionView && pinnedCollectionView.visibleCells.contains(currentInteraction.currentPageCell) { // pinned
+            } else if let pinnedCollectionView = pinnedCollectionView, collectionView == candidateCollectionView && pinnedCollectionView.visibleCells.contains(currentInteraction.currentPageCell) { // move from pinned
                 if items[currentPage].count < HomeAppsMode.regular.appsPerPage - 1 {
                     destinationIndexPath = IndexPath(item: items[currentPage].count + 1, section: 0)
                 } else {
                     return
                 }
             } else {
-                cancelFolderInteraction()
-                pageTimer?.invalidate()
-                return
+                if collectionView == candidateCollectionView { // move to empty place
+                    cancelFolderInteraction()
+                    destinationIndexPath = IndexPath(item: pageCell.collectionView.visibleCells.count, section: 0)
+                } else {
+                    cancelFolderInteraction()
+                    pageTimer?.invalidate()
+                    return
+                }
             }
         }
         ignoreDragOutOnTop = false
@@ -153,13 +150,6 @@ extension HomeAppsManager {
         pageTimer = nil
         folderTimer?.invalidate()
         folderTimer = nil
-        isEdgeCell = destinationIndexPath.row % appsPerRow == 0
-        let destinationLine = destinationIndexPath.row / appsPerRow
-        let originalLine = currentInteraction.originalIndexPath.row / appsPerRow
-        // dragging for same page same line
-        if destinationLine == originalLine && currentInteraction.currentPageCell == currentInteraction.originalPageCell && !isEdgeCell {
-            destinationIndexPath = IndexPath(item: destinationIndexPath.row - 1, section: 0)
-        }
         // make sure index is in range
         if destinationIndexPath.row >= pageCell.collectionView.numberOfItems(inSection: 0) && destinationIndexPath.row > 0 {
             destinationIndexPath = IndexPath(item: destinationIndexPath.row - 1, section: 0)
@@ -203,7 +193,7 @@ extension HomeAppsManager {
         if let pageCell = currentPageCell {
             visiblePageCells.append(pageCell)
         }
-        if let pinnedCollectionView = pinnedCollectionView, let pageCell = pinnedCollectionView.visibleCells[0] as? AppPageCell {
+        if let pinnedCollectionView = pinnedCollectionView, let pageCell = pinnedCollectionView.visibleCells.first as? AppPageCell {
             visiblePageCells.append(pageCell)
         }
         for cell in visiblePageCells.reduce([], { $0 + $1.collectionView.visibleCells }) {
@@ -238,14 +228,12 @@ extension HomeAppsManager {
         } else {
             items[currentPage].remove(at: interaction.currentIndexPath.row)
         }
-        // insert item and update pinned collectionview
         pageCell.items = pinnedItems
         pageCell.draggedItem = interaction.item
         pageCell.collectionView.performBatchUpdates({
             pageCell.collectionView.insertItems(at: [destinationIndexPath])
         }, completion: nil)
         pageCell.updateSectionInset()
-        // delete item and update candidate collectionview
         let currentPageCell = interaction.currentPageCell
         currentPageCell.items = items[currentPage]
         currentPageCell.collectionView.performBatchUpdates({
@@ -257,7 +245,7 @@ extension HomeAppsManager {
         }, completion: nil)
         interaction.currentPageCell = pageCell
         interaction.currentIndexPath = destinationIndexPath
-        resetCurrentPageItems()
+        updateStateForPageCells()
     }
     
     private func moveFromPinned(interaction: HomeAppsDragInteraction, pageCell: AppPageCell, destinationIndexPath: IndexPath) {
@@ -275,17 +263,14 @@ extension HomeAppsManager {
             }
             candidateCollectionView.reloadItems(at: indexPathsToReload)
         }
-        // update data
         items[currentPage].insert(interaction.item, at: destinationIndexPath.row)
         pinnedItems.remove(at: interaction.currentIndexPath.row)
-        // update pinned collectionview
         interaction.currentPageCell.items = pinnedItems
         interaction.currentPageCell.draggedItem = interaction.item
         interaction.currentPageCell.collectionView.performBatchUpdates({
             interaction.currentPageCell.collectionView.deleteItems(at: [interaction.currentIndexPath])
         }, completion: nil)
         interaction.currentPageCell.updateSectionInset()
-        // update candidate collectionview
         pageCell.items = items[currentPage]
         pageCell.draggedItem = interaction.item
         pageCell.collectionView.performBatchUpdates({
@@ -296,29 +281,16 @@ extension HomeAppsManager {
         }, completion: nil)
         interaction.currentPageCell = pageCell
         interaction.currentIndexPath = IndexPath(item: destinationIndexPath.row, section: 0)
-        resetCurrentPageItems()
+        updateStateForPageCells()
     }
     
-    private func resetCurrentPageItems() {
-        if let pageCell = candidateCollectionView.visibleCells.first as? AppPageCell, let pageItems = currenItems(in: pageCell) {
-            items[currentPage] = pageItems
+    private func updateStateForPageCells() {
+        if let pageCell = candidateCollectionView.visibleCells.first as? AppPageCell {
+            updateState(forPageCell: pageCell)
         }
-        if let pageCell = pinnedCollectionView?.visibleCells.first as? AppPageCell, let pageItems = currenItems(in: pageCell) {
-            pinnedItems = pageItems
+        if let pageCell = pinnedCollectionView?.visibleCells.first as? AppPageCell {
+            updateState(forPageCell: pageCell)
         }
-    }
-    
-    private func currenItems(in pageCell: AppPageCell) -> [AppItem]? {
-        var items = [AppItem]()
-        for index in 0..<pageCell.collectionView.visibleCells.count {
-            let cell = pageCell.collectionView.cellForItem(at: IndexPath(item: index, section: 0))
-            if let cell = cell as? AppCell, let item = cell.item {
-                items.append(item)
-            } else if let cell = cell as? AppFolderCell, let item = cell.item {
-                items.append(item)
-            }
-        }
-        return items.count > 0 ? items : nil
     }
     
 }

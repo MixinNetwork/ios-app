@@ -6,6 +6,9 @@ class AppFolderCell: AppCell {
     @IBOutlet weak var wrapperView: UIView!
     
     var currentPage: Int {
+        guard collectionView.frame.size.width != 0 else {
+            return 0
+        }
         return Int(collectionView.contentOffset.x) / Int(collectionView.frame.size.width)
     }
     
@@ -40,7 +43,7 @@ class AppFolderCell: AppCell {
     }
     
     func leaveEditingMode() {
-        guard let folder = item as? AppFolderModel, let last = apps.last, last.count == 0 else {
+        guard let folder = item as? AppFolderModel, let lastPageApps = apps.last, lastPageApps.count == 0 else {
             return
         }
         apps.removeLast()

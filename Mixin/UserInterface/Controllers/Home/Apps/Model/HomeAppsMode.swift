@@ -8,6 +8,9 @@ enum HomeAppsMode {
     case nestedFolder
     
     static let nestedFolderSize = CGSize(width: 60, height: 60)
+    static let folderRemovalInterval: TimeInterval = 0.5
+    static let folderInterval: TimeInterval = 0.7
+    static let pageInterval: TimeInterval = 0.7
     
     var sectionInset: UIEdgeInsets {
         switch self {

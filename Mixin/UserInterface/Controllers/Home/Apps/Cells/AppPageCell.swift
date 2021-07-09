@@ -86,10 +86,6 @@ class AppPageCell: UICollectionViewCell {
         }
     }
     
-}
-
-extension AppPageCell {
-    
     private func updateLayout() {
         guard let flowLayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else {
             return

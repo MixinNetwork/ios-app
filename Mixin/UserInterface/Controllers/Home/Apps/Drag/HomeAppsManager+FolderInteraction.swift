@@ -27,7 +27,7 @@ extension HomeAppsManager {
     
     func startFolderInteraction(for itemCell: AppCell) {
         guard let dragInteraction = currentDragInteraction else { return }
-        folderTimer = Timer.scheduledTimer(timeInterval: 0.7, target: self, selector: #selector(folderTimerHandler), userInfo: nil, repeats: false)
+        folderTimer = Timer.scheduledTimer(timeInterval: HomeAppsMode.folderInterval, target: self, selector: #selector(folderTimerHandler), userInfo: nil, repeats: false)
         dragInteraction.transitionToFolderWrapperView()
         let folderWrapperView = UIView(frame: itemCell.imageContainerView.frame)
         folderWrapperView.layer.cornerRadius = 12

@@ -2517,7 +2517,7 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
-		7C5823D326896601003AA142 /* Bots */ = {
+		7C5823D326896601003AA142 /* Apps */ = {
 			isa = PBXGroup;
 			children = (
 				7C66F1B9268B2CC2006D8462 /* Drag */,
@@ -2528,7 +2528,7 @@
 				7CBD2EF9268FF6BB00AA0847 /* HomeAppsItemManager.swift */,
 				7C5823D4268966A1003AA142 /* HomeAppsFolderViewController.swift */,
 			);
-			path = Bots;
+			path = Apps;
 			sourceTree = "<group>";
 		};
 		7C66F0212689C9D7006D8462 /* Model */ = {
@@ -3021,7 +3021,7 @@
 		DF5D9F491F9CDC200036D5FD /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				7C5823D326896601003AA142 /* Bots */,
+				7C5823D326896601003AA142 /* Apps */,
 				7B4BE55B243E0F0400198EE9 /* Model */,
 				7B9553322243757400CE95E6 /* Views */,
 				DFD2943B1FA7069600FADAAD /* Cells */,

@@ -32,8 +32,9 @@ class AppCell: UICollectionViewCell {
     }
     
     func updateUI() {
-        guard let item = item as? AppModel else { return }
-        guard let app = item.app else { return }
+        guard let item = item as? AppModel, let app = item.app else {
+            return
+        }
         switch app {
         case .embedded(let embedded):
             label?.text = embedded.name
@@ -68,7 +69,7 @@ class AppCell: UICollectionViewCell {
         animationGroup.beginTime = Double(arc4random() % 25) / 100.0
         animationGroup.animations = [positionAnimation, transformAnimation]
         animationGroup.isRemovedOnCompletion = false
-        contentView.layer.add(animationGroup, forKey: "Shaking_Animation")
+        contentView.layer.add(animationGroup, forKey: "shakingAnimation")
     }
     
     func stopShaking() {

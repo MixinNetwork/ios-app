@@ -43,9 +43,9 @@ class HomeAppsManager: NSObject {
     var currentPageCell: AppPageCell? {
         let visibleCells = candidateCollectionView.visibleCells
         if visibleCells.count == 0 {
-            return candidateCollectionView.subviews[0] as? AppPageCell
+            return candidateCollectionView.subviews.first as? AppPageCell
         } else {
-            return visibleCells[0] as? AppPageCell
+            return visibleCells.first as? AppPageCell
         }
     }
     
@@ -165,13 +165,8 @@ extension HomeAppsManager {
         delegate?.didLeaveEditingMode(on: self)
     }
     
+    // update items for current page after end drag
     func updateState(forPageCell pageCell: AppPageCell) {
-        var collectionView: UICollectionView
-        if let pinnedCollectionView = pinnedCollectionView, pinnedCollectionView.visibleCells.contains(pageCell) {
-            collectionView = pinnedCollectionView
-        } else {
-            collectionView = candidateCollectionView
-        }
         var updateItems: [AppItem] = []
         for i in 0..<pageCell.collectionView.visibleCells.count {
             let indexPath = IndexPath(item: i, section: 0)
@@ -179,13 +174,13 @@ extension HomeAppsManager {
                 updateItems.append(item)
             }
         }
-        if collectionView == candidateCollectionView {
-            guard let pageIndexPath = collectionView.indexPath(for: pageCell) else {
+        if let pinnedCollectionView = pinnedCollectionView, pinnedCollectionView.visibleCells.contains(pageCell) {
+            pinnedItems = updateItems
+        } else {
+            guard let pageIndexPath = candidateCollectionView.indexPath(for: pageCell) else {
                 return
             }
             items[pageIndexPath.row] = updateItems
-        } else {
-            pinnedItems = updateItems
         }
         pageCell.items = updateItems
     }
@@ -263,12 +258,10 @@ extension HomeAppsManager: UICollectionViewDataSource, UICollectionViewDelegate 
     }
     
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        guard let cell = cell as? AppPageCell else {
+        guard let cell = cell as? AppPageCell, isEditing else {
             return
         }
-        if isEditing {
-            cell.leaveEditingMode()
-        }
+        cell.leaveEditingMode()
     }
     
 }

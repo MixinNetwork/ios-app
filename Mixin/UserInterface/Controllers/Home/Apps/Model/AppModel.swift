@@ -24,12 +24,3 @@ extension AppModel: Equatable {
     }
     
 }
-
-extension AppModel: CustomDebugStringConvertible {
-    
-    var debugDescription: String {
-        let memoryAddress = String(format: "%p", unsafeBitCast(self, to: Int.self))
-        return "<App: \(memoryAddress)> - \(id)"
-    }
-    
-}

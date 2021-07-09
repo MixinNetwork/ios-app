@@ -272,7 +272,7 @@ extension UserProfileViewController {
     
     @objc func addContact() {
         relationshipView.isBusy = true
-        UserAPI.addFriend(userId: user.userId, full_name: user.fullName) { [weak self] (result) in
+        UserAPI.addFriend(userId: user.userId, fullName: user.fullName) { [weak self] (result) in
             switch result {
             case let .success(response):
                 self?.handle(userResponse: response, postContactDidChangeNotificationOnSuccess: true)

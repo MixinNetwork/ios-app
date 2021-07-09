@@ -655,7 +655,7 @@ class ConversationViewController: UIViewController {
             return
         }
         strangerHintView.addContactButton.isBusy = true
-        UserAPI.addFriend(userId: user.userId, full_name: user.fullName) { [weak self] (result) in
+        UserAPI.addFriend(userId: user.userId, fullName: user.fullName) { [weak self] (result) in
             guard let weakSelf = self else {
                 return
             }

@@ -214,7 +214,7 @@ class SignalLoadingViewController: UIViewController {
         let vc = makeInitialViewController()
         AppDelegate.current.mainWindow.rootViewController = vc
         if vc is HomeContainerViewController, let userId = userIdToGreetAfterLoaded {
-            ConcurrentJobQueue.shared.addJob(job: InitializeBotJob(botUserId: userId))
+            ConcurrentJobQueue.shared.addJob(job: InitializeBotJob(botUserId: userId, botFullname: "Team Mixin"))
         }
     }
     

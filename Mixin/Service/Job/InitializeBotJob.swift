@@ -4,9 +4,11 @@ import MixinServices
 class InitializeBotJob: BaseJob {
     
     let botUserId: String
+    let botFullname: String
     
-    init(botUserId: String) {
+    init(botUserId: String, botFullname: String) {
         self.botUserId = botUserId
+        self.botFullname = botFullname
     }
     
     override func getJobId() -> String {
@@ -17,7 +19,7 @@ class InitializeBotJob: BaseJob {
         guard !botUserId.isEmpty, UUID(uuidString: botUserId) != nil else {
             return
         }
-        switch UserAPI.addFriend(userId: botUserId) {
+        switch UserAPI.addFriend(userId: botUserId, fullName: botFullname) {
         case let .success(botUser):
             guard let botUserItem = UserDAO.shared.saveUser(user: botUser) else {
                 return

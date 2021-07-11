@@ -8,7 +8,7 @@ public class SendMessageService: MixinService {
     internal static let recallableSuffices = [
         "_TEXT", "_STICKER", "_CONTACT", "_IMAGE", "_DATA",
         "_AUDIO", "_VIDEO", "_LIVE", "_POST", "_LOCATION",
-        MessageCategory.SIGNAL_TRANSCRIPT.rawValue
+        "_TRANSCRIPT"
     ]
     
     public let jobCreationQueue = DispatchQueue(label: "one.mixin.services.queue.send.message.job.creation")
@@ -52,9 +52,10 @@ public class SendMessageService: MixinService {
     }
     
     public func sendMessage(message: Message, data: String?, immediatelySend: Bool = true) {
-        let shouldEncodeContent = message.category == MessageCategory.PLAIN_TEXT.rawValue
-            || message.category == MessageCategory.PLAIN_POST.rawValue
-            || message.category == MessageCategory.PLAIN_LOCATION.rawValue
+        let needsEncodeCategories: [MessageCategory] = [
+            .PLAIN_TEXT, .PLAIN_POST, .PLAIN_LOCATION, .PLAIN_TRANSCRIPT
+        ]
+        let shouldEncodeContent = needsEncodeCategories.map(\.rawValue).contains(message.category)
         let content = shouldEncodeContent ? data?.base64Encoded() : data
         let job = Job(message: message, data: content)
         UserDatabase.current.save(job)
@@ -66,7 +67,7 @@ public class SendMessageService: MixinService {
     @discardableResult
     public func saveUploadJob(message: Message) -> String {
         let job: Job
-        if message.category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue {
+        if message.category.hasSuffix("_TRANSCRIPT") {
             job = Job(attachmentMessage: message.messageId, action: .UPLOAD_TRANSCRIPT_ATTACHMENT)
         } else {
             job = Job(attachmentMessage: message.messageId, action: .UPLOAD_ATTACHMENT)
@@ -576,10 +577,10 @@ extension SendMessageService {
         if message.category.hasPrefix("PLAIN_") || message.category == MessageCategory.MESSAGE_RECALL.rawValue || message.category == MessageCategory.APP_CARD.rawValue {
             try checkConversationExist(conversation: conversation)
             if blazeMessage.params?.data == nil {
-                let shouldEncodeContent = message.category == MessageCategory.PLAIN_TEXT.rawValue
-                    || message.category == MessageCategory.PLAIN_POST.rawValue
-                    || message.category == MessageCategory.PLAIN_LOCATION.rawValue
-                if shouldEncodeContent {
+                let needsEncodeCategories: [MessageCategory] = [
+                    .PLAIN_TEXT, .PLAIN_POST, .PLAIN_LOCATION, .PLAIN_TRANSCRIPT
+                ]
+                if needsEncodeCategories.map(\.rawValue).contains(message.category) {
                     blazeMessage.params?.data = message.content?.base64Encoded()
                 } else {
                     blazeMessage.params?.data = message.content

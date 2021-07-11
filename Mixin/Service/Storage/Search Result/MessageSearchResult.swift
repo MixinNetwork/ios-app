@@ -23,7 +23,7 @@ class MessageSearchResult: SearchResult {
         self.messageId = messageId
         if category.hasSuffix("_DATA") {
             self.specializedCategory = .data
-        } else if category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue {
+        } else if category.hasSuffix("_TRANSCRIPT") {
             self.specializedCategory = .transcript
         } else {
             self.specializedCategory = nil

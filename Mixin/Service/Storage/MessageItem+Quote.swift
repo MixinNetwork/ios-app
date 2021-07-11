@@ -30,12 +30,12 @@ extension MessageItem {
             return (snapshotAmount ?? "0") + " " + (assetSymbol ?? "")
         } else if category.hasSuffix("_CONTACT") {
             return sharedUserIdentityNumber ?? ""
+        } else if category.hasSuffix("_TRANSCRIPT") {
+            return R.string.localizable.chat_transcript()
         } else if category == MessageCategory.APP_CARD.rawValue {
             return appCard?.description ?? ""
         } else if category == MessageCategory.APP_BUTTON_GROUP.rawValue {
             return appButtons?.first?.label ?? ""
-        } else if category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue {
-            return R.string.localizable.chat_transcript()
         } else {
             return ""
         }

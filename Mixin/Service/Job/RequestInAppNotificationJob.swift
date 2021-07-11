@@ -14,9 +14,9 @@ class RequestInAppNotificationJob: BaseJob {
         guard message.userId != myUserId else {
             return nil
         }
-        let availableCategorySuffices = ["_TEXT", "_IMAGE", "_STICKER", "_CONTACT", "_DATA", "_VIDEO", "_LIVE", "_AUDIO", "_POST", "_LOCATION"]
+        let availableCategorySuffices = ["_TEXT", "_IMAGE", "_STICKER", "_CONTACT", "_DATA", "_VIDEO", "_LIVE", "_AUDIO", "_POST", "_LOCATION", "_TRANSCRIPT"]
         let isCategoryAvailable = availableCategorySuffices.contains(where: message.category.hasSuffix(_:))
-            || ["SYSTEM_ACCOUNT_SNAPSHOT", "SIGNAL_TRANSCRIPT"].contains(message.category)
+            || ["SYSTEM_ACCOUNT_SNAPSHOT"].contains(message.category)
         guard isCategoryAvailable else {
             return nil
         }

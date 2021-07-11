@@ -21,7 +21,7 @@ extension AttachmentDownloadJob {
             case .message(let message):
                 return message.category
             case .transcriptMessage(let message):
-                return message.category.rawValue
+                return message.category
             }
         }
         

@@ -224,44 +224,6 @@ extension Message {
         return Message(messageId: message.messageId, conversationId: message.conversationId, userId: message.userId, category: message.category, content: message.content, mediaUrl: message.mediaUrl, mediaMimeType: message.mediaMimeType, mediaSize: message.mediaSize, mediaDuration: message.mediaDuration, mediaWidth: message.mediaWidth, mediaHeight: message.mediaHeight, mediaHash: message.mediaHash, mediaKey: message.mediaKey, mediaDigest: message.mediaDigest, mediaStatus: message.mediaStatus, mediaWaveform: message.mediaWaveform, mediaLocalIdentifier: message.mediaLocalIdentifier, thumbImage: message.thumbImage, thumbUrl: message.thumbUrl, status: message.status, action: message.actionName, participantId: message.participantId, snapshotId: message.snapshotId, name: message.name, stickerId: message.stickerId, sharedUserId: message.sharedUserId, quoteMessageId: message.quoteMessageId, quoteContent: message.quoteContent, createdAt: message.createdAt)
     }
     
-    public static func createMessage(transcriptMessage t: TranscriptMessage) -> Message {
-        let content: String?
-        if t.category == .appCard {
-            content = AppCardContentConverter.localAppCard(from: t.content)
-        } else {
-            content = t.content
-        }
-        return Message(messageId: t.messageId,
-                       conversationId: "",
-                       userId: t.userId ?? "",
-                       category: t.category.rawValue,
-                       content: content,
-                       mediaUrl: t.mediaUrl,
-                       mediaMimeType: t.mediaMimeType,
-                       mediaSize: t.mediaSize,
-                       mediaDuration: t.mediaDuration,
-                       mediaWidth: t.mediaWidth,
-                       mediaHeight: t.mediaHeight,
-                       mediaHash: nil,
-                       mediaKey: t.mediaKey,
-                       mediaDigest: t.mediaDigest,
-                       mediaStatus: t.mediaStatus,
-                       mediaWaveform: t.mediaWaveform,
-                       mediaLocalIdentifier: nil,
-                       thumbImage: t.thumbImage,
-                       thumbUrl: t.thumbUrl,
-                       status: MediaStatus.READ.rawValue,
-                       action: nil,
-                       participantId: nil,
-                       snapshotId: nil,
-                       name: t.mediaName,
-                       stickerId: t.stickerId,
-                       sharedUserId: t.sharedUserId,
-                       quoteMessageId: t.quoteMessageId,
-                       quoteContent: QuoteContentConverter.localQuoteContent(from: t.quoteContent),
-                       createdAt: t.createdAt)
-    }
-    
 }
 
 public enum MessageCategory: String, Decodable {
@@ -277,6 +239,7 @@ public enum MessageCategory: String, Decodable {
     case SIGNAL_LIVE
     case SIGNAL_POST
     case SIGNAL_LOCATION
+    case SIGNAL_TRANSCRIPT
     case PLAIN_TEXT
     case PLAIN_IMAGE
     case PLAIN_VIDEO
@@ -288,6 +251,7 @@ public enum MessageCategory: String, Decodable {
     case PLAIN_LIVE
     case PLAIN_POST
     case PLAIN_LOCATION
+    case PLAIN_TRANSCRIPT
     case APP_CARD
     case APP_BUTTON_GROUP
     case SYSTEM_CONVERSATION
@@ -313,7 +277,6 @@ public enum MessageCategory: String, Decodable {
     case KRAKEN_CANCEL
     case KRAKEN_DECLINE
     case KRAKEN_RESTART
-    case SIGNAL_TRANSCRIPT
     case EXT_UNREAD
     case EXT_ENCRYPTION
     case UNKNOWN
@@ -336,6 +299,8 @@ public enum MessageCategory: String, Decodable {
         .SIGNAL_AUDIO, .PLAIN_AUDIO,
         .SIGNAL_DATA, .PLAIN_DATA
     ]
+    
+    public static let allMediaCategoriesString: Set<String> = Set(allMediaCategories.map(\.rawValue))
     
     public static let endCallCategories: [MessageCategory] = [
         .WEBRTC_AUDIO_END,
@@ -361,7 +326,7 @@ public enum MessageCategory: String, Decodable {
         .SIGNAL_TEXT, .PLAIN_TEXT,
         .SIGNAL_POST, .PLAIN_POST,
         .SIGNAL_DATA, .PLAIN_DATA,
-        .SIGNAL_TRANSCRIPT
+        .SIGNAL_TRANSCRIPT, .PLAIN_TRANSCRIPT
     ]
     
     public static let ftsAvailableCategoryStrings: Set<String> = Set(ftsAvailable.map(\.rawValue))

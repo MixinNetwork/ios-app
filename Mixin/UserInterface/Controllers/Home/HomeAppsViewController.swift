@@ -119,10 +119,13 @@ extension HomeAppsViewController {
                             height: backgroundButton.bounds.height)
         view.autoresizingMask = .flexibleTopMargin
         backgroundButton.addSubview(view)
-        UIView.animate(withDuration: 0.3, animations: {
+        UIView.animate(withDuration: 0.3) {
             self.view.frame.origin.y = self.backgroundButton.bounds.height - self.preferredContentSize.height
             self.backgroundButton.backgroundColor = UIColor.black.withAlphaComponent(0.3)
-        })
+        } completion: { _ in
+            self.showPinTipsIfNeeded()
+        }
+        
     }
     
     @objc private func backgroundTappingAction() {
@@ -178,6 +181,16 @@ extension HomeAppsViewController {
                 candidateCollectionView.addSubview(candidateEmptyHintLabel)
             }
         }
+    }
+    
+    private func showPinTipsIfNeeded() {
+        guard !AppGroupUserDefaults.User.homeAppsPinTips else { return }
+        AppGroupUserDefaults.User.homeAppsPinTips = true
+        let viewController = HomeAppsPinTipsViewController()
+        viewController.topSpace = view.frame.origin.y + 80.0
+        viewController.modalPresentationStyle = .overFullScreen
+        viewController.modalTransitionStyle = .crossDissolve
+        present(viewController, animated: true, completion: nil)
     }
     
 }

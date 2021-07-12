@@ -208,6 +208,8 @@
 "app_category_video" = "Video";
 "app_category_camera" = "Camera";
 "app_category_other" = "Other";
+"app_pin_tips" = "You can long press and drag the frequently used robots here to display them on the home";
+"app_pin_tips_got_it" = "Got It";
 
 // Home
 "home_start_messaging_guide" = "You can chat with contacts who have Mixin installed on their phone.";

@@ -166,7 +166,7 @@ final class ConversationMessageComposer {
             var message = Message.createMessage(category: MessageCategory.SIGNAL_IMAGE.rawValue,
                                                 conversationId: conversationId,
                                                 userId: myUserId)
-            let url = AttachmentContainer.url(for: .photos, filename: message.messageId)
+            let url = AttachmentContainer.url(for: .photos, filename: message.messageId + ExtensionName.jpeg.withDot)
             guard image.saveToFile(path: url) else {
                 return
             }

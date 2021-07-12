@@ -139,7 +139,7 @@ final class GalleryImageItemViewController: GalleryItemViewController {
                 guard let self = self, self.item == item, let image = image else {
                     return
                 }
-                self.detectQRCode(image: image)
+                self.detectQRCode(for: item, image: image)
                 self.keepDisplayWakingUpIfNeeded(image: image)
             }
         }
@@ -232,17 +232,25 @@ extension GalleryImageItemViewController: UIScrollViewDelegate {
 
 extension GalleryImageItemViewController {
     
-    private func detectQRCode(image: UIImage) {
+    private func detectQRCode(for item: GalleryItem, image: UIImage) {
         guard let detector = qrCodeDetector, let cgImage = image.cgImage else {
             return
         }
-        let ciImage = CIImage(cgImage: cgImage)
-        for case let feature as CIQRCodeFeature in detector.features(in: ciImage) {
-            guard let string = feature.messageString, let url = URL(string: string) else {
-                continue
+        DispatchQueue.global().async { [weak self] in
+            let ciImage = CIImage(cgImage: cgImage)
+            let features = detector.features(in: ciImage)
+            for case let feature as CIQRCodeFeature in features {
+                guard let string = feature.messageString, let url = URL(string: string) else {
+                    continue
+                }
+                DispatchQueue.main.async {
+                    guard let self = self, self.item == item else {
+                        return
+                    }
+                    self.detectedUrl = url
+                }
+                return
             }
-            self.detectedUrl = url
-            return
         }
     }
     

@@ -144,10 +144,7 @@ extension HomeAppsManager {
             showFolderInteraction(interaction, page: page, sourceIndex: sourceIndex, destinationIndex: destinationIndex, folderIndexPath: folderIndexPath, isNewFolder: true)
             newFolder.isNewFolder = false
         } else {
-            // end press whne folder was created
-            UIView.animate(withDuration: 0.25) {
-                interaction.dragInteraction.placeholderView.alpha = 1
-            }
+            // end press when folder was created
             let destinationCell = interaction.dragInteraction.currentPageCell.collectionView.cellForItem(at: IndexPath(item: destinationIndex, section: 0)) as! AppCell
             let iconSnapshot = destinationCell.imageContainerView.snapshotView(afterScreenUpdates: false)!
             iconSnapshot.frame = destinationCell.convert(destinationCell.imageContainerView.frame, to: interaction.dragInteraction.currentPageCell)
@@ -192,9 +189,6 @@ extension HomeAppsManager {
             showFolderInteraction(interaction, page: page, sourceIndex: sourceIndex, destinationIndex: destinationIndex, folderIndexPath: folderIndexPath)
             cancelFolderInteraction()
         } else {
-            UIView.animate(withDuration: 0.25) {
-                interaction.dragInteraction.placeholderView.alpha = 1
-            }
             let convertedIconFrame = interaction.dragInteraction.placeholderView.convert(interaction.dragInteraction.placeholderView.iconView.frame, to: interaction.dragInteraction.placeholderView.superview!)
             interaction.dragInteraction.placeholderView.iconView.frame = convertedIconFrame
             interaction.dragInteraction.placeholderView.superview!.addSubview(interaction.dragInteraction.placeholderView.iconView)

@@ -39,7 +39,6 @@ extension HomeAppsManager {
         currentDragInteraction = HomeAppsDragInteraction(placeholderView: placeholderView, dragOffset: dragOffset, item: item, originalPageCell: pageCell, originalIndexPath: indexPath)
         UIView.animate(withDuration: 0.25, animations: {
             placeholderView.transform = CGAffineTransform.identity.scaledBy(x: 1.3, y: 1.3)
-            placeholderView.alpha = 0.8
         })
     }
     
@@ -108,7 +107,7 @@ extension HomeAppsManager {
             } else {
                 return
             }
-        } else if touchPoint.x > collectionView.frame.size.width - flowLayout.sectionInset.right { // mvoe to right edge
+        } else if touchPoint.x > collectionView.frame.size.width - flowLayout.sectionInset.right { // move to right edge
             cancelFolderInteraction()
             if collectionView == pinnedCollectionView { // move to pin
                 if pinnedItems.count == 0 {

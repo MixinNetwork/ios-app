@@ -263,7 +263,7 @@ extension HomeAppsManager {
         dragInteraction.currentPageCell.items = items[pageCellIndexPath.row]
         dragInteraction.currentPageCell.collectionView.deleteItems(at: [dragInteraction.currentIndexPath])
         let transfer = HomeAppsDragInteractionTransfer(gestureRecognizer: longPressRecognizer, interaction: dragInteraction)
-        delegate?.didBeginFolderDragOut(transfer: transfer, on: self)
+        delegate?.homeAppsManager(self, didBeginFolderDragOutWithTransfer: transfer)
     }
     
     @objc func folderTimerHandler() {
@@ -288,26 +288,26 @@ extension HomeAppsManager {
 
 extension HomeAppsManager: HomeAppsFolderViewControllerDelegate {
     
-    func openAnimationWillStart(on viewController: HomeAppsFolderViewController) {
+    func homeAppsFolderViewControllerOpenAnimationWillStart(_ controller: HomeAppsFolderViewController) {
         guard let info = openFolderInfo else { return }
         info.cell.imageContainerView?.isHidden = true
         info.cell.wrapperView.isHidden = true
     }
     
-    func didChange(name: String, on viewController: HomeAppsFolderViewController) {
+    func homeAppsFolderViewControllerDidEnterEditingMode(_ controller: HomeAppsFolderViewController) {
+        enterEditingMode()
+    }
+    
+    func homeAppsFolderViewController(_ controller: HomeAppsFolderViewController, didChangeName name: String) {
         guard let info = openFolderInfo else { return }
         info.cell.label?.text = name
     }
     
-    func didSelect(app: AppModel, on viewController: HomeAppsFolderViewController) {
-        delegate?.didSelect(app: app, on: self)
+    func homeAppsFolderViewController(_ controller: HomeAppsFolderViewController, didSelectApp app: AppModel) {
+        delegate?.homeAppsManager(self, didSelectApp: app)
     }
     
-    func didEnterEditingMode(on viewController: HomeAppsFolderViewController) {
-        enterEditingMode()
-    }
-    
-    func didBeginFolderDragOut(withTransfer transfer: HomeAppsDragInteractionTransfer, on viewController: HomeAppsFolderViewController) {
+    func homeAppsFolderViewController(_ controller: HomeAppsFolderViewController, didBeginFolderDragOutWithTransfer transfer: HomeAppsDragInteractionTransfer) {
         guard let info = openFolderInfo, let folderIndex = items[currentPage].firstIndex(where: { $0 === info.folder }), let pageCell = currentPageCell else {
             return
         }
@@ -363,7 +363,7 @@ extension HomeAppsManager: HomeAppsFolderViewControllerDelegate {
         info.shouldCancelCreation = info.isNewFolder
     }
     
-    func dismissAnimationWillStart(currentPage: Int, updatedPages: [[AppModel]], on viewController: HomeAppsFolderViewController) {
+    func homeAppsFolderViewController(_ controller: HomeAppsFolderViewController, dismissAnimationWillStartOnPage page: Int, updatedPages: [[AppModel]]) {
         guard let info = openFolderInfo else { return }
         UIView.animate(withDuration: 0.5) {
             info.cell.imageContainerView?.isHidden = false
@@ -371,11 +371,11 @@ extension HomeAppsManager: HomeAppsFolderViewControllerDelegate {
         }
         info.folder.pages = updatedPages.filter({ $0.count != 0 })
         info.cell.item = info.folder
-        info.cell.move(to: currentPage, animated: false)
-        delegate?.didUpdateItems(on: self)
+        info.cell.move(to: page, animated: false)
+        delegate?.homeAppsManagerDidUpdateItems(self)
     }
     
-    func dismissAnimationDidFinish(on viewController: HomeAppsFolderViewController) {
+    func homeAppsFolderViewControllerDismissAnimationDidFinish(_ controller: HomeAppsFolderViewController) {
         guard let info = openFolderInfo else { return }
         viewController.dismiss(animated: false, completion: {
             self.openFolderInfo = nil

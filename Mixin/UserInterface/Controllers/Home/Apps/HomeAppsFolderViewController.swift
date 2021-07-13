@@ -2,13 +2,13 @@ import UIKit
 
 protocol HomeAppsFolderViewControllerDelegate: AnyObject {
     
-    func openAnimationWillStart(on viewController: HomeAppsFolderViewController)
-    func didChange(name: String, on viewController: HomeAppsFolderViewController)
-    func didSelect(app: AppModel, on viewController: HomeAppsFolderViewController)
-    func didEnterEditingMode(on viewController: HomeAppsFolderViewController)
-    func didBeginFolderDragOut(withTransfer transfer: HomeAppsDragInteractionTransfer, on viewController: HomeAppsFolderViewController)
-    func dismissAnimationWillStart(currentPage: Int, updatedPages: [[AppModel]], on viewController: HomeAppsFolderViewController)
-    func dismissAnimationDidFinish(on viewController: HomeAppsFolderViewController)
+    func homeAppsFolderViewControllerOpenAnimationWillStart(_ controller: HomeAppsFolderViewController)
+    func homeAppsFolderViewControllerDidEnterEditingMode(_ controller: HomeAppsFolderViewController)
+    func homeAppsFolderViewController(_ controller: HomeAppsFolderViewController, didChangeName name: String)
+    func homeAppsFolderViewController(_ controller: HomeAppsFolderViewController, didSelectApp app: AppModel)
+    func homeAppsFolderViewController(_ controller: HomeAppsFolderViewController, didBeginFolderDragOutWithTransfer transfer: HomeAppsDragInteractionTransfer)
+    func homeAppsFolderViewController(_ controller: HomeAppsFolderViewController, dismissAnimationWillStartOnPage page: Int, updatedPages: [[AppModel]])
+    func homeAppsFolderViewControllerDismissAnimationDidFinish(_ controller: HomeAppsFolderViewController)
     
 }
 
@@ -65,7 +65,7 @@ class HomeAppsFolderViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        delegate?.openAnimationWillStart(on: self)
+        delegate?.homeAppsFolderViewControllerOpenAnimationWillStart(self)
         animateIn()
         if isEditing {
             homeAppsManager.enterEditingMode(occurHaptic: false)
@@ -88,7 +88,7 @@ extension HomeAppsFolderViewController {
     private func dismiss(completion: (() -> Void)? = nil) {
         textField.resignFirstResponder()
         homeAppsManager.leaveEditingMode()
-        delegate?.dismissAnimationWillStart(currentPage: pageControl.currentPage, updatedPages: homeAppsManager.items as! [[AppModel]], on: self)
+        delegate?.homeAppsFolderViewController(self, dismissAnimationWillStartOnPage: pageControl.currentPage, updatedPages: homeAppsManager.items as! [[AppModel]])
         animateOut(completion: completion)
     }
     
@@ -148,7 +148,7 @@ extension HomeAppsFolderViewController {
             self.backgroundView.effect = nil
         }
         animation.addCompletion { _ in
-            self.delegate?.dismissAnimationDidFinish(on: self)
+            self.delegate?.homeAppsFolderViewControllerDismissAnimationDidFinish(self)
             self.homeAppsManager = nil
             completion?()
         }
@@ -159,17 +159,9 @@ extension HomeAppsFolderViewController {
 
 extension HomeAppsFolderViewController: HomeAppsManagerDelegate {
     
-    func didUpdate(pageCount: Int, on manager: HomeAppsManager) {
-        pageControl.numberOfPages = pageCount
-    }
-    
-    func didMove(toPage page: Int, on manager: HomeAppsManager) {
-        pageControl.currentPage = page
-    }
-    
-    func didEnterEditingMode(on manager: HomeAppsManager) {
+    func homeAppsManagerDidEnterEditingMode(_ manager: HomeAppsManager) {
         if !isEditing {
-            delegate?.didEnterEditingMode(on: self)
+            delegate?.homeAppsFolderViewControllerDidEnterEditingMode(self)
             isEditing = true
         }
         if pageControl.isHidden {
@@ -183,29 +175,37 @@ extension HomeAppsFolderViewController: HomeAppsManagerDelegate {
         }
     }
     
-    func didLeaveEditingMode(on manager: HomeAppsManager) {
+    func homeAppsManagerDidLeaveEditingMode(_ manager: HomeAppsManager) {
         if !textField.hasText {
             textField.text = folder.name
         } else if let text = textField.text {
             folder.name = text
-            delegate?.didChange(name: text, on: self)
+            delegate?.homeAppsFolderViewController(self, didChangeName: text)
         }
         leaveTextFieldEditingMode()
     }
     
-    func didBeginFolderDragOut(transfer: HomeAppsDragInteractionTransfer, on manager: HomeAppsManager) {
-        dismissAction()
-        delegate?.didBeginFolderDragOut(withTransfer: transfer, on: self)
-    }
-    
-    func didSelect(app: AppModel, on manager: HomeAppsManager) {
+    func homeAppsManager(_ manager: HomeAppsManager, didSelectApp app: AppModel) {
         dismiss { [weak self] in
             guard let self = self else { return }
-            self.delegate?.didSelect(app: app, on: self)
+            self.delegate?.homeAppsFolderViewController(self, didSelectApp: app)
         }
     }
     
-    func didUpdateItems(on manager: HomeAppsManager) {}
+    func homeAppsManager(_ manager: HomeAppsManager, didMoveToPage page: Int) {
+        pageControl.currentPage = page
+    }
+    
+    func homeAppsManager(_ manager: HomeAppsManager, didUpdatePageCount pageCount: Int) {
+        pageControl.numberOfPages = pageCount
+    }
+    
+    func homeAppsManager(_ manager: HomeAppsManager, didBeginFolderDragOutWithTransfer transfer: HomeAppsDragInteractionTransfer) {
+        dismissAction()
+        delegate?.homeAppsFolderViewController(self, didBeginFolderDragOutWithTransfer: transfer)
+    }
+    
+    func homeAppsManagerDidUpdateItems(_ manager: HomeAppsManager) {}
     
 }
 
@@ -217,7 +217,7 @@ extension HomeAppsFolderViewController: UITextFieldDelegate {
             textField.text = folder.name
         } else if let text = textField.text {
             folder.name = text
-            delegate?.didChange(name: text, on: self)
+            delegate?.homeAppsFolderViewController(self, didChangeName: text)
         }
         return true
     }

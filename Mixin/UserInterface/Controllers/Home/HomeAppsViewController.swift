@@ -197,21 +197,7 @@ extension HomeAppsViewController {
 
 extension HomeAppsViewController: HomeAppsManagerDelegate {
     
-    func didUpdateItems(on manager: HomeAppsManager) {
-        appsItemManager.updateItems(manager.pinnedItems, manager.items)
-        setCandidateEmptyHintHidden(!manager.items.isEmpty)
-        updateNoPinnedHint()
-    }
-    
-    func didUpdate(pageCount: Int, on manager: HomeAppsManager) {
-        pageControl.numberOfPages = pageCount
-    }
-    
-    func didMove(toPage page: Int, on manager: HomeAppsManager) {
-        pageControl.currentPage = page
-    }
-    
-    func didSelect(app: AppModel, on manager: HomeAppsManager) {
+    func homeAppsManager(_ manager: HomeAppsManager, didSelectApp app: AppModel) {
         guard let app = app.app else {
             return
         }
@@ -225,10 +211,24 @@ extension HomeAppsViewController: HomeAppsManagerDelegate {
         }
     }
     
-    func didEnterEditingMode(on manager: HomeAppsManager) {}
+    func homeAppsManager(_ manager: HomeAppsManager, didMoveToPage page: Int) {
+        pageControl.currentPage = page
+    }
     
-    func didLeaveEditingMode(on manager: HomeAppsManager) {}
+    func homeAppsManager(_ manager: HomeAppsManager, didUpdatePageCount pageCount: Int) {
+        pageControl.numberOfPages = pageCount
+    }
     
-    func didBeginFolderDragOut(transfer: HomeAppsDragInteractionTransfer, on manager: HomeAppsManager) {}
+    func homeAppsManagerDidUpdateItems(_ manager: HomeAppsManager) {
+        appsItemManager.updateItems(manager.pinnedItems, manager.items)
+        setCandidateEmptyHintHidden(!manager.items.isEmpty)
+        updateNoPinnedHint()
+    }
+    
+    func homeAppsManagerDidEnterEditingMode(_ manager: HomeAppsManager) {}
+    
+    func homeAppsManagerDidLeaveEditingMode(_ manager: HomeAppsManager) {}
+    
+    func homeAppsManager(_ manager: HomeAppsManager, didBeginFolderDragOutWithTransfer transfer: HomeAppsDragInteractionTransfer) {}
     
 }

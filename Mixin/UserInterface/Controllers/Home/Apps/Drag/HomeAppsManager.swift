@@ -3,13 +3,13 @@ import MixinServices
 
 protocol HomeAppsManagerDelegate: AnyObject {
     
-    func didUpdateItems(on manager: HomeAppsManager)
-    func didUpdate(pageCount: Int, on manager: HomeAppsManager)
-    func didMove(toPage page: Int, on manager: HomeAppsManager)
-    func didEnterEditingMode(on manager: HomeAppsManager)
-    func didLeaveEditingMode(on manager: HomeAppsManager)
-    func didBeginFolderDragOut(transfer: HomeAppsDragInteractionTransfer, on manager: HomeAppsManager)
-    func didSelect(app: AppModel, on manager: HomeAppsManager)
+    func homeAppsManagerDidUpdateItems(_ manager: HomeAppsManager)
+    func homeAppsManagerDidEnterEditingMode(_ manager: HomeAppsManager)
+    func homeAppsManagerDidLeaveEditingMode(_ manager: HomeAppsManager)
+    func homeAppsManager(_ manager: HomeAppsManager, didSelectApp app: AppModel)
+    func homeAppsManager(_ manager: HomeAppsManager, didMoveToPage page: Int)
+    func homeAppsManager(_ manager: HomeAppsManager, didUpdatePageCount pageCount: Int)
+    func homeAppsManager(_ manager: HomeAppsManager, didBeginFolderDragOutWithTransfer transfer: HomeAppsDragInteractionTransfer)
     
 }
 
@@ -23,13 +23,13 @@ class HomeAppsManager: NSObject {
     
     var items: [[AppItem]] {
         didSet {
-            delegate?.didUpdate(pageCount: items.count, on: self)
-            delegate?.didUpdateItems(on: self)
+            delegate?.homeAppsManager(self, didUpdatePageCount: items.count)
+            delegate?.homeAppsManagerDidUpdateItems(self)
         }
     }
     var pinnedItems: [AppItem] {
         didSet {
-            delegate?.didUpdateItems(on: self)
+            delegate?.homeAppsManagerDidUpdateItems(self)
         }
     }
     var isEditing = false
@@ -144,7 +144,7 @@ extension HomeAppsManager {
             candidateCollectionView.insertItems(at: [IndexPath(item: items.count - 1, section: 0)])
         }
         tapRecognizer.isEnabled = true
-        delegate?.didEnterEditingMode(on: self)
+        delegate?.homeAppsManagerDidEnterEditingMode(self)
     }
     
     @objc func leaveEditingMode() {
@@ -162,7 +162,7 @@ extension HomeAppsManager {
             self.candidateCollectionView.deleteItems(at: emptyIndex.map({ IndexPath(item: $0, section: 0) }))
         }
         tapRecognizer.isEnabled = false
-        delegate?.didLeaveEditingMode(on: self)
+        delegate?.homeAppsManagerDidLeaveEditingMode(self)
     }
     
     // update items for current page after end drag
@@ -270,7 +270,7 @@ extension HomeAppsManager: UIScrollViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let page = scrollView.contentOffset.x / scrollView.frame.width
-        delegate?.didMove(toPage: Int(roundf(Float(page))), on: self)
+        delegate?.homeAppsManager(self, didMoveToPage: Int(roundf(Float(page))))
     }
     
 }
@@ -281,7 +281,7 @@ extension HomeAppsManager: AppPageCellDelegate {
         if let cell = cell as? AppFolderCell {
             showFolder(from: cell)
         } else if let item = cell.item as? AppModel, !isEditing {
-            delegate?.didSelect(app: item, on: self)
+            delegate?.homeAppsManager(self, didSelectApp: item)
         }
     }
     

@@ -64,8 +64,7 @@ extension HomeAppsManager {
                 return
             }
         }
-        folderRemovalTimer?.invalidate()
-        folderRemovalTimer = nil
+        stopFolderRemovalTimer()
         var destinationIndexPath: IndexPath
         let flowLayout = pageCell.collectionView.collectionViewLayout as! UICollectionViewFlowLayout
         let appsPerRow = isInAppsFolderViewController ? HomeAppsMode.folder.appsPerRow : HomeAppsMode.regular.appsPerRow
@@ -132,10 +131,8 @@ extension HomeAppsManager {
         ignoreDragOutOnTop = false
         ignoreDragOutOnBottom = false
         cancelFolderInteraction()
-        pageTimer?.invalidate()
-        pageTimer = nil
-        folderTimer?.invalidate()
-        folderTimer = nil
+        stopPageTimer()
+        stopFolderTimer()
         // make sure index is in range
         if destinationIndexPath.row >= pageCell.collectionView.numberOfItems(inSection: 0) && destinationIndexPath.row > 0 {
             destinationIndexPath = IndexPath(item: destinationIndexPath.row - 1, section: 0)
@@ -169,8 +166,7 @@ extension HomeAppsManager {
     func endDragInteraction(_ gestureRecognizer: UILongPressGestureRecognizer) {
         // create folder by dropped the item
         if currentFolderInteraction != nil {
-            folderTimer?.invalidate()
-            folderTimer = nil
+            stopFolderTimer()
             commitFolderInteraction(didDrop: true)
             return
         }
@@ -287,10 +283,10 @@ extension HomeAppsManager {
 extension HomeAppsManager {
     
     @objc func pageTimerHandler(_ timer: Timer) {
-        guard let currentInteraction = currentDragInteraction, let offset = timer.userInfo as? Int else {
+        guard items.count > 0, let currentInteraction = currentDragInteraction, let offset = timer.userInfo as? Int else {
             return
         }
-        pageTimer = nil
+        stopPageTimer()
         guard let currentIndex = items[currentPage].firstIndex(where: { $0 === currentInteraction.item }) else {
             return
         }

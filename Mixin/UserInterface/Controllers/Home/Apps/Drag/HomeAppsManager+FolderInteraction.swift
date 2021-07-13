@@ -56,8 +56,7 @@ extension HomeAppsManager {
             return
         }
         folderInteraction.dragInteraction.transitionFromFolderWrapperView()
-        folderTimer?.invalidate()
-        folderTimer = nil
+        stopFolderTimer()
         currentFolderInteraction = nil
         folderInteraction.isDismissing = true
         UIView.animate(withDuration: 0.25, animations: {
@@ -264,7 +263,7 @@ extension HomeAppsManager {
         guard let folderInteraction = currentFolderInteraction, !folderInteraction.isDismissing else {
             return
         }
-        folderTimer = nil
+        stopFolderTimer()
         let animation = CABasicAnimation(keyPath: "opacity")
         animation.autoreverses = true
         animation.repeatCount = 2
@@ -305,6 +304,7 @@ extension HomeAppsManager: HomeAppsFolderViewControllerDelegate {
         guard let info = openFolderInfo, let folderIndex = items[currentPage].firstIndex(where: { $0 === info.folder }), let pageCell = currentPageCell else {
             return
         }
+        stopPageTimer()
         if info.folder.pages.flatMap({ $0 }).count == 0 { // last app dragged out then remove folder
             items[currentPage].append(transfer.interaction.item)
             items[currentPage].remove(at: folderIndex)
@@ -364,6 +364,7 @@ extension HomeAppsManager: HomeAppsFolderViewControllerDelegate {
             info.cell.wrapperView.isHidden = false
             info.cell.label?.isHidden = false
         }
+        stopPageTimer()
         info.folder.pages = updatedPages.filter({ $0.count != 0 })
         info.cell.item = info.folder
         info.cell.move(to: page, animated: false)
@@ -372,6 +373,7 @@ extension HomeAppsManager: HomeAppsFolderViewControllerDelegate {
     
     func homeAppsFolderViewControllerDismissAnimationDidFinish(_ controller: HomeAppsFolderViewController) {
         guard let info = openFolderInfo else { return }
+        stopPageTimer()
         controller.dismiss(animated: false, completion: {
             self.openFolderInfo = nil
             info.cell.wrapperView.isHidden = false

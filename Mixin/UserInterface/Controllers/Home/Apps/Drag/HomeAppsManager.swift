@@ -35,15 +35,15 @@ class HomeAppsManager: NSObject {
     var isEditing = false
     var isInAppsFolderViewController: Bool { pinnedCollectionView == nil }
     var currentPage: Int {
-        if items.count == 0 {
-            return 0
-        }
-        guard candidateCollectionView.frame.size.width != 0 else {
+        if items.count == 0 || candidateCollectionView.frame.size.width == 0 {
             return 0
         }
         return Int(candidateCollectionView.contentOffset.x) / Int(candidateCollectionView.frame.size.width)
     }
     var currentPageCell: AppPageCell? {
+        if items.count == 0 {
+            return nil
+        }
         let visibleCells = candidateCollectionView.visibleCells
         if visibleCells.count == 0 {
             return candidateCollectionView.subviews.first as? AppPageCell
@@ -265,6 +265,21 @@ extension HomeAppsManager: UICollectionViewDataSource, UICollectionViewDelegate 
             return
         }
         cell.leaveEditingMode()
+    }
+    
+    func stopPageTimer() {
+        pageTimer?.invalidate()
+        pageTimer = nil
+    }
+    
+    func stopFolderTimer() {
+        folderTimer?.invalidate()
+        folderTimer = nil
+    }
+    
+    func stopFolderRemovalTimer() {
+        folderRemovalTimer?.invalidate()
+        folderRemovalTimer = nil
     }
     
 }

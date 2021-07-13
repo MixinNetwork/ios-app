@@ -368,6 +368,7 @@ extension HomeAppsManager: HomeAppsFolderViewControllerDelegate {
         UIView.animate(withDuration: 0.5) {
             info.cell.imageContainerView?.isHidden = false
             info.cell.wrapperView.isHidden = false
+            info.cell.label?.isHidden = false
         }
         info.folder.pages = updatedPages.filter({ $0.count != 0 })
         info.cell.item = info.folder
@@ -377,7 +378,7 @@ extension HomeAppsManager: HomeAppsFolderViewControllerDelegate {
     
     func homeAppsFolderViewControllerDismissAnimationDidFinish(_ controller: HomeAppsFolderViewController) {
         guard let info = openFolderInfo else { return }
-        viewController.dismiss(animated: false, completion: {
+        controller.dismiss(animated: false, completion: {
             self.openFolderInfo = nil
             if self.isEditing {
                 info.cell.startShaking()

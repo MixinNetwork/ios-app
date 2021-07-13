@@ -149,7 +149,6 @@ extension HomeAppsFolderViewController {
         }
         animation.addCompletion { _ in
             self.delegate?.homeAppsFolderViewControllerDismissAnimationDidFinish(self)
-            self.homeAppsManager = nil
             completion?()
         }
         animation.startAnimation()

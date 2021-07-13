@@ -38,7 +38,7 @@ extension HomeAppsManager {
         enterEditingMode()
         currentDragInteraction = HomeAppsDragInteraction(placeholderView: placeholderView, dragOffset: dragOffset, item: item, originalPageCell: pageCell, originalIndexPath: indexPath)
         UIView.animate(withDuration: 0.25, animations: {
-            placeholderView.transform = CGAffineTransform.identity.scaledBy(x: 1.3, y: 1.3)
+            placeholderView.transform = CGAffineTransform.identity.scaledBy(x: 1.15, y: 1.15)
         })
     }
     
@@ -125,21 +125,8 @@ extension HomeAppsManager {
             touchPoint.x += 22
             if let indexPath = pageCell.collectionView.indexPathForItem(at: touchPoint) {
                 destinationIndexPath = indexPath
-            } else if let pinnedCollectionView = pinnedCollectionView, collectionView == candidateCollectionView && pinnedCollectionView.visibleCells.contains(currentInteraction.currentPageCell) { // move from pinned
-                if items[currentPage].count < HomeAppsMode.regular.appsPerPage - 1 {
-                    destinationIndexPath = IndexPath(item: items[currentPage].count + 1, section: 0)
-                } else {
-                    return
-                }
             } else {
-                if collectionView == candidateCollectionView { // move to empty place
-                    cancelFolderInteraction()
-                    destinationIndexPath = IndexPath(item: pageCell.collectionView.visibleCells.count, section: 0)
-                } else {
-                    cancelFolderInteraction()
-                    pageTimer?.invalidate()
-                    return
-                }
+                destinationIndexPath = IndexPath(item: pageCell.collectionView.visibleCells.count, section: 0)
             }
         }
         ignoreDragOutOnTop = false
@@ -156,17 +143,21 @@ extension HomeAppsManager {
             destinationIndexPath = IndexPath(item: 0, section: 0)
         }
         // move item
-        if destinationIndexPath.row != currentInteraction.currentIndexPath.row {
-            if let pinnedCollectionView = pinnedCollectionView {
-                if collectionView == pinnedCollectionView && !pinnedCollectionView.visibleCells.contains(currentInteraction.currentPageCell) { // pin
-                    moveToPinned(interaction: currentInteraction, pageCell: pageCell, destinationIndexPath: destinationIndexPath)
-                    return
-                } else if collectionView == candidateCollectionView && pinnedCollectionView.visibleCells.contains(currentInteraction.currentPageCell) { // unpin
-                    moveFromPinned(interaction: currentInteraction, pageCell: pageCell, destinationIndexPath: destinationIndexPath)
-                    return
+        if let pinnedCollectionView = pinnedCollectionView {
+            if collectionView == pinnedCollectionView && !pinnedCollectionView.visibleCells.contains(currentInteraction.currentPageCell) { // pin
+                moveToPinned(interaction: currentInteraction, pageCell: pageCell, destinationIndexPath: destinationIndexPath)
+                return
+            } else if collectionView == candidateCollectionView && pinnedCollectionView.visibleCells.contains(currentInteraction.currentPageCell) { // unpin
+                moveFromPinned(interaction: currentInteraction, pageCell: pageCell, destinationIndexPath: destinationIndexPath)
+                return
+            } else if destinationIndexPath.row != currentInteraction.currentIndexPath.row {
+                let numberOfItems = pageCell.collectionView.numberOfItems(inSection: 0)
+                if currentInteraction.currentIndexPath.row < numberOfItems && destinationIndexPath.row < numberOfItems {
+                    pageCell.collectionView.moveItem(at: currentInteraction.currentIndexPath, to: destinationIndexPath)
+                    currentInteraction.currentIndexPath = destinationIndexPath
                 }
             }
-            // normal move
+        } else if destinationIndexPath.row != currentInteraction.currentIndexPath.row {
             let numberOfItems = pageCell.collectionView.numberOfItems(inSection: 0)
             if currentInteraction.currentIndexPath.row < numberOfItems && destinationIndexPath.row < numberOfItems {
                 pageCell.collectionView.moveItem(at: currentInteraction.currentIndexPath, to: destinationIndexPath)
@@ -232,7 +223,6 @@ extension HomeAppsManager {
         pageCell.collectionView.performBatchUpdates({
             pageCell.collectionView.insertItems(at: [destinationIndexPath])
         }, completion: nil)
-        pageCell.updateSectionInset()
         let currentPageCell = interaction.currentPageCell
         currentPageCell.items = items[currentPage]
         currentPageCell.collectionView.performBatchUpdates({
@@ -269,7 +259,6 @@ extension HomeAppsManager {
         interaction.currentPageCell.collectionView.performBatchUpdates({
             interaction.currentPageCell.collectionView.deleteItems(at: [interaction.currentIndexPath])
         }, completion: nil)
-        interaction.currentPageCell.updateSectionInset()
         pageCell.items = items[currentPage]
         pageCell.draggedItem = interaction.item
         pageCell.collectionView.performBatchUpdates({

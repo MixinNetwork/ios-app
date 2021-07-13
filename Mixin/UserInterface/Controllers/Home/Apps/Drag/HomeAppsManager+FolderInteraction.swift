@@ -62,7 +62,7 @@ extension HomeAppsManager {
         folderInteraction.isDismissing = true
         UIView.animate(withDuration: 0.25, animations: {
             folderInteraction.wrapperView.transform = .identity
-            self.currentDragInteraction?.placeholderView.transform = CGAffineTransform.identity.scaledBy(x: 1.3, y: 1.3)
+            self.currentDragInteraction?.placeholderView.transform = CGAffineTransform.identity.scaledBy(x: 1.15, y: 1.15)
             folderInteraction.dragInteraction.currentPageCell.collectionView.visibleCells.forEach { cell in
                 if let cell = cell as? AppCell {
                     cell.label?.alpha = 1
@@ -374,6 +374,8 @@ extension HomeAppsManager: HomeAppsFolderViewControllerDelegate {
         guard let info = openFolderInfo else { return }
         controller.dismiss(animated: false, completion: {
             self.openFolderInfo = nil
+            info.cell.wrapperView.isHidden = false
+            info.cell.label?.isHidden = false
             if self.isEditing {
                 info.cell.startShaking()
             }

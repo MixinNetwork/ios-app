@@ -35,6 +35,9 @@ class HomeAppsManager: NSObject {
     var isEditing = false
     var isInAppsFolderViewController: Bool { pinnedCollectionView == nil }
     var currentPage: Int {
+        if items.count == 0 {
+            return 0
+        }
         guard candidateCollectionView.frame.size.width != 0 else {
             return 0
         }

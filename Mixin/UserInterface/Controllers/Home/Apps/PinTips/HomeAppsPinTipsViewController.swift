@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 class HomeAppsPinTipsViewController: UIViewController {
     
@@ -17,6 +18,7 @@ class HomeAppsPinTipsViewController: UIViewController {
     }
     
     @IBAction func dismiss(_ sender: Any) {
+        AppGroupUserDefaults.User.homeAppsPinTips = true
         dismiss(animated: true, completion: nil)
     }
     

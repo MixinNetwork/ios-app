@@ -235,8 +235,11 @@ final class MediaPreviewViewController: UIViewController {
                 }
             }
         } else if itemProvider.canLoadObject(ofClass: UIImage.self) {
-            itemProvider.loadObject(ofClass: UIImage.self) { [weak self] (image, error) in
-                guard let image = image as? UIImage else {
+            itemProvider.loadObject(ofClass: UIImage.self) { [weak self] (rawImage, error) in
+                guard
+                    let rawImage = rawImage as? UIImage,
+                    let image = ImageUploadSanitizer.sanitizedImage(from: rawImage).image
+                else {
                     if let error = error {
                         reporter.report(error: error)
                     }

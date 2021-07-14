@@ -898,7 +898,7 @@
                                                                         <rect key="frame" x="0.0" y="0.0" width="54" height="54"/>
                                                                         <autoresizingMask key="autoresizingMask"/>
                                                                         <subviews>
-                                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eId-0l-p9C" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
+                                                                            <view contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="eId-0l-p9C" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
                                                                                 <rect key="frame" x="0.0" y="0.0" width="54" height="54"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="width" constant="54" id="SeW-CP-GXC"/>
@@ -947,16 +947,39 @@
                                         <rect key="frame" x="296" y="39" width="24" height="24"/>
                                         <color key="tintColor" name="icon_tint_secondary"/>
                                     </imageView>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg_dot_line_circle" translatesAutoresizingMaskIntoConstraints="NO" id="Wir-g9-pmJ">
+                                        <rect key="frame" x="40" y="24" width="54" height="54"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="54" id="fOm-b9-bVz"/>
+                                            <constraint firstAttribute="width" constant="54" id="idR-YS-waO"/>
+                                        </constraints>
+                                    </imageView>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg_dot_line_circle" translatesAutoresizingMaskIntoConstraints="NO" id="8vX-5D-QSM">
+                                        <rect key="frame" x="120" y="24" width="54" height="54"/>
+                                    </imageView>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg_dot_line_circle" translatesAutoresizingMaskIntoConstraints="NO" id="cCB-B7-N1K">
+                                        <rect key="frame" x="200" y="24" width="54" height="54"/>
+                                    </imageView>
                                 </subviews>
                                 <color key="backgroundColor" name="background"/>
                                 <constraints>
+                                    <constraint firstItem="cCB-B7-N1K" firstAttribute="leading" secondItem="8vX-5D-QSM" secondAttribute="trailing" constant="26" id="7Mx-Af-rqS"/>
+                                    <constraint firstItem="8vX-5D-QSM" firstAttribute="width" secondItem="Wir-g9-pmJ" secondAttribute="width" id="Fa6-Ke-oZ3"/>
                                     <constraint firstItem="rAc-hj-nTd" firstAttribute="centerY" secondItem="kTb-Tu-KFj" secondAttribute="centerY" id="HD9-Oj-N0N"/>
                                     <constraint firstItem="rAc-hj-nTd" firstAttribute="trailing" secondItem="kTb-Tu-KFj" secondAttribute="trailing" constant="-35" id="Iv2-TF-bma"/>
+                                    <constraint firstItem="Wir-g9-pmJ" firstAttribute="leading" secondItem="kTb-Tu-KFj" secondAttribute="leading" constant="20" id="Kfq-iP-xpi"/>
                                     <constraint firstItem="kTb-Tu-KFj" firstAttribute="leading" secondItem="2ej-wk-Qvq" secondAttribute="leading" constant="20" id="RoT-v5-GG6"/>
+                                    <constraint firstItem="8vX-5D-QSM" firstAttribute="height" secondItem="Wir-g9-pmJ" secondAttribute="height" id="XPg-W9-HbS"/>
+                                    <constraint firstItem="cCB-B7-N1K" firstAttribute="width" secondItem="Wir-g9-pmJ" secondAttribute="width" id="Xqr-1V-ikC"/>
+                                    <constraint firstItem="8vX-5D-QSM" firstAttribute="centerY" secondItem="Wir-g9-pmJ" secondAttribute="centerY" id="ZOr-nW-bBp"/>
+                                    <constraint firstItem="8vX-5D-QSM" firstAttribute="leading" secondItem="Wir-g9-pmJ" secondAttribute="trailing" constant="26" id="ar0-QB-Gkq"/>
                                     <constraint firstAttribute="trailing" secondItem="kTb-Tu-KFj" secondAttribute="trailing" constant="20" id="e0G-bz-rGL"/>
                                     <constraint firstItem="kTb-Tu-KFj" firstAttribute="top" secondItem="2ej-wk-Qvq" secondAttribute="top" constant="10" id="hjq-HI-uXW"/>
                                     <constraint firstAttribute="height" constant="110" id="jdA-qv-Lse"/>
+                                    <constraint firstItem="cCB-B7-N1K" firstAttribute="centerY" secondItem="Wir-g9-pmJ" secondAttribute="centerY" id="qQC-DC-qIL"/>
                                     <constraint firstAttribute="bottom" secondItem="kTb-Tu-KFj" secondAttribute="bottom" constant="18" id="tMk-Hv-bmI"/>
+                                    <constraint firstItem="cCB-B7-N1K" firstAttribute="height" secondItem="Wir-g9-pmJ" secondAttribute="height" id="yMn-eV-oeY"/>
+                                    <constraint firstItem="Wir-g9-pmJ" firstAttribute="centerY" secondItem="kTb-Tu-KFj" secondAttribute="centerY" id="zOJ-tX-drj"/>
                                 </constraints>
                             </view>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceHorizontal="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="LDb-PZ-N3K">
@@ -1218,6 +1241,11 @@
                         <outlet property="pinnedCollectionView" destination="kTb-Tu-KFj" id="KhN-k7-OIj"/>
                         <outlet property="pinnedWrapperHeightConstraint" destination="jdA-qv-Lse" id="YaL-Nr-ZLf"/>
                         <outlet property="titleBarHeightConstraint" destination="oec-ry-GMg" id="wdi-DW-2bh"/>
+                        <outletCollection property="pinnedPlaceholderViewLeadingConstraints" destination="ar0-QB-Gkq" collectionClass="NSMutableArray" id="HPi-bQ-Vre"/>
+                        <outletCollection property="pinnedPlaceholderViewLeadingConstraints" destination="7Mx-Af-rqS" collectionClass="NSMutableArray" id="6FJ-t0-hJR"/>
+                        <outletCollection property="pinnedPlaceholderViews" destination="Wir-g9-pmJ" collectionClass="NSMutableArray" id="bSi-OO-TbQ"/>
+                        <outletCollection property="pinnedPlaceholderViews" destination="8vX-5D-QSM" collectionClass="NSMutableArray" id="VvH-MS-tih"/>
+                        <outletCollection property="pinnedPlaceholderViews" destination="cCB-B7-N1K" collectionClass="NSMutableArray" id="Ela-BO-hOj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QnM-Xd-NyW" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -2129,6 +2157,7 @@ chat history from icloud</string>
     <resources>
         <image name="Setting/ic_about_app" width="80" height="80"/>
         <image name="Setting/ic_backup" width="88" height="58"/>
+        <image name="bg_dot_line_circle" width="54" height="54"/>
         <image name="bg_home_bottom" width="375" height="120"/>
         <image name="ic_announcement_close" width="12" height="12"/>
         <image name="ic_app_clear" width="16" height="16"/>

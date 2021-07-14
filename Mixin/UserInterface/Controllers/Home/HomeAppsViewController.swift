@@ -7,11 +7,13 @@ final class HomeAppsViewController: UIViewController {
     @IBOutlet weak var candidateCollectionView: UICollectionView!
     @IBOutlet weak var candidateCollectionLayout: UICollectionViewFlowLayout!
     @IBOutlet weak var pageControl: UIPageControl!
+    @IBOutlet var pinnedPlaceholderViews: [UIImageView]!
     
     @IBOutlet weak var titleBarHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var pinnedWrapperHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var candidateCollectionViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var pageControlTopConstraint: NSLayoutConstraint!
+    @IBOutlet var pinnedPlaceholderViewLeadingConstraints: [NSLayoutConstraint]!
     
     private lazy var candidateEmptyHintLabel: UILabel = {
         let label = UILabel()
@@ -43,6 +45,8 @@ final class HomeAppsViewController: UIViewController {
         super.viewDidLoad()
         appsItemManager = HomeAppsItemManager()
         setCandidateEmptyHintHidden(!appsItemManager.candidateItems.isEmpty)
+        pinnedPlaceholderViewLeadingConstraints.forEach({ $0.constant = HomeAppsMode.pinned.minimumInteritemSpacing })
+        updatePinnedPlaceholderViewsHidden(with: appsItemManager.pinnedItems.count)
         appsManager = HomeAppsManager(viewController: self,
                                       candidateCollectionView: candidateCollectionView,
                                       items: appsItemManager.candidateItems,
@@ -185,6 +189,12 @@ extension HomeAppsViewController {
         present(viewController, animated: true, completion: nil)
     }
     
+    private func updatePinnedPlaceholderViewsHidden(with pinnedAppCount: Int) {
+        for (index, view) in pinnedPlaceholderViews.enumerated() {
+            view.isHidden = index < pinnedAppCount
+        }
+    }
+    
 }
 
 extension HomeAppsViewController: HomeAppsManagerDelegate {
@@ -214,6 +224,7 @@ extension HomeAppsViewController: HomeAppsManagerDelegate {
     func homeAppsManagerDidUpdateItems(_ manager: HomeAppsManager) {
         appsItemManager.updateItems(manager.pinnedItems, manager.items)
         setCandidateEmptyHintHidden(!manager.items.isEmpty)
+        updatePinnedPlaceholderViewsHidden(with: manager.pinnedItems.count)
     }
     
     func homeAppsManagerDidEnterEditingMode(_ manager: HomeAppsManager) {}

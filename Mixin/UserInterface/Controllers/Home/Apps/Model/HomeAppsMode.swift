@@ -19,7 +19,7 @@ enum HomeAppsMode {
         case .pinned:
             return UIEdgeInsets(top: 14, left: 20, bottom: 14, right: 20)
         case .folder:
-            return UIEdgeInsets(top: 12, left: 20, bottom: 12, right: 20)
+            return UIEdgeInsets(top: 32, left: 22, bottom: 32, right: 22)
         case .nestedFolder:
             return UIEdgeInsets(top: 4, left: 4, bottom: 4, right: 4)
         }
@@ -37,7 +37,7 @@ enum HomeAppsMode {
             margin = 44
         case .nestedFolder:
             margin = 0
-            totalWidth = 60
+            totalWidth = 54
         }
         let cellsWidth = itemSize.width * CGFloat(appsPerRow)
         let totalSpacing = totalWidth - margin * 2 - sectionInset.horizontal - cellsWidth
@@ -60,7 +60,7 @@ enum HomeAppsMode {
         case .pinned:
             return CGSize(width: 54, height: 54)
         case .folder:
-            return CGSize(width: 80, height: 100)
+            return CGSize(width: 80, height: 90)
         case .nestedFolder:
             return CGSize(width: 14, height: 14)
         }

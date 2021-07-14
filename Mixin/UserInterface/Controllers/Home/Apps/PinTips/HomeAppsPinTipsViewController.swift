@@ -12,7 +12,7 @@ class HomeAppsPinTipsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         let mode = HomeAppsMode.regular
-        candidateAppLeadingConstraint.constant = mode.sectionInset.left + mode.itemSize.width + mode.minimumInteritemSpacing + 10
+        candidateAppLeadingConstraint.constant = mode.sectionInset.left + mode.itemSize.width + mode.minimumInteritemSpacing + (mode.itemSize.width - HomeAppsMode.imageContainerSize.width)/2
         pinnedAppSpaceConstraints.forEach({ $0.constant = HomeAppsMode.pinned.minimumInteritemSpacing })
         pinnedAppViewTopConstraint.constant = topSpace
     }

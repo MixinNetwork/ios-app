@@ -7,7 +7,7 @@ enum HomeAppsMode {
     case folder
     case nestedFolder
     
-    static let nestedFolderSize = CGSize(width: 60, height: 60)
+    static let imageContainerSize = CGSize(width: 54, height: 54)
     static let folderRemovalInterval: TimeInterval = 0.5
     static let folderInterval: TimeInterval = 0.7
     static let pageInterval: TimeInterval = 0.7
@@ -17,11 +17,11 @@ enum HomeAppsMode {
         case .regular:
             return UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
         case .pinned:
-            return UIEdgeInsets(top: 11, left: 16, bottom: 11, right: 16)
+            return UIEdgeInsets(top: 14, left: 20, bottom: 14, right: 20)
         case .folder:
-            return UIEdgeInsets(top: 12, left: 30, bottom: 12, right: 30)
+            return UIEdgeInsets(top: 12, left: 20, bottom: 12, right: 20)
         case .nestedFolder:
-            return UIEdgeInsets(top: 7, left: 7, bottom: 7, right: 7)
+            return UIEdgeInsets(top: 4, left: 4, bottom: 4, right: 4)
         }
     }
     
@@ -34,7 +34,7 @@ enum HomeAppsMode {
         case .pinned:
             margin = 20
         case .folder:
-            margin = 32
+            margin = 44
         case .nestedFolder:
             margin = 0
             totalWidth = 60
@@ -58,7 +58,7 @@ enum HomeAppsMode {
         case .regular:
             return CGSize(width: 80, height: 100)
         case .pinned:
-            return CGSize(width: 60, height: 60)
+            return CGSize(width: 54, height: 54)
         case .folder:
             return CGSize(width: 80, height: 100)
         case .nestedFolder:
@@ -74,9 +74,9 @@ enum HomeAppsMode {
         case .pinned:
             return CGSize(width: screenWidth - 20 * 2, height: 82)
         case .folder:
-            return CGSize(width: screenWidth - 32 * 2, height: 328)
+            return CGSize(width: screenWidth - 44 * 2, height: 328)
         case .nestedFolder:
-            return CGSize(width: 60, height: 60)
+            return CGSize(width: 54, height: 54)
         }
     }
     

@@ -1008,11 +1008,15 @@ extension ConversationInputViewController {
     private func handlePhotoAuthorizationStatus(_ status: PHAuthorizationStatus) {
         switch status {
         case .limited:
-            photoViewController.isAuthorizationLimited = true
-            Queue.main.autoSync(execute: loadPhotoInput)
+            DispatchQueue.main.async {
+                self.photoViewController.isAuthorizationLimited = true
+                self.loadPhotoInput()
+            }
         case .authorized:
-            photoViewController.isAuthorizationLimited = false
-            Queue.main.autoSync(execute: loadPhotoInput)
+            DispatchQueue.main.async {
+                self.photoViewController.isAuthorizationLimited = false
+                self.loadPhotoInput()
+            }
         case .notDetermined:
             PHPhotoLibrary.requestAuthorization(handlePhotoAuthorizationStatus)
         case .denied, .restricted:

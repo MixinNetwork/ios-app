@@ -3,7 +3,6 @@ import MixinServices
 
 final class HomeAppsViewController: UIViewController {
     
-    @IBOutlet weak var noPinnedHintLabel: UILabel!
     @IBOutlet weak var pinnedCollectionView: UICollectionView!
     @IBOutlet weak var candidateCollectionView: UICollectionView!
     @IBOutlet weak var candidateCollectionLayout: UICollectionViewFlowLayout!
@@ -43,7 +42,6 @@ final class HomeAppsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         appsItemManager = HomeAppsItemManager()
-        noPinnedHintLabel.isHidden = !appsItemManager.pinnedItems.isEmpty
         setCandidateEmptyHintHidden(!appsItemManager.candidateItems.isEmpty)
         appsManager = HomeAppsManager(viewController: self,
                                       candidateCollectionView: candidateCollectionView,
@@ -55,7 +53,6 @@ final class HomeAppsViewController: UIViewController {
         pageControl.currentPage = 0
         candidateCollectionViewHeightConstraint.constant = HomeAppsMode.regular.itemSize.height * CGFloat(HomeAppsMode.regular.rowsPerPage)
         updatePreferredContentSizeHeight()
-        NotificationCenter.default.addObserver(self, selector: #selector(updateNoPinnedHint), name: AppGroupUserDefaults.User.homeAppIdsDidChangeNotification, object: nil)
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -140,10 +137,6 @@ extension HomeAppsViewController {
         }
     }
     
-    @objc private func updateNoPinnedHint() {
-        noPinnedHintLabel.isHidden = !appsManager.pinnedItems.isEmpty
-    }
-    
     private func updatePreferredContentSizeHeight() {
         guard !isBeingDismissed else {
             return
@@ -221,7 +214,6 @@ extension HomeAppsViewController: HomeAppsManagerDelegate {
     func homeAppsManagerDidUpdateItems(_ manager: HomeAppsManager) {
         appsItemManager.updateItems(manager.pinnedItems, manager.items)
         setCandidateEmptyHintHidden(!manager.items.isEmpty)
-        updateNoPinnedHint()
     }
     
     func homeAppsManagerDidEnterEditingMode(_ manager: HomeAppsManager) {}

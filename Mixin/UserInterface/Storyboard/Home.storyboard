@@ -943,28 +943,20 @@
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                     </collectionView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Long press and drag a bot to pin" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Nf-kR-8cU">
-                                        <rect key="frame" x="40" y="30" width="295" height="42"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <color key="textColor" name="text_accessory"/>
-                                        <nil key="highlightedColor"/>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="home_apps_pin_empty"/>
-                                        </userDefinedRuntimeAttributes>
-                                    </label>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_home_app_add" translatesAutoresizingMaskIntoConstraints="NO" id="rAc-hj-nTd">
+                                        <rect key="frame" x="296" y="39" width="24" height="24"/>
+                                        <color key="tintColor" name="icon_tint_secondary"/>
+                                    </imageView>
                                 </subviews>
                                 <color key="backgroundColor" name="background"/>
                                 <constraints>
-                                    <constraint firstItem="kTb-Tu-KFj" firstAttribute="bottom" secondItem="6Nf-kR-8cU" secondAttribute="bottom" constant="20" id="PoV-3R-wDX"/>
+                                    <constraint firstItem="rAc-hj-nTd" firstAttribute="centerY" secondItem="kTb-Tu-KFj" secondAttribute="centerY" id="HD9-Oj-N0N"/>
+                                    <constraint firstItem="rAc-hj-nTd" firstAttribute="trailing" secondItem="kTb-Tu-KFj" secondAttribute="trailing" constant="-35" id="Iv2-TF-bma"/>
                                     <constraint firstItem="kTb-Tu-KFj" firstAttribute="leading" secondItem="2ej-wk-Qvq" secondAttribute="leading" constant="20" id="RoT-v5-GG6"/>
-                                    <constraint firstItem="6Nf-kR-8cU" firstAttribute="leading" secondItem="kTb-Tu-KFj" secondAttribute="leading" constant="20" id="Wao-Wd-L7U"/>
                                     <constraint firstAttribute="trailing" secondItem="kTb-Tu-KFj" secondAttribute="trailing" constant="20" id="e0G-bz-rGL"/>
                                     <constraint firstItem="kTb-Tu-KFj" firstAttribute="top" secondItem="2ej-wk-Qvq" secondAttribute="top" constant="10" id="hjq-HI-uXW"/>
                                     <constraint firstAttribute="height" constant="110" id="jdA-qv-Lse"/>
-                                    <constraint firstItem="6Nf-kR-8cU" firstAttribute="top" secondItem="kTb-Tu-KFj" secondAttribute="top" constant="20" id="kXt-zT-gfq"/>
                                     <constraint firstAttribute="bottom" secondItem="kTb-Tu-KFj" secondAttribute="bottom" constant="18" id="tMk-Hv-bmI"/>
-                                    <constraint firstItem="kTb-Tu-KFj" firstAttribute="trailing" secondItem="6Nf-kR-8cU" secondAttribute="trailing" constant="20" id="zay-VY-Xpf"/>
                                 </constraints>
                             </view>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceHorizontal="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="LDb-PZ-N3K">
@@ -1221,7 +1213,6 @@
                         <outlet property="candidateCollectionLayout" destination="gFE-uW-e9b" id="mFZ-BG-Zse"/>
                         <outlet property="candidateCollectionView" destination="LDb-PZ-N3K" id="8KB-Ur-3tv"/>
                         <outlet property="candidateCollectionViewHeightConstraint" destination="QTq-YP-lKy" id="Thn-L8-DbJ"/>
-                        <outlet property="noPinnedHintLabel" destination="6Nf-kR-8cU" id="qw3-hx-gcC"/>
                         <outlet property="pageControl" destination="0Nz-k8-cp3" id="hkM-9W-tNV"/>
                         <outlet property="pageControlTopConstraint" destination="Xp9-eM-1Gn" id="bUi-Tw-Gpy"/>
                         <outlet property="pinnedCollectionView" destination="kTb-Tu-KFj" id="KhN-k7-OIj"/>
@@ -2161,14 +2152,17 @@ chat history from icloud</string>
         <namedColor name="icon_tint">
             <color red="0.18431372549019609" green="0.18823529411764706" blue="0.19607843137254902" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
+        <namedColor name="icon_tint_secondary">
+            <color red="0.87058823529411766" green="0.88627450980392153" blue="0.9137254901960784" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
         <namedColor name="indicator_tint">
             <color red="0.89803921568627454" green="0.9137254901960784" blue="0.94117647058823528" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="theme">
             <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

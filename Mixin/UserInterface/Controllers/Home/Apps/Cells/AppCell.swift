@@ -37,9 +37,11 @@ class AppCell: UICollectionViewCell {
         }
         switch app {
         case .embedded(let embedded):
+            imageView?.contentMode = .center
             label?.text = embedded.name
             imageView?.image = embedded.icon
         case .external(let user):
+            imageView?.contentMode = .scaleAspectFit
             label?.text = user.fullName
             imageView?.setImage(with: user)
         }

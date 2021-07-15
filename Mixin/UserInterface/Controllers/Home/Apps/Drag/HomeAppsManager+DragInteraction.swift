@@ -92,6 +92,8 @@ extension HomeAppsManager {
                 } else {
                     destinationIndexPath = IndexPath(item: indexPath.row + 1, section: 0)
                 }
+            } else if itemCell.imageContainerView.frame.minX == 0, convertedPoint.x < itemCell.imageContainerView.frame.midX {
+                destinationIndexPath = indexPath
             } else {
                 cancelFolderInteraction()
                 return

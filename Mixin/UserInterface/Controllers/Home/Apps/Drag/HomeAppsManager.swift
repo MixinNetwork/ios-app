@@ -103,7 +103,7 @@ extension HomeAppsManager {
     @objc func handleTapGesture(gestureRecognizer: UITapGestureRecognizer) {
         guard isEditing else { return }
         var touchPoint = gestureRecognizer.location(in: viewController.view)
-        guard let (collectionView, pageCell) = viewInfos(at: touchPoint) else {
+        guard let (collectionView, pageCell) = collectionViewAndPageCell(at: touchPoint) else {
             return
         }
         touchPoint = gestureRecognizer.location(in: collectionView)
@@ -113,7 +113,7 @@ extension HomeAppsManager {
         }
     }
     
-    func viewInfos(at point: CGPoint) -> (collectionView: UICollectionView, cell: AppPageCell)? {
+    func collectionViewAndPageCell(at point: CGPoint) -> (collectionView: UICollectionView, cell: AppPageCell)? {
         let collectionView: UICollectionView
         if let pinnedCollectionView = pinnedCollectionView, pinnedCollectionView.frame.contains(viewController.view.convert(point, to: pinnedCollectionView)) {
             collectionView = pinnedCollectionView
@@ -142,7 +142,7 @@ extension HomeAppsManager {
             }
         }
         // add an empty page
-        if items[items.count - 1].count > 0 {
+        if let lastPage = items.last, lastPage.count > 0 {
             items.append([])
             candidateCollectionView.insertItems(at: [IndexPath(item: items.count - 1, section: 0)])
         }
@@ -162,7 +162,9 @@ extension HomeAppsManager {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
             let emptyIndex = self.items.enumerated().compactMap( { $1.count == 0 ? $0 : nil })
             self.items.remove(at: emptyIndex)
-            self.candidateCollectionView.deleteItems(at: emptyIndex.map({ IndexPath(item: $0, section: 0) }))
+            self.candidateCollectionView.performBatchUpdates({
+                self.candidateCollectionView.deleteItems(at: emptyIndex.map({ IndexPath(item: $0, section: 0) }))
+            }, completion: nil)
         }
         tapRecognizer.isEnabled = false
         delegate?.homeAppsManagerDidLeaveEditingMode(self)

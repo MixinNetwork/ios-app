@@ -17,7 +17,7 @@ extension HomeAppsManager {
     private func beginDragInteraction(_ gestureRecognizer: UILongPressGestureRecognizer) {
         feedback.prepare()
         var touchPoint = gestureRecognizer.location(in: viewController.view)
-        guard let (collectionView, pageCell) = viewInfos(at: touchPoint) else { return }
+        guard let (collectionView, pageCell) = collectionViewAndPageCell(at: touchPoint) else { return }
         touchPoint = gestureRecognizer.location(in: collectionView)
         touchPoint.x -= collectionView.contentOffset.x
         guard let indexPath = pageCell.collectionView.indexPathForItem(at: touchPoint),
@@ -45,7 +45,7 @@ extension HomeAppsManager {
     private func updateDragInteraction(_ gestureRecognizer: UILongPressGestureRecognizer) {
         guard let currentInteraction = currentDragInteraction else { return }
         var touchPoint = gestureRecognizer.location(in: viewController.view)
-        guard let (collectionView, pageCell) = viewInfos(at: touchPoint) else { return }
+        guard let (collectionView, pageCell) = collectionViewAndPageCell(at: touchPoint) else { return }
         touchPoint = gestureRecognizer.location(in: collectionView)
         let convertedTouchPoint = viewController.view.convert(touchPoint, from: collectionView)
         currentInteraction.movePlaceholderView(to: convertedTouchPoint)

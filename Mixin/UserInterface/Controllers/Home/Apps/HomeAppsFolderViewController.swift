@@ -72,6 +72,13 @@ class HomeAppsFolderViewController: UIViewController {
         }
     }
     
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle {
+            backgroundView.effect = UserInterfaceStyle.current == .light ? .darkBlur : .lightBlur
+        }
+    }
+    
     @IBAction func clearTextField(_ sender: UIButton) {
         textField.text = ""
         textField.becomeFirstResponder()
@@ -120,7 +127,7 @@ extension HomeAppsFolderViewController {
             self.containerView.transform = CGAffineTransform.identity
             self.containerView.alpha = 1
             self.homeAppsManager.updateFolderDragOutFlags()
-            self.backgroundView.effect = .regularBlur
+            self.backgroundView.effect = UserInterfaceStyle.current == .light ? .darkBlur : .lightBlur
         }
         animation.addCompletion { _ in
             self.openAnimationDidEnd?()

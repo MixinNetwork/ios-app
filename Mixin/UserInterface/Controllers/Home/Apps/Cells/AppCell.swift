@@ -45,6 +45,7 @@ class AppCell: UICollectionViewCell {
             label?.text = user.fullName
             imageView?.setImage(with: user)
         }
+        label?.alpha = 1
         label?.isHidden = false
     }
     

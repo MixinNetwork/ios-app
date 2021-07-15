@@ -201,7 +201,7 @@ extension HomeAppsManager {
         }
     }
     
-    func perform(transfer: HomeAppsDragInteractionTransfer, showPlaceholder: Bool = false) {
+    func perform(transfer: HomeAppsDragInteractionTransfer) {
         viewController.view.removeGestureRecognizer(longPressRecognizer)
         longPressRecognizer = transfer.gestureRecognizer
         longPressRecognizer.removeTarget(nil, action: nil)
@@ -209,11 +209,9 @@ extension HomeAppsManager {
         viewController.view.addGestureRecognizer(longPressRecognizer)
         currentDragInteraction = transfer.interaction.copy()
         currentDragInteraction?.needsUpdate = true
-        if showPlaceholder {
-            let placeholderView = transfer.interaction.placeholderView
-            placeholderView.center = viewController.view.convert(placeholderView.center, from: placeholderView.superview)
-            viewController.view.addSubview(placeholderView)
-        }
+        let placeholderView = transfer.interaction.placeholderView
+        placeholderView.center = viewController.view.convert(placeholderView.center, from: placeholderView.superview)
+        viewController.view.addSubview(placeholderView)
     }
     
 }

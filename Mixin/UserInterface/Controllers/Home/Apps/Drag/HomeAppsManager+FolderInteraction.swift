@@ -96,7 +96,6 @@ extension HomeAppsManager {
                 folderViewController?.sourceFrame = convertedFrame
                 folderCell.wrapperView.isHidden = isNewFolder
                 interaction.wrapperView.removeFromSuperview()
-                interaction.dragInteraction.placeholderView.removeFromSuperview()
                 self.currentFolderInteraction = nil
             }
         }
@@ -141,6 +140,7 @@ extension HomeAppsManager {
             // still press when folder was created
             interaction.dragInteraction.currentPageCell.collectionView.reloadItems(at: [folderIndexPath])
             showFolderInteraction(interaction, page: page, sourceIndex: sourceIndex, destinationIndex: destinationIndex, folderIndexPath: folderIndexPath, isNewFolder: true)
+            interaction.dragInteraction.transitionFromFolderWrapperView()
             newFolder.isNewFolder = false
         } else {
             // end press when folder was created
@@ -170,7 +170,7 @@ extension HomeAppsManager {
         }
     }
     
-    // drop into created folder
+    // drop into folder
     private func commit(folderDropInteraction interaction: HomeAppsFolderDropInteraction, didDrop: Bool) {
         guard let page = items.firstIndex(where: { $0.contains { $0 === interaction.folder } }),
               let sourceIndex = items[page].firstIndex(where: { $0 === interaction.dragInteraction.item }),
@@ -309,7 +309,7 @@ extension HomeAppsManager: HomeAppsFolderViewControllerDelegate {
             items[currentPage].append(transfer.interaction.item)
             items[currentPage].remove(at: folderIndex)
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.45, execute: {
-                self.perform(transfer: transfer, showPlaceholder: true)
+                self.perform(transfer: transfer)
                 pageCell.draggedItem = transfer.interaction.item
                 pageCell.items = self.items[self.currentPage]
                 self.currentDragInteraction?.currentPageCell = pageCell
@@ -326,7 +326,7 @@ extension HomeAppsManager: HomeAppsFolderViewControllerDelegate {
                 })
             })
         } else { // drag out app, folder still remain more than one apps
-            perform(transfer: transfer, showPlaceholder: true)
+            perform(transfer: transfer)
             currentDragInteraction?.currentPageCell = pageCell
             if items[currentPage].count == HomeAppsMode.regular.appsPerPage {
                 currentDragInteraction?.savedState = items

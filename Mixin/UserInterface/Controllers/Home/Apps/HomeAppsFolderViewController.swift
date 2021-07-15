@@ -52,15 +52,15 @@ class HomeAppsFolderViewController: UIViewController {
             pageControl.isHidden = false
             pageControl.numberOfPages = homeAppsManager.items.count
         }
+        if let transfer = dragInteractionTransfer {
+            homeAppsManager.perform(transfer: transfer)
+        }
         if isEditing {
             let indexPath = IndexPath(item: currentPage, section: 0)
             collectionView.scrollToItem(at: indexPath, at: .centeredVertically, animated: false)
         }
-        dragInteractionTransfer = nil
         prepareForAnimateIn()
-        if let transfer = dragInteractionTransfer {
-            homeAppsManager.perform(transfer: transfer)
-        }
+        dragInteractionTransfer = nil
     }
     
     override func viewDidAppear(_ animated: Bool) {

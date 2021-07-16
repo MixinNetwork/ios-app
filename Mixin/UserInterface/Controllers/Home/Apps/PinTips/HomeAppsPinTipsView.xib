@@ -12,7 +12,6 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="HomeAppsPinTipsViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
                 <outlet property="candidateAppLeadingConstraint" destination="O3w-Fs-t3V" id="ESS-7s-QeJ"/>
-                <outlet property="lineViewTrailingConstraint" destination="fde-fZ-OA3" id="oZr-hj-9tc"/>
                 <outlet property="pinnedAppViewTopConstraint" destination="Mdt-fd-aqn" id="M6q-4X-h31"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
                 <outletCollection property="pinnedAppSpaceConstraints" destination="ZmF-2M-9lk" collectionClass="NSMutableArray" id="jyX-jk-oQI"/>
@@ -33,32 +32,32 @@
                     <rect key="frame" x="20" y="300" width="335" height="82"/>
                     <subviews>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg_extension" translatesAutoresizingMaskIntoConstraints="NO" id="S9h-TW-Jno">
-                            <rect key="frame" x="20" y="14" width="54" height="54"/>
+                            <rect key="frame" x="20" y="15" width="52" height="52"/>
                             <color key="tintColor" name="icon_tint"/>
                             <constraints>
-                                <constraint firstAttribute="width" constant="54" id="Ryv-wk-X0s"/>
-                                <constraint firstAttribute="height" constant="54" id="pnb-LU-Khr"/>
+                                <constraint firstAttribute="width" constant="52" id="Ryv-wk-X0s"/>
+                                <constraint firstAttribute="height" constant="52" id="pnb-LU-Khr"/>
                             </constraints>
                         </imageView>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_app_category_wallet" translatesAutoresizingMaskIntoConstraints="NO" id="F6n-dI-oWr">
-                            <rect key="frame" x="35" y="29" width="24" height="24"/>
+                            <rect key="frame" x="34" y="29" width="24" height="24"/>
                             <color key="tintColor" name="icon_tint"/>
                         </imageView>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg_extension" translatesAutoresizingMaskIntoConstraints="NO" id="zGX-7U-SDx">
-                            <rect key="frame" x="97" y="14" width="54" height="54"/>
+                            <rect key="frame" x="95" y="15" width="52" height="52"/>
                         </imageView>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_app_category_camera" translatesAutoresizingMaskIntoConstraints="NO" id="yps-8h-Nm3">
-                            <rect key="frame" x="112" y="29" width="24" height="24"/>
+                            <rect key="frame" x="109" y="29" width="24" height="24"/>
                             <color key="tintColor" name="icon_tint"/>
                         </imageView>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_dot_line_circle" translatesAutoresizingMaskIntoConstraints="NO" id="UIO-Cg-Byd">
-                            <rect key="frame" x="174" y="14" width="54" height="54"/>
+                            <rect key="frame" x="170" y="15" width="52" height="52"/>
                         </imageView>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2z4-mF-J2X">
-                            <rect key="frame" x="251" y="14" width="54" height="54"/>
+                            <rect key="frame" x="245" y="15" width="52" height="52"/>
                             <subviews>
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_home_app_add" translatesAutoresizingMaskIntoConstraints="NO" id="nrz-yn-xRE">
-                                    <rect key="frame" x="15" y="15" width="24" height="24"/>
+                                    <rect key="frame" x="14" y="14" width="24" height="24"/>
                                     <color key="tintColor" name="icon_tint_secondary"/>
                                 </imageView>
                             </subviews>
@@ -105,7 +104,7 @@
                     </constraints>
                 </imageView>
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_line_arrow" translatesAutoresizingMaskIntoConstraints="NO" id="nd5-fV-9mZ">
-                    <rect key="frame" x="176" y="387" width="49" height="55"/>
+                    <rect key="frame" x="176" y="387" width="44" height="55"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="55" id="nK0-J1-jlP"/>
                     </constraints>
@@ -178,7 +177,7 @@
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="Alw-at-ECR" secondAttribute="trailing" constant="20" id="Ga5-vH-1uL"/>
                 <constraint firstItem="Alw-at-ECR" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="300" id="Mdt-fd-aqn"/>
                 <constraint firstItem="LN8-oq-DUP" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="115" id="O3w-Fs-t3V"/>
-                <constraint firstItem="nd5-fV-9mZ" firstAttribute="trailing" secondItem="UIO-Cg-Byd" secondAttribute="trailing" constant="-23" id="fde-fZ-OA3"/>
+                <constraint firstItem="nd5-fV-9mZ" firstAttribute="trailing" secondItem="UIO-Cg-Byd" secondAttribute="centerX" constant="4" id="fde-fZ-OA3"/>
                 <constraint firstAttribute="bottom" secondItem="pwY-aW-16U" secondAttribute="bottom" id="het-5e-yK3"/>
                 <constraint firstItem="nd5-fV-9mZ" firstAttribute="top" secondItem="Alw-at-ECR" secondAttribute="bottom" constant="5" id="oCG-hI-VtW"/>
             </constraints>

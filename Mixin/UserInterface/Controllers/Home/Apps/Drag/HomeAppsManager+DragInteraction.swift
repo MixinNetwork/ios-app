@@ -38,7 +38,7 @@ extension HomeAppsManager {
         enterEditingMode()
         currentDragInteraction = HomeAppsDragInteraction(placeholderView: placeholderView, dragOffset: dragOffset, item: item, originalPageCell: pageCell, originalIndexPath: indexPath)
         UIView.animate(withDuration: 0.25, animations: {
-            placeholderView.transform = CGAffineTransform.identity.scaledBy(x: 1.15, y: 1.15)
+            placeholderView.transform = CGAffineTransform.identity.scaledBy(x: HomeAppsConstants.appIconScale.x, y: HomeAppsConstants.appIconScale.y)
         })
     }
     
@@ -59,12 +59,12 @@ extension HomeAppsManager {
                 shouldStartDragOutTimer = true
             }
             if shouldStartDragOutTimer {
-                guard folderRemovalTimer == nil else { return }
-                folderRemovalTimer = Timer.scheduledTimer(timeInterval: HomeAppsMode.folderRemovalInterval, target: self, selector: #selector(folderRemoveTimerHandler), userInfo: nil, repeats: false)
+                guard folderRemoveTimer == nil else { return }
+                folderRemoveTimer = Timer.scheduledTimer(timeInterval: HomeAppsConstants.folderRemoveInterval, target: self, selector: #selector(folderRemoveTimerHandler), userInfo: nil, repeats: false)
                 return
             }
         }
-        stopFolderRemovalTimer()
+        stopFolderRemoveTimer()
         var destinationIndexPath: IndexPath
         let flowLayout = pageCell.collectionView.collectionViewLayout as! UICollectionViewFlowLayout
         let appsPerRow = isInAppsFolderViewController ? HomeAppsMode.folder.appsPerRow : HomeAppsMode.regular.appsPerRow
@@ -103,7 +103,7 @@ extension HomeAppsManager {
             if collectionView == pinnedCollectionView { // move to pin
                 destinationIndexPath = IndexPath(item: 0, section: 0)
             } else if !(pageTimer?.isValid ?? false) && collectionView == candidateCollectionView { // move to previous page
-                pageTimer = Timer.scheduledTimer(timeInterval: HomeAppsMode.pageInterval, target: self, selector: #selector(pageTimerHandler(_:)), userInfo: -1, repeats: false)
+                pageTimer = Timer.scheduledTimer(timeInterval: HomeAppsConstants.pageInterval, target: self, selector: #selector(pageTimerHandler(_:)), userInfo: -1, repeats: false)
                 return
             } else {
                 return
@@ -117,7 +117,7 @@ extension HomeAppsManager {
                     destinationIndexPath = IndexPath(item: pinnedItems.count - 1, section: 0)
                 }
             } else if !(pageTimer?.isValid ?? false) && collectionView == candidateCollectionView { // move to next page
-                pageTimer = Timer.scheduledTimer(timeInterval: HomeAppsMode.pageInterval, target: self, selector: #selector(pageTimerHandler(_:)), userInfo: 1, repeats: false)
+                pageTimer = Timer.scheduledTimer(timeInterval: HomeAppsConstants.pageInterval, target: self, selector: #selector(pageTimerHandler(_:)), userInfo: 1, repeats: false)
                 return
             } else {
                 return

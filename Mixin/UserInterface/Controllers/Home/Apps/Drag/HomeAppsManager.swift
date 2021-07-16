@@ -58,7 +58,7 @@ class HomeAppsManager: NSObject {
     
     var pageTimer: Timer?
     var folderTimer: Timer?
-    var folderRemovalTimer: Timer?
+    var folderRemoveTimer: Timer?
     
     var ignoreDragOutOnTop = false
     var ignoreDragOutOnBottom = false
@@ -277,9 +277,9 @@ extension HomeAppsManager: UICollectionViewDataSource, UICollectionViewDelegate 
         folderTimer = nil
     }
     
-    func stopFolderRemovalTimer() {
-        folderRemovalTimer?.invalidate()
-        folderRemovalTimer = nil
+    func stopFolderRemoveTimer() {
+        folderRemoveTimer?.invalidate()
+        folderRemoveTimer = nil
     }
     
 }

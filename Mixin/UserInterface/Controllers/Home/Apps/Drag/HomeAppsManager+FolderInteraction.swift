@@ -27,7 +27,7 @@ extension HomeAppsManager {
     
     func startFolderInteraction(for itemCell: AppCell) {
         guard let dragInteraction = currentDragInteraction else { return }
-        folderTimer = Timer.scheduledTimer(timeInterval: HomeAppsMode.folderInterval, target: self, selector: #selector(folderTimerHandler), userInfo: nil, repeats: false)
+        folderTimer = Timer.scheduledTimer(timeInterval: HomeAppsConstants.folderInterval, target: self, selector: #selector(folderTimerHandler), userInfo: nil, repeats: false)
         dragInteraction.transitionToFolderWrapperView()
         let folderWrapperView = UIView(frame: itemCell.imageContainerView.frame)
         folderWrapperView.layer.cornerRadius = 12
@@ -42,7 +42,7 @@ extension HomeAppsManager {
         }
         itemCell.stopShaking()
         UIView.animate(withDuration: 0.25) {
-            folderWrapperView.transform = CGAffineTransform.identity.scaledBy(x: 1.2, y: 1.2)
+            folderWrapperView.transform = CGAffineTransform.identity.scaledBy(x: HomeAppsConstants.folderScale.x, y: HomeAppsConstants.folderScale.y)
             self.currentDragInteraction?.placeholderView.transform = .identity
             itemCell.label?.alpha = 0
         }
@@ -61,7 +61,7 @@ extension HomeAppsManager {
         folderInteraction.isDismissing = true
         UIView.animate(withDuration: 0.25, animations: {
             folderInteraction.wrapperView.transform = .identity
-            self.currentDragInteraction?.placeholderView.transform = CGAffineTransform.identity.scaledBy(x: 1.15, y: 1.15)
+            self.currentDragInteraction?.placeholderView.transform = CGAffineTransform.identity.scaledBy(x: HomeAppsConstants.appIconScale.x, y: HomeAppsConstants.appIconScale.y)
             folderInteraction.dragInteraction.currentPageCell.collectionView.visibleCells.forEach { cell in
                 if let cell = cell as? AppCell {
                     cell.label?.alpha = 1

@@ -898,7 +898,7 @@
                                                                         <rect key="frame" x="0.0" y="0.0" width="54" height="54"/>
                                                                         <autoresizingMask key="autoresizingMask"/>
                                                                         <subviews>
-                                                                            <view contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="eId-0l-p9C" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
+                                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eId-0l-p9C" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
                                                                                 <rect key="frame" x="0.0" y="0.0" width="54" height="54"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="width" constant="54" id="SeW-CP-GXC"/>
@@ -1315,10 +1315,10 @@
                                                             </collectionViewFlowLayout>
                                                             <cells>
                                                                 <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="app" id="GHp-wd-8eh" customClass="AppCell" customModule="Mixin" customModuleProvider="target">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="80" height="90"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="80" height="74"/>
                                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                     <collectionViewCellContentView key="contentView" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="3jn-9k-1AC">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="80" height="90"/>
+                                                                        <rect key="frame" x="0.0" y="0.0" width="80" height="74"/>
                                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                         <subviews>
                                                                             <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="S4Z-Z9-u5O" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
@@ -1346,7 +1346,7 @@
                                                                             <constraint firstItem="S4Z-Z9-u5O" firstAttribute="centerX" secondItem="3jn-9k-1AC" secondAttribute="centerX" id="v2m-Da-Q6H"/>
                                                                         </constraints>
                                                                     </collectionViewCellContentView>
-                                                                    <size key="customSize" width="80" height="90"/>
+                                                                    <size key="customSize" width="80" height="74"/>
                                                                     <connections>
                                                                         <outlet property="imageContainerView" destination="S4Z-Z9-u5O" id="KRf-0l-cEB"/>
                                                                         <outlet property="imageView" destination="S4Z-Z9-u5O" id="X0g-Ut-0Jr"/>
@@ -2198,10 +2198,10 @@ chat history from icloud</string>
             <color red="0.89803921568627454" green="0.9137254901960784" blue="0.94117647058823528" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="theme">
             <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

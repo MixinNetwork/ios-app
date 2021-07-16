@@ -8,9 +8,6 @@ enum HomeAppsMode {
     case nestedFolder
     
     static let imageContainerSize = CGSize(width: 54, height: 54)
-    static let folderRemovalInterval: TimeInterval = 0.5
-    static let folderInterval: TimeInterval = 0.7
-    static let pageInterval: TimeInterval = 0.7
     
     var sectionInset: UIEdgeInsets {
         switch self {
@@ -46,6 +43,8 @@ enum HomeAppsMode {
         switch self {
         case .nestedFolder:
             return 2
+        case .folder:
+            return 20
         default:
             return 0
         }
@@ -58,7 +57,7 @@ enum HomeAppsMode {
         case .pinned:
             return CGSize(width: 54, height: 54)
         case .folder:
-            return CGSize(width: 80, height: 90)
+            return CGSize(width: 80, height: 74)
         case .nestedFolder:
             return CGSize(width: 14, height: 14)
         }

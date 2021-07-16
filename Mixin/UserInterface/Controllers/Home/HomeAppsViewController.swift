@@ -183,7 +183,7 @@ extension HomeAppsViewController {
     private func showPinTipsIfNeeded() {
         guard !AppGroupUserDefaults.User.homeAppsPinTips else { return }
         let viewController = HomeAppsPinTipsViewController()
-        viewController.topSpace = view.frame.origin.y + 80.0
+        viewController.pinnedViewTopOffset = view.frame.origin.y + 80.0
         viewController.modalPresentationStyle = .overFullScreen
         viewController.modalTransitionStyle = .crossDissolve
         present(viewController, animated: true, completion: nil)

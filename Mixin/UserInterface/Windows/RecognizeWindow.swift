@@ -47,7 +47,7 @@ class RecognizeWindow: BottomSheetView {
         return Bundle.main.loadNibNamed("RecognizeWindow", owner: nil, options: nil)?.first as! RecognizeWindow
     }
     
-    var textIsValidURL: Bool {
+    private var textIsValidURL: Bool {
         let text = contentTextView.text!
         let detector = try! NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
         if let match = detector.firstMatch(in: text, options: [], range: NSRange(location: 0, length: text.utf16.count)) {

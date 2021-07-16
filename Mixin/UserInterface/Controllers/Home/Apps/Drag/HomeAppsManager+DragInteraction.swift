@@ -73,7 +73,7 @@ extension HomeAppsManager {
                 return
             }
             let imageCenter = itemCell.imageContainerView.center
-            let offset = 20 as CGFloat
+            let offset = HomeAppsConstants.folderTargetOffset
             let targetRect = CGRect(x: imageCenter.x - offset, y: imageCenter.y - offset, width: offset * 2, height: offset * 2)
             let convertedPoint = itemCell.convert(touchPoint, from: pageCell.collectionView)
             let canCreateFolder = targetRect.contains(convertedPoint)

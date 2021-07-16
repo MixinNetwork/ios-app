@@ -2,7 +2,7 @@ import UIKit
 
 protocol AppPageCellDelegate: AnyObject {
     
-    func didSelect(cell: AppCell, on pageCell: AppPageCell)
+    func appPageCell(_ pageCell: AppPageCell, didSelect cell: AppCell)
     
 }
 
@@ -125,7 +125,7 @@ extension AppPageCell: UICollectionViewDelegate, UICollectionViewDataSource {
         guard let cell = collectionView.cellForItem(at: indexPath) as? AppCell else {
             return
         }
-        delegate?.didSelect(cell: cell, on: self)
+        delegate?.appPageCell(self, didSelect: cell)
     }
     
 }

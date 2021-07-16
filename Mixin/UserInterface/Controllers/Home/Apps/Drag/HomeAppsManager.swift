@@ -295,7 +295,7 @@ extension HomeAppsManager: UIScrollViewDelegate {
 
 extension HomeAppsManager: AppPageCellDelegate {
     
-    func didSelect(cell: AppCell, on pageCell: AppPageCell) {
+    func appPageCell(_ pageCell: AppPageCell, didSelect cell: AppCell) {
         if let cell = cell as? AppFolderCell {
             showFolder(from: cell)
         } else if let item = cell.item as? AppModel, !isEditing {

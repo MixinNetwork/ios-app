@@ -9,4 +9,6 @@ enum HomeAppsConstants {
     static let appIconScale = CGPoint(x: 1.15, y: 1.15)
     static let folderScale = CGPoint(x: 1.2, y: 1.2)
     
+    static let folderTargetOffset: CGFloat = 20
+    
 }

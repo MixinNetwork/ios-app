@@ -23,7 +23,7 @@ extension HomeAppsManager {
         guard let indexPath = pageCell.collectionView.indexPathForItem(at: touchPoint),
               let cell = pageCell.collectionView.cellForItem(at: indexPath) as? AppCell,
               let item = cell.item else {
-            // long press empty place to active editing mode
+            // long press empty place to start editing mode
             enterEditingMode()
             return
         }
@@ -166,7 +166,6 @@ extension HomeAppsManager {
     }
     
     func endDragInteraction(_ gestureRecognizer: UILongPressGestureRecognizer) {
-        // create folder by dropped the item
         if currentFolderInteraction != nil {
             stopFolderTimer()
             commitFolderInteraction(didDrop: true)

@@ -137,13 +137,13 @@ extension HomeAppsManager {
         let folderIndexPath = IndexPath(item: destinationIndex, section: 0)
         interaction.dragInteraction.currentPageCell.items = items[page]
         if !didDrop {
-            // still press when folder was created
+            // still hold app when folder was created
             interaction.dragInteraction.currentPageCell.collectionView.reloadItems(at: [folderIndexPath])
             showFolderInteraction(interaction, page: page, sourceIndex: sourceIndex, destinationIndex: destinationIndex, folderIndexPath: folderIndexPath, isNewFolder: true)
             interaction.dragInteraction.transitionFromFolderWrapperView()
             newFolder.isNewFolder = false
         } else {
-            // end press when folder was created
+            // drap app when folder was created
             let destinationCell = interaction.dragInteraction.currentPageCell.collectionView.cellForItem(at: IndexPath(item: destinationIndex, section: 0)) as! AppCell
             let iconSnapshot = destinationCell.imageContainerView.snapshotView(afterScreenUpdates: false)!
             iconSnapshot.frame = destinationCell.convert(destinationCell.imageContainerView.frame, to: interaction.dragInteraction.currentPageCell)

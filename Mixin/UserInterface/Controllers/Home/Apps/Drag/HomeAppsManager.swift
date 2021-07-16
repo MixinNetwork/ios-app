@@ -192,6 +192,9 @@ extension HomeAppsManager {
     
     // moves last item in page to next and rearranges next pages if needed
     func moveLastItem(inPage page: Int) {
+        guard page + 1 < items.count else {
+            return
+        }
         var currentPageItems = items[page + 1]
         currentPageItems.insert(items[page].removeLast(), at: 0)
         items[page + 1] = currentPageItems

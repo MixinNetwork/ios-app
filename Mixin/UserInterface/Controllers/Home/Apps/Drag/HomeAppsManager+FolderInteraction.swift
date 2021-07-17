@@ -305,7 +305,8 @@ extension HomeAppsManager: HomeAppsFolderViewControllerDelegate {
             return
         }
         stopPageTimer()
-        if info.folder.pages.flatMap({ $0 }).count == 0 { // last app dragged out then remove folder
+        let appsCountInFolder = info.folder.pages.reduce(0, { $0 + $1.count })
+        if appsCountInFolder == 0 { // last app dragged out then remove folder
             items[currentPage].append(transfer.interaction.item)
             items[currentPage].remove(at: folderIndex)
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.45, execute: {
@@ -353,6 +354,7 @@ extension HomeAppsManager: HomeAppsFolderViewControllerDelegate {
                     self.endDragInteraction(self.longPressRecognizer)
                 }
             })
+            info.isNewFolder = appsCountInFolder == 1
         }
         info.shouldCancelCreation = info.isNewFolder
     }

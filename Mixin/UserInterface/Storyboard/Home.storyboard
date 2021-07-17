@@ -1428,7 +1428,7 @@
                                 <rect key="frame" x="82.5" y="71.5" width="210" height="30.5"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="24"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" returnKeyType="done"/>
                                 <connections>
                                     <outlet property="delegate" destination="aRa-wQ-N2z" id="h9g-bc-Lm9"/>
                                 </connections>
@@ -2198,7 +2198,7 @@ chat history from icloud</string>
             <color red="0.89803921568627454" green="0.9137254901960784" blue="0.94117647058823528" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
             <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

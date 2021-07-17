@@ -883,7 +883,7 @@
                                                     <subviews>
                                                         <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="jp6-5U-Xwh">
                                                             <rect key="frame" x="0.0" y="0.0" width="335" height="82"/>
-                                                            <color key="backgroundColor" name="background_secondary"/>
+                                                            <color key="backgroundColor" name="background_input"/>
                                                             <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="C1g-YY-Fny">
                                                                 <size key="itemSize" width="54" height="54"/>
                                                                 <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -1021,7 +1021,7 @@
                                                                 <subviews>
                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DvM-IY-875">
                                                                         <rect key="frame" x="13" y="12" width="54" height="54"/>
-                                                                        <color key="backgroundColor" name="background_secondary"/>
+                                                                        <color key="backgroundColor" name="background_input"/>
                                                                         <userDefinedRuntimeAttributes>
                                                                             <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                                                                 <integer key="value" value="12"/>
@@ -2184,6 +2184,9 @@ chat history from icloud</string>
         <image name="ic_user_bot" width="14" height="11"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="background_input">
+            <color red="0.96100002527236938" green="0.96899998188018799" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_secondary">
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

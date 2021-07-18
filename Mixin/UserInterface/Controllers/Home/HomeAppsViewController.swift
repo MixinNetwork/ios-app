@@ -3,6 +3,7 @@ import MixinServices
 
 final class HomeAppsViewController: UIViewController {
     
+    @IBOutlet weak var homeTitleLabel: UILabel!
     @IBOutlet weak var pinnedCollectionView: UICollectionView!
     @IBOutlet weak var candidateCollectionView: UICollectionView!
     @IBOutlet weak var candidateCollectionLayout: UICollectionViewFlowLayout!
@@ -43,6 +44,7 @@ final class HomeAppsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        updateHomeTitleLabel(isEditing: false)
         appsItemManager = HomeAppsItemManager()
         setCandidateEmptyHintHidden(!appsItemManager.candidateItems.isEmpty)
         pinnedPlaceholderViewLeadingConstraints.forEach({ $0.constant = HomeAppsMode.pinned.minimumInteritemSpacing })
@@ -195,6 +197,16 @@ extension HomeAppsViewController {
         }
     }
     
+    private func updateHomeTitleLabel(isEditing: Bool) {
+        if isEditing {
+            self.homeTitleLabel.textColor = UIColor.theme
+            self.homeTitleLabel.text = R.string.localizable.action_done()
+        } else {
+            self.homeTitleLabel.textColor = UIColor.title
+            self.homeTitleLabel.text = R.string.localizable.home_title_apps()
+        }
+    }
+    
 }
 
 extension HomeAppsViewController: HomeAppsManagerDelegate {
@@ -227,9 +239,13 @@ extension HomeAppsViewController: HomeAppsManagerDelegate {
         updatePinnedPlaceholderViewsHidden(with: manager.pinnedItems.count)
     }
     
-    func homeAppsManagerDidEnterEditingMode(_ manager: HomeAppsManager) {}
+    func homeAppsManagerDidEnterEditingMode(_ manager: HomeAppsManager) {
+        updateHomeTitleLabel(isEditing: true)
+    }
     
-    func homeAppsManagerDidLeaveEditingMode(_ manager: HomeAppsManager) {}
+    func homeAppsManagerDidLeaveEditingMode(_ manager: HomeAppsManager) {
+        updateHomeTitleLabel(isEditing: false)
+    }
     
     func homeAppsManager(_ manager: HomeAppsManager, didBeginFolderDragOutWithTransfer transfer: HomeAppsDragInteractionTransfer) {}
     

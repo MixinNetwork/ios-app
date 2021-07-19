@@ -20,6 +20,7 @@ class CallViewController: ResizablePopupViewController {
     @IBOutlet weak var acceptButton: UIButton!
     @IBOutlet weak var muteStackView: UIStackView!
     @IBOutlet weak var speakerStackView: UIStackView!
+    @IBOutlet weak var statusLabel: UILabel!
     
     @IBOutlet weak var hideContentViewConstraint: NSLayoutConstraint!
     @IBOutlet weak var showContentViewConstraint: NSLayoutConstraint!
@@ -36,7 +37,7 @@ class CallViewController: ResizablePopupViewController {
             guard let call = call else {
                 return
             }
-            updateTitle(call: call)
+            updateStatusLabel(call: call)
         }
     }
     
@@ -94,8 +95,8 @@ class CallViewController: ResizablePopupViewController {
         contentView.layer.cornerRadius = 13
         hideContentViewConstraint.priority = .defaultHigh
         showContentViewConstraint.priority = .defaultLow
-        let titleFont = UIFont.monospacedDigitSystemFont(ofSize: 18, weight: .semibold)
-        titleLabel.setFont(scaledFor: titleFont, adjustForContentSize: true)
+        let statusFont = UIFont.monospacedDigitSystemFont(ofSize: 14, weight: .regular)
+        statusLabel.setFont(scaledFor: statusFont, adjustForContentSize: true)
         UIView.performWithoutAnimation(subtitleButton.layoutIfNeeded) // Remove the animation by setText:
         membersCollectionView.register(R.nib.callMemberCell)
         membersCollectionView.dataSource = self
@@ -156,12 +157,7 @@ class CallViewController: ResizablePopupViewController {
         case .expanded, .unavailable:
             return maxHeight
         case .compressed:
-            switch ScreenHeight.current {
-            case .short, .medium:
-                return round(maxHeight * 0.8)
-            case .long, .extraLong:
-                return round(maxHeight * 0.6)
-            }
+            return round(maxHeight / 3 * 2)
         }
     }
     
@@ -222,6 +218,7 @@ class CallViewController: ResizablePopupViewController {
         isConnectionUnstable = false
         
         if let call = call as? PeerToPeerCall {
+            titleLabel.text = R.string.localizable.chat_menu_call()
             if let user = call.remoteUser {
                 members = [user]
             } else {
@@ -230,7 +227,7 @@ class CallViewController: ResizablePopupViewController {
             }
             membersCollectionView.reloadData()
         } else if let call = call as? GroupCall {
-            titleLabel.text = R.string.localizable.chat_menu_group_call()
+            titleLabel.text = call.conversationName
             membersCollectionView.isHidden = false
             call.membersDataSource.collectionView = membersCollectionView
         }
@@ -419,39 +416,22 @@ extension CallViewController {
         }
     }
     
-    private func updateTitle(call: Call) {
+    private func updateStatusLabel(call: Call) {
         if isConnectionUnstable {
             let description = R.string.localizable.group_call_bad_network()
-            if call is PeerToPeerCall {
-                titleLabel.text = R.string.localizable.call_p2p_title_with_status(description)
-            } else {
-                titleLabel.text = R.string.localizable.call_group_title_with_status(description)
-            }
+            statusLabel.text = description
         } else {
-            let status: String?
             if call.status == .connected {
-                status = service.connectionDuration
+                statusLabel.text = service.connectionDuration
             } else {
-                status = call.status.localizedDescription
-            }
-            if call is PeerToPeerCall {
-                if let status = status {
-                    titleLabel.text = R.string.localizable.call_p2p_title_with_status(status)
-                } else {
-                    titleLabel.text = R.string.localizable.chat_menu_call()
-                }
-            } else {
-                if let status = status {
-                    titleLabel.text = R.string.localizable.call_group_title_with_status(status)
-                } else {
-                    titleLabel.text = R.string.localizable.chat_menu_group_call()
-                }
+                statusLabel.text = call.status.localizedDescription
             }
         }
+        trayView.layoutIfNeeded()
     }
     
     private func updateViews(call: Call) {
-        updateTitle(call: call)
+        updateStatusLabel(call: call)
         let animationDuration: TimeInterval = 0.3
         switch call.status {
         case .incoming:
@@ -500,7 +480,7 @@ extension CallViewController {
                 guard let call = self.call else {
                     return
                 }
-                self.updateTitle(call: call)
+                self.updateStatusLabel(call: call)
             }
             RunLoop.main.add(timer, forMode: .default)
             self.timer = timer

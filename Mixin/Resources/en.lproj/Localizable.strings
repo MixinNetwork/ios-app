@@ -363,8 +363,6 @@
 "call_encryption_title" = "This call is secured with end-to-end encryption";
 "call_encryption_description" = "No one outside of this call can view or listen to it. Not even Mixin.";
 "call_hint_on_another_call" = "You are already on another call. Try after it was ended.";
-"call_p2p_title_with_status" = "Call (%@)";
-"call_group_title_with_status" = "Group Call (%@)";
 "call_status_outgoing" = "Calling...";
 "call_status_incoming" = "Incoming voice call";
 "call_status_connecting" = "Connecting";

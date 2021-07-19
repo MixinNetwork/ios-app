@@ -20,7 +20,8 @@ class GroupCallConfirmationViewController: CallViewController {
         setConnectionButtonsEnabled(true)
         minimizeButton.setImage(R.image.ic_title_close(), for: .normal)
         minimizeButton.tintColor = .white
-        titleLabel.text = R.string.localizable.chat_menu_group_call()
+        titleLabel.text = conversation.name
+        statusLabel.text = nil
         membersCollectionView.isHidden = false
         hangUpStackView.alpha = 0
         acceptStackView.alpha = 1

@@ -363,8 +363,6 @@
 "call_encryption_title" = "此通话使用端对端加密进行保护";
 "call_encryption_description" = "除了参与通话的人，其他人包含Mixin在内都无法听取或查看。";
 "call_hint_on_another_call" = "正在通话中，请挂断当前电话后重试";
-"call_p2p_title_with_status" = "语音通话（%@）";
-"call_group_title_with_status" = "群组语音（%@）";
 "call_status_outgoing" = "正在呼叫...";
 "call_status_incoming" = "语音通话来电";
 "call_status_connecting" = "正在连接";

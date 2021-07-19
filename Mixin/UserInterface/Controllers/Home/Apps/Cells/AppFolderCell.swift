@@ -40,6 +40,7 @@ class AppFolderCell: AppCell {
         placeholderView?.removeFromSuperview()
         imageContainerView.transform = .identity
         collectionView.reloadData()
+        collectionView.isHidden = folder.isNewFolder
     }
     
     func leaveEditingMode() {

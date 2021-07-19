@@ -148,7 +148,6 @@ extension HomeAppsManager {
             let iconSnapshot = destinationCell.imageContainerView.snapshotView(afterScreenUpdates: false)!
             iconSnapshot.frame = destinationCell.convert(destinationCell.imageContainerView.frame, to: interaction.dragInteraction.currentPageCell)
             interaction.dragInteraction.currentPageCell.contentView.addSubview(iconSnapshot)
-            
             let convertedIconFrame = interaction.dragInteraction.placeholderView.convert(interaction.dragInteraction.placeholderView.iconView.frame, to: interaction.dragInteraction.placeholderView.superview!)
             interaction.dragInteraction.placeholderView.iconView.frame = convertedIconFrame
             interaction.dragInteraction.placeholderView.superview!.addSubview(interaction.dragInteraction.placeholderView.iconView)
@@ -380,6 +379,7 @@ extension HomeAppsManager: HomeAppsFolderViewControllerDelegate {
             self.openFolderInfo = nil
             info.cell.wrapperView.isHidden = false
             info.cell.label?.isHidden = false
+            info.cell.label?.alpha = 1
             if self.isEditing {
                 info.cell.startShaking()
             }

@@ -4,6 +4,7 @@ class HomeAppsSnapshotView: UIView {
     
     var iconView: UIView
     var nameView: UIView?
+    var source: HomeAppsMode = .regular
     
     required init(frame: CGRect, iconView: UIView, nameView: UIView? = nil) {
         self.iconView = iconView

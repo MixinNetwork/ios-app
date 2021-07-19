@@ -32,6 +32,7 @@ extension HomeAppsManager {
         offsettedTouchPoint.x += dragOffset.width
         offsettedTouchPoint.y += dragOffset.height
         let placeholderView = cell.snapshotView
+        placeholderView.source = isInAppsFolderViewController ? .folder : (collectionView == pinnedCollectionView ? .pinned : .regular)
         placeholderView.center = viewController.view.convert(offsettedTouchPoint, from: collectionView)
         viewController.view.addSubview(placeholderView)
         cell.contentView.isHidden = true
@@ -175,8 +176,7 @@ extension HomeAppsManager {
             return
         }
         updateState(forPageCell: currentInteraction.currentPageCell)
-        let convertedRect = currentInteraction.currentPageCell.collectionView.convert(cell.frame, to: viewController.view)
-        var visiblePageCells: [AppPageCell] = [] 
+        var visiblePageCells: [AppPageCell] = []
         if let pageCell = currentPageCell {
             visiblePageCells.append(pageCell)
         }
@@ -187,6 +187,17 @@ extension HomeAppsManager {
             if let cell = cell as? AppCell {
                 cell.label?.alpha = 1
                 cell.startShaking()
+            }
+        }
+        // update placeholder's image view x offset
+        var convertedRect = currentInteraction.currentPageCell.collectionView.convert(cell.frame, to: viewController.view)
+        if let pinnedCollectionView = pinnedCollectionView, pinnedCollectionView.visibleCells.contains(currentInteraction.currentPageCell) {
+            if currentInteraction.placeholderView.source != .pinned { // move candidate to pinned
+                convertedRect.origin.x -= HomeAppsConstants.placeholderImageXOffset
+            }
+        } else if candidateCollectionView.visibleCells.contains(currentInteraction.currentPageCell) {
+            if currentInteraction.placeholderView.source == .pinned { // move pinned to candidate
+                convertedRect.origin.x += HomeAppsConstants.placeholderImageXOffset
             }
         }
         UIView.animate(withDuration: 0.25) {

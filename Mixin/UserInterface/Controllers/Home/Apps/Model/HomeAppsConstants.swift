@@ -11,4 +11,6 @@ enum HomeAppsConstants {
     
     static let folderTargetOffset: CGFloat = 20
     
+    static let placeholderImageXOffset: CGFloat =  13
+    
 }

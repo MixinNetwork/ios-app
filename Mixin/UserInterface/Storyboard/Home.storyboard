@@ -982,8 +982,8 @@
                                     <constraint firstItem="Wir-g9-pmJ" firstAttribute="centerY" secondItem="kTb-Tu-KFj" secondAttribute="centerY" id="zOJ-tX-drj"/>
                                 </constraints>
                             </view>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceHorizontal="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="LDb-PZ-N3K">
-                                <rect key="frame" x="0.0" y="180" width="375" height="400"/>
+                            <collectionView multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceHorizontal="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="LDb-PZ-N3K">
+                                <rect key="frame" x="0.0" y="192" width="375" height="400"/>
                                 <color key="backgroundColor" name="background"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="400" id="QTq-YP-lKy"/>
@@ -995,14 +995,14 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="app_page" id="aNC-Om-brp" customClass="AppPageCell" customModule="Mixin" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="app_page" id="aNC-Om-brp" customClass="AppPageCell" customModule="Mixin" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="400"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="LpB-63-jrt">
+                                        <collectionViewCellContentView key="contentView" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="LpB-63-jrt">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="400"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="mZ1-8Z-ksP">
+                                                <collectionView multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="mZ1-8Z-ksP">
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="400"/>
                                                     <color key="backgroundColor" name="background"/>
                                                     <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="Do4-rh-SyA">
@@ -1012,15 +1012,15 @@
                                                         <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                     </collectionViewFlowLayout>
                                                     <cells>
-                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="app_folder" id="YaQ-im-FHS" customClass="AppFolderCell" customModule="Mixin" customModuleProvider="target">
+                                                        <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="app_folder" id="YaQ-im-FHS" customClass="AppFolderCell" customModule="Mixin" customModuleProvider="target">
                                                             <rect key="frame" x="0.0" y="0.0" width="80" height="100"/>
                                                             <autoresizingMask key="autoresizingMask"/>
-                                                            <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="iQi-6y-Vfr">
+                                                            <collectionViewCellContentView key="contentView" opaque="NO" multipleTouchEnabled="YES" userInteractionEnabled="NO" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="iQi-6y-Vfr">
                                                                 <rect key="frame" x="0.0" y="0.0" width="80" height="100"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                 <subviews>
                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DvM-IY-875">
-                                                                        <rect key="frame" x="13" y="12" width="54" height="54"/>
+                                                                        <rect key="frame" x="13" y="0.0" width="54" height="54"/>
                                                                         <color key="backgroundColor" name="background_input"/>
                                                                         <userDefinedRuntimeAttributes>
                                                                             <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -1029,7 +1029,7 @@
                                                                         </userDefinedRuntimeAttributes>
                                                                     </view>
                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yHi-Eb-Tqz">
-                                                                        <rect key="frame" x="13" y="12" width="54" height="54"/>
+                                                                        <rect key="frame" x="13" y="0.0" width="54" height="54"/>
                                                                         <subviews>
                                                                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="KIb-yL-9Fc">
                                                                                 <rect key="frame" x="0.0" y="0.0" width="54" height="54"/>
@@ -1121,7 +1121,7 @@
                                                                         </constraints>
                                                                     </view>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Folder" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xpc-bE-lHe">
-                                                                        <rect key="frame" x="0.0" y="74" width="80" height="14.5"/>
+                                                                        <rect key="frame" x="0.0" y="62" width="80" height="14.5"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                                         <nil key="textColor"/>
                                                                         <nil key="highlightedColor"/>
@@ -1133,7 +1133,7 @@
                                                                 <constraints>
                                                                     <constraint firstItem="DvM-IY-875" firstAttribute="trailing" secondItem="yHi-Eb-Tqz" secondAttribute="trailing" id="ASw-3p-NGy"/>
                                                                     <constraint firstItem="DvM-IY-875" firstAttribute="leading" secondItem="yHi-Eb-Tqz" secondAttribute="leading" id="Jv2-Gv-WhS"/>
-                                                                    <constraint firstItem="yHi-Eb-Tqz" firstAttribute="top" secondItem="iQi-6y-Vfr" secondAttribute="top" constant="12" id="Mn0-Qg-hXt"/>
+                                                                    <constraint firstItem="yHi-Eb-Tqz" firstAttribute="top" secondItem="iQi-6y-Vfr" secondAttribute="top" id="Mn0-Qg-hXt"/>
                                                                     <constraint firstAttribute="trailing" secondItem="xpc-bE-lHe" secondAttribute="trailing" id="Pdq-9X-uBp"/>
                                                                     <constraint firstItem="xpc-bE-lHe" firstAttribute="top" secondItem="yHi-Eb-Tqz" secondAttribute="bottom" constant="8" id="bvj-5x-NSt"/>
                                                                     <constraint firstItem="DvM-IY-875" firstAttribute="top" secondItem="yHi-Eb-Tqz" secondAttribute="top" id="dsV-8u-fC2"/>
@@ -1149,22 +1149,22 @@
                                                                 <outlet property="wrapperView" destination="DvM-IY-875" id="CXU-9T-KAG"/>
                                                             </connections>
                                                         </collectionViewCell>
-                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="app" id="o7y-WF-Sv7" customClass="AppCell" customModule="Mixin" customModuleProvider="target">
+                                                        <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="app" id="o7y-WF-Sv7" customClass="AppCell" customModule="Mixin" customModuleProvider="target">
                                                             <rect key="frame" x="98.5" y="0.0" width="80" height="100"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                            <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="pbD-ME-YPI">
+                                                            <collectionViewCellContentView key="contentView" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="pbD-ME-YPI">
                                                                 <rect key="frame" x="0.0" y="0.0" width="80" height="100"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                 <subviews>
                                                                     <view clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ETx-y6-dPR" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
-                                                                        <rect key="frame" x="13" y="12" width="54" height="54"/>
+                                                                        <rect key="frame" x="13" y="0.0" width="54" height="54"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="height" constant="54" id="4zF-us-EKT"/>
                                                                             <constraint firstAttribute="width" constant="54" id="CIB-SJ-hTa"/>
                                                                         </constraints>
                                                                     </view>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mixin" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fcQ-WF-KHU">
-                                                                        <rect key="frame" x="0.0" y="74" width="80" height="14.5"/>
+                                                                        <rect key="frame" x="0.0" y="62" width="80" height="14.5"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                                         <nil key="textColor"/>
                                                                         <nil key="highlightedColor"/>
@@ -1175,7 +1175,7 @@
                                                                 </subviews>
                                                                 <constraints>
                                                                     <constraint firstItem="fcQ-WF-KHU" firstAttribute="top" secondItem="ETx-y6-dPR" secondAttribute="bottom" constant="8" id="1Yr-Ba-D7D"/>
-                                                                    <constraint firstItem="ETx-y6-dPR" firstAttribute="top" secondItem="pbD-ME-YPI" secondAttribute="top" constant="12" id="3bq-lc-IjJ"/>
+                                                                    <constraint firstItem="ETx-y6-dPR" firstAttribute="top" secondItem="pbD-ME-YPI" secondAttribute="top" id="3bq-lc-IjJ"/>
                                                                     <constraint firstItem="fcQ-WF-KHU" firstAttribute="leading" secondItem="pbD-ME-YPI" secondAttribute="leading" id="V1B-u5-OlO"/>
                                                                     <constraint firstAttribute="trailing" secondItem="fcQ-WF-KHU" secondAttribute="trailing" id="fsj-Vw-c1S"/>
                                                                     <constraint firstItem="ETx-y6-dPR" firstAttribute="centerX" secondItem="pbD-ME-YPI" secondAttribute="centerX" id="ol8-sI-hHg"/>
@@ -1208,7 +1208,7 @@
                                 </cells>
                             </collectionView>
                             <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" hidesForSinglePage="YES" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="0Nz-k8-cp3">
-                                <rect key="frame" x="126.5" y="600" width="122" height="28"/>
+                                <rect key="frame" x="126.5" y="606" width="122" height="28"/>
                                 <color key="pageIndicatorTintColor" name="indicator_tint"/>
                                 <color key="currentPageIndicatorTintColor" name="theme"/>
                                 <connections>
@@ -1222,9 +1222,9 @@
                             <constraint firstItem="qIs-RA-yvT" firstAttribute="leading" secondItem="YeN-WV-fIc" secondAttribute="leading" id="3Ug-i9-K3F"/>
                             <constraint firstItem="LDb-PZ-N3K" firstAttribute="leading" secondItem="YeN-WV-fIc" secondAttribute="leading" id="Ccc-jp-7OO"/>
                             <constraint firstItem="2ej-wk-Qvq" firstAttribute="leading" secondItem="YeN-WV-fIc" secondAttribute="leading" id="Sp6-db-XPm"/>
-                            <constraint firstItem="LDb-PZ-N3K" firstAttribute="top" secondItem="2ej-wk-Qvq" secondAttribute="bottom" id="WTW-d9-8cr"/>
+                            <constraint firstItem="LDb-PZ-N3K" firstAttribute="top" secondItem="2ej-wk-Qvq" secondAttribute="bottom" constant="12" id="WTW-d9-8cr"/>
                             <constraint firstAttribute="trailing" secondItem="2ej-wk-Qvq" secondAttribute="trailing" id="WiB-0t-ajT"/>
-                            <constraint firstItem="0Nz-k8-cp3" firstAttribute="top" secondItem="LDb-PZ-N3K" secondAttribute="bottom" constant="20" id="Xp9-eM-1Gn"/>
+                            <constraint firstItem="0Nz-k8-cp3" firstAttribute="top" secondItem="LDb-PZ-N3K" secondAttribute="bottom" constant="14" id="Xp9-eM-1Gn"/>
                             <constraint firstItem="qIs-RA-yvT" firstAttribute="top" secondItem="8Wk-87-Ngs" secondAttribute="top" id="Y6K-V4-OsQ"/>
                             <constraint firstItem="0Nz-k8-cp3" firstAttribute="centerX" secondItem="8Wk-87-Ngs" secondAttribute="centerX" id="eum-oM-YqP"/>
                             <constraint firstItem="2ej-wk-Qvq" firstAttribute="top" secondItem="qIs-RA-yvT" secondAttribute="bottom" id="oyj-Sg-aYs"/>
@@ -2202,7 +2202,7 @@ chat history from icloud</string>
             <color red="0.89803921568627454" green="0.9137254901960784" blue="0.94117647058823528" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
             <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

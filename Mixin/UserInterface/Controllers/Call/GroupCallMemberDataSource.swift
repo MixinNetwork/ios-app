@@ -99,7 +99,7 @@ class GroupCallMemberDataSource: NSObject {
             index = indexPath.item - 1
         }
         if index < members.count {
-            return members[indexPath.item - 1]
+            return members[index]
         } else {
             return nil
         }

@@ -440,6 +440,10 @@
 "sticker_add_failed" = "Failed to add sticker";
 "sticker_remove_failed" = "Failed to delete stickers";
 "sticker_add_required" = "Requires stickers file size larger than 1KB and less than 800KB, width and height between 64 and 512 pixels.";
+"sticker_store_title" = "Sticker Store";
+"sticker_store_add" = "Add";
+"sticker_store_added" = "Added";
+
 
 // Camera
 "camera_save_photo_success" = "Photo saved.";

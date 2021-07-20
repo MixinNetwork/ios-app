@@ -591,6 +591,7 @@
 		7CC3B1A026C21F7E0018B0D1 /* ScriptMessageProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC3B19F26C21F7E0018B0D1 /* ScriptMessageProxy.swift */; };
 		7CE5E7A8269BDA29000B7904 /* HomeAppsPinTipsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE5E7A6269BDA29000B7904 /* HomeAppsPinTipsViewController.swift */; };
 		7CE5E7A9269BDA29000B7904 /* HomeAppsPinTipsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CE5E7A7269BDA29000B7904 /* HomeAppsPinTipsView.xib */; };
+		7C6AD1F526A6794F00E6C41D /* StickerStoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6AD1F426A6794F00E6C41D /* StickerStoreViewController.swift */; };
 		811C8154F03C8CBB72DBA1F4 /* Pods_MixinShare.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67A8E0E9B65F16ADB27E6F25 /* Pods_MixinShare.framework */; };
 		842347EE2695BA6400009A39 /* InitializeBotJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842347ED2695BA6400009A39 /* InitializeBotJob.swift */; };
 		84A10E96256B63B4006AC741 /* AssetAPI+Ticker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A10E95256B63B4006AC741 /* AssetAPI+Ticker.swift */; };
@@ -1578,6 +1579,7 @@
 		7CC3B19F26C21F7E0018B0D1 /* ScriptMessageProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptMessageProxy.swift; sourceTree = "<group>"; };
 		7CE5E7A6269BDA29000B7904 /* HomeAppsPinTipsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsPinTipsViewController.swift; sourceTree = "<group>"; };
 		7CE5E7A7269BDA29000B7904 /* HomeAppsPinTipsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomeAppsPinTipsView.xib; sourceTree = "<group>"; };
+		7C6AD1F426A6794F00E6C41D /* StickerStoreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerStoreViewController.swift; sourceTree = "<group>"; };
 		842347ED2695BA6400009A39 /* InitializeBotJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitializeBotJob.swift; sourceTree = "<group>"; };
 		84A10E95256B63B4006AC741 /* AssetAPI+Ticker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AssetAPI+Ticker.swift"; sourceTree = "<group>"; };
 		84A10E99256B6416006AC741 /* TickerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TickerResponse.swift; sourceTree = "<group>"; };
@@ -2776,6 +2778,7 @@
 				7B1ABADF21186BF2009FAA6C /* StickerInputViewController.swift */,
 				7B915F69215F315A00A562C6 /* StickersCollectionViewController.swift */,
 				7B1ABB05211968D1009FAA6C /* StickersViewController.swift */,
+				7C6AD1F426A6794F00E6C41D /* StickerStoreViewController.swift */,
 				7B8ED47B21197F220039946B /* RecentStickersViewController.swift */,
 				7B8ED47D21197FF40039946B /* FavoriteStickersViewController.swift */,
 				7B915F6B215F32A500A562C6 /* GiphyViewController.swift */,
@@ -4952,6 +4955,7 @@
 				7BAD3A8E21A6D10400BAEE0B /* BusyButton.swift in Sources */,
 				7BFCB8A8241CF1B800E7BC43 /* LocationExtensions.swift in Sources */,
 				DF56966F1FAAB11D00226D42 /* ContactHeaderView.swift in Sources */,
+				7C6AD1F526A6794F00E6C41D /* StickerStoreViewController.swift in Sources */,
 				7BF205702484BCB2004C0819 /* ProfileMenuItemLabel.swift in Sources */,
 				7B4F5ACD224CBA4A00A8392D /* AssetFilterViewController.swift in Sources */,
 				7B8BB586234EE9A200991ACB /* SharedMediaAudioTableViewController.swift in Sources */,

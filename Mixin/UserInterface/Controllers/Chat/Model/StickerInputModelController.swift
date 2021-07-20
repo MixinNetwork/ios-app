@@ -10,7 +10,7 @@ class StickerInputModelController: NSObject {
     let recentStickersViewController = RecentStickersViewController(index: 0)
     let favoriteStickersViewController = FavoriteStickersViewController(index: 1)
     let giphyViewController = GiphyViewController(index: 2)
-    let numberOfFixedControllers = 3
+    let numberOfFixedControllers = 4
     
     private var officialStickers = [[StickerItem]]()
     

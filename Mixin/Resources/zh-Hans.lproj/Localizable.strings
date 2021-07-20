@@ -440,6 +440,9 @@
 "sticker_add_failed" = "添加贴纸失败";
 "sticker_remove_failed" = "删除贴纸失败";
 "sticker_add_required" = "贴纸要求大于 1KB 且小于 800KB，宽高大于 64 像素且小于 512 像素。";
+"sticker_store_title" = "表情商场";
+"sticker_store_add" = "添加";
+"sticker_store_added" = "已添加";
 
 // Camera
 "camera_save_photo_success" = "图片已成功保存在相册";

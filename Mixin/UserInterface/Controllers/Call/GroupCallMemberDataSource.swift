@@ -26,6 +26,8 @@ class GroupCallMemberDataSource: NSObject {
     private(set) var members: [UserItem]
     private(set) var invitingMemberUserIds: Set<String>
     
+    private weak var participantsCountLabel: UILabel?
+    
     init(conversationId: String, members: [UserItem], invitingMemberUserIds: Set<String>) {
         CallService.shared.log("[GroupCallMemberDataSource] init with members: \(members.map(\.fullName)), inviting: \(invitingMemberUserIds)")
         self.members = members
@@ -57,6 +59,7 @@ class GroupCallMemberDataSource: NSObject {
                 .map(self.indexPath(forMemberAt:))
             self.members.append(contentsOf: filtered)
             collectionView?.insertItems(at: indexPaths)
+            participantsCountLabel?.text = R.string.localizable.group_call_participants_count(self.members.count)
         }
     }
     
@@ -67,12 +70,14 @@ class GroupCallMemberDataSource: NSObject {
             let indexPath = self.indexPath(forMemberAt: index)
             UIView.performWithoutAnimation {
                 collectionView?.reloadItems(at: [indexPath])
+                participantsCountLabel?.text = R.string.localizable.group_call_participants_count(self.members.count)
             }
         } else {
             let indexPath = self.indexPath(forMemberAt: members.count)
             members.append(member)
             memberUserIds.insert(member.userId)
             collectionView?.insertItems(at: [indexPath])
+            participantsCountLabel?.text = R.string.localizable.group_call_participants_count(self.members.count)
         }
     }
     
@@ -84,6 +89,7 @@ class GroupCallMemberDataSource: NSObject {
             let indexPath = self.indexPath(forMemberAt: index)
             members.remove(at: index)
             collectionView?.deleteItems(at: [indexPath])
+            participantsCountLabel?.text = R.string.localizable.group_call_participants_count(self.members.count)
         }
     }
     
@@ -130,6 +136,7 @@ class GroupCallMemberDataSource: NSObject {
                 self.members.remove(at: index)
                 let indexPath = self.indexPath(forMemberAt: index)
                 self.collectionView?.deleteItems(at: [indexPath])
+                self.participantsCountLabel?.text = R.string.localizable.group_call_participants_count(self.members.count)
             }
         }
     }
@@ -169,6 +176,13 @@ extension GroupCallMemberDataSource: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         1
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CallViewController.footerReuseId, for: indexPath) as! CallFooterView
+        view.label.text = R.string.localizable.group_call_participants_count(members.count)
+        participantsCountLabel = view.label
+        return view
     }
     
 }

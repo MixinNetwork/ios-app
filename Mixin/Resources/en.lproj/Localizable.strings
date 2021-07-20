@@ -389,6 +389,7 @@
 "group_call_tap_to_join" = "Tap to join";
 "group_call_selections_reach_limit" = "Group calling allows up to %@ participants to call each other";
 "group_call_bad_network" = "Connection unstable";
+"group_call_participants_count" = "%d Participants";
 
 // Sticker
 "sticker_manager_title" = "My Stickers";

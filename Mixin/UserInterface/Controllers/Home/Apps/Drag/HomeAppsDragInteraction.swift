@@ -36,17 +36,6 @@ class HomeAppsDragInteraction {
         return interaction
     }
     
-    func transitionToFolderWrapperView() {
-        UIView.animate(withDuration: 0.2) {
-            self.placeholderView.nameView?.alpha = 0
-        }
-    }
-    
-    func transitionFromFolderWrapperView() {
-        UIView.animate(withDuration: 0.2) {
-            self.placeholderView.nameView?.alpha = 1
-        }
-    }
 }
 
 struct HomeAppsDragInteractionTransfer {

@@ -3,17 +3,12 @@ import UIKit
 class HomeAppsSnapshotView: UIView {
     
     var iconView: UIView
-    var nameView: UIView?
     var source: HomeAppsMode = .regular
     
-    required init(frame: CGRect, iconView: UIView, nameView: UIView? = nil) {
+    required init(frame: CGRect, iconView: UIView) {
         self.iconView = iconView
-        self.nameView = nameView
         super.init(frame: frame)
         addSubview(iconView)
-        if let nameView = nameView {
-            addSubview(nameView)
-        }
     }
     
     required init?(coder: NSCoder) {

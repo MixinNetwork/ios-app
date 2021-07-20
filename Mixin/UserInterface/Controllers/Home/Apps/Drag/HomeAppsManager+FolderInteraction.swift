@@ -28,7 +28,6 @@ extension HomeAppsManager {
     func startFolderInteraction(for itemCell: AppCell) {
         guard let dragInteraction = currentDragInteraction else { return }
         folderTimer = Timer.scheduledTimer(timeInterval: HomeAppsConstants.folderInterval, target: self, selector: #selector(folderTimerHandler), userInfo: nil, repeats: false)
-        dragInteraction.transitionToFolderWrapperView()
         let folderWrapperView = UIView(frame: itemCell.imageContainerView.frame)
         folderWrapperView.layer.cornerRadius = 12
         folderWrapperView.backgroundColor = R.color.background_secondary()
@@ -55,7 +54,6 @@ extension HomeAppsManager {
               !folderInteraction.isDismissing else {
             return
         }
-        folderInteraction.dragInteraction.transitionFromFolderWrapperView()
         stopFolderTimer()
         currentFolderInteraction = nil
         folderInteraction.isDismissing = true
@@ -140,7 +138,6 @@ extension HomeAppsManager {
             // still hold app when folder was created
             interaction.dragInteraction.currentPageCell.collectionView.reloadItems(at: [folderIndexPath])
             showFolderInteraction(interaction, page: page, sourceIndex: sourceIndex, destinationIndex: destinationIndex, folderIndexPath: folderIndexPath, isNewFolder: true)
-            interaction.dragInteraction.transitionFromFolderWrapperView()
             newFolder.isNewFolder = false
         } else {
             // drap app when folder was created

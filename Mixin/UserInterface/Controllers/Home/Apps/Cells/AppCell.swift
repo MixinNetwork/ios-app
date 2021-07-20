@@ -14,12 +14,7 @@ class AppCell: UICollectionViewCell {
     var snapshotView: HomeAppsSnapshotView {
         let iconView = imageContainerView.snapshotView(afterScreenUpdates: true)!
         iconView.frame = imageContainerView.frame
-        guard let label = label else {
-            return HomeAppsSnapshotView(frame: bounds, iconView: iconView)
-        }
-        let nameView = label.snapshotView(afterScreenUpdates: true)!
-        nameView.frame = label.frame
-        return HomeAppsSnapshotView(frame: bounds, iconView: iconView, nameView: nameView)
+        return HomeAppsSnapshotView(frame: bounds, iconView: iconView)
     }
     
     private var isShaking = false

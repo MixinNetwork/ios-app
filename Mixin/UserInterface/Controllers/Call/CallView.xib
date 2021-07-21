@@ -112,10 +112,10 @@
                             </subviews>
                         </stackView>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="t3e-bg-GeY" userLabel="Group Call Members Wrapper">
-                            <rect key="frame" x="0.0" y="60.333333333333314" width="390" height="322.66666666666669"/>
+                            <rect key="frame" x="0.0" y="60.333333333333314" width="390" height="323.66666666666669"/>
                             <subviews>
                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="wM3-bs-IJ8">
-                                    <rect key="frame" x="0.0" y="0.0" width="390" height="322.66666666666669"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="390" height="323.66666666666669"/>
                                     <color key="backgroundColor" name="background"/>
                                     <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Ge5-Xe-Grf">
                                         <size key="itemSize" width="128" height="128"/>
@@ -134,7 +134,7 @@
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="I21-Y9-gJW">
-                            <rect key="frame" x="0.0" y="383" width="390" height="122"/>
+                            <rect key="frame" x="0.0" y="384" width="390" height="122"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PGR-fd-qeK">
                                     <rect key="frame" x="0.0" y="0.0" width="390" height="80"/>
@@ -256,7 +256,7 @@
                         <constraint firstItem="02X-1z-xjL" firstAttribute="top" secondItem="DGO-cU-Jif" secondAttribute="top" constant="15" id="U3O-Fb-Dcu"/>
                         <constraint firstItem="c10-IX-mVV" firstAttribute="leading" secondItem="DGO-cU-Jif" secondAttribute="leading" constant="10" id="Zfy-I1-hTz"/>
                         <constraint firstItem="t3e-bg-GeY" firstAttribute="top" secondItem="CPG-77-gPe" secondAttribute="bottom" id="aEe-II-OmB"/>
-                        <constraint firstAttribute="bottom" secondItem="I21-Y9-gJW" secondAttribute="bottom" constant="1" id="c7a-aE-EhR"/>
+                        <constraint firstAttribute="bottom" secondItem="I21-Y9-gJW" secondAttribute="bottom" id="c7a-aE-EhR"/>
                         <constraint firstItem="I21-Y9-gJW" firstAttribute="top" secondItem="t3e-bg-GeY" secondAttribute="bottom" id="g4R-6X-9dK"/>
                         <constraint firstItem="CPG-77-gPe" firstAttribute="centerY" secondItem="02X-1z-xjL" secondAttribute="centerY" id="g9C-cY-GPd"/>
                         <constraint firstItem="CPG-77-gPe" firstAttribute="leading" secondItem="02X-1z-xjL" secondAttribute="trailing" constant="8" id="ir0-KR-Vvj"/>
@@ -298,7 +298,7 @@
             <color red="0.18431372549019609" green="0.18823529411764706" blue="0.19607843137254902" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
             <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

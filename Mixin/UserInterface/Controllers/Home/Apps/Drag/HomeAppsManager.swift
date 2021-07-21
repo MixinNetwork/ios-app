@@ -67,7 +67,7 @@ class HomeAppsManager: NSObject {
     let tapRecognizer = UITapGestureRecognizer()
     let feedback = UIImpactFeedbackGenerator()
     
-    init(viewController: UIViewController, candidateCollectionView: UICollectionView, items: [[AppItem]], pinnedCollectionView: UICollectionView? = nil, pinnedItems:[AppItem] = []) {
+    init(viewController: UIViewController, candidateCollectionView: UICollectionView, items: [[AppItem]] = [[]], pinnedCollectionView: UICollectionView? = nil, pinnedItems:[AppItem] = []) {
         self.viewController = viewController
         self.candidateCollectionView = candidateCollectionView
         self.pinnedCollectionView = pinnedCollectionView
@@ -94,6 +94,13 @@ class HomeAppsManager: NSObject {
         tapRecognizer.addTarget(self, action: #selector(handleTapGesture(gestureRecognizer:)))
         self.viewController.view.addGestureRecognizer(tapRecognizer)
         NotificationCenter.default.addObserver(self, selector: #selector(leaveEditingMode), name: UIApplication.willResignActiveNotification, object: nil)
+    }
+    
+    func reloadData(pinnedItems:[AppItem], candidateItems: [[AppItem]]) {
+        self.items = candidateItems
+        self.pinnedItems = pinnedItems
+        candidateCollectionView.reloadData()
+        pinnedCollectionView?.reloadData()
     }
     
 }

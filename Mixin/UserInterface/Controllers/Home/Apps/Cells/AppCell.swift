@@ -27,10 +27,10 @@ class AppCell: UICollectionViewCell {
     }
     
     func updateUI() {
-        guard let item = item as? AppModel, let app = item.app else {
+        guard let item = item as? AppModel else {
             return
         }
-        switch app {
+        switch item.app {
         case .embedded(let embedded):
             imageView?.contentMode = .center
             label?.text = embedded.name

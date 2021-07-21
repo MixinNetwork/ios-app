@@ -44,19 +44,18 @@ final class HomeAppsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        updateHomeTitleLabel(isEditing: false)
-        appsItemManager = HomeAppsItemManager()
-        setCandidateEmptyHintHidden(!appsItemManager.candidateItems.isEmpty)
-        pinnedPlaceholderViewLeadingConstraints.forEach({ $0.constant = HomeAppsMode.pinned.minimumInteritemSpacing })
-        updatePinnedPlaceholderViewsHidden(with: appsItemManager.pinnedItems.count)
-        appsManager = HomeAppsManager(viewController: self,
-                                      candidateCollectionView: candidateCollectionView,
-                                      items: appsItemManager.candidateItems,
-                                      pinnedCollectionView: pinnedCollectionView,
-                                      pinnedItems: appsItemManager.pinnedItems)
+        appsManager = HomeAppsManager(viewController: self, candidateCollectionView: candidateCollectionView, pinnedCollectionView: pinnedCollectionView)
         appsManager.delegate = self
-        pageControl.numberOfPages = appsManager.items.count
+        appsItemManager = HomeAppsItemManager()
+        appsItemManager.loadData { pinnedItems, candidateItems in
+            self.pageControl.numberOfPages = candidateItems.count
+            self.setCandidateEmptyHintHidden(!candidateItems.isEmpty)
+            self.updatePinnedPlaceholderViewsHidden(with: pinnedItems.count)
+            self.appsManager.reloadData(pinnedItems: pinnedItems, candidateItems: candidateItems)
+        }
         pageControl.currentPage = 0
+        updateHomeTitleLabel(isEditing: false)
+        pinnedPlaceholderViewLeadingConstraints.forEach({ $0.constant = HomeAppsMode.pinned.minimumInteritemSpacing })
         candidateCollectionViewHeightConstraint.constant = HomeAppsMode.regular.itemSize.height * CGFloat(HomeAppsMode.regular.rowsPerPage)
         updatePreferredContentSizeHeight()
     }
@@ -212,10 +211,7 @@ extension HomeAppsViewController {
 extension HomeAppsViewController: HomeAppsManagerDelegate {
     
     func homeAppsManager(_ manager: HomeAppsManager, didSelectApp app: AppModel) {
-        guard let app = app.app else {
-            return
-        }
-        switch app {
+        switch app.app {
         case let .embedded(app):
             dismissAsChild(completion: app.action)
         case let .external(user):

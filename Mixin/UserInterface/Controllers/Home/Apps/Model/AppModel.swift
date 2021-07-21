@@ -3,12 +3,11 @@ import Foundation
 class AppModel: AppItem {
     
     var id: String
-    var app: HomeApp? {
-        return HomeApp(id: id)
-    }
+    var app: HomeApp
     
-    init(id: String) {
+    init(id: String, app: HomeApp) {
         self.id = id
+        self.app = app
     }
     
     func toDictionary() -> [String : Any] {

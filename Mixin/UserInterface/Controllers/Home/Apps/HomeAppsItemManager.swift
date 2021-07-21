@@ -30,7 +30,10 @@ class HomeAppsItemManager {
 extension HomeAppsItemManager {
     
     private func initItems() {
-        let pinnedIds = Set(AppGroupUserDefaults.User.homeAppIds)
+        var pinnedIds = Set(AppGroupUserDefaults.User.homeAppIds)
+        if pinnedIds.count > HomeAppsMode.pinned.appsPerRow {
+            pinnedIds = Set(pinnedIds.prefix(HomeAppsMode.pinned.appsPerRow))
+        }
         pinnedItems = pinnedIds.compactMap({ return AppModel(id: $0) })
         var candidateEmbeddedApps = EmbeddedApp.all
         candidateEmbeddedApps.removeAll(where: {

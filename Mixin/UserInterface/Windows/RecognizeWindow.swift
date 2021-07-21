@@ -48,14 +48,12 @@ class RecognizeWindow: BottomSheetView {
     }
     
     private var textIsValidURL: Bool {
-        guard let text = contentTextView.text, let detector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue) else {
+        guard let text = contentTextView.text,
+              let detector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue),
+              let match = detector.firstMatch(in: text, options: [], range: NSRange(location: 0, length: text.utf16.count)) else {
             return false
         }
-        if let match = detector.firstMatch(in: text, options: [], range: NSRange(location: 0, length: text.utf16.count)) {
-            return match.range.length == text.utf16.count
-        } else {
-            return false
-        }
+        return match.range.length == text.utf16.count
     }
     
     private func copyContent() {

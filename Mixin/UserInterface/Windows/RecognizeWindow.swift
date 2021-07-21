@@ -7,6 +7,8 @@ class RecognizeWindow: BottomSheetView {
     @IBOutlet weak var actionButton: RoundedButton!
     @IBOutlet weak var actionButtonBottomConstraint: NSLayoutConstraint!
     
+    private var validURL: URL?
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         contentTextView.delegate = self
@@ -14,7 +16,8 @@ class RecognizeWindow: BottomSheetView {
     
     func presentWindow(text: String) {
         contentTextView.text = text
-        if textIsValidURL {
+        if textIsValidURL, let url = URL(string: text) {
+            validURL = url
             actionButton.setTitle(R.string.localizable.action_open(), for: .normal)
             actionButtonBottomConstraint.constant = -12
             actionButton.contentEdgeInsets = UIEdgeInsets(top: 12, left: 38, bottom: 12, right: 38)
@@ -26,10 +29,8 @@ class RecognizeWindow: BottomSheetView {
     }
     
     @IBAction func buttonAction(_ sender: Any) {
-        if textIsValidURL {
-            if let url = URL(string: contentTextView.text) {
-                open(url)
-            }
+        if let url = validURL {
+            open(url)
         } else {
             copyContent()
         }

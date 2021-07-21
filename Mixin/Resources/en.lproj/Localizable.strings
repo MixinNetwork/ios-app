@@ -364,8 +364,6 @@
 "call_encryption_title" = "This call is secured with end-to-end encryption";
 "call_encryption_description" = "No one outside of this call can view or listen to it. Not even Mixin.";
 "call_hint_on_another_call" = "You are already on another call. Try after it was ended.";
-"call_p2p_title_with_status" = "Call (%@)";
-"call_group_title_with_status" = "Group Call (%@)";
 "call_status_outgoing" = "Calling...";
 "call_status_incoming" = "Incoming voice call";
 "call_status_connecting" = "Connecting";
@@ -392,6 +390,7 @@
 "group_call_tap_to_join" = "Tap to join";
 "group_call_selections_reach_limit" = "Group calling allows up to %@ participants to call each other";
 "group_call_bad_network" = "Connection unstable";
+"group_call_participants_count" = "%d Participants";
 
 // Sticker
 "sticker_manager_title" = "My Stickers";

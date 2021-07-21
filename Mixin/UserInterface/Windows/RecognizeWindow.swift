@@ -48,8 +48,9 @@ class RecognizeWindow: BottomSheetView {
     }
     
     private var textIsValidURL: Bool {
-        let text = contentTextView.text!
-        let detector = try! NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
+        guard let text = contentTextView.text, let detector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue) else {
+            return false
+        }
         if let match = detector.firstMatch(in: text, options: [], range: NSRange(location: 0, length: text.utf16.count)) {
             return match.range.length == text.utf16.count
         } else {

@@ -175,7 +175,12 @@ class CallViewController: ResizablePopupViewController {
         case .expanded, .unavailable:
             return maxHeight
         case .compressed:
-            return round(maxHeight / 3 * 2)
+            switch ScreenHeight.current {
+            case .short, .medium:
+                return round(maxHeight * 0.8) + 14
+            case .long, .extraLong:
+                return round(maxHeight * 0.6) + 14
+            }
         }
     }
     

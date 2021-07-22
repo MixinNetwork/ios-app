@@ -23,8 +23,8 @@ extension HomeAppsManager {
         touchPoint = gestureRecognizer.location(in: collectionView)
         touchPoint.x -= collectionView.contentOffset.x
         guard let indexPath = pageCell.collectionView.indexPathForItem(at: touchPoint),
-              let cell = pageCell.collectionView.cellForItem(at: indexPath) as? AppCell,
-              let item = cell.item,
+              let cell = pageCell.collectionView.cellForItem(at: indexPath) as? HomeAppCell,
+              let item = cell.generalItem,
               let placeholderView = cell.snapshotView else {
             // long press empty place to start editing mode
             enterEditingMode()
@@ -80,7 +80,7 @@ extension HomeAppsManager {
         let flowLayout = pageCell.collectionView.collectionViewLayout as! UICollectionViewFlowLayout
         let appsPerRow = isInAppsFolderViewController ? HomeAppsMode.folder.appsPerRow : HomeAppsMode.regular.appsPerRow
         if let indexPath = pageCell.collectionView.indexPathForItem(at: touchPoint), pageCell == currentInteraction.currentPageCell { // move in same collection view
-            guard let itemCell = pageCell.collectionView.cellForItem(at: indexPath) as? AppCell else {
+            guard let itemCell = pageCell.collectionView.cellForItem(at: indexPath) as? HomeAppCell else {
                 return
             }
             let imageCenter = itemCell.imageContainerView.center
@@ -182,7 +182,7 @@ extension HomeAppsManager {
             commitFolderInteraction(didDrop: true)
             return
         }
-        guard let currentInteraction = currentDragInteraction, let cell = currentInteraction.currentPageCell.collectionView.cellForItem(at: currentInteraction.currentIndexPath) as? AppCell else {
+        guard let currentInteraction = currentDragInteraction, let cell = currentInteraction.currentPageCell.collectionView.cellForItem(at: currentInteraction.currentIndexPath) as? HomeAppCell else {
             return
         }
         updateState(forPageCell: currentInteraction.currentPageCell)
@@ -194,7 +194,7 @@ extension HomeAppsManager {
             visiblePageCells.append(pageCell)
         }
         for cell in visiblePageCells.reduce([], { $0 + $1.collectionView.visibleCells }) {
-            if let cell = cell as? AppCell {
+            if let cell = cell as? HomeAppCell {
                 cell.label?.alpha = 1
                 cell.startShaking()
             }

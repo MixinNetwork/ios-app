@@ -2,7 +2,7 @@ import UIKit
 
 protocol AppPageCellDelegate: AnyObject {
     
-    func appPageCell(_ pageCell: AppPageCell, didSelect cell: AppCell)
+    func appPageCell(_ pageCell: AppPageCell, didSelect cell: HomeAppCell)
     
 }
 
@@ -27,7 +27,7 @@ class AppPageCell: UICollectionViewCell {
             return
         }
         isEditing = true
-        for case let cell as AppCell in collectionView.visibleCells {
+        for case let cell as HomeAppCell in collectionView.visibleCells {
             cell.startShaking()
             if let cell = cell as? AppFolderCell {
                 cell.moveToFirstAvailablePage()
@@ -40,7 +40,7 @@ class AppPageCell: UICollectionViewCell {
             return
         }
         isEditing = false
-        for case let cell as AppCell in collectionView.visibleCells {
+        for case let cell as HomeAppCell in collectionView.visibleCells {
             cell.stopShaking()
             if let cell = cell as? AppFolderCell {
                 cell.leaveEditingMode()
@@ -122,7 +122,7 @@ extension AppPageCell: UICollectionViewDelegate, UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let cell = collectionView.cellForItem(at: indexPath) as? AppCell else {
+        guard let cell = collectionView.cellForItem(at: indexPath) as? HomeAppCell else {
             return
         }
         delegate?.appPageCell(self, didSelect: cell)

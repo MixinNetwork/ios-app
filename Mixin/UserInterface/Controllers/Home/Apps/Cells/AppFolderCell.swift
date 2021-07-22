@@ -1,9 +1,17 @@
 import UIKit
 
-class AppFolderCell: AppCell {
+class AppFolderCell: ShakableCell {
     
+    @IBOutlet weak var label: UILabel?
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var wrapperView: UIView!
+    @IBOutlet weak var imageContainerView: UIView!
+    
+    var item: AppItem? {
+        didSet {
+            updateUI()
+        }
+    }
     
     var currentPage: Int {
         guard collectionView.frame.size.width != 0 else {
@@ -23,19 +31,10 @@ class AppFolderCell: AppCell {
         super.prepareForReuse()
         wrapperView.isHidden = false
     }
-
-    override var snapshotView: HomeAppsSnapshotView? {
-        guard let snapshotView = super.snapshotView,
-              let wrapperView = wrapperView.snapshotView(afterScreenUpdates: true) else {
-            return nil
-        }
-        wrapperView.frame = snapshotView.iconView.frame
-        snapshotView.insertSubview(wrapperView, belowSubview: snapshotView.iconView)
-        return snapshotView
-    }
     
-    override func updateUI() {
-        super.updateUI()
+    func updateUI() {
+        label?.alpha = 1
+        label?.isHidden = false
         guard let folder = item as? HomeAppFolder else {
             return
         }
@@ -122,6 +121,33 @@ extension AppFolderCell {
             appCell.imageView?.isHidden = false
             completion()
         })
+    }
+    
+}
+
+extension AppFolderCell: HomeAppCell {
+    
+    var snapshotView: HomeAppsSnapshotView? {
+        guard let iconView = imageContainerView.snapshotView(afterScreenUpdates: true) else {
+            return nil
+        }
+        iconView.frame = imageContainerView.frame
+        let snapshotView = HomeAppsSnapshotView(frame: bounds, iconView: iconView)
+        guard let wrapperView = wrapperView.snapshotView(afterScreenUpdates: true) else {
+            return nil
+        }
+        wrapperView.frame = snapshotView.iconView.frame
+        snapshotView.insertSubview(wrapperView, belowSubview: snapshotView.iconView)
+        return snapshotView
+    }
+    
+    var generalItem: AppItem? {
+        get {
+            item
+        }
+        set {
+            item = newValue
+        }
     }
     
 }

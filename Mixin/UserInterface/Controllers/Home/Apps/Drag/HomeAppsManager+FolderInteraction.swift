@@ -25,7 +25,7 @@ extension HomeAppsManager {
         return folderViewController
     }
     
-    func startFolderInteraction(for itemCell: AppCell) {
+    func startFolderInteraction(for itemCell: HomeAppCell) {
         guard let dragInteraction = currentDragInteraction else {
             return
         }
@@ -35,10 +35,10 @@ extension HomeAppsManager {
         folderWrapperView.backgroundColor = R.color.background_secondary()
         itemCell.contentView.insertSubview(folderWrapperView, belowSubview: itemCell.imageContainerView)
         cancelFolderInteraction()
-        if let folder = itemCell.item as? HomeAppFolder, let folderCell = itemCell as? AppFolderCell {
+        if let folder = itemCell.generalItem as? HomeAppFolder, let folderCell = itemCell as? AppFolderCell {
             currentFolderInteraction = HomeAppsFolderDropInteraction(dragInteraction: dragInteraction, folder: folder, wrapperView: folderWrapperView)
             folderCell.wrapperView.isHidden = false
-        } else if let app = itemCell.item as? AppModel {
+        } else if let app = itemCell.generalItem as? AppModel {
             currentFolderInteraction = HomeAppsFolderCreationInteraction(dragInteraction: dragInteraction, destinationApp: app, wrapperView: folderWrapperView)
         }
         itemCell.stopShaking()
@@ -52,7 +52,7 @@ extension HomeAppsManager {
     func cancelFolderInteraction() {
         guard var folderInteraction = currentFolderInteraction,
               let index = folderInteraction.dragInteraction.currentPageCell.items.firstIndex(where: { $0 === folderInteraction.item }),
-              let cell = folderInteraction.dragInteraction.currentPageCell.collectionView.cellForItem(at: IndexPath(item: index, section: 0)) as? AppCell,
+              let cell = folderInteraction.dragInteraction.currentPageCell.collectionView.cellForItem(at: IndexPath(item: index, section: 0)) as? HomeAppCell,
               !folderInteraction.isDismissing else {
             return
         }
@@ -62,7 +62,7 @@ extension HomeAppsManager {
         UIView.animate(withDuration: 0.25, animations: {
             folderInteraction.wrapperView.transform = .identity
             self.currentDragInteraction?.placeholderView.transform = CGAffineTransform.identity.scaledBy(x: HomeAppsConstants.appIconScale.x, y: HomeAppsConstants.appIconScale.y)
-            for case let cell as AppCell in folderInteraction.dragInteraction.currentPageCell.collectionView.visibleCells {
+            for case let cell as HomeAppCell in folderInteraction.dragInteraction.currentPageCell.collectionView.visibleCells {
                 cell.label?.alpha = 1
             }
         }, completion: { _ in
@@ -70,7 +70,7 @@ extension HomeAppsManager {
                 folderCell.wrapperView.isHidden = false
             }
             folderInteraction.wrapperView.removeFromSuperview()
-            for case let cell as AppCell in folderInteraction.dragInteraction.currentPageCell.collectionView.visibleCells {
+            for case let cell as HomeAppCell in folderInteraction.dragInteraction.currentPageCell.collectionView.visibleCells {
                 cell.startShaking()
             }
         })
@@ -139,9 +139,8 @@ extension HomeAppsManager {
             interaction.dragInteraction.currentPageCell.collectionView.reloadItems(at: [folderIndexPath])
             showFolderInteraction(interaction, page: page, sourceIndex: sourceIndex, destinationIndex: destinationIndex, folderIndexPath: folderIndexPath, isNewFolder: true)
             newFolder.isNewFolder = false
-        } else {
-            // drap app when folder was created
-            let destinationCell = interaction.dragInteraction.currentPageCell.collectionView.cellForItem(at: IndexPath(item: destinationIndex, section: 0)) as! AppCell
+        } else if let destinationCell = interaction.dragInteraction.currentPageCell.collectionView.cellForItem(at: IndexPath(item: destinationIndex, section: 0)) as? HomeAppCell {
+            // drop app when folder was created
             let iconSnapshot = destinationCell.imageContainerView.snapshotView(afterScreenUpdates: false)!
             iconSnapshot.frame = destinationCell.convert(destinationCell.imageContainerView.frame, to: interaction.dragInteraction.currentPageCell)
             interaction.dragInteraction.currentPageCell.contentView.addSubview(iconSnapshot)

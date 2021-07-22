@@ -184,7 +184,7 @@ extension HomeAppsManager {
         var updateItems: [AppItem] = []
         for i in 0..<pageCell.collectionView.visibleCells.count {
             let indexPath = IndexPath(item: i, section: 0)
-            if let cell = pageCell.collectionView.cellForItem(at: indexPath) as? AppCell, let item = cell.item {
+            if let cell = pageCell.collectionView.cellForItem(at: indexPath) as? HomeAppCell, let item = cell.generalItem {
                 updateItems.append(item)
             }
         }
@@ -307,10 +307,10 @@ extension HomeAppsManager: UIScrollViewDelegate {
 
 extension HomeAppsManager: AppPageCellDelegate {
     
-    func appPageCell(_ pageCell: AppPageCell, didSelect cell: AppCell) {
+    func appPageCell(_ pageCell: AppPageCell, didSelect cell: HomeAppCell) {
         if let cell = cell as? AppFolderCell {
             showFolder(from: cell)
-        } else if let item = cell.item as? AppModel, !isEditing {
+        } else if let item = cell.generalItem as? AppModel, !isEditing {
             delegate?.homeAppsManager(self, didSelectApp: item)
         }
     }

@@ -44,6 +44,7 @@ final class HomeAppsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.layer.cornerRadius = 13
         appsManager = HomeAppsManager(viewController: self, candidateCollectionView: candidateCollectionView, pinnedCollectionView: pinnedCollectionView)
         appsManager.delegate = self
         appsItemManager = HomeAppsItemManager()
@@ -182,7 +183,9 @@ extension HomeAppsViewController {
     }
     
     private func showPinTipsIfNeeded() {
-        guard !AppGroupUserDefaults.User.homeAppsPinTips else { return }
+        guard !AppGroupUserDefaults.User.homeAppsPinTips else {
+            return
+        }
         let viewController = HomeAppsPinTipsViewController()
         viewController.pinnedViewTopOffset = view.frame.origin.y + 80.0
         viewController.modalPresentationStyle = .overFullScreen

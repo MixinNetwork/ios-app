@@ -23,10 +23,11 @@ class AppPageCell: UICollectionViewCell {
     private var isEditing = false
     
     func enterEditingMode() {
-        guard !isEditing else { return }
+        guard !isEditing else {
+            return
+        }
         isEditing = true
-        for cell in collectionView.visibleCells {
-            guard let cell = cell as? AppCell else { return }
+        for case let cell as AppCell in collectionView.visibleCells {
             cell.startShaking()
             if let cell = cell as? AppFolderCell {
                 cell.moveToFirstAvailablePage()
@@ -35,10 +36,11 @@ class AppPageCell: UICollectionViewCell {
     }
     
     func leaveEditingMode() {
-        guard isEditing else { return }
+        guard isEditing else {
+            return
+        }
         isEditing = false
-        for cell in collectionView.visibleCells {
-            guard let cell = cell as? AppCell else { return }
+        for case let cell as AppCell in collectionView.visibleCells {
             cell.stopShaking()
             if let cell = cell as? AppFolderCell {
                 cell.leaveEditingMode()

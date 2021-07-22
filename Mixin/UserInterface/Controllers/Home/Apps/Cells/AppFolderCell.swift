@@ -36,7 +36,9 @@ class AppFolderCell: AppCell {
     
     override func updateUI() {
         super.updateUI()
-        guard let folder = item as? AppFolderModel else { return }
+        guard let folder = item as? AppFolderModel else {
+            return
+        }
         apps = folder.pages
         label?.text = folder.name
         placeholderView?.removeFromSuperview()
@@ -75,7 +77,9 @@ extension AppFolderCell {
     }
     
     func move(to page: Int, animated: Bool) {
-        guard page < apps.count else { return }
+        guard page < apps.count else {
+            return
+        }
         let indexPath = IndexPath(item: page, section: 0)
         collectionView.scrollToItem(at: indexPath, at: .left, animated: animated)
     }

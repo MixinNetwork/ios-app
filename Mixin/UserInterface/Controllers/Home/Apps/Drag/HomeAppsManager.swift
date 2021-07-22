@@ -108,7 +108,9 @@ class HomeAppsManager: NSObject {
 extension HomeAppsManager {
     
     @objc func handleTapGesture(gestureRecognizer: UITapGestureRecognizer) {
-        guard isEditing else { return }
+        guard isEditing else {
+            return
+        }
         var touchPoint = gestureRecognizer.location(in: viewController.view)
         guard let (collectionView, pageCell) = collectionViewAndPageCell(at: touchPoint) else {
             return
@@ -138,15 +140,15 @@ extension HomeAppsManager {
     }
     
     func enterEditingMode(occurHaptic: Bool = true) {
-        guard !isEditing else { return }
+        guard !isEditing else {
+            return
+        }
         isEditing = true
         if occurHaptic {
             feedback.impactOccurred()
         }
-        for cell in candidateCollectionView.visibleCells + (pinnedCollectionView?.visibleCells ?? []) {
-            if let cell = cell as? AppPageCell {
-                cell.enterEditingMode()
-            }
+        for case let cell as AppPageCell in candidateCollectionView.visibleCells + (pinnedCollectionView?.visibleCells ?? []) {
+            cell.enterEditingMode()
         }
         // add an empty page
         if let lastPage = items.last, lastPage.count > 0 {
@@ -158,12 +160,12 @@ extension HomeAppsManager {
     }
     
     @objc func leaveEditingMode() {
-        guard isEditing else { return }
+        guard isEditing else {
+            return
+        }
         isEditing = false
-        for cell in candidateCollectionView.visibleCells + (pinnedCollectionView?.visibleCells ?? []) {
-            if let cell = cell as? AppPageCell {
-                cell.leaveEditingMode()
-            }
+        for case let cell as AppPageCell in candidateCollectionView.visibleCells + (pinnedCollectionView?.visibleCells ?? []) {
+            cell.leaveEditingMode()
         }
         // remove empty page
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {

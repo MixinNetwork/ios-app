@@ -26,7 +26,9 @@ extension HomeAppsManager {
     }
     
     func startFolderInteraction(for itemCell: AppCell) {
-        guard let dragInteraction = currentDragInteraction else { return }
+        guard let dragInteraction = currentDragInteraction else {
+            return
+        }
         folderTimer = Timer.scheduledTimer(timeInterval: HomeAppsConstants.folderInterval, target: self, selector: #selector(folderTimerHandler), userInfo: nil, repeats: false)
         let folderWrapperView = UIView(frame: itemCell.imageContainerView.frame)
         folderWrapperView.layer.cornerRadius = 12
@@ -60,20 +62,16 @@ extension HomeAppsManager {
         UIView.animate(withDuration: 0.25, animations: {
             folderInteraction.wrapperView.transform = .identity
             self.currentDragInteraction?.placeholderView.transform = CGAffineTransform.identity.scaledBy(x: HomeAppsConstants.appIconScale.x, y: HomeAppsConstants.appIconScale.y)
-            folderInteraction.dragInteraction.currentPageCell.collectionView.visibleCells.forEach { cell in
-                if let cell = cell as? AppCell {
-                    cell.label?.alpha = 1
-                }
+            for case let cell as AppCell in folderInteraction.dragInteraction.currentPageCell.collectionView.visibleCells {
+                cell.label?.alpha = 1
             }
         }, completion: { _ in
             if let folderCell = cell as? AppFolderCell {
                 folderCell.wrapperView.isHidden = false
             }
             folderInteraction.wrapperView.removeFromSuperview()
-            folderInteraction.dragInteraction.currentPageCell.collectionView.visibleCells.forEach { cell in
-                if let cell = cell as? AppCell {
-                    cell.startShaking()
-                }
+            for case let cell as AppCell in folderInteraction.dragInteraction.currentPageCell.collectionView.visibleCells {
+                cell.startShaking()
             }
         })
     }
@@ -100,7 +98,9 @@ extension HomeAppsManager {
     }
     
     func updateFolderDragOutFlags() {
-        guard let interaction = currentDragInteraction else { return }
+        guard let interaction = currentDragInteraction else {
+            return
+        }
         if interaction.placeholderView.center.y < candidateCollectionView.superview!.frame.minY {
             ignoreDragOutOnTop = true
         } else if interaction.placeholderView.center.y > candidateCollectionView.superview!.frame.maxY {
@@ -278,7 +278,9 @@ extension HomeAppsManager {
 extension HomeAppsManager: HomeAppsFolderViewControllerDelegate {
     
     func homeAppsFolderViewControllerOpenAnimationWillStart(_ controller: HomeAppsFolderViewController) {
-        guard let info = openFolderInfo else { return }
+        guard let info = openFolderInfo else {
+            return
+        }
         info.cell.imageContainerView?.isHidden = true
         info.cell.wrapperView.isHidden = true
     }
@@ -288,7 +290,9 @@ extension HomeAppsManager: HomeAppsFolderViewControllerDelegate {
     }
     
     func homeAppsFolderViewController(_ controller: HomeAppsFolderViewController, didChangeName name: String) {
-        guard let info = openFolderInfo else { return }
+        guard let info = openFolderInfo else {
+            return
+        }
         info.cell.label?.text = name
     }
     
@@ -356,7 +360,9 @@ extension HomeAppsManager: HomeAppsFolderViewControllerDelegate {
     }
     
     func homeAppsFolderViewController(_ controller: HomeAppsFolderViewController, dismissAnimationWillStartOnPage page: Int, updatedPages: [[AppModel]]) {
-        guard let info = openFolderInfo else { return }
+        guard let info = openFolderInfo else {
+            return
+        }
         UIView.animate(withDuration: 0.5) {
             info.cell.imageContainerView?.isHidden = false
             info.cell.wrapperView.isHidden = false
@@ -370,7 +376,9 @@ extension HomeAppsManager: HomeAppsFolderViewControllerDelegate {
     }
     
     func homeAppsFolderViewControllerDismissAnimationDidFinish(_ controller: HomeAppsFolderViewController) {
-        guard let info = openFolderInfo else { return }
+        guard let info = openFolderInfo else {
+            return
+        }
         stopPageTimer()
         controller.dismiss(animated: false, completion: {
             self.openFolderInfo = nil

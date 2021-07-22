@@ -193,7 +193,9 @@ extension HomeAppsFolderViewController: HomeAppsManagerDelegate {
     
     func homeAppsManager(_ manager: HomeAppsManager, didSelectApp app: AppModel) {
         dismiss { [weak self] in
-            guard let self = self else { return }
+            guard let self = self else {
+                return
+            }
             self.delegate?.homeAppsFolderViewController(self, didSelectApp: app)
         }
     }

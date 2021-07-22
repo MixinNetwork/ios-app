@@ -2,13 +2,13 @@ import UIKit
 
 class HomeAppsDragInteraction {
     
+    let placeholderView: HomeAppsSnapshotView
+    let dragOffset: CGSize
     let item: AppItem
     let originalPageCell: AppPageCell
     let originalIndexPath: IndexPath
     var currentPageCell: AppPageCell
     var currentIndexPath: IndexPath
-    let placeholderView: HomeAppsSnapshotView
-    let dragOffset: CGSize
     var needsUpdate = false
     var savedState: [[AppItem]]?
     

@@ -17,7 +17,9 @@ extension HomeAppsManager {
     private func beginDragInteraction(_ gestureRecognizer: UILongPressGestureRecognizer) {
         feedback.prepare()
         var touchPoint = gestureRecognizer.location(in: viewController.view)
-        guard let (collectionView, pageCell) = collectionViewAndPageCell(at: touchPoint) else { return }
+        guard let (collectionView, pageCell) = collectionViewAndPageCell(at: touchPoint) else {
+            return
+        }
         touchPoint = gestureRecognizer.location(in: collectionView)
         touchPoint.x -= collectionView.contentOffset.x
         guard let indexPath = pageCell.collectionView.indexPathForItem(at: touchPoint),
@@ -44,13 +46,19 @@ extension HomeAppsManager {
     }
     
     private func updateDragInteraction(_ gestureRecognizer: UILongPressGestureRecognizer) {
-        guard let currentInteraction = currentDragInteraction else { return }
+        guard let currentInteraction = currentDragInteraction else {
+            return
+        }
         var touchPoint = gestureRecognizer.location(in: viewController.view)
-        guard let (collectionView, pageCell) = collectionViewAndPageCell(at: touchPoint) else { return }
+        guard let (collectionView, pageCell) = collectionViewAndPageCell(at: touchPoint) else {
+            return
+        }
         touchPoint = gestureRecognizer.location(in: collectionView)
         let convertedTouchPoint = viewController.view.convert(touchPoint, from: collectionView)
         currentInteraction.movePlaceholderView(to: convertedTouchPoint)
-        guard !currentInteraction.needsUpdate else { return }
+        guard !currentInteraction.needsUpdate else {
+            return
+        }
         touchPoint.x -= collectionView.contentOffset.x
         if isInAppsFolderViewController {
             var shouldStartDragOutTimer = false
@@ -60,7 +68,9 @@ extension HomeAppsManager {
                 shouldStartDragOutTimer = true
             }
             if shouldStartDragOutTimer {
-                guard folderRemoveTimer == nil else { return }
+                guard folderRemoveTimer == nil else {
+                    return
+                }
                 folderRemoveTimer = Timer.scheduledTimer(timeInterval: HomeAppsConstants.folderRemoveInterval, target: self, selector: #selector(folderRemoveTimerHandler), userInfo: nil, repeats: false)
                 return
             }

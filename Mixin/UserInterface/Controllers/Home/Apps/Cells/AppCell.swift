@@ -47,7 +47,9 @@ class AppCell: UICollectionViewCell {
     }
     
     func startShaking() {
-        guard !isShaking else { return }
+        guard !isShaking else {
+            return
+        }
         isShaking = true
         let positionAnimation = CAKeyframeAnimation(keyPath: "position")
         positionAnimation.values = [CGPoint(x: -1, y: -1),

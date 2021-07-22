@@ -40,7 +40,9 @@ extension HomeAppsItemManager {
             pinnedIds = Set(pinnedIds.prefix(HomeAppsMode.pinned.appsPerRow))
         }
         pinnedItems = pinnedIds.compactMap({ id -> AppModel? in
-            guard let app = HomeApp(id: id) else { return nil }
+            guard let app = HomeApp(id: id) else {
+                return nil
+            }
             return AppModel(id: id, app: app)
         })
         var candidateEmbeddedApps = EmbeddedApp.all
@@ -80,7 +82,9 @@ extension HomeAppsItemManager {
                 let newlyAddedItemIds = Set(allAppIds).subtracting(existsItemIds)
                 if newlyAddedItemIds.count > 0 {
                     let newlyAddedItems = newlyAddedItemIds.compactMap { id -> AppModel? in
-                        guard let app = HomeApp(id: id) else { return nil }
+                        guard let app = HomeApp(id: id) else {
+                            return nil
+                        }
                         return AppModel(id: id, app: app)
                     }
                     let newlyAddedItemPages = newlyAddedItems.splitInPages(ofSize: HomeAppsMode.regular.appsPerPage)

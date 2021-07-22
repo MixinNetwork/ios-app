@@ -129,14 +129,13 @@ extension AppFolderCell: UICollectionViewDataSource, UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard indexPath.item < apps.count else {
-            return UICollectionViewCell()
-        }
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.app_page, for: indexPath)!
-        cell.mode = .nestedFolder
-        cell.draggedItem = nil
-        cell.items = apps[indexPath.item]
-        cell.collectionView.reloadData()
+        if indexPath.item < apps.count {
+            cell.mode = .nestedFolder
+            cell.draggedItem = nil
+            cell.items = apps[indexPath.item]
+            cell.collectionView.reloadData()
+        }
         return cell
     }
     

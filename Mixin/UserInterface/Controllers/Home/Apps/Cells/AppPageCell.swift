@@ -83,9 +83,6 @@ extension AppPageCell: UICollectionViewDelegate, UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard indexPath.item < items.count else {
-            return UICollectionViewCell(frame: .zero)
-        }
         if let folder = items[indexPath.item] as? AppFolderModel {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.app_folder, for: indexPath)!
             cell.item = folder
@@ -117,8 +114,9 @@ extension AppPageCell: UICollectionViewDelegate, UICollectionViewDataSource {
             }
             cell.label?.isHidden = mode == .pinned
             return cell
+        } else {
+            fatalError()
         }
-        return UICollectionViewCell(frame: .zero)
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

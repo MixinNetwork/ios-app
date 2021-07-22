@@ -11,8 +11,10 @@ class AppCell: UICollectionViewCell {
             updateUI()
         }
     }
-    var snapshotView: HomeAppsSnapshotView {
-        let iconView = imageContainerView.snapshotView(afterScreenUpdates: true)!
+    var snapshotView: HomeAppsSnapshotView? {
+        guard let iconView = imageContainerView.snapshotView(afterScreenUpdates: true) else {
+            return nil
+        }
         iconView.frame = imageContainerView.frame
         return HomeAppsSnapshotView(frame: bounds, iconView: iconView)
     }

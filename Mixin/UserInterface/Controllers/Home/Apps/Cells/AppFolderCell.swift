@@ -23,10 +23,12 @@ class AppFolderCell: AppCell {
         super.prepareForReuse()
         wrapperView.isHidden = false
     }
-    
-    override var snapshotView: HomeAppsSnapshotView {
-        let snapshotView = super.snapshotView
-        let wrapperView = wrapperView.snapshotView(afterScreenUpdates: true)!
+
+    override var snapshotView: HomeAppsSnapshotView? {
+        guard let snapshotView = super.snapshotView,
+              let wrapperView = wrapperView.snapshotView(afterScreenUpdates: true) else {
+            return nil
+        }
         wrapperView.frame = snapshotView.iconView.frame
         snapshotView.insertSubview(wrapperView, belowSubview: snapshotView.iconView)
         return snapshotView

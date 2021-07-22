@@ -66,9 +66,7 @@ extension HomeAppsItemManager {
         existsItemIds.removeAll()
         let embeddedApps = EmbeddedApp.all
         let appUsers = UserDAO.shared.getAppUsers()
-        let embeddedAppIds = embeddedApps.map({ $0.id })
-        let appUserIds = appUsers.compactMap({ $0.appId })
-        let allAppIds = embeddedAppIds + appUserIds
+        let allAppIds = embeddedApps.map({ $0.id }) + appUsers.compactMap({ $0.appId })
         do {
             if let parsedDict = try JSONSerialization.jsonObject(with: jsonData, options: []) as? JSONDictionary,
                let pinnedJSONArray = parsedDict["pinned"] as? JSONArray,

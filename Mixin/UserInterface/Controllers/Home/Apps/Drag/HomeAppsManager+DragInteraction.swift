@@ -22,7 +22,8 @@ extension HomeAppsManager {
         touchPoint.x -= collectionView.contentOffset.x
         guard let indexPath = pageCell.collectionView.indexPathForItem(at: touchPoint),
               let cell = pageCell.collectionView.cellForItem(at: indexPath) as? AppCell,
-              let item = cell.item else {
+              let item = cell.item,
+              let placeholderView = cell.snapshotView else {
             // long press empty place to start editing mode
             enterEditingMode()
             return
@@ -31,7 +32,6 @@ extension HomeAppsManager {
         var offsettedTouchPoint = gestureRecognizer.location(in: collectionView)
         offsettedTouchPoint.x += dragOffset.width
         offsettedTouchPoint.y += dragOffset.height
-        let placeholderView = cell.snapshotView
         placeholderView.source = isInAppsFolderViewController ? .folder : (collectionView == pinnedCollectionView ? .pinned : .regular)
         placeholderView.center = viewController.view.convert(offsettedTouchPoint, from: collectionView)
         viewController.view.addSubview(placeholderView)

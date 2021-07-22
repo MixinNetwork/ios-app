@@ -209,7 +209,6 @@
 "app_category_camera" = "摄影";
 "app_category_other" = "其他";
 "app_pin_tips" = "可将常用机器人长按拖至此处，可显示于首页";
-"app_pin_tips_got_it" = "知道了";
 
 // Home
 "home_start_messaging_guide" = "你可以与你的 Mixin 好友一起聊天。";

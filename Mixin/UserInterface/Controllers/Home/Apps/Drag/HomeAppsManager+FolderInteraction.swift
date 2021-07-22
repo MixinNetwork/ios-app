@@ -10,7 +10,7 @@ extension HomeAppsManager {
         let folderViewController = HomeAppsFolderViewController.instance()
         folderViewController.modalPresentationStyle = .overFullScreen
         folderViewController.isEditing = isEditing
-        folderViewController.folder = cell.item as? AppFolderModel
+        folderViewController.folder = cell.item as? HomeAppFolder
         folderViewController.currentPage = cell.currentPage
         folderViewController.sourceFrame = convertedFrame
         folderViewController.startInRename = startInRename
@@ -35,7 +35,7 @@ extension HomeAppsManager {
         folderWrapperView.backgroundColor = R.color.background_secondary()
         itemCell.contentView.insertSubview(folderWrapperView, belowSubview: itemCell.imageContainerView)
         cancelFolderInteraction()
-        if let folder = itemCell.item as? AppFolderModel, let folderCell = itemCell as? AppFolderCell {
+        if let folder = itemCell.item as? HomeAppFolder, let folderCell = itemCell as? AppFolderCell {
             currentFolderInteraction = HomeAppsFolderDropInteraction(dragInteraction: dragInteraction, folder: folder, wrapperView: folderWrapperView)
             folderCell.wrapperView.isHidden = false
         } else if let app = itemCell.item as? AppModel {
@@ -129,7 +129,7 @@ extension HomeAppsManager {
             return
         }
         let folderName = sourceApp.app.category 
-        let newFolder = AppFolderModel(name: folderName, pages: [[interaction.destinationApp, sourceApp]])
+        let newFolder = HomeAppFolder(name: folderName, pages: [[interaction.destinationApp, sourceApp]])
         newFolder.isNewFolder = true
         items[page][destinationIndex] = newFolder
         let folderIndexPath = IndexPath(item: destinationIndex, section: 0)
@@ -176,7 +176,7 @@ extension HomeAppsManager {
         }
         let folderIndexPath = IndexPath(item: destinationIndex, section: 0)
         guard let folderCell = interaction.dragInteraction.currentPageCell.collectionView.cellForItem(at: folderIndexPath) as? AppFolderCell,
-              let item = folderCell.item as? AppFolderModel else {
+              let item = folderCell.item as? HomeAppFolder else {
             return
         }
         item.pages[folderCell.currentPage].append(sourceApp)

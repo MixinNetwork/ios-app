@@ -1,6 +1,6 @@
 import Foundation
 
-class AppFolderModel: AppItem {
+class HomeAppFolder: AppItem {
     
     var name: String
     var pages: [[AppModel]]
@@ -20,9 +20,9 @@ class AppFolderModel: AppItem {
     
 }
 
-extension AppFolderModel: Equatable {
+extension HomeAppFolder: Equatable {
     
-    static func == (lhs: AppFolderModel, rhs: AppFolderModel) -> Bool {
+    static func == (lhs: HomeAppFolder, rhs: HomeAppFolder) -> Bool {
         return lhs === rhs
     }
     

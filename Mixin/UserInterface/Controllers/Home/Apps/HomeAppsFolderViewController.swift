@@ -26,7 +26,7 @@ class HomeAppsFolderViewController: UIViewController {
     @IBOutlet weak var pageControl: UIPageControl!
     
     var openAnimationDidEnd: (() -> Void)?
-    var folder: AppFolderModel!
+    var folder: HomeAppFolder!
     var sourceFrame: CGRect!
     var startInRename: Bool = false
     var currentPage: Int = 0

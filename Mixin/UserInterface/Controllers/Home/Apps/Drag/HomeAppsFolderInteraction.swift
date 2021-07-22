@@ -32,9 +32,9 @@ class HomeAppsFolderDropInteraction: HomeAppsFolderInteraction {
     var item: AppItem
     var isDismissing: Bool = false
     var wrapperView: UIView
-    let folder: AppFolderModel
+    let folder: HomeAppFolder
 
-    required init(dragInteraction: HomeAppsDragInteraction, folder: AppFolderModel, wrapperView: UIView) {
+    required init(dragInteraction: HomeAppsDragInteraction, folder: HomeAppFolder, wrapperView: UIView) {
         self.dragInteraction = dragInteraction
         self.folder = folder
         self.item = folder
@@ -45,14 +45,14 @@ class HomeAppsFolderDropInteraction: HomeAppsFolderInteraction {
 
 class HomeAppsOpenFolderInfo {
     
-    let folder: AppFolderModel
+    let folder: HomeAppFolder
     let cell: AppFolderCell
     var isNewFolder: Bool
     var shouldCancelCreation = false
     
     required init(cell: AppFolderCell, isNewFolder: Bool) {
         self.cell = cell
-        self.folder = cell.item as! AppFolderModel
+        self.folder = cell.item as! HomeAppFolder
         self.isNewFolder = isNewFolder
     }
     

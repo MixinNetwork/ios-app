@@ -136,7 +136,7 @@ extension HomeAppsItemManager {
                     }
                     return page.count > 0 ? page : nil
                 }
-                return pages.count > 0 ? AppFolderModel(name: name, pages: pages) : nil
+                return pages.count > 0 ? HomeAppFolder(name: name, pages: pages) : nil
             }
         }
     }

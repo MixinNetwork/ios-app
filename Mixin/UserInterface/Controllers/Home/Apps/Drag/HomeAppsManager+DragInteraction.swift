@@ -89,7 +89,7 @@ extension HomeAppsManager {
             let convertedPoint = itemCell.convert(touchPoint, from: pageCell.collectionView)
             let canCreateFolder = targetRect.contains(convertedPoint)
             if canCreateFolder && indexPath.row != currentInteraction.currentIndexPath.row && collectionView == candidateCollectionView { // create folder
-                if currentFolderInteraction != nil || currentInteraction.item is AppFolderModel || isInAppsFolderViewController {
+                if currentFolderInteraction != nil || currentInteraction.item is HomeAppFolder || isInAppsFolderViewController {
                     return
                 }
                 pageTimer?.invalidate()

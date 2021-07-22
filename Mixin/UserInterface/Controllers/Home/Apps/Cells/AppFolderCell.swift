@@ -36,7 +36,7 @@ class AppFolderCell: AppCell {
     
     override func updateUI() {
         super.updateUI()
-        guard let folder = item as? AppFolderModel else {
+        guard let folder = item as? HomeAppFolder else {
             return
         }
         apps = folder.pages
@@ -48,7 +48,7 @@ class AppFolderCell: AppCell {
     }
     
     func leaveEditingMode() {
-        guard let folder = item as? AppFolderModel, let lastPageApps = apps.last, lastPageApps.count == 0 else {
+        guard let folder = item as? HomeAppFolder, let lastPageApps = apps.last, lastPageApps.count == 0 else {
             return
         }
         apps.removeLast()
@@ -61,7 +61,7 @@ class AppFolderCell: AppCell {
 extension AppFolderCell {
     
     func moveToFirstAvailablePage(animated: Bool = true) {
-        if let folder = item as? AppFolderModel, (apps.last?.count ?? 0) > 0 {
+        if let folder = item as? HomeAppFolder, (apps.last?.count ?? 0) > 0 {
             folder.pages.append([])
             apps.append([])
         }

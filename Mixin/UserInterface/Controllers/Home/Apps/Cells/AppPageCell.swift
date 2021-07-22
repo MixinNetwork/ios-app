@@ -85,7 +85,7 @@ extension AppPageCell: UICollectionViewDelegate, UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if let folder = items[indexPath.item] as? AppFolderModel {
+        if let folder = items[indexPath.item] as? HomeAppFolder {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.app_folder, for: indexPath)!
             cell.item = folder
             if isEditing {

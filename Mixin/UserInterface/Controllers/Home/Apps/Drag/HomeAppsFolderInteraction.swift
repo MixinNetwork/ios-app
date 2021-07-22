@@ -2,22 +2,21 @@ import Foundation
 
 protocol HomeAppsFolderInteraction {
     
-    var dragInteraction: HomeAppsDragInteraction { get set }
-    var item: AppItem { get set }
+    var dragInteraction: HomeAppsDragInteraction { get }
+    var item: AppItem { get }
     var isDismissing: Bool { get set }
-    var wrapperView: UIView { get set }
+    var wrapperView: UIView { get }
     
 }
 
 class HomeAppsFolderCreationInteraction: HomeAppsFolderInteraction {
     
     var dragInteraction: HomeAppsDragInteraction
-    var destinationApp: AppModel
-    var wrapperView: UIView
-    var isDismissing: Bool = false
-    
     var item: AppItem
-    
+    var isDismissing: Bool = false
+    var wrapperView: UIView
+    let destinationApp: AppModel
+
     required init(dragInteraction: HomeAppsDragInteraction, destinationApp: AppModel, wrapperView: UIView) {
         self.dragInteraction = dragInteraction
         self.destinationApp = destinationApp
@@ -30,12 +29,11 @@ class HomeAppsFolderCreationInteraction: HomeAppsFolderInteraction {
 class HomeAppsFolderDropInteraction: HomeAppsFolderInteraction {
     
     var dragInteraction: HomeAppsDragInteraction
-    var folder: AppFolderModel
-    var wrapperView: UIView
-    var isDismissing: Bool = false
-    
     var item: AppItem
-    
+    var isDismissing: Bool = false
+    var wrapperView: UIView
+    let folder: AppFolderModel
+
     required init(dragInteraction: HomeAppsDragInteraction, folder: AppFolderModel, wrapperView: UIView) {
         self.dragInteraction = dragInteraction
         self.folder = folder
@@ -47,8 +45,8 @@ class HomeAppsFolderDropInteraction: HomeAppsFolderInteraction {
 
 class HomeAppsOpenFolderInfo {
     
-    var folder: AppFolderModel
-    var cell: AppFolderCell
+    let folder: AppFolderModel
+    let cell: AppFolderCell
     var isNewFolder: Bool
     var shouldCancelCreation = false
     

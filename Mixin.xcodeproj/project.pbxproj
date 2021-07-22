@@ -2204,8 +2204,6 @@
 		7B4BE55B243E0F0400198EE9 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				7B4BE560243E105000198EE9 /* EmbeddedApp.swift */,
-				7B4BE55E243E0FEC00198EE9 /* HomeApp.swift */,
 				94438D56252DAD73005760AF /* Clip.swift */,
 				7B4CBDC12528533600BA66D0 /* ClipSwitcher.swift */,
 				7B7D279F2528682B006BBFAB /* ClipSwitcherThumbnailFlowLayout.swift */,
@@ -2538,6 +2536,8 @@
 		7C66F0212689C9D7006D8462 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				7B4BE560243E105000198EE9 /* EmbeddedApp.swift */,
+				7B4BE55E243E0FEC00198EE9 /* HomeApp.swift */,
 				7C66F1A8268AB40A006D8462 /* AppItem.swift */,
 				7C66F1AE268ABE3F006D8462 /* AppModel.swift */,
 				7C66F1AC268ABE1F006D8462 /* AppFolderModel.swift */,

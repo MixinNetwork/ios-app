@@ -33,7 +33,7 @@ class GroupCall: Call {
         }
     }
     
-    init(uuid: UUID, isOutgoing: Bool, conversation: ConversationItem, members: [UserItem], invitingMembers: [UserItem]) {
+    init(uuid: UUID, isOutgoing: Bool, conversation: ConversationItem, members: [UserItem], invitingMembers: [UserItem], rtcClient: WebRTCClient) {
         self.conversation = conversation
         self.conversationName = conversation.getConversationName()
         let conversationId = conversation.conversationId
@@ -41,7 +41,7 @@ class GroupCall: Call {
                                                            members: members + invitingMembers,
                                                            invitingMemberUserIds: Set(invitingMembers.map(\.userId)))
         self.pendingInvitingMembers = invitingMembers
-        super.init(uuid: uuid, conversationId: conversationId, isOutgoing: isOutgoing)
+        super.init(uuid: uuid, conversationId: conversationId, isOutgoing: isOutgoing, rtcClient: rtcClient)
         CallService.shared.membersManager.beginPolling(forConversationWith: conversationId)
     }
     

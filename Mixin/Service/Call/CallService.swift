@@ -424,8 +424,8 @@ extension CallService {
                 NotificationCenter.default.post(name: Self.willStartCallNotification, object: self)
             }
             guard WebSocketService.shared.isConnected else {
-                self.activeCall = nil
                 self.alert(error: CallError.networkFailure)
+                self.close(uuid: uuid)
                 completion?(false)
                 return
             }

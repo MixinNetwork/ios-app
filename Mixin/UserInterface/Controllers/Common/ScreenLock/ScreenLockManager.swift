@@ -84,6 +84,7 @@ extension ScreenLockManager {
         guard window == nil else {
             return
         }
+        AppDelegate.current.mainWindow.endEditing(true)
         viewController = ScreenLockViewController()
         viewController!.tapUnlockAction = { [weak self] in
             self?.performBiometricAuthentication()

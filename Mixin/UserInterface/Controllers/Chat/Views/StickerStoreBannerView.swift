@@ -1,8 +1,13 @@
 import UIKit
 
 class StickerStoreBannerView: UICollectionReusableView {
-
+    
     @IBOutlet weak var collectionView: UICollectionView!
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        collectionView.decelerationRate = .fast
+    }
     
 }
 

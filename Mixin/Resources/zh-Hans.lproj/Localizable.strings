@@ -443,6 +443,9 @@
 "sticker_store_title" = "表情商场";
 "sticker_store_add" = "添加";
 "sticker_store_added" = "已添加";
+"sticker_store_my_stickers" = "我的表情";
+"sticker_edit_no_stickers" = "没有表情";
+"sticker_count" = "%@ 个表情";
 
 // Camera
 "camera_save_photo_success" = "图片已成功保存在相册";

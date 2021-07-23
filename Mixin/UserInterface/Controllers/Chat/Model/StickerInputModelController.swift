@@ -40,15 +40,15 @@ class StickerInputModelController: NSObject {
     }
     
     func dequeueReusableStickersViewController(withIndex index: Int) -> StickersCollectionViewController? {
-        guard index >= 0 && index - numberOfFixedControllers < officialStickers.count else {
+        guard index > 0 && index - numberOfFixedControllers < officialStickers.count else {
             return nil
         }
         switch index {
-        case 0:
-            return recentStickersViewController
         case 1:
-            return favoriteStickersViewController
+            return recentStickersViewController
         case 2:
+            return favoriteStickersViewController
+        case 3:
             return giphyViewController
         default:
             let viewController: StickersViewController

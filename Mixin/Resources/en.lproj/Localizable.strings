@@ -443,7 +443,9 @@
 "sticker_store_title" = "Sticker Store";
 "sticker_store_add" = "Add";
 "sticker_store_added" = "Added";
-
+"sticker_store_my_stickers" = "My Stickers";
+"sticker_edit_no_stickers" = "NO STICKERS";
+"sticker_count" = "%@ stickers";
 
 // Camera
 "camera_save_photo_success" = "Photo saved.";

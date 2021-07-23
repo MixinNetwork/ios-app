@@ -127,9 +127,12 @@ extension StickerInputViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let selectedIndex = indexPath.item
         if selectedIndex == 0 {
-            let viewController = StickerStoreViewController.instance()
-            viewController.modalPresentationStyle = .fullScreen
-            present(viewController, animated: true, completion: nil)
+            let viewController = StickersStoreViewController.instance()
+            let navigationController = UINavigationController(rootViewController: viewController)
+            navigationController.modalPresentationStyle = .fullScreen
+            navigationController.setNavigationBarHidden(true, animated: false)
+            navigationController.interactivePopGestureRecognizer?.isEnabled = false
+            present(navigationController, animated: true, completion: nil)
             return
         }
         guard selectedIndex != currentIndex, !isScrollingByAlbumSelection else {

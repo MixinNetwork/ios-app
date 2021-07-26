@@ -9,7 +9,17 @@ class AppFolderCell: ShakableCell {
     
     var folder: HomeAppFolder? {
         didSet {
-            updateUI()
+            label?.alpha = 1
+            label?.isHidden = false
+            guard let folder = folder else {
+                return
+            }
+            apps = folder.pages
+            label?.text = folder.name
+            placeholderView?.removeFromSuperview()
+            imageContainerView.transform = .identity
+            collectionView.reloadData()
+            collectionView.isHidden = folder.isNewFolder
         }
     }
     
@@ -30,20 +40,6 @@ class AppFolderCell: ShakableCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         wrapperView.isHidden = false
-    }
-    
-    func updateUI() {
-        label?.alpha = 1
-        label?.isHidden = false
-        guard let folder = folder else {
-            return
-        }
-        apps = folder.pages
-        label?.text = folder.name
-        placeholderView?.removeFromSuperview()
-        imageContainerView.transform = .identity
-        collectionView.reloadData()
-        collectionView.isHidden = folder.isNewFolder
     }
     
     func leaveEditingMode() {

@@ -8,30 +8,26 @@ class AppCell: ShakableCell {
     
     var app: HomeApp? {
         didSet {
-            updateUI()
+            switch app {
+            case .embedded(let embedded):
+                imageView?.contentMode = .center
+                label?.text = embedded.name
+                imageView?.image = embedded.icon
+            case .external(let user):
+                imageView?.contentMode = .scaleAspectFit
+                label?.text = user.fullName
+                imageView?.setImage(with: user)
+            case .none:
+                return
+            }
+            label?.alpha = 1
+            label?.isHidden = false
         }
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
         imageView?.prepareForReuse()
-        label?.isHidden = false
-    }
-    
-    func updateUI() {
-        switch app {
-        case .embedded(let embedded):
-            imageView?.contentMode = .center
-            label?.text = embedded.name
-            imageView?.image = embedded.icon
-        case .external(let user):
-            imageView?.contentMode = .scaleAspectFit
-            label?.text = user.fullName
-            imageView?.setImage(with: user)
-        case .none:
-            return
-        }
-        label?.alpha = 1
         label?.isHidden = false
     }
     

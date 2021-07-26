@@ -201,11 +201,11 @@ extension HomeAppsViewController {
     
     private func updateHomeTitleLabel(isEditing: Bool) {
         if isEditing {
-            self.homeTitleLabel.textColor = UIColor.theme
-            self.homeTitleLabel.text = R.string.localizable.action_done()
+            homeTitleLabel.textColor = .theme
+            homeTitleLabel.text = R.string.localizable.action_done()
         } else {
-            self.homeTitleLabel.textColor = UIColor.title
-            self.homeTitleLabel.text = R.string.localizable.home_title_apps()
+            homeTitleLabel.textColor = .title
+            homeTitleLabel.text = R.string.localizable.home_title_apps()
         }
     }
     
@@ -247,6 +247,8 @@ extension HomeAppsViewController: HomeAppsManagerDelegate {
         updateHomeTitleLabel(isEditing: false)
     }
     
-    func homeAppsManager(_ manager: HomeAppsManager, didBeginFolderDragOutWithTransfer transfer: HomeAppsDragInteractionTransfer) {}
+    func homeAppsManager(_ manager: HomeAppsManager, didBeginFolderDragOutWithTransfer transfer: HomeAppsDragInteractionTransfer) {
+        
+    }
     
 }

@@ -2,12 +2,12 @@ import Foundation
 
 enum HomeAppsMode {
     
+    static let imageContainerSize = CGSize(width: 54, height: 54)
+    
     case regular
     case pinned
     case folder
     case nestedFolder
-    
-    static let imageContainerSize = CGSize(width: 54, height: 54)
     
     var sectionInset: UIEdgeInsets {
         switch self {
@@ -45,7 +45,7 @@ enum HomeAppsMode {
             return 2
         case .folder:
             return 20
-        default:
+        case .regular, .pinned:
             return 0
         }
     }
@@ -104,7 +104,7 @@ enum HomeAppsMode {
     }
     
     var appsPerPage: Int {
-        return rowsPerPage * appsPerRow
+        rowsPerPage * appsPerRow
     }
     
     private var margin: CGFloat {

@@ -2532,6 +2532,7 @@
 				5E3725B9268D4E0400269FE7 /* HomeAppsSnapshotView.swift */,
 				7C66F1B2268B0B11006D8462 /* HomeAppsExtension.swift */,
 				7CBD2EF9268FF6BB00AA0847 /* HomeAppsStorage.swift */,
+				7B4ADAA6243C7C8400F04CA6 /* HomeAppsViewController.swift */,
 				7C5823D4268966A1003AA142 /* HomeAppsFolderViewController.swift */,
 			);
 			path = Apps;
@@ -3059,7 +3060,6 @@
 				DFB2062721ABC088006E4341 /* RestoreViewController.swift */,
 				7B63A8622431C9EE00D0F7C7 /* CirclesViewController.swift */,
 				7BB0F90F2434821000BEDA97 /* CircleEditorViewController.swift */,
-				7B4ADAA6243C7C8400F04CA6 /* HomeAppsViewController.swift */,
 				7BBCABAD2524644C00601762 /* HomeOverlayViewController.swift */,
 				7B9650AD248794FD00DE86B9 /* MinimizedCallViewController.swift */,
 				7BBCEC372523A2B400F270DF /* MinimizedClipSwitcherViewController.swift */,

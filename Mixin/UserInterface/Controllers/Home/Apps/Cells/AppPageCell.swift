@@ -1,9 +1,7 @@
 import UIKit
 
 protocol AppPageCellDelegate: AnyObject {
-    
     func appPageCell(_ pageCell: AppPageCell, didSelect cell: HomeAppCell)
-    
 }
 
 class AppPageCell: UICollectionViewCell {

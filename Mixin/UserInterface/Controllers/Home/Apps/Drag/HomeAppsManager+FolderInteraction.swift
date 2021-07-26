@@ -7,7 +7,7 @@ extension HomeAppsManager {
         openFolderInfo = HomeAppsOpenFolderInfo(cell: cell, isNewFolder: isNewFolder)
         cell.stopShaking()
         let convertedFrame = cell.convert(cell.imageContainerView.frame, to: AppDelegate.current.mainWindow)
-        let folderViewController = HomeAppsFolderViewController.instance()
+        let folderViewController = R.storyboard.home.appsFolder()!
         folderViewController.modalPresentationStyle = .overFullScreen
         folderViewController.isEditing = isEditing
         folderViewController.folder = cell.folder
@@ -56,7 +56,7 @@ extension HomeAppsManager {
               !folderInteraction.isDismissing else {
             return
         }
-        stopFolderTimer()
+        invalidateFolderTimer()
         currentFolderInteraction = nil
         folderInteraction.isDismissing = true
         UIView.animate(withDuration: 0.25, animations: {
@@ -120,7 +120,7 @@ extension HomeAppsManager {
         }
     }
     
-    // create new folder
+    // Create new folder
     private func commit(folderCreationInteraction interaction: HomeAppsFolderCreationInteraction, didDrop: Bool) {
         guard let page = items.firstIndex(where: { $0.contains { $0.app == interaction.destinationApp } }),
               let sourceIndex = items[page].firstIndex(where: { $0 == interaction.dragInteraction.item }),
@@ -135,12 +135,12 @@ extension HomeAppsManager {
         let folderIndexPath = IndexPath(item: destinationIndex, section: 0)
         interaction.dragInteraction.currentPageCell.items = items[page]
         if !didDrop {
-            // still hold app when folder was created
+            // Still hold app when folder was created
             interaction.dragInteraction.currentPageCell.collectionView.reloadItems(at: [folderIndexPath])
             showFolderInteraction(interaction, page: page, sourceIndex: sourceIndex, destinationIndex: destinationIndex, folderIndexPath: folderIndexPath, isNewFolder: true)
             newFolder.isNewFolder = false
         } else if let destinationCell = interaction.dragInteraction.currentPageCell.collectionView.cellForItem(at: IndexPath(item: destinationIndex, section: 0)) as? HomeAppCell {
-            // drop app when folder was created
+            // Drop app when folder was created
             let iconSnapshot = destinationCell.imageContainerView.snapshotView(afterScreenUpdates: false)!
             iconSnapshot.frame = destinationCell.convert(destinationCell.imageContainerView.frame, to: interaction.dragInteraction.currentPageCell)
             interaction.dragInteraction.currentPageCell.contentView.addSubview(iconSnapshot)
@@ -165,7 +165,7 @@ extension HomeAppsManager {
         }
     }
     
-    // drop into folder
+    // Drop into folder
     private func commit(folderDropInteraction interaction: HomeAppsFolderDropInteraction, didDrop: Bool) {
         guard let page = items.firstIndex(where: { $0.contains { $0.folder == interaction.folder } }),
               let sourceIndex = items[page].firstIndex(where: { $0 == interaction.dragInteraction.item }),
@@ -258,8 +258,8 @@ extension HomeAppsManager {
         guard let folderInteraction = currentFolderInteraction, !folderInteraction.isDismissing else {
             return
         }
-        stopFolderTimer()
-        let animation = CABasicAnimation(keyPath: "opacity")
+        invalidateFolderTimer()
+        let animation = CABasicAnimation(keyPath: #keyPath(CALayer.opacity))
         animation.autoreverses = true
         animation.repeatCount = 2
         animation.toValue = 0.5
@@ -303,9 +303,10 @@ extension HomeAppsManager: HomeAppsFolderViewControllerDelegate {
         guard let info = openFolderInfo, let folderIndex = items[currentPage].firstIndex(where: { $0 == .folder(info.folder) }), let pageCell = currentPageCell else {
             return
         }
-        stopPageTimer()
+        invalidatePageTimer()
         let appsCountInFolder = info.folder.pages.reduce(0, { $0 + $1.count })
-        if appsCountInFolder == 0 { // last app dragged out then remove folder
+        if appsCountInFolder == 0 {
+            // Last app dragged out then remove folder
             items[currentPage].append(transfer.interaction.item)
             items[currentPage].remove(at: folderIndex)
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.45, execute: {
@@ -319,13 +320,14 @@ extension HomeAppsManager: HomeAppsFolderViewControllerDelegate {
                     pageCell.collectionView.deleteItems(at: [IndexPath(item: folderIndex, section: 0)])
                     pageCell.collectionView.insertItems(at: [IndexPath(item: self.items[self.currentPage].count - 1, section: 0)])
                 }, completion: { _ in
-                    // force end the operation.
+                    // Force end the operation.
                     if self.longPressRecognizer.state == .possible {
                         self.endDragInteraction(self.longPressRecognizer)
                     }
                 })
             })
-        } else { // drag out app, folder still remain more than one apps
+        } else {
+            // Drag out app, folder still remain more than one apps
             perform(transfer: transfer)
             currentDragInteraction?.currentPageCell = pageCell
             if items[currentPage].count == HomeAppsMode.regular.appsPerPage {
@@ -367,7 +369,7 @@ extension HomeAppsManager: HomeAppsFolderViewControllerDelegate {
             info.cell.wrapperView.isHidden = false
             info.cell.label?.isHidden = false
         }
-        stopPageTimer()
+        invalidatePageTimer()
         info.folder.pages = updatedPages.filter({ $0.count != 0 })
         info.cell.folder = info.folder
         info.cell.move(to: page, animated: false)
@@ -378,7 +380,7 @@ extension HomeAppsManager: HomeAppsFolderViewControllerDelegate {
         guard let info = openFolderInfo else {
             return
         }
-        stopPageTimer()
+        invalidatePageTimer()
         controller.dismiss(animated: false, completion: {
             self.openFolderInfo = nil
             info.cell.wrapperView.isHidden = false

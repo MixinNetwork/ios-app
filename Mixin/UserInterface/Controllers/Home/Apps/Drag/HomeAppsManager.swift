@@ -15,11 +15,13 @@ protocol HomeAppsManagerDelegate: AnyObject {
 
 class HomeAppsManager: NSObject {
     
+    let feedback = UIImpactFeedbackGenerator()
+    
     weak var delegate: HomeAppsManagerDelegate?
     
-    unowned var viewController: UIViewController
-    unowned var candidateCollectionView: UICollectionView
-    unowned var pinnedCollectionView: UICollectionView?
+    unowned let viewController: UIViewController
+    unowned let candidateCollectionView: UICollectionView
+    unowned let pinnedCollectionView: UICollectionView?
     
     var items: [[HomeAppItem]] {
         didSet {
@@ -33,15 +35,28 @@ class HomeAppsManager: NSObject {
         }
     }
     var isEditing = false
-    var isInAppsFolderViewController: Bool { pinnedCollectionView == nil }
-    var currentPage: Int {
-        if items.count == 0 || candidateCollectionView.frame.size.width == 0 {
-            return 0
-        }
-        return Int(candidateCollectionView.contentOffset.x) / Int(candidateCollectionView.frame.size.width)
+    
+    var longPressRecognizer = UILongPressGestureRecognizer()
+    var currentDragInteraction: HomeAppsDragInteraction?
+    var currentFolderInteraction: HomeAppsFolderInteraction?
+    var openFolderInfo: HomeAppsOpenFolderInfo?
+    var ignoreDragOutOnTop = false
+    var ignoreDragOutOnBottom = false
+    
+    var isInAppsFolderViewController: Bool {
+        pinnedCollectionView == nil
     }
+    
+    var currentPage: Int {
+        if items.isEmpty || candidateCollectionView.frame.size.width == 0 {
+            return 0
+        } else {
+            return Int(candidateCollectionView.contentOffset.x) / Int(candidateCollectionView.frame.size.width)
+        }
+    }
+    
     var currentPageCell: AppPageCell? {
-        if items.count == 0 {
+        guard !items.isEmpty else {
             return nil
         }
         let visibleCells = candidateCollectionView.visibleCells
@@ -52,21 +67,12 @@ class HomeAppsManager: NSObject {
         }
     }
     
-    var currentDragInteraction: HomeAppsDragInteraction?
-    var currentFolderInteraction: HomeAppsFolderInteraction?
-    var openFolderInfo: HomeAppsOpenFolderInfo?
+    weak var pageTimer: Timer?
+    weak var folderTimer: Timer?
+    weak var folderRemoveTimer: Timer?
     
-    var pageTimer: Timer?
-    var folderTimer: Timer?
-    var folderRemoveTimer: Timer?
-    
-    var ignoreDragOutOnTop = false
-    var ignoreDragOutOnBottom = false
-    
-    var longPressRecognizer = UILongPressGestureRecognizer()
-    let tapRecognizer = UITapGestureRecognizer()
-    let feedback = UIImpactFeedbackGenerator()
-    
+    private let tapRecognizer = UITapGestureRecognizer()
+        
     init(
         viewController: UIViewController,
         candidateCollectionView: UICollectionView,
@@ -88,10 +94,10 @@ class HomeAppsManager: NSObject {
         if let flowLayout = pinnedCollectionView?.collectionViewLayout as? UICollectionViewFlowLayout {
             flowLayout.itemSize = HomeAppsMode.pinned.pageSize
         }
-        self.candidateCollectionView.dataSource = self
-        self.candidateCollectionView.delegate = self
-        self.pinnedCollectionView?.dataSource = self
-        self.pinnedCollectionView?.delegate = self
+        candidateCollectionView.dataSource = self
+        candidateCollectionView.delegate = self
+        pinnedCollectionView?.dataSource = self
+        pinnedCollectionView?.delegate = self
         longPressRecognizer.addTarget(self, action: #selector(handleLongPressGesture(_:)))
         self.viewController.view.addGestureRecognizer(longPressRecognizer)
         tapRecognizer.isEnabled = false
@@ -156,7 +162,7 @@ extension HomeAppsManager {
         for case let cell as AppPageCell in candidateCollectionView.visibleCells + (pinnedCollectionView?.visibleCells ?? []) {
             cell.enterEditingMode()
         }
-        // add an empty page
+        // Add an empty page
         if let lastPage = items.last, lastPage.count > 0 {
             items.append([])
             candidateCollectionView.insertItems(at: [IndexPath(item: items.count - 1, section: 0)])
@@ -173,7 +179,7 @@ extension HomeAppsManager {
         for case let cell as AppPageCell in candidateCollectionView.visibleCells + (pinnedCollectionView?.visibleCells ?? []) {
             cell.leaveEditingMode()
         }
-        // remove empty page
+        // Remove empty page
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
             let emptyIndex = self.items.enumerated().compactMap( { $1.count == 0 ? $0 : nil })
             self.items.remove(at: emptyIndex)
@@ -185,7 +191,7 @@ extension HomeAppsManager {
         delegate?.homeAppsManagerDidLeaveEditingMode(self)
     }
     
-    // update items for current page after end drag
+    // Update items for current page after end drag
     func updateState(forPageCell pageCell: AppPageCell) {
         if let pinnedCollectionView = pinnedCollectionView, pinnedCollectionView.visibleCells.contains(pageCell) {
             let items = pageCell.collectionView.visibleCells.compactMap { ($0 as? AppCell)?.app }
@@ -201,7 +207,7 @@ extension HomeAppsManager {
         }
     }
     
-    // moves last item in page to next and rearranges next pages if needed
+    // Moves last item in page to next and rearranges next pages if needed
     func moveLastItem(inPage page: Int) {
         guard page + 1 < items.count else {
             return
@@ -210,7 +216,7 @@ extension HomeAppsManager {
         currentPageItems.insert(items[page].removeLast(), at: 0)
         items[page + 1] = currentPageItems
         let appsPerPage = isInAppsFolderViewController ? HomeAppsMode.folder.appsPerPage : HomeAppsMode.regular.appsPerPage
-        if currentPageItems.count >  appsPerPage {
+        if currentPageItems.count > appsPerPage {
             moveLastItem(inPage: page + 1)
         }
     }
@@ -226,6 +232,21 @@ extension HomeAppsManager {
         let placeholderView = transfer.interaction.placeholderView
         placeholderView.center = viewController.view.convert(placeholderView.center, from: placeholderView.superview)
         viewController.view.addSubview(placeholderView)
+    }
+    
+    func invalidatePageTimer() {
+        pageTimer?.invalidate()
+        pageTimer = nil
+    }
+    
+    func invalidateFolderTimer() {
+        folderTimer?.invalidate()
+        folderTimer = nil
+    }
+    
+    func invalidateFolderRemoveTimer() {
+        folderRemoveTimer?.invalidate()
+        folderRemoveTimer = nil
     }
     
 }
@@ -281,28 +302,13 @@ extension HomeAppsManager: UICollectionViewDataSource, UICollectionViewDelegate 
         cell.leaveEditingMode()
     }
     
-    func stopPageTimer() {
-        pageTimer?.invalidate()
-        pageTimer = nil
-    }
-    
-    func stopFolderTimer() {
-        folderTimer?.invalidate()
-        folderTimer = nil
-    }
-    
-    func stopFolderRemoveTimer() {
-        folderRemoveTimer?.invalidate()
-        folderRemoveTimer = nil
-    }
-    
 }
 
 extension HomeAppsManager: UIScrollViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let page = scrollView.contentOffset.x / scrollView.frame.width
-        delegate?.homeAppsManager(self, didMoveToPage: Int(roundf(Float(page))))
+        delegate?.homeAppsManager(self, didMoveToPage: Int(round(Float(page))))
     }
     
 }
@@ -322,12 +328,10 @@ extension HomeAppsManager: AppPageCellDelegate {
 }
 
 extension HomeAppsManager: UIGestureRecognizerDelegate {
-    // disable tag when clear button tapped in folder controller
+    
+    // Disable tag when clear button tapped in folder controller
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-        if touch.view is UIButton {
-            return false
-        }
-        return true
+        !(touch.view is UIButton)
     }
     
 }

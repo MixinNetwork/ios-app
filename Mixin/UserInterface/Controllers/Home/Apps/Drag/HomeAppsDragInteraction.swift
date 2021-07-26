@@ -7,6 +7,7 @@ class HomeAppsDragInteraction {
     let item: HomeAppItem
     let originalPageCell: AppPageCell
     let originalIndexPath: IndexPath
+    
     var currentPageCell: AppPageCell
     var currentIndexPath: IndexPath
     var needsUpdate = false

@@ -26,7 +26,7 @@ extension HomeAppsManager {
               let cell = pageCell.collectionView.cellForItem(at: indexPath) as? HomeAppCell,
               let item = cell.item,
               let placeholderView = cell.snapshotView else {
-            // long press empty place to start editing mode
+            // Long press empty place to start editing mode
             enterEditingMode()
             return
         }
@@ -75,11 +75,12 @@ extension HomeAppsManager {
                 return
             }
         }
-        stopFolderRemoveTimer()
+        invalidateFolderRemoveTimer()
         var destinationIndexPath: IndexPath
         let flowLayout = pageCell.collectionView.collectionViewLayout as! UICollectionViewFlowLayout
         let appsPerRow = isInAppsFolderViewController ? HomeAppsMode.folder.appsPerRow : HomeAppsMode.regular.appsPerRow
-        if let indexPath = pageCell.collectionView.indexPathForItem(at: touchPoint), pageCell == currentInteraction.currentPageCell { // move in same collection view
+        if let indexPath = pageCell.collectionView.indexPathForItem(at: touchPoint), pageCell == currentInteraction.currentPageCell {
+            // Move in same collection view
             guard let itemCell = pageCell.collectionView.cellForItem(at: indexPath) as? HomeAppCell else {
                 return
             }
@@ -88,16 +89,22 @@ extension HomeAppsManager {
             let targetRect = CGRect(x: imageCenter.x - offset, y: imageCenter.y - offset, width: offset * 2, height: offset * 2)
             let convertedPoint = itemCell.convert(touchPoint, from: pageCell.collectionView)
             let canCreateFolder = targetRect.contains(convertedPoint)
-            if canCreateFolder && indexPath.row != currentInteraction.currentIndexPath.row && collectionView == candidateCollectionView { // create folder
-                if currentFolderInteraction != nil || currentInteraction.item is HomeAppFolder || isInAppsFolderViewController {
+            if canCreateFolder && indexPath.row != currentInteraction.currentIndexPath.row && collectionView == candidateCollectionView {
+                // Create folder
+                if currentFolderInteraction != nil || isInAppsFolderViewController {
+                    return
+                }
+                if case .folder = currentInteraction.item {
                     return
                 }
                 pageTimer?.invalidate()
                 startFolderInteraction(for: itemCell)
                 return
-            } else if convertedPoint.x < itemCell.imageContainerView.frame.minX { // move to previous of item
+            } else if convertedPoint.x < itemCell.imageContainerView.frame.minX {
+                // Move to previous of item
                 destinationIndexPath = indexPath
-            } else if convertedPoint.x > itemCell.imageContainerView.frame.maxX { // move to next of item
+            } else if convertedPoint.x > itemCell.imageContainerView.frame.maxX {
+                // Move to next of item
                 if (indexPath.row + 1) % appsPerRow == 0 {
                     destinationIndexPath = indexPath
                 } else {
@@ -109,25 +116,31 @@ extension HomeAppsManager {
                 cancelFolderInteraction()
                 return
             }
-        } else if touchPoint.x <= flowLayout.sectionInset.left { // move to left edge
+        } else if touchPoint.x <= flowLayout.sectionInset.left {
+            // Move to left edge
             cancelFolderInteraction()
-            if collectionView == pinnedCollectionView { // move to pin
+            if collectionView == pinnedCollectionView {
+                // Move to pin
                 destinationIndexPath = IndexPath(item: 0, section: 0)
-            } else if !(pageTimer?.isValid ?? false) && collectionView == candidateCollectionView { // move to previous page
+            } else if !(pageTimer?.isValid ?? false) && collectionView == candidateCollectionView {
+                // Move to previous page
                 pageTimer = Timer.scheduledTimer(timeInterval: HomeAppsConstants.pageInterval, target: self, selector: #selector(pageTimerHandler(_:)), userInfo: -1, repeats: false)
                 return
             } else {
                 return
             }
-        } else if touchPoint.x > collectionView.frame.size.width - flowLayout.sectionInset.right { // move to right edge
+        } else if touchPoint.x > collectionView.frame.size.width - flowLayout.sectionInset.right {
+            // Move to right edge
             cancelFolderInteraction()
-            if collectionView == pinnedCollectionView { // move to pin
+            if collectionView == pinnedCollectionView {
+                // Move to pin
                 if pinnedItems.count == 0 {
                     destinationIndexPath = IndexPath(item: 0, section: 0)
                 } else {
                     destinationIndexPath = IndexPath(item: pinnedItems.count - 1, section: 0)
                 }
-            } else if !(pageTimer?.isValid ?? false) && collectionView == candidateCollectionView { // move to next page
+            } else if !(pageTimer?.isValid ?? false) && collectionView == candidateCollectionView {
+                // Move to next page
                 pageTimer = Timer.scheduledTimer(timeInterval: HomeAppsConstants.pageInterval, target: self, selector: #selector(pageTimerHandler(_:)), userInfo: 1, repeats: false)
                 return
             } else {
@@ -144,15 +157,15 @@ extension HomeAppsManager {
         ignoreDragOutOnTop = false
         ignoreDragOutOnBottom = false
         cancelFolderInteraction()
-        stopPageTimer()
-        stopFolderTimer()
-        // make sure index is in range
+        invalidatePageTimer()
+        invalidateFolderTimer()
+        // Make sure index is in range
         if destinationIndexPath.row >= pageCell.collectionView.numberOfItems(inSection: 0) && destinationIndexPath.row > 0 {
             destinationIndexPath = IndexPath(item: destinationIndexPath.row - 1, section: 0)
         } else if destinationIndexPath.row == -1 {
             destinationIndexPath = IndexPath(item: 0, section: 0)
         }
-        // move item
+        // Move item
         if let pinnedCollectionView = pinnedCollectionView {
             if collectionView == pinnedCollectionView && !pinnedCollectionView.visibleCells.contains(currentInteraction.currentPageCell) { // pin
                 moveToPinned(interaction: currentInteraction, pageCell: pageCell, destinationIndexPath: destinationIndexPath)
@@ -178,7 +191,7 @@ extension HomeAppsManager {
     
     func endDragInteraction(_ gestureRecognizer: UILongPressGestureRecognizer) {
         if currentFolderInteraction != nil {
-            stopFolderTimer()
+            invalidateFolderTimer()
             commitFolderInteraction(didDrop: true)
             return
         }
@@ -199,14 +212,16 @@ extension HomeAppsManager {
                 cell.startShaking()
             }
         }
-        // update placeholder's image view x offset
+        // Update placeholder's image view x offset
         var convertedRect = currentInteraction.currentPageCell.collectionView.convert(cell.frame, to: viewController.view)
         if let pinnedCollectionView = pinnedCollectionView, pinnedCollectionView.visibleCells.contains(currentInteraction.currentPageCell) {
-            if currentInteraction.placeholderView.source != .pinned { // move candidate to pinned
+            if currentInteraction.placeholderView.source != .pinned {
+                // Move candidate to pinned
                 convertedRect.origin.x -= HomeAppsConstants.placeholderImageXOffset
             }
         } else if candidateCollectionView.visibleCells.contains(currentInteraction.currentPageCell) {
-            if currentInteraction.placeholderView.source == .pinned { // move pinned to candidate
+            if currentInteraction.placeholderView.source == .pinned {
+                // Move pinned to candidate
                 convertedRect.origin.x += HomeAppsConstants.placeholderImageXOffset
             }
         }
@@ -257,7 +272,7 @@ extension HomeAppsManager {
     
     private func moveFromPinned(interaction: HomeAppsDragInteraction, pageCell: AppPageCell, destinationIndexPath: IndexPath) {
         var didMoveLastItem = false
-        // need to move last item to next page
+        // Need to move last item to next page
         if items[currentPage].count == HomeAppsMode.regular.appsPerPage {
             didMoveLastItem = true
             interaction.savedState = items
@@ -308,7 +323,7 @@ extension HomeAppsManager {
         guard items.count > 0, let currentInteraction = currentDragInteraction, let offset = timer.userInfo as? Int else {
             return
         }
-        stopPageTimer()
+        invalidatePageTimer()
         guard let currentIndex = items[currentPage].firstIndex(where: { $0 == currentInteraction.item }) else {
             return
         }
@@ -344,4 +359,3 @@ extension HomeAppsManager {
     }
     
 }
-

@@ -1,7 +1,6 @@
 import UIKit
 
 protocol HomeAppsFolderViewControllerDelegate: AnyObject {
-    
     func homeAppsFolderViewControllerOpenAnimationWillStart(_ controller: HomeAppsFolderViewController)
     func homeAppsFolderViewControllerDidEnterEditingMode(_ controller: HomeAppsFolderViewController)
     func homeAppsFolderViewController(_ controller: HomeAppsFolderViewController, didChangeName name: String)
@@ -9,7 +8,6 @@ protocol HomeAppsFolderViewControllerDelegate: AnyObject {
     func homeAppsFolderViewController(_ controller: HomeAppsFolderViewController, didBeginFolderDragOutWithTransfer transfer: HomeAppsDragInteractionTransfer)
     func homeAppsFolderViewController(_ controller: HomeAppsFolderViewController, dismissAnimationWillStartOnPage page: Int, updatedPages: [[HomeApp]])
     func homeAppsFolderViewControllerDismissAnimationDidFinish(_ controller: HomeAppsFolderViewController)
-    
 }
 
 class HomeAppsFolderViewController: UIViewController {
@@ -34,10 +32,6 @@ class HomeAppsFolderViewController: UIViewController {
     
     private var homeAppsManager: HomeAppsManager!
     private var containerViewOriginalFrame: CGRect!
-    
-    class func instance() -> HomeAppsFolderViewController {
-        R.storyboard.home.appsFolder()!
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -216,7 +210,9 @@ extension HomeAppsFolderViewController: HomeAppsManagerDelegate {
         delegate?.homeAppsFolderViewController(self, didBeginFolderDragOutWithTransfer: transfer)
     }
     
-    func homeAppsManagerDidUpdateItems(_ manager: HomeAppsManager) {}
+    func homeAppsManagerDidUpdateItems(_ manager: HomeAppsManager) {
+        
+    }
     
 }
 

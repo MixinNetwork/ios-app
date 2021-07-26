@@ -6,7 +6,7 @@ protocol HomeAppsManagerDelegate: AnyObject {
     func homeAppsManagerDidUpdateItems(_ manager: HomeAppsManager)
     func homeAppsManagerDidEnterEditingMode(_ manager: HomeAppsManager)
     func homeAppsManagerDidLeaveEditingMode(_ manager: HomeAppsManager)
-    func homeAppsManager(_ manager: HomeAppsManager, didSelectApp app: AppModel)
+    func homeAppsManager(_ manager: HomeAppsManager, didSelectApp app: HomeApp)
     func homeAppsManager(_ manager: HomeAppsManager, didMoveToPage page: Int)
     func homeAppsManager(_ manager: HomeAppsManager, didUpdatePageCount pageCount: Int)
     func homeAppsManager(_ manager: HomeAppsManager, didBeginFolderDragOutWithTransfer transfer: HomeAppsDragInteractionTransfer)
@@ -21,13 +21,13 @@ class HomeAppsManager: NSObject {
     unowned var candidateCollectionView: UICollectionView
     unowned var pinnedCollectionView: UICollectionView?
     
-    var items: [[AppItem]] {
+    var items: [[HomeAppItem]] {
         didSet {
             delegate?.homeAppsManager(self, didUpdatePageCount: items.count)
             delegate?.homeAppsManagerDidUpdateItems(self)
         }
     }
-    var pinnedItems: [AppItem] {
+    var pinnedItems: [HomeApp] {
         didSet {
             delegate?.homeAppsManagerDidUpdateItems(self)
         }
@@ -67,7 +67,13 @@ class HomeAppsManager: NSObject {
     let tapRecognizer = UITapGestureRecognizer()
     let feedback = UIImpactFeedbackGenerator()
     
-    init(viewController: UIViewController, candidateCollectionView: UICollectionView, items: [[AppItem]] = [[]], pinnedCollectionView: UICollectionView? = nil, pinnedItems:[AppItem] = []) {
+    init(
+        viewController: UIViewController,
+        candidateCollectionView: UICollectionView,
+        items: [[HomeAppItem]] = [[]],
+        pinnedCollectionView: UICollectionView? = nil,
+        pinnedItems: [HomeApp] = []
+    ) {
         self.viewController = viewController
         self.candidateCollectionView = candidateCollectionView
         self.pinnedCollectionView = pinnedCollectionView
@@ -96,7 +102,7 @@ class HomeAppsManager: NSObject {
         NotificationCenter.default.addObserver(self, selector: #selector(leaveEditingMode), name: UIApplication.willResignActiveNotification, object: nil)
     }
     
-    func reloadData(pinnedItems:[AppItem], candidateItems: [[AppItem]]) {
+    func reloadData(pinnedItems: [HomeApp], candidateItems: [[HomeAppItem]]) {
         self.items = candidateItems
         self.pinnedItems = pinnedItems
         candidateCollectionView.reloadData()
@@ -181,22 +187,18 @@ extension HomeAppsManager {
     
     // update items for current page after end drag
     func updateState(forPageCell pageCell: AppPageCell) {
-        var updateItems: [AppItem] = []
-        for i in 0..<pageCell.collectionView.visibleCells.count {
-            let indexPath = IndexPath(item: i, section: 0)
-            if let cell = pageCell.collectionView.cellForItem(at: indexPath) as? HomeAppCell, let item = cell.generalItem {
-                updateItems.append(item)
-            }
-        }
         if let pinnedCollectionView = pinnedCollectionView, pinnedCollectionView.visibleCells.contains(pageCell) {
-            pinnedItems = updateItems
+            let items = pageCell.collectionView.visibleCells.compactMap { ($0 as? AppCell)?.app }
+            pinnedItems = items
+            pageCell.items = items.map { .app($0) }
         } else {
             guard let pageIndexPath = candidateCollectionView.indexPath(for: pageCell) else {
                 return
             }
-            items[pageIndexPath.row] = updateItems
+            let items = pageCell.collectionView.visibleCells.compactMap { ($0 as? HomeAppCell)?.item }
+            self.items[pageIndexPath.row] = items
+            pageCell.items = items
         }
-        pageCell.items = updateItems
     }
     
     // moves last item in page to next and rearranges next pages if needed
@@ -239,7 +241,7 @@ extension HomeAppsManager: UICollectionViewDataSource, UICollectionViewDelegate 
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let items = collectionView == candidateCollectionView ? items[indexPath.row] : pinnedItems
+        let items = collectionView == candidateCollectionView ? items[indexPath.row] : pinnedItems.map { .app($0) }
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.app_page, for: indexPath)!
         cell.items = items
         cell.draggedItem = currentDragInteraction?.item
@@ -310,8 +312,10 @@ extension HomeAppsManager: AppPageCellDelegate {
     func appPageCell(_ pageCell: AppPageCell, didSelect cell: HomeAppCell) {
         if let cell = cell as? AppFolderCell {
             showFolder(from: cell)
-        } else if let item = cell.generalItem as? AppModel, !isEditing {
-            delegate?.homeAppsManager(self, didSelectApp: item)
+        } else if let cell = cell as? AppCell {
+            if !isEditing, let app = cell.app {
+                delegate?.homeAppsManager(self, didSelectApp: app)
+            }
         }
     }
     

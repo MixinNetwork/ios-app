@@ -16,6 +16,8 @@ final class HomeAppsViewController: UIViewController {
     @IBOutlet weak var pageControlTopConstraint: NSLayoutConstraint!
     @IBOutlet var pinnedPlaceholderViewLeadingConstraints: [NSLayoutConstraint]!
     
+    private let storage = HomeAppsStorage()
+    
     private lazy var candidateEmptyHintLabel: UILabel = {
         let label = UILabel()
         label.text = R.string.localizable.home_apps_candidate_empty()
@@ -36,7 +38,6 @@ final class HomeAppsViewController: UIViewController {
     private var candidateEmptyHintLabelIfLoaded: UILabel?
     
     private var appsManager: HomeAppsManager!
-    private var appsItemManager: HomeAppsItemManager!
     
     class func instance() -> HomeAppsViewController {
         R.storyboard.home.apps()!
@@ -47,8 +48,7 @@ final class HomeAppsViewController: UIViewController {
         view.layer.cornerRadius = 13
         appsManager = HomeAppsManager(viewController: self, candidateCollectionView: candidateCollectionView, pinnedCollectionView: pinnedCollectionView)
         appsManager.delegate = self
-        appsItemManager = HomeAppsItemManager()
-        appsItemManager.loadData { pinnedItems, candidateItems in
+        storage.load { pinnedItems, candidateItems in
             self.pageControl.numberOfPages = candidateItems.count
             self.setCandidateEmptyHintHidden(!candidateItems.isEmpty)
             self.updatePinnedPlaceholderViewsHidden(with: pinnedItems.count)
@@ -213,8 +213,8 @@ extension HomeAppsViewController {
 
 extension HomeAppsViewController: HomeAppsManagerDelegate {
     
-    func homeAppsManager(_ manager: HomeAppsManager, didSelectApp app: AppModel) {
-        switch app.app {
+    func homeAppsManager(_ manager: HomeAppsManager, didSelectApp app: HomeApp) {
+        switch app {
         case let .embedded(app):
             dismissAsChild(completion: app.action)
         case let .external(user):
@@ -233,7 +233,8 @@ extension HomeAppsViewController: HomeAppsManagerDelegate {
     }
     
     func homeAppsManagerDidUpdateItems(_ manager: HomeAppsManager) {
-        appsItemManager.updateItems(manager.pinnedItems, manager.items)
+        storage.save(pinnedApps: manager.pinnedItems)
+        storage.save(candidateItems: manager.items)
         setCandidateEmptyHintHidden(!manager.items.isEmpty)
         updatePinnedPlaceholderViewsHidden(with: manager.pinnedItems.count)
     }

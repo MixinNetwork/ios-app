@@ -26,7 +26,7 @@ enum HomeApp {
             return nil
         }
     }
-
+    
     var categoryIcon: UIImage? {
         switch self {
         case .embedded(let app):

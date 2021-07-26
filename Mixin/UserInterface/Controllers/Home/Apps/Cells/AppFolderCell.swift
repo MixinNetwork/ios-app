@@ -7,7 +7,7 @@ class AppFolderCell: ShakableCell {
     @IBOutlet weak var wrapperView: UIView!
     @IBOutlet weak var imageContainerView: UIView!
     
-    var item: AppItem? {
+    var folder: HomeAppFolder? {
         didSet {
             updateUI()
         }
@@ -21,7 +21,7 @@ class AppFolderCell: ShakableCell {
     }
     
     private var placeholderView: UIView?
-    private var apps: [[AppModel]] = [] {
+    private var apps: [[HomeApp]] = [] {
         didSet {
             collectionView.reloadData()
         }
@@ -35,7 +35,7 @@ class AppFolderCell: ShakableCell {
     func updateUI() {
         label?.alpha = 1
         label?.isHidden = false
-        guard let folder = item as? HomeAppFolder else {
+        guard let folder = folder else {
             return
         }
         apps = folder.pages
@@ -47,7 +47,7 @@ class AppFolderCell: ShakableCell {
     }
     
     func leaveEditingMode() {
-        guard let folder = item as? HomeAppFolder, let lastPageApps = apps.last, lastPageApps.count == 0 else {
+        guard let folder = folder, let lastPageApps = apps.last, lastPageApps.count == 0 else {
             return
         }
         apps.removeLast()
@@ -60,7 +60,7 @@ class AppFolderCell: ShakableCell {
 extension AppFolderCell {
     
     func moveToFirstAvailablePage(animated: Bool = true) {
-        if let folder = item as? HomeAppFolder, (apps.last?.count ?? 0) > 0 {
+        if let folder = folder, (apps.last?.count ?? 0) > 0 {
             folder.pages.append([])
             apps.append([])
         }
@@ -141,12 +141,21 @@ extension AppFolderCell: HomeAppCell {
         return snapshotView
     }
     
-    var generalItem: AppItem? {
+    var item: HomeAppItem? {
         get {
-            item
+            if let item = folder {
+                return .folder(item)
+            } else {
+                return nil
+            }
         }
         set {
-            item = newValue
+            switch newValue {
+            case let .folder(folder):
+                self.folder = folder
+            default:
+                break
+            }
         }
     }
     
@@ -163,7 +172,7 @@ extension AppFolderCell: UICollectionViewDataSource, UICollectionViewDelegate {
         if indexPath.item < apps.count {
             cell.mode = .nestedFolder
             cell.draggedItem = nil
-            cell.items = apps[indexPath.item]
+            cell.items = apps[indexPath.item].map(HomeAppItem.init)
             cell.collectionView.reloadData()
         }
         return cell

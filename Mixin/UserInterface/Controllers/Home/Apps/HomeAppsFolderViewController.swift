@@ -5,9 +5,9 @@ protocol HomeAppsFolderViewControllerDelegate: AnyObject {
     func homeAppsFolderViewControllerOpenAnimationWillStart(_ controller: HomeAppsFolderViewController)
     func homeAppsFolderViewControllerDidEnterEditingMode(_ controller: HomeAppsFolderViewController)
     func homeAppsFolderViewController(_ controller: HomeAppsFolderViewController, didChangeName name: String)
-    func homeAppsFolderViewController(_ controller: HomeAppsFolderViewController, didSelectApp app: AppModel)
+    func homeAppsFolderViewController(_ controller: HomeAppsFolderViewController, didSelectApp app: HomeApp)
     func homeAppsFolderViewController(_ controller: HomeAppsFolderViewController, didBeginFolderDragOutWithTransfer transfer: HomeAppsDragInteractionTransfer)
-    func homeAppsFolderViewController(_ controller: HomeAppsFolderViewController, dismissAnimationWillStartOnPage page: Int, updatedPages: [[AppModel]])
+    func homeAppsFolderViewController(_ controller: HomeAppsFolderViewController, dismissAnimationWillStartOnPage page: Int, updatedPages: [[HomeApp]])
     func homeAppsFolderViewControllerDismissAnimationDidFinish(_ controller: HomeAppsFolderViewController)
     
 }
@@ -43,7 +43,9 @@ class HomeAppsFolderViewController: UIViewController {
         super.viewDidLoad()
         textField.text = folder.name
         leaveTextFieldEditingMode()
-        homeAppsManager = HomeAppsManager(viewController: self, candidateCollectionView: collectionView, items: folder.pages)
+        homeAppsManager = HomeAppsManager(viewController: self,
+                                          candidateCollectionView: collectionView,
+                                          items: folder.pages.map { $0.map { .app($0) } })
         homeAppsManager.delegate = self
         if homeAppsManager.items.count == 1 {
             pageControl.isHidden = true
@@ -95,7 +97,8 @@ extension HomeAppsFolderViewController {
     private func dismiss(completion: (() -> Void)? = nil) {
         textField.resignFirstResponder()
         homeAppsManager.leaveEditingMode()
-        delegate?.homeAppsFolderViewController(self, dismissAnimationWillStartOnPage: pageControl.currentPage, updatedPages: homeAppsManager.items as! [[AppModel]])
+        let pages: [[HomeApp]] = homeAppsManager.items.map { $0.compactMap { $0.app } }
+        delegate?.homeAppsFolderViewController(self, dismissAnimationWillStartOnPage: pageControl.currentPage, updatedPages: pages)
         animateOut(completion: completion)
     }
     
@@ -191,7 +194,7 @@ extension HomeAppsFolderViewController: HomeAppsManagerDelegate {
         leaveTextFieldEditingMode()
     }
     
-    func homeAppsManager(_ manager: HomeAppsManager, didSelectApp app: AppModel) {
+    func homeAppsManager(_ manager: HomeAppsManager, didSelectApp app: HomeApp) {
         dismiss { [weak self] in
             guard let self = self else {
                 return

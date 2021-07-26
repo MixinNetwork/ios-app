@@ -4,15 +4,15 @@ class HomeAppsDragInteraction {
     
     let placeholderView: HomeAppsSnapshotView
     let dragOffset: CGSize
-    let item: AppItem
+    let item: HomeAppItem
     let originalPageCell: AppPageCell
     let originalIndexPath: IndexPath
     var currentPageCell: AppPageCell
     var currentIndexPath: IndexPath
     var needsUpdate = false
-    var savedState: [[AppItem]]?
+    var savedState: [[HomeAppItem]]?
     
-    required init(placeholderView: HomeAppsSnapshotView, dragOffset: CGSize, item: AppItem, originalPageCell: AppPageCell, originalIndexPath: IndexPath) {
+    required init(placeholderView: HomeAppsSnapshotView, dragOffset: CGSize, item: HomeAppItem, originalPageCell: AppPageCell, originalIndexPath: IndexPath) {
         self.placeholderView = placeholderView
         self.dragOffset = dragOffset
         self.item = item

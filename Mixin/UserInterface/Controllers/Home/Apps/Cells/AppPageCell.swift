@@ -17,8 +17,8 @@ class AppPageCell: UICollectionViewCell {
             updateLayout()
         }
     }
-    var items: [AppItem] = []
-    var draggedItem: AppItem?
+    var items: [HomeAppItem] = []
+    var draggedItem: HomeAppItem?
     
     private var isEditing = false
     
@@ -49,8 +49,8 @@ class AppPageCell: UICollectionViewCell {
         }
     }
     
-    func delete(item: AppItem) {
-        guard let index = items.firstIndex(where: { $0 === item }),
+    func delete(item: HomeAppItem) {
+        guard let index = items.firstIndex(where: { $0 == item }),
               let cell = collectionView.cellForItem(at: IndexPath(item: index, section: 0)) else {
             return
         }
@@ -85,9 +85,26 @@ extension AppPageCell: UICollectionViewDelegate, UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if let folder = items[indexPath.item] as? HomeAppFolder {
+        let item = items[indexPath.item]
+        switch item {
+        case .app(let app):
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.app, for: indexPath)!
+            cell.app = app
+            if isEditing {
+                cell.startShaking()
+            } else {
+                cell.stopShaking()
+            }
+            if let draggedItem = draggedItem, draggedItem == .app(app) {
+                cell.contentView.isHidden = true
+            } else {
+                cell.contentView.isHidden = false
+            }
+            cell.label?.isHidden = mode == .pinned
+            return cell
+        case .folder(let folder):
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.app_folder, for: indexPath)!
-            cell.item = folder
+            cell.folder = folder
             if isEditing {
                 cell.startShaking()
                 cell.moveToFirstAvailablePage(animated: false)
@@ -95,29 +112,12 @@ extension AppPageCell: UICollectionViewDelegate, UICollectionViewDataSource {
                 cell.stopShaking()
                 cell.leaveEditingMode()
             }
-            if let draggedItem = draggedItem, draggedItem === folder {
+            if let draggedItem = draggedItem, draggedItem == .folder(folder) {
                 cell.contentView.isHidden = true
             } else {
                 cell.contentView.isHidden = false
             }
             return cell
-        } else if let app = items[indexPath.item] as? AppModel {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.app, for: indexPath)!
-            cell.item = app
-            if isEditing {
-                cell.startShaking()
-            } else {
-                cell.stopShaking()
-            }
-            if let draggedItem = draggedItem, draggedItem === app {
-                cell.contentView.isHidden = true
-            } else {
-                cell.contentView.isHidden = false
-            }
-            cell.label?.isHidden = mode == .pinned
-            return cell
-        } else {
-            fatalError()
         }
     }
     

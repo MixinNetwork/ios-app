@@ -10,7 +10,7 @@ extension HomeAppsManager {
         let folderViewController = HomeAppsFolderViewController.instance()
         folderViewController.modalPresentationStyle = .overFullScreen
         folderViewController.isEditing = isEditing
-        folderViewController.folder = cell.item as? HomeAppFolder
+        folderViewController.folder = cell.folder
         folderViewController.currentPage = cell.currentPage
         folderViewController.sourceFrame = convertedFrame
         folderViewController.startInRename = startInRename
@@ -35,10 +35,10 @@ extension HomeAppsManager {
         folderWrapperView.backgroundColor = R.color.background_secondary()
         itemCell.contentView.insertSubview(folderWrapperView, belowSubview: itemCell.imageContainerView)
         cancelFolderInteraction()
-        if let folder = itemCell.generalItem as? HomeAppFolder, let folderCell = itemCell as? AppFolderCell {
+        if let cell = itemCell as? AppFolderCell, let folder = cell.folder {
             currentFolderInteraction = HomeAppsFolderDropInteraction(dragInteraction: dragInteraction, folder: folder, wrapperView: folderWrapperView)
-            folderCell.wrapperView.isHidden = false
-        } else if let app = itemCell.generalItem as? AppModel {
+            cell.wrapperView.isHidden = false
+        } else if let cell = itemCell as? AppCell, let app = cell.app {
             currentFolderInteraction = HomeAppsFolderCreationInteraction(dragInteraction: dragInteraction, destinationApp: app, wrapperView: folderWrapperView)
         }
         itemCell.stopShaking()
@@ -51,7 +51,7 @@ extension HomeAppsManager {
     
     func cancelFolderInteraction() {
         guard var folderInteraction = currentFolderInteraction,
-              let index = folderInteraction.dragInteraction.currentPageCell.items.firstIndex(where: { $0 === folderInteraction.item }),
+              let index = folderInteraction.dragInteraction.currentPageCell.items.firstIndex(where: { $0 == folderInteraction.item }),
               let cell = folderInteraction.dragInteraction.currentPageCell.collectionView.cellForItem(at: IndexPath(item: index, section: 0)) as? HomeAppCell,
               !folderInteraction.isDismissing else {
             return
@@ -122,16 +122,16 @@ extension HomeAppsManager {
     
     // create new folder
     private func commit(folderCreationInteraction interaction: HomeAppsFolderCreationInteraction, didDrop: Bool) {
-        guard let page = items.firstIndex(where: { $0.contains { $0 === interaction.destinationApp } }),
-              let sourceIndex = items[page].firstIndex(where: { $0 === interaction.dragInteraction.item }),
-              let destinationIndex = items[page].firstIndex(where: { $0 === interaction.destinationApp }),
-              let sourceApp = interaction.dragInteraction.item as? AppModel else {
+        guard let page = items.firstIndex(where: { $0.contains { $0.app == interaction.destinationApp } }),
+              let sourceIndex = items[page].firstIndex(where: { $0 == interaction.dragInteraction.item }),
+              let destinationIndex = items[page].firstIndex(where: { $0.app == interaction.destinationApp }),
+              case let .app(sourceApp) = interaction.dragInteraction.item else {
             return
         }
-        let folderName = sourceApp.app.category 
+        let folderName = sourceApp.category
         let newFolder = HomeAppFolder(name: folderName, pages: [[interaction.destinationApp, sourceApp]])
         newFolder.isNewFolder = true
-        items[page][destinationIndex] = newFolder
+        items[page][destinationIndex] = .folder(newFolder)
         let folderIndexPath = IndexPath(item: destinationIndex, section: 0)
         interaction.dragInteraction.currentPageCell.items = items[page]
         if !didDrop {
@@ -167,18 +167,18 @@ extension HomeAppsManager {
     
     // drop into folder
     private func commit(folderDropInteraction interaction: HomeAppsFolderDropInteraction, didDrop: Bool) {
-        guard let page = items.firstIndex(where: { $0.contains { $0 === interaction.folder } }),
-              let sourceIndex = items[page].firstIndex(where: { $0 === interaction.dragInteraction.item }),
-              let destinationIndex = items[page].firstIndex(where: { $0 === interaction.folder }),
-              let sourceApp = interaction.dragInteraction.item as? AppModel else {
+        guard let page = items.firstIndex(where: { $0.contains { $0.folder == interaction.folder } }),
+              let sourceIndex = items[page].firstIndex(where: { $0 == interaction.dragInteraction.item }),
+              let destinationIndex = items[page].firstIndex(where: { $0.folder == interaction.folder }),
+              case let .app(sourceApp) = interaction.dragInteraction.item else {
             return
         }
         let folderIndexPath = IndexPath(item: destinationIndex, section: 0)
         guard let folderCell = interaction.dragInteraction.currentPageCell.collectionView.cellForItem(at: folderIndexPath) as? AppFolderCell,
-              let item = folderCell.item as? HomeAppFolder else {
+              let folder = folderCell.folder else {
             return
         }
-        item.pages[folderCell.currentPage].append(sourceApp)
+        folder.pages[folderCell.currentPage].append(sourceApp)
         if !didDrop {
             showFolderInteraction(interaction, page: page, sourceIndex: sourceIndex, destinationIndex: destinationIndex, folderIndexPath: folderIndexPath)
             cancelFolderInteraction()
@@ -188,7 +188,7 @@ extension HomeAppsManager {
             interaction.dragInteraction.placeholderView.superview!.addSubview(interaction.dragInteraction.placeholderView.iconView)
             interaction.dragInteraction.placeholderView.removeFromSuperview()
             let folderCell = interaction.dragInteraction.currentPageCell.collectionView.cellForItem(at: folderIndexPath) as! AppFolderCell
-            folderCell.move(view: interaction.dragInteraction.placeholderView.iconView, toCellPositionAtIndex: item.pages[folderCell.currentPage].count - 1) {
+            folderCell.move(view: interaction.dragInteraction.placeholderView.iconView, toCellPositionAtIndex: folder.pages[folderCell.currentPage].count - 1) {
                 var didRestoreSavedState = false
                 if let savedState = interaction.dragInteraction.savedState {
                     self.items = savedState
@@ -201,7 +201,7 @@ extension HomeAppsManager {
                 self.currentFolderInteraction = nil
                 self.currentDragInteraction = nil
                 interaction.dragInteraction.currentPageCell.collectionView.performBatchUpdates {
-                    folderCell.item = item
+                    folderCell.folder = folder
                     interaction.dragInteraction.placeholderView.iconView.removeFromSuperview()
                     folderCell.moveToFirstAvailablePage()
                     if folderIndexPath.row < sourceIndex {
@@ -295,12 +295,12 @@ extension HomeAppsManager: HomeAppsFolderViewControllerDelegate {
         info.cell.label?.text = name
     }
     
-    func homeAppsFolderViewController(_ controller: HomeAppsFolderViewController, didSelectApp app: AppModel) {
+    func homeAppsFolderViewController(_ controller: HomeAppsFolderViewController, didSelectApp app: HomeApp) {
         delegate?.homeAppsManager(self, didSelectApp: app)
     }
     
     func homeAppsFolderViewController(_ controller: HomeAppsFolderViewController, didBeginFolderDragOutWithTransfer transfer: HomeAppsDragInteractionTransfer) {
-        guard let info = openFolderInfo, let folderIndex = items[currentPage].firstIndex(where: { $0 === info.folder }), let pageCell = currentPageCell else {
+        guard let info = openFolderInfo, let folderIndex = items[currentPage].firstIndex(where: { $0 == .folder(info.folder) }), let pageCell = currentPageCell else {
             return
         }
         stopPageTimer()
@@ -358,7 +358,7 @@ extension HomeAppsManager: HomeAppsFolderViewControllerDelegate {
         info.shouldCancelCreation = info.isNewFolder
     }
     
-    func homeAppsFolderViewController(_ controller: HomeAppsFolderViewController, dismissAnimationWillStartOnPage page: Int, updatedPages: [[AppModel]]) {
+    func homeAppsFolderViewController(_ controller: HomeAppsFolderViewController, dismissAnimationWillStartOnPage page: Int, updatedPages: [[HomeApp]]) {
         guard let info = openFolderInfo else {
             return
         }
@@ -369,7 +369,7 @@ extension HomeAppsManager: HomeAppsFolderViewControllerDelegate {
         }
         stopPageTimer()
         info.folder.pages = updatedPages.filter({ $0.count != 0 })
-        info.cell.item = info.folder
+        info.cell.folder = info.folder
         info.cell.move(to: page, animated: false)
         delegate?.homeAppsManagerDidUpdateItems(self)
     }
@@ -395,13 +395,13 @@ extension HomeAppsManager: HomeAppsFolderViewControllerDelegate {
                 info.cell.move(to: 0, animated: true)
             }
         })
-        guard let folderIndex = items[currentPage].firstIndex(where: { $0 === info.folder }), let pageCell = currentPageCell else {
+        guard let folderIndex = items[currentPage].firstIndex(where: { $0.folder == info.folder }), let pageCell = currentPageCell else {
             return
         }
         if info.shouldCancelCreation {
             if let cell = pageCell.collectionView.cellForItem(at: IndexPath(item: folderIndex, section: 0)) as? AppFolderCell {
                 cell.revokeFolderCreation {
-                    self.items[self.currentPage][folderIndex] = info.folder.pages[0][0]
+                    self.items[self.currentPage][folderIndex] = .app(info.folder.pages[0][0])
                     pageCell.items = self.items[self.currentPage]
                     pageCell.collectionView.performBatchUpdates({
                         pageCell.collectionView.reloadItems(at: [IndexPath(item: folderIndex, section: 0)])
@@ -410,7 +410,7 @@ extension HomeAppsManager: HomeAppsFolderViewControllerDelegate {
             }
         } else if info.folder.pages.reduce(0, { $0 + $1.count }) == 0 {
             items[currentPage].remove(at: folderIndex)
-            pageCell.delete(item: info.folder)
+            pageCell.delete(item: .folder(info.folder))
         }
     }
     

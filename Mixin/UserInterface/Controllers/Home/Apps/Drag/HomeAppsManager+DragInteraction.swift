@@ -24,7 +24,7 @@ extension HomeAppsManager {
         touchPoint.x -= collectionView.contentOffset.x
         guard let indexPath = pageCell.collectionView.indexPathForItem(at: touchPoint),
               let cell = pageCell.collectionView.cellForItem(at: indexPath) as? HomeAppCell,
-              let item = cell.generalItem,
+              let item = cell.item,
               let placeholderView = cell.snapshotView else {
             // long press empty place to start editing mode
             enterEditingMode()
@@ -224,10 +224,10 @@ extension HomeAppsManager {
         guard pinnedItems.count < HomeAppsMode.pinned.appsPerPage else {
             return
         }
-        guard interaction.item is AppModel else {
+        guard case let .app(app) = interaction.item else {
             return
         }
-        pinnedItems.insert(interaction.item, at: destinationIndexPath.row)
+        pinnedItems.insert(app, at: destinationIndexPath.row)
         var didRestoreSavedState = false
         if let savedState = interaction.savedState {
             items = savedState
@@ -236,7 +236,7 @@ extension HomeAppsManager {
         } else {
             items[currentPage].remove(at: interaction.currentIndexPath.row)
         }
-        pageCell.items = pinnedItems
+        pageCell.items = pinnedItems.map { .app($0) }
         pageCell.draggedItem = interaction.item
         pageCell.collectionView.performBatchUpdates({
             pageCell.collectionView.insertItems(at: [destinationIndexPath])
@@ -272,7 +272,7 @@ extension HomeAppsManager {
         }
         items[currentPage].insert(interaction.item, at: destinationIndexPath.row)
         pinnedItems.remove(at: interaction.currentIndexPath.row)
-        interaction.currentPageCell.items = pinnedItems
+        interaction.currentPageCell.items = pinnedItems.map { .app($0) }
         interaction.currentPageCell.draggedItem = interaction.item
         interaction.currentPageCell.collectionView.performBatchUpdates({
             interaction.currentPageCell.collectionView.deleteItems(at: [interaction.currentIndexPath])
@@ -309,7 +309,7 @@ extension HomeAppsManager {
             return
         }
         stopPageTimer()
-        guard let currentIndex = items[currentPage].firstIndex(where: { $0 === currentInteraction.item }) else {
+        guard let currentIndex = items[currentPage].firstIndex(where: { $0 == currentInteraction.item }) else {
             return
         }
         let currentPageItemsInitialCount = items[currentPage].count

@@ -6,7 +6,7 @@ class AppCell: ShakableCell {
     @IBOutlet weak var label: UILabel?
     @IBOutlet weak var imageContainerView: UIView!
     
-    var item: AppItem? {
+    var app: HomeApp? {
         didSet {
             updateUI()
         }
@@ -19,10 +19,7 @@ class AppCell: ShakableCell {
     }
     
     func updateUI() {
-        guard let item = item as? AppModel else {
-            return
-        }
-        switch item.app {
+        switch app {
         case .embedded(let embedded):
             imageView?.contentMode = .center
             label?.text = embedded.name
@@ -31,6 +28,8 @@ class AppCell: ShakableCell {
             imageView?.contentMode = .scaleAspectFit
             label?.text = user.fullName
             imageView?.setImage(with: user)
+        case .none:
+            return
         }
         label?.alpha = 1
         label?.isHidden = false
@@ -48,12 +47,21 @@ extension AppCell: HomeAppCell {
         return HomeAppsSnapshotView(frame: bounds, iconView: iconView)
     }
     
-    var generalItem: AppItem? {
+    var item: HomeAppItem? {
         get {
-            item
+            if let app = app {
+                return .app(app)
+            } else {
+                return nil
+            }
         }
         set {
-            item = newValue
+            switch newValue {
+            case let .app(app):
+                self.app = app
+            default:
+                break
+            }
         }
     }
     

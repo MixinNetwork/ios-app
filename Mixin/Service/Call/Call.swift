@@ -9,6 +9,7 @@ class Call: NSObject {
     let uuid: UUID
     let conversationId: String
     let isOutgoing: Bool
+    let rtcClient: WebRTCClient
     
     private(set) lazy var uuidString = uuid.uuidString.lowercased()
     
@@ -23,10 +24,11 @@ class Call: NSObject {
     
     weak var timer: Timer?
     
-    init(uuid: UUID, conversationId: String, isOutgoing: Bool) {
+    init(uuid: UUID, conversationId: String, isOutgoing: Bool, rtcClient: WebRTCClient) {
         self.uuid = uuid
         self.conversationId = conversationId
         self.isOutgoing = isOutgoing
+        self.rtcClient = rtcClient
         self.status = isOutgoing ? .outgoing : .incoming
         super.init()
     }

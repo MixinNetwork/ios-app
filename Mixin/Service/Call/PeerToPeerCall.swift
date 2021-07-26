@@ -13,18 +13,19 @@ class PeerToPeerCall: Call {
         "<PeerToPeerCall: uuid: \(uuidString), isOutgoing: \(isOutgoing), status: \(status.debugDescription), conversationId: \(conversationId), connectedDate: \(connectedDate?.description ?? "(never)"), remoteUsername: \(remoteUsername), hasReceivedRemoteAnswer: \(hasReceivedRemoteAnswer))>"
     }
     
-    init(uuid: UUID, isOutgoing: Bool, remoteUserId: String, remoteUsername: String) {
+    init(uuid: UUID, isOutgoing: Bool, remoteUserId: String, remoteUsername: String, rtcClient: WebRTCClient) {
         self.remoteUserId = remoteUserId
         self.remoteUsername = remoteUsername
         let conversationId = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: remoteUserId)
-        super.init(uuid: uuid, conversationId: conversationId, isOutgoing: isOutgoing)
+        super.init(uuid: uuid, conversationId: conversationId, isOutgoing: isOutgoing, rtcClient: rtcClient)
     }
     
-    convenience init(uuid: UUID, isOutgoing: Bool, remoteUser: UserItem) {
+    convenience init(uuid: UUID, isOutgoing: Bool, remoteUser: UserItem, rtcClient: WebRTCClient) {
         self.init(uuid: uuid,
                   isOutgoing: isOutgoing,
                   remoteUserId: remoteUser.userId,
-                  remoteUsername: remoteUser.fullName)
+                  remoteUsername: remoteUser.fullName,
+                  rtcClient: rtcClient)
         self.remoteUser = remoteUser
     }
     

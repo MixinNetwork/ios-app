@@ -59,7 +59,7 @@ extension StickersStoreViewController: UICollectionViewDelegate, UICollectionVie
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.item < stickerStoreItems.count {
-            let viewController = StickersPreviewViewController.instance()
+            let viewController = StickersAlbumPreviewViewController.instance()
             viewController.stickerStoreItem = stickerStoreItems[indexPath.row]
             viewController.presentAsChild(of: self)
         }

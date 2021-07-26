@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class StickersPreviewViewController: ResizablePopupViewController {
+class StickersAlbumPreviewViewController: ResizablePopupViewController {
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var collectionView: UICollectionView!
@@ -24,8 +24,8 @@ class StickersPreviewViewController: ResizablePopupViewController {
         return button
     }()
     
-    class func instance() -> StickersPreviewViewController {
-        R.storyboard.chat.stickers_preview()!
+    class func instance() -> StickersAlbumPreviewViewController {
+        R.storyboard.chat.stickers_album_preview()!
     }
     
     override var resizableScrollView: UIScrollView? {
@@ -43,7 +43,7 @@ class StickersPreviewViewController: ResizablePopupViewController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         let cellCount = CGFloat(cellCountPerRow)
-        flowLayout.minimumInteritemSpacing = ((view.bounds.width - cellCount * flowLayout.itemSize.width - flowLayout.sectionInset.horizontal)/(cellCount - 1))
+        flowLayout.minimumInteritemSpacing = ((view.bounds.width - cellCount * flowLayout.itemSize.width - flowLayout.sectionInset.horizontal) / (cellCount - 1))
     }
     
     override func updatePreferredContentSizeHeight(size: ResizablePopupViewController.Size) {
@@ -51,6 +51,7 @@ class StickersPreviewViewController: ResizablePopupViewController {
             return
         }
         let height = preferredContentHeight(forSize: size)
+        collectionViewHeightConstraint.constant = collectionViewHeight(forSize: size)
         preferredContentSize.height = height
         view.frame.origin.y = backgroundButton.bounds.height - height
     }
@@ -58,12 +59,15 @@ class StickersPreviewViewController: ResizablePopupViewController {
     override func preferredContentHeight(forSize size: Size) -> CGFloat {
         view.layoutIfNeeded()
         let window = AppDelegate.current.mainWindow
-        switch size {
-        case .expanded, .unavailable:
-            return window.bounds.height - window.safeAreaInsets.top
-        case .compressed:
-            return titleBarHeightConstraint.constant + flowLayout.itemSize.height * 3 + window.safeAreaInsets.bottom + 102
-        }
+        let maxHeight = window.bounds.height - window.safeAreaInsets.top
+        let collectionViewHeight = collectionViewHeight(forSize: size)
+        let height = 30.0
+            + titleBarHeightConstraint.constant
+            + stickerActionButtonTopConstraint.constant
+            + stickerActionButtonHeightConstraint.constant
+            + collectionViewHeight
+            + window.safeAreaInsets.bottom
+        return min(maxHeight, height)
     }
     
     override func changeSizeAction(_ recognizer: UIPanGestureRecognizer) {
@@ -124,7 +128,18 @@ class StickersPreviewViewController: ResizablePopupViewController {
     
 }
 
-extension StickersPreviewViewController {
+extension StickersAlbumPreviewViewController {
+    
+    private func collectionViewHeight(forSize size: Size) -> CGFloat {
+        let countOfRows: CGFloat
+        switch size {
+        case .expanded, .unavailable:
+            countOfRows = ceil(CGFloat(stickerStoreItem.stickers.count) / CGFloat(cellCountPerRow))
+        case .compressed:
+            countOfRows = CGFloat(initCountOfRows)
+        }
+        return countOfRows * (flowLayout.itemSize.height + flowLayout.minimumLineSpacing) - flowLayout.minimumLineSpacing
+    }
     
     @objc func backgroundTappingAction() {
         dismissAsChild(completion: nil)
@@ -166,7 +181,7 @@ extension StickersPreviewViewController {
     
 }
 
-extension StickersPreviewViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+extension StickersAlbumPreviewViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return stickerStoreItem.stickers.count

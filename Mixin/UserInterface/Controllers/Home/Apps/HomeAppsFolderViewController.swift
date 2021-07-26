@@ -113,7 +113,7 @@ extension HomeAppsFolderViewController {
         textField.alpha = 0
         backgroundView.effect = nil
         containerViewOriginalFrame = containerView.frame
-        containerView.transform = CGAffineTransform.transform(rect: containerView.frame, to: sourceFrame)
+        containerView.transform = CGAffineTransform.transform(from: containerView.frame, to: sourceFrame)
         containerView.alpha = 0
     }
     
@@ -147,7 +147,7 @@ extension HomeAppsFolderViewController {
             self.view.layoutIfNeeded()
             self.textField.alpha = 0
             self.leaveTextFieldEditingMode()
-            self.containerView.transform = CGAffineTransform.transform(rect: self.containerView.frame, to: self.sourceFrame)
+            self.containerView.transform = CGAffineTransform.transform(from: self.containerView.frame, to: self.sourceFrame)
             self.containerView.alpha = 0
             self.backgroundView.effect = nil
         }

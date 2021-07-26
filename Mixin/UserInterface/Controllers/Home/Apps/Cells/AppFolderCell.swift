@@ -19,7 +19,7 @@ class AppFolderCell: ShakableCell {
             placeholderView?.removeFromSuperview()
             imageContainerView.transform = .identity
             collectionView.reloadData()
-            collectionView.isHidden = folder.isNewFolder
+            collectionView.isHidden = folder.isNewlyCreated
         }
     }
     
@@ -109,7 +109,7 @@ extension AppFolderCell {
         contentView.addSubview(imageView)
         appCell.imageView?.isHidden = true
         UIView.animate(withDuration: 0.55, animations: {
-            imageView.transform = .transform(rect: imageView.frame, to: self.imageContainerView.frame)
+            imageView.transform = .transform(from: imageView.frame, to: self.imageContainerView.frame)
             self.imageContainerView.transform = CGAffineTransform.identity.scaledBy(x: 0.01, y: 0.01)
             self.label?.alpha = 0
         }, completion: { _ in

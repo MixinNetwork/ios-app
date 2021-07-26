@@ -181,10 +181,12 @@ extension HomeAppsManager {
         }
         // Remove empty page
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-            let emptyIndex = self.items.enumerated().compactMap( { $1.count == 0 ? $0 : nil })
-            self.items.remove(at: emptyIndex)
+            let emptyIndices = self.items.enumerated().compactMap { $1.count == 0 ? $0 : nil }
+            for index in emptyIndices.sorted(by: >) {
+                self.items.remove(at: index)
+            }
             self.candidateCollectionView.performBatchUpdates({
-                self.candidateCollectionView.deleteItems(at: emptyIndex.map({ IndexPath(item: $0, section: 0) }))
+                self.candidateCollectionView.deleteItems(at: emptyIndices.map({ IndexPath(item: $0, section: 0) }))
             }, completion: nil)
         }
         tapRecognizer.isEnabled = false
@@ -215,8 +217,8 @@ extension HomeAppsManager {
         var currentPageItems = items[page + 1]
         currentPageItems.insert(items[page].removeLast(), at: 0)
         items[page + 1] = currentPageItems
-        let appsPerPage = isInAppsFolderViewController ? HomeAppsMode.folder.appsPerPage : HomeAppsMode.regular.appsPerPage
-        if currentPageItems.count > appsPerPage {
+        let mode: HomeAppsMode = isInAppsFolderViewController ? .folder : .regular
+        if currentPageItems.count > mode.appsPerPage {
             moveLastItem(inPage: page + 1)
         }
     }

@@ -3,8 +3,8 @@ import Foundation
 extension HomeAppsManager {
     
     @discardableResult
-    func showFolder(from cell: AppFolderCell, isNewFolder: Bool = false, startInRename: Bool = false) -> HomeAppsFolderViewController {
-        openFolderInfo = HomeAppsOpenFolderInfo(cell: cell, isNewFolder: isNewFolder)
+    func showFolder(from cell: AppFolderCell, isNewlyCreated: Bool = false, startInRename: Bool = false) -> HomeAppsFolderViewController {
+        openFolderInfo = HomeAppsOpenFolderInfo(cell: cell, isNewlyCreated: isNewlyCreated)
         cell.stopShaking()
         let convertedFrame = cell.convert(cell.imageContainerView.frame, to: AppDelegate.current.mainWindow)
         let folderViewController = R.storyboard.home.appsFolder()!
@@ -76,11 +76,11 @@ extension HomeAppsManager {
         })
     }
     
-    func showFolderInteraction(_ interaction: HomeAppsFolderInteraction, page: Int, sourceIndex: Int, destinationIndex: Int, folderIndexPath: IndexPath, isNewFolder: Bool = false) {
+    func showFolderInteraction(_ interaction: HomeAppsFolderInteraction, page: Int, sourceIndex: Int, destinationIndex: Int, folderIndexPath: IndexPath, isNewlyCreated: Bool = false) {
         let folderIndexPath = IndexPath(item: destinationIndex, section: 0)
         interaction.dragInteraction.currentPageCell.items = items[page]
         let folderCell = interaction.dragInteraction.currentPageCell.collectionView.cellForItem(at: folderIndexPath) as! AppFolderCell
-        let folderViewController = showFolder(from: folderCell, isNewFolder: isNewFolder)
+        let folderViewController = showFolder(from: folderCell, isNewlyCreated: isNewlyCreated)
         folderViewController.openAnimationDidEnd = { [weak folderViewController] in
             self.items[page].remove(at: sourceIndex)
             interaction.dragInteraction.currentPageCell.items = self.items[page]
@@ -90,7 +90,7 @@ extension HomeAppsManager {
                 folderCell.stopShaking()
                 let convertedFrame = folderCell.convert(folderCell.imageContainerView.frame, to: AppDelegate.current.mainWindow)
                 folderViewController?.sourceFrame = convertedFrame
-                folderCell.wrapperView.isHidden = isNewFolder
+                folderCell.wrapperView.isHidden = isNewlyCreated
                 interaction.wrapperView.removeFromSuperview()
                 self.currentFolderInteraction = nil
             }
@@ -130,15 +130,15 @@ extension HomeAppsManager {
         }
         let folderName = sourceApp.category
         let newFolder = HomeAppFolder(name: folderName, pages: [[interaction.destinationApp, sourceApp]])
-        newFolder.isNewFolder = true
+        newFolder.isNewlyCreated = true
         items[page][destinationIndex] = .folder(newFolder)
         let folderIndexPath = IndexPath(item: destinationIndex, section: 0)
         interaction.dragInteraction.currentPageCell.items = items[page]
         if !didDrop {
             // Still hold app when folder was created
             interaction.dragInteraction.currentPageCell.collectionView.reloadItems(at: [folderIndexPath])
-            showFolderInteraction(interaction, page: page, sourceIndex: sourceIndex, destinationIndex: destinationIndex, folderIndexPath: folderIndexPath, isNewFolder: true)
-            newFolder.isNewFolder = false
+            showFolderInteraction(interaction, page: page, sourceIndex: sourceIndex, destinationIndex: destinationIndex, folderIndexPath: folderIndexPath, isNewlyCreated: true)
+            newFolder.isNewlyCreated = false
         } else if let destinationCell = interaction.dragInteraction.currentPageCell.collectionView.cellForItem(at: IndexPath(item: destinationIndex, section: 0)) as? HomeAppCell {
             // Drop app when folder was created
             let iconSnapshot = destinationCell.imageContainerView.snapshotView(afterScreenUpdates: false)!
@@ -158,8 +158,8 @@ extension HomeAppsManager {
                     interaction.dragInteraction.placeholderView.iconView.removeFromSuperview()
                     self.currentFolderInteraction = nil
                     self.currentDragInteraction = nil
-                    self.showFolderInteraction(interaction, page: page, sourceIndex: sourceIndex, destinationIndex: destinationIndex, folderIndexPath: folderIndexPath, isNewFolder: true)
-                    newFolder.isNewFolder = false
+                    self.showFolderInteraction(interaction, page: page, sourceIndex: sourceIndex, destinationIndex: destinationIndex, folderIndexPath: folderIndexPath, isNewlyCreated: true)
+                    newFolder.isNewlyCreated = false
                 }
             }
         }
@@ -355,9 +355,9 @@ extension HomeAppsManager: HomeAppsFolderViewControllerDelegate {
                     self.endDragInteraction(self.longPressRecognizer)
                 }
             })
-            info.isNewFolder = appsCountInFolder == 1
+            info.isNewlyCreated = appsCountInFolder == 1
         }
-        info.shouldCancelCreation = info.isNewFolder
+        info.shouldCancelCreation = info.isNewlyCreated
     }
     
     func homeAppsFolderViewController(_ controller: HomeAppsFolderViewController, dismissAnimationWillStartOnPage page: Int, updatedPages: [[HomeApp]]) {

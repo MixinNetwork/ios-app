@@ -569,7 +569,6 @@
 		7C66F02B268A0431006D8462 /* AppCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F02A268A0431006D8462 /* AppCell.swift */; };
 		7C66F1AB268ABABE006D8462 /* AppFolderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1AA268ABABE006D8462 /* AppFolderCell.swift */; };
 		7C66F1AD268ABE1F006D8462 /* HomeAppFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1AC268ABE1F006D8462 /* HomeAppFolder.swift */; };
-		7C66F1B3268B0B11006D8462 /* HomeAppsExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1B2268B0B11006D8462 /* HomeAppsExtension.swift */; };
 		7C66F1BB268B2CE5006D8462 /* HomeAppsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1BA268B2CE5006D8462 /* HomeAppsManager.swift */; };
 		7C66F1BD268B2F23006D8462 /* HomeAppsManager+DragInteraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1BC268B2F23006D8462 /* HomeAppsManager+DragInteraction.swift */; };
 		7C66F1BF268B3514006D8462 /* HomeAppsManager+FolderInteraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1BE268B3514006D8462 /* HomeAppsManager+FolderInteraction.swift */; };
@@ -1532,7 +1531,6 @@
 		7C66F02A268A0431006D8462 /* AppCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCell.swift; sourceTree = "<group>"; };
 		7C66F1AA268ABABE006D8462 /* AppFolderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFolderCell.swift; sourceTree = "<group>"; };
 		7C66F1AC268ABE1F006D8462 /* HomeAppFolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppFolder.swift; sourceTree = "<group>"; };
-		7C66F1B2268B0B11006D8462 /* HomeAppsExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsExtension.swift; sourceTree = "<group>"; };
 		7C66F1BA268B2CE5006D8462 /* HomeAppsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeAppsManager.swift; sourceTree = "<group>"; };
 		7C66F1BC268B2F23006D8462 /* HomeAppsManager+DragInteraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeAppsManager+DragInteraction.swift"; sourceTree = "<group>"; };
 		7C66F1BE268B3514006D8462 /* HomeAppsManager+FolderInteraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeAppsManager+FolderInteraction.swift"; sourceTree = "<group>"; };
@@ -2530,7 +2528,6 @@
 				7C66F0212689C9D7006D8462 /* Model */,
 				7C35D1CF2689C04F002B5BBC /* Cells */,
 				5E3725B9268D4E0400269FE7 /* HomeAppsSnapshotView.swift */,
-				7C66F1B2268B0B11006D8462 /* HomeAppsExtension.swift */,
 				7CBD2EF9268FF6BB00AA0847 /* HomeAppsStorage.swift */,
 				7B4ADAA6243C7C8400F04CA6 /* HomeAppsViewController.swift */,
 				7C5823D4268966A1003AA142 /* HomeAppsFolderViewController.swift */,
@@ -4233,7 +4230,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7C66F1B3268B0B11006D8462 /* HomeAppsExtension.swift in Sources */,
 				7BF49DD320C3DBAC00A8510E /* CaptchaManager.swift in Sources */,
 				DF8CECE11FC3054700E40064 /* TransferTypeCell.swift in Sources */,
 				7BCB8C8422BB56B8002A13CC /* DataAndStorageSettingsViewController.swift in Sources */,

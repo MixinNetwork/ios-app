@@ -4,7 +4,7 @@ final class HomeAppFolder {
     
     var name: String
     var pages: [[HomeApp]]
-    var isNewFolder = false
+    var isNewlyCreated = false
     
     init(name: String, pages: [[HomeApp]]) {
         self.name = name

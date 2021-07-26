@@ -47,13 +47,16 @@ final class HomeAppsOpenFolderInfo {
     
     let folder: HomeAppFolder
     let cell: AppFolderCell
-    var isNewFolder: Bool
+    var isNewlyCreated: Bool
     var shouldCancelCreation = false
     
-    init(cell: AppFolderCell, isNewFolder: Bool) {
+    init?(cell: AppFolderCell, isNewlyCreated: Bool) {
+        guard let folder = cell.folder else {
+            return nil
+        }
         self.cell = cell
-        self.folder = cell.folder! // FIXME
-        self.isNewFolder = isNewFolder
+        self.folder = folder
+        self.isNewlyCreated = isNewlyCreated
     }
     
 }

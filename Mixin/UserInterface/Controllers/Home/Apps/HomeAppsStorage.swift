@@ -17,8 +17,6 @@ class HomeAppsStorage {
                         var items = homeAppItemsWrapper.items
                         if items.count > HomeAppsMode.regular.appsPerPage {
                             needsSave = true
-                            let apps: [HomeApp]
-                            let pages: [[HomeApp]]
                             let folderName: String
                             var appFolder: HomeAppFolder?
                             var removedItems = items.suffix(items.count - HomeAppsMode.regular.appsPerPage + 1)
@@ -30,21 +28,23 @@ class HomeAppsStorage {
                                 appFolder = folder
                                 removedItems.removeFirst()
                             }
-                            apps = removedItems.reduce([HomeApp]()) { result, homeAppItem in
-                                switch homeAppItem {
+                            let apps: [HomeApp] = removedItems.reduce([]) { previous, item in
+                                switch item {
                                 case .app(let app):
-                                    return result + [app]
+                                    return previous + [app]
                                 case .folder(let folder):
-                                    return result + folder.pages.flatMap({ $0 })
+                                    return previous + folder.pages.flatMap { $0 }
                                 }
                             }
+                            let pages: [[HomeApp]]
                             if let folder = appFolder {
-                                pages = folder.pages + apps.splitInPages(ofSize: HomeAppsMode.folder.appsPerPage)
+                                pages = folder.pages + apps.slices(ofSize: HomeAppsMode.folder.appsPerPage)
                             } else {
-                                pages = apps.splitInPages(ofSize: HomeAppsMode.folder.appsPerPage)
+                                pages = apps.slices(ofSize: HomeAppsMode.folder.appsPerPage)
                             }
                             items.removeLast(items.count - HomeAppsMode.regular.appsPerPage + 1)
-                            items.append(HomeAppItem(folder: HomeAppFolder(name: folderName, pages: pages)))
+                            let folder = HomeAppFolder(name: folderName, pages: pages)
+                            items.append(.folder(folder))
                         }
                         return items
                     }
@@ -65,7 +65,7 @@ class HomeAppsStorage {
                         }
                         let allCandidates = candidateEmbeddedApps.map { HomeAppItem.app(.embedded($0)) }
                             + appUsers.map { HomeAppItem.app(.external($0)) }
-                        return allCandidates.splitInPages(ofSize: HomeAppsMode.regular.appsPerPage)
+                        return allCandidates.slices(ofSize: HomeAppsMode.regular.appsPerPage)
                     }()
                     self.save(candidateItems: candidateItems)
                     return (pinned, candidateItems)

@@ -12,7 +12,46 @@ class HomeAppsStorage {
                     .prefix(HomeAppsMode.pinned.appsPerRow)
                     .compactMap(HomeApp.init(id:))
                 if let json = AppGroupUserDefaults.User.homeAppsFolder, let items = try? JSONDecoder.default.decode([HomeAppItemsWrapper].self, from: json) {
-                    return (pinned, items.map(\.items))
+                    var needsSave = false
+                    let candidateItems = items.map { homeAppItemsWrapper -> [HomeAppItem] in
+                        var items = homeAppItemsWrapper.items
+                        if items.count > HomeAppsMode.regular.appsPerPage {
+                            needsSave = true
+                            let apps: [HomeApp]
+                            let pages: [[HomeApp]]
+                            let folderName: String
+                            var appFolder: HomeAppFolder?
+                            var removedItems = items.suffix(items.count - HomeAppsMode.regular.appsPerPage + 1)
+                            switch removedItems.first! {
+                            case .app(let app):
+                                folderName = app.category
+                            case .folder(let folder):
+                                folderName = folder.name
+                                appFolder = folder
+                                removedItems.removeFirst()
+                            }
+                            apps = removedItems.reduce([HomeApp]()) { result, homeAppItem in
+                                switch homeAppItem {
+                                case .app(let app):
+                                    return result + [app]
+                                case .folder(let folder):
+                                    return result + folder.pages.flatMap({ $0 })
+                                }
+                            }
+                            if let folder = appFolder {
+                                pages = folder.pages + apps.splitInPages(ofSize: HomeAppsMode.folder.appsPerPage)
+                            } else {
+                                pages = apps.splitInPages(ofSize: HomeAppsMode.folder.appsPerPage)
+                            }
+                            items.removeLast(items.count - HomeAppsMode.regular.appsPerPage + 1)
+                            items.append(HomeAppItem(folder: HomeAppFolder(name: folderName, pages: pages)))
+                        }
+                        return items
+                    }
+                    if needsSave {
+                        self.save(candidateItems: candidateItems)
+                    }
+                    return (pinned, candidateItems)
                 } else {
                     let candidateItems: [[HomeAppItem]] = {
                         let pinnedIds = Set(pinned.map(\.id))

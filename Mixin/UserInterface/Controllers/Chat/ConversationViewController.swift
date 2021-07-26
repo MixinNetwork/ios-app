@@ -103,6 +103,7 @@ class ConversationViewController: UIViewController {
     private var myInvitation: Message?
     private var isShowingKeyboard = false
     private var groupCallIndicatorCenterYConstraint: NSLayoutConstraint!
+    private var makeInputTextViewFirstResponderOnAppear = false
     
     private(set) lazy var imagePickerController = ImagePickerController(initialCameraPosition: .rear, cropImageAfterPicked: false, parent: self, delegate: self)
     
@@ -365,6 +366,10 @@ class ConversationViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         isAppearanceAnimating = true
+        if makeInputTextViewFirstResponderOnAppear {
+            conversationInputViewController.textView.becomeFirstResponder()
+            makeInputTextViewFirstResponderOnAppear = false
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -377,6 +382,9 @@ class ConversationViewController: UIViewController {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
+        if conversationInputViewController.textView.isFirstResponder {
+            makeInputTextViewFirstResponderOnAppear = true
+        }
         super.viewWillDisappear(animated)
         dismissMenu(animated: true)
         isAppearanceAnimating = true

@@ -106,6 +106,16 @@ public final class UserDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [conversationId])
     }
     
+    public func getAppUsersAppId() -> [String] {
+        let sql = """
+            SELECT u.app_id
+            FROM apps a, users u
+            WHERE a.app_id = u.app_id AND u.relationship = 'FRIEND'
+            ORDER BY u.full_name ASC
+        """
+        return db.select(with: sql)
+    }
+    
     public func getAppUsers() -> [User] {
         let sql = """
             SELECT u.user_id, u.full_name, u.biography, u.identity_number, u.avatar_url, u.phone, u.is_verified, u.mute_until, u.app_id, u.relationship, u.created_at, u.is_scam

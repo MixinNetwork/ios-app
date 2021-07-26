@@ -12,7 +12,42 @@ class HomeAppsStorage {
                 .compactMap(HomeApp.init(id:))
             let candidate: [[HomeAppItem]]
             if let json = AppGroupUserDefaults.User.homeAppsFolder, let wrappers = try? JSONDecoder.default.decode([HomeAppItemsWrapper].self, from: json) {
-                candidate = self.candidateItems(with: wrappers)
+                var items = self.candidateItems(with: wrappers)
+                var existedIds = Set(pinned.map(\.id))
+                for item in items.flatMap({ $0 }) {
+                    switch item {
+                    case let .app(app):
+                        existedIds.insert(app.id)
+                    case let .folder(folder):
+                        let ids = folder.pages.flatMap { $0 }.map(\.id)
+                        existedIds.formUnion(ids)
+                    }
+                }
+                let newApps = UserDAO.shared.getAppUsersAppId()
+                    .filter { !existedIds.contains($0) }
+                    .compactMap { HomeApp(id: $0) }
+                if !newApps.isEmpty {
+                    if let lastPage = items.last, lastPage.count < HomeAppsMode.regular.appsPerPage {
+                        let trailingApps: [HomeAppItem] = newApps
+                            .suffix(HomeAppsMode.regular.appsPerPage - lastPage.count)
+                            .map { .app($0) }
+                        items[items.count - 1].append(contentsOf: trailingApps)
+                        if newApps.count > trailingApps.count {
+                            let newPages: [[HomeAppItem]] = newApps
+                                .prefix(newApps.count - trailingApps.count)
+                                .map { .app($0) }
+                                .slices(ofSize: HomeAppsMode.regular.appsPerPage)
+                            items.append(contentsOf: newPages)
+                        }
+                    } else {
+                        let newPages: [[HomeAppItem]] = newApps
+                            .map { .app($0) }
+                            .slices(ofSize: HomeAppsMode.regular.appsPerPage)
+                        items.append(contentsOf: newPages)
+                    }
+                    self.save(candidateItems: items)
+                }
+                candidate = items
             } else {
                 let pinnedIds = Set(pinned.map(\.id))
                 candidate = self.defaultCandidateItems(with: pinnedIds)

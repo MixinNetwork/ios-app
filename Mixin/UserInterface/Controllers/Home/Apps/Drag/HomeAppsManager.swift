@@ -195,15 +195,15 @@ extension HomeAppsManager {
     
     // Update items for current page after end drag
     func updateState(forPageCell pageCell: AppPageCell) {
+        let sortedCells = pageCell.collectionView.indexPathsForVisibleItems
+            .sorted { $0.item < $1.item }
+            .compactMap(pageCell.collectionView.cellForItem(at:))
         if let pinnedCollectionView = pinnedCollectionView, pinnedCollectionView.visibleCells.contains(pageCell) {
-            let items = pageCell.collectionView.visibleCells.compactMap { ($0 as? AppCell)?.app }
+            let items = sortedCells.compactMap { ($0 as? AppCell)?.app }
             pinnedItems = items
             pageCell.items = items.map { .app($0) }
-        } else {
-            guard let pageIndexPath = candidateCollectionView.indexPath(for: pageCell) else {
-                return
-            }
-            let items = pageCell.collectionView.visibleCells.compactMap { ($0 as? HomeAppCell)?.item }
+        } else if let pageIndexPath = candidateCollectionView.indexPath(for: pageCell) {
+            let items = sortedCells.compactMap { ($0 as? HomeAppCell)?.item }
             self.items[pageIndexPath.row] = items
             pageCell.items = items
         }

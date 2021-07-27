@@ -29,12 +29,12 @@ class HomeAppsStorage {
                 if !newApps.isEmpty {
                     if let lastPage = items.last, lastPage.count < HomeAppsMode.regular.appsPerPage {
                         let trailingApps: [HomeAppItem] = newApps
-                            .suffix(HomeAppsMode.regular.appsPerPage - lastPage.count)
+                            .prefix(HomeAppsMode.regular.appsPerPage - lastPage.count)
                             .map { .app($0) }
                         items[items.count - 1].append(contentsOf: trailingApps)
                         if newApps.count > trailingApps.count {
                             let newPages: [[HomeAppItem]] = newApps
-                                .prefix(newApps.count - trailingApps.count)
+                                .suffix(newApps.count - trailingApps.count)
                                 .map { .app($0) }
                                 .slices(ofSize: HomeAppsMode.regular.appsPerPage)
                             items.append(contentsOf: newPages)
@@ -92,7 +92,11 @@ extension HomeAppsStorage {
     
     private func candidateItems(with wrappers: [HomeAppItemsWrapper]) -> [[HomeAppItem]] {
         var needsSave = false
-        let candidateItems = wrappers.map { wrapper -> [HomeAppItem] in
+        let candidateItems = wrappers.compactMap { wrapper -> [HomeAppItem]? in
+            guard !wrapper.items.isEmpty else {
+                needsSave = true
+                return nil
+            }
             var items = wrapper.items
             if items.count > HomeAppsMode.regular.appsPerPage {
                 needsSave = true

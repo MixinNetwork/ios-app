@@ -436,7 +436,7 @@
 // Sticker
 "sticker_manager_title" = "My Stickers";
 "sticker_add_title" = "Add Sticker";
-"sticker_remove_title" = "Delete Stickers";
+"sticker_remove_title" = "Remove Stickers";
 "sticker_add_failed" = "Failed to add sticker";
 "sticker_remove_failed" = "Failed to delete stickers";
 "sticker_add_required" = "Requires stickers file size larger than 1KB and less than 800KB, width and height between 64 and 512 pixels.";

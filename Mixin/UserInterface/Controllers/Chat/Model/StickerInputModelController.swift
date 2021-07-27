@@ -7,9 +7,9 @@ class StickerInputModelController: NSObject {
     static let maxNumberOfRecentStickerRows = 6
     static let maxNumberOfRecentStickers = maxNumberOfRecentStickerRows * StickerInputModelController.numberOfItemsPerRow
     
-    let recentStickersViewController = RecentStickersViewController(index: 0)
-    let favoriteStickersViewController = FavoriteStickersViewController(index: 1)
-    let giphyViewController = GiphyViewController(index: 2)
+    let recentStickersViewController = RecentStickersViewController(index: 1)
+    let favoriteStickersViewController = FavoriteStickersViewController(index: 2)
+    let giphyViewController = GiphyViewController(index: 3)
     let numberOfFixedControllers = 4
     
     private var officialStickers = [[StickerItem]]()

@@ -1,24 +1,24 @@
 import UIKit
 
-class StickerStoreBannerFlowLayout: UICollectionViewFlowLayout {
+class StickersStoreBannerFlowLayout: UICollectionViewFlowLayout {
     
     override func prepare() {
         super.prepare()
-        let inset = (UIScreen.main.bounds.width - itemSize.width)/2
+        collectionView?.decelerationRate = .fast
+        let inset = (UIScreen.main.bounds.width - itemSize.width) / 2
         sectionInset = UIEdgeInsets(top: 0, left: inset, bottom: 0, right: inset)
         minimumLineSpacing = 6
     }
     
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
-        guard let collectionView = collectionView,
-              let layoutAttributes = super.layoutAttributesForElements(in: rect) else {
+        guard let collectionView = collectionView, let layoutAttributes = super.layoutAttributesForElements(in: rect) else {
             return super.layoutAttributesForElements(in: rect)
         }
-        let centerX = collectionView.contentOffset.x + collectionView.bounds.size.width/2
+        let centerX = collectionView.contentOffset.x + collectionView.bounds.size.width / 2
         layoutAttributes.forEach { attributes in
             let distance = abs(attributes.center.x - centerX)
-            let apartScale = distance/collectionView.bounds.size.width
-            let scale = abs(cos(apartScale * CGFloat.pi/4))
+            let apartScale = distance / collectionView.bounds.size.width
+            let scale = abs(cos(apartScale * CGFloat.pi / 4))
             attributes.transform = CGAffineTransform(scaleX: 1.0, y: scale)
         }
         return layoutAttributes
@@ -34,8 +34,8 @@ class StickerStoreBannerFlowLayout: UICollectionViewFlowLayout {
             return super.targetContentOffset(forProposedContentOffset: proposedContentOffset, withScrollingVelocity: velocity)
         }
         var targetPoint = proposedContentOffset
+        var moveDistance = CGFloat.greatestFiniteMagnitude
         let centerX = proposedContentOffset.x + collectionView.bounds.width / 2
-        var moveDistance: CGFloat = CGFloat(MAXFLOAT)
         attributes.forEach { (attr) in
             if abs(attr.center.x - centerX) < abs(moveDistance) {
                 moveDistance = attr.center.x - centerX

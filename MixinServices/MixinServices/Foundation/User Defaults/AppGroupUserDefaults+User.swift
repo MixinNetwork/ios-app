@@ -59,6 +59,8 @@ extension AppGroupUserDefaults {
             case userInterfaceStyle = "ui_style"
 
             case pinMessageBanners = "pin_message_banners"
+            
+            case stickers = "sticker"
         }
         
         public static let version = 27
@@ -69,7 +71,8 @@ extension AppGroupUserDefaults {
         public static let circleNameDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.circle.name.change")
         public static let homeAppIdsDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.home.app.ids.change")
         public static let pinMessageBannerDidChangeNotification = Notification.Name("one.mixin.services.pinMessageBannerDidChange")
-        
+        public static let stickerIdsDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.chat.sticker.ids.change")
+
         private static let maxNumberOfAssetSearchHistory = 2
         
         public static var needsUpgradeInMainApp: Bool {
@@ -221,6 +224,13 @@ extension AppGroupUserDefaults {
             }
         }
                 
+        @Default(namespace: .user, key: Key.stickers, defaultValue: [])
+        public static var stickers: [String] {
+            didSet {
+                NotificationCenter.default.post(onMainThread: stickerIdsDidChangeNotification, object: self)
+            }
+        }
+        
         public static func insertRecentlyUsedAppId(id: String) {
             let maxNumberOfIds = 12
             var ids = recentlyUsedAppIds

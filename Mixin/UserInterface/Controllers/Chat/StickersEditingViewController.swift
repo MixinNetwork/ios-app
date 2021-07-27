@@ -4,21 +4,17 @@ import MixinServices
 class StickersEditingViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var stickerImageView: UIImageView!
+    @IBOutlet weak var stickerEmptyImageView: UIImageView!
     @IBOutlet weak var stickerEmptyHintView: UIView!
     @IBOutlet weak var stickerEmptyHintViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var stickerEmptyHintViewHeightConstraint: NSLayoutConstraint!
     
     var stickerStoreItems = [StickerStoreItem]()
     
-    class func instance() -> StickersEditingViewController {
-        R.storyboard.chat.my_stickers()!
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        stickerImageView.tintColor = UIColor(displayP3RgbValue: 0xC0C5D4, alpha: 0.3)
-        stickerEmptyHintViewTopConstraint.constant = (UIScreen.main.bounds.height - stickerEmptyHintViewHeightConstraint.constant)/7*3
+        stickerEmptyImageView.tintColor = UIColor(displayP3RgbValue: 0xC0C5D4, alpha: 0.3)
+        stickerEmptyHintViewTopConstraint.constant = (UIScreen.main.bounds.height - stickerEmptyHintViewHeightConstraint.constant) / 7 * 3
         tableView.setEditing(false, animated: true)
         tableView.dragInteractionEnabled = true
         tableView.dragDelegate = self
@@ -37,6 +33,10 @@ extension StickersEditingViewController {
         tableView.isHidden = !hidden
     }
     
+    private func syncStickers() {
+        AppGroupUserDefaults.User.stickers = stickerStoreItems.map({ $0.album.albumId })
+    }
+    
 }
 
 extension StickersEditingViewController: UITableViewDataSource, UITableViewDelegate {
@@ -52,11 +52,11 @@ extension StickersEditingViewController: UITableViewDataSource, UITableViewDeleg
             cell.onDeleteSticker = {
                 tableView.performBatchUpdates {
                     self.stickerStoreItems.remove(at: indexPath.row)
+                    self.syncStickers()
                     tableView.deleteRows(at: [indexPath], with: .fade)
                 } completion: { _ in
                     tableView.reloadData()
                 }
-                
             }
         }
         return cell
@@ -65,6 +65,7 @@ extension StickersEditingViewController: UITableViewDataSource, UITableViewDeleg
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         let item = stickerStoreItems.remove(at: sourceIndexPath.row)
         stickerStoreItems.insert(item, at: destinationIndexPath.row)
+        syncStickers()
         tableView.reloadData()
     }
     

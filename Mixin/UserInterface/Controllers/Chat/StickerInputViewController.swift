@@ -36,6 +36,10 @@ class StickerInputViewController: UIViewController {
         albumsCollectionView.delegate = self
         pageScrollView = pageViewController.view.subviews.first(where: { $0 is UIScrollView }) as? UIScrollView
         pageScrollView?.delegate = self
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(reload),
+                                               name: AppGroupUserDefaults.User.stickerIdsDidChangeNotification,
+                                               object: nil)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -55,7 +59,7 @@ class StickerInputViewController: UIViewController {
         }
     }
     
-    func reload() {
+    @objc func reload() {
         DispatchQueue.global(qos: .userInitiated).async {
             self.officialAlbums = AlbumDAO.shared.getAlbums()
             self.modelController.reloadRecentFavoriteStickers()
@@ -127,12 +131,13 @@ extension StickerInputViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let selectedIndex = indexPath.item
         if selectedIndex == 0 {
-            let viewController = StickersStoreViewController.instance()
+            let viewController = R.storyboard.chat.sticker_store()!
             let navigationController = UINavigationController(rootViewController: viewController)
             navigationController.modalPresentationStyle = .fullScreen
             navigationController.setNavigationBarHidden(true, animated: false)
-            navigationController.interactivePopGestureRecognizer?.isEnabled = false
+            navigationController.interactivePopGestureRecognizer?.isEnabled = true
             present(navigationController, animated: true, completion: nil)
+            collectionView.selectItem(at: IndexPath(item: currentIndex, section: 0), animated: false, scrollPosition: .centeredVertically)
             return
         }
         guard selectedIndex != currentIndex, !isScrollingByAlbumSelection else {
@@ -211,7 +216,7 @@ extension StickerInputViewController: UIScrollViewDelegate {
 extension StickerInputViewController {
     
     private func selectAlbum(at index: Int) {
-        guard index >= 0 && index < numberOfAllAlbums else {
+        guard index > 0 && index < numberOfAllAlbums else {
             return
         }
         let indexPath = IndexPath(item: index, section: 0)

@@ -130,7 +130,7 @@ extension HomeAppsManager {
             pinnedCollectionView?.reloadData()
             isDeleted = true
         } else {
-            let filterItems = items.compactMap({ page -> [HomeAppItem]? in
+            let filteredItems = items.compactMap({ page -> [HomeAppItem]? in
                 guard !isDeleted else {
                     return page
                 }
@@ -140,30 +140,35 @@ extension HomeAppsManager {
                     }
                     switch appItem {
                     case .app(let app):
-                        isDeleted = app.id == appId
-                        return app.id == appId ? nil : appItem
+                        guard app.id != appId else {
+                            isDeleted = true
+                            return nil
+                        }
+                        return appItem
                     case .folder(let folder):
                         let pages = folder.pages.compactMap { page -> [HomeApp]? in
                             guard !isDeleted else {
                                 return page
                             }
-                            let filterPage = page.filter { $0.id != appId }
-                            isDeleted = filterPage.count != page.count
-                            return filterPage.isEmpty ? nil : filterPage
+                            let filteredPage = page.filter { $0.id != appId }
+                            if filteredPage.count != page.count {
+                                isDeleted = true
+                            }
+                            return filteredPage.isEmpty ? nil : filteredPage
                         }
                         if pages.isEmpty {
                             return nil
-                        } else if pages.reduce(0, { $0 + $1.count }) == 1 {
-                            return .init(app: pages.first!.first!)
+                        } else if pages.reduce(0, { $0 + $1.count }) == 1, let app = pages.first?.first {
+                            return .app(app)
                         } else {
-                            return .init(folder: .init(name: folder.name, pages: pages))
+                            return .folder(HomeAppFolder(name: folder.name, pages: pages))
                         }
                     }
                 }
                 return pageItems.isEmpty ? nil : pageItems
             })
             if isDeleted {
-                items = filterItems
+                items = filteredItems
                 candidateCollectionView.reloadData()
             }
         }
@@ -171,9 +176,9 @@ extension HomeAppsManager {
             return
         }
         if let lastPage = items.last, lastPage.count < HomeAppsMode.regular.appsPerPage {
-            items[items.count - 1].append(.init(app: app))
+            items[items.count - 1].append(.app(app))
         } else {
-            items.append([.init(app: app)])
+            items.append([.app(app)])
         }
         candidateCollectionView.reloadData()
     }

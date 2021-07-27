@@ -208,8 +208,15 @@ public final class UserDAO: UserDatabaseDAO {
                                                         userInfo: [Self.UserInfoKey.app: users[0].app])
                     }
                     if notifyContact {
-                        NotificationCenter.default.post(onMainThread: Self.contactsDidChangeNotification,
-                                                        object: self)
+                        if users.count == 1 {
+                            let user = UserItem.createUser(from: users[0])
+                            NotificationCenter.default.post(onMainThread: Self.contactsDidChangeNotification,
+                                                            object: self,
+                                                            userInfo: [Self.UserInfoKey.user: user])
+                        } else {
+                            NotificationCenter.default.post(onMainThread: Self.contactsDidChangeNotification,
+                                                            object: self)
+                        }
                     }
                 }
             }

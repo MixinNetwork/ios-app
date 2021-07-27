@@ -3,29 +3,32 @@ import MixinServices
 
 class StickersAlbumPreviewViewController: ResizablePopupViewController {
     
+    @IBOutlet weak var backgroundButton: UIButton!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
     @IBOutlet weak var stickerActionButton: UIButton!
+    
+    @IBOutlet weak var contentView: UIView!
+    
+    @IBOutlet weak var hideContentViewConstraint: NSLayoutConstraint!
+    @IBOutlet weak var showContentViewConstraint: NSLayoutConstraint!
+    @IBOutlet weak var contentViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var titleBarHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var collectionViewHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var stickerActionButtonTopConstraint: NSLayoutConstraint!
-    @IBOutlet weak var stickerActionButtonHeightConstraint: NSLayoutConstraint!
     
     var stickerStoreItem: StickerStoreItem!
     
     private let cellCountPerRow = 3
     private let initCountOfRows = 3
-    private lazy var resizeGestureCoordinator = HomeAppResizeGestureCoordinator(scrollView: collectionView)
-    private lazy var backgroundButton: UIButton = {
-        let button = UIButton()
-        button.backgroundColor = UIColor.black.withAlphaComponent(0)
-        button.addTarget(self, action: #selector(backgroundTappingAction), for: .touchUpInside)
-        return button
-    }()
+    private lazy var resizeRecognizerDelegate = PopupResizeGestureCoordinator(scrollView: resizableScrollView)
+    private var isShowingContentView = false
     
     class func instance() -> StickersAlbumPreviewViewController {
         R.storyboard.chat.stickers_album_preview()!
+    }
+    
+    override var automaticallyAdjustsResizableScrollViewBottomInset: Bool {
+        false
     }
     
     override var resizableScrollView: UIScrollView? {
@@ -34,10 +37,15 @@ class StickersAlbumPreviewViewController: ResizablePopupViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        titleLabel.text = stickerStoreItem.album.name
-        updatePreferredContentSizeHeight(size: size)
+        view.layer.maskedCorners = []
+        view.layer.cornerRadius = 0
+        contentView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        contentView.layer.cornerRadius = 13
+        resizeRecognizer.delegate = resizeRecognizerDelegate
         view.addGestureRecognizer(resizeRecognizer)
-        resizeRecognizer.delegate = resizeGestureCoordinator
+        showContentViewConstraint.priority = .defaultHigh
+        hideContentViewConstraint.priority = .defaultLow
+        titleLabel.text = stickerStoreItem.album.name
     }
     
     override func viewWillLayoutSubviews() {
@@ -46,76 +54,35 @@ class StickersAlbumPreviewViewController: ResizablePopupViewController {
         flowLayout.minimumInteritemSpacing = ((view.bounds.width - cellCount * flowLayout.itemSize.width - flowLayout.sectionInset.horizontal) / (cellCount - 1))
     }
     
-    override func updatePreferredContentSizeHeight(size: ResizablePopupViewController.Size) {
-        guard !isBeingDismissed else {
-            return
-        }
-        let height = preferredContentHeight(forSize: size)
-        collectionViewHeightConstraint.constant = collectionViewHeight(forSize: size)
-        preferredContentSize.height = height
-        view.frame.origin.y = backgroundButton.bounds.height - height
-    }
-    
     override func preferredContentHeight(forSize size: Size) -> CGFloat {
         view.layoutIfNeeded()
         let window = AppDelegate.current.mainWindow
+        let countOfRows: CGFloat
+        switch size {
+        case .expanded, .unavailable:
+            countOfRows = ceil(CGFloat(stickerStoreItem.stickers.count) / CGFloat(cellCountPerRow))
+        case .compressed:
+            countOfRows = CGFloat(initCountOfRows)
+        }
         let maxHeight = window.bounds.height - window.safeAreaInsets.top
-        let collectionViewHeight = collectionViewHeight(forSize: size)
-        let height = 30.0
-            + titleBarHeightConstraint.constant
-            + stickerActionButtonTopConstraint.constant
-            + stickerActionButtonHeightConstraint.constant
+        let collectionViewHeight = countOfRows * (flowLayout.itemSize.height + flowLayout.minimumLineSpacing) - flowLayout.minimumLineSpacing
+        let height = titleBarHeightConstraint.constant
             + collectionViewHeight
             + window.safeAreaInsets.bottom
+            + 102.0
         return min(maxHeight, height)
     }
     
-    override func changeSizeAction(_ recognizer: UIPanGestureRecognizer) {
-        guard size != .unavailable else {
-            return
-        }
-        switch recognizer.state {
-        case .began:
-            resizableScrollView?.isScrollEnabled = false
-            size = size.opposite
-            let animator = makeSizeAnimator(destination: size)
-            animator.pauseAnimation()
-            sizeAnimator = animator
-        case .changed:
-            if let animator = sizeAnimator {
-                let translation = recognizer.translation(in: backgroundButton)
-                var fractionComplete = translation.y / (backgroundButton.bounds.height - preferredContentHeight(forSize: .compressed))
-                if size == .expanded {
-                    fractionComplete *= -1
-                }
-                animator.fractionComplete = fractionComplete
+    override func updatePreferredContentSizeHeight(size: ResizablePopupViewController.Size) {
+        if size == .expanded {
+            UIView.performWithoutAnimation {
+                let diff = preferredContentHeight(forSize: .expanded) - preferredContentHeight(forSize: .compressed)
+                collectionView.frame.size.height += diff
+                collectionView.layoutIfNeeded()
             }
-        case .ended:
-            if let animator = sizeAnimator {
-                let locationAboveBegan = recognizer.translation(in: backgroundButton).y <= 0
-                let isGoingUp = recognizer.velocity(in: backgroundButton).y <= 0
-                let locationUnderBegan = recognizer.translation(in: backgroundButton).y >= 0
-                let isGoingDown = recognizer.velocity(in: backgroundButton).y >= 0
-                let shouldExpand = size == .expanded
-                    && ((locationAboveBegan && isGoingUp) || isGoingUp)
-                let shouldCompress = size == .compressed
-                    && ((locationUnderBegan && isGoingDown) || isGoingDown)
-                let shouldReverse = !shouldExpand && !shouldCompress
-                let completionSize = shouldReverse ? size.opposite : size
-                animator.isReversed = shouldReverse
-                animator.addCompletion { (position) in
-                    self.size = completionSize
-                    self.updatePreferredContentSizeHeight(size: completionSize)
-                    self.setNeedsSizeAppearanceUpdated(size: completionSize)
-                    self.sizeAnimator = nil
-                    recognizer.isEnabled = true
-                }
-                recognizer.isEnabled = false
-                animator.continueAnimation(withTimingParameters: nil, durationFactor: 0)
-            }
-        default:
-            break
         }
+        contentViewHeightConstraint.constant = preferredContentHeight(forSize: size)
+        view.layoutIfNeeded()
     }
     
     @IBAction func dismissAction(_ sender: Any) {
@@ -130,53 +97,38 @@ class StickersAlbumPreviewViewController: ResizablePopupViewController {
 
 extension StickersAlbumPreviewViewController {
     
-    private func collectionViewHeight(forSize size: Size) -> CGFloat {
-        let countOfRows: CGFloat
-        switch size {
-        case .expanded, .unavailable:
-            countOfRows = ceil(CGFloat(stickerStoreItem.stickers.count) / CGFloat(cellCountPerRow))
-        case .compressed:
-            countOfRows = CGFloat(initCountOfRows)
+    func presentAsChild(of parent: UIViewController) {
+        loadViewIfNeeded()
+        parent.addChild(self)
+        parent.view.addSubview(view)
+        view.snp.makeEdgesEqualToSuperview()
+        didMove(toParent: parent)
+        guard !isShowingContentView else {
+            return
         }
-        return countOfRows * (flowLayout.itemSize.height + flowLayout.minimumLineSpacing) - flowLayout.minimumLineSpacing
-    }
-    
-    @objc func backgroundTappingAction() {
-        dismissAsChild(completion: nil)
+        isShowingContentView = true
+        hideContentViewConstraint.priority = .defaultLow
+        showContentViewConstraint.priority = .defaultHigh
+        UIView.animate(withDuration: 0.5) {
+            UIView.setAnimationCurve(.overdamped)
+            self.view.layoutIfNeeded()
+            self.view.backgroundColor = .black.withAlphaComponent(0.4)
+        }
     }
     
     func dismissAsChild(completion: (() -> Void)?) {
-        UIView.animate(withDuration: 0.3, animations: {
-            self.view.frame.origin.y = self.backgroundButton.bounds.height
-            self.backgroundButton.backgroundColor = UIColor.black.withAlphaComponent(0)
-        }) { (finished) in
+        isShowingContentView = false
+        hideContentViewConstraint.priority = .defaultHigh
+        showContentViewConstraint.priority = .defaultLow
+        UIView.animate(withDuration: 0.5) {
+            UIView.setAnimationCurve(.overdamped)
+            self.view.layoutIfNeeded()
+            self.view.backgroundColor = .black.withAlphaComponent(0)
+        } completion: { _ in
             self.willMove(toParent: nil)
             self.view.removeFromSuperview()
             self.removeFromParent()
-            self.backgroundButton.removeFromSuperview()
-            completion?()
         }
-    }
-    
-    func presentAsChild(of parent: UIViewController) {
-        loadViewIfNeeded()
-        backgroundButton.frame = parent.view.bounds
-        backgroundButton.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        
-        parent.addChild(self)
-        parent.view.addSubview(backgroundButton)
-        didMove(toParent: parent)
-        
-        view.frame = CGRect(x: 0,
-                            y: backgroundButton.bounds.height,
-                            width: backgroundButton.bounds.width,
-                            height: backgroundButton.bounds.height)
-        view.autoresizingMask = .flexibleTopMargin
-        backgroundButton.addSubview(view)
-        UIView.animate(withDuration: 0.3, animations: {
-            self.view.frame.origin.y = self.backgroundButton.bounds.height - self.preferredContentSize.height
-            self.backgroundButton.backgroundColor = UIColor.black.withAlphaComponent(0.3)
-        })
     }
     
 }

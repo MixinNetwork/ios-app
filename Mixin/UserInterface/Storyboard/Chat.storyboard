@@ -1153,115 +1153,153 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cFW-ZT-IeW">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rUb-xr-cGy">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Button"/>
+                                <connections>
+                                    <action selector="dismissAction:" destination="WSC-FM-Emt" eventType="touchUpInside" id="eL2-He-mzF"/>
+                                </connections>
+                            </button>
+                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qRN-K4-WGc">
+                                <rect key="frame" x="0.0" y="159" width="375" height="508"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sticker" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tCe-ai-bsh">
-                                        <rect key="frame" x="20" y="24.5" width="56" height="21"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
-                                        </userDefinedRuntimeAttributes>
-                                    </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vM0-0E-bkA">
-                                        <rect key="frame" x="318" y="13" width="44" height="44"/>
+                                    <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cFW-ZT-IeW">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sticker" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tCe-ai-bsh">
+                                                <rect key="frame" x="20" y="24.5" width="56" height="21"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
+                                                </userDefinedRuntimeAttributes>
+                                            </label>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vM0-0E-bkA">
+                                                <rect key="frame" x="318" y="13" width="44" height="44"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="vM0-0E-bkA" secondAttribute="height" multiplier="1:1" id="QUs-gP-zWp"/>
+                                                    <constraint firstAttribute="width" constant="44" id="qKz-8A-ThU"/>
+                                                </constraints>
+                                                <state key="normal" image="ic_dialog_close"/>
+                                                <connections>
+                                                    <action selector="dismissAction:" destination="WSC-FM-Emt" eventType="touchUpInside" id="wSe-Vy-pcB"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" name="background"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" secondItem="vM0-0E-bkA" secondAttribute="height" multiplier="1:1" id="QUs-gP-zWp"/>
-                                            <constraint firstAttribute="width" constant="44" id="qKz-8A-ThU"/>
+                                            <constraint firstAttribute="trailing" secondItem="vM0-0E-bkA" secondAttribute="trailing" constant="13" id="CoA-1g-BGv"/>
+                                            <constraint firstItem="tCe-ai-bsh" firstAttribute="leading" secondItem="cFW-ZT-IeW" secondAttribute="leading" constant="20" id="It7-10-8kP"/>
+                                            <constraint firstItem="tCe-ai-bsh" firstAttribute="centerY" secondItem="cFW-ZT-IeW" secondAttribute="centerY" id="Kqe-bj-m4Z"/>
+                                            <constraint firstItem="tCe-ai-bsh" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="vM0-0E-bkA" secondAttribute="leading" constant="-10" id="gG0-lQ-Gl9"/>
+                                            <constraint firstItem="vM0-0E-bkA" firstAttribute="top" secondItem="cFW-ZT-IeW" secondAttribute="top" constant="13" id="mrX-tq-GAI"/>
+                                            <constraint firstAttribute="height" constant="70" id="ng8-bt-yoC"/>
                                         </constraints>
-                                        <state key="normal" image="ic_dialog_close"/>
+                                    </view>
+                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="ElG-fB-oVo">
+                                        <rect key="frame" x="0.0" y="70" width="375" height="336"/>
+                                        <color key="backgroundColor" name="background"/>
+                                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="12" minimumInteritemSpacing="0.0" id="mcV-fB-1yl">
+                                            <size key="itemSize" width="104" height="104"/>
+                                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                            <inset key="sectionInset" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
+                                        </collectionViewFlowLayout>
+                                        <cells>
+                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="stickers_preview_cell" id="3q6-qY-PvC" customClass="StickerPreviewCell" customModule="Mixin" customModuleProvider="target">
+                                                <rect key="frame" x="20" y="0.0" width="104" height="104"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="hqQ-aZ-MDs">
+                                                    <rect key="frame" x="0.0" y="0.0" width="104" height="104"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                </collectionViewCellContentView>
+                                            </collectionViewCell>
+                                        </cells>
                                         <connections>
-                                            <action selector="dismissAction:" destination="WSC-FM-Emt" eventType="touchUpInside" id="wSe-Vy-pcB"/>
+                                            <outlet property="dataSource" destination="WSC-FM-Emt" id="YPn-Bv-dmu"/>
+                                            <outlet property="delegate" destination="WSC-FM-Emt" id="Qp9-gj-7aw"/>
                                         </connections>
-                                    </button>
+                                    </collectionView>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gGZ-8g-4qx">
+                                        <rect key="frame" x="0.0" y="414" width="375" height="94"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cPh-fr-g6e">
+                                                <rect key="frame" x="124.5" y="25" width="126" height="44"/>
+                                                <color key="backgroundColor" name="theme"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="44" id="DsG-q7-exp"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
+                                                <inset key="contentEdgeInsets" minX="16" minY="0.0" maxX="16" maxY="0.0"/>
+                                                <state key="normal" title="Add Stickers">
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </state>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                        <integer key="value" value="21"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                                <connections>
+                                                    <action selector="stickerButtonAction:" destination="WSC-FM-Emt" eventType="touchUpInside" id="deg-hy-KP1"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" name="background"/>
+                                        <constraints>
+                                            <constraint firstItem="cPh-fr-g6e" firstAttribute="centerX" secondItem="gGZ-8g-4qx" secondAttribute="centerX" id="wcG-uJ-ELN"/>
+                                        </constraints>
+                                    </view>
                                 </subviews>
                                 <color key="backgroundColor" name="background"/>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="vM0-0E-bkA" secondAttribute="trailing" constant="13" id="CoA-1g-BGv"/>
-                                    <constraint firstItem="tCe-ai-bsh" firstAttribute="leading" secondItem="cFW-ZT-IeW" secondAttribute="leading" constant="20" id="It7-10-8kP"/>
-                                    <constraint firstItem="tCe-ai-bsh" firstAttribute="centerY" secondItem="cFW-ZT-IeW" secondAttribute="centerY" id="Kqe-bj-m4Z"/>
-                                    <constraint firstItem="tCe-ai-bsh" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="vM0-0E-bkA" secondAttribute="leading" constant="-10" id="gG0-lQ-Gl9"/>
-                                    <constraint firstItem="vM0-0E-bkA" firstAttribute="top" secondItem="cFW-ZT-IeW" secondAttribute="top" constant="13" id="mrX-tq-GAI"/>
-                                    <constraint firstAttribute="height" constant="70" id="ng8-bt-yoC"/>
+                                    <constraint firstAttribute="trailing" secondItem="gGZ-8g-4qx" secondAttribute="trailing" id="08e-7y-QWx"/>
+                                    <constraint firstItem="cFW-ZT-IeW" firstAttribute="top" secondItem="qRN-K4-WGc" secondAttribute="top" id="56J-2M-Bdo"/>
+                                    <constraint firstItem="cFW-ZT-IeW" firstAttribute="leading" secondItem="qRN-K4-WGc" secondAttribute="leading" id="6h5-yN-z4q"/>
+                                    <constraint firstAttribute="bottom" secondItem="gGZ-8g-4qx" secondAttribute="bottom" id="RnR-WA-dms"/>
+                                    <constraint firstItem="gGZ-8g-4qx" firstAttribute="leading" secondItem="qRN-K4-WGc" secondAttribute="leading" id="cdR-uu-NsM"/>
+                                    <constraint firstItem="ElG-fB-oVo" firstAttribute="top" secondItem="cFW-ZT-IeW" secondAttribute="bottom" id="dQX-oN-r2z"/>
+                                    <constraint firstAttribute="height" constant="508" id="eKW-kX-hnV"/>
+                                    <constraint firstItem="ElG-fB-oVo" firstAttribute="leading" secondItem="qRN-K4-WGc" secondAttribute="leading" id="fvT-aJ-pLh"/>
+                                    <constraint firstAttribute="trailing" secondItem="ElG-fB-oVo" secondAttribute="trailing" id="ii2-Og-OmH"/>
+                                    <constraint firstAttribute="trailing" secondItem="cFW-ZT-IeW" secondAttribute="trailing" id="rje-1E-qm5"/>
+                                    <constraint firstItem="gGZ-8g-4qx" firstAttribute="top" secondItem="ElG-fB-oVo" secondAttribute="bottom" constant="8" symbolic="YES" id="vwr-YZ-HBP"/>
+                                    <constraint firstAttribute="bottom" secondItem="ElG-fB-oVo" secondAttribute="bottom" constant="102" id="zLN-In-rPt"/>
                                 </constraints>
                             </view>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="ElG-fB-oVo">
-                                <rect key="frame" x="0.0" y="70" width="375" height="336"/>
-                                <color key="backgroundColor" name="background"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="336" id="Vta-m0-m30"/>
-                                </constraints>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="12" minimumInteritemSpacing="0.0" id="mcV-fB-1yl">
-                                    <size key="itemSize" width="104" height="104"/>
-                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                    <inset key="sectionInset" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
-                                </collectionViewFlowLayout>
-                                <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="stickers_preview_cell" id="3q6-qY-PvC" customClass="StickerPreviewCell" customModule="Mixin" customModuleProvider="target">
-                                        <rect key="frame" x="20" y="0.0" width="104" height="104"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="hqQ-aZ-MDs">
-                                            <rect key="frame" x="0.0" y="0.0" width="104" height="104"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                        </collectionViewCellContentView>
-                                    </collectionViewCell>
-                                </cells>
-                                <connections>
-                                    <outlet property="dataSource" destination="WSC-FM-Emt" id="YPn-Bv-dmu"/>
-                                    <outlet property="delegate" destination="WSC-FM-Emt" id="Qp9-gj-7aw"/>
-                                </connections>
-                            </collectionView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cPh-fr-g6e">
-                                <rect key="frame" x="124.5" y="435" width="126" height="44"/>
-                                <color key="backgroundColor" name="theme"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="DsG-q7-exp"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
-                                <inset key="contentEdgeInsets" minX="16" minY="0.0" maxX="16" maxY="0.0"/>
-                                <state key="normal" title="Add Stickers">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                        <integer key="value" value="21"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                                <connections>
-                                    <action selector="stickerButtonAction:" destination="WSC-FM-Emt" eventType="touchUpInside" id="deg-hy-KP1"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="gS8-f5-9U8"/>
-                        <color key="backgroundColor" name="background"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="ElG-fB-oVo" firstAttribute="leading" secondItem="4i9-uW-gaU" secondAttribute="leading" id="7gB-Du-ImK"/>
-                            <constraint firstItem="cFW-ZT-IeW" firstAttribute="trailing" secondItem="4i9-uW-gaU" secondAttribute="trailing" id="FOf-BU-av3"/>
-                            <constraint firstItem="ElG-fB-oVo" firstAttribute="top" secondItem="cFW-ZT-IeW" secondAttribute="bottom" id="KqR-ig-09h"/>
-                            <constraint firstItem="cPh-fr-g6e" firstAttribute="top" secondItem="ElG-fB-oVo" secondAttribute="bottom" constant="29" id="ZTY-vZ-rCd"/>
-                            <constraint firstItem="cPh-fr-g6e" firstAttribute="centerX" secondItem="gS8-f5-9U8" secondAttribute="centerX" id="a3v-81-0SH"/>
-                            <constraint firstAttribute="trailing" secondItem="ElG-fB-oVo" secondAttribute="trailing" id="cBK-dD-EeF"/>
-                            <constraint firstItem="cFW-ZT-IeW" firstAttribute="leading" secondItem="4i9-uW-gaU" secondAttribute="leading" id="gPR-a8-Jte"/>
-                            <constraint firstItem="cFW-ZT-IeW" firstAttribute="top" secondItem="4i9-uW-gaU" secondAttribute="top" id="wD1-Hr-JPq"/>
+                            <constraint firstAttribute="bottom" secondItem="qRN-K4-WGc" secondAttribute="bottom" priority="750" id="CpX-S6-KRi"/>
+                            <constraint firstItem="qRN-K4-WGc" firstAttribute="top" secondItem="4i9-uW-gaU" secondAttribute="bottom" priority="250" id="I1N-Mi-jf4"/>
+                            <constraint firstAttribute="trailing" secondItem="qRN-K4-WGc" secondAttribute="trailing" id="S6l-XT-J9A"/>
+                            <constraint firstAttribute="bottom" secondItem="rUb-xr-cGy" secondAttribute="bottom" id="Vvk-ve-0Lt"/>
+                            <constraint firstItem="rUb-xr-cGy" firstAttribute="top" secondItem="4i9-uW-gaU" secondAttribute="top" id="Zwo-wh-nzb"/>
+                            <constraint firstItem="rUb-xr-cGy" firstAttribute="leading" secondItem="4i9-uW-gaU" secondAttribute="leading" id="f2m-4K-gqP"/>
+                            <constraint firstAttribute="trailing" secondItem="rUb-xr-cGy" secondAttribute="trailing" id="h0g-NB-EHD"/>
+                            <constraint firstItem="gS8-f5-9U8" firstAttribute="bottom" secondItem="cPh-fr-g6e" secondAttribute="bottom" constant="25" id="qDw-pp-CaJ"/>
+                            <constraint firstItem="qRN-K4-WGc" firstAttribute="leading" secondItem="4i9-uW-gaU" secondAttribute="leading" id="qc7-PT-a0k"/>
+                            <constraint firstItem="gS8-f5-9U8" firstAttribute="bottom" secondItem="qRN-K4-WGc" secondAttribute="bottom" id="v7k-vN-9Zc"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="backgroundButton" destination="rUb-xr-cGy" id="1Jv-25-UnN"/>
                         <outlet property="collectionView" destination="ElG-fB-oVo" id="QeB-qo-1qI"/>
-                        <outlet property="collectionViewHeightConstraint" destination="Vta-m0-m30" id="q7o-fN-h1j"/>
+                        <outlet property="contentView" destination="qRN-K4-WGc" id="HwA-PG-QEB"/>
+                        <outlet property="contentViewHeightConstraint" destination="eKW-kX-hnV" id="noF-Jp-hBn"/>
                         <outlet property="flowLayout" destination="mcV-fB-1yl" id="GyG-4a-pnb"/>
+                        <outlet property="hideContentViewConstraint" destination="I1N-Mi-jf4" id="2hV-6j-koc"/>
+                        <outlet property="showContentViewConstraint" destination="CpX-S6-KRi" id="pUD-Ph-GTw"/>
                         <outlet property="stickerActionButton" destination="cPh-fr-g6e" id="zZ1-VI-qyU"/>
-                        <outlet property="stickerActionButtonHeightConstraint" destination="DsG-q7-exp" id="Ulu-MT-BuE"/>
-                        <outlet property="stickerActionButtonTopConstraint" destination="ZTY-vZ-rCd" id="OCl-8f-yRf"/>
-                        <outlet property="titleBarHeightConstraint" destination="ng8-bt-yoC" id="W8Z-m3-WIN"/>
+                        <outlet property="titleBarHeightConstraint" destination="ng8-bt-yoC" id="8aM-ZY-a1g"/>
                         <outlet property="titleLabel" destination="tCe-ai-bsh" id="ZPQ-aP-DbZ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gFx-xw-qVQ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2329" y="2696"/>
+            <point key="canvasLocation" x="2328.8000000000002" y="2695.5022488755626"/>
         </scene>
         <!--Sticker Preview View Controller-->
         <scene sceneID="S7e-Ql-1cl">
@@ -2784,7 +2822,7 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_input">
-            <color red="0.96100002527236938" green="0.96899998188018799" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_secondary">
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

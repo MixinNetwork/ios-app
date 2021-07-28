@@ -3,7 +3,13 @@ import MixinServices
 
 class HomeAppsStorage {
     
-    private let queue = DispatchQueue(label: "one.mixin.messenger.HomeAppsItemManager")
+    private enum Error: Swift.Error {
+        case missingApps
+    }
+    
+    private static let usersKey = CodingUserInfoKey(rawValue: "users")!
+    
+    private let queue = DispatchQueue(label: "one.mixin.messenger.HomeAppsStorage")
     
     func load(completion: @escaping (_ pinnedItems: [HomeApp], _ candidateItems: [[HomeAppItem]]) -> Void) {
         queue.async {
@@ -11,7 +17,10 @@ class HomeAppsStorage {
                 .prefix(HomeAppsMode.pinned.appsPerRow)
                 .compactMap(HomeApp.init(id:))
             let candidate: [[HomeAppItem]]
-            if let json = AppGroupUserDefaults.User.homeAppsFolder, let wrappers = try? JSONDecoder.default.decode([HomeAppItemsWrapper].self, from: json) {
+            let decoder = JSONDecoder()
+            decoder.userInfo = [HomeAppsStorage.usersKey: UserDAO.shared.getAppUsers()]
+            if let json = AppGroupUserDefaults.User.homeAppsFolder,
+               let wrappers = try? decoder.decode([HomeAppItemsWrapper].self, from: json) {
                 var items = self.candidateItems(with: wrappers)
                 var existedIds = Set(pinned.map(\.id))
                 for item in items.flatMap({ $0 }) {
@@ -158,6 +167,9 @@ extension HomeAppsStorage {
         }
         
         init(from decoder: Decoder) throws {
+            guard let users = decoder.userInfo[HomeAppsStorage.usersKey] as? [User] else {
+                throw Error.missingApps
+            }
             var container = try decoder.unkeyedContainer()
             var items: [HomeAppItem] = []
             while !container.isAtEnd {
@@ -170,10 +182,14 @@ extension HomeAppsStorage {
                     guard let id = try? nestedContainer.decode(String.self, forKey: .value) else {
                         continue
                     }
-                    guard let app = HomeApp(id: id) else {
+                    if let app = EmbeddedApp.all.first(where: { $0.id == id }) {
+                        items.append(.app(.embedded(app)))
+                    } else if var user = users.first(where: { $0.appId == id }) {
+                        user.app = AppDAO.shared.getApp(appId: id)
+                        items.append(.app(.external(user)))
+                    } else {
                         continue
                     }
-                    items.append(.app(app))
                 case .folder:
                     guard let folder = try? nestedContainer.decode(HomeAppFolder.self, forKey: .value) else {
                         continue

@@ -296,9 +296,7 @@ public class ReceiveMessageService: MixinService {
                 updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
                 return
             }
-            if let updatedAt = appCard.updatedAt {
-                syncApp(appId: appId, updatedAt: updatedAt)
-            }
+            syncApp(appId: appId, updatedAt: appCard.updatedAt)
         }
         _ = syncUser(userId: data.getSenderId())
 
@@ -307,14 +305,13 @@ public class ReceiveMessageService: MixinService {
         updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
     }
 
-    private func syncApp(appId: String, updatedAt: String) {
-        guard !updatedAt.isEmpty && !appId.isEmpty else {
+    private func syncApp(appId: String, updatedAt: String?) {
+        guard !appId.isEmpty else {
             return
         }
         guard AppDAO.shared.getApp(appId: appId)?.updatedAt != updatedAt else {
             return
         }
-
         if case let .success(response) = UserSessionAPI.showUser(userId: appId) {
             UserDAO.shared.updateUsers(users: [response], sendNotificationAfterFinished: false)
         } else {

@@ -52,11 +52,19 @@ extension SendMessageService {
                 if isSignalMessage, category.hasPrefix("PLAIN_") {
                     let range = category.startIndex...category.index(category.startIndex, offsetBy: 5)
                     child.category.replaceSubrange(range, with: "SIGNAL_")
-                    child.mediaCreatedAt = nil // Force attachement to re-upload
+                    if MessageCategory.allMediaCategoriesString.contains(child.category) {
+                        // Force the attachment to re-upload
+                        child.mediaCreatedAt = nil
+                        child.content = nil
+                    }
                 } else if !isSignalMessage, category.hasPrefix("SIGNAL_") {
                     let range = category.startIndex...category.index(category.startIndex, offsetBy: 6)
                     child.category.replaceSubrange(range, with: "PLAIN_")
-                    child.mediaCreatedAt = nil // Force attachement to re-upload
+                    if MessageCategory.allMediaCategoriesString.contains(child.category) {
+                        // Force the attachment to re-upload
+                        child.mediaCreatedAt = nil
+                        child.content = nil
+                    }
                 }
             }
         }

@@ -184,8 +184,7 @@ extension HomeAppsStorage {
                     }
                     if let app = EmbeddedApp.all.first(where: { $0.id == id }) {
                         items.append(.app(.embedded(app)))
-                    } else if var user = users.first(where: { $0.appId == id }) {
-                        user.app = AppDAO.shared.getApp(appId: id)
+                    } else if let user = users.first(where: { $0.appId == id }) {
                         items.append(.app(.external(user)))
                     } else {
                         continue

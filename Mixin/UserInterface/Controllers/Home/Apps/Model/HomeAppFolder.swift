@@ -36,8 +36,6 @@ extension HomeAppFolder: Codable {
         let userMap = UserDAO.shared.getUsers(withAppIds: ids.flatMap({ $0 }))
             .reduce(into: [String: User]()) { result, user in
                 if let appId = user.appId {
-                    var user = user
-                    user.app = AppDAO.shared.getApp(appId: appId)
                     result[appId] = user
                 }
             }

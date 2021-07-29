@@ -19,19 +19,9 @@ class HomeAppsStorage {
             let candidate: [[HomeAppItem]]
             let decoder = JSONDecoder()
             decoder.userInfo = [HomeAppsStorage.usersKey: UserDAO.shared.getAppUsers()]
-            if let json = AppGroupUserDefaults.User.homeAppsFolder,
-               let wrappers = try? decoder.decode([HomeAppItemsWrapper].self, from: json) {
-                var items = self.candidateItems(with: wrappers)
+            if let json = AppGroupUserDefaults.User.homeAppsFolder, let coders = try? decoder.decode([HomeAppItemsCoder].self, from: json) {
                 var existedIds = Set(pinned.map(\.id))
-                for item in items.flatMap({ $0 }) {
-                    switch item {
-                    case let .app(app):
-                        existedIds.insert(app.id)
-                    case let .folder(folder):
-                        let ids = folder.pages.flatMap { $0 }.map(\.id)
-                        existedIds.formUnion(ids)
-                    }
-                }
+                var items = self.candidateItems(with: coders, existedIds: &existedIds)
                 let newApps = UserDAO.shared.getAppUsersAppId()
                     .filter { !existedIds.contains($0) }
                     .compactMap { HomeApp(id: $0) }
@@ -76,8 +66,8 @@ class HomeAppsStorage {
     
     func save(candidateItems: [[HomeAppItem]]) {
         queue.async {
-            let candidateWrappers = candidateItems.map(HomeAppItemsWrapper.init(items:))
-            AppGroupUserDefaults.User.homeAppsFolder = try? JSONEncoder.default.encode(candidateWrappers)
+            let candidateCoders = candidateItems.map(HomeAppItemsCoder.init(items:))
+            AppGroupUserDefaults.User.homeAppsFolder = try? JSONEncoder.default.encode(candidateCoders)
         }
     }
     
@@ -99,14 +89,35 @@ extension HomeAppsStorage {
         return allCandidates.slices(ofSize: HomeAppsMode.regular.appsPerPage)
     }
     
-    private func candidateItems(with wrappers: [HomeAppItemsWrapper]) -> [[HomeAppItem]] {
+    private func candidateItems(with coders: [HomeAppItemsCoder], existedIds: inout Set<String>) -> [[HomeAppItem]] {
         var needsSave = false
-        let candidateItems = wrappers.compactMap { wrapper -> [HomeAppItem]? in
-            guard !wrapper.items.isEmpty else {
+        let candidateItems = coders.compactMap { coder -> [HomeAppItem]? in
+            var items = coder.items.compactMap { item -> HomeAppItem? in
+                switch item {
+                case .app(let app):
+                    if !existedIds.insert(app.id).inserted {
+                        Logger.write(log: "[HomeAppsStorage] duplicate app...appId:\(app.id)")
+                        return nil
+                    }
+                    return item
+                case .folder(let folder):
+                    let pages = folder.pages.compactMap { page -> [HomeApp]? in
+                        let pageApps = page.compactMap { app -> HomeApp? in
+                            if !existedIds.insert(app.id).inserted {
+                                Logger.write(log: "[HomeAppsStorage] duplicate app in folder...appId:\(app.id)")
+                                return nil
+                            }
+                            return app
+                        }
+                        return pageApps.isEmpty ? nil : pageApps
+                    }
+                    return pages.isEmpty ? nil : .folder(.init(name: folder.name, pages: pages))
+                }
+            }
+            guard !items.isEmpty else {
                 needsSave = true
                 return nil
             }
-            var items = wrapper.items
             if items.count > HomeAppsMode.regular.appsPerPage {
                 needsSave = true
                 let folderName: String
@@ -150,7 +161,7 @@ extension HomeAppsStorage {
 
 extension HomeAppsStorage {
     
-    private struct HomeAppItemsWrapper: Codable {
+    private struct HomeAppItemsCoder: Codable {
         
         enum ItemType: String, Codable {
             case app, folder

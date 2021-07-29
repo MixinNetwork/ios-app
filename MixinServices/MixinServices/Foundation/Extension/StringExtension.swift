@@ -99,14 +99,7 @@ public extension String {
         }
         return String(suffix(from: index(suffixIndex, offsetBy: 1)))
     }
-
-    func pathExtension() -> String? {
-        guard let idx = self.lastIndex(of: ".") else {
-            return nil
-        }
-        return String(self[idx..<endIndex])
-    }
-
+    
     func toUTCDate() -> Date {
         return DateFormatter.iso8601Full.date(from: self) ?? Date()
     }

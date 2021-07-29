@@ -1,4 +1,5 @@
 import Foundation
+import MixinServices
 
 final class HomeAppFolder {
     
@@ -32,7 +33,24 @@ extension HomeAppFolder: Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let name = try container.decode(String.self, forKey: .name)
         let ids = try container.decode([[String]].self, forKey: .id)
-        let pages = ids.map { $0.compactMap(HomeApp.init(id:)) }
+        let userMap = UserDAO.shared.getUsers(withAppIds: ids.flatMap({ $0 }))
+            .reduce(into: [String: User]()) { result, user in
+                if let appId = user.appId {
+                    result[appId] = user
+                }
+            }
+        let pages = ids.compactMap { pageIds -> [HomeApp]? in
+            let apps = pageIds.compactMap { id -> HomeApp? in
+                if let user = userMap[id] {
+                    return .external(user)
+                } else if let app = EmbeddedApp.all.first(where: { $0.id == id }) {
+                    return .embedded(app)
+                } else {
+                    return nil
+                }
+            }
+            return apps.isEmpty ? nil : apps
+        }
         self.init(name: name, pages: pages)
     }
     

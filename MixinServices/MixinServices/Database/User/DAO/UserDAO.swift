@@ -96,6 +96,21 @@ public final class UserDAO: UserDatabaseDAO {
         return ids.compactMap { userMap[$0] }
     }
     
+    public func getUsers(withAppIds ids: [String]) -> [User] {
+        guard ids.count > 0 else {
+            return []
+        }
+        let keys = ids.map { _ in "?" }.joined(separator: ",")
+        let sql = """
+            SELECT u.*
+            FROM apps a, users u
+            WHERE u.app_id in (\(keys)) AND a.app_id = u.app_id AND u.relationship = 'FRIEND'
+        """
+        let users: [User] = db.select(with: sql, arguments: StatementArguments(ids))
+        let userMap = users.reduce(into: [String: User]()) { $0[$1.userId] = $1 }
+        return ids.compactMap { userMap[$0] }
+    }
+    
     public func getAppUsers(inConversationOf conversationId: String) -> [User] {
         let sql = """
         SELECT u.user_id, u.full_name, u.biography, u.identity_number, u.avatar_url,
@@ -208,8 +223,15 @@ public final class UserDAO: UserDatabaseDAO {
                                                         userInfo: [Self.UserInfoKey.app: users[0].app])
                     }
                     if notifyContact {
-                        NotificationCenter.default.post(onMainThread: Self.contactsDidChangeNotification,
-                                                        object: self)
+                        if users.count == 1 {
+                            let user = UserItem.createUser(from: users[0])
+                            NotificationCenter.default.post(onMainThread: Self.contactsDidChangeNotification,
+                                                            object: self,
+                                                            userInfo: [Self.UserInfoKey.user: user])
+                        } else {
+                            NotificationCenter.default.post(onMainThread: Self.contactsDidChangeNotification,
+                                                            object: self)
+                        }
                     }
                 }
             }

@@ -72,7 +72,7 @@ class HomeAppsManager: NSObject {
     weak var folderRemoveTimer: Timer?
     
     private let tapRecognizer = UITapGestureRecognizer()
-        
+    
     init(
         viewController: UIViewController,
         candidateCollectionView: UICollectionView,
@@ -106,6 +106,7 @@ class HomeAppsManager: NSObject {
         tapRecognizer.addTarget(self, action: #selector(handleTapGesture(gestureRecognizer:)))
         self.viewController.view.addGestureRecognizer(tapRecognizer)
         NotificationCenter.default.addObserver(self, selector: #selector(leaveEditingMode), name: UIApplication.willResignActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(contactsDidChange(_:)), name: UserDAO.contactsDidChangeNotification, object: nil)
     }
     
     func reloadData(pinnedItems: [HomeApp], candidateItems: [[HomeAppItem]]) {
@@ -118,6 +119,69 @@ class HomeAppsManager: NSObject {
 }
 
 extension HomeAppsManager {
+    
+    @objc func contactsDidChange(_ notification: Notification) {
+        guard let appId = (notification.userInfo?[UserDAO.UserInfoKey.user] as? UserItem)?.appId else {
+            return
+        }
+        var isDeleted = false
+        if let index = pinnedItems.firstIndex(where: { $0.id == appId }) {
+            pinnedItems.remove(at: index)
+            pinnedCollectionView?.reloadData()
+            isDeleted = true
+        } else {
+            let filteredItems = items.compactMap({ page -> [HomeAppItem]? in
+                guard !isDeleted else {
+                    return page
+                }
+                let pageItems = page.compactMap { appItem -> HomeAppItem? in
+                    guard !isDeleted else {
+                        return appItem
+                    }
+                    switch appItem {
+                    case .app(let app):
+                        guard app.id != appId else {
+                            isDeleted = true
+                            return nil
+                        }
+                        return appItem
+                    case .folder(let folder):
+                        let pages = folder.pages.compactMap { page -> [HomeApp]? in
+                            guard !isDeleted else {
+                                return page
+                            }
+                            let filteredPage = page.filter { $0.id != appId }
+                            if filteredPage.count != page.count {
+                                isDeleted = true
+                            }
+                            return filteredPage.isEmpty ? nil : filteredPage
+                        }
+                        if pages.isEmpty {
+                            return nil
+                        } else if pages.reduce(0, { $0 + $1.count }) == 1, let app = pages.first?.first {
+                            return .app(app)
+                        } else {
+                            return .folder(HomeAppFolder(name: folder.name, pages: pages))
+                        }
+                    }
+                }
+                return pageItems.isEmpty ? nil : pageItems
+            })
+            if isDeleted {
+                items = filteredItems
+                candidateCollectionView.reloadData()
+            }
+        }
+        guard !isDeleted, let app = HomeApp(id: appId) else {
+            return
+        }
+        if let lastPage = items.last, lastPage.count < HomeAppsMode.regular.appsPerPage {
+            items[items.count - 1].append(.app(app))
+        } else {
+            items.append([.app(app)])
+        }
+        candidateCollectionView.reloadData()
+    }
     
     @objc func handleTapGesture(gestureRecognizer: UITapGestureRecognizer) {
         guard isEditing else {

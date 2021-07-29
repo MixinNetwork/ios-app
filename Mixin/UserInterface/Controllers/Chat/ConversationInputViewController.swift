@@ -44,6 +44,10 @@ class ConversationInputViewController: UIViewController {
     
     var detectsMentionToken = false
     
+    override var canBecomeFirstResponder: Bool {
+        true
+    }
+    
     var minimizedHeight: CGFloat {
         return quotePreviewWrapperHeightConstraint.constant
             + inputBarView.frame.height
@@ -70,7 +74,7 @@ class ConversationInputViewController: UIViewController {
         return customInputViewController is ConversationInputInteractiveResizableViewController
     }
     
-    private let alwaysAddInteractionToSendButton = false
+    private let alwaysUsesFallbackSilentSendMenu = false
     private let interactiveDismissResponder = InteractiveDismissResponder(height: 50)
     private let maxInputRow: Int = {
         if ScreenHeight.current <= .short {
@@ -175,13 +179,11 @@ class ConversationInputViewController: UIViewController {
         textView.inputAccessoryView = interactiveDismissResponder
         textView.textContainerInset = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
         textView.delegate = self
-        if #available(iOS 13.0, *) {
-            if #available(iOS 14.0, *), !alwaysAddInteractionToSendButton {
-                sendButton.menu = UIMenu(title: "", image: nil, identifier: nil, options: [], children: [sendSilentNotificationAction])
-            } else {
-                let interaction = UIContextMenuInteraction(delegate: self)
-                sendButton.addInteraction(interaction)
-            }
+        if #available(iOS 14.0, *), !alwaysUsesFallbackSilentSendMenu {
+            sendButton.menu = UIMenu(title: "", image: nil, identifier: nil, options: [], children: [sendSilentNotificationAction])
+        } else {
+            let recognizer = UILongPressGestureRecognizer(target: self, action: #selector(showSilentSendMenu(_:)))
+            sendButton.addGestureRecognizer(recognizer)
         }
         lastSafeAreaInsetsBottom = view.safeAreaInsets.bottom
         setPreferredContentHeight(minimizedHeight, animated: false)
@@ -337,21 +339,6 @@ class ConversationInputViewController: UIViewController {
     
     @IBAction func sendTextMessageAction(_ sender: Any) {
         sendTextMessage(silentNotification: false)
-    }
-    
-    private func sendTextMessage(silentNotification: Bool) {
-        textView.unmarkText()
-        guard !trimmedMessageDraft.isEmpty else {
-            return
-        }
-        composer.sendMessage(type: .SIGNAL_TEXT,
-                             quote: quote?.message,
-                             value: trimmedMessageDraft,
-                             silentNotification: silentNotification)
-        mentionRanges.removeAll()
-        textView.text = ""
-        textViewDidChange(textView)
-        quote = nil
     }
     
     // MARK: - Interface
@@ -654,6 +641,42 @@ extension ConversationInputViewController {
         }
     }
     
+    @objc private func menuControllerDidHideMenu(_ notification: Notification) {
+        UIMenuController.shared.menuItems = nil
+        NotificationCenter.default.removeObserver(self,
+                                                  name: UIMenuController.didHideMenuNotification,
+                                                  object: nil)
+        if textView.overrideNext == self {
+            textView.overrideNext = nil
+        }
+    }
+    
+    @objc private func showSilentSendMenu(_ recognizer: UIGestureRecognizer) {
+        guard recognizer.state == .began else {
+            return
+        }
+        if textView.isFirstResponder {
+            textView.overrideNext = self
+        } else {
+            becomeFirstResponder()
+        }
+        UIMenuController.shared.menuItems = [
+            UIMenuItem(title: R.string.localizable.chat_send_silent_notification(),
+                       action: #selector(sendTextMessageSilently))
+        ]
+        UIMenuController.shared.setTargetRect(sendButton.bounds, in: sendButton)
+        UIMenuController.shared.setMenuVisible(true, animated: true)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(menuControllerDidHideMenu(_:)),
+                                               name: UIMenuController.didHideMenuNotification,
+                                               object: nil)
+        AppDelegate.current.mainWindow.addDismissMenuResponder()
+    }
+    
+    @objc private func sendTextMessageSilently() {
+        sendTextMessage(silentNotification: true)
+    }
+    
 }
 
 // MARK: - Embedded class
@@ -833,56 +856,8 @@ extension ConversationInputViewController: UITextViewDelegate {
     
 }
 
-// MARK: - UIContextMenuInteractionDelegate
-@available(iOS 13.0, *)
-extension ConversationInputViewController: UIContextMenuInteractionDelegate {
-    
-    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
-        let children = [sendSilentNotificationAction]
-        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
-            UIMenu(title: "", image: nil, children: children)
-        }
-    }
-    
-    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, previewForHighlightingMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
-        sendButtonPreview
-    }
-    
-    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, previewForDismissingMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
-        sendButtonPreview
-    }
-    
-    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, willDisplayMenuFor configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionAnimating?) {
-        textView.unmarkText()
-    }
-    
-}
-
 // MARK: - Private works
 extension ConversationInputViewController {
-    
-    @available(iOS 13.0, *)
-    private var sendButtonPreview: UITargetedPreview {
-        let parameters = UIPreviewParameters()
-        parameters.visiblePath = {
-            let path = UIBezierPath()
-            path.move(to: CGPoint(x: 27.34, y: 35.86))
-            path.addLine(to: CGPoint(x: 33.24, y: 20.5))
-            path.addCurve(to: CGPoint(x: 33.24, y: 18.17), controlPoint1: CGPoint(x: 33.53, y: 19.75), controlPoint2: CGPoint(x: 33.53, y: 18.92))
-            path.addCurve(to: CGPoint(x: 29.04, y: 16.3), controlPoint1: CGPoint(x: 32.6, y: 16.49), controlPoint2: CGPoint(x: 30.72, y: 15.66))
-            path.addLine(to: CGPoint(x: 13.68, y: 22.2))
-            path.addCurve(to: CGPoint(x: 11.86, y: 23.96), controlPoint1: CGPoint(x: 12.86, y: 22.52), controlPoint2: CGPoint(x: 12.21, y: 23.15))
-            path.addCurve(to: CGPoint(x: 13.57, y: 28.22), controlPoint1: CGPoint(x: 11.15, y: 25.61), controlPoint2: CGPoint(x: 11.92, y: 27.52))
-            path.addLine(to: CGPoint(x: 18.59, y: 30.38))
-            path.addCurve(to: CGPoint(x: 19.16, y: 30.95), controlPoint1: CGPoint(x: 18.85, y: 30.49), controlPoint2: CGPoint(x: 19.05, y: 30.69))
-            path.addLine(to: CGPoint(x: 21.32, y: 35.97))
-            path.addCurve(to: CGPoint(x: 23.14, y: 37.73), controlPoint1: CGPoint(x: 21.66, y: 36.78), controlPoint2: CGPoint(x: 22.32, y: 37.41))
-            path.addCurve(to: CGPoint(x: 27.34, y: 35.86), controlPoint1: CGPoint(x: 24.81, y: 38.37), controlPoint2: CGPoint(x: 26.69, y: 37.53))
-            path.close()
-            return path
-        }()
-        return UITargetedPreview(view: sendButton, parameters: parameters)
-    }
     
     private func setPhotosButtonSelected(_ selected: Bool) {
         photosButton.isSelected = selected
@@ -1110,6 +1085,21 @@ extension ConversationInputViewController {
         } else {
             conversationViewController.inputTextViewDidInputMentionCandidate(nil)
         }
+    }
+    
+    private func sendTextMessage(silentNotification: Bool) {
+        textView.unmarkText()
+        guard !trimmedMessageDraft.isEmpty else {
+            return
+        }
+        composer.sendMessage(type: .SIGNAL_TEXT,
+                             quote: quote?.message,
+                             value: trimmedMessageDraft,
+                             silentNotification: silentNotification)
+        mentionRanges.removeAll()
+        textView.text = ""
+        textViewDidChange(textView)
+        quote = nil
     }
     
 }

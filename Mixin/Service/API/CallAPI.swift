@@ -6,8 +6,8 @@ final class CallAPI: MixinAPI {
         static let turn = "/turn"
     }
     
-    static func turn(completion: @escaping (MixinAPI.Result<[TurnServer]>) -> Void) {
-        request(method: .get, path: Path.turn, completion: completion)
+    static func turn(queue: DispatchQueue, completion: @escaping (MixinAPI.Result<[TurnServer]>) -> Void) {
+        request(method: .get, path: Path.turn, queue: queue, completion: completion)
     }
     
     static func turn() -> MixinAPI.Result<[TurnServer]> {

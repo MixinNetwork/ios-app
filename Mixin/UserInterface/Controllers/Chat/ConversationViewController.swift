@@ -103,6 +103,7 @@ class ConversationViewController: UIViewController {
     private var myInvitation: Message?
     private var isShowingKeyboard = false
     private var groupCallIndicatorCenterYConstraint: NSLayoutConstraint!
+    private var makeInputTextViewFirstResponderOnAppear = false
     
     private(set) lazy var imagePickerController = ImagePickerController(initialCameraPosition: .rear, cropImageAfterPicked: false, parent: self, delegate: self)
     
@@ -365,6 +366,10 @@ class ConversationViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         isAppearanceAnimating = true
+        if makeInputTextViewFirstResponderOnAppear {
+            conversationInputViewController.textView.becomeFirstResponder()
+            makeInputTextViewFirstResponderOnAppear = false
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -377,6 +382,9 @@ class ConversationViewController: UIViewController {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
+        if conversationInputViewController.textView.isFirstResponder {
+            makeInputTextViewFirstResponderOnAppear = true
+        }
         super.viewWillDisappear(animated)
         dismissMenu(animated: true)
         isAppearanceAnimating = true
@@ -490,7 +498,7 @@ class ConversationViewController: UIViewController {
                 .map({ $0.message })
                 .sorted(by: { $0.createdAt < $1.createdAt })
             let containsTranscriptMessage = messages.contains {
-                $0.category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue
+                $0.category.hasSuffix("_TRANSCRIPT")
             }
             if messages.count == 1 || containsTranscriptMessage {
                 let vc = MessageReceiverViewController.instance(content: .messages(messages))
@@ -502,7 +510,7 @@ class ConversationViewController: UIViewController {
                     self.navigationController?.pushViewController(vc, animated: true)
                 }))
                 alert.addAction(UIAlertAction(title: R.string.localizable.chat_forward_combined(), style: .default, handler: { (_) in
-                    let vc = MessageReceiverViewController.instance(content: .transcript(messages), hideApps: true)
+                    let vc = MessageReceiverViewController.instance(content: .transcript(messages))
                     self.navigationController?.pushViewController(vc, animated: true)
                 }))
                 alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
@@ -831,7 +839,7 @@ class ConversationViewController: UIViewController {
                 let vc = LocationPreviewViewController(location: location)
                 let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.chat_menu_location())
                 navigationController?.pushViewController(container, animated: true)
-            } else if message.category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue {
+            } else if message.category.hasSuffix("_TRANSCRIPT") {
                 let vc = TranscriptPreviewViewController(transcriptMessage: message)
                 vc.presentAsChild(of: self, completion: nil)
             } else {
@@ -1751,6 +1759,11 @@ extension ConversationViewController {
             }
         } else if category.hasSuffix("_LOCATION") {
             actions = [.forward, .reply, .delete]
+        } else if category.hasSuffix("_TRANSCRIPT") {
+            actions = [.reply, .delete]
+            if message.mediaStatus == MediaStatus.DONE.rawValue {
+                actions.insert(.forward, at: 0)
+            }
         } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
             actions = [.delete]
         } else if category == MessageCategory.APP_CARD.rawValue {
@@ -1759,11 +1772,6 @@ extension ConversationViewController {
             actions = [.delete]
         } else if category == MessageCategory.MESSAGE_RECALL.rawValue {
             actions = [.delete]
-        } else if category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue {
-            actions = [.reply, .delete]
-            if message.mediaStatus == MediaStatus.DONE.rawValue {
-                actions.insert(.forward, at: 0)
-            }
         } else {
             actions = []
         }

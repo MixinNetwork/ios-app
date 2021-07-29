@@ -51,6 +51,8 @@
 "action_cancel_float" = "关闭浮窗";
 "action_remove_all" = "全部删除";
 "action_close" = "关闭";
+"action_change_settings" = "更改设置";
+"action_open" = "打开";
 "menu_delete" = "删除";
 "menu_edit" = "编辑";
 "menu_report" = "上报";
@@ -94,6 +96,7 @@
 "toast_authorized" = "已授权";
 "toast_changed" = "已修改";
 "toast_blocked" = "已屏蔽";
+"toast_unable_to_share" = "无法分享此内容";
 "permission_denied_photo_library" = "Mixin 需要相册权限，请点击'设置'打开系统授权。";
 "permission_denied_network" = "Mixin 需要无线数据权限，请点击'设置'打开系统授权。";
 "biometry_suggestion" = "建议使用%@支付";
@@ -358,6 +361,9 @@
 "chat_transcript_forward_invalid_media_status" = "请下载全部附件后转发";
 "chat_transcript_forward_invalid_app_card_not_shareable" = "该卡片已被设置为不允许转发";
 "chat_transcript_forward_invalid_link_not_shareable" = "该链接已被设置为不允许分享";
+"chat_pick_from_library" = "打开相册";
+"chat_manage_photo_auth" = "更改设置";
+"chat_photo_select_more" = "选择更多照片";
 
 // Web
 "web_suspicious_link" = "可疑链接";
@@ -373,8 +379,6 @@
 "call_encryption_title" = "此通话使用端对端加密进行保护";
 "call_encryption_description" = "除了参与通话的人，其他人包含Mixin在内都无法听取或查看。";
 "call_hint_on_another_call" = "正在通话中，请挂断当前电话后重试";
-"call_p2p_title_with_status" = "语音通话（%@）";
-"call_group_title_with_status" = "群组语音（%@）";
 "call_status_outgoing" = "正在呼叫...";
 "call_status_incoming" = "语音通话来电";
 "call_status_connecting" = "正在连接";
@@ -401,6 +405,7 @@
 "group_call_tap_to_join" = "点击加入";
 "group_call_selections_reach_limit" = "支持最多%@人同时通话";
 "group_call_bad_network" = "网络状态不佳";
+"group_call_participants_count" = "%d 位成员";
 
 // Sticker
 "sticker_manager_title" = "我收藏的贴纸";
@@ -869,6 +874,11 @@
 "about_privacy_policy" = "服务条款";
 "about_acknowledgements" = "许可证";
 "about_app_upgrade" = "版本更新";
+"about_diagnose" = "诊断";
+
+// Diagnose
+"diagnose_warning" = "⚠️请在Mixin团队指导下使用";
+"diagnose_database_access" = "数据库访问";
 
 "report_title"="给开发人员发送聊天日志?";
 "report_button"="把日志发给开发者";

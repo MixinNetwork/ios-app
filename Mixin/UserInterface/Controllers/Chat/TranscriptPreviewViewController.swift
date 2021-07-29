@@ -46,7 +46,8 @@ class TranscriptPreviewViewController: FullscreenPopupViewController {
         
         backgroundView.contentView.addSubview(tableView)
         tableView.snp.makeConstraints { make in
-            make.edges.equalToSuperview().priority(.high)
+            make.left.right.bottom.equalToSuperview()
+            make.top.equalTo(view.safeAreaLayoutGuide).priority(.high)
             make.top.greaterThanOrEqualToSuperview().offset(20)
         }
         tableView.backgroundColor = .clear
@@ -245,7 +246,7 @@ class TranscriptPreviewViewController: FullscreenPopupViewController {
                         }
                     }
                 }
-            } else if message.category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue {
+            } else if message.category.hasSuffix("_TRANSCRIPT") {
                 let vc = TranscriptPreviewViewController(transcriptMessage: message)
                 vc.presentAsChild(of: self, completion: nil)
             }

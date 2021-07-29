@@ -4,6 +4,8 @@ import MixinServices
 
 class CallViewController: ResizablePopupViewController {
     
+    static let footerReuseId = "footer"
+    
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var minimizeButton: UIButton!
     @IBOutlet weak var settingsButton: UIButton! // Preserved
@@ -20,6 +22,7 @@ class CallViewController: ResizablePopupViewController {
     @IBOutlet weak var acceptButton: UIButton!
     @IBOutlet weak var muteStackView: UIStackView!
     @IBOutlet weak var speakerStackView: UIStackView!
+    @IBOutlet weak var statusLabel: UILabel!
     
     @IBOutlet weak var hideContentViewConstraint: NSLayoutConstraint!
     @IBOutlet weak var showContentViewConstraint: NSLayoutConstraint!
@@ -28,6 +31,7 @@ class CallViewController: ResizablePopupViewController {
     @IBOutlet weak var hangUpButtonCenterXConstraint: NSLayoutConstraint!
     @IBOutlet weak var acceptButtonTrailingConstraint: NSLayoutConstraint!
     @IBOutlet weak var acceptButtonCenterXConstraint: NSLayoutConstraint!
+    @IBOutlet weak var trayContentViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var trayContentViewBottomConstraint: NSLayoutConstraint!
     
     var members: [UserItem] = []
@@ -36,7 +40,7 @@ class CallViewController: ResizablePopupViewController {
             guard let call = call else {
                 return
             }
-            updateTitle(call: call)
+            updateStatusLabel(call: call)
         }
     }
     
@@ -94,10 +98,13 @@ class CallViewController: ResizablePopupViewController {
         contentView.layer.cornerRadius = 13
         hideContentViewConstraint.priority = .defaultHigh
         showContentViewConstraint.priority = .defaultLow
-        let titleFont = UIFont.monospacedDigitSystemFont(ofSize: 18, weight: .semibold)
-        titleLabel.setFont(scaledFor: titleFont, adjustForContentSize: true)
+        let statusFont = UIFont.monospacedDigitSystemFont(ofSize: 14, weight: .regular)
+        statusLabel.setFont(scaledFor: statusFont, adjustForContentSize: true)
         UIView.performWithoutAnimation(subtitleButton.layoutIfNeeded) // Remove the animation by setText:
         membersCollectionView.register(R.nib.callMemberCell)
+        membersCollectionView.register(UINib(resource: R.nib.callFooterView),
+                                       forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
+                                       withReuseIdentifier: Self.footerReuseId)
         membersCollectionView.dataSource = self
         membersCollectionView.delegate = self
         trayView.layer.shadowColor = UIColor.black.withAlphaComponent(0.2).cgColor
@@ -121,15 +128,17 @@ class CallViewController: ResizablePopupViewController {
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
+        membersCollectionLayout.headerReferenceSize = .zero
+        membersCollectionLayout.minimumInteritemSpacing = 0
         let labelHeight: CGFloat = ceil(CallMemberCell.labelFont.lineHeight)
         if let call = call, call is PeerToPeerCall {
             let itemSize = CGSize(width: CallMemberCell.Layout.bigger.avatarWrapperWidth,
                                   height: CallMemberCell.Layout.bigger.avatarWrapperWidth + labelHeight + CallMemberCell.Layout.bigger.labelTopMargin)
             membersCollectionLayout.itemSize = itemSize
-            membersCollectionLayout.minimumInteritemSpacing = 0
             membersCollectionLayout.minimumLineSpacing = 0
             let horizontalInset = floor((view.bounds.width - itemSize.width) / 2)
             membersCollectionLayout.sectionInset = UIEdgeInsets(top: 88, left: horizontalInset, bottom: 0, right: horizontalInset)
+            membersCollectionLayout.footerReferenceSize = .zero
         } else {
             var horizontalInset = view.bounds.width - numberOfGroupCallMembersPerRow * CallMemberCell.Layout.normal.avatarWrapperWidth
             horizontalInset /= 2 + 2 * numberOfGroupCallMembersPerRow
@@ -138,15 +147,25 @@ class CallViewController: ResizablePopupViewController {
             let itemSize = CGSize(width: CallMemberCell.Layout.normal.avatarWrapperWidth + horizontalInset * 2,
                                   height: CallMemberCell.Layout.normal.avatarWrapperWidth + labelHeight + CallMemberCell.Layout.normal.labelTopMargin)
             membersCollectionLayout.itemSize = itemSize
-            membersCollectionLayout.minimumInteritemSpacing = 0
             membersCollectionLayout.minimumLineSpacing = 16
             membersCollectionLayout.sectionInset = UIEdgeInsets(top: verticalInset, left: horizontalInset, bottom: verticalInset, right: horizontalInset)
+            let numberOfItems = membersCollectionView.dataSource?.collectionView(membersCollectionView, numberOfItemsInSection: 0) ?? 0
+            let numberOfLines = ceil(CGFloat(numberOfItems) / numberOfGroupCallMembersPerRow)
+            let membersHeight = numberOfLines * itemSize.height + max(0, numberOfLines - 1) * verticalInset
+            let collectionViewHeight = preferredContentHeight(forSize: size)
+                - settingsButton.frame.maxY
+                - membersCollectionLayout.sectionInset.vertical
+                - trayContentViewHeightConstraint.constant
+                - calculatedTrayContentViewBottomMargin
+            let footerHeight = max(64 - verticalInset + labelHeight, collectionViewHeight - membersHeight)
+            membersCollectionLayout.footerReferenceSize = CGSize(width: view.bounds.width, height: floor(footerHeight))
         }
     }
     
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
-        trayContentViewBottomConstraint.constant = max(20, view.safeAreaInsets.bottom + 8)
+        trayContentViewBottomConstraint.constant = calculatedTrayContentViewBottomMargin
+        view.layoutIfNeeded()
     }
     
     override func preferredContentHeight(forSize size: Size) -> CGFloat {
@@ -158,9 +177,9 @@ class CallViewController: ResizablePopupViewController {
         case .compressed:
             switch ScreenHeight.current {
             case .short, .medium:
-                return round(maxHeight * 0.8)
+                return round(maxHeight * 0.8) + 14
             case .long, .extraLong:
-                return round(maxHeight * 0.6)
+                return round(maxHeight * 0.6) + 14
             }
         }
     }
@@ -222,6 +241,7 @@ class CallViewController: ResizablePopupViewController {
         isConnectionUnstable = false
         
         if let call = call as? PeerToPeerCall {
+            titleLabel.text = R.string.localizable.chat_menu_call()
             if let user = call.remoteUser {
                 members = [user]
             } else {
@@ -230,9 +250,11 @@ class CallViewController: ResizablePopupViewController {
             }
             membersCollectionView.reloadData()
         } else if let call = call as? GroupCall {
-            titleLabel.text = R.string.localizable.chat_menu_group_call()
+            titleLabel.text = call.conversationName
             membersCollectionView.isHidden = false
             call.membersDataSource.collectionView = membersCollectionView
+            view.setNeedsLayout()
+            view.layoutIfNeeded()
         }
         if let call = call {
             updateViews(call: call)
@@ -334,6 +356,16 @@ extension CallViewController: UICollectionViewDataSource {
         return cell
     }
     
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Self.footerReuseId, for: indexPath) as! CallFooterView
+        if call is GroupCall {
+            view.label.text = R.string.localizable.group_call_participants_count(members.count)
+        } else {
+            view.label.text = ""
+        }
+        return view
+    }
+    
 }
 
 extension CallViewController: UICollectionViewDelegate {
@@ -419,39 +451,22 @@ extension CallViewController {
         }
     }
     
-    private func updateTitle(call: Call) {
+    private func updateStatusLabel(call: Call) {
         if isConnectionUnstable {
             let description = R.string.localizable.group_call_bad_network()
-            if call is PeerToPeerCall {
-                titleLabel.text = R.string.localizable.call_p2p_title_with_status(description)
-            } else {
-                titleLabel.text = R.string.localizable.call_group_title_with_status(description)
-            }
+            statusLabel.text = description
         } else {
-            let status: String?
             if call.status == .connected {
-                status = service.connectionDuration
+                statusLabel.text = service.connectionDuration
             } else {
-                status = call.status.localizedDescription
-            }
-            if call is PeerToPeerCall {
-                if let status = status {
-                    titleLabel.text = R.string.localizable.call_p2p_title_with_status(status)
-                } else {
-                    titleLabel.text = R.string.localizable.chat_menu_call()
-                }
-            } else {
-                if let status = status {
-                    titleLabel.text = R.string.localizable.call_group_title_with_status(status)
-                } else {
-                    titleLabel.text = R.string.localizable.chat_menu_group_call()
-                }
+                statusLabel.text = call.status.localizedDescription
             }
         }
+        trayView.layoutIfNeeded()
     }
     
     private func updateViews(call: Call) {
-        updateTitle(call: call)
+        updateStatusLabel(call: call)
         let animationDuration: TimeInterval = 0.3
         switch call.status {
         case .incoming:
@@ -493,6 +508,10 @@ extension CallViewController {
 
 extension CallViewController {
     
+    private var calculatedTrayContentViewBottomMargin: CGFloat {
+        max(20, view.safeAreaInsets.bottom + 8)
+    }
+    
     private func setConnectionDurationTimerEnabled(_ enabled: Bool) {
         timer?.invalidate()
         if enabled {
@@ -500,7 +519,7 @@ extension CallViewController {
                 guard let call = self.call else {
                     return
                 }
-                self.updateTitle(call: call)
+                self.updateStatusLabel(call: call)
             }
             RunLoop.main.add(timer, forMode: .default)
             self.timer = timer

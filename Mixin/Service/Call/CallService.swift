@@ -65,7 +65,6 @@ class CallService: NSObject {
     private let retryInterval = DispatchTimeInterval.seconds(3)
     private let isMainlandChina = false
     
-    private lazy var rtcClient = WebRTCClient(delegateQueue: queue.dispatchQueue)
     private lazy var nativeCallInterface = NativeCallInterface(service: self)
     private lazy var listPendingInvitationCounter = Counter(value: 0)
     
@@ -94,7 +93,6 @@ class CallService: NSObject {
     
     override init() {
         super.init()
-        rtcClient.delegate = self
         updateCallKitAvailability()
         KrakenMessageRetriever.shared.delegate = self
         RTCAudioSession.sharedInstance().add(self)
@@ -215,7 +213,7 @@ extension CallService {
                 } else {
                     self.log("[CallService] Request start p2p call with user: \(remoteUser.fullName)")
                     let handle = CXHandle(type: .generic, value: remoteUser.userId)
-                    let call = PeerToPeerCall(uuid: UUID(), isOutgoing: true, remoteUser: remoteUser)
+                    let call = PeerToPeerCall(uuid: UUID(), isOutgoing: true, remoteUser: remoteUser, rtcClient: self.makeRtcClient())
                     self.requestStartCall(call, handle: handle, playOutgoingRingtone: true)
                 }
             }
@@ -245,7 +243,8 @@ extension CallService {
                                  isOutgoing: true,
                                  conversation: conversation,
                                  members: members,
-                                 invitingMembers: invitingMembers)
+                                 invitingMembers: invitingMembers,
+                                 rtcClient: makeRtcClient())
             showCallingInterface(call: call, animated: animated)
             let handle = CXHandle(type: .generic, value: conversation.conversationId)
             requestStartCall(call, handle: handle, playOutgoingRingtone: false)
@@ -425,8 +424,8 @@ extension CallService {
                 NotificationCenter.default.post(name: Self.willStartCallNotification, object: self)
             }
             guard WebSocketService.shared.isConnected else {
-                self.activeCall = nil
                 self.alert(error: CallError.networkFailure)
+                self.close(uuid: uuid)
                 completion?(false)
                 return
             }
@@ -552,8 +551,8 @@ extension CallService {
     func closeAll() {
         self.log("[CallService] close all call")
         activeCall?.timer?.invalidate()
+        activeCall?.rtcClient.close()
         activeCall = nil
-        rtcClient.close()
         for timer in pendingAnswerCalls.values.compactMap(\.timer) {
             timer.invalidate()
         }
@@ -581,7 +580,7 @@ extension CallService {
         self.log("[CallService] close call: \(uuid)")
         if let call = activeCall, call.uuid == uuid {
             activeCall = nil
-            rtcClient.close()
+            call.rtcClient.close()
             call.timer?.invalidate()
         }
         if let call = pendingAnswerCalls.removeValue(forKey: uuid) {
@@ -769,13 +768,13 @@ extension CallService {
             if !data.quoteMessageId.isEmpty {
                 if let call = activeCall as? PeerToPeerCall, call.uuid == UUID(uuidString: data.quoteMessageId), !call.isOutgoing {
                     self.log("[CallService] Got restart offer, setting it")
-                    rtcClient.set(remoteSdp: sdp) { (error) in
+                    call.rtcClient.set(remoteSdp: sdp) { (error) in
                         self.handleResultFromSettingRemoteSdpWhenAnsweringPeerToPeerCall(call, error: error, completion: nil)
                     }
                 }
             } else {
                 try? AudioSession.shared.activate(client: self)
-                let call = PeerToPeerCall(uuid: uuid, isOutgoing: false, remoteUser: user)
+                let call = PeerToPeerCall(uuid: uuid, isOutgoing: false, remoteUser: user, rtcClient: makeRtcClient())
                 pendingAnswerCalls[uuid] = call
                 pendingSDPs[uuid] = sdp
                 beginUnanswerCountDown(for: call)
@@ -796,8 +795,8 @@ extension CallService {
             return
         }
         let newCandidates = [RTCIceCandidate](jsonString: candidatesString)
-        if let call = activeCall, data.quoteMessageId == call.uuidString, rtcClient.canAddRemoteCandidate {
-            newCandidates.forEach(rtcClient.add(remoteCandidate:))
+        if let call = activeCall, data.quoteMessageId == call.uuidString, call.rtcClient.canAddRemoteCandidate {
+            newCandidates.forEach(call.rtcClient.add(remoteCandidate:))
         } else if let uuid = UUID(uuidString: data.quoteMessageId) {
             var candidates = pendingCandidates[uuid] ?? []
             candidates.append(contentsOf: newCandidates)
@@ -815,7 +814,7 @@ extension CallService {
             call.timer?.invalidate()
             ringtonePlayer.stop()
             call.status = .connecting
-            rtcClient.set(remoteSdp: sdp) { (error) in
+            call.rtcClient.set(remoteSdp: sdp) { (error) in
                 if let error = error {
                     self.failCurrentCall(sendFailedMessageToRemote: true,
                                          error: .setRemoteAnswer(error))
@@ -939,7 +938,8 @@ extension CallService {
                                  isOutgoing: false,
                                  conversation: conversation,
                                  members: members,
-                                 invitingMembers: [])
+                                 invitingMembers: [],
+                                 rtcClient: makeRtcClient())
             if let user = UserDAO.shared.getUser(userId: data.userId) {
                 call.inviters = [user]
             }
@@ -1158,7 +1158,7 @@ extension CallService: WebRTCClientDelegate {
         }
         self.log("[CallService] RTC IceConnectionState change to failed")
         if let call = activeCall as? PeerToPeerCall, call.isOutgoing {
-            rtcClient.offer(key: nil, withIceRestartConstraint: true) { (result) in
+            call.rtcClient.offer(key: nil, withIceRestartConstraint: true) { (result) in
                 switch result {
                 case .success(let sdpJson):
                     self.log("[CallService] Sending restart offer")
@@ -1256,7 +1256,8 @@ extension CallService: PKPushRegistryDelegate {
                                  isOutgoing: false,
                                  conversation: conversation,
                                  members: members,
-                                 invitingMembers: [])
+                                 invitingMembers: [],
+                                 rtcClient: makeRtcClient())
             if let user = UserDAO.shared.getUser(userId: userId) {
                 call.inviters = [user]
             }
@@ -1268,7 +1269,7 @@ extension CallService: PKPushRegistryDelegate {
             }
             self.log("[CallService] report incoming group call from PushKit notification: \(call.debugDescription)")
         } else if isUsingCallKit, name.isEmpty, let username = payload.dictionaryPayload["full_name"] as? String {
-            let call = PeerToPeerCall(uuid: uuid, isOutgoing: false, remoteUserId: userId, remoteUsername: username)
+            let call = PeerToPeerCall(uuid: uuid, isOutgoing: false, remoteUserId: userId, remoteUsername: username, rtcClient: makeRtcClient())
             pendingAnswerCalls[uuid] = call
             beginUnanswerCountDown(for: call)
             nativeCallInterface.reportIncomingCall(uuid: uuid, handleId: userId, localizedName: username) { (error) in
@@ -1395,7 +1396,7 @@ extension CallService {
     }
     
     private func updateAudioTrackEnabling() {
-        if let audioTrack = rtcClient.audioTrack {
+        if let audioTrack = activeCall?.rtcClient.audioTrack {
             audioTrack.isEnabled = !isMuted
             self.log("[CallService] isMuted: \(isMuted)")
         } else {
@@ -1567,7 +1568,7 @@ extension CallService {
             self.showCallingInterface(call: call, animated: true)
         }
         beginUnanswerCountDown(for: call)
-        rtcClient.offer(key: nil, withIceRestartConstraint: false) { (result) in
+        call.rtcClient.offer(key: nil, withIceRestartConstraint: false) { (result) in
             switch result {
             case .success(let sdpJson):
                 let msg = Message.createWebRTCMessage(messageId: call.uuidString,
@@ -1597,7 +1598,7 @@ extension CallService {
             endCall(uuid: uuid)
         }
         self.ringtonePlayer.stop()
-        self.rtcClient.set(remoteSdp: sdp) { (error) in
+        call.rtcClient.set(remoteSdp: sdp) { (error) in
             self.handleResultFromSettingRemoteSdpWhenAnsweringPeerToPeerCall(call, error: error, completion: completion)
         }
     }
@@ -1608,7 +1609,7 @@ extension CallService {
                                  error: .setRemoteSdp(error))
             completion?(false)
         } else {
-            self.rtcClient.answer(completion: { result in
+            call.rtcClient.answer(completion: { result in
                 switch result {
                 case .success(let sdpJson):
                     self.log("[CallService] Sending answer")
@@ -1621,7 +1622,7 @@ extension CallService {
                                                           ownerUser: call.remoteUser,
                                                           isGroupMessage: false)
                     if let candidates = self.pendingCandidates.removeValue(forKey: call.uuid) {
-                        candidates.forEach(self.rtcClient.add(remoteCandidate:))
+                        candidates.forEach(call.rtcClient.add(remoteCandidate:))
                     }
                     completion?(true)
                 case .failure(let error):
@@ -1639,6 +1640,12 @@ extension CallService {
 extension CallService {
     
     private typealias SdpResult = Result<(trackId: String, sdp: RTCSessionDescription), CallError>
+    
+    private func makeRtcClient() -> WebRTCClient {
+        let client = WebRTCClient(delegateQueue: queue.dispatchQueue)
+        client.delegate = self
+        return client
+    }
     
     private func request(_ request: KrakenRequest, completion: @escaping (SdpResult) -> Void) {
         self.log("[KrakenMessageRetriever] Request \(request.debugDescription)")
@@ -1681,7 +1688,7 @@ extension CallService {
         }
         self.log("[CallService] restart Current GroupCall \(call.debugDescription)")
         call.frameKey = nil
-        rtcClient.close()
+        call.rtcClient.close()
         pendingTrickles.removeValue(forKey: call.uuid)
         startGroupCall(call, isRestarting: false) { (success) in
             if !success {
@@ -1715,7 +1722,7 @@ extension CallService {
         }
         self.log("[CallService] start group call impl, framekey: \(frameKey)")
         beginUnanswerCountDown(for: call)
-        rtcClient.offer(key: frameKey, withIceRestartConstraint: isRestarting) { result in
+        call.rtcClient.offer(key: frameKey, withIceRestartConstraint: isRestarting) { result in
             switch result {
             case .success(let sdp):
                 self.publish(sdp: sdp, to: call, isRestarting: isRestarting, completion: completion)
@@ -1763,7 +1770,7 @@ extension CallService {
             callInterface.reportOutgoingCallStartedConnecting(uuid: call.uuid)
             call.invitePendingUsers()
         }
-        rtcClient.set(remoteSdp: sdp) { (error) in
+        call.rtcClient.set(remoteSdp: sdp) { (error) in
             if let error = error {
                 self.log("[CallService] group call publish impl set sdp from publishing response failed: \(error)")
                 let end = KrakenRequest(callUUID: call.uuid,
@@ -1805,7 +1812,7 @@ extension CallService {
             switch result {
             case let .success((_, sdp)) where sdp.type == .offer:
                 self.log("[CallService] setting sdp from subscribe response")
-                self.rtcClient.set(remoteSdp: sdp) { (error) in
+                call.rtcClient.set(remoteSdp: sdp) { (error) in
                     if let error = error {
                         reporter.report(error: error)
                         self.log("[CallService] subscribe failed to setting sdp: \(error)")
@@ -1840,7 +1847,7 @@ extension CallService {
     }
     
     private func answer(userId: String, of call: GroupCall) {
-        rtcClient.answer { (result) in
+        call.rtcClient.answer { (result) in
             switch result {
             case .success(let sdpJson):
                 let answer = KrakenRequest(callUUID: call.uuid,
@@ -1881,14 +1888,14 @@ extension CallService {
                 let userIds = self.membersManager.members[conversationId] ?? [] // Since there's an active call it won't be nil
                 if userIds.contains(userId) {
                     let frameKey = SignalProtocol.shared.getSenderKeyPublic(groupId: conversationId, userId: userId)
-                    self.rtcClient.setFrameDecryptorKey(frameKey, forReceiverWith: userId, sessionId: sessionId)
+                    call.rtcClient.setFrameDecryptorKey(frameKey, forReceiverWith: userId, sessionId: sessionId)
                 }
             } else if let userId = userId, !userId.isEmpty {
                 try? ReceiveMessageService.shared.checkSessionSenderKey(conversationId: call.conversationId)
             } else {
                 try? ReceiveMessageService.shared.checkSessionSenderKey(conversationId: call.conversationId)
                 let frameKey = SignalProtocol.shared.getSenderKeyPublic(groupId: conversationId, userId: myUserId)
-                self.rtcClient.setFrameEncryptorKey(frameKey)
+                call.rtcClient.setFrameEncryptorKey(frameKey)
             }
         }
     }

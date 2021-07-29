@@ -225,6 +225,8 @@ extension ConversationTableView {
                 self = .post
             } else if category.hasSuffix("_LOCATION") {
                 self = .location
+            } else if category.hasSuffix("_TRANSCRIPT") {
+                self = .transcript
             } else if category.hasPrefix("WEBRTC_") || category == MessageCategory.MESSAGE_RECALL.rawValue {
                 self = .iconPrefixedText
             } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
@@ -237,8 +239,6 @@ extension ConversationTableView {
                 self = .appButtonGroup
             } else if category == MessageCategory.APP_CARD.rawValue {
                 self = .appCard
-            } else if category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue {
-                self = .transcript
             } else {
                 self = .unknown
             }

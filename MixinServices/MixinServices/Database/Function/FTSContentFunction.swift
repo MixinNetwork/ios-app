@@ -10,11 +10,11 @@ public func ftsContent(messageId: String, category: String, content: String?, na
         return name
     case .SIGNAL_TEXT, .PLAIN_TEXT, .SIGNAL_POST, .PLAIN_POST:
         return content
-    case .SIGNAL_TRANSCRIPT:
+    case .SIGNAL_TRANSCRIPT, .PLAIN_TRANSCRIPT:
         let children = children ?? TranscriptMessageDAO.shared.childMessages(with: messageId)
         let ftsContents: [String] = children.compactMap { child in
             ftsContent(messageId: child.messageId,
-                       category: child.category.rawValue,
+                       category: child.category,
                        content: child.content,
                        name: child.mediaName)
         }

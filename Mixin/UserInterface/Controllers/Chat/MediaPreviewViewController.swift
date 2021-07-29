@@ -20,10 +20,26 @@ final class MediaPreviewViewController: UIViewController {
     weak var conversationInputViewController: ConversationInputViewController?
     
     private var lastRequestId: PHImageRequestID?
-    private var asset: PHAsset?
+    private var asset: Asset?
     private var playerView: PlayerView?
     private var playerObservation: NSKeyValueObservation?
     private var seekToZeroBeforePlay = false
+    
+    private var movieTypeIdentifier: String {
+        if #available(iOS 14.0, *) {
+            return UTType.movie.identifier
+        } else {
+            return kUTTypeMovie as String
+        }
+    }
+    
+    private var gifTypeIdentifier: String {
+        if #available(iOS 14.0, *) {
+            return UTType.gif.identifier
+        } else {
+            return kUTTypeGIF as String
+        }
+    }
     
     private lazy var videoThumbnailMaskLayer: CALayer = {
         let layer = CALayer()
@@ -98,7 +114,14 @@ final class MediaPreviewViewController: UIViewController {
         } catch {
             mute = false
         }
-        requestAndPlay(asset: asset, mute: mute)
+        switch asset {
+        case .phAsset(let asset):
+            requestAndPlay(asset: asset, mute: mute)
+        case .video(let url):
+            playVideo(at: url, mute: mute)
+        default:
+            break
+        }
     }
     
     @IBAction func pauseAction(_ sender: Any) {
@@ -107,18 +130,33 @@ final class MediaPreviewViewController: UIViewController {
     
     @IBAction func sendAction(_ sender: Any) {
         dismiss(animated: true, completion: nil)
-        if let asset = asset {
+        switch asset {
+        case let .phAsset(asset):
             conversationInputViewController?.send(asset: asset)
+        case let .image(image):
+            conversationInputViewController?.send(image: image)
+        case let .video(url):
+            conversationInputViewController?.moveAndSendVideo(at: url)
+        case let .gif(url, image):
+            conversationInputViewController?.moveAndSendGifImage(at: url, image: image)
+        case .none:
+            break
         }
     }
     
     @IBAction func dismissAction(_ sender: Any) {
         AudioSession.shared.deactivateAsynchronously(client: self, notifyOthersOnDeactivation: true)
         dismiss(animated: true, completion: nil)
+        switch asset {
+        case let .video(url), let .gif(url, _):
+            try? FileManager.default.removeItem(at: url)
+        default:
+            break
+        }
     }
     
     func load(asset: PHAsset) {
-        self.asset = asset
+        self.asset = .phAsset(asset)
         loadViewIfNeeded()
         activityIndicator.startAnimating()
         let targetSize = imageView.bounds.size * UIScreen.main.scale
@@ -126,15 +164,11 @@ final class MediaPreviewViewController: UIViewController {
             guard let weakSelf = self, let image = image else {
                 return
             }
-            let useMinimalImageViewSize = asset.mediaType == .image
-                && CGFloat(asset.pixelWidth * 3) < targetSize.width
-                && CGFloat(asset.pixelHeight * 3) < targetSize.height
-            if useMinimalImageViewSize {
-                weakSelf.minimalImageViewWidthConstraint.priority = .almostRequired
-                weakSelf.normalImageViewWidthConstraint.priority = .almostInexist
+            if asset.mediaType == .image {
+                let assetPixelSize = CGSize(width: asset.pixelWidth, height: asset.pixelHeight)
+                weakSelf.updateImageViewSizeForImages(with: assetPixelSize)
             } else {
-                weakSelf.minimalImageViewWidthConstraint.priority = .almostInexist
-                weakSelf.normalImageViewWidthConstraint.priority = .almostRequired
+                weakSelf.updateImageViewSizeForVideos()
             }
             weakSelf.imageView.image = image
             weakSelf.lastRequestId = nil
@@ -146,6 +180,90 @@ final class MediaPreviewViewController: UIViewController {
                     PHImageManager.default().cancelImageRequest(id)
                 }
                 weakSelf.loadAnimatedImage(asset: asset)
+            }
+        }
+    }
+    
+    func canLoad(itemProvider: NSItemProvider) -> Bool {
+        itemProvider.hasItemConformingToTypeIdentifier(gifTypeIdentifier)
+            || itemProvider.hasItemConformingToTypeIdentifier(movieTypeIdentifier)
+            || itemProvider.canLoadObject(ofClass: UIImage.self)
+    }
+    
+    func load(itemProvider: NSItemProvider) {
+        loadViewIfNeeded()
+        activityIndicator.startAnimating()
+        if itemProvider.hasItemConformingToTypeIdentifier(gifTypeIdentifier) {
+            copyFile(from: itemProvider, identifier: gifTypeIdentifier) { _ in
+                FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ExtensionName.gif.withDot)
+            } completion: { [weak self] url in
+                guard let image = YYImage(contentsOfFile: url.path) else {
+                    return
+                }
+                DispatchQueue.main.async {
+                    guard let self = self else {
+                        return
+                    }
+                    self.asset = .gif(url, image)
+                    let assetPixelSize = image.size * image.scale
+                    self.updateImageViewSizeForImages(with: assetPixelSize)
+                    self.imageView.image = image
+                    self.activityIndicator.stopAnimating()
+                    self.playButton.isHidden = true
+                    self.view.layoutIfNeeded()
+                }
+            }
+        } else if itemProvider.hasItemConformingToTypeIdentifier(movieTypeIdentifier) {
+            // A video file in temp directory or with no extension name is not playable
+            guard let document = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+                return
+            }
+            copyFile(from: itemProvider, identifier: movieTypeIdentifier) { source in
+                document.appendingPathComponent(UUID().uuidString).appendingPathExtension(source.pathExtension)
+            } completion: { [weak self] url in
+                let thumbnail = UIImage(withFirstFrameOfVideoAtURL: url)
+                DispatchQueue.main.async {
+                    guard let self = self else {
+                        return
+                    }
+                    self.asset = .video(url)
+                    self.updateImageViewSizeForVideos()
+                    self.imageView.image = thumbnail
+                    self.activityIndicator.stopAnimating()
+                    self.playButton.isHidden = false
+                    self.view.layoutIfNeeded()
+                }
+            }
+        } else if itemProvider.canLoadObject(ofClass: UIImage.self) {
+            itemProvider.loadObject(ofClass: UIImage.self) { [weak self] (rawImage, error) in
+                guard
+                    let rawImage = rawImage as? UIImage,
+                    let image = ImageUploadSanitizer.sanitizedImage(from: rawImage).image
+                else {
+                    if let error = error {
+                        reporter.report(error: error)
+                    }
+                    DispatchQueue.main.async {
+                        guard let self = self else {
+                            return
+                        }
+                        showAutoHiddenHud(style: .error, text: R.string.localizable.toast_unable_to_share())
+                        self.dismiss(animated: true, completion: nil)
+                    }
+                    return
+                }
+                DispatchQueue.main.async {
+                    guard let self = self else {
+                        return
+                    }
+                    self.asset = .image(image)
+                    let assetPixelSize = image.size * image.scale
+                    self.updateImageViewSizeForImages(with: assetPixelSize)
+                    self.imageView.image = image
+                    self.activityIndicator.stopAnimating()
+                    self.playButton.isHidden = true
+                    self.view.layoutIfNeeded()
+                }
             }
         }
     }
@@ -172,6 +290,73 @@ extension MediaPreviewViewController: AudioSessionClient {
 }
 
 extension MediaPreviewViewController {
+    
+    private enum Asset {
+        case phAsset(PHAsset)
+        case gif(URL, UIImage)
+        case video(URL)
+        case image(UIImage)
+    }
+    
+    enum Error: Swift.Error {
+        case loadFileRepresentation(Swift.Error?)
+        case copyItem(Swift.Error)
+    }
+    
+    // The completion is only called on success
+    private func copyFile(
+        from provider: NSItemProvider,
+        identifier: String,
+        to makeDestinationURL: @escaping (URL) -> URL,
+        completion: @escaping (URL) -> Void
+    ) {
+        provider.loadFileRepresentation(forTypeIdentifier: identifier) { (source, error) in
+            if let source = source {
+                do {
+                    let destination = makeDestinationURL(source)
+                    try FileManager.default.copyItem(at: source, to: destination)
+                    completion(destination)
+                } catch {
+                    reporter.report(error: Error.copyItem(error))
+                }
+            } else {
+                reporter.report(error: Error.loadFileRepresentation(error))
+            }
+        }
+    }
+    
+    private func updateImageViewSizeForImages(with pixelSize: CGSize) {
+        let imageViewPixelSize = imageView.bounds.size * UIScreen.main.scale
+        let useMinimalImageViewSize = pixelSize.width < imageViewPixelSize.width / 3
+            && pixelSize.height < imageViewPixelSize.height / 3
+        if useMinimalImageViewSize {
+            minimalImageViewWidthConstraint.priority = .almostRequired
+            normalImageViewWidthConstraint.priority = .almostInexist
+        } else {
+            minimalImageViewWidthConstraint.priority = .almostInexist
+            normalImageViewWidthConstraint.priority = .almostRequired
+        }
+    }
+    
+    private func updateImageViewSizeForVideos() {
+        minimalImageViewWidthConstraint.priority = .almostInexist
+        normalImageViewWidthConstraint.priority = .almostRequired
+    }
+    
+    private func playVideo(at url: URL, mute: Bool) {
+        playButton.isHidden = true
+        if let player = playerView?.layer.player {
+            if seekToZeroBeforePlay {
+                player.seek(to: .zero)
+                seekToZeroBeforePlay = false
+            }
+            player.isMuted = mute
+            player.rate = 1
+        } else {
+            let item = AVPlayerItem(url: url)
+            play(item: item, mute: mute)
+        }
+    }
     
     private func requestAndPlay(asset: PHAsset, mute: Bool) {
         playButton.isHidden = true

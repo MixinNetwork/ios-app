@@ -15,6 +15,7 @@ class StickerMessageViewModel: DetailInfoMessageViewModel {
     var contentFrame = CGRect.zero
     
     private let contentSize: CGSize
+    private let minForwarderIconLeftMargin: CGFloat = 0
     
     override init(message: MessageItem) {
         let assetWidth, assetHeight: Int?
@@ -86,7 +87,6 @@ class StickerMessageViewModel: DetailInfoMessageViewModel {
                                   height: contentSize.height)
         }
         layoutDetailInfo(backgroundImageFrame: backgroundImageFrame)
-        fullnameFrame.size.width = min(fullnameFrame.size.width, maxContentWidth)
         let timeOffset = style.contains(.received)
             ? timeMargin.leading
             : (timeMargin.trailing - DetailInfoMessageViewModel.statusLeftMargin - statusFrame.width)
@@ -96,6 +96,16 @@ class StickerMessageViewModel: DetailInfoMessageViewModel {
         layoutForwarderIcon()
         statusFrame.origin = CGPoint(x: timeFrame.maxX + DetailInfoMessageViewModel.statusLeftMargin,
                                      y: timeFrame.origin.y + (timeFrame.height - statusFrame.height) / 2)
+        if style.contains(.received) {
+            let forwarderIconLeftMargin = forwarderFrame.minX - contentFrame.minX
+            if forwarderIconLeftMargin < minForwarderIconLeftMargin {
+                let diff = minForwarderIconLeftMargin - forwarderIconLeftMargin
+                timeFrame.origin.x += diff
+                encryptedIconFrame.origin.x += diff
+                forwarderFrame.origin.x += diff
+                statusFrame.origin.x += diff
+            }
+        }
         cellHeight = fullnameHeight
             + contentFrame.size.height
             + contentMargin.vertical

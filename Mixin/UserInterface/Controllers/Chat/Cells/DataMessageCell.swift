@@ -27,7 +27,7 @@ class DataMessageCell: CardMessageCell<DataMessageExtensionIconView, CardMessage
     }
     
     deinit {
-        if let viewModel = viewModel as? DataMessageViewModel, viewModel.isListPlayable {
+        if let viewModel = viewModel as? DataMessageViewModel, viewModel.isListPlayable && viewModel.transcriptId == nil {
             PlaylistManager.shared.unregister(cell: self, for: viewModel.message.messageId)
         }
     }
@@ -35,7 +35,7 @@ class DataMessageCell: CardMessageCell<DataMessageExtensionIconView, CardMessage
     override func prepareForReuse() {
         super.prepareForReuse()
         style = .stopped
-        if let viewModel = viewModel as? DataMessageViewModel, viewModel.isListPlayable {
+        if let viewModel = viewModel as? DataMessageViewModel, viewModel.isListPlayable && viewModel.transcriptId == nil {
             PlaylistManager.shared.unregister(cell: self, for: viewModel.message.messageId)
         }
     }
@@ -67,7 +67,7 @@ class DataMessageCell: CardMessageCell<DataMessageExtensionIconView, CardMessage
             titleLabel.text = viewModel.message.name ?? " "
             let mediaExpired = viewModel.mediaStatus == MediaStatus.EXPIRED.rawValue
             subtitleLabel.text =  mediaExpired ? Localized.CHAT_FILE_EXPIRED : viewModel.sizeRepresentation
-            if viewModel.isListPlayable {
+            if viewModel.isListPlayable && viewModel.transcriptId == nil {
                 PlaylistManager.shared.register(cell: self, for: viewModel.message.messageId)
             }
         }

@@ -12,7 +12,7 @@ open class AttachmentDownloadJob: AttachmentLoadingJob {
     private var owner: AttachmentOwner!
     
     private var originalPathExtension: String? {
-        owner.mediaName?.pathExtension()?.lowercased()
+        owner.mediaName?.components(separatedBy: ".").lazy.last
     }
     
     private var mimeInferredPathExtension: String? {

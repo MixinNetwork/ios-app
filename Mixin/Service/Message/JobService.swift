@@ -59,7 +59,7 @@ class JobService {
                 UploaderQueue.shared.addJob(job: VideoUploadJob(message: message, jobId: jobId))
             } else if message.category.hasSuffix("_AUDIO") {
                 UploaderQueue.shared.addJob(job: AudioUploadJob(message: message, jobId: jobId))
-            } else if message.category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue {
+            } else if message.category.hasSuffix("_TRANSCRIPT") {
                 let job = TranscriptAttachmentUploadJob(message: message, jobIdToRemoveAfterFinished: jobId)
                 UploaderQueue.shared.addJob(job: job)
             }

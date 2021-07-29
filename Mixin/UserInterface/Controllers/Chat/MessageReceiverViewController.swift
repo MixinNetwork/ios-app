@@ -8,7 +8,6 @@ class MessageReceiverViewController: PeerViewController<[MessageReceiver], Check
         true
     }
     
-    private var hideApps = false
     private var messageContent: MessageContent!
     private var selections = [MessageReceiver]() {
         didSet {
@@ -16,10 +15,9 @@ class MessageReceiverViewController: PeerViewController<[MessageReceiver], Check
         }
     }
     
-    class func instance(content: MessageContent, hideApps: Bool = false) -> UIViewController {
+    class func instance(content: MessageContent) -> UIViewController {
         let vc = MessageReceiverViewController()
         vc.messageContent = content
-        vc.hideApps = hideApps
         return ContainerViewController.instance(viewController: vc, title: Localized.ACTION_SHARE_TO)
     }
     
@@ -34,9 +32,7 @@ class MessageReceiverViewController: PeerViewController<[MessageReceiver], Check
         var apps = [UserItem]()
         for user in users {
             if user.isBot {
-                if !hideApps {
-                    apps.append(user)
-                }
+                apps.append(user)
             } else {
                 contacts.append(user)
             }
@@ -441,11 +437,11 @@ extension MessageReceiverViewController {
             newMessage.thumbUrl = message.thumbUrl
             let liveData = TransferLiveData(width: width, height: height, thumbUrl: thumbUrl, url: mediaUrl)
             newMessage.content = try! JSONEncoder.default.encode(liveData).base64EncodedString()
-        } else if message.category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue {
+        } else if message.category.hasSuffix("_TRANSCRIPT") {
             let transcriptId = UUID().uuidString.lowercased()
             let children: [TranscriptMessage] = TranscriptMessageDAO.shared.childMessages(with: message.messageId).map { original in
                 let mediaUrl: String?
-                if original.category.includesAttachment, let sourceFilename = original.mediaUrl {
+                if MessageCategory.allMediaCategoriesString.contains(original.category), let sourceFilename = original.mediaUrl {
                     do {
                         let extensionName: String
                         if let lastComponent = sourceFilename.components(separatedBy: ".").lazy.last {
@@ -457,7 +453,7 @@ extension MessageReceiverViewController {
                         let source = AttachmentContainer.url(transcriptId: message.messageId, filename: sourceFilename)
                         let destination = AttachmentContainer.url(transcriptId: transcriptId, filename: destinationFilename)
                         try FileManager.default.copyItem(at: source, to: destination)
-                        if original.category == .video {
+                        if original.category.hasSuffix("_VIDEO") {
                             let source = AttachmentContainer.videoThumbnailURL(transcriptId: message.messageId, videoFilename: sourceFilename)
                             let destination = AttachmentContainer.videoThumbnailURL(transcriptId: transcriptId, videoFilename: destinationFilename)
                             try? FileManager.default.copyItem(at: source, to: destination)
@@ -474,7 +470,7 @@ extension MessageReceiverViewController {
             let message = Message.createMessage(messageId: transcriptId,
                                                 conversationId: receiver.conversationId,
                                                 userId: myUserId,
-                                                category: MessageCategory.SIGNAL_TRANSCRIPT.rawValue,
+                                                category: message.category,
                                                 content: message.content,
                                                 status: MessageStatus.SENDING.rawValue,
                                                 createdAt: Date().toUTCString())

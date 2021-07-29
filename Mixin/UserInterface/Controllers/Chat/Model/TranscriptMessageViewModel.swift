@@ -69,32 +69,32 @@ extension TranscriptMessageViewModel  {
         } else {
             digest = ""
         }
-        switch content.category {
-        case .text:
+        switch MessageCategory(rawValue: content.category) {
+        case .SIGNAL_TEXT, .PLAIN_TEXT:
             digest += content.content ?? " "
-        case .image:
+        case .SIGNAL_IMAGE, .PLAIN_IMAGE:
             digest += R.string.localizable.notification_content_photo()
-        case .video:
+        case .SIGNAL_VIDEO, .PLAIN_VIDEO:
             digest += R.string.localizable.notification_content_video()
-        case .data:
+        case .SIGNAL_DATA, .PLAIN_DATA:
             digest += R.string.localizable.notification_content_file()
-        case .sticker:
+        case .SIGNAL_STICKER, .PLAIN_STICKER:
             digest += R.string.localizable.notification_content_sticker()
-        case .contact:
+        case .SIGNAL_CONTACT, .PLAIN_CONTACT:
             digest += R.string.localizable.notification_content_contact()
-        case .audio:
+        case .SIGNAL_AUDIO, .PLAIN_AUDIO:
             digest += R.string.localizable.notification_content_audio()
-        case .live:
+        case .SIGNAL_LIVE, .PLAIN_LIVE:
             digest += R.string.localizable.notification_content_live()
-        case .post:
+        case .SIGNAL_POST, .PLAIN_POST:
             digest += content.content ?? " "
-        case .location:
+        case .SIGNAL_LOCATION, .PLAIN_LOCATION:
             digest += R.string.localizable.notification_content_location()
-        case .appCard:
+        case .APP_CARD:
             if let json = content.content?.data(using: .utf8), let card = try? JSONDecoder.default.decode(AppCardData.self, from: json) {
                 digest += "[\(card.title)]"
             }
-        case .unknown:
+        default:
             digest += R.string.localizable.notification_content_unknown()
         }
         return digest

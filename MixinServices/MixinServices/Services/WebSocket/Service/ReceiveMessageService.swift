@@ -296,9 +296,7 @@ public class ReceiveMessageService: MixinService {
                 updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
                 return
             }
-            if let updatedAt = appCard.updatedAt {
-                syncApp(appId: appId, updatedAt: updatedAt)
-            }
+            syncApp(appId: appId, cardUpdatedAt: appCard.updatedAt)
         }
         _ = syncUser(userId: data.getSenderId())
 
@@ -307,14 +305,14 @@ public class ReceiveMessageService: MixinService {
         updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
     }
 
-    private func syncApp(appId: String, updatedAt: String) {
-        guard !updatedAt.isEmpty && !appId.isEmpty else {
+    private func syncApp(appId: String, cardUpdatedAt: String?) {
+        guard !appId.isEmpty else {
             return
         }
-        guard AppDAO.shared.getApp(appId: appId)?.updatedAt != updatedAt else {
+        let app = AppDAO.shared.getApp(appId: appId)
+        guard app == nil || app?.updatedAt != cardUpdatedAt else {
             return
         }
-
         if case let .success(response) = UserSessionAPI.showUser(userId: appId) {
             UserDAO.shared.updateUsers(users: [response], sendNotificationAfterFinished: false)
         } else {
@@ -574,8 +572,16 @@ public class ReceiveMessageService: MixinService {
             }
             let message = Message.createLocationMessage(content: content, data: data)
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
-        } else if data.category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue {
-            guard let (content, children, hasAttachment) = parseTranscript(plainText: plainText, transcriptId: data.messageId) else {
+        } else if data.category.hasSuffix("_TRANSCRIPT") {
+            var content = plainText
+            if data.category.hasPrefix("PLAIN_") {
+                guard let decoded = plainText.base64Decoded() else {
+                    ReceiveMessageService.shared.processUnknownMessage(data: data)
+                    return
+                }
+                content = decoded
+            }
+            guard let (content, children, hasAttachment) = parseTranscript(plainText: content, transcriptId: data.messageId) else {
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }
@@ -803,11 +809,10 @@ public class ReceiveMessageService: MixinService {
                     absentUserIds.insert(id)
                 }
             }
-            switch child.category {
-            case .data, .image, .video, .audio:
+            if MessageCategory.allMediaCategoriesString.contains(child.category) {
                 hasAttachment = true
                 child.mediaStatus = MediaStatus.PENDING.rawValue
-            case .sticker:
+            } else if child.category.hasSuffix("_STICKER") {
                 guard let stickerId = child.stickerId, UUID(uuidString: stickerId) != nil else {
                     child.stickerId = nil
                     continue
@@ -816,8 +821,6 @@ public class ReceiveMessageService: MixinService {
                     continue
                 }
                 ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob(stickerId: stickerId))
-            default:
-                break
             }
         }
         if !absentUserIds.isEmpty {
@@ -972,7 +975,7 @@ public class ReceiveMessageService: MixinService {
             default:
                 break
             }
-        case MessageCategory.PLAIN_TEXT.rawValue, MessageCategory.PLAIN_IMAGE.rawValue, MessageCategory.PLAIN_DATA.rawValue, MessageCategory.PLAIN_VIDEO.rawValue, MessageCategory.PLAIN_LIVE.rawValue, MessageCategory.PLAIN_AUDIO.rawValue, MessageCategory.PLAIN_STICKER.rawValue, MessageCategory.PLAIN_CONTACT.rawValue, MessageCategory.PLAIN_POST.rawValue, MessageCategory.PLAIN_LOCATION.rawValue:
+        case MessageCategory.PLAIN_TEXT.rawValue, MessageCategory.PLAIN_IMAGE.rawValue, MessageCategory.PLAIN_DATA.rawValue, MessageCategory.PLAIN_VIDEO.rawValue, MessageCategory.PLAIN_LIVE.rawValue, MessageCategory.PLAIN_AUDIO.rawValue, MessageCategory.PLAIN_STICKER.rawValue, MessageCategory.PLAIN_CONTACT.rawValue, MessageCategory.PLAIN_POST.rawValue, MessageCategory.PLAIN_LOCATION.rawValue, MessageCategory.PLAIN_TRANSCRIPT.rawValue:
             _ = syncUser(userId: data.getSenderId())
             processDecryptSuccess(data: data, plainText: data.data)
             updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)

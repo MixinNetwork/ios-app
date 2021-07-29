@@ -20,7 +20,8 @@ class GroupCallConfirmationViewController: CallViewController {
         setConnectionButtonsEnabled(true)
         minimizeButton.setImage(R.image.ic_title_close(), for: .normal)
         minimizeButton.tintColor = .white
-        titleLabel.text = R.string.localizable.chat_menu_group_call()
+        titleLabel.text = conversation.name
+        statusLabel.text = nil
         membersCollectionView.isHidden = false
         hangUpStackView.alpha = 0
         acceptStackView.alpha = 1
@@ -48,6 +49,12 @@ class GroupCallConfirmationViewController: CallViewController {
         }
     }
     
+    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Self.footerReuseId, for: indexPath) as! CallFooterView
+        view.label.text = R.string.localizable.group_call_participants_count(members.count)
+        return view
+    }
+    
     func loadMembers(with userIds: [String]) {
         DispatchQueue.global().async {
             let members = UserDAO.shared.getUsers(with: userIds)
@@ -55,6 +62,8 @@ class GroupCallConfirmationViewController: CallViewController {
                 self.members = members
                 if self.isViewLoaded {
                     self.membersCollectionView.reloadData()
+                    self.view.setNeedsLayout()
+                    self.view.layoutIfNeeded()
                 }
             }
         }

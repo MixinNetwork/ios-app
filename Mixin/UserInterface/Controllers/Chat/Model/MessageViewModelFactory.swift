@@ -133,6 +133,8 @@ class MessageViewModelFactory {
                 viewModel = PostMessageViewModel(message: message)
             } else if message.category.hasSuffix("_LOCATION") {
                 viewModel = LocationMessageViewModel(message: message)
+            } else if message.category.hasSuffix("_TRANSCRIPT") {
+                viewModel = TranscriptMessageViewModel(message: message)
             } else if message.category.hasPrefix("WEBRTC_") {
                 viewModel = CallMessageViewModel(message: message)
             } else if message.category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
@@ -152,8 +154,6 @@ class MessageViewModelFactory {
                 viewModel = EncryptionHintViewModel(message: message)
             } else if MessageCategory.krakenCategories.contains(message.category) {
                 viewModel = SystemMessageViewModel(message: message)
-            } else if message.category == MessageCategory.SIGNAL_TRANSCRIPT.rawValue {
-                viewModel = TranscriptMessageViewModel(message: message)
             } else {
                 viewModel = UnknownMessageViewModel(message: message)
             }

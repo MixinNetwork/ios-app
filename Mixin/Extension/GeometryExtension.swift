@@ -56,4 +56,11 @@ extension CGAffineTransform {
     
     static let italic = CGAffineTransform(a: 1, b: 0, c: tan(.pi / 14), d: 1, tx: 0, ty: 0).translatedBy(x: 0, y: -1)
     
+    static func transform(from: CGRect, to: CGRect) -> CGAffineTransform {
+        let scaleWidth = to.width / from.width
+        let scaleHeight = to.height / from.height
+        let transform = CGAffineTransform.identity.translatedBy(x: to.midX - from.midX, y: to.midY - from.midY)
+        return transform.scaledBy(x: scaleWidth, y: scaleHeight)
+    }
+    
 }

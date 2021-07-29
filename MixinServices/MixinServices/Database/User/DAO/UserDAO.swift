@@ -96,6 +96,21 @@ public final class UserDAO: UserDatabaseDAO {
         return ids.compactMap { userMap[$0] }
     }
     
+    public func getUsers(withAppIds ids: [String]) -> [User] {
+        guard ids.count > 0 else {
+            return []
+        }
+        let keys = ids.map { _ in "?" }.joined(separator: ",")
+        let sql = """
+            SELECT u.*
+            FROM apps a, users u
+            WHERE u.app_id in (\(keys)) AND a.app_id = u.app_id AND u.relationship = 'FRIEND'
+        """
+        let users: [User] = db.select(with: sql, arguments: StatementArguments(ids))
+        let userMap = users.reduce(into: [String: User]()) { $0[$1.userId] = $1 }
+        return ids.compactMap { userMap[$0] }
+    }
+    
     public func getAppUsers(inConversationOf conversationId: String) -> [User] {
         let sql = """
         SELECT u.user_id, u.full_name, u.biography, u.identity_number, u.avatar_url,
@@ -104,6 +119,16 @@ public final class UserDAO: UserDatabaseDAO {
         WHERE p.conversation_id = ? AND p.user_id = u.user_id AND a.app_id = u.app_id
         """
         return db.select(with: sql, arguments: [conversationId])
+    }
+    
+    public func getAppUsersAppId() -> [String] {
+        let sql = """
+            SELECT u.app_id
+            FROM apps a, users u
+            WHERE a.app_id = u.app_id AND u.relationship = 'FRIEND'
+            ORDER BY u.full_name ASC
+        """
+        return db.select(with: sql)
     }
     
     public func getAppUsers() -> [User] {
@@ -198,8 +223,15 @@ public final class UserDAO: UserDatabaseDAO {
                                                         userInfo: [Self.UserInfoKey.app: users[0].app])
                     }
                     if notifyContact {
-                        NotificationCenter.default.post(onMainThread: Self.contactsDidChangeNotification,
-                                                        object: self)
+                        if users.count == 1 {
+                            let user = UserItem.createUser(from: users[0])
+                            NotificationCenter.default.post(onMainThread: Self.contactsDidChangeNotification,
+                                                            object: self,
+                                                            userInfo: [Self.UserInfoKey.user: user])
+                        } else {
+                            NotificationCenter.default.post(onMainThread: Self.contactsDidChangeNotification,
+                                                            object: self)
+                        }
                     }
                 }
             }

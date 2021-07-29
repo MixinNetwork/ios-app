@@ -196,6 +196,22 @@
 
 // Apps
 "app_not_found" = "找不到这个机器人";
+"app_category_wallet" = "钱包";
+"app_category_trading" = "交易";
+"app_category_business" = "商业";
+"app_category_social" = "社交";
+"app_category_shopping" = "购物";
+"app_category_education" = "教育";
+"app_category_news" = "新闻";
+"app_category_tools" = "工具";
+"app_category_games" = "游戏";
+"app_category_books" = "书籍";
+"app_category_music" = "应用";
+"app_category_photo" = "照相";
+"app_category_video" = "视频";
+"app_category_camera" = "摄影";
+"app_category_other" = "其他";
+"app_pin_tips" = "可将常用机器人长按拖至此处，可显示于首页";
 
 // Home
 "home_start_messaging_guide" = "你可以与你的 Mixin 好友一起聊天。";
@@ -209,7 +225,6 @@
 "home_bulletin_button_notification" = "设置";
 "home_title_apps" = "机器人";
 "home_apps_candidate_empty" = "可以添加你喜欢的机器人";
-"home_apps_pin_empty" = "长按并拖拽机器人置顶";
 
 // Clip
 "clip_remove_all" = "确定要删除全部浮窗？";

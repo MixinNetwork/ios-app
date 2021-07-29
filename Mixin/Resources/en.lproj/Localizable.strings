@@ -196,6 +196,22 @@
 
 // Apps
 "app_not_found" = "App not found.";
+"app_category_wallet" = "Wallet";
+"app_category_trading" = "Trading";
+"app_category_business" = "Business";
+"app_category_social" = "Social";
+"app_category_shopping" = "Shopping";
+"app_category_education" = "Education";
+"app_category_news" = "News";
+"app_category_tools" = "Tools";
+"app_category_games" = "Games";
+"app_category_books" = "Books";
+"app_category_music" = "Music";
+"app_category_photo" = "Photo";
+"app_category_video" = "Video";
+"app_category_camera" = "Camera";
+"app_category_other" = "Other";
+"app_pin_tips" = "You can long press and drag the frequently used robots here to display them on the home";
 
 // Home
 "home_start_messaging_guide" = "You can chat with contacts who have Mixin installed on their phone.";
@@ -209,7 +225,6 @@
 "home_bulletin_button_notification" = "Settings";
 "home_title_apps" = "Bots";
 "home_apps_candidate_empty" = "Please add your favorite bot first.";
-"home_apps_pin_empty" = "Long press and drag a bot to pin";
 
 // Clip
 "clip_remove_all" = "Remove all floats?";

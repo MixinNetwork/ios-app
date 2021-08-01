@@ -23,10 +23,10 @@ enum ScreenWidth: Int {
     case long
     
     static let current: ScreenWidth = {
-        let height = min(UIScreen.main.bounds.height, UIScreen.main.bounds.width)
-        if height <= 375 {
+        let width = min(UIScreen.main.bounds.height, UIScreen.main.bounds.width)
+        if width < (320 + 375) / 2 {
             return .short
-        } else if height <= 390 {
+        } else if width < (390 + 414) / 2 {
             return .medium
         } else {
             return .long

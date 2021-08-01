@@ -317,7 +317,12 @@ extension OggOpusRecorder {
         pcmData.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) -> Void in
             let samples = ptr.bindMemory(to: Int16.self)
             for i in 0..<numberOfSamples {
-                let sample = abs(samples.baseAddress!.advanced(by: i).pointee)
+                var sample = samples.baseAddress!.advanced(by: i).pointee
+                if sample == .min {
+                    sample = .max
+                } else {
+                    sample = abs(sample)
+                }
                 waveformPeak = max(waveformPeak, sample)
                 waveformPeakCount += 1
                 if waveformPeakCount >= waveformPeakSampleScope {

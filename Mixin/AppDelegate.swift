@@ -140,10 +140,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return false
         }
         if ScreenLockManager.shared.isLocked {
-            ScreenLockManager.shared.authenticationSucceed = {
+            ScreenLockManager.shared.screenLockViewDidHide = {
                 _ = UrlWindow.checkUrl(url: url, ignoreUnsupportMixinSchema: false)
+                ScreenLockManager.shared.screenLockViewDidHide = nil
             }
-            return false
+            return true
         } else {
             return UrlWindow.checkUrl(url: url, ignoreUnsupportMixinSchema: false)
         }

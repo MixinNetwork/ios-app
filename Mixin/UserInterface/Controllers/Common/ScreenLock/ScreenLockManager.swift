@@ -17,7 +17,7 @@ final class ScreenLockManager {
     static let shared = ScreenLockManager()
     
     var hasOtherBiometricAuthInProgress = false
-    var authenticationSucceed: (() -> Void)?
+    var screenLockViewDidHide: (() -> Void)?
     
     private(set) var isLocked = false
     private(set) var isLastAuthenticationStillValid = false
@@ -155,6 +155,7 @@ extension ScreenLockManager {
                     }
                 } else {
                     hideScreenLockView()
+                    screenLockViewDidHide?()
                 }
             } else if from == .willResignActive {
                 if !hasLastBiometricAuthenticationFailed {
@@ -172,7 +173,7 @@ extension ScreenLockManager {
             hasLastBiometricAuthenticationFailed = false
             hideScreenLockView()
             AppGroupUserDefaults.User.lastLockScreenBiometricVerifiedDate = Date()
-            authenticationSucceed?()
+            screenLockViewDidHide?()
         case .authenticationFailed:
             hasLastBiometricAuthenticationFailed = true
             viewController?.showUnlockOption(true)

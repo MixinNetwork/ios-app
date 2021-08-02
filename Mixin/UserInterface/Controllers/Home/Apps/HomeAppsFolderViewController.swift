@@ -23,6 +23,9 @@ class HomeAppsFolderViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var pageControl: UIPageControl!
     
+    @IBOutlet weak var containerViewLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var containerViewTrailingConstraint: NSLayoutConstraint!
+    
     var openAnimationDidEnd: (() -> Void)?
     var folder: HomeAppFolder!
     var sourceFrame: CGRect!
@@ -35,6 +38,10 @@ class HomeAppsFolderViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        if ScreenWidth.current <= .short {
+            containerViewLeadingConstraint.constant = 20
+            containerViewTrailingConstraint.constant = 20
+        }
         textField.text = folder.name
         leaveTextFieldEditingMode()
         homeAppsManager = HomeAppsManager(viewController: self,

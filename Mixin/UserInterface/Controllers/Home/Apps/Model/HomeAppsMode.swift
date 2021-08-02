@@ -53,11 +53,19 @@ enum HomeAppsMode {
     var itemSize: CGSize {
         switch self {
         case .regular:
-            return CGSize(width: 80, height: 100)
+            if ScreenWidth.current <= .short {
+                return CGSize(width: 60, height: 96)
+            } else {
+                return CGSize(width: 80, height: 100)
+            }
         case .pinned:
             return CGSize(width: 54, height: 54)
         case .folder:
-            return CGSize(width: 80, height: 74)
+            if ScreenWidth.current <= .short {
+                return CGSize(width: 60, height: 74)
+            } else {
+                return CGSize(width: 80, height: 74)
+            }
         case .nestedFolder:
             return CGSize(width: 14, height: 14)
         }
@@ -93,7 +101,7 @@ enum HomeAppsMode {
     var rowsPerPage: Int {
         switch self {
         case .regular:
-            return (ScreenHeight.current == .medium ? 3 : 4)
+            return (ScreenHeight.current <= .medium ? 3 : 4)
         case .pinned:
             return 1
         case .folder:
@@ -114,7 +122,11 @@ enum HomeAppsMode {
         case .pinned:
             return 20
         case .folder:
-            return 44
+            if ScreenWidth.current <= .short {
+                return 20
+            } else {
+                return 44
+            }
         case .nestedFolder:
             return 0
         }

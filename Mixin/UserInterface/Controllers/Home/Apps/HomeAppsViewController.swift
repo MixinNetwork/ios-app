@@ -154,13 +154,17 @@ extension HomeAppsViewController {
     
     private func preferredContentHeight() -> CGFloat {
         view.layoutIfNeeded()
-        return titleBarHeightConstraint.constant
+        let height = titleBarHeightConstraint.constant
             + pinnedWrapperHeightConstraint.constant
             + candidateCollectionViewHeightConstraint.constant
             + pageControlTopConstraint.constant
             + ceil(pageControl.bounds.height)
             + AppDelegate.current.mainWindow.safeAreaInsets.bottom
-            + 22
+        if ScreenHeight.current <= .short {
+            return height + 36
+        } else {
+            return height + 22
+        }
     }
     
     private func setCandidateEmptyHintHidden(_ hidden: Bool) {

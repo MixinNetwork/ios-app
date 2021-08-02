@@ -23,7 +23,6 @@ class StickerStorePreviewCell: UICollectionViewCell {
             collectionView.reloadData()
         }
     }
-    
     private let cellCountPerRow = 4
     
     @IBAction func stickerAction(_ sender: Any) {

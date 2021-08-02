@@ -48,8 +48,9 @@ extension StickersStoreViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.sticker_store_preview, for: indexPath)!
         if indexPath.item < stickerStoreItems.count {
-            cell.stickerStoreItem = stickerStoreItems[indexPath.row]
-            cell.onStickerAction = {
+            let item = stickerStoreItems[indexPath.row]
+            cell.stickerStoreItem = item
+            cell.onStickerOperation = {
                 
             }
         }
@@ -81,10 +82,9 @@ extension StickersStoreViewController: UICollectionViewDelegate {
 extension StickersStoreViewController {
     
     @objc private func syncStickers() {
-        let stickers = AppGroupUserDefaults.User.stickers
-        for index in stickerStoreItems.indices {
-            var item = stickerStoreItems[index]
-            item.isAdded = stickers.contains(item.album.albumId)
+        let stickerAblums = AppGroupUserDefaults.User.stickerAblums
+        for (index, item) in stickerStoreItems.enumerated() {
+            stickerStoreItems[index].isAdded = stickerAblums.contains(item.album.albumId)
         }
         collectionView.reloadData()
     }

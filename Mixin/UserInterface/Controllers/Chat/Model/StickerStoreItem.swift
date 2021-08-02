@@ -8,3 +8,11 @@ struct StickerStoreItem {
     var isAdded: Bool = Bool.random()
     
 }
+
+extension StickerStoreItem {
+    
+    var albumId: String {
+        return album.albumId
+    }
+    
+}

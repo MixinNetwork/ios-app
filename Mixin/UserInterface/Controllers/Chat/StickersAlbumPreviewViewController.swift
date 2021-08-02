@@ -27,7 +27,7 @@ class StickersAlbumPreviewViewController: ResizablePopupViewController {
     class func instance() -> StickersAlbumPreviewViewController {
         R.storyboard.chat.stickers_album_preview()!
     }
-
+    
     override var automaticallyAdjustsResizableScrollViewBottomInset: Bool {
         false
     }
@@ -99,6 +99,13 @@ class StickersAlbumPreviewViewController: ResizablePopupViewController {
     }
     
     @IBAction func stickerButtonAction(_ sender: Any) {
+        let stickerAblums = AppGroupUserDefaults.User.stickerAblums
+        let albumId = stickerStoreItem.album.albumId
+        if stickerStoreItem.isAdded {
+            AppGroupUserDefaults.User.stickerAblums = stickerAblums.filter({ $0 != albumId })
+        } else {
+            AppGroupUserDefaults.User.stickerAblums = Array(Set(stickerAblums + [albumId]))
+        }
         dismissAsChild(completion: nil)
     }
     
@@ -161,6 +168,10 @@ extension StickersAlbumPreviewViewController: UICollectionViewDataSource {
         }
         return cell
     }
+    
+}
+
+extension StickersAlbumPreviewViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         guard let cell = cell as? StickerPreviewCell else {

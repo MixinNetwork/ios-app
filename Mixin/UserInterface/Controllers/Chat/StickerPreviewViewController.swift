@@ -2,7 +2,7 @@ import UIKit
 import MixinServices
 
 class StickerPreviewViewController: UIViewController {
-
+    
     @IBOutlet weak var stickersContentView: UIView!
     @IBOutlet weak var activityIndicatorView: ActivityIndicatorView!
     @IBOutlet weak var stickerView: AnimatedStickerView!
@@ -14,9 +14,10 @@ class StickerPreviewViewController: UIViewController {
     @IBOutlet weak var stickersContentViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var stickersContentViewHeightConstraint: NSLayoutConstraint!
     
-    var sticker: StickerItem?
+    var message: MessageItem!
     
-    var stickers = [StickerItem]()
+    private var albumId: String?
+    private lazy var stickers = [StickerItem]()
     private lazy var backgroundButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = UIColor.black.withAlphaComponent(0)
@@ -24,17 +25,14 @@ class StickerPreviewViewController: UIViewController {
         return button
     }()
     
-    class func instance() -> StickerPreviewViewController {
-        R.storyboard.chat.sticker_preview()!
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.layer.cornerRadius = 13
         updatePreferredContentSizeHeight()
-        if let sticker = sticker {
-            stickerView.load(sticker: sticker)
-            stickerView.startAnimating()
+        stickerView.load(message: message)
+        stickerView.startAnimating()
+        if message.assetCategory == "SYSTEM" {
+            fetchStickersFromStore()
         }
     }
     
@@ -53,7 +51,11 @@ class StickerPreviewViewController: UIViewController {
     }
     
     @IBAction func addStickersAction(_ sender: Any) {
-        
+        guard let albumId = albumId else {
+            return
+        }
+        AppGroupUserDefaults.User.stickerAblums = Array(Set(AppGroupUserDefaults.User.stickerAblums + [albumId]))
+        dismissAsChild(completion: nil)
     }
     
 }
@@ -82,23 +84,29 @@ extension StickerPreviewViewController {
     }
     
     private func fetchStickersFromStore() {
-        activityIndicatorView.isHidden = false
         activityIndicatorView.startAnimating()
-        DispatchQueue.global().async {
+        DispatchQueue.global().async { [weak self] in
+            guard let self = self else {
+                DispatchQueue.main.async {
+                    self?.activityIndicatorView.stopAnimating()
+                }
+                return
+            }
+            guard let stickerId = self.message.stickerId, let album = AlbumDAO.shared.getAlbum(stickerId: stickerId) else {
+                self.activityIndicatorView.stopAnimating()
+                return
+            }
+            self.albumId = album.albumId
+            self.stickers = StickerDAO.shared.getStickers(albumId: album.albumId)
             DispatchQueue.main.async {
-                self.activityIndicatorView.isHidden = true
                 self.activityIndicatorView.stopAnimating()
                 self.stickersContentView.isHidden = false
-                // update date
+                // update data
                 self.collectionView.isHidden = false
                 self.collectionView.reloadData()
                 self.updatePreferredContentSizeHeight()
             }
         }
-    }
-    
-    private var isStoreSticker: Bool {
-        return true
     }
     
 }
@@ -116,6 +124,10 @@ extension StickerPreviewViewController: UICollectionViewDataSource {
         }
         return cell
     }
+    
+}
+
+extension StickerPreviewViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         guard let cell = cell as? StickerPreviewCell else {
@@ -166,5 +178,5 @@ extension StickerPreviewViewController {
             self.backgroundButton.backgroundColor = UIColor.black.withAlphaComponent(0.3)
         }
     }
-        
+    
 }

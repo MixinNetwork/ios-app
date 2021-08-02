@@ -15,9 +15,7 @@ class StickersEditingViewController: UIViewController {
         super.viewDidLoad()
         stickerEmptyImageView.tintColor = UIColor(displayP3RgbValue: 0xC0C5D4, alpha: 0.3)
         stickerEmptyHintViewTopConstraint.constant = (UIScreen.main.bounds.height - stickerEmptyHintViewHeightConstraint.constant) / 7 * 3
-        tableView.setEditing(false, animated: true)
-        tableView.dragInteractionEnabled = true
-        tableView.dragDelegate = self
+        tableView.isEditing = true
     }
     
     @IBAction func backAction(_ sender: Any) {
@@ -34,12 +32,12 @@ extension StickersEditingViewController {
     }
     
     private func syncStickers() {
-        AppGroupUserDefaults.User.stickers = stickerStoreItems.map({ $0.album.albumId })
+        AppGroupUserDefaults.User.stickerAblums = stickerStoreItems.map({ $0.album.albumId })
     }
     
 }
 
-extension StickersEditingViewController: UITableViewDataSource, UITableViewDelegate {
+extension StickersEditingViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return stickerStoreItems.count
@@ -62,24 +60,23 @@ extension StickersEditingViewController: UITableViewDataSource, UITableViewDeleg
         return cell
     }
     
+}
+
+extension StickersEditingViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        return .none
+    }
+    
+    func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
+        return false
+    }
+    
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         let item = stickerStoreItems.remove(at: sourceIndexPath.row)
         stickerStoreItems.insert(item, at: destinationIndexPath.row)
         syncStickers()
         tableView.reloadData()
-    }
-    
-}
-
-extension StickersEditingViewController: UITableViewDragDelegate {
-    
-    func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
-        let item = UIDragItem(itemProvider: NSItemProvider())
-        return [item]
-    }
-    
-    func tableView(_ tableView: UITableView, dragSessionIsRestrictedToDraggingApplication session: UIDragSession) -> Bool {
-        return true
     }
     
 }

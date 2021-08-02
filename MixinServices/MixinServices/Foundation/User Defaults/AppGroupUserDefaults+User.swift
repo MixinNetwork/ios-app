@@ -60,7 +60,8 @@ extension AppGroupUserDefaults {
 
             case pinMessageBanners = "pin_message_banners"
             
-            case stickers = "sticker"
+            case stickerAblums = "sticker_albums"
+            
         }
         
         public static let version = 27
@@ -224,8 +225,8 @@ extension AppGroupUserDefaults {
             }
         }
                 
-        @Default(namespace: .user, key: Key.stickers, defaultValue: [])
-        public static var stickers: [String] {
+        @Default(namespace: .user, key: Key.stickerAblums, defaultValue: [])
+        public static var stickerAblums: [String] {
             didSet {
                 NotificationCenter.default.post(onMainThread: stickerIdsDidChangeNotification, object: self)
             }

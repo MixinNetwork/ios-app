@@ -10,15 +10,20 @@ class StickersStoreViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //TODO: remove mock
-        let albums = AlbumDAO.shared.getAlbums()
-        stickerStoreItems = albums.map({ StickerStoreItem(album: $0, stickers: StickerDAO.shared.getStickers(albumId: $0.albumId)) })
-        collectionView.reloadData()
-        //TODO: update banner
-        //flowLayout.headerReferenceSize = .zero
+        StickersStoreManager.shared.fetchStoreStickers { result in
+            switch result {
+            case .success(let items):
+                //TODO: update banner
+                //flowLayout.headerReferenceSize = .zero
+                stickerStoreItems = items
+                collectionView.reloadData()
+            case .failure(_):
+                collectionView.reloadData()
+            }
+        }
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(syncStickers),
-                                               name: AppGroupUserDefaults.User.stickerIdsDidChangeNotification,
+                                               selector: #selector(syncStickerAlbums),
+                                               name: AppGroupUserDefaults.User.stickerAlbumIdsDidChangeNotification,
                                                object: nil)
     }
     
@@ -33,7 +38,6 @@ class StickersStoreViewController: UIViewController {
     
     @IBAction func editAction(_ sender: Any) {
         let viewController = R.storyboard.chat.my_stickers()!
-        viewController.stickerStoreItems = stickerStoreItems
         navigationController?.pushViewController(viewController, animated: true)
     }
     
@@ -51,7 +55,7 @@ extension StickersStoreViewController: UICollectionViewDataSource {
             let item = stickerStoreItems[indexPath.row]
             cell.stickerStoreItem = item
             cell.onStickerOperation = {
-                
+                StickersStoreManager.shared.handleStickerOperation(with: item)
             }
         }
         return cell
@@ -81,7 +85,7 @@ extension StickersStoreViewController: UICollectionViewDelegate {
 
 extension StickersStoreViewController {
     
-    @objc private func syncStickers() {
+    @objc private func syncStickerAlbums() {
         let stickerAblums = AppGroupUserDefaults.User.stickerAblums
         for (index, item) in stickerStoreItems.enumerated() {
             stickerStoreItems[index].isAdded = stickerAblums.contains(item.album.albumId)

@@ -99,13 +99,7 @@ class StickersAlbumPreviewViewController: ResizablePopupViewController {
     }
     
     @IBAction func stickerButtonAction(_ sender: Any) {
-        let stickerAblums = AppGroupUserDefaults.User.stickerAblums
-        let albumId = stickerStoreItem.album.albumId
-        if stickerStoreItem.isAdded {
-            AppGroupUserDefaults.User.stickerAblums = stickerAblums.filter({ $0 != albumId })
-        } else {
-            AppGroupUserDefaults.User.stickerAblums = Array(Set(stickerAblums + [albumId]))
-        }
+        StickersStoreManager.shared.handleStickerOperation(with: stickerStoreItem)
         dismissAsChild(completion: nil)
     }
     

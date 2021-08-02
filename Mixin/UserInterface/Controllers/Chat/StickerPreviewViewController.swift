@@ -16,7 +16,7 @@ class StickerPreviewViewController: UIViewController {
     
     var message: MessageItem!
     
-    private var albumId: String?
+    private var album: Album?
     private lazy var stickers = [StickerItem]()
     private lazy var backgroundButton: UIButton = {
         let button = UIButton()
@@ -31,8 +31,9 @@ class StickerPreviewViewController: UIViewController {
         updatePreferredContentSizeHeight()
         stickerView.load(message: message)
         stickerView.startAnimating()
-        if message.assetCategory == "SYSTEM" {
-            fetchStickersFromStore()
+        
+        if message.assetCategory == "SYSTEM", let stickerId = message.stickerId {
+            fetchSticker(with: stickerId)
         }
     }
     
@@ -51,10 +52,10 @@ class StickerPreviewViewController: UIViewController {
     }
     
     @IBAction func addStickersAction(_ sender: Any) {
-        guard let albumId = albumId else {
+        guard let album = album else {
             return
         }
-        AppGroupUserDefaults.User.stickerAblums = Array(Set(AppGroupUserDefaults.User.stickerAblums + [albumId]))
+        StickersStoreManager.shared.add(album: album)
         dismissAsChild(completion: nil)
     }
     
@@ -83,28 +84,21 @@ extension StickerPreviewViewController {
             + (stickers.count > 0 ? 160.0 : 90.0)
     }
     
-    private func fetchStickersFromStore() {
+    private func fetchSticker(with stickerId: String) {
         activityIndicatorView.startAnimating()
-        DispatchQueue.global().async { [weak self] in
-            guard let self = self else {
-                DispatchQueue.main.async {
-                    self?.activityIndicatorView.stopAnimating()
-                }
-                return
-            }
-            guard let stickerId = self.message.stickerId, let album = AlbumDAO.shared.getAlbum(stickerId: stickerId) else {
-                self.activityIndicatorView.stopAnimating()
-                return
-            }
-            self.albumId = album.albumId
-            self.stickers = StickerDAO.shared.getStickers(albumId: album.albumId)
-            DispatchQueue.main.async {
-                self.activityIndicatorView.stopAnimating()
-                self.stickersContentView.isHidden = false
-                // update data
-                self.collectionView.isHidden = false
-                self.collectionView.reloadData()
-                self.updatePreferredContentSizeHeight()
+        StickersStoreManager.shared.fetchSticker(stickerId: stickerId) { result in
+            activityIndicatorView.stopAnimating()
+            switch result {
+            case .success(let item):
+                album = item.album
+                stickers = item.stickers
+                stickersContentView.isHidden = false
+                collectionView.isHidden = false
+                collectionView.reloadData()
+                updatePreferredContentSizeHeight()
+            case .failure:
+                stickersContentView.isHidden = true
+                collectionView.isHidden = true
             }
         }
     }

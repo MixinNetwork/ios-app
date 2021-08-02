@@ -5,17 +5,17 @@ class StickersEditingViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var stickerEmptyImageView: UIImageView!
-    @IBOutlet weak var stickerEmptyHintView: UIView!
-    @IBOutlet weak var stickerEmptyHintViewTopConstraint: NSLayoutConstraint!
-    @IBOutlet weak var stickerEmptyHintViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var stickerEmptyWrapperView: UIView!
+    @IBOutlet weak var stickerEmptyWrapperViewTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var stickerEmptyWrapperViewHeightConstraint: NSLayoutConstraint!
     
-    var stickerStoreItems = [StickerStoreItem]()
+    private var stickerStoreItems = [StickerStoreItem]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         stickerEmptyImageView.tintColor = UIColor(displayP3RgbValue: 0xC0C5D4, alpha: 0.3)
-        stickerEmptyHintViewTopConstraint.constant = (UIScreen.main.bounds.height - stickerEmptyHintViewHeightConstraint.constant) / 7 * 3
-        tableView.isEditing = true
+        stickerEmptyWrapperViewTopConstraint.constant = (UIScreen.main.bounds.height - stickerEmptyWrapperViewHeightConstraint.constant) / 7 * 3
+        fetchMyStickers()
     }
     
     @IBAction func backAction(_ sender: Any) {
@@ -26,13 +26,19 @@ class StickersEditingViewController: UIViewController {
 
 extension StickersEditingViewController {
     
-    private func setStickerEmptyHintHidden(_ hidden: Bool) {
-        stickerEmptyHintView.isHidden = hidden
-        tableView.isHidden = !hidden
-    }
-    
-    private func syncStickers() {
-        AppGroupUserDefaults.User.stickerAblums = stickerStoreItems.map({ $0.album.albumId })
+    private func fetchMyStickers() {
+        StickersStoreManager.shared.fetchMyStickers { items in
+            if items.isEmpty {
+                self.stickerEmptyWrapperView.isHidden = false
+                self.tableView.isHidden = true
+            } else {
+                self.stickerStoreItems = items
+                self.stickerEmptyWrapperView.isHidden = true
+                self.tableView.isHidden = false
+                self.tableView.reloadData()
+                self.tableView.isEditing = true
+            }
+        }
     }
     
 }
@@ -50,7 +56,7 @@ extension StickersEditingViewController: UITableViewDataSource {
             cell.onDeleteSticker = {
                 tableView.performBatchUpdates {
                     self.stickerStoreItems.remove(at: indexPath.row)
-                    self.syncStickers()
+                    StickersStoreManager.shared.remove(album: self.stickerStoreItems[indexPath.row].album)
                     tableView.deleteRows(at: [indexPath], with: .fade)
                 } completion: { _ in
                     tableView.reloadData()
@@ -75,7 +81,7 @@ extension StickersEditingViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         let item = stickerStoreItems.remove(at: sourceIndexPath.row)
         stickerStoreItems.insert(item, at: destinationIndexPath.row)
-        syncStickers()
+        StickersStoreManager.shared.updateStickerAlbumSequence(albumIds: stickerStoreItems.map({ $0.album.albumId }))
         tableView.reloadData()
     }
     

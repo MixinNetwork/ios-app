@@ -72,7 +72,7 @@ extension AppGroupUserDefaults {
         public static let circleNameDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.circle.name.change")
         public static let homeAppIdsDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.home.app.ids.change")
         public static let pinMessageBannerDidChangeNotification = Notification.Name("one.mixin.services.pinMessageBannerDidChange")
-        public static let stickerIdsDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.chat.sticker.ids.change")
+        public static let stickerAlbumIdsDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.chat.sticker.album.ids.change")
 
         private static let maxNumberOfAssetSearchHistory = 2
         
@@ -228,7 +228,7 @@ extension AppGroupUserDefaults {
         @Default(namespace: .user, key: Key.stickerAblums, defaultValue: [])
         public static var stickerAblums: [String] {
             didSet {
-                NotificationCenter.default.post(onMainThread: stickerIdsDidChangeNotification, object: self)
+                NotificationCenter.default.post(onMainThread: stickerAlbumIdsDidChangeNotification, object: self)
             }
         }
         

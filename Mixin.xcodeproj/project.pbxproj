@@ -597,6 +597,7 @@
 		7C4E2B0626A9BE50008190F5 /* StickersEditingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4E2B0526A9BE50008190F5 /* StickersEditingCell.swift */; };
 		7C4FF5AA26AE614C003E39AC /* StickerPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4FF5A926AE614C003E39AC /* StickerPreviewViewController.swift */; };
 		7C6AD1F526A6794F00E6C41D /* StickersStoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6AD1F426A6794F00E6C41D /* StickersStoreViewController.swift */; };
+		7CB23AA226B8D9690084E4A3 /* StickersStoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB23AA126B8D9690084E4A3 /* StickersStoreManager.swift */; };
 		7CC2BDB926A7CAD6001749B1 /* StickersStoreBannerFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC2BDB826A7CAD6001749B1 /* StickersStoreBannerFlowLayout.swift */; };
 		7CF2FEA626AA89BA00D3A5B3 /* StickersAlbumPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF2FEA526AA89BA00D3A5B3 /* StickersAlbumPreviewViewController.swift */; };
 		7CF2FEA826AAC1EA00D3A5B3 /* StickerStoreItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF2FEA726AAC1EA00D3A5B3 /* StickerStoreItem.swift */; };
@@ -1593,6 +1594,7 @@
 		7C4E2B0526A9BE50008190F5 /* StickersEditingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersEditingCell.swift; sourceTree = "<group>"; };
 		7C4FF5A926AE614C003E39AC /* StickerPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerPreviewViewController.swift; sourceTree = "<group>"; };
 		7C6AD1F426A6794F00E6C41D /* StickersStoreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersStoreViewController.swift; sourceTree = "<group>"; };
+		7CB23AA126B8D9690084E4A3 /* StickersStoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersStoreManager.swift; sourceTree = "<group>"; };
 		7CC2BDB826A7CAD6001749B1 /* StickersStoreBannerFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersStoreBannerFlowLayout.swift; sourceTree = "<group>"; };
 		7CF2FEA526AA89BA00D3A5B3 /* StickersAlbumPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersAlbumPreviewViewController.swift; sourceTree = "<group>"; };
 		7CF2FEA726AAC1EA00D3A5B3 /* StickerStoreItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerStoreItem.swift; sourceTree = "<group>"; };
@@ -2175,6 +2177,7 @@
 				94D63DD52646C29100FD7EE8 /* MessageViewModelFactory.swift */,
 				7CC2BDB826A7CAD6001749B1 /* StickersStoreBannerFlowLayout.swift */,
 				7CF2FEA726AAC1EA00D3A5B3 /* StickerStoreItem.swift */,
+				7CB23AA126B8D9690084E4A3 /* StickersStoreManager.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -4403,6 +4406,7 @@
 				9427D52725E0EB5B00B1EF0E /* PlaylistItem.swift in Sources */,
 				DFFDCF8420AD8A7A00B4956E /* FileSendViewController.swift in Sources */,
 				94D9DF5725F889BC00FC2F28 /* BulletinContentView.swift in Sources */,
+				7CB23AA226B8D9690084E4A3 /* StickersStoreManager.swift in Sources */,
 				7B09E55A1FD157EB002E45D3 /* MessageViewModel.swift in Sources */,
 				7BF071C02244E6A1007240AD /* UploadContactCell.swift in Sources */,
 				7B7DACA823505B41006AA2AC /* SharedMediaAudioMessagePlayingManager.swift in Sources */,

@@ -37,4 +37,8 @@ public final class AlbumDAO: UserDatabaseDAO {
         db.save(album)
     }
     
+    public func deleteAlbum(albumId: String) {
+        db.delete(User.self, where: Album.column(of: .albumId) == albumId)
+    }
+    
 }

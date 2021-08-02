@@ -38,7 +38,7 @@ class StickerInputViewController: UIViewController {
         pageScrollView?.delegate = self
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(reload),
-                                               name: AppGroupUserDefaults.User.stickerIdsDidChangeNotification,
+                                               name: AppGroupUserDefaults.User.stickerAlbumIdsDidChangeNotification,
                                                object: nil)
     }
     
@@ -62,6 +62,17 @@ class StickerInputViewController: UIViewController {
     @objc func reload() {
         DispatchQueue.global(qos: .userInitiated).async {
             self.officialAlbums = AlbumDAO.shared.getAlbums()
+            let stickerAblums = AppGroupUserDefaults.User.stickerAblums
+            if stickerAblums.isEmpty {
+                AppGroupUserDefaults.User.stickerAblums = self.officialAlbums.map({ $0.albumId })
+            } else {
+                let albumMap: [String: Album] = self.officialAlbums.reduce(into: [:]) { $0[$1.albumId] = $1 }
+                self.officialAlbums = stickerAblums.compactMap { albumMap[$0] }
+                if self.officialAlbums.count != stickerAblums.count {
+                    let newAddedAlbums = self.officialAlbums.suffix(self.officialAlbums.count - stickerAblums.count)
+                    self.officialAlbums += newAddedAlbums
+                }
+            }
             self.modelController.reloadRecentFavoriteStickers()
             self.modelController.reloadOfficialStickers(albums: self.officialAlbums)
             DispatchQueue.main.async {

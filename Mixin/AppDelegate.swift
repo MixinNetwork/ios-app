@@ -136,7 +136,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-        return LoginManager.shared.isLoggedIn && UrlWindow.checkUrl(url: url, ignoreUnsupportMixinSchema: false)
+        guard LoginManager.shared.isLoggedIn else {
+            return false
+        }
+        if ScreenLockManager.shared.isLocked {
+            ScreenLockManager.shared.authenticationSucceed = {
+                let _ = UrlWindow.checkUrl(url: url, ignoreUnsupportMixinSchema: false)
+            }
+            return false
+        } else {
+            return UrlWindow.checkUrl(url: url, ignoreUnsupportMixinSchema: false)
+        }
     }
     
     func applicationProtectedDataDidBecomeAvailable(_ application: UIApplication) {

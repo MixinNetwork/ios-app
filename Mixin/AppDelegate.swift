@@ -141,7 +141,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         if ScreenLockManager.shared.isLocked {
             ScreenLockManager.shared.authenticationSucceed = {
-                let _ = UrlWindow.checkUrl(url: url, ignoreUnsupportMixinSchema: false)
+                _ = UrlWindow.checkUrl(url: url, ignoreUnsupportMixinSchema: false)
             }
             return false
         } else {

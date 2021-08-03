@@ -40,40 +40,15 @@ class SilentNotificationMessagePreviewViewController: UIViewController {
     }
     
     @IBAction func sendNormally(_ sender: Any) {
-        normalButton.alpha = 0
-        close(sender)
         delegate?.silentNotificationMessagePreviewViewController(self, didSelectSendWithNotification: true)
     }
     
     @IBAction func sendSilently(_ sender: Any) {
-        normalButton.alpha = 0
-        close(sender)
         delegate?.silentNotificationMessagePreviewViewController(self, didSelectSendWithNotification: false)
     }
     
     @IBAction func close(_ sender: Any) {
-        UIView.animate(withDuration: 0.25) {
-            self.view.backgroundColor = .black.withAlphaComponent(0)
-            self.backgroundView.effect = nil
-            self.messageBackgroundView.alpha = 0
-            if let frame = self.textViewOriginalFrame {
-                self.textView.frame = frame
-                self.messageBackgroundView.frame = frame.inset(by: self.messageBackgroundInsets)
-            }
-            if let offset = self.textViewOriginalContentOffset {
-                self.textView.contentOffset = offset
-            }
-            if let frame = self.normalButtonOriginalFrame {
-                self.normalButton.frame = frame
-            }
-            self.silentButton.transform = self.sendSilentlyHiddenTransform
-            self.silentButton.alpha = 0
-        } completion: { _ in
-            self.willMove(toParent: nil)
-            self.view.removeFromSuperview()
-            self.removeFromParent()
-            self.delegate?.silentNotificationMessagePreviewViewControllerDidClose(self)
-        }
+        dismiss(hideSendNormallyButton: false)
     }
     
     func show(
@@ -156,6 +131,34 @@ class SilentNotificationMessagePreviewViewController: UIViewController {
             }
         default:
             break
+        }
+    }
+    
+    func dismiss(hideSendNormallyButton: Bool) {
+        if hideSendNormallyButton {
+            normalButton.alpha = 0
+        }
+        UIView.animate(withDuration: 0.25) {
+            self.view.backgroundColor = .black.withAlphaComponent(0)
+            self.backgroundView.effect = nil
+            self.messageBackgroundView.alpha = 0
+            if let frame = self.textViewOriginalFrame {
+                self.textView.frame = frame
+                self.messageBackgroundView.frame = frame.inset(by: self.messageBackgroundInsets)
+            }
+            if let offset = self.textViewOriginalContentOffset {
+                self.textView.contentOffset = offset
+            }
+            if let frame = self.normalButtonOriginalFrame {
+                self.normalButton.frame = frame
+            }
+            self.silentButton.transform = self.sendSilentlyHiddenTransform
+            self.silentButton.alpha = 0
+        } completion: { _ in
+            self.willMove(toParent: nil)
+            self.view.removeFromSuperview()
+            self.removeFromParent()
+            self.delegate?.silentNotificationMessagePreviewViewControllerDidClose(self)
         }
     }
     

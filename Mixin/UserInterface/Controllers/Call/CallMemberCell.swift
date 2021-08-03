@@ -24,6 +24,23 @@ class CallMemberCell: UICollectionViewCell {
     @IBOutlet weak var avatarWrapperWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var labelTopConstraint: NSLayoutConstraint!
     
+    private let speakingIndicatorLayer: CALayer = {
+        let size = CGSize(width: 74, height: 74)
+        let path = UIBezierPath(arcCenter: CGPoint(x: size.width / 2, y: size.height / 2),
+                                radius: size.width / 2,
+                                startAngle: 0,
+                                endAngle: 2 * .pi,
+                                clockwise: true)
+        let layer = CAShapeLayer()
+        layer.bounds = CGRect(origin: .zero, size: size)
+        layer.fillColor = UIColor.clear.cgColor
+        layer.strokeColor = UIColor(displayP3RgbValue: 0x50BD5C).cgColor
+        layer.lineWidth = 2
+        layer.path = path.cgPath
+        layer.isHidden = true
+        return layer
+    }()
+    
     var hasBiggerLayout = true {
         didSet {
             let constant = hasBiggerLayout ? Layout.bigger : Layout.normal
@@ -32,22 +49,31 @@ class CallMemberCell: UICollectionViewCell {
         }
     }
     
+    var isSpeaking = false {
+        didSet {
+            speakingIndicatorLayer.isHidden = !isSpeaking
+        }
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         label.font = Self.labelFont
         label.adjustsFontForContentSizeCategory = true
+        layer.insertSublayer(speakingIndicatorLayer, at: 0)
     }
     
     override func layoutSubviews() {
         UIView.performWithoutAnimation {
             super.layoutSubviews()
             avatarWrapperView.layer.cornerRadius = avatarWrapperView.frame.width / 2
+            speakingIndicatorLayer.position = avatarWrapperView.center
         }
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
         avatarImageView.prepareForReuse()
+        isSpeaking = false
     }
     
 }

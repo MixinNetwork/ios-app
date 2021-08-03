@@ -628,6 +628,8 @@
 		94A1B95026A5DB6900C5D3FA /* CallFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94A1B94F26A5DB6800C5D3FA /* CallFooterView.xib */; };
 		94A1B95226A5DDB800C5D3FA /* CallFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A1B95126A5DDB800C5D3FA /* CallFooterView.swift */; };
 		94B7643525EA8E9B00EDF9C6 /* CacheableAssetFileDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B7643425EA8E9B00EDF9C6 /* CacheableAssetFileDescription.swift */; };
+		94B7B6DC26B43562000B0AC5 /* SilentNotificationMessagePreviewView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B7B6DB26B43562000B0AC5 /* SilentNotificationMessagePreviewView.xib */; };
+		94B7B6DE26B43581000B0AC5 /* SilentNotificationMessagePreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B7B6DD26B43580000B0AC5 /* SilentNotificationMessagePreviewViewController.swift */; };
 		94B8D185266E37ED00F43CBB /* DiagnoseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B8D184266E37ED00F43CBB /* DiagnoseViewController.swift */; };
 		94B8D189266E41D300F43CBB /* DatabaseDiagnosticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B8D187266E41D300F43CBB /* DatabaseDiagnosticViewController.swift */; };
 		94B8D18A266E41D300F43CBB /* DatabaseDiagnosticView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B8D188266E41D300F43CBB /* DatabaseDiagnosticView.xib */; };
@@ -1592,6 +1594,8 @@
 		94A1B94F26A5DB6800C5D3FA /* CallFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CallFooterView.xib; sourceTree = "<group>"; };
 		94A1B95126A5DDB800C5D3FA /* CallFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallFooterView.swift; sourceTree = "<group>"; };
 		94B7643425EA8E9B00EDF9C6 /* CacheableAssetFileDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheableAssetFileDescription.swift; sourceTree = "<group>"; };
+		94B7B6DB26B43562000B0AC5 /* SilentNotificationMessagePreviewView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SilentNotificationMessagePreviewView.xib; sourceTree = "<group>"; };
+		94B7B6DD26B43580000B0AC5 /* SilentNotificationMessagePreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SilentNotificationMessagePreviewViewController.swift; sourceTree = "<group>"; };
 		94B8D184266E37ED00F43CBB /* DiagnoseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnoseViewController.swift; sourceTree = "<group>"; };
 		94B8D187266E41D300F43CBB /* DatabaseDiagnosticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseDiagnosticViewController.swift; sourceTree = "<group>"; };
 		94B8D188266E41D300F43CBB /* DatabaseDiagnosticView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DatabaseDiagnosticView.xib; sourceTree = "<group>"; };
@@ -2726,6 +2730,7 @@
 				7BC3EBF62497507900E81FD8 /* GroupCallMemberPickerContentViewController.swift */,
 				7B1D61122512773F00BD6B15 /* ExternalSharingConfirmationViewController.swift */,
 				94FCB5FE264673C400CCC8FD /* TranscriptPreviewViewController.swift */,
+				94B7B6DD26B43580000B0AC5 /* SilentNotificationMessagePreviewViewController.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -3213,6 +3218,7 @@
 				7B1C8B982513265200F7A817 /* ExternalSharingPreviewWrapperView.swift */,
 				94095BB625BE8BC100F44832 /* TextPreviewView.xib */,
 				94095BBB25BE8DCF00F44832 /* TextPreviewView.swift */,
+				94B7B6DB26B43562000B0AC5 /* SilentNotificationMessagePreviewView.xib */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3783,6 +3789,7 @@
 				DFD294491FA7145F00FADAAD /* Contact.storyboard in Resources */,
 				94E8913925C019F000F1E5D4 /* Pods-Mixin-acknowledgements.plist in Resources */,
 				7BD3880024DC66F900A3035C /* Localizable.strings in Resources */,
+				94B7B6DC26B43562000B0AC5 /* SilentNotificationMessagePreviewView.xib in Resources */,
 				7BE73BFD230A8D0300B97FC6 /* group_separator_4.png in Resources */,
 				E05D992923911D55009F9E8D /* ProfileFavoriteAppsView.xib in Resources */,
 				7B869C6E202D7D90009930BA /* NumberPadView.xib in Resources */,
@@ -4934,6 +4941,7 @@
 				ABE865C223F260FE00C0167D /* PermissionsActionCell.swift in Sources */,
 				7B9A090525481ADB00E8568D /* MinimizedClipIconView.swift in Sources */,
 				7B23FEA52229538B00F912EC /* PhotoInputAlbumCell.swift in Sources */,
+				94B7B6DE26B43581000B0AC5 /* SilentNotificationMessagePreviewViewController.swift in Sources */,
 				7B37B16323ED483D00590215 /* GalleryTransitionFromNonQuotingMessageCellView.swift in Sources */,
 				7B40207E215B7046008FF42E /* AttachmentExpirationHintingMessageCell.swift in Sources */,
 				7B78B2461FF2170400371632 /* InviteLinkViewController.swift in Sources */,

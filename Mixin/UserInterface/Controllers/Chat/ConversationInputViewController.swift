@@ -44,10 +44,6 @@ class ConversationInputViewController: UIViewController {
     
     var detectsMentionToken = false
     
-    override var canBecomeFirstResponder: Bool {
-        true
-    }
-    
     var minimizedHeight: CGFloat {
         return quotePreviewWrapperHeightConstraint.constant
             + inputBarView.frame.height
@@ -74,7 +70,6 @@ class ConversationInputViewController: UIViewController {
         return customInputViewController is ConversationInputInteractiveResizableViewController
     }
     
-    private let alwaysUsesFallbackSilentSendMenu = false
     private let interactiveDismissResponder = InteractiveDismissResponder(height: 50)
     private let maxInputRow: Int = {
         if ScreenHeight.current <= .short {
@@ -93,6 +88,7 @@ class ConversationInputViewController: UIViewController {
     private var lastSafeAreaInsetsBottom: CGFloat = 0
     private var reportHeightChangeWhenKeyboardFrameChanges = true
     private var lastMentionDetectedText: String?
+    private var makeTextViewFirstResponderOnSilentMessagePreviewClose = false
     private var customInputViewController: UIViewController? {
         didSet {
             if let old = oldValue {
@@ -120,6 +116,8 @@ class ConversationInputViewController: UIViewController {
     // [textView selectedRange:] triggers another delegate call immediately
     // Resolve the recursion with this flag
     private var isManipulatingSelection = false
+    
+    private weak var silentNotificationMessagePreviewIfLoaded: SilentNotificationMessagePreviewViewController?
     
     private var conversationViewController: ConversationViewController {
         return parent as! ConversationViewController
@@ -153,13 +151,6 @@ class ConversationInputViewController: UIViewController {
         return lastKeyboardHeightIsAvailable ? KeyboardHeight.last : KeyboardHeight.default
     }
     
-    @available(iOS 13.0, *)
-    private var sendSilentNotificationAction: UIAction {
-        UIAction(title: R.string.localizable.chat_send_silent_notification(),
-                 image: R.image.conversation.ic_silent(),
-                 handler: { [weak self] _ in self?.sendTextMessage(silentNotification: true) })
-    }
-    
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
@@ -179,12 +170,8 @@ class ConversationInputViewController: UIViewController {
         textView.inputAccessoryView = interactiveDismissResponder
         textView.textContainerInset = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
         textView.delegate = self
-        if #available(iOS 14.0, *), !alwaysUsesFallbackSilentSendMenu {
-            sendButton.menu = UIMenu(title: "", image: nil, identifier: nil, options: [], children: [sendSilentNotificationAction])
-        } else {
-            let recognizer = UILongPressGestureRecognizer(target: self, action: #selector(showSilentSendMenu(_:)))
-            sendButton.addGestureRecognizer(recognizer)
-        }
+        let recognizer = UILongPressGestureRecognizer(target: self, action: #selector(previewSilentNotificationMessage(_:)))
+        sendButton.addGestureRecognizer(recognizer)
         lastSafeAreaInsetsBottom = view.safeAreaInsets.bottom
         setPreferredContentHeight(minimizedHeight, animated: false)
         if let draft = AppGroupUserDefaults.User.conversationDraft[composer.conversationId], !draft.isEmpty {
@@ -641,36 +628,24 @@ extension ConversationInputViewController {
         }
     }
     
-    @objc private func menuControllerDidHideMenu(_ notification: Notification) {
-        UIMenuController.shared.menuItems = nil
-        NotificationCenter.default.removeObserver(self,
-                                                  name: UIMenuController.didHideMenuNotification,
-                                                  object: nil)
-        if textView.overrideNext == self {
-            textView.overrideNext = nil
+    @objc private func previewSilentNotificationMessage(_ recognizer: UIGestureRecognizer) {
+        switch recognizer.state {
+        case .began:
+            let preview = SilentNotificationMessagePreviewViewController()
+            preview.delegate = self
+            preview.show(in: conversationViewController) { contentView, textView, sendButton in
+                textView.frame = inputBarView.convert(self.textView.frame, to: contentView)
+                textView.textContainerInset = self.textView.textContainerInset
+                textView.text = self.textView.text
+                textView.contentOffset = self.textView.contentOffset
+                sendButton.frame = inputBarView.convert(self.sendButton.frame, to: contentView)
+            }
+            silentNotificationMessagePreviewIfLoaded = preview
+        case .changed, .ended:
+            silentNotificationMessagePreviewIfLoaded?.handleGestureChange(with: recognizer)
+        default:
+            break
         }
-    }
-    
-    @objc private func showSilentSendMenu(_ recognizer: UIGestureRecognizer) {
-        guard recognizer.state == .began else {
-            return
-        }
-        if textView.isFirstResponder {
-            textView.overrideNext = self
-        } else {
-            becomeFirstResponder()
-        }
-        UIMenuController.shared.menuItems = [
-            UIMenuItem(title: R.string.localizable.chat_send_silent_notification(),
-                       action: #selector(sendTextMessageSilently))
-        ]
-        UIMenuController.shared.setTargetRect(sendButton.bounds, in: sendButton)
-        UIMenuController.shared.setMenuVisible(true, animated: true)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(menuControllerDidHideMenu(_:)),
-                                               name: UIMenuController.didHideMenuNotification,
-                                               object: nil)
-        AppDelegate.current.mainWindow.addDismissMenuResponder()
     }
     
     @objc private func sendTextMessageSilently() {
@@ -852,6 +827,34 @@ extension ConversationInputViewController: UITextViewDelegate {
             // Ignore any selection change caused by text input
             detectAndReportMentionCandidateIfNeeded()
         }
+    }
+    
+}
+
+// MARK: - SilentNotificationMessagePreviewViewControllerDelegate
+extension ConversationInputViewController: SilentNotificationMessagePreviewViewControllerDelegate {
+    
+    func silentNotificationMessagePreviewViewControllerWillShow(_ viewController: SilentNotificationMessagePreviewViewController) {
+        textView.textColor = .clear
+        sendButton.isHidden = true
+        if textView.isFirstResponder {
+            makeTextViewFirstResponderOnSilentMessagePreviewClose = true
+            resignTextViewFirstResponderWithoutReportingContentHeightChange()
+        }
+    }
+    
+    func silentNotificationMessagePreviewViewController(_ viewController: SilentNotificationMessagePreviewViewController, didSelectSendWithNotification notify: Bool) {
+        sendTextMessage(silentNotification: !notify)
+    }
+    
+    func silentNotificationMessagePreviewViewControllerDidClose(_ viewController: SilentNotificationMessagePreviewViewController) {
+        textView.textColor = typingAttributes[.foregroundColor] as? UIColor
+        sendButton.isHidden = false
+        if makeTextViewFirstResponderOnSilentMessagePreviewClose {
+            textView.becomeFirstResponder()
+            makeTextViewFirstResponderOnSilentMessagePreviewClose = false
+        }
+        silentNotificationMessagePreviewIfLoaded = nil
     }
     
 }

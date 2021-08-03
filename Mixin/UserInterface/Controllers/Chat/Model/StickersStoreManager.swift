@@ -1,8 +1,10 @@
 import MixinServices
 
 class StickersStoreManager {
-
+    
     static let shared = StickersStoreManager()
+    
+    var shouldCheckNewStickers: Bool = true
     
     private var ablumIds: [String] {
         return AppGroupUserDefaults.User.stickerAblums
@@ -75,5 +77,8 @@ extension StickersStoreManager {
         }
     }
     
+    func checkIsHasNewStickers() {
+        
+    }
+    
 }
-

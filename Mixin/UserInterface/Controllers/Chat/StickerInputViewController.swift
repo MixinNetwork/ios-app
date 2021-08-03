@@ -115,6 +115,7 @@ extension StickerInputViewController: UICollectionViewDataSource {
         case 0:
             cell.imageView.image = R.image.ic_sticker_store()
             cell.imageView.contentMode = .center
+            cell.dotImageView.isHidden = false
         case 1:
             cell.imageView.image = R.image.ic_recent_stickers()
             cell.imageView.contentMode = .center

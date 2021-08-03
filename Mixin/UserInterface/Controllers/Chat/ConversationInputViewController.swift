@@ -170,7 +170,7 @@ class ConversationInputViewController: UIViewController {
         textView.inputAccessoryView = interactiveDismissResponder
         textView.textContainerInset = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
         textView.delegate = self
-        let recognizer = UILongPressGestureRecognizer(target: self, action: #selector(previewSilentNotificationMessage(_:)))
+        let recognizer = PreviewGestureRecognizer(target: self, action: #selector(previewSilentNotificationMessage(_:)))
         sendButton.addGestureRecognizer(recognizer)
         lastSafeAreaInsetsBottom = view.safeAreaInsets.bottom
         setPreferredContentHeight(minimizedHeight, animated: false)
@@ -861,6 +861,17 @@ extension ConversationInputViewController: SilentNotificationMessagePreviewViewC
 
 // MARK: - Private works
 extension ConversationInputViewController {
+    
+    private class PreviewGestureRecognizer: UILongPressGestureRecognizer {
+        
+        override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
+            super.touchesMoved(touches, with: event)
+            if state == .possible, let touch = touches.first, touch.force / touch.maximumPossibleForce > 0.7 {
+                state = .began
+            }
+        }
+        
+    }
     
     private func setPhotosButtonSelected(_ selected: Bool) {
         photosButton.isSelected = selected

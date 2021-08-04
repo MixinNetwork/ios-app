@@ -118,7 +118,7 @@ extension WebMoreMenuViewController {
         case about
         case copyLink
         case refresh
-        case openInSafari
+        case openInBrowser
         
         var image: UIImage? {
             switch self {
@@ -134,8 +134,8 @@ extension WebMoreMenuViewController {
                 return R.image.web.ic_action_copy()
             case .refresh:
                 return R.image.web.ic_action_refresh()
-            case .openInSafari:
-                return R.image.web.ic_action_open_in_safari()
+            case .openInBrowser:
+                return R.image.web.ic_action_open_in_browser()
             }
         }
         
@@ -153,8 +153,8 @@ extension WebMoreMenuViewController {
                 return R.string.localizable.group_button_title_copy_link()
             case .refresh:
                 return R.string.localizable.action_refresh()
-            case .openInSafari:
-                return R.string.localizable.action_open_safari()
+            case .openInBrowser:
+                return R.string.localizable.action_open_browser()
             }
         }
         

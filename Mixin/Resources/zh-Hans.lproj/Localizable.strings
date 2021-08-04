@@ -22,7 +22,7 @@
 "action_done" = "完成";
 "action_save" = "保存";
 "action_more" = "更多";
-"action_open_safari" = "在 Safari 中打开";
+"action_open_browser" = "在浏览器中打开";
 "action_refresh" = "刷新";
 "action_select" = "选择";
 "action_clear" = "清理";

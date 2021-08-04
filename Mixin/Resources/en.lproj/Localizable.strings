@@ -22,7 +22,7 @@
 "action_done" = "Done";
 "action_save" = "Save";
 "action_more" = "More";
-"action_open_safari" = "Open in Safari";
+"action_open_browser" = "Open in Browser";
 "action_refresh" = "Refresh";
 "action_select" = "Select";
 "action_clear" = "Clear";

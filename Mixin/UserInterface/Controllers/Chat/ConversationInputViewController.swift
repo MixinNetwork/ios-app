@@ -633,13 +633,7 @@ extension ConversationInputViewController {
         case .began:
             let preview = SilentNotificationMessagePreviewViewController()
             preview.delegate = self
-            preview.show(in: conversationViewController) { contentView, textView, sendButton in
-                textView.frame = inputBarView.convert(self.textView.frame, to: contentView)
-                textView.textContainerInset = self.textView.textContainerInset
-                textView.text = self.textView.text
-                textView.contentOffset = self.textView.contentOffset
-                sendButton.frame = inputBarView.convert(self.sendButton.frame, to: contentView)
-            }
+            preview.show(in: conversationViewController, textView: textView, sendButton: sendButton)
             silentNotificationMessagePreviewIfLoaded = preview
         case .changed, .ended:
             silentNotificationMessagePreviewIfLoaded?.handleGestureChange(with: recognizer)

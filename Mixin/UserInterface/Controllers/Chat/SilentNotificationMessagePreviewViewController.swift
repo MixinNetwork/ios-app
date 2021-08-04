@@ -11,6 +11,7 @@ class SilentNotificationMessagePreviewViewController: UIViewController {
     @IBOutlet weak var backgroundView: UIVisualEffectView!
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var messageBackgroundView: UIImageView!
+    @IBOutlet weak var textViewWrapperView: UIView!
     @IBOutlet weak var textView: ConversationInputTextView!
     @IBOutlet weak var normalButton: UIButton!
     @IBOutlet weak var silentButton: HighlightableButton!
@@ -23,9 +24,9 @@ class SilentNotificationMessagePreviewViewController: UIViewController {
     private let textViewHorizontalOffset: CGFloat = 8
     private let messageBackgroundInsets = UIEdgeInsets(top: 2, left: 11, bottom: 0, right: 2)
     
-    private var normalButtonOriginalFrame: CGRect?
-    private var textViewOriginalFrame: CGRect?
-    private var textViewOriginalContentOffset: CGPoint?
+    private var initialNormalButtonFrame: CGRect?
+    private var initialTextViewWrapperFrame: CGRect?
+    private var initialTextViewContentOffset: CGPoint?
     
     private var sendSilentlyHiddenTransform: CGAffineTransform {
         let scale = normalButton.frame.width / silentButton.frame.width
@@ -51,10 +52,7 @@ class SilentNotificationMessagePreviewViewController: UIViewController {
         dismiss(hideSendNormallyButton: false)
     }
     
-    func show(
-        in parent: UIViewController,
-        layout: (_ contentView: UIView, _ textView: UITextView, _ sendButton: UIButton) -> Void
-    ) {
+    func show(in parent: UIViewController, textView templateTextView: UITextView, sendButton templateSendButton: UIButton) {
         delegate?.silentNotificationMessagePreviewViewControllerWillShow(self)
         feedback.impactOccurred()
         
@@ -68,14 +66,24 @@ class SilentNotificationMessagePreviewViewController: UIViewController {
         silentButton.alpha = 0
         silentButton.sizeToFit()
         
-        layout(contentView, textView, normalButton)
-        textViewOriginalFrame = textView.frame
-        textViewOriginalContentOffset = textView.contentOffset
-        normalButtonOriginalFrame = normalButton.frame
-        messageBackgroundView.frame = textView.frame.inset(by: messageBackgroundInsets)
+        if let superview = templateTextView.superview {
+            textViewWrapperView.frame = superview.convert(templateTextView.frame, to: contentView)
+            initialTextViewWrapperFrame = textViewWrapperView.frame
+            textView.frame = textViewWrapperView.bounds
+        }
+        textView.textContainerInset = templateTextView.textContainerInset
+        textView.text = templateTextView.text
+        textView.contentOffset = templateTextView.contentOffset
+        initialTextViewContentOffset = templateTextView.contentOffset
+        if let superview = templateSendButton.superview {
+            normalButton.frame = superview.convert(templateSendButton.frame, to: contentView)
+            initialNormalButtonFrame = normalButton.frame
+        }
         
-        var silentButtonOrigin = CGPoint(x: textView.frame.maxX - silentButtonTrailingMargin - silentButton.bounds.width,
-                                         y: textView.frame.maxY + silentButtonTopMargin)
+        messageBackgroundView.frame = textViewWrapperView.frame.inset(by: messageBackgroundInsets)
+        
+        var silentButtonOrigin = CGPoint(x: textViewWrapperView.frame.maxX - silentButtonTrailingMargin - silentButton.bounds.width,
+                                         y: textViewWrapperView.frame.maxY + silentButtonTopMargin)
         let verticalOffset = (silentButtonOrigin.y + silentButton.bounds.height) - (view.bounds.height - view.safeAreaInsets.bottom)
         if verticalOffset > 0 {
             silentButtonOrigin.y -= verticalOffset
@@ -83,39 +91,39 @@ class SilentNotificationMessagePreviewViewController: UIViewController {
         silentButton.frame.origin = silentButtonOrigin
         silentButton.transform = sendSilentlyHiddenTransform
         
-        let trailingEmptyWidth = textView.frame.size.width
-            - textView.textContainerInset.horizontal
-            - textView.textContainer.lineFragmentPadding * 2
-            - textWidth(within: textView)
-        UIView.animate(withDuration: 0.25) {
+        let trailingEmptyWidth: CGFloat = {
+            let width = textView.frame.size.width
+                - textView.textContainerInset.horizontal
+                - textView.textContainer.lineFragmentPadding * 2
+                - textWidth(within: textView)
+            return max(0, width)
+        }()
+        let topExpanding = max(0, textView.contentOffset.y)
+        let bottomExpanding: CGFloat = {
+            let height = textView.contentSize.height
+                - textView.contentOffset.y
+                - textView.frame.size.height
+            return max(0, height)
+        }()
+        let textWrapperFrame = CGRect(x: textViewWrapperView.frame.origin.x + textViewHorizontalOffset + trailingEmptyWidth,
+                                      y: textViewWrapperView.frame.origin.y - topExpanding - bottomExpanding - verticalOffset,
+                                      width: textViewWrapperView.frame.width - trailingEmptyWidth,
+                                      height: textViewWrapperView.frame.height + topExpanding + bottomExpanding)
+        textView.frame = CGRect(x: textView.frame.origin.x,
+                                y: textView.frame.origin.y - textView.contentOffset.y,
+                                width: textWrapperFrame.width,
+                                height: textWrapperFrame.height)
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut) {
             self.view.backgroundColor = .black.withAlphaComponent(0.24)
             self.backgroundView.effect = .regularBlur
+            self.textViewWrapperView.frame = textWrapperFrame
+            self.textView.frame = self.textViewWrapperView.bounds
+            self.messageBackgroundView.frame = self.textViewWrapperView.frame.inset(by: self.messageBackgroundInsets)
             self.silentButton.transform = .identity
             self.silentButton.alpha = 1
-            
-            self.textView.frame.origin.x += self.textViewHorizontalOffset
-            if trailingEmptyWidth > 0 {
-                self.textView.frame.size.width -= trailingEmptyWidth
-                self.textView.frame.origin.x += trailingEmptyWidth
-            }
-            let topExpanding = self.textView.contentOffset.y
-            if topExpanding > 0 {
-                self.textView.frame.size.height += topExpanding
-                self.textView.frame.origin.y -= topExpanding
-                self.textView.contentOffset.y = 0
-            }
-            let bottomExpanding = self.textView.contentSize.height - self.textView.frame.size.height
-            if bottomExpanding > 0 {
-                self.textView.frame.size.height += bottomExpanding
-                self.textView.frame.origin.y -= bottomExpanding
-                self.textView.contentOffset.y = self.textView.contentSize.height - self.textView.frame.size.height
-            }
-            if verticalOffset > 0 {
-                self.textView.frame.origin.y -= verticalOffset
-            }
-            
+        }
+        UIView.animate(withDuration: 0.2) {
             self.messageBackgroundView.alpha = 1
-            self.messageBackgroundView.frame = self.textView.frame.inset(by: self.messageBackgroundInsets)
         }
     }
     
@@ -138,18 +146,21 @@ class SilentNotificationMessagePreviewViewController: UIViewController {
         if hideSendNormallyButton {
             normalButton.alpha = 0
         }
-        UIView.animate(withDuration: 0.25) {
+        UIView.animate(withDuration: 0.4) {
+            self.messageBackgroundView.alpha = 0
+        }
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut) {
             self.view.backgroundColor = .black.withAlphaComponent(0)
             self.backgroundView.effect = nil
-            self.messageBackgroundView.alpha = 0
-            if let frame = self.textViewOriginalFrame {
-                self.textView.frame = frame
+            if let frame = self.initialTextViewWrapperFrame {
+                self.textViewWrapperView.frame = frame
                 self.messageBackgroundView.frame = frame.inset(by: self.messageBackgroundInsets)
             }
-            if let offset = self.textViewOriginalContentOffset {
+            if let offset = self.initialTextViewContentOffset {
                 self.textView.contentOffset = offset
             }
-            if let frame = self.normalButtonOriginalFrame {
+            self.textView.frame = self.textViewWrapperView.bounds
+            if let frame = self.initialNormalButtonFrame {
                 self.normalButton.frame = frame
             }
             self.silentButton.transform = self.sendSilentlyHiddenTransform

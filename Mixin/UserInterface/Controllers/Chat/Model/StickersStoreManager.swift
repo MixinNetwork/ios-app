@@ -2,12 +2,24 @@ import MixinServices
 
 class StickersStoreManager {
     
-    static let shared = StickersStoreManager()
+    private static var privateShared : StickersStoreManager?
     
-    var shouldCheckNewStickers: Bool = true
-    
-    private var ablumIds: [String] {
+    private let bannerItemsCount = 3
+    private var shouldCheckNewStickers = true
+    private var albumIds: [String]? {
         return AppGroupUserDefaults.User.stickerAblums
+    }
+    
+    class func shared() -> StickersStoreManager {
+        guard let shared = privateShared else {
+            privateShared = StickersStoreManager()
+            return privateShared!
+        }
+        return shared
+    }
+    
+    class func destroy() {
+        privateShared = nil
     }
     
 }
@@ -23,62 +35,85 @@ extension StickersStoreManager {
     }
     
     func add(album: Album) {
-        AppGroupUserDefaults.User.stickerAblums = Array(Set(ablumIds + [album.albumId]))
-        AlbumDAO.shared.insertOrUpdateAblum(album: album)
+        if let myAlbumsId = albumIds {
+            AppGroupUserDefaults.User.stickerAblums = Array(Set(myAlbumsId + [album.albumId]))
+        } else {
+            AppGroupUserDefaults.User.stickerAblums = [album.albumId]
+        }
     }
     
     func remove(album: Album) {
-        AppGroupUserDefaults.User.stickerAblums = ablumIds.filter({ $0 != album.albumId })
-        AlbumDAO.shared.deleteAlbum(albumId: album.albumId)
+        guard let myAlbumsId = albumIds else {
+            return
+        }
+        AppGroupUserDefaults.User.stickerAblums = myAlbumsId.filter({ $0 != album.albumId })
     }
     
     func updateStickerAlbumSequence(albumIds: [String]) {
         AppGroupUserDefaults.User.stickerAblums = albumIds
     }
     
-    // TODO: fetch from server and merge with local official
-    func fetchMyStickers(completion: (([StickerStoreItem]) -> Void)?) {
-        DispatchQueue.global().async {
-            let albums = AlbumDAO.shared.getAlbums()
-            var currentAlbums: [Album]
-            if self.ablumIds.isEmpty {
-                AppGroupUserDefaults.User.stickerAblums = albums.map({ $0.albumId })
-                currentAlbums = albums
+    func loadMyStickers(completion: @escaping ([StickerStoreItem]) -> Void) {
+        DispatchQueue.global(qos: .userInitiated).async {
+            var myAlbums: [Album]
+            if let albumIds = self.albumIds {
+                myAlbums = AlbumDAO.shared.getAlbums(with: albumIds)
             } else {
-                let albumMap: [String: Album] = albums.reduce(into: [:]) { $0[$1.albumId] = $1 }
-                currentAlbums = self.ablumIds.compactMap { albumMap[$0] }
-                if currentAlbums.count < albums.count {
-                    let newAddedAlbums = albums.suffix(albums.count - currentAlbums.count)
-                    currentAlbums += newAddedAlbums
+                myAlbums = AlbumDAO.shared.getAlbums()
+                AppGroupUserDefaults.User.stickerAblums = myAlbums.map({ $0.albumId })
+            }
+            let items = myAlbums.map({
+                StickerStoreItem(album: $0,
+                                 stickers: StickerDAO.shared.getStickers(albumId: $0.albumId),
+                                 isAdded: true)
+            })
+            completion(items)
+        }
+    }
+    
+    func loadStoreStickers(completion: @escaping (_ bannerItems: [StickerStoreItem], _ listItems: [StickerStoreItem]) -> Void) {
+        DispatchQueue.global(qos: .userInitiated).async {
+            var bannerItems: [StickerStoreItem] = []
+            var listItems: [StickerStoreItem] = []
+            AlbumDAO.shared.getAlbums().forEach { album in
+                let item = StickerStoreItem(album: album,
+                                            stickers: StickerDAO.shared.getStickers(albumId: album.albumId),
+                                            isAdded: (self.albumIds?.contains(album.albumId)) ?? false)
+                if album.banner != nil && bannerItems.count < self.bannerItemsCount {
+                    bannerItems.append(item)
+                } else {
+                    listItems.append(item)
                 }
             }
-            let items = currentAlbums.map({ StickerStoreItem(album: $0, stickers: StickerDAO.shared.getStickers(albumId: $0.albumId), isAdded: true) })
             DispatchQueue.main.async {
-                completion?(items)
+                completion(bannerItems, listItems)
             }
         }
     }
     
-    // TODO: fetch from server
-    func fetchStoreStickers(completion: (Result<[StickerStoreItem], Error>) -> Void) {
-        func alert(_ str: String) {
-            AppDelegate.current.mainWindow.rootViewController?.alert(str)
-        }
-        let stickerStoreItems = AlbumDAO.shared.getAlbums().map({ StickerStoreItem(album: $0, stickers: StickerDAO.shared.getStickers(albumId: $0.albumId), isAdded: .random()) })
-        completion(.success(stickerStoreItems))
-    }
-    
-    // TODO: fetch from erver
-    func fetchSticker(stickerId: String, completion: (Result<StickerStoreItem, Error>) -> Void) {
+    func loadSticker(stickerId: String, completion: @escaping (StickerStoreItem?) -> Void) {
         if let album = AlbumDAO.shared.getAlbum(stickerId: stickerId) {
-            completion(.success(StickerStoreItem(album: album, stickers: StickerDAO.shared.getStickers(albumId: album.albumId))))
+            completion((StickerStoreItem(album: album, stickers: StickerDAO.shared.getStickers(albumId: album.albumId))))
         } else {
-            //completion(.failure(error))
+            completion(nil)
         }
     }
     
-    func checkIsHasNewStickers() {
-        
+    func loadStickerIfAdded(stickerId: String) -> StickerStoreItem? {
+        guard let albumIds = albumIds, let album = AlbumDAO.shared.getAlbum(stickerId: stickerId), albumIds.contains(album.albumId) else {
+            return nil
+        }
+        return StickerStoreItem(album: album, stickers: StickerDAO.shared.getStickers(albumId: album.albumId), isAdded: true)
+    }
+    
+    func checkNewStickersIfNeeded(completion: @escaping (Bool) -> Void) {
+        guard shouldCheckNewStickers else {
+            return
+        }
+        shouldCheckNewStickers = false
+        DispatchQueue.main.async {
+            completion(true)
+        }
     }
     
 }

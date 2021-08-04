@@ -12,6 +12,7 @@ class StickerInputViewController: UIViewController {
     private var pageScrollView: UIScrollView?
     private var isScrollingByAlbumSelection = false
     private var currentPage: StickersCollectionViewController!
+    private var hasNewStickers = false
     
     var numberOfAllAlbums: Int {
         return officialAlbums.count + modelController.numberOfFixedControllers
@@ -45,6 +46,13 @@ class StickerInputViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.animated = true
+        StickersStoreManager.shared().checkNewStickersIfNeeded { hasNewStickers in
+            guard hasNewStickers else {
+                return
+            }
+            self.hasNewStickers = true
+            self.albumsCollectionView.reloadItems(at: [IndexPath(item: 0, section: 0)])
+        }
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -60,19 +68,8 @@ class StickerInputViewController: UIViewController {
     }
     
     @objc func reload() {
-        DispatchQueue.global(qos: .userInitiated).async {
-            self.officialAlbums = AlbumDAO.shared.getAlbums()
-            let stickerAblums = AppGroupUserDefaults.User.stickerAblums
-            if stickerAblums.isEmpty {
-                AppGroupUserDefaults.User.stickerAblums = self.officialAlbums.map({ $0.albumId })
-            } else {
-                let albumMap: [String: Album] = self.officialAlbums.reduce(into: [:]) { $0[$1.albumId] = $1 }
-                self.officialAlbums = stickerAblums.compactMap { albumMap[$0] }
-                if self.officialAlbums.count != stickerAblums.count {
-                    let newAddedAlbums = self.officialAlbums.suffix(self.officialAlbums.count - stickerAblums.count)
-                    self.officialAlbums += newAddedAlbums
-                }
-            }
+        StickersStoreManager.shared().loadMyStickers { items in
+            self.officialAlbums = items.map({ $0.album })
             self.modelController.reloadRecentFavoriteStickers()
             self.modelController.reloadOfficialStickers(albums: self.officialAlbums)
             DispatchQueue.main.async {
@@ -115,7 +112,7 @@ extension StickerInputViewController: UICollectionViewDataSource {
         case 0:
             cell.imageView.image = R.image.ic_sticker_store()
             cell.imageView.contentMode = .center
-            cell.dotImageView.isHidden = false
+            cell.dotImageView.isHidden = !hasNewStickers
         case 1:
             cell.imageView.image = R.image.ic_recent_stickers()
             cell.imageView.contentMode = .center
@@ -150,6 +147,8 @@ extension StickerInputViewController: UICollectionViewDelegate {
             navigationController.interactivePopGestureRecognizer?.isEnabled = true
             present(navigationController, animated: true, completion: nil)
             collectionView.selectItem(at: IndexPath(item: currentIndex, section: 0), animated: false, scrollPosition: .centeredVertically)
+            hasNewStickers = false
+            collectionView.reloadItems(at: [IndexPath(item: 0, section: 0)])
             return
         }
         guard selectedIndex != currentIndex, !isScrollingByAlbumSelection else {

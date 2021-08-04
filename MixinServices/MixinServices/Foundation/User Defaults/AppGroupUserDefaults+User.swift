@@ -225,8 +225,8 @@ extension AppGroupUserDefaults {
             }
         }
                 
-        @Default(namespace: .user, key: Key.stickerAblums, defaultValue: [])
-        public static var stickerAblums: [String] {
+        @Default(namespace: .user, key: Key.stickerAblums, defaultValue: nil)
+        public static var stickerAblums: [String]? {
             didSet {
                 NotificationCenter.default.post(onMainThread: stickerAlbumIdsDidChangeNotification, object: self)
             }

@@ -6,20 +6,15 @@ class StickersStoreViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
     
-    private var stickerStoreItems = [StickerStoreItem]()
+    private var bannerItems = [StickerStoreItem]()
+    private var listItems = [StickerStoreItem]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        StickersStoreManager.shared.fetchStoreStickers { result in
-            switch result {
-            case .success(let items):
-                //TODO: update banner
-                //flowLayout.headerReferenceSize = .zero
-                stickerStoreItems = items
-                collectionView.reloadData()
-            case .failure(_):
-                collectionView.reloadData()
-            }
+        StickersStoreManager.shared().loadStoreStickers { bannerItems, listItems in
+            self.bannerItems = bannerItems
+            self.listItems = listItems
+            self.collectionView.reloadData()
         }
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(syncStickerAlbums),
@@ -30,6 +25,11 @@ class StickersStoreViewController: UIViewController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         flowLayout.itemSize = CGSize(width: view.bounds.width, height: 102)
+        if bannerItems.isEmpty {
+            flowLayout.headerReferenceSize = .zero
+        } else {
+            flowLayout.headerReferenceSize = ScreenWidth.current < .medium ? CGSize(width: view.bounds.width, height: 208) : CGSize(width: view.bounds.width, height: 238)
+        }
     }
     
     @IBAction func dismissAction(_ sender: Any) {
@@ -46,16 +46,16 @@ class StickersStoreViewController: UIViewController {
 extension StickersStoreViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return stickerStoreItems.count
+        return listItems.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.sticker_store_preview, for: indexPath)!
-        if indexPath.item < stickerStoreItems.count {
-            let item = stickerStoreItems[indexPath.row]
+        if indexPath.item < listItems.count {
+            let item = listItems[indexPath.row]
             cell.stickerStoreItem = item
             cell.onStickerOperation = {
-                StickersStoreManager.shared.handleStickerOperation(with: item)
+                StickersStoreManager.shared().handleStickerOperation(with: item)
             }
         }
         return cell
@@ -63,9 +63,9 @@ extension StickersStoreViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: R.reuseIdentifier.sticker_banner, for: indexPath)!
-        header.stickerStoreItems = Array(stickerStoreItems.prefix(3))
-        header.onSelectItem = { item in
-            self.showStickerAlbumPreviewController(with: item)
+        header.stickerStoreItems = bannerItems
+        header.onSelectItem = { [weak self] item in
+            self?.showStickerAlbumPreviewController(with: item)
         }
         return header
     }
@@ -75,10 +75,10 @@ extension StickersStoreViewController: UICollectionViewDataSource {
 extension StickersStoreViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard indexPath.item < stickerStoreItems.count else {
+        guard indexPath.item < listItems.count else {
             return
         }
-        showStickerAlbumPreviewController(with: stickerStoreItems[indexPath.row])
+        showStickerAlbumPreviewController(with: listItems[indexPath.row])
     }
     
 }
@@ -86,11 +86,18 @@ extension StickersStoreViewController: UICollectionViewDelegate {
 extension StickersStoreViewController {
     
     @objc private func syncStickerAlbums() {
-        let stickerAblums = AppGroupUserDefaults.User.stickerAblums
-        for (index, item) in stickerStoreItems.enumerated() {
-            stickerStoreItems[index].isAdded = stickerAblums.contains(item.album.albumId)
+        guard let stickerAblums = AppGroupUserDefaults.User.stickerAblums else {
+            return
         }
-        collectionView.reloadData()
+        for (index, item) in bannerItems.enumerated() {
+            bannerItems[index].isAdded = stickerAblums.contains(item.album.albumId)
+        }
+        for (index, item) in listItems.enumerated() {
+            listItems[index].isAdded = stickerAblums.contains(item.album.albumId)
+        }
+        UIView.performWithoutAnimation {
+            collectionView.reloadData()
+        }
     }
     
     private func showStickerAlbumPreviewController(with item: StickerStoreItem) {

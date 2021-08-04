@@ -830,7 +830,7 @@
                                                     <color key="textColor" name="text"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qYq-sN-8nf">
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qYq-sN-8nf">
                                                     <rect key="frame" x="308" y="0.0" width="47" height="26"/>
                                                     <color key="backgroundColor" name="theme"/>
                                                     <constraints>
@@ -838,9 +838,7 @@
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
                                                     <inset key="contentEdgeInsets" minX="10" minY="0.0" maxX="10" maxY="0.0"/>
-                                                    <state key="normal" title="Add">
-                                                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    </state>
+                                                    <state key="normal" title="Add"/>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="sticker_store_add"/>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -852,17 +850,17 @@
                                                     </connections>
                                                 </button>
                                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="3Cl-kB-Fh3">
-                                                    <rect key="frame" x="0.0" y="32" width="375" height="72"/>
+                                                    <rect key="frame" x="20" y="32" width="335" height="72"/>
                                                     <color key="backgroundColor" name="background"/>
                                                     <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="4" minimumInteritemSpacing="0.0" id="Lai-36-8qQ">
                                                         <size key="itemSize" width="72" height="72"/>
                                                         <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                                         <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                                        <inset key="sectionInset" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
+                                                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                     </collectionViewFlowLayout>
                                                     <cells>
                                                         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="sticker_preview" id="qKP-ci-ftD" customClass="StickerPreviewCell" customModule="Mixin" customModuleProvider="target">
-                                                            <rect key="frame" x="20" y="0.0" width="72" height="72"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="72" height="72"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="jYv-cW-l24">
                                                                 <rect key="frame" x="0.0" y="0.0" width="72" height="72"/>
@@ -879,11 +877,11 @@
                                             <constraints>
                                                 <constraint firstItem="3Cl-kB-Fh3" firstAttribute="top" secondItem="0N3-xF-dy3" secondAttribute="top" constant="32" id="5Kt-BO-YMR"/>
                                                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="5md-9Y-eyo" secondAttribute="trailing" constant="90" id="LTi-qU-Ydg"/>
+                                                <constraint firstItem="5md-9Y-eyo" firstAttribute="leading" secondItem="3Cl-kB-Fh3" secondAttribute="leading" id="NBH-10-RRM"/>
                                                 <constraint firstItem="qYq-sN-8nf" firstAttribute="top" secondItem="0N3-xF-dy3" secondAttribute="top" id="PqL-Do-5HP"/>
-                                                <constraint firstAttribute="trailing" secondItem="qYq-sN-8nf" secondAttribute="trailing" constant="20" id="SgN-8Z-huS"/>
-                                                <constraint firstAttribute="trailing" secondItem="3Cl-kB-Fh3" secondAttribute="trailing" id="bQf-Cx-tiS"/>
-                                                <constraint firstItem="3Cl-kB-Fh3" firstAttribute="leading" secondItem="0N3-xF-dy3" secondAttribute="leading" id="doJ-XS-yK0"/>
-                                                <constraint firstItem="5md-9Y-eyo" firstAttribute="leading" secondItem="0N3-xF-dy3" secondAttribute="leading" constant="20" id="eVo-bb-M4T"/>
+                                                <constraint firstItem="qYq-sN-8nf" firstAttribute="trailing" secondItem="3Cl-kB-Fh3" secondAttribute="trailing" id="aWS-9q-zfA"/>
+                                                <constraint firstAttribute="trailing" secondItem="3Cl-kB-Fh3" secondAttribute="trailing" constant="20" id="bQf-Cx-tiS"/>
+                                                <constraint firstItem="3Cl-kB-Fh3" firstAttribute="leading" secondItem="0N3-xF-dy3" secondAttribute="leading" constant="20" id="doJ-XS-yK0"/>
                                                 <constraint firstItem="5md-9Y-eyo" firstAttribute="centerY" secondItem="qYq-sN-8nf" secondAttribute="centerY" id="mEY-Aj-Euy"/>
                                                 <constraint firstAttribute="bottom" secondItem="3Cl-kB-Fh3" secondAttribute="bottom" id="pM7-sq-uFp"/>
                                             </constraints>
@@ -891,7 +889,8 @@
                                         <connections>
                                             <outlet property="addButton" destination="qYq-sN-8nf" id="Tjt-44-eTp"/>
                                             <outlet property="collectionView" destination="3Cl-kB-Fh3" id="qLV-1X-85Y"/>
-                                            <outlet property="flowLayout" destination="Lai-36-8qQ" id="Bdn-8e-cl5"/>
+                                            <outlet property="collectionViewLeadingConstraint" destination="doJ-XS-yK0" id="CuE-kF-ISl"/>
+                                            <outlet property="collectionViewTrailingConstraint" destination="bQf-Cx-tiS" id="RCr-an-KRQ"/>
                                             <outlet property="nameLabel" destination="5md-9Y-eyo" id="n5T-5X-H5W"/>
                                         </connections>
                                     </collectionViewCell>
@@ -2843,7 +2842,7 @@
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_selection">
-            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.96100002527236938" green="0.96899998188018799" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="icon_fill">
             <color red="0.23137254901960785" green="0.23529411764705882" blue="0.24313725490196078" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -2855,10 +2854,10 @@
             <color red="0.89803921568627454" green="0.90588235294117647" blue="0.92156862745098034" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_placeholder">
             <color red="0.73725490196078436" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

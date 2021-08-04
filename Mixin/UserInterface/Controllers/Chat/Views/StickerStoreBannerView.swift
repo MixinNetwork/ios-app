@@ -11,10 +11,6 @@ class StickerStoreBannerView: UICollectionReusableView {
             collectionView.reloadData()
         }
     }
-        
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
     
 }
 
@@ -26,13 +22,11 @@ extension StickerStoreBannerView: UICollectionViewDataSource, UICollectionViewDe
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.sticker_preview, for: indexPath)!
-        if indexPath.item < stickerStoreItems.count, let url = URL(string: stickerStoreItems[indexPath.item].album.iconUrl) {
+        if indexPath.item < stickerStoreItems.count,
+           let banner = stickerStoreItems[indexPath.item].album.banner,
+           let url = URL(string: banner) {
             cell.stickerView.load(imageURL: url, contentMode: .scaleAspectFill)
         }
-        cell.backgroundColor = UIColor(red: .random(in: 0...1),
-                                       green: .random(in: 0...1),
-                                       blue: .random(in: 0...1),
-                                       alpha: 1.0)
         return cell
     }
     

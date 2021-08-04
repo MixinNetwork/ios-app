@@ -31,9 +31,8 @@ class StickerPreviewViewController: UIViewController {
         updatePreferredContentSizeHeight()
         stickerView.load(message: message)
         stickerView.startAnimating()
-        
         if message.assetCategory == "SYSTEM", let stickerId = message.stickerId {
-            fetchSticker(with: stickerId)
+            loadSticker(with: stickerId)
         }
     }
     
@@ -55,7 +54,7 @@ class StickerPreviewViewController: UIViewController {
         guard let album = album else {
             return
         }
-        StickersStoreManager.shared.add(album: album)
+        StickersStoreManager.shared().add(album: album)
         dismissAsChild(completion: nil)
     }
     
@@ -78,27 +77,29 @@ extension StickerPreviewViewController {
     
     private func preferredContentHeight() -> CGFloat {
         view.layoutIfNeeded()
-        return stickerPreviewViewTopConstraint.constant
+        let window = AppDelegate.current.mainWindow
+        let maxHeight = window.bounds.height - window.safeAreaInsets.top
+        let contentHeight = stickerPreviewViewTopConstraint.constant
             + stickerPreviewViewHeightConstraint.constant
-            + AppDelegate.current.mainWindow.safeAreaInsets.bottom
+            + window.safeAreaInsets.bottom
             + (stickers.count > 0 ? 160.0 : 90.0)
+        return min(maxHeight, contentHeight)
     }
     
-    private func fetchSticker(with stickerId: String) {
+    private func loadSticker(with stickerId: String) {
         activityIndicatorView.startAnimating()
-        StickersStoreManager.shared.fetchSticker(stickerId: stickerId) { result in
-            activityIndicatorView.stopAnimating()
-            switch result {
-            case .success(let item):
-                album = item.album
-                stickers = item.stickers
-                stickersContentView.isHidden = false
-                collectionView.isHidden = false
-                collectionView.reloadData()
-                updatePreferredContentSizeHeight()
-            case .failure:
-                stickersContentView.isHidden = true
-                collectionView.isHidden = true
+        StickersStoreManager.shared().loadSticker(stickerId: stickerId) { item in
+            self.activityIndicatorView.stopAnimating()
+            if let item = item {
+                self.album = item.album
+                self.stickers = item.stickers
+                self.stickersContentView.isHidden = false
+                self.collectionView.isHidden = false
+                self.collectionView.reloadData()
+                self.updatePreferredContentSizeHeight()
+            } else {
+                self.stickersContentView.isHidden = true
+                self.collectionView.isHidden = true
             }
         }
     }

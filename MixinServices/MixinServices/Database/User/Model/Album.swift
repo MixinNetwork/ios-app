@@ -16,6 +16,7 @@ public struct Album {
     public let userId: String
     public let category: String
     public let description: String
+    public let banner: String?
     
 }
 
@@ -30,6 +31,7 @@ extension Album: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mixin
         case userId = "user_id"
         case category
         case description
+        case banner
     }
     
     public init(from decoder: Decoder) throws {
@@ -42,6 +44,7 @@ extension Album: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mixin
         userId = try container.decodeIfPresent(String.self, forKey: .userId) ?? ""
         category = try container.decodeIfPresent(String.self, forKey: .category) ?? ""
         description = try container.decodeIfPresent(String.self, forKey: .description) ?? ""
+        banner = try container.decodeIfPresent(String.self, forKey: .banner)
     }
     
 }

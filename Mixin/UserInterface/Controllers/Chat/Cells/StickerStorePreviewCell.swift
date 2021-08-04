@@ -6,7 +6,9 @@ class StickerStorePreviewCell: UICollectionViewCell {
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var addButton: UIButton!
     @IBOutlet weak var collectionView: UICollectionView!
-    @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
+    
+    @IBOutlet weak var collectionViewLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var collectionViewTrailingConstraint: NSLayoutConstraint!
     
     var onStickerOperation: (() -> Void)?
     var stickerStoreItem: StickerStoreItem! {
@@ -32,8 +34,9 @@ class StickerStorePreviewCell: UICollectionViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        let inset: CGFloat = ScreenWidth.current < .medium ? 10 : 20
-        flowLayout.sectionInset = UIEdgeInsets(top: 0, left: inset, bottom: 0, right: inset)
+        let space: CGFloat = ScreenWidth.current < .medium ? 10 : 20
+        collectionViewLeadingConstraint.constant = space
+        collectionViewTrailingConstraint.constant = space
     }
     
 }

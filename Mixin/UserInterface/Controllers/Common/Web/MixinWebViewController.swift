@@ -109,7 +109,7 @@ class MixinWebViewController: WebViewController {
         case .app:
             sections = [[.share], [floatAction], [.about, .refresh]]
         case .webPage:
-            sections = [[.share], [floatAction], [.copyLink, .refresh, .openInSafari]]
+            sections = [[.share], [floatAction], [.copyLink, .refresh, .openInBrowser]]
         }
         let more = WebMoreMenuViewController(sections: sections)
         more.overrideStatusBarStyle = preferredStatusBarStyle
@@ -331,7 +331,7 @@ extension MixinWebViewController: WebMoreMenuControllerDelegate {
                 copyAction(currentUrl: url)
             case .refresh:
                 reloadAction(controller)
-            case .openInSafari:
+            case .openInBrowser:
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }
         }

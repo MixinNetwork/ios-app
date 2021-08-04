@@ -108,12 +108,12 @@ class HomeAppsManager: NSObject {
         pinnedCollectionView?.dataSource = self
         pinnedCollectionView?.delegate = self
         longPressRecognizer.addTarget(self, action: #selector(handleLongPressGesture(_:)))
-        self.viewController!.view.addGestureRecognizer(longPressRecognizer)
+        viewController.view.addGestureRecognizer(longPressRecognizer)
         tapRecognizer.isEnabled = false
         tapRecognizer.delegate = self
         tapRecognizer.cancelsTouchesInView = false
         tapRecognizer.addTarget(self, action: #selector(handleTapGesture(gestureRecognizer:)))
-        self.viewController!.view.addGestureRecognizer(tapRecognizer)
+        viewController.view.addGestureRecognizer(tapRecognizer)
         NotificationCenter.default.addObserver(self, selector: #selector(leaveEditingMode), name: UIApplication.willResignActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(contactsDidChange(_:)), name: UserDAO.contactsDidChangeNotification, object: nil)
     }

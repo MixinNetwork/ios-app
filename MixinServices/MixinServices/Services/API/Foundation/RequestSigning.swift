@@ -32,8 +32,7 @@ extension RequestSigning {
     private static var edDSAPrivateKey: Ed25519PrivateKey? {
         if let cached = cachedEdDSAPrivateKey {
             return cachedEdDSAPrivateKey
-        } else if let secret = AppGroupKeychain.sessionSecret {
-            let key = Ed25519PrivateKey(rfc8032Representation: secret)
+        } else if let secret = AppGroupKeychain.sessionSecret, let key = Ed25519PrivateKey(rfc8032Representation: secret) {
             cachedEdDSAPrivateKey = key
             return key
         } else {

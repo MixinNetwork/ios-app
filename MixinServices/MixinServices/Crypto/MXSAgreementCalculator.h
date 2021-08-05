@@ -3,7 +3,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(AgreementCalculator)
-@interface MXMAgreementCalculator : NSObject
+@interface MXSAgreementCalculator : NSObject
 
 + (NSData * _Nullable)agreementFromPublicKeyData:(NSData *)publicKeyData
                                   privateKeyData:(NSData *)privateKeyData;

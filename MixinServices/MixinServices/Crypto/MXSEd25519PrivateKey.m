@@ -4,29 +4,38 @@
 #include <openssl/rand.h>
 #include <openssl/sha.h>
 
-static const int seedLength = 32;
+static const size_t seedLength = 32;
 
 @implementation MXSEd25519PrivateKey {
-    uint8_t _seed[seedLength];
-    uint8_t _publicKey[ED25519_PUBLIC_KEY_LEN];
+    NSData *_seed;
+    MXSEd25519PublicKey *_publicKey;
     uint8_t _privateKey[ED25519_PRIVATE_KEY_LEN];
-}
-
-- (instancetype)initWithRFC8032Representation:(NSData *)seed {
-    self = [super init];
-    if (self) {
-        NSAssert(seed.length == seedLength, @"Invalid seed");
-        memcpy(_seed, seed.bytes, seedLength);
-        ED25519_keypair_from_seed(_publicKey, _privateKey, _seed);
-    }
-    return self;
 }
 
 - (instancetype)init {
     self = [super init];
     if (self) {
-        RAND_bytes(_seed, seedLength);
-        ED25519_keypair_from_seed(_publicKey, _privateKey, _seed);
+        uint8_t *seed = malloc(seedLength);
+        RAND_bytes(seed, seedLength);
+        _seed = [NSData dataWithBytesNoCopy:seed length:seedLength freeWhenDone:YES];
+        
+        uint8_t *publicKey = malloc(ED25519_PUBLIC_KEY_LEN);
+        ED25519_keypair_from_seed(publicKey, _privateKey, seed);
+        _publicKey = [[MXSEd25519PublicKey alloc] initWithBytesNoCopy:publicKey length:ED25519_PUBLIC_KEY_LEN freeWhenDone:YES];
+    }
+    return self;
+}
+
+- (nullable instancetype)initWithRFC8032Representation:(NSData *)seed {
+    if (seed.length != seedLength) {
+        return nil;
+    }
+    self = [super init];
+    if (self) {
+        _seed = [seed copy];
+        uint8_t *publicKey = malloc(ED25519_PUBLIC_KEY_LEN);
+        ED25519_keypair_from_seed(publicKey, _privateKey, _seed.bytes);
+        _publicKey = [[MXSEd25519PublicKey alloc] initWithBytesNoCopy:publicKey length:ED25519_PUBLIC_KEY_LEN freeWhenDone:YES];
     }
     return self;
 }
@@ -41,28 +50,29 @@ static const int seedLength = 32;
 }
 
 - (MXSEd25519PublicKey *)publicKey {
-    return [[MXSEd25519PublicKey alloc] initWithBytes:_publicKey];
+    return _publicKey;
 }
 
 - (NSData *)rfc8032Representation {
-    return [NSData dataWithBytes:_seed length:seedLength];
+    return _seed;
 }
 
 - (NSData *)x25519Representation {
-    unsigned char hash[SHA512_DIGEST_LENGTH];
-    SHA512(_seed, seedLength, hash);
+    unsigned char *hash = malloc(SHA512_DIGEST_LENGTH);
+    SHA512(_seed.bytes, seedLength, hash);
     hash[0] &= 248;
     hash[31] &= 127;
     hash[31] |= 64;
-    return [NSData dataWithBytes:hash length:seedLength];
+    return [NSData dataWithBytesNoCopy:hash length:seedLength freeWhenDone:YES];
 }
 
 - (NSData * _Nullable)signatureForData:(NSData *)data {
-    uint8_t sig[ED25519_SIGNATURE_LEN];
+    uint8_t *sig = malloc(ED25519_SIGNATURE_LEN);
     int result = ED25519_sign(sig, data.bytes, data.length, _privateKey);
     if (result == 1) {
-        return [NSData dataWithBytes:sig length:ED25519_SIGNATURE_LEN];
+        return [NSData dataWithBytesNoCopy:sig length:ED25519_SIGNATURE_LEN freeWhenDone:YES];
     } else {
+        free(sig);
         return nil;
     }
 }

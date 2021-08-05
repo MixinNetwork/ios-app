@@ -70,34 +70,32 @@ const uint8_t version = 1;
         if (derivedSecretLength < 0) {
             goto complete;
         }
-        uint8_t *messageEncryptKey = derivedSecret;
+        NSData *messageEncryptKey = [NSData dataWithBytesNoCopy:derivedSecret length:messageEncryptKeyLength freeWhenDone:NO];
         uint8_t *hmacKey = derivedSecret + messageEncryptKeyLength;
         
-        iv = malloc(ivLength);
-        status = SecRandomCopyBytes(kSecRandomDefault, ivLength, iv);
-        if (status != errSecSuccess) {
+        NSMutableData *iv = [NSMutableData dataWithLength:ivLength];
+        status = CCRandomGenerateBytes(iv.mutableBytes, iv.length);
+        if (status != kCCSuccess) {
             goto complete;
         }
         
-        CCCryptorRef cryptor = nil;
-        CCCryptorCreate(kCCEncrypt, kCCAlgorithmAES, kCCOptionPKCS7Padding, messageEncryptKey, messageEncryptKeyLength, iv, &cryptor);
-        size_t encryptedMessageLength = CCCryptorGetOutputLength(cryptor, messageJSONData.length, true);
+        NSData *encryptedMessage = [MXSAESCryptor encrypt:messageJSONData
+                                                  withKey:messageEncryptKey
+                                                       iv:iv
+                                                  padding:MXSAESCryptorPaddingPKCS7
+                                                    error:nil];
+        if (!encryptedMessage) {
+            goto complete;
+        }
         
-        NSUInteger bodyLength = versionLength + ivLength + encryptedMessageLength + CC_SHA256_DIGEST_LENGTH;
+        NSUInteger bodyLength = versionLength + ivLength + encryptedMessage.length + CC_SHA256_DIGEST_LENGTH;
         NSMutableData *body = [NSMutableData dataWithCapacity:bodyLength];
         [body appendBytes:&version length:versionLength];
-        [body appendBytes:iv length:ivLength];
+        [body appendData:iv];
+        [body appendData:encryptedMessage];
         
-        void *encryptedMessage = malloc(encryptedMessageLength);
-        size_t dataOutMoved = 0;
-        CCCryptorUpdate(cryptor, messageJSONData.bytes, messageJSONData.length, encryptedMessage, encryptedMessageLength, &dataOutMoved);
-        CCCryptorFinal(cryptor, encryptedMessage + dataOutMoved, encryptedMessageLength - dataOutMoved, &dataOutMoved);
-        [body appendBytes:encryptedMessage length:encryptedMessageLength];
-        free(encryptedMessage);
-        CCCryptorRelease(cryptor);
-
         void *hmac = malloc(CC_SHA256_DIGEST_LENGTH);
-        CCHmac(kCCHmacAlgSHA256, hmacKey, hmacKeyLength, body.bytes, versionLength + ivLength + encryptedMessageLength, hmac);
+        CCHmac(kCCHmacAlgSHA256, hmacKey, hmacKeyLength, body.bytes, versionLength + ivLength + encryptedMessage.length, hmac);
         [body appendBytes:hmac length:CC_SHA256_DIGEST_LENGTH];
         free(hmac);
         

@@ -6,7 +6,7 @@ public extension Data {
         return [UInt8](self)
     }
     
-    init?(withSecuredRandomBytesOfCount count: Int) {
+    init?(withNumberOfSecuredRandomBytes count: Int) {
         guard let bytes = malloc(count) else {
             return nil
         }

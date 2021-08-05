@@ -75,6 +75,7 @@ extension CaptchaManager: WKScriptMessageHandler {
             webView.removeFromSuperview()
             let captchaViewController = CaptchaViewController()
             captchaViewController.load(webView: webView)
+            captchaViewController.presentationController?.delegate = self
             requestingViewController.present(captchaViewController, animated: true, completion: nil)
         case .hCaptchaFailed:
             requestingViewController?.dismiss(animated: true, completion: nil)
@@ -86,6 +87,14 @@ extension CaptchaManager: WKScriptMessageHandler {
         case let .hCaptchaToken(token):
             report(token: .hCaptcha(token))
         }
+    }
+    
+}
+
+extension CaptchaManager: UIAdaptivePresentationControllerDelegate {
+    
+    func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+        cancel()
     }
     
 }

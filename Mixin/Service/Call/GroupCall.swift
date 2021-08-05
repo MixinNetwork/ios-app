@@ -17,12 +17,35 @@ class GroupCall: Call {
     // invite after group call is connected
     private var pendingInvitingMembers: [UserItem]?
     
+    private weak var speakingTimer: Timer?
+    
     private var hasBegunConnecting: Bool {
         status != .incoming && status != .outgoing
     }
     
     override var description: String {
         "<GroupCall: uuid: \(uuidString), isOutgoing: \(isOutgoing), status: \(status.debugDescription), conversationId: \(conversationId), connectedDate: \(connectedDate?.description ?? "(never)"), trackId: \(trackId ?? "(null)"), inviters: \(inviters.map(\.fullName)), pendingInvitingMembers: \(pendingInvitingMembers?.map(\.fullName).debugDescription ?? "(null)")>"
+    }
+    
+    override var status: Call.Status {
+        didSet {
+            if status == .connected {
+                DispatchQueue.main.async {
+                    guard self.speakingTimer == nil else {
+                        return
+                    }
+                    self.speakingTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self] _ in
+                        self?.rtcClient.audioLevels(completion: { levels in
+                            self?.membersDataSource.report(audioLevels: levels)
+                        })
+                    })
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self.speakingTimer?.invalidate()
+                }
+            }
+        }
     }
     
     var localizedName: String {

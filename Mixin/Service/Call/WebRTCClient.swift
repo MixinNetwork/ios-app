@@ -28,6 +28,7 @@ class WebRTCClient: NSObject {
     private var peerConnection: RTCPeerConnection?
     private var rtpSender: RTCRtpSender?
     private var rtpReceivers = [String : RTCRtpReceiver]()
+    private var tracksUserId: [String: String] = [:] // Key is track id, value is user id
     
     var canAddRemoteCandidate: Bool {
         peerConnection != nil
@@ -114,6 +115,27 @@ class WebRTCClient: NSObject {
         }
     }
     
+    func audioLevels(completion: @escaping ([String: Double]) -> Void) {
+        queue.async {
+            self.peerConnection?.statistics(completionHandler: { report in
+                let audioLevels: [String: Double] = report.statistics.reduce(into: [:]) { result, pair in
+                    guard
+                        pair.key.hasPrefix("RTCMediaStreamTrack_receiver_"),
+                        let trackId = pair.value.values["trackIdentifier"] as? String,
+                        let userId = self.tracksUserId[trackId],
+                        let level = pair.value.values["audioLevel"] as? Double
+                    else {
+                        return
+                    }
+                    result[userId] = level
+                }
+                DispatchQueue.main.async {
+                    completion(audioLevels)
+                }
+            })
+        }
+    }
+    
     func close() {
         isClosed = true
         peerConnection?.close()
@@ -177,6 +199,9 @@ extension WebRTCClient: RTCPeerConnectionDelegate {
             if let frameKey = frameKey {
                 rtpReceivers[id.rawValue] = rtpReceiver
                 rtpReceiver.setFrameDecryptorKey(frameKey)
+            }
+            if let trackId = rtpReceiver.track?.trackId {
+                self.tracksUserId[trackId] = id.userId
             }
             queue.async {
                 self.delegate?.webRTCClient(self, didAddReceiverWith: id.userId)

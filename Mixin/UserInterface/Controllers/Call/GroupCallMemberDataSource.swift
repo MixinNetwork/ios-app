@@ -26,6 +26,8 @@ class GroupCallMemberDataSource: NSObject {
     private(set) var members: [UserItem]
     private(set) var invitingMemberUserIds: Set<String>
     
+    private var audioLevels: [String: Double] = [:] // key is user id
+    
     private weak var participantsCountLabel: UILabel?
     
     init(conversationId: String, members: [UserItem], invitingMemberUserIds: Set<String>) {
@@ -93,11 +95,28 @@ class GroupCallMemberDataSource: NSObject {
         }
     }
     
+    func report(audioLevels: [String: Double]) {
+        self.audioLevels = audioLevels
+        for indexPath in collectionView?.indexPathsForVisibleItems ?? [] {
+            guard let member = member(at: indexPath) else {
+                continue
+            }
+            guard let cell = collectionView?.cellForItem(at: indexPath) as? CallMemberCell else {
+                continue
+            }
+            cell.isSpeaking = isMemberSpeaking(userId: member.userId)
+        }
+    }
+    
     func indexPath(forMemberAt index: Int) -> IndexPath {
         IndexPath(item: index + 1, section: 0) // +1 for the add button
     }
     
     func member(at indexPath: IndexPath) -> UserItem? {
+        guard indexPath.item > 0 else {
+            // Add member button
+            return nil
+        }
         let index: Int
         if debugWithNumerousMembers {
             index = (indexPath.item - 1) % members.count
@@ -141,6 +160,10 @@ class GroupCallMemberDataSource: NSObject {
         }
     }
     
+    private func isMemberSpeaking(userId: String) -> Bool {
+        (audioLevels[userId] ?? 0) > 0.01
+    }
+    
 }
 
 extension GroupCallMemberDataSource: UICollectionViewDataSource {
@@ -168,6 +191,7 @@ extension GroupCallMemberDataSource: UICollectionViewDataSource {
                 cell.avatarImageView.setImage(with: member)
                 cell.connectingView.isHidden = !invitingMemberUserIds.contains(member.userId)
                 cell.label.text = member.fullName
+                cell.isSpeaking = isMemberSpeaking(userId: member.userId)
             }
         }
         cell.hasBiggerLayout = false

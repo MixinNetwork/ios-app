@@ -1450,7 +1450,9 @@ extension CallService {
         var identifier: UIBackgroundTaskIdentifier = .invalid
         var cancelBackgroundTask: DispatchWorkItem!
         cancelBackgroundTask = DispatchWorkItem {
-            if application.applicationState != .active {
+            let disconnectWebSocket = application.applicationState != .active
+                && !CallService.shared.hasCall
+            if disconnectWebSocket {
                 MixinService.isStopProcessMessages = true
                 WebSocketService.shared.disconnect()
             }

@@ -3,7 +3,10 @@ import Foundation
 extension HomeAppsManager {
     
     @discardableResult
-    func showFolder(from cell: AppFolderCell, isNewlyCreated: Bool = false, startInRename: Bool = false) -> HomeAppsFolderViewController {
+    func showFolder(from cell: AppFolderCell, isNewlyCreated: Bool = false, startInRename: Bool = false) -> HomeAppsFolderViewController? {
+        guard let viewController = viewController else {
+            return nil
+        }
         openFolderInfo = HomeAppsOpenFolderInfo(cell: cell, isNewlyCreated: isNewlyCreated)
         cell.stopShaking()
         let convertedFrame = cell.convert(cell.imageContainerView.frame, to: AppDelegate.current.mainWindow)
@@ -80,7 +83,9 @@ extension HomeAppsManager {
         let folderIndexPath = IndexPath(item: destinationIndex, section: 0)
         interaction.dragInteraction.currentPageCell.items = items[page]
         let folderCell = interaction.dragInteraction.currentPageCell.collectionView.cellForItem(at: folderIndexPath) as! AppFolderCell
-        let folderViewController = showFolder(from: folderCell, isNewlyCreated: isNewlyCreated)
+        guard let folderViewController = showFolder(from: folderCell, isNewlyCreated: isNewlyCreated) else {
+            return
+        }
         folderViewController.openAnimationDidEnd = { [weak folderViewController] in
             self.items[page].remove(at: sourceIndex)
             interaction.dragInteraction.currentPageCell.items = self.items[page]
@@ -98,7 +103,7 @@ extension HomeAppsManager {
     }
     
     func updateFolderDragOutFlags() {
-        guard let interaction = currentDragInteraction else {
+        guard let candidateCollectionView = candidateCollectionView, let interaction = currentDragInteraction else {
             return
         }
         if interaction.placeholderView.center.y < candidateCollectionView.superview!.frame.minY {
@@ -243,7 +248,7 @@ extension HomeAppsManager {
     
     @objc func folderRemoveTimerHandler() {
         guard let dragInteraction = currentDragInteraction,
-              let pageCellIndexPath = candidateCollectionView.indexPath(for: dragInteraction.currentPageCell) else {
+              let pageCellIndexPath = candidateCollectionView?.indexPath(for: dragInteraction.currentPageCell) else {
             return
         }
         updateState(forPageCell: dragInteraction.currentPageCell)

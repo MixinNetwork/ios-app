@@ -15,6 +15,9 @@ extension HomeAppsManager {
     }
     
     private func beginDragInteraction(_ gestureRecognizer: UILongPressGestureRecognizer) {
+        guard let viewController = viewController else {
+            return
+        }
         feedback.prepare()
         var touchPoint = gestureRecognizer.location(in: viewController.view)
         guard let (collectionView, pageCell) = collectionViewAndPageCell(at: touchPoint) else {
@@ -46,7 +49,7 @@ extension HomeAppsManager {
     }
     
     private func updateDragInteraction(_ gestureRecognizer: UILongPressGestureRecognizer) {
-        guard let currentInteraction = currentDragInteraction else {
+        guard let viewController = viewController, let currentInteraction = currentDragInteraction else {
             return
         }
         var touchPoint = gestureRecognizer.location(in: viewController.view)
@@ -60,7 +63,7 @@ extension HomeAppsManager {
             return
         }
         touchPoint.x -= collectionView.contentOffset.x
-        if isInAppsFolderViewController {
+        if isInAppsFolderViewController, let candidateCollectionView = candidateCollectionView {
             var shouldStartDragOutTimer = false
             if touchPoint.y < candidateCollectionView.frame.minY && !ignoreDragOutOnTop {
                 shouldStartDragOutTimer = true
@@ -190,6 +193,9 @@ extension HomeAppsManager {
     }
     
     func endDragInteraction(_ gestureRecognizer: UILongPressGestureRecognizer) {
+        guard let viewController = viewController else {
+            return
+        }
         if currentFolderInteraction != nil {
             invalidateFolderTimer()
             commitFolderInteraction(didDrop: true)
@@ -219,7 +225,7 @@ extension HomeAppsManager {
                 // Move candidate to pinned
                 convertedRect.origin.x -= HomeAppsConstants.placeholderImageXOffset
             }
-        } else if candidateCollectionView.visibleCells.contains(currentInteraction.currentPageCell) {
+        } else if let candidateCollectionView = candidateCollectionView, candidateCollectionView.visibleCells.contains(currentInteraction.currentPageCell) {
             if currentInteraction.placeholderView.source == .pinned {
                 // Move pinned to candidate
                 convertedRect.origin.x += HomeAppsConstants.placeholderImageXOffset
@@ -283,7 +289,7 @@ extension HomeAppsManager {
                 let indexPath = IndexPath(item: page, section: 0)
                 indexPathsToReload.append(indexPath)
             }
-            candidateCollectionView.reloadItems(at: indexPathsToReload)
+            candidateCollectionView?.reloadItems(at: indexPathsToReload)
         }
         items[currentPage].insert(interaction.item, at: destinationIndexPath.row)
         pinnedItems.remove(at: interaction.currentIndexPath.row)
@@ -306,7 +312,7 @@ extension HomeAppsManager {
     }
     
     private func updateStateForPageCells() {
-        if let pageCell = candidateCollectionView.visibleCells.first as? AppPageCell {
+        if let pageCell = candidateCollectionView?.visibleCells.first as? AppPageCell {
             updateState(forPageCell: pageCell)
         }
         if let pageCell = pinnedCollectionView?.visibleCells.first as? AppPageCell {
@@ -320,7 +326,10 @@ extension HomeAppsManager {
 extension HomeAppsManager {
     
     @objc func pageTimerHandler(_ timer: Timer) {
-        guard items.count > 0, let currentInteraction = currentDragInteraction, let offset = timer.userInfo as? Int else {
+        guard items.count > 0,
+              let candidateCollectionView = candidateCollectionView,
+              let currentInteraction = currentDragInteraction,
+              let offset = timer.userInfo as? Int else {
             return
         }
         invalidatePageTimer()

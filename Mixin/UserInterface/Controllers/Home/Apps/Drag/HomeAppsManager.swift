@@ -19,9 +19,9 @@ class HomeAppsManager: NSObject {
     
     weak var delegate: HomeAppsManagerDelegate?
     
-    unowned let viewController: UIViewController
-    unowned let candidateCollectionView: UICollectionView
-    unowned let pinnedCollectionView: UICollectionView?
+    weak var viewController: UIViewController?
+    weak var candidateCollectionView: UICollectionView?
+    weak var pinnedCollectionView: UICollectionView?
     
     var items: [[HomeAppItem]] {
         didSet {
@@ -48,6 +48,9 @@ class HomeAppsManager: NSObject {
     }
     
     var currentPage: Int {
+        guard let candidateCollectionView = candidateCollectionView else {
+            return 0
+        }
         if items.isEmpty || candidateCollectionView.frame.size.width == 0 {
             return 0
         } else {
@@ -56,7 +59,7 @@ class HomeAppsManager: NSObject {
     }
     
     var currentPageCell: AppPageCell? {
-        guard !items.isEmpty else {
+        guard !items.isEmpty, let candidateCollectionView = candidateCollectionView else {
             return nil
         }
         let visibleCells = candidateCollectionView.visibleCells
@@ -72,6 +75,12 @@ class HomeAppsManager: NSObject {
     weak var folderRemoveTimer: Timer?
     
     private let tapRecognizer = UITapGestureRecognizer()
+    
+    deinit {
+        pageTimer?.invalidate()
+        folderTimer?.invalidate()
+        folderRemoveTimer?.invalidate()
+    }
     
     init(
         viewController: UIViewController,
@@ -99,12 +108,12 @@ class HomeAppsManager: NSObject {
         pinnedCollectionView?.dataSource = self
         pinnedCollectionView?.delegate = self
         longPressRecognizer.addTarget(self, action: #selector(handleLongPressGesture(_:)))
-        self.viewController.view.addGestureRecognizer(longPressRecognizer)
+        viewController.view.addGestureRecognizer(longPressRecognizer)
         tapRecognizer.isEnabled = false
         tapRecognizer.delegate = self
         tapRecognizer.cancelsTouchesInView = false
         tapRecognizer.addTarget(self, action: #selector(handleTapGesture(gestureRecognizer:)))
-        self.viewController.view.addGestureRecognizer(tapRecognizer)
+        viewController.view.addGestureRecognizer(tapRecognizer)
         NotificationCenter.default.addObserver(self, selector: #selector(leaveEditingMode), name: UIApplication.willResignActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(contactsDidChange(_:)), name: UserDAO.contactsDidChangeNotification, object: nil)
     }
@@ -112,7 +121,7 @@ class HomeAppsManager: NSObject {
     func reloadData(pinnedItems: [HomeApp], candidateItems: [[HomeAppItem]]) {
         self.items = candidateItems
         self.pinnedItems = pinnedItems
-        candidateCollectionView.reloadData()
+        candidateCollectionView?.reloadData()
         pinnedCollectionView?.reloadData()
     }
     
@@ -169,7 +178,7 @@ extension HomeAppsManager {
             })
             if isDeleted {
                 items = filteredItems
-                candidateCollectionView.reloadData()
+                candidateCollectionView?.reloadData()
             }
         }
         guard !isDeleted, let app = HomeApp(id: appId) else {
@@ -180,11 +189,11 @@ extension HomeAppsManager {
         } else {
             items.append([.app(app)])
         }
-        candidateCollectionView.reloadData()
+        candidateCollectionView?.reloadData()
     }
     
     @objc func handleTapGesture(gestureRecognizer: UITapGestureRecognizer) {
-        guard isEditing else {
+        guard isEditing, let viewController = viewController else {
             return
         }
         var touchPoint = gestureRecognizer.location(in: viewController.view)
@@ -199,11 +208,16 @@ extension HomeAppsManager {
     }
     
     func collectionViewAndPageCell(at point: CGPoint) -> (collectionView: UICollectionView, cell: AppPageCell)? {
+        guard let viewController = viewController else {
+            return nil
+        }
         let collectionView: UICollectionView
         if let pinnedCollectionView = pinnedCollectionView, pinnedCollectionView.frame.contains(viewController.view.convert(point, to: pinnedCollectionView)) {
             collectionView = pinnedCollectionView
-        } else {
+        } else if let candidateCollectionView = candidateCollectionView {
             collectionView = candidateCollectionView
+        } else {
+            return nil
         }
         let convertedPoint = viewController.view.convert(point, to: collectionView)
         if let indexPath = collectionView.indexPathForItem(at: convertedPoint), let cell = collectionView.cellForItem(at: indexPath) as? AppPageCell {
@@ -223,13 +237,13 @@ extension HomeAppsManager {
         if occurHaptic {
             feedback.impactOccurred()
         }
-        for case let cell as AppPageCell in candidateCollectionView.visibleCells + (pinnedCollectionView?.visibleCells ?? []) {
+        for case let cell as AppPageCell in (candidateCollectionView?.visibleCells ?? []) + (pinnedCollectionView?.visibleCells ?? []) {
             cell.enterEditingMode()
         }
         // Add an empty page
         if let lastPage = items.last, lastPage.count > 0 {
             items.append([])
-            candidateCollectionView.insertItems(at: [IndexPath(item: items.count - 1, section: 0)])
+            candidateCollectionView?.insertItems(at: [IndexPath(item: items.count - 1, section: 0)])
         }
         tapRecognizer.isEnabled = true
         delegate?.homeAppsManagerDidEnterEditingMode(self)
@@ -240,7 +254,7 @@ extension HomeAppsManager {
             return
         }
         isEditing = false
-        for case let cell as AppPageCell in candidateCollectionView.visibleCells + (pinnedCollectionView?.visibleCells ?? []) {
+        for case let cell as AppPageCell in (candidateCollectionView?.visibleCells ?? []) + (pinnedCollectionView?.visibleCells ?? []) {
             cell.leaveEditingMode()
         }
         // Remove empty page
@@ -249,8 +263,8 @@ extension HomeAppsManager {
             for index in emptyIndices.sorted(by: >) {
                 self.items.remove(at: index)
             }
-            self.candidateCollectionView.performBatchUpdates({
-                self.candidateCollectionView.deleteItems(at: emptyIndices.map({ IndexPath(item: $0, section: 0) }))
+            self.candidateCollectionView?.performBatchUpdates({
+                self.candidateCollectionView?.deleteItems(at: emptyIndices.map({ IndexPath(item: $0, section: 0) }))
             }, completion: nil)
         }
         tapRecognizer.isEnabled = false
@@ -266,7 +280,7 @@ extension HomeAppsManager {
             let items = sortedCells.compactMap { ($0 as? AppCell)?.app }
             pinnedItems = items
             pageCell.items = items.map { .app($0) }
-        } else if let pageIndexPath = candidateCollectionView.indexPath(for: pageCell) {
+        } else if let pageIndexPath = candidateCollectionView?.indexPath(for: pageCell) {
             let items = sortedCells.compactMap { ($0 as? HomeAppCell)?.item }
             self.items[pageIndexPath.row] = items
             pageCell.items = items
@@ -288,6 +302,9 @@ extension HomeAppsManager {
     }
     
     func perform(transfer: HomeAppsDragInteractionTransfer) {
+        guard let viewController = viewController else {
+            return
+        }
         viewController.view.removeGestureRecognizer(longPressRecognizer)
         longPressRecognizer = transfer.gestureRecognizer
         longPressRecognizer.removeTarget(nil, action: nil)

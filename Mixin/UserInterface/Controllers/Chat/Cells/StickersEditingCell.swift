@@ -8,8 +8,11 @@ class StickersEditingCell: UITableViewCell {
     @IBOutlet weak var countLabel: UILabel!
     
     var onDeleteSticker: (() -> Void)?
-    var stickerStoreItem: StickerStoreItem! {
+    var stickerStoreItem: StickerStoreItem? {
         didSet {
+            guard let stickerStoreItem = stickerStoreItem else {
+                return
+            }
             nameLabel.text = stickerStoreItem.album.name
             countLabel.text = Localized.STICKER_COUNT(count: stickerStoreItem.stickers.count)
             if let url = URL(string: stickerStoreItem.album.iconUrl) {
@@ -17,10 +20,6 @@ class StickersEditingCell: UITableViewCell {
                 stickerImageView.sd_setImage(with: url, placeholderImage: nil, context: context)
             }
         }
-    }
-    
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
     }
     
     override func prepareForReuse() {

@@ -61,7 +61,9 @@ extension AppGroupUserDefaults {
             case pinMessageBanners = "pin_message_banners"
             
             case stickerAblums = "sticker_albums"
-            
+            case stickerUpdateDate = "sticker_update_date"
+            case hasNewStickers = "has_new_stickers"
+
         }
         
         public static let version = 27
@@ -231,6 +233,13 @@ extension AppGroupUserDefaults {
                 NotificationCenter.default.post(onMainThread: stickerAlbumIdsDidChangeNotification, object: self)
             }
         }
+        
+        @Default(namespace: .user, key: Key.stickerUpdateDate, defaultValue: nil)
+        public static var stickerUpdateDate: Date?
+        
+        @Default(namespace: .user, key: Key.hasNewStickers, defaultValue: false)
+        public static var hasNewStickers: Bool
+        
         
         public static func insertRecentlyUsedAppId(id: String) {
             let maxNumberOfIds = 12

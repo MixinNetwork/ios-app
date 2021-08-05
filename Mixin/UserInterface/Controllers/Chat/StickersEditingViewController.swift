@@ -15,18 +15,6 @@ class StickersEditingViewController: UIViewController {
         super.viewDidLoad()
         stickerEmptyImageView.tintColor = UIColor(displayP3RgbValue: 0xC0C5D4, alpha: 0.3)
         stickerEmptyWrapperViewTopConstraint.constant = (UIScreen.main.bounds.height - stickerEmptyWrapperViewHeightConstraint.constant) / 7 * 3
-        fetchMyStickers()
-    }
-    
-    @IBAction func backAction(_ sender: Any) {
-        navigationController?.popViewController(animated: true)
-    }
-    
-}
-
-extension StickersEditingViewController {
-    
-    private func fetchMyStickers() {
         StickersStoreManager.shared().loadMyStickers { items in
             DispatchQueue.main.async {
                 if items.isEmpty {
@@ -36,11 +24,15 @@ extension StickersEditingViewController {
                     self.stickerStoreItems = items
                     self.stickerEmptyWrapperView.isHidden = true
                     self.tableView.isHidden = false
-                    self.tableView.reloadData()
                     self.tableView.isEditing = true
+                    self.tableView.reloadData()
                 }
             }
         }
+    }
+    
+    @IBAction func backAction(_ sender: Any) {
+        navigationController?.popViewController(animated: true)
     }
     
 }
@@ -89,9 +81,12 @@ extension StickersEditingViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        guard sourceIndexPath.row < stickerStoreItems.count && destinationIndexPath.row < stickerStoreItems.count else {
+            return
+        }
         let item = stickerStoreItems.remove(at: sourceIndexPath.row)
         stickerStoreItems.insert(item, at: destinationIndexPath.row)
-        StickersStoreManager.shared().updateStickerAlbumSequence(albumIds: stickerStoreItems.map({ $0.album.albumId }))
+        StickersStoreManager.shared().updateStickerAlbumsSequence(albumIds: stickerStoreItems.map({ $0.album.albumId }))
         tableView.reloadData()
     }
     

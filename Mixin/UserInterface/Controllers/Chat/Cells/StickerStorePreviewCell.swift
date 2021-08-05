@@ -11,8 +11,11 @@ class StickerStorePreviewCell: UICollectionViewCell {
     @IBOutlet weak var collectionViewTrailingConstraint: NSLayoutConstraint!
     
     var onStickerOperation: (() -> Void)?
-    var stickerStoreItem: StickerStoreItem! {
+    var stickerStoreItem: StickerStoreItem? {
         didSet {
+            guard let stickerStoreItem = stickerStoreItem else {
+                return
+            }
             nameLabel.text = stickerStoreItem.album.name
             if stickerStoreItem.isAdded {
                 addButton.setTitle(R.string.localizable.sticker_store_added(), for: .normal)
@@ -34,9 +37,9 @@ class StickerStorePreviewCell: UICollectionViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        let space: CGFloat = ScreenWidth.current < .medium ? 10 : 20
-        collectionViewLeadingConstraint.constant = space
-        collectionViewTrailingConstraint.constant = space
+        let margin: CGFloat = ScreenWidth.current < .medium ? 10 : 20
+        collectionViewLeadingConstraint.constant = margin
+        collectionViewTrailingConstraint.constant = margin
     }
     
 }
@@ -44,12 +47,15 @@ class StickerStorePreviewCell: UICollectionViewCell {
 extension StickerStorePreviewCell: UICollectionViewDataSource, UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        guard let stickerStoreItem = stickerStoreItem else {
+            return 0
+        }
         return min(cellCountPerRow, stickerStoreItem.stickers.count)
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.sticker_preview, for: indexPath)!
-        if indexPath.item < stickerStoreItem.stickers.count {
+        if let stickerStoreItem = stickerStoreItem, indexPath.item < stickerStoreItem.stickers.count {
             cell.stickerView.load(sticker: stickerStoreItem.stickers[indexPath.item])
         }
         return cell

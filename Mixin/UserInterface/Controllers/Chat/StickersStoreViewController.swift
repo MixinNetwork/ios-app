@@ -24,7 +24,7 @@ class StickersStoreViewController: UIViewController {
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        flowLayout.itemSize = CGSize(width: view.bounds.width, height: 102)
+        flowLayout.itemSize = CGSize(width: view.bounds.width, height: 104)
         if bannerItems.isEmpty {
             flowLayout.headerReferenceSize = .zero
         } else {
@@ -86,23 +86,20 @@ extension StickersStoreViewController: UICollectionViewDelegate {
 extension StickersStoreViewController {
     
     @objc private func syncStickerAlbums() {
-        guard let stickerAblums = AppGroupUserDefaults.User.stickerAblums else {
+        guard let albumIds = AppGroupUserDefaults.User.stickerAblums else {
             return
         }
         for (index, item) in bannerItems.enumerated() {
-            bannerItems[index].isAdded = stickerAblums.contains(item.album.albumId)
+            bannerItems[index].isAdded = albumIds.contains(item.album.albumId)
         }
         for (index, item) in listItems.enumerated() {
-            listItems[index].isAdded = stickerAblums.contains(item.album.albumId)
+            listItems[index].isAdded = albumIds.contains(item.album.albumId)
         }
-        UIView.performWithoutAnimation {
-            collectionView.reloadData()
-        }
+        collectionView.reloadData()
     }
     
     private func showStickerAlbumPreviewController(with item: StickerStoreItem) {
-        let viewController = StickersAlbumPreviewViewController.instance()
-        viewController.stickerStoreItem = item
+        let viewController = StickersAlbumPreviewViewController.instance(with: item)
         viewController.presentAsChild(of: self)
     }
     

@@ -4,11 +4,12 @@ class StickersStoreManager {
     
     private static var privateShared : StickersStoreManager?
     
-    private let bannerItemsCount = 3
-    private var shouldCheckNewStickers = true
     private var albumIds: [String]? {
         return AppGroupUserDefaults.User.stickerAblums
     }
+    private let bannerItemsMaxCount = 3
+    private let checkStickerInterval: TimeInterval = 60 * 60 * 24
+    private let queue = DispatchQueue(label: "one.mixin.messenger.StickersStoreManager")
     
     class func shared() -> StickersStoreManager {
         guard let shared = privateShared else {
@@ -35,21 +36,22 @@ extension StickersStoreManager {
     }
     
     func add(album: Album) {
-        if let myAlbumsId = albumIds {
-            AppGroupUserDefaults.User.stickerAblums = Array(Set(myAlbumsId + [album.albumId]))
+        if var albumIds = albumIds {
+            albumIds.insert(album.albumId, at: 0)
+            AppGroupUserDefaults.User.stickerAblums = albumIds
         } else {
             AppGroupUserDefaults.User.stickerAblums = [album.albumId]
         }
     }
     
     func remove(album: Album) {
-        guard let myAlbumsId = albumIds else {
+        guard let albumIds = albumIds else {
             return
         }
-        AppGroupUserDefaults.User.stickerAblums = myAlbumsId.filter({ $0 != album.albumId })
+        AppGroupUserDefaults.User.stickerAblums = albumIds.filter({ $0 != album.albumId })
     }
     
-    func updateStickerAlbumSequence(albumIds: [String]) {
+    func updateStickerAlbumsSequence(albumIds: [String]) {
         AppGroupUserDefaults.User.stickerAblums = albumIds
     }
     
@@ -79,7 +81,7 @@ extension StickersStoreManager {
                 let item = StickerStoreItem(album: album,
                                             stickers: StickerDAO.shared.getStickers(albumId: album.albumId),
                                             isAdded: (self.albumIds?.contains(album.albumId)) ?? false)
-                if album.banner != nil && bannerItems.count < self.bannerItemsCount {
+                if album.banner != nil && bannerItems.count < self.bannerItemsMaxCount {
                     bannerItems.append(item)
                 } else {
                     listItems.append(item)
@@ -93,9 +95,9 @@ extension StickersStoreManager {
     
     func loadSticker(stickerId: String, completion: @escaping (StickerStoreItem?) -> Void) {
         if let album = AlbumDAO.shared.getAlbum(stickerId: stickerId) {
-            completion((StickerStoreItem(album: album, stickers: StickerDAO.shared.getStickers(albumId: album.albumId))))
+            completion(StickerStoreItem(album: album, stickers: StickerDAO.shared.getStickers(albumId: album.albumId)))
         } else {
-            completion(nil)
+            fetchAllStickers(withTarget: stickerId, completion: completion)
         }
     }
     
@@ -107,12 +109,86 @@ extension StickersStoreManager {
     }
     
     func checkNewStickersIfNeeded(completion: @escaping (Bool) -> Void) {
-        guard shouldCheckNewStickers else {
+        let date = AppGroupUserDefaults.User.stickerUpdateDate
+        guard date == nil || -date!.timeIntervalSinceNow > checkStickerInterval else {
             return
         }
-        shouldCheckNewStickers = false
-        DispatchQueue.main.async {
-            completion(true)
+        queue.async {
+            let stickerAlbums = AlbumDAO.shared.getAblumsUpdateAt()
+            var hasNewStickers = false
+            StickerAPI.albums { (result) in
+                switch result {
+                case let .success(albums):
+                    for album in albums {
+                        if stickerAlbums[album.albumId] != album.updatedAt {
+                            hasNewStickers = true
+                            break
+                        }
+                    }
+                case let .failure(error):
+                    reporter.report(error: error)
+                }
+                DispatchQueue.main.async {
+                    if hasNewStickers {
+                        ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob())
+                    }
+                    AppGroupUserDefaults.User.hasNewStickers = AppGroupUserDefaults.User.hasNewStickers ? true : hasNewStickers
+                    AppGroupUserDefaults.User.stickerUpdateDate = Date()
+                    completion(hasNewStickers)
+                }
+            }
+        }
+    }
+    
+}
+
+extension StickersStoreManager {
+    
+    private func fetchAllStickers(withTarget stickerId: String, completion: @escaping (StickerStoreItem?) -> Void) {
+        let stickerWorkingGroup = DispatchGroup()
+        var stickerStoreItem: StickerStoreItem?
+        stickerWorkingGroup.enter()
+        queue.async {
+            let stickerAlbums = AlbumDAO.shared.getAblumsUpdateAt()
+            StickerAPI.albums { (result) in
+                switch result {
+                case let .success(albums):
+                    for album in albums {
+                        guard stickerAlbums[album.albumId] != album.updatedAt else {
+                            continue
+                        }
+                        guard !MixinService.isStopProcessMessages else {
+                            return
+                        }
+                        AlbumDAO.shared.insertOrUpdateAblum(album: album)
+                        
+                        stickerWorkingGroup.enter()
+                        StickerAPI.stickers(albumId: album.albumId) { (result) in
+                            switch result {
+                            case let .success(stickers):
+                                guard !MixinService.isStopProcessMessages else {
+                                    return
+                                }
+                                let stickers = StickerDAO.shared.insertOrUpdateStickers(stickers: stickers, albumId: album.albumId)
+                                if stickers.contains(where: { $0.stickerId == stickerId }) {
+                                    stickerStoreItem = StickerStoreItem(album: album, stickers: stickers)
+                                }
+                            case let .failure(error):
+                                reporter.report(error: error)
+                            }
+                            stickerWorkingGroup.leave()
+                        }
+                    }
+                case let .failure(error):
+                    reporter.report(error: error)
+                }
+                stickerWorkingGroup.leave()
+            }
+        }
+        stickerWorkingGroup.notify(queue: queue) {
+            DispatchQueue.main.async {
+                completion(stickerStoreItem)
+            }
         }
     }
     

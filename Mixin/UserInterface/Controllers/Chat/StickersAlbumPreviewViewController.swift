@@ -17,15 +17,17 @@ class StickersAlbumPreviewViewController: ResizablePopupViewController {
     @IBOutlet weak var actionBarHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var actionBarContentHeightConstraint: NSLayoutConstraint!
     
-    var stickerStoreItem: StickerStoreItem!
-    
     private lazy var resizeRecognizerDelegate = PopupResizeGestureCoordinator(scrollView: resizableScrollView)
+    
+    private var stickerStoreItem: StickerStoreItem!
     private var isShowingContentView = false
     private let cellCountPerRow = 3
     private let defaultCountOfRows = 3
     
-    class func instance() -> StickersAlbumPreviewViewController {
-        R.storyboard.chat.stickers_album_preview()!
+    class func instance(with stickerStoreItem: StickerStoreItem) -> StickersAlbumPreviewViewController {
+        let vc = R.storyboard.chat.stickers_album_preview()!
+        vc.stickerStoreItem = stickerStoreItem
+        return vc
     }
     
     override var automaticallyAdjustsResizableScrollViewBottomInset: Bool {

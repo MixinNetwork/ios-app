@@ -12,7 +12,6 @@ class StickerInputViewController: UIViewController {
     private var pageScrollView: UIScrollView?
     private var isScrollingByAlbumSelection = false
     private var currentPage: StickersCollectionViewController!
-    private var hasNewStickers = false
     
     var numberOfAllAlbums: Int {
         return officialAlbums.count + modelController.numberOfFixedControllers
@@ -50,7 +49,6 @@ class StickerInputViewController: UIViewController {
             guard hasNewStickers else {
                 return
             }
-            self.hasNewStickers = true
             self.albumsCollectionView.reloadItems(at: [IndexPath(item: 0, section: 0)])
         }
     }
@@ -112,7 +110,7 @@ extension StickerInputViewController: UICollectionViewDataSource {
         case 0:
             cell.imageView.image = R.image.ic_sticker_store()
             cell.imageView.contentMode = .center
-            cell.dotImageView.isHidden = !hasNewStickers
+            cell.dotImageView.isHidden = !AppGroupUserDefaults.User.hasNewStickers
         case 1:
             cell.imageView.image = R.image.ic_recent_stickers()
             cell.imageView.contentMode = .center
@@ -144,10 +142,9 @@ extension StickerInputViewController: UICollectionViewDelegate {
             let navigationController = UINavigationController(rootViewController: viewController)
             navigationController.modalPresentationStyle = .fullScreen
             navigationController.setNavigationBarHidden(true, animated: false)
-            navigationController.interactivePopGestureRecognizer?.isEnabled = true
             present(navigationController, animated: true, completion: nil)
             collectionView.selectItem(at: IndexPath(item: currentIndex, section: 0), animated: false, scrollPosition: .centeredVertically)
-            hasNewStickers = false
+            AppGroupUserDefaults.User.hasNewStickers = false
             collectionView.reloadItems(at: [IndexPath(item: 0, section: 0)])
             return
         }

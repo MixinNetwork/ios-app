@@ -16,8 +16,7 @@ class StickerPreviewViewController: UIViewController {
     
     var message: MessageItem!
     
-    private var album: Album?
-    private lazy var stickers = [StickerItem]()
+    private var stickerStoreItem: StickerStoreItem?
     private lazy var backgroundButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = UIColor.black.withAlphaComponent(0)
@@ -51,7 +50,7 @@ class StickerPreviewViewController: UIViewController {
     }
     
     @IBAction func addStickersAction(_ sender: Any) {
-        guard let album = album else {
+        guard let album = stickerStoreItem?.album else {
             return
         }
         StickersStoreManager.shared().add(album: album)
@@ -82,7 +81,7 @@ extension StickerPreviewViewController {
         let contentHeight = stickerPreviewViewTopConstraint.constant
             + stickerPreviewViewHeightConstraint.constant
             + window.safeAreaInsets.bottom
-            + (stickers.count > 0 ? 160.0 : 90.0)
+            + ((stickerStoreItem != nil && !stickerStoreItem!.stickers.isEmpty) ? 160 : 90)
         return min(maxHeight, contentHeight)
     }
     
@@ -91,8 +90,7 @@ extension StickerPreviewViewController {
         StickersStoreManager.shared().loadSticker(stickerId: stickerId) { item in
             self.activityIndicatorView.stopAnimating()
             if let item = item {
-                self.album = item.album
-                self.stickers = item.stickers
+                self.stickerStoreItem = item
                 self.stickersContentView.isHidden = false
                 self.collectionView.isHidden = false
                 self.collectionView.reloadData()
@@ -109,13 +107,16 @@ extension StickerPreviewViewController {
 extension StickerPreviewViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return stickers.count
+        guard let stickerStoreItem = stickerStoreItem else {
+            return 0
+        }
+        return stickerStoreItem.stickers.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.sticker_preview, for: indexPath)!
-        if indexPath.row < stickers.count {
-            cell.stickerView.load(sticker: stickers[indexPath.item])
+        if let stickerStoreItem = stickerStoreItem, indexPath.row < stickerStoreItem.stickers.count {
+            cell.stickerView.load(sticker: stickerStoreItem.stickers[indexPath.item])
         }
         return cell
     }

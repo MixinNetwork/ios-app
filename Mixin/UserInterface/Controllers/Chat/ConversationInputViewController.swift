@@ -88,6 +88,7 @@ class ConversationInputViewController: UIViewController {
     private var lastSafeAreaInsetsBottom: CGFloat = 0
     private var reportHeightChangeWhenKeyboardFrameChanges = true
     private var lastMentionDetectedText: String?
+    private var makeTextViewFirstResponderOnSilentMessagePreviewClose = false
     private var customInputViewController: UIViewController? {
         didSet {
             if let old = oldValue {
@@ -115,6 +116,8 @@ class ConversationInputViewController: UIViewController {
     // [textView selectedRange:] triggers another delegate call immediately
     // Resolve the recursion with this flag
     private var isManipulatingSelection = false
+    
+    private weak var silentNotificationMessagePreviewIfLoaded: SilentNotificationMessagePreviewViewController?
     
     private var conversationViewController: ConversationViewController {
         return parent as! ConversationViewController
@@ -167,6 +170,8 @@ class ConversationInputViewController: UIViewController {
         textView.inputAccessoryView = interactiveDismissResponder
         textView.textContainerInset = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
         textView.delegate = self
+        let recognizer = PreviewGestureRecognizer(target: self, action: #selector(previewSilentNotificationMessage(_:)))
+        sendButton.addGestureRecognizer(recognizer)
         lastSafeAreaInsetsBottom = view.safeAreaInsets.bottom
         setPreferredContentHeight(minimizedHeight, animated: false)
         if let draft = AppGroupUserDefaults.User.conversationDraft[composer.conversationId], !draft.isEmpty {
@@ -320,17 +325,7 @@ class ConversationInputViewController: UIViewController {
     }
     
     @IBAction func sendTextMessageAction(_ sender: Any) {
-        textView.unmarkText()
-        guard !trimmedMessageDraft.isEmpty else {
-            return
-        }
-        composer.sendMessage(type: .SIGNAL_TEXT,
-                             quote: quote?.message,
-                             value: trimmedMessageDraft)
-        mentionRanges.removeAll()
-        textView.text = ""
-        textViewDidChange(textView)
-        quote = nil
+        sendTextMessage(silentNotification: false)
     }
     
     // MARK: - Interface
@@ -633,6 +628,24 @@ extension ConversationInputViewController {
         }
     }
     
+    @objc private func previewSilentNotificationMessage(_ recognizer: UIGestureRecognizer) {
+        switch recognizer.state {
+        case .began:
+            let preview = SilentNotificationMessagePreviewViewController()
+            preview.delegate = self
+            preview.show(in: conversationViewController, textView: textView, sendButton: sendButton)
+            silentNotificationMessagePreviewIfLoaded = preview
+        case .changed, .ended:
+            silentNotificationMessagePreviewIfLoaded?.handleGestureChange(with: recognizer)
+        default:
+            break
+        }
+    }
+    
+    @objc private func sendTextMessageSilently() {
+        sendTextMessage(silentNotification: true)
+    }
+    
 }
 
 // MARK: - Embedded class
@@ -812,8 +825,48 @@ extension ConversationInputViewController: UITextViewDelegate {
     
 }
 
+// MARK: - SilentNotificationMessagePreviewViewControllerDelegate
+extension ConversationInputViewController: SilentNotificationMessagePreviewViewControllerDelegate {
+    
+    func silentNotificationMessagePreviewViewControllerWillShow(_ viewController: SilentNotificationMessagePreviewViewController) {
+        textView.textColor = .clear
+        sendButton.isHidden = true
+        if textView.isFirstResponder {
+            makeTextViewFirstResponderOnSilentMessagePreviewClose = true
+            resignTextViewFirstResponderWithoutReportingContentHeightChange()
+        }
+    }
+    
+    func silentNotificationMessagePreviewViewController(_ viewController: SilentNotificationMessagePreviewViewController, didSelectSendWithNotification notify: Bool) {
+        viewController.dismiss(hideSendNormallyButton: true)
+        sendTextMessage(silentNotification: !notify)
+    }
+    
+    func silentNotificationMessagePreviewViewControllerDidClose(_ viewController: SilentNotificationMessagePreviewViewController) {
+        textView.textColor = typingAttributes[.foregroundColor] as? UIColor
+        sendButton.isHidden = false
+        if makeTextViewFirstResponderOnSilentMessagePreviewClose {
+            textView.becomeFirstResponder()
+            makeTextViewFirstResponderOnSilentMessagePreviewClose = false
+        }
+        silentNotificationMessagePreviewIfLoaded = nil
+    }
+    
+}
+
 // MARK: - Private works
 extension ConversationInputViewController {
+    
+    private class PreviewGestureRecognizer: UILongPressGestureRecognizer {
+        
+        override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
+            super.touchesMoved(touches, with: event)
+            if state == .possible, let touch = touches.first, touch.force / touch.maximumPossibleForce > 0.7 {
+                state = .began
+            }
+        }
+        
+    }
     
     private func setPhotosButtonSelected(_ selected: Bool) {
         photosButton.isSelected = selected
@@ -1041,6 +1094,21 @@ extension ConversationInputViewController {
         } else {
             conversationViewController.inputTextViewDidInputMentionCandidate(nil)
         }
+    }
+    
+    private func sendTextMessage(silentNotification: Bool) {
+        textView.unmarkText()
+        guard !trimmedMessageDraft.isEmpty else {
+            return
+        }
+        composer.sendMessage(type: .SIGNAL_TEXT,
+                             quote: quote?.message,
+                             value: trimmedMessageDraft,
+                             silentNotification: silentNotification)
+        mentionRanges.removeAll()
+        textView.text = ""
+        textViewDidChange(textView)
+        quote = nil
     }
     
 }

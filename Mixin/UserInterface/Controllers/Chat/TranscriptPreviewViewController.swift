@@ -7,8 +7,13 @@ class TranscriptPreviewViewController: FullscreenPopupViewController {
     let backgroundView = UIVisualEffectView(effect: .prominentBlur)
     let tableView = ConversationTableView()
     
+    override var canBecomeFirstResponder: Bool {
+        true
+    }
+    
     private let factory: ViewModelFactory
     private let queue: Queue
+    private let alwaysUsesLegacyMenu = false
     
     private lazy var audioManager: TranscriptAudioMessagePlayingManager = {
         let manager = TranscriptAudioMessagePlayingManager(transcriptId: transcriptMessage.messageId)
@@ -35,6 +40,10 @@ class TranscriptPreviewViewController: FullscreenPopupViewController {
         fatalError("Storyboard/Xib not supported")
     }
     
+    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        action == #selector(copySelectedMessage)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -53,7 +62,13 @@ class TranscriptPreviewViewController: FullscreenPopupViewController {
         tableView.backgroundColor = .clear
         tableView.separatorStyle = .none
         tableView.dataSource = self
-        tableView.delegate = self
+        if #available(iOS 13.0, *), !alwaysUsesLegacyMenu {
+            tableView.delegate = self
+        } else {
+            tableView.delegate = self
+            let recognizer = UILongPressGestureRecognizer(target: self, action: #selector(showCopyMenu(_:)))
+            tableView.addGestureRecognizer(recognizer)
+        }
         
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapAction(_:)))
         tapRecognizer.delegate = self
@@ -264,6 +279,64 @@ class TranscriptPreviewViewController: FullscreenPopupViewController {
         dismissAsChild(animated: true)
     }
     
+    @objc private func menuControllerWillHideMenu(_ notification: Notification) {
+        if let indexPath = tableView.indexPathForSelectedRow {
+            tableView.deselectRow(at: indexPath, animated: true)
+        }
+        NotificationCenter.default.removeObserver(self,
+                                                  name: UIMenuController.willHideMenuNotification,
+                                                  object: nil)
+    }
+    
+    @objc private func menuControllerDidHideMenu(_ notification: Notification) {
+        UIMenuController.shared.menuItems = nil
+        NotificationCenter.default.removeObserver(self,
+                                                  name: UIMenuController.didHideMenuNotification,
+                                                  object: nil)
+    }
+    
+    @objc private func showCopyMenu(_ recognizer: UIGestureRecognizer) {
+        guard recognizer.state == .began else {
+            return
+        }
+        let location = recognizer.location(in: tableView)
+        guard
+            let cell = tableView.messageCellForRow(at: location),
+            let indexPath = tableView.indexPath(for: cell),
+            let viewModel = self.viewModel(at: indexPath),
+            viewModel.message.category.hasSuffix("_TEXT")
+        else {
+            return
+        }
+        tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+        becomeFirstResponder()
+        UIMenuController.shared.menuItems = [
+            UIMenuItem(title: R.string.localizable.action_copy(),
+                       action: #selector(copySelectedMessage))
+        ]
+        UIMenuController.shared.setTargetRect(cell.contentFrame, in: cell)
+        UIMenuController.shared.setMenuVisible(true, animated: true)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(menuControllerWillHideMenu(_:)),
+                                               name: UIMenuController.willHideMenuNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(menuControllerDidHideMenu(_:)),
+                                               name: UIMenuController.didHideMenuNotification,
+                                               object: nil)
+        AppDelegate.current.mainWindow.addDismissMenuResponder()
+    }
+    
+    @objc private func copySelectedMessage() {
+        guard let indexPath = tableView.indexPathForSelectedRow else {
+            return
+        }
+        guard let message = self.viewModel(at: indexPath)?.message else {
+            return
+        }
+        UIPasteboard.general.string = message.content
+    }
+    
 }
 
 // MARK: - MessageViewModelFactoryDelegate
@@ -372,6 +445,25 @@ extension TranscriptPreviewViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         nil
+    }
+    
+    @available(iOS 13.0, *)
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        if let label = tableView.hitTest(point, with: nil) as? TextMessageLabel, label.canResponseTouch(at: tableView.convert(point, to: label)) {
+            return nil
+        } else {
+            return contextMenuConfigurationForRow(at: indexPath)
+        }
+    }
+    
+    @available(iOS 13.0, *)
+    func tableView(_ tableView: UITableView, previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        previewForContextMenu(with: configuration)
+    }
+    
+    @available(iOS 13.0, *)
+    func tableView(_ tableView: UITableView, previewForDismissingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        previewForContextMenu(with: configuration)
     }
     
 }
@@ -602,6 +694,71 @@ extension TranscriptPreviewViewController {
             return
         }
         MixinWebViewController.presentInstance(with: .init(conversationId: "", initialUrl: url), asChildOf: self)
+    }
+    
+    @available(iOS 13.0, *)
+    private func contextMenuConfigurationForRow(at indexPath: IndexPath) -> UIContextMenuConfiguration? {
+        guard !alwaysUsesLegacyMenu else {
+            return nil
+        }
+        guard !tableView.allowsMultipleSelection, let message = viewModel(at: indexPath)?.message else {
+            return nil
+        }
+        guard message.category.hasSuffix("_TEXT") else {
+            return nil
+        }
+        let copyAction = UIAction(title: R.string.localizable.action_copy(), image: R.image.conversation.ic_action_copy()) { _ in
+            UIPasteboard.general.string = message.content
+        }
+        let identifier = message.messageId as NSString
+        return UIContextMenuConfiguration(identifier: identifier, previewProvider: nil) { (elements) -> UIMenu? in
+            UIMenu(title: "", children: [copyAction])
+        }
+    }
+    
+    @available(iOS 13.0, *)
+    private func previewForContextMenu(with configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        guard !alwaysUsesLegacyMenu else {
+            return nil
+        }
+        guard let identifier = configuration.identifier as? NSString else {
+            return nil
+        }
+        let messageId = identifier as String
+        guard
+            let indexPath = self.indexPath(where: { $0.messageId == messageId }),
+            let cell = tableView.cellForRow(at: indexPath) as? MessageCell,
+            cell.window != nil,
+            let viewModel = viewModel(at: indexPath)
+        else {
+            return nil
+        }
+        let param = UIPreviewParameters()
+        param.backgroundColor = .clear
+        
+        if let viewModel = viewModel as? StickerMessageViewModel {
+            param.visiblePath = UIBezierPath(roundedRect: viewModel.contentFrame,
+                                             cornerRadius: StickerMessageCell.contentCornerRadius)
+        } else if let viewModel = viewModel as? AppButtonGroupViewModel {
+            param.visiblePath = UIBezierPath(roundedRect: viewModel.buttonGroupFrame,
+                                             cornerRadius: AppButtonView.cornerRadius)
+        } else {
+            if viewModel.style.contains(.received) {
+                if viewModel.style.contains(.tail) {
+                    param.visiblePath = BubblePath.leftWithTail(frame: viewModel.backgroundImageFrame)
+                } else {
+                    param.visiblePath = BubblePath.left(frame: viewModel.backgroundImageFrame)
+                }
+            } else {
+                if viewModel.style.contains(.tail) {
+                    param.visiblePath = BubblePath.rightWithTail(frame: viewModel.backgroundImageFrame)
+                } else {
+                    param.visiblePath = BubblePath.right(frame: viewModel.backgroundImageFrame)
+                }
+            }
+        }
+        
+        return UITargetedPreview(view: cell.messageContentView, parameters: param)
     }
     
 }

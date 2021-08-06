@@ -5,7 +5,7 @@ class StickersStoreBannerFlowLayout: UICollectionViewFlowLayout {
     override func prepare() {
         super.prepare()
         collectionView?.decelerationRate = .fast
-        itemSize = ScreenWidth.current < .medium ? CGSize(width: 273, height: 170) : CGSize(width: 320, height: 200)
+        itemSize = ScreenWidth.current <= .short ? CGSize(width: 273, height: 170) : CGSize(width: 320, height: 200)
         let inset = (UIScreen.main.bounds.width - itemSize.width) / 2
         sectionInset = UIEdgeInsets(top: 0, left: inset, bottom: 0, right: inset)
         minimumLineSpacing = 6

@@ -37,7 +37,7 @@ class StickerStorePreviewCell: UICollectionViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        let margin: CGFloat = ScreenWidth.current < .medium ? 10 : 20
+        let margin: CGFloat = ScreenWidth.current <= .short ? 10 : 20
         collectionViewLeadingConstraint.constant = margin
         collectionViewTrailingConstraint.constant = margin
     }

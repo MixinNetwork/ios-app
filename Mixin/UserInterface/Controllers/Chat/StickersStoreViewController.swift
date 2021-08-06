@@ -28,7 +28,7 @@ class StickersStoreViewController: UIViewController {
         if bannerItems.isEmpty {
             flowLayout.headerReferenceSize = .zero
         } else {
-            flowLayout.headerReferenceSize = ScreenWidth.current < .medium ? CGSize(width: view.bounds.width, height: 208) : CGSize(width: view.bounds.width, height: 238)
+            flowLayout.headerReferenceSize = ScreenWidth.current <= .short ? CGSize(width: view.bounds.width, height: 208) : CGSize(width: view.bounds.width, height: 238)
         }
     }
     

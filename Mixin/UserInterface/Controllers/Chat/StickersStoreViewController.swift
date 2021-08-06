@@ -52,10 +52,9 @@ extension StickersStoreViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.sticker_store_preview, for: indexPath)!
         if indexPath.item < listItems.count {
-            let item = listItems[indexPath.row]
-            cell.stickerStoreItem = item
+            cell.stickerStoreItem = listItems[indexPath.row]
             cell.onStickerOperation = {
-                StickersStoreManager.shared().handleStickerOperation(with: item)
+                StickersStoreManager.shared().handleStickerOperation(with: listItems[indexPath.row])
             }
         }
         return cell

@@ -144,8 +144,10 @@ extension StickerInputViewController: UICollectionViewDelegate {
             navigationController.setNavigationBarHidden(true, animated: false)
             present(navigationController, animated: true, completion: nil)
             collectionView.selectItem(at: IndexPath(item: currentIndex, section: 0), animated: false, scrollPosition: .centeredVertically)
-            AppGroupUserDefaults.User.hasNewStickers = false
-            collectionView.reloadItems(at: [IndexPath(item: 0, section: 0)])
+            if AppGroupUserDefaults.User.hasNewStickers {
+                AppGroupUserDefaults.User.hasNewStickers = false
+                collectionView.reloadItems(at: [IndexPath(item: 0, section: 0)])
+            }
             return
         }
         guard selectedIndex != currentIndex, !isScrollingByAlbumSelection else {

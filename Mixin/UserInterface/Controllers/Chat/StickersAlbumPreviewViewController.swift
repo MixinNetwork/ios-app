@@ -69,7 +69,6 @@ class StickersAlbumPreviewViewController: ResizablePopupViewController {
     
     override func preferredContentHeight(forSize size: Size) -> CGFloat {
         view.layoutIfNeeded()
-        let window = AppDelegate.current.mainWindow
         let countOfRows: CGFloat
         switch size {
         case .expanded, .unavailable:
@@ -77,6 +76,7 @@ class StickersAlbumPreviewViewController: ResizablePopupViewController {
         case .compressed:
             countOfRows = CGFloat(defaultCountOfRows)
         }
+        let window = AppDelegate.current.mainWindow
         let maxHeight = window.bounds.height - window.safeAreaInsets.top
         let collectionViewHeight = countOfRows * (flowLayout.itemSize.height + flowLayout.minimumLineSpacing) - flowLayout.minimumLineSpacing
         let contentHeight = titleBarHeightConstraint.constant

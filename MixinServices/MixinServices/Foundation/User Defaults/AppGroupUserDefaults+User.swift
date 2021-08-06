@@ -240,7 +240,6 @@ extension AppGroupUserDefaults {
         @Default(namespace: .user, key: Key.hasNewStickers, defaultValue: false)
         public static var hasNewStickers: Bool
         
-        
         public static func insertRecentlyUsedAppId(id: String) {
             let maxNumberOfIds = 12
             var ids = recentlyUsedAppIds

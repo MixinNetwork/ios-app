@@ -58,7 +58,7 @@ extension StickersEditingViewController: UITableViewDataSource {
                 } completion: { _ in
                     if self.stickerStoreItems.isEmpty {
                         self.stickerEmptyWrapperView.isHidden = false
-                        self.tableView.isHidden = true
+                        tableView.isHidden = true
                     } else {
                         tableView.reloadData()
                     }

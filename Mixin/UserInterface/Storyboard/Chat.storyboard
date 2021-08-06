@@ -812,13 +812,13 @@
                                 <color key="backgroundColor" name="background"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="13" minimumInteritemSpacing="10" id="XEZ-KA-NKG">
                                     <size key="itemSize" width="375" height="104"/>
-                                    <size key="headerReferenceSize" width="0.0" height="238"/>
+                                    <size key="headerReferenceSize" width="0.0" height="208"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="sticker_store_preview" id="6ze-5H-jkF" customClass="StickerStorePreviewCell" customModule="Mixin" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="238" width="375" height="104"/>
+                                        <rect key="frame" x="0.0" y="208" width="375" height="104"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="0N3-xF-dy3">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="104"/>
@@ -896,27 +896,24 @@
                                     </collectionViewCell>
                                 </cells>
                                 <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="sticker_banner" id="mlU-XT-LVE" customClass="StickerStoreBannerView" customModule="Mixin" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="238"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="208"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="TCC-kH-Uue">
-                                            <rect key="frame" x="0.0" y="10" width="375" height="200"/>
+                                        <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="TCC-kH-Uue">
+                                            <rect key="frame" x="0.0" y="10" width="375" height="170"/>
                                             <color key="backgroundColor" name="background"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="200" id="fjQ-ix-1ja"/>
-                                            </constraints>
-                                            <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="6" minimumInteritemSpacing="6" id="0dd-GT-YgM" customClass="StickersStoreBannerFlowLayout" customModule="Mixin" customModuleProvider="target">
-                                                <size key="itemSize" width="320" height="200"/>
+                                            <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="6" minimumInteritemSpacing="0.0" id="0dd-GT-YgM" customClass="StickersStoreBannerFlowLayout" customModule="Mixin" customModuleProvider="target">
+                                                <size key="itemSize" width="320" height="170"/>
                                                 <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                                 <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                                 <inset key="sectionInset" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
                                             </collectionViewFlowLayout>
                                             <cells>
                                                 <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="sticker_preview" id="r5d-VI-YRf" customClass="StickerPreviewCell" customModule="Mixin" customModuleProvider="target">
-                                                    <rect key="frame" x="20" y="0.0" width="320" height="200"/>
+                                                    <rect key="frame" x="20" y="0.0" width="320" height="170"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Tqe-DR-0Nw">
-                                                        <rect key="frame" x="0.0" y="0.0" width="320" height="200"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="320" height="170"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                     </collectionViewCellContentView>
                                                     <userDefinedRuntimeAttributes>
@@ -935,6 +932,7 @@
                                     <color key="backgroundColor" name="background"/>
                                     <constraints>
                                         <constraint firstItem="TCC-kH-Uue" firstAttribute="top" secondItem="mlU-XT-LVE" secondAttribute="top" constant="10" id="4VT-ir-KOL"/>
+                                        <constraint firstAttribute="bottom" secondItem="TCC-kH-Uue" secondAttribute="bottom" constant="28" id="7sk-lT-vnt"/>
                                         <constraint firstAttribute="trailing" secondItem="TCC-kH-Uue" secondAttribute="trailing" id="TPU-DK-Okn"/>
                                         <constraint firstItem="TCC-kH-Uue" firstAttribute="leading" secondItem="mlU-XT-LVE" secondAttribute="leading" id="yFp-Mx-Wko"/>
                                     </constraints>
@@ -2842,7 +2840,7 @@
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_selection">
-            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.96100002527236938" green="0.96899998188018799" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="icon_tint">
             <color red="0.18431372549019609" green="0.18823529411764706" blue="0.19607843137254902" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -2851,7 +2849,7 @@
             <color red="0.89803921568627454" green="0.90588235294117647" blue="0.92156862745098034" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
             <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

@@ -28,8 +28,11 @@ public class KrakenMessageRetriever {
 
         Logger.write(conversationId: id, log: "[KrakenMessageRetriever][RequestPeers]...listKrakenPeers...")
         do {
-            let peers = try WebSocketService.shared.respondedMessage(for: blazeMessage).blazeMessage?.toKrakenPeers()
-            return peers
+            if let peers = try WebSocketService.shared.respondedMessage(for: blazeMessage).blazeMessage?.toKrakenPeers() {
+                return peers.filter { $0.userId != myUserId }
+            } else {
+                return nil
+            }
         } catch MixinAPIError.invalidConversationChecksum {
             SendMessageService.shared.syncConversation(conversationId: id)
             try? ReceiveMessageService.shared.checkSessionSenderKey(conversationId: id)

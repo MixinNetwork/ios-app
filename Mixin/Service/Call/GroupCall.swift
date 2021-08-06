@@ -43,6 +43,7 @@ class GroupCall: Call {
             } else {
                 DispatchQueue.main.async {
                     self.speakingTimer?.invalidate()
+                    self.membersDataSource.report(audioLevels: [:])
                 }
             }
         }

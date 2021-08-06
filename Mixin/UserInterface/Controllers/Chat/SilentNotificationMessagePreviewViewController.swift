@@ -84,7 +84,11 @@ class SilentNotificationMessagePreviewViewController: UIViewController {
         
         var silentButtonOrigin = CGPoint(x: textViewWrapperView.frame.maxX - silentButtonTrailingMargin - silentButton.bounds.width,
                                          y: textViewWrapperView.frame.maxY + silentButtonTopMargin)
-        let verticalOffset = (silentButtonOrigin.y + silentButton.bounds.height) - (view.bounds.height - view.safeAreaInsets.bottom)
+        let verticalOffset: CGFloat = {
+            let offset = (silentButtonOrigin.y + silentButton.bounds.height)
+                - (view.bounds.height - view.safeAreaInsets.bottom)
+            return max(0, offset)
+        }()
         if verticalOffset > 0 {
             silentButtonOrigin.y -= verticalOffset
         }

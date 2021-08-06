@@ -981,6 +981,7 @@
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_sticker_smile" translatesAutoresizingMaskIntoConstraints="NO" id="BKT-LH-hhp">
                                         <rect key="frame" x="7" y="0.0" width="70" height="70"/>
+                                        <color key="tintColor" red="0.75294117647058822" green="0.77254901960784317" blue="0.83137254901960778" alpha="0.69999999999999996" colorSpace="custom" customColorSpace="displayP3"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="70" id="HHY-5d-Z9n"/>
                                             <constraint firstAttribute="height" constant="70" id="lZR-7K-qkZ"/>
@@ -1443,6 +1444,11 @@
                             <constraint firstItem="rMR-wD-1I3" firstAttribute="top" secondItem="UC5-3X-J54" secondAttribute="top" constant="80" id="nhg-GJ-WGs"/>
                             <constraint firstAttribute="trailing" secondItem="65m-JQ-Gh7" secondAttribute="trailing" constant="13" id="ztD-L1-DwD"/>
                         </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                <integer key="value" value="13"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
                     </view>
                     <connections>
                         <outlet property="activityIndicatorView" destination="aP5-vR-lzk" id="2EC-Ff-YXy"/>
@@ -2849,7 +2855,7 @@
             <color red="0.89803921568627454" green="0.90588235294117647" blue="0.92156862745098034" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
             <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

@@ -19,14 +19,13 @@ class StickerPreviewViewController: UIViewController {
     private var stickerStoreItem: StickerStoreItem?
     private lazy var backgroundButton: UIButton = {
         let button = UIButton()
-        button.backgroundColor = UIColor.black.withAlphaComponent(0)
+        button.backgroundColor = .black.withAlphaComponent(0)
         button.addTarget(self, action: #selector(backgroundTappingAction), for: .touchUpInside)
         return button
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.layer.cornerRadius = 13
         updatePreferredContentSizeHeight()
         stickerView.load(message: message)
         stickerView.startAnimating()
@@ -146,8 +145,8 @@ extension StickerPreviewViewController {
     func dismissAsChild(completion: (() -> Void)?) {
         UIView.animate(withDuration: 0.3, animations: {
             self.view.frame.origin.y = self.backgroundButton.bounds.height
-            self.backgroundButton.backgroundColor = UIColor.black.withAlphaComponent(0)
-        }) { (finished) in
+            self.backgroundButton.backgroundColor = .black.withAlphaComponent(0)
+        }) { _ in
             self.willMove(toParent: nil)
             self.view.removeFromSuperview()
             self.removeFromParent()
@@ -171,7 +170,7 @@ extension StickerPreviewViewController {
         backgroundButton.addSubview(view)
         UIView.animate(withDuration: 0.3) {
             self.view.frame.origin.y = self.backgroundButton.bounds.height - self.preferredContentSize.height
-            self.backgroundButton.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+            self.backgroundButton.backgroundColor = .black.withAlphaComponent(0.3)
         }
     }
     

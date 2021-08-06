@@ -62,7 +62,7 @@ extension StickersStoreManager {
                 myAlbums = AlbumDAO.shared.getAlbums(with: albumIds)
             } else {
                 myAlbums = AlbumDAO.shared.getAlbums()
-                AppGroupUserDefaults.User.stickerAblums = myAlbums.map({ $0.albumId })
+                AppGroupUserDefaults.User.stickerAblums = myAlbums.map(\.albumId)
             }
             let items = myAlbums.map({
                 StickerStoreItem(album: $0,
@@ -115,17 +115,13 @@ extension StickersStoreManager {
         }
         queue.async {
             let stickerAlbums = AlbumDAO.shared.getAblumsUpdateAt()
-            var hasNewStickers = false
             StickerAPI.albums { (result) in
+                let hasNewStickers: Bool
                 switch result {
                 case let .success(albums):
-                    for album in albums {
-                        if stickerAlbums[album.albumId] != album.updatedAt {
-                            hasNewStickers = true
-                            break
-                        }
-                    }
+                    hasNewStickers = (albums.first(where: { $0.updatedAt != stickerAlbums[$0.albumId] }) != nil)
                 case let .failure(error):
+                    hasNewStickers = false
                     reporter.report(error: error)
                 }
                 DispatchQueue.main.async {

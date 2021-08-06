@@ -67,7 +67,7 @@ class StickerInputViewController: UIViewController {
     
     @objc func reload() {
         StickersStoreManager.shared().loadMyStickers { items in
-            self.officialAlbums = items.map({ $0.album })
+            self.officialAlbums = items.map(\.album)
             self.modelController.reloadRecentFavoriteStickers()
             self.modelController.reloadOfficialStickers(albums: self.officialAlbums)
             DispatchQueue.main.async {

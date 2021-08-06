@@ -13,8 +13,7 @@ class StickersEditingViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        stickerEmptyImageView.tintColor = UIColor(displayP3RgbValue: 0xC0C5D4, alpha: 0.3)
-        stickerEmptyWrapperViewTopConstraint.constant = (UIScreen.main.bounds.height - stickerEmptyWrapperViewHeightConstraint.constant) / 7 * 3
+        stickerEmptyWrapperViewTopConstraint.constant = round((UIScreen.main.bounds.height - stickerEmptyWrapperViewHeightConstraint.constant) / 7 * 3)
         StickersStoreManager.shared().loadMyStickers { items in
             DispatchQueue.main.async {
                 if items.isEmpty {

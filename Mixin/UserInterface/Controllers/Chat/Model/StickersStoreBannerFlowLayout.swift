@@ -6,8 +6,8 @@ class StickersStoreBannerFlowLayout: UICollectionViewFlowLayout {
         super.prepare()
         collectionView?.decelerationRate = .fast
         itemSize = ScreenWidth.current <= .short ? CGSize(width: 273, height: 170) : CGSize(width: 320, height: 200)
-        let inset = (UIScreen.main.bounds.width - itemSize.width) / 2
-        sectionInset = UIEdgeInsets(top: 0, left: inset, bottom: 0, right: inset)
+        let horizontalInset = floor((UIScreen.main.bounds.width - itemSize.width) / 2)
+        sectionInset = UIEdgeInsets(top: 0, left: horizontalInset, bottom: 0, right: horizontalInset)
         minimumLineSpacing = 6
     }
     
@@ -19,7 +19,7 @@ class StickersStoreBannerFlowLayout: UICollectionViewFlowLayout {
         layoutAttributes.forEach { attributes in
             let distance = abs(attributes.center.x - centerX)
             let apartScale = distance / collectionView.bounds.size.width
-            let scale = abs(cos(apartScale * CGFloat.pi / 4))
+            let scale = abs(cos(apartScale * .pi / 4))
             attributes.transform = CGAffineTransform(scaleX: 1.0, y: scale)
         }
         return layoutAttributes

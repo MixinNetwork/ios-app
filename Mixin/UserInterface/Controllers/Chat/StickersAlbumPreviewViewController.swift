@@ -64,7 +64,7 @@ class StickersAlbumPreviewViewController: ResizablePopupViewController {
         super.viewWillLayoutSubviews()
         let cellCount = CGFloat(cellCountPerRow)
         flowLayout.itemSize = ScreenWidth.current <= .short ? CGSize(width: 87, height: 87) : CGSize(width: 104, height: 104)
-        flowLayout.minimumInteritemSpacing = ((view.bounds.width - cellCount * flowLayout.itemSize.width - flowLayout.sectionInset.horizontal) / (cellCount - 1))
+        flowLayout.minimumInteritemSpacing = (view.bounds.width - cellCount * flowLayout.itemSize.width - flowLayout.sectionInset.horizontal) / (cellCount - 1)
     }
     
     override func preferredContentHeight(forSize size: Size) -> CGFloat {

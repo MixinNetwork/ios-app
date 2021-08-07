@@ -50,7 +50,7 @@ class SilentNotificationMessagePreviewViewController: UIViewController {
     }
     
     @IBAction func close(_ sender: Any) {
-        dismiss(hideSendNormallyButton: false)
+        dismiss(hideSendNormallyButton: false, completion: nil)
     }
     
     func show(in parent: UIViewController, textView templateTextView: UITextView, sendButton templateSendButton: UIButton) {
@@ -148,7 +148,7 @@ class SilentNotificationMessagePreviewViewController: UIViewController {
         }
     }
     
-    func dismiss(hideSendNormallyButton: Bool) {
+    func dismiss(hideSendNormallyButton: Bool, completion: (() -> Void)?) {
         if hideSendNormallyButton {
             normalButton.alpha = 0
         }
@@ -175,6 +175,7 @@ class SilentNotificationMessagePreviewViewController: UIViewController {
             self.willMove(toParent: nil)
             self.view.removeFromSuperview()
             self.removeFromParent()
+            completion?()
             self.delegate?.silentNotificationMessagePreviewViewControllerDidClose(self)
         }
     }

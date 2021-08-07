@@ -838,8 +838,9 @@ extension ConversationInputViewController: SilentNotificationMessagePreviewViewC
     }
     
     func silentNotificationMessagePreviewViewController(_ viewController: SilentNotificationMessagePreviewViewController, didSelectSendWithNotification notify: Bool) {
-        viewController.dismiss(hideSendNormallyButton: true)
-        sendTextMessage(silentNotification: !notify)
+        viewController.dismiss(hideSendNormallyButton: true) {
+            self.sendTextMessage(silentNotification: !notify)
+        }
     }
     
     func silentNotificationMessagePreviewViewControllerDidClose(_ viewController: SilentNotificationMessagePreviewViewController) {

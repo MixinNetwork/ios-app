@@ -77,8 +77,9 @@
                                 <color key="backgroundColor" name="menu_background"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                 <color key="tintColor" name="text"/>
-                                <inset key="contentEdgeInsets" minX="16" minY="10" maxX="36" maxY="10"/>
-                                <inset key="imageEdgeInsets" minX="40" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                <inset key="contentEdgeInsets" minX="36" minY="10" maxX="36" maxY="10"/>
+                                <inset key="titleEdgeInsets" minX="-40" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="-40" maxY="0.0"/>
                                 <state key="normal" title="Send Without Sound" image="Conversation/ic_silent">
                                     <color key="titleColor" name="text"/>
                                 </state>

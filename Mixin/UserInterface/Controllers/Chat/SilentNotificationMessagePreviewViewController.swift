@@ -39,6 +39,12 @@ class SilentNotificationMessagePreviewViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         backgroundView.effect = nil
+        if ScreenWidth.current <= .short {
+            silentButton.contentEdgeInsets.left -= 10
+            silentButton.contentEdgeInsets.right -= 10
+            silentButton.titleEdgeInsets.left += 15
+            silentButton.imageEdgeInsets.right += 15
+        }
     }
     
     @IBAction func sendNormally(_ sender: Any) {

@@ -21,6 +21,7 @@ class SilentNotificationMessagePreviewViewController: UIViewController {
     private let feedback = UIImpactFeedbackGenerator()
     private let silentButtonTopMargin: CGFloat = 20
     private let silentButtonTrailingMargin: CGFloat = 3
+    private let minSilentButtonBottomMargin: CGFloat = 20
     private let textViewHorizontalOffset: CGFloat = 8
     private let messageBackgroundInsets = UIEdgeInsets(top: 2, left: 11, bottom: 0, right: 2)
     
@@ -85,8 +86,9 @@ class SilentNotificationMessagePreviewViewController: UIViewController {
         var silentButtonOrigin = CGPoint(x: textViewWrapperView.frame.maxX - silentButtonTrailingMargin - silentButton.bounds.width,
                                          y: textViewWrapperView.frame.maxY + silentButtonTopMargin)
         let verticalOffset: CGFloat = {
+            let bottomMargin = max(minSilentButtonBottomMargin, view.safeAreaInsets.bottom)
             let offset = (silentButtonOrigin.y + silentButton.bounds.height)
-                - (view.bounds.height - view.safeAreaInsets.bottom)
+                - (view.bounds.height - bottomMargin)
             return max(0, offset)
         }()
         if verticalOffset > 0 {

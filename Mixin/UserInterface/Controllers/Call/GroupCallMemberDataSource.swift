@@ -37,10 +37,15 @@ class GroupCallMemberDataSource: NSObject {
         self.conversationId = conversationId
         self.memberUserIds = Set(members.map(\.userId))
         super.init()
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(updateWithPolledPeers(_:)),
-                                               name: GroupCallMembersManager.membersDidChangeNotification,
-                                               object: nil)
+        let center = NotificationCenter.default
+        center.addObserver(self,
+                           selector: #selector(callServiceMutenessDidChange),
+                           name: CallService.mutenessDidChangeNotification,
+                           object: nil)
+        center.addObserver(self,
+                           selector: #selector(updateWithPolledPeers(_:)),
+                           name: GroupCallMembersManager.membersDidChangeNotification,
+                           object: nil)
     }
     
     deinit {
@@ -158,6 +163,17 @@ class GroupCallMemberDataSource: NSObject {
                 self.participantsCountLabel?.text = R.string.localizable.group_call_participants_count(self.members.count)
             }
         }
+    }
+    
+    @objc private func callServiceMutenessDidChange() {
+        guard CallService.shared.isMuted, let index = members.firstIndex(where: { $0.userId == myUserId }) else {
+            return
+        }
+        let indexPath = self.indexPath(forMemberAt: index)
+        guard let cell = collectionView?.cellForItem(at: indexPath) as? CallMemberCell else {
+            return
+        }
+        cell.isSpeaking = false
     }
     
     private func isMemberSpeaking(userId: String) -> Bool {

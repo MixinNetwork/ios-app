@@ -7,7 +7,8 @@ public final class AlbumDAO: UserDatabaseDAO {
     
     public func getAlbum(stickerId: String) -> Album? {
         let sql = """
-            SELECT a.album_id, a.name, a.icon_url, a.created_at, a.update_at, a.user_id, a.category, a.description FROM albums a
+            SELECT a.*
+            FROM albums a
             INNER JOIN sticker_relationships sa ON sa.album_id = a.album_id AND sa.sticker_id = ?
             LIMIT 1
         """

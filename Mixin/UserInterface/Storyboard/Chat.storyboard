@@ -1222,7 +1222,7 @@
                                                     <constraint firstAttribute="height" constant="102" id="dbF-4U-WOm"/>
                                                 </constraints>
                                             </view>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cPh-fr-g6e">
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cPh-fr-g6e">
                                                 <rect key="frame" x="124.5" y="30" width="126" height="44"/>
                                                 <color key="backgroundColor" name="theme"/>
                                                 <constraints>
@@ -1355,7 +1355,7 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mQs-zd-oqr">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mQs-zd-oqr">
                                         <rect key="frame" x="308" y="0.0" width="47" height="26"/>
                                         <color key="backgroundColor" name="theme"/>
                                         <constraints>
@@ -1373,7 +1373,7 @@
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
-                                            <action selector="addStickersAction:" destination="PFT-TF-vIS" eventType="touchUpInside" id="W2i-wf-RwT"/>
+                                            <action selector="stickerButtonAction:" destination="PFT-TF-vIS" eventType="touchUpInside" id="W2i-wf-RwT"/>
                                         </connections>
                                     </button>
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="ZTT-74-VWa">
@@ -1453,6 +1453,7 @@
                     <connections>
                         <outlet property="activityIndicatorView" destination="aP5-vR-lzk" id="2EC-Ff-YXy"/>
                         <outlet property="collectionView" destination="ZTT-74-VWa" id="puK-KW-83x"/>
+                        <outlet property="stickerActionButton" destination="mQs-zd-oqr" id="uTD-S8-nTP"/>
                         <outlet property="stickerPreviewViewHeightConstraint" destination="EAz-Gk-l5I" id="Qfp-qG-UJD"/>
                         <outlet property="stickerPreviewViewTopConstraint" destination="nhg-GJ-WGs" id="WJn-C9-pZr"/>
                         <outlet property="stickerView" destination="xdR-GZ-4YM" id="okI-VM-QeH"/>
@@ -2846,7 +2847,7 @@
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_selection">
-            <color red="0.96100002527236938" green="0.96899998188018799" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="icon_tint">
             <color red="0.18431372549019609" green="0.18823529411764706" blue="0.19607843137254902" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

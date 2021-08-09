@@ -872,20 +872,11 @@ class ConversationViewController: UIViewController {
                 navigationController?.pushViewController(container, animated: true)
             } else if message.category.hasSuffix("_TRANSCRIPT") {
                 let vc = TranscriptPreviewViewController(transcriptMessage: message)
-<<<<<<< HEAD
                 vc.presentAsChild(of: self)
-=======
-                vc.presentAsChild(of: self, completion: nil)
             } else if message.category.hasSuffix("_STICKER") {
-                if message.assetCategory == "SYSTEM", let stickerId = message.stickerId, let item = StickersStoreManager.shared().loadStickerIfAdded(stickerId: stickerId) {
-                    let vc = StickersAlbumPreviewViewController.instance(with: item)
-                    vc.presentAsChild(of: self)
-                } else {
-                    let vc = R.storyboard.chat.sticker_preview()!
-                    vc.message = message
-                    vc.presentAsChild(of: self)
-                }
->>>>>>> aa580e983 (Update album delete/move operation and click stick to show preview)
+                let vc = R.storyboard.chat.sticker_preview()!
+                vc.message = message
+                vc.presentAsChild(of: self)
             } else {
                 conversationInputViewController.dismiss()
             }

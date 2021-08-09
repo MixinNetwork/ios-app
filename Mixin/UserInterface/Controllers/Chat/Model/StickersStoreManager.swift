@@ -81,7 +81,7 @@ extension StickersStoreManager {
                 let item = StickerStoreItem(album: album,
                                             stickers: StickerDAO.shared.getStickers(albumId: album.albumId),
                                             isAdded: (self.albumIds?.contains(album.albumId)) ?? false)
-                if album.banner != nil && bannerItems.count < self.bannerItemsMaxCount {
+                if let banner = album.banner, banner.count > 0, bannerItems.count < self.bannerItemsMaxCount {
                     bannerItems.append(item)
                 } else {
                     listItems.append(item)
@@ -95,17 +95,11 @@ extension StickersStoreManager {
     
     func loadSticker(stickerId: String, completion: @escaping (StickerStoreItem?) -> Void) {
         if let album = AlbumDAO.shared.getAlbum(stickerId: stickerId) {
-            completion(StickerStoreItem(album: album, stickers: StickerDAO.shared.getStickers(albumId: album.albumId)))
+            let isAdded = albumIds != nil && albumIds!.contains(album.albumId)
+            completion(StickerStoreItem(album: album, stickers: StickerDAO.shared.getStickers(albumId: album.albumId), isAdded: isAdded))
         } else {
             fetchAllStickers(withTarget: stickerId, completion: completion)
         }
-    }
-    
-    func loadStickerIfAdded(stickerId: String) -> StickerStoreItem? {
-        guard let albumIds = albumIds, let album = AlbumDAO.shared.getAlbum(stickerId: stickerId), albumIds.contains(album.albumId) else {
-            return nil
-        }
-        return StickerStoreItem(album: album, stickers: StickerDAO.shared.getStickers(albumId: album.albumId), isAdded: true)
     }
     
     func checkNewStickersIfNeeded(completion: @escaping (Bool) -> Void) {
@@ -119,7 +113,7 @@ extension StickersStoreManager {
                 let hasNewStickers: Bool
                 switch result {
                 case let .success(albums):
-                    hasNewStickers = (albums.first(where: { $0.updatedAt != stickerAlbums[$0.albumId] }) != nil)
+                    hasNewStickers = albums.contains(where: { $0.updatedAt != stickerAlbums[$0.albumId] })
                 case let .failure(error):
                     hasNewStickers = false
                     reporter.report(error: error)

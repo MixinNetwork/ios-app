@@ -47,6 +47,7 @@ public final class UserDatabase: Database {
             .init(key: .userId, constraints: "TEXT NOT NULL"),
             .init(key: .category, constraints: "TEXT NOT NULL"),
             .init(key: .description, constraints: "TEXT NOT NULL"),
+            .init(key: .banner, constraints: "TEXT"),
         ]),
         ColumnMigratableTableDefinition<App>(constraints: nil, columns: [
             .init(key: .appId, constraints: "TEXT PRIMARY KEY"),
@@ -410,6 +411,11 @@ public final class UserDatabase: Database {
             """
             try db.execute(sql: sql)
             try db.execute(sql: "CREATE INDEX IF NOT EXISTS index_pin_messages_conversation_id ON pin_messages(conversation_id)")
+        }
+            
+        migrator.registerMigration("sticker_store") { db in
+            let sql = "ALTER TABLE albums ADD banner TEXT"
+            try db.execute(sql: sql)
         }
         
         migrator.registerMigration("encrypted_app_messages") { (db) in

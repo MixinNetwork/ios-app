@@ -8,6 +8,7 @@ class StickerPreviewViewController: UIViewController {
     @IBOutlet weak var stickerView: AnimatedStickerView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var stickerActionButton: UIButton!
     
     @IBOutlet weak var stickerPreviewViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var stickerPreviewViewHeightConstraint: NSLayoutConstraint!
@@ -48,12 +49,14 @@ class StickerPreviewViewController: UIViewController {
         dismissAsChild(completion: nil)
     }
     
-    @IBAction func addStickersAction(_ sender: Any) {
-        guard let album = stickerStoreItem?.album else {
+    @IBAction func stickerButtonAction(_ sender: Any) {
+        guard var item = stickerStoreItem else {
             return
         }
-        StickersStoreManager.shared().add(album: album)
-        dismissAsChild(completion: nil)
+        StickersStoreManager.shared().handleStickerOperation(with: item)
+        item.isAdded.toggle()
+        stickerStoreItem = item
+        updateStickerActionButton(isAdded: item.isAdded)
     }
     
 }
@@ -90,6 +93,7 @@ extension StickerPreviewViewController {
             self.activityIndicatorView.stopAnimating()
             if let item = item {
                 self.stickerStoreItem = item
+                self.updateStickerActionButton(isAdded: item.isAdded)
                 self.stickersContentView.isHidden = false
                 self.collectionView.isHidden = false
                 self.collectionView.reloadData()
@@ -98,6 +102,18 @@ extension StickerPreviewViewController {
                 self.stickersContentView.isHidden = true
                 self.collectionView.isHidden = true
             }
+        }
+    }
+    
+    private func updateStickerActionButton(isAdded: Bool) {
+        if isAdded {
+            stickerActionButton.setTitle(R.string.localizable.sticker_store_added(), for: .normal)
+            stickerActionButton.backgroundColor = R.color.sticker_button_background_disabled()
+            stickerActionButton.setTitleColor(R.color.sticker_button_text_disabled(), for: .normal)
+        } else {
+            stickerActionButton.setTitle(R.string.localizable.sticker_store_add(), for: .normal)
+            stickerActionButton.backgroundColor = R.color.theme()
+            stickerActionButton.setTitleColor(.white, for: .normal)
         }
     }
     

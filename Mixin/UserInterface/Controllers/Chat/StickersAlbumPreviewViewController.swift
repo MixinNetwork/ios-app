@@ -51,13 +51,7 @@ class StickersAlbumPreviewViewController: ResizablePopupViewController {
         titleLabel.text = stickerStoreItem.album.name
         actionBarHeightConstraint.constant = AppDelegate.current.mainWindow.safeAreaInsets.bottom
             + actionBarContentHeightConstraint.constant
-        if stickerStoreItem.isAdded {
-            stickerActionButton.backgroundColor = R.color.red()
-            stickerActionButton.setTitle(R.string.localizable.sticker_remove_title(), for: .normal)
-        } else {
-            stickerActionButton.backgroundColor = R.color.theme()
-            stickerActionButton.setTitle(R.string.localizable.sticker_add_title(), for: .normal)
-        }
+        updateStickerActionButton()
     }
     
     override func viewWillLayoutSubviews() {
@@ -103,7 +97,8 @@ class StickersAlbumPreviewViewController: ResizablePopupViewController {
     
     @IBAction func stickerButtonAction(_ sender: Any) {
         StickersStoreManager.shared().handleStickerOperation(with: stickerStoreItem)
-        dismissAsChild(completion: nil)
+        stickerStoreItem.isAdded.toggle()
+        updateStickerActionButton()
     }
     
 }
@@ -147,6 +142,16 @@ extension StickersAlbumPreviewViewController {
             self.willMove(toParent: nil)
             self.view.removeFromSuperview()
             self.removeFromParent()
+        }
+    }
+    
+    private func updateStickerActionButton() {
+        if stickerStoreItem.isAdded {
+            stickerActionButton.backgroundColor = R.color.red()
+            stickerActionButton.setTitle(R.string.localizable.sticker_remove_title(), for: .normal)
+        } else {
+            stickerActionButton.backgroundColor = R.color.theme()
+            stickerActionButton.setTitle(R.string.localizable.sticker_add_title(), for: .normal)
         }
     }
     

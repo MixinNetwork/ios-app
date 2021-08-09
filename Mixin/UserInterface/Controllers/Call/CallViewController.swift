@@ -393,6 +393,7 @@ extension CallViewController: UICollectionViewDelegate {
                             }
                             if !filteredMembers.isEmpty {
                                 call.invite(members: filteredMembers)
+                                CallService.shared.membersManager.beginPolling(forConversationWith: call.conversationId)
                             }
                         }
                     }

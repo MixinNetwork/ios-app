@@ -34,6 +34,8 @@ final class ScreenLockManager {
         }
     }
     
+    private let context = LAContext()
+
     private init() {
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillResignActive), name: UIApplication.willResignActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
@@ -69,7 +71,10 @@ extension ScreenLockManager {
     }
     
     func performBiometricAuthentication(completion: ((Bool) -> Void)? = nil) {
-        let context = LAContext()
+        guard context.canEvaluatePolicy(.deviceOwnerAuthentication, error: nil) else {
+            self.state = .authenticationFailed
+            return
+        }
         context.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: R.string.localizable.screen_lock_unlock_tip(biometryType.localizedName)) { success, error in
             DispatchQueue.main.async {
                 self.state = success ? .authenticationSucceed : .authenticationFailed

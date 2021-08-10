@@ -222,6 +222,9 @@ class CallViewController: ResizablePopupViewController {
         } else {
             layout()
         }
+        if let call = self.call as? GroupCall {
+            call.beginSpeakingStatusPolling()
+        }
     }
     
     func hideContentView(completion: (() -> Void)?) {
@@ -233,6 +236,9 @@ class CallViewController: ResizablePopupViewController {
             self.view.layoutIfNeeded()
             self.view.backgroundColor = .black.withAlphaComponent(0)
         } completion: { _ in
+            if let call = self.call as? GroupCall {
+                call.endSpeakingStatusPolling()
+            }
             completion?()
         }
     }
@@ -269,6 +275,7 @@ class CallViewController: ResizablePopupViewController {
                                            selector: #selector(groupCallVisibleMembersDidChange),
                                            name: GroupCallMemberDataSource.visibleMembersDidChangeNotification,
                                            object: call.membersDataSource)
+            call.beginSpeakingStatusPolling()
         }
         if let call = call {
             updateViews(call: call)
@@ -461,6 +468,13 @@ extension CallViewController {
         }
         DispatchQueue.main.async {
             self.updateViews(call: call)
+        }
+        if let call = call as? GroupCall {
+            if call.status == .connected {
+                DispatchQueue.main.async(execute: call.beginSpeakingStatusPolling)
+            } else {
+                DispatchQueue.main.async(execute: call.endSpeakingStatusPolling)
+            }
         }
     }
     

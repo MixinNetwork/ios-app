@@ -24,6 +24,20 @@ class CallMemberCell: UICollectionViewCell {
     @IBOutlet weak var avatarWrapperWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var labelTopConstraint: NSLayoutConstraint!
     
+    var hasBiggerLayout = true {
+        didSet {
+            let constant = hasBiggerLayout ? Layout.bigger : Layout.normal
+            labelTopConstraint.constant = constant.labelTopMargin
+            avatarWrapperWidthConstraint.constant = constant.avatarWrapperWidth
+        }
+    }
+    
+    var isSpeaking = false {
+        didSet {
+            speakingIndicatorLayer.isHidden = !isSpeaking
+        }
+    }
+    
     private let speakingIndicatorLayer: CALayer = {
         let size = CGSize(width: 74, height: 74)
         let path = UIBezierPath(arcCenter: CGPoint(x: size.width / 2, y: size.height / 2),
@@ -41,33 +55,19 @@ class CallMemberCell: UICollectionViewCell {
         return layer
     }()
     
-    var hasBiggerLayout = true {
-        didSet {
-            let constant = hasBiggerLayout ? Layout.bigger : Layout.normal
-            labelTopConstraint.constant = constant.labelTopMargin
-            avatarWrapperWidthConstraint.constant = constant.avatarWrapperWidth
-        }
-    }
-    
-    var isSpeaking = false {
-        didSet {
-            speakingIndicatorLayer.isHidden = !isSpeaking
-        }
-    }
-    
     override func awakeFromNib() {
         super.awakeFromNib()
         label.font = Self.labelFont
         label.adjustsFontForContentSizeCategory = true
-        layer.insertSublayer(speakingIndicatorLayer, at: 0)
+        avatarWrapperView.layer.insertSublayer(speakingIndicatorLayer, at: 0)
     }
     
     override func layoutSubviews() {
-        UIView.performWithoutAnimation {
-            super.layoutSubviews()
-            avatarWrapperView.layer.cornerRadius = avatarWrapperView.frame.width / 2
-            speakingIndicatorLayer.position = avatarWrapperView.center
-        }
+        super.layoutSubviews()
+        avatarWrapperView.layer.cornerRadius = avatarWrapperView.frame.width / 2
+        connectingView.layer.cornerRadius = connectingView.frame.width / 2
+        speakingIndicatorLayer.position = CGPoint(x: avatarWrapperView.bounds.midX,
+                                                  y: avatarWrapperView.bounds.midY)
     }
     
     override func prepareForReuse() {

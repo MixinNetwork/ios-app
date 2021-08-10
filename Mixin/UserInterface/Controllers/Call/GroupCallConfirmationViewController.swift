@@ -23,6 +23,7 @@ class GroupCallConfirmationViewController: CallViewController {
         titleLabel.text = conversation.name
         statusLabel.text = nil
         membersCollectionView.isHidden = false
+        membersCountLabel.text = R.string.localizable.group_call_participants_count(members.count)
         hangUpStackView.alpha = 0
         acceptStackView.alpha = 1
         acceptButtonTrailingConstraint.priority = .defaultLow
@@ -49,12 +50,6 @@ class GroupCallConfirmationViewController: CallViewController {
         }
     }
     
-    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Self.footerReuseId, for: indexPath) as! CallFooterView
-        view.label.text = R.string.localizable.group_call_participants_count(members.count)
-        return view
-    }
-    
     func loadMembers(with userIds: [String]) {
         DispatchQueue.global().async {
             let members = UserDAO.shared.getUsers(with: userIds)
@@ -62,6 +57,7 @@ class GroupCallConfirmationViewController: CallViewController {
                 self.members = members
                 if self.isViewLoaded {
                     self.membersCollectionView.reloadData()
+                    self.membersCountLabel.text = R.string.localizable.group_call_participants_count(members.count)
                     self.view.setNeedsLayout()
                     self.view.layoutIfNeeded()
                 }

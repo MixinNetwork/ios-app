@@ -4,15 +4,15 @@ import MixinServices
 
 class CallViewController: ResizablePopupViewController {
     
-    static let footerReuseId = "footer"
-    
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var minimizeButton: UIButton!
     @IBOutlet weak var settingsButton: UIButton! // Preserved
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleButton: UIButton!
+    @IBOutlet weak var membersWrapperView: UIView!
     @IBOutlet weak var membersCollectionView: UICollectionView!
     @IBOutlet weak var membersCollectionLayout: UICollectionViewFlowLayout!
+    @IBOutlet weak var membersCountLabel: UILabel!
     @IBOutlet weak var trayView: UIView!
     @IBOutlet weak var muteSwitch: UIButton!
     @IBOutlet weak var speakerSwitch: UIButton!
@@ -27,33 +27,14 @@ class CallViewController: ResizablePopupViewController {
     @IBOutlet weak var hideContentViewConstraint: NSLayoutConstraint!
     @IBOutlet weak var showContentViewConstraint: NSLayoutConstraint!
     @IBOutlet weak var contentViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var collectionViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var hangUpButtonLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var hangUpButtonCenterXConstraint: NSLayoutConstraint!
     @IBOutlet weak var acceptButtonTrailingConstraint: NSLayoutConstraint!
     @IBOutlet weak var acceptButtonCenterXConstraint: NSLayoutConstraint!
     @IBOutlet weak var trayContentViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var membersCountBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var trayContentViewBottomConstraint: NSLayoutConstraint!
-    
-    var members: [UserItem] = []
-    var isConnectionUnstable = false {
-        didSet {
-            guard let call = call else {
-                return
-            }
-            updateStatusLabel(call: call)
-        }
-    }
-    
-    private unowned let service: CallService
-    
-    private let numberOfGroupCallMembersPerRow: CGFloat = 4
-    
-    private lazy var resizeRecognizerDelegate = PopupResizeGestureCoordinator(scrollView: resizableScrollView)
-    
-    private weak var call: Call?
-    private weak var timer: Timer?
-    
-    private var isShowingContentView = false
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         if service.isMinimized {
@@ -69,6 +50,33 @@ class CallViewController: ResizablePopupViewController {
     
     override var automaticallyAdjustsResizableScrollViewBottomInset: Bool {
         false
+    }
+    
+    var members: [UserItem] = []
+    var isConnectionUnstable = false {
+        didSet {
+            guard let call = call else {
+                return
+            }
+            updateStatusLabel(call: call)
+        }
+    }
+    
+    private unowned let service: CallService
+    
+    private let membersCountBottomMargin: CGFloat = 32
+    private let numberOfGroupCallMembersPerRow: CGFloat = 4
+    
+    private lazy var resizeRecognizerDelegate = PopupResizeGestureCoordinator(scrollView: resizableScrollView)
+    
+    private weak var call: Call?
+    private weak var timer: Timer?
+    
+    private var isShowingContentView = false
+    
+    private var membersCountFont: UIFont {
+        let font = UIFont.monospacedDigitSystemFont(ofSize: 14, weight: .regular)
+        return UIFontMetrics.default.scaledFont(for: font)
     }
     
     init(service: CallService) {
@@ -101,12 +109,15 @@ class CallViewController: ResizablePopupViewController {
         let statusFont = UIFont.monospacedDigitSystemFont(ofSize: 14, weight: .regular)
         statusLabel.setFont(scaledFor: statusFont, adjustForContentSize: true)
         UIView.performWithoutAnimation(subtitleButton.layoutIfNeeded) // Remove the animation by setText:
+        collectionViewHeightConstraint.constant = calculatedCollectionViewHeight(size: .expanded)
         membersCollectionView.register(R.nib.callMemberCell)
-        membersCollectionView.register(UINib(resource: R.nib.callFooterView),
-                                       forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
-                                       withReuseIdentifier: Self.footerReuseId)
         membersCollectionView.dataSource = self
         membersCollectionView.delegate = self
+        membersCollectionLayout.headerReferenceSize = .zero
+        membersCollectionLayout.footerReferenceSize = .zero
+        membersCollectionLayout.minimumInteritemSpacing = 0
+        membersCountLabel.font = membersCountFont
+        membersCountLabel.adjustsFontForContentSizeCategory = true
         trayView.layer.shadowColor = UIColor.black.withAlphaComponent(0.2).cgColor
         trayView.layer.shadowOpacity = 1
         trayView.layer.shadowRadius = 10
@@ -128,18 +139,16 @@ class CallViewController: ResizablePopupViewController {
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        membersCollectionLayout.headerReferenceSize = .zero
-        membersCollectionLayout.minimumInteritemSpacing = 0
         let labelHeight: CGFloat = ceil(CallMemberCell.labelFont.lineHeight)
-        if let call = call, call is PeerToPeerCall {
+        if call is PeerToPeerCall {
             let itemSize = CGSize(width: CallMemberCell.Layout.bigger.avatarWrapperWidth,
                                   height: CallMemberCell.Layout.bigger.avatarWrapperWidth + labelHeight + CallMemberCell.Layout.bigger.labelTopMargin)
             membersCollectionLayout.itemSize = itemSize
             membersCollectionLayout.minimumLineSpacing = 0
             let horizontalInset = floor((view.bounds.width - itemSize.width) / 2)
             membersCollectionLayout.sectionInset = UIEdgeInsets(top: 88, left: horizontalInset, bottom: 0, right: horizontalInset)
-            membersCollectionLayout.footerReferenceSize = .zero
-        } else {
+            membersCollectionView.contentInset.bottom = 0
+        } else if call is GroupCall {
             var horizontalInset = view.bounds.width - numberOfGroupCallMembersPerRow * CallMemberCell.Layout.normal.avatarWrapperWidth
             horizontalInset /= 2 + 2 * numberOfGroupCallMembersPerRow
             horizontalInset = floor(horizontalInset)
@@ -149,23 +158,26 @@ class CallViewController: ResizablePopupViewController {
             membersCollectionLayout.itemSize = itemSize
             membersCollectionLayout.minimumLineSpacing = 16
             membersCollectionLayout.sectionInset = UIEdgeInsets(top: verticalInset, left: horizontalInset, bottom: verticalInset, right: horizontalInset)
-            let numberOfItems = membersCollectionView.dataSource?.collectionView(membersCollectionView, numberOfItemsInSection: 0) ?? 0
-            let numberOfLines = ceil(CGFloat(numberOfItems) / numberOfGroupCallMembersPerRow)
-            let membersHeight = numberOfLines * itemSize.height + max(0, numberOfLines - 1) * verticalInset
-            let collectionViewHeight = preferredContentHeight(forSize: size)
-                - settingsButton.frame.maxY
-                - membersCollectionLayout.sectionInset.vertical
-                - trayContentViewHeightConstraint.constant
-                - calculatedTrayContentViewBottomMargin
-            let footerHeight = max(64 - verticalInset + labelHeight, collectionViewHeight - membersHeight)
-            membersCollectionLayout.footerReferenceSize = CGSize(width: view.bounds.width, height: floor(footerHeight))
         }
+        updateCollectionViewBottomInset()
     }
     
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         trayContentViewBottomConstraint.constant = calculatedTrayContentViewBottomMargin
         view.layoutIfNeeded()
+    }
+    
+    override func viewWillResize() {
+        let height = calculatedCollectionViewHeight(size: .expanded)
+        collectionViewHeightConstraint.constant = round(height)
+        UIView.performWithoutAnimation(view.layoutIfNeeded)
+    }
+    
+    override func viewDidResize(to size: Size) {
+        if collectionViewHeightConstraint.constant != membersWrapperView.bounds.height {
+            collectionViewHeightConstraint.constant = membersWrapperView.bounds.height
+        }
     }
     
     override func preferredContentHeight(forSize size: Size) -> CGFloat {
@@ -185,15 +197,8 @@ class CallViewController: ResizablePopupViewController {
     }
     
     override func updatePreferredContentSizeHeight(size: Size) {
-        if size == .expanded {
-            // XXX: Remove the weird animation added to avatar image when resizing to expanded size
-            UIView.performWithoutAnimation {
-                let diff = preferredContentHeight(forSize: .expanded) - preferredContentHeight(forSize: .compressed)
-                membersCollectionView.frame.size.height += diff
-                membersCollectionView.layoutIfNeeded()
-            }
-        }
         contentViewHeightConstraint.constant = preferredContentHeight(forSize: size)
+        updateMembersCountPosition()
         view.layoutIfNeeded()
     }
     
@@ -240,6 +245,10 @@ class CallViewController: ResizablePopupViewController {
         self.call = call
         isConnectionUnstable = false
         
+        let notificationCenter = NotificationCenter.default
+        notificationCenter.removeObserver(self,
+                                          name: GroupCallMemberDataSource.visibleMembersDidChangeNotification,
+                                          object: nil)
         if let call = call as? PeerToPeerCall {
             titleLabel.text = R.string.localizable.chat_menu_call()
             if let user = call.remoteUser {
@@ -249,12 +258,17 @@ class CallViewController: ResizablePopupViewController {
                 members = [item]
             }
             membersCollectionView.reloadData()
+            membersCountLabel.text = ""
         } else if let call = call as? GroupCall {
             titleLabel.text = call.conversationName
             membersCollectionView.isHidden = false
             call.membersDataSource.collectionView = membersCollectionView
-            view.setNeedsLayout()
+            membersCountLabel.text = R.string.localizable.group_call_participants_count(call.membersDataSource.members.count)
             view.layoutIfNeeded()
+            notificationCenter.addObserver(self,
+                                           selector: #selector(groupCallVisibleMembersDidChange),
+                                           name: GroupCallMemberDataSource.visibleMembersDidChangeNotification,
+                                           object: call.membersDataSource)
         }
         if let call = call {
             updateViews(call: call)
@@ -356,14 +370,12 @@ extension CallViewController: UICollectionViewDataSource {
         return cell
     }
     
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Self.footerReuseId, for: indexPath) as! CallFooterView
-        if call is GroupCall {
-            view.label.text = R.string.localizable.group_call_participants_count(members.count)
-        } else {
-            view.label.text = ""
-        }
-        return view
+}
+
+extension CallViewController: UIScrollViewDelegate {
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView)  {
+        updateMembersCountPosition()
     }
     
 }
@@ -452,6 +464,68 @@ extension CallViewController {
         }
     }
     
+    @objc private func groupCallVisibleMembersDidChange() {
+        if let call = call as? GroupCall {
+            membersCountLabel.text = R.string.localizable.group_call_participants_count(call.membersDataSource.members.count)
+        } else {
+            membersCountLabel.text = ""
+        }
+        updateMembersCountPosition()
+        updateCollectionViewBottomInset()
+    }
+    
+}
+
+extension CallViewController {
+    
+    private var calculatedTrayContentViewBottomMargin: CGFloat {
+        max(20, view.safeAreaInsets.bottom + 8)
+    }
+    
+    private var calculatedMembersHeight: CGFloat {
+        let numberOfItems = membersCollectionView.dataSource?.collectionView(membersCollectionView, numberOfItemsInSection: 0) ?? 0
+        let numberOfLines = ceil(CGFloat(numberOfItems) / numberOfGroupCallMembersPerRow)
+        return numberOfLines * membersCollectionLayout.itemSize.height
+            + max(0, numberOfLines - 1) * membersCollectionLayout.minimumLineSpacing
+            + membersCollectionLayout.sectionInset.vertical
+    }
+    
+    private func calculatedCollectionViewHeight(size: Size) -> CGFloat {
+        preferredContentHeight(forSize: size)
+            - settingsButton.frame.maxY
+            - trayContentViewHeightConstraint.constant
+            - calculatedTrayContentViewBottomMargin
+    }
+    
+    private func setConnectionDurationTimerEnabled(_ enabled: Bool) {
+        timer?.invalidate()
+        if enabled {
+            let timer = Timer(timeInterval: 1, repeats: true) { (_) in
+                guard let call = self.call else {
+                    return
+                }
+                self.updateStatusLabel(call: call)
+            }
+            RunLoop.main.add(timer, forMode: .default)
+            self.timer = timer
+        }
+    }
+    
+    private func minimize(completion: (() -> Void)?) {
+        let needsAuthentication = !ScreenLockManager.shared.isLastAuthenticationStillValid &&
+            ScreenLockManager.shared.needsBiometricAuthentication &&
+            !service.isMinimized
+        if needsAuthentication {
+            ScreenLockManager.shared.performBiometricAuthentication { success in
+                if success {
+                    self.service.setInterfaceMinimized(true, animated: true, completion: completion)
+                }
+            }
+        } else {
+            service.setInterfaceMinimized(true, animated: true, completion: completion)
+        }
+    }
+    
     private func updateStatusLabel(call: Call) {
         if isConnectionUnstable {
             let description = R.string.localizable.group_call_bad_network()
@@ -505,40 +579,20 @@ extension CallViewController {
         }
     }
     
-}
-
-extension CallViewController {
-    
-    private var calculatedTrayContentViewBottomMargin: CGFloat {
-        max(20, view.safeAreaInsets.bottom + 8)
+    private func updateMembersCountPosition() {
+        var margin = calculatedCollectionViewHeight(size: size)
+            - calculatedMembersHeight
+            + membersCollectionView.contentOffset.y
+        margin = min(membersCountBottomMargin, margin)
+        membersCountBottomConstraint.constant = margin
     }
     
-    private func setConnectionDurationTimerEnabled(_ enabled: Bool) {
-        timer?.invalidate()
-        if enabled {
-            let timer = Timer(timeInterval: 1, repeats: true) { (_) in
-                guard let call = self.call else {
-                    return
-                }
-                self.updateStatusLabel(call: call)
-            }
-            RunLoop.main.add(timer, forMode: .default)
-            self.timer = timer
-        }
-    }
-    
-    private func minimize(completion: (() -> Void)?) {
-        let needsAuthentication = !ScreenLockManager.shared.isLastAuthenticationStillValid &&
-            ScreenLockManager.shared.needsBiometricAuthentication &&
-            !service.isMinimized
-        if needsAuthentication {
-            ScreenLockManager.shared.performBiometricAuthentication { success in
-                if success {
-                    self.service.setInterfaceMinimized(true, animated: true, completion: completion)
-                }
-            }
+    private func updateCollectionViewBottomInset() {
+        let membersCountHeight = membersCountBottomMargin + ceil(membersCountFont.lineHeight)
+        if call is GroupCall, membersWrapperView.bounds.height - calculatedMembersHeight < membersCountHeight {
+            membersCollectionView.contentInset.bottom = membersCountHeight
         } else {
-            service.setInterfaceMinimized(true, animated: true, completion: completion)
+            membersCollectionView.contentInset.bottom = 0
         }
     }
     

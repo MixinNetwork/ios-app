@@ -625,8 +625,6 @@
 		949569A8263B13BF00E043FE /* TranscriptMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949569A7263B13BF00E043FE /* TranscriptMessageViewModel.swift */; };
 		949A3686261D9C5C004251B2 /* post.css in Resources */ = {isa = PBXBuildFile; fileRef = 949A3685261D9C5C004251B2 /* post.css */; };
 		94A1B1DF25BFD7CB0098586D /* LinkLocatingTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A1B1DE25BFD7CB0098586D /* LinkLocatingTextView.swift */; };
-		94A1B95026A5DB6900C5D3FA /* CallFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94A1B94F26A5DB6800C5D3FA /* CallFooterView.xib */; };
-		94A1B95226A5DDB800C5D3FA /* CallFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A1B95126A5DDB800C5D3FA /* CallFooterView.swift */; };
 		94B7643525EA8E9B00EDF9C6 /* CacheableAssetFileDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B7643425EA8E9B00EDF9C6 /* CacheableAssetFileDescription.swift */; };
 		94B7B6DC26B43562000B0AC5 /* SilentNotificationMessagePreviewView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B7B6DB26B43562000B0AC5 /* SilentNotificationMessagePreviewView.xib */; };
 		94B7B6DE26B43581000B0AC5 /* SilentNotificationMessagePreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B7B6DD26B43580000B0AC5 /* SilentNotificationMessagePreviewViewController.swift */; };
@@ -1591,8 +1589,6 @@
 		949569A7263B13BF00E043FE /* TranscriptMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptMessageViewModel.swift; sourceTree = "<group>"; };
 		949A3685261D9C5C004251B2 /* post.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = post.css; sourceTree = "<group>"; };
 		94A1B1DE25BFD7CB0098586D /* LinkLocatingTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkLocatingTextView.swift; sourceTree = "<group>"; };
-		94A1B94F26A5DB6800C5D3FA /* CallFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CallFooterView.xib; sourceTree = "<group>"; };
-		94A1B95126A5DDB800C5D3FA /* CallFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallFooterView.swift; sourceTree = "<group>"; };
 		94B7643425EA8E9B00EDF9C6 /* CacheableAssetFileDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheableAssetFileDescription.swift; sourceTree = "<group>"; };
 		94B7B6DB26B43562000B0AC5 /* SilentNotificationMessagePreviewView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SilentNotificationMessagePreviewView.xib; sourceTree = "<group>"; };
 		94B7B6DD26B43580000B0AC5 /* SilentNotificationMessagePreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SilentNotificationMessagePreviewViewController.swift; sourceTree = "<group>"; };
@@ -2257,8 +2253,6 @@
 				7B7E7143217D87860052C7DD /* CallView.xib */,
 				7B7E7145217D89790052C7DD /* CallViewController.swift */,
 				7BA8CC3924A9C4D300455902 /* GroupCallConfirmationViewController.swift */,
-				94A1B94F26A5DB6800C5D3FA /* CallFooterView.xib */,
-				94A1B95126A5DDB800C5D3FA /* CallFooterView.swift */,
 			);
 			path = Call;
 			sourceTree = "<group>";
@@ -3777,7 +3771,6 @@
 				7BDFAE942559165800296F8B /* CompactAssetCell.xib in Resources */,
 				7BBB6F532451C9E7002798F2 /* BackupTableHeaderView.xib in Resources */,
 				94739A5426258F8300E8914D /* Custom-acknowledgements.plist in Resources */,
-				94A1B95026A5DB6900C5D3FA /* CallFooterView.xib in Resources */,
 				7B54F95022B22E2900908A9D /* VerifyPinView.xib in Resources */,
 				7B51DDB9223A50D5008ACDBB /* VerificationCodeView.xib in Resources */,
 				DF44B0CE20C6897D00A099B6 /* EmptyView.xib in Resources */,
@@ -4865,7 +4858,6 @@
 				DFB2062A21AC1771006E4341 /* RestoreJob.swift in Sources */,
 				7B9EDF101FB588D700D26989 /* UIImageExtension.swift in Sources */,
 				7B2636D5224E2A7E0057116D /* InfiniteTopView.swift in Sources */,
-				94A1B95226A5DDB800C5D3FA /* CallFooterView.swift in Sources */,
 				7B66AC072428D72000869DBD /* PostWebViewController.swift in Sources */,
 				9492285F25DFB7D60000A19F /* MinimizedPlaylistViewController.swift in Sources */,
 				7C66F1AD268ABE1F006D8462 /* HomeAppFolder.swift in Sources */,

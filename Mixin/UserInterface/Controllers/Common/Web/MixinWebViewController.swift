@@ -193,24 +193,18 @@ extension MixinWebViewController: WKNavigationDelegate {
             decisionHandler(.cancel)
             return
         }
-        
         if isViewLoaded && parent != nil && (UrlWindow.checkUrl(url: url, webContext: context) || UrlWindow.checkPayUrl(url: url.absoluteString)) {
             decisionHandler(.cancel)
-            return
         } else if "file" == url.scheme {
             decisionHandler(.allow)
-            return
-        }
-        
-        guard ["http", "https"].contains(url.scheme?.lowercased() ?? "") else {
-            if UIApplication.shared.canOpenURL(url) {
-                UIApplication.shared.open(url, options: [:], completionHandler: nil)
-            }
+        } else if ["http", "https"].contains(url.scheme?.lowercased() ?? "") {
+            decisionHandler(.allow)
+        } else if parent != nil && UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
             decisionHandler(.cancel)
-            return
+        } else {
+            decisionHandler(.cancel)
         }
-        
-        decisionHandler(.allow)
     }
     
     func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {

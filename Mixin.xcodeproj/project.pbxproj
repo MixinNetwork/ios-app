@@ -573,6 +573,7 @@
 		7C66F1C1268C0250006D8462 /* HomeAppsFolderInteraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1C0268C0250006D8462 /* HomeAppsFolderInteraction.swift */; };
 		7C7635B826A13461006101DB /* HomeAppsConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7635B726A13461006101DB /* HomeAppsConstants.swift */; };
 		7CBD2EFA268FF6BB00AA0847 /* HomeAppsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBD2EF9268FF6BB00AA0847 /* HomeAppsStorage.swift */; };
+		7CC3B1A026C21F7E0018B0D1 /* WeakWKScriptMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC3B19F26C21F7E0018B0D1 /* WeakWKScriptMessageHandler.swift */; };
 		7CE5E7A8269BDA29000B7904 /* HomeAppsPinTipsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE5E7A6269BDA29000B7904 /* HomeAppsPinTipsViewController.swift */; };
 		7CE5E7A9269BDA29000B7904 /* HomeAppsPinTipsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CE5E7A7269BDA29000B7904 /* HomeAppsPinTipsView.xib */; };
 		811C8154F03C8CBB72DBA1F4 /* Pods_MixinShare.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67A8E0E9B65F16ADB27E6F25 /* Pods_MixinShare.framework */; };
@@ -1537,6 +1538,7 @@
 		7C66F1C0268C0250006D8462 /* HomeAppsFolderInteraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsFolderInteraction.swift; sourceTree = "<group>"; };
 		7C7635B726A13461006101DB /* HomeAppsConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsConstants.swift; sourceTree = "<group>"; };
 		7CBD2EF9268FF6BB00AA0847 /* HomeAppsStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsStorage.swift; sourceTree = "<group>"; };
+		7CC3B19F26C21F7E0018B0D1 /* WeakWKScriptMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeakWKScriptMessageHandler.swift; sourceTree = "<group>"; };
 		7CE5E7A6269BDA29000B7904 /* HomeAppsPinTipsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsPinTipsViewController.swift; sourceTree = "<group>"; };
 		7CE5E7A7269BDA29000B7904 /* HomeAppsPinTipsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomeAppsPinTipsView.xib; sourceTree = "<group>"; };
 		842347ED2695BA6400009A39 /* InitializeBotJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitializeBotJob.swift; sourceTree = "<group>"; };
@@ -2638,6 +2640,7 @@
 				7BBCEC1725232A9800F270DF /* WebMoreMenuViewController.swift */,
 				E041064F23C6079400A6F08E /* MixinWebViewController.swift */,
 				7B66AC062428D72000869DBD /* PostWebViewController.swift */,
+				7CC3B19F26C21F7E0018B0D1 /* WeakWKScriptMessageHandler.swift */,
 			);
 			path = Web;
 			sourceTree = "<group>";
@@ -4481,6 +4484,7 @@
 				DF08F0A623828B8F005CFD34 /* PHAssetExtension.swift in Sources */,
 				7BD639CA2282B17B00B7B3A6 /* PeerViewController.swift in Sources */,
 				7C66F1C1268C0250006D8462 /* HomeAppsFolderInteraction.swift in Sources */,
+				7CC3B1A026C21F7E0018B0D1 /* WeakWKScriptMessageHandler.swift in Sources */,
 				842347EE2695BA6400009A39 /* InitializeBotJob.swift in Sources */,
 				DF886D452440B2F800F44BCC /* ConversationCircleRequest.swift in Sources */,
 				7BEBCE2D228185130037BF18 /* MediaPreviewViewController.swift in Sources */,

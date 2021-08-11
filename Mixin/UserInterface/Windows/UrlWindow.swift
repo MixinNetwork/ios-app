@@ -837,6 +837,9 @@ extension UrlWindow {
 
     private static func presentAuthorization(authorization: AuthorizationResponse, webContext: MixinWebViewController.Context? = nil, hud: Hud) {
         if let context = webContext,  case let .app(app, _) = context.style {
+            if let switcher = UIApplication.homeContainerViewController?.clipSwitcher, let clip = switcher.clips.first(where: { $0.app?.appId == app.appId }) {
+                Logger.write(log: "[Authorization][Clip][\(clip.title)]...url:\(clip.url.absoluteString)")
+            }
             Logger.write(log: "[Authorization][WebContext][\(app.appNumber)][\(app.name)]...\(app.homeUri)")
         } else {
             Logger.write(log: "[Authorization][\(authorization.app.appNumber)][\(authorization.app.name)]...\(authorization.app.homeUri)")

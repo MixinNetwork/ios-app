@@ -23,6 +23,7 @@ final class ScreenLockManager {
     private(set) var isLastAuthenticationStillValid = false
     private(set) var window: UIWindow?
     
+    private var context: LAContext!
     private var viewController: ScreenLockViewController?
     private var hasLastBiometricAuthenticationFailed = false
     private var state: State = .none {
@@ -69,8 +70,13 @@ extension ScreenLockManager {
     }
     
     func performBiometricAuthentication(completion: ((Bool) -> Void)? = nil) {
-        let context = LAContext()
-        context.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: R.string.localizable.screen_lock_unlock_tip(biometryType.localizedName)) { success, error in
+        context = LAContext()
+        guard context.canEvaluatePolicy(.deviceOwnerAuthentication, error: nil) else {
+            self.state = .authenticationFailed
+            return
+        }
+        let reason = R.string.localizable.screen_lock_unlock_tip(biometryType.localizedName)
+        context.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: reason) { success, error in
             DispatchQueue.main.async {
                 self.state = success ? .authenticationSucceed : .authenticationFailed
                 completion?(success)
@@ -183,5 +189,3 @@ extension ScreenLockManager {
     }
     
 }
-
-

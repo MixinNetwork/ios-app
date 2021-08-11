@@ -26,10 +26,9 @@ class MixinWebViewController: WebViewController {
         config.mediaTypesRequiringUserActionForPlayback = .video
         config.preferences.javaScriptCanOpenWindowsAutomatically = true
         config.userContentController.addUserScript(Script.disableImageSelection)
-        let handler = WeakWKScriptMessageHandler(delegate: self)
-        config.userContentController.add(handler, name: HandlerName.mixinContext)
-        config.userContentController.add(handler, name: HandlerName.reloadTheme)
-        config.userContentController.add(handler, name: HandlerName.playlist)
+        config.userContentController.add(scriptMessageProxy, name: HandlerName.mixinContext)
+        config.userContentController.add(scriptMessageProxy, name: HandlerName.reloadTheme)
+        config.userContentController.add(scriptMessageProxy, name: HandlerName.playlist)
         config.applicationNameForUserAgent = "Mixin/\(Bundle.main.shortVersion)"
         return config
     }
@@ -38,6 +37,7 @@ class MixinWebViewController: WebViewController {
     
     private(set) var context: Context!
     
+    private lazy var scriptMessageProxy = ScriptMessageProxy(target: self)
     private lazy var suspicousLinkView = R.nib.suspiciousLinkView(owner: self)!
     private lazy var loadingFailureView: UIView = {
         let view = R.nib.webLoadingFailureView(owner: self)!
@@ -49,7 +49,6 @@ class MixinWebViewController: WebViewController {
     
     private var isMessageHandlerAdded = true
     private var webViewTitleObserver: NSKeyValueObservation?
-    private var didBecomeActive = true
     
     deinit {
         #if DEBUG
@@ -83,25 +82,23 @@ class MixinWebViewController: WebViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        didBecomeActive = true
         if !isMessageHandlerAdded {
             let controller = webView.configuration.userContentController
-            controller.add(self, name: HandlerName.mixinContext)
-            controller.add(self, name: HandlerName.reloadTheme)
-            controller.add(self, name: HandlerName.playlist)
+            controller.add(scriptMessageProxy, name: HandlerName.mixinContext)
+            controller.add(scriptMessageProxy, name: HandlerName.reloadTheme)
+            controller.add(scriptMessageProxy, name: HandlerName.playlist)
             isMessageHandlerAdded = true
         }
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        didBecomeActive = false
-        Logger.write(log: "[MixinWebViewController][ViewDidDisappear]...isMessageHandlerAdded:\(isMessageHandlerAdded)")
     }
     
     override func popupDidDismissAsChild() {
         super.popupDidDismissAsChild()
         if associatedClip == nil {
+            // Remove message handlers here because viewDidDisappear: is not getting called
+            // everytime view is disappeared. Since MixinWebViewController is always being
+            // added as a child view controller of some parent controller, when the user pop that
+            // parent view controller immediately after he dismiss this one, viewDidDisappear:
+            // is not getting called.
             removeAllMessageHandlers()
         }
     }
@@ -197,7 +194,7 @@ extension MixinWebViewController: WKNavigationDelegate {
             return
         }
         
-        if isViewLoaded && didBecomeActive && (UrlWindow.checkUrl(url: url, webContext: context) || UrlWindow.checkPayUrl(url: url.absoluteString)) {
+        if isViewLoaded && parent != nil && (UrlWindow.checkUrl(url: url, webContext: context) || UrlWindow.checkPayUrl(url: url.absoluteString)) {
             decisionHandler(.cancel)
             return
         } else if "file" == url.scheme {

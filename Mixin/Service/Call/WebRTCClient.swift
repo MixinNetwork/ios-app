@@ -117,17 +117,32 @@ class WebRTCClient: NSObject {
     
     func audioLevels(completion: @escaping ([String: Double]) -> Void) {
         queue.async {
+            let isAudioTrackEnabled = self.audioTrack?.isEnabled ?? false
             self.peerConnection?.statistics(completionHandler: { report in
                 let audioLevels: [String: Double] = report.statistics.reduce(into: [:]) { result, pair in
-                    guard
-                        pair.key.hasPrefix("RTCMediaStreamTrack_receiver_"),
-                        let trackId = pair.value.values["trackIdentifier"] as? String,
-                        let userId = self.tracksUserId[trackId],
-                        let level = pair.value.values["audioLevel"] as? Double
-                    else {
-                        return
+                    if pair.key.hasPrefix("RTCMediaStreamTrack_sender_") {
+                        if isAudioTrackEnabled {
+                            guard
+                                let mediaSourceId = pair.value.values["mediaSourceId"] as? String,
+                                let source = report.statistics[mediaSourceId],
+                                let level = source.values["audioLevel"] as? Double
+                            else {
+                                return
+                            }
+                            result[myUserId] = level
+                        } else {
+                            result[myUserId] = 0
+                        }
+                    } else if pair.key.hasPrefix("RTCMediaStreamTrack_receiver_") {
+                        guard
+                            let trackId = pair.value.values["trackIdentifier"] as? String,
+                            let userId = self.tracksUserId[trackId],
+                            let level = pair.value.values["audioLevel"] as? Double
+                        else {
+                            return
+                        }
+                        result[userId] = level
                     }
-                    result[userId] = level
                 }
                 DispatchQueue.main.async {
                     completion(audioLevels)

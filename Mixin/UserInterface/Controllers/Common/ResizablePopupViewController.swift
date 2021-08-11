@@ -65,6 +65,7 @@ class ResizablePopupViewController: UIViewController {
         }
         switch recognizer.state {
         case .began:
+            viewWillResize()
             resizableScrollView?.isScrollEnabled = false
             size = size.opposite
             let animator = makeSizeAnimator(destination: size)
@@ -98,6 +99,7 @@ class ResizablePopupViewController: UIViewController {
                     self.setNeedsSizeAppearanceUpdated(size: completionSize)
                     self.sizeAnimator = nil
                     recognizer.isEnabled = true
+                    self.viewDidResize(to: completionSize)
                 }
                 recognizer.isEnabled = false
                 animator.continueAnimation(withTimingParameters: nil, durationFactor: 0)
@@ -106,7 +108,15 @@ class ResizablePopupViewController: UIViewController {
             break
         }
     }
-
+    
+    func viewWillResize() {
+        
+    }
+    
+    func viewDidResize(to size: Size) {
+        
+    }
+    
     func updatePreferredContentSizeHeight(size: Size) {
         guard !isBeingDismissed else {
             return

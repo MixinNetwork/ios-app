@@ -27,27 +27,6 @@ class GroupCall: Call {
         "<GroupCall: uuid: \(uuidString), isOutgoing: \(isOutgoing), status: \(status.debugDescription), conversationId: \(conversationId), connectedDate: \(connectedDate?.description ?? "(never)"), trackId: \(trackId ?? "(null)"), inviters: \(inviters.map(\.fullName)), pendingInvitingMembers: \(pendingInvitingMembers?.map(\.fullName).debugDescription ?? "(null)")>"
     }
     
-    override var status: Call.Status {
-        didSet {
-            if status == .connected {
-                DispatchQueue.main.async {
-                    guard self.speakingTimer == nil else {
-                        return
-                    }
-                    self.speakingTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self] _ in
-                        self?.rtcClient.audioLevels(completion: { levels in
-                            self?.membersDataSource.report(audioLevels: levels)
-                        })
-                    })
-                }
-            } else {
-                DispatchQueue.main.async {
-                    self.speakingTimer?.invalidate()
-                }
-            }
-        }
-    }
-    
     var localizedName: String {
         if inviters.isEmpty || hasBegunConnecting {
             return conversationName
@@ -66,6 +45,10 @@ class GroupCall: Call {
         self.pendingInvitingMembers = invitingMembers
         super.init(uuid: uuid, conversationId: conversationId, isOutgoing: isOutgoing, rtcClient: rtcClient)
         CallService.shared.membersManager.beginPolling(forConversationWith: conversationId)
+    }
+    
+    deinit {
+        speakingTimer?.invalidate()
     }
     
     func invite(members: [UserItem]) {
@@ -109,6 +92,25 @@ class GroupCall: Call {
         DispatchQueue.main.async {
             self.membersDataSource.reportMemberWithIdDidDisconnected(id)
         }
+    }
+    
+    func beginSpeakingStatusPolling() {
+        guard speakingTimer == nil else {
+            return
+        }
+        let timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self] _ in
+            self?.rtcClient.audioLevels(completion: { levels in
+                self?.membersDataSource.report(audioLevels: levels)
+            })
+        })
+        timer.fire()
+        speakingTimer = timer
+    }
+    
+    func endSpeakingStatusPolling() {
+        speakingTimer?.invalidate()
+        speakingTimer = nil
+        membersDataSource.report(audioLevels: [:])
     }
     
 }

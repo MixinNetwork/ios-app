@@ -77,8 +77,10 @@ class GroupCallMemberPickerContentViewController: UserItemPeerViewController<Che
         }
         
         collectionView.snp.updateConstraints { (make) in
+            make.leading.equalToSuperview()
             make.trailing.equalToSuperview().offset(-78)
         }
+        collectionView.contentInset.left = 20
         tableView.allowsMultipleSelection = true
         collectionView.dataSource = self
     }

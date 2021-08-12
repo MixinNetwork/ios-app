@@ -202,6 +202,19 @@ extension MixinWebViewController: WKNavigationDelegate {
         } else if parent != nil && UIApplication.shared.canOpenURL(url) {
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
             decisionHandler(.cancel)
+        } else if parent == nil, let url = MixinURL(url: url), case .codes(let code) = url {
+            UserAPI.codes(codeId: code) { (result) in
+                switch result {
+                case let .success(code):
+                    if let auth = code.authorization {
+                        let request = AuthorizationRequest(authorizationId: auth.authorizationId, scopes: [])
+                        AuthorizeAPI.authorize(authorization: request) { _ in }
+                    }
+                case .failure:
+                    break
+                }
+            }
+            decisionHandler(.cancel)
         } else {
             decisionHandler(.cancel)
         }

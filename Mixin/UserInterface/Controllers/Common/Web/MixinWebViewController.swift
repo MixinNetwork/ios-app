@@ -26,9 +26,9 @@ class MixinWebViewController: WebViewController {
         config.mediaTypesRequiringUserActionForPlayback = .video
         config.preferences.javaScriptCanOpenWindowsAutomatically = true
         config.userContentController.addUserScript(Script.disableImageSelection)
-        config.userContentController.add(self, name: HandlerName.mixinContext)
-        config.userContentController.add(self, name: HandlerName.reloadTheme)
-        config.userContentController.add(self, name: HandlerName.playlist)
+        config.userContentController.add(scriptMessageProxy, name: HandlerName.mixinContext)
+        config.userContentController.add(scriptMessageProxy, name: HandlerName.reloadTheme)
+        config.userContentController.add(scriptMessageProxy, name: HandlerName.playlist)
         config.applicationNameForUserAgent = "Mixin/\(Bundle.main.shortVersion)"
         return config
     }
@@ -37,6 +37,7 @@ class MixinWebViewController: WebViewController {
     
     private(set) var context: Context!
     
+    private lazy var scriptMessageProxy = ScriptMessageProxy(target: self)
     private lazy var suspicousLinkView = R.nib.suspiciousLinkView(owner: self)!
     private lazy var loadingFailureView: UIView = {
         let view = R.nib.webLoadingFailureView(owner: self)!
@@ -83,9 +84,9 @@ class MixinWebViewController: WebViewController {
         super.viewDidAppear(animated)
         if !isMessageHandlerAdded {
             let controller = webView.configuration.userContentController
-            controller.add(self, name: HandlerName.mixinContext)
-            controller.add(self, name: HandlerName.reloadTheme)
-            controller.add(self, name: HandlerName.playlist)
+            controller.add(scriptMessageProxy, name: HandlerName.mixinContext)
+            controller.add(scriptMessageProxy, name: HandlerName.reloadTheme)
+            controller.add(scriptMessageProxy, name: HandlerName.playlist)
             isMessageHandlerAdded = true
         }
     }
@@ -93,6 +94,11 @@ class MixinWebViewController: WebViewController {
     override func popupDidDismissAsChild() {
         super.popupDidDismissAsChild()
         if associatedClip == nil {
+            // Remove message handlers here because viewDidDisappear: is not getting called
+            // everytime view is disappeared. Since MixinWebViewController is always being
+            // added as a child view controller of some parent controller, when the user pop that
+            // parent view controller immediately after he dismiss this one, viewDidDisappear:
+            // is not getting called.
             removeAllMessageHandlers()
         }
     }
@@ -187,24 +193,31 @@ extension MixinWebViewController: WKNavigationDelegate {
             decisionHandler(.cancel)
             return
         }
-        
-        if isViewLoaded && (UrlWindow.checkUrl(url: url, webContext: context) || UrlWindow.checkPayUrl(url: url.absoluteString)) {
+        if isViewLoaded && parent != nil && (UrlWindow.checkUrl(url: url, webContext: context) || UrlWindow.checkPayUrl(url: url.absoluteString)) {
             decisionHandler(.cancel)
-            return
         } else if "file" == url.scheme {
             decisionHandler(.allow)
-            return
-        }
-        
-        guard ["http", "https"].contains(url.scheme?.lowercased() ?? "") else {
-            if UIApplication.shared.canOpenURL(url) {
-                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        } else if ["http", "https"].contains(url.scheme?.lowercased() ?? "") {
+            decisionHandler(.allow)
+        } else if parent != nil && UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            decisionHandler(.cancel)
+        } else if parent == nil, let url = MixinURL(url: url), case .codes(let code) = url {
+            UserAPI.codes(codeId: code) { (result) in
+                switch result {
+                case let .success(code):
+                    if let auth = code.authorization {
+                        let request = AuthorizationRequest(authorizationId: auth.authorizationId, scopes: [])
+                        AuthorizeAPI.authorize(authorization: request) { _ in }
+                    }
+                case .failure:
+                    break
+                }
             }
             decisionHandler(.cancel)
-            return
+        } else {
+            decisionHandler(.cancel)
         }
-        
-        decisionHandler(.allow)
     }
     
     func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {

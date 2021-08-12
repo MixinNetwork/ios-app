@@ -5,6 +5,7 @@ final class RoundedBlurButton: UIButton {
     private let blurView = UIVisualEffectView(effect: .darkBlur)
     
     var backgroundSize: CGSize?
+    var cornerRadius: CGFloat?
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -27,7 +28,7 @@ final class RoundedBlurButton: UIButton {
         }
         blurView.bounds.size = blurViewSize
         blurView.center = CGPoint(x: bounds.midX, y: bounds.midY)
-        blurView.layer.cornerRadius = blurViewSize.width / 2
+        blurView.layer.cornerRadius = cornerRadius ?? blurViewSize.width / 2
         sendSubviewToBack(blurView)
     }
     

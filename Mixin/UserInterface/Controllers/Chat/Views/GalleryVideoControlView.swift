@@ -17,9 +17,9 @@ final class GalleryVideoControlView: UIView, GalleryAnimatable {
     
     @IBOutlet weak var visualControlWrapperView: UIView!
     @IBOutlet weak var visualControlBackgroundImageView: UIImageView!
-    @IBOutlet weak var pipButton: UIButton!
+    @IBOutlet weak var pipButton: RoundedBlurButton!
     @IBOutlet weak var liveBadgeView: UIImageView!
-    @IBOutlet weak var closeButton: UIButton!
+    @IBOutlet weak var closeButton: RoundedBlurButton!
     
     @IBOutlet weak var playControlWrapperView: UIView!
     @IBOutlet weak var reloadButton: RoundedBlurButton!
@@ -58,6 +58,10 @@ final class GalleryVideoControlView: UIView, GalleryAnimatable {
         super.awakeFromNib()
         for button in [reloadButton, playButton, pauseButton] {
             button!.backgroundSize = CGSize(width: 60, height: 60)
+        }
+        for button in [pipButton, closeButton] {
+            button!.backgroundSize = CGSize(width: 46, height: 36)
+            button!.cornerRadius = 12
         }
     }
     

@@ -12,7 +12,7 @@ final class GalleryActivityIndicatorView: UIView {
         }
     }
     
-    private let backgroundSize = CGSize(width: 60, height: 60)
+    private let backgroundSize = CGSize(width: 56, height: 56)
     private let backgroundView = UIVisualEffectView(effect: .darkBlur)
     private let indicatorSize = CGSize(width: 20, height: 20)
     private let indicator = Indicator()

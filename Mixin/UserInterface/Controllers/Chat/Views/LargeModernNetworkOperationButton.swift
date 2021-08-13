@@ -3,7 +3,7 @@ import UIKit
 class LargeModernNetworkOperationButton: ModernNetworkOperationButton {
     
     override var backgroundSize: CGSize {
-        return CGSize(width: 60, height: 60)
+        return CGSize(width: 56, height: 56)
     }
     
     override var iconSet: NetworkOperationIconSet.Type {

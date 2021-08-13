@@ -31,11 +31,13 @@ final class GalleryVideoControlView: UIView, GalleryAnimatable {
     @IBOutlet weak var slider: GalleryVideoSlider!
     @IBOutlet weak var remainingTimeLabel: UILabel!
     
+    @IBOutlet weak var progressView: UIProgressView!
+    
     @IBOutlet weak var activityIndicatorView: GalleryActivityIndicatorView!
     
     @IBOutlet weak var visualControlTopConstraint: NSLayoutConstraint!
-    @IBOutlet weak var visualControlLeadingConstraint: NSLayoutConstraint!
-    @IBOutlet weak var visualControlTrailingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var pipButtonLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var closeButtonTrailingConstraint: NSLayoutConstraint!
     
     var playControlStyle: PlayControlStyle = .play {
         didSet {
@@ -49,7 +51,8 @@ final class GalleryVideoControlView: UIView, GalleryAnimatable {
         }
     }
     
-    private let pipModePlayControlTransform = CGAffineTransform(scaleX: 0.64, y: 0.64)
+    private let pipModePlayControlTransform = CGAffineTransform(scaleX: 0.68, y: 0.68)
+    private let pipModeVisualControlTransform = CGAffineTransform(scaleX: 0.66, y: 0.66)
     
     private var playControlsHidden = true
     private var otherControlsHidden = true
@@ -95,12 +98,17 @@ final class GalleryVideoControlView: UIView, GalleryAnimatable {
         let showLiveBadge = style.contains(.liveStream) && !style.contains(.pip)
         liveBadgeView.alpha = showLiveBadge ? 1 : 0
         
-        let transform = style.contains(.pip) ? pipModePlayControlTransform : .identity
-        playControlWrapperView.transform = transform
+        let playControlTransform = style.contains(.pip) ? pipModePlayControlTransform : .identity
+        playControlWrapperView.transform = playControlTransform
         playControlWrapperView.alpha = playControlsHidden || style.contains(.loading) ? 0 : 1
         
-        activityIndicatorView.transform = transform
+        activityIndicatorView.transform = playControlTransform
         activityIndicatorView.isAnimating = style.contains(.loading)
+        
+        let visualControlTransform = style.contains(.pip) ? pipModeVisualControlTransform : .identity
+        [pipButton, closeButton].forEach { button in
+            button.transform = visualControlTransform
+        }
         
         let hideTimeControl = otherControlsHidden
             || style.contains(.pip)
@@ -109,14 +117,13 @@ final class GalleryVideoControlView: UIView, GalleryAnimatable {
         
         visualControlBackgroundImageView.alpha = style.contains(.pip) ? 0 : 1
         
-        let constraints = [
-            visualControlLeadingConstraint,
-            visualControlTrailingConstraint,
-            visualControlTopConstraint
-        ]
-        for constraint in constraints {
-            constraint?.constant = style.contains(.pip) ? 0 : 12
+        let hideProgressView = style.contains(.liveStream) || !style.contains(.pip) || otherControlsHidden
+        progressView.alpha = hideProgressView ? 0 : 1
+        
+        [pipButtonLeadingConstraint, closeButtonTrailingConstraint].forEach { constraint in
+            constraint?.constant = style.contains(.pip) ? 0 : 23
         }
+        visualControlTopConstraint.constant = style.contains(.pip) ? -2 : 12
     }
     
 }

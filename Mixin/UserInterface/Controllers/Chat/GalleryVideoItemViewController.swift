@@ -777,6 +777,21 @@ extension GalleryVideoItemViewController {
         slider.setValue(sliderValue, animated: false)
     }
     
+    private func updateProgressView(time: CMTime) {
+        guard controlView.style.contains(.pip) else {
+            return
+        }
+        guard playerItemDuration.isValid else {
+            return
+        }
+        let duration = CMTimeGetSeconds(playerItemDuration)
+        guard duration.isFinite else {
+            return
+        }
+        let time = CMTimeGetSeconds(time)
+        controlView.progressView.progress = Float(time/duration)
+    }
+    
     private func updateTimeLabel(time: CMTime) {
         guard playerItemDuration.isValid else {
             return
@@ -800,6 +815,7 @@ extension GalleryVideoItemViewController {
                 return
             }
             weakSelf.updateSliderPosition(time: time)
+            weakSelf.updateProgressView(time: time)
         })
         
         let timeLabelInterval = CMTime(seconds: 1, preferredTimescale: timescale)

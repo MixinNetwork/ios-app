@@ -163,6 +163,19 @@
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </view>
+                <progressView clipsSubviews="YES" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="aSq-x1-aA2">
+                    <rect key="frame" x="25" y="366" width="364" height="3"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="3" id="Xix-Tv-Mgq"/>
+                    </constraints>
+                    <color key="progressTintColor" red="1" green="1" blue="1" alpha="0.69999999999999996" colorSpace="custom" customColorSpace="sRGB"/>
+                    <color key="trackTintColor" red="1" green="1" blue="1" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <real key="value" value="1.5"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </progressView>
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
@@ -173,30 +186,34 @@
                 <constraint firstItem="TKP-4B-OUV" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="DLM-o6-VTX"/>
                 <constraint firstAttribute="bottom" secondItem="gga-kw-mqs" secondAttribute="bottom" constant="16" id="Fti-Ug-7nF"/>
                 <constraint firstItem="2mC-M8-6Y5" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="G4O-7x-H1l"/>
+                <constraint firstAttribute="trailing" secondItem="aSq-x1-aA2" secondAttribute="trailing" constant="25" id="MaB-0Y-SMD"/>
                 <constraint firstItem="HPi-eF-W69" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="UxV-ZI-U3f"/>
+                <constraint firstAttribute="bottom" secondItem="aSq-x1-aA2" secondAttribute="bottom" constant="10" id="WWd-KH-ixJ"/>
                 <constraint firstItem="gga-kw-mqs" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="14" id="gES-N4-V9M"/>
                 <constraint firstAttribute="trailing" secondItem="HPi-eF-W69" secondAttribute="trailing" id="j8F-lV-H4U"/>
                 <constraint firstItem="TKP-4B-OUV" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="k0V-Je-0g5"/>
                 <constraint firstItem="jT8-96-b2D" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="odC-3D-4Vh"/>
+                <constraint firstItem="aSq-x1-aA2" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="25" id="xcX-dI-NKa"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
                 <outlet property="activityIndicatorView" destination="jT8-96-b2D" id="9He-4Q-IFe"/>
                 <outlet property="closeButton" destination="ykM-27-EvN" id="MJL-ww-ocf"/>
+                <outlet property="closeButtonTrailingConstraint" destination="uZL-Jt-pDo" id="gq6-79-OCj"/>
                 <outlet property="liveBadgeView" destination="OSM-5H-FgV" id="HNS-nX-WPn"/>
                 <outlet property="pauseButton" destination="Hyw-t1-hLS" id="LEj-vs-Jdu"/>
                 <outlet property="pipButton" destination="Q7h-05-TmK" id="EGd-AX-cAZ"/>
+                <outlet property="pipButtonLeadingConstraint" destination="6fv-sK-AcP" id="XhW-Qf-atY"/>
                 <outlet property="playButton" destination="yED-yG-s6z" id="ZFL-Ks-4Tc"/>
                 <outlet property="playControlWrapperView" destination="TKP-4B-OUV" id="RVX-l9-lxU"/>
                 <outlet property="playedTimeLabel" destination="Zk4-gl-otk" id="KT1-mN-NJy"/>
+                <outlet property="progressView" destination="aSq-x1-aA2" id="SCT-5m-EP9"/>
                 <outlet property="reloadButton" destination="VCF-sg-yOy" id="Pjq-9Z-FWO"/>
                 <outlet property="remainingTimeLabel" destination="Hl0-e0-d3X" id="lvN-pH-SOc"/>
                 <outlet property="slider" destination="7CY-zg-LG0" id="WrQ-QJ-jgr"/>
                 <outlet property="timeControlWrapperView" destination="gga-kw-mqs" id="NdO-Li-2bE"/>
                 <outlet property="visualControlBackgroundImageView" destination="2mC-M8-6Y5" id="GSv-8k-VMz"/>
-                <outlet property="visualControlLeadingConstraint" destination="3yd-WU-6CA" id="E1u-UR-Gkq"/>
                 <outlet property="visualControlTopConstraint" destination="UxV-ZI-U3f" id="Gel-Vm-2pA"/>
-                <outlet property="visualControlTrailingConstraint" destination="j8F-lV-H4U" id="R2s-J7-vNF"/>
                 <outlet property="visualControlWrapperView" destination="HPi-eF-W69" id="kKi-Jd-l8j"/>
             </connections>
             <point key="canvasLocation" x="137.68115942028987" y="187.16517857142856"/>

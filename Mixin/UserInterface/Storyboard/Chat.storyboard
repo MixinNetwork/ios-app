@@ -1337,7 +1337,7 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="320" id="EAz-Gk-l5I"/>
                                     <constraint firstItem="xdR-GZ-4YM" firstAttribute="centerX" secondItem="rMR-wD-1I3" secondAttribute="centerX" id="Xvp-g3-B7i"/>
-                                    <constraint firstAttribute="width" constant="320" id="b5f-yB-3wl"/>
+                                    <constraint firstAttribute="width" secondItem="rMR-wD-1I3" secondAttribute="height" multiplier="1:1" id="kLd-eR-jPi"/>
                                     <constraint firstItem="xdR-GZ-4YM" firstAttribute="centerY" secondItem="rMR-wD-1I3" secondAttribute="centerY" id="xYx-qM-qYJ"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
@@ -1347,7 +1347,7 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="akM-tx-rFc">
-                                <rect key="frame" x="0.0" y="434" width="375" height="104"/>
+                                <rect key="frame" x="0.0" y="434" width="375" height="112"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sticker" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dri-wQ-cBu">
                                         <rect key="frame" x="20" y="3.5" width="53.5" height="19.5"/>
@@ -1377,23 +1377,23 @@
                                         </connections>
                                     </button>
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="ZTT-74-VWa">
-                                        <rect key="frame" x="0.0" y="32" width="375" height="72"/>
+                                        <rect key="frame" x="0.0" y="32" width="375" height="80"/>
                                         <color key="backgroundColor" name="background"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="72" id="GnQ-Cp-cjs"/>
+                                            <constraint firstAttribute="height" constant="80" id="GnQ-Cp-cjs"/>
                                         </constraints>
-                                        <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="4" minimumInteritemSpacing="0.0" id="1jw-9Z-Jmr">
-                                            <size key="itemSize" width="72" height="72"/>
+                                        <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="8" minimumInteritemSpacing="0.0" id="1jw-9Z-Jmr">
+                                            <size key="itemSize" width="80" height="80"/>
                                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                             <inset key="sectionInset" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
                                         </collectionViewFlowLayout>
                                         <cells>
-                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="sticker_preview" id="Emf-PX-Y18" customClass="StickerPreviewCell" customModule="Mixin" customModuleProvider="target">
-                                                <rect key="frame" x="20" y="0.0" width="72" height="72"/>
+                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="sticker_item_preview" id="Emf-PX-Y18" customClass="StickerPreviewItemCell" customModule="Mixin" customModuleProvider="target">
+                                                <rect key="frame" x="20" y="0.0" width="80" height="80"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="FjI-Ue-nyP">
-                                                    <rect key="frame" x="0.0" y="0.0" width="72" height="72"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </collectionViewCellContentView>
                                             </collectionViewCell>
@@ -1407,7 +1407,7 @@
                                 <color key="backgroundColor" name="background"/>
                                 <constraints>
                                     <constraint firstItem="dri-wQ-cBu" firstAttribute="leading" secondItem="akM-tx-rFc" secondAttribute="leading" constant="20" id="31C-Mp-9T2"/>
-                                    <constraint firstAttribute="height" constant="104" id="AMu-rr-WcD"/>
+                                    <constraint firstAttribute="height" constant="112" id="AMu-rr-WcD"/>
                                     <constraint firstItem="mQs-zd-oqr" firstAttribute="top" secondItem="akM-tx-rFc" secondAttribute="top" id="CeM-ID-WSy"/>
                                     <constraint firstAttribute="trailing" secondItem="ZTT-74-VWa" secondAttribute="trailing" id="EKX-2p-c4x"/>
                                     <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="dri-wQ-cBu" secondAttribute="trailing" constant="90" id="J0Q-xd-IzQ"/>
@@ -2841,7 +2841,7 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_input">
-            <color red="0.96100002527236938" green="0.96899998188018799" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_secondary">
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -2856,7 +2856,7 @@
             <color red="0.89803921568627454" green="0.90588235294117647" blue="0.92156862745098034" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
             <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

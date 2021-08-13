@@ -27,6 +27,7 @@ class StickerPreviewViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        stickerPreviewViewHeightConstraint.constant = ScreenWidth.current <= .short ? 280 : 320
         updatePreferredContentSizeHeight()
         stickerView.load(message: message)
         stickerView.startAnimating()
@@ -83,7 +84,7 @@ extension StickerPreviewViewController {
         let contentHeight = stickerPreviewViewTopConstraint.constant
             + stickerPreviewViewHeightConstraint.constant
             + window.safeAreaInsets.bottom
-            + ((stickerStoreItem != nil && !stickerStoreItem!.stickers.isEmpty) ? 160 : 90)
+            + ((stickerStoreItem != nil && !stickerStoreItem!.stickers.isEmpty) ? 168 : 90)
         return min(maxHeight, contentHeight)
     }
     
@@ -93,11 +94,15 @@ extension StickerPreviewViewController {
             self.activityIndicatorView.stopAnimating()
             if let item = item {
                 self.stickerStoreItem = item
+                self.titleLabel.text = item.album.name
                 self.updateStickerActionButton(isAdded: item.isAdded)
                 self.stickersContentView.isHidden = false
                 self.collectionView.isHidden = false
                 self.collectionView.reloadData()
                 self.updatePreferredContentSizeHeight()
+                if let index = item.stickers.firstIndex(where: { $0.stickerId == stickerId }) {
+                    self.collectionView.selectItem(at: IndexPath(item: index, section: 0), animated: false, scrollPosition: .centeredHorizontally)
+                }
             } else {
                 self.stickersContentView.isHidden = true
                 self.collectionView.isHidden = true
@@ -129,7 +134,7 @@ extension StickerPreviewViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.sticker_preview, for: indexPath)!
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.sticker_item_preview, for: indexPath)!
         if let stickerStoreItem = stickerStoreItem, indexPath.row < stickerStoreItem.stickers.count {
             cell.stickerView.load(sticker: stickerStoreItem.stickers[indexPath.item])
         }
@@ -141,17 +146,29 @@ extension StickerPreviewViewController: UICollectionViewDataSource {
 extension StickerPreviewViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        guard let cell = cell as? StickerPreviewCell else {
+        guard let cell = cell as? StickerPreviewItemCell else {
             return
         }
         cell.stickerView.startAnimating()
+        guard let selectedIndexPaths = collectionView.indexPathsForSelectedItems, selectedIndexPaths.contains(indexPath) else {
+            return
+        }
+        cell.isSelected = true
     }
     
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        guard let cell = cell as? StickerPreviewCell else {
+        guard let cell = cell as? StickerPreviewItemCell else {
             return
         }
         cell.stickerView.stopAnimating()
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let stickerStoreItem = stickerStoreItem, indexPath.item < stickerStoreItem.stickers.count else {
+            return
+        }
+        stickerView.load(sticker: stickerStoreItem.stickers[indexPath.item])
+        collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
     }
     
 }

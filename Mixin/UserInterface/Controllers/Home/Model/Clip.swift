@@ -205,29 +205,20 @@ extension Clip {
         guard let thumbnailCachesURL = Self.thumbnailCachesURL else {
             return
         }
-        
-        var isDirectory = ObjCBool(false)
-        var isExist = fileManager.fileExists(atPath: thumbnailCachesURL.path, isDirectory: &isDirectory)
-        if isExist && !isDirectory.boolValue {
-            try? fileManager.removeItem(at: thumbnailCachesURL)
-        } else if !isExist {
-            try? fileManager.createDirectory(at: thumbnailCachesURL,
-                                             withIntermediateDirectories: true,
-                                             attributes: nil)
-        }
-        isExist = fileManager.fileExists(atPath: thumbnailCachesURL.path, isDirectory: &isDirectory)
-        guard isExist && isDirectory.boolValue else {
+        do {
+            try fileManager.createDirectoryIfNotExists(at: thumbnailCachesURL)
+            
+            guard let url = self.thumbnailCacheURL else {
+                return
+            }
+            if let thumbnail = thumbnail {
+                let data = thumbnail.jpegData(compressionQuality: JPEGCompressionQuality.low)
+                try? data?.write(to: url)
+            } else {
+                try? fileManager.removeItem(at: url)
+            }
+        } catch {
             return
-        }
-        
-        guard let url = self.thumbnailCacheURL else {
-            return
-        }
-        if let thumbnail = thumbnail {
-            let data = thumbnail.jpegData(compressionQuality: JPEGCompressionQuality.low)
-            try? data?.write(to: url)
-        } else {
-            try? fileManager.removeItem(at: url)
         }
     }
     

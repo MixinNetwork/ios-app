@@ -20,7 +20,7 @@ class CacheableAssetFileManager {
     private let fileManager = FileManager.default
     
     private var cacheURL: URL? {
-        FileManager.default
+        fileManager
             .urls(for: .cachesDirectory, in: .userDomainMask).first?
             .appendingPathComponent("CacheableAssets", isDirectory: true)
     }
@@ -45,39 +45,15 @@ class CacheableAssetFileManager {
         guard let cacheURL = cacheURL else {
             throw Error.inaccessibleCacheFolder
         }
-        try createFileIfNotExists(at: cacheURL, isDirectory: true)
+        try fileManager.createDirectoryIfNotExists(at: cacheURL)
         
         let assetURL = cacheURL.appendingPathComponent(id, isDirectory: false)
-        let isAssetFileNewlyCreated = try createFileIfNotExists(at: assetURL, isDirectory: false)
+        let isAssetFileNewlyCreated = try fileManager.createFileIfNotExists(at: assetURL)
         let descriptionURL = cacheURL.appendingPathComponent(id + ".cafd", isDirectory: false)
         
         return FilePack(assetURL: assetURL,
                         isAssetFileNewlyCreated: isAssetFileNewlyCreated,
                         fileDescriptionURL: descriptionURL)
-    }
-    
-    // Returns true if the file is newly created, false if the file already exists
-    @discardableResult
-    private func createFileIfNotExists(at url: URL, isDirectory shouldBeDirectory: Bool) throws -> Bool {
-        var isDirectory = ObjCBool(false)
-        
-        if fileManager.fileExists(atPath: url.path, isDirectory: &isDirectory) {
-            if isDirectory.boolValue == shouldBeDirectory {
-                return false
-            } else {
-                try fileManager.removeItem(at: url)
-            }
-        }
-        
-        if shouldBeDirectory {
-            try fileManager.createDirectory(at: url,
-                                            withIntermediateDirectories: true,
-                                            attributes: nil)
-            return true
-        } else {
-            try Data().write(to: url)
-            return true
-        }
     }
     
 }

@@ -409,12 +409,12 @@ class UrlWindow {
             return true
         }
         guard let recipientId = query["recipient"], let assetId = query["asset"], let amount = query["amount"] else {
-            Logger.write(errorMsg: "[UrlWindow][CheckPayUrl]\(url)")
+            Log.general.error(category: "PayURL", message: "Invalid URL: \(url)")
             showAutoHiddenHud(style: .error, text: R.string.localizable.url_invalid_payment())
             return true
         }
         guard !recipientId.isEmpty && UUID(uuidString: recipientId) != nil && !assetId.isEmpty && UUID(uuidString: assetId) != nil && !amount.isEmpty && amount.isGenericNumber else {
-            Logger.write(errorMsg: "[UrlWindow][CheckPayUrl]\(url)")
+            Log.general.error(category: "PayURL", message: "Invalid URL: \(url)")
             showAutoHiddenHud(style: .error, text: R.string.localizable.url_invalid_payment())
             return true
         }

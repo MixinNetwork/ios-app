@@ -166,7 +166,7 @@ extension MixinAPI {
                     if let requestId = response.request?.allHTTPHeaderFields?["X-Request-Id"], !requestId.isEmpty {
                         let responseRequestId = response.response?.allHeaderFields[caseInsensitive: "x-request-id"] ?? ""
                         if requestId != responseRequestId {
-                            Logger.write(errorMsg: "[MixinAPI][\(response.request?.url?.path ?? "")][X-Request-Id][\(requestId)]...response...\(response.response?.allHeaderFields)")
+                            Log.general.error(category: "MixinAPI", message: "Mismatched request id. Request path: \(response.request?.url?.path), id: \(requestId), responded header: \(response.response?.allHeaderFields)")
                             completion(.failure(.internalServerError))
                             return
                         }

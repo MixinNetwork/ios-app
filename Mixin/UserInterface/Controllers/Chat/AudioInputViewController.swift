@@ -205,9 +205,9 @@ extension AudioInputViewController: OggOpusRecorderDelegate {
         layoutForStopping()
         stopRedDotAnimation()
         if reason != .userInitiated {
+            Log.general.info(category: "AudioInput", message: "Recording is cancelled with \(reason.rawValue)")
             var userInfo = userInfo ?? [:]
             userInfo["reason"] = reason.rawValue
-            Logger.write(errorMsg: "[OggOpusRecorderDidCancelRecording]...reason:\(reason.rawValue)")
             reporter.report(event: .cancelAudioRecording, userInfo: userInfo)
         }
     }
@@ -234,7 +234,7 @@ extension AudioInputViewController: OggOpusRecorderDelegate {
     }
     
     func oggOpusRecorderDidDetectAudioSessionInterruptionEnd(_ recorder: OggOpusRecorder) {
-        Logger.write(errorMsg: "[OggOpusRecorderDidCancelRecording]...detect interruption end")
+        Log.general.info(category: "AudioInput", message: "Recorder detects an interruption end")
     }
     
 }

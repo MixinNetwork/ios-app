@@ -230,7 +230,7 @@ extension AppDelegate {
     }
     
     @objc func cleanForLogout() {
-        WKWebsiteDataStore.default().removeAllCookiesAndLocalStorage()
+        WKWebsiteDataStore.default().removeAuthenticationRelatedData()
         BackupJobQueue.shared.cancelAllOperations()
         
         UIApplication.shared.setShortcutItemsEnabled(false)

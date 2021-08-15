@@ -128,7 +128,7 @@ extension CaptchaManager {
             return
         }
         webView.load(URLRequest(url: .blank))
-        WKWebsiteDataStore.default().removeAllCookiesAndLocalStorage()
+        WKWebsiteDataStore.default().removeAuthenticationRelatedData()
         
         guard let htmlFilePath = R.file.captchaHtml.path(),
               let htmlString = try? String(contentsOfFile: htmlFilePath),

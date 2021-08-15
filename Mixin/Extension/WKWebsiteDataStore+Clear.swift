@@ -3,8 +3,17 @@ import WebKit
 
 extension WKWebsiteDataStore {
     
-    func removeAllCookiesAndLocalStorage() {
-        removeData(ofTypes: [WKWebsiteDataTypeCookies, WKWebsiteDataTypeLocalStorage], modifiedSince: .distantPast, completionHandler: {})
+    func removeAuthenticationRelatedData() {
+        let types: Set<String> = [
+            WKWebsiteDataTypeOfflineWebApplicationCache,
+            WKWebsiteDataTypeCookies,
+            WKWebsiteDataTypeSessionStorage,
+            WKWebsiteDataTypeLocalStorage,
+            WKWebsiteDataTypeWebSQLDatabases,
+            WKWebsiteDataTypeIndexedDBDatabases,
+            WKWebsiteDataTypeServiceWorkerRegistrations,
+        ]
+        removeData(ofTypes: types, modifiedSince: .distantPast, completionHandler: {})
     }
     
 }

@@ -50,7 +50,7 @@ class SignalLoadingViewController: UIViewController {
             case .success:
                 AppGroupUserDefaults.Crypto.isPrekeyLoaded = true
                 DispatchQueue.main.async {
-                    WKWebsiteDataStore.default().removeAllCookiesAndLocalStorage()
+                    WKWebsiteDataStore.default().removeAuthenticationRelatedData()
                 }
                 return
             case .failure(.unauthorized):

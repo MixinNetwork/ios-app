@@ -9,18 +9,6 @@ public enum Logger {
     private static let errorLog = "error"
     private static let databaseLog = "database"
     
-    public static func writeDatabase(error: Error, extra: String = "", newSection: Bool = false) {
-        queue.async {
-            #if DEBUG
-            print("===error:\(error)...\n\(extra)")
-            #endif
-            writeLog(filename: databaseLog, log: "\n------------------------------------\n[Error]" + error.localizedDescription, newSection: extra.isEmpty && newSection)
-            if !extra.isEmpty {
-                writeLog(filename: databaseLog, log: extra, newSection: newSection)
-            }
-        }
-    }
-    
     public static func writeDatabase(log: String, newSection: Bool = false) {
         queue.async {
             #if DEBUG

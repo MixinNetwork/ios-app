@@ -75,7 +75,7 @@ class InitializeFTSJob: BaseJob {
                     }
                 }
             } catch {
-                Logger.writeDatabase(error: error)
+                Log.database.error(category: "FTS", message: "FTS initialization failed: \(error)")
                 reporter.report(error: error)
                 return
             }

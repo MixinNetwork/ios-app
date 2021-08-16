@@ -21,7 +21,7 @@ extension ConversationDAO {
                 }
                 return try String.fetchAll(db, sql: sql, arguments: ["\"\(keyword)\""], adapter: nil)
             } catch {
-                Logger.writeDatabase(error: error)
+                Log.database.error(category: "ConversationDAO+Search", message: "Failed to fetch cids: \(error)")
                 return []
             }
         }
@@ -119,7 +119,7 @@ extension ConversationDAO {
         } catch DatabaseError.SQLITE_INTERRUPT {
             return []
         } catch {
-            Logger.writeDatabase(error: error)
+            Log.database.error(category: "ConversationDAO+Search", message: "Failed to fetch items: \(error)")
             return []
         }
     }

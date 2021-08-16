@@ -243,7 +243,7 @@ extension BackupViewController {
                     hud.set(style: .error, text: R.string.localizable.error_operation_failed())
                     hud.scheduleAutoHidden()
                 }
-                Logger.writeDatabase(error: error)
+                Log.database.error(category: "BackupViewController", message: "Backup failed: \(error)")
             }
         }
     }

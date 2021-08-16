@@ -132,7 +132,7 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (7.5.0):
     - GoogleUtilities/Logger
-  - GRDB.swift/SQLCipher (5.8.0):
+  - GRDB.swift/SQLCipher (5.9.0):
     - SQLCipher (>= 3.4.0)
   - GzipSwift (5.1.1)
   - libsignal-protocol-c (2.3.2)
@@ -191,7 +191,7 @@ PODS:
     - SDWebImage/Core (~> 5.10)
     - YYImage/Core
   - SnapKit (5.0.1)
-  - SocketRocket (0.5.1)
+  - SocketRocket (0.6.0)
   - SQLCipher (4.4.3):
     - SQLCipher/standard (= 4.4.3)
   - SQLCipher/common (4.4.3)
@@ -302,7 +302,7 @@ SPEC CHECKSUMS:
   GoogleAppMeasurement: 8d10c1c470fcb0e5143ed74fddd164f0a0384800
   GoogleDataTransport: 85fd18ff3019bb85d3f2c551d04c481dedf71fc9
   GoogleUtilities: eea970f4a389963963bffe8d8fabe43540678b9c
-  GRDB.swift: 9b9beec114435e1d852ad68c136cff4c71134627
+  GRDB.swift: ff730d72aac9ce0123138d77cc7e0331b3c8b148
   GzipSwift: 893f3e48e597a1a4f62fafcb6514220fcf8287fa
   libsignal-protocol-c: 2fecccb06cc14bdbd28e76a656c0c8c648a482a0
   lottie-ios: 0e760146411886f6104050c932a8e6964853267f
@@ -317,11 +317,11 @@ SPEC CHECKSUMS:
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageYYPlugin: 91d664f814860c27bd4298b32d961f05d342a041
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
-  SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
+  SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   SQLCipher: 155ffeafc9ac102e5c9b68e3e9a1297a98a27096
   YYImage: 6db68da66f20d9f169ceb94dfb9947c3867b9665
   Zip: 414f59909701fda9a84ab774ebe0f5449b1082cc
 
 PODFILE CHECKSUM: c6d7f3b3101e6a62fbe5d8991314e7221178350b
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.10.2

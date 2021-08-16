@@ -217,7 +217,7 @@ extension AudioInputViewController: OggOpusRecorderDelegate {
         layoutForStopping()
         stopRedDotAnimation()
         reporter.report(error: error)
-        Logger.write(error: error)
+        Log.general.error(category: "AudioInput", message: "Recording failed with: \(error)")
     }
     
     func oggOpusRecorder(_ recorder: OggOpusRecorder, didFinishRecordingWithMetadata metadata: AudioMetadata) {

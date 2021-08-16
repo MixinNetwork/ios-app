@@ -84,7 +84,7 @@ class RestoreViewController: UIViewController {
                     AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
                 }
             } catch {
-                Logger.write(error: error, extra: "[iCloud][RestoreViewController][\(cloudURL.suffix(base: backupDir))]")
+                Log.general.error(category: "RestoreViewController", message: "Restoration at: \(cloudURL.suffix(base: backupDir)), failed for: \(error)")
                 self.restoreFailed(error: error)
             }
         }

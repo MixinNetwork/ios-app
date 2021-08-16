@@ -183,13 +183,14 @@ extension MixinAPI {
                             completion(.success(try JSONDecoder.default.decode(Response.self, from: data)))
                         }
                     } catch {
-                        Logger.write(error: error, extra: "data decode failed.")
+                        Log.general.error(category: "MixinAPI", message: "Failed to decode response: \(error)" )
                         reporter.report(error: error)
                         completion(.failure(.invalidJSON(error)))
                     }
                 case let .failure(error):
-                    let requestId = response.request?.allHTTPHeaderFields?["X-Request-Id"] ?? ""
-                    Logger.write(error: error, extra: "[\(response.request?.url?.path ?? "")][X-Request-Id]\(requestId)...")
+                    let path = response.request?.url?.path ?? "(null)"
+                    let requestId = response.request?.allHTTPHeaderFields?["X-Request-Id"] ?? "(null)"
+                    Log.general.error(category: "MixinAPI", message: "Request with path: \(path), id: \(requestId), failed with error: \(error)" )
                     if shouldToggleServer(for: error) {
                         MixinHost.toggle(currentHttpHost: host)
                     }

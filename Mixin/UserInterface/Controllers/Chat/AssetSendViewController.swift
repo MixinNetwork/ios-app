@@ -301,7 +301,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
                             fallthrough
                         }
                     } catch {
-                        Logger.write(error: error)
+                        Log.general.error(category: "AssetSendViewController", message: "Unable to write the file: \(error)")
                         fallthrough
                     }
                     message.thumbImage = image.base64Thumbnail()

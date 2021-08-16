@@ -255,7 +255,7 @@ extension WebRTCClient {
                 }
                 completion(iceServers)
             case let .failure(error):
-                Logger.write(error: error)
+                Log.call.error(category: "WebRTCClient", message: "ICE Server fetching fails: \(error)")
                 self?.queue.asyncAfter(deadline: .now() + 2) {
                     guard let self = self, !self.isClosed else {
                         return

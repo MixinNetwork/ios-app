@@ -147,7 +147,7 @@ class CallViewController: ResizablePopupViewController {
             membersCollectionLayout.minimumLineSpacing = 0
             let horizontalInset = floor((view.bounds.width - itemSize.width) / 2)
             membersCollectionLayout.sectionInset = UIEdgeInsets(top: 88, left: horizontalInset, bottom: 0, right: horizontalInset)
-        } else if call is GroupCall {
+        } else {
             var horizontalInset = view.bounds.width - numberOfGroupCallMembersPerRow * CallMemberCell.Layout.normal.avatarWrapperWidth
             horizontalInset /= 2 + 2 * numberOfGroupCallMembersPerRow
             horizontalInset = floor(horizontalInset)

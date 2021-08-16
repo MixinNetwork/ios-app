@@ -472,13 +472,13 @@ public class SendMessageService: MixinService {
                         if IdentityDAO.shared.getLocalIdentity() == nil {
                             userInfo["signalError"] = "local identity nil"
                             userInfo["identityCount"] = "\(IdentityDAO.shared.getCount())"
-                            Logger.write(error: error, userInfo: userInfo)
+                            Log.general.error(category: "SendMessageService", message: "Job execution failed: \(err)", userInfo: userInfo)
                             reporter.report(error: MixinServicesError.sendMessage(userInfo))
                             LoginManager.shared.logout(from: "SendMessengerError")
                             return false
                         }
                     }
-                    Logger.write(error: error, userInfo: userInfo)
+                    Log.general.error(category: "SendMessageService", message: "Job execution failed: \(error)", userInfo: userInfo)
                     reporter.report(error: MixinServicesError.sendMessage(userInfo))
                 }
                 

@@ -8,20 +8,7 @@ public enum Logger {
     private static let callLog = "call"
     private static let errorLog = "error"
     private static let databaseLog = "database"
-
-    public static func write(error: Error, userInfo: [String: Any]) {
-        queue.async {
-            #if DEBUG
-            print("===error:\(error)...\n\(userInfo)")
-            #endif
-
-            writeLog(filename: errorLog, log: "\n------------------------------------\n[Error]" + String(describing: error))
-            for (key, value) in userInfo {
-                writeLog(filename: errorLog, log: "[\(key)]:\(value)", appendTime: false)
-            }
-        }
-    }
-
+    
     public static func write(error: Error, extra: String = "") {
         queue.async {
             #if DEBUG

@@ -842,6 +842,8 @@ class ConversationViewController: UIViewController {
             } else if message.category.hasSuffix("_TRANSCRIPT") {
                 let vc = TranscriptPreviewViewController(transcriptMessage: message)
                 vc.presentAsChild(of: self, completion: nil)
+                //let vc = StaticMessagesViewController(staticMessageId: message)
+                //vc.presentAsChild(of: self)
             } else {
                 conversationInputViewController.dismiss()
             }

@@ -1,5 +1,4 @@
 import UIKit
-import PhoneNumberKit
 import MixinServices
 
 class MobileNumberViewController: ContinueButtonViewController {
@@ -10,7 +9,7 @@ class MobileNumberViewController: ContinueButtonViewController {
     @IBOutlet weak var callingCodeButton: UIButton!
     
     private let invertedPhoneNumberCharacterSet = CharacterSet(charactersIn: "0123456789+-() ").inverted
-    private let phoneNumberKit = PhoneNumberKit()
+    private let phoneNumberValidator = PhoneNumberValidator()
     
     var mobileNumber: String {
         return textField.text?.components(separatedBy: invertedPhoneNumberCharacterSet).joined() ?? ""
@@ -61,7 +60,7 @@ extension MobileNumberViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let newText = ((textField.text ?? "") as NSString).replacingCharacters(in: range, with: string)
         let numericsInText = newText.digits()
-        if newText != numericsInText, let parsedPhoneNumber = try? phoneNumberKit.parse(newText), let country = CountryCodeLibrary.shared.countries.first(where: { $0.callingCode == String(parsedPhoneNumber.countryCode) }) {
+        if newText != numericsInText, let parsedPhoneNumber = try? phoneNumberValidator.phoneNumberKit.parse(newText), let country = CountryCodeLibrary.shared.countries.first(where: { $0.callingCode == String(parsedPhoneNumber.countryCode) }) {
             self.country = country
             textField.text = parsedPhoneNumber.adjustedNationalNumber()
             textField.selectedTextRange = textField.textRange(from: textField.endOfDocument, to: textField.endOfDocument)
@@ -100,8 +99,8 @@ extension MobileNumberViewController {
     }
     
     private func updateContinueButtonIsHidden() {
-        let numberIsLegal = (try? phoneNumberKit.parse(fullNumber(withSpacing: false))) != nil
-        continueButton.isHidden = !numberIsLegal
+        let isNumberValid = phoneNumberValidator.isValid(callingCode: country.callingCode, number: mobileNumber)
+        continueButton.isHidden = !isNumberValid
     }
     
 }

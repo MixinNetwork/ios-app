@@ -217,7 +217,7 @@ DEPENDENCIES:
   - lottie-ios (from `https://github.com/airbnb/lottie-ios.git`, branch `lottie/objectiveC`)
   - MixinServices (from `./MixinServices`)
   - MixinServices/Tests (from `./MixinServices`)
-  - PhoneNumberKit
+  - PhoneNumberKit (from `https://github.com/MixinNetwork/PhoneNumberKit.git`)
   - R.swift
   - RSKImageCropper
   - SnapKit
@@ -247,7 +247,6 @@ SPEC REPOS:
     - GRDB.swift
     - GzipSwift
     - nanopb
-    - PhoneNumberKit
     - PromisesObjC
     - Protobuf
     - R.swift
@@ -268,6 +267,8 @@ EXTERNAL SOURCES:
     :git: https://github.com/airbnb/lottie-ios.git
   MixinServices:
     :path: "./MixinServices"
+  PhoneNumberKit:
+    :git: https://github.com/MixinNetwork/PhoneNumberKit.git
   YYImage:
     :git: https://github.com/wuyuehyang/YYImage.git
 
@@ -278,6 +279,9 @@ CHECKOUT OPTIONS:
   lottie-ios:
     :commit: 44bda1253360b7ea5698f058f8483e42e26e65bd
     :git: https://github.com/airbnb/lottie-ios.git
+  PhoneNumberKit:
+    :commit: 33fe0be8838850564343e1d5ae8e9685461ddae4
+    :git: https://github.com/MixinNetwork/PhoneNumberKit.git
   YYImage:
     :commit: 7acf346c746f6685f46c2fbc3edb1a05a12be827
     :git: https://github.com/wuyuehyang/YYImage.git
@@ -322,6 +326,6 @@ SPEC CHECKSUMS:
   YYImage: 6db68da66f20d9f169ceb94dfb9947c3867b9665
   Zip: 414f59909701fda9a84ab774ebe0f5449b1082cc
 
-PODFILE CHECKSUM: c6d7f3b3101e6a62fbe5d8991314e7221178350b
+PODFILE CHECKSUM: bbfd01b45711669bce2e94cde99db211655f024d
 
 COCOAPODS: 1.10.2

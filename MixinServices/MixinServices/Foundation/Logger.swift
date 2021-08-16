@@ -9,15 +9,6 @@ public enum Logger {
     private static let errorLog = "error"
     private static let databaseLog = "database"
     
-    public static func writeDatabase(log: String, newSection: Bool = false) {
-        queue.async {
-            #if DEBUG
-            print("===\(log)...\(Date())")
-            #endif
-            writeLog(filename: databaseLog, log: log, newSection: newSection)
-        }
-    }
-    
     public static func write(log: String, newSection: Bool = false) {
         queue.async {
             if log.hasPrefix("[Call]") {

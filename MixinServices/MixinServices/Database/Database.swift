@@ -14,8 +14,12 @@ open class Database {
                     return
                 }
                 if duration > 1 {
-                    Logger.writeDatabase(log: "[DB][Performance]SQL: \(statement.sql)")
-                    Logger.writeDatabase(log: "[DB][Performance]Total cost \(duration)s", newSection: true)
+                    let message = """
+                        Duration: \(duration)s, SQL:
+                        \(statement.sql)
+                        
+                    """
+                    Log.database.info(category: "Trace", message: message)
                 }
             }
         }
@@ -39,7 +43,7 @@ open class Database {
                 }
             }
             reporter.report(error: Error(code: code.rawValue, message: message))
-            Logger.writeDatabase(log: "[DB] Error: \(code), \(message)", newSection: true)
+            Log.database.error(category: "Error", message: "code: \(code), message: \(message)\n")
         }
         return {}
     }()

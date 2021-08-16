@@ -34,8 +34,8 @@ class InitializeFTSJob: BaseJob {
             return
         }
         let messageCount = UserDatabase.current.count(in: Message.self)
-        Logger.writeDatabase(log: "[FTS] Database file size \(AppGroupContainer.userDatabaseUrl.fileSize.sizeRepresentation())")
-        Logger.writeDatabase(log: "[FTS] Make fts content with \(messageCount) messages")
+        Log.database.info(category: "FTS", message: "Database file size \(AppGroupContainer.userDatabaseUrl.fileSize.sizeRepresentation())")
+        Log.database.info(category: "FTS", message: "Make fts content with \(messageCount) messages")
         
         var didInitializedAllMessages = false
         var numberOfMessagesProcessed = 0
@@ -59,7 +59,7 @@ class InitializeFTSJob: BaseJob {
                             lastInitializedRowID = rowID
                         } else {
                             try db.execute(sql: "DELETE FROM \(Message.ftsTableName) WHERE id MATCH ?", arguments: ["\"\(token)\""])
-                            Logger.writeDatabase(log: "[FTS] A mismatched record is detected and removed")
+                            Log.database.info(category: "FTS", message: "A mismatched record is detected and removed")
                             return
                         }
                     } else {
@@ -68,7 +68,7 @@ class InitializeFTSJob: BaseJob {
                     try db.execute(sql: insertionSQL, arguments: [lastInitializedRowID])
                     let numberOfChanges = db.changesCount
                     numberOfMessagesProcessed += numberOfChanges
-                    Logger.writeDatabase(log: "[FTS] \(numberOfChanges) messages are wrote into FTS table")
+                    Log.database.info(category: "FTS", message: "\(numberOfChanges) messages are wrote into FTS table")
                     didInitializedAllMessages = numberOfChanges < Self.insertionLimit
                     if didInitializedAllMessages {
                         AppGroupUserDefaults.Database.isFTSInitialized = true
@@ -83,7 +83,7 @@ class InitializeFTSJob: BaseJob {
         }
         
         let interval = -startDate.timeIntervalSinceNow
-        Logger.writeDatabase(log: "[FTS] Initialized \(numberOfMessagesProcessed) messages in \(interval)s")
+        Log.database.info(category: "FTS", message: "Initialized \(numberOfMessagesProcessed) messages in \(interval)s")
     }
     
 }

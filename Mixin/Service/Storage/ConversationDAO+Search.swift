@@ -43,7 +43,7 @@ extension ConversationDAO {
         snapshot.read { (db) -> Void in
             for cid in cids {
                 if cid.isEmpty {
-                    Logger.writeDatabase(log: "[FTS] Got empty cid")
+                    Log.database.error(category: "FTS", message: "Got empty cid")
                 }
                 let arguments = ["keyword": "(content : \"\(keyword)\") AND (conversation_id : \"\(uuidTokenString(uuidString: cid))\")"]
                 let resultsInConversation = searchResults(db, with: sql, arguments: arguments, keyword: keyword)

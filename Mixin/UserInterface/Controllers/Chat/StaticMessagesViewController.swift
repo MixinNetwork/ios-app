@@ -104,7 +104,7 @@ class StaticMessagesViewController: UIViewController {
 
 extension StaticMessagesViewController {
     
-    func reloadData(_ items: [MessageItem]) {
+    func reloadData(items: [MessageItem], onMainQueue completion: (() -> Void)? = nil) {
         for item in items where item.category == MessageCategory.SIGNAL_STICKER.rawValue {
             if item.stickerId == nil {
                 item.category = MessageCategory.SIGNAL_TEXT.rawValue
@@ -114,6 +114,7 @@ extension StaticMessagesViewController {
         let layoutWidth = AppDelegate.current.mainWindow.bounds.width
         let (dates, viewModels) = factory.viewModels(with: items, fits: layoutWidth)
         DispatchQueue.main.async {
+            completion?()
             self.dates = dates
             self.viewModels = viewModels
             self.tableView.reloadData()
@@ -170,10 +171,14 @@ extension StaticMessagesViewController {
                 return nil
             }
         }()
-        if let indexPath = tappedIndexPath, let cell = tableView.cellForRow(at: indexPath) as? MessageCell, cell.contentFrame.contains(recognizer.location(in: cell)), let viewModel = tappedViewModel {
+        if let indexPath = tappedIndexPath,
+           let viewModel = tappedViewModel,
+           let cell = tableView.cellForRow(at: indexPath) as? MessageCell, cell.contentFrame.contains(recognizer.location(in: cell))
+        {
             let message = viewModel.message
             let isImageOrVideo = message.category.hasSuffix("_IMAGE") || message.category.hasSuffix("_VIDEO")
             let mediaStatusIsReady = message.mediaStatus == MediaStatus.DONE.rawValue || message.mediaStatus == MediaStatus.READ.rawValue
+            
             if let quoteMessageId = viewModel.message.quoteMessageId,
                !quoteMessageId.isEmpty,
                let quote = cell.quotedMessageViewIfLoaded,
@@ -275,7 +280,7 @@ extension StaticMessagesViewController {
             }
         }
     }
-    
+    //TODO: ‼️ fix this, recall message
     @objc private func conversationDidChange(_ sender: Notification) {
         guard
             let change = sender.object as? ConversationChange,

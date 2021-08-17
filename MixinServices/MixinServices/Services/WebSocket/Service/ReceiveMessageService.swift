@@ -217,6 +217,7 @@ public class ReceiveMessageService: MixinService {
             ReceiveMessageService.shared.processAppCard(data: data)
             ReceiveMessageService.shared.processCallMessage(data: data)
             ReceiveMessageService.shared.processRecallMessage(data: data)
+            ReceiveMessageService.shared.processPinMessage(data: data)
         } else {
             ReceiveMessageService.shared.processUnknownMessage(data: data)
             ReceiveMessageService.shared.updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
@@ -320,6 +321,27 @@ public class ReceiveMessageService: MixinService {
         }
     }
 
+    private func processPinMessage(data: BlazeMessageData) {
+        guard data.category == MessageCategory.MESSAGE_PIN.rawValue else {
+            return
+        }
+        updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
+        if let base64Data = Data(base64Encoded: data.data),
+           let plainData = (try? JSONDecoder.default.decode(TransferPinData.self, from: base64Data)),
+           let action = TransferPinDataAction(rawValue: plainData.action),
+           let messageId = plainData.messageIds.first,
+           let message = MessageDAO.shared.getFullMessage(messageId: messageId)
+        {
+            switch action {
+            case .pin:
+                let pinMessage = PinMessage(messageId: messageId, conversationId: message.conversationId, createdAt: data.createdAt)
+                PinMessageDAO.shared.insertMessage(pinMessage)
+            case .unpin:
+                PinMessageDAO.shared.deleteMessage(id: messageId)
+            }
+        }
+    }
+    
     private func processRecallMessage(data: BlazeMessageData) {
         guard data.category == MessageCategory.MESSAGE_RECALL.rawValue else {
             return

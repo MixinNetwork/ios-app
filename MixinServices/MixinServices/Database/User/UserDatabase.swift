@@ -398,6 +398,19 @@ public final class UserDatabase: Database {
             try db.execute(sql: sql)
         }
         
+        migrator.registerMigration("pin") { db in
+            let sql = """
+                CREATE TABLE IF NOT EXISTS pin_messages(
+                    message_id TEXT NOT NULL,
+                    conversation_id TEXT NOT NULL,
+                    created_at TEXT NOT NULL,
+                    PRIMARY KEY (message_id),
+                    FOREIGN KEY (conversation_id) REFERENCES conversations(conversation_id) ON UPDATE NO ACTION ON DELETE CASCADE,
+                    FOREIGN KEY (message_id) REFERENCES messages(id) ON UPDATE NO ACTION ON DELETE CASCADE
+                )
+            """
+        }
+        
         /* Remaining works:
          try db.execute(sql: "DROP INDEX IF EXISTS messages_unread_indexs")
          try db.execute(sql: "DROP INDEX IF EXISTS messages_user_indexs")

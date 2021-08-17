@@ -20,6 +20,23 @@ public class SendMessageService: MixinService {
     private let httpDispatchQueue = DispatchQueue(label: "one.mixin.services.queue.send.http.messages")
     private var httpProcessing = false
     
+    public func pinMessage(item: MessageItem, action: TransferPinDataAction) {
+        let blazeMessage = BlazeMessage(pinMessageId: item.messageId, conversationId: item.conversationId, action: action)
+        let job = Job(jobId: UUID().uuidString.lowercased(), action: JobAction.SEND_MESSAGE, conversationId: item.conversationId, blazeMessage: blazeMessage)
+        //TODO: ‼️ createAt is ???
+        let pinMessage = PinMessage(messageId: item.messageId, conversationId: item.conversationId, createdAt:  Date().toUTCString())
+        UserDatabase.current.write { db in
+            try job.save(db)
+            switch action {
+            case .pin:
+                try PinMessageDAO.shared.insertMessage(pinMessage)
+            case .unpin:
+                try PinMessageDAO.shared.deleteMessage(id: item.messageId)
+            }
+        }
+        SendMessageService.shared.processMessages()
+    }
+    
     public func recallMessage(item: MessageItem) {
         let category = item.category
         let conversationId = item.conversationId
@@ -603,6 +620,11 @@ extension SendMessageService {
         
         try deliverMessage(blazeMessage: blazeMessage)
         Logger.conversation(id: message.conversationId).info(category: "SendMessageService", message: "Send message: \(messageId), category:\(message.category), status:\(message.status)")
+    }
+    
+    private func sendPinMessage(blazeMessage: BlazeMessage) throws {
+        //TODO: ‼️ fix this
+        try deliverMessage(blazeMessage: blazeMessage)
     }
     
     private func checkConversationExist(conversation: ConversationItem) throws {

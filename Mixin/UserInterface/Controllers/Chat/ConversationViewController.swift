@@ -167,6 +167,12 @@ class ConversationViewController: UIViewController {
         return view
     }()
     
+    private lazy var pinMessagesView: PinMessagesView = {
+        let view = R.nib.pinMessagesView(owner: nil)!
+        view.delegate = self
+        return view
+    }()
+    
     private var unreadBadgeValue: Int = 0 {
         didSet {
             guard unreadBadgeValue != oldValue else {
@@ -281,6 +287,18 @@ class ConversationViewController: UIViewController {
             titleLabel.text = conversation.getConversationName()
         } else if let ownerUser = ownerUser {
             titleLabel.text = ownerUser.fullName
+        }
+        
+        //TODO: ‼️ add display conditions
+        if dataSource.category == .group {
+            view.addSubview(pinMessagesView)
+            pinMessagesView.snp.makeConstraints { make in
+                make.top.equalTo(navigationBarView.snp.bottom).offset(7)
+                make.left.equalTo(0)
+                make.right.equalTo(0)
+                make.height.equalTo(70)
+            }
+            NotificationCenter.default.addObserver(self, selector: #selector(pinMessagesDidChange(_:)), name: PinMessageDAO.pinMessageDidChangeNotification, object: nil)
         }
         
         reportRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(showReportMenuAction))
@@ -1151,6 +1169,23 @@ class ConversationViewController: UIViewController {
         }
     }
     
+    @objc func pinMessagesDidChange(_ notification: Notification) {
+        guard let conversationId = notification.userInfo?[PinMessageDAO.UserInfoKey.conversationId] as? String else {
+            return
+        }
+        guard conversationId == self.conversationId else {
+            return
+        }
+        guard let isPin = notification.userInfo?[PinMessageDAO.UserInfoKey.isPin] as? Bool else {
+            return
+        }
+        if isPin {
+            showPinMessageView()
+        } else {
+            
+        }
+    }
+    
     // MARK: - Interface
     func updateInputWrapper(for preferredContentHeight: CGFloat, animated: Bool) {
         let oldHeight = inputWrapperHeightConstraint.constant
@@ -1732,6 +1767,24 @@ extension ConversationViewController: TextPreviewViewDelegate {
             self.textPreviewView.attributedText = nil
             self.textPreviewView.removeFromSuperview()
         }
+    }
+    
+}
+
+// MARK: - PinMessagesViewDelegate
+extension ConversationViewController: PinMessagesViewDelegate {
+    
+    func pinMessagesViewDidTapPin(_ view: PinMessagesView) {
+        let vc = PinPreviewViewController(staticMessageId: "")
+        vc.presentAsChild(of: self)
+    }
+    
+    func pinMessagesViewDidTapClose(_ view: PinMessagesView) {
+        hidePinMessage()
+    }
+    
+    func pinMessagesViewDidTapMessage(_ view: PinMessagesView) {
+        
     }
     
 }
@@ -2348,6 +2401,28 @@ extension ConversationViewController {
                     self.groupCallIndicatorView.isHidden = ids.isEmpty
                 }
             }
+        }
+    }
+    
+    private func showPinMessageView() {
+        pinMessagesView.isHidden = false
+    }
+    
+    private func hidePinMessageView() {
+        pinMessagesView.isHidden = true
+    }
+    
+    private func showPinMessage() {
+        pinMessagesView.showMessage()
+        pinMessagesView.snp.updateConstraints { make in
+            make.left.equalTo(0)
+        }
+    }
+    
+    private func hidePinMessage() {
+        pinMessagesView.hideMessage()
+        pinMessagesView.snp.updateConstraints { make in
+            make.left.equalTo(AppDelegate.current.mainWindow.bounds.width - 60)
         }
     }
     

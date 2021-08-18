@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="PinMessagesView" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VDy-MD-ZJc">
+                    <rect key="frame" x="323" y="16" width="38" height="38"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="38" id="FF9-5Y-1YF"/>
+                        <constraint firstAttribute="height" constant="38" id="RbB-HB-4YV"/>
+                    </constraints>
+                    <state key="normal" image="Conversation/ic_pin"/>
+                    <connections>
+                        <action selector="tapPinAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="Cit-mj-DKG"/>
+                    </connections>
+                </button>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6g9-Xw-LKA" customClass="RoundedInsetLabel" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="332" y="2" width="20" height="18"/>
+                    <color key="backgroundColor" name="chat_pin__count_background"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="18" id="7KC-8v-Tmy"/>
+                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="20" id="qtS-I0-cbH"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SgE-DM-HcT">
+                    <rect key="frame" x="6" y="0.0" width="313" height="70"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="70" id="PRW-zN-7Fc"/>
+                    </constraints>
+                    <state key="normal" image="ic_pin_bubble"/>
+                    <connections>
+                        <action selector="tapMessageAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="PC6-AE-9pq"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TtF-Y8-1dd">
+                    <rect key="frame" x="14" y="15" width="40" height="40"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="vHA-JL-ytZ"/>
+                        <constraint firstAttribute="width" constant="40" id="xjY-4s-eBS"/>
+                    </constraints>
+                    <state key="normal" image="ic_announcement_close"/>
+                    <connections>
+                        <action selector="tapCloseAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="MSe-lv-k9g"/>
+                    </connections>
+                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="apB-WS-4Gl">
+                    <rect key="frame" x="54" y="12" width="239" height="46"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <color key="textColor" name="text"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="TtF-Y8-1dd" firstAttribute="leading" secondItem="SgE-DM-HcT" secondAttribute="leading" constant="8" id="1hb-qL-yga"/>
+                <constraint firstItem="apB-WS-4Gl" firstAttribute="leading" secondItem="TtF-Y8-1dd" secondAttribute="trailing" id="5Xk-NH-hbo"/>
+                <constraint firstAttribute="trailing" secondItem="VDy-MD-ZJc" secondAttribute="trailing" constant="14" id="BBS-Im-104"/>
+                <constraint firstItem="SgE-DM-HcT" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="K8y-Vr-RJp"/>
+                <constraint firstItem="SgE-DM-HcT" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="6" id="RDo-Q2-LnQ"/>
+                <constraint firstItem="6g9-Xw-LKA" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="2" id="Scg-JZ-l2S"/>
+                <constraint firstItem="VDy-MD-ZJc" firstAttribute="leading" secondItem="SgE-DM-HcT" secondAttribute="trailing" priority="750" constant="4" id="U3D-wY-p4K"/>
+                <constraint firstItem="6g9-Xw-LKA" firstAttribute="centerX" secondItem="VDy-MD-ZJc" secondAttribute="centerX" id="USJ-JB-GXH"/>
+                <constraint firstItem="VDy-MD-ZJc" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="Ygo-eS-z74"/>
+                <constraint firstItem="apB-WS-4Gl" firstAttribute="trailing" secondItem="SgE-DM-HcT" secondAttribute="trailing" constant="-26" id="kpD-XR-mhA"/>
+                <constraint firstItem="apB-WS-4Gl" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="12" id="uTT-ey-IfW"/>
+                <constraint firstItem="TtF-Y8-1dd" firstAttribute="centerY" secondItem="SgE-DM-HcT" secondAttribute="centerY" id="wzB-Wl-gOB"/>
+                <constraint firstAttribute="bottom" secondItem="apB-WS-4Gl" secondAttribute="bottom" constant="12" id="yz3-Li-zLJ"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="closeButton" destination="TtF-Y8-1dd" id="VJW-K4-cdK"/>
+                <outlet property="contentButton" destination="SgE-DM-HcT" id="wyb-Ko-pJR"/>
+                <outlet property="contentLabel" destination="apB-WS-4Gl" id="4Hc-Ta-t7d"/>
+                <outlet property="countLabel" destination="6g9-Xw-LKA" id="nm3-gj-Sdi"/>
+                <outlet property="pinButton" destination="VDy-MD-ZJc" id="L9N-qN-YWp"/>
+            </connections>
+            <point key="canvasLocation" x="-128.2608695652174" y="265.84821428571428"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Conversation/ic_pin" width="38" height="38"/>
+        <image name="ic_announcement_close" width="12" height="12"/>
+        <image name="ic_pin_bubble" width="317.5" height="72"/>
+        <namedColor name="chat_pin__count_background">
+            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

@@ -19,7 +19,7 @@ open class Database {
                         \(statement.sql)
                         
                     """
-                    Log.database.info(category: "Trace", message: message)
+                    Logger.database.info(category: "Trace", message: message)
                 }
             }
         }
@@ -43,7 +43,7 @@ open class Database {
                 }
             }
             reporter.report(error: Error(code: code.rawValue, message: message))
-            Log.database.error(category: "Error", message: "code: \(code), message: \(message)\n")
+            Logger.database.error(category: "Error", message: "code: \(code), message: \(message)\n")
         }
         return {}
     }()

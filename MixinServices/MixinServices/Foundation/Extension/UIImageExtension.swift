@@ -92,7 +92,7 @@ public extension UIImage {
                 "bitmapInfo": cgImage.bitmapInfo.rawValue
             ]
             let error = MixinServicesError.invalidScalingContextParameter(infos)
-            Log.general.error(category: "ImageScaling", message: "Failed to create CGContext", userInfo: infos)
+            Logger.general.error(category: "ImageScaling", message: "Failed to create CGContext", userInfo: infos)
             reporter.report(error: error)
             return nil
         }

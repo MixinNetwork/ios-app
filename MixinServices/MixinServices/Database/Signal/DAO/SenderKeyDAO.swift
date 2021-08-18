@@ -16,7 +16,7 @@ public class SenderKeyDAO: SignalDAO {
         let condition: SQLSpecificExpressible = SenderKey.column(of: .groupId) == groupId
             && SenderKey.column(of: .senderId) == senderId
         let changes = db.delete(SenderKey.self, where: condition)
-        Log.conversation(id: groupId).info(category: "SenderKeyDAO", message: "Delete sender id: \(senderId), changes: \(changes)")
+        Logger.conversation(id: groupId).info(category: "SenderKeyDAO", message: "Delete sender id: \(senderId), changes: \(changes)")
         return true
     }
     

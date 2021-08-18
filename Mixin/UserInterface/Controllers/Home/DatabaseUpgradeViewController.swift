@@ -25,7 +25,7 @@ class DatabaseUpgradeViewController: UIViewController {
     }
     
     private func upgrade() {
-        Log.general.info(category: "DatabaseUpgrade", message: "Begin upgrade with app state: \(UIApplication.shared.applicationStateString)")
+        Logger.general.info(category: "DatabaseUpgrade", message: "Begin upgrade with app state: \(UIApplication.shared.applicationStateString)")
         guard UIApplication.shared.applicationState == .active else {
             return
         }

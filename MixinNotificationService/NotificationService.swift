@@ -88,7 +88,7 @@ final class NotificationService: UNNotificationServiceExtension {
         deliverContent(content: rawContent)
 
         if let conversationId = self.conversationId {
-            let info: Log.UserInfo = [
+            let info: Logger.UserInfo = [
                 "messageId": messageId,
                 "reason:": from,
                 "isExpired": isExpired,
@@ -98,7 +98,7 @@ final class NotificationService: UNNotificationServiceExtension {
                 "isProcessingMessagesInAppExtension": AppGroupUserDefaults.isProcessingMessagesInAppExtension,
                 "isRunningInMainApp": AppGroupUserDefaults.isRunningInMainApp,
             ]
-            Log.conversation(id: conversationId).error(category: "NotifcationService", message: "Delivered raw message", userInfo: info)
+            Logger.conversation(id: conversationId).error(category: "NotifcationService", message: "Delivered raw message", userInfo: info)
         }
     }
     

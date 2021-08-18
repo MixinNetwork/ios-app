@@ -68,7 +68,7 @@ extension RocketWebSocket: SRWebSocketDelegate {
             return
         }
         let nsError = error as NSError
-        Log.general.error(category: "RocketWebSocket", message: "Websocket failed with: \(err), host: \(MixinHost.webSocket)")
+        Logger.general.error(category: "RocketWebSocket", message: "Websocket failed with: \(err), host: \(MixinHost.webSocket)")
 
         if (nsError.domain == "com.squareup.SocketRocket" && nsError.code == 504)
             || (nsError.domain == NSPOSIXErrorDomain && nsError.code == 61) || nsError.domain == SRWebSocketErrorDomain {
@@ -118,7 +118,7 @@ extension RocketWebSocket: SRWebSocketDelegate {
             errType = "\(code)"
         }
 
-        Log.general.error(category: "RocketWebSocket", message: "Websocket closed with: \(errType), code: \(code), wasClean:\(wasClean), reaseon: \(reason)")
+        Logger.general.error(category: "RocketWebSocket", message: "Websocket closed with: \(errType), code: \(code), wasClean:\(wasClean), reaseon: \(reason)")
         
         reporter.report(error: MixinServicesError.websocketError(errType: errType, errMessage: errMessage, errCode: code))
         delegate?.websocketDidDisconnect(socket: self, isSwitchNetwork: false)

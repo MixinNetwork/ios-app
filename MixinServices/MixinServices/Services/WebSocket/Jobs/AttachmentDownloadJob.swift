@@ -247,13 +247,13 @@ extension AttachmentDownloadJob {
             return nil
         }
         guard UUID(uuidString: attachmentId) != nil else {
-            let userInfo: Log.UserInfo = [
+            let userInfo: Logger.UserInfo = [
                 "id": owner.messageId,
                 "category": owner.category,
                 "mediaUrl": owner.mediaUrl,
                 "mediaStatus": owner.mediaStatus ?? "(null)"
             ]
-            Log.general.error(category: "AttachmentDownloadJob", message: "Message has an invalid content: \(attachmentId)", userInfo: userInfo)
+            Logger.general.error(category: "AttachmentDownloadJob", message: "Message has an invalid content: \(attachmentId)", userInfo: userInfo)
             return nil
         }
         guard !(jobId?.isEmpty ?? true) || owner.mediaUrl == nil || (owner.mediaStatus != MediaStatus.DONE.rawValue && owner.mediaStatus != MediaStatus.READ.rawValue && owner.category != MessageCategory.MESSAGE_RECALL.rawValue) else {

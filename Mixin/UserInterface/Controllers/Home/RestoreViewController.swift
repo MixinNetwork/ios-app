@@ -32,7 +32,7 @@ class RestoreViewController: UIViewController {
         guard !restoreButton.isBusy else {
             return
         }
-        Log.general.info(category: "Restore", message: "Begin restore")
+        Logger.general.info(category: "Restore", message: "Begin restore")
         restoreButton.isBusy = true
         skipButton.isHidden = true
         progressLabel.isHidden = false
@@ -49,7 +49,7 @@ class RestoreViewController: UIViewController {
                 cloudURL = backupDir.appendingPathComponent("mixin.backup.db")
             }
             guard cloudURL.isStoredCloud else {
-                Log.general.info(category: "Restore", message: "Missing file: \(cloudURL.suffix(base: backupDir))")
+                Logger.general.info(category: "Restore", message: "Missing file: \(cloudURL.suffix(base: backupDir))")
                 DispatchQueue.main.async {
                     self.skipAction(sender)
                 }
@@ -64,7 +64,7 @@ class RestoreViewController: UIViewController {
                         self.progressLabel.text = NumberFormatter.simplePercentage.string(from: NSNumber(value: progress))
                     })
                 } else {
-                    Log.general.info(category: "Restore", message: "File not downloaded: \(cloudURL.suffix(base: backupDir))")
+                    Logger.general.info(category: "Restore", message: "File not downloaded: \(cloudURL.suffix(base: backupDir))")
                 }
                 if FileManager.default.fileExists(atPath: localURL.path) {
                     UserDatabase.closeCurrent()
@@ -84,14 +84,14 @@ class RestoreViewController: UIViewController {
                     AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
                 }
             } catch {
-                Log.general.error(category: "RestoreViewController", message: "Restoration at: \(cloudURL.suffix(base: backupDir)), failed for: \(error)")
+                Logger.general.error(category: "RestoreViewController", message: "Restoration at: \(cloudURL.suffix(base: backupDir)), failed for: \(error)")
                 self.restoreFailed(error: error)
             }
         }
     }
 
     @IBAction func skipAction(_ sender: Any) {
-        Log.general.info(category: "Restore", message: "Restoration skipped")
+        Logger.general.info(category: "Restore", message: "Restoration skipped")
         AppGroupUserDefaults.Account.canRestoreChat = false
         AppGroupUserDefaults.Account.canRestoreMedia = false
         AppDelegate.current.mainWindow.rootViewController =

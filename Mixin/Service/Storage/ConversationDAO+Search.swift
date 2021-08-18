@@ -21,7 +21,7 @@ extension ConversationDAO {
                 }
                 return try String.fetchAll(db, sql: sql, arguments: ["\"\(keyword)\""], adapter: nil)
             } catch {
-                Log.database.error(category: "ConversationDAO+Search", message: "Failed to fetch cids: \(error)")
+                Logger.database.error(category: "ConversationDAO+Search", message: "Failed to fetch cids: \(error)")
                 return []
             }
         }
@@ -43,7 +43,7 @@ extension ConversationDAO {
         snapshot.read { (db) -> Void in
             for cid in cids {
                 if cid.isEmpty {
-                    Log.database.error(category: "FTS", message: "Got empty cid")
+                    Logger.database.error(category: "FTS", message: "Got empty cid")
                 }
                 let arguments = ["keyword": "(content : \"\(keyword)\") AND (conversation_id : \"\(uuidTokenString(uuidString: cid))\")"]
                 let resultsInConversation = searchResults(db, with: sql, arguments: arguments, keyword: keyword)
@@ -119,7 +119,7 @@ extension ConversationDAO {
         } catch DatabaseError.SQLITE_INTERRUPT {
             return []
         } catch {
-            Log.database.error(category: "ConversationDAO+Search", message: "Failed to fetch items: \(error)")
+            Logger.database.error(category: "ConversationDAO+Search", message: "Failed to fetch items: \(error)")
             return []
         }
     }

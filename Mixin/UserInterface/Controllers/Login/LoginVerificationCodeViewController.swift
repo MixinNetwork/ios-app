@@ -159,7 +159,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
             logs.append("[iCloud][\(backupDatabaseName)]...backupExist:\(backupExist)...fileSize:\(fileSize.sizeRepresentation())")
         }
         logs += debugCloudFiles(baseDir: icloudDir, parentDir: icloudDir)
-        Log.general.info(category: "LoginRestore", message: logs.joined(separator: "\n"))
+        Logger.general.info(category: "LoginRestore", message: logs.joined(separator: "\n"))
     }
     
     

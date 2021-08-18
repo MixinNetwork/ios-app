@@ -71,7 +71,7 @@ extension MessageDAO {
         } catch DatabaseError.SQLITE_INTERRUPT {
             // Ignore it
         } catch {
-            Log.database.error(category: "MessageDAO+Search", message: "\(error)")
+            Logger.database.error(category: "MessageDAO+Search", message: "\(error)")
             reporter.report(error: error)
         }
         

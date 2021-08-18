@@ -360,7 +360,7 @@ public final class ConversationDAO: UserDatabaseDAO {
                 }
             }
         } catch {
-            Log.general.error(category: "ConversationDAO", message: "Failed to save new created conversation: \(error)")
+            Logger.general.error(category: "ConversationDAO", message: "Failed to save new created conversation: \(error)")
             completion(false)
         }
     }

@@ -228,12 +228,12 @@ extension BackupViewController {
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         DispatchQueue.global().async {
             do {
-                Log.database.info(category: "BackupViewController", message: "Start maintaining database, size: \(AppGroupContainer.userDatabaseUrl.fileSize.sizeRepresentation())")
+                Logger.database.info(category: "BackupViewController", message: "Start maintaining database, size: \(AppGroupContainer.userDatabaseUrl.fileSize.sizeRepresentation())")
                 try UserDatabase.current.pool.write({ (db) -> Void in
                     try db.checkpoint(.full, on: nil)
                 })
                 try UserDatabase.current.pool.vacuum()
-                Log.database.info(category: "BackupViewController", message: "Database maintaining finished, size: \(AppGroupContainer.userDatabaseUrl.fileSize.sizeRepresentation())")
+                Logger.database.info(category: "BackupViewController", message: "Database maintaining finished, size: \(AppGroupContainer.userDatabaseUrl.fileSize.sizeRepresentation())")
                 DispatchQueue.main.async {
                     hud.set(style: .notification, text: R.string.localizable.report_compress_database_success())
                     hud.scheduleAutoHidden()
@@ -243,7 +243,7 @@ extension BackupViewController {
                     hud.set(style: .error, text: R.string.localizable.error_operation_failed())
                     hud.scheduleAutoHidden()
                 }
-                Log.database.error(category: "BackupViewController", message: "Backup failed: \(error)")
+                Logger.database.error(category: "BackupViewController", message: "Backup failed: \(error)")
             }
         }
     }
@@ -267,9 +267,9 @@ extension BackupViewController {
             
             var log = "\n\(AppGroupContainer.documentsUrl.path)\n"
             log += Self.debugCloudFiles(baseDir: AppGroupContainer.documentsUrl, parentDir: AppGroupContainer.documentsUrl).joined(separator: "\n")
-            Log.general.info(category: "BackupViewController", message: log)
+            Logger.general.info(category: "BackupViewController", message: log)
             
-            Log.database.info(category: "BackupViewController", message: "mixin.db size: \(AppGroupContainer.userDatabaseUrl.fileSize.sizeRepresentation())")
+            Logger.database.info(category: "BackupViewController", message: "mixin.db size: \(AppGroupContainer.userDatabaseUrl.fileSize.sizeRepresentation())")
             
             let developConversationId = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: developUser.userId)
             guard let url = Logger.export(conversationId: developConversationId) else {

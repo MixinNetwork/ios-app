@@ -218,7 +218,7 @@ extension ShareRecipientViewController {
                     dispatchGroup.enter()
                     attachment.loadItem(forTypeIdentifier: kUTTypeMovie as String, options: nil) { [weak self](item, error) in
                         if let err = error {
-                            Log.general.error(category: "ShareRecipientViewController", message: "Unable to load attachment as movie: \(err)")
+                            Logger.general.error(category: "ShareRecipientViewController", message: "Unable to load attachment as movie: \(err)")
                             dispatchGroup.leave()
                             return
                         }
@@ -265,7 +265,7 @@ extension ShareRecipientViewController {
                             dispatchGroup.leave()
                         }
                         if let err = error {
-                            Log.general.error(category: "ShareRecipientViewController", message: "Unable to load attachment: \(err)")
+                            Logger.general.error(category: "ShareRecipientViewController", message: "Unable to load attachment: \(err)")
                             return
                         }
                         guard let weakSelf = self else {
@@ -501,7 +501,7 @@ extension ShareRecipientViewController {
         interaction.direction = .outgoing
         interaction.donate { (error) in
             if let error = error {
-                Log.general.error(category: "ShareRecipientViewController", message: "Failed to donate interaction: \(error)")
+                Logger.general.error(category: "ShareRecipientViewController", message: "Failed to donate interaction: \(error)")
             }
         }
     }

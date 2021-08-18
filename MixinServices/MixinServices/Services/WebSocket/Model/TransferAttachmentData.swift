@@ -69,12 +69,12 @@ extension TransferAttachmentData: Decodable {
         do {
             return try container.decodeIfPresent(Int.self, forKey: key)
         } catch {
-            Log.general.info(category: "TransferAttachmentData", message: "Failed to decode as Int: \(error)")
+            Logger.general.info(category: "TransferAttachmentData", message: "Failed to decode as Int: \(error)")
         }
         do {
             return Int(try container.decode(Float.self, forKey: key))
         } catch {
-            Log.general.info(category: "TransferAttachmentData", message: "Failed to decode as Float: \(error)")
+            Logger.general.info(category: "TransferAttachmentData", message: "Failed to decode as Float: \(error)")
         }
         return try container.decode(String.self, forKey: key).intValue
     }
@@ -83,12 +83,12 @@ extension TransferAttachmentData: Decodable {
         do {
             return try container.decodeIfPresent(Int64.self, forKey: key)
         } catch {
-            Log.general.info(category: "TransferAttachmentData", message: "Failed to decode as Int64: \(error)")
+            Logger.general.info(category: "TransferAttachmentData", message: "Failed to decode as Int64: \(error)")
         }
         do {
             return Int64(try container.decode(Float.self, forKey: key))
         } catch {
-            Log.general.info(category: "TransferAttachmentData", message: "Failed to decode as Float: \(error)")
+            Logger.general.info(category: "TransferAttachmentData", message: "Failed to decode as Float: \(error)")
         }
         return try container.decode(String.self, forKey: key).int64Value
     }

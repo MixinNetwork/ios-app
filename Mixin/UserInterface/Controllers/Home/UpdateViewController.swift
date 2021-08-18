@@ -12,7 +12,7 @@ class UpdateViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tipsLabel.text = R.string.localizable.app_update_tips(Bundle.main.shortVersion)
-        Log.general.error(category: "UpdateViewController", message: "View did load")
+        Logger.general.error(category: "UpdateViewController", message: "View did load")
     }
 
     @IBAction func continueAction(_ sender: Any) {

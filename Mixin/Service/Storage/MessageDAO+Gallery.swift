@@ -50,7 +50,7 @@ extension MessageDAO {
                 }
             }
         } catch {
-            Log.database.error(category: "MessageDAO+Gallery", message: "\(error)")
+            Logger.database.error(category: "MessageDAO+Gallery", message: "\(error)")
             reporter.report(error: error)
         }
         

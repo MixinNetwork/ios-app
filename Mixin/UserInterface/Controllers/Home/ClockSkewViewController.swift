@@ -13,7 +13,7 @@ class ClockSkewViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        Log.general.error(category: "ClockSkewViewController", message: "View did load")
+        Logger.general.error(category: "ClockSkewViewController", message: "View did load")
     }
 
 

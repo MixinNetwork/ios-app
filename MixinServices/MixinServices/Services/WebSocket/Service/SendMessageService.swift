@@ -424,7 +424,7 @@ public class SendMessageService: MixinService {
                         
                         let result = try sendSenderKey(conversationId: conversationId, recipientId: recipientId, sessionId: sessionId)
                         if !result {
-                            Log.conversation(id: conversationId).info(category: "ResendSenderKey", message: "Received no group signal key for recipient: \(recipientId)")
+                            Logger.conversation(id: conversationId).info(category: "ResendSenderKey", message: "Received no group signal key for recipient: \(recipientId)")
                             sendNoKeyMessage(conversationId: conversationId, recipientId: recipientId)
                         }
                     }
@@ -433,7 +433,7 @@ public class SendMessageService: MixinService {
                         let blazeMessage = job.toBlazeMessage()
                         deliverNoThrow(blazeMessage: blazeMessage)
                         let messageId = blazeMessage.params?.messageId ?? "(null)"
-                        Log.conversation(id: job.conversationId!).info(category: "SendMessageService", message: "Request resend key for message: \(messageId)")
+                        Logger.conversation(id: job.conversationId!).info(category: "SendMessageService", message: "Request resend key for message: \(messageId)")
                     }
                 case JobAction.REQUEST_RESEND_MESSAGES.rawValue:
                     deliverNoThrow(blazeMessage: job.toBlazeMessage())
@@ -473,13 +473,13 @@ public class SendMessageService: MixinService {
                         if IdentityDAO.shared.getLocalIdentity() == nil {
                             userInfo["signalError"] = "local identity nil"
                             userInfo["identityCount"] = "\(IdentityDAO.shared.getCount())"
-                            Log.general.error(category: "SendMessageService", message: "Job execution failed: \(err)", userInfo: userInfo)
+                            Logger.general.error(category: "SendMessageService", message: "Job execution failed: \(err)", userInfo: userInfo)
                             reporter.report(error: MixinServicesError.sendMessage(userInfo))
                             LoginManager.shared.logout(from: "SendMessengerError")
                             return false
                         }
                     }
-                    Log.general.error(category: "SendMessageService", message: "Job execution failed: \(error)", userInfo: userInfo)
+                    Logger.general.error(category: "SendMessageService", message: "Job execution failed: \(error)", userInfo: userInfo)
                     reporter.report(error: MixinServicesError.sendMessage(userInfo))
                 }
                 
@@ -530,7 +530,7 @@ extension SendMessageService {
         blazeMessage.params?.data = try SignalProtocol.shared.encryptSessionMessageData(recipientId: recipientId, content: message.content ?? "", resendMessageId: messageId, sessionId: job.sessionId)
         try deliverMessage(blazeMessage: blazeMessage)
         
-        Log.conversation(id: message.conversationId).info(category: "SendMessageService", message: "Resend message: \(messageId), resendMessageId:\(resendMessageId), recipientId:\(recipientId)")
+        Logger.conversation(id: message.conversationId).info(category: "SendMessageService", message: "Resend message: \(messageId), resendMessageId:\(resendMessageId), recipientId:\(recipientId)")
     }
     
     private func sendMessage(blazeMessage: BlazeMessage) throws {
@@ -602,7 +602,7 @@ extension SendMessageService {
         }
         
         try deliverMessage(blazeMessage: blazeMessage)
-        Log.conversation(id: message.conversationId).info(category: "SendMessageService", message: "Send message: \(messageId), category:\(message.category), status:\(message.status)")
+        Logger.conversation(id: message.conversationId).info(category: "SendMessageService", message: "Send message: \(messageId), category:\(message.category), status:\(message.status)")
     }
     
     private func checkConversationExist(conversation: ConversationItem) throws {

@@ -36,7 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         configAnalytics()
         pendingShortcutItem = launchOptions?[UIApplication.LaunchOptionsKey.shortcutItem] as? UIApplicationShortcutItem
         addObservers()
-        Log.general.info(category: "AppDelegate", message: "App \(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion)) did finish launching with state: \(UIApplication.shared.applicationStateString)")
+        Logger.general.info(category: "AppDelegate", message: "App \(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion)) did finish launching with state: \(UIApplication.shared.applicationStateString)")
         if UIApplication.shared.applicationState == .background {
             MixinService.isStopProcessMessages = false
             WebSocketService.shared.connectIfNeeded()
@@ -166,7 +166,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         let isActive = UIApplication.shared.applicationState == .active
-        Log.general.info(category: "AppDelegate", message: "Received remote notification, app is active: \(isActive)")
+        Logger.general.info(category: "AppDelegate", message: "Received remote notification, app is active: \(isActive)")
 
         guard LoginManager.shared.isLoggedIn, !AppGroupUserDefaults.User.needsUpgradeInMainApp else {
             completionHandler(.noData)
@@ -289,9 +289,9 @@ extension AppDelegate {
         MixinServices.printSignalLog = { (message: UnsafePointer<Int8>!) -> Void in
             let log = String(cString: message)
             if log.hasPrefix("No sender key for:"), let conversationId = log.suffix(char: ":")?.substring(endChar: ":").trim() {
-                Log.conversation(id: conversationId).info(category: "Signal", message: log)
+                Logger.conversation(id: conversationId).info(category: "Signal", message: log)
             } else {
-                Log.general.info(category: "Signal", message: log)
+                Logger.general.info(category: "Signal", message: log)
             }
         }
     }

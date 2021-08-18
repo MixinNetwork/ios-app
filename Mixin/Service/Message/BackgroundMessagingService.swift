@@ -25,11 +25,11 @@ class BackgroundMessagingService {
         end()
         requestTimeout = 3
         taskIdentifier = application.beginBackgroundTask(expirationHandler: {
-            let info: Log.UserInfo = [
+            let info: Logger.UserInfo = [
                 "hasCall": CallService.shared.hasCall,
                 "duration": -startDate.timeIntervalSinceNow
             ]
-            Log.general.info(category: "BackgroundMessagingService", message: "Background service requested by \(caller) is expired", userInfo: info)
+            Logger.general.info(category: "BackgroundMessagingService", message: "Background service requested by \(caller) is expired", userInfo: info)
             if application.applicationState != .active && !CallService.shared.hasCall {
                 MixinService.isStopProcessMessages = true
                 WebSocketService.shared.disconnect()

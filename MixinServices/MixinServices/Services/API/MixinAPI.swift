@@ -117,7 +117,7 @@ extension MixinAPI {
         }
         
         if case let .failure(error) = result, error.isTransportTimedOut {
-            Log.general.error(category: "MixinAPI", message: "Sync request timed out with: \(error), timeout: \(requestTimeout)")
+            Logger.general.error(category: "MixinAPI", message: "Sync request timed out with: \(error), timeout: \(requestTimeout)")
         }
         
         return result
@@ -166,7 +166,7 @@ extension MixinAPI {
                     if let requestId = response.request?.allHTTPHeaderFields?["X-Request-Id"], !requestId.isEmpty {
                         let responseRequestId = response.response?.allHeaderFields[caseInsensitive: "x-request-id"] ?? ""
                         if requestId != responseRequestId {
-                            Log.general.error(category: "MixinAPI", message: "Mismatched request id. Request path: \(response.request?.url?.path), id: \(requestId), responded header: \(response.response?.allHeaderFields)")
+                            Logger.general.error(category: "MixinAPI", message: "Mismatched request id. Request path: \(response.request?.url?.path), id: \(requestId), responded header: \(response.response?.allHeaderFields)")
                             completion(.failure(.internalServerError))
                             return
                         }
@@ -183,14 +183,14 @@ extension MixinAPI {
                             completion(.success(try JSONDecoder.default.decode(Response.self, from: data)))
                         }
                     } catch {
-                        Log.general.error(category: "MixinAPI", message: "Failed to decode response: \(error)" )
+                        Logger.general.error(category: "MixinAPI", message: "Failed to decode response: \(error)" )
                         reporter.report(error: error)
                         completion(.failure(.invalidJSON(error)))
                     }
                 case let .failure(error):
                     let path = response.request?.url?.path ?? "(null)"
                     let requestId = response.request?.allHTTPHeaderFields?["X-Request-Id"] ?? "(null)"
-                    Log.general.error(category: "MixinAPI", message: "Request with path: \(path), id: \(requestId), failed with error: \(error)" )
+                    Logger.general.error(category: "MixinAPI", message: "Request with path: \(path), id: \(requestId), failed with error: \(error)" )
                     if shouldToggleServer(for: error) {
                         MixinHost.toggle(currentHttpHost: host)
                     }

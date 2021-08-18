@@ -110,7 +110,7 @@ public final class LoginManager {
         pthread_rwlock_unlock(&lock)
 
         if !isAppExtension {
-            Log.general.error(category: "LoginManager", message: "Logout because: \(reason)")
+            Logger.general.error(category: "LoginManager", message: "Logout because: \(reason)")
             AppGroupUserDefaults.Account.serializedAccount = nil
             DispatchQueue.main.async {
                 INInteraction.deleteAll(completion: nil)

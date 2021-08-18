@@ -26,7 +26,7 @@ public class KrakenMessageRetriever {
         param.conversationChecksum = ConversationChecksumCalculator.checksum(conversationId: id)
         let blazeMessage = BlazeMessage(params: param, action: BlazeMessageAction.listKrakenPeers.rawValue)
 
-        Log.call.info(category: "KrakenMessageRetriever", message: "Requesting peers for conversation: \(id)")
+        Logger.call.info(category: "KrakenMessageRetriever", message: "Requesting peers for conversation: \(id)")
         do {
             if let peers = try WebSocketService.shared.respondedMessage(for: blazeMessage).blazeMessage?.toKrakenPeers() {
                 return peers.filter { $0.userId != myUserId }

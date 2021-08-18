@@ -2476,12 +2476,12 @@ extension ConversationViewController {
     
     private func reportAirDop(conversationId: String) {
         DispatchQueue.global().async {
-            let info: Log.UserInfo = [
+            let info: Logger.UserInfo = [
                 "isReachable": ReachabilityManger.shared.isReachable,
                 "isConnected": WebSocketService.shared.isConnected,
                 "isRealConnected": WebSocketService.shared.isRealConnected
             ]
-            Log.conversation(id: conversationId).info(category: "Report", message: "Exported logs", userInfo: info)
+            Logger.conversation(id: conversationId).info(category: "Report", message: "Exported logs", userInfo: info)
             guard let targetUrl = Logger.export(conversationId: conversationId), FileManager.default.fileSize(targetUrl.path) > 0 else {
                 return
             }
@@ -2506,7 +2506,7 @@ extension ConversationViewController {
                     return
                 }
             }
-            Log.conversation(id: conversationId).info(category: "Report", message: "isReachable:\(ReachabilityManger.shared.isReachable), isConnected:\(WebSocketService.shared.isConnected), isRealConnected:\(WebSocketService.shared.isRealConnected)")
+            Logger.conversation(id: conversationId).info(category: "Report", message: "isReachable:\(ReachabilityManger.shared.isReachable), isConnected:\(WebSocketService.shared.isConnected), isRealConnected:\(WebSocketService.shared.isRealConnected)")
             
             if let message = message {
                 var log = "[Message][\(message.messageId)][\(message.category)][\(message.status)]...userId:\(message.userId)"
@@ -2533,7 +2533,7 @@ extension ConversationViewController {
                     }
                 }
                 
-                Log.conversation(id: conversationId).info(category: "Report", message: log)
+                Logger.conversation(id: conversationId).info(category: "Report", message: log)
             }
 
             guard let developUser = user, let url = Logger.export(conversationId: conversationId) else {

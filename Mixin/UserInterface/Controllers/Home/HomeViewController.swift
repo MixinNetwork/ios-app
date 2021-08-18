@@ -143,7 +143,7 @@ class HomeViewController: UIViewController {
             NotificationManager.shared.registerForRemoteNotificationsIfAuthorized()
             CallService.shared.registerForPushKitNotificationsIfAvailable()
         }
-        Log.general.info(category: "HomeViewController", message: "View did load with app state: \(UIApplication.shared.applicationStateString)")
+        Logger.general.info(category: "HomeViewController", message: "View did load with app state: \(UIApplication.shared.applicationStateString)")
         if UIApplication.shared.applicationState != .background {
             ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())
             ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob())

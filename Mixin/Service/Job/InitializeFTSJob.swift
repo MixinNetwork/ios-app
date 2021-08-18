@@ -34,8 +34,8 @@ class InitializeFTSJob: BaseJob {
             return
         }
         let messageCount = UserDatabase.current.count(in: Message.self)
-        Log.database.info(category: "FTS", message: "Database file size \(AppGroupContainer.userDatabaseUrl.fileSize.sizeRepresentation())")
-        Log.database.info(category: "FTS", message: "Make fts content with \(messageCount) messages")
+        Logger.database.info(category: "FTS", message: "Database file size \(AppGroupContainer.userDatabaseUrl.fileSize.sizeRepresentation())")
+        Logger.database.info(category: "FTS", message: "Make fts content with \(messageCount) messages")
         
         var didInitializedAllMessages = false
         var numberOfMessagesProcessed = 0
@@ -59,7 +59,7 @@ class InitializeFTSJob: BaseJob {
                             lastInitializedRowID = rowID
                         } else {
                             try db.execute(sql: "DELETE FROM \(Message.ftsTableName) WHERE id MATCH ?", arguments: ["\"\(token)\""])
-                            Log.database.info(category: "FTS", message: "A mismatched record is detected and removed")
+                            Logger.database.info(category: "FTS", message: "A mismatched record is detected and removed")
                             return
                         }
                     } else {
@@ -68,14 +68,14 @@ class InitializeFTSJob: BaseJob {
                     try db.execute(sql: insertionSQL, arguments: [lastInitializedRowID])
                     let numberOfChanges = db.changesCount
                     numberOfMessagesProcessed += numberOfChanges
-                    Log.database.info(category: "FTS", message: "\(numberOfChanges) messages are wrote into FTS table")
+                    Logger.database.info(category: "FTS", message: "\(numberOfChanges) messages are wrote into FTS table")
                     didInitializedAllMessages = numberOfChanges < Self.insertionLimit
                     if didInitializedAllMessages {
                         AppGroupUserDefaults.Database.isFTSInitialized = true
                     }
                 }
             } catch {
-                Log.database.error(category: "FTS", message: "FTS initialization failed: \(error)")
+                Logger.database.error(category: "FTS", message: "FTS initialization failed: \(error)")
                 reporter.report(error: error)
                 return
             }
@@ -83,7 +83,7 @@ class InitializeFTSJob: BaseJob {
         }
         
         let interval = -startDate.timeIntervalSinceNow
-        Log.database.info(category: "FTS", message: "Initialized \(numberOfMessagesProcessed) messages in \(interval)s")
+        Logger.database.info(category: "FTS", message: "Initialized \(numberOfMessagesProcessed) messages in \(interval)s")
     }
     
 }

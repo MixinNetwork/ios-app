@@ -46,7 +46,7 @@ public class SignalProtocol {
         if let store = store.senderKeyStore as? MixinSenderKeyStore {
             store.removeSenderKey(senderKeyName: senderKeyName)
         }
-        Log.conversation(id: groupId).info(category: "ClearSenderKey", message: "Cleared sender key for: \(senderId)")
+        Logger.conversation(id: groupId).info(category: "ClearSenderKey", message: "Cleared sender key for: \(senderId)")
     }
 
     func isExistSenderKey(groupId: String, senderId: String) -> Bool {
@@ -126,14 +126,14 @@ public class SignalProtocol {
         } catch SignalError.noSession {
             // Do nothing
         } catch SignalError.invalidKey {
-            Log.conversation(id: conversationId).error(category: "EncryptGroupMessageData", message: "Invalid key for: \(senderId)")
+            Logger.conversation(id: conversationId).error(category: "EncryptGroupMessageData", message: "Invalid key for: \(senderId)")
             SignalProtocol.shared.clearSenderKey(groupId: conversationId, senderId: myUserId)
             reporter.report(error: MixinServicesError.encryptGroupMessageData(SignalError.invalidKey))
         } catch let error as SignalError {
-            Log.conversation(id: conversationId).error(category: "EncryptGroupMessageData", message: "Signal error for: \(senderId), error: \(error)")
+            Logger.conversation(id: conversationId).error(category: "EncryptGroupMessageData", message: "Signal error for: \(senderId), error: \(error)")
             reporter.report(error: MixinServicesError.encryptGroupMessageData(error))
         } catch {
-            Log.conversation(id: conversationId).error(category: "EncryptGroupMessageData", message: "Error for: \(senderId), error: \(error)")
+            Logger.conversation(id: conversationId).error(category: "EncryptGroupMessageData", message: "Error for: \(senderId), error: \(error)")
             reporter.report(error: error)
         }
         let data = encodeMessageData(data: ComposeMessageData(keyType: CiphertextMessage.MessageType.senderKey.rawValue, cipher: cipher, resendMessageId: nil))

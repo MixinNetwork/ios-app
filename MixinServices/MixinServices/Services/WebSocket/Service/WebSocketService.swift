@@ -146,7 +146,7 @@ public class WebSocketService {
                         }
                     }
                     if let conversationId = message.params?.conversationId {
-                        Log.conversation(id: conversationId).error(category: "WebSocketService", message: "Received response for \(message.action), error: \(error)")
+                        Logger.conversation(id: conversationId).error(category: "WebSocketService", message: "Received response for \(message.action), error: \(error)")
                     }
                     err = error
                 }
@@ -167,9 +167,9 @@ public class WebSocketService {
                 let category = message.params?.category ?? "(null)"
                 let log = "Response timed out for \(category), timeout: \(requestTimeout)"
                 if let conversationId = message.params?.conversationId {
-                    Log.conversation(id: conversationId).error(category: "WebSocketService", message: log)
+                    Logger.conversation(id: conversationId).error(category: "WebSocketService", message: log)
                 } else {
-                    Log.general.error(category: "WebSocketService", message: log)
+                    Logger.general.error(category: "WebSocketService", message: log)
                 }
             }
             

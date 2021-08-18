@@ -162,7 +162,7 @@ final class TranscriptAttachmentUploadJob: AsynchronousJob {
             }
             SendMessageService.shared.sendMessage(message: message, data: content)
         } catch {
-            Log.general.error(category: "TranscriptAttachmentUploadJob", message: "Unable to encode child messages: \(error)")
+            Logger.general.error(category: "TranscriptAttachmentUploadJob", message: "Unable to encode child messages: \(error)")
             reporter.report(error: error)
         }
         finishJob()

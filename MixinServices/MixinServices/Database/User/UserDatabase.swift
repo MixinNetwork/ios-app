@@ -398,7 +398,7 @@ public final class UserDatabase: Database {
             try db.execute(sql: sql)
         }
         
-        migrator.registerMigration("pin") { db in
+        migrator.registerMigration("pin_messages") { db in
             let sql = """
                 CREATE TABLE IF NOT EXISTS pin_messages(
                     message_id TEXT NOT NULL,
@@ -409,6 +409,7 @@ public final class UserDatabase: Database {
                     FOREIGN KEY (message_id) REFERENCES messages(id) ON UPDATE NO ACTION ON DELETE CASCADE
                 )
             """
+            try db.execute(sql: sql)
         }
         
         /* Remaining works:

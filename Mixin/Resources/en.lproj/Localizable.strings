@@ -57,6 +57,8 @@
 "menu_delete" = "Delete";
 "menu_edit" = "Edit";
 "menu_report" = "Report";
+"menu_pin" = "Pin";
+"menu_unpin" = "Unpin";
 "no_result" = "No result";
 "title_loading" = "Loading...";
 "all_photos" = "All Photos";

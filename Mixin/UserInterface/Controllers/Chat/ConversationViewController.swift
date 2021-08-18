@@ -74,6 +74,8 @@ class ConversationViewController: UIViewController {
         .delete: UIMenuItem(title: R.string.localizable.menu_delete(), action: #selector(deleteMessage(_:))),
         .addToStickers: UIMenuItem(title: R.string.localizable.chat_message_sticker(), action: #selector(addToStickers(_:))),
         .report: UIMenuItem(title: R.string.localizable.menu_report(), action: #selector(reportMessage(_:))),
+        .pin: UIMenuItem(title: R.string.localizable.menu_pin(), action: #selector(pinMessage(_:))),
+        .unpin: UIMenuItem(title: R.string.localizable.menu_unpin(), action: #selector(unpinMessage(_:)))
     ]
     
     private let showScrollToBottomButtonThreshold: CGFloat = 150
@@ -1784,7 +1786,14 @@ extension ConversationViewController {
         if ConversationViewController.allowReportSingleMessage {
             actions.append(.report)
         }
-        
+        if dataSource.category == .group, let replyIndex = actions.firstIndex(where: { $0 == .reply }) {
+            let action: MessageAction = PinMessageDAO.shared.isPinned(messageId: message.messageId) ? .unpin : .pin
+            if replyIndex == actions.count - 1 {
+                actions.append(action)
+            } else {
+                actions.insert(action, at: replyIndex + 1)
+            }
+        }
         return actions
     }
     
@@ -1830,6 +1839,10 @@ extension ConversationViewController {
             }
         case .report:
             report(conversationId: conversationId, message: message)
+        case .pin:
+            SendMessageService.shared.pinMessage(item: message, action: .pin)
+        case .unpin:
+            SendMessageService.shared.pinMessage(item: message, action: .unpin)
         }
     }
     
@@ -1885,6 +1898,14 @@ extension ConversationViewController {
     
     @objc private func reportMessage(_ sender: Any?) {
         performActionOnSelectedRow(.report)
+    }
+    
+    @objc private func pinMessage(_ sender: Any?) {
+        performActionOnSelectedRow(.pin)
+    }
+    
+    @objc private func unpinMessage(_ sender: Any?) {
+        performActionOnSelectedRow(.unpin)
     }
     
     @objc private func menuControllerDidShowMenu(_ notification: Notification) {

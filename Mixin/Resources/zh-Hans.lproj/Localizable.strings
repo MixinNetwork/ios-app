@@ -57,6 +57,8 @@
 "menu_delete" = "删除";
 "menu_edit" = "编辑";
 "menu_report" = "上报";
+"menu_pin" = "置顶";
+"menu_unpin" = "取消置顶";
 "no_result" = "未找到相关内容";
 "title_loading" = "正在加载...";
 "all_photos" = "所有照片";

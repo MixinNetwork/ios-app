@@ -146,7 +146,7 @@ public class WebSocketService {
                         }
                     }
                     if let conversationId = message.params?.conversationId {
-                        Logger.write(conversationId: conversationId, log: "[WebSocketService][RespondedMessage][\(message.action)]...\(error)")
+                        Log.conversation(id: conversationId).error(category: "WebSocketService", message: "Received response for \(message.action), error: \(error)")
                     }
                     err = error
                 }
@@ -164,10 +164,13 @@ public class WebSocketService {
             }
             
             if semaphore.wait(timeout: .now() + .seconds(Int(requestTimeout))) == .timedOut {
-                let category = message.params?.category ?? ""
-                let log = "[WebSocketService][RespondedMessage][\(category)]...semaphore timeout...requestTimeout:\(requestTimeout)"
-                let conversationId = message.params?.conversationId ?? ""
-                Logger.write(conversationId: conversationId, log: log)
+                let category = message.params?.category ?? "(null)"
+                let log = "Response timed out for \(category), timeout: \(requestTimeout)"
+                if let conversationId = message.params?.conversationId {
+                    Log.conversation(id: conversationId).error(category: "WebSocketService", message: log)
+                } else {
+                    Log.general.error(category: "WebSocketService", message: log)
+                }
             }
             
             guard let blazeMessage = response else {

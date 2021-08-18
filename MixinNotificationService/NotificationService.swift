@@ -88,14 +88,17 @@ final class NotificationService: UNNotificationServiceExtension {
         deliverContent(content: rawContent)
 
         if let conversationId = self.conversationId {
-            Logger.write(conversationId: conversationId, log: """
-                [\(messageId)]...\(from)...isExpired:\(isExpired)...
-                isLoggedIn:\(LoginManager.shared.isLoggedIn)]...
-                isDocumentsMigrated:\(AppGroupUserDefaults.isDocumentsMigrated)]...
-                needsUpgradeInMainApp:\(AppGroupUserDefaults.User.needsUpgradeInMainApp)]...
-                isProcessingMessagesInAppExtension:\(AppGroupUserDefaults.isProcessingMessagesInAppExtension)]...
-                isRunningInMainApp:\(AppGroupUserDefaults.isRunningInMainApp)]...
-            """)
+            let info: Log.UserInfo = [
+                "messageId": messageId,
+                "reason:": from,
+                "isExpired": isExpired,
+                "isLoggedIn": LoginManager.shared.isLoggedIn,
+                "isDocumentsMigrated": AppGroupUserDefaults.isDocumentsMigrated,
+                "needsUpgradeInMainApp": AppGroupUserDefaults.User.needsUpgradeInMainApp,
+                "isProcessingMessagesInAppExtension": AppGroupUserDefaults.isProcessingMessagesInAppExtension,
+                "isRunningInMainApp": AppGroupUserDefaults.isRunningInMainApp,
+            ]
+            Log.conversation(id: conversationId).error(category: "NotifcationService", message: "Delivered raw message", userInfo: info)
         }
     }
     

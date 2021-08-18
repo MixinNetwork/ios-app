@@ -424,7 +424,7 @@ public class SendMessageService: MixinService {
                         
                         let result = try sendSenderKey(conversationId: conversationId, recipientId: recipientId, sessionId: sessionId)
                         if !result {
-                            Logger.write(conversationId: conversationId, log: "[ResendSenderKey]...recipientId:\(recipientId)...No any group signal key from server")
+                            Log.conversation(id: conversationId).info(category: "ResendSenderKey", message: "Received no group signal key for recipient: \(recipientId)")
                             sendNoKeyMessage(conversationId: conversationId, recipientId: recipientId)
                         }
                     }
@@ -432,7 +432,8 @@ public class SendMessageService: MixinService {
                     ReceiveMessageService.shared.messageDispatchQueue.sync {
                         let blazeMessage = job.toBlazeMessage()
                         deliverNoThrow(blazeMessage: blazeMessage)
-                        Logger.write(conversationId: job.conversationId!, log: "[SendMessageService][REQUEST_RESEND_KEY]...messageId:\(blazeMessage.params?.messageId ?? "")")
+                        let messageId = blazeMessage.params?.messageId ?? "(null)"
+                        Log.conversation(id: job.conversationId!).info(category: "SendMessageService", message: "Request resend key for message: \(messageId)")
                     }
                 case JobAction.REQUEST_RESEND_MESSAGES.rawValue:
                     deliverNoThrow(blazeMessage: job.toBlazeMessage())
@@ -529,7 +530,7 @@ extension SendMessageService {
         blazeMessage.params?.data = try SignalProtocol.shared.encryptSessionMessageData(recipientId: recipientId, content: message.content ?? "", resendMessageId: messageId, sessionId: job.sessionId)
         try deliverMessage(blazeMessage: blazeMessage)
         
-        Logger.write(conversationId: message.conversationId, log: "[SendMessageService][ResendMessage]...messageId:\(messageId)...resendMessageId:\(resendMessageId)...resendUserId:\(recipientId)")
+        Log.conversation(id: message.conversationId).info(category: "SendMessageService", message: "Resend message: \(messageId), resendMessageId:\(resendMessageId), recipientId:\(recipientId)")
     }
     
     private func sendMessage(blazeMessage: BlazeMessage) throws {
@@ -601,7 +602,7 @@ extension SendMessageService {
         }
         
         try deliverMessage(blazeMessage: blazeMessage)
-        Logger.write(conversationId: message.conversationId, log: "[SendMessageService][SendMessage][\(message.category)]...messageId:\(messageId)...messageStatus:\(message.status)")
+        Log.conversation(id: message.conversationId).info(category: "SendMessageService", message: "Send message: \(messageId), category:\(message.category), status:\(message.status)")
     }
     
     private func checkConversationExist(conversation: ConversationItem) throws {

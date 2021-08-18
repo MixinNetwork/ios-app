@@ -267,7 +267,7 @@ extension BackupViewController {
             
             var log = "\n\(AppGroupContainer.documentsUrl.path)\n"
             log += Self.debugCloudFiles(baseDir: AppGroupContainer.documentsUrl, parentDir: AppGroupContainer.documentsUrl).joined(separator: "\n")
-            Logger.write(log: log)
+            Log.general.info(category: "BackupViewController", message: log)
             
             Log.database.info(category: "BackupViewController", message: "mixin.db size: \(AppGroupContainer.userDatabaseUrl.fileSize.sizeRepresentation())")
             

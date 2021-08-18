@@ -39,7 +39,7 @@ public enum MixinHost {
         }
         serverIndex = nextIndex
         AppGroupUserDefaults.serverIndex = nextIndex
-        Logger.write(log: "[MixinHost][ToggleIndex]...\(webSocket):\(http)", newSection: true)
+        Log.general.info(category: "MixinHost", message: "Toggled server to \(webSocket):\(http)")
     }
     
 }

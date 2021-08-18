@@ -192,9 +192,9 @@ class CallService: NSObject {
         }
     }
     
+    @inlinable
     func log(_ log: String) {
-        NSLog(log)
-        Logger.write(log: "[Call]" + log)
+        Log.call.info(message: log)
     }
     
 }

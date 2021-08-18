@@ -118,11 +118,7 @@ extension RocketWebSocket: SRWebSocketDelegate {
             errType = "\(code)"
         }
 
-        let log = "[RocketWebSocket][\(errType)][\(code)]...wasClean:\(wasClean)...\(reason ?? "")"
-        #if DEBUG
-        NSLog(log)
-        #endif
-        Logger.write(log: log)
+        Log.general.error(category: "RocketWebSocket", message: "Websocket closed with: \(errType), code: \(code), wasClean:\(wasClean), reaseon: \(reason)")
         
         reporter.report(error: MixinServicesError.websocketError(errType: errType, errMessage: errMessage, errCode: code))
         delegate?.websocketDidDisconnect(socket: self, isSwitchNetwork: false)

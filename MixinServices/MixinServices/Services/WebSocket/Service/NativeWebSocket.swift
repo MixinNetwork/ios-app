@@ -41,11 +41,7 @@ class NativeWebSocket: NSObject, WebSocketProvider {
                     self.delegate?.websocketDidReceiveData(socket: self, data: data)
                 }
             case let .failure(error):
-                let log = "[NativeWebSocket]Failed to receive message: \(error)...\(request.debugDescription)"
-                #if DEBUG
-                NSLog(log)
-                #endif
-                Logger.write(log: "[NativeWebSocket]Failed to receive message: \(error)...\(request.debugDescription)")
+                Log.general.error(category: "NativeWebSocket", message: "Failed to receive message for request: \(request), error: \(error)")
                 reporter.report(error: error)
             }
         })
@@ -81,7 +77,7 @@ class NativeWebSocket: NSObject, WebSocketProvider {
 extension NativeWebSocket: URLSessionWebSocketDelegate {
 
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-        Logger.write(log: "[NativeWebSocket] task complete with error: \(error). response: \(task.response), header: \(task.currentRequest?.allHTTPHeaderFields)")
+        Log.general.error(category: "NativeWebSocket", message: "Task complete with error: \(error). response: \(task.response), header: \(task.currentRequest?.allHTTPHeaderFields)")
     }
 
     func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didOpenWithProtocol protocol: String?) {
@@ -131,10 +127,8 @@ extension NativeWebSocket: URLSessionWebSocketDelegate {
         if let reason = reason, let reasonStr = String(data: reason, encoding: .utf8) {
             errMessage = reasonStr
         }
-        #if DEBUG
-        Logger.write(log: "[NativeWebSocket][\(errType)][\(closeCode.rawValue)]...\(errMessage)")
-        #endif
-
+        Log.general.error(category: "NativeWebSocket", message: "Websocket closed with: \(errType), code: \(closeCode.rawValue), message: \(errMessage)")
+        
         delegate?.websocketDidDisconnect(socket: self, isSwitchNetwork: isSwitchNetwork)
 
         if closeCode != .normalClosure {

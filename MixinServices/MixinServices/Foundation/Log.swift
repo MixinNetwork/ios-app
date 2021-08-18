@@ -1,4 +1,5 @@
 import Foundation
+import Zip
 
 public enum Log {
     
@@ -6,6 +7,19 @@ public enum Log {
     case database
     case call
     case conversation(id: String)
+    
+    public static func export(conversationId: String) -> URL? {
+        let subsystems = [general, database, call, conversation(id: conversationId)]
+        let files = subsystems.compactMap(\.fileURL)
+        let filename = "\(myIdentityNumber)_\(DateFormatter.filename.string(from: Date()))"
+        do {
+            return try Zip.quickZipFiles(files, fileName: filename)
+        } catch {
+            Log.general.error(category: "Logger", message: "Failed to zip files: \(error)")
+            reporter.report(error: error)
+            return nil
+        }
+    }
     
     public func debug(category: StaticString? = nil, message: String, userInfo: UserInfo? = nil) {
         write(level: .debug, category: category, message: message, userInfo: userInfo)
@@ -91,7 +105,7 @@ extension Log {
         
     }
     
-    private static let maxFileSize = 2 * bytesPerMegaByte
+    private static let maxFileSize = 5 * bytesPerMegaByte
     private static let queue = DispatchQueue(label: "one.mixin.services.log", qos: .utility)
     private static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()

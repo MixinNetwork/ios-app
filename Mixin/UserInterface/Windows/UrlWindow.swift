@@ -838,11 +838,11 @@ extension UrlWindow {
     private static func presentAuthorization(authorization: AuthorizationResponse, webContext: MixinWebViewController.Context? = nil, hud: Hud) {
         if let context = webContext,  case let .app(app, _) = context.style {
             if let switcher = UIApplication.homeContainerViewController?.clipSwitcher, let clip = switcher.clips.first(where: { $0.app?.appId == app.appId }) {
-                Logger.write(log: "[Authorization][Clip][\(clip.title)]...url:\(clip.url.absoluteString)")
+                Log.general.info(category: "Authorization", message: "Auth window presented from clip: \(clip.title), url: \(clip.url)")
             }
-            Logger.write(log: "[Authorization][WebContext][\(app.appNumber)][\(app.name)]...\(app.homeUri)")
+            Log.general.info(category: "Authorization", message: "Auth window presented with web context. App number: \(app.appNumber), name: \(app.name), home: \(app.homeUri)")
         } else {
-            Logger.write(log: "[Authorization][\(authorization.app.appNumber)][\(authorization.app.name)]...\(authorization.app.homeUri)")
+            Log.general.info(category: "Authorization", message: "Auth window presented with app number: \(authorization.app.appNumber), name: \(authorization.app.name), home: \(authorization.app.homeUri)")
         }
         
         if let window = UIApplication.shared.keyWindow?.subviews.compactMap({ $0 as? AuthorizationWindow }).first, window.isShowing {

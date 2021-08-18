@@ -95,7 +95,7 @@ public final class LoginManager {
         }
     }
     
-    public func logout(from: String) {
+    public func logout(from reason: String) {
         guard account != nil else {
             return
         }
@@ -110,7 +110,7 @@ public final class LoginManager {
         pthread_rwlock_unlock(&lock)
 
         if !isAppExtension {
-            Logger.write(log: "[LoginManager][Logout]...from:\(from)")
+            Log.general.error(category: "LoginManager", message: "Logout because: \(reason)")
             AppGroupUserDefaults.Account.serializedAccount = nil
             DispatchQueue.main.async {
                 INInteraction.deleteAll(completion: nil)

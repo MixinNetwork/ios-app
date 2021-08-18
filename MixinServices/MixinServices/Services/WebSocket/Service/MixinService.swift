@@ -136,7 +136,7 @@ public class MixinService {
         if !SignalProtocol.shared.containsSession(recipient: recipientId, deviceId: deviceId) {
             let signalKeys = signalKeysChannel(requestSignalKeyUsers: [BlazeMessageParamSession(userId: recipientId, sessionId: sessionId)])
             guard signalKeys.count > 0 else {
-                Logger.write(log: "[MixinService][CheckSignalSession]...recipientId:\(recipientId)...sessionId:\(sessionId ?? "")...signal keys count is zero ")
+                Log.general.error(category: "CheckSignalSession", message: "Got empty signal keys for recipient: \(recipientId), session: \(sessionId)")
                 return false
             }
             try SignalProtocol.shared.processSession(userId: recipientId, key: signalKeys[0])

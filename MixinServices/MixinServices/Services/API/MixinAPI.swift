@@ -117,7 +117,7 @@ extension MixinAPI {
         }
         
         if case let .failure(error) = result, error.isTransportTimedOut {
-            Logger.write(log: "[MixinAPI][SyncRequest]...timeout...requestTimeout:\(requestTimeout)... \(debugDescription)")
+            Log.general.error(category: "MixinAPI", message: "Sync request timed out with: \(error), timeout: \(requestTimeout)")
         }
         
         return result

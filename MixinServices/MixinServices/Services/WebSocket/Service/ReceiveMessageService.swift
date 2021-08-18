@@ -147,7 +147,7 @@ public class ReceiveMessageService: MixinService {
                 repeat {
                     let oldDate = AppGroupUserDefaults.checkStatusTimeInAppExtension
 
-                    Logger.write(log: "[ReceiveMessageService] waiting for app extension to process messages...checkStatusTimeInAppExtension:\(oldDate)...isStopProcessMessages:\(MixinService.isStopProcessMessages)")
+                    Log.general.error(category: "ReceiveMessageService", message: "Waiting for app extension to process messages, checkStatusTimeInAppExtension: \(oldDate), isStopProcessMessages: \(MixinService.isStopProcessMessages)")
 
                     DarwinNotificationManager.shared.checkAppExtensionStatus()
                     Thread.sleep(forTimeInterval: 2)
@@ -1147,7 +1147,7 @@ extension ReceiveMessageService {
             AppGroupUserDefaults.Account.extensionSession = systemSession.sessionId
             SignalProtocol.shared.deleteSession(userId: systemSession.userId)
 
-            Logger.write(log: "[ReceiveMessageService][ProcessSystemSessionMessage]...log out desktop...", newSection: true)
+            Log.general.info(category: "ProcessSystemSessionMessage", message: "Desktop logged out")
 
             ParticipantSessionDAO.shared.provisionSession(userId: systemSession.userId, sessionId: systemSession.sessionId)
             NotificationCenter.default.post(onMainThread: Self.userSessionDidChangeNotification, object: self)
@@ -1158,7 +1158,7 @@ extension ReceiveMessageService {
             AppGroupUserDefaults.Account.extensionSession = nil
             SignalProtocol.shared.deleteSession(userId: systemSession.userId)
 
-            Logger.write(log: "[ReceiveMessageService][ProcessSystemSessionMessage]...log in desktop...", newSection: true)
+            Log.general.info(category: "ProcessSystemSessionMessage", message: "Desktop logged in")
 
             JobDAO.shared.clearSessionJob()
             ParticipantSessionDAO.shared.destorySession(userId: systemSession.userId, sessionId: systemSession.sessionId)

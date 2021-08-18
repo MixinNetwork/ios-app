@@ -32,7 +32,7 @@ class RestoreViewController: UIViewController {
         guard !restoreButton.isBusy else {
             return
         }
-        Logger.write(log: "[iCloud][RestoreViewController]...restore...")
+        Log.general.info(category: "Restore", message: "Begin restore")
         restoreButton.isBusy = true
         skipButton.isHidden = true
         progressLabel.isHidden = false
@@ -49,7 +49,7 @@ class RestoreViewController: UIViewController {
                 cloudURL = backupDir.appendingPathComponent("mixin.backup.db")
             }
             guard cloudURL.isStoredCloud else {
-                Logger.write(log: "[iCloud][RestoreViewController][\(cloudURL.suffix(base: backupDir))]...isStoredCloud:false")
+                Log.general.info(category: "Restore", message: "Missing file: \(cloudURL.suffix(base: backupDir))")
                 DispatchQueue.main.async {
                     self.skipAction(sender)
                 }
@@ -64,7 +64,7 @@ class RestoreViewController: UIViewController {
                         self.progressLabel.text = NumberFormatter.simplePercentage.string(from: NSNumber(value: progress))
                     })
                 } else {
-                    Logger.write(log: "[iCloud][RestoreViewController][\(cloudURL.suffix(base: backupDir))]...isDownloaded:false")
+                    Log.general.info(category: "Restore", message: "File not downloaded: \(cloudURL.suffix(base: backupDir))")
                 }
                 if FileManager.default.fileExists(atPath: localURL.path) {
                     UserDatabase.closeCurrent()
@@ -91,7 +91,7 @@ class RestoreViewController: UIViewController {
     }
 
     @IBAction func skipAction(_ sender: Any) {
-        Logger.write(log: "[iCloud][RestoreViewController]...skip...")
+        Log.general.info(category: "Restore", message: "Restoration skipped")
         AppGroupUserDefaults.Account.canRestoreChat = false
         AppGroupUserDefaults.Account.canRestoreMedia = false
         AppDelegate.current.mainWindow.rootViewController =

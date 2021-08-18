@@ -9,18 +9,6 @@ public enum Logger {
     private static let errorLog = "error"
     private static let databaseLog = "database"
     
-    public static func write(log: String, newSection: Bool = false) {
-        queue.async {
-            if log.hasPrefix("[Call]") {
-                writeLog(filename: callLog, log: log, newSection: newSection)
-            } else if log.hasPrefix("No sender key for:"), let conversationId = log.suffix(char: ":")?.substring(endChar: ":").trim() {
-//                write(conversationId: conversationId, log: log, newSection: newSection)
-            } else {
-                writeLog(filename: systemLog, log: log, newSection: newSection)
-            }
-        }
-    }
-    
     private static func writeLog(filename: String, log: String, newSection: Bool = false, appendTime: Bool = true) {
         guard LoginManager.shared.isLoggedIn else {
             return

@@ -334,8 +334,7 @@ public class ReceiveMessageService: MixinService {
         {
             switch action {
             case .pin:
-                let pinMessage = PinMessage(messageId: messageId, conversationId: message.conversationId, createdAt: data.createdAt)
-                PinMessageDAO.shared.insertMessage(pinMessage)
+                PinMessageDAO.shared.insertMessage(message)
             case .unpin:
                 PinMessageDAO.shared.deleteMessage(id: messageId)
             }

@@ -2,7 +2,16 @@ import GRDB
 
 public final class PinMessageDAO: UserDatabaseDAO {
     
+    public enum UserInfoKey {
+        public static let conversationId = "conv_id"
+        public static let message = "msg"
+        public static let messageId = "mid"
+        public static let isPin = "is_pin"
+    }
+    
     public static let shared = PinMessageDAO()
+    
+    public static let pinMessageDidChangeNotification = NSNotification.Name("one.mixin.services.PinMessageDAO.pinMessageDidChange")
     
     static let messageItemQuery = """
     SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_mime_type,
@@ -25,12 +34,12 @@ public final class PinMessageDAO: UserDatabaseDAO {
     )
     LEFT JOIN users su ON m.shared_user_id = su.user_id
     LEFT JOIN message_mentions mm ON m.id = mm.message_id
-    LEFT JOIN pin_messages p ON m.message_id = p.message_id
     """
     
     public func messageItems(conversationId: String) -> [MessageItem] {
         let sql = """
         \(Self.messageItemQuery)
+        LEFT JOIN pin_messages p ON m.message_id = p.message_id
         WHERE m.conversation_id = ?
         ORDER BY p.created_at DESC
         """
@@ -39,15 +48,36 @@ public final class PinMessageDAO: UserDatabaseDAO {
     
     public func deleteMessage(id: String) {
         db.write { (db) in
-            try PinMessage
-                .filter(Message.column(of: .messageId) == id)
-                .deleteAll(db)
+            let request = PinMessage.filter(Message.column(of: .messageId) == id)
+            guard let message = try request.fetchOne(db) else {
+                return
+            }
+            try request.deleteAll(db)
+            db.afterNextTransactionCommit { db in
+                let userInfo: [String: Any] = [
+                    PinMessageDAO.UserInfoKey.conversationId: message.conversationId,
+                    PinMessageDAO.UserInfoKey.messageId: message.messageId,
+                    PinMessageDAO.UserInfoKey.isPin: false
+                ]
+                NotificationCenter.default.post(onMainThread: PinMessageDAO.pinMessageDidChangeNotification, object: self, userInfo: userInfo)
+            }
         }
+        
     }
     
-    public func insertMessage(_ message: PinMessage) {
+    public func insertMessage(_ message: MessageItem) {
         db.write { db in
-            try message.save(db)
+            let pinMessage = PinMessage(messageId: message.messageId, conversationId: message.conversationId, createdAt:  Date().toUTCString())
+            try pinMessage.save(db)
+            db.afterNextTransactionCommit { db in
+                let userInfo: [String: Any] = [
+                    PinMessageDAO.UserInfoKey.conversationId: message.conversationId,
+                    PinMessageDAO.UserInfoKey.messageId: message.messageId,
+                    PinMessageDAO.UserInfoKey.isPin: true,
+                    PinMessageDAO.UserInfoKey.message: message
+                ]
+                NotificationCenter.default.post(onMainThread: PinMessageDAO.pinMessageDidChangeNotification, object: self, userInfo: userInfo)
+            }
         }
     }
     

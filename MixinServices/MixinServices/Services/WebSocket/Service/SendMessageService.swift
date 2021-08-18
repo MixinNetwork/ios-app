@@ -23,13 +23,11 @@ public class SendMessageService: MixinService {
     public func pinMessage(item: MessageItem, action: TransferPinDataAction) {
         let blazeMessage = BlazeMessage(pinMessageId: item.messageId, conversationId: item.conversationId, action: action)
         let job = Job(jobId: UUID().uuidString.lowercased(), action: JobAction.SEND_MESSAGE, conversationId: item.conversationId, blazeMessage: blazeMessage)
-        //TODO: ‼️ createAt is ???
-        let pinMessage = PinMessage(messageId: item.messageId, conversationId: item.conversationId, createdAt:  Date().toUTCString())
         UserDatabase.current.write { db in
             try job.save(db)
             switch action {
             case .pin:
-                try PinMessageDAO.shared.insertMessage(pinMessage)
+                try PinMessageDAO.shared.insertMessage(item)
             case .unpin:
                 try PinMessageDAO.shared.deleteMessage(id: item.messageId)
             }
@@ -413,6 +411,8 @@ public class SendMessageService: MixinService {
                         let blazeMessage = job.toBlazeMessage()
                         if blazeMessage.action == BlazeMessageAction.createCall.rawValue {
                             try SendMessageService.shared.sendCallMessage(blazeMessage: blazeMessage)
+                        } else if blazeMessage.params?.category == MessageCategory.MESSAGE_PIN.rawValue {
+                            try SendMessageService.shared.sendPinMessage(blazeMessage: blazeMessage)
                         } else {
                             try SendMessageService.shared.sendMessage(blazeMessage: blazeMessage)
                         }
@@ -621,12 +621,7 @@ extension SendMessageService {
         try deliverMessage(blazeMessage: blazeMessage)
         Logger.conversation(id: message.conversationId).info(category: "SendMessageService", message: "Send message: \(messageId), category:\(message.category), status:\(message.status)")
     }
-    
-    private func sendPinMessage(blazeMessage: BlazeMessage) throws {
-        //TODO: ‼️ fix this
-        try deliverMessage(blazeMessage: blazeMessage)
-    }
-    
+        
     private func checkConversationExist(conversation: ConversationItem) throws {
         guard conversation.status == ConversationStatus.START.rawValue else {
             return
@@ -659,6 +654,20 @@ extension SendMessageService {
             return
         }
         guard MixinService.callMessageCoordinator.shouldSendRtcBlazeMessage(with: category) else {
+            return
+        }
+        guard let conversationId = params.conversationId else {
+            return
+        }
+        guard let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId) else {
+            return
+        }
+        try checkConversationExist(conversation: conversation)
+        try deliverMessage(blazeMessage: blazeMessage)
+    }
+    
+    private func sendPinMessage(blazeMessage: BlazeMessage) throws {
+        guard let params = blazeMessage.params else {
             return
         }
         guard let conversationId = params.conversationId else {

@@ -59,6 +59,9 @@ class DatabaseUpgradeViewController: UIViewController {
             if localVersion < 26 {
                 AppGroupUserDefaults.User.isCircleSynchronized = true
             }
+            if localVersion < 27 {
+                Logger.migrate()
+            }
             
             AppGroupUserDefaults.User.needsRebuildDatabase = false
             AppGroupUserDefaults.User.localVersion = AppGroupUserDefaults.User.version

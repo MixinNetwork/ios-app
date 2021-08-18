@@ -8,6 +8,47 @@ public enum Logger {
     case call
     case conversation(id: String)
     
+    public static func migrate() {
+        let fileManager = FileManager.default
+        guard fileManager.fileExists(atPath: AppGroupContainer.logUrl.path) else {
+            return
+        }
+        guard let contents = try? fileManager.contentsOfDirectory(atPath: AppGroupContainer.logUrl.path) else {
+            return
+        }
+        
+        var legacyGeneralLog = Data()
+        let legacySystemLogURL = AppGroupContainer.logUrl.appendingPathComponent("system.txt")
+        let legacyErrorLogURL = AppGroupContainer.logUrl.appendingPathComponent("error.txt")
+        if fileManager.fileExists(atPath: legacySystemLogURL.path), let log = try? Data(contentsOf: legacySystemLogURL) {
+            legacyGeneralLog = log
+        }
+        if fileManager.fileExists(atPath: legacyErrorLogURL.path), let log = try? Data(contentsOf: legacyErrorLogURL) {
+            legacyGeneralLog += log
+        }
+        if let url = general.fileURL, !legacyGeneralLog.isEmpty, let handle = FileHandle(forWritingAtPath: url.path) {
+            handle.seekToEndOfFile()
+            handle.write(legacyGeneralLog)
+            try? fileManager.removeItem(at: legacySystemLogURL)
+            try? fileManager.removeItem(at: legacyErrorLogURL)
+        }
+        
+        for filename in contents {
+            if filename.hasSuffix(".log") {
+                // Do nothing
+            } else if filename.hasSuffix(".txt") {
+                let newName = String(filename[filename.startIndex..<filename.index(filename.endIndex, offsetBy: -3)]) + "log"
+                try? fileManager.moveItem(at: AppGroupContainer.logUrl.appendingPathComponent(filename),
+                                          to: AppGroupContainer.logUrl.appendingPathComponent(newName))
+            } else {
+                let newName = filename + ".log"
+                try? fileManager.moveItem(at: AppGroupContainer.logUrl.appendingPathComponent(filename),
+                                          to: AppGroupContainer.logUrl.appendingPathComponent(newName))
+            }
+        }
+
+    }
+    
     public static func export(conversationId: String) -> URL? {
         let subsystems = [general, database, call, conversation(id: conversationId)]
         let files = subsystems.compactMap(\.fileURL)
@@ -120,7 +161,7 @@ extension Logger {
         case .general:
             filename = "general.log"
         case .database:
-            filename = "db.log"
+            filename = "database.log"
         case .call:
             filename = "call.log"
         case .conversation(let id):

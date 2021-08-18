@@ -56,7 +56,7 @@ class GroupCallMembersManager {
     }
     
     func addMember(with userId: String, toConversationWith conversationId: String) {
-        CallService.shared.log("[GroupCallMembersManager] Add member: \(userId), to: \(conversationId)")
+        Logger.call.info(category: "GroupCallMembersManager", message: "Add member: \(userId), to: \(conversationId)")
         var members = self.members[conversationId] ?? []
         if !members.contains(userId) {
             members.append(userId)
@@ -74,7 +74,7 @@ class GroupCallMembersManager {
         guard var members = self.members[conversationId] else {
             return
         }
-        CallService.shared.log("[GroupCallMembersManager] Remove member: \(userId), from: \(conversationId)")
+        Logger.call.info(category: "GroupCallMembersManager", message: "Remove member: \(userId), from: \(conversationId)")
         let countBefore = members.count
         members.removeAll(where: { $0 == userId })
         if members.count != countBefore {
@@ -98,7 +98,7 @@ class GroupCallMembersManager {
             return
         }
         let remoteUserIds = peers.map(\.userId)
-        CallService.shared.log("[GroupCallMembersManager] Load members: \(remoteUserIds), for conversation: \(id)")
+        Logger.call.info(category: "GroupCallMembersManager", message: "Load members: \(remoteUserIds), for conversation: \(id)")
         loadedConversationsId.insert(id)
         
         let newMembers: [String]
@@ -131,24 +131,24 @@ extension GroupCallMembersManager {
         }
         let timer = Timer(timeInterval: pollingInterval, repeats: true) { [weak self] (timer) in
             guard let self = self else {
-                CallService.shared.log("[PeerPolling] manager of \(conversationId) is nil out")
+                Logger.call.info(category: "PeerPolling", message: "manager of \(conversationId) is nil out")
                 timer.invalidate()
                 return
             }
             self.queue.async {
                 guard let peers = KrakenMessageRetriever.shared.requestPeers(forConversationWith: conversationId) else {
-                    CallService.shared.log("[PeerPolling] Peer request failed. cid: \(conversationId)")
+                    Logger.call.info(category: "PeerPolling", message: "Peer request failed. cid: \(conversationId)")
                     return
                 }
                 let remoteUserIds = Set(peers.map(\.userId))
-                CallService.shared.log("[PeerPolling] cid: \(conversationId), remote id: \(remoteUserIds)")
+                Logger.call.info(category: "PeerPolling", message: "cid: \(conversationId), remote id: \(remoteUserIds)")
                 var localUserIds = self.members[conversationId] ?? []
-                CallService.shared.log("[PeerPolling] cid: \(conversationId), local id: \(localUserIds)")
+                Logger.call.info(category: "PeerPolling", message: "cid: \(conversationId), local id: \(localUserIds)")
                 localUserIds = localUserIds.filter(remoteUserIds.contains)
                 self.members[conversationId] = localUserIds
                 if localUserIds.isEmpty {
                     timer.invalidate()
-                    CallService.shared.log("[PeerPolling] Member polling for \(conversationId) ends")
+                    Logger.call.info(category: "PeerPolling", message: "Member polling for \(conversationId) ends")
                 }
                 let userInfo: [String: Any] = [
                     Self.UserInfoKey.conversationId: conversationId,
@@ -161,7 +161,7 @@ extension GroupCallMembersManager {
         }
         RunLoop.main.add(timer, forMode: .common)
         pollingTimers.setObject(timer, forKey: key)
-        CallService.shared.log("[PeerPolling] Begin polling members for \(conversationId)")
+        Logger.call.info(category: "PeerPolling", message: "Begin polling members for \(conversationId)")
     }
     
     private func endPolling(forConversationWith id: String) {
@@ -169,7 +169,7 @@ extension GroupCallMembersManager {
             return
         }
         timer.invalidate()
-        CallService.shared.log("[PeerPolling] End polling members for \(id)")
+        Logger.call.info(category: "PeerPolling", message: "End polling members for \(id)")
     }
     
 }

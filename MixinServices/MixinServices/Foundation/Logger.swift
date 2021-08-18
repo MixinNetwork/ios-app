@@ -21,27 +21,27 @@ public enum Logger {
         }
     }
     
-    public func debug(category: StaticString? = nil, message: String, userInfo: UserInfo? = nil) {
+    public func debug(category: StaticString, message: String, userInfo: UserInfo? = nil) {
         write(level: .debug, category: category, message: message, userInfo: userInfo)
     }
     
-    public func info(category: StaticString? = nil, message: String, userInfo: UserInfo? = nil) {
+    public func info(category: StaticString, message: String, userInfo: UserInfo? = nil) {
         write(level: .info, category: category, message: message, userInfo: userInfo)
     }
     
-    public func error(category: StaticString? = nil, message: String, userInfo: UserInfo? = nil) {
+    public func error(category: StaticString, message: String, userInfo: UserInfo? = nil) {
         write(level: .error, category: category, message: message, userInfo: userInfo)
     }
     
-    public func debug(category: StaticString? = nil, message: String, userInfo: [UserInfo.Key: UserInfo.Value]) {
+    public func debug(category: StaticString, message: String, userInfo: [UserInfo.Key: UserInfo.Value]) {
         write(level: .debug, category: category, message: message, userInfo: UserInfo(userInfo))
     }
     
-    public func info(category: StaticString? = nil, message: String, userInfo: [UserInfo.Key: UserInfo.Value]) {
+    public func info(category: StaticString, message: String, userInfo: [UserInfo.Key: UserInfo.Value]) {
         write(level: .info, category: category, message: message, userInfo: UserInfo(userInfo))
     }
     
-    public func error(category: StaticString? = nil, message: String, userInfo: [UserInfo.Key: UserInfo.Value]) {
+    public func error(category: StaticString, message: String, userInfo: [UserInfo.Key: UserInfo.Value]) {
         write(level: .error, category: category, message: message, userInfo: UserInfo(userInfo))
     }
     
@@ -136,7 +136,7 @@ extension Logger {
         }
     }
     
-    private func write(level: Level, category: StaticString?, message: String, userInfo: UserInfo? = nil) {
+    private func write(level: Level, category: StaticString, message: String, userInfo: UserInfo? = nil) {
         let date = Date()
         
         var formattedDate: String {
@@ -152,14 +152,10 @@ extension Logger {
         }
         
         #if DEBUG
-        let output: String
-        if let category = category {
-            output = "\(formattedDate) \(level.briefOutput)[\(category)] \(message)\(formattedUserInfo)"
-        } else {
-            output = "\(formattedDate) \(level.briefOutput)\(message)\(formattedUserInfo)"
-        }
+        let output = "\(formattedDate) \(level.briefOutput)[\(category)] \(message)\(formattedUserInfo)"
         print(output)
         #endif
+        
         guard level != .debug else {
             return
         }
@@ -169,12 +165,7 @@ extension Logger {
             }
             
             let appExtensionMark = isAppExtension ? "[AppExtension]" : ""
-            let output: String
-            if let category = category {
-                output = "\(formattedDate) \(appExtensionMark)\(level.output)[\(category)] \(message)\(formattedUserInfo)\n"
-            } else {
-                output = "\(formattedDate) \(appExtensionMark)\(level.output)\(message)\(formattedUserInfo)\n"
-            }
+            let output = "\(formattedDate) \(appExtensionMark)\(level.output)[\(category)] \(message)\(formattedUserInfo)\n"
             
             let existedFileSize = FileManager.default.fileSize(url.path)
             if existedFileSize > Self.maxFileSize {

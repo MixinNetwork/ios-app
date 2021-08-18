@@ -33,7 +33,7 @@ class GroupCallMemberDataSource: NSObject {
     private weak var participantsCountLabel: UILabel?
     
     init(conversationId: String, members: [UserItem], invitingMemberUserIds: Set<String>) {
-        CallService.shared.log("[GroupCallMemberDataSource] init with members: \(members.map(\.fullName)), inviting: \(invitingMemberUserIds)")
+        Logger.call.info(category: "GroupCallMemberDataSource", message: "init with members: \(members.map(\.fullName)), inviting: \(invitingMemberUserIds)")
         self.members = members
         self.invitingMemberUserIds = invitingMemberUserIds
         self.conversationId = conversationId
@@ -55,7 +55,7 @@ class GroupCallMemberDataSource: NSObject {
     }
     
     func reportStartInviting(_ members: [UserItem]) {
-        CallService.shared.log("[GroupCallMemberDataSource] start inviting: \(members.map(\.fullName))")
+        Logger.call.info(category: "GroupCallMemberDataSource", message: "start inviting: \(members.map(\.fullName))")
         let filtered = members.filter { (member) -> Bool in
             !self.memberUserIds.contains(member.userId)
         }
@@ -74,7 +74,7 @@ class GroupCallMemberDataSource: NSObject {
     }
     
     func reportMemberDidConnected(_ member: UserItem) {
-        CallService.shared.log("[GroupCallMemberDataSource] \(member.fullName) did connected")
+        Logger.call.info(category: "GroupCallMemberDataSource", message: "\(member.fullName) did connected")
         invitingMemberUserIds.remove(member.userId)
         if let index = members.firstIndex(where: { $0.userId == member.userId }) {
             let indexPath = self.indexPath(forMemberAt: index)
@@ -93,7 +93,7 @@ class GroupCallMemberDataSource: NSObject {
     }
     
     func reportMemberWithIdDidDisconnected(_ id: String) {
-        CallService.shared.log("[GroupCallMemberDataSource] \(id) did disconnected")
+        Logger.call.info(category: "GroupCallMemberDataSource", message: "\(id) did disconnected")
         invitingMemberUserIds.remove(id)
         memberUserIds.remove(id)
         if let index = members.firstIndex(where: { $0.userId == id }) {
@@ -156,7 +156,7 @@ class GroupCallMemberDataSource: NSObject {
                 guard !remoteIds.contains(member.userId) && member.userId != myUserId else {
                     continue
                 }
-                CallService.shared.log("[GroupCallMemberDataSource] remove zombie: \(member.fullName), at: \(index)")
+                Logger.call.info(category: "GroupCallMemberDataSource", message: "remove zombie: \(member.fullName), at: \(index)")
                 self.invitingMemberUserIds.remove(member.userId)
                 self.memberUserIds.remove(member.userId)
                 self.members.remove(at: index)

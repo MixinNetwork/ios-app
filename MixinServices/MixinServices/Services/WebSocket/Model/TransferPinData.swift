@@ -12,7 +12,7 @@ public struct TransferPinData: Codable {
     
 }
 
-public enum TransferPinDataAction: String {
+public enum TransferPinAction: String {
     case pin = "PIN"
     case unpin = "UNPIN"
 }

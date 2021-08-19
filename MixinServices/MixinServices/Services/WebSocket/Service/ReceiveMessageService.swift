@@ -325,20 +325,30 @@ public class ReceiveMessageService: MixinService {
         guard data.category == MessageCategory.MESSAGE_PIN.rawValue else {
             return
         }
-        updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
-        if let base64Data = Data(base64Encoded: data.data),
-           let plainData = (try? JSONDecoder.default.decode(TransferPinData.self, from: base64Data)),
-           let action = TransferPinDataAction(rawValue: plainData.action),
-           let messageId = plainData.messageIds.first,
-           let message = MessageDAO.shared.getFullMessage(messageId: messageId)
-        {
-            switch action {
-            case .pin:
-                PinMessageDAO.shared.insertMessage(message)
-            case .unpin:
-                PinMessageDAO.shared.deleteMessage(id: messageId)
-            }
+        guard ConversationDAO.shared.isExist(conversationId: data.conversationId),
+              let base64Data = Data(base64Encoded: data.data),
+              let plainData = (try? JSONDecoder.default.decode(TransferPinData.self, from: base64Data)),
+              let action = TransferPinAction(rawValue: plainData.action),
+              let messageId = plainData.messageIds.first,
+              let fullMessage = MessageDAO.shared.getFullMessage(messageId: messageId)
+        else {
+            updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
+            return
         }
+        let message = Message.createMessage(pinMessage: plainData.action, userId: data.userId, data: data)
+        switch action {
+        case .pin:
+            PinMessageDAO.shared.pinMessage(message: message,
+                                            fullMessage: fullMessage,
+                                            source: data.source,
+                                            silentNotification: data.silentNotification)
+        case .unpin:
+            PinMessageDAO.shared.unpinMessage(message: message,
+                                              fullMessage: fullMessage,
+                                              source: data.source,
+                                              silentNotification: data.silentNotification)
+        }
+        updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
     }
     
     private func processRecallMessage(data: BlazeMessageData) {

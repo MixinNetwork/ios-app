@@ -369,6 +369,20 @@
 "chat_pick_from_library" = "Pick from Library";
 "chat_manage_photo_auth" = "Manage";
 "chat_photo_select_more" = "Select More Photos";
+"chat_pinned_message_action" = "pinned";
+"chat_unpinned_message_action" = "unpinned";
+"chat_pin_general_message" = "%@ %@ a message";
+"chat_pin_text_message" = "%@ %@ '%@'";
+"chat_pin_image_message" = "%@ %@ a photo";
+"chat_pin_video_message" = "%@ %@ a video";
+"chat_pin_live_message" = "%@ %@ a live stream";
+"chat_pin_data_message" = "%@ %@ a file";
+"chat_pin_sticker_message" = "%@ %@ a sticker";
+"chat_pin_contact_message" = "%@ %@ a contact";
+"chat_pin_audio_message" = "%@ %@ an audio";
+"chat_pin_post_message" = "%@ %@ a post";
+"chat_pin_location_message" = "%@ %@ a location";
+"chat_pin_transcript_message" = "%@ %@ a transcript";
 
 // Web
 "web_suspicious_link" = "Suspicious Link";

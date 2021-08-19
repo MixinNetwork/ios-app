@@ -369,6 +369,20 @@
 "chat_pick_from_library" = "打开相册";
 "chat_manage_photo_auth" = "更改设置";
 "chat_photo_select_more" = "选择更多照片";
+"chat_pinned_message_action" = "置顶了";
+"chat_unpinned_message_action" = "取消置顶了";
+"chat_pin_general_message" = "%@%@一条消息";
+"chat_pin_text_message" = "%@%@'%@'";
+"chat_pin_image_message" = "%@%@一张图片";
+"chat_pin_video_message" = "%@%@一个视频";
+"chat_pin_live_message" = "%@%@一个直播";
+"chat_pin_data_message" = "%@%@一个文件";
+"chat_pin_sticker_message" = "%@%@一个贴纸";
+"chat_pin_contact_message" = "%@%@一个联系人";
+"chat_pin_audio_message" = "%@%@一个语音";
+"chat_pin_post_message" = "%@%@一篇文章";
+"chat_pin_location_message" = "%@%@一处位置";
+"chat_pin_transcript_message" = "%@%@一个聊天记录";
 
 // Web
 "web_suspicious_link" = "可疑链接";

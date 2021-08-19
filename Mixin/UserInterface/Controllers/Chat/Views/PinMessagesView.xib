@@ -83,10 +83,10 @@
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
                 <outlet property="closeButton" destination="TtF-Y8-1dd" id="VJW-K4-cdK"/>
-                <outlet property="contentButton" destination="SgE-DM-HcT" id="wyb-Ko-pJR"/>
-                <outlet property="contentLabel" destination="apB-WS-4Gl" id="4Hc-Ta-t7d"/>
                 <outlet property="countLabel" destination="6g9-Xw-LKA" id="nm3-gj-Sdi"/>
+                <outlet property="messageLabel" destination="apB-WS-4Gl" id="4Hc-Ta-t7d"/>
                 <outlet property="pinButton" destination="VDy-MD-ZJc" id="L9N-qN-YWp"/>
+                <outlet property="wrapperButton" destination="SgE-DM-HcT" id="wyb-Ko-pJR"/>
             </connections>
             <point key="canvasLocation" x="-128.2608695652174" y="265.84821428571428"/>
         </view>

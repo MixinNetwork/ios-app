@@ -12,9 +12,9 @@ final class PinMessagesView: UIView {
     
     @IBOutlet weak var pinButton: UIButton!
     @IBOutlet weak var countLabel: RoundedInsetLabel!
-    @IBOutlet weak var contentButton: UIButton!
+    @IBOutlet weak var wrapperButton: UIButton!
     @IBOutlet weak var closeButton: UIButton!
-    @IBOutlet weak var contentLabel: UILabel!
+    @IBOutlet weak var messageLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -37,16 +37,23 @@ final class PinMessagesView: UIView {
 
 extension PinMessagesView {
     
-    func showMessage() {
+    func updateCount(_ count: Int) {
+        countLabel.text = "\(count)"
+    }
+    
+    func update(content: String, count: Int) {
         closeButton.isHidden = false
-        contentButton.isHidden = false
-        contentLabel.isHidden = false
+        wrapperButton.isHidden = false
+        messageLabel.isHidden = false
+        messageLabel.text = content
+        countLabel.text = "\(count)"
     }
     
     func hideMessage() {
         closeButton.isHidden = true
-        contentButton.isHidden = true
-        contentLabel.isHidden = true
+        wrapperButton.isHidden = true
+        messageLabel.isHidden = true
     }
     
 }
+

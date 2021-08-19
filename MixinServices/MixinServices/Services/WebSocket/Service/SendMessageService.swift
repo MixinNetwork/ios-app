@@ -20,18 +20,11 @@ public class SendMessageService: MixinService {
     private let httpDispatchQueue = DispatchQueue(label: "one.mixin.services.queue.send.http.messages")
     private var httpProcessing = false
     
-    public func pinMessage(item: MessageItem, action: TransferPinDataAction) {
+    public func pinMessage(item: MessageItem, action: TransferPinAction) {
         let blazeMessage = BlazeMessage(pinMessageId: item.messageId, conversationId: item.conversationId, action: action)
         let job = Job(jobId: UUID().uuidString.lowercased(), action: JobAction.SEND_MESSAGE, conversationId: item.conversationId, blazeMessage: blazeMessage)
-        UserDatabase.current.write { db in
-            try job.save(db)
-            switch action {
-            case .pin:
-                try PinMessageDAO.shared.insertMessage(item)
-            case .unpin:
-                try PinMessageDAO.shared.deleteMessage(id: item.messageId)
-            }
-        }
+        //TODO: ‼️ insert to db ???
+        UserDatabase.current.save(job)
         SendMessageService.shared.processMessages()
     }
     

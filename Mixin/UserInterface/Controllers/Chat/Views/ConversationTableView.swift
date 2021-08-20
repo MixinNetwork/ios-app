@@ -163,6 +163,7 @@ class ConversationTableView: UITableView {
         register(AudioMessageCell.self, forCellReuseIdentifier: ReuseId.audio.rawValue)
         register(LocationMessageCell.self, forCellReuseIdentifier: ReuseId.location.rawValue)
         register(TranscriptMessageCell.self, forCellReuseIdentifier: ReuseId.transcript.rawValue)
+        register(PinMessageCell.self, forCellReuseIdentifier: ReuseId.pin.rawValue)
     }
     
 }
@@ -202,6 +203,7 @@ extension ConversationTableView {
         case location = "LocationMessageCell"
         case iconPrefixedText = "IconPrefixedTextMessageCell"
         case transcript = "TranscriptMessageCell"
+        case pin = "PinMessageCell"
         case header = "DateHeader"
         
         init(category: String) {
@@ -239,6 +241,8 @@ extension ConversationTableView {
                 self = .appButtonGroup
             } else if category == MessageCategory.APP_CARD.rawValue {
                 self = .appCard
+            } else if category == MessageCategory.MESSAGE_PIN.rawValue {
+                self = .pin
             } else {
                 self = .unknown
             }

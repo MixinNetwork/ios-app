@@ -15,6 +15,17 @@ public final class PinMessage {
     
 }
 
+extension PinMessage {
+    
+    public struct LocalContent: Codable {
+        
+        public let category: String
+        public let content: String?
+        
+    }
+    
+}
+
 extension PinMessage: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord {
     
     public enum CodingKeys: String, CodingKey {

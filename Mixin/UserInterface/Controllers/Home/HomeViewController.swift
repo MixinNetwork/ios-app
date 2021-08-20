@@ -741,6 +741,7 @@ extension HomeViewController {
             self.conversations[indexPath.row].unseenMessageCount = 0
             self.tableView.reloadRows(at: [indexPath], with: .automatic)
             self.tableView.endUpdates()
+            self.cleanDisplayedPinMessagesIfNeeded(conversationId: conversation.conversationId)
             DispatchQueue.global().async {
                 ConversationDAO.shared.clearChat(conversationId: conversationId)
             }
@@ -761,6 +762,7 @@ extension HomeViewController {
                 case .success:
                     hud.hide()
                     self?.conversations[indexPath.row].status = ConversationStatus.QUIT.rawValue
+                    self?.cleanDisplayedPinMessagesIfNeeded(conversationId: conversation.conversationId)
                     DispatchQueue.global().async {
                         ConversationDAO.shared.exitGroup(conversationId: conversationId)
                     }
@@ -769,6 +771,7 @@ extension HomeViewController {
                     case .forbidden, .notFound:
                         hud.hide()
                         self?.conversations[indexPath.row].status = ConversationStatus.QUIT.rawValue
+                        self?.cleanDisplayedPinMessagesIfNeeded(conversationId: conversation.conversationId)
                         DispatchQueue.global().async {
                             ConversationDAO.shared.exitGroup(conversationId: conversationId)
                         }
@@ -873,6 +876,13 @@ extension HomeViewController {
         } else if checkWalletBalanceForEmergencyContactBulletin {
             showEmergencyContactBulletinIfNeeded()
         }
+    }
+    
+    private func cleanDisplayedPinMessagesIfNeeded(conversationId: String) {
+        guard AppGroupUserDefaults.User.needsDisplayedPinMessages[conversationId] != nil else {
+            return
+        }
+        AppGroupUserDefaults.User.needsDisplayedPinMessages[conversationId] = ""
     }
     
 }

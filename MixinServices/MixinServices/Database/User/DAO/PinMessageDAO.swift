@@ -39,7 +39,7 @@ public final class PinMessageDAO: UserDatabaseDAO {
     public func messageItems(conversationId: String) -> [MessageItem] {
         let sql = """
         \(Self.messageItemQuery)
-        LEFT JOIN pin_messages p ON m.message_id = p.message_id
+        LEFT JOIN pin_messages p ON m.id = p.message_id
         WHERE m.conversation_id = ?
         ORDER BY p.created_at DESC
         """
@@ -49,19 +49,17 @@ public final class PinMessageDAO: UserDatabaseDAO {
     public func messageItem(messageId: String) -> MessageItem? {
         let sql = """
         \(Self.messageItemQuery)
-        LEFT JOIN pin_messages p ON m.message_id = p.message_id
+        LEFT JOIN pin_messages p ON m.id = p.message_id
         WHERE m.message_id = ?
         """
         return db.select(with: sql, arguments: [messageId])
     }
     
-    public func unpinMessage(message: Message, fullMessage: MessageItem, source: String, silentNotification: Bool) -> Bool {
-        let pinMessage = PinMessage(messageId: fullMessage.messageId, conversationId: fullMessage.conversationId, createdAt: message.createdAt)
-        return db.write { (db) in
+    public func unpinMessage(fullMessage: MessageItem) -> Bool {
+        db.write { (db) in
             try PinMessage
                 .filter(Message.column(of: .messageId) == fullMessage.messageId)
                 .deleteAll(db)
-            try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: source, silentNotification: silentNotification)
             db.afterNextTransactionCommit { db in
                 let userInfo: [String: Any] = [
                     PinMessageDAO.UserInfoKey.conversationId: fullMessage.conversationId,

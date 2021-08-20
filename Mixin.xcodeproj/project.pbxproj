@@ -577,9 +577,11 @@
 		7C7635B826A13461006101DB /* HomeAppsConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7635B726A13461006101DB /* HomeAppsConstants.swift */; };
 		7CB0954F26CCED2E0049F4C7 /* PinMessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB0954E26CCED2E0049F4C7 /* PinMessagesView.swift */; };
 		7CB0955126CCED420049F4C7 /* PinMessagesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CB0955026CCED420049F4C7 /* PinMessagesView.xib */; };
-		7CB0955326CD18F70049F4C7 /* PinPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB0955226CD18F70049F4C7 /* PinPreviewViewController.swift */; };
+		7CB0955326CD18F70049F4C7 /* PinMessagesPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB0955226CD18F70049F4C7 /* PinMessagesPreviewViewController.swift */; };
 		7CB0955726CE5F040049F4C7 /* TransferPinAction+Description.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB0955626CE5F040049F4C7 /* TransferPinAction+Description.swift */; };
 		7CB0955926CE69250049F4C7 /* PinMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB0955826CE69250049F4C7 /* PinMessageViewModel.swift */; };
+		7CB0955B26CF4DDC0049F4C7 /* PinMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB0955A26CF4DDC0049F4C7 /* PinMessageCell.swift */; };
+		7CB0955D26CF8DBF0049F4C7 /* PinAudioMessagePlayingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB0955C26CF8DBF0049F4C7 /* PinAudioMessagePlayingManager.swift */; };
 		7CBD2EFA268FF6BB00AA0847 /* HomeAppsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBD2EF9268FF6BB00AA0847 /* HomeAppsStorage.swift */; };
 		7CC3B1A026C21F7E0018B0D1 /* ScriptMessageProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC3B19F26C21F7E0018B0D1 /* ScriptMessageProxy.swift */; };
 		7CE5E7A8269BDA29000B7904 /* HomeAppsPinTipsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE5E7A6269BDA29000B7904 /* HomeAppsPinTipsViewController.swift */; };
@@ -1552,9 +1554,11 @@
 		7C7635B726A13461006101DB /* HomeAppsConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsConstants.swift; sourceTree = "<group>"; };
 		7CB0954E26CCED2E0049F4C7 /* PinMessagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinMessagesView.swift; sourceTree = "<group>"; };
 		7CB0955026CCED420049F4C7 /* PinMessagesView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PinMessagesView.xib; sourceTree = "<group>"; };
-		7CB0955226CD18F70049F4C7 /* PinPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinPreviewViewController.swift; sourceTree = "<group>"; };
+		7CB0955226CD18F70049F4C7 /* PinMessagesPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinMessagesPreviewViewController.swift; sourceTree = "<group>"; };
 		7CB0955626CE5F040049F4C7 /* TransferPinAction+Description.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TransferPinAction+Description.swift"; sourceTree = "<group>"; };
 		7CB0955826CE69250049F4C7 /* PinMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinMessageViewModel.swift; sourceTree = "<group>"; };
+		7CB0955A26CF4DDC0049F4C7 /* PinMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinMessageCell.swift; sourceTree = "<group>"; };
+		7CB0955C26CF8DBF0049F4C7 /* PinAudioMessagePlayingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinAudioMessagePlayingManager.swift; sourceTree = "<group>"; };
 		7CBD2EF9268FF6BB00AA0847 /* HomeAppsStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsStorage.swift; sourceTree = "<group>"; };
 		7CC3B19F26C21F7E0018B0D1 /* ScriptMessageProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptMessageProxy.swift; sourceTree = "<group>"; };
 		7CE5E7A6269BDA29000B7904 /* HomeAppsPinTipsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsPinTipsViewController.swift; sourceTree = "<group>"; };
@@ -2682,8 +2686,9 @@
 				9416548A25CD7190007E76D0 /* AudioMetadata.swift */,
 				7BC98FA621EF5B8C004A5D79 /* AudioMessagePlayingManager.swift */,
 				7B7DACA723505B41006AA2AC /* SharedMediaAudioMessagePlayingManager.swift */,
-				94D8426B2654D4800011DACD /* TranscriptAudioMessagePlayingManager.swift */,
 				7C0D997E26CA62CD00356655 /* StaticAudioMessagePlayingManager.swift */,
+				94D8426B2654D4800011DACD /* TranscriptAudioMessagePlayingManager.swift */,
+				7CB0955C26CF8DBF0049F4C7 /* PinAudioMessagePlayingManager.swift */,
 			);
 			path = "Audio Message";
 			sourceTree = "<group>";
@@ -2749,10 +2754,9 @@
 				7BC3EBF62497507900E81FD8 /* GroupCallMemberPickerContentViewController.swift */,
 				7B1D61122512773F00BD6B15 /* ExternalSharingConfirmationViewController.swift */,
 				94B7B6DD26B43580000B0AC5 /* SilentNotificationMessagePreviewViewController.swift */,
-				94FCB5FE264673C400CCC8FD /* TranscriptPreviewViewController.swift */,
-				7CB0955226CD18F70049F4C7 /* PinPreviewViewController.swift */,
 				7C14CFBF26CA35CF0094AF4A /* StaticMessagesViewController.swift */,
-				7C14CFC026CA35CF0094AF4A /* StaticMessagesView.xib */,
+				94FCB5FE264673C400CCC8FD /* TranscriptPreviewViewController.swift */,
+				7CB0955226CD18F70049F4C7 /* PinMessagesPreviewViewController.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -3244,6 +3248,7 @@
 				94B7B6DB26B43562000B0AC5 /* SilentNotificationMessagePreviewView.xib */,
 				7CB0955026CCED420049F4C7 /* PinMessagesView.xib */,
 				7CB0954E26CCED2E0049F4C7 /* PinMessagesView.swift */,
+				7C14CFC026CA35CF0094AF4A /* StaticMessagesView.xib */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3439,6 +3444,7 @@
 				DF2A244B1FC7F7FF003A8C1E /* TransferMessageCell.swift */,
 				7B8BFC8B1FDD7EC8004E19DB /* UnknownMessageCell.swift */,
 				7BEEC00F1FDEA0C500514A48 /* SystemMessageCell.swift */,
+				7CB0955A26CF4DDC0049F4C7 /* PinMessageCell.swift */,
 				7B28FA11201195A10023B28D /* StickerMessageCell.swift */,
 				7B28FA17201196F80023B28D /* DataMessageCell.swift */,
 				7BE0726D2024A2AC00D7B44D /* AppButtonGroupMessageCell.swift */,
@@ -4719,6 +4725,7 @@
 				DFE1F9851FAB52CE00537D43 /* ContainerViewController.swift in Sources */,
 				7B0BE46421A59AE400B91A1E /* RefreshTopAssetsJob.swift in Sources */,
 				7BC1466F230D12B70060FE19 /* CurrencyCell.swift in Sources */,
+				7CB0955B26CF4DDC0049F4C7 /* PinMessageCell.swift in Sources */,
 				7B1D61132512773F00BD6B15 /* ExternalSharingConfirmationViewController.swift in Sources */,
 				7B9D825422F1BFC40099381E /* LargeModernNetworkOperationButton.swift in Sources */,
 				DF5BF55F1FBB281E0092AFB8 /* AssetViewController.swift in Sources */,
@@ -4852,7 +4859,7 @@
 				7BA41940209AFBCD00DFCD39 /* AppCardMessageViewModel.swift in Sources */,
 				7BEFDC1D1FB07F1600F66885 /* GroupNameCell.swift in Sources */,
 				7B9C64312241EDC600465A6A /* ConversationInputAccessible.swift in Sources */,
-				7CB0955326CD18F70049F4C7 /* PinPreviewViewController.swift in Sources */,
+				7CB0955326CD18F70049F4C7 /* PinMessagesPreviewViewController.swift in Sources */,
 				7BF0E07C221ABE050053040D /* AssetIconView.swift in Sources */,
 				E07E38A623A774940005A538 /* MixinError.swift in Sources */,
 				7B84218D2011A214000EF99C /* CardMessageCell.swift in Sources */,
@@ -4932,6 +4939,7 @@
 				E05D99192390C3CB009F9E8D /* EditSharedAppsViewController.swift in Sources */,
 				E0E32602238D4FBF00D1188A /* UserAvatarStackView.swift in Sources */,
 				7B5E9B4C2437434D000AE24E /* CircleEditingButton.swift in Sources */,
+				7CB0955D26CF8DBF0049F4C7 /* PinAudioMessagePlayingManager.swift in Sources */,
 				7B4CBDC22528533600BA66D0 /* ClipSwitcher.swift in Sources */,
 				DFC0ECFD23BB610C0091E7AC /* AccountAPI.swift in Sources */,
 				7BFE47E52284530200FC4379 /* PeerHeaderView.swift in Sources */,

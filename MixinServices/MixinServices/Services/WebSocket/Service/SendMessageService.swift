@@ -23,7 +23,6 @@ public class SendMessageService: MixinService {
     public func pinMessage(item: MessageItem, action: TransferPinAction) {
         let blazeMessage = BlazeMessage(pinMessageId: item.messageId, conversationId: item.conversationId, action: action)
         let job = Job(jobId: UUID().uuidString.lowercased(), action: JobAction.SEND_MESSAGE, conversationId: item.conversationId, blazeMessage: blazeMessage)
-        //TODO: ‼️ insert to db ???
         UserDatabase.current.save(job)
         SendMessageService.shared.processMessages()
     }

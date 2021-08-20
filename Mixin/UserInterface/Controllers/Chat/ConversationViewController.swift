@@ -860,10 +860,9 @@ class ConversationViewController: UIViewController {
                 let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.chat_menu_location())
                 navigationController?.pushViewController(container, animated: true)
             } else if message.category.hasSuffix("_TRANSCRIPT") {
-                let vc = TranscriptPreviewViewController(transcriptMessage: message)
-                vc.presentAsChild(of: self, completion: nil)
-                //let vc = StaticMessagesViewController(staticMessageId: message)
-                //vc.presentAsChild(of: self)
+                //let vc = TranscriptPreviewViewController(transcriptMessage: message)
+                let vc = PinMessagesPreviewViewController(conversationId: conversationId)
+                vc.presentAsChild(of: self)
             } else {
                 conversationInputViewController.dismiss()
             }
@@ -1788,13 +1787,13 @@ extension ConversationViewController: TextPreviewViewDelegate {
 extension ConversationViewController: PinMessagesViewDelegate {
     
     func pinMessagesViewDidTapPin(_ view: PinMessagesView) {
-        let vc = PinPreviewViewController(staticMessageId: "")
+        let vc = PinMessagesPreviewViewController(conversationId: conversationId)
         vc.presentAsChild(of: self)
     }
     
     func pinMessagesViewDidTapClose(_ view: PinMessagesView) {
         hidePinMessage()
-        AppGroupUserDefaults.User.displayedPinMessages[conversationId] = ""
+        AppGroupUserDefaults.User.needsDisplayedPinMessages[conversationId] = ""
     }
     
     func pinMessagesViewDidTapMessage(_ view: PinMessagesView) {
@@ -2436,7 +2435,7 @@ extension ConversationViewController {
     
     private func updatePinContent(with message: MessageItem) {
         let count = PinMessageDAO.shared.messageCount(conversationId: conversationId)
-        let content = TransferPinAction.pin.getMessagePreview(message: message)
+        let content = TransferPinAction.getPinMessage(userId: myUserId, userFullName: myFullname, category: message.category, content: message.content)
         pinMessagesView.update(content: content, count: count)
         pinMessagesView.snp.updateConstraints { make in
             make.left.equalTo(0)
@@ -2447,6 +2446,21 @@ extension ConversationViewController {
         pinMessagesView.hideMessage()
         pinMessagesView.snp.updateConstraints { make in
             make.left.equalTo(AppDelegate.current.mainWindow.bounds.width - 60)
+        }
+    }
+    
+    private func updatePinMessageViewWhenDeletedMessagesIfNeeded() {
+        let pinnedMessageIds = PinMessageDAO.shared.messageItems(conversationId: conversationId).map(\.messageId)
+        DispatchQueue.main.sync {
+            if pinnedMessageIds.count == 0 {
+                pinMessagesView.isHidden = true
+            } else{
+                if let messageId = AppGroupUserDefaults.User.needsDisplayedPinMessages[conversationId], !pinnedMessageIds.contains(messageId) {
+                    hidePinMessage()
+                    AppGroupUserDefaults.User.needsDisplayedPinMessages[conversationId] = ""
+                }
+                pinMessagesView.updateCount(pinnedMessageIds.count)
+            }
         }
     }
     
@@ -2705,6 +2719,7 @@ extension ConversationViewController {
                 let (deleted, childMessageIds) = MessageDAO.shared.deleteMessage(id: message.messageId)
                 if deleted {
                     ReceiveMessageService.shared.stopRecallMessage(item: message, childMessageIds: childMessageIds)
+                    weakSelf.updatePinMessageViewWhenDeletedMessagesIfNeeded()
                 }
                 DispatchQueue.main.sync {
                     _ = weakSelf.dataSource?.removeViewModel(at: indexPath)

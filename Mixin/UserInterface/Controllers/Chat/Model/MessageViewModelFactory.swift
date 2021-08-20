@@ -147,6 +147,8 @@ class MessageViewModelFactory {
                 viewModel = AppCardMessageViewModel(message: message)
             } else if message.category == MessageCategory.MESSAGE_RECALL.rawValue {
                 viewModel = RecalledMessageViewModel(message: message)
+            } else if message.category == MessageCategory.MESSAGE_PIN.rawValue {
+                viewModel = PinMessageViewModel(message: message)
             } else if message.category == MessageCategory.EXT_UNREAD.rawValue {
                 viewModel = MessageViewModel(message: message)
                 viewModel.cellHeight = 38

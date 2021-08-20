@@ -141,6 +141,8 @@ class ConversationCell: ModernSelectedBackgroundCell {
                 } else {
                     contentLabel.text = R.string.localizable.chat_message_recalled()
                 }
+            } else if category == MessageCategory.MESSAGE_PIN.rawValue {
+                contentLabel.text = TransferPinAction.getPinMessage(userId: item.senderId, userFullName: item.senderFullName, content: item.content)
             } else if category == MessageCategory.KRAKEN_PUBLISH.rawValue {
                 contentLabel.text = R.string.localizable.group_call_publish(senderName)
             } else if category == MessageCategory.KRAKEN_CANCEL.rawValue {
@@ -156,8 +158,6 @@ class ConversationCell: ModernSelectedBackgroundCell {
             } else {
                 if item.contentType.hasPrefix("SYSTEM_") {
                     contentLabel.text = SystemConversationAction.getSystemMessage(actionName: item.actionName, userId: item.senderId, userFullName: item.senderFullName, participantId: item.participantUserId, participantFullName: item.participantFullName, content: item.content)
-                } else if item.contentType.hasSuffix("_PIN") {
-                    contentLabel.text = TransferPinAction.getPinMessage(actionName: item.actionName, userId: item.senderId, userFullName: item.senderFullName, content: item.content)
                 } else if item.messageId.isEmpty {
                     contentLabel.text = ""
                 } else {

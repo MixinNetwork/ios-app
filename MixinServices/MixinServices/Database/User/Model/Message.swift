@@ -234,8 +234,8 @@ extension Message {
         return Message(messageId: message.messageId, conversationId: message.conversationId, userId: message.userId, category: message.category, content: message.content, mediaUrl: message.mediaUrl, mediaMimeType: message.mediaMimeType, mediaSize: message.mediaSize, mediaDuration: message.mediaDuration, mediaWidth: message.mediaWidth, mediaHeight: message.mediaHeight, mediaHash: message.mediaHash, mediaKey: message.mediaKey, mediaDigest: message.mediaDigest, mediaStatus: message.mediaStatus, mediaWaveform: message.mediaWaveform, mediaLocalIdentifier: message.mediaLocalIdentifier, thumbImage: message.thumbImage, thumbUrl: message.thumbUrl, status: message.status, action: message.actionName, participantId: message.participantId, snapshotId: message.snapshotId, name: message.name, stickerId: message.stickerId, sharedUserId: message.sharedUserId, quoteMessageId: message.quoteMessageId, quoteContent: message.quoteContent, createdAt: message.createdAt)
     }
     
-    public static func createMessage(pinMessage action: String?, userId: String, data: BlazeMessageData) -> Message {
-        return createMessage(messageId: data.messageId, conversationId: data.conversationId, userId: userId, category: data.category, status: MessageStatus.DELIVERED.rawValue, action: action, createdAt: data.createdAt)
+    public static func createMessage(pinMessage action: String?, userId: String, content: String, data: BlazeMessageData) -> Message {
+        return createMessage(messageId: data.messageId, conversationId: data.conversationId, userId: userId, category: data.category, content: content, status: MessageStatus.DELIVERED.rawValue, action: action, createdAt: data.createdAt)
     }
     
 }

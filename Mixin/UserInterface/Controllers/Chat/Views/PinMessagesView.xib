@@ -41,7 +41,7 @@
                     <constraints>
                         <constraint firstAttribute="height" constant="70" id="PRW-zN-7Fc"/>
                     </constraints>
-                    <state key="normal" image="ic_pin_bubble"/>
+                    <state key="normal" backgroundImage="ic_pin_bubble"/>
                     <connections>
                         <action selector="tapMessageAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="PC6-AE-9pq"/>
                     </connections>
@@ -94,12 +94,12 @@
     <resources>
         <image name="Conversation/ic_pin" width="38" height="38"/>
         <image name="ic_announcement_close" width="12" height="12"/>
-        <image name="ic_pin_bubble" width="317.5" height="72"/>
+        <image name="ic_pin_bubble" width="60.5" height="111"/>
         <namedColor name="chat_pin__count_background">
             <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

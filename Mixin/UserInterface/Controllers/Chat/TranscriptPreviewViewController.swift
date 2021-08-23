@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class TranscriptPreviewViewController: StaticMessagesViewController {
+final class TranscriptPreviewViewController: StaticMessagesViewController {
     
     let transcriptMessage: MessageItem
     
@@ -19,9 +19,7 @@ class TranscriptPreviewViewController: StaticMessagesViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         titleLabel.text = R.string.localizable.chat_transcript()
-        
         let center = NotificationCenter.default
         center.addObserver(self,
                            selector: #selector(conversationDidChange(_:)),

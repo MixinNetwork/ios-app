@@ -6,6 +6,8 @@ class StaticMessagesViewController: UIViewController {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var tableView: ConversationTableView!
     
+    @IBOutlet weak var tableViewBottomConstraint: NSLayoutConstraint!
+    
     let queue =  Queue(label: "one.mixin.messenger.StaticMessagesViewController")
 
     var viewModels: [String: [MessageViewModel]] = [:]
@@ -46,7 +48,7 @@ class StaticMessagesViewController: UIViewController {
         super.viewDidLoad()
         updatePreferredContentSizeHeight()
         let safeAreaInsets = AppDelegate.current.mainWindow.safeAreaInsets
-        tableView.contentInset.bottom = safeAreaInsets.top + safeAreaInsets.bottom
+        tableViewBottomConstraint.constant = safeAreaInsets.top + safeAreaInsets.bottom
         audioManager.delegate = self
         factory.delegate = self
         tableView.backgroundColor = .clear
@@ -553,6 +555,10 @@ extension StaticMessagesViewController: UITableViewDelegate {
         if let cell = cell as? AttachmentLoadingMessageCell {
             cell.updateOperationButtonStyle()
         }
+    }
+    
+    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

@@ -13,6 +13,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="StaticMessagesViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
                 <outlet property="tableView" destination="W7w-YI-rKM" id="0YP-CV-d6m"/>
+                <outlet property="tableViewBottomConstraint" destination="LTH-q8-Krk" id="el2-NN-I2w"/>
                 <outlet property="titleLabel" destination="fFs-nx-Uwh" id="hz0-xM-2LQ"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>

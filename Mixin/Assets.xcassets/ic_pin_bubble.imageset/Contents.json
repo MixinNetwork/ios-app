@@ -17,6 +17,20 @@
     {
       "filename" : "ic_pin_bubble@2x.png",
       "idiom" : "universal",
+      "resizing" : {
+        "cap-insets" : {
+          "bottom" : 114,
+          "left" : 44,
+          "right" : 76,
+          "top" : 107
+        },
+        "center" : {
+          "height" : 1,
+          "mode" : "tile",
+          "width" : 1
+        },
+        "mode" : "9-part"
+      },
       "scale" : "2x"
     },
     {
@@ -28,11 +42,39 @@
       ],
       "filename" : "ic_pin_bubble_dark@2x.png",
       "idiom" : "universal",
+      "resizing" : {
+        "cap-insets" : {
+          "bottom" : 114,
+          "left" : 45,
+          "right" : 75,
+          "top" : 107
+        },
+        "center" : {
+          "height" : 1,
+          "mode" : "tile",
+          "width" : 1
+        },
+        "mode" : "9-part"
+      },
       "scale" : "2x"
     },
     {
       "filename" : "ic_pin_bubble@3x.png",
       "idiom" : "universal",
+      "resizing" : {
+        "cap-insets" : {
+          "bottom" : 172,
+          "left" : 47,
+          "right" : 100,
+          "top" : 160
+        },
+        "center" : {
+          "height" : 1,
+          "mode" : "tile",
+          "width" : 1
+        },
+        "mode" : "9-part"
+      },
       "scale" : "3x"
     },
     {
@@ -44,6 +86,20 @@
       ],
       "filename" : "ic_pin_bubble_dark@3x.png",
       "idiom" : "universal",
+      "resizing" : {
+        "cap-insets" : {
+          "bottom" : 173,
+          "left" : 48,
+          "right" : 93,
+          "top" : 159
+        },
+        "center" : {
+          "height" : 1,
+          "mode" : "tile",
+          "width" : 1
+        },
+        "mode" : "9-part"
+      },
       "scale" : "3x"
     }
   ],

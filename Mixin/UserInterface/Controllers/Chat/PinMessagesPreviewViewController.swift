@@ -51,7 +51,7 @@ class PinMessagesPreviewViewController: StaticMessagesViewController {
                         make.height.equalTo(safeAreaInsets.bottom + self.bottomBarViewHeight)
                         make.bottom.equalTo(-safeAreaInsets.top)
                     }
-                    self.tableView.contentInset.bottom = self.tableView.contentInset.bottom + self.bottomBarViewHeight
+                    self.tableViewBottomConstraint.constant = self.tableViewBottomConstraint.constant + self.bottomBarViewHeight
                 }
                 self.titleLabel.text = R.string.localizable.chat_pinned_messages_count(viewModels.count)
                 self.dates = dates

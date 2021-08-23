@@ -1796,7 +1796,16 @@ extension ConversationViewController: PinMessagesViewDelegate {
     }
     
     func pinMessagesViewDidTapMessage(_ view: PinMessagesView) {
-        
+        guard let messageId = AppGroupUserDefaults.User.needsDisplayedPinMessages[conversationId],
+              let indexPath = dataSource.indexPath(where: { $0.messageId == messageId }) else {
+            return
+        }
+        tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
+        if let indexPaths = tableView.indexPathsForVisibleRows, indexPaths.contains(indexPath) {
+            flashCellBackground(at: indexPath)
+        } else {
+            messageIdToFlashAfterAnimationFinished = messageId
+        }
     }
     
 }

@@ -369,6 +369,8 @@
 "chat_pick_from_library" = "Pick from Library";
 "chat_manage_photo_auth" = "Manage";
 "chat_photo_select_more" = "Select More Photos";
+
+// Pin
 "chat_pinned_general_message" = "%@ pinned a message";
 "chat_pinned_text_message" = "%@ pinned '%@'";
 "chat_pinned_image_message" = "%@ pinned a photo";
@@ -383,6 +385,7 @@
 "chat_pinned_transcript_message" = "%@ pinned a transcript";
 "chat_pinned_messages_count" = "%d Pinned Messages";
 "chat_unpin_all_messages" = "Unpin All Messages";
+"chat_alert_unpin_all_messages" = "Are you sure you want to unpin all messages?";
 
 // Web
 "web_suspicious_link" = "Suspicious Link";

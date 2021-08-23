@@ -5,21 +5,18 @@ class StaticMessagesViewController: UIViewController {
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var tableView: ConversationTableView!
-        
-    private let staticMessageId: String
-    private let factory: ViewModelFactory
+    
+    let queue =  Queue(label: "one.mixin.messenger.StaticMessagesViewController")
+
+    var viewModels: [String: [MessageViewModel]] = [:]
+    var dates: [String] = []
+    
+    private let audioManager: StaticAudioMessagePlayingManager
+    private let factory = ViewModelFactory()
     private let alwaysUsesLegacyMenu = false
-    
-    private var viewModels: [String: [MessageViewModel]] = [:]
-    private var dates: [String] = []
-    private var indexPathToFlashAfterAnimationFinished: IndexPath?
     private var didPlayAudioMessage = false
+    private var indexPathToFlashAfterAnimationFinished: IndexPath?
     
-    private lazy var audioManager: StaticAudioMessagePlayingManager = {
-        let manager = StaticAudioMessagePlayingManager(staticMessageId: staticMessageId)
-        manager.delegate = self
-        return manager
-    }()
     private lazy var backgroundButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = .black.withAlphaComponent(0)
@@ -27,16 +24,18 @@ class StaticMessagesViewController: UIViewController {
         return button
     }()
     
-    init(staticMessageId: String) {
-        self.staticMessageId = staticMessageId
-        self.factory = ViewModelFactory()
+    init(audioManager: StaticAudioMessagePlayingManager) {
+        self.audioManager = audioManager
         let nib = R.nib.staticMessagesView
         super.init(nibName: nib.name, bundle: nib.bundle)
-        factory.delegate = self
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override var canBecomeFirstResponder: Bool {
+        true
     }
     
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
@@ -46,7 +45,10 @@ class StaticMessagesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         updatePreferredContentSizeHeight()
-        
+        let safeAreaInsets = AppDelegate.current.mainWindow.safeAreaInsets
+        tableView.contentInset.bottom = safeAreaInsets.top + safeAreaInsets.bottom
+        audioManager.delegate = self
+        factory.delegate = self
         tableView.backgroundColor = .clear
         tableView.separatorStyle = .none
         tableView.dataSource = self
@@ -71,10 +73,6 @@ class StaticMessagesViewController: UIViewController {
                            selector: #selector(updateMessageMediaStatus(_:)),
                            name: MessageDAO.messageMediaStatusDidUpdateNotification,
                            object: nil)
-        center.addObserver(self,
-                           selector: #selector(conversationDidChange(_:)),
-                           name: MixinServices.conversationDidChangeNotification,
-                           object: nil)
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -87,15 +85,6 @@ class StaticMessagesViewController: UIViewController {
         }
     }
     
-    override func viewSafeAreaInsetsDidChange() {
-        super.viewSafeAreaInsetsDidChange()
-        if view.safeAreaInsets.bottom < 20 {
-            tableView.contentInset.bottom = 20 + AppDelegate.current.mainWindow.safeAreaInsets.top
-        } else {
-            tableView.contentInset.bottom = AppDelegate.current.mainWindow.safeAreaInsets.top
-        }
-    }
-    
     @IBAction func dismissAction(_ sender: Any) {
         dismissAsChild(completion: nil)
     }
@@ -104,21 +93,33 @@ class StaticMessagesViewController: UIViewController {
 
 extension StaticMessagesViewController {
     
-    func reloadData(items: [MessageItem], onMainQueue completion: (() -> Void)? = nil) {
+    func categorizedViewModels(with items: [MessageItem], fits layoutWidth: CGFloat) -> (dates: [String], viewModels: [String: [MessageViewModel]]) {
         for item in items where item.category == MessageCategory.SIGNAL_STICKER.rawValue {
             if item.stickerId == nil {
                 item.category = MessageCategory.SIGNAL_TEXT.rawValue
                 item.content = R.string.localizable.notification_content_sticker()
             }
         }
-        let layoutWidth = AppDelegate.current.mainWindow.bounds.width
-        let (dates, viewModels) = factory.viewModels(with: items, fits: layoutWidth)
-        DispatchQueue.main.async {
-            completion?()
-            self.dates = dates
-            self.viewModels = viewModels
-            self.tableView.reloadData()
+        return factory.viewModels(with: items, fits: layoutWidth)
+    }
+    
+    func viewModel(at indexPath: IndexPath) -> MessageViewModel? {
+        guard let viewModels = viewModels(at: indexPath.section), indexPath.row < viewModels.count else {
+            return nil
         }
+        return viewModels[indexPath.row]
+    }
+    
+    func indexPath(where predicate: (MessageItem) -> Bool) -> IndexPath? {
+        for (section, date) in dates.enumerated() {
+            let viewModels = viewModels[date]!
+            for (row, viewModel) in viewModels.enumerated() {
+                if predicate(viewModel.message) {
+                    return IndexPath(row: row, section: section)
+                }
+            }
+        }
+        return nil
     }
     
     func dismissAsChild(completion: (() -> Void)?) {
@@ -151,6 +152,10 @@ extension StaticMessagesViewController {
             self.view.frame.origin.y = self.backgroundButton.bounds.height - self.preferredContentSize.height
             self.backgroundButton.backgroundColor = .black.withAlphaComponent(0.3)
         }
+    }
+    
+    func attachmentURL(withFilename filename: String) -> URL? {
+        return nil
     }
     
 }
@@ -220,13 +225,21 @@ extension StaticMessagesViewController {
             } else if message.category.hasSuffix("_DATA"), let viewModel = viewModel as? DataMessageViewModel, let cell = cell as? DataMessageCell {
                 if viewModel.mediaStatus == MediaStatus.DONE.rawValue || viewModel.mediaStatus == MediaStatus.READ.rawValue {
                     if let filename = message.mediaUrl {
-                        //TODO: ‼️ fix AttachmentContainer.url(transcriptId
-                        let url = AttachmentContainer.url(transcriptId: staticMessageId, filename: filename)
-                        if FileManager.default.fileExists(atPath: url.path) {
+                        let openDocument = { (url: URL) in
                             let controller = UIDocumentInteractionController(url: url)
                             controller.delegate = self
                             if !controller.presentPreview(animated: true) {
-                                controller.presentOpenInMenu(from: CGRect.zero, in: view, animated: true)
+                                controller.presentOpenInMenu(from: CGRect.zero, in: self.view, animated: true)
+                            }
+                        }
+                        if let url = attachmentURL(withFilename: filename) {
+                            if FileManager.default.fileExists(atPath: url.path) {
+                                openDocument(url)
+                            }
+                        } else {
+                            let url = AttachmentContainer.url(for: .files, filename: filename)
+                            if FileManager.default.fileExists(atPath: url.path) {
+                                openDocument(url)
                             }
                         }
                     }
@@ -274,22 +287,8 @@ extension StaticMessagesViewController {
                         }
                     }
                 }
-            } else if message.category.hasSuffix("_TRANSCRIPT") {
-                let vc = TranscriptPreviewViewController(transcriptMessage: message)
-                vc.presentAsChild(of: self, completion: nil)
             }
         }
-    }
-    //TODO: ‼️ fix this, recall message
-    @objc private func conversationDidChange(_ sender: Notification) {
-        guard
-            let change = sender.object as? ConversationChange,
-            case .recallMessage(let messageId) = change.action,
-            messageId == staticMessageId
-        else {
-            return
-        }
-        dismissAsChild(completion: nil)
     }
     
     @objc private func menuControllerWillHideMenu(_ notification: Notification) {
@@ -379,25 +378,6 @@ extension StaticMessagesViewController {
         return viewModels[date]
     }
     
-    private func viewModel(at indexPath: IndexPath) -> MessageViewModel? {
-        guard let viewModels = viewModels(at: indexPath.section), indexPath.row < viewModels.count else {
-            return nil
-        }
-        return viewModels[indexPath.row]
-    }
-    
-    private func indexPath(where predicate: (MessageItem) -> Bool) -> IndexPath? {
-        for (section, date) in dates.enumerated() {
-            let viewModels = viewModels[date]!
-            for (row, viewModel) in viewModels.enumerated() {
-                if predicate(viewModel.message) {
-                    return IndexPath(row: row, section: section)
-                }
-            }
-        }
-        return nil
-    }
-    
     private func flashCellBackground(at indexPath: IndexPath) {
         guard let cell = tableView.cellForRow(at: indexPath) as? DetailInfoMessageCell else {
             return
@@ -479,7 +459,6 @@ extension StaticMessagesViewController {
                 }
             }
         }
-        
         return UITargetedPreview(view: cell.messageContentView, parameters: param)
     }
     

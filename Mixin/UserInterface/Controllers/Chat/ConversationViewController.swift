@@ -860,8 +860,7 @@ class ConversationViewController: UIViewController {
                 let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.chat_menu_location())
                 navigationController?.pushViewController(container, animated: true)
             } else if message.category.hasSuffix("_TRANSCRIPT") {
-                //let vc = TranscriptPreviewViewController(transcriptMessage: message)
-                let vc = PinMessagesPreviewViewController(conversationId: conversationId)
+                let vc = TranscriptPreviewViewController(transcriptMessage: message)
                 vc.presentAsChild(of: self)
             } else {
                 conversationInputViewController.dismiss()

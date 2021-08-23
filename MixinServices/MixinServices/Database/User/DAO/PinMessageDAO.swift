@@ -55,6 +55,7 @@ public final class PinMessageDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [messageId])
     }
     
+    @discardableResult
     public func unpinMessage(fullMessage: MessageItem) -> Bool {
         db.write { (db) in
             try PinMessage
@@ -74,6 +75,7 @@ public final class PinMessageDAO: UserDatabaseDAO {
         
     }
     
+    @discardableResult
     public func pinMessage(message: Message, fullMessage: MessageItem, source: String, silentNotification: Bool) -> Bool {
         let pinMessage = PinMessage(messageId: fullMessage.messageId, conversationId: fullMessage.conversationId, createdAt: message.createdAt)
         return db.write { db in

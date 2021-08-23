@@ -369,6 +369,8 @@
 "chat_pick_from_library" = "打开相册";
 "chat_manage_photo_auth" = "更改设置";
 "chat_photo_select_more" = "选择更多照片";
+
+// Pin
 "chat_pinned_general_message" = "%@置顶了一条消息";
 "chat_pinned_text_message" = "%@置顶了'%@'";
 "chat_pinned_image_message" = "%@置顶了一张图片";
@@ -383,6 +385,7 @@
 "chat_pinned_transcript_message" = "%@置顶了一个聊天记录";
 "chat_pinned_messages_count" = "%d条置顶消息";
 "chat_unpin_all_messages" = "取消所有置顶消息";
+"chat_alert_unpin_all_messages" = "你确定要取消所有置顶消息吗";
 
 // Web
 "web_suspicious_link" = "可疑链接";

@@ -1,14 +1,14 @@
 import UIKit
 
-protocol PinMessagesViewDelegate: AnyObject {
-    func pinMessagesViewDidTapPin(_ view: PinMessagesView)
-    func pinMessagesViewDidTapClose(_ view: PinMessagesView)
-    func pinMessagesViewDidTapMessage(_ view: PinMessagesView)
+protocol PinMessagesAlertViewDelegate: AnyObject {
+    func pinMessagesAlertViewDidTapPin(_ view: PinMessagesAlertView)
+    func pinMessagesAlertViewDidTapClose(_ view: PinMessagesAlertView)
+    func pinMessagesAlertViewDidTapPreview(_ view: PinMessagesAlertView)
 }
 
-final class PinMessagesView: UIView {
-
-    weak var delegate: PinMessagesViewDelegate?
+final class PinMessagesAlertView: UIView {
+    
+    weak var delegate: PinMessagesAlertViewDelegate?
     
     @IBOutlet weak var pinButton: UIButton!
     @IBOutlet weak var countLabel: RoundedInsetLabel!
@@ -20,36 +20,36 @@ final class PinMessagesView: UIView {
         super.awakeFromNib()
         countLabel.contentInset = UIEdgeInsets(top: 1, left: 6, bottom: 1, right: 6)
     }
-
+    
     @IBAction func tapCloseAction(_ sender: Any) {
-        delegate?.pinMessagesViewDidTapClose(self)
+        delegate?.pinMessagesAlertViewDidTapClose(self)
     }
     
     @IBAction func tapPinAction(_ sender: Any) {
-        delegate?.pinMessagesViewDidTapPin(self)
+        delegate?.pinMessagesAlertViewDidTapPin(self)
     }
     
     @IBAction func tapMessageAction(_ sender: Any) {
-        delegate?.pinMessagesViewDidTapMessage(self)
+        delegate?.pinMessagesAlertViewDidTapPreview(self)
     }
     
 }
 
-extension PinMessagesView {
+extension PinMessagesAlertView {
     
-    func updateCount(_ count: Int) {
+    func updateMessageCount(_ count: Int) {
         countLabel.text = "\(count)"
     }
     
-    func update(content: String, count: Int) {
+    func updateMessage(preview: String, count: Int) {
         closeButton.isHidden = false
         wrapperButton.isHidden = false
         messageLabel.isHidden = false
-        messageLabel.text = content
+        messageLabel.text = preview
         countLabel.text = "\(count)"
     }
     
-    func hideMessage() {
+    func hideMessagePreview() {
         closeButton.isHidden = true
         wrapperButton.isHidden = true
         messageLabel.isHidden = true

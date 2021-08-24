@@ -1,8 +1,14 @@
 import UIKit
 import MixinServices
 
-class PinMessagesPreviewViewController: StaticMessagesViewController {
+protocol PinMessagesPreviewViewControllerDelegate: AnyObject {
+    func pinMessagesPreviewViewController(_ controller: PinMessagesPreviewViewController, needsShowMessage messageId: String)
+}
 
+final class PinMessagesPreviewViewController: StaticMessagesViewController {
+    
+    weak var delegate: PinMessagesPreviewViewControllerDelegate?
+    
     private let conversationId: String
     private let bottomBarViewHeight: CGFloat = 50
     
@@ -31,7 +37,7 @@ class PinMessagesPreviewViewController: StaticMessagesViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         let layoutWidth = AppDelegate.current.mainWindow.bounds.width
@@ -65,6 +71,36 @@ class PinMessagesPreviewViewController: StaticMessagesViewController {
 
 extension PinMessagesPreviewViewController {
     
+    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        super.tableView(tableView, willDisplay: cell, forRowAt: indexPath)
+        guard let cell = cell as? MessageCell,
+              let viewModel = viewModel(at: indexPath), viewModel.message.userId != myUserId else {
+            return
+        }
+        let button = UIButton()
+        button.addTarget(self, action: #selector(showMessageAction(sender:)), for: .touchUpInside)
+        button.tag =  indexPath.row + 999
+        button.setImage(R.image.ic_pin_right_arrow(), for: .normal)
+        cell.contentView.addSubview(button)
+        button.snp.makeConstraints { make in
+            make.centerY.equalTo(cell.backgroundImageView)
+            make.left.equalTo(cell.backgroundImageView.snp.right)
+            make.height.width.equalTo(36)
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        super.tableView(tableView, didEndDisplaying: cell, forRowAt: indexPath)
+        guard let view = cell.viewWithTag(indexPath.row + 999), view is UIButton else {
+            return
+        }
+        view.removeFromSuperview()
+    }
+    
+}
+
+extension PinMessagesPreviewViewController {
+    
     @objc private func unpinAllAction() {
         let controller = UIAlertController(title: R.string.localizable.chat_alert_unpin_all_messages(), message: nil, preferredStyle: .alert)
         let cancelAction = UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil)
@@ -82,6 +118,15 @@ extension PinMessagesPreviewViewController {
         controller.addAction(cancelAction)
         controller.addAction(unpinAction)
         present(controller, animated: true, completion: nil)
+    }
+    
+    @objc private func showMessageAction(sender: UIButton) {
+        guard let cell = sender.superview?.superview as? MessageCell,
+              let indexPath = tableView.indexPath(for: cell),
+              let viewModel = viewModel(at: indexPath) else {
+            return
+        }
+        delegate?.pinMessagesPreviewViewController(self, needsShowMessage: viewModel.message.messageId)
     }
     
 }

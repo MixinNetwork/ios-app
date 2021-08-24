@@ -33,7 +33,8 @@ extension TransferPinAction {
     
     static func getPinMessage(userId: String, userFullName: String, content: String) -> String {
         guard let base64Data = Data(base64Encoded: content),
-              let localContent = (try? JSONDecoder.default.decode(PinMessage.LocalContent.self, from: base64Data)) else {
+              let localContent = (try? JSONDecoder.default.decode(PinMessage.LocalContent.self, from: base64Data))
+        else {
             let uFullName = userId == myUserId ? R.string.localizable.chat_message_you() : userFullName
             return R.string.localizable.chat_pinned_general_message(uFullName)
         }

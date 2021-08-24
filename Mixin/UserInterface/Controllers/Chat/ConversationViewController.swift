@@ -167,8 +167,8 @@ class ConversationViewController: UIViewController {
         return view
     }()
     
-    private lazy var pinMessagesView: PinMessagesView = {
-        let view = R.nib.pinMessagesView(owner: nil)!
+    private lazy var pinMessagesAlertView: PinMessagesAlertView = {
+        let view = R.nib.pinMessagesAlertView(owner: nil)!
         view.delegate = self
         return view
     }()
@@ -290,14 +290,14 @@ class ConversationViewController: UIViewController {
         }
         
         if dataSource.category == .group {
-            view.addSubview(pinMessagesView)
-            pinMessagesView.snp.makeConstraints { make in
+            view.addSubview(pinMessagesAlertView)
+            pinMessagesAlertView.snp.makeConstraints { make in
                 make.top.equalTo(navigationBarView.snp.bottom).offset(7)
                 make.left.equalTo(0)
                 make.right.equalTo(0)
                 make.height.equalTo(70)
             }
-            updatePinMessageView()
+            updatePinMessagesAlertView()
             NotificationCenter.default.addObserver(self, selector: #selector(pinMessagesDidChange(_:)), name: PinMessageDAO.pinMessageDidChangeNotification, object: nil)
         }
         
@@ -1174,25 +1174,37 @@ class ConversationViewController: UIViewController {
         guard conversationId == self.conversationId else {
             return
         }
-        guard let isPin = notification.userInfo?[PinMessageDAO.UserInfoKey.isPin] as? Bool,
-              let message = notification.userInfo?[PinMessageDAO.UserInfoKey.message] as? MessageItem else {
+        guard let isPinned = notification.userInfo?[PinMessageDAO.UserInfoKey.isPinned] as? Bool,
+              let messageId = notification.userInfo?[PinMessageDAO.UserInfoKey.messageId] as? String,
+              let message = notification.userInfo?[PinMessageDAO.UserInfoKey.message] as? Message else {
             return
         }
-        if isPin {
-            pinMessagesView.isHidden = false
-            updatePinContent(with: message)
-            AppGroupUserDefaults.User.needsDisplayedPinMessages[conversationId] = message.messageId
-        } else {
-            let pinnedCount = PinMessageDAO.shared.messageCount(conversationId: conversationId)
-            if pinnedCount == 0 {
-                pinMessagesView.isHidden = true
-                AppGroupUserDefaults.User.needsDisplayedPinMessages[conversationId] = ""
-            } else if let messageId = AppGroupUserDefaults.User.needsDisplayedPinMessages[conversationId], messageId == message.messageId {
-                hidePinMessage()
-                pinMessagesView.updateCount(pinnedCount)
-                AppGroupUserDefaults.User.needsDisplayedPinMessages[conversationId] = ""
+        DispatchQueue.global().async { [weak self] in
+            guard let self = self else {
+                return
+            }
+            let count = PinMessageDAO.shared.messageCount(conversationId: conversationId)
+            if isPinned {
+                guard let fullMessage = MessageDAO.shared.getFullMessage(messageId: message.messageId), let content = message.content else {
+                    return
+                }
+                DispatchQueue.main.async {
+                    self.pinMessagesAlertView.isHidden = false
+                    let preview = TransferPinAction.getPinMessage(userId: fullMessage.userId, userFullName: fullMessage.userFullName ?? "", content: content)
+                    self.updatePinMessage(preview: preview, count: count)
+                    AppGroupUserDefaults.User.needsDisplayedPinMessages[conversationId] = (messageId, preview)
+                }
             } else {
-                pinMessagesView.updateCount(pinnedCount)
+                DispatchQueue.main.async {
+                    if count == 0 {
+                        self.pinMessagesAlertView.isHidden = true
+                        AppGroupUserDefaults.User.needsDisplayedPinMessages[conversationId] = ("", "")
+                    } else if let pinMessage = AppGroupUserDefaults.User.needsDisplayedPinMessages[conversationId], pinMessage.messageId == messageId {
+                        self.hidePinMessagePreview()
+                        AppGroupUserDefaults.User.needsDisplayedPinMessages[conversationId] = ("", "")
+                    }
+                    self.pinMessagesAlertView.updateMessageCount(count)
+                }
             }
         }
     }
@@ -1782,29 +1794,35 @@ extension ConversationViewController: TextPreviewViewDelegate {
     
 }
 
-// MARK: - PinMessagesViewDelegate
-extension ConversationViewController: PinMessagesViewDelegate {
+// MARK: - PinMessagesAlertViewDelegate
+extension ConversationViewController: PinMessagesAlertViewDelegate {
     
-    func pinMessagesViewDidTapPin(_ view: PinMessagesView) {
+    func pinMessagesAlertViewDidTapPin(_ view: PinMessagesAlertView) {
         let vc = PinMessagesPreviewViewController(conversationId: conversationId)
+        vc.delegate = self
         vc.presentAsChild(of: self)
     }
     
-    func pinMessagesViewDidTapClose(_ view: PinMessagesView) {
-        hidePinMessage()
-        AppGroupUserDefaults.User.needsDisplayedPinMessages[conversationId] = ""
+    func pinMessagesAlertViewDidTapClose(_ view: PinMessagesAlertView) {
+        hidePinMessagePreview()
+        AppGroupUserDefaults.User.needsDisplayedPinMessages[conversationId] = ("", "")
     }
     
-    func pinMessagesViewDidTapMessage(_ view: PinMessagesView) {
-        guard let messageId = AppGroupUserDefaults.User.needsDisplayedPinMessages[conversationId],
-              let indexPath = dataSource.indexPath(where: { $0.messageId == messageId }) else {
+    func pinMessagesAlertViewDidTapPreview(_ view: PinMessagesAlertView) {
+        guard let messageId = AppGroupUserDefaults.User.needsDisplayedPinMessages[conversationId]?.messageId else {
             return
         }
-        tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
-        if let indexPaths = tableView.indexPathsForVisibleRows, indexPaths.contains(indexPath) {
-            flashCellBackground(at: indexPath)
-        } else {
-            messageIdToFlashAfterAnimationFinished = messageId
+        scrollToPinnedMessage(messageId: messageId)
+    }
+    
+}
+
+// MARK: - PinMessagesPreviewViewControllerDelegate
+extension ConversationViewController: PinMessagesPreviewViewControllerDelegate {
+    
+    func pinMessagesPreviewViewController(_ controller: PinMessagesPreviewViewController, needsShowMessage messageId: String) {
+        controller.dismissAsChild {
+            self.scrollToPinnedMessage(messageId: messageId)
         }
     }
     
@@ -2425,49 +2443,56 @@ extension ConversationViewController {
         }
     }
     
-    private func updatePinMessageView() {
-        if PinMessageDAO.shared.hasMessages(conversationId: conversationId) {
-            pinMessagesView.isHidden = false
-            if let messageId = AppGroupUserDefaults.User.needsDisplayedPinMessages[conversationId],
-               let message = PinMessageDAO.shared.messageItem(messageId: messageId) {
-                updatePinContent(with: message)
-            } else {
-                hidePinMessage()
-                let count = PinMessageDAO.shared.messageCount(conversationId: conversationId)
-                pinMessagesView.updateCount(count)
+    private func updatePinMessagesAlertView() {
+        DispatchQueue.global().async { [weak self] in
+            guard let self = self else {
+                return
             }
-        } else {
-            pinMessagesView.isHidden = true
+            let count = PinMessageDAO.shared.messageCount(conversationId: self.conversationId)
+            DispatchQueue.main.async {
+                if count > 0 {
+                    self.pinMessagesAlertView.isHidden = false
+                    if let message = AppGroupUserDefaults.User.needsDisplayedPinMessages[self.conversationId], !message.messageId.isEmpty {
+                        self.updatePinMessage(preview: message.preview, count: count)
+                    } else {
+                        self.hidePinMessagePreview()
+                        self.pinMessagesAlertView.updateMessageCount(count)
+                    }
+                } else {
+                    self.pinMessagesAlertView.isHidden = true
+                }
+            }
         }
     }
     
-    private func updatePinContent(with message: MessageItem) {
-        let count = PinMessageDAO.shared.messageCount(conversationId: conversationId)
-        let content = TransferPinAction.getPinMessage(userId: myUserId, userFullName: myFullname, category: message.category, content: message.content)
-        pinMessagesView.update(content: content, count: count)
-        pinMessagesView.snp.updateConstraints { make in
+    private func updatePinMessage(preview: String, count: Int) {
+        pinMessagesAlertView.updateMessage(preview: preview, count: count)
+        pinMessagesAlertView.snp.updateConstraints { make in
             make.left.equalTo(0)
         }
     }
     
-    private func hidePinMessage() {
-        pinMessagesView.hideMessage()
-        pinMessagesView.snp.updateConstraints { make in
+    private func hidePinMessagePreview() {
+        pinMessagesAlertView.hideMessagePreview()
+        pinMessagesAlertView.snp.updateConstraints { make in
             make.left.equalTo(AppDelegate.current.mainWindow.bounds.width - 60)
         }
     }
     
-    private func updatePinMessageViewWhenDeletedMessagesIfNeeded() {
+    private func updatePinMessagesAlertViewWhenDeletedMessagesIfNeeded() {
+        guard !pinMessagesAlertView.isHidden else {
+            return
+        }
         let pinnedMessageIds = PinMessageDAO.shared.messageItems(conversationId: conversationId).map(\.messageId)
         DispatchQueue.main.sync {
             if pinnedMessageIds.count == 0 {
-                pinMessagesView.isHidden = true
+                pinMessagesAlertView.isHidden = true
             } else{
-                if let messageId = AppGroupUserDefaults.User.needsDisplayedPinMessages[conversationId], !pinnedMessageIds.contains(messageId) {
-                    hidePinMessage()
-                    AppGroupUserDefaults.User.needsDisplayedPinMessages[conversationId] = ""
+                if let messageId = AppGroupUserDefaults.User.needsDisplayedPinMessages[conversationId]?.messageId, !pinnedMessageIds.contains(messageId) {
+                    hidePinMessagePreview()
+                    AppGroupUserDefaults.User.needsDisplayedPinMessages[conversationId] = ("", "")
                 }
-                pinMessagesView.updateCount(pinnedMessageIds.count)
+                pinMessagesAlertView.updateMessageCount(pinnedMessageIds.count)
             }
         }
     }
@@ -2727,7 +2752,7 @@ extension ConversationViewController {
                 let (deleted, childMessageIds) = MessageDAO.shared.deleteMessage(id: message.messageId)
                 if deleted {
                     ReceiveMessageService.shared.stopRecallMessage(item: message, childMessageIds: childMessageIds)
-                    weakSelf.updatePinMessageViewWhenDeletedMessagesIfNeeded()
+                    weakSelf.updatePinMessagesAlertViewWhenDeletedMessagesIfNeeded()
                 }
                 DispatchQueue.main.sync {
                     _ = weakSelf.dataSource?.removeViewModel(at: indexPath)
@@ -2836,6 +2861,16 @@ extension ConversationViewController {
             }
         case .delete:
             return actions.contains(.delete) ? .available : .invisible
+        }
+    }
+    
+    private func scrollToPinnedMessage(messageId: String) {
+        if let indexPath = dataSource.indexPath(where: { $0.messageId == messageId }) {
+            scheduleCellBackgroundFlash(messageId: messageId)
+            tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
+        } else if MessageDAO.shared.hasMessage(id: messageId) {
+            messageIdToFlashAfterAnimationFinished = messageId
+            reloadWithMessageId(messageId, scrollUpwards: true)
         }
     }
     

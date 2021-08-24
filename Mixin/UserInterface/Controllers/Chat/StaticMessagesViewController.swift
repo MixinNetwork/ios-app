@@ -9,13 +9,14 @@ class StaticMessagesViewController: UIViewController {
     @IBOutlet weak var tableViewBottomConstraint: NSLayoutConstraint!
     
     let queue =  Queue(label: "one.mixin.messenger.StaticMessagesViewController")
-
-    var viewModels: [String: [MessageViewModel]] = [:]
+    
     var dates: [String] = []
+    var viewModels: [String: [MessageViewModel]] = [:]
     
     private let audioManager: StaticAudioMessagePlayingManager
     private let factory = ViewModelFactory()
     private let alwaysUsesLegacyMenu = false
+    
     private var didPlayAudioMessage = false
     private var indexPathToFlashAfterAnimationFinished: IndexPath?
     
@@ -93,6 +94,7 @@ class StaticMessagesViewController: UIViewController {
     
 }
 
+// MARK: - Public
 extension StaticMessagesViewController {
     
     func categorizedViewModels(with items: [MessageItem], fits layoutWidth: CGFloat) -> (dates: [String], viewModels: [String: [MessageViewModel]]) {
@@ -125,6 +127,9 @@ extension StaticMessagesViewController {
     }
     
     func dismissAsChild(completion: (() -> Void)?) {
+        if didPlayAudioMessage {
+            audioManager.stop()
+        }
         UIView.animate(withDuration: 0.3, animations: {
             self.view.frame.origin.y = self.backgroundButton.bounds.height
             self.backgroundButton.backgroundColor = .black.withAlphaComponent(0)
@@ -156,7 +161,12 @@ extension StaticMessagesViewController {
         }
     }
     
-    func attachmentURL(withFilename filename: String) -> URL? {
+}
+
+// MARK: - Override
+extension StaticMessagesViewController {
+    
+    @objc func attachmentURL(withFilename filename: String) -> URL? {
         return nil
     }
     
@@ -234,10 +244,8 @@ extension StaticMessagesViewController {
                                 controller.presentOpenInMenu(from: CGRect.zero, in: self.view, animated: true)
                             }
                         }
-                        if let url = attachmentURL(withFilename: filename) {
-                            if FileManager.default.fileExists(atPath: url.path) {
-                                openDocument(url)
-                            }
+                        if let url = attachmentURL(withFilename: filename), FileManager.default.fileExists(atPath: url.path) {
+                            openDocument(url)
                         } else {
                             let url = AttachmentContainer.url(for: .files, filename: filename)
                             if FileManager.default.fileExists(atPath: url.path) {
@@ -353,130 +361,6 @@ extension StaticMessagesViewController {
     
 }
 
-// MARK: - Private works
-extension StaticMessagesViewController {
-    
-    private final class ViewModelFactory: MessageViewModelFactory {
-        
-        override func style(forIndex index: Int,
-                            isFirstMessage: Bool,
-                            isLastMessage: Bool,
-                            messageAtIndex: (Int) -> MessageItem) -> MessageViewModel.Style {
-            var style = super.style(forIndex: index,
-                                    isFirstMessage: isFirstMessage,
-                                    isLastMessage: isLastMessage,
-                                    messageAtIndex: messageAtIndex)
-            style.insert(.noStatus)
-            return style
-        }
-        
-    }
-    
-    private func viewModels(at section: Int) -> [MessageViewModel]? {
-        guard section < dates.count else {
-            return nil
-        }
-        let date = dates[section]
-        return viewModels[date]
-    }
-    
-    private func flashCellBackground(at indexPath: IndexPath) {
-        guard let cell = tableView.cellForRow(at: indexPath) as? DetailInfoMessageCell else {
-            return
-        }
-        cell.updateAppearance(highlight: true, animated: false)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
-            cell.updateAppearance(highlight: false, animated: true)
-        })
-    }
-    
-    private func open(url: URL) {
-        guard !UrlWindow.checkUrl(url: url) else {
-            return
-        }
-        guard let parent = parent else {
-            return
-        }
-        MixinWebViewController.presentInstance(with: .init(conversationId: "", initialUrl: url), asChildOf: parent)
-    }
-    
-    @available(iOS 13.0, *)
-    private func contextMenuConfigurationForRow(at indexPath: IndexPath) -> UIContextMenuConfiguration? {
-        guard !alwaysUsesLegacyMenu else {
-            return nil
-        }
-        guard !tableView.allowsMultipleSelection, let message = viewModel(at: indexPath)?.message else {
-            return nil
-        }
-        guard message.category.hasSuffix("_TEXT") else {
-            return nil
-        }
-        let copyAction = UIAction(title: R.string.localizable.action_copy(), image: R.image.conversation.ic_action_copy()) { _ in
-            UIPasteboard.general.string = message.content
-        }
-        let identifier = message.messageId as NSString
-        return UIContextMenuConfiguration(identifier: identifier, previewProvider: nil) { (elements) -> UIMenu? in
-            UIMenu(title: "", children: [copyAction])
-        }
-    }
-    
-    @available(iOS 13.0, *)
-    private func previewForContextMenu(with configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
-        guard !alwaysUsesLegacyMenu else {
-            return nil
-        }
-        guard let identifier = configuration.identifier as? NSString else {
-            return nil
-        }
-        let messageId = identifier as String
-        guard
-            let indexPath = indexPath(where: { $0.messageId == messageId }),
-            let cell = tableView.cellForRow(at: indexPath) as? MessageCell,
-            cell.window != nil,
-            let viewModel = viewModel(at: indexPath)
-        else {
-            return nil
-        }
-        let param = UIPreviewParameters()
-        param.backgroundColor = .clear
-        
-        if let viewModel = viewModel as? StickerMessageViewModel {
-            param.visiblePath = UIBezierPath(roundedRect: viewModel.contentFrame,
-                                             cornerRadius: StickerMessageCell.contentCornerRadius)
-        } else if let viewModel = viewModel as? AppButtonGroupViewModel {
-            param.visiblePath = UIBezierPath(roundedRect: viewModel.buttonGroupFrame,
-                                             cornerRadius: AppButtonView.cornerRadius)
-        } else {
-            if viewModel.style.contains(.received) {
-                if viewModel.style.contains(.tail) {
-                    param.visiblePath = BubblePath.leftWithTail(frame: viewModel.backgroundImageFrame)
-                } else {
-                    param.visiblePath = BubblePath.left(frame: viewModel.backgroundImageFrame)
-                }
-            } else {
-                if viewModel.style.contains(.tail) {
-                    param.visiblePath = BubblePath.rightWithTail(frame: viewModel.backgroundImageFrame)
-                } else {
-                    param.visiblePath = BubblePath.right(frame: viewModel.backgroundImageFrame)
-                }
-            }
-        }
-        return UITargetedPreview(view: cell.messageContentView, parameters: param)
-    }
-    
-    private func updatePreferredContentSizeHeight() {
-        guard !isBeingDismissed else {
-            return
-        }
-        view.layoutIfNeeded()
-        let window = AppDelegate.current.mainWindow
-        let height = window.bounds.height - window.safeAreaInsets.top
-        preferredContentSize.height = height
-        view.frame.origin.y = backgroundButton.bounds.height - height
-    }
-    
-}
-
 // MARK: - MessageViewModelFactoryDelegate
 extension StaticMessagesViewController: MessageViewModelFactoryDelegate {
     
@@ -488,7 +372,7 @@ extension StaticMessagesViewController: MessageViewModelFactoryDelegate {
         false
     }
     
-    func messageViewModelFactory(_ factory: MessageViewModelFactory, updateViewModelForPresentation viewModel: MessageViewModel) {
+    @objc func messageViewModelFactory(_ factory: MessageViewModelFactory, updateViewModelForPresentation viewModel: MessageViewModel) {
         
     }
     
@@ -759,6 +643,130 @@ extension StaticMessagesViewController {
         if let cell = cell as? AudioMessageCell {
             cell.updateUnreadStyle()
         }
+    }
+    
+}
+
+// MARK: - Private works
+extension StaticMessagesViewController {
+    
+    private final class ViewModelFactory: MessageViewModelFactory {
+        
+        override func style(forIndex index: Int,
+                            isFirstMessage: Bool,
+                            isLastMessage: Bool,
+                            messageAtIndex: (Int) -> MessageItem) -> MessageViewModel.Style {
+            var style = super.style(forIndex: index,
+                                    isFirstMessage: isFirstMessage,
+                                    isLastMessage: isLastMessage,
+                                    messageAtIndex: messageAtIndex)
+            style.insert(.noStatus)
+            return style
+        }
+        
+    }
+    
+    private func viewModels(at section: Int) -> [MessageViewModel]? {
+        guard section < dates.count else {
+            return nil
+        }
+        let date = dates[section]
+        return viewModels[date]
+    }
+    
+    private func flashCellBackground(at indexPath: IndexPath) {
+        guard let cell = tableView.cellForRow(at: indexPath) as? DetailInfoMessageCell else {
+            return
+        }
+        cell.updateAppearance(highlight: true, animated: false)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+            cell.updateAppearance(highlight: false, animated: true)
+        })
+    }
+    
+    private func open(url: URL) {
+        guard !UrlWindow.checkUrl(url: url) else {
+            return
+        }
+        guard let parent = parent else {
+            return
+        }
+        MixinWebViewController.presentInstance(with: .init(conversationId: "", initialUrl: url), asChildOf: parent)
+    }
+    
+    @available(iOS 13.0, *)
+    private func contextMenuConfigurationForRow(at indexPath: IndexPath) -> UIContextMenuConfiguration? {
+        guard !alwaysUsesLegacyMenu else {
+            return nil
+        }
+        guard !tableView.allowsMultipleSelection, let message = viewModel(at: indexPath)?.message else {
+            return nil
+        }
+        guard message.category.hasSuffix("_TEXT") else {
+            return nil
+        }
+        let copyAction = UIAction(title: R.string.localizable.action_copy(), image: R.image.conversation.ic_action_copy()) { _ in
+            UIPasteboard.general.string = message.content
+        }
+        let identifier = message.messageId as NSString
+        return UIContextMenuConfiguration(identifier: identifier, previewProvider: nil) { (elements) -> UIMenu? in
+            UIMenu(title: "", children: [copyAction])
+        }
+    }
+    
+    @available(iOS 13.0, *)
+    private func previewForContextMenu(with configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        guard !alwaysUsesLegacyMenu else {
+            return nil
+        }
+        guard let identifier = configuration.identifier as? NSString else {
+            return nil
+        }
+        let messageId = identifier as String
+        guard
+            let indexPath = indexPath(where: { $0.messageId == messageId }),
+            let cell = tableView.cellForRow(at: indexPath) as? MessageCell,
+            cell.window != nil,
+            let viewModel = viewModel(at: indexPath)
+        else {
+            return nil
+        }
+        let param = UIPreviewParameters()
+        param.backgroundColor = .clear
+        
+        if let viewModel = viewModel as? StickerMessageViewModel {
+            param.visiblePath = UIBezierPath(roundedRect: viewModel.contentFrame,
+                                             cornerRadius: StickerMessageCell.contentCornerRadius)
+        } else if let viewModel = viewModel as? AppButtonGroupViewModel {
+            param.visiblePath = UIBezierPath(roundedRect: viewModel.buttonGroupFrame,
+                                             cornerRadius: AppButtonView.cornerRadius)
+        } else {
+            if viewModel.style.contains(.received) {
+                if viewModel.style.contains(.tail) {
+                    param.visiblePath = BubblePath.leftWithTail(frame: viewModel.backgroundImageFrame)
+                } else {
+                    param.visiblePath = BubblePath.left(frame: viewModel.backgroundImageFrame)
+                }
+            } else {
+                if viewModel.style.contains(.tail) {
+                    param.visiblePath = BubblePath.rightWithTail(frame: viewModel.backgroundImageFrame)
+                } else {
+                    param.visiblePath = BubblePath.right(frame: viewModel.backgroundImageFrame)
+                }
+            }
+        }
+        return UITargetedPreview(view: cell.messageContentView, parameters: param)
+    }
+    
+    private func updatePreferredContentSizeHeight() {
+        guard !isBeingDismissed else {
+            return
+        }
+        view.layoutIfNeeded()
+        let window = AppDelegate.current.mainWindow
+        let height = window.bounds.height - window.safeAreaInsets.top
+        preferredContentSize.height = height
+        view.frame.origin.y = backgroundButton.bounds.height - height
     }
     
 }

@@ -1,5 +1,4 @@
 import UIKit
-import PhoneNumberKit
 import Alamofire
 import GRDB
 import MixinServices
@@ -21,7 +20,7 @@ class SearchViewController: UIViewController, HomeSearchViewController {
     
     private let resultLimit = 3
     private let idOrPhoneCharacterSet = Set("+0123456789")
-    private let phoneNumberKit = PhoneNumberKit()
+    private let phoneNumberValidator = PhoneNumberValidator()
     
     private var queue = OperationQueue()
     private var showSearchNumber = false
@@ -404,7 +403,7 @@ extension SearchViewController {
             return false
         }
         if keyword.contains("+") {
-            return (try? phoneNumberKit.parse(keyword)) != nil
+            return phoneNumberValidator.isValid(keyword)
         } else {
             return true
         }

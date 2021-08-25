@@ -1,5 +1,4 @@
 import UIKit
-import PhoneNumberKit
 import MixinServices
 
 class AddPeopleViewController: KeyboardBasedLayoutViewController {
@@ -11,7 +10,7 @@ class AddPeopleViewController: KeyboardBasedLayoutViewController {
     @IBOutlet weak var keyboardPlaceholderHeightConstraint: NSLayoutConstraint!
     
     private let legalKeywordCharactersSet = Set("+0123456789")
-    private let phoneNumberKit = PhoneNumberKit()
+    private let phoneNumberValidator = PhoneNumberValidator()
     
     private var keywordTextField: UITextField {
         return searchBoxView.textField
@@ -82,7 +81,7 @@ class AddPeopleViewController: KeyboardBasedLayoutViewController {
             return false
         }
         if keyword.hasPrefix("+") {
-            return (try? phoneNumberKit.parse(keyword)) != nil
+            return phoneNumberValidator.isValid(keyword)
         } else {
             return true
         }

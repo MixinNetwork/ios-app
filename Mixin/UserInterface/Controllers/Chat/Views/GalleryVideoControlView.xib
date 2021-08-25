@@ -147,6 +147,7 @@
                         </stackView>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <gestureRecognizers/>
                     <constraints>
                         <constraint firstAttribute="trailing" secondItem="3Pb-Jd-zva" secondAttribute="trailing" id="Qts-nu-itG"/>
                         <constraint firstItem="3Pb-Jd-zva" firstAttribute="leading" secondItem="gga-kw-mqs" secondAttribute="leading" id="UVN-Wi-Q11"/>
@@ -162,6 +163,9 @@
                             <integer key="value" value="16"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
+                    <connections>
+                        <outletCollection property="gestureRecognizers" destination="G7F-Ys-1fr" appends="YES" id="Enl-Pj-1bn"/>
+                    </connections>
                 </view>
                 <progressView clipsSubviews="YES" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="aSq-x1-aA2">
                     <rect key="frame" x="25" y="366" width="364" height="3"/>
@@ -218,6 +222,7 @@
             </connections>
             <point key="canvasLocation" x="137.68115942028987" y="187.16517857142856"/>
         </view>
+        <panGestureRecognizer minimumNumberOfTouches="1" id="G7F-Ys-1fr"/>
     </objects>
     <resources>
         <image name="bg_video_visual_control" width="20" height="88"/>

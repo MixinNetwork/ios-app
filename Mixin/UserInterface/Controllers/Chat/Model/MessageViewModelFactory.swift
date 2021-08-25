@@ -7,7 +7,7 @@ protocol MessageViewModelFactoryDelegate: AnyObject {
     func messageViewModelFactory(_ factory: MessageViewModelFactory, updateViewModelForPresentation viewModel: MessageViewModel)
 }
 
-class MessageViewModelFactory {
+class MessageViewModelFactory: NSObject {
     
     typealias CategorizedViewModels = (dates: [String], viewModels: [String: [MessageViewModel]])
     

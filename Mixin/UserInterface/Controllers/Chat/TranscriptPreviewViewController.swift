@@ -52,6 +52,22 @@ final class TranscriptPreviewViewController: StaticMessagesViewController {
     
 }
 
+// MARK: - Override
+extension TranscriptPreviewViewController {
+    
+    override func attachmentURL(withFilename filename: String) -> URL? {
+        return AttachmentContainer.url(transcriptId: transcriptMessage.messageId, filename: filename)
+    }
+    
+    override func messageViewModelFactory(_ factory: MessageViewModelFactory, updateViewModelForPresentation viewModel: MessageViewModel) {
+        super.messageViewModelFactory(factory, updateViewModelForPresentation: viewModel)
+        if let viewModel = viewModel as? AttachmentLoadingViewModel {
+            viewModel.transcriptId = self.transcriptMessage.messageId
+        }
+    }
+    
+}
+
 // MARK: - Callbacks
 extension TranscriptPreviewViewController {
     

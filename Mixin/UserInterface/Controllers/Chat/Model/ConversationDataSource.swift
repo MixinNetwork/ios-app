@@ -715,7 +715,7 @@ extension ConversationDataSource: MessageViewModelFactoryDelegate {
         isMessageForwardedByBot(message)
     }
     
-    func messageViewModelFactory(_ factory: MessageViewModelFactory, updateViewModelForPresentation viewModel: MessageViewModel) {
+    @objc func messageViewModelFactory(_ factory: MessageViewModelFactory, updateViewModelForPresentation viewModel: MessageViewModel) {
         if let viewModel = viewModel as? TextMessageViewModel, let keyword = highlight?.keyword {
             viewModel.highlight(keyword: keyword)
         }

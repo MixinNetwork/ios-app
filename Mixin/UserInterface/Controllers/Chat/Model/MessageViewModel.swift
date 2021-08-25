@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class MessageViewModel: CustomDebugStringConvertible {
+class MessageViewModel: NSObject {
     
     static let bottomSeparatorHeight: CGFloat = 10
     
@@ -30,7 +30,7 @@ class MessageViewModel: CustomDebugStringConvertible {
         return Margin(leading: 16, trailing: 10, top: 7, bottom: 7)
     }
     
-    var debugDescription: String {
+    override var debugDescription: String {
         return "MessageViewModel for message: \(message), layoutWidth: \(layoutWidth), cellHeight: \(cellHeight)"
     }
     

@@ -7,6 +7,7 @@ public enum ExtensionName: String {
     case html
     case ogg
     case gif
+    case pdf
     
     public var withDot: String {
         return "." + rawValue

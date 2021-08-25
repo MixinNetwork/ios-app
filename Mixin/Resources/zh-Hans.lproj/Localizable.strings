@@ -375,6 +375,8 @@
 "web_cannot_reached_title" = "无法访问此网页";
 "web_cannot_reached_desc" = "无法访问 %@，请检查你的网络并尝试切换 4G、Wi-Fi 或 VPN 后重新载入页面。";
 "web_contact_developer" = "联系开发者";
+"web_export_as_pdf" = "导出";
+"web_export_failed" = "导出失败";
 
 // Call
 "call_encryption" = "端对端加密";

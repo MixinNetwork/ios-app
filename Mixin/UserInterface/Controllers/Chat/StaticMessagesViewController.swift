@@ -127,6 +127,7 @@ extension StaticMessagesViewController {
     }
     
     func dismissAsChild(completion: (() -> Void)?) {
+        parent?.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
         if didPlayAudioMessage {
             audioManager.stop()
         }
@@ -143,6 +144,7 @@ extension StaticMessagesViewController {
     }
     
     func presentAsChild(of parent: UIViewController) {
+        parent.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         loadViewIfNeeded()
         backgroundButton.frame = parent.view.bounds
         backgroundButton.autoresizingMask = [.flexibleWidth, .flexibleHeight]

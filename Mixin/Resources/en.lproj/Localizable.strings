@@ -372,7 +372,7 @@
 
 // Pin
 "chat_pinned_general_message" = "%@ pinned a message";
-"chat_pinned_text_message" = "%@ pinned '%@'";
+"chat_pinned_text_message" = "%@ pinned \"%@\"";
 "chat_pinned_image_message" = "%@ pinned a photo";
 "chat_pinned_video_message" = "%@ pinned a video";
 "chat_pinned_live_message" = "%@ pinned a live stream";

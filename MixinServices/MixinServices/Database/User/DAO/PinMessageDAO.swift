@@ -39,9 +39,8 @@ public final class PinMessageDAO: UserDatabaseDAO {
     public func messageItems(conversationId: String) -> [MessageItem] {
         let sql = """
         \(Self.messageItemQuery)
-        LEFT JOIN pin_messages p ON m.id = p.message_id
+        INNER JOIN pin_messages p ON m.id = p.message_id
         WHERE m.conversation_id = ?
-        ORDER BY p.created_at DESC
         """
         return db.select(with: sql, arguments: [conversationId])
     }
@@ -49,7 +48,7 @@ public final class PinMessageDAO: UserDatabaseDAO {
     public func messageItem(messageId: String) -> MessageItem? {
         let sql = """
         \(Self.messageItemQuery)
-        LEFT JOIN pin_messages p ON m.id = p.message_id
+        INNER JOIN pin_messages p ON m.id = p.message_id
         WHERE m.message_id = ?
         """
         return db.select(with: sql, arguments: [messageId])

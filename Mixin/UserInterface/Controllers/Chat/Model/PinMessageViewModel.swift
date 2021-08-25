@@ -28,19 +28,8 @@ class PinMessageViewModel: MessageViewModel {
     }
     
     override func layout(width: CGFloat, style: MessageViewModel.Style) {
-        let backgroundImageHorizontalMargin: CGFloat = 76
-        let sizeToFit = CGSize(width: width - backgroundImageHorizontalMargin,
-                               height: UIView.layoutFittingExpandedSize.height)
-        let attrs: [NSAttributedString.Key: Any] = [
-            .font: MessageFontSet.systemMessage.scaled,
-            .paragraphStyle: PinMessageViewModel.paragraphStyle
-        ]
-        let textRect = (text as NSString).boundingRect(with: sizeToFit,
-                                                       options: [.usesLineFragmentOrigin, .usesFontLeading],
-                                                       attributes: attrs,
-                                                       context: nil)
         super.layout(width: width, style: style)
-        cellHeight = textRect.height
+        cellHeight = MessageFontSet.systemMessage.scaled.lineHeight
             + LabelInsets.vertical
             + bottomSeparatorHeight
     }

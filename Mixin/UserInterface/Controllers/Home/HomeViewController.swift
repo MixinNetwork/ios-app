@@ -882,7 +882,7 @@ extension HomeViewController {
         guard AppGroupUserDefaults.User.needsDisplayedPinMessages[conversationId] != nil else {
             return
         }
-        AppGroupUserDefaults.User.needsDisplayedPinMessages[conversationId] = ("", "")
+        AppGroupUserDefaults.User.needsDisplayedPinMessages.removeValue(forKey: conversationId)
     }
     
 }

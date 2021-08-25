@@ -59,7 +59,7 @@ final class PinMessagesPreviewViewController: StaticMessagesViewController {
                     }
                     self.tableViewBottomConstraint.constant = self.tableViewBottomConstraint.constant + self.bottomBarViewHeight
                 }
-                self.titleLabel.text = R.string.localizable.chat_pinned_messages_count(viewModels.count)
+                self.titleLabel.text = R.string.localizable.chat_pinned_messages_count(self.pinnedMessageItems.count)
                 self.dates = dates
                 self.viewModels = viewModels
                 self.tableView.reloadData()
@@ -83,8 +83,8 @@ extension PinMessagesPreviewViewController {
         button.setImage(R.image.ic_pin_right_arrow(), for: .normal)
         cell.contentView.addSubview(button)
         button.snp.makeConstraints { make in
-            make.centerY.equalTo(cell.backgroundImageView)
-            make.left.equalTo(cell.backgroundImageView.snp.right)
+            make.left.equalTo(cell.contentFrame.maxX)
+            make.centerY.equalTo(cell.messageContentView)
             make.height.width.equalTo(36)
         }
     }

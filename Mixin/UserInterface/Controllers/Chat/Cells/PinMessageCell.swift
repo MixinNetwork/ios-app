@@ -12,7 +12,7 @@ class PinMessageCell: MessageCell {
         label.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
         label.textColor = .black
         label.backgroundColor = .clear
-        label.numberOfLines = 0
+        label.numberOfLines = 1
         label.textAlignment = .center
         messageContentView.addSubview(label)
         label.snp.makeConstraints { (make) in

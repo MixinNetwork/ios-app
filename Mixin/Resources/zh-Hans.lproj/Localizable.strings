@@ -372,7 +372,7 @@
 
 // Pin
 "chat_pinned_general_message" = "%@置顶了一条消息";
-"chat_pinned_text_message" = "%@置顶了'%@'";
+"chat_pinned_text_message" = "%@置顶了\"%@\"";
 "chat_pinned_image_message" = "%@置顶了一张图片";
 "chat_pinned_video_message" = "%@置顶了一个视频";
 "chat_pinned_live_message" = "%@置顶了一个直播";

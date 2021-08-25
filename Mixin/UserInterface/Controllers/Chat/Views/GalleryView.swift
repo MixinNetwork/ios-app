@@ -18,14 +18,6 @@ class GalleryView: UIView {
         NotificationCenter.default.removeObserver(self)
     }
     
-    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        let hitTest = super.hitTest(point, with: event)
-        if UIApplication.shared.statusBarOrientation.isPortrait {
-            scrollView?.isScrollEnabled = !(hitTest is UISlider)
-        }
-        return hitTest
-    }
-    
     @objc func orientationDidChanged() {
         scrollView?.isScrollEnabled = UIDevice.current.orientation.isPortrait
     }

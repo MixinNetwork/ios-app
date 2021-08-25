@@ -375,7 +375,7 @@
 "web_cannot_reached_title" = "This webpage can't be reached";
 "web_cannot_reached_desc" = "%@ took too long to respond. Please check your network and try to switch 4G, Wi-Fi or VPN to reload the page.";
 "web_contact_developer" = "Contact Developer";
-"web_export_as_pdf" = "Export as PDF";
+"web_export_as_pdf" = "Export";
 "web_export_failed" = "Export failed";
 
 // Call

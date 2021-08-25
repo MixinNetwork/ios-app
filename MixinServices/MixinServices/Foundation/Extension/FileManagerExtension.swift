@@ -1,31 +1,10 @@
 import Foundation
-import Zip
-import ImageIO
 
 public extension FileManager {
     
-    func compare(path1: String, path2: String) -> Bool {
-        return fileSize(path1) == fileSize(path2) && contentsEqual(atPath: path1, andPath: path2)
-    }
-
     func directoryExists(atPath path: String) -> Bool {
         var isDir : ObjCBool = false
         return FileManager.default.fileExists(atPath: path, isDirectory: &isDir) && isDir.boolValue
-    }
-
-    func isStillImage(_ path: String) -> Bool {
-        guard let handler = FileHandle(forReadingAtPath: path) else {
-            return false
-        }
-        defer {
-            handler.closeFile()
-        }
-        guard let c = handler.readData(ofLength: 1).bytes.first else {
-            return false
-        }
-        // 0xFF => image/jpeg
-        // 0x89 => image/png
-        return c == 0x89 || c == 0xFF
     }
     
     func createNobackupDirectory(_ directory: URL) -> Bool {
@@ -60,21 +39,6 @@ public extension FileManager {
             }
         }
         try? FileManager.default.removeItem(at: directory)
-    }
-
-
-    public func debugDirectoryAndChildFiles(_ directory: URL, dir: String = "==") {
-        guard let files = try? FileManager.default.contentsOfDirectory(atPath: directory.path) else {
-            return
-        }
-        for file in files {
-            let url = directory.appendingPathComponent(file)
-            if directoryExists(atPath: url.path) {
-                debugDirectoryAndChildFiles(url, dir: dir + "==")
-            } else {
-                print("\(dir)\(url)")
-            }
-        }
     }
     
     public func childFiles(_ directory: URL) -> [String] {

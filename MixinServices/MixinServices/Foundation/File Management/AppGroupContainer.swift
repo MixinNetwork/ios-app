@@ -7,7 +7,7 @@ public enum AppGroupContainer {
     
     public static let documentsUrl: URL = {
         let url = AppGroupContainer.url.appendingPathComponent("Documents", isDirectory: true)
-        try? FileManager.default.createDirectoryIfNotExists(atPath: url.path)
+        try? FileManager.default.createDirectoryIfNotExists(at: url)
         return url
     }()
     
@@ -15,7 +15,7 @@ public enum AppGroupContainer {
     
     public static var accountUrl: URL {
         let url = documentsUrl.appendingPathComponent(myIdentityNumber, isDirectory: true)
-        try? FileManager.default.createDirectoryIfNotExists(atPath: url.path)
+        try? FileManager.default.createDirectoryIfNotExists(at: url)
         return url
     }
     
@@ -23,13 +23,13 @@ public enum AppGroupContainer {
         let url = accountUrl
             .appendingPathComponent("Group", isDirectory: true)
             .appendingPathComponent("Icons", isDirectory: true)
-        try? FileManager.default.createDirectoryIfNotExists(atPath: url.path)
+        try? FileManager.default.createDirectoryIfNotExists(at: url)
         return url
     }
     
     public static var logUrl: URL {
         let url = accountUrl.appendingPathComponent("Log", isDirectory: true)
-        try? FileManager.default.createDirectoryIfNotExists(atPath: url.path)
+        try? FileManager.default.createDirectoryIfNotExists(at: url)
         return url
     }
     

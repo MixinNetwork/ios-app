@@ -4,13 +4,13 @@ public enum AttachmentContainer {
     
     public static var url: URL {
         let url = AppGroupContainer.accountUrl.appendingPathComponent("Chat", isDirectory: true)
-        try? FileManager.default.createDirectoryIfNotExists(atPath: url.path)
+        try? FileManager.default.createDirectoryIfNotExists(at: url)
         return url
     }
     
     public static func url(for category: Category, filename: String?) -> URL {
         let url = Self.url.appendingPathComponent(category.pathComponent)
-        try? FileManager.default.createDirectoryIfNotExists(atPath: url.path)
+        try? FileManager.default.createDirectoryIfNotExists(at: url)
         if let filename = filename {
             assert(!filename.isEmpty)
             return url.appendingPathComponent(filename)
@@ -32,7 +32,7 @@ public enum AttachmentContainer {
     public static func url(transcriptId: String, filename: String?) -> URL {
         let url = Self.url.appendingPathComponent("Transcript", isDirectory: true)
             .appendingPathComponent(transcriptId, isDirectory: true)
-        try? FileManager.default.createDirectoryIfNotExists(atPath: url.path)
+        try? FileManager.default.createDirectoryIfNotExists(at: url)
         if let filename = filename {
             assert(!filename.isEmpty)
             return url.appendingPathComponent(filename)

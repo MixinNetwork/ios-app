@@ -131,24 +131,43 @@ extension PostWebViewController {
     }
     
     private func exportAsPDF(to cacheURL: URL) {
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        
         let filename = (pageTitle ?? R.string.localizable.chat_media_category_post()) + ExtensionName.pdf.withDot
         let url = cacheURL.appendingPathComponent(filename)
         let pageBounds = CGRect(x: 0, y: 0, width: 612, height: 792) // 8.5 by 11 inches according to UIGraphicsBeginPDFContextToFile(_:_:_:)
         let renderer = WebViewRenderer(webView: webView, pageBounds: pageBounds)
-        do {
-            try UIGraphicsPDFRenderer(bounds: pageBounds).writePDF(to: url) { ctx in
-                for page in 0..<renderer.numberOfPages {
-                    ctx.beginPage()
-                    renderer.drawPage(at: page, in: ctx.pdfContextBounds)
+        
+        // Dispatch time consuming procedure to next RunLoop to avoid explicit calling of [CATransaction flush]
+        DispatchQueue.main.async {
+            var success = false
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+                if success {
+                    hud.hide()
+                    let activity = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+                    activity.completionWithItemsHandler = { (_, _, _, _) in
+                        try? FileManager.default.removeItem(at: url)
+                    }
+                    self.present(activity, animated: true, completion: nil)
+                } else {
+                    try? FileManager.default.removeItem(at: url)
+                    hud.set(style: .error, text: R.string.localizable.web_export_failed())
+                    hud.scheduleAutoHidden()
                 }
             }
-            let activity = UIActivityViewController(activityItems: [url], applicationActivities: nil)
-            activity.completionWithItemsHandler = { (_, _, _, _) in
-                try? FileManager.default.removeItem(at: url)
+            
+            do {
+                try UIGraphicsPDFRenderer(bounds: pageBounds).writePDF(to: url) { ctx in
+                    for page in 0..<renderer.numberOfPages {
+                        ctx.beginPage()
+                        renderer.drawPage(at: page, in: ctx.pdfContextBounds)
+                    }
+                }
+                success = true
+            } catch {
+                success = false
             }
-            present(activity, animated: true, completion: nil)
-        } catch {
-            showAutoHiddenHud(style: .error, text: R.string.localizable.web_export_failed())
         }
     }
     

@@ -286,6 +286,11 @@ class HomeViewController: UIViewController {
     }
     
     @objc func dataDidChange(_ sender: Notification) {
+        if let change = sender.object as? ConversationChange, case .recallMessage(let messageId) = change.action {
+            DispatchQueue.global().async {
+                PinMessageDAO.shared.unpinMessage(messageId: messageId, conversationId: change.conversationId)
+            }
+        }
         guard view?.isVisibleInScreen ?? false else {
             needRefresh = true
             return
@@ -741,8 +746,8 @@ extension HomeViewController {
             self.conversations[indexPath.row].unseenMessageCount = 0
             self.tableView.reloadRows(at: [indexPath], with: .automatic)
             self.tableView.endUpdates()
-            self.cleanDisplayedPinMessagesIfNeeded(conversationId: conversation.conversationId)
             DispatchQueue.global().async {
+                self.cleanPinMessages(conversationId: conversation.conversationId)
                 ConversationDAO.shared.clearChat(conversationId: conversationId)
             }
         }))
@@ -762,8 +767,8 @@ extension HomeViewController {
                 case .success:
                     hud.hide()
                     self?.conversations[indexPath.row].status = ConversationStatus.QUIT.rawValue
-                    self?.cleanDisplayedPinMessagesIfNeeded(conversationId: conversation.conversationId)
                     DispatchQueue.global().async {
+                        self?.cleanPinMessages(conversationId: conversation.conversationId)
                         ConversationDAO.shared.exitGroup(conversationId: conversationId)
                     }
                 case let .failure(error):
@@ -771,8 +776,8 @@ extension HomeViewController {
                     case .forbidden, .notFound:
                         hud.hide()
                         self?.conversations[indexPath.row].status = ConversationStatus.QUIT.rawValue
-                        self?.cleanDisplayedPinMessagesIfNeeded(conversationId: conversation.conversationId)
                         DispatchQueue.global().async {
+                            self?.cleanPinMessages(conversationId: conversation.conversationId)
                             ConversationDAO.shared.exitGroup(conversationId: conversationId)
                         }
                     default:
@@ -878,10 +883,8 @@ extension HomeViewController {
         }
     }
     
-    private func cleanDisplayedPinMessagesIfNeeded(conversationId: String) {
-        guard AppGroupUserDefaults.User.needsDisplayedPinMessages[conversationId] != nil else {
-            return
-        }
+    private func cleanPinMessages(conversationId: String) {
+        PinMessageDAO.shared.unpinAllMessages(conversationId: conversationId)
         AppGroupUserDefaults.User.needsDisplayedPinMessages.removeValue(forKey: conversationId)
     }
     

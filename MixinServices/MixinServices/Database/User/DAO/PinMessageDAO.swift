@@ -40,7 +40,7 @@ public final class PinMessageDAO: UserDatabaseDAO {
         let sql = """
         \(Self.messageItemQuery)
         INNER JOIN pin_messages p ON m.id = p.message_id
-        WHERE m.conversation_id = ?
+        WHERE m.category != 'MESSAGE_RECALL' AND m.conversation_id = ?
         """
         return db.select(with: sql, arguments: [conversationId])
     }
@@ -49,21 +49,31 @@ public final class PinMessageDAO: UserDatabaseDAO {
         let sql = """
         \(Self.messageItemQuery)
         INNER JOIN pin_messages p ON m.id = p.message_id
-        WHERE m.message_id = ?
+        WHERE m.category != 'MESSAGE_RECALL' AND m.message_id = ?
         """
         return db.select(with: sql, arguments: [messageId])
     }
     
     @discardableResult
-    public func unpinMessage(fullMessage: MessageItem) -> Bool {
+    public func unpinAllMessages(conversationId: String) -> Bool {
+        db.write { db in
+            try PinMessage.deleteAll(db)
+        }
+    }
+    
+    @discardableResult
+    public func unpinMessage(messageId: String, conversationId: String) -> Bool {
         db.write { (db) in
-            try PinMessage
-                .filter(Message.column(of: .messageId) == fullMessage.messageId)
+            let deletedCount = try PinMessage
+                .filter(PinMessage.column(of: .messageId) == messageId)
                 .deleteAll(db)
+            guard deletedCount > 0 else {
+                return
+            }
             db.afterNextTransactionCommit { db in
                 let userInfo: [String: Any] = [
-                    PinMessageDAO.UserInfoKey.conversationId: fullMessage.conversationId,
-                    PinMessageDAO.UserInfoKey.messageId: fullMessage.messageId,
+                    PinMessageDAO.UserInfoKey.conversationId: conversationId,
+                    PinMessageDAO.UserInfoKey.messageId: messageId,
                     PinMessageDAO.UserInfoKey.isPinned: false
                 ]
                 NotificationCenter.default.post(onMainThread: PinMessageDAO.pinMessageDidChangeNotification,

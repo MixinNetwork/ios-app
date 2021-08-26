@@ -29,7 +29,6 @@ final class TranscriptPreviewViewController: StaticMessagesViewController {
                            selector: #selector(mediaStatusDidUpdate(_:)),
                            name: MessageDAO.messageMediaStatusDidUpdateNotification,
                            object: nil)
-        
         let transcriptId = transcriptMessage.messageId
         let layoutWidth = AppDelegate.current.mainWindow.bounds.width
         queue.async { [weak self] in

@@ -335,7 +335,7 @@ public class ReceiveMessageService: MixinService {
             updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
             return
         }
-        let pinLocalContent = PinMessage.LocalContent(category: fullMessage.category, content: fullMessage.content)
+        let pinLocalContent = PinMessage.LocalContent(category: fullMessage.category, content: fullMessage.mentionedFullnameReplacedContent)
         let content: String
         if let data = try? JSONEncoder.default.encode(pinLocalContent), let localContent = String(data: data, encoding: .utf8) {
             content = localContent
@@ -350,7 +350,7 @@ public class ReceiveMessageService: MixinService {
                                             source: data.source,
                                             silentNotification: data.silentNotification)
         case .unpin:
-            PinMessageDAO.shared.unpinMessage(fullMessage: fullMessage)
+            PinMessageDAO.shared.unpinMessage(messageId: fullMessage.messageId, conversationId: fullMessage.conversationId)
         }
         updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
     }

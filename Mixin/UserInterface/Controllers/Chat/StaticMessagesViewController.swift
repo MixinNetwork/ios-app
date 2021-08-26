@@ -26,7 +26,7 @@ class StaticMessagesViewController: UIViewController {
         button.addTarget(self, action: #selector(dismissAction(_:)), for: .touchUpInside)
         return button
     }()
-    
+
     init(audioManager: StaticAudioMessagePlayingManager) {
         self.audioManager = audioManager
         let nib = R.nib.staticMessagesView
@@ -299,6 +299,10 @@ extension StaticMessagesViewController {
                         }
                     }
                 }
+            } else if message.category.hasSuffix("_TRANSCRIPT"), let parent = parent {
+                let vc = TranscriptPreviewViewController(transcriptMessage: message)
+                vc.presentAsChild(of: parent)
+                
             }
         }
     }

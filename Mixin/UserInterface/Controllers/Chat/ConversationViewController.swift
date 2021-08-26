@@ -1029,6 +1029,10 @@ class ConversationViewController: UIViewController {
             if newStatus == .MENTION_READ {
                 mentionScrollingDestinations.removeAll(where: { $0 == messageId })
             }
+        case let .recallMessage(messageId):
+            DispatchQueue.global().async {
+                PinMessageDAO.shared.unpinMessage(messageId: messageId, conversationId: change.conversationId)
+            }
         default:
             break
         }
@@ -1175,8 +1179,7 @@ class ConversationViewController: UIViewController {
             return
         }
         guard let isPinned = notification.userInfo?[PinMessageDAO.UserInfoKey.isPinned] as? Bool,
-              let messageId = notification.userInfo?[PinMessageDAO.UserInfoKey.messageId] as? String,
-              let message = notification.userInfo?[PinMessageDAO.UserInfoKey.message] as? Message else {
+              let messageId = notification.userInfo?[PinMessageDAO.UserInfoKey.messageId] as? String else {
             return
         }
         DispatchQueue.global().async { [weak self] in
@@ -1185,7 +1188,9 @@ class ConversationViewController: UIViewController {
             }
             let count = PinMessageDAO.shared.messageCount(conversationId: conversationId)
             if isPinned {
-                guard let fullMessage = MessageDAO.shared.getFullMessage(messageId: message.messageId), let content = message.content else {
+                guard let pinMessage = notification.userInfo?[PinMessageDAO.UserInfoKey.message] as? Message,
+                      let fullMessage = MessageDAO.shared.getFullMessage(messageId: pinMessage.messageId),
+                      let content = pinMessage.content else {
                     return
                 }
                 DispatchQueue.main.async {
@@ -1801,6 +1806,7 @@ extension ConversationViewController: TextPreviewViewDelegate {
 extension ConversationViewController: PinMessagesAlertViewDelegate {
     
     func pinMessagesAlertViewDidTapPin(_ view: PinMessagesAlertView) {
+        conversationInputViewController.textView.resignFirstResponder()
         let vc = PinMessagesPreviewViewController(conversationId: conversationId)
         vc.delegate = self
         vc.presentAsChild(of: self)
@@ -1882,7 +1888,9 @@ extension ConversationViewController {
         if ConversationViewController.allowReportSingleMessage {
             actions.append(.report)
         }
-        if dataSource.category == .group, let replyIndex = actions.firstIndex(where: { $0 == .reply }) {
+        if dataSource.category == .group,
+           ParticipantDAO.shared.isAdmin(conversationId: conversationId, userId: myUserId),
+           let replyIndex = actions.firstIndex(where: { $0 == .reply }) {
             let action: MessageAction = PinMessageDAO.shared.isPinned(messageId: message.messageId) ? .unpin : .pin
             if replyIndex == actions.count - 1 {
                 actions.append(action)
@@ -2484,25 +2492,6 @@ extension ConversationViewController {
         }
     }
     
-    private func updatePinMessagesAlertViewWhenDeletedMessagesIfNeeded() {
-        guard !pinMessagesAlertView.isHidden else {
-            return
-        }
-        let pinnedMessageIds = PinMessageDAO.shared.messageItems(conversationId: conversationId).map(\.messageId)
-        DispatchQueue.main.sync {
-            if pinnedMessageIds.count == 0 {
-                pinMessagesAlertView.isHidden = true
-            } else{
-                if let data = AppGroupUserDefaults.User.needsDisplayedPinMessages[conversationId],
-                   let alert = PinMessageAlert.fromData(data), !pinnedMessageIds.contains(alert.messageId) {
-                    hidePinMessagePreview()
-                    AppGroupUserDefaults.User.needsDisplayedPinMessages.removeValue(forKey: conversationId)
-                }
-                pinMessagesAlertView.updateMessageCount(pinnedMessageIds.count)
-            }
-        }
-    }
-    
 }
 
 // MARK: - Helpers
@@ -2758,7 +2747,7 @@ extension ConversationViewController {
                 let (deleted, childMessageIds) = MessageDAO.shared.deleteMessage(id: message.messageId)
                 if deleted {
                     ReceiveMessageService.shared.stopRecallMessage(item: message, childMessageIds: childMessageIds)
-                    weakSelf.updatePinMessagesAlertViewWhenDeletedMessagesIfNeeded()
+                    PinMessageDAO.shared.unpinMessage(messageId: message.messageId, conversationId: message.conversationId)
                 }
                 DispatchQueue.main.sync {
                     _ = weakSelf.dataSource?.removeViewModel(at: indexPath)

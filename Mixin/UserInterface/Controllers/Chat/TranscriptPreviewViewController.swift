@@ -10,7 +10,7 @@ final class TranscriptPreviewViewController: StaticMessagesViewController {
     init(transcriptMessage: MessageItem) {
         self.transcriptMessage = transcriptMessage
         let audioManager = TranscriptAudioMessagePlayingManager(transcriptId: transcriptMessage.messageId)
-        super.init(audioManager: audioManager)
+        super.init(conversationId: transcriptMessage.conversationId, audioManager: audioManager)
     }
     
     required init?(coder: NSCoder) {
@@ -20,15 +20,6 @@ final class TranscriptPreviewViewController: StaticMessagesViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         titleLabel.text = R.string.localizable.chat_transcript()
-        let center = NotificationCenter.default
-        center.addObserver(self,
-                           selector: #selector(conversationDidChange(_:)),
-                           name: MixinServices.conversationDidChangeNotification,
-                           object: nil)
-        center.addObserver(self,
-                           selector: #selector(mediaStatusDidUpdate(_:)),
-                           name: MessageDAO.messageMediaStatusDidUpdateNotification,
-                           object: nil)
         let transcriptId = transcriptMessage.messageId
         let layoutWidth = AppDelegate.current.mainWindow.bounds.width
         queue.async { [weak self] in
@@ -47,6 +38,10 @@ final class TranscriptPreviewViewController: StaticMessagesViewController {
                 self.tableView.reloadData()
             }
         }
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(mediaStatusDidUpdate(_:)),
+                                               name: TranscriptMessageDAO.mediaStatusDidUpdateNotification,
+                                               object: nil)
     }
     
 }
@@ -61,7 +56,7 @@ extension TranscriptPreviewViewController {
     override func messageViewModelFactory(_ factory: MessageViewModelFactory, updateViewModelForPresentation viewModel: MessageViewModel) {
         super.messageViewModelFactory(factory, updateViewModelForPresentation: viewModel)
         if let viewModel = viewModel as? AttachmentLoadingViewModel {
-            viewModel.transcriptId = self.transcriptMessage.messageId
+            viewModel.transcriptId = transcriptMessage.messageId
         }
     }
     
@@ -70,7 +65,8 @@ extension TranscriptPreviewViewController {
 // MARK: - Callbacks
 extension TranscriptPreviewViewController {
     
-    @objc private func conversationDidChange(_ sender: Notification) {
+    override func conversationDidChange(_ sender: Notification) {
+        super.conversationDidChange(sender)
         guard
             let change = sender.object as? ConversationChange,
             case .recallMessage(let messageId) = change.action,
@@ -86,7 +82,7 @@ extension TranscriptPreviewViewController {
             let transcriptId = notification.userInfo?[TranscriptMessageDAO.UserInfoKey.transcriptId] as? String,
             let messageId = notification.userInfo?[TranscriptMessageDAO.UserInfoKey.messageId] as? String,
             let mediaStatus = notification.userInfo?[TranscriptMessageDAO.UserInfoKey.mediaStatus] as? MediaStatus,
-            transcriptId == self.transcriptMessage.messageId,
+            transcriptId == transcriptMessage.messageId,
             let child = childMessages.first(where: { $0.messageId == messageId })
         else {
             return
@@ -96,7 +92,7 @@ extension TranscriptPreviewViewController {
         if let mediaUrl = mediaUrl {
             child.mediaUrl = mediaUrl
         }
-        if let indexPath = indexPath(where: { $0.messageId == messageId }), let viewModel = viewModel(at: indexPath) {
+        if let indexPath = self.indexPath(where: { $0.messageId == messageId }), let viewModel = viewModel(at: indexPath) {
             if let viewModel = viewModel as? AttachmentLoadingViewModel {
                 viewModel.mediaStatus = mediaStatus.rawValue
             }

@@ -12,7 +12,9 @@ class StaticMessagesViewController: UIViewController {
     
     var dates: [String] = []
     var viewModels: [String: [MessageViewModel]] = [:]
+    var presentCompletion: (() -> Void)?
     
+    private let conversationId: String
     private let audioManager: StaticAudioMessagePlayingManager
     private let factory = ViewModelFactory()
     private let alwaysUsesLegacyMenu = false
@@ -26,8 +28,9 @@ class StaticMessagesViewController: UIViewController {
         button.addTarget(self, action: #selector(dismissAction(_:)), for: .touchUpInside)
         return button
     }()
-
-    init(audioManager: StaticAudioMessagePlayingManager) {
+    
+    init(conversationId: String, audioManager: StaticAudioMessagePlayingManager) {
+        self.conversationId = conversationId
         self.audioManager = audioManager
         let nib = R.nib.staticMessagesView
         super.init(nibName: nib.name, bundle: nib.bundle)
@@ -52,6 +55,7 @@ class StaticMessagesViewController: UIViewController {
         tableViewBottomConstraint.constant = safeAreaInsets.top + safeAreaInsets.bottom
         audioManager.delegate = self
         factory.delegate = self
+        
         tableView.backgroundColor = .clear
         tableView.separatorStyle = .none
         tableView.dataSource = self
@@ -76,6 +80,10 @@ class StaticMessagesViewController: UIViewController {
                            selector: #selector(updateMessageMediaStatus(_:)),
                            name: MessageDAO.messageMediaStatusDidUpdateNotification,
                            object: nil)
+        center.addObserver(self,
+                           selector: #selector(conversationDidChange(_:)),
+                           name: MixinServices.conversationDidChangeNotification,
+                           object: nil)
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -90,6 +98,15 @@ class StaticMessagesViewController: UIViewController {
     
     @IBAction func dismissAction(_ sender: Any) {
         dismissAsChild(completion: nil)
+    }
+    
+}
+
+// MARK: - Override
+extension StaticMessagesViewController {
+    
+    @objc func attachmentURL(withFilename filename: String) -> URL? {
+        return nil
     }
     
 }
@@ -126,6 +143,16 @@ extension StaticMessagesViewController {
         return nil
     }
     
+    func flashCellBackground(at indexPath: IndexPath) {
+        guard let cell = tableView.cellForRow(at: indexPath) as? DetailInfoMessageCell else {
+            return
+        }
+        cell.updateAppearance(highlight: true, animated: false)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+            cell.updateAppearance(highlight: false, animated: true)
+        })
+    }
+    
     func dismissAsChild(completion: (() -> Void)?) {
         parent?.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
         if didPlayAudioMessage {
@@ -160,16 +187,8 @@ extension StaticMessagesViewController {
         UIView.animate(withDuration: 0.3) {
             self.view.frame.origin.y = self.backgroundButton.bounds.height - self.preferredContentSize.height
             self.backgroundButton.backgroundColor = .black.withAlphaComponent(0.3)
+            self.presentCompletion?()
         }
-    }
-    
-}
-
-// MARK: - Override
-extension StaticMessagesViewController {
-    
-    @objc func attachmentURL(withFilename filename: String) -> URL? {
-        return nil
     }
     
 }
@@ -605,8 +624,39 @@ extension StaticMessagesViewController: StaticAudioMessagePlayingManagerDelegate
     
 }
 
-// MARK: - Attachment Callbacks
+// MARK: - Callbacks
 extension StaticMessagesViewController {
+    
+    @objc func conversationDidChange(_ sender: Notification) {
+        guard let change = sender.object as? ConversationChange, change.conversationId == conversationId else {
+            return
+        }
+        switch change.action {
+        case .updateMessage(let messageId), .recallMessage(let messageId):
+            queue.async { [weak self] in
+                guard let self = self else {
+                    return
+                }
+                guard let indexPath = self.indexPath(where: { $0.messageId == messageId }) else {
+                    return
+                }
+                guard let message = MessageDAO.shared.getFullMessage(messageId: messageId) else {
+                    return
+                }
+                DispatchQueue.main.sync {
+                    let layoutWidth = AppDelegate.current.mainWindow.bounds.width
+                    let date = DateFormatter.yyyymmdd.string(from: message.createdAt.toUTCDate())
+                    if let style = self.viewModels[date]?[indexPath.row].style {
+                        let viewModel = self.factory.viewModel(withMessage: message, style: style, fits: layoutWidth)
+                        self.viewModels[date]?[indexPath.row] = viewModel
+                        self.tableView.reloadData()
+                    }
+                }
+            }
+        default:
+            return
+        }
+    }
     
     @objc private func updateAttachmentProgress(_ notification: Notification) {
         guard
@@ -678,16 +728,6 @@ extension StaticMessagesViewController {
         }
         let date = dates[section]
         return viewModels[date]
-    }
-    
-    private func flashCellBackground(at indexPath: IndexPath) {
-        guard let cell = tableView.cellForRow(at: indexPath) as? DetailInfoMessageCell else {
-            return
-        }
-        cell.updateAppearance(highlight: true, animated: false)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
-            cell.updateAppearance(highlight: false, animated: true)
-        })
     }
     
     private func open(url: URL) {

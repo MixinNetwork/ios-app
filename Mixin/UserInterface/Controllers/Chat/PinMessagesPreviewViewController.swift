@@ -13,6 +13,8 @@ final class PinMessagesPreviewViewController: StaticMessagesViewController {
     private let bottomBarViewHeight: CGFloat = 50
     
     private var pinnedMessageItems: [MessageItem] = []
+    private var isCellFlashed = false
+    private var isPresented = false
     
     private lazy var bottomBarView: UIView = {
         let button = UIButton()
@@ -31,7 +33,7 @@ final class PinMessagesPreviewViewController: StaticMessagesViewController {
     
     init(conversationId: String) {
         self.conversationId = conversationId
-        super.init(audioManager: PinAudioMessagePlayingManager())
+        super.init(conversationId: conversationId, audioManager: StaticAudioMessagePlayingManager())
     }
     
     required init?(coder: NSCoder) {
@@ -40,6 +42,13 @@ final class PinMessagesPreviewViewController: StaticMessagesViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        presentCompletion = { [weak self] in
+            guard let self = self else {
+                return
+            }
+            self.isPresented = true
+            self.flashCellBackgroundIfNeeded()
+        }
         let layoutWidth = AppDelegate.current.mainWindow.bounds.width
         queue.async { [weak self] in
             guard let self = self else {
@@ -57,12 +66,43 @@ final class PinMessagesPreviewViewController: StaticMessagesViewController {
                         make.height.equalTo(safeAreaInsets.bottom + self.bottomBarViewHeight)
                         make.bottom.equalTo(-safeAreaInsets.top)
                     }
-                    self.tableViewBottomConstraint.constant = self.tableViewBottomConstraint.constant + self.bottomBarViewHeight
+                    self.tableViewBottomConstraint.constant += self.bottomBarViewHeight
                 }
                 self.titleLabel.text = R.string.localizable.chat_pinned_messages_count(self.pinnedMessageItems.count)
                 self.dates = dates
                 self.viewModels = viewModels
                 self.tableView.reloadData()
+                self.flashCellBackgroundIfNeeded()
+            }
+        }
+    }
+    
+}
+
+extension PinMessagesPreviewViewController {
+    
+    private func flashCellBackgroundIfNeeded() {
+        guard isPresented && !isCellFlashed && !pinnedMessageItems.isEmpty else {
+            return
+        }
+        isCellFlashed = true
+        queue.async { [weak self] in
+            guard let self = self else {
+                return
+            }
+            var messageId: String?
+            if let data = AppGroupUserDefaults.User.needsDisplayedPinMessages[self.conversationId],
+               let id = PinMessageAlert.fromData(data)?.messageId {
+                messageId = id
+            } else if let lastPinnedMessage = PinMessageDAO.shared.lastPinnedMessage(conversationId: self.conversationId) {
+                messageId = lastPinnedMessage.messageId
+            }
+            guard let messageId = messageId, let indexPath = self.indexPath(where: { $0.messageId == messageId }) else {
+                return
+            }
+            DispatchQueue.main.async {
+                self.tableView.scrollToRow(at: indexPath, at: .middle, animated: false)
+                self.flashCellBackground(at: indexPath)
             }
         }
     }
@@ -82,10 +122,11 @@ extension PinMessagesPreviewViewController {
         button.tag =  indexPath.row + 999
         button.setImage(R.image.ic_pin_right_arrow(), for: .normal)
         cell.contentView.addSubview(button)
+        let size = CGSize(width: 36, height: 36)
         button.snp.makeConstraints { make in
+            make.size.equalTo(size)
             make.left.equalTo(cell.contentFrame.maxX)
-            make.centerY.equalTo(cell.messageContentView)
-            make.height.width.equalTo(36)
+            make.top.equalTo(cell.contentFrame.midY - size.height / 2)
         }
     }
     
@@ -109,7 +150,7 @@ extension PinMessagesPreviewViewController {
                 guard let self = self else {
                     return
                 }
-                self.pinnedMessageItems.forEach({ PinMessageDAO.shared.unpinMessage(fullMessage: $0) })
+                self.pinnedMessageItems.forEach({ SendMessageService.shared.pinMessage(item: $0, action: .unpin) })
                 DispatchQueue.main.async {
                     self.dismissAsChild(completion: nil)
                 }
@@ -121,9 +162,11 @@ extension PinMessagesPreviewViewController {
     }
     
     @objc private func showMessageAction(sender: UIButton) {
-        guard let cell = sender.superview?.superview as? MessageCell,
-              let indexPath = tableView.indexPath(for: cell),
-              let viewModel = viewModel(at: indexPath) else {
+        guard
+            let cell = sender.superview?.superview as? MessageCell,
+            let indexPath = tableView.indexPath(for: cell),
+            let viewModel = viewModel(at: indexPath)
+        else {
             return
         }
         delegate?.pinMessagesPreviewViewController(self, needsShowMessage: viewModel.message.messageId)

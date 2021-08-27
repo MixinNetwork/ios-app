@@ -169,6 +169,7 @@ class ConversationViewController: UIViewController {
     
     private lazy var pinMessagesAlertView: PinMessagesAlertView = {
         let view = R.nib.pinMessagesAlertView(owner: nil)!
+        view.isHidden = true
         view.delegate = self
         return view
     }()
@@ -289,17 +290,14 @@ class ConversationViewController: UIViewController {
             titleLabel.text = ownerUser.fullName
         }
         
-        if dataSource.category == .group {
-            view.addSubview(pinMessagesAlertView)
-            pinMessagesAlertView.snp.makeConstraints { make in
-                make.top.equalTo(navigationBarView.snp.bottom).offset(7)
-                make.left.equalTo(0)
-                make.right.equalTo(0)
-                make.height.equalTo(70)
-            }
-            setupPinMessagesAlertView()
-            NotificationCenter.default.addObserver(self, selector: #selector(pinMessagesDidChange(_:)), name: PinMessageDAO.pinMessageDidChangeNotification, object: nil)
+        view.addSubview(pinMessagesAlertView)
+        pinMessagesAlertView.snp.makeConstraints { make in
+            make.top.equalTo(navigationBarView.snp.bottom).offset(7)
+            make.left.equalTo(0)
+            make.right.equalTo(0)
+            make.height.equalTo(70)
         }
+        setupPinMessagesAlertView()
         
         reportRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(showReportMenuAction))
         reportRecognizer.minimumPressDuration = 2
@@ -374,6 +372,7 @@ class ConversationViewController: UIViewController {
         center.addObserver(self, selector: #selector(willRecallMessage(_:)), name: SendMessageService.willRecallMessageNotification, object: nil)
         center.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         center.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        center.addObserver(self, selector: #selector(pinMessagesDidChange(_:)), name: PinMessageDAO.pinMessageDidChangeNotification, object: nil)
         if dataSource.category == .group {
             CallService.shared.membersManager.loadMembersAsynchornouslyIfNeverLoaded(forConversationWith: conversationId)
             updateGroupCallIndicatorViewHidden()
@@ -1195,7 +1194,7 @@ class ConversationViewController: UIViewController {
                 }
                 DispatchQueue.main.async {
                     self.pinMessagesAlertView.isHidden = false
-                    let preview = TransferPinAction.getPinMessage(userId: fullMessage.userId, userFullName: fullMessage.userFullName ?? "", content: content)
+                    let preview = TransferPinAction.getPinPreview(userId: fullMessage.userId, userFullName: fullMessage.userFullName ?? "", category: fullMessage.category, content: content)
                     self.updatePinMessage(preview: preview, count: count)
                     if let data = PinMessageAlert(messageId: messageId, preview: preview).toData() {
                         AppGroupUserDefaults.User.needsDisplayedPinMessages[conversationId] = data
@@ -1888,13 +1887,10 @@ extension ConversationViewController {
         if ConversationViewController.allowReportSingleMessage {
             actions.append(.report)
         }
-        if dataSource.category == .group,
-           ParticipantDAO.shared.isAdmin(conversationId: conversationId, userId: myUserId),
-           let replyIndex = actions.firstIndex(where: { $0 == .reply }) {
-            let action: MessageAction = PinMessageDAO.shared.isPinned(messageId: message.messageId) ? .unpin : .pin
-            if replyIndex == actions.count - 1 {
-                actions.append(action)
-            } else {
+        if let replyIndex = actions.firstIndex(where: { $0 == .reply }) {
+            if (dataSource.category == .contact) ||
+               (dataSource.category == .group && ParticipantDAO.shared.isAdmin(conversationId: conversationId, userId: myUserId)) {
+                let action: MessageAction = PinMessageDAO.shared.isPinned(messageId: message.messageId) ? .unpin : .pin
                 actions.insert(action, at: replyIndex + 1)
             }
         }

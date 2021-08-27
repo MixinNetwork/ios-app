@@ -6,7 +6,7 @@ public final class PinMessageDAO: UserDatabaseDAO {
         public static let conversationId = "conv_id"
         public static let message = "msg"
         public static let messageId = "mid"
-        public static let isPinned = "is_pinned"
+        public static let isPinned = "is_p"
     }
     
     public static let shared = PinMessageDAO()
@@ -18,7 +18,7 @@ public final class PinMessageDAO: UserDatabaseDAO {
         m.media_size, m.media_duration, m.media_width, m.media_height, m.media_hash, m.media_key,
         m.media_digest, m.media_status, m.media_waveform, m.media_local_id, m.thumb_image, m.thumb_url, m.status, m.participant_id, m.snapshot_id, m.name,
         m.sticker_id, m.created_at, u.full_name as userFullName, u.identity_number as userIdentityNumber, u.avatar_url as userAvatarUrl, u.app_id as appId,
-               u1.full_name as participantFullName, u1.user_id as participantUserId,
+        u1.full_name as participantFullName, u1.user_id as participantUserId,
                s.amount as snapshotAmount, s.asset_id as snapshotAssetId, s.type as snapshotType, a.symbol as assetSymbol, a.icon_url as assetIcon,
                st.asset_width as assetWidth, st.asset_height as assetHeight, st.asset_url as assetUrl, st.asset_type as assetType, alb.category as assetCategory,
                m.action as actionName, m.shared_user_id as sharedUserId, su.full_name as sharedUserFullName, su.identity_number as sharedUserIdentityNumber, su.avatar_url as sharedUserAvatarUrl, su.app_id as sharedUserAppId, su.is_verified as sharedUserIsVerified, m.quote_message_id, m.quote_content,
@@ -34,13 +34,14 @@ public final class PinMessageDAO: UserDatabaseDAO {
     )
     LEFT JOIN users su ON m.shared_user_id = su.user_id
     LEFT JOIN message_mentions mm ON m.id = mm.message_id
+    INNER JOIN pin_messages p ON m.id = p.message_id
     """
     
     public func messageItems(conversationId: String) -> [MessageItem] {
         let sql = """
         \(Self.messageItemQuery)
-        INNER JOIN pin_messages p ON m.id = p.message_id
         WHERE m.category != 'MESSAGE_RECALL' AND m.conversation_id = ?
+        ORDER BY m.created_at ASC
         """
         return db.select(with: sql, arguments: [conversationId])
     }
@@ -48,10 +49,20 @@ public final class PinMessageDAO: UserDatabaseDAO {
     public func messageItem(messageId: String) -> MessageItem? {
         let sql = """
         \(Self.messageItemQuery)
-        INNER JOIN pin_messages p ON m.id = p.message_id
         WHERE m.category != 'MESSAGE_RECALL' AND m.message_id = ?
         """
         return db.select(with: sql, arguments: [messageId])
+    }
+    
+    
+    public func lastPinnedMessage(conversationId: String) -> MessageItem? {
+        let sql = """
+        \(Self.messageItemQuery)
+        WHERE m.category != 'MESSAGE_RECALL' AND m.conversation_id = ?
+        ORDER BY p.created_at DESC
+        LIMIT 1
+        """
+        return db.select(with: sql, arguments: [conversationId])
     }
     
     @discardableResult
@@ -81,7 +92,6 @@ public final class PinMessageDAO: UserDatabaseDAO {
                                                 userInfo: userInfo)
             }
         }
-        
     }
     
     @discardableResult

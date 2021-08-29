@@ -47,7 +47,7 @@ class PostWebViewController: WebViewController {
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         if #available(iOS 13.0, *), traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
-            updateBackground(pageThemeColor: .background)
+            updateBackground(pageThemeColor: .background, measureDarknessWithUserInterfaceStyle: true)
         }
         if traitCollection.preferredContentSizeCategory != previousTraitCollection?.preferredContentSizeCategory, let html = html {
             webView.loadHTMLString(html, baseURL: Bundle.main.bundleURL)

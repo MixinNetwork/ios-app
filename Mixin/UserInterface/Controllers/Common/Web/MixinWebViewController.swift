@@ -434,7 +434,7 @@ extension MixinWebViewController {
                 return
             }
             let color = UIColor(hexString: colorString) ?? .background
-            self?.updateBackground(pageThemeColor: color)
+            self?.updateBackground(pageThemeColor: color, measureDarknessWithUserInterfaceStyle: false)
         }
     }
     

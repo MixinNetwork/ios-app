@@ -949,6 +949,7 @@
 "notification_content_voice_call" = "[Voice Call]";
 "notification_content_location" = "[Location]";
 "notification_content_transcript" = "[Transcript]";
+"notification_content_post" = "[Post]";
 "notification_content_unknown" = "[Unknown]";
 
 "alert_key_contact_message" = "send you a message";

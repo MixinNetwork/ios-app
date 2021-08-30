@@ -91,9 +91,8 @@ extension PinMessagesPreviewViewController {
                 return
             }
             var messageId: String?
-            if let data = AppGroupUserDefaults.User.needsDisplayedPinMessages[self.conversationId],
-               let id = PinMessageAlert.fromData(data)?.messageId {
-                messageId = id
+            if let displayedMessageId = AppGroupUserDefaults.User.needsDisplayedPinMessages[self.conversationId] {
+                messageId = displayedMessageId
             } else if let lastPinnedMessage = PinMessageDAO.shared.lastPinnedMessage(conversationId: self.conversationId) {
                 messageId = lastPinnedMessage.messageId
             }
@@ -162,11 +161,9 @@ extension PinMessagesPreviewViewController {
     }
     
     @objc private func showMessageAction(sender: UIButton) {
-        guard
-            let cell = sender.superview?.superview as? MessageCell,
-            let indexPath = tableView.indexPath(for: cell),
-            let viewModel = viewModel(at: indexPath)
-        else {
+        guard let cell = sender.superview?.superview as? MessageCell,
+              let indexPath = tableView.indexPath(for: cell),
+              let viewModel = viewModel(at: indexPath) else {
             return
         }
         delegate?.pinMessagesPreviewViewController(self, needsShowMessage: viewModel.message.messageId)

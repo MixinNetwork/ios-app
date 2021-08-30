@@ -289,9 +289,9 @@ extension StaticMessagesViewController {
                     let vc = UserProfileViewController(user: user)
                     present(vc, animated: true, completion: nil)
                 }
-            } else if message.category.hasSuffix("_POST") {
+            } else if message.category.hasSuffix("_POST"), let parent = parent {
                 let message = Message.createMessage(message: message)
-                PostWebViewController.presentInstance(message: message, asChildOf: self)
+                PostWebViewController.presentInstance(message: message, asChildOf: parent)
             } else if message.category.hasSuffix("_LOCATION"), let location = message.location {
                 let vc = LocationPreviewViewController(location: location)
                 let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.chat_menu_location())
@@ -313,8 +313,11 @@ extension StaticMessagesViewController {
                             guard !UrlWindow.checkUrl(url: appCard.action) else {
                                 return
                             }
+                            guard let parent = self.parent else {
+                                return
+                            }
                             let context = MixinWebViewController.Context(conversationId: "", url: appCard.action, app: app)
-                            MixinWebViewController.presentInstance(with: context, asChildOf: self)
+                            MixinWebViewController.presentInstance(with: context, asChildOf: parent)
                         }
                     }
                 }

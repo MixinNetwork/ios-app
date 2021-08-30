@@ -335,20 +335,33 @@ public class ReceiveMessageService: MixinService {
             updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
             return
         }
-        let pinLocalContent = PinMessage.LocalContent(category: fullMessage.category, content: fullMessage.mentionedFullnameReplacedContent)
+        let pinLocalContent = PinMessage.LocalContent(category: fullMessage.category, content: fullMessage.content)
         let content: String
         if let data = try? JSONEncoder.default.encode(pinLocalContent), let localContent = String(data: data, encoding: .utf8) {
             content = localContent
         } else {
             content = ""
         }
+        var mention: MessageMention?
+        if pinLocalContent.category.hasSuffix("_TEXT"), let content = pinLocalContent.content {
+            let numbers = MessageMentionDetector.identityNumbers(from: content)
+            var mentions = UserDAO.shared.mentionRepresentation(identityNumbers: numbers)
+            if data.userId != myUserId && mentions[myIdentityNumber] == nil {
+                mentions[myIdentityNumber] = myFullname
+            }
+            mention = MessageMention(conversationId: data.conversationId,
+                                     messageId: data.messageId,
+                                     mentions: mentions,
+                                     hasRead: true)
+        }
         let message = Message.createMessage(pinMessage: plainData.action, userId: data.userId, content: content, data: data)
         switch action {
         case .pin:
-            PinMessageDAO.shared.pinMessage(message: message,
-                                            fullMessage: fullMessage,
+            PinMessageDAO.shared.pinMessage(item: fullMessage,
                                             source: data.source,
-                                            silentNotification: data.silentNotification)
+                                            silentNotification: data.silentNotification,
+                                            message: message,
+                                            mention: mention)
         case .unpin:
             PinMessageDAO.shared.unpinMessage(messageId: fullMessage.messageId, conversationId: fullMessage.conversationId)
         }

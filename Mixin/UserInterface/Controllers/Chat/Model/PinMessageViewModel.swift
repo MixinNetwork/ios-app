@@ -18,11 +18,15 @@ class PinMessageViewModel: MessageViewModel {
     let text: String
     
     override init(message: MessageItem) {
-        if let content = message.content {
-            text = TransferPinAction.getPinMessage(userId: message.userId, userFullName: message.userFullName ?? "", content: content)
-        } else {
-            text = message.content ?? ""
+        let uFullName = message.userId == myUserId ? R.string.localizable.chat_message_you() : (message.userFullName ?? "")
+        var category = ""
+        if let data = message.content?.data(using: .utf8), let localContent = try? JSONDecoder.default.decode(PinMessage.LocalContent.self, from: data) {
+            if localContent.category.hasSuffix("_TEXT"), let content = localContent.content {
+                message.content = content
+            }
+            category = localContent.category
         }
+        text = TransferPinAction.getPinMessage(userId: message.userId, userFullName: uFullName, category: category, content: message.mentionedFullnameReplacedContent)
         super.init(message: message)
         backgroundImage = R.image.ic_chat_bubble_system()
     }

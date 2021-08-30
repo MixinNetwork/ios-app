@@ -884,7 +884,7 @@ extension HomeViewController {
     }
     
     private func cleanPinMessages(conversationId: String) {
-        PinMessageDAO.shared.unpinAllMessages(conversationId: conversationId)
+        PinMessageDAO.shared.removeAllMessages(conversationId: conversationId)
         AppGroupUserDefaults.User.needsDisplayedPinMessages.removeValue(forKey: conversationId)
     }
     

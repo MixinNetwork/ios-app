@@ -90,11 +90,13 @@ class WebMoreMenuViewController: UIViewController {
     }
     
     private func updatePreferredContentSizeHeight() {
-        view.layoutIfNeeded()
-        preferredContentSize.height = titleView.frame.height
-            + tableViewController.tableView.contentSize.height
-            + max(20, view.safeAreaInsets.bottom)
-            + additionalBottomHeight
+        DispatchQueue.main.async {
+            self.view.layoutIfNeeded()
+            self.preferredContentSize.height = self.titleView.frame.height
+                + self.tableViewController.tableView.contentSize.height
+                + max(20, self.view.safeAreaInsets.bottom)
+                + self.additionalBottomHeight
+        }
     }
     
 }

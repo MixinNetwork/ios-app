@@ -66,7 +66,7 @@ class AppearanceSettingsViewController: SettingsTableViewController {
         case .unspecified:
             subtitle = R.string.localizable.setting_appearance_ui_style_auto()
         @unknown default:
-            subtitle = R.string.localizable.setting_appearance_ui_style_light()
+            subtitle = ""
         }
         userInterfaceStyleRow.subtitle = subtitle
     }

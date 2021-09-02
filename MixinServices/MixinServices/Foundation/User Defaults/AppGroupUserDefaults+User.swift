@@ -55,12 +55,15 @@ extension AppGroupUserDefaults {
             
             case homeAppsFolder = "home_apps_folder"
             case homeAppsPinTips = "home_apps_pin_tips"
+            
+            case userInterfaceStyle = "ui_style"
         }
         
         public static let version = 26
         public static let uninitializedVersion = -1
         
         public static let didChangeRecentlyUsedAppIdsNotification = Notification.Name(rawValue: "one.mixin.services.recently.used.app.ids.change")
+        public static let didChangeUserInterfaceStyleNotification = Notification.Name(rawValue: "one.mixin.services.DidChangeUserInterfaceStyle")
         public static let circleNameDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.circle.name.change")
         public static let homeAppIdsDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.home.app.ids.change")
         
@@ -200,6 +203,13 @@ extension AppGroupUserDefaults {
         
         @Default(namespace: .user, key: Key.homeAppsPinTips, defaultValue: false)
         public static var homeAppsPinTips: Bool
+        
+        @RawRepresentableDefault(namespace: .user, key: Key.userInterfaceStyle, defaultValue: .unspecified)
+        public static var userInterfaceStyle: UIUserInterfaceStyle {
+            didSet {
+                NotificationCenter.default.post(onMainThread: didChangeUserInterfaceStyleNotification, object: self)
+            }
+        }
         
         public static func insertRecentlyUsedAppId(id: String) {
             let maxNumberOfIds = 12

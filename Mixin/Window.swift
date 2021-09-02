@@ -1,8 +1,29 @@
 import UIKit
+import MixinServices
 
 class Window: UIWindow {
     
     private var dismissMenuResponder: UIButton?
+    
+    private var notificationCenter: NotificationCenter {
+        .default
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        observerUserInterfaceStyleChangeNotification()
+        updateUserInterfaceStyle()
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        observerUserInterfaceStyleChangeNotification()
+        updateUserInterfaceStyle()
+    }
+    
+    deinit {
+        notificationCenter.removeObserver(self)
+    }
     
     func addDismissMenuResponder() {
         guard dismissMenuResponder == nil else {
@@ -15,10 +36,10 @@ class Window: UIWindow {
         responder.addTarget(self, action: #selector(dismissMenu(_:)), for: .touchUpInside)
         addSubview(responder)
         self.dismissMenuResponder = responder
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(menuControllerWillHideMenu(_:)),
-                                               name: UIMenuController.willHideMenuNotification,
-                                               object: nil)
+        notificationCenter.addObserver(self,
+                                       selector: #selector(menuControllerWillHideMenu(_:)),
+                                       name: UIMenuController.willHideMenuNotification,
+                                       object: nil)
     }
     
     @objc private func dismissMenu(_ sender: Any) {
@@ -28,9 +49,30 @@ class Window: UIWindow {
     @objc private func menuControllerWillHideMenu(_ notification: Notification) {
         dismissMenuResponder?.removeFromSuperview()
         dismissMenuResponder = nil
-        NotificationCenter.default.removeObserver(self,
-                                                  name: UIMenuController.willHideMenuNotification,
-                                                  object: nil)
+        notificationCenter.removeObserver(self,
+                                          name: UIMenuController.willHideMenuNotification,
+                                          object: nil)
+    }
+    
+    @objc private func updateUserInterfaceStyle() {
+        guard #available(iOS 13.0, *) else {
+            return
+        }
+        overrideUserInterfaceStyle = AppGroupUserDefaults.User.userInterfaceStyle
+    }
+    
+    private func observerUserInterfaceStyleChangeNotification() {
+        let notifications = [
+            AppGroupUserDefaults.User.didChangeUserInterfaceStyleNotification,
+            LoginManager.accountDidChangeNotification,
+            LoginManager.didLogoutNotification
+        ]
+        for notification in notifications {
+            notificationCenter.addObserver(self,
+                                           selector: #selector(updateUserInterfaceStyle),
+                                           name: notification,
+                                           object: nil)
+        }
     }
     
 }

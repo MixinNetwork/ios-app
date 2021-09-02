@@ -12,7 +12,7 @@ class DepositViewController: UIViewController {
     
     private var asset: AssetItem!
     private lazy var depositWindow = QrcodeWindow.instance()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         container?.setSubtitle(subtitle: asset.symbol)
@@ -48,7 +48,7 @@ class DepositViewController: UIViewController {
                 tips = R.string.localizable.wallet_deposit_attention()
             }
         }
-        hintLabel.attributedText = bulletListString(stringList: asset.depositTips)
+        hintLabel.attributedText = bulletAttributedString(with: asset.depositTips)
         
         let vc = DepositNoticeViewController(tips: tips)
         if !asset.tag.isEmpty {
@@ -102,25 +102,23 @@ extension DepositViewController: DepositFieldViewDelegate {
 
 extension DepositViewController {
     
-    private func bulletListString(stringList: [String]) -> NSAttributedString {
-        let font = hintLabel.font ?? .systemFont(ofSize: 12)
-        let color = hintLabel.textColor ?? .accessoryText
+    private func bulletAttributedString(with strings: [String]) -> NSAttributedString {
         let indentation: CGFloat = 10
-        let paragraphStyle = NSMutableParagraphStyle()
         let nonOptions = [NSTextTab.OptionKey: Any]()
+        let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.tabStops = [NSTextTab(textAlignment: .left, location: indentation, options: nonOptions)]
         paragraphStyle.defaultTabInterval = indentation
         paragraphStyle.lineSpacing = 2
         paragraphStyle.paragraphSpacing = 6
         paragraphStyle.headIndent = indentation
         let attributes: [NSAttributedString.Key: Any] = [
-            .font: font,
-            .foregroundColor: color,
+            .font: hintLabel.font ?? .systemFont(ofSize: 12),
+            .foregroundColor: hintLabel.textColor ?? .accessoryText,
             .paragraphStyle: paragraphStyle
         ]
         let bullet = "• "
         let bulletListString = NSMutableAttributedString()
-        for string in stringList {
+        for string in strings {
             let formattedString = "\(bullet)\t\(string)\n"
             let attributedString = NSMutableAttributedString(string: formattedString)
             attributedString.addAttributes(attributes, range: NSMakeRange(0, attributedString.length))

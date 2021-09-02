@@ -21,7 +21,7 @@ class AppearanceSettingsViewController: SettingsTableViewController {
     
     private lazy var userInterfaceStyleRow = SettingsRow(title: R.string.localizable.setting_appearance_ui_style(), accessory: .disclosure)
     private lazy var languageRow = SettingsRow(title: R.string.localizable.setting_appearance_language(),
-                                               subtitle: R.string.localizable.strings_current(),
+                                               subtitle: R.string.localizable.strings_language(),
                                                accessory: .disclosure)
     
     private lazy var dataSource = SettingsDataSource(sections: [

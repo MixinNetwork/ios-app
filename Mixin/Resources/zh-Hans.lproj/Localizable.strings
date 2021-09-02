@@ -1,5 +1,5 @@
 "app_name" = "Mixin";
-"strings_current" = "中文";
+"strings_language" = "中文";
 
 // Common
 "dialog_button_ok" = "确定";

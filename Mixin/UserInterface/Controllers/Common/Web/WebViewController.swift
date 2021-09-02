@@ -55,7 +55,7 @@ class WebViewController: FullscreenPopupViewController {
         extractImageRecognizer.delegate = self
         webContentView.addGestureRecognizer(extractImageRecognizer)
         
-        updateBackground(pageThemeColor: .background)
+        updateBackground(pageThemeColor: .background, measureDarknessWithUserInterfaceStyle: true)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -67,19 +67,24 @@ class WebViewController: FullscreenPopupViewController {
         NotificationCenter.default.post(name: Self.didDismissNotification, object: self)
     }
     
-    func updateBackground(pageThemeColor: UIColor) {
+    func updateBackground(pageThemeColor: UIColor, measureDarknessWithUserInterfaceStyle: Bool) {
         statusBarBackgroundView.backgroundColor = pageThemeColor
         titleWrapperView.backgroundColor = pageThemeColor
         webView.backgroundColor = pageThemeColor
         
-        let themeColorIsDark = pageThemeColor.w3cLightness < 0.5
-        titleLabel.textColor = themeColorIsDark ? .white : textDarkColor
-        pageControlView.style = themeColorIsDark ? .dark : .light
-        
-        if #available(iOS 13.0, *) {
-            statusBarStyle = themeColorIsDark ? .lightContent : .darkContent
+        let isThemeColorDark: Bool
+        if measureDarknessWithUserInterfaceStyle {
+            isThemeColorDark = UserInterfaceStyle.current == .dark
         } else {
-            statusBarStyle = themeColorIsDark ? .lightContent : .default
+            isThemeColorDark = pageThemeColor.w3cLightness < 0.5
+        }
+        
+        titleLabel.textColor = isThemeColorDark ? .white : textDarkColor
+        pageControlView.style = isThemeColorDark ? .dark : .light
+        if #available(iOS 13.0, *) {
+            statusBarStyle = isThemeColorDark ? .lightContent : .darkContent
+        } else {
+            statusBarStyle = isThemeColorDark ? .lightContent : .default
         }
         setNeedsStatusBarAppearanceUpdate()
     }

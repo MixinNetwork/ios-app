@@ -1,4 +1,5 @@
 "app_name" = "Mixin";
+"strings_language" = "English";
 
 // Common
 "dialog_button_ok" = "OK";
@@ -850,6 +851,13 @@
 "setting_permissions" = "Permissions";
 "setting_permissions_date" = "Approved: %@, Last Accessed: %@";
 "setting_appearance" = "Appearance";
+"setting_appearance_ui_style" = "Interface Style";
+"setting_appearance_ui_style_light" = "Light";
+"setting_appearance_ui_style_dark" = "Dark";
+"setting_appearance_ui_style_auto" = "Automatic";
+"setting_appearance_language" = "Language";
+"setting_appearance_language_alert_title" = "Change your app language";
+"setting_appearance_language_alert_description" = "You can pick a preferred language in settings";
 "setting_pin" = "PIN";
 "setting_feedback" = "Feedback";
 "setting_share_this_app" = "Share This App";

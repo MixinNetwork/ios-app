@@ -21,7 +21,7 @@ final class ScreenLockManager {
     
     private(set) var isLocked = false
     private(set) var isLastAuthenticationStillValid = false
-    private(set) var window: UIWindow?
+    private(set) var window: Window?
     
     private var context: LAContext!
     private var viewController: ScreenLockViewController?
@@ -98,7 +98,7 @@ extension ScreenLockManager {
         viewController!.tapUnlockAction = { [weak self] in
             self?.performBiometricAuthentication()
         }
-        window = UIWindow(frame: UIScreen.main.bounds)
+        window = Window(frame: UIScreen.main.bounds)
         window!.rootViewController = viewController
         window!.makeKeyAndVisible()
     }

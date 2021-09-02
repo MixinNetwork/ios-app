@@ -858,7 +858,7 @@
 "setting_appearance_ui_style_auto" = "自动";
 "setting_appearance_language" = "语言";
 "setting_appearance_language_alert_title" = "设置语言";
-"setting_appearance_language_alert_description" = "可前往系统设置修改语言偏好";
+"setting_appearance_language_alert_description" = "前往系统设置修改语言偏好";
 "setting_pin" = "密码";
 "setting_feedback" = "反馈";
 "setting_share_this_app" = "分享此 App";

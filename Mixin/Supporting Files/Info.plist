@@ -119,6 +119,10 @@
 			<false/>
 		</dict>
 	</dict>
+	<key>UIAppFonts</key>
+	<array>
+		<string>mixin_condensed.otf</string>
+	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

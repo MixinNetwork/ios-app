@@ -2,8 +2,8 @@ import UIKit
 
 extension UIFont {
     
-    static func dinCondensedBold(ofSize size: CGFloat) -> UIFont {
-        return UIFont(name: "DINCondensed-Bold", size: size) ?? .systemFont(ofSize: size)
+    static func condensed(size: CGFloat) -> UIFont {
+        return UIFont(name: "Mixin Condensed", size: size) ?? .systemFont(ofSize: size)
     }
     
 }

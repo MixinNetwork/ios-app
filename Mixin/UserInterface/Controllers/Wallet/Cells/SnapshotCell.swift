@@ -20,8 +20,7 @@ class SnapshotCell: ModernSelectedBackgroundCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         amountLabel.contentInset = UIEdgeInsets(top: 2, left: 0, bottom: 0, right: 0)
-        amountLabel.setFont(scaledFor: .dinCondensedBold(ofSize: 19),
-                            adjustForContentSize: true)
+        amountLabel.setFont(scaledFor: .condensed(size: 19), adjustForContentSize: true)
     }
     
     override func prepareForReuse() {

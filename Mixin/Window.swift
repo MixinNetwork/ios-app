@@ -11,13 +11,13 @@ class Window: UIWindow {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        observerUserInterfaceStyleChangeNotification()
+        observeUserInterfaceStyleChangeNotification()
         updateUserInterfaceStyle()
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        observerUserInterfaceStyleChangeNotification()
+        observeUserInterfaceStyleChangeNotification()
         updateUserInterfaceStyle()
     }
     
@@ -61,7 +61,7 @@ class Window: UIWindow {
         overrideUserInterfaceStyle = AppGroupUserDefaults.User.userInterfaceStyle
     }
     
-    private func observerUserInterfaceStyleChangeNotification() {
+    private func observeUserInterfaceStyleChangeNotification() {
         let notifications = [
             AppGroupUserDefaults.User.didChangeUserInterfaceStyleNotification,
             LoginManager.accountDidChangeNotification,

@@ -497,6 +497,7 @@
 "wallet_deposit_trx" = "This address supports all TRC 10 and TRC 20 tokens, such as TRX, BTT, USDT-TRON, etc.";
 "wallet_deposit_other" = "This address only support %@.";
 "wallet_deposit_confirmations" = "Deposit will arrive after at least %@ block confirmations.";
+"wallet_deposit_notice" = "Notice";
 "wallet_no_transaction" = "No transaction";
 "wallet_address" = "Address";
 "wallet_address_destination" = "Address";
@@ -504,7 +505,7 @@
 "wallet_address_memo" = "Memo";
 "wallet_deposit_attention" = "Please try a small amount for the first deposit.";
 "wallet_deposit_attention_minimum" = "Please try a small amount for the first deposit. Deposit at least %@ %@ for the first time.";
-"wallet_deposit_account_attention" = "Attention: Please try a small amount for the first deposit. Both a Memo and an Address are required to successfully deposit your %@ to Mixin Messenger";
+"wallet_deposit_account_attention" = "Please try a small amount for the first deposit. Both a Memo and an Address are required to successfully deposit your %@ to Mixin Messenger";
 "wallet_menu_show_hidden_assets" = "Hidden assets";
 "wallet_menu_show_asset" = "Show asset";
 "wallet_menu_hide_asset" = "Hide asset";

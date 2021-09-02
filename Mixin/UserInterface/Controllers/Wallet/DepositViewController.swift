@@ -7,16 +7,17 @@ class DepositViewController: UIViewController {
     @IBOutlet weak var upperDepositFieldView: DepositFieldView!
     @IBOutlet weak var lowerDepositFieldView: DepositFieldView!
     @IBOutlet weak var hintLabel: UILabel!
+    @IBOutlet weak var warningView: UIView!
     @IBOutlet weak var warningLabel: UILabel!
     
     private var asset: AssetItem!
     private lazy var depositWindow = QrcodeWindow.instance()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         container?.setSubtitle(subtitle: asset.symbol)
         view.layoutIfNeeded()
-
+        
         upperDepositFieldView.titleLabel.text = R.string.localizable.wallet_address_destination()
         upperDepositFieldView.contentLabel.text = asset.destination
         let nameImage = UIImage(qrcode: asset.destination, size: upperDepositFieldView.qrCodeImageView.bounds.size)
@@ -24,7 +25,8 @@ class DepositViewController: UIViewController {
         upperDepositFieldView.assetIconView.setIcon(asset: asset)
         upperDepositFieldView.shadowView.hasLowerShadow = true
         upperDepositFieldView.delegate = self
-
+        
+        let tips: String
         if !asset.tag.isEmpty {
             if asset.usesTag {
                 lowerDepositFieldView.titleLabel.text = R.string.localizable.wallet_address_tag()
@@ -37,19 +39,27 @@ class DepositViewController: UIViewController {
             lowerDepositFieldView.assetIconView.setIcon(asset: asset)
             lowerDepositFieldView.shadowView.hasLowerShadow = false
             lowerDepositFieldView.delegate = self
-            warningLabel.text = R.string.localizable.wallet_deposit_account_attention(asset.symbol)
+            tips = R.string.localizable.wallet_deposit_account_attention(asset.symbol)
         } else {
             lowerDepositFieldView.isHidden = true
             if asset.reserve.doubleValue > 0 {
-                warningLabel.text = R.string.localizable.wallet_deposit_attention_minimum(asset.reserve, asset.chain?.symbol ?? "")
+                tips = R.string.localizable.wallet_deposit_attention_minimum(asset.reserve, asset.chain?.symbol ?? "")
             } else {
-                warningLabel.text = R.string.localizable.wallet_deposit_attention()
+                tips = R.string.localizable.wallet_deposit_attention()
             }
         }
-
-        hintLabel.text = asset.depositTips
-
-        DepositTipWindow.instance().render(asset: asset).presentPopupControllerAnimated()
+        hintLabel.attributedText = bulletListString(stringList: asset.depositTips)
+        
+        let vc = DepositNoticeViewController(tips: tips)
+        if !asset.tag.isEmpty {
+            warningLabel.text = tips
+            vc.dismissCompletion = {
+                UIView.animate(withDuration: 0.3) {
+                    self.warningView.isHidden = false
+                }
+            }
+        }
+        present(vc, animated: true, completion: nil)
     }
     
     class func instance(asset: AssetItem) -> UIViewController {
@@ -88,4 +98,35 @@ extension DepositViewController: DepositFieldViewDelegate {
                              asset: asset)
         depositWindow.presentView()
     }
+}
+
+extension DepositViewController {
+    
+    private func bulletListString(stringList: [String]) -> NSAttributedString {
+        let font = hintLabel.font ?? .systemFont(ofSize: 12)
+        let color = hintLabel.textColor ?? .accessoryText
+        let indentation: CGFloat = 10
+        let paragraphStyle = NSMutableParagraphStyle()
+        let nonOptions = [NSTextTab.OptionKey: Any]()
+        paragraphStyle.tabStops = [NSTextTab(textAlignment: .left, location: indentation, options: nonOptions)]
+        paragraphStyle.defaultTabInterval = indentation
+        paragraphStyle.lineSpacing = 2
+        paragraphStyle.paragraphSpacing = 6
+        paragraphStyle.headIndent = indentation
+        let attributes: [NSAttributedString.Key: Any] = [
+            .font: font,
+            .foregroundColor: color,
+            .paragraphStyle: paragraphStyle
+        ]
+        let bullet = "• "
+        let bulletListString = NSMutableAttributedString()
+        for string in stringList {
+            let formattedString = "\(bullet)\t\(string)\n"
+            let attributedString = NSMutableAttributedString(string: formattedString)
+            attributedString.addAttributes(attributes, range: NSMakeRange(0, attributedString.length))
+            bulletListString.append(attributedString)
+        }
+        return bulletListString
+    }
+    
 }

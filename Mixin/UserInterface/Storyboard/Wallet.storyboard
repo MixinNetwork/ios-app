@@ -232,7 +232,7 @@
                                                             </constraints>
                                                         </view>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JDj-Ex-KE6">
-                                                            <rect key="frame" x="183" y="47" width="48" height="14"/>
+                                                            <rect key="frame" x="182.66666666666666" y="47" width="48.666666666666657" height="14"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="4.617" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7s3-8d-IEj">
                                                                     <rect key="frame" x="0.0" y="0.0" width="23" height="14"/>
@@ -241,7 +241,7 @@
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BTC" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l67-0u-hKp">
-                                                                    <rect key="frame" x="26" y="0.3333333333333357" width="22" height="13.333333333333334"/>
+                                                                    <rect key="frame" x="26.666666666666686" y="-0.3333333333333357" width="22" height="13.333333333333334"/>
                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                                     <color key="textColor" name="text_accessory"/>
                                                                     <nil key="highlightedColor"/>
@@ -579,7 +579,7 @@
                                                     </constraints>
                                                 </view>
                                                 <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="HOU-mR-kEE">
-                                                    <rect key="frame" x="99.333333333333329" y="80" width="175.33333333333337" height="56"/>
+                                                    <rect key="frame" x="100.33333333333333" y="80" width="173.66666666666669" height="56"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="enL-XN-l1B">
                                                             <rect key="frame" x="0.0" y="6" width="3" height="50"/>
@@ -588,8 +588,8 @@
                                                                 <constraint firstAttribute="width" constant="3" id="txl-EP-N3o"/>
                                                             </constraints>
                                                         </view>
-                                                        <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="+0.00001342" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hy0-UM-G0M">
-                                                            <rect key="frame" x="7" y="6" width="142.33333333333334" height="50"/>
+                                                        <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="+0.00001342" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hy0-UM-G0M">
+                                                            <rect key="frame" x="7" y="6" width="140.66666666666666" height="50"/>
                                                             <gestureRecognizers/>
                                                             <fontDescription key="fontDescription" name="MixinCondensed-Regular" family="Mixin Condensed" pointSize="34"/>
                                                             <color key="textColor" red="0.16078431372549018" green="0.74509803921568629" blue="0.45098039215686275" alpha="1" colorSpace="calibratedRGB"/>
@@ -598,8 +598,8 @@
                                                                 <outletCollection property="gestureRecognizers" destination="Nol-iF-VEd" appends="YES" id="i5D-Y2-zOE"/>
                                                             </connections>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ETH" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ptc-MK-Zp1" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
-                                                            <rect key="frame" x="153.33333333333337" y="6" width="22" height="50"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="ETH" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ptc-MK-Zp1" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
+                                                            <rect key="frame" x="151.66666666666669" y="6" width="22" height="50"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                             <color key="textColor" name="text"/>
                                                             <nil key="highlightedColor"/>
@@ -1067,6 +1067,47 @@
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="3jx-1E-qdc">
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="628.66666666666663"/>
                                         <subviews>
+                                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XKC-d7-lOO">
+                                                <rect key="frame" x="0.0" y="-46" width="414" height="46"/>
+                                                <subviews>
+                                                    <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="L71-We-SqS">
+                                                        <rect key="frame" x="14" y="10" width="386" height="36"/>
+                                                        <color key="backgroundColor" name="wallet_deposit_alert_background"/>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                <integer key="value" value="8"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </view>
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Wallet/ic_wallet_deposit_warning" translatesAutoresizingMaskIntoConstraints="NO" id="AVT-cv-7GW">
+                                                        <rect key="frame" x="24" y="18" width="20" height="20"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="20" id="jhf-gP-0pO"/>
+                                                            <constraint firstAttribute="height" constant="20" id="w6v-ar-ypb"/>
+                                                        </constraints>
+                                                    </imageView>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lav-AR-c9W">
+                                                        <rect key="frame" x="50" y="18" width="340" height="20"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                        <color key="textColor" name="title"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                                <color key="backgroundColor" name="background"/>
+                                                <constraints>
+                                                    <constraint firstItem="L71-We-SqS" firstAttribute="leading" secondItem="XKC-d7-lOO" secondAttribute="leading" constant="14" id="4ey-fu-X5w"/>
+                                                    <constraint firstItem="lav-AR-c9W" firstAttribute="leading" secondItem="L71-We-SqS" secondAttribute="leading" constant="36" id="7O5-yJ-GJD"/>
+                                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="46" id="Ira-TJ-h2H"/>
+                                                    <constraint firstItem="AVT-cv-7GW" firstAttribute="leading" secondItem="L71-We-SqS" secondAttribute="leading" constant="10" id="L3f-9Y-UhW"/>
+                                                    <constraint firstItem="lav-AR-c9W" firstAttribute="top" secondItem="L71-We-SqS" secondAttribute="top" constant="8" id="Qkj-fJ-dot"/>
+                                                    <constraint firstItem="lav-AR-c9W" firstAttribute="trailing" secondItem="L71-We-SqS" secondAttribute="trailing" constant="-10" id="VXm-Cp-tub"/>
+                                                    <constraint firstAttribute="bottom" secondItem="L71-We-SqS" secondAttribute="bottom" id="Yhh-Sf-EMr"/>
+                                                    <constraint firstItem="lav-AR-c9W" firstAttribute="bottom" secondItem="L71-We-SqS" secondAttribute="bottom" constant="-8" id="gim-pT-EZU"/>
+                                                    <constraint firstAttribute="trailing" secondItem="L71-We-SqS" secondAttribute="trailing" constant="14" id="m60-cH-XRP"/>
+                                                    <constraint firstItem="AVT-cv-7GW" firstAttribute="top" secondItem="L71-We-SqS" secondAttribute="top" constant="8" id="pdb-aA-SYP"/>
+                                                    <constraint firstItem="L71-We-SqS" firstAttribute="top" secondItem="XKC-d7-lOO" secondAttribute="top" constant="10" id="vq4-In-jIe"/>
+                                                </constraints>
+                                            </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tB5-S1-fay" customClass="DepositFieldView" customModule="Mixin" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="414" height="248"/>
                                                 <color key="backgroundColor" red="0.9882352941176471" green="0.99215686274509807" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
@@ -1084,34 +1125,21 @@
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iWR-ea-wTp">
                                                 <rect key="frame" x="0.0" y="496.00000000000006" width="414" height="132.66666666666669"/>
                                                 <subviews>
-                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="r9y-CN-8yf">
-                                                        <rect key="frame" x="30" y="15.000000000000007" width="354" height="102.66666666666669"/>
-                                                        <subviews>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aFl-kr-gDX">
-                                                                <rect key="frame" x="0.0" y="0.0" width="354" height="53.333333333333336"/>
-                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                <string key="text">This address supports all base on EOS tokens, such as EOS, IQ, BLACK, KARMA, etc.Deposit will arrive after at least 126 block confirmations. </string>
-                                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                                <color key="textColor" name="text_accessory"/>
-                                                                <nil key="highlightedColor"/>
-                                                            </label>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zEy-2R-8To">
-                                                                <rect key="frame" x="0.0" y="63.333333333333371" width="354" height="39.333333333333343"/>
-                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                <string key="text">Notice: Both an Account Memo and an AccountName are required to successfully deposit your EOS to Mixin, deposit will arrive after at least 126 block confirmations.</string>
-                                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                                <color key="textColor" name="red"/>
-                                                                <nil key="highlightedColor"/>
-                                                            </label>
-                                                        </subviews>
-                                                    </stackView>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aFl-kr-gDX">
+                                                        <rect key="frame" x="24" y="0.0" width="366" height="132.66666666666666"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <string key="text">This address supports all base on EOS tokens, such as EOS, IQ, BLACK, KARMA, etc.Deposit will arrive after at least 126 block confirmations. </string>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                        <color key="textColor" name="text_accessory"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
                                                 </subviews>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="bottom" secondItem="r9y-CN-8yf" secondAttribute="bottom" constant="15" id="2Cd-nU-H4z"/>
-                                                    <constraint firstAttribute="trailing" secondItem="r9y-CN-8yf" secondAttribute="trailing" constant="30" id="T0c-nX-NqM"/>
-                                                    <constraint firstItem="r9y-CN-8yf" firstAttribute="top" secondItem="iWR-ea-wTp" secondAttribute="top" constant="15" id="YFM-nq-xp8"/>
-                                                    <constraint firstItem="r9y-CN-8yf" firstAttribute="leading" secondItem="iWR-ea-wTp" secondAttribute="leading" constant="30" id="xwv-dK-6hA"/>
+                                                    <constraint firstItem="aFl-kr-gDX" firstAttribute="leading" secondItem="iWR-ea-wTp" secondAttribute="leading" constant="24" id="8sO-KY-Sec"/>
+                                                    <constraint firstAttribute="trailing" secondItem="aFl-kr-gDX" secondAttribute="trailing" constant="24" id="ESS-hy-SC0"/>
+                                                    <constraint firstItem="aFl-kr-gDX" firstAttribute="top" secondItem="iWR-ea-wTp" secondAttribute="top" id="b94-AF-R6I"/>
+                                                    <constraint firstAttribute="bottom" secondItem="aFl-kr-gDX" secondAttribute="bottom" id="d9j-RA-YYG"/>
                                                 </constraints>
                                             </view>
                                         </subviews>
@@ -1132,8 +1160,8 @@
                         <constraints>
                             <constraint firstItem="C6u-Ug-gQE" firstAttribute="trailing" secondItem="QBi-Sl-cc1" secondAttribute="trailing" id="Fnt-DP-K41"/>
                             <constraint firstAttribute="bottom" secondItem="QBi-Sl-cc1" secondAttribute="bottom" id="WNM-Ev-5WR"/>
-                            <constraint firstItem="QBi-Sl-cc1" firstAttribute="top" secondItem="ujt-Yu-JL5" secondAttribute="top" id="d1d-DE-5NL"/>
                             <constraint firstItem="QBi-Sl-cc1" firstAttribute="leading" secondItem="C6u-Ug-gQE" secondAttribute="leading" id="kmL-TP-NXl"/>
+                            <constraint firstItem="QBi-Sl-cc1" firstAttribute="top" secondItem="ujt-Yu-JL5" secondAttribute="top" id="vO0-dB-GDP"/>
                         </constraints>
                     </view>
                     <connections>
@@ -1141,7 +1169,8 @@
                         <outlet property="lowerDepositFieldView" destination="za9-iG-3NZ" id="N0l-9T-KMR"/>
                         <outlet property="scrollView" destination="QBi-Sl-cc1" id="1x6-kd-RUM"/>
                         <outlet property="upperDepositFieldView" destination="tB5-S1-fay" id="s4i-CM-PVg"/>
-                        <outlet property="warningLabel" destination="zEy-2R-8To" id="cNw-sJ-9qw"/>
+                        <outlet property="warningLabel" destination="lav-AR-c9W" id="cGF-13-vHC"/>
+                        <outlet property="warningView" destination="XKC-d7-lOO" id="igh-5f-T8y"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6TB-tL-GxM" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2099,6 +2128,7 @@
         <image name="Wallet/ic_token_indicator_left" width="19" height="25"/>
         <image name="Wallet/ic_token_indicator_middle" width="19" height="25"/>
         <image name="Wallet/ic_token_indicator_right" width="19" height="25"/>
+        <image name="Wallet/ic_wallet_deposit_warning" width="20" height="20"/>
         <image name="ic_arrow_down" width="30" height="30"/>
         <image name="ic_dialog_close" width="26" height="26"/>
         <image name="ic_input_menu" width="11" height="6"/>
@@ -2123,7 +2153,7 @@
             <color red="0.90980392156862744" green="0.41960784313725491" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
             <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -2133,6 +2163,9 @@
         </namedColor>
         <namedColor name="title">
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="wallet_deposit_alert_background">
+            <color red="0.90980392156862744" green="0.41960784313725491" blue="0.40392156862745099" alpha="0.16" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

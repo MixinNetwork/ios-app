@@ -36,7 +36,7 @@ class TransactionViewController: UIViewController {
                 amountLabel.textColor = .walletGreen
             }
         }
-        amountLabel.setFont(scaledFor: .dinCondensedBold(ofSize: 34), adjustForContentSize: true)
+        amountLabel.setFont(scaledFor: .condensed(size: 34), adjustForContentSize: true)
         fiatMoneyValueLabel.text = R.string.localizable.transaction_value_now(Currency.current.symbol + getFormatValue(priceUsd: asset.priceUsd)) + "\n "
         symbolLabel.text = snapshot.assetSymbol
         if ScreenHeight.current >= .extraLong {

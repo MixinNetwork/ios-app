@@ -618,6 +618,7 @@
 		947B36AE25DEB75A00146111 /* PlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947B36AD25DEB75A00146111 /* PlaylistViewController.swift */; };
 		947B36B325DEB79100146111 /* PlaylistView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 947B36B225DEB79100146111 /* PlaylistView.xib */; };
 		947F4AD625866D6C00B0A5F9 /* InitializeFTSJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947F4AD525866D6C00B0A5F9 /* InitializeFTSJob.swift */; };
+		94812DDA26E082C400213F79 /* mixin_condensed.otf in Resources */ = {isa = PBXBuildFile; fileRef = 94812DD926E082C400213F79 /* mixin_condensed.otf */; };
 		9489E3A025C5B150000319F8 /* AcknowledgementsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9489E39F25C5B150000319F8 /* AcknowledgementsViewController.swift */; };
 		94904FD325912A2000F2FDE6 /* CaptchaToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94904FD225912A2000F2FDE6 /* CaptchaToken.swift */; };
 		9492285F25DFB7D60000A19F /* MinimizedPlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9492285E25DFB7D60000A19F /* MinimizedPlaylistViewController.swift */; };
@@ -1584,6 +1585,7 @@
 		947B36AD25DEB75A00146111 /* PlaylistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistViewController.swift; sourceTree = "<group>"; };
 		947B36B225DEB79100146111 /* PlaylistView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlaylistView.xib; sourceTree = "<group>"; };
 		947F4AD525866D6C00B0A5F9 /* InitializeFTSJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitializeFTSJob.swift; sourceTree = "<group>"; };
+		94812DD926E082C400213F79 /* mixin_condensed.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = mixin_condensed.otf; sourceTree = "<group>"; };
 		9489E39F25C5B150000319F8 /* AcknowledgementsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgementsViewController.swift; sourceTree = "<group>"; };
 		94904FD225912A2000F2FDE6 /* CaptchaToken.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CaptchaToken.swift; sourceTree = "<group>"; };
 		9492285E25DFB7D60000A19F /* MinimizedPlaylistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinimizedPlaylistViewController.swift; sourceTree = "<group>"; };
@@ -3028,6 +3030,7 @@
 				7B45A51B2189F28A0008F894 /* ringtone_outgoing.caf */,
 				274264A820011BB0000A8808 /* mixin.caf */,
 				DF8EF6BB2034737F00E99CE8 /* payment_success.caf */,
+				94812DD926E082C400213F79 /* mixin_condensed.otf */,
 				7B833E9A22C4AEB90063929D /* ic_app_loading@2x.webp */,
 				7B833E9B22C4AEB90063929D /* ic_app_loading@3x.webp */,
 				7BE73BFB230A8D0300B97FC6 /* group_separator_2.png */,
@@ -3830,6 +3833,7 @@
 				ABE865C123F260FE00C0167D /* PermissionsActionCell.xib in Resources */,
 				7B9650B024879B9000DE86B9 /* MinimizedCallView.xib in Resources */,
 				DFF44176223A035000DDD5F8 /* GoogleService-Info.plist in Resources */,
+				94812DDA26E082C400213F79 /* mixin_condensed.otf in Resources */,
 				94E34123261D829200E2F9D3 /* code.css in Resources */,
 				7BEC4DF121A7D054003336F2 /* AssetCell.xib in Resources */,
 				949A3686261D9C5C004251B2 /* post.css in Resources */,

@@ -4,7 +4,7 @@ import MixinServices
 class WalletHeaderView: InfiniteTopView {
     
     @IBOutlet weak var fiatMoneySymbolLabel: UILabel!
-    @IBOutlet weak var fiatMoneyValueLabel: InsetLabel!
+    @IBOutlet weak var fiatMoneyValueLabel: UILabel!
     @IBOutlet weak var btcValueLabel: UILabel!
     
     @IBOutlet weak var assetChartWrapperView: UIView!
@@ -24,14 +24,9 @@ class WalletHeaderView: InfiniteTopView {
     
     private var contentHeight: CGFloat = 159
     private let btcValueAttributes: [NSAttributedString.Key: Any] = [
-        .font: UIFont.dinCondensedBold(ofSize: 14).scaled(),
+        .font: UIFont.condensed(size: 14).scaled(),
         .kern: 0.7
     ]
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        fiatMoneyValueLabel.contentInset = UIEdgeInsets(top: 2, left: 0, bottom: 0, right: 0)
-    }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         return CGSize(width: size.width, height: contentHeight)

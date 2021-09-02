@@ -29,7 +29,7 @@ class InConversationSearchViewController: SearchConversationViewController {
     }
     
     override func pushConversation(viewController: ConversationViewController) {
-        navigationController?.pushViewController(withBackRoot: viewController)
+        navigationController?.pushViewController(viewController, animated: true)
     }
     
     func load(user: UserItem, conversationId: String) {

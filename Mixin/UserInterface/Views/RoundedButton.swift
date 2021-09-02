@@ -50,6 +50,13 @@ class RoundedButton: UIButton {
         updatePaths()
     }
     
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle {
+            updateAppearanceWithIsEnabled()
+        }
+    }
+    
     private func prepare() {
         setTitleColor(.white, for: .normal)
         setTitleColor(textDisableColor, for: .disabled)

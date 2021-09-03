@@ -8,7 +8,7 @@ class StaticMessagesViewController: UIViewController {
     
     @IBOutlet weak var tableViewBottomConstraint: NSLayoutConstraint!
     
-    let queue =  Queue(label: "one.mixin.messenger.StaticMessagesViewController")
+    let queue = DispatchQueue(label: "one.mixin.messenger.StaticMessagesViewController")
     
     var dates: [String] = []
     var viewModels: [String: [MessageViewModel]] = [:]

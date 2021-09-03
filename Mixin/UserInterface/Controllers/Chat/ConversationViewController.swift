@@ -1881,7 +1881,7 @@ extension ConversationViewController {
         if ConversationViewController.allowReportSingleMessage {
             actions.append(.report)
         }
-        if let replyIndex = actions.firstIndex(where: { $0 == .reply }) {
+        if status != MessageStatus.SENDING.rawValue, let replyIndex = actions.firstIndex(where: { $0 == .reply }) {
             let isGroupAdmin = dataSource.category == .group && ParticipantDAO.shared.isAdmin(conversationId: conversationId, userId: myUserId)
             if dataSource.category == .contact || isGroupAdmin {
                 let action: MessageAction = PinMessageDAO.shared.isPinned(messageId: message.messageId) ? .unpin : .pin

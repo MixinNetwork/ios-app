@@ -26,36 +26,38 @@ public class SendMessageService: MixinService {
         let job = Job(jobId: UUID().uuidString.lowercased(), action: JobAction.SEND_MESSAGE, conversationId: item.conversationId, blazeMessage: blazeMessage)
         UserDatabase.current.save(job)
         SendMessageService.shared.processMessages()
-        
-        switch action {
-        case .pin:
-            var mention: MessageMention?
-            if item.category.hasSuffix("_TEXT"), let content = item.content {
-                let numbers = MessageMentionDetector.identityNumbers(from: content)
-                var mentions = UserDAO.shared.mentionRepresentation(identityNumbers: numbers)
-                if item.userId != myUserId && mentions[myIdentityNumber] == nil {
-                    mentions[myIdentityNumber] = myFullname
+    
+        ReceiveMessageService.shared.messageDispatchQueue.sync {
+            switch action {
+            case .pin:
+                var mention: MessageMention?
+                if item.category.hasSuffix("_TEXT"), let content = item.content {
+                    let numbers = MessageMentionDetector.identityNumbers(from: content)
+                    var mentions = UserDAO.shared.mentionRepresentation(identityNumbers: numbers)
+                    if item.userId != myUserId && mentions[myIdentityNumber] == nil {
+                        mentions[myIdentityNumber] = myFullname
+                    }
+                    mention = MessageMention(conversationId: item.conversationId,
+                                             messageId: messageId,
+                                             mentions: mentions,
+                                             hasRead: true)
                 }
-                mention = MessageMention(conversationId: item.conversationId,
-                                         messageId: messageId,
-                                         mentions: mentions,
-                                         hasRead: true)
+                let pinLocalContent = PinMessage.LocalContent(category: item.category, content: item.content)
+                let content: String
+                if let data = try? JSONEncoder.default.encode(pinLocalContent), let localContent = String(data: data, encoding: .utf8) {
+                    content = localContent
+                } else {
+                    content = ""
+                }
+                let message = Message.createMessage(messageId: messageId, conversationId: item.conversationId, userId: myUserId, category: MessageCategory.MESSAGE_PIN.rawValue, content: content, status: MessageStatus.DELIVERED.rawValue, action: action.rawValue, createdAt: Date().toUTCString())
+                PinMessageDAO.shared.pinMessage(item: item,
+                                                source: MessageCategory.MESSAGE_PIN.rawValue,
+                                                silentNotification: true,
+                                                message: message,
+                                                mention: mention)
+            case .unpin:
+                PinMessageDAO.shared.unpinMessage(messageId: item.messageId, conversationId: item.conversationId)
             }
-            let pinLocalContent = PinMessage.LocalContent(category: item.category, content: item.content)
-            let content: String
-            if let data = try? JSONEncoder.default.encode(pinLocalContent), let localContent = String(data: data, encoding: .utf8) {
-                content = localContent
-            } else {
-                content = ""
-            }
-            let message = Message.createMessage(messageId: messageId, conversationId: item.conversationId, userId: myUserId, category: MessageCategory.MESSAGE_PIN.rawValue, content: content, status: MessageStatus.DELIVERED.rawValue, action: action.rawValue, createdAt: Date().toUTCString())
-            PinMessageDAO.shared.pinMessage(item: item,
-                                            source: MessageCategory.MESSAGE_PIN.rawValue,
-                                            silentNotification: true,
-                                            message: message,
-                                            mention: mention)
-        case .unpin:
-            PinMessageDAO.shared.unpinMessage(messageId: item.messageId, conversationId: item.conversationId)
         }
     }
     

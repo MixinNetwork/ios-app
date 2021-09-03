@@ -127,7 +127,7 @@ public extension UNMutableNotificationContent {
             } else {
                 return R.string.localizable.alert_key_contact_transcript_message()
             }
-        } else if message.category == MessageCategory.MESSAGE_PIN.rawValue, conversationIsGroup {
+        } else if message.category == MessageCategory.MESSAGE_PIN.rawValue {
             return R.string.localizable.chat_pinned_general_message(userFullName)
         } else {
             return R.string.localizable.notification_content_general()

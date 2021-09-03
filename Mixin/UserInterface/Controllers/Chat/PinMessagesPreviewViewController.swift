@@ -145,15 +145,8 @@ extension PinMessagesPreviewViewController {
         let controller = UIAlertController(title: R.string.localizable.chat_alert_unpin_all_messages(), message: nil, preferredStyle: .alert)
         let cancelAction = UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil)
         let unpinAction = UIAlertAction(title: R.string.localizable.menu_unpin(), style: .default) { _ in
-            self.queue.async { [weak self] in
-                guard let self = self else {
-                    return
-                }
-                self.pinnedMessageItems.forEach({ SendMessageService.shared.pinMessage(item: $0, action: .unpin) })
-                DispatchQueue.main.async {
-                    self.dismissAsChild(completion: nil)
-                }
-            }
+            self.pinnedMessageItems.forEach({ SendMessageService.shared.pinMessage(item: $0, action: .unpin) })
+            self.dismissAsChild(completion: nil)
         }
         controller.addAction(cancelAction)
         controller.addAction(unpinAction)

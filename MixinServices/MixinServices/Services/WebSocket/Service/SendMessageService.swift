@@ -21,13 +21,13 @@ public class SendMessageService: MixinService {
     private var httpProcessing = false
     
     public func pinMessage(item: MessageItem, action: TransferPinAction) {
-        let messageId = UUID().uuidString.lowercased()
-        let blazeMessage = BlazeMessage(messageId: messageId, pinMessageId: item.messageId, conversationId: item.conversationId, action: action)
-        let job = Job(jobId: UUID().uuidString.lowercased(), action: JobAction.SEND_MESSAGE, conversationId: item.conversationId, blazeMessage: blazeMessage)
-        UserDatabase.current.save(job)
-        SendMessageService.shared.processMessages()
-    
-        ReceiveMessageService.shared.messageDispatchQueue.sync {
+        DispatchQueue.global().async {
+            let messageId = UUID().uuidString.lowercased()
+            let blazeMessage = BlazeMessage(messageId: messageId, pinMessageId: item.messageId, conversationId: item.conversationId, action: action)
+            let job = Job(jobId: UUID().uuidString.lowercased(), action: JobAction.SEND_MESSAGE, conversationId: item.conversationId, blazeMessage: blazeMessage)
+            UserDatabase.current.save(job)
+            SendMessageService.shared.processMessages()
+        
             switch action {
             case .pin:
                 var mention: MessageMention?

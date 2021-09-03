@@ -215,9 +215,6 @@ extension AppGroupUserDefaults {
 
         @Default(namespace: .user, key: Key.needsDisplayedPinMessages, defaultValue: [:])
         public static var needsDisplayedPinMessages: [String: String]
-
-        @Default(namespace: .user, key: Key.needsDisplayedPinMessages, defaultValue: [:])
-        public static var needsDisplayedPinMessages: [String: String]
         
         public static func insertRecentlyUsedAppId(id: String) {
             let maxNumberOfIds = 12

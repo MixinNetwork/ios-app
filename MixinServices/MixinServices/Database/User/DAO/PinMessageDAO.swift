@@ -95,8 +95,8 @@ public final class PinMessageDAO: UserDatabaseDAO {
         let pinMessage = PinMessage(messageId: item.messageId, conversationId: item.conversationId, createdAt: message.createdAt)
         return db.write { db in
             try pinMessage.save(db)
-            try mention?.save(db)
             try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: source, silentNotification: silentNotification)
+            try mention?.save(db)
             db.afterNextTransactionCommit { db in
                 let userInfo: [String: Any] = [
                     PinMessageDAO.UserInfoKey.conversationId: item.conversationId,

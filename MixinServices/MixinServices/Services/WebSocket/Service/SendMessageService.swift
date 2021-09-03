@@ -21,10 +21,42 @@ public class SendMessageService: MixinService {
     private var httpProcessing = false
     
     public func pinMessage(item: MessageItem, action: TransferPinAction) {
-        let blazeMessage = BlazeMessage(pinMessageId: item.messageId, conversationId: item.conversationId, action: action)
+        let messageId = UUID().uuidString.lowercased()
+        let blazeMessage = BlazeMessage(messageId: messageId, pinMessageId: item.messageId, conversationId: item.conversationId, action: action)
         let job = Job(jobId: UUID().uuidString.lowercased(), action: JobAction.SEND_MESSAGE, conversationId: item.conversationId, blazeMessage: blazeMessage)
         UserDatabase.current.save(job)
         SendMessageService.shared.processMessages()
+        
+        switch action {
+        case .pin:
+            var mention: MessageMention?
+            if item.category.hasSuffix("_TEXT"), let content = item.content {
+                let numbers = MessageMentionDetector.identityNumbers(from: content)
+                var mentions = UserDAO.shared.mentionRepresentation(identityNumbers: numbers)
+                if item.userId != myUserId && mentions[myIdentityNumber] == nil {
+                    mentions[myIdentityNumber] = myFullname
+                }
+                mention = MessageMention(conversationId: item.conversationId,
+                                         messageId: messageId,
+                                         mentions: mentions,
+                                         hasRead: true)
+            }
+            let pinLocalContent = PinMessage.LocalContent(category: item.category, content: item.content)
+            let content: String
+            if let data = try? JSONEncoder.default.encode(pinLocalContent), let localContent = String(data: data, encoding: .utf8) {
+                content = localContent
+            } else {
+                content = ""
+            }
+            let message = Message.createMessage(messageId: messageId, conversationId: item.conversationId, userId: myUserId, category: MessageCategory.MESSAGE_PIN.rawValue, content: content, status: MessageStatus.DELIVERED.rawValue, action: action.rawValue, createdAt: Date().toUTCString())
+            PinMessageDAO.shared.pinMessage(item: item,
+                                            source: MessageCategory.MESSAGE_PIN.rawValue,
+                                            silentNotification: true,
+                                            message: message,
+                                            mention: mention)
+        case .unpin:
+            PinMessageDAO.shared.unpinMessage(messageId: item.messageId, conversationId: item.conversationId)
+        }
     }
     
     public func recallMessage(item: MessageItem) {

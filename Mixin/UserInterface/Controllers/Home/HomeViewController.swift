@@ -139,6 +139,7 @@ class HomeViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(groupConversationParticipantDidChange(_:)), name: ReceiveMessageService.groupConversationParticipantDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(circleNameDidChange), name: AppGroupUserDefaults.User.circleNameDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateHomeApps), name: AppGroupUserDefaults.User.homeAppIdsDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(pinMessagesDidChange(_:)), name: PinMessageDAO.pinMessageDidChangeNotification, object: nil)
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             NotificationManager.shared.registerForRemoteNotificationsIfAuthorized()
             CallService.shared.registerForPushKitNotificationsIfAvailable()
@@ -432,6 +433,22 @@ class HomeViewController: UIViewController {
                     self.appStackView.alpha = 1
                 }
             }
+        }
+    }
+    
+    @objc func pinMessagesDidChange(_ notification: Notification) {
+        guard view?.isVisibleInScreen ?? false else {
+            return
+        }
+        guard let conversationId = notification.userInfo?[PinMessageDAO.UserInfoKey.conversationId] as? String,
+              let messageId = notification.userInfo?[PinMessageDAO.UserInfoKey.messageId] as? String,
+              let isPinned = notification.userInfo?[PinMessageDAO.UserInfoKey.isPinned] as? Bool else {
+            return
+        }
+        if isPinned {
+            AppGroupUserDefaults.User.needsDisplayedPinMessages[conversationId] = messageId
+        } else {
+            AppGroupUserDefaults.User.needsDisplayedPinMessages.removeValue(forKey: conversationId)
         }
     }
     

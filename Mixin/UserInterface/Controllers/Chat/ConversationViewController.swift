@@ -904,6 +904,10 @@ class ConversationViewController: UIViewController {
         guard cell.contentFrame.contains(recognizer.location(in: cell)) else {
             return
         }
+        guard !(tableView.isDragging && tableView.isDecelerating) else {
+            return
+        }
+        
         textPreviewView.alpha = 0
         textPreviewView.frame = view.bounds
         view.addSubview(textPreviewView)

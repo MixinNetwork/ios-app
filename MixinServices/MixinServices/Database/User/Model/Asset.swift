@@ -95,4 +95,8 @@ extension Asset {
         chainId == "6cfe566e-4aad-470b-8c9a-2fd35b49c68d"
     }
     
+    public var isERC20: Bool {
+        chainId == "43d61dcd-e413-450d-80b8-101d5e903357"
+    }
+    
 }

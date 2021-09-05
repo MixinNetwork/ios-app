@@ -1020,6 +1020,7 @@
 "error_insufficient_balance" = "Insufficient balance";
 "error_pin_incorrect" = "PIN incorrect";
 "error_fee_insufficient" = "Insufficient transaction fee";
+"error_fee_insufficient_detailed" = "Insufficient transaction fee. Please make sure your wallet has %@ as fee";
 "error_transfer_amount_too_small" = "Transfer amount too small";
 "error_too_many_stickers" = "Too many stickers.";
 "error_withdrawal_amount_too_small" = "Withdraw amount too small";

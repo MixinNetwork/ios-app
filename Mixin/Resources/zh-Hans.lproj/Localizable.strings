@@ -1017,6 +1017,7 @@
 "error_insufficient_balance" = "余额不足";
 "error_pin_incorrect" = "密码不正确";
 "error_fee_insufficient" = "手续费不足";
+"error_fee_insufficient_detailed" = "手续费不足。请确保钱包内有 %@ 作为Fee";
 "error_transfer_amount_too_small" = "转账金额太小";
 "error_too_many_stickers" = "贴纸数已达上限";
 "error_withdrawal_amount_too_small" = "提现金额太少了";

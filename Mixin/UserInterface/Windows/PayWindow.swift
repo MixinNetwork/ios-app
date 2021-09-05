@@ -67,6 +67,7 @@ class PayWindow: BottomSheetView {
     private var soundId: SystemSoundID = 0
     private var isAutoFillPIN = false
     private var processing = false
+    private var withdrawlFee: String?
     private var isKeyboardAppear = false
     private var isMultisigUsersAppear = false
     private var isDelayDismissCancelled = false
@@ -147,7 +148,8 @@ class PayWindow: BottomSheetView {
             } else {
                 amountExchangeLabel.text = R.string.localizable.pay_withdrawal_memo(amountToken, amountExchange, feeToken, feeExchange)
             }
-
+            self.withdrawlFee = feeToken
+            
             if !showError {
                 payLabel.text = R.string.localizable.withdraw_by_pin()
                 if showBiometric {
@@ -494,13 +496,19 @@ extension PayWindow: PinFieldDelegate {
             guard let self = self else {
                 return
             }
+            var message = description
             switch error {
             case .malformedPin, .incorrectPin, .insufficientPool, .internalServerError:
                 self.errorContinueAction = .retryPin
+            case .insufficientFee:
+                if let fee = self.withdrawlFee {
+                    message = R.string.localizable.error_fee_insufficient_detailed(fee)
+                }
+                fallthrough
             default:
                 self.errorContinueAction = .close
             }
-            self.failedHandler(errorMsg: description)
+            self.failedHandler(errorMsg: message)
         }
     }
 

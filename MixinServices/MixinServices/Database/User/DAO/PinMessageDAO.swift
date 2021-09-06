@@ -11,7 +11,7 @@ public final class PinMessageDAO: UserDatabaseDAO {
     
     public static let shared = PinMessageDAO()
     
-    public static let pinMessageDidChangeNotification = NSNotification.Name("one.mixin.services.PinMessageDAO.pinMessageDidChange")
+    public static let pinMessageDidChangeNotification = Notification.Name("one.mixin.services.PinMessageDAO.pinMessageDidChange")
     
     static let messageItemQuery = """
     SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_mime_type,
@@ -86,12 +86,15 @@ public final class PinMessageDAO: UserDatabaseDAO {
             }
         }
     }
+    
     @discardableResult
-    public func pinMessage(item: MessageItem,
-                           source: String,
-                           silentNotification: Bool,
-                           message: Message,
-                           mention: MessageMention? = nil) -> Bool {
+    public func pinMessage(
+        item: MessageItem,
+        source: String,
+        silentNotification: Bool,
+        message: Message,
+        mention: MessageMention? = nil
+    ) -> Bool {
         let pinMessage = PinMessage(messageId: item.messageId, conversationId: item.conversationId, createdAt: message.createdAt)
         return db.write { db in
             try pinMessage.save(db)

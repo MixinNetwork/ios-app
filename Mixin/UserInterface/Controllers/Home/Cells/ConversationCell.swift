@@ -142,14 +142,16 @@ class ConversationCell: ModernSelectedBackgroundCell {
                     contentLabel.text = R.string.localizable.chat_message_recalled()
                 }
             } else if category == MessageCategory.MESSAGE_PIN.rawValue {
-                var category = ""
+                let category: String
                 if let data = item.content.data(using: .utf8), let localContent = try? JSONDecoder.default.decode(PinMessage.LocalContent.self, from: data) {
                     if localContent.category.hasSuffix("_TEXT"), let content = localContent.content {
                         item.content = content
                     }
                     category = localContent.category
+                } else {
+                    category = ""
                 }
-                contentLabel.text = TransferPinAction.getPinMessage(userId: item.senderId, userFullName: item.senderFullName, category: category, content: item.mentionedFullnameReplacedContent)
+                contentLabel.text = TransferPinAction.pinMessage(userId: item.senderId, userFullName: item.senderFullName, category: category, content: item.mentionedFullnameReplacedContent)
             } else if category == MessageCategory.KRAKEN_PUBLISH.rawValue {
                 contentLabel.text = R.string.localizable.group_call_publish(senderName)
             } else if category == MessageCategory.KRAKEN_CANCEL.rawValue {

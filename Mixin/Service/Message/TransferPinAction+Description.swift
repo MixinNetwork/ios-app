@@ -2,7 +2,7 @@ import MixinServices
 
 extension TransferPinAction {
     
-    static func getPinMessage(userId: String, userFullName: String, category: String, content: String? = nil) -> String {
+    static func pinMessage(userId: String, userFullName: String, category: String, content: String? = nil) -> String {
         if category.hasSuffix("_TEXT"), let content = content {
             return R.string.localizable.chat_pinned_text_message(userFullName, content)
         } else if category.hasSuffix("_IMAGE") {
@@ -30,7 +30,7 @@ extension TransferPinAction {
         }
     }
     
-    static func getPinMessagePreview(item: MessageItem, isGroup: Bool) -> String {
+    static func pinMessagePreview(item: MessageItem, isGroup: Bool) -> String {
         let senderName = item.userId == myUserId ? R.string.localizable.chat_message_you() : (item.userFullName ?? "")
         let category = item.category
         if category.hasSuffix("_TEXT") {

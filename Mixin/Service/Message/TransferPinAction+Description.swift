@@ -2,8 +2,35 @@ import MixinServices
 
 extension TransferPinAction {
     
-    static func pinMessage(userId: String, userFullName: String, category: String, content: String? = nil) -> String {
-        if category.hasSuffix("_TEXT"), let content = content {
+    static func pinMessage(item: ConversationItem) -> String {
+        let category: String
+        if let localContent = TransferPinAction.pinMessageLocalContent(from: item.content) {
+            if localContent.category.hasSuffix("_TEXT"), let content = localContent.content {
+                item.content = content
+            }
+            category = localContent.category
+        } else {
+            category = ""
+        }
+        return TransferPinAction.pinMessage(userId: item.senderId, userName: item.senderFullName, category: category, content: item.mentionedFullnameReplacedContent)
+    }
+    
+    static func pinMessage(item: MessageItem) -> String {
+        let category: String
+        if let content = item.content, let localContent = TransferPinAction.pinMessageLocalContent(from: content) {
+            if localContent.category.hasSuffix("_TEXT"), let content = localContent.content {
+                item.content = content
+            }
+            category = localContent.category
+        } else {
+            category = ""
+        }
+        return TransferPinAction.pinMessage(userId: item.userId, userName: item.userFullName, category: category, content: item.mentionedFullnameReplacedContent)
+    }
+    
+    private static func pinMessage(userId: String, userName: String?, category: String, content: String) -> String {
+        let userFullName = userId == myUserId ? R.string.localizable.chat_message_you() : (userName ?? "")
+        if category.hasSuffix("_TEXT") {
             return R.string.localizable.chat_pinned_text_message(userFullName, content)
         } else if category.hasSuffix("_IMAGE") {
             return R.string.localizable.chat_pinned_image_message(userFullName)
@@ -30,75 +57,11 @@ extension TransferPinAction {
         }
     }
     
-    static func pinMessagePreview(item: MessageItem, isGroup: Bool) -> String {
-        let senderName = item.userId == myUserId ? R.string.localizable.chat_message_you() : (item.userFullName ?? "")
-        let category = item.category
-        if category.hasSuffix("_TEXT") {
-            let content = item.mentionedFullnameReplacedContent
-            if isGroup {
-                return "\(senderName): \(content)"
-            } else {
-                return content
-            }
-        } else if category.hasSuffix("_IMAGE") {
-            if isGroup {
-                return "\(senderName): \(R.string.localizable.notification_content_photo())"
-            } else {
-                return R.string.localizable.notification_content_photo()
-            }
-        } else if category.hasSuffix("_STICKER") {
-            if isGroup {
-                return "\(senderName): \(R.string.localizable.notification_content_sticker())"
-            } else {
-                return R.string.localizable.notification_content_sticker()
-            }
-        } else if category.hasSuffix("_CONTACT") {
-            if isGroup {
-                return "\(senderName): \(R.string.localizable.notification_content_contact())"
-            } else {
-                return R.string.localizable.notification_content_contact()
-            }
-        } else if category.hasSuffix("_DATA") {
-            if isGroup {
-                return "\(senderName): \(R.string.localizable.notification_content_file())"
-            } else {
-                return R.string.localizable.notification_content_file()
-            }
-        } else if category.hasSuffix("_VIDEO") {
-            if isGroup {
-                return "\(senderName): \(R.string.localizable.notification_content_video())"
-            } else {
-                return R.string.localizable.notification_content_video()
-            }
-        } else if category.hasSuffix("_LIVE") {
-            if isGroup {
-                return "\(senderName): \(R.string.localizable.notification_content_live())"
-            } else {
-                return R.string.localizable.notification_content_live()
-            }
-        } else if category.hasSuffix("_AUDIO") {
-            if isGroup {
-                return "\(senderName): \(R.string.localizable.notification_content_audio())"
-            } else {
-                return R.string.localizable.notification_content_audio()
-            }
-        } else if category.hasSuffix("_POST") {
-            if isGroup {
-                return "\(senderName): \(R.string.localizable.notification_content_post())"
-            } else {
-                return R.string.localizable.notification_content_post()
-            }
-        } else if category.hasSuffix("_LOCATION") {
-            if isGroup {
-                return "\(senderName): \(R.string.localizable.notification_content_location())"
-            } else {
-                return R.string.localizable.notification_content_location()
-            }
-        } else if category.hasSuffix("_TRANSCRIPT") {
-            return R.string.localizable.notification_content_transcript()
-        } else {
-            return R.string.localizable.chat_cell_title_unknown_category()
+    private static func pinMessageLocalContent(from content: String) -> PinMessage.LocalContent? {
+        guard let data = content.data(using: .utf8), let localContent = try? JSONDecoder.default.decode(PinMessage.LocalContent.self, from: data) else {
+            return nil
         }
+        return localContent
     }
     
 }

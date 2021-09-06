@@ -4,9 +4,9 @@ public final class PinMessageDAO: UserDatabaseDAO {
     
     public enum UserInfoKey {
         public static let conversationId = "conv_id"
-        public static let messageId = "mid"
+        public static let pinnedMessageId = "p_mid"
         public static let isPinned = "is_p"
-        public static let message = "msg"
+        public static let messageId = "m_id"
     }
     
     public static let shared = PinMessageDAO()
@@ -77,8 +77,8 @@ public final class PinMessageDAO: UserDatabaseDAO {
             db.afterNextTransactionCommit { db in
                 let userInfo: [String: Any] = [
                     PinMessageDAO.UserInfoKey.conversationId: conversationId,
-                    PinMessageDAO.UserInfoKey.messageId: messageId,
-                    PinMessageDAO.UserInfoKey.isPinned: false
+                    PinMessageDAO.UserInfoKey.pinnedMessageId: messageId,
+                    PinMessageDAO.UserInfoKey.isPinned: false,
                 ]
                 NotificationCenter.default.post(onMainThread: PinMessageDAO.pinMessageDidChangeNotification,
                                                 object: self,
@@ -103,9 +103,9 @@ public final class PinMessageDAO: UserDatabaseDAO {
             db.afterNextTransactionCommit { db in
                 let userInfo: [String: Any] = [
                     PinMessageDAO.UserInfoKey.conversationId: item.conversationId,
-                    PinMessageDAO.UserInfoKey.messageId: item.messageId,
+                    PinMessageDAO.UserInfoKey.pinnedMessageId: item.messageId,
                     PinMessageDAO.UserInfoKey.isPinned: true,
-                    PinMessageDAO.UserInfoKey.message: item
+                    PinMessageDAO.UserInfoKey.messageId: message.messageId
                 ]
                 NotificationCenter.default.post(onMainThread: PinMessageDAO.pinMessageDidChangeNotification,
                                                 object: self,

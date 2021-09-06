@@ -1177,13 +1177,14 @@ class ConversationViewController: UIViewController {
             return
         }
         guard let isPinned = notification.userInfo?[PinMessageDAO.UserInfoKey.isPinned] as? Bool,
-              let messageId = notification.userInfo?[PinMessageDAO.UserInfoKey.messageId] as? String else {
+              let pinnedMessageId = notification.userInfo?[PinMessageDAO.UserInfoKey.pinnedMessageId] as? String else {
             return
         }
         DispatchQueue.global().async { [weak self] in
             let count = PinMessageDAO.shared.messageCount(conversationId: conversationId)
             if isPinned {
-                guard let message = notification.userInfo?[PinMessageDAO.UserInfoKey.message] as? MessageItem else {
+                guard let messageId = notification.userInfo?[PinMessageDAO.UserInfoKey.messageId] as? String,
+                      let message = MessageDAO.shared.getFullMessage(messageId: messageId) else {
                     return
                 }
                 DispatchQueue.main.async {
@@ -1191,9 +1192,10 @@ class ConversationViewController: UIViewController {
                         return
                     }
                     self.pinMessagesAlertView.isHidden = false
-                    let preview = TransferPinAction.pinMessagePreview(item: message, isGroup: self.dataSource.category == .group)
+                    let preview = TransferPinAction.pinMessage(item: message)
                     self.updatePinMessage(preview: preview, count: count)
-                    AppGroupUserDefaults.User.needsDisplayedPinMessages[conversationId] = messageId
+                    let data = DisplayedPinMessage(messageId: messageId, pinnedMessageId: pinnedMessageId).toData()
+                    AppGroupUserDefaults.User.needsDisplayedPinMessages[conversationId] = data
                 }
             } else {
                 DispatchQueue.main.async {
@@ -1203,7 +1205,8 @@ class ConversationViewController: UIViewController {
                     if count == 0 {
                         self.pinMessagesAlertView.isHidden = true
                         AppGroupUserDefaults.User.needsDisplayedPinMessages.removeValue(forKey: conversationId)
-                    } else if let msgId = AppGroupUserDefaults.User.needsDisplayedPinMessages[conversationId], msgId == messageId {
+                    } else if let data = AppGroupUserDefaults.User.needsDisplayedPinMessages[conversationId],
+                              let msgId = DisplayedPinMessage.fromData(data)?.pinnedMessageId, msgId == pinnedMessageId {
                         self.hidePinMessagePreview()
                         AppGroupUserDefaults.User.needsDisplayedPinMessages.removeValue(forKey: conversationId)
                     }
@@ -1814,10 +1817,11 @@ extension ConversationViewController: PinMessagesAlertViewDelegate {
     }
     
     func pinMessagesAlertViewDidTapPreview(_ view: PinMessagesAlertView) {
-        guard let messageId = AppGroupUserDefaults.User.needsDisplayedPinMessages[conversationId] else {
+        guard let data = AppGroupUserDefaults.User.needsDisplayedPinMessages[conversationId],
+              let pinnedMessageId = DisplayedPinMessage.fromData(data)?.pinnedMessageId else {
             return
         }
-        scrollToPinnedMessage(messageId: messageId)
+        scrollToPinnedMessage(messageId: pinnedMessageId)
     }
     
 }
@@ -2451,11 +2455,11 @@ extension ConversationViewController {
         let conversationId = self.conversationId
         DispatchQueue.global().async { [weak self] in
             let count = PinMessageDAO.shared.messageCount(conversationId: conversationId)
-            let displayedMessage: MessageItem?
-            if let messageId = AppGroupUserDefaults.User.needsDisplayedPinMessages[conversationId] {
-                displayedMessage = MessageDAO.shared.getFullMessage(messageId: messageId)
+            let message: MessageItem?
+            if let data = AppGroupUserDefaults.User.needsDisplayedPinMessages[conversationId], let messageId = DisplayedPinMessage.fromData(data)?.messageId {
+                message = MessageDAO.shared.getFullMessage(messageId: messageId)
             } else {
-                displayedMessage = nil
+                message = nil
             }
             DispatchQueue.main.async {
                 guard let self = self else {
@@ -2463,8 +2467,8 @@ extension ConversationViewController {
                 }
                 if count > 0 {
                     self.pinMessagesAlertView.isHidden = false
-                    if let message = displayedMessage {
-                        let preview = TransferPinAction.pinMessagePreview(item: message, isGroup: self.dataSource.category == .group)
+                    if let item = message {
+                        let preview = TransferPinAction.pinMessage(item: item)
                         self.updatePinMessage(preview: preview, count: count)
                     } else {
                         self.hidePinMessagePreview()

@@ -441,12 +441,16 @@ class HomeViewController: UIViewController {
             return
         }
         guard let conversationId = notification.userInfo?[PinMessageDAO.UserInfoKey.conversationId] as? String,
-              let messageId = notification.userInfo?[PinMessageDAO.UserInfoKey.messageId] as? String,
+              let pinnedMessageId = notification.userInfo?[PinMessageDAO.UserInfoKey.pinnedMessageId] as? String,
               let isPinned = notification.userInfo?[PinMessageDAO.UserInfoKey.isPinned] as? Bool else {
             return
         }
         if isPinned {
-            AppGroupUserDefaults.User.needsDisplayedPinMessages[conversationId] = messageId
+            guard let messageId = notification.userInfo?[PinMessageDAO.UserInfoKey.messageId] as? String else {
+                return
+            }
+            let data = DisplayedPinMessage(messageId: messageId, pinnedMessageId: pinnedMessageId).toData()
+            AppGroupUserDefaults.User.needsDisplayedPinMessages[conversationId] = data
         } else {
             AppGroupUserDefaults.User.needsDisplayedPinMessages.removeValue(forKey: conversationId)
         }

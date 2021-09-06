@@ -11,7 +11,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="PinMessagesAlertView" customModule="Mixin" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="375" height="58"/>
+            <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VDy-MD-ZJc">
@@ -38,9 +38,9 @@
                     <size key="shadowOffset" width="0.0" height="0.0"/>
                 </label>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SgE-DM-HcT">
-                    <rect key="frame" x="9" y="10" width="314" height="48"/>
+                    <rect key="frame" x="9" y="10" width="314" height="50"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="48" id="PRW-zN-7Fc"/>
+                        <constraint firstAttribute="height" constant="50" id="PRW-zN-7Fc"/>
                     </constraints>
                     <state key="normal" backgroundImage="ic_pin_bubble"/>
                     <connections>
@@ -48,7 +48,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TtF-Y8-1dd">
-                    <rect key="frame" x="16" y="13" width="40" height="40"/>
+                    <rect key="frame" x="16" y="14" width="40" height="40"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="40" id="vHA-JL-ytZ"/>
                         <constraint firstAttribute="width" constant="40" id="xjY-4s-eBS"/>
@@ -59,7 +59,7 @@
                     </connections>
                 </button>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="apB-WS-4Gl">
-                    <rect key="frame" x="58" y="24.5" width="239" height="17"/>
+                    <rect key="frame" x="58" y="25.5" width="239" height="17"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>

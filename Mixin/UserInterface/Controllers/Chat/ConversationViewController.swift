@@ -295,7 +295,7 @@ class ConversationViewController: UIViewController {
             make.top.equalTo(navigationBarView.snp.bottom)
             make.left.equalTo(0)
             make.right.equalTo(0)
-            make.height.equalTo(58)
+            make.height.equalTo(60)
         }
         setupPinMessagesAlertView()
         

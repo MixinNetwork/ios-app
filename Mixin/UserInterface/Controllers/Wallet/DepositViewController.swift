@@ -104,9 +104,8 @@ extension DepositViewController {
     
     private func bulletAttributedString(with strings: [String]) -> NSAttributedString {
         let indentation: CGFloat = 10
-        let nonOptions = [NSTextTab.OptionKey: Any]()
         let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.tabStops = [NSTextTab(textAlignment: .left, location: indentation, options: nonOptions)]
+        paragraphStyle.tabStops = [NSTextTab(textAlignment: .left, location: indentation)]
         paragraphStyle.defaultTabInterval = indentation
         paragraphStyle.lineSpacing = 2
         paragraphStyle.paragraphSpacing = 6
@@ -119,10 +118,8 @@ extension DepositViewController {
         let bullet = "• "
         let bulletListString = NSMutableAttributedString()
         for string in strings {
-            let formattedString = "\(bullet)\t\(string)\n"
-            let attributedString = NSMutableAttributedString(string: formattedString)
-            attributedString.addAttributes(attributes, range: NSMakeRange(0, attributedString.length))
-            bulletListString.append(attributedString)
+            let string = NSMutableAttributedString(string: "\(bullet)\t\(string)\n", attributes: attributes)
+            bulletListString.append(string)
         }
         return bulletListString
     }

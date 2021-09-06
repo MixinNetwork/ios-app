@@ -292,10 +292,10 @@ class ConversationViewController: UIViewController {
         
         view.addSubview(pinMessagesAlertView)
         pinMessagesAlertView.snp.makeConstraints { make in
-            make.top.equalTo(navigationBarView.snp.bottom).offset(7)
+            make.top.equalTo(navigationBarView.snp.bottom)
             make.left.equalTo(0)
             make.right.equalTo(0)
-            make.height.equalTo(70)
+            make.height.equalTo(58)
         }
         setupPinMessagesAlertView()
         

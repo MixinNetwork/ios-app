@@ -18,6 +18,7 @@ final class PinMessagesPreviewViewController: StaticMessagesViewController {
     
     private lazy var bottomBarView: UIView = {
         let button = UIButton()
+        button.titleLabel?.font = .systemFont(ofSize: 16)
         button.setTitle(R.string.localizable.chat_unpin_all_messages(), for: .normal)
         button.setTitleColor(R.color.theme(), for: .normal)
         button.addTarget(self, action: #selector(unpinAllAction), for: .touchUpInside)

@@ -19,6 +19,7 @@ final class TranscriptPreviewViewController: StaticMessagesViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        factory.delegate = self
         titleLabel.text = R.string.localizable.chat_transcript()
         let transcriptId = transcriptMessage.messageId
         let layoutWidth = AppDelegate.current.mainWindow.bounds.width
@@ -53,8 +54,20 @@ extension TranscriptPreviewViewController {
         return AttachmentContainer.url(transcriptId: transcriptMessage.messageId, filename: filename)
     }
     
-    override func messageViewModelFactory(_ factory: MessageViewModelFactory, updateViewModelForPresentation viewModel: MessageViewModel) {
-        super.messageViewModelFactory(factory, updateViewModelForPresentation: viewModel)
+}
+
+// MARK: - MessageViewModelFactoryDelegate
+extension TranscriptPreviewViewController: MessageViewModelFactoryDelegate {
+    
+    func messageViewModelFactory(_ factory: MessageViewModelFactory, showUsernameForMessageIfNeeded message: MessageItem) -> Bool {
+        message.userId != myUserId
+    }
+    
+    func messageViewModelFactory(_ factory: MessageViewModelFactory, isMessageForwardedByBot message: MessageItem) -> Bool {
+        false
+    }
+    
+    func messageViewModelFactory(_ factory: MessageViewModelFactory, updateViewModelForPresentation viewModel: MessageViewModel) {
         if let viewModel = viewModel as? AttachmentLoadingViewModel {
             viewModel.transcriptId = transcriptMessage.messageId
         }

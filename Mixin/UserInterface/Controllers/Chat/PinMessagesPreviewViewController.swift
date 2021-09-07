@@ -44,6 +44,7 @@ final class PinMessagesPreviewViewController: StaticMessagesViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        factory.delegate = self
         presentCompletion = { [weak self] in
             guard let self = self else {
                 return
@@ -77,6 +78,23 @@ final class PinMessagesPreviewViewController: StaticMessagesViewController {
                 self.flashCellBackgroundIfNeeded()
             }
         }
+    }
+    
+}
+
+// MARK: - MessageViewModelFactoryDelegate
+extension PinMessagesPreviewViewController: MessageViewModelFactoryDelegate {
+    
+    func messageViewModelFactory(_ factory: MessageViewModelFactory, showUsernameForMessageIfNeeded message: MessageItem) -> Bool {
+        message.userId != myUserId
+    }
+    
+    func messageViewModelFactory(_ factory: MessageViewModelFactory, isMessageForwardedByBot message: MessageItem) -> Bool {
+        false
+    }
+    
+    func messageViewModelFactory(_ factory: MessageViewModelFactory, updateViewModelForPresentation viewModel: MessageViewModel) {
+        
     }
     
 }

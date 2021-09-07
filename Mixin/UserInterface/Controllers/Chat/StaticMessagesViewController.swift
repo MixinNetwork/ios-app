@@ -9,14 +9,14 @@ class StaticMessagesViewController: UIViewController {
     @IBOutlet weak var tableViewBottomConstraint: NSLayoutConstraint!
     
     let queue = DispatchQueue(label: "one.mixin.messenger.StaticMessagesViewController")
-    
+    let factory = ViewModelFactory()
+
     var dates: [String] = []
     var viewModels: [String: [MessageViewModel]] = [:]
     var presentCompletion: (() -> Void)?
     
     private let conversationId: String
     private let audioManager: StaticAudioMessagePlayingManager
-    private let factory = ViewModelFactory()
     private let alwaysUsesLegacyMenu = false
     
     private var didPlayAudioMessage = false
@@ -54,7 +54,6 @@ class StaticMessagesViewController: UIViewController {
         let safeAreaInsets = AppDelegate.current.mainWindow.safeAreaInsets
         tableViewBottomConstraint.constant = safeAreaInsets.top + safeAreaInsets.bottom
         audioManager.delegate = self
-        factory.delegate = self
         
         tableView.backgroundColor = .clear
         tableView.separatorStyle = .none
@@ -389,23 +388,6 @@ extension StaticMessagesViewController {
     
 }
 
-// MARK: - MessageViewModelFactoryDelegate
-extension StaticMessagesViewController: MessageViewModelFactoryDelegate {
-    
-    func messageViewModelFactory(_ factory: MessageViewModelFactory, showUsernameForMessageIfNeeded message: MessageItem) -> Bool {
-        message.userId != myUserId
-    }
-    
-    func messageViewModelFactory(_ factory: MessageViewModelFactory, isMessageForwardedByBot message: MessageItem) -> Bool {
-        false
-    }
-    
-    @objc func messageViewModelFactory(_ factory: MessageViewModelFactory, updateViewModelForPresentation viewModel: MessageViewModel) {
-        
-    }
-    
-}
-
 // MARK: - UITableViewDataSource
 extension StaticMessagesViewController: UITableViewDataSource {
     
@@ -709,7 +691,7 @@ extension StaticMessagesViewController {
 // MARK: - Private works
 extension StaticMessagesViewController {
     
-    private final class ViewModelFactory: MessageViewModelFactory {
+    final class ViewModelFactory: MessageViewModelFactory {
         
         override func style(forIndex index: Int,
                             isFirstMessage: Bool,

@@ -383,6 +383,7 @@
 "chat_pinned_post_message" = "%@ pinned a post";
 "chat_pinned_location_message" = "%@ pinned a location";
 "chat_pinned_transcript_message" = "%@ pinned a transcript";
+"chat_pinned_app_card_message" = "%@ pinned a card";
 "chat_pinned_messages_count" = "%d Pinned Messages";
 "chat_unpin_all_messages" = "Unpin All Messages";
 "chat_alert_unpin_all_messages" = "Are you sure you want to unpin all messages?";

@@ -383,6 +383,7 @@
 "chat_pinned_post_message" = "%@置顶了一篇文章";
 "chat_pinned_location_message" = "%@置顶了一处位置";
 "chat_pinned_transcript_message" = "%@置顶了一个聊天记录";
+"chat_pinned_app_card_message" = "%@置顶了一张卡片";
 "chat_pinned_messages_count" = "%d条置顶消息";
 "chat_unpin_all_messages" = "取消所有置顶消息";
 "chat_alert_unpin_all_messages" = "你确定要取消所有置顶消息吗";

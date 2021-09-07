@@ -52,6 +52,8 @@ extension TransferPinAction {
             return R.string.localizable.chat_pinned_location_message(userFullName)
         } else if category.hasSuffix("_TRANSCRIPT") {
             return R.string.localizable.chat_pinned_transcript_message(userFullName)
+        } else if category == MessageCategory.APP_CARD.rawValue {
+            return R.string.localizable.chat_pinned_app_card_message(userFullName)
         } else {
             return R.string.localizable.chat_pinned_general_message(userFullName)
         }

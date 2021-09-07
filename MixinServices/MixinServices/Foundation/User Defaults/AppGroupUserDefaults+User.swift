@@ -58,7 +58,7 @@ extension AppGroupUserDefaults {
             
             case userInterfaceStyle = "ui_style"
 
-            case needsDisplayedPinMessages = "needs_displayed_pin_messages"
+            case visiblePinMessages = "visible_pin_messages"
         }
         
         public static let version = 27
@@ -212,9 +212,9 @@ extension AppGroupUserDefaults {
                 NotificationCenter.default.post(onMainThread: didChangeUserInterfaceStyleNotification, object: self)
             }
         }
-
-        @Default(namespace: .user, key: Key.needsDisplayedPinMessages, defaultValue: [:])
-        public static var needsDisplayedPinMessages: [String: Data]
+        
+        @Default(namespace: .user, key: Key.visiblePinMessages, defaultValue: [:])
+        public static var visiblePinMessagesData: [String: Data]
         
         public static func insertRecentlyUsedAppId(id: String) {
             let maxNumberOfIds = 12

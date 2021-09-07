@@ -449,10 +449,10 @@ class HomeViewController: UIViewController {
             guard let messageId = notification.userInfo?[PinMessageDAO.UserInfoKey.messageId] as? String else {
                 return
             }
-            let data = DisplayedPinMessage(messageId: messageId, pinnedMessageId: pinnedMessageId).toData()
-            AppGroupUserDefaults.User.needsDisplayedPinMessages[conversationId] = data
+            let message = VisiblePinMessage(messageId: messageId, pinnedMessageId: pinnedMessageId)
+            AppGroupUserDefaults.User.setVisiblePinMessage(message, for: conversationId)
         } else {
-            AppGroupUserDefaults.User.needsDisplayedPinMessages.removeValue(forKey: conversationId)
+            AppGroupUserDefaults.User.setVisiblePinMessage(nil, for: conversationId)
         }
     }
     
@@ -906,7 +906,7 @@ extension HomeViewController {
     
     private func cleanPinMessages(conversationId: String) {
         PinMessageDAO.shared.removeAllMessages(conversationId: conversationId)
-        AppGroupUserDefaults.User.needsDisplayedPinMessages.removeValue(forKey: conversationId)
+        AppGroupUserDefaults.User.setVisiblePinMessage(nil, for: conversationId)
     }
     
 }

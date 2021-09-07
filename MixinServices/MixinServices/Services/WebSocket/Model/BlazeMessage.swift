@@ -100,8 +100,8 @@ extension BlazeMessage {
         self.init(params: params, action: BlazeMessageAction.createMessage.rawValue)
     }
     
-    init(messageId: String, pinMessageId: String, conversationId: String, action: TransferPinAction) {
-        let transferPlainData = TransferPinData(action: action.rawValue, messageIds: [pinMessageId])
+    init(messageId: String, pinMessageIds: [String], conversationId: String, action: TransferPinAction) {
+        let transferPlainData = TransferPinData(action: action.rawValue, messageIds: pinMessageIds)
         let encoded = (try? JSONEncoder.default.encode(transferPlainData).base64EncodedString()) ?? ""
         let params = BlazeMessageParam(conversationId: conversationId, category: MessageCategory.MESSAGE_PIN.rawValue, data: encoded, status: MessageStatus.SENT.rawValue, messageId: messageId)
         self.init(params: params, action: BlazeMessageAction.createMessage.rawValue)

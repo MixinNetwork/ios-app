@@ -4,7 +4,7 @@ public final class PinMessageDAO: UserDatabaseDAO {
     
     public enum UserInfoKey {
         public static let conversationId = "conv_id"
-        public static let pinnedMessageId = "p_mid"
+        public static let pinnedMessageIds = "p_mids"
         public static let isPinned = "is_p"
         public static let messageId = "m_id"
     }
@@ -66,10 +66,11 @@ public final class PinMessageDAO: UserDatabaseDAO {
     }
     
     @discardableResult
-    public func unpinMessage(messageId: String, conversationId: String) -> Bool {
+    public func unpinMessages(messageIds: [String], conversationId: String) -> Bool {
         db.write { (db) in
+            let condition = PinMessage.column(of: .conversationId) == conversationId && messageIds.contains(PinMessage.column(of: .messageId))
             let deletedCount = try PinMessage
-                .filter(PinMessage.column(of: .messageId) == messageId)
+                .filter(condition)
                 .deleteAll(db)
             guard deletedCount > 0 else {
                 return
@@ -77,7 +78,7 @@ public final class PinMessageDAO: UserDatabaseDAO {
             db.afterNextTransactionCommit { db in
                 let userInfo: [String: Any] = [
                     PinMessageDAO.UserInfoKey.conversationId: conversationId,
-                    PinMessageDAO.UserInfoKey.pinnedMessageId: messageId,
+                    PinMessageDAO.UserInfoKey.pinnedMessageIds: messageIds,
                     PinMessageDAO.UserInfoKey.isPinned: false,
                 ]
                 NotificationCenter.default.post(onMainThread: PinMessageDAO.pinMessageDidChangeNotification,
@@ -103,7 +104,7 @@ public final class PinMessageDAO: UserDatabaseDAO {
             db.afterNextTransactionCommit { db in
                 let userInfo: [String: Any] = [
                     PinMessageDAO.UserInfoKey.conversationId: item.conversationId,
-                    PinMessageDAO.UserInfoKey.pinnedMessageId: item.messageId,
+                    PinMessageDAO.UserInfoKey.pinnedMessageIds: [item.messageId],
                     PinMessageDAO.UserInfoKey.isPinned: true,
                     PinMessageDAO.UserInfoKey.messageId: message.messageId
                 ]

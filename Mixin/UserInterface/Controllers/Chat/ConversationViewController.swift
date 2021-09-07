@@ -1029,7 +1029,7 @@ class ConversationViewController: UIViewController {
             }
         case let .recallMessage(messageId):
             DispatchQueue.global().async {
-                PinMessageDAO.shared.unpinMessage(messageId: messageId, conversationId: change.conversationId)
+                PinMessageDAO.shared.unpinMessages(messageIds: [messageId], conversationId: change.conversationId)
             }
         default:
             break
@@ -1177,13 +1177,14 @@ class ConversationViewController: UIViewController {
             return
         }
         guard let isPinned = notification.userInfo?[PinMessageDAO.UserInfoKey.isPinned] as? Bool,
-              let pinnedMessageId = notification.userInfo?[PinMessageDAO.UserInfoKey.pinnedMessageId] as? String else {
+              let pinnedMessageIds = notification.userInfo?[PinMessageDAO.UserInfoKey.pinnedMessageIds] as? [String] else {
             return
         }
         DispatchQueue.global().async { [weak self] in
             let count = PinMessageDAO.shared.messageCount(conversationId: conversationId)
             if isPinned {
-                guard let messageId = notification.userInfo?[PinMessageDAO.UserInfoKey.messageId] as? String,
+                guard let pinnedMessageId = pinnedMessageIds.first,
+                      let messageId = notification.userInfo?[PinMessageDAO.UserInfoKey.messageId] as? String,
                       let message = MessageDAO.shared.getFullMessage(messageId: messageId) else {
                     return
                 }
@@ -1205,7 +1206,7 @@ class ConversationViewController: UIViewController {
                     if count == 0 {
                         self.pinMessagesAlertView.isHidden = true
                         AppGroupUserDefaults.User.setVisiblePinMessage(nil, for: conversationId)
-                    } else if AppGroupUserDefaults.User.visiblePinMessage(for: conversationId)?.pinnedMessageId == pinnedMessageId {
+                    } else if AppGroupUserDefaults.User.visiblePinMessage(for: conversationId)?.pinnedMessageId == pinnedMessageIds.first {
                         self.hidePinMessagePreview()
                         AppGroupUserDefaults.User.setVisiblePinMessage(nil, for: conversationId)
                     }
@@ -1805,7 +1806,7 @@ extension ConversationViewController: PinMessagesAlertViewDelegate {
     
     func pinMessagesAlertViewDidTapPin(_ view: PinMessagesAlertView) {
         conversationInputViewController.textView.resignFirstResponder()
-        let vc = PinMessagesPreviewViewController(conversationId: conversationId)
+        let vc = PinMessagesPreviewViewController(conversationId: conversationId, isGroup: dataSource.category == .group)
         vc.delegate = self
         vc.presentAsChild(of: self)
     }
@@ -1938,9 +1939,9 @@ extension ConversationViewController {
         case .report:
             report(conversationId: conversationId, message: message)
         case .pin:
-            SendMessageService.shared.pinMessage(item: message, action: .pin)
+            SendMessageService.shared.sendPinMessages(items: [message], conversationId: conversationId, action: .pin)
         case .unpin:
-            SendMessageService.shared.pinMessage(item: message, action: .unpin)
+            SendMessageService.shared.sendPinMessages(items: [message], conversationId: conversationId, action: .unpin)
         }
     }
     
@@ -2748,7 +2749,7 @@ extension ConversationViewController {
                 let (deleted, childMessageIds) = MessageDAO.shared.deleteMessage(id: message.messageId)
                 if deleted {
                     ReceiveMessageService.shared.stopRecallMessage(item: message, childMessageIds: childMessageIds)
-                    PinMessageDAO.shared.unpinMessage(messageId: message.messageId, conversationId: message.conversationId)
+                    PinMessageDAO.shared.unpinMessages(messageIds: [message.messageId], conversationId: message.conversationId)
                 }
                 DispatchQueue.main.sync {
                     _ = weakSelf.dataSource?.removeViewModel(at: indexPath)

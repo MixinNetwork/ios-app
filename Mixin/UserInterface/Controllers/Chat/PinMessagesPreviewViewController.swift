@@ -9,13 +9,17 @@ final class PinMessagesPreviewViewController: StaticMessagesViewController {
     
     weak var delegate: PinMessagesPreviewViewControllerDelegate?
     
+    private let isGroup: Bool
     private let conversationId: String
     private let bottomBarViewHeight: CGFloat = 50
+    private let processDispatchQueue = DispatchQueue(label: "one.mixin.messenger.PinMessagesPreviewViewController")
+    private let layoutWidth = AppDelegate.current.mainWindow.bounds.width
     
     private var showMessageButtons: [MessageCell: UIButton] = [:]
     private var pinnedMessageItems: [MessageItem] = []
     private var isCellFlashed = false
     private var isPresented = false
+    private var isUnpinAllMessages = false
     
     private lazy var bottomBarView: UIView = {
         let button = UIButton()
@@ -33,8 +37,9 @@ final class PinMessagesPreviewViewController: StaticMessagesViewController {
         return view
     }()
     
-    init(conversationId: String) {
+    init(conversationId: String, isGroup: Bool) {
         self.conversationId = conversationId
+        self.isGroup = isGroup
         super.init(conversationId: conversationId, audioManager: StaticAudioMessagePlayingManager())
     }
     
@@ -52,14 +57,13 @@ final class PinMessagesPreviewViewController: StaticMessagesViewController {
             self.isPresented = true
             self.flashCellBackgroundIfNeeded()
         }
-        let layoutWidth = AppDelegate.current.mainWindow.bounds.width
         queue.async { [weak self] in
             guard let self = self else {
                 return
             }
             self.pinnedMessageItems = PinMessageDAO.shared.messageItems(conversationId: self.conversationId)
-            let (dates, viewModels) = self.categorizedViewModels(with: self.pinnedMessageItems, fits: layoutWidth)
-            let isAdmin = ParticipantDAO.shared.isAdmin(conversationId: self.conversationId, userId: myUserId)
+            let (dates, viewModels) = self.categorizedViewModels(with: self.pinnedMessageItems, fits: self.layoutWidth)
+            let isAdmin = !self.isGroup || ParticipantDAO.shared.isAdmin(conversationId: self.conversationId, userId: myUserId)
             DispatchQueue.main.async {
                 if isAdmin {
                     let safeAreaInsets = AppDelegate.current.mainWindow.safeAreaInsets
@@ -78,59 +82,12 @@ final class PinMessagesPreviewViewController: StaticMessagesViewController {
                 self.flashCellBackgroundIfNeeded()
             }
         }
+        NotificationCenter.default.addObserver(self, selector: #selector(pinMessagesDidChange(_:)), name: PinMessageDAO.pinMessageDidChangeNotification, object: nil)
     }
     
 }
 
-// MARK: - MessageViewModelFactoryDelegate
-extension PinMessagesPreviewViewController: MessageViewModelFactoryDelegate {
-    
-    func messageViewModelFactory(_ factory: MessageViewModelFactory, showUsernameForMessageIfNeeded message: MessageItem) -> Bool {
-        message.userId != myUserId
-    }
-    
-    func messageViewModelFactory(_ factory: MessageViewModelFactory, isMessageForwardedByBot message: MessageItem) -> Bool {
-        false
-    }
-    
-    func messageViewModelFactory(_ factory: MessageViewModelFactory, updateViewModelForPresentation viewModel: MessageViewModel) {
-        
-    }
-    
-}
-
-extension PinMessagesPreviewViewController {
-    
-    private func flashCellBackgroundIfNeeded() {
-        guard isPresented && !isCellFlashed && !pinnedMessageItems.isEmpty else {
-            return
-        }
-        isCellFlashed = true
-        let conversationId = self.conversationId
-        queue.async { [weak self] in
-            let messageId: String?
-            if let pinnedMessageId = AppGroupUserDefaults.User.visiblePinMessage(for: conversationId)?.pinnedMessageId {
-                messageId = pinnedMessageId
-            } else if let lastPinnedMessage = PinMessageDAO.shared.lastPinnedMessage(conversationId: conversationId) {
-                messageId = lastPinnedMessage.messageId
-            } else {
-                messageId = nil
-            }
-            DispatchQueue.main.async {
-                guard let self = self else {
-                    return
-                }
-                guard let messageId = messageId, let indexPath = self.indexPath(where: { $0.messageId == messageId }) else {
-                    return
-                }
-                self.tableView.scrollToRow(at: indexPath, at: .middle, animated: false)
-                self.flashCellBackground(at: indexPath)
-            }
-        }
-    }
-    
-}
-
+// MARK: - Override
 extension PinMessagesPreviewViewController {
     
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -166,13 +123,32 @@ extension PinMessagesPreviewViewController {
     
 }
 
+// MARK: - MessageViewModelFactoryDelegate
+extension PinMessagesPreviewViewController: MessageViewModelFactoryDelegate {
+    
+    func messageViewModelFactory(_ factory: MessageViewModelFactory, showUsernameForMessageIfNeeded message: MessageItem) -> Bool {
+        message.userId != myUserId
+    }
+    
+    func messageViewModelFactory(_ factory: MessageViewModelFactory, isMessageForwardedByBot message: MessageItem) -> Bool {
+        false
+    }
+    
+    func messageViewModelFactory(_ factory: MessageViewModelFactory, updateViewModelForPresentation viewModel: MessageViewModel) {
+        
+    }
+    
+}
+
+// MARK: - Actions
 extension PinMessagesPreviewViewController {
     
     @objc private func unpinAllAction() {
         let controller = UIAlertController(title: R.string.localizable.chat_alert_unpin_all_messages(), message: nil, preferredStyle: .alert)
         let cancelAction = UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil)
         let unpinAction = UIAlertAction(title: R.string.localizable.menu_unpin(), style: .default) { _ in
-            self.pinnedMessageItems.forEach({ SendMessageService.shared.pinMessage(item: $0, action: .unpin) })
+            self.isUnpinAllMessages = true
+            SendMessageService.shared.sendPinMessages(items: self.pinnedMessageItems, conversationId: self.conversationId, action: .unpin)
             self.dismissAsChild(completion: nil)
         }
         controller.addAction(cancelAction)
@@ -187,6 +163,81 @@ extension PinMessagesPreviewViewController {
             return
         }
         delegate?.pinMessagesPreviewViewController(self, needsShowMessage: viewModel.message.messageId)
+    }
+    
+    @objc func pinMessagesDidChange(_ notification: Notification) {
+        guard !isUnpinAllMessages else {
+            return
+        }
+        guard let conversationId = notification.userInfo?[PinMessageDAO.UserInfoKey.conversationId] as? String else {
+            return
+        }
+        guard conversationId == self.conversationId else {
+            return
+        }
+        guard let isPinned = notification.userInfo?[PinMessageDAO.UserInfoKey.isPinned] as? Bool else {
+            return
+        }
+        processDispatchQueue.sync { [weak self] in
+            guard let self = self else {
+                return
+            }
+            self.pinnedMessageItems = PinMessageDAO.shared.messageItems(conversationId: self.conversationId)
+            guard self.pinnedMessageItems.count > 0 else {
+                DispatchQueue.main.async {
+                    self.dismissAsChild(completion: nil)
+                }
+                return
+            }
+            let (dates, viewModels) = self.categorizedViewModels(with: self.pinnedMessageItems, fits: self.layoutWidth)
+            DispatchQueue.main.async {
+                self.titleLabel.text = R.string.localizable.chat_pinned_messages_count(self.pinnedMessageItems.count)
+                self.dates = dates
+                self.viewModels = viewModels
+                self.tableView.reloadData()
+                if isPinned {
+                    guard let messageId = (notification.userInfo?[PinMessageDAO.UserInfoKey.pinnedMessageIds] as? [String])?.first,
+                          let indexPath = self.indexPath(where: { $0.messageId == messageId }) else {
+                        return
+                    }
+                    self.tableView.scrollToRow(at: indexPath, at: .middle, animated: false)
+                    self.flashCellBackground(at: indexPath)
+                }
+            }
+        }
+    }
+    
+}
+
+// MARK: - Helper
+extension PinMessagesPreviewViewController {
+    
+    private func flashCellBackgroundIfNeeded() {
+        guard isPresented && !isCellFlashed && !pinnedMessageItems.isEmpty else {
+            return
+        }
+        isCellFlashed = true
+        let conversationId = self.conversationId
+        queue.async { [weak self] in
+            let messageId: String?
+            if let pinnedMessageId = AppGroupUserDefaults.User.visiblePinMessage(for: conversationId)?.pinnedMessageId {
+                messageId = pinnedMessageId
+            } else if let lastPinnedMessage = PinMessageDAO.shared.lastPinnedMessage(conversationId: conversationId) {
+                messageId = lastPinnedMessage.messageId
+            } else {
+                messageId = nil
+            }
+            DispatchQueue.main.async {
+                guard let self = self else {
+                    return
+                }
+                guard let messageId = messageId, let indexPath = self.indexPath(where: { $0.messageId == messageId }) else {
+                    return
+                }
+                self.tableView.scrollToRow(at: indexPath, at: .middle, animated: false)
+                self.flashCellBackground(at: indexPath)
+            }
+        }
     }
     
 }

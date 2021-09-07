@@ -289,7 +289,7 @@ class HomeViewController: UIViewController {
     @objc func dataDidChange(_ sender: Notification) {
         if let change = sender.object as? ConversationChange, case .recallMessage(let messageId) = change.action {
             DispatchQueue.global().async {
-                PinMessageDAO.shared.unpinMessage(messageId: messageId, conversationId: change.conversationId)
+                PinMessageDAO.shared.unpinMessages(messageIds: [messageId], conversationId: change.conversationId)
             }
         }
         guard view?.isVisibleInScreen ?? false else {
@@ -441,12 +441,13 @@ class HomeViewController: UIViewController {
             return
         }
         guard let conversationId = notification.userInfo?[PinMessageDAO.UserInfoKey.conversationId] as? String,
-              let pinnedMessageId = notification.userInfo?[PinMessageDAO.UserInfoKey.pinnedMessageId] as? String,
+              let pinnedMessageIds = notification.userInfo?[PinMessageDAO.UserInfoKey.pinnedMessageIds] as? [String],
               let isPinned = notification.userInfo?[PinMessageDAO.UserInfoKey.isPinned] as? Bool else {
             return
         }
         if isPinned {
-            guard let messageId = notification.userInfo?[PinMessageDAO.UserInfoKey.messageId] as? String else {
+            guard let messageId = notification.userInfo?[PinMessageDAO.UserInfoKey.messageId] as? String,
+                  let pinnedMessageId = pinnedMessageIds.first else {
                 return
             }
             let message = VisiblePinMessage(messageId: messageId, pinnedMessageId: pinnedMessageId)

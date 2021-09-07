@@ -328,15 +328,18 @@ public class ReceiveMessageService: MixinService {
         guard ConversationDAO.shared.isExist(conversationId: data.conversationId),
               let base64Data = Data(base64Encoded: data.data),
               let plainData = (try? JSONDecoder.default.decode(TransferPinData.self, from: base64Data)),
-              let action = TransferPinAction(rawValue: plainData.action),
-              let messageId = plainData.messageIds.first,
-              let fullMessage = MessageDAO.shared.getFullMessage(messageId: messageId)
+              let action = TransferPinAction(rawValue: plainData.action)
         else {
             updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
             return
         }
         switch action {
         case .pin:
+            guard let messageId = plainData.messageIds.first,
+                  let fullMessage = MessageDAO.shared.getFullMessage(messageId: messageId) else {
+                updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
+                return
+            }
             let pinLocalContent = PinMessage.LocalContent(category: fullMessage.category, content: fullMessage.content)
             let content: String
             if let data = try? JSONEncoder.default.encode(pinLocalContent), let localContent = String(data: data, encoding: .utf8) {
@@ -363,7 +366,7 @@ public class ReceiveMessageService: MixinService {
                                             message: message,
                                             mention: mention)
         case .unpin:
-            PinMessageDAO.shared.unpinMessage(messageId: fullMessage.messageId, conversationId: fullMessage.conversationId)
+            PinMessageDAO.shared.unpinMessages(messageIds: plainData.messageIds, conversationId: data.conversationId)
         }
         updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
     }

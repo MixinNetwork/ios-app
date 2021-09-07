@@ -20,16 +20,19 @@ public class SendMessageService: MixinService {
     private let httpDispatchQueue = DispatchQueue(label: "one.mixin.services.queue.send.http.messages")
     private var httpProcessing = false
     
-    public func pinMessage(item: MessageItem, action: TransferPinAction) {
+    public func sendPinMessages(items: [MessageItem], conversationId: String, action: TransferPinAction) {
         DispatchQueue.global().async {
             let messageId = UUID().uuidString.lowercased()
-            let blazeMessage = BlazeMessage(messageId: messageId, pinMessageId: item.messageId, conversationId: item.conversationId, action: action)
-            let job = Job(jobId: UUID().uuidString.lowercased(), action: JobAction.SEND_MESSAGE, conversationId: item.conversationId, blazeMessage: blazeMessage)
+            let pinMessageIds = items.map(\.messageId)
+            let blazeMessage = BlazeMessage(messageId: messageId, pinMessageIds: pinMessageIds, conversationId: conversationId, action: action)
+            let job = Job(jobId: UUID().uuidString.lowercased(), action: JobAction.SEND_MESSAGE, conversationId: conversationId, blazeMessage: blazeMessage)
             UserDatabase.current.save(job)
             SendMessageService.shared.processMessages()
-        
             switch action {
             case .pin:
+                guard let item = items.first else {
+                    return
+                }
                 var mention: MessageMention?
                 if item.category.hasSuffix("_TEXT"), let content = item.content {
                     let numbers = MessageMentionDetector.identityNumbers(from: content)
@@ -56,7 +59,7 @@ public class SendMessageService: MixinService {
                                                 message: message,
                                                 mention: mention)
             case .unpin:
-                PinMessageDAO.shared.unpinMessage(messageId: item.messageId, conversationId: item.conversationId)
+                PinMessageDAO.shared.unpinMessages(messageIds: pinMessageIds, conversationId: conversationId)
             }
         }
     }

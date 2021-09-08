@@ -175,34 +175,23 @@ extension PinMessagesPreviewViewController {
         guard conversationId == self.conversationId else {
             return
         }
-        guard let isPinned = notification.userInfo?[PinMessageDAO.UserInfoKey.isPinned] as? Bool else {
-            return
-        }
         processDispatchQueue.sync { [weak self] in
             guard let self = self else {
                 return
             }
-            self.pinnedMessageItems = PinMessageDAO.shared.messageItems(conversationId: self.conversationId)
-            guard self.pinnedMessageItems.count > 0 else {
+            guard PinMessageDAO.shared.hasMessages(conversationId: self.conversationId) else {
                 DispatchQueue.main.async {
                     self.dismissAsChild(completion: nil)
                 }
                 return
             }
+            self.pinnedMessageItems = PinMessageDAO.shared.messageItems(conversationId: self.conversationId)
             let (dates, viewModels) = self.categorizedViewModels(with: self.pinnedMessageItems, fits: self.layoutWidth)
             DispatchQueue.main.async {
                 self.titleLabel.text = R.string.localizable.chat_pinned_messages_count(self.pinnedMessageItems.count)
                 self.dates = dates
                 self.viewModels = viewModels
                 self.tableView.reloadData()
-                if isPinned {
-                    guard let messageId = (notification.userInfo?[PinMessageDAO.UserInfoKey.pinnedMessageIds] as? [String])?.first,
-                          let indexPath = self.indexPath(where: { $0.messageId == messageId }) else {
-                        return
-                    }
-                    self.tableView.scrollToRow(at: indexPath, at: .middle, animated: false)
-                    self.flashCellBackground(at: indexPath)
-                }
             }
         }
     }

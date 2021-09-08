@@ -250,7 +250,7 @@ extension AttachmentDownloadJob {
             let userInfo: Logger.UserInfo = [
                 "id": owner.messageId,
                 "category": owner.category,
-                "mediaUrl": owner.mediaUrl,
+                "mediaUrl": owner.mediaUrl ?? "(null)",
                 "mediaStatus": owner.mediaStatus ?? "(null)"
             ]
             Logger.general.error(category: "AttachmentDownloadJob", message: "Message has an invalid content: \(attachmentId)", userInfo: userInfo)

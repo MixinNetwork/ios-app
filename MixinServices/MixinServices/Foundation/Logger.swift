@@ -181,6 +181,8 @@ extension Logger {
         let date = Date()
         
         var formattedDate: String {
+            // Formatting a date may reduce the performance of caller, use a computed
+            // var to postpone this procedure to background queue
             Self.dateFormatter.string(from: date)
         }
         

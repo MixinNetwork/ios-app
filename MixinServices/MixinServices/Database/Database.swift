@@ -14,6 +14,7 @@ open class Database {
                     return
                 }
                 if duration > 1 {
+                    // Add a trailing linebreak to clear the border of SQL string
                     let message = """
                         Duration: \(duration)s, SQL:
                         \(statement.sql)

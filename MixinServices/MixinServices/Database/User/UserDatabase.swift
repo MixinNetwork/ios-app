@@ -399,17 +399,17 @@ public final class UserDatabase: Database {
         }
         
         migrator.registerMigration("pin_messages") { db in
-            let sql = """
+            let sql =  """
                 CREATE TABLE IF NOT EXISTS pin_messages(
                     message_id TEXT NOT NULL,
                     conversation_id TEXT NOT NULL,
                     created_at TEXT NOT NULL,
                     PRIMARY KEY (message_id),
-                    FOREIGN KEY (conversation_id) REFERENCES conversations(conversation_id) ON UPDATE NO ACTION ON DELETE CASCADE,
                     FOREIGN KEY (message_id) REFERENCES messages(id) ON UPDATE NO ACTION ON DELETE CASCADE
                 )
             """
             try db.execute(sql: sql)
+            try db.execute(sql: "CREATE INDEX IF NOT EXISTS index_pin_messages_conversation_id ON pin_messages(conversation_id)")
         }
         
         /* Remaining works:

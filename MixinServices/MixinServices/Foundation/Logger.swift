@@ -136,9 +136,9 @@ extension Logger {
             case .debug:
                 return "[DEBUG]"
             case .info:
-                return "[INFO]"
+                return "[INFO] "
             case .warn:
-                return "[WARN]"
+                return "[WARN] "
             case .error:
                 return "[ERROR]"
             }

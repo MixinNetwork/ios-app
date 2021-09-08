@@ -910,6 +910,7 @@ extension ConversationDataSource {
                 && !tableView.isDecelerating
                 && isLastCell
                 && (lastMessageIsVisibleBeforeInsertion || messageIsSentByMe)
+                && !(message.category == MessageCategory.MESSAGE_PIN.rawValue && messageIsSentByMe)
             if shouldScrollToNewMessage {
                 if tableView.tableFooterView == nil {
                     tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)

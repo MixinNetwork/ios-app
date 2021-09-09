@@ -48,6 +48,7 @@ class HomeViewController: UIViewController {
     private var appActions: [(() -> Void)?] = []
     private var isEditingRow = false
     private var insufficientBalanceForEmergencyContactBulletinConfirmedDate: Date?
+    private var selectedConversation: ConversationItem?
     
     private var bulletinContent: BulletinContent? = nil {
         didSet {
@@ -163,6 +164,7 @@ class HomeViewController: UIViewController {
             fetchConversations()
         }
         checkServerStatus()
+        selectedConversation = nil
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -437,22 +439,26 @@ class HomeViewController: UIViewController {
     }
     
     @objc func pinMessagesDidChange(_ notification: Notification) {
-        guard view?.isVisibleInScreen ?? false else {
+        guard let conversationId = notification.userInfo?[PinMessageDAO.UserInfoKey.conversationId] as? String,
+              selectedConversation?.conversationId != conversationId else {
             return
         }
-        guard let conversationId = notification.userInfo?[PinMessageDAO.UserInfoKey.conversationId] as? String,
-              let pinnedMessageIds = notification.userInfo?[PinMessageDAO.UserInfoKey.pinnedMessageIds] as? [String],
+        guard let sourceMessageIds = notification.userInfo?[PinMessageDAO.UserInfoKey.sourceMessageIds] as? [String],
               let isPinned = notification.userInfo?[PinMessageDAO.UserInfoKey.isPinned] as? Bool else {
             return
         }
         if isPinned {
             guard let messageId = notification.userInfo?[PinMessageDAO.UserInfoKey.messageId] as? String,
-                  let pinnedMessageId = pinnedMessageIds.first else {
+                  let pinnedMessageId = sourceMessageIds.first else {
                 return
             }
             let message = VisiblePinMessage(messageId: messageId, pinnedMessageId: pinnedMessageId)
             AppGroupUserDefaults.User.setVisiblePinMessage(message, for: conversationId)
         } else {
+            guard let pinnedMessageId = AppGroupUserDefaults.User.visiblePinMessage(for: conversationId)?.pinnedMessageId,
+                  sourceMessageIds.contains(pinnedMessageId) else {
+                return
+            }
             AppGroupUserDefaults.User.setVisiblePinMessage(nil, for: conversationId)
         }
     }
@@ -518,6 +524,7 @@ extension HomeViewController: UITableViewDelegate {
             conversation.unseenMessageCount = 0
             let vc = ConversationViewController.instance(conversation: conversation)
             navigationController?.pushViewController(vc, animated: true)
+            selectedConversation = conversation
         }
     }
     

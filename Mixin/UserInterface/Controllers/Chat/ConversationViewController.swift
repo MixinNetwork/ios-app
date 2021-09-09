@@ -1177,13 +1177,13 @@ class ConversationViewController: UIViewController {
             return
         }
         guard let isPinned = notification.userInfo?[PinMessageDAO.UserInfoKey.isPinned] as? Bool,
-              let pinnedMessageIds = notification.userInfo?[PinMessageDAO.UserInfoKey.pinnedMessageIds] as? [String] else {
+              let sourceMessageIds = notification.userInfo?[PinMessageDAO.UserInfoKey.sourceMessageIds] as? [String] else {
             return
         }
         DispatchQueue.global().async { [weak self] in
             let count = PinMessageDAO.shared.messageCount(conversationId: conversationId)
             if isPinned {
-                guard let pinnedMessageId = pinnedMessageIds.first,
+                guard let pinnedMessageId = sourceMessageIds.first,
                       let messageId = notification.userInfo?[PinMessageDAO.UserInfoKey.messageId] as? String,
                       let message = MessageDAO.shared.getFullMessage(messageId: messageId) else {
                     return
@@ -1206,7 +1206,7 @@ class ConversationViewController: UIViewController {
                     if count == 0 {
                         self.pinMessagesAlertView.isHidden = true
                         AppGroupUserDefaults.User.setVisiblePinMessage(nil, for: conversationId)
-                    } else if AppGroupUserDefaults.User.visiblePinMessage(for: conversationId)?.pinnedMessageId == pinnedMessageIds.first {
+                    } else if AppGroupUserDefaults.User.visiblePinMessage(for: conversationId)?.pinnedMessageId == sourceMessageIds.first {
                         self.hidePinMessagePreview()
                         AppGroupUserDefaults.User.setVisiblePinMessage(nil, for: conversationId)
                     }

@@ -21,30 +21,21 @@ final class TranscriptPreviewViewController: StaticMessagesViewController {
         super.viewDidLoad()
         factory.delegate = self
         titleLabel.text = R.string.localizable.chat_transcript()
-        let transcriptId = transcriptMessage.messageId
-        let layoutWidth = AppDelegate.current.mainWindow.bounds.width
-        queue.async { [weak self] in
-            guard let self = self else {
-                return
-            }
-            let items = TranscriptMessageDAO.shared.messageItems(transcriptId: transcriptId)
-            let children = items.compactMap { item in
-                TranscriptMessage(transcriptId: transcriptId, mediaUrl: item.mediaUrl, thumbImage: item.thumbImage, messageItem: item)
-            }
-            let (dates, viewModels) = self.categorizedViewModels(with: items, fits: layoutWidth)
-            DispatchQueue.main.async {
-                self.childMessages = children
-                self.dates = dates
-                self.viewModels = viewModels
-                self.tableView.reloadData()
-            }
-        }
+        reloadData()
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(mediaStatusDidUpdate(_:)),
                                                name: TranscriptMessageDAO.mediaStatusDidUpdateNotification,
                                                object: nil)
     }
     
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard traitCollection.preferredContentSizeCategory != previousTraitCollection?.preferredContentSizeCategory else {
+            return
+        }
+        reloadData()
+    }
+
 }
 
 // MARK: - Override
@@ -125,3 +116,30 @@ extension TranscriptPreviewViewController {
     }
     
 }
+
+// MARK: - Helper
+extension TranscriptPreviewViewController {
+    
+    private func reloadData() {
+        let layoutWidth = AppDelegate.current.mainWindow.bounds.width
+        queue.async { [weak self] in
+            guard let self = self else {
+                return
+            }
+            let transcriptId = self.transcriptMessage.messageId
+            let items = TranscriptMessageDAO.shared.messageItems(transcriptId: transcriptId)
+            let children = items.compactMap { item in
+                TranscriptMessage(transcriptId: transcriptId, mediaUrl: item.mediaUrl, thumbImage: item.thumbImage, messageItem: item)
+            }
+            let (dates, viewModels) = self.categorizedViewModels(with: items, fits: layoutWidth)
+            DispatchQueue.main.async {
+                self.childMessages = children
+                self.dates = dates
+                self.viewModels = viewModels
+                self.tableView.reloadData()
+            }
+        }
+    }
+    
+}
+   

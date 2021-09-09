@@ -270,7 +270,9 @@ extension MessageItem {
     }
     
     public var isSystemMessage: Bool {
-        category == MessageCategory.SYSTEM_CONVERSATION.rawValue || category.hasPrefix("KRAKEN_")
+        category == MessageCategory.SYSTEM_CONVERSATION.rawValue
+            || category.hasPrefix("KRAKEN_")
+            || category == MessageCategory.MESSAGE_PIN.rawValue
     }
     
     public var userIsBot: Bool {

@@ -71,6 +71,7 @@ final class PinMessagesPreviewViewController: StaticMessagesViewController {
         }
         reloadData()
     }
+    
 }
 
 // MARK: - Override

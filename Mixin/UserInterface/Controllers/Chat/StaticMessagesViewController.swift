@@ -52,7 +52,8 @@ class StaticMessagesViewController: UIViewController {
         super.viewDidLoad()
         updatePreferredContentSizeHeight()
         let safeAreaInsets = AppDelegate.current.mainWindow.safeAreaInsets
-        tableViewBottomConstraint.constant = safeAreaInsets.top + safeAreaInsets.bottom
+        tableViewBottomConstraint.constant = safeAreaInsets.top
+        tableView.contentInset.bottom = safeAreaInsets.bottom
         audioManager.delegate = self
         
         tableView.backgroundColor = .clear

@@ -43,6 +43,7 @@ final class PinMessagesPreviewViewController: StaticMessagesViewController {
         factory.delegate = self
         reloadData()
         NotificationCenter.default.addObserver(self, selector: #selector(pinMessagesDidChange(_:)), name: PinMessageDAO.pinMessageDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(participantDidChange(_:)), name: ParticipantDAO.participantDidChangeNotification, object: nil)
     }
     
     override func viewDidPresentAsChild() {
@@ -167,6 +168,18 @@ extension PinMessagesPreviewViewController {
         }
     }
     
+    @objc private func participantDidChange(_ notification: Notification) {
+        guard let conversationId = notification.userInfo?[ParticipantDAO.UserInfoKey.conversationId] as? String else {
+            return
+        }
+        guard conversationId == self.conversationId else {
+            return
+        }
+        queue.async {
+            self.updateUnpinAllButtonVisibility()
+        }
+    }
+    
 }
 
 // MARK: - Helper
@@ -204,16 +217,7 @@ extension PinMessagesPreviewViewController {
         queue.async {
             let pinnedMessageItems = PinMessageDAO.shared.messageItems(conversationId: conversationId)
             let (dates, viewModels) = self.categorizedViewModels(with: pinnedMessageItems, fits: self.layoutWidth)
-            let canUnpinMessages = !self.isGroup || ParticipantDAO.shared.isAdmin(conversationId: conversationId, userId: myUserId)
             DispatchQueue.main.async {
-                if canUnpinMessages {
-                    self.addBottomBarViewIfNeverAdded()
-                    self.tableView.contentInset.bottom = self.unpinAllButtonHeight
-                        + self.additionalBottomInsetWhenUnpinAllIsAvailable
-                } else {
-                    self.bottomBarViewIfAdded?.removeFromSuperview()
-                    self.tableView.contentInset.bottom = 0
-                }
                 self.pinnedMessageItems = pinnedMessageItems
                 self.titleLabel.text = R.string.localizable.chat_pinned_messages_count(self.pinnedMessageItems.count)
                 self.dates = dates
@@ -221,6 +225,7 @@ extension PinMessagesPreviewViewController {
                 self.tableView.reloadData()
                 self.flashCellBackgroundIfNeeded()
             }
+            self.updateUnpinAllButtonVisibility()
         }
     }
     
@@ -248,6 +253,20 @@ extension PinMessagesPreviewViewController {
                 }
                 self.tableView.scrollToRow(at: indexPath, at: .middle, animated: false)
                 self.flashCellBackground(at: indexPath)
+            }
+        }
+    }
+    
+    private func updateUnpinAllButtonVisibility() {
+        let canUnpinMessages = !isGroup || ParticipantDAO.shared.isAdmin(conversationId: conversationId, userId: myUserId)
+        DispatchQueue.main.async {
+            if canUnpinMessages {
+                self.addBottomBarViewIfNeverAdded()
+                self.tableView.contentInset.bottom = self.unpinAllButtonHeight
+                    + self.additionalBottomInsetWhenUnpinAllIsAvailable
+            } else {
+                self.bottomBarViewIfAdded?.removeFromSuperview()
+                self.tableView.contentInset.bottom = 0
             }
         }
     }

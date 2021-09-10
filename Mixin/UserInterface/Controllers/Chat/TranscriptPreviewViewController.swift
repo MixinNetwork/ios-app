@@ -137,4 +137,3 @@ extension TranscriptPreviewViewController {
     }
     
 }
-   

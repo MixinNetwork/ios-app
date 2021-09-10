@@ -47,7 +47,7 @@ class StaticMessagesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black.withAlphaComponent(0)
-        view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        contentView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         audioManager.delegate = self
         
         tableView.backgroundColor = .clear
@@ -312,7 +312,6 @@ extension StaticMessagesViewController {
             } else if message.category.hasSuffix("_TRANSCRIPT"), let parent = parent {
                 let vc = TranscriptPreviewViewController(transcriptMessage: message)
                 vc.presentAsChild(of: parent)
-                
             }
         }
     }

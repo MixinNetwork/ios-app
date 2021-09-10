@@ -404,8 +404,7 @@ public final class UserDatabase: Database {
                     message_id TEXT NOT NULL,
                     conversation_id TEXT NOT NULL,
                     created_at TEXT NOT NULL,
-                    PRIMARY KEY (message_id),
-                    FOREIGN KEY (message_id) REFERENCES messages(id) ON UPDATE NO ACTION ON DELETE CASCADE
+                    PRIMARY KEY (message_id)
                 )
             """
             try db.execute(sql: sql)

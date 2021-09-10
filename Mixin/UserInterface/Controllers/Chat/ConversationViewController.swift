@@ -1030,10 +1030,6 @@ class ConversationViewController: UIViewController {
             if newStatus == .MENTION_READ {
                 mentionScrollingDestinations.removeAll(where: { $0 == messageId })
             }
-        case let .recallMessage(messageId):
-            DispatchQueue.global().async {
-                PinMessageDAO.shared.unpinMessages(messageIds: [messageId], conversationId: change.conversationId)
-            }
         default:
             break
         }

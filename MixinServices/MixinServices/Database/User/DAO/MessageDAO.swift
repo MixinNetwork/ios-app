@@ -609,7 +609,6 @@ public final class MessageDAO: UserDatabaseDAO {
                                    category: message.category,
                                    status: message.status,
                                    quoteMessageIds: quoteMessageIds)
-            try PinMessageDAO.shared.unpinMessages(messageIds: [messageId], conversationId: message.conversationId, from: db)
         }
     }
     
@@ -652,6 +651,7 @@ public final class MessageDAO: UserDatabaseDAO {
         try MessageMention
             .filter(MessageMention.column(of: .messageId) == messageId)
             .deleteAll(database)
+        try PinMessageDAO.shared.unpinMessages(messageIds: [messageId], conversationId: conversationId, from: database)
         
         if category.hasSuffix("_TRANSCRIPT") {
             try TranscriptMessage

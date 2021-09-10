@@ -225,8 +225,7 @@ extension PinMessagesPreviewViewController {
         let conversationId = self.conversationId
         queue.async { [weak self] in
             let messageId: String?
-            if let data = AppGroupUserDefaults.User.visiblePinMessagesData[conversationId],
-               let id = try? JSONDecoder.default.decode(PinMessage.VisiblePinMessage.self, from: data).pinnedMessageId {
+            if let id = AppGroupUserDefaults.User.visiblePinMessage(for: conversationId)?.pinnedMessageId {
                 messageId = id
             } else if let lastPinnedMessage = PinMessageDAO.shared.lastPinnedMessage(conversationId: conversationId) {
                 messageId = lastPinnedMessage.messageId

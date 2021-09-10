@@ -214,7 +214,18 @@ extension AppGroupUserDefaults {
         }
         
         @Default(namespace: .user, key: Key.visiblePinMessages, defaultValue: [:])
-        public static var visiblePinMessagesData: [String: Data]
+        private static var visiblePinMessagesData: [String: Data]
+        
+        public static func visiblePinMessage(for conversationId: String) -> PinMessage.VisiblePinMessage? {
+            guard let data = visiblePinMessagesData[conversationId] else {
+                return nil
+            }
+            return try? JSONDecoder.default.decode(PinMessage.VisiblePinMessage.self, from: data)
+        }
+        
+        public static func setVisiblePinMessage(_ message: PinMessage.VisiblePinMessage?, for conversationId: String) {
+            visiblePinMessagesData[conversationId] = try? JSONEncoder.default.encode(message)
+        }
         
         public static func insertRecentlyUsedAppId(id: String) {
             let maxNumberOfIds = 12

@@ -1817,15 +1817,14 @@ extension ConversationViewController: PinMessagesAlertViewDelegate {
     
     func pinMessagesAlertViewDidTapClose(_ view: PinMessagesAlertView) {
         hidePinMessagePreview()
-        AppGroupUserDefaults.User.visiblePinMessagesData[conversationId] = nil
+        AppGroupUserDefaults.User.setVisiblePinMessage(nil, for: conversationId)
     }
     
     func pinMessagesAlertViewDidTapPreview(_ view: PinMessagesAlertView) {
-        guard let data = AppGroupUserDefaults.User.visiblePinMessagesData[conversationId],
-              let messageId = try? JSONDecoder.default.decode(PinMessage.VisiblePinMessage.self, from: data).pinnedMessageId else {
+        guard let id = AppGroupUserDefaults.User.visiblePinMessage(for: conversationId)?.pinnedMessageId else {
             return
         }
-        scrollToPinnedMessage(messageId: messageId)
+        scrollToPinnedMessage(messageId: id)
     }
     
 }
@@ -2492,8 +2491,7 @@ extension ConversationViewController {
             var ids = MessageMentionDAO.shared.unreadMessageIds(conversationId: conversationId)
             let pinMessageCount = PinMessageDAO.shared.messageCount(conversationId: conversationId)
             let visiblePinMessage: MessageItem?
-            if let data = AppGroupUserDefaults.User.visiblePinMessagesData[conversationId],
-               let id = try? JSONDecoder.default.decode(PinMessage.VisiblePinMessage.self, from: data).messageId {
+            if let id = AppGroupUserDefaults.User.visiblePinMessage(for: conversationId)?.messageId {
                 visiblePinMessage = MessageDAO.shared.getFullMessage(messageId: id)
             } else {
                 visiblePinMessage = nil

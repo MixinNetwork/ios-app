@@ -76,10 +76,8 @@ public final class PinMessageDAO: UserDatabaseDAO {
         }
         database.afterNextTransactionCommit { db in
             let needsRemoveVisibleMessage: Bool
-            if let data = AppGroupUserDefaults.User.visiblePinMessagesData[conversationId],
-               let id = try? JSONDecoder.default.decode(PinMessage.VisiblePinMessage.self, from: data).pinnedMessageId,
-               messageIds.contains(id) {
-                AppGroupUserDefaults.User.visiblePinMessagesData[conversationId] = nil
+            if let id = AppGroupUserDefaults.User.visiblePinMessage(for: conversationId)?.pinnedMessageId, messageIds.contains(id) {
+                AppGroupUserDefaults.User.setVisiblePinMessage(nil, for: conversationId)
                 needsRemoveVisibleMessage = true
             } else {
                 needsRemoveVisibleMessage = false
@@ -116,7 +114,7 @@ public final class PinMessageDAO: UserDatabaseDAO {
             try mention?.save(db)
             db.afterNextTransactionCommit { db in
                 let visiblePinMessage = PinMessage.VisiblePinMessage(messageId: message.messageId, pinnedMessageId: item.messageId)
-                AppGroupUserDefaults.User.visiblePinMessagesData[item.conversationId] = try? JSONEncoder.default.encode(visiblePinMessage)
+                AppGroupUserDefaults.User.setVisiblePinMessage(visiblePinMessage, for: item.conversationId)
                 let userInfo: [String: Any] = [
                     PinMessageDAO.UserInfoKey.conversationId: item.conversationId,
                     PinMessageDAO.UserInfoKey.sourceMessageIds: [item.messageId],
@@ -135,7 +133,7 @@ public final class PinMessageDAO: UserDatabaseDAO {
             .filter(PinMessage.column(of: .conversationId) == conversationId)
             .deleteAll(database)
         database.afterNextTransactionCommit { db in
-            AppGroupUserDefaults.User.visiblePinMessagesData[conversationId] = nil
+            AppGroupUserDefaults.User.setVisiblePinMessage(nil, for: conversationId)
         }
     }
     

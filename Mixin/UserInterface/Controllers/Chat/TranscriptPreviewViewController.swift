@@ -35,11 +35,6 @@ final class TranscriptPreviewViewController: StaticMessagesViewController {
         }
         reloadData()
     }
-
-}
-
-// MARK: - Override
-extension TranscriptPreviewViewController {
     
     override func attachmentURL(withFilename filename: String) -> URL? {
         return AttachmentContainer.url(transcriptId: transcriptMessage.messageId, filename: filename)

@@ -3,17 +3,20 @@ import MixinServices
 
 class StaticMessagesViewController: UIViewController {
     
+    @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var tableView: ConversationTableView!
     
-    @IBOutlet weak var tableViewBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var contentViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var showContentConstraint: NSLayoutConstraint!
+    @IBOutlet weak var hideContentConstraint: NSLayoutConstraint!
     
     let queue = DispatchQueue(label: "one.mixin.messenger.StaticMessagesViewController")
     let factory = ViewModelFactory()
-
+    
     var dates: [String] = []
     var viewModels: [String: [MessageViewModel]] = [:]
-    var presentCompletion: (() -> Void)?
     
     private let conversationId: String
     private let audioManager: StaticAudioMessagePlayingManager
@@ -21,13 +24,6 @@ class StaticMessagesViewController: UIViewController {
     
     private var didPlayAudioMessage = false
     private var indexPathToFlashAfterAnimationFinished: IndexPath?
-    
-    private lazy var backgroundButton: UIButton = {
-        let button = UIButton()
-        button.backgroundColor = .black.withAlphaComponent(0)
-        button.addTarget(self, action: #selector(dismissAction(_:)), for: .touchUpInside)
-        return button
-    }()
     
     init(conversationId: String, audioManager: StaticAudioMessagePlayingManager) {
         self.conversationId = conversationId
@@ -50,10 +46,8 @@ class StaticMessagesViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        updatePreferredContentSizeHeight()
-        let safeAreaInsets = AppDelegate.current.mainWindow.safeAreaInsets
-        tableViewBottomConstraint.constant = safeAreaInsets.top
-        tableView.contentInset.bottom = safeAreaInsets.bottom
+        view.backgroundColor = .black.withAlphaComponent(0)
+        view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         audioManager.delegate = self
         
         tableView.backgroundColor = .clear
@@ -66,7 +60,6 @@ class StaticMessagesViewController: UIViewController {
             let recognizer = UILongPressGestureRecognizer(target: self, action: #selector(showCopyMenu(_:)))
             tableView.addGestureRecognizer(recognizer)
         }
-        
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapAction(_:)))
         tapRecognizer.delegate = self
         tableView.addGestureRecognizer(tapRecognizer)
@@ -86,13 +79,15 @@ class StaticMessagesViewController: UIViewController {
                            object: nil)
     }
     
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        guard traitCollection.preferredContentSizeCategory != previousTraitCollection?.preferredContentSizeCategory else {
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        guard let image = backgroundImageView.image else {
             return
         }
-        DispatchQueue.main.async {
-            self.updatePreferredContentSizeHeight()
+        let isBackgroundImageUndersized = backgroundImageView.frame.width > image.size.width
+            || backgroundImageView.frame.height > image.size.height
+        if isBackgroundImageUndersized {
+            backgroundImageView.contentMode = .scaleAspectFill
         }
     }
     
@@ -100,19 +95,13 @@ class StaticMessagesViewController: UIViewController {
         dismissAsChild(completion: nil)
     }
     
-}
-
-// MARK: - Override
-extension StaticMessagesViewController {
-    
-    @objc func attachmentURL(withFilename filename: String) -> URL? {
+    func attachmentURL(withFilename filename: String) -> URL? {
         return nil
     }
     
-}
-
-// MARK: - Public
-extension StaticMessagesViewController {
+    func viewDidPresentAsChild() {
+        
+    }
     
     func categorizedViewModels(with items: [MessageItem], fits layoutWidth: CGFloat) -> (dates: [String], viewModels: [String: [MessageViewModel]]) {
         for item in items where item.category == MessageCategory.SIGNAL_STICKER.rawValue {
@@ -154,40 +143,39 @@ extension StaticMessagesViewController {
     }
     
     func dismissAsChild(completion: (() -> Void)?) {
-        parent?.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
         if didPlayAudioMessage {
             audioManager.stop()
         }
-        UIView.animate(withDuration: 0.3, animations: {
-            self.view.frame.origin.y = self.backgroundButton.bounds.height
-            self.backgroundButton.backgroundColor = .black.withAlphaComponent(0)
+        showContentConstraint.priority = .defaultLow
+        hideContentConstraint.priority = .defaultHigh
+        UIView.animate(withDuration: 0.5, animations: {
+            UIView.setAnimationCurve(.overdamped)
+            self.view.layoutIfNeeded()
+            self.view.backgroundColor = .black.withAlphaComponent(0)
         }) { _ in
             self.willMove(toParent: nil)
             self.view.removeFromSuperview()
             self.removeFromParent()
-            self.backgroundButton.removeFromSuperview()
             completion?()
         }
     }
     
     func presentAsChild(of parent: UIViewController) {
-        parent.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         loadViewIfNeeded()
-        backgroundButton.frame = parent.view.bounds
-        backgroundButton.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        view.frame = parent.view.bounds
+        view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        contentViewHeightConstraint.constant = parent.view.bounds.height - parent.view.safeAreaInsets.top
         parent.addChild(self)
-        parent.view.addSubview(backgroundButton)
+        parent.view.addSubview(view)
         didMove(toParent: parent)
-        view.frame = CGRect(x: 0,
-                            y: backgroundButton.bounds.height,
-                            width: backgroundButton.bounds.width,
-                            height: backgroundButton.bounds.height)
-        view.autoresizingMask = .flexibleTopMargin
-        backgroundButton.addSubview(view)
-        UIView.animate(withDuration: 0.3) {
-            self.view.frame.origin.y = self.backgroundButton.bounds.height - self.preferredContentSize.height
-            self.backgroundButton.backgroundColor = .black.withAlphaComponent(0.3)
-            self.presentCompletion?()
+        UIView.performWithoutAnimation(view.layoutIfNeeded)
+        showContentConstraint.priority = .defaultHigh
+        hideContentConstraint.priority = .defaultLow
+        UIView.animate(withDuration: 0.5) {
+            UIView.setAnimationCurve(.overdamped)
+            self.view.layoutIfNeeded()
+            self.view.backgroundColor = .black.withAlphaComponent(0.3)
+            self.viewDidPresentAsChild()
         }
     }
     
@@ -788,17 +776,6 @@ extension StaticMessagesViewController {
             }
         }
         return UITargetedPreview(view: cell.messageContentView, parameters: param)
-    }
-    
-    private func updatePreferredContentSizeHeight() {
-        guard !isBeingDismissed else {
-            return
-        }
-        view.layoutIfNeeded()
-        let window = AppDelegate.current.mainWindow
-        let height = window.bounds.height - window.safeAreaInsets.top
-        preferredContentSize.height = height
-        view.frame.origin.y = backgroundButton.bounds.height - height
     }
     
 }

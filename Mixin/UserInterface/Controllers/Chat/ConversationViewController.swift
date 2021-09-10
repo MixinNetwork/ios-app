@@ -1061,6 +1061,7 @@ class ConversationViewController: UIViewController {
             DispatchQueue.main.sync {
                 self?.userHandleViewController.users = users
             }
+            self?.updateMessagePinningAvailability()
         }
     }
     
@@ -2493,13 +2494,11 @@ extension ConversationViewController {
                 visiblePinMessage = nil
             }
             let pinnedMessageIds = Set(PinMessageDAO.shared.messageItems(conversationId: conversationId).map(\.messageId))
-            let canPinMessages = !isGroup || ParticipantDAO.shared.isAdmin(conversationId: conversationId, userId: myUserId)
             DispatchQueue.main.async {
                 guard let self = self else {
                     return
                 }
                 self.pinnedMessageIds = pinnedMessageIds
-                self.canPinMessages = canPinMessages
                 UIView.performWithoutAnimation {
                     self.userHandleViewController.users = users
                     if isGroup {
@@ -2522,6 +2521,7 @@ extension ConversationViewController {
                     }
                 }
             }
+            self?.updateMessagePinningAvailability()
         }
     }
     
@@ -2856,6 +2856,14 @@ extension ConversationViewController {
         } else if MessageDAO.shared.hasMessage(id: messageId) {
             messageIdToFlashAfterAnimationFinished = messageId
             reloadWithMessageId(messageId, scrollUpwards: true)
+        }
+    }
+    
+    private func updateMessagePinningAvailability() {
+        let isAvailable = dataSource.category != .group
+            || ParticipantDAO.shared.isAdmin(conversationId: conversationId, userId: myUserId)
+        DispatchQueue.main.sync {
+            self.canPinMessages = isAvailable
         }
     }
     

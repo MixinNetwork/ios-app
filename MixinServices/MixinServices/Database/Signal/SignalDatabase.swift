@@ -80,7 +80,7 @@ public final class SignalDatabase: Database {
         do {
             try pool.erase()
         } catch {
-            Logger.writeDatabase(error: error)
+            Logger.database.error(category: "SignalDatabase", message: "Failed to erase the pool: \(error)")
             reporter.report(error: error)
         }
     }

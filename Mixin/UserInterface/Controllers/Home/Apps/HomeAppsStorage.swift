@@ -96,7 +96,7 @@ extension HomeAppsStorage {
                 switch item {
                 case .app(let app):
                     if !existedIds.insert(app.id).inserted {
-                        Logger.write(log: "[HomeAppsStorage] duplicate app...appId:\(app.id)")
+                        Logger.general.error(category: "HomeAppsStorage", message: "A duplicated app is detected: \(app.id)")
                         return nil
                     }
                     return item
@@ -104,7 +104,7 @@ extension HomeAppsStorage {
                     let pages = folder.pages.compactMap { page -> [HomeApp]? in
                         let pageApps = page.compactMap { app -> HomeApp? in
                             if !existedIds.insert(app.id).inserted {
-                                Logger.write(log: "[HomeAppsStorage] duplicate app in folder...appId:\(app.id)")
+                                Logger.general.error(category: "HomeAppsStorage", message: "A duplicated app in folder is detected: \(app.id)")
                                 return nil
                             }
                             return app

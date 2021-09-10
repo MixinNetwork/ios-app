@@ -53,7 +53,7 @@ public extension UIImage {
     
     public func imageByScaling(to size: CGSize) -> UIImage? {
         // Do not use UIGraphicsImageRenderer / UIGraphicsBeginImageContextWithOptions here
-        // They crashes the app on iPhone XS Max with iOS 14.1, when perfoming on a background thread
+        // They crash the app on iPhone XS Max with iOS 14.1, when perfoming on a background thread
         let cgImage: CGImage
         if let image = self.cgImage {
             cgImage = image
@@ -75,13 +75,14 @@ public extension UIImage {
             orientationResolvedSize = size
         }
         
-        guard let context = CGContext(data: nil,
-                                      width: Int(orientationResolvedSize.width),
-                                      height: Int(orientationResolvedSize.height),
-                                      bitsPerComponent: cgImage.bitsPerComponent,
-                                      bytesPerRow: 0, // Only a few combinations are not supported by iOS, use auto-calculated bpr
-                                      space: cgImage.colorSpace ?? CGColorSpace(name: CGColorSpace.sRGB)!,
-                                      bitmapInfo: cgImage.bitmapInfo.rawValue) else {
+        let maybeContext = CGContext(data: nil,
+                                     width: Int(orientationResolvedSize.width),
+                                     height: Int(orientationResolvedSize.height),
+                                     bitsPerComponent: cgImage.bitsPerComponent,
+                                     bytesPerRow: 0, // Only a few combinations are not supported by iOS, use auto-calculated bpr
+                                     space: cgImage.colorSpace ?? CGColorSpace(name: CGColorSpace.sRGB)!,
+                                     bitmapInfo: cgImage.bitmapInfo.rawValue)
+        guard let context = maybeContext else {
             let infos: [String : Any] = [
                 "width": Int(orientationResolvedSize.width),
                 "height": Int(orientationResolvedSize.height),
@@ -91,8 +92,8 @@ public extension UIImage {
                 "bitmapInfo": cgImage.bitmapInfo.rawValue
             ]
             let error = MixinServicesError.invalidScalingContextParameter(infos)
+            Logger.general.error(category: "ImageScaling", message: "Failed to create CGContext", userInfo: infos)
             reporter.report(error: error)
-            Logger.write(error: error, userInfo: infos)
             return nil
         }
         context.interpolationQuality = .high

@@ -42,7 +42,7 @@ public class MixinService {
         let startTime = Date()
         defer {
             if -startTime.timeIntervalSinceNow > 2 {
-                Logger.write(conversationId: conversationId, log: "[CheckSessionSenderKey][CheckSessionSenderKey]...check session too slow...\(-startTime.timeIntervalSinceNow)s")
+                Logger.conversation(id: conversationId).info(category: "CheckSessionSenderKey", message: "Check session costs \(-startTime.timeIntervalSinceNow)s")
             }
         }
 
@@ -65,6 +65,7 @@ public class MixinService {
 
         if !requestSignalKeyUsers.isEmpty {
             let signalKeys = signalKeysChannel(requestSignalKeyUsers: requestSignalKeyUsers)
+            Logger.conversation(id: conversationId).info(category: "CheckSessionSenderKey", message: "Created Signal Keys: \(signalKeys.map { "{\($0.userId ?? "(null)")}" }.joined(separator: ","))")
             var keys = [String]()
             for signalKey in signalKeys {
                 guard let recipientId = signalKey.userId else {
@@ -87,7 +88,6 @@ public class MixinService {
                 }
                 UserDatabase.current.save(sentSenderKeys)
             }
-            Logger.write(conversationId: conversationId, log: "[CheckSessionSenderKey][SignalKeys]...\(signalKeys.map { "{\($0.userId ?? "")}" }.joined(separator: ","))...")
         }
         
         guard signalKeyMessages.count > 0 else {
@@ -109,8 +109,11 @@ public class MixinService {
         } else if retry {
             return try checkSessionSenderKey(conversationId: conversationId)
         }
-
-        Logger.write(conversationId: conversationId, log: "[CheckSessionSenderKey][CreateSignalKeyMessage]...deliver:\(success)...retry:\(retry)...\(signalKeyMessages.map { "{\($0.messageId):\($0.recipientId ?? ""):\($0.sessionId ?? "")}" }.joined(separator: ","))...")
+        
+        let messages = signalKeyMessages.map { tm in
+            "\(tm.messageId):\(tm.recipientId ?? ""):\(tm.sessionId ?? "")"
+        }
+        Logger.conversation(id: conversationId).info(category: "CheckSessionSenderKey", message: "Signal Key Message delivered: \(success), retry: \(retry), messages: \(messages.joined(separator: ", "))")
     }
 
     internal func syncConversation(conversationId: String) {
@@ -133,7 +136,7 @@ public class MixinService {
         if !SignalProtocol.shared.containsSession(recipient: recipientId, deviceId: deviceId) {
             let signalKeys = signalKeysChannel(requestSignalKeyUsers: [BlazeMessageParamSession(userId: recipientId, sessionId: sessionId)])
             guard signalKeys.count > 0 else {
-                Logger.write(log: "[MixinService][CheckSignalSession]...recipientId:\(recipientId)...sessionId:\(sessionId ?? "")...signal keys count is zero ")
+                Logger.general.error(category: "CheckSignalSession", message: "Got empty signal keys for recipient: \(recipientId), session: \(sessionId)")
                 return false
             }
             try SignalProtocol.shared.processSession(userId: recipientId, key: signalKeys[0])
@@ -147,7 +150,7 @@ public class MixinService {
         if signalKeys.count > 0 {
             try SignalProtocol.shared.processSession(userId: recipientId, key: signalKeys[0])
         } else {
-            Logger.write(conversationId: conversationId, log: "[SendSenderKey]...recipientId:\(recipientId)...No any signal key from server")
+            Logger.conversation(id: conversationId).info(category: "SendSenderKey", message: "Received no signal key from receipient: \(recipientId)")
             let session = ParticipantSession(conversationId: conversationId,
                                              userId: recipientId,
                                              sessionId: sessionId,
@@ -176,7 +179,12 @@ public class MixinService {
         } else if retry {
             return try sendSenderKey(conversationId: conversationId, recipientId: recipientId, sessionId: sessionId)
         }
-        Logger.write(conversationId: conversationId, log: "[DeliverSenderKey]...messageId:\(blazeMessage.params?.messageId ?? "")...sessionId:\(sessionId)...recipientId:\(recipientId)...\(success)")
+        let infos: Logger.UserInfo = [
+            "message_id": blazeMessage.params?.messageId ?? "",
+            "session_id": sessionId,
+            "recipient_id": recipientId
+        ]
+        Logger.conversation(id: conversationId).info(category: "DeliverSenderKey", message: "Sender key is delivered: \(success)", userInfo: infos)
         return success
     }
 
@@ -189,7 +197,7 @@ public class MixinService {
     }
 
     func refreshParticipantSession(conversationId: String, userId: String, retry: Bool) -> Bool {
-        Logger.write(conversationId: conversationId, log: "[RefreshSession]...userId:\(userId)...retry:\(retry)")
+        Logger.conversation(id: conversationId).info(category: "RefreshSession", message: "Start refreshing session for: \(userId), retry: \(retry)")
         repeat {
             guard LoginManager.shared.isLoggedIn else {
                 return false

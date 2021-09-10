@@ -38,7 +38,7 @@ class HomeNavigationController: UINavigationController {
         if AppGroupUserDefaults.Crypto.isPrekeyLoaded && AppGroupUserDefaults.Crypto.isSessionSynchronized && !AppGroupUserDefaults.Account.isClockSkewed && LoginManager.shared.isLoggedIn {
             reporter.registerUserInformation()
             checkDevice()
-            Logger.write(log: "HomeNavigationController...viewDidLoad...applicationState:\(UIApplication.shared.applicationStateString)")
+            Logger.general.info(category: "HomeNavigationController", message: "View did load with app state: \(UIApplication.shared.applicationStateString)")
             if UIApplication.shared.applicationState == .active {
                 WebSocketService.shared.connect(firstConnect: true)
                 ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob())

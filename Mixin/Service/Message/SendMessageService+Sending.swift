@@ -81,7 +81,7 @@ extension SendMessageService {
             
             if message.category.hasPrefix("WEBRTC_") {
                 guard let recipient = ownerUser else {
-                    Logger.write(log: "[Call] recipient user id is empty!")
+                    Logger.call.error(category: "SendMessageService", message: "Empty recipient id")
                     return
                 }
                 SendMessageService.shared.sendWebRTCMessage(message: message, recipientId: recipient.userId)

@@ -44,13 +44,9 @@ open class Reporter {
         }
         
         AppCenter.start(withAppSecret: key, services: [Analytics.self, Crashes.self])
-
-        if !isAppExtension {
-            guard Crashes.hasCrashedInLastSession, let crashReport = Crashes.lastSessionCrashReport else {
-                return
-            }
-            
-            Logger.write(errorMsg: "[\(crashReport.signal ?? "")][\(crashReport.exceptionName ?? "")][\(crashReport.exceptionReason ?? "")]")
+        
+        if !isAppExtension, Crashes.hasCrashedInLastSession, let report = Crashes.lastSessionCrashReport {
+            Logger.general.info(category: "LastCrash", message: "Signal: \(report.signal), exception: \(report.exceptionName ?? "(null)"), reason: \(report.exceptionReason ?? "(null)")")
         }
     }
 

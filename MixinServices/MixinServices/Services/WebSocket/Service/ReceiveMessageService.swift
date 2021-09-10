@@ -85,7 +85,7 @@ public class ReceiveMessageService: MixinService {
             repeat {
                 if -startDate.timeIntervalSinceNow >= 15 || AppGroupUserDefaults.isRunningInMainApp || extensionTimeWillExpire() {
                     if let conversationId = conversationId {
-                        Logger.write(conversationId: conversationId, log: "[AppExtension][\(messageId)]...process message spend time:\(-startDate.timeIntervalSinceNow)s...")
+                        Logger.conversation(id: conversationId).info(category: "AppExtension", message: "Abort message processing for: \(messageId). Elapsed time: \(-startDate.timeIntervalSinceNow)s")
                     }
                     callback(nil)
                     return
@@ -147,7 +147,7 @@ public class ReceiveMessageService: MixinService {
                 repeat {
                     let oldDate = AppGroupUserDefaults.checkStatusTimeInAppExtension
 
-                    Logger.write(log: "[ReceiveMessageService] waiting for app extension to process messages...checkStatusTimeInAppExtension:\(oldDate)...isStopProcessMessages:\(MixinService.isStopProcessMessages)")
+                    Logger.general.error(category: "ReceiveMessageService", message: "Waiting for app extension to process messages, checkStatusTimeInAppExtension: \(oldDate), isStopProcessMessages: \(MixinService.isStopProcessMessages)")
 
                     DarwinNotificationManager.shared.checkAppExtensionStatus()
                     Thread.sleep(forTimeInterval: 2)
@@ -371,13 +371,32 @@ public class ReceiveMessageService: MixinService {
                 }
             })
             let status = RatchetSenderKeyDAO.shared.getRatchetSenderKeyStatus(groupId: data.conversationId, senderId: data.userId, sessionId: data.sessionId)
-            Logger.write(conversationId: data.conversationId, log: "[ProcessSignalMessage][\(username)][\(data.category)]...decrypt success...messageId:\(data.messageId)...\(data.createdAt)...status:\(status ?? "")...source:\(data.source)...resendMessageId:\(decoded.resendMessageId ?? "")...deviceId:\(SignalProtocol.convertSessionIdToDeviceId(data.sessionId))")
+            let info: Logger.UserInfo = [
+                "username": username,
+                "category": data.category,
+                "createdAt": data.createdAt,
+                "status": status ?? "(null)",
+                "source": data.source,
+                "resendMessageId": decoded.resendMessageId ?? "(null)",
+                "deviceId": SignalProtocol.convertSessionIdToDeviceId(data.sessionId),
+            ]
+            Logger.conversation(id: data.conversationId).info(category: "ProcessSignalMessage", message: "Decrypted message: \(data.messageId)", userInfo: info)
             if status == RatchetStatus.REQUESTING.rawValue {
                 RatchetSenderKeyDAO.shared.deleteRatchetSenderKey(groupId: data.conversationId, senderId: data.userId, sessionId: data.sessionId)
                 self.requestResendMessage(conversationId: data.conversationId, userId: data.userId, sessionId: data.sessionId)
             }
         } catch {
-            Logger.write(conversationId: data.conversationId, log: "[ProcessSignalMessage][\(username)][\(data.category)][\(CiphertextMessage.MessageType.toString(rawValue: decoded.keyType))]...decrypt failed...\(error)...messageId:\(data.messageId)...sessionId:\(data.sessionId)...\(data.createdAt)...source:\(data.source)...resendMessageId:\(decoded.resendMessageId ?? "")")
+            let info: Logger.UserInfo = [
+                "username": username,
+                "category": data.category,
+                "messageType": CiphertextMessage.MessageType.toString(rawValue: decoded.keyType),
+                "sessionId": data.sessionId,
+                "createdAt": data.createdAt,
+                "source": data.source,
+                "resendMessageId": decoded.resendMessageId ?? "(null)",
+                "error": error,
+            ]
+            Logger.conversation(id: data.conversationId).info(category: "ProcessSignalMessage", message: "Failed to decrypt message: \(data.messageId)", userInfo: info)
             if let err = error as? SignalError, err != SignalError.noSession {
                 var userInfo = [String: Any]()
                 userInfo["conversationId"] = data.conversationId
@@ -427,7 +446,7 @@ public class ReceiveMessageService: MixinService {
             return
         }
         refreshRefreshOneTimePreKeys[conversationId] = now
-        Logger.write(conversationId: conversationId, log: "[ProcessSignalMessage]...refreshKeys...")
+        Logger.conversation(id: conversationId).info(category: "ProcessSignalMessage", message: "Refreshed keys")
         refreshKeys()
     }
 
@@ -462,12 +481,12 @@ public class ReceiveMessageService: MixinService {
                 return
             }
             guard let transferMediaData = (try? JSONDecoder.default.decode(TransferAttachmentData.self, from: base64Data)) else {
-                Logger.write(conversationId: data.conversationId, log: "[BadData][ProcessDecryptSuccess][\(data.category)]\(String(data: base64Data, encoding: .utf8))")
+                Logger.conversation(id: data.conversationId).error(category: "DecryptSuccess", message: "Invalid data for category: \(data.category), data: \(String(data: base64Data, encoding: .utf8))")
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }
             guard let height = transferMediaData.height, let width = transferMediaData.width, height > 0, width > 0 else {
-                Logger.write(conversationId: data.conversationId, log: "[BadData][ProcessDecryptSuccess][\(data.category)]\(String(data: base64Data, encoding: .utf8))")
+                Logger.conversation(id: data.conversationId).error(category: "DecryptSuccess", message: "Invalid TransferAttachmentData for category: \(data.category), data: \(String(data: base64Data, encoding: .utf8))")
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }
@@ -492,7 +511,7 @@ public class ReceiveMessageService: MixinService {
                 return
             }
             guard let live = (try? JSONDecoder.default.decode(TransferLiveData.self, from: base64Data)) else {
-                Logger.write(conversationId: data.conversationId, log: "[BadData][ProcessDecryptSuccess][\(data.category)]\(String(data: base64Data, encoding: .utf8))")
+                Logger.conversation(id: data.conversationId).error(category: "DecryptSuccess", message: "Invalid TransferLiveData for category: \(data.category), data: \(String(data: base64Data, encoding: .utf8))")
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }
@@ -504,7 +523,7 @@ public class ReceiveMessageService: MixinService {
                 return
             }
             guard let transferMediaData = (try? JSONDecoder.default.decode(TransferAttachmentData.self, from: base64Data)) else {
-                Logger.write(conversationId: data.conversationId, log: "[BadData][ProcessDecryptSuccess][\(data.category)]\(String(data: base64Data, encoding: .utf8))")
+                Logger.conversation(id: data.conversationId).error(category: "DecryptSuccess", message: "Invalid TransferAttachmentData for category: \(data.category), data: \(String(data: base64Data, encoding: .utf8))")
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }
@@ -520,7 +539,7 @@ public class ReceiveMessageService: MixinService {
                 return
             }
             guard let transferMediaData = (try? JSONDecoder.default.decode(TransferAttachmentData.self, from: base64Data)) else {
-                Logger.write(conversationId: data.conversationId, log: "[BadData][ProcessDecryptSuccess][\(data.category)]\(String(data: base64Data, encoding: .utf8))")
+                Logger.conversation(id: data.conversationId).error(category: "DecryptSuccess", message: "Invalid TransferAttachmentData for category: \(data.category), data: \(String(data: base64Data, encoding: .utf8))")
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }
@@ -540,12 +559,12 @@ public class ReceiveMessageService: MixinService {
                 return
             }
             guard let transferData = (try? JSONDecoder.default.decode(TransferContactData.self, from: base64Data)) else {
-                Logger.write(conversationId: data.conversationId, log: "[BadData][ProcessDecryptSuccess][\(data.category)]\(String(data: base64Data, encoding: .utf8))")
+                Logger.conversation(id: data.conversationId).error(category: "DecryptSuccess", message: "Invalid TransferContactData for category: \(data.category), data: \(String(data: base64Data, encoding: .utf8))")
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }
             guard !transferData.userId.isEmpty, UUID(uuidString: transferData.userId) != nil else {
-                Logger.write(conversationId: data.conversationId, log: "[BadData][ProcessDecryptSuccess][\(data.category)]\(String(data: base64Data, encoding: .utf8))")
+                Logger.conversation(id: data.conversationId).error(category: "DecryptSuccess", message: "Invalid TransferContactData for category: \(data.category), data: \(String(data: base64Data, encoding: .utf8))")
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }
@@ -746,14 +765,14 @@ public class ReceiveMessageService: MixinService {
             return nil
         }
         guard let transferStickerData = (try? JSONDecoder.default.decode(TransferStickerData.self, from: base64Data)) else {
-            Logger.write(conversationId: data.conversationId, log: "[BadData][ParseSticker]\(String(data: base64Data, encoding: .utf8))")
+            Logger.conversation(id: data.conversationId).error(category: "ParseSticker", message: "Invalid TransferStickerData: \(String(data: base64Data, encoding: .utf8))")
             ReceiveMessageService.shared.processUnknownMessage(data: data)
             return nil
         }
 
         if let stickerId = transferStickerData.stickerId {
             guard !stickerId.isEmpty, UUID(uuidString: stickerId) != nil else {
-                Logger.write(conversationId: data.conversationId, log: "[BadData][ParseSticker]\(String(data: base64Data, encoding: .utf8))")
+                Logger.conversation(id: data.conversationId).error(category: "ParseSticker", message: "Invalid TransferStickerData: \(String(data: base64Data, encoding: .utf8))")
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return nil
             }
@@ -944,7 +963,14 @@ public class ReceiveMessageService: MixinService {
             }
 
             if let user = UserDAO.shared.getUser(userId: data.userId) {
-                Logger.write(conversationId: data.conversationId, log: "[ProcessPlainMessage][\(user.fullName)][\(data.category)][\(plainData.action)]...messageId:\(data.messageId)...\(data.createdAt)")
+                let info: Logger.UserInfo = [
+                    "user": user.fullName,
+                    "category": data.category,
+                    "action": plainData.action,
+                    "messageId": data.messageId,
+                    "createdAt": data.createdAt,
+                ]
+                Logger.conversation(id: data.conversationId).info(category: "ReceiveMessageService", message: "Received plain message", userInfo: info)
             }
             switch plainData.action {
             case PlainDataAction.RESEND_KEY.rawValue:
@@ -993,7 +1019,7 @@ public class ReceiveMessageService: MixinService {
             return
         }
 
-        Logger.write(conversationId: conversationId, log: "[ReceiveMessageService][REQUEST_REQUEST_MESSAGES]...messages:[\(messages.joined(separator: ","))]")
+        Logger.conversation(id: conversationId).info(category: "ReceiveMessageService", message: "Request resend messages: [\(messages.joined(separator: ","))]")
         let transferPlainData = PlainJsonMessagePayload(action: PlainDataAction.RESEND_MESSAGES.rawValue, messageId: nil, messages: messages, ackMessages: nil)
         let encoded = (try? JSONEncoder.default.encode(transferPlainData).base64EncodedString()) ?? ""
         let messageId = UUID().uuidString.lowercased()
@@ -1121,7 +1147,7 @@ extension ReceiveMessageService {
             AppGroupUserDefaults.Account.extensionSession = systemSession.sessionId
             SignalProtocol.shared.deleteSession(userId: systemSession.userId)
 
-            Logger.write(log: "[ReceiveMessageService][ProcessSystemSessionMessage]...log out desktop...", newSection: true)
+            Logger.general.info(category: "ProcessSystemSessionMessage", message: "Desktop logged out")
 
             ParticipantSessionDAO.shared.provisionSession(userId: systemSession.userId, sessionId: systemSession.sessionId)
             NotificationCenter.default.post(onMainThread: Self.userSessionDidChangeNotification, object: self)
@@ -1132,7 +1158,7 @@ extension ReceiveMessageService {
             AppGroupUserDefaults.Account.extensionSession = nil
             SignalProtocol.shared.deleteSession(userId: systemSession.userId)
 
-            Logger.write(log: "[ReceiveMessageService][ProcessSystemSessionMessage]...log in desktop...", newSection: true)
+            Logger.general.info(category: "ProcessSystemSessionMessage", message: "Desktop logged in")
 
             JobDAO.shared.clearSessionJob()
             ParticipantSessionDAO.shared.destorySession(userId: systemSession.userId, sessionId: systemSession.sessionId)
@@ -1155,7 +1181,7 @@ extension ReceiveMessageService {
 
         if let participantId = sysMessage.participantId {
             let usernameOrId = UserDAO.shared.getUser(userId: participantId)?.fullName ?? participantId
-            Logger.write(conversationId: data.conversationId, log: "[ProcessSystemMessage][\(usernameOrId)][\(sysMessage.action)]...messageId:\(data.messageId)...\(data.createdAt)")
+            Logger.conversation(id: data.conversationId).info(category: "ProcessSystemMessage", message: "Received \(sysMessage.action) from \(usernameOrId), messageId: \(data.messageId), createdAt: \(data.createdAt)")
         }
 
         if userId == User.systemUser {

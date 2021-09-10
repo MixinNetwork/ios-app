@@ -159,7 +159,7 @@ class RestoreJob: BaseJob {
                 do {
                     try FileManager.default.startDownloadingUbiquitousItem(at: file.cloudURL)
                 } catch {
-                    Logger.write(error: error, extra: "\(file.cloudURL.path)")
+                    Logger.general.error(category: "RestoreJob", message: "Failed to download ubiquitous item at: \(file.cloudURL.path), error: \(error)")
                     monitors.removeValue(forKey: fileName)
                     reporter.report(error: error)
                 }

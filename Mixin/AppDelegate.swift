@@ -36,7 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         configAnalytics()
         pendingShortcutItem = launchOptions?[UIApplication.LaunchOptionsKey.shortcutItem] as? UIApplicationShortcutItem
         addObservers()
-        Logger.write(log: "\n-----------------------\n[AppDelegate]...didFinishLaunching...\(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion))...\(UIApplication.shared.applicationStateString)")
+        Logger.general.info(category: "AppDelegate", message: "App \(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion)) did finish launching with state: \(UIApplication.shared.applicationStateString)")
         if UIApplication.shared.applicationState == .background {
             MixinService.isStopProcessMessages = false
             WebSocketService.shared.connectIfNeeded()
@@ -166,7 +166,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         let isActive = UIApplication.shared.applicationState == .active
-        Logger.write(log: "[AppDelegate] received remote notification...isActive:\(isActive)")
+        Logger.general.info(category: "AppDelegate", message: "Received remote notification, app is active: \(isActive)")
 
         guard LoginManager.shared.isLoggedIn, !AppGroupUserDefaults.User.needsUpgradeInMainApp else {
             completionHandler(.noData)
@@ -288,7 +288,11 @@ extension AppDelegate {
         reporter.registerUserInformation()
         MixinServices.printSignalLog = { (message: UnsafePointer<Int8>!) -> Void in
             let log = String(cString: message)
-            Logger.write(log: log)
+            if log.hasPrefix("No sender key for:"), let conversationId = log.suffix(char: ":")?.substring(endChar: ":").trim() {
+                Logger.conversation(id: conversationId).info(category: "Signal", message: log)
+            } else {
+                Logger.general.info(category: "Signal", message: log)
+            }
         }
     }
     

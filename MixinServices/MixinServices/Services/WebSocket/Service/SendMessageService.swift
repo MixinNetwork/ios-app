@@ -52,14 +52,21 @@ public class SendMessageService: MixinService {
                 } else {
                     content = ""
                 }
-                let message = Message.createMessage(messageId: messageId, conversationId: item.conversationId, userId: myUserId, category: MessageCategory.MESSAGE_PIN.rawValue, content: content, status: MessageStatus.DELIVERED.rawValue, action: action.rawValue, createdAt: Date().toUTCString())
-                PinMessageDAO.shared.saveMessage(item: item,
-                                                 source: MessageCategory.MESSAGE_PIN.rawValue,
-                                                 silentNotification: true,
-                                                 message: message,
-                                                 mention: mention)
+                let message = Message.createMessage(messageId: messageId,
+                                                    conversationId: item.conversationId,
+                                                    userId: myUserId,
+                                                    category: MessageCategory.MESSAGE_PIN.rawValue,
+                                                    content: content,
+                                                    status: MessageStatus.DELIVERED.rawValue,
+                                                    action: action.rawValue,
+                                                    createdAt: Date().toUTCString())
+                PinMessageDAO.shared.save(item: item,
+                                          source: MessageCategory.MESSAGE_PIN.rawValue,
+                                          silentNotification: true,
+                                          message: message,
+                                          mention: mention)
             case .unpin:
-                PinMessageDAO.shared.deleteMessages(messageIds: pinMessageIds, conversationId: conversationId)
+                PinMessageDAO.shared.delete(messageIds: pinMessageIds, conversationId: conversationId)
             }
         }
     }

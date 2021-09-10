@@ -1886,7 +1886,7 @@ extension ConversationViewController {
         if ConversationViewController.allowReportSingleMessage {
             actions.append(.report)
         }
-        if status != MessageStatus.SENDING.rawValue, let replyIndex = actions.firstIndex(where: { $0 == .reply }), canPinMessages {
+        if canPinMessages, status != MessageStatus.SENDING.rawValue, let replyIndex = actions.firstIndex(where: { $0 == .reply }) {
             let action: MessageAction = pinnedMessageIds.contains(message.messageId) ? .unpin : .pin
             actions.insert(action, at: replyIndex + 1)
         }
@@ -2737,7 +2737,7 @@ extension ConversationViewController {
                 let (deleted, childMessageIds) = MessageDAO.shared.deleteMessage(id: message.messageId)
                 if deleted {
                     ReceiveMessageService.shared.stopRecallMessage(item: message, childMessageIds: childMessageIds)
-                    PinMessageDAO.shared.deleteMessages(messageIds: [message.messageId], conversationId: message.conversationId)
+                    PinMessageDAO.shared.delete(messageIds: [message.messageId], conversationId: message.conversationId)
                 }
                 DispatchQueue.main.sync {
                     _ = weakSelf.dataSource?.removeViewModel(at: indexPath)

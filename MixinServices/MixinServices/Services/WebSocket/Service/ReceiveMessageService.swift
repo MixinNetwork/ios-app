@@ -360,13 +360,13 @@ public class ReceiveMessageService: MixinService {
                                          hasRead: true)
             }
             let message = Message.createMessage(messageId: data.messageId, conversationId: data.conversationId, userId: data.userId, category: data.category, content: content, status: MessageStatus.DELIVERED.rawValue, action: plainData.action, createdAt: data.createdAt)
-            PinMessageDAO.shared.saveMessage(item: fullMessage,
-                                             source: data.source,
-                                             silentNotification: data.silentNotification,
-                                             message: message,
-                                             mention: mention)
+            PinMessageDAO.shared.save(item: fullMessage,
+                                      source: data.source,
+                                      silentNotification: data.silentNotification,
+                                      message: message,
+                                      mention: mention)
         case .unpin:
-            PinMessageDAO.shared.deleteMessages(messageIds: plainData.messageIds, conversationId: data.conversationId)
+            PinMessageDAO.shared.delete(messageIds: plainData.messageIds, conversationId: data.conversationId)
         }
         updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
     }

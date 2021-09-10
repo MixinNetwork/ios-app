@@ -66,7 +66,7 @@ public final class PinMessageDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [conversationId])
     }
     
-    public func deleteMessages(messageIds: [String], conversationId: String, from database: GRDB.Database) throws {
+    public func delete(messageIds: [String], conversationId: String, from database: GRDB.Database) throws {
         let condition = PinMessage.column(of: .conversationId) == conversationId && messageIds.contains(PinMessage.column(of: .messageId))
         let deletedCount = try PinMessage
             .filter(condition)
@@ -94,13 +94,13 @@ public final class PinMessageDAO: UserDatabaseDAO {
         }
     }
     
-    public func deleteMessages(messageIds: [String], conversationId: String) {
+    public func delete(messageIds: [String], conversationId: String) {
         db.write { (db) in
-            try deleteMessages(messageIds: messageIds, conversationId: conversationId, from: db)
+            try delete(messageIds: messageIds, conversationId: conversationId, from: db)
         }
     }
     
-    public func saveMessage(
+    public func save(
         item: MessageItem,
         source: String,
         silentNotification: Bool,

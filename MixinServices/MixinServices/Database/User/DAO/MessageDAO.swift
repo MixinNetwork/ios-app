@@ -135,7 +135,7 @@ public final class MessageDAO: UserDatabaseDAO {
                 .select(Message.column(of: .messageId))
                 .fetchAll(db)
             try request.deleteAll(db)
-            try PinMessageDAO.shared.deleteMessages(messageIds: messageIds, conversationId: conversationId, from: db)
+            try PinMessageDAO.shared.delete(messageIds: messageIds, conversationId: conversationId, from: db)
         }
     }
     
@@ -658,7 +658,7 @@ public final class MessageDAO: UserDatabaseDAO {
         try MessageMention
             .filter(MessageMention.column(of: .messageId) == messageId)
             .deleteAll(database)
-        try PinMessageDAO.shared.deleteMessages(messageIds: [messageId], conversationId: conversationId, from: database)
+        try PinMessageDAO.shared.delete(messageIds: [messageId], conversationId: conversationId, from: database)
         
         if category.hasSuffix("_TRANSCRIPT") {
             try TranscriptMessage

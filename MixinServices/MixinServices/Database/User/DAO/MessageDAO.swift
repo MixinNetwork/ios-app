@@ -129,7 +129,14 @@ public final class MessageDAO: UserDatabaseDAO {
     public func deleteMediaMessages(conversationId: String, categories: [MessageCategory]) {
         let condition: SQLSpecificExpressible = Message.column(of: .conversationId) == conversationId
             && categories.map(\.rawValue).contains(Message.column(of: .category))
-        db.delete(Message.self, where: condition)
+        db.write { db in
+            let request = Message.filter(condition)
+            let messageIds: [String] = try request
+                .select(Message.column(of: .messageId))
+                .fetchAll(db)
+            try request.deleteAll(db)
+            try PinMessageDAO.shared.deleteMessages(messageIds: messageIds, conversationId: conversationId, from: db)
+        }
     }
     
     public func findFailedMessages(conversationId: String, userId: String) -> [String] {
@@ -651,7 +658,7 @@ public final class MessageDAO: UserDatabaseDAO {
         try MessageMention
             .filter(MessageMention.column(of: .messageId) == messageId)
             .deleteAll(database)
-        try PinMessageDAO.shared.unpinMessages(messageIds: [messageId], conversationId: conversationId, from: database)
+        try PinMessageDAO.shared.deleteMessages(messageIds: [messageId], conversationId: conversationId, from: database)
         
         if category.hasSuffix("_TRANSCRIPT") {
             try TranscriptMessage

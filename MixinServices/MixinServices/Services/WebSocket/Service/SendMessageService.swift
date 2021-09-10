@@ -53,13 +53,13 @@ public class SendMessageService: MixinService {
                     content = ""
                 }
                 let message = Message.createMessage(messageId: messageId, conversationId: item.conversationId, userId: myUserId, category: MessageCategory.MESSAGE_PIN.rawValue, content: content, status: MessageStatus.DELIVERED.rawValue, action: action.rawValue, createdAt: Date().toUTCString())
-                PinMessageDAO.shared.pinMessage(item: item,
-                                                source: MessageCategory.MESSAGE_PIN.rawValue,
-                                                silentNotification: true,
-                                                message: message,
-                                                mention: mention)
+                PinMessageDAO.shared.saveMessage(item: item,
+                                                 source: MessageCategory.MESSAGE_PIN.rawValue,
+                                                 silentNotification: true,
+                                                 message: message,
+                                                 mention: mention)
             case .unpin:
-                PinMessageDAO.shared.unpinMessages(messageIds: pinMessageIds, conversationId: conversationId)
+                PinMessageDAO.shared.deleteMessages(messageIds: pinMessageIds, conversationId: conversationId)
             }
         }
     }

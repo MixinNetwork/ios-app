@@ -2737,7 +2737,7 @@ extension ConversationViewController {
                 let (deleted, childMessageIds) = MessageDAO.shared.deleteMessage(id: message.messageId)
                 if deleted {
                     ReceiveMessageService.shared.stopRecallMessage(item: message, childMessageIds: childMessageIds)
-                    PinMessageDAO.shared.unpinMessages(messageIds: [message.messageId], conversationId: message.conversationId)
+                    PinMessageDAO.shared.deleteMessages(messageIds: [message.messageId], conversationId: message.conversationId)
                 }
                 DispatchQueue.main.sync {
                     _ = weakSelf.dataSource?.removeViewModel(at: indexPath)

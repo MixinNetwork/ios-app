@@ -609,6 +609,7 @@ public final class MessageDAO: UserDatabaseDAO {
                                    category: message.category,
                                    status: message.status,
                                    quoteMessageIds: quoteMessageIds)
+            try PinMessageDAO.shared.unpinMessages(messageIds: [messageId], conversationId: message.conversationId, from: db)
         }
     }
     

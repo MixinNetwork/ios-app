@@ -106,6 +106,8 @@ class ConversationViewController: UIViewController {
     private var isShowingKeyboard = false
     private var groupCallIndicatorCenterYConstraint: NSLayoutConstraint!
     private var makeInputTextViewFirstResponderOnAppear = false
+    private var canPinMessages = false
+    private var pinnedMessageIds = Set<String>()
     
     private weak var pinMessagesAlertViewIfLoaded: PinMessagesAlertView?
     
@@ -1193,23 +1195,24 @@ class ConversationViewController: UIViewController {
                     guard let self = self else {
                         return
                     }
+                    self.pinnedMessageIds.insert(pinnedMessageId)
                     self.pinMessagesAlertView.isHidden = false
                     let preview = TransferPinAction.pinMessage(item: message)
                     self.updatePinMessage(preview: preview, count: count)
-                    let pinMessage = VisiblePinMessage(messageId: messageId, pinnedMessageId: pinnedMessageId)
-                    AppGroupUserDefaults.User.setVisiblePinMessage(pinMessage, for: conversationId)
                 }
             } else {
+                guard let needsHideVisibleMessage = notification.userInfo?[PinMessageDAO.UserInfoKey.needsHideVisibleMessage] as? Bool else {
+                    return
+                }
                 DispatchQueue.main.async {
                     guard let self = self else {
                         return
                     }
+                    sourceMessageIds.forEach { self.pinnedMessageIds.remove($0) }
                     if count == 0 {
                         self.pinMessagesAlertViewIfLoaded?.isHidden = true
-                        AppGroupUserDefaults.User.setVisiblePinMessage(nil, for: conversationId)
-                    } else if AppGroupUserDefaults.User.visiblePinMessage(for: conversationId)?.pinnedMessageId == sourceMessageIds.first {
+                    } else if needsHideVisibleMessage {
                         self.hidePinMessagePreview()
-                        AppGroupUserDefaults.User.setVisiblePinMessage(nil, for: conversationId)
                     }
                     self.pinMessagesAlertView.updateMessageCount(count)
                 }
@@ -1814,14 +1817,15 @@ extension ConversationViewController: PinMessagesAlertViewDelegate {
     
     func pinMessagesAlertViewDidTapClose(_ view: PinMessagesAlertView) {
         hidePinMessagePreview()
-        AppGroupUserDefaults.User.setVisiblePinMessage(nil, for: conversationId)
+        AppGroupUserDefaults.User.visiblePinMessagesData[conversationId] = nil
     }
     
     func pinMessagesAlertViewDidTapPreview(_ view: PinMessagesAlertView) {
-        guard let pinnedMessageId = AppGroupUserDefaults.User.visiblePinMessage(for: conversationId)?.pinnedMessageId else {
+        guard let data = AppGroupUserDefaults.User.visiblePinMessagesData[conversationId],
+              let messageId = try? JSONDecoder.default.decode(PinMessage.VisiblePinMessage.self, from: data).pinnedMessageId else {
             return
         }
-        scrollToPinnedMessage(messageId: pinnedMessageId)
+        scrollToPinnedMessage(messageId: messageId)
     }
     
 }
@@ -1887,12 +1891,9 @@ extension ConversationViewController {
         if ConversationViewController.allowReportSingleMessage {
             actions.append(.report)
         }
-        if status != MessageStatus.SENDING.rawValue, let replyIndex = actions.firstIndex(where: { $0 == .reply }) {
-            let isGroupAdmin = dataSource.category == .group && ParticipantDAO.shared.isAdmin(conversationId: conversationId, userId: myUserId)
-            if dataSource.category == .contact || isGroupAdmin {
-                let action: MessageAction = PinMessageDAO.shared.isPinned(messageId: message.messageId) ? .unpin : .pin
-                actions.insert(action, at: replyIndex + 1)
-            }
+        if status != MessageStatus.SENDING.rawValue, let replyIndex = actions.firstIndex(where: { $0 == .reply }), canPinMessages {
+            let action: MessageAction = pinnedMessageIds.contains(message.messageId) ? .unpin : .pin
+            actions.insert(action, at: replyIndex + 1)
         }
         return actions
     }
@@ -2491,11 +2492,14 @@ extension ConversationViewController {
             var ids = MessageMentionDAO.shared.unreadMessageIds(conversationId: conversationId)
             let pinMessageCount = PinMessageDAO.shared.messageCount(conversationId: conversationId)
             let visiblePinMessage: MessageItem?
-            if let id = AppGroupUserDefaults.User.visiblePinMessage(for: conversationId)?.messageId {
+            if let data = AppGroupUserDefaults.User.visiblePinMessagesData[conversationId],
+               let id = try? JSONDecoder.default.decode(PinMessage.VisiblePinMessage.self, from: data).messageId {
                 visiblePinMessage = MessageDAO.shared.getFullMessage(messageId: id)
             } else {
                 visiblePinMessage = nil
             }
+            self?.pinnedMessageIds = Set(PinMessageDAO.shared.messageItems(conversationId: conversationId).map(\.messageId))
+            self?.canPinMessages = !isGroup || ParticipantDAO.shared.isAdmin(conversationId: conversationId, userId: myUserId)
             DispatchQueue.main.async {
                 guard let self = self else {
                     return

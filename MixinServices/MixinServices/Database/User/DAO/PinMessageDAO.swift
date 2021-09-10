@@ -7,6 +7,7 @@ public final class PinMessageDAO: UserDatabaseDAO {
         public static let sourceMessageIds = "s_mids"
         public static let isPinned = "is_p"
         public static let messageId = "m_id"
+        public static let needsHideVisibleMessage = "hd_msg"
     }
     
     public static let shared = PinMessageDAO()
@@ -65,43 +66,57 @@ public final class PinMessageDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [conversationId])
     }
     
-    @discardableResult
-    public func unpinMessages(messageIds: [String], conversationId: String) -> Bool {
-        db.write { (db) in
-            let condition = PinMessage.column(of: .conversationId) == conversationId && messageIds.contains(PinMessage.column(of: .messageId))
-            let deletedCount = try PinMessage
-                .filter(condition)
-                .deleteAll(db)
-            guard deletedCount > 0 else {
-                return
+    public func unpinMessages(messageIds: [String], conversationId: String, from database: GRDB.Database) throws {
+        let condition = PinMessage.column(of: .conversationId) == conversationId && messageIds.contains(PinMessage.column(of: .messageId))
+        let deletedCount = try PinMessage
+            .filter(condition)
+            .deleteAll(database)
+        guard deletedCount > 0 else {
+            return
+        }
+        database.afterNextTransactionCommit { db in
+            let needsRemoveVisibleMessage: Bool
+            if let data = AppGroupUserDefaults.User.visiblePinMessagesData[conversationId],
+               let id = try? JSONDecoder.default.decode(PinMessage.VisiblePinMessage.self, from: data).pinnedMessageId,
+               messageIds.contains(id) {
+                AppGroupUserDefaults.User.visiblePinMessagesData[conversationId] = nil
+                needsRemoveVisibleMessage = true
+            } else {
+                needsRemoveVisibleMessage = false
             }
-            db.afterNextTransactionCommit { db in
-                let userInfo: [String: Any] = [
-                    PinMessageDAO.UserInfoKey.conversationId: conversationId,
-                    PinMessageDAO.UserInfoKey.sourceMessageIds: messageIds,
-                    PinMessageDAO.UserInfoKey.isPinned: false,
-                ]
-                NotificationCenter.default.post(onMainThread: PinMessageDAO.pinMessageDidChangeNotification,
-                                                object: self,
-                                                userInfo: userInfo)
-            }
+            let userInfo: [String: Any] = [
+                PinMessageDAO.UserInfoKey.conversationId: conversationId,
+                PinMessageDAO.UserInfoKey.sourceMessageIds: messageIds,
+                PinMessageDAO.UserInfoKey.isPinned: false,
+                PinMessageDAO.UserInfoKey.needsHideVisibleMessage: needsRemoveVisibleMessage
+            ]
+            NotificationCenter.default.post(onMainThread: PinMessageDAO.pinMessageDidChangeNotification,
+                                            object: self,
+                                            userInfo: userInfo)
         }
     }
     
-    @discardableResult
+    public func unpinMessages(messageIds: [String], conversationId: String) {
+        db.write { (db) in
+            try unpinMessages(messageIds: messageIds, conversationId: conversationId, from: db)
+        }
+    }
+    
     public func pinMessage(
         item: MessageItem,
         source: String,
         silentNotification: Bool,
         message: Message,
         mention: MessageMention? = nil
-    ) -> Bool {
+    ) {
         let pinMessage = PinMessage(messageId: item.messageId, conversationId: item.conversationId, createdAt: message.createdAt)
-        return db.write { db in
+        db.write { db in
             try pinMessage.save(db)
             try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: source, silentNotification: silentNotification)
             try mention?.save(db)
             db.afterNextTransactionCommit { db in
+                let visiblePinMessage = PinMessage.VisiblePinMessage(messageId: message.messageId, pinnedMessageId: item.messageId)
+                AppGroupUserDefaults.User.visiblePinMessagesData[item.conversationId] = try? JSONEncoder.default.encode(visiblePinMessage)
                 let userInfo: [String: Any] = [
                     PinMessageDAO.UserInfoKey.conversationId: item.conversationId,
                     PinMessageDAO.UserInfoKey.sourceMessageIds: [item.messageId],
@@ -115,10 +130,12 @@ public final class PinMessageDAO: UserDatabaseDAO {
         }
     }
     
-    @discardableResult
-    public func removeAllMessages(conversationId: String) -> Bool {
-        db.write { db in
-            try PinMessage.deleteAll(db)
+    public func deleteAll(conversationId: String, from database: GRDB.Database) throws {
+        try PinMessage
+            .filter(PinMessage.column(of: .conversationId) == conversationId)
+            .deleteAll(database)
+        database.afterNextTransactionCommit { db in
+            AppGroupUserDefaults.User.visiblePinMessagesData[conversationId] = nil
         }
     }
     

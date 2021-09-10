@@ -24,6 +24,13 @@ extension PinMessage {
         
     }
     
+    public struct VisiblePinMessage: Codable {
+        
+        public let messageId: String
+        public let pinnedMessageId: String
+        
+    }
+    
 }
 
 extension PinMessage: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord {

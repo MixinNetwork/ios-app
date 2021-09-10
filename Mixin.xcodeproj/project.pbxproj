@@ -564,7 +564,6 @@
 		7C0D997F26CA62CD00356655 /* StaticAudioMessagePlayingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0D997E26CA62CD00356655 /* StaticAudioMessagePlayingManager.swift */; };
 		7C14CFC126CA35CF0094AF4A /* StaticMessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C14CFBF26CA35CF0094AF4A /* StaticMessagesViewController.swift */; };
 		7C14CFC226CA35CF0094AF4A /* StaticMessagesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C14CFC026CA35CF0094AF4A /* StaticMessagesView.xib */; };
-		7C2E79E226E5F329009D2E40 /* VisiblePinMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2E79E126E5F329009D2E40 /* VisiblePinMessage.swift */; };
 		7C5823D5268966A1003AA142 /* HomeAppsFolderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5823D4268966A1003AA142 /* HomeAppsFolderViewController.swift */; };
 		7C66F0272689D1FE006D8462 /* HomeAppsDragInteraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F0262689D1FE006D8462 /* HomeAppsDragInteraction.swift */; };
 		7C66F029268A0384006D8462 /* AppPageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F028268A0384006D8462 /* AppPageCell.swift */; };
@@ -1541,7 +1540,6 @@
 		7C0D997E26CA62CD00356655 /* StaticAudioMessagePlayingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticAudioMessagePlayingManager.swift; sourceTree = "<group>"; };
 		7C14CFBF26CA35CF0094AF4A /* StaticMessagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticMessagesViewController.swift; sourceTree = "<group>"; };
 		7C14CFC026CA35CF0094AF4A /* StaticMessagesView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StaticMessagesView.xib; sourceTree = "<group>"; };
-		7C2E79E126E5F329009D2E40 /* VisiblePinMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisiblePinMessage.swift; sourceTree = "<group>"; };
 		7C5823D4268966A1003AA142 /* HomeAppsFolderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsFolderViewController.swift; sourceTree = "<group>"; };
 		7C66F0262689D1FE006D8462 /* HomeAppsDragInteraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsDragInteraction.swift; sourceTree = "<group>"; };
 		7C66F028268A0384006D8462 /* AppPageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppPageCell.swift; sourceTree = "<group>"; };
@@ -2130,7 +2128,6 @@
 				7BF19C21241E0DB600B192D5 /* UserPickedLocation.swift */,
 				7B9F06C520A9858D0095A51B /* VideoMessageViewModel.swift */,
 				7BF9969420CA6F3800FD948F /* Waveform.swift */,
-				7C2E79E126E5F329009D2E40 /* VisiblePinMessage.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -4874,7 +4871,6 @@
 				7B333A8823406AF900FDA848 /* GalleryTransitionFromSharedMediaView.swift in Sources */,
 				7B9C102A245588DA00B2718F /* PhoneNumberSettingViewController.swift in Sources */,
 				7BAD2E55207DE046006D7887 /* UnreadHintMessageCell.swift in Sources */,
-				7C2E79E226E5F329009D2E40 /* VisiblePinMessage.swift in Sources */,
 				7B86B1EF23F6A70300C80AD9 /* AudioMessageActionView.swift in Sources */,
 				947B36A925DEB72A00146111 /* PlaylistManager.swift in Sources */,
 				7BA9D9C4226DCFFC00255943 /* SearchConversationViewController.swift in Sources */,

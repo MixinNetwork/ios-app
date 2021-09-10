@@ -48,7 +48,6 @@ class HomeViewController: UIViewController {
     private var appActions: [(() -> Void)?] = []
     private var isEditingRow = false
     private var insufficientBalanceForEmergencyContactBulletinConfirmedDate: Date?
-    private var selectedConversation: ConversationItem?
     
     private var bulletinContent: BulletinContent? = nil {
         didSet {
@@ -140,7 +139,6 @@ class HomeViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(groupConversationParticipantDidChange(_:)), name: ReceiveMessageService.groupConversationParticipantDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(circleNameDidChange), name: AppGroupUserDefaults.User.circleNameDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateHomeApps), name: AppGroupUserDefaults.User.homeAppIdsDidChangeNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(pinMessagesDidChange(_:)), name: PinMessageDAO.pinMessageDidChangeNotification, object: nil)
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             NotificationManager.shared.registerForRemoteNotificationsIfAuthorized()
             CallService.shared.registerForPushKitNotificationsIfAvailable()
@@ -164,7 +162,6 @@ class HomeViewController: UIViewController {
             fetchConversations()
         }
         checkServerStatus()
-        selectedConversation = nil
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -289,11 +286,6 @@ class HomeViewController: UIViewController {
     }
     
     @objc func dataDidChange(_ sender: Notification) {
-        if let change = sender.object as? ConversationChange, case .recallMessage(let messageId) = change.action {
-            DispatchQueue.global().async {
-                PinMessageDAO.shared.unpinMessages(messageIds: [messageId], conversationId: change.conversationId)
-            }
-        }
         guard view?.isVisibleInScreen ?? false else {
             needRefresh = true
             return
@@ -438,31 +430,6 @@ class HomeViewController: UIViewController {
         }
     }
     
-    @objc func pinMessagesDidChange(_ notification: Notification) {
-        guard let conversationId = notification.userInfo?[PinMessageDAO.UserInfoKey.conversationId] as? String,
-              selectedConversation?.conversationId != conversationId else {
-            return
-        }
-        guard let sourceMessageIds = notification.userInfo?[PinMessageDAO.UserInfoKey.sourceMessageIds] as? [String],
-              let isPinned = notification.userInfo?[PinMessageDAO.UserInfoKey.isPinned] as? Bool else {
-            return
-        }
-        if isPinned {
-            guard let messageId = notification.userInfo?[PinMessageDAO.UserInfoKey.messageId] as? String,
-                  let pinnedMessageId = sourceMessageIds.first else {
-                return
-            }
-            let message = VisiblePinMessage(messageId: messageId, pinnedMessageId: pinnedMessageId)
-            AppGroupUserDefaults.User.setVisiblePinMessage(message, for: conversationId)
-        } else {
-            guard let pinnedMessageId = AppGroupUserDefaults.User.visiblePinMessage(for: conversationId)?.pinnedMessageId,
-                  sourceMessageIds.contains(pinnedMessageId) else {
-                return
-            }
-            AppGroupUserDefaults.User.setVisiblePinMessage(nil, for: conversationId)
-        }
-    }
-    
     func dismissAppsWindow() {
         if let homeApps = children.compactMap({ $0 as? HomeAppsViewController }).first {
             homeApps.dismissAsChild(completion: nil)
@@ -524,7 +491,6 @@ extension HomeViewController: UITableViewDelegate {
             conversation.unseenMessageCount = 0
             let vc = ConversationViewController.instance(conversation: conversation)
             navigationController?.pushViewController(vc, animated: true)
-            selectedConversation = conversation
         }
     }
     
@@ -776,7 +742,6 @@ extension HomeViewController {
             self.tableView.reloadRows(at: [indexPath], with: .automatic)
             self.tableView.endUpdates()
             DispatchQueue.global().async {
-                self.cleanPinMessages(conversationId: conversation.conversationId)
                 ConversationDAO.shared.clearChat(conversationId: conversationId)
             }
         }))
@@ -797,7 +762,6 @@ extension HomeViewController {
                     hud.hide()
                     self?.conversations[indexPath.row].status = ConversationStatus.QUIT.rawValue
                     DispatchQueue.global().async {
-                        self?.cleanPinMessages(conversationId: conversation.conversationId)
                         ConversationDAO.shared.exitGroup(conversationId: conversationId)
                     }
                 case let .failure(error):
@@ -806,7 +770,6 @@ extension HomeViewController {
                         hud.hide()
                         self?.conversations[indexPath.row].status = ConversationStatus.QUIT.rawValue
                         DispatchQueue.global().async {
-                            self?.cleanPinMessages(conversationId: conversation.conversationId)
                             ConversationDAO.shared.exitGroup(conversationId: conversationId)
                         }
                     default:
@@ -910,11 +873,6 @@ extension HomeViewController {
         } else if checkWalletBalanceForEmergencyContactBulletin {
             showEmergencyContactBulletinIfNeeded()
         }
-    }
-    
-    private func cleanPinMessages(conversationId: String) {
-        PinMessageDAO.shared.removeAllMessages(conversationId: conversationId)
-        AppGroupUserDefaults.User.setVisiblePinMessage(nil, for: conversationId)
     }
     
 }

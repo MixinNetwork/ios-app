@@ -1183,7 +1183,7 @@ class ConversationViewController: UIViewController {
               let sourceMessageIds = notification.userInfo?[PinMessageDAO.UserInfoKey.sourceMessageIds] as? [String] else {
             return
         }
-        DispatchQueue.global().async { [weak self] in
+        dataSource.queue.async { [weak self] in
             let count = PinMessageDAO.shared.messageCount(conversationId: conversationId)
             if isPinned {
                 guard let pinnedMessageId = sourceMessageIds.first,
@@ -2498,12 +2498,14 @@ extension ConversationViewController {
             } else {
                 visiblePinMessage = nil
             }
-            self?.pinnedMessageIds = Set(PinMessageDAO.shared.messageItems(conversationId: conversationId).map(\.messageId))
-            self?.canPinMessages = !isGroup || ParticipantDAO.shared.isAdmin(conversationId: conversationId, userId: myUserId)
+            let pinnedMessageIds = Set(PinMessageDAO.shared.messageItems(conversationId: conversationId).map(\.messageId))
+            let canPinMessages = !isGroup || ParticipantDAO.shared.isAdmin(conversationId: conversationId, userId: myUserId)
             DispatchQueue.main.async {
                 guard let self = self else {
                     return
                 }
+                self.pinnedMessageIds = pinnedMessageIds
+                self.canPinMessages = canPinMessages
                 UIView.performWithoutAnimation {
                     self.userHandleViewController.users = users
                     if isGroup {

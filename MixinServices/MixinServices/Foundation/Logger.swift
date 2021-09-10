@@ -147,6 +147,7 @@ extension Logger {
     }
     
     private static let maxFileSize = 5 * bytesPerMegaByte
+    private static let preservedTrailingLogSize = 1 * bytesPerMegaByte // Last 1MB of old logs will be preserved when size exceeds maximum
     private static let queue = DispatchQueue(label: "one.mixin.services.log", qos: .utility)
     private static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -212,11 +213,11 @@ extension Logger {
             
             let existedFileSize = FileManager.default.fileSize(url.path)
             if existedFileSize > Self.maxFileSize {
-                handle.seek(toFileOffset: UInt64(existedFileSize) - 128)
+                let trailingOffset = UInt64(existedFileSize) - UInt64(Self.preservedTrailingLogSize)
+                handle.seek(toFileOffset: trailingOffset)
                 let trailing = String(data: handle.readDataToEndOfFile(), encoding: .utf8) ?? ""
                 if let data = (trailing + "\n" + output).data(using: .utf8) {
-                    handle.seek(toFileOffset: 0)
-                    handle.write(data)
+                    try? data.write(to: url)
                 }
             } else {
                 if let data = output.data(using: .utf8) {

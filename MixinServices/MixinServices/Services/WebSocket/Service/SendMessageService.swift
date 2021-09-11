@@ -60,10 +60,10 @@ public class SendMessageService: MixinService {
                                                     status: MessageStatus.DELIVERED.rawValue,
                                                     action: action.rawValue,
                                                     createdAt: Date().toUTCString())
-                PinMessageDAO.shared.save(item: item,
+                PinMessageDAO.shared.save(referencedItem: item,
                                           source: MessageCategory.MESSAGE_PIN.rawValue,
                                           silentNotification: true,
-                                          message: message,
+                                          pinMessage: message,
                                           mention: mention)
             case .unpin:
                 PinMessageDAO.shared.delete(messageIds: pinMessageIds, conversationId: conversationId)

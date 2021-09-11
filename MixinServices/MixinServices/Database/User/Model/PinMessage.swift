@@ -24,10 +24,15 @@ extension PinMessage {
         
     }
     
-    public struct VisiblePinMessage: Codable {
+    public struct Banner: Codable {
         
-        public let messageId: String
-        public let pinnedMessageId: String
+        public let pinMessageId: String
+        public let referencedMessageId: String
+        
+        public enum CodingKeys: String, CodingKey {
+            case pinMessageId = "pid"
+            case referencedMessageId = "rid"
+        }
         
     }
     

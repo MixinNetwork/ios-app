@@ -42,7 +42,8 @@ final class PinMessagesPreviewViewController: StaticMessagesViewController {
         super.viewDidLoad()
         factory.delegate = self
         reloadData()
-        NotificationCenter.default.addObserver(self, selector: #selector(pinMessagesDidChange(_:)), name: PinMessageDAO.pinMessageDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(pinMessagesDidChange(_:)), name: PinMessageDAO.didSaveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(pinMessagesDidChange(_:)), name: PinMessageDAO.didDeleteNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(participantDidChange(_:)), name: ParticipantDAO.participantDidChangeNotification, object: nil)
     }
     
@@ -150,7 +151,7 @@ extension PinMessagesPreviewViewController {
             return
         }
         queue.async {
-            guard PinMessageDAO.shared.hasMessages(conversationId: conversationId) else {
+            guard PinMessageDAO.shared.hasMessage(conversationId: conversationId) else {
                 DispatchQueue.main.async {
                     self.dismissAsChild(completion: nil)
                 }
@@ -237,7 +238,7 @@ extension PinMessagesPreviewViewController {
         let conversationId = self.conversationId
         queue.async { [weak self] in
             let messageId: String?
-            if let id = AppGroupUserDefaults.User.visiblePinMessage(for: conversationId)?.pinnedMessageId {
+            if let id = AppGroupUserDefaults.User.pinMessageBanner(for: conversationId)?.referencedMessageId {
                 messageId = id
             } else if let lastPinnedMessage = PinMessageDAO.shared.lastPinnedMessage(conversationId: conversationId) {
                 messageId = lastPinnedMessage.messageId

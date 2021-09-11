@@ -58,7 +58,7 @@ extension AppGroupUserDefaults {
             
             case userInterfaceStyle = "ui_style"
 
-            case visiblePinMessages = "visible_pin_messages"
+            case pinMessageBanners = "pin_message_banners"
         }
         
         public static let version = 27
@@ -68,6 +68,9 @@ extension AppGroupUserDefaults {
         public static let didChangeUserInterfaceStyleNotification = Notification.Name(rawValue: "one.mixin.services.DidChangeUserInterfaceStyle")
         public static let circleNameDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.circle.name.change")
         public static let homeAppIdsDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.home.app.ids.change")
+        public static let pinMessageBannerDidRemoveNotification = Notification.Name("one.mixin.services.pinMessageBannerDidChange")
+        
+        public static let conversationIdUserInfoKey = "cid"
         
         private static let maxNumberOfAssetSearchHistory = 2
         
@@ -213,18 +216,24 @@ extension AppGroupUserDefaults {
             }
         }
         
-        @Default(namespace: .user, key: Key.visiblePinMessages, defaultValue: [:])
-        private static var visiblePinMessagesData: [String: Data]
+        @Default(namespace: .user, key: Key.pinMessageBanners, defaultValue: [:])
+        private static var pinMessageBannersData: [String: Data]
         
-        public static func visiblePinMessage(for conversationId: String) -> PinMessage.VisiblePinMessage? {
-            guard let data = visiblePinMessagesData[conversationId] else {
+        public static func pinMessageBanner(for conversationId: String) -> PinMessage.Banner? {
+            guard let data = pinMessageBannersData[conversationId] else {
                 return nil
             }
-            return try? JSONDecoder.default.decode(PinMessage.VisiblePinMessage.self, from: data)
+            return try? JSONDecoder.default.decode(PinMessage.Banner.self, from: data)
         }
         
-        public static func setVisiblePinMessage(_ message: PinMessage.VisiblePinMessage?, for conversationId: String) {
-            visiblePinMessagesData[conversationId] = try? JSONEncoder.default.encode(message)
+        public static func setPinMessageBanner(_ banner: PinMessage.Banner?, for conversationId: String) {
+            let data = try? JSONEncoder.default.encode(banner)
+            pinMessageBannersData[conversationId] = data
+            if data == nil {
+                NotificationCenter.default.post(onMainThread: Self.pinMessageBannerDidRemoveNotification,
+                                                object: self,
+                                                userInfo: [Self.conversationIdUserInfoKey: conversationIdUserInfoKey])
+            }
         }
         
         public static func insertRecentlyUsedAppId(id: String) {

@@ -714,6 +714,7 @@ public final class MessageDAO: UserDatabaseDAO {
             try TranscriptMessage
                 .filter(TranscriptMessage.column(of: .transcriptId) == id)
                 .deleteAll(db)
+            try PinMessageDAO.shared.delete(messageId: id, from: db)
         }
         return (deleteCount > 0, childMessageIds)
     }

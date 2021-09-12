@@ -232,8 +232,7 @@ extension AppGroupUserDefaults {
                 NotificationCenter.default.post(onMainThread: Self.pinMessageBannerDidRemoveNotification,
                                                 object: self,
                                                 userInfo: [Self.conversationIdUserInfoKey: conversationId])
-            } else {
-                let data = try? JSONEncoder.default.encode(banner)
+            } else if let data = try? JSONEncoder.default.encode(banner) {
                 pinMessageBannersData[conversationId] = data
             }
         }

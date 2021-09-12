@@ -109,7 +109,7 @@ class ConversationViewController: UIViewController {
     private var canPinMessages = false
     private var pinnedMessageIds = Set<String>()
     
-    private weak var pinMessagesAlertViewIfLoaded: PinMessagesAlertView?
+    private weak var pinMessageBannerViewIfLoaded: PinMessageBannerView?
     
     private(set) lazy var imagePickerController = ImagePickerController(initialCameraPosition: .rear, cropImageAfterPicked: false, parent: self, delegate: self)
     
@@ -171,8 +171,8 @@ class ConversationViewController: UIViewController {
         return view
     }()
     
-    private lazy var pinMessagesAlertView: PinMessagesAlertView = {
-        let alert = R.nib.pinMessagesAlertView(owner: nil)!
+    private lazy var pinMessageBannerView: PinMessageBannerView = {
+        let alert = R.nib.pinMessageBannerView(owner: nil)!
         alert.isHidden = true
         alert.delegate = self
         view.addSubview(alert)
@@ -181,7 +181,7 @@ class ConversationViewController: UIViewController {
             make.left.right.equalTo(0)
             make.height.equalTo(60)
         }
-        pinMessagesAlertViewIfLoaded = alert
+        pinMessageBannerViewIfLoaded = alert
         return alert
     }()
     
@@ -1179,23 +1179,21 @@ class ConversationViewController: UIViewController {
         guard conversationId == self.conversationId else {
             return
         }
-        guard let referencedMessageId = notification.userInfo?[PinMessageDAO.UserInfoKey.referencedMessageId] as? String else {
-            return
-        }
         dataSource.queue.async { [weak self] in
-            let count = PinMessageDAO.shared.messageCount(conversationId: conversationId)
             guard
                 let messageId = notification.userInfo?[PinMessageDAO.UserInfoKey.messageId] as? String,
-                let message = MessageDAO.shared.getFullMessage(messageId: messageId)
+                let message = MessageDAO.shared.getFullMessage(messageId: messageId),
+                let referencedMessageId = notification.userInfo?[PinMessageDAO.UserInfoKey.referencedMessageId] as? String
             else {
                 return
             }
+            let count = PinMessageDAO.shared.messageCount(conversationId: conversationId)
             DispatchQueue.main.async {
                 guard let self = self else {
                     return
                 }
                 self.pinnedMessageIds.insert(referencedMessageId)
-                self.pinMessagesAlertView.isHidden = false
+                self.pinMessageBannerView.isHidden = false
                 let preview = TransferPinAction.pinMessage(item: message)
                 self.updatePinMessageAlertView(preview: preview, count: count)
             }
@@ -1220,15 +1218,21 @@ class ConversationViewController: UIViewController {
                 }
                 self.pinnedMessageIds.subtract(referencedMessageIds)
                 if count == 0 {
-                    self.pinMessagesAlertViewIfLoaded?.isHidden = true
+                    self.pinMessageBannerViewIfLoaded?.isHidden = true
                 } else {
-                    self.pinMessagesAlertView.updateMessageCount(count)
+                    self.pinMessageBannerView.updateMessageCount(count)
                 }
             }
         }
     }
     
     @objc private func pinMessageBannerDidRemove(_ notification: Notification) {
+        guard let conversationId = notification.userInfo?[AppGroupUserDefaults.User.conversationIdUserInfoKey] as? String else {
+            return
+        }
+        guard conversationId == self.conversationId else {
+            return
+        }
         hidePinMessagePreview()
     }
     
@@ -1817,22 +1821,22 @@ extension ConversationViewController: TextPreviewViewDelegate {
     
 }
 
-// MARK: - PinMessagesAlertViewDelegate
-extension ConversationViewController: PinMessagesAlertViewDelegate {
+// MARK: - PinMessageBannerViewDelegate
+extension ConversationViewController: PinMessageBannerViewDelegate {
     
-    func pinMessagesAlertViewDidTapPin(_ view: PinMessagesAlertView) {
+    func pinMessageBannerViewDidTapPin(_ view: PinMessageBannerView) {
         conversationInputViewController.textView.resignFirstResponder()
         let vc = PinMessagesPreviewViewController(conversationId: conversationId, isGroup: dataSource.category == .group)
         vc.delegate = self
         vc.presentAsChild(of: self)
     }
     
-    func pinMessagesAlertViewDidTapClose(_ view: PinMessagesAlertView) {
+    func pinMessageBannerViewDidTapClose(_ view: PinMessageBannerView) {
         hidePinMessagePreview()
         AppGroupUserDefaults.User.setPinMessageBanner(nil, for: conversationId)
     }
     
-    func pinMessagesAlertViewDidTapPreview(_ view: PinMessagesAlertView) {
+    func pinMessageBannerViewDidTapPreview(_ view: PinMessageBannerView) {
         guard let id = AppGroupUserDefaults.User.pinMessageBanner(for: conversationId)?.referencedMessageId else {
             return
         }
@@ -2464,15 +2468,15 @@ extension ConversationViewController {
     }
     
     private func updatePinMessageAlertView(preview: String, count: Int) {
-        pinMessagesAlertView.updateMessage(preview: preview, count: count)
-        pinMessagesAlertView.snp.updateConstraints { make in
+        pinMessageBannerView.updateMessage(preview: preview, count: count)
+        pinMessageBannerView.snp.updateConstraints { make in
             make.left.equalTo(0)
         }
     }
     
     private func hidePinMessagePreview() {
-        pinMessagesAlertView.hideMessagePreview()
-        pinMessagesAlertView.snp.updateConstraints { make in
+        pinMessageBannerView.hideMessagePreview()
+        pinMessageBannerView.snp.updateConstraints { make in
             make.left.equalTo(AppDelegate.current.mainWindow.bounds.width - 60)
         }
     }
@@ -2525,13 +2529,13 @@ extension ConversationViewController {
                     ids.removeAll(where: self.dataSource.visibleMessageIds.contains)
                     self.mentionScrollingDestinations = ids
                     if pinMessageCount > 0 {
-                        self.pinMessagesAlertView.isHidden = false
+                        self.pinMessageBannerView.isHidden = false
                         if let item = visiblePinMessage {
                             let preview = TransferPinAction.pinMessage(item: item)
                             self.updatePinMessageAlertView(preview: preview, count: pinMessageCount)
                         } else {
                             self.hidePinMessagePreview()
-                            self.pinMessagesAlertView.updateMessageCount(pinMessageCount)
+                            self.pinMessageBannerView.updateMessageCount(pinMessageCount)
                         }
                     }
                 }

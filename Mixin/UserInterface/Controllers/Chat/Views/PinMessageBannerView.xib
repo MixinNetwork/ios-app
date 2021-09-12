@@ -10,7 +10,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="PinMessagesAlertView" customModule="Mixin" customModuleProvider="target">
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="PinMessageBannerView" customModule="Mixin" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
@@ -101,7 +101,7 @@
     <resources>
         <image name="Conversation/ic_pin" width="38" height="38"/>
         <image name="ic_announcement_close" width="12" height="12"/>
-        <image name="ic_pin_bubble" width="36.5" height="76"/>
+        <image name="ic_pin_bubble" width="37.5" height="76"/>
         <namedColor name="chat_pin__count_background">
             <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

@@ -232,7 +232,7 @@ extension AppGroupUserDefaults {
             if data == nil {
                 NotificationCenter.default.post(onMainThread: Self.pinMessageBannerDidRemoveNotification,
                                                 object: self,
-                                                userInfo: [Self.conversationIdUserInfoKey: conversationIdUserInfoKey])
+                                                userInfo: [Self.conversationIdUserInfoKey: conversationId])
             }
         }
         

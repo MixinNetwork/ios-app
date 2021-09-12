@@ -1,14 +1,14 @@
 import UIKit
 
-protocol PinMessagesAlertViewDelegate: AnyObject {
-    func pinMessagesAlertViewDidTapPin(_ view: PinMessagesAlertView)
-    func pinMessagesAlertViewDidTapClose(_ view: PinMessagesAlertView)
-    func pinMessagesAlertViewDidTapPreview(_ view: PinMessagesAlertView)
+protocol PinMessageBannerViewDelegate: AnyObject {
+    func pinMessageBannerViewDidTapPin(_ view: PinMessageBannerView)
+    func pinMessageBannerViewDidTapClose(_ view: PinMessageBannerView)
+    func pinMessageBannerViewDidTapPreview(_ view: PinMessageBannerView)
 }
 
-final class PinMessagesAlertView: UIView {
+final class PinMessageBannerView: UIView {
     
-    weak var delegate: PinMessagesAlertViewDelegate?
+    weak var delegate: PinMessageBannerViewDelegate?
     
     @IBOutlet weak var pinButton: UIButton!
     @IBOutlet weak var countLabel: RoundedInsetLabel!
@@ -22,20 +22,20 @@ final class PinMessagesAlertView: UIView {
     }
     
     @IBAction func tapCloseAction(_ sender: Any) {
-        delegate?.pinMessagesAlertViewDidTapClose(self)
+        delegate?.pinMessageBannerViewDidTapClose(self)
     }
     
     @IBAction func tapPinAction(_ sender: Any) {
-        delegate?.pinMessagesAlertViewDidTapPin(self)
+        delegate?.pinMessageBannerViewDidTapPin(self)
     }
     
     @IBAction func tapMessageAction(_ sender: Any) {
-        delegate?.pinMessagesAlertViewDidTapPreview(self)
+        delegate?.pinMessageBannerViewDidTapPreview(self)
     }
     
 }
 
-extension PinMessagesAlertView {
+extension PinMessageBannerView {
     
     func updateMessageCount(_ count: Int) {
         countLabel.text = "\(count)"

@@ -227,12 +227,14 @@ extension AppGroupUserDefaults {
         }
         
         public static func setPinMessageBanner(_ banner: PinMessage.Banner?, for conversationId: String) {
-            let data = try? JSONEncoder.default.encode(banner)
-            pinMessageBannersData[conversationId] = data
-            if data == nil {
+            if banner == nil {
+                pinMessageBannersData[conversationId] = nil
                 NotificationCenter.default.post(onMainThread: Self.pinMessageBannerDidRemoveNotification,
                                                 object: self,
                                                 userInfo: [Self.conversationIdUserInfoKey: conversationId])
+            } else {
+                let data = try? JSONEncoder.default.encode(banner)
+                pinMessageBannersData[conversationId] = data
             }
         }
         

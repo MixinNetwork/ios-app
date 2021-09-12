@@ -1832,7 +1832,6 @@ extension ConversationViewController: PinMessageBannerViewDelegate {
     }
     
     func pinMessageBannerViewDidTapClose(_ view: PinMessageBannerView) {
-        hidePinMessagePreview()
         AppGroupUserDefaults.User.setPinMessageBanner(nil, for: conversationId)
     }
     

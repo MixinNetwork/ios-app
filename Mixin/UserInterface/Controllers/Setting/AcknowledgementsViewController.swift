@@ -4,15 +4,16 @@ import AcknowList
 class AcknowledgementsViewController: AcknowListViewController {
     
     class func instance() -> UIViewController {
-        let customAcknows: [Acknow] = {
-            guard let url = Bundle.main.url(forResource: "Custom-acknowledgements", withExtension: "plist") else {
-                return []
+        let acknows: [Acknow] = {
+            ["Pods-Mixin-acknowledgements", "Custom-acknowledgements"].reduce(into: []) { result, resource in
+                guard let url = Bundle.main.url(forResource: resource, withExtension: "plist") else {
+                    return
+                }
+                let acknows = AcknowParser(plistPath: url.path).parseAcknowledgements()
+                result += acknows
             }
-            let parser = AcknowParser(plistPath: url.path)
-            return parser.parseAcknowledgements()
         }()
-        let controller = AcknowledgementsViewController()
-        controller.acknowledgements.append(contentsOf: customAcknows)
+        let controller = AcknowledgementsViewController(acknowledgements: acknows)
         let title = R.string.localizable.about_acknowledgements()
         return ContainerViewController.instance(viewController: controller, title: title)
     }

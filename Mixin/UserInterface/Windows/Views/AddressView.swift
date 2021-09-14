@@ -168,6 +168,10 @@ extension AddressView {
         guard let info = sender.userInfo, let superView = self.superView, superView.isShowing else {
             return
         }
+        guard pinField.isFirstResponder else {
+            pinField.becomeFirstResponder()
+            return
+        }
         guard let duration = (info[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue else {
             return
         }

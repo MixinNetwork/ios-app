@@ -75,21 +75,19 @@ public extension UIImage {
             orientationResolvedSize = size
         }
         
+        let colorSpace = cgImage.colorSpace ?? CGColorSpace(name: CGColorSpace.sRGB)!
         let maybeContext = CGContext(data: nil,
                                      width: Int(orientationResolvedSize.width),
                                      height: Int(orientationResolvedSize.height),
-                                     bitsPerComponent: cgImage.bitsPerComponent,
-                                     bytesPerRow: 0, // Only a few combinations are not supported by iOS, use auto-calculated bpr
-                                     space: cgImage.colorSpace ?? CGColorSpace(name: CGColorSpace.sRGB)!,
-                                     bitmapInfo: cgImage.bitmapInfo.rawValue)
+                                     bitsPerComponent: 16,
+                                     bytesPerRow: 0, // Use auto-calculated bpr
+                                     space: colorSpace,
+                                     bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)
         guard let context = maybeContext else {
             let infos: [String : Any] = [
                 "width": Int(orientationResolvedSize.width),
                 "height": Int(orientationResolvedSize.height),
-                "bitsPerComponent": cgImage.bitsPerComponent,
-                "bytesPerRow": 0,
-                "space": cgImage.colorSpace?.name ?? "(null)",
-                "bitmapInfo": cgImage.bitmapInfo.rawValue
+                "space": colorSpace ?? "(null)",
             ]
             let error = MixinServicesError.invalidScalingContextParameter(infos)
             Logger.general.error(category: "ImageScaling", message: "Failed to create CGContext", userInfo: infos)

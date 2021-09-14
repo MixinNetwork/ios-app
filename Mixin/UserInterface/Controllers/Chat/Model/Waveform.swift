@@ -18,7 +18,7 @@ struct Waveform {
         if let data = data {
             for (i, value) in data.enumerated() {
                 let targetIndex = i * numberOfValues / data.count
-                values[targetIndex] = max(value, data[i])
+                values[targetIndex] = max(value, values[targetIndex])
             }
         }
         self.values = values

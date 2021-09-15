@@ -658,7 +658,6 @@ public final class MessageDAO: UserDatabaseDAO {
         try MessageMention
             .filter(MessageMention.column(of: .messageId) == messageId)
             .deleteAll(database)
-        try PinMessageDAO.shared.delete(messageIds: [messageId], conversationId: conversationId, from: database)
         
         if category.hasSuffix("_TRANSCRIPT") {
             try TranscriptMessage
@@ -684,6 +683,9 @@ public final class MessageDAO: UserDatabaseDAO {
         
         let messageIds = quoteMessageIds + [messageId]
         database.afterNextTransactionCommit { (_) in
+            if let id = AppGroupUserDefaults.User.pinMessageBanner(for: conversationId)?.referencedMessageId, messageId == id {
+                AppGroupUserDefaults.User.setPinMessageBanner(nil, for: conversationId)
+            }
             for messageId in messageIds {
                 let change = ConversationChange(conversationId: conversationId,
                                                 action: .recallMessage(messageId: messageId))

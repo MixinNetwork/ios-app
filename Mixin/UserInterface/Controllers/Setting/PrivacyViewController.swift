@@ -109,7 +109,7 @@ extension PrivacyViewController: UITableViewDelegate {
                     vc = ScreenLockSettingViewController.instance()
                 }
             } else {
-                vc = WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil)
+                vc = WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, source: "PrivacyViewController", dismissTarget: nil)
             }
         case 1:
             if indexPath.row == 0 {

@@ -8,7 +8,8 @@ class WalletPasswordViewController: ContinueButtonViewController {
     @IBOutlet weak var subtitleLabel: UILabel!
     @IBOutlet weak var backButton: UIButton!
     
-    enum WalletPasswordType {
+    enum WalletPasswordType: CustomDebugStringConvertible {
+        
         case initPinStep1
         case initPinStep2(previous: String)
         case initPinStep3(previous: String)
@@ -18,6 +19,30 @@ class WalletPasswordViewController: ContinueButtonViewController {
         case changePinStep3(old: String, previous: String)
         case changePinStep4(old: String, previous: String)
         case changePinStep5(old: String, previous: String)
+        
+        var debugDescription: String {
+            switch self {
+            case .initPinStep1:
+                return "init1"
+            case .initPinStep2:
+                return "init2"
+            case .initPinStep3:
+                return "init3"
+            case .initPinStep4:
+                return "init4"
+            case .changePinStep1:
+                return "change1"
+            case .changePinStep2:
+                return "change2"
+            case .changePinStep3:
+                return "change3"
+            case .changePinStep4:
+                return "change4"
+            case .changePinStep5:
+                return "change5"
+            }
+        }
+        
     }
 
     enum DismissTarget {
@@ -26,7 +51,8 @@ class WalletPasswordViewController: ContinueButtonViewController {
         case changePhone
         case setEmergencyContact
     }
-
+    
+    private var source: StaticString = ""
     private var dismissTarget: DismissTarget?
     private var walletPasswordType = WalletPasswordType.initPinStep1
     private var isBusy = false {
@@ -35,6 +61,10 @@ class WalletPasswordViewController: ContinueButtonViewController {
             continueButton.isHidden = !isBusy
             pinField.receivesInput = !isBusy
         }
+    }
+    
+    deinit {
+        Logger.general.info(category: "SetPIN", message: "\(self) deinited")
     }
     
     override func viewDidLoad() {
@@ -67,6 +97,7 @@ class WalletPasswordViewController: ContinueButtonViewController {
             subtitleLabel.text = ""
             backButton.setImage(R.image.ic_title_back(), for: .normal)
         }
+        Logger.general.info(category: "SetPIN", message: "\(self) viewDidLoad with step: \(walletPasswordType), source: \(source), destination: \(String(describing: dismissTarget))")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -76,38 +107,44 @@ class WalletPasswordViewController: ContinueButtonViewController {
             pinField.becomeFirstResponder()
         }
         pinField.clear()
+        Logger.general.info(category: "SetPIN", message: "\(self) viewWillAppear")
     }
     
     @IBAction func backAction(_ sender: Any) {
         navigationController?.popViewController(animated: true)
     }
     
-    class func instance(walletPasswordType: WalletPasswordType, dismissTarget: DismissTarget?) -> WalletPasswordViewController {
+    class func instance(walletPasswordType: WalletPasswordType, source: StaticString, dismissTarget: DismissTarget?) -> WalletPasswordViewController {
         let vc = R.storyboard.wallet.password()!
         vc.walletPasswordType = walletPasswordType
+        vc.source = source
         vc.dismissTarget = dismissTarget
         return vc
     }
     
-    class func instance(dismissTarget: DismissTarget) -> UIViewController {
+    class func instance(dismissTarget: DismissTarget, source: StaticString) -> UIViewController {
         let vc = R.storyboard.wallet.password()!
         vc.walletPasswordType = .initPinStep1
+        vc.source = source
         vc.dismissTarget = dismissTarget
         return vc
     }
 
     private func popToFirstInitController() {
         guard let viewController = navigationController?.viewControllers.first(where: { $0 is WalletPasswordViewController }) else {
+            Logger.general.error(category: "SetPIN", message: "\(self) Failed to pop to first step")
             return
         }
         navigationController?.popToViewController(viewController, animated: true)
+        Logger.general.info(category: "SetPIN", message: "\(self) Pop to first step")
     }
 
     private func popToLastController() {
         guard let viewController = navigationController?.viewControllers.reversed().first(where: { !($0 is WalletPasswordViewController) }) else {
+            Logger.general.error(category: "SetPIN", message: "\(self) Failed to pop all set PINs")
             return
         }
-
+        Logger.general.info(category: "SetPIN", message: "\(self) Pop all set PINs")
         navigationController?.popToViewController(viewController, animated: true)
     }
 
@@ -138,6 +175,7 @@ class WalletPasswordViewController: ContinueButtonViewController {
     
     private func removeWalletPasswordAndPresent(_ viewController: UIViewController) {
         guard let navigationController = navigationController else {
+            Logger.general.error(category: "SetPIN", message: "\(self) Failed to remove set PIN controller")
             return
         }
         var viewControllers: [UIViewController] = navigationController.viewControllers
@@ -186,6 +224,7 @@ extension WalletPasswordViewController: PinFieldDelegate {
             if pin == "123456" || Set(pin).count < 3 {
                 pinField.clear()
                 alert(Localized.WALLET_PIN_TOO_SIMPLE)
+                Logger.general.info(category: "SetPIN", message: "\(self) Too simple PIN detected")
                 return
             }
         default:
@@ -194,11 +233,11 @@ extension WalletPasswordViewController: PinFieldDelegate {
         
         switch walletPasswordType {
         case .initPinStep1:
-            let vc = WalletPasswordViewController.instance(walletPasswordType: .initPinStep2(previous: pin), dismissTarget: dismissTarget)
+            let vc = WalletPasswordViewController.instance(walletPasswordType: .initPinStep2(previous: pin), source: source, dismissTarget: dismissTarget)
             navigationController?.pushViewController(vc, animated: true)
         case .initPinStep2(let previous):
             if previous == pin {
-                let vc = WalletPasswordViewController.instance(walletPasswordType: .initPinStep3(previous: pin), dismissTarget: dismissTarget)
+                let vc = WalletPasswordViewController.instance(walletPasswordType: .initPinStep3(previous: pin), source: source, dismissTarget: dismissTarget)
                 navigationController?.pushViewController(vc, animated: true)
             } else {
                 alert(Localized.WALLET_PIN_INCONSISTENCY, cancelHandler: { [weak self](_) in
@@ -207,7 +246,7 @@ extension WalletPasswordViewController: PinFieldDelegate {
             }
         case .initPinStep3(let previous):
             if previous == pin {
-                let vc = WalletPasswordViewController.instance(walletPasswordType: .initPinStep4(previous: pin), dismissTarget: dismissTarget)
+                let vc = WalletPasswordViewController.instance(walletPasswordType: .initPinStep4(previous: pin), source: source, dismissTarget: dismissTarget)
                 navigationController?.pushViewController(vc, animated: true)
             } else {
                 alert(Localized.WALLET_PIN_INCONSISTENCY, cancelHandler: { [weak self](_) in
@@ -217,6 +256,7 @@ extension WalletPasswordViewController: PinFieldDelegate {
         case .initPinStep4(let previous):
             if previous == pin {
                 isBusy = true
+                Logger.general.info(category: "SetPIN", message: "\(self) Begin init PIN")
                 AccountAPI.updatePin(old: nil, new: pin, completion: { [weak self] (result) in
                     self?.isBusy = false
                     switch result {
@@ -224,10 +264,12 @@ extension WalletPasswordViewController: PinFieldDelegate {
                         AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
                         LoginManager.shared.setAccount(account)
                         self?.updatePasswordSuccessfully(alertTitle: Localized.WALLET_SET_PASSWORD_SUCCESS)
+                        Logger.general.info(category: "SetPIN", message: "\(String(describing: self)) Successfully inited PIN")
                     case let .failure(error):
                         PINVerificationFailureHandler.handle(error: error) { (description) in
                             self?.alert(description)
                         }
+                        Logger.general.info(category: "SetPIN", message: "\(String(describing: self)) PIN init failed with: \(error)")
                     }
                 })
             } else {
@@ -237,6 +279,7 @@ extension WalletPasswordViewController: PinFieldDelegate {
             }
         case .changePinStep1:
             isBusy = true
+            Logger.general.info(category: "SetPIN", message: "\(self) Begin verify PIN")
             AccountAPI.verify(pin: pin, completion: { [weak self] (result) in
                 guard let weakSelf = self else {
                     return
@@ -245,21 +288,23 @@ extension WalletPasswordViewController: PinFieldDelegate {
                 switch result {
                 case .success:
                     AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
-                    let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep2(old: pin), dismissTarget: weakSelf.dismissTarget)
+                    let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep2(old: pin), source: weakSelf.source, dismissTarget: weakSelf.dismissTarget)
                     weakSelf.navigationController?.pushViewController(vc, animated: true)
+                    Logger.general.info(category: "SetPIN", message: "\(weakSelf) Successfully verified PIN")
                 case let .failure(error):
                     weakSelf.pinField.clear()
                     PINVerificationFailureHandler.handle(error: error) { (description) in
                         self?.alert(description)
                     }
+                    Logger.general.info(category: "SetPIN", message: "\(weakSelf) PIN verification failed for: \(error)")
                 }
             })
         case .changePinStep2(let old):
-            let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep3(old: old, previous: pin), dismissTarget: dismissTarget)
+            let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep3(old: old, previous: pin), source: source, dismissTarget: dismissTarget)
             navigationController?.pushViewController(vc, animated: true)
         case .changePinStep3(let old, let previous):
             if previous == pin {
-                let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep4(old: old, previous: pin), dismissTarget: dismissTarget)
+                let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep4(old: old, previous: pin), source: source, dismissTarget: dismissTarget)
                 navigationController?.pushViewController(vc, animated: true)
             } else {
                 alert(Localized.WALLET_PIN_INCONSISTENCY, cancelHandler: { [weak self](_) in
@@ -268,7 +313,7 @@ extension WalletPasswordViewController: PinFieldDelegate {
             }
         case .changePinStep4(let old, let previous):
             if previous == pin {
-                let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep5(old: old, previous: pin), dismissTarget: dismissTarget)
+                let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep5(old: old, previous: pin), source: source, dismissTarget: dismissTarget)
                 navigationController?.pushViewController(vc, animated: true)
             } else {
                 alert(Localized.WALLET_PIN_INCONSISTENCY, cancelHandler: { [weak self](_) in
@@ -278,6 +323,7 @@ extension WalletPasswordViewController: PinFieldDelegate {
         case .changePinStep5(let old, let previous):
             if previous == pin {
                 isBusy = true
+                Logger.general.info(category: "SetPIN", message: "\(self) Begin change PIN")
                 AccountAPI.updatePin(old: old, new: pin, completion: { [weak self] (result) in
                     self?.isBusy = false
                     switch result {
@@ -289,10 +335,12 @@ extension WalletPasswordViewController: PinFieldDelegate {
                         AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
                         LoginManager.shared.setAccount(account)
                         self?.updatePasswordSuccessfully(alertTitle: Localized.WALLET_CHANGE_PASSWORD_SUCCESS)
+                        Logger.general.info(category: "SetPIN", message: "\(String(describing: self)) Successfully changed PIN")
                     case let .failure(error):
                         PINVerificationFailureHandler.handle(error: error) { (description) in
                             self?.alert(description)
                         }
+                        Logger.general.info(category: "SetPIN", message: "\(String(describing: self)) Failed to change pin for: \(error)")
                     }
                 })
             } else {

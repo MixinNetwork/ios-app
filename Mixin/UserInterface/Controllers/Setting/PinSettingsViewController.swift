@@ -123,7 +123,7 @@ extension PinSettingsViewController: UITableViewDelegate {
                 present(alert, animated: true, completion: nil)
             }
         } else if indexPath.row == 0 {
-            let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep1, dismissTarget: nil)
+            let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep1, source: "PinSettings", dismissTarget: nil)
             navigationController?.pushViewController(vc, animated: true)
         }
     }

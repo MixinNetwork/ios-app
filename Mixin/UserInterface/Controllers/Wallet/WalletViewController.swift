@@ -54,7 +54,7 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
                 navigationController.pushViewController(withBackRoot: wallet)
             }
         } else {
-            navigationController.pushViewController(withBackRoot: WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: .wallet))
+            navigationController.pushViewController(withBackRoot: WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, source: "presentWallet", dismissTarget: .wallet))
         }
     }
     

@@ -352,7 +352,7 @@ extension UserProfileViewController {
             let vc = VerifyPinNavigationController(rootViewController: ChangeNumberVerifyPinViewController())
             dismissAndPresent(vc)
         } else {
-            let vc = WalletPasswordViewController.instance(dismissTarget: .changePhone)
+            let vc = WalletPasswordViewController.instance(dismissTarget: .changePhone, source: "changeNumber")
             dismissAndPush(vc)
         }
     }
@@ -387,7 +387,7 @@ extension UserProfileViewController {
         if LoginManager.shared.account?.has_pin ?? false {
             viewController = TransferOutViewController.instance(asset: nil, type: .contact(user))
         } else {
-            viewController = WalletPasswordViewController.instance(dismissTarget: .transfer(user: user))
+            viewController = WalletPasswordViewController.instance(dismissTarget: .transfer(user: user), source: "transfer")
         }
         dismissAndPush(viewController)
     }

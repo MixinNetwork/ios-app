@@ -104,7 +104,7 @@ extension EmergencyContactViewController {
             let navigationController = VerifyPinNavigationController(rootViewController: vc)
             present(navigationController, animated: true, completion: nil)
         } else {
-            let vc = WalletPasswordViewController.instance(dismissTarget: .setEmergencyContact)
+            let vc = WalletPasswordViewController.instance(dismissTarget: .setEmergencyContact, source: "changeEmergencyContact")
             navigationController?.pushViewController(vc, animated: true)
         }
     }
@@ -130,7 +130,7 @@ extension EmergencyContactViewController {
                 let nav = VerifyPinNavigationController(rootViewController: vc)
                 self?.navigationController?.present(nav, animated: true, completion: nil)
             } else {
-                let vc = WalletPasswordViewController.instance(dismissTarget: .setEmergencyContact)
+                let vc = WalletPasswordViewController.instance(dismissTarget: .setEmergencyContact, source: "enableEmergencyContact")
                 self?.navigationController?.pushViewController(vc, animated: true)
             }
         }

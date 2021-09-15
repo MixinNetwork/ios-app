@@ -330,13 +330,22 @@ public class ReceiveMessageService: MixinService {
               let plainData = (try? JSONDecoder.default.decode(TransferPinData.self, from: base64Data)),
               let action = TransferPinAction(rawValue: plainData.action)
         else {
-            updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
+            Logger.conversation(id: data.conversationId).error(category: "ParsePin", message: "Invalid TransferPinData: \(data.data)")
+            ReceiveMessageService.shared.processUnknownMessage(data: data)
             return
         }
         switch action {
         case .pin:
             guard let messageId = plainData.messageIds.first,
                   let fullMessage = MessageDAO.shared.getFullMessage(messageId: messageId) else {
+                let message = Message.createMessage(messageId: data.messageId,
+                                                    conversationId: data.conversationId,
+                                                    userId: data.userId,
+                                                    category: data.category,
+                                                    status: MessageStatus.DELIVERED.rawValue,
+                                                    action: plainData.action,
+                                                    createdAt: data.createdAt)
+                MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification)
                 updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
                 return
             }
@@ -349,17 +358,21 @@ public class ReceiveMessageService: MixinService {
             }
             var mention: MessageMention?
             if pinLocalContent.category.hasSuffix("_TEXT"), let content = pinLocalContent.content {
-                let numbers = MessageMentionDetector.identityNumbers(from: content)
-                var mentions = UserDAO.shared.mentionRepresentation(identityNumbers: numbers)
-                if data.userId != myUserId && mentions[myIdentityNumber] == nil {
-                    mentions[myIdentityNumber] = myFullname
-                }
                 mention = MessageMention(conversationId: data.conversationId,
                                          messageId: data.messageId,
-                                         mentions: mentions,
+                                         userId: data.userId,
+                                         content: content,
                                          hasRead: true)
             }
-            let message = Message.createMessage(messageId: data.messageId, conversationId: data.conversationId, userId: data.userId, category: data.category, content: content, status: MessageStatus.DELIVERED.rawValue, action: plainData.action, createdAt: data.createdAt)
+            let message = Message.createMessage(messageId: data.messageId,
+                                                conversationId: data.conversationId,
+                                                userId: data.userId,
+                                                category: data.category,
+                                                content: content,
+                                                status: MessageStatus.DELIVERED.rawValue,
+                                                action: plainData.action,
+                                                quoteMessageId: messageId,
+                                                createdAt: data.createdAt)
             PinMessageDAO.shared.save(referencedItem: fullMessage,
                                       source: data.source,
                                       silentNotification: data.silentNotification,
@@ -692,15 +705,10 @@ public class ReceiveMessageService: MixinService {
         
         switch data.category {
         case MessageCategory.SIGNAL_TEXT.rawValue:
-            let numbers = MessageMentionDetector.identityNumbers(from: plainText)
-            var mentions = UserDAO.shared.mentionRepresentation(identityNumbers: numbers)
-            if data.userId != myUserId && quoteMessage?.userId == myUserId && mentions[myIdentityNumber] == nil {
-                mentions[myIdentityNumber] = myFullname
-            }
             let mention = MessageMention(conversationId: data.conversationId,
                                          messageId: messageId,
-                                         mentions: mentions,
-                                         hasRead: data.userId == myUserId || mentions[myIdentityNumber] == nil)
+                                         userId: data.userId,
+                                         content: plainText)
             MessageDAO.shared.updateMessageContentAndStatus(content: plainText,
                                                             status: Message.getStatus(data: data),
                                                             mention: mention,

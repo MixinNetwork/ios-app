@@ -658,6 +658,8 @@ public final class MessageDAO: UserDatabaseDAO {
         try MessageMention
             .filter(MessageMention.column(of: .messageId) == messageId)
             .deleteAll(database)
+        try PinMessageDAO.shared.delete(messageIds: [messageId], conversationId: conversationId, from: database)
+        try clearContentForPinMessage(quoteMessageId: messageId, database: database)
         
         if category.hasSuffix("_TRANSCRIPT") {
             try TranscriptMessage
@@ -683,9 +685,6 @@ public final class MessageDAO: UserDatabaseDAO {
         
         let messageIds = quoteMessageIds + [messageId]
         database.afterNextTransactionCommit { (_) in
-            if let id = AppGroupUserDefaults.User.pinMessageBanner(for: conversationId)?.referencedMessageId, messageId == id {
-                AppGroupUserDefaults.User.setPinMessageBanner(nil, for: conversationId)
-            }
             for messageId in messageIds {
                 let change = ConversationChange(conversationId: conversationId,
                                                 action: .recallMessage(messageId: messageId))
@@ -717,6 +716,7 @@ public final class MessageDAO: UserDatabaseDAO {
                 .filter(TranscriptMessage.column(of: .transcriptId) == id)
                 .deleteAll(db)
             try PinMessageDAO.shared.delete(messageId: id, from: db)
+            try clearContentForPinMessage(quoteMessageId: id, database: db)
         }
         return (deleteCount > 0, childMessageIds)
     }
@@ -742,6 +742,21 @@ public final class MessageDAO: UserDatabaseDAO {
 }
 
 extension MessageDAO {
+    
+    private func clearContentForPinMessage(quoteMessageId: String, database: GRDB.Database) throws {
+        let condition: SQLSpecificExpressible = Message.column(of: .quoteMessageId) == quoteMessageId
+            && Message.column(of: .category) == MessageCategory.MESSAGE_PIN.rawValue
+        let request = Message.filter(condition)
+        guard let message = try request.fetchOne(database) else {
+            return
+        }
+        try request.updateAll(database, [Message.column(of: .content).set(to: nil)])
+        database.afterNextTransactionCommit { db in
+            let updateChange = ConversationChange(conversationId: message.conversationId,
+                                                  action: .updateMessage(messageId: message.messageId))
+            NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: updateChange)
+        }
+    }
     
     private func hasUnreadMessage(conversationId: String) -> Bool {
         let condition: SQLSpecificExpressible = Message.column(of: .conversationId) == conversationId

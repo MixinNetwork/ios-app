@@ -35,14 +35,10 @@ public class SendMessageService: MixinService {
                 }
                 var mention: MessageMention?
                 if item.category.hasSuffix("_TEXT"), let content = item.content {
-                    let numbers = MessageMentionDetector.identityNumbers(from: content)
-                    var mentions = UserDAO.shared.mentionRepresentation(identityNumbers: numbers)
-                    if item.userId != myUserId && mentions[myIdentityNumber] == nil {
-                        mentions[myIdentityNumber] = myFullname
-                    }
                     mention = MessageMention(conversationId: item.conversationId,
                                              messageId: messageId,
-                                             mentions: mentions,
+                                             userId: item.userId,
+                                             content: content,
                                              hasRead: true)
                 }
                 let pinLocalContent = PinMessage.LocalContent(category: item.category, content: item.content)
@@ -59,6 +55,7 @@ public class SendMessageService: MixinService {
                                                     content: content,
                                                     status: MessageStatus.DELIVERED.rawValue,
                                                     action: action.rawValue,
+                                                    quoteMessageId: item.messageId,
                                                     createdAt: Date().toUTCString())
                 PinMessageDAO.shared.save(referencedItem: item,
                                           source: MessageCategory.MESSAGE_PIN.rawValue,

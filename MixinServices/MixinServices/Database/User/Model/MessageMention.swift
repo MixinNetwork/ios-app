@@ -52,6 +52,20 @@ public struct MessageMention {
                   hasRead: hasRead)
     }
     
+    public init?(conversationId: String, messageId: String, userId: String, content: String, hasRead: Bool? = nil) {
+        let numbers = MessageMentionDetector.identityNumbers(from: content)
+        var mentions = UserDAO.shared.mentionRepresentation(identityNumbers: numbers)
+        if userId != myUserId && mentions[myIdentityNumber] == nil {
+            mentions[myIdentityNumber] = myFullname
+        }
+        let hasRead = hasRead ?? (userId == myUserId || mentions[myIdentityNumber] == nil)
+        let json = (try? JSONEncoder.default.encode(mentions)) ?? Data()
+        self.init(conversationId: conversationId,
+                  messageId: messageId,
+                  mentionsJson: json,
+                  hasRead: hasRead)
+    }
+    
     private init(conversationId: String, messageId: String, mentionsJson: Data, hasRead: Bool) {
         self.conversationId = conversationId
         self.messageId = messageId

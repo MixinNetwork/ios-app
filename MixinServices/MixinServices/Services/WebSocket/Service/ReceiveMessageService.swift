@@ -332,6 +332,7 @@ public class ReceiveMessageService: MixinService {
         else {
             Logger.conversation(id: data.conversationId).error(category: "ParsePin", message: "Invalid TransferPinData: \(data.data)")
             ReceiveMessageService.shared.processUnknownMessage(data: data)
+            updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
             return
         }
         switch action {

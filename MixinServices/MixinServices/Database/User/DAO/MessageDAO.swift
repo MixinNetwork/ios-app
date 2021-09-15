@@ -659,7 +659,7 @@ public final class MessageDAO: UserDatabaseDAO {
             .filter(MessageMention.column(of: .messageId) == messageId)
             .deleteAll(database)
         try PinMessageDAO.shared.delete(messageIds: [messageId], conversationId: conversationId, from: database)
-        try clearContentForPinMessage(quoteMessageId: messageId, database: database)
+        try clearPinMessageContent(quoteMessageId: messageId, conversationId: conversationId, database: database)
         
         if category.hasSuffix("_TRANSCRIPT") {
             try TranscriptMessage
@@ -701,6 +701,10 @@ public final class MessageDAO: UserDatabaseDAO {
         var deleteCount = 0
         var childMessageIds: [String] = []
         db.write { (db) in
+            let conversationId: String? = try Message
+                .select(Message.column(of: .conversationId))
+                .filter(Message.column(of: .messageId) == id)
+                .fetchOne(db)
             deleteCount = try Message
                 .filter(Message.column(of: .messageId) == id)
                 .deleteAll(db)
@@ -715,8 +719,10 @@ public final class MessageDAO: UserDatabaseDAO {
             try TranscriptMessage
                 .filter(TranscriptMessage.column(of: .transcriptId) == id)
                 .deleteAll(db)
-            try PinMessageDAO.shared.delete(messageId: id, from: db)
-            try clearContentForPinMessage(quoteMessageId: id, database: db)
+            if let conversationId = conversationId {
+                try PinMessageDAO.shared.delete(messageIds: [id], conversationId: conversationId, from: db)
+                try clearPinMessageContent(quoteMessageId: id, conversationId: conversationId, database: db)
+            }
         }
         return (deleteCount > 0, childMessageIds)
     }
@@ -743,17 +749,20 @@ public final class MessageDAO: UserDatabaseDAO {
 
 extension MessageDAO {
     
-    private func clearContentForPinMessage(quoteMessageId: String, database: GRDB.Database) throws {
+    private func clearPinMessageContent(quoteMessageId: String, conversationId: String, database: GRDB.Database) throws {
         let condition: SQLSpecificExpressible = Message.column(of: .quoteMessageId) == quoteMessageId
             && Message.column(of: .category) == MessageCategory.MESSAGE_PIN.rawValue
-        let request = Message.filter(condition)
-        guard let message = try request.fetchOne(database) else {
+        let messageId: String? = try Message
+            .select(Message.column(of: .messageId))
+            .filter(condition)
+            .fetchOne(database)
+        guard let messageId = messageId else {
             return
         }
-        try request.updateAll(database, [Message.column(of: .content).set(to: nil)])
+        try Message.filter(condition).updateAll(database, [Message.column(of: .content).set(to: nil)])
         database.afterNextTransactionCommit { db in
-            let updateChange = ConversationChange(conversationId: message.conversationId,
-                                                  action: .updateMessage(messageId: message.messageId))
+            let updateChange = ConversationChange(conversationId: conversationId,
+                                                  action: .updateMessage(messageId: messageId))
             NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: updateChange)
         }
     }

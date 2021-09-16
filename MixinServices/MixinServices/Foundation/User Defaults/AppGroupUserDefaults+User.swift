@@ -70,8 +70,6 @@ extension AppGroupUserDefaults {
         public static let homeAppIdsDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.home.app.ids.change")
         public static let pinMessageBannerDidChangeNotification = Notification.Name("one.mixin.services.pinMessageBannerDidChange")
         
-        public static let conversationIdUserInfoKey = "cid"
-        
         private static let maxNumberOfAssetSearchHistory = 2
         
         public static var needsUpgradeInMainApp: Bool {

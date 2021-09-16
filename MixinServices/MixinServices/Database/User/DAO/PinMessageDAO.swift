@@ -45,14 +45,6 @@ public final class PinMessageDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [conversationId])
     }
     
-    public func messageItem(messageId: String) -> MessageItem? {
-        let sql = """
-        \(Self.messageItemQuery)
-        WHERE m.message_id = ?
-        """
-        return db.select(with: sql, arguments: [messageId])
-    }
-    
     public func lastPinnedMessage(conversationId: String) -> MessageItem? {
         let sql = """
         \(Self.messageItemQuery)

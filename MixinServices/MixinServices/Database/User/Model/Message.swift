@@ -29,7 +29,10 @@ public struct Message {
     public var name: String?
     public var stickerId: String?
     public var sharedUserId: String?
+    
+    // For messages with category of MESSAGE_PIN, this value references the message that gets pinned
     public var quoteMessageId: String?
+    
     public var quoteContent: Data?
     public var createdAt: String
     

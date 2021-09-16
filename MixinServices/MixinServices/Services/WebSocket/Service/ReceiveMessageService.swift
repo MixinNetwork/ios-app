@@ -330,8 +330,8 @@ public class ReceiveMessageService: MixinService {
         }
         guard ConversationDAO.shared.isExist(conversationId: data.conversationId),
               let base64Data = Data(base64Encoded: data.data),
-              let plainData = (try? JSONDecoder.default.decode(TransferPinData.self, from: base64Data)),
-              let action = TransferPinAction(rawValue: plainData.action)
+              let pinData = (try? JSONDecoder.default.decode(TransferPinData.self, from: base64Data)),
+              let action = TransferPinAction(rawValue: pinData.action)
         else {
             Logger.conversation(id: data.conversationId).error(category: "ParsePin", message: "Invalid TransferPinData: \(data.data)")
             ReceiveMessageService.shared.processUnknownMessage(data: data)
@@ -339,14 +339,14 @@ public class ReceiveMessageService: MixinService {
         }
         switch action {
         case .pin:
-            for messageId in plainData.messageIds {
+            for messageId in pinData.messageIds {
                 guard let fullMessage = MessageDAO.shared.getFullMessage(messageId: messageId) else {
                     let message = Message.createMessage(messageId: data.messageId,
                                                         conversationId: data.conversationId,
                                                         userId: data.userId,
                                                         category: data.category,
                                                         status: MessageStatus.DELIVERED.rawValue,
-                                                        action: plainData.action,
+                                                        action: pinData.action,
                                                         createdAt: data.createdAt)
                     MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification)
                     continue
@@ -374,7 +374,7 @@ public class ReceiveMessageService: MixinService {
                                                     category: data.category,
                                                     content: content,
                                                     status: MessageStatus.DELIVERED.rawValue,
-                                                    action: plainData.action,
+                                                    action: pinData.action,
                                                     quoteMessageId: messageId,
                                                     createdAt: data.createdAt)
                 PinMessageDAO.shared.save(referencedItem: fullMessage,
@@ -384,7 +384,7 @@ public class ReceiveMessageService: MixinService {
                                           mention: mention)
             }
         case .unpin:
-            PinMessageDAO.shared.delete(messageIds: plainData.messageIds, conversationId: data.conversationId)
+            PinMessageDAO.shared.delete(messageIds: pinData.messageIds, conversationId: data.conversationId)
         }
     }
     

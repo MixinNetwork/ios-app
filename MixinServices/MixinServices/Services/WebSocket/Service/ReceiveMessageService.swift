@@ -357,13 +357,15 @@ public class ReceiveMessageService: MixinService {
             } else {
                 content = ""
             }
-            var mention: MessageMention?
+            let mention: MessageMention?
             if pinLocalContent.category.hasSuffix("_TEXT"), let content = pinLocalContent.content {
                 mention = MessageMention(conversationId: data.conversationId,
                                          messageId: data.messageId,
-                                         userId: data.userId,
                                          content: content,
-                                         hasRead: true)
+                                         addMeIntoMentions: false,
+                                         hasRead: { _ in true })
+            } else {
+                mention = nil
             }
             let message = Message.createMessage(messageId: data.messageId,
                                                 conversationId: data.conversationId,
@@ -708,8 +710,9 @@ public class ReceiveMessageService: MixinService {
         case MessageCategory.SIGNAL_TEXT.rawValue:
             let mention = MessageMention(conversationId: data.conversationId,
                                          messageId: messageId,
-                                         userId: data.userId,
-                                         content: plainText)
+                                         content: plainText,
+                                         addMeIntoMentions: data.userId != myUserId && quoteMessage?.userId == myUserId,
+                                         hasRead: { data.userId == myUserId || $0[myIdentityNumber] == nil })
             MessageDAO.shared.updateMessageContentAndStatus(content: plainText,
                                                             status: Message.getStatus(data: data),
                                                             mention: mention,

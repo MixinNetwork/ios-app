@@ -33,13 +33,15 @@ public class SendMessageService: MixinService {
                 guard let item = items.first else {
                     return
                 }
-                var mention: MessageMention?
+                let mention: MessageMention?
                 if item.category.hasSuffix("_TEXT"), let content = item.content {
                     mention = MessageMention(conversationId: item.conversationId,
                                              messageId: messageId,
-                                             userId: item.userId,
                                              content: content,
-                                             hasRead: true)
+                                             addMeIntoMentions: false,
+                                             hasRead: { _ in true })
+                } else {
+                    mention = nil
                 }
                 let pinLocalContent = PinMessage.LocalContent(category: item.category, content: item.content)
                 let content: String

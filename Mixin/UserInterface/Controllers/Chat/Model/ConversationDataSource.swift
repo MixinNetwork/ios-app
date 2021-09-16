@@ -926,7 +926,7 @@ extension ConversationDataSource {
     
     func postNewMessageOutOfBoundsNotification(message: MessageItem) {
         var userInfo: [String: Any] = [UserInfoKey.unreadMessageCount: 1]
-        if message.mentions?[myIdentityNumber] != nil {
+        if message.category != MessageCategory.MESSAGE_PIN.rawValue, message.mentions?[myIdentityNumber] != nil {
             userInfo[UserInfoKey.mentionedMessageIds] = [message.messageId]
         }
         DispatchQueue.main.async {

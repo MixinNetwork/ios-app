@@ -325,6 +325,9 @@ public class ReceiveMessageService: MixinService {
         guard data.category == MessageCategory.MESSAGE_PIN.rawValue else {
             return
         }
+        defer {
+            updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
+        }
         guard ConversationDAO.shared.isExist(conversationId: data.conversationId),
               let base64Data = Data(base64Encoded: data.data),
               let plainData = (try? JSONDecoder.default.decode(TransferPinData.self, from: base64Data)),
@@ -332,59 +335,57 @@ public class ReceiveMessageService: MixinService {
         else {
             Logger.conversation(id: data.conversationId).error(category: "ParsePin", message: "Invalid TransferPinData: \(data.data)")
             ReceiveMessageService.shared.processUnknownMessage(data: data)
-            updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
             return
         }
         switch action {
         case .pin:
-            guard let messageId = plainData.messageIds.first,
-                  let fullMessage = MessageDAO.shared.getFullMessage(messageId: messageId) else {
+            for messageId in plainData.messageIds {
+                guard let fullMessage = MessageDAO.shared.getFullMessage(messageId: messageId) else {
+                    let message = Message.createMessage(messageId: data.messageId,
+                                                        conversationId: data.conversationId,
+                                                        userId: data.userId,
+                                                        category: data.category,
+                                                        status: MessageStatus.DELIVERED.rawValue,
+                                                        action: plainData.action,
+                                                        createdAt: data.createdAt)
+                    MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification)
+                    continue
+                }
+                let pinLocalContent = PinMessage.LocalContent(category: fullMessage.category, content: fullMessage.content)
+                let content: String
+                if let data = try? JSONEncoder.default.encode(pinLocalContent), let localContent = String(data: data, encoding: .utf8) {
+                    content = localContent
+                } else {
+                    content = ""
+                }
+                let mention: MessageMention?
+                if pinLocalContent.category.hasSuffix("_TEXT"), let content = pinLocalContent.content {
+                    mention = MessageMention(conversationId: data.conversationId,
+                                             messageId: data.messageId,
+                                             content: content,
+                                             addMeIntoMentions: false,
+                                             hasRead: { _ in true })
+                } else {
+                    mention = nil
+                }
                 let message = Message.createMessage(messageId: data.messageId,
                                                     conversationId: data.conversationId,
                                                     userId: data.userId,
                                                     category: data.category,
+                                                    content: content,
                                                     status: MessageStatus.DELIVERED.rawValue,
                                                     action: plainData.action,
+                                                    quoteMessageId: messageId,
                                                     createdAt: data.createdAt)
-                MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification)
-                updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
-                return
+                PinMessageDAO.shared.save(referencedItem: fullMessage,
+                                          source: data.source,
+                                          silentNotification: data.silentNotification,
+                                          pinMessage: message,
+                                          mention: mention)
             }
-            let pinLocalContent = PinMessage.LocalContent(category: fullMessage.category, content: fullMessage.content)
-            let content: String
-            if let data = try? JSONEncoder.default.encode(pinLocalContent), let localContent = String(data: data, encoding: .utf8) {
-                content = localContent
-            } else {
-                content = ""
-            }
-            let mention: MessageMention?
-            if pinLocalContent.category.hasSuffix("_TEXT"), let content = pinLocalContent.content {
-                mention = MessageMention(conversationId: data.conversationId,
-                                         messageId: data.messageId,
-                                         content: content,
-                                         addMeIntoMentions: false,
-                                         hasRead: { _ in true })
-            } else {
-                mention = nil
-            }
-            let message = Message.createMessage(messageId: data.messageId,
-                                                conversationId: data.conversationId,
-                                                userId: data.userId,
-                                                category: data.category,
-                                                content: content,
-                                                status: MessageStatus.DELIVERED.rawValue,
-                                                action: plainData.action,
-                                                quoteMessageId: messageId,
-                                                createdAt: data.createdAt)
-            PinMessageDAO.shared.save(referencedItem: fullMessage,
-                                      source: data.source,
-                                      silentNotification: data.silentNotification,
-                                      pinMessage: message,
-                                      mention: mention)
         case .unpin:
             PinMessageDAO.shared.delete(messageIds: plainData.messageIds, conversationId: data.conversationId)
         }
-        updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
     }
     
     private func processRecallMessage(data: BlazeMessageData) {

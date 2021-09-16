@@ -74,7 +74,7 @@ public final class PinMessageDAO: UserDatabaseDAO {
                 .fetchOne(database)
             if let pinMessageId = pinMessageId {
                 try Message
-                    .filter(Message.column(of: .messageId) == messageId)
+                    .filter(Message.column(of: .messageId) == pinMessageId)
                     .updateAll(database, [Message.column(of: .content).set(to: nil)])
             }
             return pinMessageId

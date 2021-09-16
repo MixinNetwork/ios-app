@@ -703,12 +703,15 @@ extension SendMessageService {
     
     private func sendPinMessage(blazeMessage: BlazeMessage) throws {
         guard let params = blazeMessage.params else {
+            Logger.general.error(category: "SendPinMessage", message: "No params")
             return
         }
         guard let conversationId = params.conversationId else {
+            Logger.general.error(category: "SendPinMessage", message: "No conversation ID")
             return
         }
         guard let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId) else {
+            Logger.general.error(category: "SendPinMessage", message: "No conversation")
             return
         }
         try checkConversationExist(conversation: conversation)

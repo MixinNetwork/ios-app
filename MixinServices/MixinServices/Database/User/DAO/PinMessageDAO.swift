@@ -12,6 +12,9 @@ public final class PinMessageDAO: UserDatabaseDAO {
     public static let shared = PinMessageDAO()
     
     public static let didSaveNotification = Notification.Name("one.mixin.services.PinMessageDAO.DidSave")
+    
+    // When this notification is posted with no referencedMessageIds in userinfo, it means that all pin messages
+    // in this conversation are deleted
     public static let didDeleteNotification = Notification.Name("one.mixin.services.PinMessageDAO.DidDelete")
     
     static let messageItemQuery = """
@@ -134,6 +137,9 @@ public final class PinMessageDAO: UserDatabaseDAO {
             .deleteAll(database)
         database.afterNextTransactionCommit { db in
             AppGroupUserDefaults.User.pinMessageBanners[conversationId] = nil
+            NotificationCenter.default.post(onMainThread: PinMessageDAO.didDeleteNotification,
+                                            object: self,
+                                            userInfo: [PinMessageDAO.UserInfoKey.conversationId: conversationId])
         }
     }
     

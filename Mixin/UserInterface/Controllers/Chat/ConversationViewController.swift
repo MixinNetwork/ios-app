@@ -1206,16 +1206,17 @@ class ConversationViewController: UIViewController {
         guard conversationId == self.conversationId else {
             return
         }
-        guard let referencedMessageIds = notification.userInfo?[PinMessageDAO.UserInfoKey.referencedMessageIds] as? [String] else {
-            return
-        }
         dataSource.queue.async { [weak self] in
             let count = PinMessageDAO.shared.messageCount(conversationId: conversationId)
             DispatchQueue.main.async {
                 guard let self = self else {
                     return
                 }
-                self.pinnedMessageIds.subtract(referencedMessageIds)
+                if let referencedMessageIds = notification.userInfo?[PinMessageDAO.UserInfoKey.referencedMessageIds] as? [String] {
+                    self.pinnedMessageIds.subtract(referencedMessageIds)
+                } else {
+                    self.pinnedMessageIds = []
+                }
                 if count == 0 {
                     self.pinMessageBannerViewIfLoaded?.isHidden = true
                 } else {

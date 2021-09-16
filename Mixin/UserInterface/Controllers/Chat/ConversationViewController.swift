@@ -1820,7 +1820,6 @@ extension ConversationViewController: TextPreviewViewDelegate {
 extension ConversationViewController: PinMessageBannerViewDelegate {
     
     func pinMessageBannerViewDidTapPin(_ view: PinMessageBannerView) {
-        conversationInputViewController.textView.resignFirstResponder()
         let vc = PinMessagesPreviewViewController(conversationId: conversationId, isGroup: dataSource.category == .group)
         vc.delegate = self
         vc.presentAsChild(of: self)

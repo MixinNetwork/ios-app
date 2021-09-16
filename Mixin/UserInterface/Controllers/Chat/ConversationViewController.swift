@@ -172,17 +172,17 @@ class ConversationViewController: UIViewController {
     }()
     
     private lazy var pinMessageBannerView: PinMessageBannerView = {
-        let alert = R.nib.pinMessageBannerView(owner: nil)!
-        alert.isHidden = true
-        alert.delegate = self
-        view.addSubview(alert)
-        alert.snp.makeConstraints { make in
+        let banner = R.nib.pinMessageBannerView(owner: nil)!
+        banner.isHidden = true
+        banner.delegate = self
+        view.addSubview(banner)
+        banner.snp.makeConstraints { make in
             make.top.equalTo(navigationBarView.snp.bottom)
             make.left.right.equalTo(0)
             make.height.equalTo(60)
         }
-        pinMessageBannerViewIfLoaded = alert
-        return alert
+        pinMessageBannerViewIfLoaded = banner
+        return banner
     }()
     
     private var unreadBadgeValue: Int = 0 {

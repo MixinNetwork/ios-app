@@ -376,7 +376,7 @@ class ConversationViewController: UIViewController {
         center.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         center.addObserver(self, selector: #selector(pinMessageDidSave(_:)), name: PinMessageDAO.didSaveNotification, object: nil)
         center.addObserver(self, selector: #selector(pinMessageDidDelete(_:)), name: PinMessageDAO.didDeleteNotification, object: nil)
-        center.addObserver(self, selector: #selector(pinMessageBannerDidRemove(_:)), name: AppGroupUserDefaults.User.pinMessageBannerDidRemoveNotification, object: nil)
+        center.addObserver(self, selector: #selector(pinMessageBannerDidChange), name: AppGroupUserDefaults.User.pinMessageBannerDidChangeNotification, object: nil)
         
         if dataSource.category == .group {
             CallService.shared.membersManager.loadMembersAsynchornouslyIfNeverLoaded(forConversationWith: conversationId)
@@ -1226,14 +1226,10 @@ class ConversationViewController: UIViewController {
         }
     }
     
-    @objc private func pinMessageBannerDidRemove(_ notification: Notification) {
-        guard let conversationId = notification.userInfo?[AppGroupUserDefaults.User.conversationIdUserInfoKey] as? String else {
-            return
+    @objc private func pinMessageBannerDidChange() {
+        if AppGroupUserDefaults.User.pinMessageBanners[conversationId] == nil {
+            hidePinMessagePreview()
         }
-        guard conversationId == self.conversationId else {
-            return
-        }
-        hidePinMessagePreview()
     }
     
     // MARK: - Interface
@@ -1832,14 +1828,15 @@ extension ConversationViewController: PinMessageBannerViewDelegate {
     }
     
     func pinMessageBannerViewDidTapClose(_ view: PinMessageBannerView) {
-        AppGroupUserDefaults.User.setPinMessageBanner(nil, for: conversationId)
+        AppGroupUserDefaults.User.pinMessageBanners[conversationId] = nil
     }
     
     func pinMessageBannerViewDidTapPreview(_ view: PinMessageBannerView) {
-        guard let id = AppGroupUserDefaults.User.pinMessageBanner(for: conversationId)?.referencedMessageId else {
+        guard let id = AppGroupUserDefaults.User.pinMessageBanners[conversationId],
+              let quoteMessageId = MessageDAO.shared.quoteMessageId(messageId: id) else {
             return
         }
-        scrollToPinnedMessage(messageId: id)
+        scrollToPinnedMessage(messageId: quoteMessageId)
     }
     
 }
@@ -2506,7 +2503,7 @@ extension ConversationViewController {
             var ids = MessageMentionDAO.shared.unreadMessageIds(conversationId: conversationId)
             let pinMessageCount = PinMessageDAO.shared.messageCount(conversationId: conversationId)
             let visiblePinMessage: MessageItem?
-            if let id = AppGroupUserDefaults.User.pinMessageBanner(for: conversationId)?.pinMessageId {
+            if let id = AppGroupUserDefaults.User.pinMessageBanners[conversationId] {
                 visiblePinMessage = MessageDAO.shared.getFullMessage(messageId: id)
             } else {
                 visiblePinMessage = nil

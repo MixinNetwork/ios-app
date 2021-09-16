@@ -745,12 +745,19 @@ public final class MessageDAO: UserDatabaseDAO {
                         where: Message.column(of: .messageId) == id)
     }
     
+    public func quoteMessageId(messageId: String) -> String? {
+        db.select(column: Message.column(of: .quoteMessageId),
+                  from: Message.self,
+                  where: Message.column(of: .messageId) == messageId)
+    }
+    
 }
 
 extension MessageDAO {
     
     private func clearPinMessageContent(quoteMessageId: String, conversationId: String, database: GRDB.Database) throws {
-        let condition: SQLSpecificExpressible = Message.column(of: .quoteMessageId) == quoteMessageId
+        let condition: SQLSpecificExpressible = Message.column(of: .conversationId) == conversationId
+            && Message.column(of: .quoteMessageId) == quoteMessageId
             && Message.column(of: .category) == MessageCategory.MESSAGE_PIN.rawValue
         let messageId: String? = try Message
             .select(Message.column(of: .messageId))
@@ -759,7 +766,9 @@ extension MessageDAO {
         guard let messageId = messageId else {
             return
         }
-        try Message.filter(condition).updateAll(database, [Message.column(of: .content).set(to: nil)])
+        try Message
+            .filter(Message.column(of: .messageId) == messageId)
+            .updateAll(database, [Message.column(of: .content).set(to: nil)])
         database.afterNextTransactionCommit { db in
             let updateChange = ConversationChange(conversationId: conversationId,
                                                   action: .updateMessage(messageId: messageId))

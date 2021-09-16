@@ -238,8 +238,8 @@ extension PinMessagesPreviewViewController {
         let conversationId = self.conversationId
         queue.async { [weak self] in
             let messageId: String?
-            if let id = AppGroupUserDefaults.User.pinMessageBanner(for: conversationId)?.referencedMessageId {
-                messageId = id
+            if let id = AppGroupUserDefaults.User.pinMessageBanners[conversationId], let quoteMessageId = MessageDAO.shared.quoteMessageId(messageId: id) {
+                messageId = quoteMessageId
             } else if let lastPinnedMessage = PinMessageDAO.shared.lastPinnedMessage(conversationId: conversationId) {
                 messageId = lastPinnedMessage.messageId
             } else {

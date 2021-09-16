@@ -24,18 +24,6 @@ extension PinMessage {
         
     }
     
-    public struct Banner: Codable {
-        
-        public let pinMessageId: String
-        public let referencedMessageId: String
-        
-        public enum CodingKeys: String, CodingKey {
-            case pinMessageId = "pid"
-            case referencedMessageId = "rid"
-        }
-        
-    }
-    
 }
 
 extension PinMessage: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord {

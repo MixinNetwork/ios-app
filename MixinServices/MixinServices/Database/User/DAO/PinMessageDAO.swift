@@ -71,8 +71,8 @@ public final class PinMessageDAO: UserDatabaseDAO {
             return
         }
         database.afterNextTransactionCommit { db in
-            if let id = AppGroupUserDefaults.User.pinMessageBanner(for: conversationId)?.referencedMessageId, messageIds.contains(id) {
-                AppGroupUserDefaults.User.setPinMessageBanner(nil, for: conversationId)
+            if let id = AppGroupUserDefaults.User.pinMessageBanners[conversationId], let quoteMessageId = MessageDAO.shared.quoteMessageId(messageId: id), messageIds.contains(quoteMessageId) {
+                AppGroupUserDefaults.User.pinMessageBanners[conversationId] = nil
             }
             let userInfo: [String: Any] = [
                 PinMessageDAO.UserInfoKey.conversationId: conversationId,
@@ -103,8 +103,7 @@ public final class PinMessageDAO: UserDatabaseDAO {
             try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: source, silentNotification: silentNotification)
             try mention?.save(db)
             db.afterNextTransactionCommit { db in
-                let banner = PinMessage.Banner(pinMessageId: message.messageId, referencedMessageId: referencedItem.messageId)
-                AppGroupUserDefaults.User.setPinMessageBanner(banner, for: referencedItem.conversationId)
+                AppGroupUserDefaults.User.pinMessageBanners[referencedItem.conversationId] = message.messageId
                 let userInfo: [String: Any] = [
                     PinMessageDAO.UserInfoKey.conversationId: referencedItem.conversationId,
                     PinMessageDAO.UserInfoKey.referencedMessageId: referencedItem.messageId,
@@ -122,7 +121,7 @@ public final class PinMessageDAO: UserDatabaseDAO {
             .filter(PinMessage.column(of: .conversationId) == conversationId)
             .deleteAll(database)
         database.afterNextTransactionCommit { db in
-            AppGroupUserDefaults.User.setPinMessageBanner(nil, for: conversationId)
+            AppGroupUserDefaults.User.pinMessageBanners[conversationId] = nil
         }
     }
     

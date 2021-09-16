@@ -68,7 +68,7 @@ extension AppGroupUserDefaults {
         public static let didChangeUserInterfaceStyleNotification = Notification.Name(rawValue: "one.mixin.services.DidChangeUserInterfaceStyle")
         public static let circleNameDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.circle.name.change")
         public static let homeAppIdsDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.home.app.ids.change")
-        public static let pinMessageBannerDidRemoveNotification = Notification.Name("one.mixin.services.pinMessageBannerDidChange")
+        public static let pinMessageBannerDidChangeNotification = Notification.Name("one.mixin.services.pinMessageBannerDidChange")
         
         public static let conversationIdUserInfoKey = "cid"
         
@@ -217,31 +217,12 @@ extension AppGroupUserDefaults {
         }
         
         @Default(namespace: .user, key: Key.pinMessageBanners, defaultValue: [:])
-        private static var pinMessageBannersData: [String: Data]
-        
-        public static func pinMessageBanner(for conversationId: String) -> PinMessage.Banner? {
-            guard let data = pinMessageBannersData[conversationId] else {
-                return nil
-            }
-            return try? JSONDecoder.default.decode(PinMessage.Banner.self, from: data)
-        }
-        
-        public static func setPinMessageBanner(_ banner: PinMessage.Banner?, for conversationId: String) {
-            if banner == nil {
-                pinMessageBannersData[conversationId] = nil
-                NotificationCenter.default.post(onMainThread: Self.pinMessageBannerDidRemoveNotification,
-                                                object: self,
-                                                userInfo: [Self.conversationIdUserInfoKey: conversationId])
-            } else {
-                do {
-                    let data = try JSONEncoder.default.encode(banner)
-                    pinMessageBannersData[conversationId] = data
-                } catch {
-                    reporter.report(error: error)
-                }
+        public static var pinMessageBanners: [String: String] {
+            didSet {
+                NotificationCenter.default.post(onMainThread: Self.pinMessageBannerDidChangeNotification, object: self)
             }
         }
-        
+                
         public static func insertRecentlyUsedAppId(id: String) {
             let maxNumberOfIds = 12
             var ids = recentlyUsedAppIds

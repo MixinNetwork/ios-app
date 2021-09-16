@@ -130,11 +130,11 @@ public final class MessageDAO: UserDatabaseDAO {
         let condition: SQLSpecificExpressible = Message.column(of: .conversationId) == conversationId
             && categories.map(\.rawValue).contains(Message.column(of: .category))
         db.write { db in
-            let request = Message.filter(condition)
-            let messageIds: [String] = try request
+            let messageIds: [String] = try Message
                 .select(Message.column(of: .messageId))
+                .filter(condition)
                 .fetchAll(db)
-            try request.deleteAll(db)
+            try Message.filter(condition).deleteAll(db)
             try PinMessageDAO.shared.delete(messageIds: messageIds, conversationId: conversationId, from: db)
         }
     }
@@ -659,7 +659,6 @@ public final class MessageDAO: UserDatabaseDAO {
             .filter(MessageMention.column(of: .messageId) == messageId)
             .deleteAll(database)
         try PinMessageDAO.shared.delete(messageIds: [messageId], conversationId: conversationId, from: database)
-        try clearPinMessageContent(quoteMessageId: messageId, conversationId: conversationId, database: database)
         
         if category.hasSuffix("_TRANSCRIPT") {
             try TranscriptMessage
@@ -721,7 +720,6 @@ public final class MessageDAO: UserDatabaseDAO {
                 .deleteAll(db)
             if let conversationId = conversationId {
                 try PinMessageDAO.shared.delete(messageIds: [id], conversationId: conversationId, from: db)
-                try clearPinMessageContent(quoteMessageId: id, conversationId: conversationId, database: db)
             }
         }
         return (deleteCount > 0, childMessageIds)
@@ -754,27 +752,6 @@ public final class MessageDAO: UserDatabaseDAO {
 }
 
 extension MessageDAO {
-    
-    private func clearPinMessageContent(quoteMessageId: String, conversationId: String, database: GRDB.Database) throws {
-        let condition: SQLSpecificExpressible = Message.column(of: .conversationId) == conversationId
-            && Message.column(of: .quoteMessageId) == quoteMessageId
-            && Message.column(of: .category) == MessageCategory.MESSAGE_PIN.rawValue
-        let messageId: String? = try Message
-            .select(Message.column(of: .messageId))
-            .filter(condition)
-            .fetchOne(database)
-        guard let messageId = messageId else {
-            return
-        }
-        try Message
-            .filter(Message.column(of: .messageId) == messageId)
-            .updateAll(database, [Message.column(of: .content).set(to: nil)])
-        database.afterNextTransactionCommit { db in
-            let updateChange = ConversationChange(conversationId: conversationId,
-                                                  action: .updateMessage(messageId: messageId))
-            NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: updateChange)
-        }
-    }
     
     private func hasUnreadMessage(conversationId: String) -> Bool {
         let condition: SQLSpecificExpressible = Message.column(of: .conversationId) == conversationId

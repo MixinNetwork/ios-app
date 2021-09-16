@@ -67,20 +67,40 @@ public final class PinMessageDAO: UserDatabaseDAO {
         let deletedCount = try PinMessage
             .filter(messageIds.contains(PinMessage.column(of: .messageId)))
             .deleteAll(database)
-        guard deletedCount > 0 else {
-            return
+        
+        // The messages look like system ones in conversation
+        let updatedPinMessageIds: [String] = try messageIds.compactMap { messageId in
+            let condition: SQLSpecificExpressible = Message.column(of: .conversationId) == conversationId
+                && Message.column(of: .quoteMessageId) == messageId
+                && Message.column(of: .category) == MessageCategory.MESSAGE_PIN.rawValue
+            let pinMessageId: String? = try Message
+                .select(Message.column(of: .messageId))
+                .filter(condition)
+                .fetchOne(database)
+            if let pinMessageId = pinMessageId {
+                try Message
+                    .filter(Message.column(of: .messageId) == messageId)
+                    .updateAll(database, [Message.column(of: .content).set(to: nil)])
+            }
+            return pinMessageId
         }
         database.afterNextTransactionCommit { db in
-            if let id = AppGroupUserDefaults.User.pinMessageBanners[conversationId], let quoteMessageId = MessageDAO.shared.quoteMessageId(messageId: id), messageIds.contains(quoteMessageId) {
-                AppGroupUserDefaults.User.pinMessageBanners[conversationId] = nil
+            if deletedCount > 0 {
+                if let id = AppGroupUserDefaults.User.pinMessageBanners[conversationId], let quoteMessageId = MessageDAO.shared.quoteMessageId(messageId: id), messageIds.contains(quoteMessageId) {
+                    AppGroupUserDefaults.User.pinMessageBanners[conversationId] = nil
+                }
+                let userInfo: [String: Any] = [
+                    PinMessageDAO.UserInfoKey.conversationId: conversationId,
+                    PinMessageDAO.UserInfoKey.referencedMessageIds: messageIds,
+                ]
+                NotificationCenter.default.post(onMainThread: PinMessageDAO.didDeleteNotification,
+                                                object: self,
+                                                userInfo: userInfo)
             }
-            let userInfo: [String: Any] = [
-                PinMessageDAO.UserInfoKey.conversationId: conversationId,
-                PinMessageDAO.UserInfoKey.referencedMessageIds: messageIds,
-            ]
-            NotificationCenter.default.post(onMainThread: PinMessageDAO.didDeleteNotification,
-                                            object: self,
-                                            userInfo: userInfo)
+            for id in updatedPinMessageIds {
+                let updateChange = ConversationChange(conversationId: conversationId, action: .updateMessage(messageId: id))
+                NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: updateChange)
+            }
         }
     }
     

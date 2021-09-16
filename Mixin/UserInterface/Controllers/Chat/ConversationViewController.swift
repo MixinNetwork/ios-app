@@ -1194,8 +1194,7 @@ class ConversationViewController: UIViewController {
                 }
                 self.pinnedMessageIds.insert(referencedMessageId)
                 self.pinMessageBannerView.isHidden = false
-                let preview = TransferPinAction.pinMessage(item: message)
-                self.updatePinMessageAlertView(preview: preview, count: count)
+                self.updatePinMessageBanner(item: message, count: count)
             }
         }
     }
@@ -2463,8 +2462,9 @@ extension ConversationViewController {
         }
     }
     
-    private func updatePinMessageAlertView(preview: String, count: Int) {
-        pinMessageBannerView.updateMessage(preview: preview, count: count)
+    private func updatePinMessageBanner(item: MessageItem, count: Int) {
+        let preview = TransferPinAction.pinMessage(item: item)
+        pinMessageBannerView.update(preview: preview, count: count)
         pinMessageBannerView.snp.updateConstraints { make in
             make.left.equalTo(0)
         }
@@ -2527,8 +2527,7 @@ extension ConversationViewController {
                     if pinMessageCount > 0 {
                         self.pinMessageBannerView.isHidden = false
                         if let item = visiblePinMessage {
-                            let preview = TransferPinAction.pinMessage(item: item)
-                            self.updatePinMessageAlertView(preview: preview, count: pinMessageCount)
+                            self.updatePinMessageBanner(item: item, count: pinMessageCount)
                         } else {
                             self.hidePinMessagePreview()
                             self.pinMessageBannerView.updateMessageCount(pinMessageCount)

@@ -41,7 +41,7 @@ extension PinMessageBannerView {
         countLabel.text = "\(count)"
     }
     
-    func updateMessage(preview: String, count: Int) {
+    func update(preview: String, count: Int) {
         closeButton.isHidden = false
         wrapperButton.isHidden = false
         messageLabel.isHidden = false

@@ -7,7 +7,7 @@ public class Currency: CustomDebugStringConvertible {
     public var rate: Double
     
     public var icon: UIImage {
-        return UIImage(named: "CurrencyIcon/\(code)")!
+        return UIImage(named: "Currency/\(code)")!
     }
     
     init(code: String, symbol: String, rate: Double) {

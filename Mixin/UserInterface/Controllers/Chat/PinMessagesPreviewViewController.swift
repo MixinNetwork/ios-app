@@ -59,24 +59,26 @@ final class PinMessagesPreviewViewController: StaticMessagesViewController {
     }
     
     override func menuItems(for viewModel: MessageViewModel) -> [UIMenuItem]? {
-        var items = super.menuItems(for: viewModel) ?? []
-        if canUnpinMessages {
-            items.append(UIMenuItem(title: R.string.localizable.menu_unpin(), action: #selector(unpinSelectedMessage)))
+        guard canUnpinMessages else {
+            return super.menuItems(for: viewModel)
         }
+        var items = super.menuItems(for: viewModel) ?? []
+        items.append(UIMenuItem(title: R.string.localizable.menu_unpin(), action: #selector(unpinSelectedMessage)))
         return items
     }
     
     @available(iOS 13.0, *)
     override func contextMenuActions(for viewModel: MessageViewModel) -> [UIAction]? {
-        var actions = super.contextMenuActions(for: viewModel) ?? []
-        if canUnpinMessages {
-            let unpinAction = UIAction(title: R.string.localizable.menu_unpin(), image: R.image.conversation.ic_action_unpin()) { (_) in
-                SendMessageService.shared.sendPinMessages(items: [viewModel.message],
-                                                          conversationId: self.conversationId,
-                                                          action: .unpin)
-            }
-            actions.append(unpinAction)
+        guard canUnpinMessages else {
+            return super.contextMenuActions(for: viewModel)
         }
+        var actions = super.contextMenuActions(for: viewModel) ?? []
+        let unpinAction = UIAction(title: R.string.localizable.menu_unpin(), image: R.image.conversation.ic_action_unpin()) { (_) in
+            SendMessageService.shared.sendPinMessages(items: [viewModel.message],
+                                                      conversationId: self.conversationId,
+                                                      action: .unpin)
+        }
+        actions.append(unpinAction)
         return actions
     }
     

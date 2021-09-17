@@ -112,7 +112,9 @@
             <constraints>
                 <constraint firstItem="vwe-e6-MZT" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="16j-oh-8Ot"/>
                 <constraint firstItem="vwe-e6-MZT" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="3Yj-gT-du7"/>
+                <constraint firstItem="vwe-e6-MZT" firstAttribute="top" relation="greaterThanOrEqual" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="20" id="AgT-A3-fAC"/>
                 <constraint firstItem="vwe-e6-MZT" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="bottom" priority="750" id="gUe-Kr-D1A"/>
+                <constraint firstItem="vwe-e6-MZT" firstAttribute="top" relation="greaterThanOrEqual" secondItem="fnl-2z-Ty3" secondAttribute="top" id="iHu-5W-hh3"/>
                 <constraint firstItem="vwe-e6-MZT" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" priority="250" id="zCi-Qp-voq"/>
             </constraints>
             <connections>

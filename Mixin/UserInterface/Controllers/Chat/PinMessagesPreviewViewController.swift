@@ -16,8 +16,6 @@ final class PinMessagesPreviewViewController: StaticMessagesViewController {
     
     private var showMessageButtons: [MessageCell: UIButton] = [:]
     private var pinnedMessageItems: [MessageItem] = []
-    private var isPresented = false
-    private var isInitialCellFlashingCompleted = false
     private var ignoresPinMessageChangeNotification = false
     
     private var layoutWidth: CGFloat {
@@ -45,11 +43,6 @@ final class PinMessagesPreviewViewController: StaticMessagesViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(pinMessagesDidChange(_:)), name: PinMessageDAO.didSaveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(pinMessagesDidChange(_:)), name: PinMessageDAO.didDeleteNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(participantDidChange(_:)), name: ParticipantDAO.participantDidChangeNotification, object: nil)
-    }
-    
-    override func viewDidPresentAsChild() {
-        isPresented = true
-        flashCellBackgroundIfNeeded()
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -224,37 +217,8 @@ extension PinMessagesPreviewViewController {
                 self.dates = dates
                 self.viewModels = viewModels
                 self.tableView.reloadData()
-                self.flashCellBackgroundIfNeeded()
             }
             self.updateUnpinAllButtonVisibility()
-        }
-    }
-    
-    private func flashCellBackgroundIfNeeded() {
-        guard isPresented && !isInitialCellFlashingCompleted && !pinnedMessageItems.isEmpty else {
-            return
-        }
-        isInitialCellFlashingCompleted = true
-        let conversationId = self.conversationId
-        queue.async { [weak self] in
-            let messageId: String?
-            if let id = AppGroupUserDefaults.User.pinMessageBanners[conversationId], let quoteMessageId = MessageDAO.shared.quoteMessageId(messageId: id) {
-                messageId = quoteMessageId
-            } else if let lastPinnedMessage = PinMessageDAO.shared.lastPinnedMessage(conversationId: conversationId) {
-                messageId = lastPinnedMessage.messageId
-            } else {
-                messageId = nil
-            }
-            DispatchQueue.main.async {
-                guard let self = self else {
-                    return
-                }
-                guard let messageId = messageId, let indexPath = self.indexPath(where: { $0.messageId == messageId }) else {
-                    return
-                }
-                self.tableView.scrollToRow(at: indexPath, at: .middle, animated: false)
-                self.flashCellBackground(at: indexPath)
-            }
         }
     }
     

@@ -11,16 +11,11 @@ final class PinMessageBannerView: UIView {
     weak var delegate: PinMessageBannerViewDelegate?
     
     @IBOutlet weak var pinButton: UIButton!
-    @IBOutlet weak var countLabel: RoundedInsetLabel!
+    @IBOutlet weak var countLabel: InsetLabel!
     @IBOutlet weak var wrapperButton: UIButton!
     @IBOutlet weak var closeButton: UIButton!
     @IBOutlet weak var messageLabel: UILabel!
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        countLabel.contentInset = UIEdgeInsets(top: 1, left: 6, bottom: 1, right: 6)
-    }
-    
+        
     @IBAction func tapCloseAction(_ sender: Any) {
         delegate?.pinMessageBannerViewDidTapClose(self)
     }

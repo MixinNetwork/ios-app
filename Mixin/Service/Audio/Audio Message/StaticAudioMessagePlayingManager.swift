@@ -9,10 +9,6 @@ class StaticAudioMessagePlayingManager: AudioMessagePlayingManager {
     
     weak var delegate: StaticAudioMessagePlayingManagerDelegate?
     
-    override func updateMediaStatusToRead(message: MessageItem) {
-        // Do nothing. There's no read indication for audio messages inside a transcript
-    }
-    
     override func playableMessage(nextTo message: MessageItem) -> MessageItem? {
         return delegate?.staticAudioMessagePlayingManager(self, playableMessageNextTo: message)
     }

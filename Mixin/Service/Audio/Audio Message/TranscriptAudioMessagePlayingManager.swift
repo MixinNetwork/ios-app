@@ -9,6 +9,10 @@ class TranscriptAudioMessagePlayingManager: StaticAudioMessagePlayingManager {
         self.transcriptId = transcriptId
     }
     
+    override func updateMediaStatusToRead(message: MessageItem) {
+        // Do nothing. There's no read indication for audio messages inside a transcript
+    }
+    
     override func filePath(message: MessageItem, mediaUrl: String) -> String {
         AttachmentContainer.url(transcriptId: transcriptId, filename: mediaUrl).path
     }

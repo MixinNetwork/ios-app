@@ -136,6 +136,7 @@ public final class MessageDAO: UserDatabaseDAO {
                 .fetchAll(db)
             try Message.filter(condition).deleteAll(db)
             try PinMessageDAO.shared.delete(messageIds: messageIds, conversationId: conversationId, from: db)
+            try clearPinMessageContent(quoteMessageIds: messageIds, conversationId: conversationId, from: db)
         }
     }
     
@@ -659,6 +660,7 @@ public final class MessageDAO: UserDatabaseDAO {
             .filter(MessageMention.column(of: .messageId) == messageId)
             .deleteAll(database)
         try PinMessageDAO.shared.delete(messageIds: [messageId], conversationId: conversationId, from: database)
+        try clearPinMessageContent(quoteMessageIds: [messageId], conversationId: conversationId, from: database)
         
         if category.hasSuffix("_TRANSCRIPT") {
             try TranscriptMessage
@@ -720,6 +722,7 @@ public final class MessageDAO: UserDatabaseDAO {
                 .deleteAll(db)
             if let conversationId = conversationId {
                 try PinMessageDAO.shared.delete(messageIds: [id], conversationId: conversationId, from: db)
+                try clearPinMessageContent(quoteMessageIds: [id], conversationId: conversationId, from: db)
             }
         }
         return (deleteCount > 0, childMessageIds)
@@ -899,6 +902,30 @@ extension MessageDAO {
                                messageSource: messageSource,
                                children: children,
                                silentNotification: silentNotification)
+    }
+    
+    private func clearPinMessageContent(quoteMessageIds: [String], conversationId: String, from database: GRDB.Database) throws {
+        let ids: [String] = try quoteMessageIds.flatMap { (quoteMessageId) -> [String] in
+            let condition: SQLSpecificExpressible = Message.column(of: .conversationId) == conversationId
+                && Message.column(of: .quoteMessageId) == quoteMessageId
+                && Message.column(of: .category) == MessageCategory.MESSAGE_PIN.rawValue
+            let pinMessageIds: [String] = try Message
+                .select(Message.column(of: .messageId))
+                .filter(condition)
+                .fetchAll(database)
+            for id in pinMessageIds {
+                try Message
+                    .filter(Message.column(of: .messageId) == id)
+                    .updateAll(database, [Message.column(of: .content).set(to: nil)])
+            }
+            return pinMessageIds
+        }
+        database.afterNextTransactionCommit { db in
+            for id in ids {
+                let updateChange = ConversationChange(conversationId: conversationId, action: .updateMessage(messageId: id))
+                NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: updateChange)
+            }
+        }
     }
     
 }

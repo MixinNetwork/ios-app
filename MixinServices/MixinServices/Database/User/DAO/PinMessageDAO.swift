@@ -48,16 +48,6 @@ public final class PinMessageDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [conversationId])
     }
     
-    public func lastPinnedMessage(conversationId: String) -> MessageItem? {
-        let sql = """
-        \(Self.messageItemQuery)
-        WHERE m.conversation_id = ?
-        ORDER BY p.created_at DESC
-        LIMIT 1
-        """
-        return db.select(with: sql, arguments: [conversationId])
-    }
-    
     public func delete(messageIds: [String], conversationId: String, from database: GRDB.Database) throws {
         let deletedCount = try PinMessage
             .filter(messageIds.contains(PinMessage.column(of: .messageId)))
@@ -151,11 +141,6 @@ public final class PinMessageDAO: UserDatabaseDAO {
     public func hasMessage(conversationId: String) -> Bool {
         db.recordExists(in: PinMessage.self,
                         where: PinMessage.column(of: .conversationId) == conversationId)
-    }
-    
-    public func isPinned(messageId: String) -> Bool {
-        db.recordExists(in: PinMessage.self,
-                        where: PinMessage.column(of: .messageId) == messageId)
     }
     
 }

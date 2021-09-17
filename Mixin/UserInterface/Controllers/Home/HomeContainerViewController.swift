@@ -172,10 +172,24 @@ extension HomeContainerViewController {
             .children
             .compactMap({ $0 as? SharedMediaMediaViewController })
             .first
+        if let delegate = sharedMedia {
+            return delegate
+        }
         let conversation = homeNavigationController.viewControllers
             .compactMap({ $0 as? ConversationViewController })
             .first(where: { $0.conversationId == conversationId })
-        return sharedMedia ?? conversation
+        if let conversation = conversation {
+            let isShowingStaticMessages = conversation.children.contains { child in
+                child is TranscriptPreviewViewController || child is PinMessagesPreviewViewController
+            }
+            if isShowingStaticMessages {
+                return nil
+            } else {
+                return conversation
+            }
+        } else {
+            return nil
+        }
     }
     
     private func removeGalleryFromItsParentIfNeeded() {

@@ -910,6 +910,7 @@ extension ConversationDataSource {
                 && !tableView.isDecelerating
                 && isLastCell
                 && (lastMessageIsVisibleBeforeInsertion || messageIsSentByMe)
+                && !(message.category == MessageCategory.MESSAGE_PIN.rawValue && messageIsSentByMe)
             if shouldScrollToNewMessage {
                 if tableView.tableFooterView == nil {
                     tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
@@ -925,7 +926,7 @@ extension ConversationDataSource {
     
     func postNewMessageOutOfBoundsNotification(message: MessageItem) {
         var userInfo: [String: Any] = [UserInfoKey.unreadMessageCount: 1]
-        if message.mentions?[myIdentityNumber] != nil {
+        if message.category != MessageCategory.MESSAGE_PIN.rawValue, message.mentions?[myIdentityNumber] != nil {
             userInfo[UserInfoKey.mentionedMessageIds] = [message.messageId]
         }
         DispatchQueue.main.async {

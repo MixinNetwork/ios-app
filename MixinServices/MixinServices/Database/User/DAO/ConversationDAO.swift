@@ -166,6 +166,7 @@ public final class ConversationDAO: UserDatabaseDAO {
                 .filter(Participant.column(of: .conversationId) == conversationId)
                 .deleteAll(db)
             try deleteFTSContent(with: conversationId, from: db)
+            try PinMessageDAO.shared.deleteAll(conversationId: conversationId, from: db)
             db.afterNextTransactionCommit { (_) in
                 NotificationCenter.default.post(onMainThread: ParticipantDAO.participantDidChangeNotification,
                                                 object: self,
@@ -197,6 +198,7 @@ public final class ConversationDAO: UserDatabaseDAO {
                 .filter(ParticipantSession.column(of: .conversationId) == conversationId)
                 .deleteAll(db)
             try deleteFTSContent(with: conversationId, from: db)
+            try PinMessageDAO.shared.deleteAll(conversationId: conversationId, from: db)
             db.afterNextTransactionCommit { (_) in
                 let job = AttachmentCleanUpJob(conversationId: conversationId,
                                                mediaUrls: mediaUrls,
@@ -224,6 +226,7 @@ public final class ConversationDAO: UserDatabaseDAO {
                 .filter(Conversation.column(of: .conversationId) == conversationId)
                 .updateAll(db, [Conversation.column(of: .unseenMessageCount).set(to: 0)])
             try deleteFTSContent(with: conversationId, from: db)
+            try PinMessageDAO.shared.deleteAll(conversationId: conversationId, from: db)
             db.afterNextTransactionCommit { (_) in
                 let job = AttachmentCleanUpJob(conversationId: conversationId,
                                                mediaUrls: mediaUrls,

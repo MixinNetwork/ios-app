@@ -57,6 +57,8 @@
 "menu_delete" = "删除";
 "menu_edit" = "编辑";
 "menu_report" = "上报";
+"menu_pin" = "置顶";
+"menu_unpin" = "取消置顶";
 "no_result" = "未找到相关内容";
 "title_loading" = "正在加载...";
 "all_photos" = "所有照片";
@@ -367,6 +369,24 @@
 "chat_pick_from_library" = "打开相册";
 "chat_manage_photo_auth" = "更改设置";
 "chat_photo_select_more" = "选择更多照片";
+
+// Pin
+"chat_pinned_general_message" = "%@置顶了一条消息";
+"chat_pinned_text_message" = "%@置顶了\"%@\"";
+"chat_pinned_image_message" = "%@置顶了一张图片";
+"chat_pinned_video_message" = "%@置顶了一个视频";
+"chat_pinned_live_message" = "%@置顶了一个直播";
+"chat_pinned_data_message" = "%@置顶了一个文件";
+"chat_pinned_sticker_message" = "%@置顶了一个贴纸";
+"chat_pinned_contact_message" = "%@置顶了一个联系人";
+"chat_pinned_audio_message" = "%@置顶了一个语音";
+"chat_pinned_post_message" = "%@置顶了一篇文章";
+"chat_pinned_location_message" = "%@置顶了一处位置";
+"chat_pinned_transcript_message" = "%@置顶了一个聊天记录";
+"chat_pinned_app_card_message" = "%@置顶了一张卡片";
+"chat_pinned_messages_count" = "%d条置顶消息";
+"chat_unpin_all_messages" = "取消所有置顶消息";
+"chat_alert_unpin_all_messages" = "你确定要取消所有置顶消息吗";
 
 // Web
 "web_suspicious_link" = "可疑链接";
@@ -927,6 +947,7 @@
 "notification_content_voice_call" = "[语音通话]";
 "notification_content_location" = "[位置]";
 "notification_content_transcript" = "[聊天记录]";
+"notification_content_post" = "[文章]";
 "notification_content_unknown" = "[未知消息]";
 
 "alert_key_contact_message" = "发来一条信息";

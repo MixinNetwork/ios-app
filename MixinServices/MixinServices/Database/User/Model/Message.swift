@@ -29,7 +29,10 @@ public struct Message {
     public var name: String?
     public var stickerId: String?
     public var sharedUserId: String?
+    
+    // For messages with category of MESSAGE_PIN, this value references the message that gets pinned
     public var quoteMessageId: String?
+    
     public var quoteContent: Data?
     public var createdAt: String
     
@@ -278,6 +281,7 @@ public enum MessageCategory: String, Decodable {
     case WEBRTC_AUDIO_END
     case WEBRTC_ICE_CANDIDATE
     case MESSAGE_RECALL
+    case MESSAGE_PIN
     case KRAKEN_INVITE
     case KRAKEN_PUBLISH
     case KRAKEN_SUBSCRIBE

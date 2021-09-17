@@ -57,6 +57,8 @@
 "menu_delete" = "Delete";
 "menu_edit" = "Edit";
 "menu_report" = "Report";
+"menu_pin" = "Pin";
+"menu_unpin" = "Unpin";
 "no_result" = "No result";
 "title_loading" = "Loading...";
 "all_photos" = "All Photos";
@@ -367,6 +369,24 @@
 "chat_pick_from_library" = "Pick from Library";
 "chat_manage_photo_auth" = "Manage";
 "chat_photo_select_more" = "Select More Photos";
+
+// Pin
+"chat_pinned_general_message" = "%@ pinned a message";
+"chat_pinned_text_message" = "%@ pinned \"%@\"";
+"chat_pinned_image_message" = "%@ pinned a photo";
+"chat_pinned_video_message" = "%@ pinned a video";
+"chat_pinned_live_message" = "%@ pinned a live stream";
+"chat_pinned_data_message" = "%@ pinned a file";
+"chat_pinned_sticker_message" = "%@ pinned a sticker";
+"chat_pinned_contact_message" = "%@ pinned a contact";
+"chat_pinned_audio_message" = "%@ pinned an audio";
+"chat_pinned_post_message" = "%@ pinned a post";
+"chat_pinned_location_message" = "%@ pinned a location";
+"chat_pinned_transcript_message" = "%@ pinned a transcript";
+"chat_pinned_app_card_message" = "%@ pinned a card";
+"chat_pinned_messages_count" = "%d Pinned Messages";
+"chat_unpin_all_messages" = "Unpin All Messages";
+"chat_alert_unpin_all_messages" = "Are you sure you want to unpin all messages?";
 
 // Web
 "web_suspicious_link" = "Suspicious Link";
@@ -930,6 +950,7 @@
 "notification_content_voice_call" = "[Voice Call]";
 "notification_content_location" = "[Location]";
 "notification_content_transcript" = "[Transcript]";
+"notification_content_post" = "[Post]";
 "notification_content_unknown" = "[Unknown]";
 
 "alert_key_contact_message" = "send you a message";

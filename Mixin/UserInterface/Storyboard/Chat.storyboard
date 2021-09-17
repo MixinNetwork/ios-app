@@ -198,13 +198,13 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="syC-xp-0cA" customClass="HittestBypassWrapperView" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="320" y="601" width="44" height="8"/>
+                                <rect key="frame" x="320" y="599" width="44" height="10"/>
                                 <subviews>
                                     <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gq7-57-99M">
-                                        <rect key="frame" x="0.0" y="0.0" width="44" height="4"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="44" height="5"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eDd-sJ-8a5">
-                                                <rect key="frame" x="22" y="4" width="0.0" height="0.0"/>
+                                                <rect key="frame" x="22" y="5" width="0.0" height="0.0"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="eDd-sJ-8a5" secondAttribute="height" multiplier="1:1" id="5Ra-4R-I6j"/>
                                                 </constraints>
@@ -233,21 +233,21 @@
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
-                                            <constraint firstItem="eDd-sJ-8a5" firstAttribute="top" secondItem="gq7-57-99M" secondAttribute="top" constant="4" id="2Yu-Kp-COl"/>
+                                            <constraint firstItem="eDd-sJ-8a5" firstAttribute="top" secondItem="gq7-57-99M" secondAttribute="top" constant="5" id="2Yu-Kp-COl"/>
                                             <constraint firstItem="eDd-sJ-8a5" firstAttribute="centerX" secondItem="gq7-57-99M" secondAttribute="centerX" id="GuH-YD-E22"/>
                                             <constraint firstItem="kbn-FY-Imd" firstAttribute="width" relation="lessThanOrEqual" secondItem="gq7-57-99M" secondAttribute="width" id="WLr-3E-gRF"/>
                                             <constraint firstAttribute="width" constant="44" id="Wyb-tn-yg9"/>
-                                            <constraint firstAttribute="height" constant="4" id="aKJ-9Q-iGJ"/>
+                                            <constraint firstAttribute="height" constant="5" id="aKJ-9Q-iGJ"/>
                                             <constraint firstItem="kbn-FY-Imd" firstAttribute="top" secondItem="gq7-57-99M" secondAttribute="top" id="beg-0F-HsB"/>
                                             <constraint firstItem="kbn-FY-Imd" firstAttribute="centerX" secondItem="gq7-57-99M" secondAttribute="centerX" id="cJr-f6-bag"/>
                                             <constraint firstAttribute="bottom" secondItem="eDd-sJ-8a5" secondAttribute="bottom" id="ekI-qu-Lyv"/>
                                         </constraints>
                                     </view>
                                     <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="enU-Jm-AWl">
-                                        <rect key="frame" x="0.0" y="4" width="44" height="4"/>
+                                        <rect key="frame" x="0.0" y="5" width="44" height="5"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hzm-Vh-1BZ">
-                                                <rect key="frame" x="22" y="4" width="0.0" height="0.0"/>
+                                                <rect key="frame" x="22" y="5" width="0.0" height="0.0"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="hzm-Vh-1BZ" secondAttribute="height" multiplier="1:1" id="2tX-U0-LhA"/>
                                                 </constraints>
@@ -278,9 +278,9 @@
                                             <constraint firstAttribute="width" constant="44" id="9aO-oj-Qar"/>
                                             <constraint firstAttribute="bottom" secondItem="hzm-Vh-1BZ" secondAttribute="bottom" id="F4e-GZ-fvF"/>
                                             <constraint firstItem="x2d-vg-jlV" firstAttribute="centerX" secondItem="enU-Jm-AWl" secondAttribute="centerX" id="KXD-rv-BTA"/>
-                                            <constraint firstItem="hzm-Vh-1BZ" firstAttribute="top" secondItem="enU-Jm-AWl" secondAttribute="top" constant="4" id="dwp-WB-XsQ"/>
+                                            <constraint firstItem="hzm-Vh-1BZ" firstAttribute="top" secondItem="enU-Jm-AWl" secondAttribute="top" constant="5" id="dwp-WB-XsQ"/>
                                             <constraint firstItem="hzm-Vh-1BZ" firstAttribute="centerX" secondItem="enU-Jm-AWl" secondAttribute="centerX" id="h6l-Qj-m89"/>
-                                            <constraint firstAttribute="height" constant="4" id="iai-L8-XoW"/>
+                                            <constraint firstAttribute="height" constant="5" id="iai-L8-XoW"/>
                                             <constraint firstItem="x2d-vg-jlV" firstAttribute="width" relation="lessThanOrEqual" secondItem="enU-Jm-AWl" secondAttribute="width" id="lOl-Lr-KDt"/>
                                             <constraint firstItem="x2d-vg-jlV" firstAttribute="top" secondItem="enU-Jm-AWl" secondAttribute="top" id="yz8-X5-8ce"/>
                                         </constraints>
@@ -2087,7 +2087,7 @@
     <resources>
         <image name="Conversation/bg_chat" width="428" height="926"/>
         <image name="Conversation/ic_app" width="22" height="20"/>
-        <image name="Conversation/ic_chat_bottom" width="44" height="44"/>
+        <image name="Conversation/ic_chat_bottom" width="38" height="38"/>
         <image name="Conversation/ic_jump_to_mention" width="38" height="38"/>
         <image name="Conversation/ic_keyboard" width="24" height="18"/>
         <image name="Conversation/ic_mic" width="14" height="20"/>

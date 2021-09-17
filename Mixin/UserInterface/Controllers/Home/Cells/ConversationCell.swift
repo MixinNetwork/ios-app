@@ -141,6 +141,8 @@ class ConversationCell: ModernSelectedBackgroundCell {
                 } else {
                     contentLabel.text = R.string.localizable.chat_message_recalled()
                 }
+            } else if category == MessageCategory.MESSAGE_PIN.rawValue {
+                contentLabel.text = TransferPinAction.pinMessage(item: item)
             } else if category == MessageCategory.KRAKEN_PUBLISH.rawValue {
                 contentLabel.text = R.string.localizable.group_call_publish(senderName)
             } else if category == MessageCategory.KRAKEN_CANCEL.rawValue {

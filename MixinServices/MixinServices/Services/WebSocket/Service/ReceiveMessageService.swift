@@ -217,6 +217,7 @@ public class ReceiveMessageService: MixinService {
             ReceiveMessageService.shared.processAppCard(data: data)
             ReceiveMessageService.shared.processCallMessage(data: data)
             ReceiveMessageService.shared.processRecallMessage(data: data)
+            ReceiveMessageService.shared.processPinMessage(data: data)
         } else {
             ReceiveMessageService.shared.processUnknownMessage(data: data)
             ReceiveMessageService.shared.updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
@@ -320,6 +321,73 @@ public class ReceiveMessageService: MixinService {
         }
     }
 
+    private func processPinMessage(data: BlazeMessageData) {
+        guard data.category == MessageCategory.MESSAGE_PIN.rawValue else {
+            return
+        }
+        defer {
+            updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
+        }
+        guard ConversationDAO.shared.isExist(conversationId: data.conversationId),
+              let base64Data = Data(base64Encoded: data.data),
+              let pinData = (try? JSONDecoder.default.decode(TransferPinData.self, from: base64Data)),
+              let action = TransferPinAction(rawValue: pinData.action)
+        else {
+            Logger.conversation(id: data.conversationId).error(category: "ParsePin", message: "Invalid TransferPinData: \(data.data)")
+            ReceiveMessageService.shared.processUnknownMessage(data: data)
+            return
+        }
+        switch action {
+        case .pin:
+            for messageId in pinData.messageIds {
+                guard let fullMessage = MessageDAO.shared.getFullMessage(messageId: messageId) else {
+                    let message = Message.createMessage(messageId: data.messageId,
+                                                        conversationId: data.conversationId,
+                                                        userId: data.userId,
+                                                        category: data.category,
+                                                        status: MessageStatus.DELIVERED.rawValue,
+                                                        action: pinData.action,
+                                                        createdAt: data.createdAt)
+                    MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification)
+                    continue
+                }
+                let pinLocalContent = PinMessage.LocalContent(category: fullMessage.category, content: fullMessage.content)
+                let content: String
+                if let data = try? JSONEncoder.default.encode(pinLocalContent), let localContent = String(data: data, encoding: .utf8) {
+                    content = localContent
+                } else {
+                    content = ""
+                }
+                let mention: MessageMention?
+                if pinLocalContent.category.hasSuffix("_TEXT"), let content = pinLocalContent.content {
+                    mention = MessageMention(conversationId: data.conversationId,
+                                             messageId: data.messageId,
+                                             content: content,
+                                             addMeIntoMentions: false,
+                                             hasRead: { _ in true })
+                } else {
+                    mention = nil
+                }
+                let message = Message.createMessage(messageId: data.messageId,
+                                                    conversationId: data.conversationId,
+                                                    userId: data.userId,
+                                                    category: data.category,
+                                                    content: content,
+                                                    status: MessageStatus.DELIVERED.rawValue,
+                                                    action: pinData.action,
+                                                    quoteMessageId: messageId,
+                                                    createdAt: data.createdAt)
+                PinMessageDAO.shared.save(referencedItem: fullMessage,
+                                          source: data.source,
+                                          silentNotification: data.silentNotification,
+                                          pinMessage: message,
+                                          mention: mention)
+            }
+        case .unpin:
+            PinMessageDAO.shared.delete(messageIds: pinData.messageIds, conversationId: data.conversationId)
+        }
+    }
+    
     private func processRecallMessage(data: BlazeMessageData) {
         guard data.category == MessageCategory.MESSAGE_RECALL.rawValue else {
             return
@@ -641,15 +709,11 @@ public class ReceiveMessageService: MixinService {
         
         switch data.category {
         case MessageCategory.SIGNAL_TEXT.rawValue:
-            let numbers = MessageMentionDetector.identityNumbers(from: plainText)
-            var mentions = UserDAO.shared.mentionRepresentation(identityNumbers: numbers)
-            if data.userId != myUserId && quoteMessage?.userId == myUserId && mentions[myIdentityNumber] == nil {
-                mentions[myIdentityNumber] = myFullname
-            }
             let mention = MessageMention(conversationId: data.conversationId,
                                          messageId: messageId,
-                                         mentions: mentions,
-                                         hasRead: data.userId == myUserId || mentions[myIdentityNumber] == nil)
+                                         content: plainText,
+                                         addMeIntoMentions: data.userId != myUserId && quoteMessage?.userId == myUserId,
+                                         hasRead: { data.userId == myUserId || $0[myIdentityNumber] == nil })
             MessageDAO.shared.updateMessageContentAndStatus(content: plainText,
                                                             status: Message.getStatus(data: data),
                                                             mention: mention,

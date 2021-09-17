@@ -57,6 +57,8 @@ extension AppGroupUserDefaults {
             case homeAppsPinTips = "home_apps_pin_tips"
             
             case userInterfaceStyle = "ui_style"
+
+            case pinMessageBanners = "pin_message_banners"
         }
         
         public static let version = 27
@@ -66,6 +68,7 @@ extension AppGroupUserDefaults {
         public static let didChangeUserInterfaceStyleNotification = Notification.Name(rawValue: "one.mixin.services.DidChangeUserInterfaceStyle")
         public static let circleNameDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.circle.name.change")
         public static let homeAppIdsDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.home.app.ids.change")
+        public static let pinMessageBannerDidChangeNotification = Notification.Name("one.mixin.services.pinMessageBannerDidChange")
         
         private static let maxNumberOfAssetSearchHistory = 2
         
@@ -211,6 +214,13 @@ extension AppGroupUserDefaults {
             }
         }
         
+        @Default(namespace: .user, key: Key.pinMessageBanners, defaultValue: [:])
+        public static var pinMessageBanners: [String: String] {
+            didSet {
+                NotificationCenter.default.post(onMainThread: Self.pinMessageBannerDidChangeNotification, object: self)
+            }
+        }
+                
         public static func insertRecentlyUsedAppId(id: String) {
             let maxNumberOfIds = 12
             var ids = recentlyUsedAppIds

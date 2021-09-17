@@ -8,6 +8,8 @@ enum MessageAction {
     case delete
     case addToStickers
     case report
+    case pin
+    case unpin
     
     var image: UIImage? {
         switch self {
@@ -23,6 +25,10 @@ enum MessageAction {
             return R.image.conversation.ic_action_add_to_sticker()
         case .report:
             return R.image.conversation.ic_action_report()
+        case .pin:
+            return R.image.conversation.ic_action_pin()
+        case .unpin:
+            return R.image.conversation.ic_action_unpin()
         }
     }
     
@@ -40,6 +46,11 @@ enum MessageAction {
             return R.string.localizable.chat_message_sticker()
         case .report:
             return R.string.localizable.menu_report()
+        case .pin:
+            return R.string.localizable.menu_pin()
+        case .unpin:
+            return R.string.localizable.menu_unpin()
+            
         }
     }
     

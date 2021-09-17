@@ -561,6 +561,9 @@
 		7BFE47E32284394000FC4379 /* CheckmarkPeerCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BFE47E12284394000FC4379 /* CheckmarkPeerCell.xib */; };
 		7BFE47E52284530200FC4379 /* PeerHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFE47E42284530200FC4379 /* PeerHeaderView.swift */; };
 		7BFE47E722845DE100FC4379 /* MessageReceiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFE47E622845DE100FC4379 /* MessageReceiver.swift */; };
+		7C0D997F26CA62CD00356655 /* StaticAudioMessagePlayingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0D997E26CA62CD00356655 /* StaticAudioMessagePlayingManager.swift */; };
+		7C14CFC126CA35CF0094AF4A /* StaticMessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C14CFBF26CA35CF0094AF4A /* StaticMessagesViewController.swift */; };
+		7C14CFC226CA35CF0094AF4A /* StaticMessagesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C14CFC026CA35CF0094AF4A /* StaticMessagesView.xib */; };
 		7C5823D5268966A1003AA142 /* HomeAppsFolderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5823D4268966A1003AA142 /* HomeAppsFolderViewController.swift */; };
 		7C66F0272689D1FE006D8462 /* HomeAppsDragInteraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F0262689D1FE006D8462 /* HomeAppsDragInteraction.swift */; };
 		7C66F029268A0384006D8462 /* AppPageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F028268A0384006D8462 /* AppPageCell.swift */; };
@@ -572,6 +575,12 @@
 		7C66F1BF268B3514006D8462 /* HomeAppsManager+FolderInteraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1BE268B3514006D8462 /* HomeAppsManager+FolderInteraction.swift */; };
 		7C66F1C1268C0250006D8462 /* HomeAppsFolderInteraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1C0268C0250006D8462 /* HomeAppsFolderInteraction.swift */; };
 		7C7635B826A13461006101DB /* HomeAppsConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7635B726A13461006101DB /* HomeAppsConstants.swift */; };
+		7CB0954F26CCED2E0049F4C7 /* PinMessageBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB0954E26CCED2E0049F4C7 /* PinMessageBannerView.swift */; };
+		7CB0955126CCED420049F4C7 /* PinMessageBannerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CB0955026CCED420049F4C7 /* PinMessageBannerView.xib */; };
+		7CB0955326CD18F70049F4C7 /* PinMessagesPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB0955226CD18F70049F4C7 /* PinMessagesPreviewViewController.swift */; };
+		7CB0955726CE5F040049F4C7 /* TransferPinAction+Description.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB0955626CE5F040049F4C7 /* TransferPinAction+Description.swift */; };
+		7CB0955926CE69250049F4C7 /* PinMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB0955826CE69250049F4C7 /* PinMessageViewModel.swift */; };
+		7CB0955B26CF4DDC0049F4C7 /* PinMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB0955A26CF4DDC0049F4C7 /* PinMessageCell.swift */; };
 		7CBD2EFA268FF6BB00AA0847 /* HomeAppsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBD2EF9268FF6BB00AA0847 /* HomeAppsStorage.swift */; };
 		7CC3B1A026C21F7E0018B0D1 /* ScriptMessageProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC3B19F26C21F7E0018B0D1 /* ScriptMessageProxy.swift */; };
 		7CE5E7A8269BDA29000B7904 /* HomeAppsPinTipsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE5E7A6269BDA29000B7904 /* HomeAppsPinTipsViewController.swift */; };
@@ -1528,6 +1537,9 @@
 		7BFE47E12284394000FC4379 /* CheckmarkPeerCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CheckmarkPeerCell.xib; sourceTree = "<group>"; };
 		7BFE47E42284530200FC4379 /* PeerHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerHeaderView.swift; sourceTree = "<group>"; };
 		7BFE47E622845DE100FC4379 /* MessageReceiver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageReceiver.swift; sourceTree = "<group>"; };
+		7C0D997E26CA62CD00356655 /* StaticAudioMessagePlayingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticAudioMessagePlayingManager.swift; sourceTree = "<group>"; };
+		7C14CFBF26CA35CF0094AF4A /* StaticMessagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticMessagesViewController.swift; sourceTree = "<group>"; };
+		7C14CFC026CA35CF0094AF4A /* StaticMessagesView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StaticMessagesView.xib; sourceTree = "<group>"; };
 		7C5823D4268966A1003AA142 /* HomeAppsFolderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsFolderViewController.swift; sourceTree = "<group>"; };
 		7C66F0262689D1FE006D8462 /* HomeAppsDragInteraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsDragInteraction.swift; sourceTree = "<group>"; };
 		7C66F028268A0384006D8462 /* AppPageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppPageCell.swift; sourceTree = "<group>"; };
@@ -1539,6 +1551,12 @@
 		7C66F1BE268B3514006D8462 /* HomeAppsManager+FolderInteraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeAppsManager+FolderInteraction.swift"; sourceTree = "<group>"; };
 		7C66F1C0268C0250006D8462 /* HomeAppsFolderInteraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsFolderInteraction.swift; sourceTree = "<group>"; };
 		7C7635B726A13461006101DB /* HomeAppsConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsConstants.swift; sourceTree = "<group>"; };
+		7CB0954E26CCED2E0049F4C7 /* PinMessageBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinMessageBannerView.swift; sourceTree = "<group>"; };
+		7CB0955026CCED420049F4C7 /* PinMessageBannerView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PinMessageBannerView.xib; sourceTree = "<group>"; };
+		7CB0955226CD18F70049F4C7 /* PinMessagesPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinMessagesPreviewViewController.swift; sourceTree = "<group>"; };
+		7CB0955626CE5F040049F4C7 /* TransferPinAction+Description.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TransferPinAction+Description.swift"; sourceTree = "<group>"; };
+		7CB0955826CE69250049F4C7 /* PinMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinMessageViewModel.swift; sourceTree = "<group>"; };
+		7CB0955A26CF4DDC0049F4C7 /* PinMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinMessageCell.swift; sourceTree = "<group>"; };
 		7CBD2EF9268FF6BB00AA0847 /* HomeAppsStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsStorage.swift; sourceTree = "<group>"; };
 		7CC3B19F26C21F7E0018B0D1 /* ScriptMessageProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptMessageProxy.swift; sourceTree = "<group>"; };
 		7CE5E7A6269BDA29000B7904 /* HomeAppsPinTipsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsPinTipsViewController.swift; sourceTree = "<group>"; };
@@ -2050,65 +2068,66 @@
 		7B14568B1FCC17AD001B6DED /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				7BEDF9F720510CD300371266 /* ConversationDataSource.swift */,
-				94FA8FC82644236F006BC715 /* ConversationMessageComposer.swift */,
+				7B9A2BD02023729E00135DA4 /* AppButtonGroupViewModel.swift */,
+				7BA4193F209AFBCD00DFCD39 /* AppCardMessageViewModel.swift */,
+				7BAECA3920401DE500AEA42F /* AttachmentLoadingViewModel.swift */,
+				7BD38B6120BEA12800D06E5C /* AudioMessageViewModel.swift */,
+				E0C7674C23CC9411003F9215 /* BackgroundedTrailingInfoViewModel.swift */,
 				7B31E565236181C9004F891A /* BubbleImageSet.swift */,
 				7BACFED22459C47C0033A3CD /* BubblePath.swift */,
-				7BEB97172366CF42002DB190 /* MessageFontSet.swift */,
-				7B09E5591FD157EB002E45D3 /* MessageViewModel.swift */,
-				7B836C7D1FD17D6100529754 /* DetailInfoMessageViewModel.swift */,
-				7BAECA3920401DE500AEA42F /* AttachmentLoadingViewModel.swift */,
-				E0C7674C23CC9411003F9215 /* BackgroundedTrailingInfoViewModel.swift */,
-				7B1456911FCC186E001B6DED /* TextMessageViewModel.swift */,
-				7B6351D42410F2430034D9F8 /* ImageMessageViewModel.swift */,
-				7B88655820AC330D002D15E4 /* PhotoRepresentableMessageViewModel.swift */,
-				7B09E55B1FD15B9B002E45D3 /* PhotoMessageViewModel.swift */,
-				7BB6FD242011AD3400E84C5C /* CardMessageViewModel.swift */,
-				7B86B1F423F6AB0A00C80AD9 /* TitledCardContentWidthCalculable.swift */,
-				7B09E55D1FD15BAA002E45D3 /* TransferMessageViewModel.swift */,
-				7B8144621FDD62B900404431 /* SystemMessageViewModel.swift */,
-				7BEEC0111FDEA19300514A48 /* EncryptionHintViewModel.swift */,
-				7B8BFC891FDD77F9004E19DB /* UnknownMessageViewModel.swift */,
-				7B0B01911FEA19BA000EEE4F /* DecryptionFailedMessageViewModel.swift */,
-				7B28FA13201195E40023B28D /* StickerMessageViewModel.swift */,
-				7B28FA15201196DD0023B28D /* DataMessageViewModel.swift */,
-				7B9A2BD02023729E00135DA4 /* AppButtonGroupViewModel.swift */,
-				7BB20A8B207B5F0C007ACFEE /* ContactMessageViewModel.swift */,
-				7BA4193F209AFBCD00DFCD39 /* AppCardMessageViewModel.swift */,
-				7B9F06C520A9858D0095A51B /* VideoMessageViewModel.swift */,
-				7BD38B6120BEA12800D06E5C /* AudioMessageViewModel.swift */,
-				7B7FBF8C2282D51100644693 /* IconPrefixedTextMessageViewModel.swift */,
 				7BD7534B2182CD7A00BAC172 /* CallMessageViewModel.swift */,
-				7B7FBF8E2282D75400644693 /* RecalledMessageViewModel.swift */,
-				7B91055F22CF4A1E002E3608 /* LiveMessageViewModel.swift */,
-				E081796B23C32BCD005FEEAC /* PostMessageViewModel.swift */,
-				7BF196AE24115F9100CC8325 /* LocationMessageViewModel.swift */,
-				949569A7263B13BF00E043FE /* TranscriptMessageViewModel.swift */,
-				7BFDB73820DA41E3005673CC /* Quote.swift */,
-				7BBA1CA820692C7600B2F0CE /* GalleryItem.swift */,
-				7BF9969420CA6F3800FD948F /* Waveform.swift */,
-				7B1ABB0D21196B24009FAA6C /* TilingCollectionViewFlowLayout.swift */,
-				7B8ED47F21198EC20039946B /* StickerInputModelController.swift */,
-				7BCAF549216B0C3700D6564A /* GiphyCollectionViewFlowLayout.swift */,
-				7BFE47E622845DE100FC4379 /* MessageReceiver.swift */,
-				7BAB76AB228AAE00009ECB8C /* MessageReceiverSearchResult.swift */,
-				7BF42E3822DCB132005066E6 /* GalleryItemModelController.swift */,
+				7BB6FD242011AD3400E84C5C /* CardMessageViewModel.swift */,
+				7BB20A8B207B5F0C007ACFEE /* ContactMessageViewModel.swift */,
+				7BEDF9F720510CD300371266 /* ConversationDataSource.swift */,
+				94FA8FC82644236F006BC715 /* ConversationMessageComposer.swift */,
+				7B28FA15201196DD0023B28D /* DataMessageViewModel.swift */,
+				7B0B01911FEA19BA000EEE4F /* DecryptionFailedMessageViewModel.swift */,
+				7B836C7D1FD17D6100529754 /* DetailInfoMessageViewModel.swift */,
+				7BEEC0111FDEA19300514A48 /* EncryptionHintViewModel.swift */,
 				7BF42E4022DDF0D9005066E6 /* GalleryAnimatable.swift */,
-				7B9D825722F1BFEA0099381E /* NetworkOperationIconSet.swift */,
-				7B9D825522F1BFE90099381E /* NormalNetworkOperationIconSet.swift */,
+				7BBA1CA820692C7600B2F0CE /* GalleryItem.swift */,
+				7BF42E3822DCB132005066E6 /* GalleryItemModelController.swift */,
+				7BCAF549216B0C3700D6564A /* GiphyCollectionViewFlowLayout.swift */,
+				7B7FBF8C2282D51100644693 /* IconPrefixedTextMessageViewModel.swift */,
+				7B6351D42410F2430034D9F8 /* ImageMessageViewModel.swift */,
 				7B9D825622F1BFEA0099381E /* LargeNetworkOperationIconSet.swift */,
-				7B8BB581234DDA0000991ACB /* SharedMediaDataSource.swift */,
-				7B8BB587234F160C00991ACB /* SharedMediaCategorizer.swift */,
-				7B8BB589234F28A700991ACB /* SharedMediaGroupedByDateCategorizer.swift */,
-				7B7DACA923505F06006AA2AC /* SharedMediaAudio.swift */,
-				7B81D91523E93F470031E945 /* QuotedMessageViewModel.swift */,
-				7BF19C21241E0DB600B192D5 /* UserPickedLocation.swift */,
-				7B015F4E241F91A60004A563 /* SearchResultAnnotation.swift */,
-				7B082D17242CA19F00C5E163 /* MultipleSelectionIntent.swift */,
-				7BE6C7EB242DF07B00A0F2AE /* MessageAction.swift */,
+				7B91055F22CF4A1E002E3608 /* LiveMessageViewModel.swift */,
+				7BF196AE24115F9100CC8325 /* LocationMessageViewModel.swift */,
 				7BA41A9224E123F50042ED03 /* MentionToken.swift */,
 				7B91AB69251A2BAC00879812 /* Message+ExternalSharing.swift */,
+				7BE6C7EB242DF07B00A0F2AE /* MessageAction.swift */,
+				7BEB97172366CF42002DB190 /* MessageFontSet.swift */,
+				7BFE47E622845DE100FC4379 /* MessageReceiver.swift */,
+				7BAB76AB228AAE00009ECB8C /* MessageReceiverSearchResult.swift */,
+				7B09E5591FD157EB002E45D3 /* MessageViewModel.swift */,
 				94D63DD52646C29100FD7EE8 /* MessageViewModelFactory.swift */,
+				7B082D17242CA19F00C5E163 /* MultipleSelectionIntent.swift */,
+				7B9D825722F1BFEA0099381E /* NetworkOperationIconSet.swift */,
+				7B9D825522F1BFE90099381E /* NormalNetworkOperationIconSet.swift */,
+				7B09E55B1FD15B9B002E45D3 /* PhotoMessageViewModel.swift */,
+				7B88655820AC330D002D15E4 /* PhotoRepresentableMessageViewModel.swift */,
+				7CB0955826CE69250049F4C7 /* PinMessageViewModel.swift */,
+				E081796B23C32BCD005FEEAC /* PostMessageViewModel.swift */,
+				7BFDB73820DA41E3005673CC /* Quote.swift */,
+				7B81D91523E93F470031E945 /* QuotedMessageViewModel.swift */,
+				7B7FBF8E2282D75400644693 /* RecalledMessageViewModel.swift */,
+				7B015F4E241F91A60004A563 /* SearchResultAnnotation.swift */,
+				7B7DACA923505F06006AA2AC /* SharedMediaAudio.swift */,
+				7B8BB587234F160C00991ACB /* SharedMediaCategorizer.swift */,
+				7B8BB581234DDA0000991ACB /* SharedMediaDataSource.swift */,
+				7B8BB589234F28A700991ACB /* SharedMediaGroupedByDateCategorizer.swift */,
+				7B8ED47F21198EC20039946B /* StickerInputModelController.swift */,
+				7B28FA13201195E40023B28D /* StickerMessageViewModel.swift */,
+				7B8144621FDD62B900404431 /* SystemMessageViewModel.swift */,
+				7B1456911FCC186E001B6DED /* TextMessageViewModel.swift */,
+				7B1ABB0D21196B24009FAA6C /* TilingCollectionViewFlowLayout.swift */,
+				7B86B1F423F6AB0A00C80AD9 /* TitledCardContentWidthCalculable.swift */,
+				949569A7263B13BF00E043FE /* TranscriptMessageViewModel.swift */,
+				7B09E55D1FD15BAA002E45D3 /* TransferMessageViewModel.swift */,
+				7B8BFC891FDD77F9004E19DB /* UnknownMessageViewModel.swift */,
+				7BF19C21241E0DB600B192D5 /* UserPickedLocation.swift */,
+				7B9F06C520A9858D0095A51B /* VideoMessageViewModel.swift */,
+				7BF9969420CA6F3800FD948F /* Waveform.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -2665,6 +2684,7 @@
 				9416548A25CD7190007E76D0 /* AudioMetadata.swift */,
 				7BC98FA621EF5B8C004A5D79 /* AudioMessagePlayingManager.swift */,
 				7B7DACA723505B41006AA2AC /* SharedMediaAudioMessagePlayingManager.swift */,
+				7C0D997E26CA62CD00356655 /* StaticAudioMessagePlayingManager.swift */,
 				94D8426B2654D4800011DACD /* TranscriptAudioMessagePlayingManager.swift */,
 			);
 			path = "Audio Message";
@@ -2730,8 +2750,10 @@
 				7BF5EE4E2497A55700DDD9CC /* GroupCallMemberPickerViewController.swift */,
 				7BC3EBF62497507900E81FD8 /* GroupCallMemberPickerContentViewController.swift */,
 				7B1D61122512773F00BD6B15 /* ExternalSharingConfirmationViewController.swift */,
-				94FCB5FE264673C400CCC8FD /* TranscriptPreviewViewController.swift */,
 				94B7B6DD26B43580000B0AC5 /* SilentNotificationMessagePreviewViewController.swift */,
+				7C14CFBF26CA35CF0094AF4A /* StaticMessagesViewController.swift */,
+				94FCB5FE264673C400CCC8FD /* TranscriptPreviewViewController.swift */,
+				7CB0955226CD18F70049F4C7 /* PinMessagesPreviewViewController.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -3221,6 +3243,9 @@
 				94095BB625BE8BC100F44832 /* TextPreviewView.xib */,
 				94095BBB25BE8DCF00F44832 /* TextPreviewView.swift */,
 				94B7B6DB26B43562000B0AC5 /* SilentNotificationMessagePreviewView.xib */,
+				7CB0955026CCED420049F4C7 /* PinMessageBannerView.xib */,
+				7CB0954E26CCED2E0049F4C7 /* PinMessageBannerView.swift */,
+				7C14CFC026CA35CF0094AF4A /* StaticMessagesView.xib */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3286,6 +3311,7 @@
 				DFAD89A0241B6D6400836EDD /* JobService.swift */,
 				7B9650B32487EBE000DE86B9 /* BackgroundMessagingService.swift */,
 				7B8ECAE7250F6BE8006F0479 /* ExternalSharingContext.swift */,
+				7CB0955626CE5F040049F4C7 /* TransferPinAction+Description.swift */,
 			);
 			path = Message;
 			sourceTree = "<group>";
@@ -3415,6 +3441,7 @@
 				DF2A244B1FC7F7FF003A8C1E /* TransferMessageCell.swift */,
 				7B8BFC8B1FDD7EC8004E19DB /* UnknownMessageCell.swift */,
 				7BEEC00F1FDEA0C500514A48 /* SystemMessageCell.swift */,
+				7CB0955A26CF4DDC0049F4C7 /* PinMessageCell.swift */,
 				7B28FA11201195A10023B28D /* StickerMessageCell.swift */,
 				7B28FA17201196F80023B28D /* DataMessageCell.swift */,
 				7BE0726D2024A2AC00D7B44D /* AppButtonGroupMessageCell.swift */,
@@ -3799,6 +3826,7 @@
 				DF3C47451FA071CD00A07C71 /* Home.storyboard in Resources */,
 				7B70D8532457F4F800E01239 /* AnnouncementBadgeContentView.xib in Resources */,
 				7B63C48F21A4333A0044C4BF /* DepositFieldView.xib in Resources */,
+				7C14CFC226CA35CF0094AF4A /* StaticMessagesView.xib in Resources */,
 				7B5F966B241424CD003A087B /* LocationInformationView.xib in Resources */,
 				DF06D927222FC82200FE7FBC /* LoginConfirmWindow.xib in Resources */,
 				7BE5BFAD2338A62900516A00 /* SearchConversationView.xib in Resources */,
@@ -3831,6 +3859,7 @@
 				7B11788E2293D55C000F934E /* BalanceInputAccessoryView.xib in Resources */,
 				7B0B01961FEA628F000EEE4F /* StrangerHintView.xib in Resources */,
 				ABE865C123F260FE00C0167D /* PermissionsActionCell.xib in Resources */,
+				7CB0955126CCED420049F4C7 /* PinMessageBannerView.xib in Resources */,
 				7B9650B024879B9000DE86B9 /* MinimizedCallView.xib in Resources */,
 				DFF44176223A035000DDD5F8 /* GoogleService-Info.plist in Resources */,
 				94812DDA26E082C400213F79 /* mixin_condensed.otf in Resources */,
@@ -4354,6 +4383,7 @@
 				7B9650AE248794FD00DE86B9 /* MinimizedCallViewController.swift in Sources */,
 				7BDBDE6C223636B8006220DF /* ShadowImageView.swift in Sources */,
 				7BBC6EA81FA98D1A00DC130A /* AddPeopleViewController.swift in Sources */,
+				7CB0955926CE69250049F4C7 /* PinMessageViewModel.swift in Sources */,
 				DFD93F1E2111C0030013401A /* UIDeviceExtension.swift in Sources */,
 				7B35AF78228AA3BD00E8101D /* MessagesWithUserSearchResult.swift in Sources */,
 				7B61B9CA2538E1C8001F94A3 /* ScreenHeightCompatibleLayoutConstraint.swift in Sources */,
@@ -4366,6 +4396,7 @@
 				E0BC7BB9238FAE0B00E3EF2C /* MyFavoriteAppProfileMenuItemView.swift in Sources */,
 				94904FD325912A2000F2FDE6 /* CaptchaToken.swift in Sources */,
 				DF6068C720BECD3100C38C64 /* AssetSendViewController.swift in Sources */,
+				7CB0955726CE5F040049F4C7 /* TransferPinAction+Description.swift in Sources */,
 				94B7643525EA8E9B00EDF9C6 /* CacheableAssetFileDescription.swift in Sources */,
 				DFC0ECE423BB60DE0091E7AC /* VerificationResponse.swift in Sources */,
 				7B91AB6A251A2BAC00879812 /* Message+ExternalSharing.swift in Sources */,
@@ -4411,6 +4442,7 @@
 				DF6175BF2223985C00624609 /* MXMProvisionCryptor.m in Sources */,
 				DF75FF4424FE61E1008A7CF3 /* UpdateViewController.swift in Sources */,
 				7C66F1BB268B2CE5006D8462 /* HomeAppsManager.swift in Sources */,
+				7C14CFC126CA35CF0094AF4A /* StaticMessagesViewController.swift in Sources */,
 				DFA5B5931FB051BB00549728 /* WalletViewController.swift in Sources */,
 				DF53BB71202362F1002BF028 /* AuthorizationScopeCell.swift in Sources */,
 				7B86B1F323F6AA5C00C80AD9 /* AudioMessageProgressView.swift in Sources */,
@@ -4569,6 +4601,7 @@
 				944C656125D9BA0A008BDDD3 /* OggOpusWriter.swift in Sources */,
 				7BB8417C2230C63000FB88B9 /* ConversationAccessible.swift in Sources */,
 				7B28FA14201195E40023B28D /* StickerMessageViewModel.swift in Sources */,
+				7CB0954F26CCED2E0049F4C7 /* PinMessageBannerView.swift in Sources */,
 				7CE5E7A8269BDA29000B7904 /* HomeAppsPinTipsViewController.swift in Sources */,
 				7B4E3078229565C200A03F6E /* SearchBoxLeftView.swift in Sources */,
 				7B710DFC243637A5008F0D73 /* CirclesTableFooterView.swift in Sources */,
@@ -4689,6 +4722,7 @@
 				DFE1F9851FAB52CE00537D43 /* ContainerViewController.swift in Sources */,
 				7B0BE46421A59AE400B91A1E /* RefreshTopAssetsJob.swift in Sources */,
 				7BC1466F230D12B70060FE19 /* CurrencyCell.swift in Sources */,
+				7CB0955B26CF4DDC0049F4C7 /* PinMessageCell.swift in Sources */,
 				7B1D61132512773F00BD6B15 /* ExternalSharingConfirmationViewController.swift in Sources */,
 				7B9D825422F1BFC40099381E /* LargeModernNetworkOperationButton.swift in Sources */,
 				DF5BF55F1FBB281E0092AFB8 /* AssetViewController.swift in Sources */,
@@ -4791,6 +4825,7 @@
 				7B369206233A3314007321A7 /* SharedMediaViewController.swift in Sources */,
 				E061E52B23B208E600598FC3 /* NSAttributedString+CoreText.swift in Sources */,
 				7BF196B52411650900CC8325 /* LocationMessageCell.swift in Sources */,
+				7C0D997F26CA62CD00356655 /* StaticAudioMessagePlayingManager.swift in Sources */,
 				7B2D174C22B117DF00AE3DD8 /* EmergencyContactIdVerificationViewController.swift in Sources */,
 				DFF2145D209AC7D400612234 /* ConerLabel.swift in Sources */,
 				DFC2647424E9339C00BF954D /* BigAmountConfirmationWindow.swift in Sources */,
@@ -4821,6 +4856,7 @@
 				7BA41940209AFBCD00DFCD39 /* AppCardMessageViewModel.swift in Sources */,
 				7BEFDC1D1FB07F1600F66885 /* GroupNameCell.swift in Sources */,
 				7B9C64312241EDC600465A6A /* ConversationInputAccessible.swift in Sources */,
+				7CB0955326CD18F70049F4C7 /* PinMessagesPreviewViewController.swift in Sources */,
 				7BF0E07C221ABE050053040D /* AssetIconView.swift in Sources */,
 				E07E38A623A774940005A538 /* MixinError.swift in Sources */,
 				7B84218D2011A214000EF99C /* CardMessageCell.swift in Sources */,

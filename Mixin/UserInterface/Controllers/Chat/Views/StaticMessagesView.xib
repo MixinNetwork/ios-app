@@ -71,7 +71,7 @@
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Conversation/bg_chat" translatesAutoresizingMaskIntoConstraints="NO" id="CGI-bd-Z7p">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                                 </imageView>
-                                <tableView clipsSubviews="YES" contentMode="center" alwaysBounceVertical="YES" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" contentViewInsetsToSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W7w-YI-rKM" customClass="ConversationTableView" customModule="Mixin" customModuleProvider="target">
+                                <tableView clipsSubviews="YES" contentMode="center" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" contentViewInsetsToSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W7w-YI-rKM" customClass="ConversationTableView" customModule="Mixin" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                                 </tableView>
                             </subviews>

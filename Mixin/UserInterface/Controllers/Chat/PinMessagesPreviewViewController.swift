@@ -17,6 +17,7 @@ final class PinMessagesPreviewViewController: StaticMessagesViewController {
     private var showMessageButtons: [MessageCell: UIButton] = [:]
     private var pinnedMessageItems: [MessageItem] = []
     private var ignoresPinMessageChangeNotification = false
+    private var canUnpinMessages = false
     
     private var layoutWidth: CGFloat {
         Queue.main.autoSync {
@@ -36,6 +37,10 @@ final class PinMessagesPreviewViewController: StaticMessagesViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        super.canPerformAction(action, withSender: sender) || action == #selector(unpinSelectedMessage)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         factory.delegate = self
@@ -51,6 +56,28 @@ final class PinMessagesPreviewViewController: StaticMessagesViewController {
             return
         }
         reloadData()
+    }
+    
+    override func menuItems(for viewModel: MessageViewModel) -> [UIMenuItem]? {
+        var items = super.menuItems(for: viewModel) ?? []
+        if canUnpinMessages {
+            items.append(UIMenuItem(title: R.string.localizable.menu_unpin(), action: #selector(unpinSelectedMessage)))
+        }
+        return items
+    }
+    
+    @available(iOS 13.0, *)
+    override func contextMenuActions(for viewModel: MessageViewModel) -> [UIAction]? {
+        var actions = super.contextMenuActions(for: viewModel) ?? []
+        if canUnpinMessages {
+            let unpinAction = UIAction(title: R.string.localizable.menu_unpin(), image: R.image.conversation.ic_action_unpin()) { (_) in
+                SendMessageService.shared.sendPinMessages(items: [viewModel.message],
+                                                          conversationId: self.conversationId,
+                                                          action: .unpin)
+            }
+            actions.append(unpinAction)
+        }
+        return actions
     }
     
 }
@@ -110,6 +137,18 @@ extension PinMessagesPreviewViewController: MessageViewModelFactoryDelegate {
 
 // MARK: - Actions
 extension PinMessagesPreviewViewController {
+    
+    @objc private func unpinSelectedMessage() {
+        guard let indexPath = tableView.indexPathForSelectedRow else {
+            return
+        }
+        guard let message = viewModel(at: indexPath)?.message else {
+            return
+        }
+        SendMessageService.shared.sendPinMessages(items: [message],
+                                                  conversationId: conversationId,
+                                                  action: .unpin)
+    }
     
     @objc private func unpinAllAction() {
         let controller = UIAlertController(title: R.string.localizable.chat_alert_unpin_all_messages(), message: nil, preferredStyle: .alert)
@@ -225,6 +264,7 @@ extension PinMessagesPreviewViewController {
     private func updateUnpinAllButtonVisibility() {
         let canUnpinMessages = !isGroup || ParticipantDAO.shared.isAdmin(conversationId: conversationId, userId: myUserId)
         DispatchQueue.main.async {
+            self.canUnpinMessages = canUnpinMessages
             if canUnpinMessages {
                 self.addBottomBarViewIfNeverAdded()
                 self.tableView.contentInset.bottom = self.unpinAllButtonHeight

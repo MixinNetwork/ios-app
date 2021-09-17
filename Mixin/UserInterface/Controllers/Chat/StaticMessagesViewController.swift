@@ -57,7 +57,7 @@ class StaticMessagesViewController: UIViewController {
             tableView.delegate = self
         } else {
             tableView.delegate = self
-            let recognizer = UILongPressGestureRecognizer(target: self, action: #selector(showCopyMenu(_:)))
+            let recognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction(_:)))
             tableView.addGestureRecognizer(recognizer)
         }
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapAction(_:)))
@@ -101,6 +101,26 @@ class StaticMessagesViewController: UIViewController {
     
     func viewDidPresentAsChild() {
         
+    }
+    
+    func menuItems(for viewModel: MessageViewModel) -> [UIMenuItem]? {
+        if viewModel.message.category.hasSuffix("_TEXT") {
+            return [UIMenuItem(title: R.string.localizable.action_copy(), action: #selector(copySelectedMessage))]
+        } else {
+            return nil
+        }
+    }
+    
+    @available(iOS 13.0, *)
+    func contextMenuActions(for viewModel: MessageViewModel) -> [UIAction]? {
+        if viewModel.message.category.hasSuffix("_TEXT") {
+            let copyAction = UIAction(title: R.string.localizable.action_copy(), image: R.image.conversation.ic_action_copy()) { _ in
+                UIPasteboard.general.string = viewModel.message.content
+            }
+            return [copyAction]
+        } else {
+            return nil
+        }
     }
     
     func categorizedViewModels(with items: [MessageItem], fits layoutWidth: CGFloat) -> (dates: [String], viewModels: [String: [MessageViewModel]]) {
@@ -333,7 +353,7 @@ extension StaticMessagesViewController {
                                                   object: nil)
     }
     
-    @objc private func showCopyMenu(_ recognizer: UIGestureRecognizer) {
+    @objc private func longPressAction(_ recognizer: UIGestureRecognizer) {
         guard recognizer.state == .began else {
             return
         }
@@ -342,16 +362,13 @@ extension StaticMessagesViewController {
             let cell = tableView.messageCellForRow(at: location),
             let indexPath = tableView.indexPath(for: cell),
             let viewModel = viewModel(at: indexPath),
-            viewModel.message.category.hasSuffix("_TEXT")
+            let menuItems = self.menuItems(for: viewModel)
         else {
             return
         }
         tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
         becomeFirstResponder()
-        UIMenuController.shared.menuItems = [
-            UIMenuItem(title: R.string.localizable.action_copy(),
-                       action: #selector(copySelectedMessage))
-        ]
+        UIMenuController.shared.menuItems = menuItems
         UIMenuController.shared.setTargetRect(cell.contentFrame, in: cell)
         UIMenuController.shared.setMenuVisible(true, animated: true)
         NotificationCenter.default.addObserver(self,
@@ -560,7 +577,6 @@ extension StaticMessagesViewController: CoreTextLabelDelegate {
         alert.addAction(UIAlertAction(title: Localized.CHAT_MESSAGE_MENU_COPY, style: .default, handler: { (_) in
             UIPasteboard.general.string = url.absoluteString
             showAutoHiddenHud(style: .notification, text: Localized.TOAST_COPIED)
-            
         }))
         alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         present(alert, animated: true, completion: nil)
@@ -682,10 +698,12 @@ extension StaticMessagesViewController {
     
     final class ViewModelFactory: MessageViewModelFactory {
         
-        override func style(forIndex index: Int,
-                            isFirstMessage: Bool,
-                            isLastMessage: Bool,
-                            messageAtIndex: (Int) -> MessageItem) -> MessageViewModel.Style {
+        override func style(
+            forIndex index: Int,
+            isFirstMessage: Bool,
+            isLastMessage: Bool,
+            messageAtIndex: (Int) -> MessageItem
+        ) -> MessageViewModel.Style {
             var style = super.style(forIndex: index,
                                     isFirstMessage: isFirstMessage,
                                     isLastMessage: isLastMessage,
@@ -719,18 +737,15 @@ extension StaticMessagesViewController {
         guard !alwaysUsesLegacyMenu else {
             return nil
         }
-        guard !tableView.allowsMultipleSelection, let message = viewModel(at: indexPath)?.message else {
+        guard !tableView.allowsMultipleSelection, let viewModel = viewModel(at: indexPath) else {
             return nil
         }
-        guard message.category.hasSuffix("_TEXT") else {
+        guard let actions = contextMenuActions(for: viewModel), !actions.isEmpty else {
             return nil
         }
-        let copyAction = UIAction(title: R.string.localizable.action_copy(), image: R.image.conversation.ic_action_copy()) { _ in
-            UIPasteboard.general.string = message.content
-        }
-        let identifier = message.messageId as NSString
+        let identifier = viewModel.message.messageId as NSString
         return UIContextMenuConfiguration(identifier: identifier, previewProvider: nil) { (elements) -> UIMenu? in
-            UIMenu(title: "", children: [copyAction])
+            UIMenu(title: "", children: actions)
         }
     }
     

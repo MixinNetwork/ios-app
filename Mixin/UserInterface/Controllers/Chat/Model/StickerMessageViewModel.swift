@@ -94,6 +94,7 @@ class StickerMessageViewModel: DetailInfoMessageViewModel {
                                    y: contentFrame.maxY + contentMargin.bottom + timeMargin.top)
         layoutEncryptedIconFrame()
         layoutForwarderIcon()
+        layoutPinnedIconFrame()
         statusFrame.origin = CGPoint(x: timeFrame.maxX + DetailInfoMessageViewModel.statusLeftMargin,
                                      y: timeFrame.origin.y + (timeFrame.height - statusFrame.height) / 2)
         if style.contains(.received) {

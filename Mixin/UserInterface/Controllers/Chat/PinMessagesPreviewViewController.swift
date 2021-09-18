@@ -92,26 +92,22 @@ extension PinMessagesPreviewViewController {
         guard let cell = cell as? MessageCell, let viewModel = viewModel(at: indexPath) else {
             return
         }
-        let isSentByMe = viewModel.message.userId == myUserId
         let showMessageButton: UIButton
         if let button = showMessageButtons[cell] {
             showMessageButton = button
         } else {
-            let image = isSentByMe ? R.image.ic_pin_left_arrow() : R.image.ic_pin_right_arrow()
             showMessageButton = UIButton()
             showMessageButton.addTarget(self, action: #selector(showMessageAction(_:)), for: .touchUpInside)
-            showMessageButton.setImage(image, for: .normal)
             showMessageButtons[cell] = showMessageButton
         }
-        cell.contentView.addSubview(showMessageButton)
+        let isSentByMe = viewModel.message.userId == myUserId
+        let image = isSentByMe ? R.image.ic_pin_left_arrow() : R.image.ic_pin_right_arrow()
         let size = CGSize(width: 36, height: 36)
-        let leftConstraint = isSentByMe ? cell.contentFrame.minX - size.width : cell.contentFrame.maxX
-        let topConstraint = cell.contentFrame.midY - size.height / 2
-        showMessageButton.snp.makeConstraints { make in
-            make.size.equalTo(size)
-            make.left.equalTo(leftConstraint)
-            make.top.equalTo(topConstraint)
-        }
+        let origin = CGPoint(x: isSentByMe ? cell.contentFrame.minX - size.width : cell.contentFrame.maxX,
+                             y: cell.contentFrame.midY - size.height / 2)
+        showMessageButton.frame = CGRect(origin: origin, size: size)
+        showMessageButton.setImage(image, for: .normal)
+        cell.contentView.addSubview(showMessageButton)
     }
     
     override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {

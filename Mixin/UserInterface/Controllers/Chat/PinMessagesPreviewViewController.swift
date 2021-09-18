@@ -101,12 +101,14 @@ extension PinMessagesPreviewViewController {
             showMessageButtons[cell] = showMessageButton
         }
         let isSentByMe = viewModel.message.userId == myUserId
-        let image = isSentByMe ? R.image.ic_pin_left_arrow() : R.image.ic_pin_right_arrow()
         let size = CGSize(width: 36, height: 36)
         let origin = CGPoint(x: isSentByMe ? cell.contentFrame.minX - size.width : cell.contentFrame.maxX,
                              y: cell.contentFrame.midY - size.height / 2)
         showMessageButton.frame = CGRect(origin: origin, size: size)
-        showMessageButton.setImage(image, for: .normal)
+        showMessageButton.setImage(R.image.ic_pin_right_arrow(), for: .normal)
+        if isSentByMe {
+            showMessageButton.transform = CGAffineTransform(rotationAngle: .pi)
+        }
         cell.contentView.addSubview(showMessageButton)
     }
     
@@ -168,7 +170,7 @@ extension PinMessagesPreviewViewController {
         guard let indexPath = tableView.indexPathForRow(at: location) else {
             return
         }
-        guard let viewModel = self.viewModel(at: indexPath) else {
+        guard let viewModel = viewModel(at: indexPath) else {
             return
         }
         delegate?.pinMessagesPreviewViewController(self, needsShowMessage: viewModel.message.messageId)

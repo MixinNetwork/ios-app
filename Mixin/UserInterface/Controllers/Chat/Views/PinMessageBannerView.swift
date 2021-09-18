@@ -15,7 +15,7 @@ final class PinMessageBannerView: UIView {
     @IBOutlet weak var wrapperButton: UIButton!
     @IBOutlet weak var closeButton: UIButton!
     @IBOutlet weak var messageLabel: UILabel!
-        
+    
     @IBAction func tapCloseAction(_ sender: Any) {
         delegate?.pinMessageBannerViewDidTapClose(self)
     }
@@ -40,11 +40,13 @@ extension PinMessageBannerView {
         closeButton.isHidden = false
         wrapperButton.isHidden = false
         messageLabel.isHidden = false
+        countLabel.isHidden = false
         messageLabel.text = preview
         countLabel.text = "\(count)"
     }
     
-    func hideMessagePreview() {
+    func hideMessagePreviewAndCount() {
+        countLabel.isHidden = true
         closeButton.isHidden = true
         wrapperButton.isHidden = true
         messageLabel.isHidden = true

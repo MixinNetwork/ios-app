@@ -1228,7 +1228,7 @@ class ConversationViewController: UIViewController {
     
     @objc private func pinMessageBannerDidChange() {
         if AppGroupUserDefaults.User.pinMessageBanners[conversationId] == nil {
-            hidePinMessagePreview()
+            hidePinMessagePreviewAndCount()
         }
     }
     
@@ -2470,8 +2470,8 @@ extension ConversationViewController {
         }
     }
     
-    private func hidePinMessagePreview() {
-        pinMessageBannerView.hideMessagePreview()
+    private func hidePinMessagePreviewAndCount() {
+        pinMessageBannerView.hideMessagePreviewAndCount()
         pinMessageBannerView.snp.updateConstraints { make in
             make.left.equalTo(AppDelegate.current.mainWindow.bounds.width - 60)
         }
@@ -2529,8 +2529,7 @@ extension ConversationViewController {
                         if let item = visiblePinMessage {
                             self.updatePinMessageBanner(item: item, count: pinMessageCount)
                         } else {
-                            self.hidePinMessagePreview()
-                            self.pinMessageBannerView.updateMessageCount(pinMessageCount)
+                            self.hidePinMessagePreviewAndCount()
                         }
                     }
                 }

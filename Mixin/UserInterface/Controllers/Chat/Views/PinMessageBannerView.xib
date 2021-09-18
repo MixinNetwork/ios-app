@@ -14,7 +14,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VDy-MD-ZJc">
-                    <rect key="frame" x="321" y="13" width="44" height="44"/>
+                    <rect key="frame" x="320" y="13" width="44" height="44"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="44" id="FF9-5Y-1YF"/>
                         <constraint firstAttribute="height" constant="44" id="RbB-HB-4YV"/>
@@ -25,7 +25,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SgE-DM-HcT">
-                    <rect key="frame" x="9" y="10" width="312" height="50"/>
+                    <rect key="frame" x="9" y="10" width="311" height="50"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="50" id="PRW-zN-7Fc"/>
                     </constraints>
@@ -46,7 +46,7 @@
                     </connections>
                 </button>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="apB-WS-4Gl">
-                    <rect key="frame" x="58" y="10" width="237" height="48"/>
+                    <rect key="frame" x="58" y="10" width="236" height="48"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
@@ -59,7 +59,7 @@
             <constraints>
                 <constraint firstItem="TtF-Y8-1dd" firstAttribute="leading" secondItem="SgE-DM-HcT" secondAttribute="leading" constant="7" id="1hb-qL-yga"/>
                 <constraint firstItem="apB-WS-4Gl" firstAttribute="leading" secondItem="TtF-Y8-1dd" secondAttribute="trailing" constant="2" id="5Xk-NH-hbo"/>
-                <constraint firstAttribute="trailing" secondItem="VDy-MD-ZJc" secondAttribute="trailing" constant="10" id="BBS-Im-104"/>
+                <constraint firstAttribute="trailing" secondItem="VDy-MD-ZJc" secondAttribute="trailing" constant="11" id="BBS-Im-104"/>
                 <constraint firstAttribute="bottom" secondItem="SgE-DM-HcT" secondAttribute="bottom" id="HSN-ob-PEl"/>
                 <constraint firstItem="SgE-DM-HcT" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="9" id="RDo-Q2-LnQ"/>
                 <constraint firstItem="VDy-MD-ZJc" firstAttribute="leading" secondItem="SgE-DM-HcT" secondAttribute="trailing" priority="750" id="U3D-wY-p4K"/>

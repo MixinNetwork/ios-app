@@ -9,6 +9,7 @@ class DetailInfoMessageViewModel: MessageViewModel {
     static let identityIconSize = R.image.ic_user_bot()!.size
     static let encryptedIconRightMargin: CGFloat = 4
     static let forwarderIconRightMargin: CGFloat = 4
+    static let pinnedIconRightMargin: CGFloat = 4
     
     class var bubbleImageSet: BubbleImageSet.Type {
         return GeneralBubbleImageSet.self
@@ -24,6 +25,7 @@ class DetailInfoMessageViewModel: MessageViewModel {
     var fullnameColor = UIColor.text
     var forwarderFrame = CGRect.zero
     var encryptedIconFrame = CGRect.zero
+    var pinnedIconFrame = CGRect.zero
     var timeFrame = CGRect(x: 0, y: 0, width: 0, height: 12)
     var statusFrame = CGRect.zero
     var identityIconFrame = CGRect(origin: .zero, size: DetailInfoMessageViewModel.identityIconSize)
@@ -108,6 +110,7 @@ class DetailInfoMessageViewModel: MessageViewModel {
         }
         layoutEncryptedIconFrame()
         layoutForwarderIcon()
+        layoutPinnedIconFrame()
         statusFrame.origin = CGPoint(x: timeFrame.maxX + DetailInfoMessageViewModel.statusLeftMargin,
                                      y: timeFrame.origin.y + (timeFrame.height - statusFrame.height) / 2)
         fullnameFrame.size.width = max(minFullnameWidth, min(fullnameFrame.size.width, maxContentWidth))
@@ -151,6 +154,26 @@ class DetailInfoMessageViewModel: MessageViewModel {
         }
         let origin = CGPoint(x: x, y: timeFrame.origin.y + (timeFrame.height - size.height) / 2)
         forwarderFrame = CGRect(origin: origin, size: size)
+    }
+    
+    func layoutPinnedIconFrame() {
+        let size: CGSize
+        if isPinned {
+            size = R.image.ic_message_pinned()!.size
+        } else {
+            size = .zero
+        }
+        let rightMargin: CGFloat = isPinned ? Self.pinnedIconRightMargin : 0
+        var x = forwarderFrame.origin.x - rightMargin - size.width
+        let diff = x - minDetailInfoLeftMargin
+        if isPinned && diff < 0 {
+            x -= diff
+            forwarderFrame.origin.x -= diff
+            encryptedIconFrame.origin.x -= diff
+            timeFrame.origin.x -= diff
+        }
+        let origin = CGPoint(x: x, y: timeFrame.origin.y + (timeFrame.height - size.height) / 2)
+        pinnedIconFrame = CGRect(origin: origin, size: size)
     }
     
     private func updateStatusImageAndTintColor() {

@@ -66,6 +66,8 @@ public final class MessageItem {
     public var mentionsJson: Data?
     public var hasMentionRead: Bool?
     
+    public var isPinned: Bool?
+    
     public lazy var appButtons: [AppButtonData]? = {
         guard category == MessageCategory.APP_BUTTON_GROUP.rawValue, let content = content, let data = Data(base64Encoded: content) else {
             return nil
@@ -239,6 +241,8 @@ extension MessageItem: Codable, MixinFetchableRecord {
         
         case mentionsJson = "mentions"
         case hasMentionRead
+        
+        case isPinned = "pinned"
     }
     
 }

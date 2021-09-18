@@ -93,6 +93,8 @@ class ConversationDataSource {
         NotificationCenter.default.addObserver(self, selector: #selector(messageDaoDidRedecryptMessage(_:)), name: MessageDAO.didRedecryptMessageNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateMediaProgress(_:)), name: AttachmentLoadingJob.progressNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateMessageMediaStatus(_:)), name: MessageDAO.messageMediaStatusDidUpdateNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateMessagePinning(_:)), name: PinMessageDAO.didSaveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateMessagePinning(_:)), name: PinMessageDAO.didDeleteNotification, object: nil)
         reload(completion: completion)
     }
     
@@ -612,6 +614,17 @@ extension ConversationDataSource {
         }
         if let cell = cell as? AudioMessageCell {
             cell.updateUnreadStyle()
+        }
+    }
+    
+    @objc private func updateMessagePinning(_ notification: Notification) {
+        guard let conversationId = notification.userInfo?[PinMessageDAO.UserInfoKey.conversationId] as? String, conversationId == self.conversationId else {
+            return
+        }
+        if let id = notification.userInfo?[PinMessageDAO.UserInfoKey.referencedMessageId] as? String {
+            updateMessage(messageId: id)
+        } else if let ids = notification.userInfo?[PinMessageDAO.UserInfoKey.referencedMessageIds] as? [String] {
+            ids.forEach(updateMessage(messageId:))
         }
     }
     

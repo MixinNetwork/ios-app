@@ -214,9 +214,13 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
             let encryptedIconWidth = isEncrypted
                 ? Self.encryptedIconRightMargin + R.image.ic_message_encrypted()!.size.width
                 : 0
+            let pinIconWidth = isPinned
+                ? Self.pinnedIconRightMargin + R.image.ic_message_pinned()!.size.width
+                : 0
             let width = trailingInfoLeftMargin
                 + forwarderIconWidth
                 + encryptedIconWidth
+                + pinIconWidth
                 + timeFrame.width
                 + statusImageWidth
                 + DetailInfoMessageViewModel.statusLeftMargin

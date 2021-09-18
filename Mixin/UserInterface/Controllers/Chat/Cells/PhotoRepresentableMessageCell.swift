@@ -68,6 +68,7 @@ class PhotoRepresentableMessageCell: ImageMessageCell {
         maskingView.clipsToBounds = true
         forwarderImageView.alpha = 0.9
         encryptedImageView.alpha = 0.9
+        pinnedImageView.alpha = 0.9
         statusImageView.alpha = 0.9
     }
     

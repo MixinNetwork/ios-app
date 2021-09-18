@@ -66,7 +66,7 @@ class TranscriptMessageCell: TextMessageCell {
                 if index == viewModel.digests.count - 1, trailingInfoPlaceholder.superview != stackView {
                     trailingInfoPlaceholder.removeFromSuperview()
                     stackView.addArrangedSubview(trailingInfoPlaceholder)
-                    let placeholderWidth = statusImageView.frame.maxX - encryptedImageView.frame.minX
+                    let placeholderWidth = statusImageView.frame.maxX - pinnedImageView.frame.minX
                     trailingInfoPlaceholder.widthAnchor.constraint(equalToConstant: placeholderWidth).isActive = true
                 }
             }

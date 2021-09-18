@@ -89,24 +89,28 @@ extension PinMessagesPreviewViewController {
     
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         super.tableView(tableView, willDisplay: cell, forRowAt: indexPath)
-        guard let cell = cell as? MessageCell, let viewModel = viewModel(at: indexPath), viewModel.message.userId != myUserId else {
+        guard let cell = cell as? MessageCell, let viewModel = viewModel(at: indexPath) else {
             return
         }
+        let isSentByMe = viewModel.message.userId == myUserId
         let showMessageButton: UIButton
         if let button = showMessageButtons[cell] {
             showMessageButton = button
         } else {
+            let image = isSentByMe ? R.image.ic_pin_left_arrow() : R.image.ic_pin_right_arrow()
             showMessageButton = UIButton()
             showMessageButton.addTarget(self, action: #selector(showMessageAction(_:)), for: .touchUpInside)
-            showMessageButton.setImage(R.image.ic_pin_right_arrow(), for: .normal)
+            showMessageButton.setImage(image, for: .normal)
             showMessageButtons[cell] = showMessageButton
         }
         cell.contentView.addSubview(showMessageButton)
         let size = CGSize(width: 36, height: 36)
+        let leftConstraint = isSentByMe ? cell.contentFrame.minX - size.width : cell.contentFrame.maxX
+        let topConstraint = cell.contentFrame.midY - size.height / 2
         showMessageButton.snp.makeConstraints { make in
             make.size.equalTo(size)
-            make.left.equalTo(cell.contentFrame.maxX)
-            make.top.equalTo(cell.contentFrame.midY - size.height / 2)
+            make.left.equalTo(leftConstraint)
+            make.top.equalTo(topConstraint)
         }
     }
     

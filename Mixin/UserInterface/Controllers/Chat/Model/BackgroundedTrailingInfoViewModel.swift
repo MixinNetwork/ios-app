@@ -13,7 +13,9 @@ extension BackgroundedTrailingInfoViewModel where Self: DetailInfoMessageViewMod
     func layoutTrailingInfoBackgroundFrame() {
         let margin: CGFloat = 10
         let minX: CGFloat
-        if style.contains(.forwardedByBot) {
+        if isPinned {
+            minX = pinnedIconFrame.minX
+        } else if style.contains(.forwardedByBot) {
             minX = forwarderFrame.minX
         } else if isEncrypted {
             minX = encryptedIconFrame.minX
@@ -26,7 +28,9 @@ extension BackgroundedTrailingInfoViewModel where Self: DetailInfoMessageViewMod
             let forwarderIconWidthIfHas = style.contains(.forwardedByBot) ? (forwarderFrame.width + Self.forwarderIconRightMargin) : 0
             let encryptedIconWidthIfHas = isEncrypted ? (encryptedIconFrame.width + Self.encryptedIconRightMargin) : 0
             let statusIconWidthIfHas = showStatusImage ? (statusFrame.width + Self.statusLeftMargin) : 0
-            return forwarderIconWidthIfHas
+            let pinnedIconWidthIfHas = isPinned ? (pinnedIconFrame.width + Self.pinnedIconRightMargin) : 0
+            return pinnedIconWidthIfHas
+                + forwarderIconWidthIfHas
                 + encryptedIconWidthIfHas
                 + timeFrame.width
                 + statusIconWidthIfHas

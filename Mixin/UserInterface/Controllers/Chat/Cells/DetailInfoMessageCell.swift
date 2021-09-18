@@ -10,6 +10,7 @@ class DetailInfoMessageCell: MessageCell {
     
     let fullnameButton = UIButton()
     let encryptedImageView = UIImageView(image: R.image.ic_message_encrypted())
+    let pinnedImageView = UIImageView(image: R.image.ic_message_pinned())
     let timeLabel = UILabel()
     let statusImageView = UIImageView()
     let forwarderImageView = UIImageView(image: R.image.conversation.ic_forwarder_bot())
@@ -20,6 +21,7 @@ class DetailInfoMessageCell: MessageCell {
         super.render(viewModel: viewModel)
         forwarderImageView.tintColor = viewModel.trailingInfoColor
         encryptedImageView.tintColor = viewModel.trailingInfoColor
+        pinnedImageView.tintColor = viewModel.trailingInfoColor
         timeLabel.textColor = viewModel.trailingInfoColor
         if let viewModel = viewModel as? DetailInfoMessageViewModel {
             backgroundImageView.frame = viewModel.backgroundImageFrame
@@ -38,6 +40,8 @@ class DetailInfoMessageCell: MessageCell {
             forwarderImageView.isHidden = !viewModel.style.contains(.forwardedByBot)
             encryptedImageView.frame = viewModel.encryptedIconFrame
             encryptedImageView.isHidden = !viewModel.isEncrypted
+            pinnedImageView.frame = viewModel.pinnedIconFrame
+            pinnedImageView.isHidden = !viewModel.isPinned
             timeLabel.frame = viewModel.timeFrame
             timeLabel.text = viewModel.time
             updateStatusImageView()
@@ -72,6 +76,9 @@ class DetailInfoMessageCell: MessageCell {
         
         encryptedImageView.alpha = 0.7
         messageContentView.addSubview(encryptedImageView)
+        
+        pinnedImageView.alpha = 0.7
+        messageContentView.addSubview(pinnedImageView)
         
         timeLabel.backgroundColor = .clear
         timeLabel.font = MessageFontSet.time.scaled

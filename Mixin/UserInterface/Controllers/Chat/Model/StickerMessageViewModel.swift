@@ -104,6 +104,7 @@ class StickerMessageViewModel: DetailInfoMessageViewModel {
                 encryptedIconFrame.origin.x += diff
                 forwarderFrame.origin.x += diff
                 statusFrame.origin.x += diff
+                pinnedIconFrame.origin.x += diff
             }
         }
         cellHeight = fullnameHeight

@@ -11,7 +11,6 @@ final class PinMessageBannerView: UIView {
     weak var delegate: PinMessageBannerViewDelegate?
     
     @IBOutlet weak var pinButton: UIButton!
-    @IBOutlet weak var countLabel: InsetLabel!
     @IBOutlet weak var wrapperButton: UIButton!
     @IBOutlet weak var closeButton: UIButton!
     @IBOutlet weak var messageLabel: UILabel!
@@ -32,21 +31,14 @@ final class PinMessageBannerView: UIView {
 
 extension PinMessageBannerView {
     
-    func updateMessageCount(_ count: Int) {
-        countLabel.text = "\(count)"
-    }
-    
-    func update(preview: String, count: Int) {
+    func update(preview: String) {
         closeButton.isHidden = false
         wrapperButton.isHidden = false
         messageLabel.isHidden = false
-        countLabel.isHidden = false
         messageLabel.text = preview
-        countLabel.text = "\(count)"
     }
     
-    func hideMessagePreviewAndCount() {
-        countLabel.isHidden = true
+    func hideMessagePreview() {
         closeButton.isHidden = true
         wrapperButton.isHidden = true
         messageLabel.isHidden = true

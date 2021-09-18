@@ -444,13 +444,7 @@ public class SendMessageService: MixinService {
                 case JobAction.SEND_MESSAGE.rawValue:
                     try ReceiveMessageService.shared.messageDispatchQueue.sync {
                         let blazeMessage = job.toBlazeMessage()
-                        if blazeMessage.action == BlazeMessageAction.createCall.rawValue {
-                            try SendMessageService.shared.sendCallMessage(blazeMessage: blazeMessage)
-                        } else if blazeMessage.params?.category == MessageCategory.MESSAGE_PIN.rawValue {
-                            try SendMessageService.shared.sendPinMessage(blazeMessage: blazeMessage)
-                        } else {
-                            try SendMessageService.shared.sendMessage(blazeMessage: blazeMessage)
-                        }
+                        try SendMessageService.shared.sendMessage(blazeMessage: blazeMessage)
                     }
                 case JobAction.RESEND_MESSAGE.rawValue:
                     try ReceiveMessageService.shared.messageDispatchQueue.sync {
@@ -586,75 +580,113 @@ extension SendMessageService {
     }
     
     private func sendMessage(blazeMessage: BlazeMessage) throws {
-        var blazeMessage = blazeMessage
-        guard let messageId = blazeMessage.params?.messageId, var message = MessageDAO.shared.getMessage(messageId: messageId) else {
-            return
-        }
-        guard let conversation = ConversationDAO.shared.getConversation(conversationId: message.conversationId) else {
-            return
+        let conversationId: String
+        let category: String
+        var message: Message?
+        if blazeMessage.action == BlazeMessageAction.createCall.rawValue {
+            guard let params = blazeMessage.params else {
+                return
+            }
+            guard let categoryString = params.category, let c = MessageCategory(rawValue: categoryString) else {
+                return
+            }
+            guard MixinService.callMessageCoordinator.shouldSendRtcBlazeMessage(with: c) else {
+                return
+            }
+            guard let cid = params.conversationId else {
+                return
+            }
+            conversationId = cid
+            category = categoryString
+        } else if blazeMessage.params?.category == MessageCategory.MESSAGE_PIN.rawValue {
+            guard let cid = blazeMessage.params?.conversationId else {
+                Logger.general.error(category: "SendMessage", message: "No conversation ID")
+                return
+            }
+            conversationId = cid
+            category = MessageCategory.MESSAGE_PIN.rawValue
+        } else {
+            guard let messageId = blazeMessage.params?.messageId, let m = MessageDAO.shared.getMessage(messageId: messageId) else {
+                return
+            }
+            conversationId = m.conversationId
+            category = m.category
+            message = m
         }
         
+        var blazeMessage = blazeMessage
+        
+        guard let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId) else {
+            return
+        }
         if conversation.isGroup() && conversation.status != ConversationStatus.SUCCESS.rawValue {
             var userInfo = [String: Any]()
             userInfo["error"] = "conversation status error"
             userInfo["conversationStatus"] = "\(conversation.status)"
-            userInfo["conversationId"] = "\(message.conversationId)"
+            userInfo["conversationId"] = "\(conversationId)"
             reporter.report(error: MixinServicesError.sendMessage(userInfo))
             return
         }
         
-        if message.category.hasSuffix("_TEXT"), let text = message.content {
-            if conversation.category == ConversationCategory.GROUP.rawValue, let identityNumber = prefixMentionedAppIdentityNumberFromMessage(with: text) {
-                if let recipientId = ParticipantDAO.shared.getParticipantId(conversationId: conversation.conversationId, identityNumber: identityNumber), !recipientId.isEmpty {
-                    blazeMessage.params?.recipientId = recipientId
-                    blazeMessage.params?.data = nil
+        if let m = message {
+            if m.category.hasSuffix("_TEXT"), let text = m.content {
+                if conversation.category == ConversationCategory.GROUP.rawValue, let identityNumber = prefixMentionedAppIdentityNumberFromMessage(with: text) {
+                    if let recipientId = ParticipantDAO.shared.getParticipantId(conversationId: conversation.conversationId, identityNumber: identityNumber), !recipientId.isEmpty {
+                        blazeMessage.params?.recipientId = recipientId
+                        blazeMessage.params?.data = nil
+                    } else {
+                        message?.category = MessageCategory.SIGNAL_TEXT.rawValue
+                    }
                 } else {
-                    message.category = MessageCategory.SIGNAL_TEXT.rawValue
+                    let numbers = MessageMentionDetector.identityNumbers(from: text).filter { $0 != myIdentityNumber }
+                    if numbers.count > 0 {
+                        let userIds = UserDAO.shared.userIds(identityNumbers: numbers)
+                        blazeMessage.params?.mentions = userIds
+                    }
                 }
+            }
+            if m.category == MessageCategory.MESSAGE_RECALL.rawValue {
+                blazeMessage.params?.messageId = UUID().uuidString.lowercased()
             } else {
-                let numbers = MessageMentionDetector.identityNumbers(from: text).filter { $0 != myIdentityNumber }
-                if numbers.count > 0 {
-                    let userIds = UserDAO.shared.userIds(identityNumbers: numbers)
-                    blazeMessage.params?.mentions = userIds
-                }
+                blazeMessage.params?.category = m.category
+                blazeMessage.params?.quoteMessageId = m.quoteMessageId
             }
         }
         
-        if message.category == MessageCategory.MESSAGE_RECALL.rawValue {
-            blazeMessage.params?.messageId = UUID().uuidString.lowercased()
-        } else {
-            blazeMessage.params?.category = message.category
-            blazeMessage.params?.quoteMessageId = message.quoteMessageId
-        }
-        
-        if message.category.hasPrefix("PLAIN_") || message.category == MessageCategory.MESSAGE_RECALL.rawValue || message.category == MessageCategory.APP_CARD.rawValue {
+        let plainCategories: Set<String> = [
+            MessageCategory.MESSAGE_RECALL.rawValue,
+            MessageCategory.MESSAGE_PIN.rawValue,
+            MessageCategory.APP_CARD.rawValue
+        ]
+        if category.hasPrefix("PLAIN_") || plainCategories.contains(category) {
             try checkConversationExist(conversation: conversation)
-            if blazeMessage.params?.data == nil {
+            if let message = message, blazeMessage.params?.data == nil {
                 let needsEncodeCategories: [MessageCategory] = [
                     .PLAIN_TEXT, .PLAIN_POST, .PLAIN_LOCATION, .PLAIN_TRANSCRIPT
                 ]
-                if needsEncodeCategories.map(\.rawValue).contains(message.category) {
+                if needsEncodeCategories.map(\.rawValue).contains(category) {
                     blazeMessage.params?.data = message.content?.base64Encoded()
                 } else {
                     blazeMessage.params?.data = message.content
                 }
             }
         } else {
-            if !SignalProtocol.shared.isExistSenderKey(groupId: message.conversationId, senderId: message.userId) {
+            if !SignalProtocol.shared.isExistSenderKey(groupId: conversationId, senderId: message?.userId ?? myUserId) {
                 if conversation.isGroup() {
-                    syncConversation(conversationId: message.conversationId)
+                    syncConversation(conversationId: conversationId)
                 } else {
                     try createConversation(conversation: conversation)
                 }
             }
-            try checkSessionSenderKey(conversationId: message.conversationId)
-            
-            let content = blazeMessage.params?.data ?? message.content ?? ""
-            blazeMessage.params?.data = try SignalProtocol.shared.encryptGroupMessageData(conversationId: message.conversationId, senderId: message.userId, content: content)
+            try checkSessionSenderKey(conversationId: conversationId)
+            if let message = message {
+                let content = blazeMessage.params?.data ?? message.content ?? ""
+                blazeMessage.params?.data = try SignalProtocol.shared.encryptGroupMessageData(conversationId: message.conversationId, senderId: message.userId, content: content)
+            }
         }
         
         try deliverMessage(blazeMessage: blazeMessage)
-        Logger.conversation(id: message.conversationId).info(category: "SendMessageService", message: "Send message: \(messageId), category:\(message.category), status:\(message.status)")
+        Logger.conversation(id: conversationId).info(category: "SendMessageService", message: "Send message: \(blazeMessage.params?.messageId), category:\(category), status:\(message?.status)")
     }
         
     private func checkConversationExist(conversation: ConversationItem) throws {
@@ -679,43 +711,6 @@ extension SendMessageService {
         case let .failure(error):
             throw error
         }
-    }
-    
-    private func sendCallMessage(blazeMessage: BlazeMessage) throws {
-        guard let params = blazeMessage.params else {
-            return
-        }
-        guard let categoryString = params.category, let category = MessageCategory(rawValue: categoryString) else {
-            return
-        }
-        guard MixinService.callMessageCoordinator.shouldSendRtcBlazeMessage(with: category) else {
-            return
-        }
-        guard let conversationId = params.conversationId else {
-            return
-        }
-        guard let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId) else {
-            return
-        }
-        try checkConversationExist(conversation: conversation)
-        try deliverMessage(blazeMessage: blazeMessage)
-    }
-    
-    private func sendPinMessage(blazeMessage: BlazeMessage) throws {
-        guard let params = blazeMessage.params else {
-            Logger.general.error(category: "SendPinMessage", message: "No params")
-            return
-        }
-        guard let conversationId = params.conversationId else {
-            Logger.general.error(category: "SendPinMessage", message: "No conversation ID")
-            return
-        }
-        guard let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId) else {
-            Logger.general.error(category: "SendPinMessage", message: "No conversation")
-            return
-        }
-        try checkConversationExist(conversation: conversation)
-        try deliverMessage(blazeMessage: blazeMessage)
     }
     
     private func deliverMessage(blazeMessage: BlazeMessage) throws {

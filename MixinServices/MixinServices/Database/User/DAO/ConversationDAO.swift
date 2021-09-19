@@ -379,6 +379,13 @@ public final class ConversationDAO: UserDatabaseDAO {
                 Participant(conversationId: conversationId, userId: $0.userId, role: $0.role, status: ParticipantStatus.SUCCESS.rawValue, createdAt: $0.createdAt)
             }
             try participants.insert(db)
+            if let participantSessions = response.participantSessions {
+                let createdAt = Date().toUTCString()
+                let sessions = participantSessions.map { session in
+                    ParticipantSession(conversationId: conversationId, userId: session.userId, sessionId: session.sessionId, sentToServer: nil, createdAt: createdAt)
+                }
+                try sessions.save(db)
+            }
             conversation = try ConversationItem.fetchOne(db, sql: ConversationDAO.sqlQueryConversationByCoversationId, arguments: [conversationId], adapter: nil)
             participantUsers = try ParticipantUser.fetchAll(db, sql: ParticipantDAO.sqlQueryGroupIconParticipants, arguments: [conversationId], adapter: nil)
         }

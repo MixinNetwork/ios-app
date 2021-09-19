@@ -289,6 +289,7 @@ extension MessageReceiverViewController {
         case video(URL)
         case appCard(AppCardData)
         case transcript([MessageItem])
+        case transcriptMessage(transcriptId: String, item: MessageItem)
     }
     
     private struct ComposedMessage {
@@ -342,34 +343,50 @@ extension MessageReceiverViewController {
         case .transcript(let messages):
             return [makeTranscriptMessage(messages: messages, to: receiver.conversationId)]
                 .compactMap { $0 }
+        case .transcriptMessage(let transcriptId, let item):
+            if let message = makeMessage(message: item, transcriptId: transcriptId, to: receiver, createdAt: Date().toUTCString()) {
+                return [message]
+            } else {
+                return []
+            }
         }
     }
     
     // Copy media file in case of deletion or recalling
-    private static func mediaUrl(from message: MessageItem, with newMessageId: String) -> String? {
-        guard let category = AttachmentContainer.Category(messageCategory: message.category), let videoFilename = message.mediaUrl else {
+    private static func mediaUrl(from message: MessageItem, transcriptId: String?, with newMessageId: String) -> String? {
+        guard let category = AttachmentContainer.Category(messageCategory: message.category), let mediaFilename = message.mediaUrl else {
             return message.mediaUrl
         }
         
-        let fromUrl = AttachmentContainer.url(for: category, filename: videoFilename)
-        guard FileManager.default.fileExists(atPath: fromUrl.path) else {
+        let fromURL: URL
+        if let transcriptId = transcriptId {
+            fromURL = AttachmentContainer.url(transcriptId: transcriptId, filename: mediaFilename)
+        } else {
+            fromURL = AttachmentContainer.url(for: category, filename: mediaFilename)
+        }
+        guard FileManager.default.fileExists(atPath: fromURL.path) else {
             return message.mediaUrl
         }
-        let filename = newMessageId + "." + fromUrl.pathExtension
-        let toUrl = AttachmentContainer.url(for: category, filename: filename)
-        try? FileManager.default.copyItem(at: fromUrl, to: toUrl)
+        let filename = newMessageId + "." + fromURL.pathExtension
+        let toURL = AttachmentContainer.url(for: category, filename: filename)
+        try? FileManager.default.copyItem(at: fromURL, to: toURL)
         
         if message.category.hasSuffix("_VIDEO") {
             // Copy video thumbnail
-            let source = AttachmentContainer.videoThumbnailURL(videoFilename: videoFilename)
+            let source: URL
+            if let transcriptId = transcriptId {
+                source = AttachmentContainer.videoThumbnailURL(transcriptId: transcriptId, videoFilename: mediaFilename)
+            } else {
+                source = AttachmentContainer.videoThumbnailURL(videoFilename: mediaFilename)
+            }
             let destination = AttachmentContainer.url(for: .videos, filename: newMessageId + ExtensionName.jpeg.withDot)
             try? FileManager.default.copyItem(at: source, to: destination)
         }
         
-        return toUrl.lastPathComponent
+        return toURL.lastPathComponent
     }
     
-    private static func makeMessage(message: MessageItem, to receiver: MessageReceiver, createdAt: String) -> ComposedMessage? {
+    private static func makeMessage(message: MessageItem, transcriptId: String? = nil, to receiver: MessageReceiver, createdAt: String) -> ComposedMessage? {
         var newMessage = Message.createMessage(category: message.category,
                                                conversationId: receiver.conversationId,
                                                createdAt: createdAt,
@@ -390,20 +407,20 @@ extension MessageReceiverViewController {
             newMessage.mediaWidth = message.mediaWidth
             newMessage.mediaHeight = message.mediaHeight
             newMessage.mediaMimeType = message.mediaMimeType
-            newMessage.mediaUrl = mediaUrl(from: message, with: newMessage.messageId)
+            newMessage.mediaUrl = mediaUrl(from: message, transcriptId: transcriptId, with: newMessage.messageId)
             newMessage.mediaStatus = MediaStatus.PENDING.rawValue
         } else if message.category.hasSuffix("_DATA") {
             newMessage.category = isSignalMessage ? MessageCategory.SIGNAL_DATA.rawValue : MessageCategory.PLAIN_DATA.rawValue
             newMessage.name = message.name
             newMessage.mediaSize = message.mediaSize
             newMessage.mediaMimeType = message.mediaMimeType
-            newMessage.mediaUrl = mediaUrl(from: message, with: newMessage.messageId)
+            newMessage.mediaUrl = mediaUrl(from: message, transcriptId: transcriptId, with: newMessage.messageId)
             newMessage.mediaStatus = MediaStatus.PENDING.rawValue
         } else if message.category.hasSuffix("_AUDIO") {
             newMessage.category = isSignalMessage ? MessageCategory.SIGNAL_AUDIO.rawValue : MessageCategory.PLAIN_AUDIO.rawValue
             newMessage.mediaSize = message.mediaSize
             newMessage.mediaMimeType = message.mediaMimeType
-            newMessage.mediaUrl = mediaUrl(from: message, with: newMessage.messageId)
+            newMessage.mediaUrl = mediaUrl(from: message, transcriptId: transcriptId, with: newMessage.messageId)
             newMessage.mediaWaveform = message.mediaWaveform
             newMessage.mediaDuration = message.mediaDuration
             newMessage.mediaStatus = MediaStatus.PENDING.rawValue
@@ -414,7 +431,7 @@ extension MessageReceiverViewController {
             newMessage.mediaWidth = message.mediaWidth
             newMessage.mediaHeight = message.mediaHeight
             newMessage.mediaMimeType = message.mediaMimeType
-            newMessage.mediaUrl = mediaUrl(from: message, with: newMessage.messageId)
+            newMessage.mediaUrl = mediaUrl(from: message, transcriptId: transcriptId, with: newMessage.messageId)
             newMessage.mediaStatus = MediaStatus.PENDING.rawValue
             newMessage.mediaDuration = message.mediaDuration
         } else if message.category.hasSuffix("_STICKER") {

@@ -184,9 +184,11 @@ class ConversationCell: ModernSelectedBackgroundCell {
                 unreadLabel.backgroundColor = .theme
             }
             unreadLabel.isHidden = false
+            unreadLabel.alpha = 1
             unreadLabel.text = "\(item.unseenMessageCount)"
         } else {
             unreadLabel.isHidden = true
+            unreadLabel.alpha = 0 // XXX: Sometimes unread label shows for no reason, even if isHidden is alreay true
         }
         mentionLabel.isHidden = !hasUnreadMention
     }

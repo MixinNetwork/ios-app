@@ -1187,14 +1187,13 @@ class ConversationViewController: UIViewController {
             else {
                 return
             }
-            let count = PinMessageDAO.shared.messageCount(conversationId: conversationId)
             DispatchQueue.main.async {
                 guard let self = self else {
                     return
                 }
                 self.pinnedMessageIds.insert(referencedMessageId)
                 self.pinMessageBannerView.isHidden = false
-                self.updatePinMessageBanner(item: message, count: count)
+                self.updatePinMessagePreview(item: message)
             }
         }
     }
@@ -1207,7 +1206,7 @@ class ConversationViewController: UIViewController {
             return
         }
         dataSource.queue.async { [weak self] in
-            let count = PinMessageDAO.shared.messageCount(conversationId: conversationId)
+            let hasMessage = PinMessageDAO.shared.hasMessage(conversationId: conversationId)
             DispatchQueue.main.async {
                 guard let self = self else {
                     return
@@ -1217,10 +1216,8 @@ class ConversationViewController: UIViewController {
                 } else {
                     self.pinnedMessageIds = []
                 }
-                if count == 0 {
+                if !hasMessage {
                     self.pinMessageBannerViewIfLoaded?.isHidden = true
-                } else {
-                    self.pinMessageBannerView.updateMessageCount(count)
                 }
             }
         }
@@ -2462,9 +2459,9 @@ extension ConversationViewController {
         }
     }
     
-    private func updatePinMessageBanner(item: MessageItem, count: Int) {
+    private func updatePinMessagePreview(item: MessageItem) {
         let preview = TransferPinAction.pinMessage(item: item)
-        pinMessageBannerView.update(preview: preview, count: count)
+        pinMessageBannerView.update(preview: preview)
         pinMessageBannerView.snp.updateConstraints { make in
             make.left.equalTo(0)
         }
@@ -2501,7 +2498,7 @@ extension ConversationViewController {
         dataSource.queue.async { [weak self] in
             let users = ParticipantDAO.shared.getParticipants(conversationId: conversationId)
             var ids = MessageMentionDAO.shared.unreadMessageIds(conversationId: conversationId)
-            let pinMessageCount = PinMessageDAO.shared.messageCount(conversationId: conversationId)
+            let hasPinMessage = PinMessageDAO.shared.hasMessage(conversationId: conversationId)
             let visiblePinMessage: MessageItem?
             if let id = AppGroupUserDefaults.User.pinMessageBanners[conversationId] {
                 visiblePinMessage = MessageDAO.shared.getFullMessage(messageId: id)
@@ -2524,13 +2521,12 @@ extension ConversationViewController {
                     }
                     ids.removeAll(where: self.dataSource.visibleMessageIds.contains)
                     self.mentionScrollingDestinations = ids
-                    if pinMessageCount > 0 {
+                    if hasPinMessage {
                         self.pinMessageBannerView.isHidden = false
                         if let item = visiblePinMessage {
-                            self.updatePinMessageBanner(item: item, count: pinMessageCount)
+                            self.updatePinMessagePreview(item: item)
                         } else {
                             self.hidePinMessagePreview()
-                            self.pinMessageBannerView.updateMessageCount(pinMessageCount)
                         }
                     }
                 }

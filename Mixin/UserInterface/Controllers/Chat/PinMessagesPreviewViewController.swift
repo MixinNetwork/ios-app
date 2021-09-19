@@ -89,7 +89,7 @@ extension PinMessagesPreviewViewController {
     
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         super.tableView(tableView, willDisplay: cell, forRowAt: indexPath)
-        guard let cell = cell as? MessageCell, let viewModel = viewModel(at: indexPath), viewModel.message.userId != myUserId else {
+        guard let cell = cell as? MessageCell, let viewModel = viewModel(at: indexPath) else {
             return
         }
         let showMessageButton: UIButton
@@ -97,17 +97,21 @@ extension PinMessagesPreviewViewController {
             showMessageButton = button
         } else {
             showMessageButton = UIButton()
-            showMessageButton.addTarget(self, action: #selector(showMessageAction(_:)), for: .touchUpInside)
             showMessageButton.setImage(R.image.ic_pin_right_arrow(), for: .normal)
+            showMessageButton.addTarget(self, action: #selector(showMessageAction(_:)), for: .touchUpInside)
             showMessageButtons[cell] = showMessageButton
         }
-        cell.contentView.addSubview(showMessageButton)
+        let isSentByMe = viewModel.message.userId == myUserId
         let size = CGSize(width: 36, height: 36)
-        showMessageButton.snp.makeConstraints { make in
-            make.size.equalTo(size)
-            make.left.equalTo(cell.contentFrame.maxX)
-            make.top.equalTo(cell.contentFrame.midY - size.height / 2)
+        let origin = CGPoint(x: isSentByMe ? cell.contentFrame.minX - size.width : cell.contentFrame.maxX,
+                             y: cell.contentFrame.midY - size.height / 2)
+        showMessageButton.frame = CGRect(origin: origin, size: size)
+        if isSentByMe {
+            showMessageButton.transform = CGAffineTransform(rotationAngle: .pi)
+        } else {
+            showMessageButton.transform = .identity
         }
+        cell.contentView.addSubview(showMessageButton)
     }
     
     override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -168,7 +172,7 @@ extension PinMessagesPreviewViewController {
         guard let indexPath = tableView.indexPathForRow(at: location) else {
             return
         }
-        guard let viewModel = self.viewModel(at: indexPath) else {
+        guard let viewModel = viewModel(at: indexPath) else {
             return
         }
         delegate?.pinMessagesPreviewViewController(self, needsShowMessage: viewModel.message.messageId)

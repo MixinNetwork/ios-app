@@ -112,11 +112,6 @@ public final class PinMessageDAO: UserDatabaseDAO {
         }
     }
     
-    public func messageCount(conversationId: String) -> Int {
-        db.count(in: PinMessage.self,
-                 where: PinMessage.column(of: .conversationId) == conversationId)
-    }
-    
     public func hasMessage(conversationId: String) -> Bool {
         db.recordExists(in: PinMessage.self,
                         where: PinMessage.column(of: .conversationId) == conversationId)

@@ -407,7 +407,7 @@ extension ShareRecipientViewController {
         let thumbnailURL = AttachmentContainer.url(for: .videos, filename: messageId + ExtensionName.jpeg.withDot)
         thumbnail.saveToFile(path: thumbnailURL)
 
-        let category: MessageCategory = conversation.isSignalConversation ? .SIGNAL_VIDEO : .SIGNAL_VIDEO
+        let category: MessageCategory = conversation.isSignalConversation ? .SIGNAL_VIDEO : .PLAIN_VIDEO
         var message = Message.createMessage(category: category.rawValue, conversationId: conversation.conversationId, userId: myUserId)
         message.messageId = messageId
         message.thumbImage = thumbnail.base64Thumbnail()
@@ -426,7 +426,7 @@ extension ShareRecipientViewController {
         guard FileManager.default.fileSize(url.path) > 0 else {
             return
         }
-        let category: MessageCategory = conversation.isSignalConversation ? .SIGNAL_DATA : .SIGNAL_DATA
+        let category: MessageCategory = conversation.isSignalConversation ? .SIGNAL_DATA : .PLAIN_DATA
         var message = Message.createMessage(category: category.rawValue, conversationId: conversation.conversationId, userId: myUserId)
 
         let fileExtension = url.pathExtension.lowercased()

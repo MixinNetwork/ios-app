@@ -19,12 +19,13 @@ extension MixinAPIError {
                 default:
                     return underlying.localizedDescription
                 }
-            } else if case .responseValidationFailed(reason: .unacceptableStatusCode) = error {
-                return R.string.localizable.error_server_5xx()
-            } else if case .sessionTaskFailed = error {
-                return R.string.localizable.error_network_task_failed()
             } else {
-                return error.localizedDescription
+                switch error {
+                case .responseValidationFailed(.unacceptableStatusCode):
+                    return R.string.localizable.error_server_5xx()
+                default:
+                    return R.string.localizable.error_network_task_failed()
+                }
             }
         case .webSocketTimeOut, .clockSkewDetected:
             return R.string.localizable.error_connection_timeout()

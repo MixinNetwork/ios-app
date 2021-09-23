@@ -92,6 +92,9 @@ class PinValidationViewController: UIViewController {
                 self.descriptionLabel.textColor = .mixinRed
                 self.descriptionLabel.text = description
             }
+            if case .httpTransport(let afError) = error, (afError.underlyingError as NSError?)?.domain != NSURLErrorDomain {
+                reporter.report(error: afError)
+            }
         }
     }
     

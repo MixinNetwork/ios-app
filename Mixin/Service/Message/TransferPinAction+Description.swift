@@ -28,6 +28,13 @@ extension TransferPinAction {
         return TransferPinAction.pinMessage(userId: item.userId, userName: item.userFullName, category: category, content: item.mentionedFullnameReplacedContent)
     }
     
+    static func isPinnedText(item: MessageItem) -> Bool {
+        if let content = item.content, let localContent = TransferPinAction.pinMessageLocalContent(from: content), localContent.category.hasSuffix("_TEXT") {
+            return true
+        }
+        return false
+    }
+    
     private static func pinMessage(userId: String, userName: String?, category: String, content: String) -> String {
         let userFullName = userId == myUserId ? R.string.localizable.chat_message_you() : (userName ?? "")
         if category.hasSuffix("_TEXT") {

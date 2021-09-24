@@ -195,7 +195,7 @@ extension PinMessagesPreviewViewController {
                 }
                 return
             }
-            let pinnedMessageItems = PinMessageDAO.shared.messageItems(conversationId: conversationId)
+            let pinnedMessageItems = self.messageItems()
             let (dates, viewModels) = self.categorizedViewModels(with: pinnedMessageItems, fits: self.layoutWidth)
             DispatchQueue.main.async {
                 self.pinnedMessageItems = pinnedMessageItems
@@ -252,9 +252,8 @@ extension PinMessagesPreviewViewController {
     }
     
     private func reloadData() {
-        let conversationId = self.conversationId
         queue.async {
-            let pinnedMessageItems = PinMessageDAO.shared.messageItems(conversationId: conversationId)
+            let pinnedMessageItems = self.messageItems()
             let (dates, viewModels) = self.categorizedViewModels(with: pinnedMessageItems, fits: self.layoutWidth)
             DispatchQueue.main.async {
                 self.pinnedMessageItems = pinnedMessageItems
@@ -280,6 +279,12 @@ extension PinMessagesPreviewViewController {
                 self.tableView.contentInset.bottom = 0
             }
         }
+    }
+    
+    private func messageItems() -> [MessageItem] {
+        let items = PinMessageDAO.shared.messageItems(conversationId: conversationId)
+        items.forEach { $0.isPinned = false } // No need to display pin icon
+        return items
     }
     
 }

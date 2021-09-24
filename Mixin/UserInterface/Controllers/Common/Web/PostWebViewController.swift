@@ -146,9 +146,11 @@ extension PostWebViewController {
                 if success {
                     hud.hide()
                     let activity = UIActivityViewController(activityItems: [url], applicationActivities: nil)
-                    activity.completionWithItemsHandler = { (_, _, _, _) in
+                    activity.completionWithItemsHandler = { (_, completed, _, _) in
                         try? FileManager.default.removeItem(at: url)
-                        
+                        guard completed else {
+                            return
+                        }
                         if AppGroupUserDefaults.User.hasRestoreUploadAttachment {
                             AppGroupUserDefaults.User.hasRestoreUploadAttachment = false
                             JobService.shared.restoreUploadJobs()

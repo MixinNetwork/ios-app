@@ -10,6 +10,8 @@ class PopupPresentationController: UIPresentationController {
         return button
     }()
     
+    private var isTransitioning = false
+    
     override var frameOfPresentedViewInContainerView: CGRect {
         let presentingBounds = presentingViewController.view.bounds
         if presentedViewController.preferredContentSize != .zero {
@@ -25,15 +27,24 @@ class PopupPresentationController: UIPresentationController {
     
     override func preferredContentSizeDidChange(forChildContentContainer container: UIContentContainer) {
         super.preferredContentSizeDidChange(forChildContentContainer: container)
-        presentedView?.frame = frameOfPresentedViewInContainerView
+        if isTransitioning {
+            DispatchQueue.main.async(execute: updatePresentedViewFrame)
+        } else {
+            updatePresentedViewFrame()
+        }
     }
     
     override func containerViewWillLayoutSubviews() {
         super.containerViewWillLayoutSubviews()
-        presentedView?.frame = frameOfPresentedViewInContainerView
+        if isTransitioning {
+            DispatchQueue.main.async(execute: updatePresentedViewFrame)
+        } else {
+            updatePresentedViewFrame()
+        }
     }
     
     override func presentationTransitionWillBegin() {
+        isTransitioning = true
         if let containerView = containerView {
             backgroundButton.frame = containerView.bounds
             backgroundButton.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -48,7 +59,12 @@ class PopupPresentationController: UIPresentationController {
         })
     }
     
+    override func presentationTransitionDidEnd(_ completed: Bool) {
+        isTransitioning = false
+    }
+    
     override func dismissalTransitionWillBegin() {
+        isTransitioning = true
         guard let coordinator = presentedViewController.transitionCoordinator else {
             backgroundButton.alpha = 0
             return
@@ -58,8 +74,16 @@ class PopupPresentationController: UIPresentationController {
         })
     }
     
+    override func dismissalTransitionDidEnd(_ completed: Bool) {
+        isTransitioning = false
+    }
+    
     @objc func backgroundTapAction(sender: Any) {
         presentingViewController.dismiss(animated: true, completion: nil)
+    }
+    
+    private func updatePresentedViewFrame() {
+        presentedView?.frame = frameOfPresentedViewInContainerView
     }
     
 }

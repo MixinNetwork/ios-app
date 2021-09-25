@@ -30,6 +30,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _ = CacheableAssetFileManager.shared
         UNUserNotificationCenter.current().setNotificationCategories([.message])
         UNUserNotificationCenter.current().delegate = NotificationManager.shared
+        if #available(iOS 15.0, *) {
+            UITableView.appearance().sectionHeaderTopPadding = 0
+        }
         checkLogin()
         ScreenLockManager.shared.lockScreenIfNeeded()
         checkJailbreak()

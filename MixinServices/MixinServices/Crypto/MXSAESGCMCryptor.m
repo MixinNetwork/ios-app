@@ -18,7 +18,7 @@ static const size_t tagLength = 16;
 + (NSData * _Nullable)encrypt:(NSData *)plainData
                       withKey:(NSData *)key
                            iv:(NSData *)iv
-                        error:(NSError * _Nullable *)outError NS_SWIFT_NAME(encrypt(_:with:iv:padding:)) {
+                        error:(NSError * _Nullable *)outError {
     EVP_CIPHER_CTX *ctx = EVP_CIPHER_CTX_new();
     if (!ctx) {
         if (outError) {

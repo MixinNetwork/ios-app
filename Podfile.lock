@@ -212,6 +212,7 @@ DEPENDENCIES:
   - Firebase/Performance
   - GCDWebServer
   - GCDWebServer/WebDAV
+  - GRDB.swift/SQLCipher (from `https://github.com/wuyuehyang/GRDB.swift.git`)
   - libsignal-protocol-c (from `https://github.com/MixinNetwork/libsignal-protocol-c.git`)
   - lottie-ios (from `https://github.com/airbnb/lottie-ios.git`, branch `lottie/objectiveC`)
   - MixinServices (from `./MixinServices`)
@@ -243,7 +244,6 @@ SPEC REPOS:
     - GoogleAppMeasurement
     - GoogleDataTransport
     - GoogleUtilities
-    - GRDB.swift
     - GzipSwift
     - nanopb
     - PromisesObjC
@@ -258,6 +258,8 @@ SPEC REPOS:
     - Zip
 
 EXTERNAL SOURCES:
+  GRDB.swift:
+    :git: https://github.com/wuyuehyang/GRDB.swift.git
   libsignal-protocol-c:
     :git: https://github.com/MixinNetwork/libsignal-protocol-c.git
   lottie-ios:
@@ -271,6 +273,9 @@ EXTERNAL SOURCES:
     :git: https://github.com/wuyuehyang/YYImage.git
 
 CHECKOUT OPTIONS:
+  GRDB.swift:
+    :commit: 9253866b5706ccd9cf11bf829ed9fab18ec5849d
+    :git: https://github.com/wuyuehyang/GRDB.swift.git
   libsignal-protocol-c:
     :commit: f55d4e7b94f388a1ad5e3c6835c3bf4c335283d4
     :git: https://github.com/MixinNetwork/libsignal-protocol-c.git
@@ -304,7 +309,7 @@ SPEC CHECKSUMS:
   GoogleAppMeasurement: 2be61ce546ad074dbe4dd545f222ac6033bb1d9e
   GoogleDataTransport: 85fd18ff3019bb85d3f2c551d04c481dedf71fc9
   GoogleUtilities: 8de2a97a17e15b6b98e38e8770e2d129a57c0040
-  GRDB.swift: 9a33d9680cd3c870c82f48a6cbc73d3cfbb235eb
+  GRDB.swift: 7afca530bbb0004273ea81fd419fa17d934ca7e1
   GzipSwift: 893f3e48e597a1a4f62fafcb6514220fcf8287fa
   libsignal-protocol-c: 2fecccb06cc14bdbd28e76a656c0c8c648a482a0
   lottie-ios: 0e760146411886f6104050c932a8e6964853267f
@@ -323,6 +328,6 @@ SPEC CHECKSUMS:
   YYImage: 6db68da66f20d9f169ceb94dfb9947c3867b9665
   Zip: 414f59909701fda9a84ab774ebe0f5449b1082cc
 
-PODFILE CHECKSUM: bbfd01b45711669bce2e94cde99db211655f024d
+PODFILE CHECKSUM: 872566b8b4383d87a327a1266bbfce687b2d4f04
 
 COCOAPODS: 1.11.2

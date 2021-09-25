@@ -16,8 +16,10 @@ class PinMessageViewModel: MessageViewModel {
     }()
     
     let text: String
+    let isPinnedText: Bool
     
     override init(message: MessageItem) {
+        isPinnedText = TransferPinAction.isPinnedText(item: message)
         text = TransferPinAction.pinMessage(item: message)
         super.init(message: message)
         backgroundImage = R.image.ic_chat_bubble_system()

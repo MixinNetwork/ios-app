@@ -6,10 +6,6 @@ class LocationMessageViewModel: ImageMessageViewModel {
     
     typealias Snapshot = (image: UIImage, annotationCenter: CGPoint)
     
-    override class var bubbleWidth: CGFloat {
-        ScreenWidth.current <= .short ? 260 : 296
-    }
-    
     let hasAddress: Bool
     
     override var statusNormalTintColor: UIColor {
@@ -31,13 +27,7 @@ class LocationMessageViewModel: ImageMessageViewModel {
     }
     
     override func layout(width: CGFloat, style: MessageViewModel.Style) {
-        let photoWidth: CGFloat
-        if quotedMessageViewModel == nil {
-            photoWidth = Self.bubbleWidth
-        } else {
-            photoWidth = Self.bubbleWidth - Self.quotingMessageMargin.horizontal
-        }
-        photoFrame.size = CGSize(width: photoWidth, height: 180)
+        photoFrame.size = CGSize(width: ScreenWidth.current <= .short ? 260 : 296, height: 180)
         super.layout(width: width, style: style)
         if style.contains(.received) {
             labelsLeadingConstant = 20 - (quotedMessageViewModel == nil ? 0 : Self.quotingMessageMargin.trailing)

@@ -5,7 +5,7 @@ import MixinServices
 
 class UrlWindow {
     
-    class func checkUrl(url: URL, webContext: MixinWebViewController.Context? = nil, clearNavigationStack: Bool = true, ignoreUnsupportMixinSchema: Bool = true) -> Bool {
+    class func checkUrl(url: URL, webContext: MixinWebViewController.Context? = nil, clearNavigationStack: Bool = true, presentHintOnUnsupportedMixinSchema: Bool = true) -> Bool {
         if let mixinURL = MixinURL(url: url) {
             switch mixinURL {
             case let .codes(code):
@@ -35,7 +35,12 @@ class UrlWindow {
                 UIApplication.currentActivity()?.alert(R.string.localizable.desktop_upgrade())
                 return true
             case .unknown:
-                return ignoreUnsupportMixinSchema ? url.scheme == MixinURL.scheme : false
+                if presentHintOnUnsupportedMixinSchema && url.scheme == MixinURL.scheme {
+                    UnknownURLWindow.instance(url: url.absoluteString).presentPopupControllerAnimated()
+                    return true
+                } else {
+                    return false
+                }
             }
         } else if let url = MixinInternalURL(url: url) {
             switch url {

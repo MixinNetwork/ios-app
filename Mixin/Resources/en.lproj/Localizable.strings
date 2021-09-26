@@ -656,6 +656,8 @@
 
 // Url
 "url_invalid_payment" = "Invalid payment link";
+"url_unrecognized" = "Link recognition failure";
+"url_unrecognized_tip" = "%@ failed to recognize, please upgrade Mixin to the latest version or contact the developer to check the link";
 
 // Multisig
 "multisig_by_pin" = "Multisig by PIN";

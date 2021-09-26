@@ -4,9 +4,9 @@ class UnknownURLWindow: BottomSheetView {
     
     @IBOutlet weak var tipLabel: UILabel!
     
-    class func instance(url: String) -> UnknownURLWindow {
-        let window = Bundle.main.loadNibNamed("UnknownURLWindow", owner: nil, options: nil)?.first as! UnknownURLWindow
-        window.tipLabel.text = R.string.localizable.url_unrecognized_tip(url)
+    class func instance(url: URL) -> UnknownURLWindow {
+        let window = R.nib.unknownURLWindow(owner: self)!
+        window.tipLabel.text = R.string.localizable.url_unrecognized_tip(url.absoluteString)
         return window
     }
     

@@ -36,7 +36,7 @@ class UrlWindow {
                 return true
             case .unknown:
                 if presentHintOnUnsupportedMixinSchema && url.scheme == MixinURL.scheme {
-                    UnknownURLWindow.instance(url: url.absoluteString).presentPopupControllerAnimated()
+                    UnknownURLWindow.instance(url: url).presentPopupControllerAnimated()
                     return true
                 } else {
                     return false

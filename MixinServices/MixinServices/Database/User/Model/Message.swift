@@ -291,6 +291,17 @@ public enum MessageCategory: String, Decodable {
     case KRAKEN_CANCEL
     case KRAKEN_DECLINE
     case KRAKEN_RESTART
+    case ENCRYPTED_TEXT
+    case ENCRYPTED_IMAGE
+    case ENCRYPTED_VIDEO
+    case ENCRYPTED_STICKER
+    case ENCRYPTED_DATA
+    case ENCRYPTED_CONTACT
+    case ENCRYPTED_AUDIO
+    case ENCRYPTED_LIVE
+    case ENCRYPTED_POST
+    case ENCRYPTED_LOCATION
+    case ENCRYPTED_TRANSCRIPT
     case EXT_UNREAD
     case EXT_ENCRYPTION
     case UNKNOWN
@@ -335,12 +346,11 @@ public enum MessageCategory: String, Decodable {
         return Set(categories.map(\.rawValue))
     }()
     
-    // ⚠️ Database table creation depends on this, look after database when modifying
     public static let ftsAvailable: Set<Self> = [
-        .SIGNAL_TEXT, .PLAIN_TEXT,
-        .SIGNAL_POST, .PLAIN_POST,
-        .SIGNAL_DATA, .PLAIN_DATA,
-        .SIGNAL_TRANSCRIPT, .PLAIN_TRANSCRIPT
+        .SIGNAL_TEXT, .PLAIN_TEXT, .ENCRYPTED_TEXT,
+        .SIGNAL_POST, .PLAIN_POST, .ENCRYPTED_POST,
+        .SIGNAL_DATA, .PLAIN_DATA, .ENCRYPTED_DATA,
+        .SIGNAL_TRANSCRIPT, .PLAIN_TRANSCRIPT, .ENCRYPTED_TRANSCRIPT
     ]
     
     public static let ftsAvailableCategoryStrings: Set<String> = Set(ftsAvailable.map(\.rawValue))

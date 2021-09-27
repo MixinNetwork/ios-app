@@ -315,7 +315,7 @@ SPEC CHECKSUMS:
   GzipSwift: 893f3e48e597a1a4f62fafcb6514220fcf8287fa
   libsignal-protocol-c: 2fecccb06cc14bdbd28e76a656c0c8c648a482a0
   lottie-ios: 0e760146411886f6104050c932a8e6964853267f
-  MixinServices: 67774802fbd7cd96616ab61941929e328b8a4aa3
+  MixinServices: 6e4f09d94583a3b508b81444dc938a0a6799238c
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   PhoneNumberKit: 4ce83273551c4d2ae10b7361162f4283dd02835f
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58

@@ -62,11 +62,11 @@ public final class MessageDAO: UserDatabaseDAO {
     """
     static let sqlQueryFullAudioMessages = """
     \(sqlQueryFullMessage)
-    WHERE m.conversation_id = ? AND m.category in ('SIGNAL_AUDIO', 'PLAIN_AUDIO')
+    WHERE m.conversation_id = ? AND m.category in ('SIGNAL_AUDIO', 'PLAIN_AUDIO', 'ENCRYPTED_AUDIO')
     """
     static let sqlQueryFullDataMessages = """
     \(sqlQueryFullMessage)
-    WHERE m.conversation_id = ? AND m.category in ('SIGNAL_DATA', 'PLAIN_DATA')
+    WHERE m.conversation_id = ? AND m.category in ('SIGNAL_DATA', 'PLAIN_DATA', 'ENCRYPTED_DATA')
     """
     static let sqlQueryFullMessageById = sqlQueryFullMessage + " WHERE m.id = ?"
     static let sqlQueryQuoteMessageById = """
@@ -367,6 +367,12 @@ public final class MessageDAO: UserDatabaseDAO {
                 }
             }
         }
+    }
+    
+    public func updateMessageCategory(_ category: String, forMessageWithId id: String) {
+        db.update(Message.self,
+                  assignments: [Message.column(of: .category).set(to: category)],
+                  where: Message.column(of: .messageId) == id)
     }
     
     public func getFullMessage(messageId: String) -> MessageItem? {

@@ -31,6 +31,9 @@ class AboutViewController: SettingsTableViewController {
         versionLabel.text = Bundle.main.shortVersion + "(\(Bundle.main.bundleVersion))"
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
+        #if DEBUG
+        showDiagnoseRow(self)
+        #endif
     }
     
     @IBAction func showDiagnoseRow(_ sender: Any) {

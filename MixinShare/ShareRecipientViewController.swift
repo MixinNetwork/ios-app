@@ -467,6 +467,12 @@ extension ShareRecipientViewController {
         if msg.category.hasSuffix("_TEXT"), let content = msg.content, content.utf8.count > 64 * 1024 {
             msg.content = String(content.prefix(64 * 1024))
         }
+        if conversation.isBot, let app = AppDAO.shared.getApp(ofUserId: conversation.userId) {
+            if (app.capabilities ?? []).contains("ENCRYPTED") {
+                msg.category = msg.category.replacingOccurrences(of: "PLAIN_", with: "ENCRYPTED_")
+            }
+        }
+        
         MessageDAO.shared.insertMessage(message: msg, messageSource: "")
 
         if ["_TEXT", "_POST"].contains(where: msg.category.hasSuffix) {

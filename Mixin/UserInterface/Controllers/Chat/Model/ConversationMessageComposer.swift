@@ -9,6 +9,8 @@ final class ConversationMessageComposer {
     let isGroup: Bool
     let ownerUser: UserItem?
     
+    private(set) var opponentApp: App?
+    
     private lazy var thumbnailRequestOptions: PHImageRequestOptions = {
         let options = PHImageRequestOptions()
         options.deliveryMode = .fastFormat
@@ -32,9 +34,22 @@ final class ConversationMessageComposer {
                   ownerUser: ownerUser)
     }
     
+    func loadOpponentApp(userId: String, completion: ((App?) -> Void)?) {
+        queue.async { [weak self] in
+            let app = AppDAO.shared.getApp(ofUserId: userId)
+            DispatchQueue.main.async {
+                if let app = app {
+                    self?.opponentApp = app
+                }
+                completion?(app)
+            }
+        }
+    }
+    
     func sendMessage(type: MessageCategory, messageId: String? = nil, quote: MessageItem? = nil, value: Any, silentNotification: Bool = false) {
         let isGroupMessage = self.isGroup
         let ownerUser = self.ownerUser
+        let app = self.opponentApp
         let createdAt: Date = {
             var date = Date()
             if let quote = quote {
@@ -56,7 +71,11 @@ final class ConversationMessageComposer {
         if type == .SIGNAL_TEXT || type == .SIGNAL_POST, let text = value as? String {
             message.content = text
             queue.async {
-                SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage, silentNotification: silentNotification)
+                SendMessageService.shared.sendMessage(message: message,
+                                                      ownerUser: ownerUser,
+                                                      opponentApp: app,
+                                                      isGroupMessage: isGroupMessage,
+                                                      silentNotification: silentNotification)
             }
         } else if type == .SIGNAL_DATA, let url = value as? URL {
             queue.async {
@@ -77,7 +96,10 @@ final class ConversationMessageComposer {
                 message.mediaMimeType = FileManager.default.mimeType(ext: fileExtension)
                 message.mediaUrl = targetUrl.lastPathComponent
                 message.mediaStatus = MediaStatus.PENDING.rawValue
-                SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
+                SendMessageService.shared.sendMessage(message: message,
+                                                      ownerUser: ownerUser,
+                                                      opponentApp: app,
+                                                      isGroupMessage: isGroupMessage)
             }
         } else if type == .SIGNAL_VIDEO, let url = value as? URL {
             queue.async {
@@ -102,7 +124,10 @@ final class ConversationMessageComposer {
                 message.mediaMimeType = FileManager.default.mimeType(ext: url.pathExtension)
                 message.mediaUrl = url.lastPathComponent
                 message.mediaStatus = MediaStatus.PENDING.rawValue
-                SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
+                SendMessageService.shared.sendMessage(message: message,
+                                                      ownerUser: ownerUser,
+                                                      opponentApp: app,
+                                                      isGroupMessage: isGroupMessage)
             }
         } else if type == .SIGNAL_AUDIO, let value = value as? (tempUrl: URL, metadata: AudioMetadata) {
             queue.async {
@@ -119,7 +144,10 @@ final class ConversationMessageComposer {
                     message.mediaStatus = MediaStatus.PENDING.rawValue
                     message.mediaWaveform = value.metadata.waveform
                     message.mediaDuration = Int64(value.metadata.duration)
-                    SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
+                    SendMessageService.shared.sendMessage(message: message,
+                                                          ownerUser: ownerUser,
+                                                          opponentApp: app,
+                                                          isGroupMessage: isGroupMessage)
                 } catch {
                     showAutoHiddenHud(style: .error, text: R.string.localizable.error_operation_failed())
                 }
@@ -133,7 +161,10 @@ final class ConversationMessageComposer {
                 let albumId = AlbumDAO.shared.getAlbum(stickerId: sticker.stickerId)?.albumId
                 let transferData = TransferStickerData(stickerId: sticker.stickerId, name: sticker.name, albumId: albumId)
                 message.content = try! JSONEncoder().encode(transferData).base64EncodedString()
-                SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
+                SendMessageService.shared.sendMessage(message: message,
+                                                      ownerUser: ownerUser,
+                                                      opponentApp: app,
+                                                      isGroupMessage: isGroupMessage)
             }
         }
     }
@@ -141,6 +172,7 @@ final class ConversationMessageComposer {
     func send(image: GiphyImage, thumbnail: UIImage?) {
         let conversationId = self.conversationId
         let ownerUser = self.ownerUser
+        let app = self.opponentApp
         let isGroupMessage = self.isGroup
         queue.async {
             var message = Message.createMessage(category: MessageCategory.SIGNAL_IMAGE.rawValue,
@@ -154,13 +186,14 @@ final class ConversationMessageComposer {
                 message.thumbImage = thumbnail.base64Thumbnail()
             }
             message.mediaMimeType = "image/gif"
-            SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
+            SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, opponentApp: app, isGroupMessage: isGroupMessage)
         }
     }
     
     func send(image: UIImage, quoteMessageId: String?) {
         let conversationId = self.conversationId
         let ownerUser = self.ownerUser
+        let app = self.opponentApp
         let isGroupMessage = self.isGroup
         queue.async {
             var message = Message.createMessage(category: MessageCategory.SIGNAL_IMAGE.rawValue,
@@ -177,13 +210,14 @@ final class ConversationMessageComposer {
             message.quoteMessageId = quoteMessageId
             message.thumbImage = image.base64Thumbnail()
             message.mediaMimeType = "image/jpeg"
-            SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
+            SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, opponentApp: app, isGroupMessage: isGroupMessage)
         }
     }
     
     func moveAndSendVideo(at source: URL, quoteMessageId: String?) {
         let conversationId = self.conversationId
         let ownerUser = self.ownerUser
+        let app = self.opponentApp
         let isGroupMessage = self.isGroup
         queue.async {
             var message = Message.createMessage(category: MessageCategory.SIGNAL_VIDEO.rawValue,
@@ -214,7 +248,7 @@ final class ConversationMessageComposer {
                 message.mediaUrl = url.lastPathComponent
                 message.mediaStatus = MediaStatus.PENDING.rawValue
                 message.quoteMessageId = quoteMessageId
-                SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
+                SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, opponentApp: app, isGroupMessage: isGroupMessage)
             } catch {
                 showAutoHiddenHud(style: .error, text: R.string.localizable.error_operation_failed())
             }
@@ -224,6 +258,7 @@ final class ConversationMessageComposer {
     func moveAndSendGifImage(at source: URL, image: UIImage, quoteMessageId: String?) {
         let conversationId = self.conversationId
         let ownerUser = self.ownerUser
+        let app = self.opponentApp
         let isGroupMessage = self.isGroup
         queue.async {
             var message = Message.createMessage(category: MessageCategory.SIGNAL_IMAGE.rawValue,
@@ -239,7 +274,7 @@ final class ConversationMessageComposer {
                 message.mediaHeight = Int(image.size.height * image.scale)
                 message.thumbImage = image.base64Thumbnail()
                 message.mediaMimeType = "image/gif"
-                SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
+                SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, opponentApp: app, isGroupMessage: isGroupMessage)
             } catch {
                 showAutoHiddenHud(style: .error, text: R.string.localizable.error_operation_failed())
             }
@@ -249,6 +284,7 @@ final class ConversationMessageComposer {
     func send(asset: PHAsset, quoteMessageId: String?) {
         let conversationId = self.conversationId
         let ownerUser = self.ownerUser
+        let app = self.opponentApp
         let isGroupMessage = self.isGroup
         let options = self.thumbnailRequestOptions
         queue.async {
@@ -274,7 +310,7 @@ final class ConversationMessageComposer {
                     message.thumbImage = image.base64Thumbnail()
                 }
             }
-            SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
+            SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, opponentApp: app, isGroupMessage: isGroupMessage)
         }
     }
     

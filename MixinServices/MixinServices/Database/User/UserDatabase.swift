@@ -173,6 +173,7 @@ public final class UserDatabase: Database {
             .init(key: .sessionId, constraints: "TEXT NOT NULL"),
             .init(key: .sentToServer, constraints: "INTEGER"),
             .init(key: .createdAt, constraints: "TEXT NOT NULL"),
+            .init(key: .publicKey, constraints: "TEXT")
         ]),
         ColumnMigratableTableDefinition<Participant>(constraints: "PRIMARY KEY(conversation_id, user_id)", columns: [
             .init(key: .conversationId, constraints: "TEXT NOT NULL"),
@@ -409,6 +410,14 @@ public final class UserDatabase: Database {
             """
             try db.execute(sql: sql)
             try db.execute(sql: "CREATE INDEX IF NOT EXISTS index_pin_messages_conversation_id ON pin_messages(conversation_id)")
+        }
+        
+        migrator.registerMigration("encrypted_app_messages") { (db) in
+            let infos = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(participant_session)")
+            let columnNames = infos.map(\.name)
+            if !columnNames.contains("public_key") {
+                try db.execute(sql: "ALTER TABLE participant_session ADD COLUMN public_key TEXT")
+            }
         }
         
         /* Remaining works:

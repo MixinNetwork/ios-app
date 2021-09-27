@@ -6,6 +6,7 @@ NS_SWIFT_NAME(Ed25519PublicKey)
 @interface MXSEd25519PublicKey : NSObject
 
 @property (nonatomic, strong, readonly) NSData *rawRepresentation;
+@property (nonatomic, strong, readonly) NSData *x25519Representation;
 
 - (instancetype)init NS_UNAVAILABLE;
 

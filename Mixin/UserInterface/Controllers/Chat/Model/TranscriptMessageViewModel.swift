@@ -70,25 +70,25 @@ extension TranscriptMessageViewModel  {
             digest = ""
         }
         switch MessageCategory(rawValue: content.category) {
-        case .SIGNAL_TEXT, .PLAIN_TEXT:
+        case .SIGNAL_TEXT, .PLAIN_TEXT, .ENCRYPTED_TEXT:
             digest += content.content ?? " "
-        case .SIGNAL_IMAGE, .PLAIN_IMAGE:
+        case .SIGNAL_IMAGE, .PLAIN_IMAGE, .ENCRYPTED_IMAGE:
             digest += R.string.localizable.notification_content_photo()
-        case .SIGNAL_VIDEO, .PLAIN_VIDEO:
+        case .SIGNAL_VIDEO, .PLAIN_VIDEO, .ENCRYPTED_VIDEO:
             digest += R.string.localizable.notification_content_video()
-        case .SIGNAL_DATA, .PLAIN_DATA:
+        case .SIGNAL_DATA, .PLAIN_DATA, .ENCRYPTED_DATA:
             digest += R.string.localizable.notification_content_file()
-        case .SIGNAL_STICKER, .PLAIN_STICKER:
+        case .SIGNAL_STICKER, .PLAIN_STICKER, .ENCRYPTED_STICKER:
             digest += R.string.localizable.notification_content_sticker()
-        case .SIGNAL_CONTACT, .PLAIN_CONTACT:
+        case .SIGNAL_CONTACT, .PLAIN_CONTACT, .ENCRYPTED_CONTACT:
             digest += R.string.localizable.notification_content_contact()
-        case .SIGNAL_AUDIO, .PLAIN_AUDIO:
+        case .SIGNAL_AUDIO, .PLAIN_AUDIO, .ENCRYPTED_AUDIO:
             digest += R.string.localizable.notification_content_audio()
-        case .SIGNAL_LIVE, .PLAIN_LIVE:
+        case .SIGNAL_LIVE, .PLAIN_LIVE, .ENCRYPTED_LIVE:
             digest += R.string.localizable.notification_content_live()
-        case .SIGNAL_POST, .PLAIN_POST:
+        case .SIGNAL_POST, .PLAIN_POST, .ENCRYPTED_POST:
             digest += content.content ?? " "
-        case .SIGNAL_LOCATION, .PLAIN_LOCATION:
+        case .SIGNAL_LOCATION, .PLAIN_LOCATION, .ENCRYPTED_LOCATION:
             digest += R.string.localizable.notification_content_location()
         case .APP_CARD:
             if let json = content.content?.data(using: .utf8), let card = try? JSONDecoder.default.decode(AppCardData.self, from: json) {

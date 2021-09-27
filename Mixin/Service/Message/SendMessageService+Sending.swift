@@ -3,7 +3,14 @@ import MixinServices
 
 extension SendMessageService {
     
-    func sendMessage(message: Message, children: [TranscriptMessage]? = nil, ownerUser: UserItem?, isGroupMessage: Bool, silentNotification: Bool = false) {
+    func sendMessage(
+        message: Message,
+        children: [TranscriptMessage]? = nil,
+        ownerUser: UserItem?,
+        opponentApp: App? = nil,
+        isGroupMessage: Bool,
+        silentNotification: Bool = false
+    ) {
         guard let account = LoginManager.shared.account else {
             return
         }
@@ -11,55 +18,89 @@ extension SendMessageService {
         var msg = message
         msg.userId = account.user_id
         msg.status = MessageStatus.SENDING.rawValue
-
-        var isSignalMessage = isGroupMessage
-        if !isGroupMessage {
-            isSignalMessage = !(ownerUser?.isBot ?? true)
+        
+        let app: App?
+        if let opponentApp = opponentApp {
+            app = opponentApp
+        } else if let user = ownerUser, user.isBot {
+            app = AppDAO.shared.getApp(ofUserId: user.userId)
+        } else {
+            app = nil
         }
-
-        if msg.category.hasSuffix("_TEXT") {
-            if isSignalMessage {
-                if let content = msg.content, willTextMessageWithContentSendDirectlyToApp(content, conversationId: msg.conversationId, inGroup: isGroupMessage) {
-                    msg.category = MessageCategory.PLAIN_TEXT.rawValue
+        
+        let categoryPrefix: String
+        if isGroupMessage {
+            if msg.category.hasSuffix("_TEXT"), let content = msg.content, let id = groupMessageRecipientAppId(content, conversationId: msg.conversationId) {
+                if let app = AppDAO.shared.getApp(appId: id), app.capabilities?.contains("ENCRYPTED") ?? false {
+                    categoryPrefix = "ENCRYPTED"
                 } else {
-                    msg.category = MessageCategory.SIGNAL_TEXT.rawValue
+                    categoryPrefix = "PLAIN"
                 }
             } else {
-                msg.category = MessageCategory.PLAIN_TEXT.rawValue
+                categoryPrefix = "SIGNAL"
             }
+        } else if let user = ownerUser {
+            if user.isBot {
+                if let app = app, app.capabilities?.contains("ENCRYPTED") ?? false {
+                    categoryPrefix = "ENCRYPTED"
+                } else {
+                    categoryPrefix = "PLAIN"
+                }
+            } else {
+                categoryPrefix = "SIGNAL"
+            }
+        } else {
+            assertionFailure("No receiver")
+            categoryPrefix = "PLAIN"
+        }
+        
+        if msg.category.hasSuffix("_TEXT") {
+            msg.category = categoryPrefix + "_TEXT"
         } else if msg.category.hasSuffix("_IMAGE") {
-            msg.category = isSignalMessage ? MessageCategory.SIGNAL_IMAGE.rawValue :  MessageCategory.PLAIN_IMAGE.rawValue
+            msg.category = categoryPrefix + "_IMAGE"
         } else if msg.category.hasSuffix("_VIDEO") {
-            msg.category = isSignalMessage ? MessageCategory.SIGNAL_VIDEO.rawValue :  MessageCategory.PLAIN_VIDEO.rawValue
+            msg.category = categoryPrefix + "_VIDEO"
         } else if msg.category.hasSuffix("_DATA") {
-            msg.category = isSignalMessage ? MessageCategory.SIGNAL_DATA.rawValue :  MessageCategory.PLAIN_DATA.rawValue
+            msg.category = categoryPrefix + "_DATA"
         } else if msg.category.hasSuffix("_STICKER") {
-            msg.category = isSignalMessage ? MessageCategory.SIGNAL_STICKER.rawValue :  MessageCategory.PLAIN_STICKER.rawValue
+            msg.category = categoryPrefix + "_STICKER"
         } else if msg.category.hasSuffix("_CONTACT") {
-            msg.category = isSignalMessage ? MessageCategory.SIGNAL_CONTACT.rawValue :  MessageCategory.PLAIN_CONTACT.rawValue
+            msg.category = categoryPrefix + "_CONTACT"
         } else if msg.category.hasSuffix("_AUDIO") {
-            msg.category = isSignalMessage ? MessageCategory.SIGNAL_AUDIO.rawValue :  MessageCategory.PLAIN_AUDIO.rawValue
+            msg.category = categoryPrefix + "_AUDIO"
         } else if msg.category.hasSuffix("_LIVE") {
-            msg.category = isSignalMessage ? MessageCategory.SIGNAL_LIVE.rawValue :  MessageCategory.PLAIN_LIVE.rawValue
+            msg.category = categoryPrefix + "_LIVE"
         } else if msg.category.hasSuffix("_POST") {
-            msg.category = isSignalMessage ? MessageCategory.SIGNAL_POST.rawValue :  MessageCategory.PLAIN_POST.rawValue
+            msg.category = categoryPrefix + "_POST"
         } else if msg.category.hasSuffix("_LOCATION") {
-            msg.category = isSignalMessage ? MessageCategory.SIGNAL_LOCATION.rawValue :  MessageCategory.PLAIN_LOCATION.rawValue
+            msg.category = categoryPrefix + "_LOCATION"
         } else if msg.category.hasSuffix("_TRANSCRIPT") {
-            msg.category = isSignalMessage ? MessageCategory.SIGNAL_TRANSCRIPT.rawValue :  MessageCategory.PLAIN_TRANSCRIPT.rawValue
+            msg.category = categoryPrefix + "_TRANSCRIPT"
+            let isPlainMessage = categoryPrefix == "PLAIN"
             for child in children ?? [] {
                 let category = child.category
-                if isSignalMessage, category.hasPrefix("PLAIN_") {
-                    let range = category.startIndex...category.index(category.startIndex, offsetBy: 5)
-                    child.category.replaceSubrange(range, with: "SIGNAL_")
+                if !isPlainMessage, category.hasPrefix("PLAIN_") {
+                    let range = category.startIndex...category.index(category.startIndex, offsetBy: 4)
+                    child.category.replaceSubrange(range, with: categoryPrefix)
+                    print(child.category)
                     if MessageCategory.allMediaCategoriesString.contains(child.category) {
                         // Force the attachment to re-upload
                         child.mediaCreatedAt = nil
                         child.content = nil
                     }
-                } else if !isSignalMessage, category.hasPrefix("SIGNAL_") {
-                    let range = category.startIndex...category.index(category.startIndex, offsetBy: 6)
-                    child.category.replaceSubrange(range, with: "PLAIN_")
+                } else if isPlainMessage, category.hasPrefix("SIGNAL_") {
+                    let range = category.startIndex...category.index(category.startIndex, offsetBy: 5)
+                    child.category.replaceSubrange(range, with: categoryPrefix)
+                    print(child.category)
+                    if MessageCategory.allMediaCategoriesString.contains(child.category) {
+                        // Force the attachment to re-upload
+                        child.mediaCreatedAt = nil
+                        child.content = nil
+                    }
+                } else if isPlainMessage, category.hasPrefix("ENCRYPTED_") {
+                    let range = category.startIndex...category.index(category.startIndex, offsetBy: 8)
+                    child.category.replaceSubrange(range, with: categoryPrefix)
+                    print(child.category)
                     if MessageCategory.allMediaCategoriesString.contains(child.category) {
                         // Force the attachment to re-upload
                         child.mediaCreatedAt = nil

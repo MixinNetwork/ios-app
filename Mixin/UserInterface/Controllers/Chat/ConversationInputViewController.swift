@@ -79,8 +79,6 @@ class ConversationInputViewController: UIViewController {
         }
     }()
     
-    private(set) var opponentApp: App?
-    
     private var mentionRanges = Set<NSRange>()
     private var typingAttributes: [NSAttributedString.Key: Any] = [:]
     private var lastSelectedRange: NSRange!
@@ -123,7 +121,7 @@ class ConversationInputViewController: UIViewController {
         return parent as! ConversationViewController
     }
     
-    private var composer: ConversationMessageComposer {
+    var composer: ConversationMessageComposer {
         return conversationViewController.composer
     }
     
@@ -307,7 +305,7 @@ class ConversationInputViewController: UIViewController {
     
     // TODO: use view controller based web view and present it right here
     @IBAction func openOpponentAppAction(_ sender: Any) {
-        guard let user = composer.ownerUser, user.isBot, let app = opponentApp else {
+        guard let app = composer.opponentApp else {
             return
         }
         dismiss()
@@ -353,16 +351,12 @@ class ConversationInputViewController: UIViewController {
                 }
             }
         } else if let ownerUser = composer.ownerUser {
-            composer.queue.async { [weak self] in
-                let app = AppDAO.shared.getApp(ofUserId: ownerUser.userId)
-                DispatchQueue.main.async {
-                    if let app = app {
-                        self?.opponentApp = app
-                        AppGroupUserDefaults.User.insertRecentlyUsedAppId(id: app.appId)
-                    }
-                    self?.loadFavoriteApps(ownerUser: ownerUser)
-                    self?.reloadFixedExtensions()
+            composer.loadOpponentApp(userId: ownerUser.userId) { [weak self] app in
+                if let app = app {
+                    AppGroupUserDefaults.User.insertRecentlyUsedAppId(id: app.appId)
                 }
+                self?.loadFavoriteApps(ownerUser: ownerUser)
+                self?.reloadFixedExtensions()
             }
         }
         
@@ -382,12 +376,7 @@ class ConversationInputViewController: UIViewController {
             unblockButton.isBusy = false
         }
         appButton.isHidden = !user.isBot
-        DispatchQueue.global().async { [weak self] in
-            let app = AppDAO.shared.getApp(ofUserId: user.userId)
-            DispatchQueue.main.sync {
-                self?.opponentApp = app
-            }
-        }
+        composer.loadOpponentApp(userId: user.userId, completion: nil)
     }
     
     func dismissCustomInput(minimize: Bool) {
@@ -459,6 +448,7 @@ class ConversationInputViewController: UIViewController {
     func sendContact(userIds: [String], completion: @escaping () -> Void) {
         let conversationId = composer.conversationId
         let ownerUser = composer.ownerUser
+        let app = composer.opponentApp
         let isGroup = composer.isGroup
         var quoteMessageId = quote?.message.messageId
         quote = nil
@@ -477,6 +467,7 @@ class ConversationInputViewController: UIViewController {
                 message.content = try! JSONEncoder().encode(transferData).base64EncodedString()
                 SendMessageService.shared.sendMessage(message: message,
                                                       ownerUser: ownerUser,
+                                                      opponentApp: app,
                                                       isGroupMessage: isGroup)
             }
             DispatchQueue.main.async(execute: completion)
@@ -494,6 +485,7 @@ class ConversationInputViewController: UIViewController {
         message.quoteMessageId = quoteMessageId
         SendMessageService.shared.sendMessage(message: message,
                                               ownerUser: composer.ownerUser,
+                                              opponentApp: composer.opponentApp,
                                               isGroupMessage: composer.isGroup)
     }
     
@@ -891,7 +883,7 @@ extension ConversationInputViewController {
     private func reloadFixedExtensions() {
         if !composer.isGroup, let ownerUser = composer.ownerUser, !ownerUser.isBot {
             extensionViewController.fixedExtensions = [.transfer, .call, .camera, .file, .contact, .location]
-        } else if let app = opponentApp, app.creatorId == myUserId {
+        } else if let app = composer.opponentApp, app.creatorId == myUserId {
             extensionViewController.fixedExtensions = [.transfer, .camera, .file, .contact, .location]
         } else if composer.isGroup {
             extensionViewController.fixedExtensions = [.camera, .groupCall, .file, .contact, .location]

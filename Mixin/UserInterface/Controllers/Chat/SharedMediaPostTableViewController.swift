@@ -30,7 +30,7 @@ extension SharedMediaPostTableViewController: SharedMediaDataSourceDelegate {
     
     func sharedMediaDataSource(_ dataSource: AnyObject, itemsForConversationId conversationId: String, location: ItemType?, count: Int) -> [ItemType] {
         let messages = MessageDAO.shared.getMessages(conversationId: conversationId,
-                                                     categoryIn: [.SIGNAL_POST, .PLAIN_POST],
+                                                     categoryIn: [.SIGNAL_POST, .PLAIN_POST, .ENCRYPTED_POST],
                                                      earlierThan: location?.message,
                                                      count: count)
         let items = messages.map { PostMessageViewModel(message: $0) }

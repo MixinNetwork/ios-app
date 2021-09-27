@@ -119,7 +119,12 @@ class SignalLoadingViewController: UIViewController {
                     guard let sessionId = userSessionMap[$0.userId] else {
                         return nil
                     }
-                    return ParticipantSession(conversationId: $0.conversationId, userId: $0.userId, sessionId: sessionId, sentToServer: nil, createdAt: Date().toUTCString())
+                    return ParticipantSession(conversationId: $0.conversationId,
+                                              userId: $0.userId,
+                                              sessionId: sessionId,
+                                              sentToServer: nil,
+                                              createdAt: Date().toUTCString(),
+                                              publicKey: nil)
                 }
                 UserDatabase.current.save(participantSessions)
                 return

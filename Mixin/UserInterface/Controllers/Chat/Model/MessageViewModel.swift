@@ -60,7 +60,7 @@ class MessageViewModel: CustomDebugStringConvertible {
     
     init(message: MessageItem) {
         self.message = message
-        self.isEncrypted = message.category.hasPrefix("SIGNAL_")
+        self.isEncrypted = message.category.hasPrefix("SIGNAL_") || message.category.hasPrefix("ENCRYPTED_")
         self.isPinned = message.isPinned ?? false
         self.time = message.createdAt.toUTCDate().timeHoursAndMinutes()
         thumbnail = UIImage(thumbnailString: message.thumbImage)

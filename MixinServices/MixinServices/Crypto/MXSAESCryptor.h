@@ -16,6 +16,11 @@ NS_SWIFT_NAME(AESCryptor)
                       padding:(MXSAESCryptorPadding)padding
                         error:(NSError * _Nullable *)outError NS_SWIFT_NAME(encrypt(_:with:iv:padding:));
 
++ (NSData * _Nullable)decrypt:(NSData *)cipher
+                      withKey:(NSData *)key
+                           iv:(NSData *)iv
+                        error:(NSError * _Nullable *)outError NS_SWIFT_NAME(decrypt(_:with:iv:));
+
 - (instancetype)init NS_UNAVAILABLE;
 
 @end

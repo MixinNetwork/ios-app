@@ -6,10 +6,10 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(AESGCMCryptor)
 @interface MXSAESGCMCryptor : NSObject
 
-// This cryptor appends tag of tagLength to the cipher on encryption,
+// This cryptor appends tag of tagLength to the cipher on encryption, and
 // expect a tag on trailing of cipher on decryption. Feel free to change
 // this behavior if needed
-@property (class, assign) NSInteger tagLength;
+@property (class, assign, readonly) NSInteger tagLength;
 
 + (NSData * _Nullable)encrypt:(NSData *)plainData
                       withKey:(NSData *)key

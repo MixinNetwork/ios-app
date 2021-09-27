@@ -35,15 +35,18 @@ struct GalleryItem: Equatable {
     
     private static let imageCategories: [String] = [
         MessageCategory.SIGNAL_IMAGE.rawValue,
-        MessageCategory.PLAIN_IMAGE.rawValue
+        MessageCategory.PLAIN_IMAGE.rawValue,
+        MessageCategory.ENCRYPTED_IMAGE.rawValue
     ]
     private static let videoCategories: [String] = [
         MessageCategory.SIGNAL_VIDEO.rawValue,
-        MessageCategory.PLAIN_VIDEO.rawValue
+        MessageCategory.PLAIN_VIDEO.rawValue,
+        MessageCategory.ENCRYPTED_VIDEO.rawValue
     ]
     private static let streamCategories: [String] = [
         MessageCategory.SIGNAL_LIVE.rawValue,
-        MessageCategory.PLAIN_LIVE.rawValue
+        MessageCategory.PLAIN_LIVE.rawValue,
+        MessageCategory.ENCRYPTED_LIVE.rawValue
     ]
     
     let transcriptId: String?

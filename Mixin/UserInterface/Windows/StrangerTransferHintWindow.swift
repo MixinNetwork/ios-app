@@ -11,6 +11,15 @@ final class StrangerTransferHintWindow: BottomSheetView {
     var continueHandler: (() -> Void)?
     var cancelHandler: (() -> Void)?
     
+    private var canDismiss = false
+
+    override func dismissPopupControllerAnimated() {
+        guard canDismiss else {
+            return
+        }
+        super.dismissPopupControllerAnimated()
+    }
+    
     class func instance(userItem: UserItem) -> StrangerTransferHintWindow {
         let window = R.nib.strangerTransferHintWindow(owner: self)!
         window.avatarImageView.setImage(with: userItem)
@@ -21,11 +30,13 @@ final class StrangerTransferHintWindow: BottomSheetView {
     }
     
     @IBAction func continueAction(_ sender: Any) {
+        canDismiss = true
         dismissPopupControllerAnimated()
         continueHandler?()
     }
     
     @IBAction func cancelAction(_ sender: Any) {
+        canDismiss = true
         dismissPopupControllerAnimated()
         cancelHandler?()
     }

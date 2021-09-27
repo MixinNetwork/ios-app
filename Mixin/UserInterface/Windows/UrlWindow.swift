@@ -324,7 +324,7 @@ class UrlWindow {
             DispatchQueue.main.async {
                 hud.hide()
                 func push() {
-                    let vc = TransferOutViewController.instance(asset: nil, type: .contact(user))
+                    let vc = TransferOutViewController.instance(asset: nil, type: .contact(user), ignoreStrangerTransferConfirmation: true)
                     if clearNavigationStack {
                         UIApplication.homeNavigationController?.pushViewController(withBackRoot: vc)
                     } else {

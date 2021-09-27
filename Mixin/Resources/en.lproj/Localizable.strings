@@ -589,6 +589,7 @@
 "wallet_face_id" = "Face ID";
 "wallet_header_recent_searches" = "Recent searches";
 "wallet_header_trending" = "Trending";
+"wallet_transfer_stranger_hint" = "Mixin ID %@ is not in your contacts，please check if the payee is correct. If you transfer to the wrong person, assets will not be recovered!";
 
 // Transaction
 "transaction_title" = "Transaction";
@@ -838,6 +839,8 @@
 "setting_transfer_large_summary" = "Display confirmation dialog when transfer greater than or equal to %@.";
 "setting_duplicate_transfer_title" = "Duplicate Transfer Confirmation";
 "setting_duplicate_transfer_summary" = "Display confirmation dialog when you transfer the same amount to the same person within 6 hours.";
+"setting_stranger_transfer_title" = "Stranger Transfer Confirmation";
+"setting_stranger_transfer_summary" = "Display confirmation dialog when you transfer to a stranger";
 "setting_backup_title" = "Chat Backup";
 "setting_backup_now" = "Back Up Now";
 "setting_backing" = "Backing Up...";

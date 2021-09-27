@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="StrangerTransferHintWindow" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vWd-Bq-ypz">
+                    <rect key="frame" x="0.0" y="451.5" width="414" height="444.5"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UEw-Ff-3Hc" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="175" y="70" width="64" height="64"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="UEw-Ff-3Hc" secondAttribute="height" multiplier="1:1" id="R3P-Zr-pNX"/>
+                                <constraint firstAttribute="width" constant="64" id="UUE-jd-MNj"/>
+                            </constraints>
+                        </view>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NYY-dH-zkr">
+                            <rect key="frame" x="24" y="158" width="366" height="21.5"/>
+                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                            <color key="textColor" name="text"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mixin ID: 220021" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sgw-RE-hNg">
+                            <rect key="frame" x="24" y="183.5" width="366" height="14.5"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                            <color key="textColor" name="text_desc"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" Mixin ID 220021 不是你的联系人，请确认收款人是否正确。如果您转错人，资产将无法追回！" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eSN-Lu-8xf" customClass="LineHeightLabel" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="24" y="210" width="366" height="33.5"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <color key="textColor" name="red"/>
+                            <nil key="highlightedColor"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="lineHeight">
+                                    <real key="value" value="1.2"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oMd-oV-aWJ" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="149" y="279.5" width="116" height="42"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="42" id="8Oc-EO-5Kw"/>
+                                <constraint firstAttribute="width" constant="116" id="WlI-2c-DC2"/>
+                            </constraints>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="plain" title="Continue"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                    <real key="value" value="21"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="action_continue"/>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="continueAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="mWr-b2-QvN"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Uk1-nc-hf4">
+                            <rect key="frame" x="173" y="345.5" width="68.5" height="31"/>
+                            <color key="tintColor" name="theme"/>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="plain" title="Cancel">
+                                <fontDescription key="titleFontDescription" type="system" pointSize="14"/>
+                            </buttonConfiguration>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="dialog_button_cancel"/>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="cancelAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="2uk-W3-vrh"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" name="background"/>
+                    <constraints>
+                        <constraint firstItem="eSN-Lu-8xf" firstAttribute="leading" secondItem="vWd-Bq-ypz" secondAttribute="leading" constant="24" id="7IF-wb-quv"/>
+                        <constraint firstItem="UEw-Ff-3Hc" firstAttribute="top" secondItem="vWd-Bq-ypz" secondAttribute="top" constant="70" id="7Ku-bp-FeC"/>
+                        <constraint firstItem="sgw-RE-hNg" firstAttribute="top" secondItem="NYY-dH-zkr" secondAttribute="bottom" constant="4" id="8qt-h7-f4f"/>
+                        <constraint firstAttribute="trailing" secondItem="sgw-RE-hNg" secondAttribute="trailing" constant="24" id="DhL-tL-BNF"/>
+                        <constraint firstItem="eSN-Lu-8xf" firstAttribute="top" secondItem="sgw-RE-hNg" secondAttribute="bottom" constant="12" id="GWv-nm-3fa"/>
+                        <constraint firstItem="oMd-oV-aWJ" firstAttribute="top" secondItem="eSN-Lu-8xf" secondAttribute="bottom" constant="36" id="JYe-99-HXL"/>
+                        <constraint firstAttribute="trailing" secondItem="NYY-dH-zkr" secondAttribute="trailing" constant="24" id="bZz-47-BpE"/>
+                        <constraint firstItem="UEw-Ff-3Hc" firstAttribute="centerX" secondItem="vWd-Bq-ypz" secondAttribute="centerX" id="cmF-sz-Z4o"/>
+                        <constraint firstItem="sgw-RE-hNg" firstAttribute="leading" secondItem="vWd-Bq-ypz" secondAttribute="leading" constant="24" id="fTp-pe-nsM"/>
+                        <constraint firstItem="NYY-dH-zkr" firstAttribute="top" secondItem="UEw-Ff-3Hc" secondAttribute="bottom" constant="24" id="kGe-qM-ovq"/>
+                        <constraint firstAttribute="trailing" secondItem="eSN-Lu-8xf" secondAttribute="trailing" constant="24" id="o8P-P8-CPK"/>
+                        <constraint firstItem="oMd-oV-aWJ" firstAttribute="centerX" secondItem="vWd-Bq-ypz" secondAttribute="centerX" id="qg6-u8-XZZ"/>
+                        <constraint firstItem="Uk1-nc-hf4" firstAttribute="centerX" secondItem="vWd-Bq-ypz" secondAttribute="centerX" id="wcc-NS-Iti"/>
+                        <constraint firstItem="Uk1-nc-hf4" firstAttribute="top" secondItem="oMd-oV-aWJ" secondAttribute="bottom" constant="24" id="ydh-Ge-kYn"/>
+                        <constraint firstItem="NYY-dH-zkr" firstAttribute="leading" secondItem="vWd-Bq-ypz" secondAttribute="leading" constant="24" id="zrU-ff-XcM"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                            <integer key="value" value="13"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.40000000000000002" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="Uk1-nc-hf4" secondAttribute="bottom" constant="34" id="UIJ-eg-AdN"/>
+                <constraint firstAttribute="bottom" secondItem="vWd-Bq-ypz" secondAttribute="bottom" id="Wve-q5-XDk"/>
+                <constraint firstItem="vWd-Bq-ypz" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="saY-Nr-Sxv"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="vWd-Bq-ypz" secondAttribute="trailing" id="spi-z5-N5P"/>
+            </constraints>
+            <connections>
+                <outlet property="avatarImageView" destination="UEw-Ff-3Hc" id="DBJ-hX-gOp"/>
+                <outlet property="hintLabel" destination="eSN-Lu-8xf" id="X93-3H-F8f"/>
+                <outlet property="idLabel" destination="sgw-RE-hNg" id="WkH-iF-fts"/>
+                <outlet property="nameLabel" destination="NYY-dH-zkr" id="UDq-p1-CVa"/>
+                <outlet property="popupView" destination="vWd-Bq-ypz" id="SSV-9G-8LO"/>
+            </connections>
+            <point key="canvasLocation" x="-94.20289855072464" y="11.383928571428571"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="red">
+            <color red="0.90980392156862744" green="0.41960784313725491" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_desc">
+            <color red="0.73725490196078436" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="theme">
+            <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

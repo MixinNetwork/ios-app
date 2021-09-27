@@ -39,6 +39,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
     private var chainAsset: AssetItem?
     private var isInputAssetAmount = true
     private var adjustBottomConstraintWhenKeyboardFrameChanges = true
+    private var ignoreStrangerTransferConfirmation = true
     
     private weak var payWindowIfLoaded: PayWindow?
     
@@ -210,24 +211,44 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         
         switch opponent! {
         case .contact(let user):
-            DispatchQueue.global().async { [weak self] in
-                let action: PayWindow.PinAction = .transfer(trackId: traceId, user: user, fromWeb: false)
-                PayWindow.checkPay(traceId: traceId, asset: asset, action: action, opponentId: user.userId, amount: amount, fiatMoneyAmount: fiatMoneyAmount, memo: memo, fromWeb: false) { (canPay, errorMsg) in
-                    DispatchQueue.main.async {
-                        guard let weakSelf = self else {
-                            return
-                        }
-                        weakSelf.continueButton.isBusy = false
-                        if canPay {
-                            payWindow.render(asset: asset, action: action, amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, textfield: weakSelf.amountTextField).presentPopupControllerAnimated()
-                        } else {
-                            weakSelf.amountTextField.becomeFirstResponder()
-                            if let error = errorMsg {
-                                showAutoHiddenHud(style: .error, text: error)
+            let checkPay = {
+                DispatchQueue.global().async { [weak self] in
+                    let action: PayWindow.PinAction = .transfer(trackId: traceId, user: user, fromWeb: false)
+                    PayWindow.checkPay(traceId: traceId, asset: asset, action: action, opponentId: user.userId, amount: amount, fiatMoneyAmount: fiatMoneyAmount, memo: memo, fromWeb: false) { (canPay, errorMsg) in
+                        DispatchQueue.main.async {
+                            guard let weakSelf = self else {
+                                return
+                            }
+                            weakSelf.continueButton.isBusy = false
+                            if canPay {
+                                payWindow.render(asset: asset, action: action, amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, textfield: weakSelf.amountTextField).presentPopupControllerAnimated()
+                            } else {
+                                weakSelf.amountTextField.becomeFirstResponder()
+                                if let error = errorMsg {
+                                    showAutoHiddenHud(style: .error, text: error)
+                                }
                             }
                         }
                     }
                 }
+            }
+            let isStranger = user.relationship == Relationship.STRANGER.rawValue
+            let strangerTransferConfirmation = AppGroupUserDefaults.User.strangerTransferConfirmation
+            let transferOverTenDollars = asset.priceUsd.doubleValue * amount.doubleValue >= 10
+            if !ignoreStrangerTransferConfirmation && isStranger && strangerTransferConfirmation && transferOverTenDollars {
+                let window = StrangerTransferHintWindow.instance(userItem: user)
+                window.continueHandler = {
+                    checkPay()
+                }
+                window.cancelHandler = {
+                    DispatchQueue.main.async {
+                        self.continueButton.isBusy = false
+                        self.amountTextField.becomeFirstResponder()
+                    }
+                }
+                window.presentPopupControllerAnimated()
+            } else {
+                checkPay()
             }
         case .address(let address):
             DispatchQueue.global().async { [weak self] in
@@ -411,10 +432,11 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         amountTextField.reloadInputViews()
     }
     
-    class func instance(asset: AssetItem?, type: Opponent) -> UIViewController {
+    class func instance(asset: AssetItem?, type: Opponent, ignoreStrangerTransferConfirmation: Bool = false) -> UIViewController {
         let vc = R.storyboard.wallet.send()!
         vc.opponent = type
         vc.asset = asset
+        vc.ignoreStrangerTransferConfirmation = ignoreStrangerTransferConfirmation
         let container = ContainerViewController.instance(viewController: vc, title: "")
         return container
     }

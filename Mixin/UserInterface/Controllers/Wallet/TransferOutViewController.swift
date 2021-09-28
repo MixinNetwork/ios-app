@@ -237,14 +237,10 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
             let transferOverTenDollars = asset.priceUsd.doubleValue * amount.doubleValue >= 10
             if !ignoreStrangerTransferConfirmation && isStranger && strangerTransferConfirmation && transferOverTenDollars {
                 let window = StrangerTransferHintWindow.instance(userItem: user)
-                window.continueHandler = {
-                    checkPay()
-                }
-                window.cancelHandler = {
-                    DispatchQueue.main.async {
-                        self.continueButton.isBusy = false
-                        self.amountTextField.becomeFirstResponder()
-                    }
+                window.onContinue = checkPay
+                window.onCancel = {
+                    self.continueButton.isBusy = false
+                    self.amountTextField.becomeFirstResponder()
                 }
                 window.presentPopupControllerAnimated()
             } else {

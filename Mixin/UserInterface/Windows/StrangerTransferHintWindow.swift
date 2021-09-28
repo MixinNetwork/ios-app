@@ -8,8 +8,8 @@ final class StrangerTransferHintWindow: BottomSheetView {
     @IBOutlet weak var idLabel: UILabel!
     @IBOutlet weak var hintLabel: LineHeightLabel!
     
-    var continueHandler: (() -> Void)?
-    var cancelHandler: (() -> Void)?
+    var onContinue: (() -> Void)?
+    var onCancel: (() -> Void)?
     
     private var canDismiss = false
 
@@ -31,14 +31,14 @@ final class StrangerTransferHintWindow: BottomSheetView {
     
     @IBAction func continueAction(_ sender: Any) {
         canDismiss = true
+        onContinue?()
         dismissPopupControllerAnimated()
-        continueHandler?()
     }
     
     @IBAction func cancelAction(_ sender: Any) {
         canDismiss = true
+        onCancel?()
         dismissPopupControllerAnimated()
-        cancelHandler?()
     }
     
 }

@@ -589,7 +589,7 @@
 "wallet_face_id" = "Face ID";
 "wallet_header_recent_searches" = "Recent searches";
 "wallet_header_trending" = "Trending";
-"wallet_transfer_stranger_hint" = "Mixin ID %@ is not in your contacts，please check if the payee is correct. If you transfer to the wrong person, assets will not be recovered!";
+"wallet_transfer_stranger_hint" = "Mixin ID %@ is not in your contacts, please check if the payee is correct. If you transfer to the wrong person, assets will not be recovered!";
 
 // Transaction
 "transaction_title" = "Transaction";

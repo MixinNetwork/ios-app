@@ -226,6 +226,11 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         guard let itemViewController = currentItemViewController, let item = itemViewController.item else {
             return
         }
+        children.forEach { controller in
+            if let vc = controller as? MixinWebViewController {
+                vc.dismissAsChild(animated: false, completion: nil)
+            }
+        }
         delegate?.galleryViewController(self, willDismiss: item)
         pageViewController.view.alpha = 0
         pageViewController.view.transform = .identity

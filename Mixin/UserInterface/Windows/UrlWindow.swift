@@ -189,6 +189,35 @@ class UrlWindow {
             return false
         }
         
+        func pushConversationViewController(user: UserItem? = nil, conversation: ConversationItem? = nil) {
+            let pushController = {
+                let viewController: UIViewController?
+                if let user = user {
+                    viewController = ConversationViewController.instance(ownerUser: user)
+                } else if let conversation = conversation {
+                    viewController = ConversationViewController.instance(conversation: conversation)
+                } else {
+                    viewController = nil
+                }
+                if let viewController = viewController {
+                    UIApplication.homeNavigationController?.pushViewController(withBackRoot: viewController)
+                }
+            }
+            if let container = UIApplication.homeContainerViewController, container.galleryIsOnTopMost {
+                let currentItemViewController = container.galleryViewController.currentItemViewController
+                if let vc = currentItemViewController as? GalleryVideoItemViewController {
+                    vc.togglePipMode(completion: {
+                        DispatchQueue.main.async(execute: pushController)
+                    })
+                } else {
+                    container.galleryViewController.dismiss(transitionViewInitialOffsetY: 0)
+                    pushController()
+                }
+            } else {
+                pushController()
+            }
+        }
+        
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         DispatchQueue.global().async {
@@ -202,8 +231,7 @@ class UrlWindow {
                 }
                 DispatchQueue.main.async {
                     hud.hide()
-                    let vc = ConversationViewController.instance(ownerUser: user)
-                    UIApplication.homeNavigationController?.pushViewController(withBackRoot: vc)
+                    pushConversationViewController(user: user)
                 }
             } else {
                 var conversation = ConversationDAO.shared.getConversation(conversationId: conversationId)
@@ -242,8 +270,7 @@ class UrlWindow {
                 
                 DispatchQueue.main.async {
                     hud.hide()
-                    let vc = ConversationViewController.instance(conversation: conversation)
-                    UIApplication.homeNavigationController?.pushViewController(withBackRoot: vc)
+                    pushConversationViewController(conversation: conversation)
                 }
             }
         }

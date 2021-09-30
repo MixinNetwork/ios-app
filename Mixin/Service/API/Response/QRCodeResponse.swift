@@ -8,6 +8,7 @@ struct QRCodeResponse: Encodable {
     var conversation: ConversationResponse? = nil
     var authorization: AuthorizationResponse? = nil
     var multisig: MultisigResponse? = nil
+    var nonFungible: NonFungibleResponse? = nil
     var payment: PaymentCodeResponse? = nil
     
 }
@@ -26,6 +27,8 @@ extension QRCodeResponse: Decodable {
             authorization = try AuthorizationResponse(from: decoder)
         case "multisig_request":
             multisig = try MultisigResponse(from: decoder)
+        case "non_fungible_request":
+            nonFungible = try NonFungibleResponse(from: decoder)
         case "payment":
             payment = try PaymentCodeResponse(from: decoder)
         default:

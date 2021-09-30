@@ -644,6 +644,8 @@ extension UrlWindow {
                     presentConversation(conversation: conversation, codeId: codeId, hud: hud)
                 } else if let multisig = code.multisig {
                     presentMultisig(multisig: multisig, hud: hud)
+                } else if let nonFungible = code.nonFungible {
+                    presentNonfungible(nonFungible: nonFungible, hud: hud)
                 } else if let payment = code.payment {
                     presentPayment(payment: payment, hud: hud)
                 } else {
@@ -762,7 +764,21 @@ extension UrlWindow {
         
         return users
     }
-
+    
+    private static func nonFungibleToken(tokenId: String, hud: Hud) -> NonFungibleToken? {
+        switch NonFungibleAPI.token(tokenId: tokenId) {
+        case let .success(token):
+            return token
+        case let .failure(error):
+            let text = error.localizedDescription(overridingNotFoundDescriptionWith: R.string.localizable.asset_not_found())
+            DispatchQueue.main.async {
+                hud.set(style: .error, text: text)
+                hud.scheduleAutoHidden()
+            }
+            return nil
+        }
+    }
+    
     private static func presentMultisig(multisig: MultisigResponse, hud: Hud) {
         guard LoginManager.shared.account?.has_pin ?? false else {
             UIApplication.homeNavigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil), animated: true)
@@ -835,6 +851,40 @@ extension UrlWindow {
         }
     }
 
+    private static func presentNonfungible(nonFungible: NonFungibleResponse, hud: Hud) {
+        guard LoginManager.shared.account?.has_pin ?? false else {
+            UIApplication.homeNavigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil), animated: true)
+            DispatchQueue.main.async {
+                hud.hide()
+            }
+            return
+        }
+        DispatchQueue.global().async {
+            //TODO: ‼️ tokenid? nonFungible.assetId
+            guard let token = nonFungibleToken(tokenId: nonFungible.tokenId, hud: hud) else {
+                return
+            }
+            guard let asset = syncAsset(assetId: nonFungible.tokenId, hud: hud) else {
+                return
+            }
+            guard let users = syncUsers(userIds: nonFungible.senders + nonFungible.receivers, hud: hud) else {
+                return
+            }
+            let senderUsers = users.filter { nonFungible.senders.contains($0.userId) }
+            let receiverUsers = users.filter { nonFungible.receivers.contains($0.userId) }
+            var error = ""
+            if nonFungible.action == NonFungibleAction.sign.rawValue && nonFungible.state == NonFungibleState.signed.rawValue {
+                error = R.string.localizable.non_fungible_state_signed()
+            } else if nonFungible.action == NonFungibleAction.unlock.rawValue && nonFungible.state == NonFungibleState.unlocked.rawValue {
+                error = R.string.localizable.non_fungible_state_unlocked()
+            }
+            DispatchQueue.main.async {
+                hud.hide()
+                PayWindow.instance().render(asset: asset, action: .nonFungible(nonFungible: nonFungible, senders: senderUsers, receivers: receiverUsers), amount: nonFungible.amount, memo: "", error: error).presentPopupControllerAnimated()
+            }
+        }
+    }
+    
     private static func presentAuthorization(authorization: AuthorizationResponse, webContext: MixinWebViewController.Context? = nil, hud: Hud) {
         if let context = webContext,  case let .app(app, _) = context.style {
             if let switcher = UIApplication.homeContainerViewController?.clipSwitcher, let clip = switcher.clips.first(where: { $0.app?.appId == app.appId }) {

@@ -12,6 +12,7 @@ class PayWindow: BottomSheetView {
         case transfer(trackId: String, user: UserItem, fromWeb: Bool)
         case withdraw(trackId: String, address: Address, chainAsset: AssetItem, fromWeb: Bool)
         case multisig(multisig: MultisigResponse, senders: [UserItem], receivers: [UserItem])
+        case nonFungible(nonFungible: NonFungibleResponse, senders: [UserItem], receivers: [UserItem])
     }
 
     enum ErrorContinueAction {
@@ -51,6 +52,12 @@ class PayWindow: BottomSheetView {
     @IBOutlet weak var multisigActionView: UIImageView!
     @IBOutlet weak var multisigStackView: UIStackView!
 
+    @IBOutlet weak var nonFungibleView: UIStackView!
+    @IBOutlet weak var nonFungibleImageView: UIImageView!
+    @IBOutlet weak var nonFungibleTitleLabel: UILabel!
+    @IBOutlet weak var nonFungibleDescLabel: UILabel!
+    @IBOutlet weak var nonFungibleDescPlaceView: UIView!
+    
     @IBOutlet weak var sendersButtonWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var receiversButtonWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var successViewHeightConstraint: NSLayoutConstraint!
@@ -117,7 +124,10 @@ class PayWindow: BottomSheetView {
             amountLabel.text = amountToken
             amountExchangeLabel.text = amountExchange
         }
-
+        nonFungibleView.isHidden = true
+        assetIconView.isHidden = false
+        amountExchangeLabel.isHidden = true
+        amountLabel.isHidden = true
         let showError = !(error?.isEmpty ?? true)
         let showBiometric = isAllowBiometricPay
         switch pinAction! {
@@ -183,9 +193,33 @@ class PayWindow: BottomSheetView {
             }
             mixinIDLabel.text = multisig.memo
             renderMultisigInfo(showError: showError, showBiometric: showBiometric, senders: senders, receivers: receivers)
+        case let .nonFungible(nonFungible, senders, receivers):
+            multisigView.isHidden = false
+            assetIconView.isHidden = true
+            nonFungibleView.isHidden = false
+            amountExchangeLabel.isHidden = true
+            amountLabel.isHidden = true
+            switch nonFungible.action {
+            case NonFungibleAction.sign.rawValue:
+                multisigActionView.image = R.image.multisig_sign()
+                nameLabel.text = R.string.localizable.chat_menu_transfer()
+            case NonFungibleAction.unlock.rawValue:
+                multisigActionView.image = R.image.multisig_revoke()
+                nameLabel.text = R.string.localizable.non_fungible_revoke_transaction()
+            default:
+                break
+            }
+            //TODO: ‼️ update value 
+            nonFungibleTitleLabel.text = "Rarible #1155"
+            nonFungibleDescLabel.text = "nice to meet you"
+            nonFungibleDescLabel.isHidden = false
+            nonFungibleDescPlaceView.isHidden = false
+            mixinIDLabel.text = "nonFungible.memo"
+            renderMultisigInfo(isNonFungible: true, showError: showError, showBiometric: showBiometric, senders: senders, receivers: receivers)
         }
-
-        assetIconView.setIcon(asset: asset)
+        if !assetIconView.isHidden {
+            assetIconView.setIcon(asset: asset)
+        }
         memoLabel.isHidden = memo.isEmpty
         memoPlaceView.isHidden = memo.isEmpty
         memoLabel.text = memo
@@ -204,15 +238,23 @@ class PayWindow: BottomSheetView {
         return self
     }
 
-    private func renderMultisigInfo(showError: Bool, showBiometric: Bool, senders: [UserItem], receivers: [UserItem]) {
+    private func renderMultisigInfo(
+        isNonFungible: Bool = false,
+        showError: Bool,
+        showBiometric: Bool,
+        senders: [UserItem],
+        receivers: [UserItem]
+    ) {
         if !showError {
-            payLabel.text = R.string.localizable.multisig_by_pin()
+            payLabel.text = isNonFungible ? R.string.localizable.non_fungible_pay_by_pin() : R.string.localizable.multisig_by_pin()
             if showBiometric {
+                let title: String
                 if biometryType == .faceID {
-                    biometricButton.setTitle(R.string.localizable.multisig_use_face(), for: .normal)
+                    title = isNonFungible ? R.string.localizable.transfer_use_face() : R.string.localizable.multisig_use_face()
                 } else {
-                    biometricButton.setTitle(R.string.localizable.multisig_use_touch(), for: .normal)
+                    title = isNonFungible ? R.string.localizable.transfer_use_touch() : R.string.localizable.multisig_use_touch()
                 }
+                biometricButton.setTitle(title, for: .normal)
             }
         }
 
@@ -293,6 +335,8 @@ class PayWindow: BottomSheetView {
 
         if case let .multisig(multisig, _, _) = pinAction! {
             MultisigAPI.cancel(requestId: multisig.requestId) { (_) in }
+        } else if case let .nonFungible(nonFungible, _, _) = pinAction! {
+            NonFungibleAPI.cancel(requestId: nonFungible.outputId) { (_) in }
         }
     }
 
@@ -319,12 +363,19 @@ class PayWindow: BottomSheetView {
     }
 
     @IBAction func sendersAction(_ sender: Any) {
-        guard case let .multisig(_, senders, _) = pinAction! else {
+        let users: [UserItem]?
+        if case let .multisig(_, senders, _) = pinAction! {
+            users = senders
+        } else if case let .nonFungible(_, senders, _) = pinAction! {
+            users = senders
+        } else {
+            users = nil
+        }
+        guard let users = users else {
             return
         }
-
         let window = MultisigUsersWindow.instance()
-        window.render(users: senders, isSender: true)
+        window.render(users: users, isSender: true)
         let isKeyboardAppear = self.isKeyboardAppear
         window.onDismiss = {
             self.isMultisigUsersAppear = false
@@ -347,6 +398,8 @@ class PayWindow: BottomSheetView {
         case let .multisig(_, _, receivers):
             users = receivers
         case let .payment(_, receivers):
+            users = receivers
+        case let .nonFungible(_, _, receivers):
             users = receivers
         default:
             return
@@ -661,6 +714,26 @@ extension PayWindow: PinFieldDelegate {
             default:
                 break
             }
+        case let .nonFungible(nonFungible, _, _):
+            let nonfungibleTokenCompletion = { [weak self] (result: MixinAPI.Result<Empty>) in
+                guard let weakSelf = self else {
+                    return
+                }
+                switch result {
+                case .success:
+                    weakSelf.successHandler()
+                case let .failure(error):
+                    weakSelf.failedHandler(error: error)
+                }
+            }
+            switch nonFungible.action {
+            case NonFungibleAction.sign.rawValue:
+                NonFungibleAPI.sign(requestId: nonFungible.outputId, pin: pin, completion: nonfungibleTokenCompletion)
+            case NonFungibleAction.unlock.rawValue:
+                NonFungibleAPI.unlock(requestId: nonFungible.outputId, pin: pin, completion: nonfungibleTokenCompletion)
+            default:
+                break
+            }
         }
     }
 
@@ -708,6 +781,8 @@ extension PayWindow: PinFieldDelegate {
             case .multisig:
                 break
             case .payment:
+                break
+            case .nonFungible:
                 break
             }
         }

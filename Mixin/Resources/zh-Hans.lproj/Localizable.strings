@@ -669,6 +669,12 @@
 "multisig_state_signed" = "您已经对这笔交易进行了签名，您无法再次签名。";
 "multisig_state_unlocked" = "这笔交易已经被其他人撤销了，您无法再次撤销。";
 
+// NFT
+"non_fungible_pay_by_pin" = "通过密码支付";
+"non_fungible_revoke_transaction" = "撤销非同质化代币交易";
+"non_fungible_state_signed" = "您已经对这笔交易进行了签名，您无法再次签名。";
+"non_fungible_state_unlocked" = "这笔交易已经被其他人撤销了，您无法再次撤销。";
+
 // QRCode
 "qr_code_not_found" = "未检测到二维码";
 "myqrcode_title" = "我的二维码";

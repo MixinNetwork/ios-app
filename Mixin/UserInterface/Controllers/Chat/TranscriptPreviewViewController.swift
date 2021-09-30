@@ -17,6 +17,10 @@ final class TranscriptPreviewViewController: StaticMessagesViewController {
         fatalError("Storyboard/Xib not supported")
     }
     
+    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        super.canPerformAction(action, withSender: sender) || action == #selector(addToStickers)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         factory.delegate = self

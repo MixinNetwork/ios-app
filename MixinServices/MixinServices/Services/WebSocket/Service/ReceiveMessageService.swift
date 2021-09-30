@@ -1211,7 +1211,7 @@ extension ReceiveMessageService {
             AppGroupUserDefaults.Account.extensionSession = systemSession.sessionId
             SignalProtocol.shared.deleteSession(userId: systemSession.userId)
 
-            Logger.general.info(category: "ProcessSystemSessionMessage", message: "Desktop logged out")
+            Logger.general.info(category: "ProcessSystemSessionMessage", message: "Desktop login")
 
             ParticipantSessionDAO.shared.provisionSession(userId: systemSession.userId, sessionId: systemSession.sessionId)
             NotificationCenter.default.post(onMainThread: Self.userSessionDidChangeNotification, object: self)
@@ -1222,7 +1222,7 @@ extension ReceiveMessageService {
             AppGroupUserDefaults.Account.extensionSession = nil
             SignalProtocol.shared.deleteSession(userId: systemSession.userId)
 
-            Logger.general.info(category: "ProcessSystemSessionMessage", message: "Desktop logged in")
+            Logger.general.info(category: "ProcessSystemSessionMessage", message: "Desktop logout")
 
             JobDAO.shared.clearSessionJob()
             ParticipantSessionDAO.shared.destorySession(userId: systemSession.userId, sessionId: systemSession.sessionId)

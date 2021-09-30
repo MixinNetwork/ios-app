@@ -22,7 +22,6 @@ final class NonFungibleAPI: MixinAPI {
         request(method: .post, path: Path.cancel(id: requestId), completion: completion)
     }
     
-    //TODO: ‼️ outputId ? 
     static func sign(requestId: String, pin: String, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {
         PINEncryptor.encrypt(pin: pin, onFailure: completion) { (encryptedPin) in
             self.request(method: .post,

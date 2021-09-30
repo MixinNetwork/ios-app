@@ -673,6 +673,7 @@
 "non_fungible_revoke_transaction" = "Revoke NFT Transaction";
 "non_fungible_state_signed" = "This NFT link has already been signed by yourself, you can not make a duplicate operation.";
 "non_fungible_state_unlocked" = "This NFT link has already been revoked by someone, you can not make a duplicate operation.";
+"non_fungible_token_title" = "%@ #%@";
 
 // QRCode
 "qr_code_not_found" = "QR Code not found";

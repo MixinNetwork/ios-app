@@ -282,7 +282,7 @@
                                     </userDefinedRuntimeAttributes>
                                 </view>
                                 <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="kEj-ha-IpG">
-                                    <rect key="frame" x="112.5" y="132.5" width="70" height="100"/>
+                                    <rect key="frame" x="112.5" y="132.5" width="70" height="90"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eng-gB-gzF">
                                             <rect key="frame" x="0.0" y="0.0" width="70" height="20"/>
@@ -291,7 +291,7 @@
                                                 <constraint firstAttribute="height" constant="20" id="W5U-k8-buj"/>
                                             </constraints>
                                         </view>
-                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_notification_qrcode" translatesAutoresizingMaskIntoConstraints="NO" id="36D-mc-S27">
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="non_fungible" translatesAutoresizingMaskIntoConstraints="NO" id="36D-mc-S27">
                                             <rect key="frame" x="0.0" y="20" width="70" height="70"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" secondItem="36D-mc-S27" secondAttribute="height" multiplier="1:1" id="ZbD-L1-P16"/>
@@ -303,38 +303,6 @@
                                                 </userDefinedRuntimeAttribute>
                                             </userDefinedRuntimeAttributes>
                                         </imageView>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vTW-pw-uzg">
-                                            <rect key="frame" x="0.0" y="90" width="70" height="6"/>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="6" id="iu5-cK-bST"/>
-                                            </constraints>
-                                        </view>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Pq-Zo-noI">
-                                            <rect key="frame" x="12" y="96" width="46" height="0.0"/>
-                                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
-                                            <color key="textColor" name="text"/>
-                                            <nil key="highlightedColor"/>
-                                            <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
-                                            </userDefinedRuntimeAttributes>
-                                        </label>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nUh-4P-ysv">
-                                            <rect key="frame" x="0.0" y="96" width="70" height="4"/>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="4" id="Ycg-9P-kSJ"/>
-                                            </constraints>
-                                        </view>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nhb-z5-HsN">
-                                            <rect key="frame" x="17.5" y="100" width="35.5" height="0.0"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                            <color key="textColor" name="text"/>
-                                            <nil key="highlightedColor"/>
-                                            <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
-                                            </userDefinedRuntimeAttributes>
-                                        </label>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </stackView>
@@ -652,10 +620,7 @@
                 <outlet property="multisigStackView" destination="qGj-IP-qzY" id="6qZ-C5-mAX"/>
                 <outlet property="multisigView" destination="QTE-p7-9Tt" id="tJN-Bh-4bn"/>
                 <outlet property="nameLabel" destination="Xfg-Lf-zjd" id="bvk-aO-Pxi"/>
-                <outlet property="nonFungibleDescLabel" destination="Nhb-z5-HsN" id="YMf-Ia-C8X"/>
-                <outlet property="nonFungibleDescPlaceView" destination="nUh-4P-ysv" id="T33-pv-xgn"/>
                 <outlet property="nonFungibleImageView" destination="36D-mc-S27" id="gfi-7C-LC9"/>
-                <outlet property="nonFungibleTitleLabel" destination="0Pq-Zo-noI" id="Jwg-OC-ENl"/>
                 <outlet property="nonFungibleView" destination="kEj-ha-IpG" id="Wff-u9-pMW"/>
                 <outlet property="payLabel" destination="AYJ-kX-YBZ" id="ZVr-Uf-MJC"/>
                 <outlet property="paySuccessImageView" destination="gfw-v1-eUv" id="i4H-4S-7b2"/>
@@ -680,10 +645,10 @@
     </objects>
     <resources>
         <image name="ic_dialog_close" width="26" height="26"/>
-        <image name="ic_notification_qrcode" width="18" height="18"/>
         <image name="ic_pay_face" width="20" height="20"/>
         <image name="ic_pay_success" width="42" height="42"/>
         <image name="multisig_sign" width="7" height="11"/>
+        <image name="non_fungible" width="168" height="168"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

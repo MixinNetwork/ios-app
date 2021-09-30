@@ -51,12 +51,8 @@ class PayWindow: BottomSheetView {
     @IBOutlet weak var receiverMoreLabel: UILabel!
     @IBOutlet weak var multisigActionView: UIImageView!
     @IBOutlet weak var multisigStackView: UIStackView!
-
     @IBOutlet weak var nonFungibleView: UIStackView!
     @IBOutlet weak var nonFungibleImageView: UIImageView!
-    @IBOutlet weak var nonFungibleTitleLabel: UILabel!
-    @IBOutlet weak var nonFungibleDescLabel: UILabel!
-    @IBOutlet weak var nonFungibleDescPlaceView: UIView!
     
     @IBOutlet weak var sendersButtonWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var receiversButtonWidthConstraint: NSLayoutConstraint!
@@ -108,7 +104,7 @@ class PayWindow: BottomSheetView {
         }
     }
 
-    func render(asset: AssetItem, action: PinAction, amount: String, memo: String, error: String? = nil, fiatMoneyAmount: String? = nil, textfield: UITextField? = nil) -> PayWindow {
+    func render(asset: AssetItem, action: PinAction, amount: String, memo: String, error: String? = nil, fiatMoneyAmount: String? = nil, textfield: UITextField? = nil, token: NonFungibleToken? = nil) -> PayWindow {
         self.asset = asset
         self.amount = amount
         self.memo = memo
@@ -126,8 +122,7 @@ class PayWindow: BottomSheetView {
         }
         nonFungibleView.isHidden = true
         assetIconView.isHidden = false
-        amountExchangeLabel.isHidden = true
-        amountLabel.isHidden = true
+        amountExchangeLabel.isHidden = false
         let showError = !(error?.isEmpty ?? true)
         let showBiometric = isAllowBiometricPay
         switch pinAction! {
@@ -198,7 +193,6 @@ class PayWindow: BottomSheetView {
             assetIconView.isHidden = true
             nonFungibleView.isHidden = false
             amountExchangeLabel.isHidden = true
-            amountLabel.isHidden = true
             switch nonFungible.action {
             case NonFungibleAction.sign.rawValue:
                 multisigActionView.image = R.image.multisig_sign()
@@ -209,12 +203,9 @@ class PayWindow: BottomSheetView {
             default:
                 break
             }
-            //TODO: ‼️ update value 
-            nonFungibleTitleLabel.text = "Rarible #1155"
-            nonFungibleDescLabel.text = "nice to meet you"
-            nonFungibleDescLabel.isHidden = false
-            nonFungibleDescPlaceView.isHidden = false
-            mixinIDLabel.text = "nonFungible.memo"
+            //TODO: ‼️ update value
+            amountLabel.text = R.string.localizable.non_fungible_token_title("Rarible", token?.tokenKey ?? "")
+            mixinIDLabel.text = token?.groupKey ?? ""
             renderMultisigInfo(isNonFungible: true, showError: showError, showBiometric: showBiometric, senders: senders, receivers: receivers)
         }
         if !assetIconView.isHidden {
@@ -336,7 +327,7 @@ class PayWindow: BottomSheetView {
         if case let .multisig(multisig, _, _) = pinAction! {
             MultisigAPI.cancel(requestId: multisig.requestId) { (_) in }
         } else if case let .nonFungible(nonFungible, _, _) = pinAction! {
-            NonFungibleAPI.cancel(requestId: nonFungible.outputId) { (_) in }
+            NonFungibleAPI.cancel(requestId: nonFungible.requestId) { (_) in }
         }
     }
 
@@ -715,7 +706,7 @@ extension PayWindow: PinFieldDelegate {
                 break
             }
         case let .nonFungible(nonFungible, _, _):
-            let nonfungibleTokenCompletion = { [weak self] (result: MixinAPI.Result<Empty>) in
+            let nonfungibleCompletion = { [weak self] (result: MixinAPI.Result<Empty>) in
                 guard let weakSelf = self else {
                     return
                 }
@@ -728,9 +719,9 @@ extension PayWindow: PinFieldDelegate {
             }
             switch nonFungible.action {
             case NonFungibleAction.sign.rawValue:
-                NonFungibleAPI.sign(requestId: nonFungible.outputId, pin: pin, completion: nonfungibleTokenCompletion)
+                NonFungibleAPI.sign(requestId: nonFungible.requestId, pin: pin, completion: nonfungibleCompletion)
             case NonFungibleAction.unlock.rawValue:
-                NonFungibleAPI.unlock(requestId: nonFungible.outputId, pin: pin, completion: nonfungibleTokenCompletion)
+                NonFungibleAPI.unlock(requestId: nonFungible.requestId, pin: pin, completion: nonfungibleCompletion)
             default:
                 break
             }

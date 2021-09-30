@@ -860,11 +860,11 @@ extension UrlWindow {
             return
         }
         DispatchQueue.global().async {
-            //TODO: ‼️ tokenid? nonFungible.assetId
+            //TODO: ‼️ asset ?
+            let asset = Asset(assetId: "", type: "", symbol: "", name: "", iconUrl: "", balance: "", destination: "", tag: "", priceBtc: "", priceUsd: "", changeUsd: "", chainId: "", confirmations: 0, assetKey: "", reserve: "")
+            let assetItem = AssetItem(asset: asset, chain: nil)
+            
             guard let token = nonFungibleToken(tokenId: nonFungible.tokenId, hud: hud) else {
-                return
-            }
-            guard let asset = syncAsset(assetId: nonFungible.tokenId, hud: hud) else {
                 return
             }
             guard let users = syncUsers(userIds: nonFungible.senders + nonFungible.receivers, hud: hud) else {
@@ -880,7 +880,7 @@ extension UrlWindow {
             }
             DispatchQueue.main.async {
                 hud.hide()
-                PayWindow.instance().render(asset: asset, action: .nonFungible(nonFungible: nonFungible, senders: senderUsers, receivers: receiverUsers), amount: nonFungible.amount, memo: "", error: error).presentPopupControllerAnimated()
+                PayWindow.instance().render(asset: assetItem, action: .nonFungible(nonFungible: nonFungible, senders: senderUsers, receivers: receiverUsers), amount: nonFungible.amount, memo: "", error: error, token: token).presentPopupControllerAnimated()
             }
         }
     }

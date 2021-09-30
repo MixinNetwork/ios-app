@@ -674,6 +674,7 @@
 "non_fungible_revoke_transaction" = "撤销非同质化代币交易";
 "non_fungible_state_signed" = "您已经对这笔交易进行了签名，您无法再次签名。";
 "non_fungible_state_unlocked" = "这笔交易已经被其他人撤销了，您无法再次撤销。";
+"non_fungible_token_title" = "%@ #%@";
 
 // QRCode
 "qr_code_not_found" = "未检测到二维码";

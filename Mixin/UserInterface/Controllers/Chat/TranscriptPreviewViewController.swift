@@ -40,6 +40,30 @@ final class TranscriptPreviewViewController: StaticMessagesViewController {
         return AttachmentContainer.url(transcriptId: transcriptMessage.messageId, filename: filename)
     }
     
+    override func menuItems(for viewModel: MessageViewModel) -> [UIMenuItem]? {
+        if viewModel.message.category.hasSuffix("_STICKER"), viewModel.message.stickerId != nil {
+            var items = super.menuItems(for: viewModel) ?? []
+            items.append(UIMenuItem(title: R.string.localizable.chat_message_sticker(), action: #selector(addToStickers)))
+            return items
+        } else {
+            return super.menuItems(for: viewModel)
+        }
+    }
+    
+    @available(iOS 13.0, *)
+    override func contextMenuActions(for viewModel: MessageViewModel) -> [UIAction]? {
+        if viewModel.message.category.hasSuffix("_STICKER"), let stickerId = viewModel.message.stickerId {
+            var actions = super.contextMenuActions(for: viewModel) ?? []
+            let addStickerAction = UIAction(title: R.string.localizable.chat_message_sticker(), image: R.image.conversation.ic_action_add_to_sticker()) { _ in
+                self.addSticker(stickerId: stickerId)
+            }
+            actions.append(addStickerAction)
+            return actions
+        } else {
+            return super.contextMenuActions(for: viewModel)
+        }
+    }
+    
 }
 
 // MARK: - MessageViewModelFactoryDelegate
@@ -114,6 +138,30 @@ extension TranscriptPreviewViewController {
 
 // MARK: - Helper
 extension TranscriptPreviewViewController {
+    
+    @objc private func addToStickers() {
+        guard let indexPath = tableView.indexPathForSelectedRow else {
+            return
+        }
+        guard let stickerId = viewModel(at: indexPath)?.message.stickerId else {
+            return
+        }
+        addSticker(stickerId: stickerId)
+    }
+    
+    private func addSticker(stickerId: String) {
+        StickerAPI.addSticker(stickerId: stickerId, completion: { (result) in
+            switch result {
+            case let .success(sticker):
+                DispatchQueue.global().async {
+                    StickerDAO.shared.insertOrUpdateFavoriteSticker(sticker: sticker)
+                    showAutoHiddenHud(style: .notification, text: Localized.TOAST_ADDED)
+                }
+            case let .failure(error):
+                showAutoHiddenHud(style: .error, text: error.localizedDescription)
+            }
+        })
+    }
     
     private func reloadData() {
         let layoutWidth = AppDelegate.current.mainWindow.bounds.width

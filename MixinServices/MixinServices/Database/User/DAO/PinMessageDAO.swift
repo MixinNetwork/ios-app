@@ -27,7 +27,8 @@ public final class PinMessageDAO: UserDatabaseDAO {
         st.asset_width as assetWidth, st.asset_height as assetHeight, st.asset_url as assetUrl, st.asset_type as assetType, alb.category as assetCategory,
         m.action as actionName, m.shared_user_id as sharedUserId, su.full_name as sharedUserFullName, su.identity_number as sharedUserIdentityNumber, su.avatar_url as sharedUserAvatarUrl, su.app_id as sharedUserAppId, su.is_verified as sharedUserIsVerified, m.quote_message_id, m.quote_content,
         mm.mentions, mm.has_read as hasMentionRead, 0 AS pinned
-    FROM messages m
+    FROM pin_messages p
+    INNER JOIN messages m ON p.message_id = m.id
     LEFT JOIN users u ON m.user_id = u.user_id
     LEFT JOIN users u1 ON m.participant_id = u1.user_id
     LEFT JOIN stickers st ON m.sticker_id = st.sticker_id
@@ -36,13 +37,12 @@ public final class PinMessageDAO: UserDatabaseDAO {
     )
     LEFT JOIN users su ON m.shared_user_id = su.user_id
     LEFT JOIN message_mentions mm ON m.id = mm.message_id
-    INNER JOIN pin_messages p ON m.id = p.message_id
     """
     
     public func messageItems(conversationId: String) -> [MessageItem] {
         let sql = """
         \(Self.messageItemQuery)
-        WHERE m.conversation_id = ?
+        WHERE p.conversation_id = ?
         ORDER BY m.created_at ASC
         """
         return db.select(with: sql, arguments: [conversationId])

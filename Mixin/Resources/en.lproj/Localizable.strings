@@ -1020,11 +1020,13 @@
 "error_insufficient_balance" = "Insufficient balance";
 "error_pin_incorrect" = "PIN incorrect";
 "error_fee_insufficient" = "Insufficient transaction fee";
+"error_fee_insufficient_detailed" = "Insufficient transaction fee. Please make sure your wallet has %@ as fee";
 "error_transfer_amount_too_small" = "Transfer amount too small";
 "error_too_many_stickers" = "Too many stickers.";
 "error_withdrawal_amount_too_small" = "Withdraw amount too small";
 "error_blockchian_not_in_sync" = "Blockchain not in sync, please try again later.";
 "error_malformed_address" = "Invalid address format.";
+"error_malformed_address_detailed" = "Invalid address format. Try again with a valid address of %@";
 "error_malformed_address_eos" = "Invalid address format. Mixin does not support withdrawal to the EOS contract address!";
 
 "error_network_task_failed" = "Network connection failed. Check or switch your network and try again";

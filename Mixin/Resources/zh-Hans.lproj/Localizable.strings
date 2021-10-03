@@ -533,7 +533,7 @@
 "wallet_send_amount" = "数量";
 "wallet_button_add_address" = "点击添加地址";
 "wallet_hint_transaction_fee" = "需要 %@ 作为 %@ 提现手续费。";
-"wallet_password_address_tips" = "通过密码修改";
+"wallet_password_address_tips" = "通过密码保存";
 "wallet_withdrawal_change_amount" = "修改金额";
 "wallet_withdrawal_change_amount_count" = "修改金额 (%@)";
 "wallet_withdrawal_address_tips" = "首次提现到新地址，建议小额尝试！如果您提现到错误的地址资产将无法找回！";
@@ -1017,11 +1017,13 @@
 "error_insufficient_balance" = "余额不足";
 "error_pin_incorrect" = "密码不正确";
 "error_fee_insufficient" = "手续费不足";
+"error_fee_insufficient_detailed" = "手续费不足。请确保钱包内有 %@ 作为手续费";
 "error_transfer_amount_too_small" = "转账金额太小";
 "error_too_many_stickers" = "贴纸数已达上限";
 "error_withdrawal_amount_too_small" = "提现金额太少了";
 "error_blockchian_not_in_sync" = "区块链同步异常，请稍后重试";
 "error_malformed_address" = "地址格式错误";
+"error_malformed_address_detailed" = "地址格式错误。请输入正确的 %@ 地址";
 "error_malformed_address_eos" = "地址格式错误。Mixin 不支持提现到 EOS 合约地址！";
 
 "error_network_task_failed" = "网络连接失败，请检查或切换网络后重试";

@@ -118,7 +118,7 @@ extension AddressView: PinFieldDelegate {
             guard let address = addressRequest else {
                 return
             }
-            WithdrawalAPI.save(address: address) { [weak self](result) in
+            WithdrawalAPI.save(address: address) { [weak self] (result) in
                 self?.processing = false
                 switch result {
                 case let .success(address):
@@ -127,13 +127,26 @@ extension AddressView: PinFieldDelegate {
                     AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
                     showAutoHiddenHud(style: .notification, text: Localized.TOAST_SAVED)
                 case .failure(.malformedAddress):
-                    let errorMsg = self?.asset?.isEOSChain ?? false ? R.string.localizable.error_malformed_address_eos() : R.string.localizable.error_malformed_address()
-                    self?.superView?.alert(errorMsg)
-                    self?.superView?.dismissPopupControllerAnimated()
+                    guard let self = self else {
+                        return
+                    }
+                    let message: String
+                    if self.asset.isEOSChain {
+                        message = R.string.localizable.error_malformed_address_eos()
+                    } else if self.asset.isERC20 {
+                        message = R.string.localizable.error_malformed_address_detailed("Ethereum(ERC20) \(self.asset.symbol)")
+                    } else {
+                        message = R.string.localizable.error_malformed_address_detailed(self.asset.symbol)
+                    }
+                    self.superView?.alert(message)
+                    self.superView?.dismissPopupControllerAnimated()
                 case let .failure(error):
+                    guard let self = self else {
+                        return
+                    }
                     PINVerificationFailureHandler.handle(error: error) { (description) in
-                        self?.superView?.alert(description)
-                        self?.superView?.dismissPopupControllerAnimated()
+                        self.superView?.alert(description)
+                        self.superView?.dismissPopupControllerAnimated()
                     }
                 }
             }

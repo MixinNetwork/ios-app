@@ -317,14 +317,6 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
     func linkRanges(from string: String) -> [Link.Range] {
         var ranges = [Link.Range]()
         
-        Link.detector.enumerateMatches(in: string, options: [], using: { (result, _, _) in
-            guard let result = result, let url = result.url else {
-                return
-            }
-            let range = Link.Range(range: result.range, url: url)
-            ranges.append(range)
-        })
-        
         let nsString = string as NSString
         let fullRange = NSRange(location: 0, length: nsString.length)
         for mention in message.sortedMentions {
@@ -338,16 +330,30 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
                 let newSearchingLocation = NSMaxRange(range)
                 let newSearchingLength = searchingRange.length - (newSearchingLocation - searchingRange.location)
                 searchingRange = NSRange(location: newSearchingLocation, length: newSearchingLength)
-                guard let url = MixinInternalURL.identityNumber(mention.key).url else {
+                guard !ranges.contains(where: { $0.range.intersection(range) != nil }) else {
+                    // If there is a detected user mention from previous sortedMention, ignore this one
                     continue
                 }
-                ranges.removeAll { (linkRange) -> Bool in
-                    linkRange.range.intersection(range) != nil
+                guard let url = MixinInternalURL.identityNumber(mention.key).url else {
+                    continue
                 }
                 let linkRange = Link.Range(range: range, url: url)
                 ranges.append(linkRange)
             }
         }
+        
+        Link.detector.enumerateMatches(in: string, options: [], using: { (result, _, _) in
+            guard let result = result, let url = result.url else {
+                return
+            }
+            guard !ranges.contains(where: { $0.range.intersection(result.range) != nil }) else {
+                // Ignore links in user name. For example, a user with fullname of "www.google.com",
+                // and he was mentioned with an @ prefix, we don't consider that name a clickable URL link
+                return
+            }
+            let range = Link.Range(range: result.range, url: url)
+            ranges.append(range)
+        })
         
         Self.appIdentityNumberRegex?.enumerateMatches(in: string, options: [], range: fullRange) { result, _, _ in
             guard let range = result?.range else {

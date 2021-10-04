@@ -694,6 +694,8 @@
 "auth_permission_circles_read_description" = "访问你的圈子列表";
 "auth_permission_circles_write" = "管理圈子";
 "auth_permission_circles_write_description" = "管理你所有的圈子";
+"auth_permission_collectibles_read" = "查看 NFT";
+"auth_permission_collectibles_read_description" = "访问你的 NFT 列表";
 "auth_assets_more" = "等";
 "auth_profile_description" = "%@, %@, 头像";
 "auth_success" = "成功登录 %@";

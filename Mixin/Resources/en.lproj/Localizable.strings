@@ -693,6 +693,8 @@
 "auth_permission_circles_read_description" = "access your circle list";
 "auth_permission_circles_write" = "Write Circles";
 "auth_permission_circles_write_description" = "manage all your circles";
+"auth_permission_collectibles_read" = "Read Collectibles";
+"auth_permission_collectibles_read_description" = "access your collectibles";
 "auth_assets_more" = " and more";
 "auth_profile_description" = "%@, %@, profile photo";
 "auth_success" = "Successfully log in to %@";

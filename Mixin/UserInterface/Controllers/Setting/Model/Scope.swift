@@ -12,6 +12,7 @@ enum Scope: String {
     case SNAPSHOTS_READ = "SNAPSHOTS:READ"
     case CIRCLES_READ = "CIRCLES:READ"
     case CIRCLES_WRITE = "CIRCLES:WRITE"
+    case COLLECTIBLES_READ = "COLLECTIBLES:READ"
     
     static func getCompleteScopeInfo(authInfo: AuthorizationResponse) -> ([(scope: Scope, name: String, desc: String)], [Scope.RawValue]) {
         guard let account = LoginManager.shared.account else {
@@ -56,6 +57,10 @@ enum Scope: String {
         if authInfo.scopes.contains(Scope.CIRCLES_WRITE.rawValue) {
             result.append((.CIRCLES_WRITE, R.string.localizable.auth_permission_circles_write(), R.string.localizable.auth_permission_circles_write_description()))
             scopes.append(Scope.CIRCLES_WRITE.rawValue)
+        }
+        if authInfo.scopes.contains(Scope.COLLECTIBLES_READ.rawValue) {
+            result.append((.COLLECTIBLES_READ, R.string.localizable.auth_permission_collectibles_read(), R.string.localizable.auth_permission_collectibles_read_description()))
+            scopes.append(Scope.COLLECTIBLES_READ.rawValue)
         }
         return (result, scopes)
     }

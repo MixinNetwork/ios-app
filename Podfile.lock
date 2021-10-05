@@ -21,23 +21,23 @@ PODS:
   - DeviceGuru/DeviceGuru (7.0.1):
     - DeviceGuru/Resources
   - DeviceGuru/Resources (7.0.1)
-  - Firebase/Analytics (8.7.0):
+  - Firebase/Analytics (8.8.0):
     - Firebase/Core
-  - Firebase/Core (8.7.0):
+  - Firebase/Core (8.8.0):
     - Firebase/CoreOnly
-    - FirebaseAnalytics (~> 8.7.0)
-  - Firebase/CoreOnly (8.7.0):
-    - FirebaseCore (= 8.7.0)
-  - Firebase/Crashlytics (8.7.0):
+    - FirebaseAnalytics (~> 8.8.0)
+  - Firebase/CoreOnly (8.8.0):
+    - FirebaseCore (= 8.8.0)
+  - Firebase/Crashlytics (8.8.0):
     - Firebase/CoreOnly
-    - FirebaseCrashlytics (~> 8.7.0)
-  - Firebase/Performance (8.7.0):
+    - FirebaseCrashlytics (~> 8.8.0)
+  - Firebase/Performance (8.8.0):
     - Firebase/CoreOnly
-    - FirebasePerformance (~> 8.7.0)
-  - FirebaseABTesting (8.7.0):
+    - FirebasePerformance (~> 8.8.0)
+  - FirebaseABTesting (8.8.0):
     - FirebaseCore (~> 8.0)
-  - FirebaseAnalytics (8.7.0):
-    - FirebaseAnalytics/AdIdSupport (= 8.7.0)
+  - FirebaseAnalytics (8.8.0):
+    - FirebaseAnalytics/AdIdSupport (= 8.8.0)
     - FirebaseCore (~> 8.0)
     - FirebaseInstallations (~> 8.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.4)
@@ -45,37 +45,37 @@ PODS:
     - GoogleUtilities/Network (~> 7.4)
     - "GoogleUtilities/NSData+zlib (~> 7.4)"
     - nanopb (~> 2.30908.0)
-  - FirebaseAnalytics/AdIdSupport (8.7.0):
+  - FirebaseAnalytics/AdIdSupport (8.8.0):
     - FirebaseCore (~> 8.0)
     - FirebaseInstallations (~> 8.0)
-    - GoogleAppMeasurement (= 8.7.0)
+    - GoogleAppMeasurement (= 8.8.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.4)
     - GoogleUtilities/MethodSwizzler (~> 7.4)
     - GoogleUtilities/Network (~> 7.4)
     - "GoogleUtilities/NSData+zlib (~> 7.4)"
     - nanopb (~> 2.30908.0)
-  - FirebaseCore (8.7.0):
+  - FirebaseCore (8.8.0):
     - FirebaseCoreDiagnostics (~> 8.0)
     - GoogleUtilities/Environment (~> 7.4)
     - GoogleUtilities/Logger (~> 7.4)
-  - FirebaseCoreDiagnostics (8.7.0):
+  - FirebaseCoreDiagnostics (8.8.0):
     - GoogleDataTransport (~> 9.0)
     - GoogleUtilities/Environment (~> 7.4)
     - GoogleUtilities/Logger (~> 7.4)
     - nanopb (~> 2.30908.0)
-  - FirebaseCrashlytics (8.7.0):
+  - FirebaseCrashlytics (8.8.0):
     - FirebaseCore (~> 8.0)
     - FirebaseInstallations (~> 8.0)
     - GoogleDataTransport (~> 9.0)
     - GoogleUtilities/Environment (~> 7.4)
     - nanopb (~> 2.30908.0)
     - PromisesObjC (< 3.0, >= 1.2)
-  - FirebaseInstallations (8.7.0):
+  - FirebaseInstallations (8.8.0):
     - FirebaseCore (~> 8.0)
     - GoogleUtilities/Environment (~> 7.4)
     - GoogleUtilities/UserDefaults (~> 7.4)
     - PromisesObjC (< 3.0, >= 1.2)
-  - FirebasePerformance (8.7.0):
+  - FirebasePerformance (8.8.0):
     - FirebaseCore (~> 8.0)
     - FirebaseInstallations (~> 8.0)
     - FirebaseRemoteConfig (~> 8.0)
@@ -84,7 +84,7 @@ PODS:
     - GoogleUtilities/ISASwizzler (~> 7.4)
     - GoogleUtilities/MethodSwizzler (~> 7.4)
     - nanopb (~> 2.30908.0)
-  - FirebaseRemoteConfig (8.7.0):
+  - FirebaseRemoteConfig (8.8.0):
     - FirebaseABTesting (~> 8.0)
     - FirebaseCore (~> 8.0)
     - FirebaseInstallations (~> 8.0)
@@ -95,14 +95,21 @@ PODS:
   - GCDWebServer/Core (3.5.4)
   - GCDWebServer/WebDAV (3.5.4):
     - GCDWebServer/Core
-  - GoogleAppMeasurement (8.7.0):
-    - GoogleAppMeasurement/AdIdSupport (= 8.7.0)
+  - GoogleAppMeasurement (8.8.0):
+    - GoogleAppMeasurement/AdIdSupport (= 8.8.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.4)
     - GoogleUtilities/MethodSwizzler (~> 7.4)
     - GoogleUtilities/Network (~> 7.4)
     - "GoogleUtilities/NSData+zlib (~> 7.4)"
     - nanopb (~> 2.30908.0)
-  - GoogleAppMeasurement/AdIdSupport (8.7.0):
+  - GoogleAppMeasurement/AdIdSupport (8.8.0):
+    - GoogleAppMeasurement/WithoutAdIdSupport (= 8.8.0)
+    - GoogleUtilities/AppDelegateSwizzler (~> 7.4)
+    - GoogleUtilities/MethodSwizzler (~> 7.4)
+    - GoogleUtilities/Network (~> 7.4)
+    - "GoogleUtilities/NSData+zlib (~> 7.4)"
+    - nanopb (~> 2.30908.0)
+  - GoogleAppMeasurement/WithoutAdIdSupport (8.8.0):
     - GoogleUtilities/AppDelegateSwizzler (~> 7.4)
     - GoogleUtilities/MethodSwizzler (~> 7.4)
     - GoogleUtilities/Network (~> 7.4)
@@ -132,7 +139,7 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (7.5.2):
     - GoogleUtilities/Logger
-  - GRDB.swift/SQLCipher (5.11.0):
+  - GRDB.swift/SQLCipher (5.12.0):
     - SQLCipher (>= 3.4.0)
   - GzipSwift (5.1.1)
   - libsignal-protocol-c (2.3.2)
@@ -183,9 +190,9 @@ PODS:
     - R.swift.Library (~> 5.3.0)
   - R.swift.Library (5.3.0)
   - RSKImageCropper (3.0.2)
-  - SDWebImage (5.11.1):
-    - SDWebImage/Core (= 5.11.1)
-  - SDWebImage/Core (5.11.1)
+  - SDWebImage (5.12.0):
+    - SDWebImage/Core (= 5.12.0)
+  - SDWebImage/Core (5.12.0)
   - SDWebImageYYPlugin/YYImage (0.7.0):
     - SDWebImage/Core (~> 5.10)
     - YYImage/Core
@@ -212,7 +219,6 @@ DEPENDENCIES:
   - Firebase/Performance
   - GCDWebServer
   - GCDWebServer/WebDAV
-  - GRDB.swift/SQLCipher (from `https://github.com/wuyuehyang/GRDB.swift.git`)
   - libsignal-protocol-c (from `https://github.com/MixinNetwork/libsignal-protocol-c.git`)
   - lottie-ios (from `https://github.com/airbnb/lottie-ios.git`, branch `lottie/objectiveC`)
   - MixinServices (from `./MixinServices`)
@@ -244,6 +250,7 @@ SPEC REPOS:
     - GoogleAppMeasurement
     - GoogleDataTransport
     - GoogleUtilities
+    - GRDB.swift
     - GzipSwift
     - nanopb
     - PromisesObjC
@@ -258,8 +265,6 @@ SPEC REPOS:
     - Zip
 
 EXTERNAL SOURCES:
-  GRDB.swift:
-    :git: https://github.com/wuyuehyang/GRDB.swift.git
   libsignal-protocol-c:
     :git: https://github.com/MixinNetwork/libsignal-protocol-c.git
   lottie-ios:
@@ -273,9 +278,6 @@ EXTERNAL SOURCES:
     :git: https://github.com/wuyuehyang/YYImage.git
 
 CHECKOUT OPTIONS:
-  GRDB.swift:
-    :commit: 9253866b5706ccd9cf11bf829ed9fab18ec5849d
-    :git: https://github.com/wuyuehyang/GRDB.swift.git
   libsignal-protocol-c:
     :commit: f55d4e7b94f388a1ad5e3c6835c3bf4c335283d4
     :git: https://github.com/MixinNetwork/libsignal-protocol-c.git
@@ -296,20 +298,20 @@ SPEC CHECKSUMS:
   AppCenter: 883369ab78427b0561c688158d689dfe1f993ea9
   BoringSSL: e10f92a27043805c01071fe815a5cd98ae8212e7
   DeviceGuru: 73d82f34cddee25d215b35eb4d094b7a44ec187a
-  Firebase: bc9325d5ee2041524bac78a5213d0e530c651309
-  FirebaseABTesting: 5a72ea0e88422f9e223614cb4016cafffb2af8d1
-  FirebaseAnalytics: 52768800c2add1d84b751420cb4caaf8195f2c41
-  FirebaseCore: f4804c1d3f4bbbefc88904d15653038f2c99ddf7
-  FirebaseCoreDiagnostics: b63732f581a1c6a453ec7241f9ab60b3a5bd3450
-  FirebaseCrashlytics: 6fac03d1eef054833b71c929c93ab95c12989728
-  FirebaseInstallations: ede6fb72bb6337914e5888b399271259d0c4910c
-  FirebasePerformance: a1a23adbc53917d7654c349d355371d5239cc340
-  FirebaseRemoteConfig: 34300dd83055c06e2768d0932dd8fb2c1575745f
+  Firebase: 629510f1a9ddb235f3a7c5c8ceb23ba887f0f814
+  FirebaseABTesting: 981336dd14d84787e33466e4247f77ec2343f8d9
+  FirebaseAnalytics: 5506ea8b867d8423485a84b4cd612d279f7b0b8a
+  FirebaseCore: 98b29e3828f0a53651c363937a7f7d92a19f1ba2
+  FirebaseCoreDiagnostics: fe77f42da6329d6d83d21fd9d621a6b704413bfc
+  FirebaseCrashlytics: 3660c045c8e45cc4276110562a0ef44cf43c8157
+  FirebaseInstallations: 2563cb18a723ef9c6ef18318a49519b75dce613c
+  FirebasePerformance: 0c01a7a496657d7cea86d40c0b1725259d164c6c
+  FirebaseRemoteConfig: f6365883d7950d784ee97bcdbbf1e442d4fa6119
   GCDWebServer: 2c156a56c8226e2d5c0c3f208a3621ccffbe3ce4
-  GoogleAppMeasurement: 2be61ce546ad074dbe4dd545f222ac6033bb1d9e
+  GoogleAppMeasurement: 5ba1164e3c844ba84272555e916d0a6d3d977e91
   GoogleDataTransport: 85fd18ff3019bb85d3f2c551d04c481dedf71fc9
   GoogleUtilities: 8de2a97a17e15b6b98e38e8770e2d129a57c0040
-  GRDB.swift: 7afca530bbb0004273ea81fd419fa17d934ca7e1
+  GRDB.swift: f94b00ac11ab22597771b6a47211d1c44284395a
   GzipSwift: 893f3e48e597a1a4f62fafcb6514220fcf8287fa
   libsignal-protocol-c: 2fecccb06cc14bdbd28e76a656c0c8c648a482a0
   lottie-ios: 0e760146411886f6104050c932a8e6964853267f
@@ -320,7 +322,7 @@ SPEC CHECKSUMS:
   R.swift: c533450b0f7dc494e0993f5f1a1db925d84c3006
   R.swift.Library: 0fc583cb55a99e28901299cc451614cad1161962
   RSKImageCropper: 1ac71e9a82e3f41eea3eedfff8eacb0d3821c9ec
-  SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
+  SDWebImage: 4ea20cca2986adc5aacde07aa686742fd4c67a37
   SDWebImageYYPlugin: 91d664f814860c27bd4298b32d961f05d342a041
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
@@ -328,6 +330,6 @@ SPEC CHECKSUMS:
   YYImage: 6db68da66f20d9f169ceb94dfb9947c3867b9665
   Zip: 414f59909701fda9a84ab774ebe0f5449b1082cc
 
-PODFILE CHECKSUM: 872566b8b4383d87a327a1266bbfce687b2d4f04
+PODFILE CHECKSUM: bbfd01b45711669bce2e94cde99db211655f024d
 
 COCOAPODS: 1.11.2

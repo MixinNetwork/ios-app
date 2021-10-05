@@ -24,11 +24,6 @@ target 'Mixin' do
   pod 'AlignedCollectionViewFlowLayout'
   pod 'R.swift'
   pod 'AcknowList'
-  
-  # Workaround to prevent Xcode 13.0 from importing Combine.framework to unsupported platforms
-  # https://github.com/groue/GRDB.swift/issues/1059
-  pod 'GRDB.swift/SQLCipher', :git => 'https://github.com/wuyuehyang/GRDB.swift.git'
-  
   mixin_services
 end
 

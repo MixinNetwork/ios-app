@@ -874,9 +874,9 @@ extension UrlWindow {
             let receiverUsers = users.filter { collectible.receivers.contains($0.userId) }
             var error = ""
             if collectible.action == CollectibleAction.sign.rawValue && collectible.state == CollectibleState.signed.rawValue {
-                error = R.string.localizable.non_fungible_state_signed()
+                error = R.string.localizable.collectible_state_signed()
             } else if collectible.action == CollectibleAction.unlock.rawValue && collectible.state == CollectibleState.unlocked.rawValue {
-                error = R.string.localizable.non_fungible_state_unlocked()
+                error = R.string.localizable.collectible_state_unlocked()
             }
             DispatchQueue.main.async {
                 hud.hide()

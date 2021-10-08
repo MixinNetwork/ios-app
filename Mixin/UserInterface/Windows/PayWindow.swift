@@ -199,17 +199,18 @@ class PayWindow: BottomSheetView {
                 nameLabel.text = R.string.localizable.chat_menu_transfer()
             case CollectibleAction.unlock.rawValue:
                 multisigActionView.image = R.image.multisig_revoke()
-                nameLabel.text = R.string.localizable.non_fungible_revoke_transaction()
+                nameLabel.text = R.string.localizable.collectible_revoke_transaction()
             default:
                 break
             }
             //TODO: ‼️ update value
             if let token = token {
-                amountLabel.text = R.string.localizable.non_fungible_token_title("Rarible", token.tokenKey)
+                amountLabel.text = R.string.localizable.collectible_token_title("Rarible", token.tokenKey)
                 mixinIDLabel.text = token.groupKey
                 collectibleImageView.sd_setImage(with: URL(string: token.meta.iconUrl))
             }
             renderMultisigInfo(isCollectible: true, showError: showError, showBiometric: showBiometric, senders: senders, receivers: receivers)
+            //let hash = 
         }
         if !assetIconView.isHidden {
             assetIconView.setIcon(asset: asset)
@@ -240,7 +241,7 @@ class PayWindow: BottomSheetView {
         receivers: [UserItem]
     ) {
         if !showError {
-            payLabel.text = isCollectible ? R.string.localizable.non_fungible_pay_by_pin() : R.string.localizable.multisig_by_pin()
+            payLabel.text = isCollectible ? R.string.localizable.collectible_pay_by_pin() : R.string.localizable.multisig_by_pin()
             if showBiometric {
                 let title: String
                 if biometryType == .faceID {

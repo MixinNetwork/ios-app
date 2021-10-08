@@ -670,11 +670,12 @@
 "multisig_state_unlocked" = "这笔交易已经被其他人撤销了，您无法再次撤销。";
 
 // NFT
-"non_fungible_pay_by_pin" = "通过密码支付";
-"non_fungible_revoke_transaction" = "撤销非同质化代币交易";
-"non_fungible_state_signed" = "您已经对这笔交易进行了签名，您无法再次签名。";
-"non_fungible_state_unlocked" = "这笔交易已经被其他人撤销了，您无法再次撤销。";
-"non_fungible_token_title" = "%@ #%@";
+"collectible_pay_by_pin" = "通过密码支付";
+"collectible_revoke_transaction" = "撤销非同质化代币交易";
+"collectible_state_signed" = "您已经对这笔交易进行了签名，您无法再次签名。";
+"collectible_state_unlocked" = "这笔交易已经被其他人撤销了，您无法再次撤销。";
+"collectible_token_title" = "%@ #%@";
+"collectible_not_found" = "NFT not found.";
 
 // QRCode
 "qr_code_not_found" = "未检测到二维码";

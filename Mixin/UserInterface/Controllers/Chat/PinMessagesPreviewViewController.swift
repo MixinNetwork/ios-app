@@ -44,7 +44,7 @@ final class PinMessagesPreviewViewController: StaticMessagesViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         factory.delegate = self
-        reloadData()
+        reloadData(scrollToBottom: true)
         NotificationCenter.default.addObserver(self, selector: #selector(pinMessagesDidChange(_:)), name: PinMessageDAO.didSaveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(pinMessagesDidChange(_:)), name: PinMessageDAO.didDeleteNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(participantDidChange(_:)), name: ParticipantDAO.participantDidChangeNotification, object: nil)
@@ -251,19 +251,22 @@ extension PinMessagesPreviewViewController {
         bottomBarViewIfAdded = bottomBarView
     }
     
-    private func reloadData() {
+    private func reloadData(scrollToBottom: Bool = false) {
         let conversationId = self.conversationId
         queue.async {
             let pinnedMessageItems = PinMessageDAO.shared.messageItems(conversationId: conversationId)
             let (dates, viewModels) = self.categorizedViewModels(with: pinnedMessageItems, fits: self.layoutWidth)
+            self.updateUnpinAllButtonVisibility()
             DispatchQueue.main.async {
                 self.pinnedMessageItems = pinnedMessageItems
                 self.titleLabel.text = R.string.localizable.chat_pinned_messages_count(self.pinnedMessageItems.count)
                 self.dates = dates
                 self.viewModels = viewModels
                 self.tableView.reloadData()
+                if scrollToBottom, let indexPath = self.indexPath(where: { $0.messageId == pinnedMessageItems.last?.messageId }) {
+                    self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
+                }
             }
-            self.updateUnpinAllButtonVisibility()
         }
     }
     

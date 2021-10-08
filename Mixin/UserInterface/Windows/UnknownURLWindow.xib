@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -16,7 +16,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZDk-Bd-aGS">
-                    <rect key="frame" x="0.0" y="485.5" width="414" height="410.5"/>
+                    <rect key="frame" x="0.0" y="429.5" width="414" height="466.5"/>
                     <subviews>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_link" translatesAutoresizingMaskIntoConstraints="NO" id="8Bb-cI-OLr">
                             <rect key="frame" x="171" y="70" width="72" height="72"/>
@@ -64,6 +64,20 @@
                                 <action selector="okAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="btZ-kI-4Iw"/>
                             </connections>
                         </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VRH-cP-BGt">
+                            <rect key="frame" x="177" y="370.5" width="60" height="32"/>
+                            <color key="tintColor" name="theme"/>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="plain" title="Copy">
+                                <fontDescription key="titleFontDescription" type="system" pointSize="15"/>
+                            </buttonConfiguration>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="action_copy"/>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="copyAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="sCh-EE-qxa"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" name="background"/>
                     <constraints>
@@ -72,6 +86,7 @@
                         <constraint firstItem="0A2-tu-Jsr" firstAttribute="top" secondItem="fCB-38-zf8" secondAttribute="bottom" constant="12" id="7iw-4W-6Ng"/>
                         <constraint firstItem="8Bb-cI-OLr" firstAttribute="top" secondItem="ZDk-Bd-aGS" secondAttribute="top" constant="70" id="CFK-2W-GaW"/>
                         <constraint firstAttribute="trailing" secondItem="0A2-tu-Jsr" secondAttribute="trailing" constant="30" id="Cyy-ft-5bl"/>
+                        <constraint firstItem="VRH-cP-BGt" firstAttribute="top" secondItem="2jw-2B-YEr" secondAttribute="bottom" constant="24" id="IZ2-Pw-I4v"/>
                         <constraint firstItem="2jw-2B-YEr" firstAttribute="centerX" secondItem="ZDk-Bd-aGS" secondAttribute="centerX" id="dag-89-wVw"/>
                         <constraint firstItem="fCB-38-zf8" firstAttribute="centerX" secondItem="ZDk-Bd-aGS" secondAttribute="centerX" id="fS4-ec-RzE"/>
                         <constraint firstItem="2jw-2B-YEr" firstAttribute="top" secondItem="0A2-tu-Jsr" secondAttribute="bottom" constant="54" id="iyA-Wd-h96"/>
@@ -89,8 +104,9 @@
             <constraints>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="ZDk-Bd-aGS" secondAttribute="trailing" id="4Vt-cQ-C7W"/>
                 <constraint firstItem="ZDk-Bd-aGS" firstAttribute="bottom" secondItem="iN0-l3-epB" secondAttribute="bottom" id="eF2-2D-yDU"/>
+                <constraint firstItem="VRH-cP-BGt" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="fUK-XQ-ySQ"/>
                 <constraint firstItem="ZDk-Bd-aGS" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="o4l-N5-QNo"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="2jw-2B-YEr" secondAttribute="bottom" constant="30" id="zi5-zT-evB"/>
+                <constraint firstItem="VRH-cP-BGt" firstAttribute="bottom" secondItem="vUN-kp-3ea" secondAttribute="bottom" constant="-30" id="y8u-8g-bFC"/>
             </constraints>
             <connections>
                 <outlet property="popupView" destination="ZDk-Bd-aGS" id="ElM-Xd-Rzj"/>
@@ -109,6 +125,9 @@
         </namedColor>
         <namedColor name="text_desc">
             <color red="0.73725490196078436" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="theme">
+            <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="title">
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

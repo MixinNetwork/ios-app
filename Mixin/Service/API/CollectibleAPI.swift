@@ -1,7 +1,7 @@
 import Alamofire
 import MixinServices
 
-final class NonFungibleAPI: MixinAPI {
+final class CollectibleAPI: MixinAPI {
     
     private enum Path {
         static func cancel(id: String) -> String {
@@ -40,7 +40,7 @@ final class NonFungibleAPI: MixinAPI {
         }
     }
     
-    static func token(tokenId: String) -> MixinAPI.Result<NonFungibleToken> {
+    static func token(tokenId: String) -> MixinAPI.Result<CollectibleToken> {
         return request(method: .get, path: Path.tokens(id: tokenId))
     }
     

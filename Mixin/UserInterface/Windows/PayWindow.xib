@@ -606,6 +606,8 @@
                 <outlet property="amountLabel" destination="z51-ol-7We" id="Org-mu-VkH"/>
                 <outlet property="assetIconView" destination="V2K-V8-QTR" id="o8x-82-O2i"/>
                 <outlet property="biometricButton" destination="9LC-YO-0cd" id="uj8-Ha-78l"/>
+                <outlet property="collectibleImageView" destination="36D-mc-S27" id="gfi-7C-LC9"/>
+                <outlet property="collectibleView" destination="kEj-ha-IpG" id="Wff-u9-pMW"/>
                 <outlet property="contentBottomConstraint" destination="Kj1-Cd-2IZ" id="quv-It-XeJ"/>
                 <outlet property="dismissButton" destination="gXI-gx-wZd" id="PqQ-K8-gdU"/>
                 <outlet property="enableBiometricAuthButton" destination="BSf-bK-UvH" id="MoZ-xq-IOY"/>
@@ -620,8 +622,6 @@
                 <outlet property="multisigStackView" destination="qGj-IP-qzY" id="6qZ-C5-mAX"/>
                 <outlet property="multisigView" destination="QTE-p7-9Tt" id="tJN-Bh-4bn"/>
                 <outlet property="nameLabel" destination="Xfg-Lf-zjd" id="bvk-aO-Pxi"/>
-                <outlet property="nonFungibleImageView" destination="36D-mc-S27" id="gfi-7C-LC9"/>
-                <outlet property="nonFungibleView" destination="kEj-ha-IpG" id="Wff-u9-pMW"/>
                 <outlet property="payLabel" destination="AYJ-kX-YBZ" id="ZVr-Uf-MJC"/>
                 <outlet property="paySuccessImageView" destination="gfw-v1-eUv" id="i4H-4S-7b2"/>
                 <outlet property="pinField" destination="GhP-FQ-P0s" id="bHG-Dy-Znn"/>
@@ -656,7 +656,7 @@
             <color red="0.90980392156862744" green="0.41960784313725491" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
             <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

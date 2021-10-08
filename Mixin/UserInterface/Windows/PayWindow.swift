@@ -12,7 +12,7 @@ class PayWindow: BottomSheetView {
         case transfer(trackId: String, user: UserItem, fromWeb: Bool)
         case withdraw(trackId: String, address: Address, chainAsset: AssetItem, fromWeb: Bool)
         case multisig(multisig: MultisigResponse, senders: [UserItem], receivers: [UserItem])
-        case nonFungible(nonFungible: NonFungibleResponse, senders: [UserItem], receivers: [UserItem])
+        case collectible(collectible: CollectibleResponse, senders: [UserItem], receivers: [UserItem])
     }
 
     enum ErrorContinueAction {
@@ -51,8 +51,8 @@ class PayWindow: BottomSheetView {
     @IBOutlet weak var receiverMoreLabel: UILabel!
     @IBOutlet weak var multisigActionView: UIImageView!
     @IBOutlet weak var multisigStackView: UIStackView!
-    @IBOutlet weak var nonFungibleView: UIStackView!
-    @IBOutlet weak var nonFungibleImageView: UIImageView!
+    @IBOutlet weak var collectibleView: UIStackView!
+    @IBOutlet weak var collectibleImageView: UIImageView!
     
     @IBOutlet weak var sendersButtonWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var receiversButtonWidthConstraint: NSLayoutConstraint!
@@ -104,7 +104,7 @@ class PayWindow: BottomSheetView {
         }
     }
 
-    func render(asset: AssetItem, action: PinAction, amount: String, memo: String, error: String? = nil, fiatMoneyAmount: String? = nil, textfield: UITextField? = nil, token: NonFungibleToken? = nil) -> PayWindow {
+    func render(asset: AssetItem, action: PinAction, amount: String, memo: String, error: String? = nil, fiatMoneyAmount: String? = nil, textfield: UITextField? = nil, token: CollectibleToken? = nil) -> PayWindow {
         self.asset = asset
         self.amount = amount
         self.memo = memo
@@ -120,7 +120,7 @@ class PayWindow: BottomSheetView {
             amountLabel.text = amountToken
             amountExchangeLabel.text = amountExchange
         }
-        nonFungibleView.isHidden = true
+        collectibleView.isHidden = true
         assetIconView.isHidden = false
         amountExchangeLabel.isHidden = false
         let showError = !(error?.isEmpty ?? true)
@@ -188,25 +188,28 @@ class PayWindow: BottomSheetView {
             }
             mixinIDLabel.text = multisig.memo
             renderMultisigInfo(showError: showError, showBiometric: showBiometric, senders: senders, receivers: receivers)
-        case let .nonFungible(nonFungible, senders, receivers):
+        case let .collectible(collectible, senders, receivers):
             multisigView.isHidden = false
             assetIconView.isHidden = true
-            nonFungibleView.isHidden = false
+            collectibleView.isHidden = false
             amountExchangeLabel.isHidden = true
-            switch nonFungible.action {
-            case NonFungibleAction.sign.rawValue:
+            switch collectible.action {
+            case CollectibleAction.sign.rawValue:
                 multisigActionView.image = R.image.multisig_sign()
                 nameLabel.text = R.string.localizable.chat_menu_transfer()
-            case NonFungibleAction.unlock.rawValue:
+            case CollectibleAction.unlock.rawValue:
                 multisigActionView.image = R.image.multisig_revoke()
                 nameLabel.text = R.string.localizable.non_fungible_revoke_transaction()
             default:
                 break
             }
             //TODO: ‼️ update value
-            amountLabel.text = R.string.localizable.non_fungible_token_title("Rarible", token?.tokenKey ?? "")
-            mixinIDLabel.text = token?.groupKey ?? ""
-            renderMultisigInfo(isNonFungible: true, showError: showError, showBiometric: showBiometric, senders: senders, receivers: receivers)
+            if let token = token {
+                amountLabel.text = R.string.localizable.non_fungible_token_title("Rarible", token.tokenKey)
+                mixinIDLabel.text = token.groupKey
+                collectibleImageView.sd_setImage(with: URL(string: token.meta.iconUrl))
+            }
+            renderMultisigInfo(isCollectible: true, showError: showError, showBiometric: showBiometric, senders: senders, receivers: receivers)
         }
         if !assetIconView.isHidden {
             assetIconView.setIcon(asset: asset)
@@ -230,20 +233,20 @@ class PayWindow: BottomSheetView {
     }
 
     private func renderMultisigInfo(
-        isNonFungible: Bool = false,
+        isCollectible: Bool = false,
         showError: Bool,
         showBiometric: Bool,
         senders: [UserItem],
         receivers: [UserItem]
     ) {
         if !showError {
-            payLabel.text = isNonFungible ? R.string.localizable.non_fungible_pay_by_pin() : R.string.localizable.multisig_by_pin()
+            payLabel.text = isCollectible ? R.string.localizable.non_fungible_pay_by_pin() : R.string.localizable.multisig_by_pin()
             if showBiometric {
                 let title: String
                 if biometryType == .faceID {
-                    title = isNonFungible ? R.string.localizable.transfer_use_face() : R.string.localizable.multisig_use_face()
+                    title = isCollectible ? R.string.localizable.transfer_use_face() : R.string.localizable.multisig_use_face()
                 } else {
-                    title = isNonFungible ? R.string.localizable.transfer_use_touch() : R.string.localizable.multisig_use_touch()
+                    title = isCollectible ? R.string.localizable.transfer_use_touch() : R.string.localizable.multisig_use_touch()
                 }
                 biometricButton.setTitle(title, for: .normal)
             }
@@ -326,8 +329,8 @@ class PayWindow: BottomSheetView {
 
         if case let .multisig(multisig, _, _) = pinAction! {
             MultisigAPI.cancel(requestId: multisig.requestId) { (_) in }
-        } else if case let .nonFungible(nonFungible, _, _) = pinAction! {
-            NonFungibleAPI.cancel(requestId: nonFungible.requestId) { (_) in }
+        } else if case let .collectible(collectible, _, _) = pinAction! {
+            CollectibleAPI.cancel(requestId: collectible.requestId) { (_) in }
         }
     }
 
@@ -357,7 +360,7 @@ class PayWindow: BottomSheetView {
         let users: [UserItem]?
         if case let .multisig(_, senders, _) = pinAction! {
             users = senders
-        } else if case let .nonFungible(_, senders, _) = pinAction! {
+        } else if case let .collectible(_, senders, _) = pinAction! {
             users = senders
         } else {
             users = nil
@@ -390,7 +393,7 @@ class PayWindow: BottomSheetView {
             users = receivers
         case let .payment(_, receivers):
             users = receivers
-        case let .nonFungible(_, _, receivers):
+        case let .collectible(_, _, receivers):
             users = receivers
         default:
             return
@@ -705,8 +708,8 @@ extension PayWindow: PinFieldDelegate {
             default:
                 break
             }
-        case let .nonFungible(nonFungible, _, _):
-            let nonfungibleCompletion = { [weak self] (result: MixinAPI.Result<Empty>) in
+        case let .collectible(collectible, _, _):
+            let collectibleCompletion = { [weak self] (result: MixinAPI.Result<Empty>) in
                 guard let weakSelf = self else {
                     return
                 }
@@ -717,11 +720,11 @@ extension PayWindow: PinFieldDelegate {
                     weakSelf.failedHandler(error: error)
                 }
             }
-            switch nonFungible.action {
-            case NonFungibleAction.sign.rawValue:
-                NonFungibleAPI.sign(requestId: nonFungible.requestId, pin: pin, completion: nonfungibleCompletion)
-            case NonFungibleAction.unlock.rawValue:
-                NonFungibleAPI.unlock(requestId: nonFungible.requestId, pin: pin, completion: nonfungibleCompletion)
+            switch collectible.action {
+            case CollectibleAction.sign.rawValue:
+                CollectibleAPI.sign(requestId: collectible.requestId, pin: pin, completion: collectibleCompletion)
+            case CollectibleAction.unlock.rawValue:
+                CollectibleAPI.unlock(requestId: collectible.requestId, pin: pin, completion: collectibleCompletion)
             default:
                 break
             }
@@ -773,7 +776,7 @@ extension PayWindow: PinFieldDelegate {
                 break
             case .payment:
                 break
-            case .nonFungible:
+            case .collectible:
                 break
             }
         }

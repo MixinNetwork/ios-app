@@ -1,6 +1,6 @@
 import Foundation
 
-struct NonFungibleResponse: Codable {
+struct CollectibleResponse: Codable {
     
     let type: String
     let codeId: String
@@ -42,13 +42,13 @@ struct NonFungibleResponse: Codable {
     
 }
 
-enum NonFungibleState: String {
+enum CollectibleState: String {
     case initial
     case unlocked
     case signed
 }
 
-enum NonFungibleAction: String {
+enum CollectibleAction: String {
     case unlock
     case sign
 }

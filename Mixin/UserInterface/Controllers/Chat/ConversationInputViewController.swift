@@ -525,7 +525,7 @@ extension ConversationInputViewController {
             return
         }
         if keyboardWillBeInvisible {
-            setPreferredContentHeight(minimizedHeight, animated: false)
+            setPreferredContentHeight(minimizedHeight, animated: true)
         } else {
             var height = quotePreviewWrapperHeightConstraint.constant
                 + inputBarView.frame.height
@@ -534,7 +534,7 @@ extension ConversationInputViewController {
                 - interactiveDismissResponder.height
             height = max(minimizedHeight, height)
             if view.frame.height != height {
-                setPreferredContentHeight(height, animated: false)
+                setPreferredContentHeight(height, animated: true)
             }
         }
     }

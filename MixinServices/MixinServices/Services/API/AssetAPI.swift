@@ -39,7 +39,7 @@ public final class AssetAPI: MixinAPI {
         static func search(keyword: String) -> String? {
             return "/network/assets/search/\(keyword)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         }
-        static let top = "/network/assets/top"
+        static let top = "/network/assets/top?kind=NORMAL"
         
         static let fiats = "/fiats"
     }

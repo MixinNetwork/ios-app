@@ -205,12 +205,24 @@ class PayWindow: BottomSheetView {
             }
             //TODO: ‼️ update value
             if let token = token {
-                amountLabel.text = R.string.localizable.collectible_token_title("Rarible", token.tokenKey)
-                mixinIDLabel.text = token.groupKey
-                collectibleImageView.sd_setImage(with: URL(string: token.meta.iconUrl))
+                amountLabel.text = R.string.localizable.collectible_token_title(token.meta.groupName, token.tokenKey)
+                if token.meta.mime.contains("image") {
+                    collectibleImageView.sd_setImage(with: URL(string: token.meta.iconUrl))
+                } else {
+                    collectibleImageView.image = R.image.ic_other_collectible()
+                }
+                if let url = URL(string: token.meta.mediaUrl) {
+                    DispatchQueue.global().async {
+                        if let data = try? Data(contentsOf: url), "\(data.hashValue)" == token.meta.hash {
+                            DispatchQueue.main.async {
+                                //TODO: ‼️ update ui, show verify icon ?
+                            }
+                        }
+                    }
+                }
             }
+            mixinIDLabel.text = nil
             renderMultisigInfo(isCollectible: true, showError: showError, showBiometric: showBiometric, senders: senders, receivers: receivers)
-            //let hash = 
         }
         if !assetIconView.isHidden {
             assetIconView.setIcon(asset: asset)

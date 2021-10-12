@@ -860,10 +860,6 @@ extension UrlWindow {
             return
         }
         DispatchQueue.global().async {
-            //TODO: ‼️ asset ?
-            let asset = Asset(assetId: "", type: "", symbol: "", name: "", iconUrl: "", balance: "", destination: "", tag: "", priceBtc: "", priceUsd: "", changeUsd: "", chainId: "", confirmations: 0, assetKey: "", reserve: "")
-            let assetItem = AssetItem(asset: asset, chain: nil)
-            
             guard let token = collectibleToken(tokenId: collectible.tokenId, hud: hud) else {
                 return
             }
@@ -874,13 +870,13 @@ extension UrlWindow {
             let receiverUsers = users.filter { collectible.receivers.contains($0.userId) }
             var error = ""
             if collectible.action == CollectibleAction.sign.rawValue && collectible.state == CollectibleState.signed.rawValue {
-                error = R.string.localizable.collectible_state_signed()
+                error = R.string.localizable.multisig_state_signed()
             } else if collectible.action == CollectibleAction.unlock.rawValue && collectible.state == CollectibleState.unlocked.rawValue {
-                error = R.string.localizable.collectible_state_unlocked()
+                error = R.string.localizable.multisig_state_unlocked()
             }
             DispatchQueue.main.async {
                 hud.hide()
-                PayWindow.instance().render(asset: assetItem, action: .collectible(collectible: collectible, senders: senderUsers, receivers: receiverUsers), amount: collectible.amount, memo: "", error: error, token: token).presentPopupControllerAnimated()
+                PayWindow.instance().render(token: token, action: .collectible(collectible: collectible, senders: senderUsers, receivers: receiverUsers), amount: collectible.amount, memo: "", error: error).presentPopupControllerAnimated()
             }
         }
     }

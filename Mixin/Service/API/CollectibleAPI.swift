@@ -5,13 +5,13 @@ final class CollectibleAPI: MixinAPI {
     
     private enum Path {
         static func cancel(id: String) -> String {
-            return "/collectibles/\(id)/cancel"
+            return "/collectibles/requests/\(id)/cancel"
         }
         static func sign(id: String) -> String {
-            return "/collectibles/\(id)/sign"
+            return "/collectibles/requests/\(id)/sign"
         }
         static func unlock(id: String) -> String {
-            return "/collectibles/\(id)/unlock"
+            return "/collectibles/requests/\(id)/unlock"
         }
         static func tokens(id: String) -> String {
             return "/collectibles/tokens/\(id)"

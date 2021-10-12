@@ -669,12 +669,7 @@
 "multisig_state_unlocked" = "This multisig link has already been revoked by someone, you can not make a duplicate operation.";
 
 // NFT
-"collectible_pay_by_pin" = "Pay by PIN";
-"collectible_revoke_transaction" = "Revoke NFT Transaction";
-"collectible_state_signed" = "This NFT link has already been signed by yourself, you can not make a duplicate operation.";
-"collectible_state_unlocked" = "This NFT link has already been revoked by someone, you can not make a duplicate operation.";
-"collectible_token_title" = "%@ #%@";
-"collectible_not_found" = "NFT not found.";
+"collectible_token_id" = "#%@";
 
 // QRCode
 "qr_code_not_found" = "QR Code not found";

@@ -363,6 +363,13 @@
                                         <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
                                     </userDefinedRuntimeAttributes>
                                 </label>
+                                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8VZ-xH-pcV">
+                                    <rect key="frame" x="147.5" y="202.5" width="0.0" height="0.0"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                    <color key="textColor" name="text_accessory"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oXe-5X-NEr" userLabel="PINView">
                                     <rect key="frame" x="27.5" y="202.5" width="240" height="101"/>
                                     <subviews>
@@ -639,6 +646,7 @@
                 <outlet property="sendersButtonWidthConstraint" destination="qRO-lC-QnD" id="iP4-cv-VfI"/>
                 <outlet property="successView" destination="gQV-om-Skc" id="JOT-5o-AFb"/>
                 <outlet property="successViewHeightConstraint" destination="P1B-SA-R2I" id="qzX-Yv-ga4"/>
+                <outlet property="tokenNameLabel" destination="8VZ-xH-pcV" id="WSK-8t-Szz"/>
             </connections>
             <point key="canvasLocation" x="82.400000000000006" y="63.418290854572717"/>
         </view>
@@ -659,7 +667,7 @@
             <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="theme">
             <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

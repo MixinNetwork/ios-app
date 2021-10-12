@@ -7,7 +7,7 @@ class DiagnoseViewController: SettingsTableViewController {
             SettingsRow(title: R.string.localizable.diagnose_database_access(), accessory: .disclosure),
         ]),
         SettingsSection(rows: [
-            SettingsRow(title: "iTunes 备份诊断", accessory: .disclosure),
+            SettingsRow(title: R.string.localizable.diagnose_backup_restore(), accessory: .disclosure),
         ])
     ])
     
@@ -30,7 +30,7 @@ extension DiagnoseViewController: UITableViewDelegate {
             navigationController?.pushViewController(container, animated: true)
         case 1:
             let container = ContainerViewController.instance(viewController: iTunesBackupDiagnosticViewController(),
-                                                             title: "iTunes 备份诊断")
+                                                             title: R.string.localizable.diagnose_backup_restore())
             navigationController?.pushViewController(container, animated: true)
         default:
             break

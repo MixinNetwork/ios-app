@@ -913,6 +913,8 @@
 // Diagnose
 "diagnose_warning" = "⚠️请在Mixin团队指导下使用";
 "diagnose_database_access" = "数据库访问";
+"diagnose_backup_restore" = "备份恢复";
+"diagnose_copy_output" = "复制结果";
 
 "report_title"="给开发人员发送聊天日志?";
 "report_button"="把日志发给开发者";

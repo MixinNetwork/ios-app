@@ -108,11 +108,11 @@ extension iTunesBackupDiagnosticViewController: ContainerViewControllerDelegate 
     
     func barRightButtonTappedAction() {
         UIPasteboard.general.string = outputTextView.text
-        showAutoHiddenHud(style: .notification, text: "已复制")
+        showAutoHiddenHud(style: .notification, text: R.string.localizable.toast_copied())
     }
     
     func textBarRightButton() -> String? {
-        "复制结果"
+        R.string.localizable.diagnose_copy_output()
     }
     
 }

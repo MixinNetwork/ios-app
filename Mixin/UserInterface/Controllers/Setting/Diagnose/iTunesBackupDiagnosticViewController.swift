@@ -17,6 +17,11 @@ class iTunesBackupDiagnosticViewController: UIViewController {
         outputTextView.text = ""
         diagnoseButton.isBusy = true
         DispatchQueue.global().async {
+            defer {
+                DispatchQueue.main.async {
+                    self.diagnoseButton.isBusy = false
+                }
+            }
             let urls = [
                 AppGroupContainer.url,
                 
@@ -88,9 +93,6 @@ class iTunesBackupDiagnosticViewController: UIViewController {
             }
             for (url, error) in failedURLs {
                 self.output("❌ Failed to manipulate URL: \(url), error: \(error)")
-            }
-            DispatchQueue.main.async {
-                self.diagnoseButton.isBusy = false
             }
         }
     }

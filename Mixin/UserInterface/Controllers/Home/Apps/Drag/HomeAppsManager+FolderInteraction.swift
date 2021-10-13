@@ -354,7 +354,7 @@ extension HomeAppsManager: HomeAppsFolderViewControllerDelegate {
             }
             let indexPath = IndexPath(item: indexPathRow, section: 0)
             currentDragInteraction?.currentIndexPath = indexPath
-            currentDragInteraction?.needsUpdate = false
+            currentDragInteraction?.needsUpdate = true
             pageCell.items = items[currentPage]
             pageCell.collectionView.performBatchUpdates({
                 if self.currentDragInteraction?.savedState == nil {
@@ -392,6 +392,7 @@ extension HomeAppsManager: HomeAppsFolderViewControllerDelegate {
         guard let info = openFolderInfo else {
             return
         }
+        currentDragInteraction?.needsUpdate = false
         invalidatePageTimer()
         controller.dismiss(animated: false, completion: {
             self.openFolderInfo = nil
@@ -414,12 +415,15 @@ extension HomeAppsManager: HomeAppsFolderViewControllerDelegate {
         }
         if info.shouldCancelCreation {
             if let cell = pageCell.collectionView.cellForItem(at: IndexPath(item: folderIndex, section: 0)) as? AppFolderCell {
+                currentDragInteraction?.needsUpdate = true
                 cell.revokeFolderCreation {
                     self.items[self.currentPage][folderIndex] = .app(info.folder.pages[0][0])
                     pageCell.items = self.items[self.currentPage]
-                    pageCell.collectionView.performBatchUpdates({
+                    pageCell.collectionView.performBatchUpdates {
                         pageCell.collectionView.reloadItems(at: [IndexPath(item: folderIndex, section: 0)])
-                    }, completion: nil)
+                    } completion: { _ in
+                        self.currentDragInteraction?.needsUpdate = false
+                    }
                 }
             }
         } else if info.folder.pages.reduce(0, { $0 + $1.count }) == 0 {

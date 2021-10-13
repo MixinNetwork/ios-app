@@ -28,7 +28,8 @@ extension HomeAppsManager {
         guard let indexPath = pageCell.collectionView.indexPathForItem(at: touchPoint),
               let cell = pageCell.collectionView.cellForItem(at: indexPath) as? HomeAppCell,
               let item = cell.item,
-              let placeholderView = cell.snapshotView else {
+              let placeholderView = cell.snapshotView
+        else {
             // Long press empty place to start editing mode
             enterEditingMode()
             return
@@ -64,11 +65,13 @@ extension HomeAppsManager {
         }
         touchPoint.x -= collectionView.contentOffset.x
         if isInAppsFolderViewController, let candidateCollectionView = candidateCollectionView {
-            var shouldStartDragOutTimer = false
+            let shouldStartDragOutTimer: Bool
             if touchPoint.y < candidateCollectionView.frame.minY && !ignoreDragOutOnTop {
                 shouldStartDragOutTimer = true
             } else if touchPoint.y > candidateCollectionView.frame.maxY && !ignoreDragOutOnBottom {
                 shouldStartDragOutTimer = true
+            } else {
+                shouldStartDragOutTimer = false
             }
             if shouldStartDragOutTimer {
                 guard folderRemoveTimer == nil else {
@@ -209,14 +212,12 @@ extension HomeAppsManager {
         if let pageCell = currentPageCell {
             visiblePageCells.append(pageCell)
         }
-        if let pinnedCollectionView = pinnedCollectionView, let pageCell = pinnedCollectionView.visibleCells.first as? AppPageCell {
+        if let pageCell = pinnedCollectionView?.visibleCells.first as? AppPageCell {
             visiblePageCells.append(pageCell)
         }
-        for cell in visiblePageCells.reduce([], { $0 + $1.collectionView.visibleCells }) {
-            if let cell = cell as? HomeAppCell {
-                cell.label?.alpha = 1
-                cell.startShaking()
-            }
+        for case let cell as HomeAppCell in visiblePageCells.reduce([], { $0 + $1.collectionView.visibleCells }) {
+            cell.label?.alpha = 1
+            cell.startShaking()
         }
         // Update placeholder's image view x offset
         var convertedRect = currentInteraction.currentPageCell.collectionView.convert(cell.frame, to: viewController.view)
@@ -249,13 +250,14 @@ extension HomeAppsManager {
             return
         }
         pinnedItems.insert(app, at: destinationIndexPath.row)
-        var didRestoreSavedState = false
+        let didRestoreSavedState: Bool
         if let savedState = interaction.savedState {
             items = savedState
             interaction.savedState = nil
             didRestoreSavedState = true
         } else {
             items[currentPage].remove(at: interaction.currentIndexPath.row)
+            didRestoreSavedState = false
         }
         pageCell.items = pinnedItems.map { .app($0) }
         pageCell.draggedItem = interaction.item
@@ -277,7 +279,7 @@ extension HomeAppsManager {
     }
     
     private func moveFromPinned(interaction: HomeAppsDragInteraction, pageCell: AppPageCell, destinationIndexPath: IndexPath) {
-        var didMoveLastItem = false
+        let didMoveLastItem: Bool
         // Need to move last item to next page
         if items[currentPage].count == HomeAppsMode.regular.appsPerPage {
             didMoveLastItem = true
@@ -290,6 +292,8 @@ extension HomeAppsManager {
                 indexPathsToReload.append(indexPath)
             }
             candidateCollectionView?.reloadItems(at: indexPathsToReload)
+        } else {
+            didMoveLastItem = false
         }
         items[currentPage].insert(interaction.item, at: destinationIndexPath.row)
         pinnedItems.remove(at: interaction.currentIndexPath.row)

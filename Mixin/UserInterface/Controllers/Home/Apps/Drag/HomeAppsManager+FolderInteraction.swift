@@ -201,7 +201,7 @@ extension HomeAppsManager {
             interaction.dragInteraction.placeholderView.removeFromSuperview()
             let folderCell = interaction.dragInteraction.currentPageCell.collectionView.cellForItem(at: folderIndexPath) as! AppFolderCell
             folderCell.move(view: interaction.dragInteraction.placeholderView.iconView, toCellPositionAtIndex: folder.pages[folderCell.currentPage].count - 1) {
-                var didRestoreSavedState = false
+                let didRestoreSavedState: Bool
                 if let savedState = interaction.dragInteraction.savedState {
                     self.items = savedState
                     interaction.dragInteraction.currentPageCell.items = self.items[page]
@@ -209,6 +209,9 @@ extension HomeAppsManager {
                 } else if folderIndexPath.row < sourceIndex {
                     self.items[page].remove(at: sourceIndex)
                     interaction.dragInteraction.currentPageCell.items = self.items[page]
+                    didRestoreSavedState = false
+                } else {
+                    didRestoreSavedState = false
                 }
                 self.currentFolderInteraction = nil
                 self.currentDragInteraction = nil

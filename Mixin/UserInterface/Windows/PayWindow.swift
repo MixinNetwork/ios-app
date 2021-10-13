@@ -234,6 +234,7 @@ class PayWindow: BottomSheetView {
                 collectibleImageView.image = R.image.ic_other_collectible()
             }
             renderMultisigInfo(showError: showError, showBiometric: showBiometric, senders: senders, receivers: receivers)
+            payLabel.text = R.string.localizable.transfer_by_pin()
         }
 
         dismissButton.isEnabled = true
@@ -641,87 +642,84 @@ extension PayWindow: PinFieldDelegate {
         pinField.isHidden = true
         payLabel.isHidden = true
         loadingView.startAnimating()
-
-        if let assetId = asset?.assetId {
-            var trace: Trace?
-            let completion = { [weak self] (result: MixinAPI.Result<Snapshot>) in
-                guard let weakSelf = self else {
-                    return
-                }
-
-                switch result {
-                case let .success(snapshot):
-                    if let trace = trace {
-                        TraceDAO.shared.updateSnapshot(traceId: trace.traceId, snapshotId: snapshot.snapshotId)
-                    }
-                    switch pinAction {
-                    case .transfer, .payment:
-                        AppGroupUserDefaults.User.hasPerformedTransfer = true
-                        AppGroupUserDefaults.Wallet.defaultTransferAssetId = assetId
-                    case let .withdraw(_,address,_,_):
-                        AppGroupUserDefaults.Wallet.withdrawnAddressIds[address.addressId] = true
-                        ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(assetId: snapshot.assetId))
-                    default:
-                        break
-                    }
-                    SnapshotDAO.shared.saveSnapshots(snapshots: [snapshot])
-                    weakSelf.successHandler()
-                case let .failure(error):
-                    switch error {
-                    case .insufficientBalance, .malformedPin, .incorrectPin, .transferAmountTooSmall, .insufficientFee, .chainNotInSync:
-                        if let trace = trace {
-                            TraceDAO.shared.deleteTrace(traceId: trace.traceId)
-                        }
-                    default:
-                        break
-                    }
-                    weakSelf.failedHandler(error: error)
-                }
+        
+        let assetId = asset?.assetId ?? ""
+        var trace: Trace?
+        let completion = { [weak self] (result: MixinAPI.Result<Snapshot>) in
+            guard let weakSelf = self else {
+                return
             }
 
-            let generalizedAmount: String
-            if let decimalSeparator = Locale.current.decimalSeparator, decimalSeparator != "." {
-                generalizedAmount = amount.replacingOccurrences(of: decimalSeparator, with: ".")
-            } else {
-                generalizedAmount = amount
-            }
-
-            switch pinAction {
-            case let .transfer(trackId, user, _):
-                trace = Trace(traceId: trackId, assetId: assetId, amount: generalizedAmount, opponentId: user.userId, destination: nil, tag: nil)
-                TraceDAO.shared.saveTrace(trace: trace)
-                PaymentAPI.transfer(assetId: assetId, opponentId: user.userId, amount: generalizedAmount, memo: memo, pin: pin, traceId: trackId, completion: completion)
-            case let .payment(payment, _):
-                let transactionRequest = RawTransactionRequest(assetId: payment.assetId, opponentMultisig: OpponentMultisig(receivers: payment.receivers, threshold: payment.threshold), amount: payment.amount, pin: "", traceId: payment.traceId, memo: payment.memo)
-                PaymentAPI.transactions(transactionRequest: transactionRequest, pin: pin, completion: completion)
-            case let .withdraw(trackId, address, _, _):
-                trace = Trace(traceId: trackId, assetId: assetId, amount: generalizedAmount, opponentId: nil, destination: address.destination, tag: address.tag)
-                TraceDAO.shared.saveTrace(trace: trace)
-                WithdrawalAPI.withdrawal(withdrawal: WithdrawalRequest(addressId: address.addressId, amount: generalizedAmount, traceId: trackId, pin: pin, memo: memo), completion: completion)
-            case let .multisig(multisig, _, _):
-                let multisigCompletion = { [weak self] (result: MixinAPI.Result<Empty>) in
-                    guard let weakSelf = self else {
-                        return
-                    }
-                    switch result {
-                    case .success:
-                        weakSelf.successHandler()
-                    case let .failure(error):
-                        weakSelf.failedHandler(error: error)
-                    }
+            switch result {
+            case let .success(snapshot):
+                if let trace = trace {
+                    TraceDAO.shared.updateSnapshot(traceId: trace.traceId, snapshotId: snapshot.snapshotId)
                 }
-                switch multisig.action {
-                case MultisigAction.sign.rawValue:
-                    MultisigAPI.sign(requestId: multisig.requestId, pin: pin, completion: multisigCompletion)
-                case MultisigAction.unlock.rawValue:
-                    MultisigAPI.unlock(requestId: multisig.requestId, pin: pin, completion: multisigCompletion)
+                switch pinAction {
+                case .transfer, .payment:
+                    AppGroupUserDefaults.User.hasPerformedTransfer = true
+                    AppGroupUserDefaults.Wallet.defaultTransferAssetId = assetId
+                case let .withdraw(_,address,_,_):
+                    AppGroupUserDefaults.Wallet.withdrawnAddressIds[address.addressId] = true
+                    ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(assetId: snapshot.assetId))
                 default:
                     break
                 }
-            case .collectible:
+                SnapshotDAO.shared.saveSnapshots(snapshots: [snapshot])
+                weakSelf.successHandler()
+            case let .failure(error):
+                switch error {
+                case .insufficientBalance, .malformedPin, .incorrectPin, .transferAmountTooSmall, .insufficientFee, .chainNotInSync:
+                    if let trace = trace {
+                        TraceDAO.shared.deleteTrace(traceId: trace.traceId)
+                    }
+                default:
+                    break
+                }
+                weakSelf.failedHandler(error: error)
+            }
+        }
+
+        let generalizedAmount: String
+        if let decimalSeparator = Locale.current.decimalSeparator, decimalSeparator != "." {
+            generalizedAmount = amount.replacingOccurrences(of: decimalSeparator, with: ".")
+        } else {
+            generalizedAmount = amount
+        }
+
+        switch pinAction {
+        case let .transfer(trackId, user, _):
+            trace = Trace(traceId: trackId, assetId: assetId, amount: generalizedAmount, opponentId: user.userId, destination: nil, tag: nil)
+            TraceDAO.shared.saveTrace(trace: trace)
+            PaymentAPI.transfer(assetId: assetId, opponentId: user.userId, amount: generalizedAmount, memo: memo, pin: pin, traceId: trackId, completion: completion)
+        case let .payment(payment, _):
+            let transactionRequest = RawTransactionRequest(assetId: payment.assetId, opponentMultisig: OpponentMultisig(receivers: payment.receivers, threshold: payment.threshold), amount: payment.amount, pin: "", traceId: payment.traceId, memo: payment.memo)
+            PaymentAPI.transactions(transactionRequest: transactionRequest, pin: pin, completion: completion)
+        case let .withdraw(trackId, address, _, _):
+            trace = Trace(traceId: trackId, assetId: assetId, amount: generalizedAmount, opponentId: nil, destination: address.destination, tag: address.tag)
+            TraceDAO.shared.saveTrace(trace: trace)
+            WithdrawalAPI.withdrawal(withdrawal: WithdrawalRequest(addressId: address.addressId, amount: generalizedAmount, traceId: trackId, pin: pin, memo: memo), completion: completion)
+        case let .multisig(multisig, _, _):
+            let multisigCompletion = { [weak self] (result: MixinAPI.Result<Empty>) in
+                guard let weakSelf = self else {
+                    return
+                }
+                switch result {
+                case .success:
+                    weakSelf.successHandler()
+                case let .failure(error):
+                    weakSelf.failedHandler(error: error)
+                }
+            }
+            switch multisig.action {
+            case MultisigAction.sign.rawValue:
+                MultisigAPI.sign(requestId: multisig.requestId, pin: pin, completion: multisigCompletion)
+            case MultisigAction.unlock.rawValue:
+                MultisigAPI.unlock(requestId: multisig.requestId, pin: pin, completion: multisigCompletion)
+            default:
                 break
             }
-        } else if case let .collectible(collectible, _, _) = pinAction {
+        case let .collectible(collectible, _, _):
             let completion = { [weak self] (result: MixinAPI.Result<Empty>) in
                 guard let self = self else {
                     return

@@ -87,17 +87,24 @@ extension HomeAppsManager {
             return
         }
         folderViewController.openAnimationDidEnd = { [weak folderViewController] in
-            self.items[page].remove(at: sourceIndex)
-            interaction.dragInteraction.currentPageCell.items = self.items[page]
-            interaction.dragInteraction.currentPageCell.collectionView.performBatchUpdates {
-                interaction.dragInteraction.currentPageCell.collectionView.deleteItems(at: [IndexPath(item: sourceIndex, section: 0)])
-            } completion: { _ in
+            let completion = { (finished: Bool) in
                 folderCell.stopShaking()
                 let convertedFrame = folderCell.convert(folderCell.imageContainerView.frame, to: AppDelegate.current.mainWindow)
                 folderViewController?.sourceFrame = convertedFrame
                 folderCell.wrapperView.isHidden = isNewlyCreated
                 interaction.wrapperView.removeFromSuperview()
                 self.currentFolderInteraction = nil
+            }
+            if let index = self.items[page].firstIndex(where: { $0 == interaction.dragInteraction.item }) {
+                self.items[page].remove(at: index)
+                interaction.dragInteraction.currentPageCell.items = self.items[page]
+                interaction.dragInteraction.currentPageCell.collectionView.performBatchUpdates({
+                    interaction.dragInteraction.currentPageCell.collectionView.deleteItems(at: [IndexPath(item: index, section: 0)])
+                }, completion: completion)
+            } else {
+                interaction.dragInteraction.currentPageCell.items = self.items[page]
+                interaction.dragInteraction.currentPageCell.collectionView.reloadData()
+                completion(true)
             }
         }
     }

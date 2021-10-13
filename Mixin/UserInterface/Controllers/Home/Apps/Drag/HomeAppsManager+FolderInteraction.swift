@@ -179,6 +179,9 @@ extension HomeAppsManager {
     
     // Drop into folder
     private func commit(folderDropInteraction interaction: HomeAppsFolderDropInteraction, didDrop: Bool) {
+        guard !interaction.dragInteraction.needsUpdate else {
+            return
+        }
         guard let page = items.firstIndex(where: { $0.contains { $0.folder == interaction.folder } }),
               let sourceIndex = items[page].firstIndex(where: { $0 == interaction.dragInteraction.item }),
               let destinationIndex = items[page].firstIndex(where: { $0.folder == interaction.folder }),
@@ -195,6 +198,7 @@ extension HomeAppsManager {
             showFolderInteraction(interaction, page: page, sourceIndex: sourceIndex, destinationIndex: destinationIndex, folderIndexPath: folderIndexPath)
             cancelFolderInteraction()
         } else {
+            interaction.dragInteraction.needsUpdate = true
             let convertedIconFrame = interaction.dragInteraction.placeholderView.convert(interaction.dragInteraction.placeholderView.iconView.frame, to: interaction.dragInteraction.placeholderView.superview!)
             interaction.dragInteraction.placeholderView.iconView.frame = convertedIconFrame
             interaction.dragInteraction.placeholderView.superview!.addSubview(interaction.dragInteraction.placeholderView.iconView)
@@ -239,6 +243,7 @@ extension HomeAppsManager {
                             }
                         }, completion: nil)
                     }
+                    interaction.dragInteraction.needsUpdate = false
                 }
             }
             UIView.animate(withDuration: 0.35) {

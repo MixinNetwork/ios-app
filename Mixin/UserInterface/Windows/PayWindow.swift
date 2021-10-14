@@ -228,11 +228,7 @@ class PayWindow: BottomSheetView {
             amountLabel.text = token.meta.groupName
             amountExchangeLabel.text = R.string.localizable.collectible_token_id(token.tokenKey)
             tokenNameLabel.text = token.meta.tokenName
-            if token.meta.mime.contains("image") {
-                collectibleImageView.sd_setImage(with: URL(string: token.meta.iconUrl))
-            } else {
-                collectibleImageView.image = R.image.ic_other_collectible()
-            }
+            collectibleImageView.sd_setImage(with: URL(string: token.meta.iconUrl))
             renderMultisigInfo(showError: showError, showBiometric: showBiometric, senders: senders, receivers: receivers)
             payLabel.text = R.string.localizable.transfer_by_pin()
         }

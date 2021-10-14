@@ -669,6 +669,9 @@
 "multisig_state_signed" = "您已经对这笔交易进行了签名，您无法再次签名。";
 "multisig_state_unlocked" = "这笔交易已经被其他人撤销了，您无法再次撤销。";
 
+// NFT
+"collectible_token_id" = "#%@";
+
 // QRCode
 "qr_code_not_found" = "未检测到二维码";
 "myqrcode_title" = "我的二维码";

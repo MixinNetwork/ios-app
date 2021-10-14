@@ -12,6 +12,7 @@ class PayWindow: BottomSheetView {
         case transfer(trackId: String, user: UserItem, fromWeb: Bool)
         case withdraw(trackId: String, address: Address, chainAsset: AssetItem, fromWeb: Bool)
         case multisig(multisig: MultisigResponse, senders: [UserItem], receivers: [UserItem])
+        case collectible(collectible: CollectibleResponse, senders: [UserItem], receivers: [UserItem])
     }
 
     enum ErrorContinueAction {
@@ -22,6 +23,7 @@ class PayWindow: BottomSheetView {
     @IBOutlet weak var pinField: PinField!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var mixinIDLabel: UILabel!
+    @IBOutlet weak var mixinIDPlaceView: UIView!
     @IBOutlet weak var amountLabel: UILabel!
     @IBOutlet weak var amountExchangeLabel: UILabel!
     @IBOutlet weak var memoLabel: UILabel!
@@ -39,7 +41,8 @@ class PayWindow: BottomSheetView {
     @IBOutlet weak var errorLabel: UILabel!
     @IBOutlet weak var pinView: UIView!
     @IBOutlet weak var errorContinueButton: RoundedButton!
-
+    @IBOutlet weak var tokenNameLabel: UILabel!
+    
     @IBOutlet weak var senderViewOne: AvatarImageView!
     @IBOutlet weak var senderViewTwo: AvatarImageView!
     @IBOutlet weak var senderMoreView: CornerView!
@@ -50,10 +53,14 @@ class PayWindow: BottomSheetView {
     @IBOutlet weak var receiverMoreLabel: UILabel!
     @IBOutlet weak var multisigActionView: UIImageView!
     @IBOutlet weak var multisigStackView: UIStackView!
-
+    @IBOutlet weak var collectibleView: UIStackView!
+    @IBOutlet weak var collectibleImageView: UIImageView!
+    
     @IBOutlet weak var sendersButtonWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var receiversButtonWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var successViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var amountLabelPlaceHeightConstraint: ScreenHeightCompatibleLayoutConstraint!
+    @IBOutlet weak var resultViewPlaceHeightConstraint: ScreenHeightCompatibleLayoutConstraint!
     
     private lazy var biometricAuthQueue = DispatchQueue(label: "one.mixin.messenger.PayWindow.BioAuth")
     private lazy var context = LAContext()
@@ -61,7 +68,7 @@ class PayWindow: BottomSheetView {
 
     private var pinAction: PinAction!
     private var errorContinueAction: ErrorContinueAction?
-    private var asset: AssetItem!
+    private var asset: AssetItem?
     private var amount = ""
     private var memo = ""
     private var soundId: SystemSoundID = 0
@@ -101,94 +108,139 @@ class PayWindow: BottomSheetView {
         }
     }
 
-    func render(asset: AssetItem, action: PinAction, amount: String, memo: String, error: String? = nil, fiatMoneyAmount: String? = nil, textfield: UITextField? = nil) -> PayWindow {
+    func render(
+        asset: AssetItem? = nil,
+        token: CollectibleToken? = nil,
+        action: PinAction,
+        amount: String,
+        memo: String,
+        error: String? = nil,
+        fiatMoneyAmount: String? = nil,
+        textfield: UITextField? = nil
+    ) -> PayWindow {
         self.asset = asset
         self.amount = amount
         self.memo = memo
         self.pinAction = action
         self.textfield = textfield
 
-        let amountToken = CurrencyFormatter.localizedString(from: amount, locale: .current, format: .precision, sign: .whenNegative, symbol: .custom(asset.symbol)) ?? amount
-        let amountExchange = CurrencyFormatter.localizedPrice(price: amount, priceUsd: asset.priceUsd)
-        if let fiatMoneyAmount = fiatMoneyAmount {
-            amountLabel.text = fiatMoneyAmount + " " + Currency.current.code
-            amountExchangeLabel.text = amountToken
-        } else {
-            amountLabel.text = amountToken
-            amountExchangeLabel.text = amountExchange
-        }
-
         let showError = !(error?.isEmpty ?? true)
         let showBiometric = isAllowBiometricPay
-        switch pinAction! {
-        case let .transfer(_, user, _):
-            multisigView.isHidden = true
-            nameLabel.text = Localized.PAY_TRANSFER_TITLE(fullname: user.fullName)
-            mixinIDLabel.text = user.isCreatedByMessenger ? user.identityNumber : user.userId
-            mixinIDLabel.textColor = .accessoryText
-            pinView.isHidden = false
-            if !showError {
-                payLabel.text = R.string.localizable.transfer_by_pin()
-                if showBiometric {
-                    if biometryType == .faceID {
-                        biometricButton.setTitle(R.string.localizable.transfer_use_face(), for: .normal)
-                    } else {
-                        biometricButton.setTitle(R.string.localizable.transfer_use_touch(), for: .normal)
-                    }
-                }
-            }
-        case let .withdraw(_, address, chainAsset, _):
-            multisigView.isHidden = true
-            nameLabel.text = R.string.localizable.pay_withdrawal_title(address.label)
-            mixinIDLabel.text = address.fullAddress
-            let feeToken = CurrencyFormatter.localizedString(from: address.fee, locale: .current, format: .precision, sign: .whenNegative, symbol: .custom(chainAsset.symbol)) ?? address.fee
-            let feeExchange = CurrencyFormatter.localizedPrice(price: address.fee, priceUsd: chainAsset.priceUsd)
+        
+        if let asset = asset {
+            assetIconView.isHidden = false
+            collectibleView.isHidden = true
+            tokenNameLabel.isHidden = true
+            mixinIDPlaceView.isHidden = false
+            amountLabelPlaceHeightConstraint.constant = 10
+            resultViewPlaceHeightConstraint.constant = 30
+            let amountToken = CurrencyFormatter.localizedString(from: amount, locale: .current, format: .precision, sign: .whenNegative, symbol: .custom(asset.symbol)) ?? amount
+            let amountExchange = CurrencyFormatter.localizedPrice(price: amount, priceUsd: asset.priceUsd)
             if let fiatMoneyAmount = fiatMoneyAmount {
-                amountExchangeLabel.text = R.string.localizable.pay_withdrawal_memo(amountToken, "≈ " + Currency.current.symbol + fiatMoneyAmount, feeToken, feeExchange)
+                amountLabel.text = fiatMoneyAmount + " " + Currency.current.code
+                amountExchangeLabel.text = amountToken
             } else {
-                amountExchangeLabel.text = R.string.localizable.pay_withdrawal_memo(amountToken, amountExchange, feeToken, feeExchange)
+                amountLabel.text = amountToken
+                amountExchangeLabel.text = amountExchange
             }
-            self.withdrawlFee = feeToken
-            
-            if !showError {
-                payLabel.text = R.string.localizable.withdraw_by_pin()
-                if showBiometric {
-                    if biometryType == .faceID {
-                        biometricButton.setTitle(R.string.localizable.withdraw_use_face(), for: .normal)
-                    } else {
-                        biometricButton.setTitle(R.string.localizable.withdraw_use_touch(), for: .normal)
+            switch pinAction! {
+            case let .transfer(_, user, _):
+                multisigView.isHidden = true
+                nameLabel.text = Localized.PAY_TRANSFER_TITLE(fullname: user.fullName)
+                mixinIDLabel.text = user.isCreatedByMessenger ? user.identityNumber : user.userId
+                mixinIDLabel.textColor = .accessoryText
+                pinView.isHidden = false
+                if !showError {
+                    payLabel.text = R.string.localizable.transfer_by_pin()
+                    if showBiometric {
+                        if biometryType == .faceID {
+                            biometricButton.setTitle(R.string.localizable.transfer_use_face(), for: .normal)
+                        } else {
+                            biometricButton.setTitle(R.string.localizable.transfer_use_touch(), for: .normal)
+                        }
                     }
                 }
-            }
-        case let .payment(payment, receivers):
-            guard let account = LoginManager.shared.account else {
-                break
-            }
-            multisigView.isHidden = false
-            multisigActionView.image = R.image.multisig_sign()
-            nameLabel.text = R.string.localizable.multisig_transaction()
-            mixinIDLabel.text = payment.memo
-            renderMultisigInfo(showError: showError, showBiometric: showBiometric, senders: [UserItem.createUser(from: account)], receivers: receivers)
-        case let .multisig(multisig, senders, receivers):
-            multisigView.isHidden = false
-            switch multisig.action {
-            case MultisigAction.sign.rawValue:
+            case let .withdraw(_, address, chainAsset, _):
+                multisigView.isHidden = true
+                nameLabel.text = R.string.localizable.pay_withdrawal_title(address.label)
+                mixinIDLabel.text = address.fullAddress
+                let feeToken = CurrencyFormatter.localizedString(from: address.fee, locale: .current, format: .precision, sign: .whenNegative, symbol: .custom(chainAsset.symbol)) ?? address.fee
+                let feeExchange = CurrencyFormatter.localizedPrice(price: address.fee, priceUsd: chainAsset.priceUsd)
+                if let fiatMoneyAmount = fiatMoneyAmount {
+                    amountExchangeLabel.text = R.string.localizable.pay_withdrawal_memo(amountToken, "≈ " + Currency.current.symbol + fiatMoneyAmount, feeToken, feeExchange)
+                } else {
+                    amountExchangeLabel.text = R.string.localizable.pay_withdrawal_memo(amountToken, amountExchange, feeToken, feeExchange)
+                }
+                self.withdrawlFee = feeToken
+                
+                if !showError {
+                    payLabel.text = R.string.localizable.withdraw_by_pin()
+                    if showBiometric {
+                        if biometryType == .faceID {
+                            biometricButton.setTitle(R.string.localizable.withdraw_use_face(), for: .normal)
+                        } else {
+                            biometricButton.setTitle(R.string.localizable.withdraw_use_touch(), for: .normal)
+                        }
+                    }
+                }
+            case let .payment(payment, receivers):
+                guard let account = LoginManager.shared.account else {
+                    break
+                }
+                multisigView.isHidden = false
                 multisigActionView.image = R.image.multisig_sign()
                 nameLabel.text = R.string.localizable.multisig_transaction()
-            case MultisigAction.unlock.rawValue:
+                mixinIDLabel.text = payment.memo
+                renderMultisigInfo(showError: showError, showBiometric: showBiometric, senders: [UserItem.createUser(from: account)], receivers: receivers)
+            case let .multisig(multisig, senders, receivers):
+                multisigView.isHidden = false
+                switch multisig.action {
+                case MultisigAction.sign.rawValue:
+                    multisigActionView.image = R.image.multisig_sign()
+                    nameLabel.text = R.string.localizable.multisig_transaction()
+                case MultisigAction.unlock.rawValue:
+                    multisigActionView.image = R.image.multisig_revoke()
+                    nameLabel.text = R.string.localizable.multisig_revoke_transaction()
+                default:
+                    break
+                }
+                mixinIDLabel.text = multisig.memo
+                renderMultisigInfo(showError: showError, showBiometric: showBiometric, senders: senders, receivers: receivers)
+            case .collectible:
+                break
+            }
+            assetIconView.setIcon(asset: asset)
+            memoLabel.isHidden = memo.isEmpty
+            memoPlaceView.isHidden = memo.isEmpty
+            memoLabel.text = memo
+        } else if let token = token, case let .collectible(collectible, senders, receivers) = action {
+            multisigView.isHidden = false
+            assetIconView.isHidden = true
+            collectibleView.isHidden = false
+            tokenNameLabel.isHidden = false
+            memoLabel.isHidden = true
+            memoPlaceView.isHidden = false
+            mixinIDPlaceView.isHidden = true
+            amountLabelPlaceHeightConstraint.constant = 6
+            resultViewPlaceHeightConstraint.constant = 10
+            switch collectible.action {
+            case CollectibleAction.sign.rawValue:
+                multisigActionView.image = R.image.multisig_sign()
+                nameLabel.text = R.string.localizable.chat_menu_transfer()
+            case CollectibleAction.unlock.rawValue:
                 multisigActionView.image = R.image.multisig_revoke()
                 nameLabel.text = R.string.localizable.multisig_revoke_transaction()
             default:
                 break
             }
-            mixinIDLabel.text = multisig.memo
+            mixinIDLabel.text = nil
+            amountLabel.text = token.meta.groupName
+            amountExchangeLabel.text = R.string.localizable.collectible_token_id(token.tokenKey)
+            tokenNameLabel.text = token.meta.tokenName
+            collectibleImageView.sd_setImage(with: URL(string: token.meta.iconUrl))
             renderMultisigInfo(showError: showError, showBiometric: showBiometric, senders: senders, receivers: receivers)
+            payLabel.text = R.string.localizable.transfer_by_pin()
         }
-
-        assetIconView.setIcon(asset: asset)
-        memoLabel.isHidden = memo.isEmpty
-        memoPlaceView.isHidden = memo.isEmpty
-        memoLabel.text = memo
 
         dismissButton.isEnabled = true
         if let err = error, !err.isEmpty {
@@ -293,6 +345,8 @@ class PayWindow: BottomSheetView {
 
         if case let .multisig(multisig, _, _) = pinAction! {
             MultisigAPI.cancel(requestId: multisig.requestId) { (_) in }
+        } else if case let .collectible(collectible, _, _) = pinAction! {
+            CollectibleAPI.cancel(requestId: collectible.requestId) { (_) in }
         }
     }
 
@@ -319,12 +373,19 @@ class PayWindow: BottomSheetView {
     }
 
     @IBAction func sendersAction(_ sender: Any) {
-        guard case let .multisig(_, senders, _) = pinAction! else {
+        let users: [UserItem]?
+        if case let .multisig(_, senders, _) = pinAction! {
+            users = senders
+        } else if case let .collectible(_, senders, _) = pinAction! {
+            users = senders
+        } else {
+            users = nil
+        }
+        guard let users = users else {
             return
         }
-
         let window = MultisigUsersWindow.instance()
-        window.render(users: senders, isSender: true)
+        window.render(users: users, isSender: true)
         let isKeyboardAppear = self.isKeyboardAppear
         window.onDismiss = {
             self.isMultisigUsersAppear = false
@@ -347,6 +408,8 @@ class PayWindow: BottomSheetView {
         case let .multisig(_, _, receivers):
             users = receivers
         case let .payment(_, receivers):
+            users = receivers
+        case let .collectible(_, _, receivers):
             users = receivers
         default:
             return
@@ -577,7 +640,6 @@ extension PayWindow: PinFieldDelegate {
         }
         processing = true
         let pinAction: PinAction = self.pinAction!
-        let assetId = asset.assetId
         dismissButton.isEnabled = false
         if !biometricButton.isHidden {
             biometricButton.isHidden = true
@@ -585,7 +647,8 @@ extension PayWindow: PinFieldDelegate {
         pinField.isHidden = true
         payLabel.isHidden = true
         loadingView.startAnimating()
-
+        
+        let assetId = asset?.assetId ?? ""
         var trace: Trace?
         let completion = { [weak self] (result: MixinAPI.Result<Snapshot>) in
             guard let weakSelf = self else {
@@ -661,6 +724,26 @@ extension PayWindow: PinFieldDelegate {
             default:
                 break
             }
+        case let .collectible(collectible, _, _):
+            let completion = { [weak self] (result: MixinAPI.Result<Empty>) in
+                guard let self = self else {
+                    return
+                }
+                switch result {
+                case .success:
+                    self.successHandler()
+                case let .failure(error):
+                    self.failedHandler(error: error)
+                }
+            }
+            switch collectible.action {
+            case CollectibleAction.sign.rawValue:
+                CollectibleAPI.sign(requestId: collectible.requestId, pin: pin, completion: completion)
+            case CollectibleAction.unlock.rawValue:
+                CollectibleAPI.unlock(requestId: collectible.requestId, pin: pin, completion: completion)
+            default:
+                break
+            }
         }
     }
 
@@ -708,6 +791,8 @@ extension PayWindow: PinFieldDelegate {
             case .multisig:
                 break
             case .payment:
+                break
+            case .collectible:
                 break
             }
         }

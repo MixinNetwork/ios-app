@@ -282,17 +282,17 @@
                                     </userDefinedRuntimeAttributes>
                                 </view>
                                 <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="kEj-ha-IpG">
-                                    <rect key="frame" x="112.5" y="132.5" width="70" height="90"/>
+                                    <rect key="frame" x="112.5" y="132.5" width="70" height="73"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eng-gB-gzF">
-                                            <rect key="frame" x="0.0" y="0.0" width="70" height="20"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="70" height="3"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="20" id="W5U-k8-buj"/>
+                                                <constraint firstAttribute="height" constant="3" id="W5U-k8-buj"/>
                                             </constraints>
                                         </view>
                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="non_fungible" translatesAutoresizingMaskIntoConstraints="NO" id="36D-mc-S27">
-                                            <rect key="frame" x="0.0" y="20" width="70" height="70"/>
+                                            <rect key="frame" x="0.0" y="3" width="70" height="70"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" secondItem="36D-mc-S27" secondAttribute="height" multiplier="1:1" id="ZbD-L1-P16"/>
                                                 <constraint firstAttribute="height" constant="70" id="nJu-Zd-Mr8"/>
@@ -611,6 +611,7 @@
             <connections>
                 <outlet property="amountExchangeLabel" destination="2PH-Ch-c3M" id="OEd-UD-9Xl"/>
                 <outlet property="amountLabel" destination="z51-ol-7We" id="Org-mu-VkH"/>
+                <outlet property="amountLabelPlaceHeightConstraint" destination="1Cw-JE-RWK" id="RpS-Su-nv9"/>
                 <outlet property="assetIconView" destination="V2K-V8-QTR" id="o8x-82-O2i"/>
                 <outlet property="biometricButton" destination="9LC-YO-0cd" id="uj8-Ha-78l"/>
                 <outlet property="collectibleImageView" destination="36D-mc-S27" id="gfi-7C-LC9"/>
@@ -625,6 +626,7 @@
                 <outlet property="memoLabel" destination="3g0-U4-ZFa" id="iY1-5L-GFv"/>
                 <outlet property="memoPlaceView" destination="5f3-GA-Aig" id="wjZ-YA-vSJ"/>
                 <outlet property="mixinIDLabel" destination="Xua-9X-dAo" id="7MT-iH-wwO"/>
+                <outlet property="mixinIDPlaceView" destination="LwX-MD-Oov" id="CbU-KZ-j6x"/>
                 <outlet property="multisigActionView" destination="InA-gq-86H" id="sui-ED-mIX"/>
                 <outlet property="multisigStackView" destination="qGj-IP-qzY" id="6qZ-C5-mAX"/>
                 <outlet property="multisigView" destination="QTE-p7-9Tt" id="tJN-Bh-4bn"/>
@@ -639,6 +641,7 @@
                 <outlet property="receiverViewOne" destination="erW-Sg-vcU" id="Fka-Ec-Hrr"/>
                 <outlet property="receiverViewTwo" destination="fku-oZ-uir" id="fiD-B2-XrC"/>
                 <outlet property="receiversButtonWidthConstraint" destination="O0O-iw-P3C" id="iSO-SH-mYa"/>
+                <outlet property="resultViewPlaceHeightConstraint" destination="Blo-vS-RNo" id="ReE-mO-BNc"/>
                 <outlet property="senderMoreLabel" destination="xIJ-50-vjo" id="IiP-X3-WH3"/>
                 <outlet property="senderMoreView" destination="omW-3E-iZg" id="eJT-bP-QIU"/>
                 <outlet property="senderViewOne" destination="Edj-oR-Zbb" id="WGX-zb-XZ4"/>
@@ -664,10 +667,10 @@
             <color red="0.90980392156862744" green="0.41960784313725491" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="theme">
             <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

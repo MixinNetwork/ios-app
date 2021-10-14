@@ -23,6 +23,7 @@ class PayWindow: BottomSheetView {
     @IBOutlet weak var pinField: PinField!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var mixinIDLabel: UILabel!
+    @IBOutlet weak var mixinIDPlaceView: UIView!
     @IBOutlet weak var amountLabel: UILabel!
     @IBOutlet weak var amountExchangeLabel: UILabel!
     @IBOutlet weak var memoLabel: UILabel!
@@ -58,6 +59,8 @@ class PayWindow: BottomSheetView {
     @IBOutlet weak var sendersButtonWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var receiversButtonWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var successViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var amountLabelPlaceHeightConstraint: ScreenHeightCompatibleLayoutConstraint!
+    @IBOutlet weak var resultViewPlaceHeightConstraint: ScreenHeightCompatibleLayoutConstraint!
     
     private lazy var biometricAuthQueue = DispatchQueue(label: "one.mixin.messenger.PayWindow.BioAuth")
     private lazy var context = LAContext()
@@ -128,6 +131,9 @@ class PayWindow: BottomSheetView {
             assetIconView.isHidden = false
             collectibleView.isHidden = true
             tokenNameLabel.isHidden = true
+            mixinIDPlaceView.isHidden = false
+            amountLabelPlaceHeightConstraint.constant = 10
+            resultViewPlaceHeightConstraint.constant = 30
             let amountToken = CurrencyFormatter.localizedString(from: amount, locale: .current, format: .precision, sign: .whenNegative, symbol: .custom(asset.symbol)) ?? amount
             let amountExchange = CurrencyFormatter.localizedPrice(price: amount, priceUsd: asset.priceUsd)
             if let fiatMoneyAmount = fiatMoneyAmount {
@@ -213,7 +219,10 @@ class PayWindow: BottomSheetView {
             collectibleView.isHidden = false
             tokenNameLabel.isHidden = false
             memoLabel.isHidden = true
-            memoPlaceView.isHidden = true
+            memoPlaceView.isHidden = false
+            mixinIDPlaceView.isHidden = true
+            amountLabelPlaceHeightConstraint.constant = 6
+            resultViewPlaceHeightConstraint.constant = 10
             switch collectible.action {
             case CollectibleAction.sign.rawValue:
                 multisigActionView.image = R.image.multisig_sign()

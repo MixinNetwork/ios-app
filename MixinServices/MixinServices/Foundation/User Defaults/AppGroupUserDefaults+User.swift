@@ -24,6 +24,7 @@ extension AppGroupUserDefaults {
             
             case showMessagePreviewInNotification = "show_message_preview_in_notification"
             case duplicateTransferConfirmation = "duplicate_transfer_confirmation"
+            case strangerTransferConfirmation = "stranger_transfer_confirmation"
             case conversationDraft = "conversation_draft"
             case currentConversationId = "current_conversation_id"
             case reloadConversation = "reload_conversation"
@@ -124,6 +125,9 @@ extension AppGroupUserDefaults {
         
         @Default(namespace: .user, key: Key.duplicateTransferConfirmation, defaultValue: true)
         public static var duplicateTransferConfirmation: Bool
+        
+        @Default(namespace: .user, key: Key.strangerTransferConfirmation, defaultValue: true)
+        public static var strangerTransferConfirmation: Bool
         
         @Default(namespace: .user, key: Key.conversationDraft, defaultValue: [:])
         public static var conversationDraft: [String: String]

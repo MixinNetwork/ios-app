@@ -61,6 +61,7 @@ class KeyboardBasedLayoutViewController: UIViewController {
             layout(for: frame)
         } else {
             UIView.performWithoutAnimation {
+                view.layoutIfNeeded()
                 layout(for: frame)
             }
         }

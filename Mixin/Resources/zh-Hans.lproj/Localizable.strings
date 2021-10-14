@@ -588,6 +588,7 @@
 "wallet_store_encrypted_pin_tip" = "启用%@支付？";
 "wallet_touch_id" = "指纹";
 "wallet_face_id" = "面容";
+"wallet_transfer_stranger_hint" = "Mixin ID %@ 不是你的联系人，请确认收款人是否正确。如果您转错人，资产将无法追回!";
 
 // Transaction
 "transaction_title" = "交易详情";
@@ -841,6 +842,8 @@
 "setting_transfer_large_summary" = "当转账金额大于或等于 %@ 时显示确认弹窗";
 "setting_duplicate_transfer_title" = "重复转账确认";
 "setting_duplicate_transfer_summary" = "当你在 6 个小时内给相同的人转相同的金额时显示确认弹窗";
+"setting_stranger_transfer_title" = "陌生人转账确认";
+"setting_stranger_transfer_summary" = "当你给陌生人转账时显示确认弹窗";
 "setting_backup_title" = "聊天记录备份";
 "setting_backup_now" = "立即备份";
 "setting_backing" = "正在备份...";

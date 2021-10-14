@@ -7,6 +7,8 @@ class NotificationAndConfirmationSettingsViewController: SettingsTableViewContro
                                                      accessory: .switch(isOn: showsMessagePreview))
     private lazy var duplicateTransferRow = SettingsRow(title: R.string.localizable.setting_duplicate_transfer_title(),
                                                      accessory: .switch(isOn: duplicateTransferConfirmation))
+    private lazy var strangerTransferRow = SettingsRow(title: R.string.localizable.setting_stranger_transfer_title(),
+                                                       accessory: .switch(isOn: strangerTransferConfirmation))
     
     private lazy var dataSource = SettingsDataSource(sections: [
         SettingsSection(footer: R.string.localizable.setting_notification_message_preview_description(), rows: [
@@ -16,6 +18,9 @@ class NotificationAndConfirmationSettingsViewController: SettingsTableViewContro
         makeTransferConfirmationThresholdSection(),
         SettingsSection(footer: R.string.localizable.setting_duplicate_transfer_summary(), rows: [
             duplicateTransferRow
+        ]),
+        SettingsSection(footer: R.string.localizable.setting_stranger_transfer_summary(), rows: [
+            strangerTransferRow
         ])
     ])
     
@@ -31,6 +36,10 @@ class NotificationAndConfirmationSettingsViewController: SettingsTableViewContro
     
     private var duplicateTransferConfirmation: Bool {
         AppGroupUserDefaults.User.duplicateTransferConfirmation
+    }
+    
+    private var strangerTransferConfirmation: Bool {
+        AppGroupUserDefaults.User.strangerTransferConfirmation
     }
     
     private var transferNotificationThreshold: String {
@@ -69,6 +78,8 @@ class NotificationAndConfirmationSettingsViewController: SettingsTableViewContro
             AppGroupUserDefaults.User.showMessagePreviewInNotification = isOn
         } else if row == duplicateTransferRow {
             AppGroupUserDefaults.User.duplicateTransferConfirmation = isOn
+        } else if row == strangerTransferRow {
+            AppGroupUserDefaults.User.strangerTransferConfirmation = isOn
         }
     }
     

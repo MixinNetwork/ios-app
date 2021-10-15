@@ -30,7 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _ = CacheableAssetFileManager.shared
         UNUserNotificationCenter.current().setNotificationCategories([.message])
         UNUserNotificationCenter.current().delegate = NotificationManager.shared
-        // UIAppearance doesn't respond to selector setSectionHeaderTopPadding when iOS app running on Mac. 
+        // [_UIAppearance setSectionHeaderTopPadding:] not working on macOS 11.6 (disguised as iOS 14.7)
         if #available(iOS 15.0, *), !ProcessInfo.processInfo.isiOSAppOnMac {
             UITableView.appearance().sectionHeaderTopPadding = 0
         }

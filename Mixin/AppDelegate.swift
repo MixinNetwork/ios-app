@@ -30,7 +30,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _ = CacheableAssetFileManager.shared
         UNUserNotificationCenter.current().setNotificationCategories([.message])
         UNUserNotificationCenter.current().delegate = NotificationManager.shared
-        if #available(iOS 15.0, *) {
+        // UIAppearance doesn't respond to selector setSectionHeaderTopPadding when iOS app running on Mac. 
+        if #available(iOS 15.0, *), !ProcessInfo.processInfo.isiOSAppOnMac {
             UITableView.appearance().sectionHeaderTopPadding = 0
         }
         checkLogin()

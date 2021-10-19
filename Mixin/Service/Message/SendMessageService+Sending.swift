@@ -82,7 +82,6 @@ extension SendMessageService {
                 if !isPlainMessage, category.hasPrefix("PLAIN_") {
                     let range = category.startIndex...category.index(category.startIndex, offsetBy: 4)
                     child.category.replaceSubrange(range, with: categoryPrefix)
-                    print(child.category)
                     if MessageCategory.allMediaCategoriesString.contains(child.category) {
                         // Force the attachment to re-upload
                         child.mediaCreatedAt = nil
@@ -91,7 +90,6 @@ extension SendMessageService {
                 } else if isPlainMessage, category.hasPrefix("SIGNAL_") {
                     let range = category.startIndex...category.index(category.startIndex, offsetBy: 5)
                     child.category.replaceSubrange(range, with: categoryPrefix)
-                    print(child.category)
                     if MessageCategory.allMediaCategoriesString.contains(child.category) {
                         // Force the attachment to re-upload
                         child.mediaCreatedAt = nil
@@ -100,7 +98,6 @@ extension SendMessageService {
                 } else if isPlainMessage, category.hasPrefix("ENCRYPTED_") {
                     let range = category.startIndex...category.index(category.startIndex, offsetBy: 8)
                     child.category.replaceSubrange(range, with: categoryPrefix)
-                    print(child.category)
                     if MessageCategory.allMediaCategoriesString.contains(child.category) {
                         // Force the attachment to re-upload
                         child.mediaCreatedAt = nil

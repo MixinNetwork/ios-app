@@ -23,6 +23,7 @@ class LocationMessageViewModel: ImageMessageViewModel {
     var cachedSnapshot: [UserInterfaceStyle: Snapshot] = [:]
     var informationFrame: CGRect?
     var labelsLeadingConstant: CGFloat = 20
+    var maskViewFrame: CGRect = .zero
     
     override init(message: MessageItem) {
         hasAddress = message.location?.address != nil
@@ -39,16 +40,28 @@ class LocationMessageViewModel: ImageMessageViewModel {
         photoFrame.size = CGSize(width: photoWidth, height: 180)
         super.layout(width: width, style: style)
         if style.contains(.received) {
-            labelsLeadingConstant = 20
+            labelsLeadingConstant = 20 - (quotedMessageViewModel == nil ? 0 : Self.quotingMessageMargin.trailing)
         } else {
             labelsLeadingConstant = 14
         }
         if hasAddress {
             photoFrame.size.height = 120
-            informationFrame = CGRect(x: photoFrame.origin.x,
-                                      y: photoFrame.maxY,
-                                      width: photoFrame.width,
-                                      height: 60)
+            let informationHeight: CGFloat = 60
+            if quotedMessageViewModel == nil {
+                maskViewFrame = photoFrame
+                informationFrame = CGRect(x: photoFrame.origin.x,
+                                          y: photoFrame.maxY,
+                                          width: photoFrame.width,
+                                          height: informationHeight)
+            } else {
+                maskViewFrame = CGRect(origin: photoFrame.origin,
+                                       size: CGSize(width: photoFrame.width, height: photoFrame.height + informationHeight))
+                informationFrame = CGRect(x: 0,
+                                          y: photoFrame.height,
+                                          width: photoFrame.width,
+                                          height: informationHeight)
+                photoFrame.origin = .zero
+            }
         } else {
             photoFrame.size.height = 180
             informationFrame = nil

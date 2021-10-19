@@ -44,8 +44,8 @@ class LocationMessageCell: ImageMessageCell {
                     maskingView.layer.mask = backgroundImageView.layer
                 }
             } else {
-                maskingView.frame = viewModel.photoFrame
-                mapImageView.frame = maskingView.bounds
+                maskingView.frame = viewModel.maskViewFrame
+                mapImageView.frame = viewModel.photoFrame
                 if maskingView.layer.mask == backgroundImageView.layer {
                     maskingView.layer.mask = nil
                 }

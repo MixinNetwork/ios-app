@@ -23,7 +23,7 @@ class LocationMessageViewModel: ImageMessageViewModel {
     var cachedSnapshot: [UserInterfaceStyle: Snapshot] = [:]
     var informationFrame: CGRect?
     var labelsLeadingConstant: CGFloat = 20
-    var maskViewFrame: CGRect = .zero
+    var maskFrame: CGRect = .zero
     
     override init(message: MessageItem) {
         hasAddress = message.location?.address != nil
@@ -48,13 +48,13 @@ class LocationMessageViewModel: ImageMessageViewModel {
             photoFrame.size.height = 120
             let informationHeight: CGFloat = 60
             if quotedMessageViewModel == nil {
-                maskViewFrame = photoFrame
+                maskFrame = photoFrame
                 informationFrame = CGRect(x: photoFrame.origin.x,
                                           y: photoFrame.maxY,
                                           width: photoFrame.width,
                                           height: informationHeight)
             } else {
-                maskViewFrame = CGRect(origin: photoFrame.origin,
+                maskFrame = CGRect(origin: photoFrame.origin,
                                        size: CGSize(width: photoFrame.width, height: photoFrame.height + informationHeight))
                 informationFrame = CGRect(x: 0,
                                           y: photoFrame.height,
@@ -64,7 +64,11 @@ class LocationMessageViewModel: ImageMessageViewModel {
             }
         } else {
             photoFrame.size.height = 180
+            maskFrame = photoFrame
             informationFrame = nil
+            if quotedMessageViewModel != nil {
+                photoFrame.origin = .zero
+            }
         }
         layoutTrailingInfoBackgroundFrame()
     }

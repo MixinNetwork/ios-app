@@ -124,7 +124,7 @@ class StaticMessagesViewController: UIViewController {
     }
     
     func categorizedViewModels(with items: [MessageItem], fits layoutWidth: CGFloat) -> (dates: [String], viewModels: [String: [MessageViewModel]]) {
-        for item in items where item.category == MessageCategory.SIGNAL_STICKER.rawValue {
+        for item in items where item.category.hasSuffix("_STICKER") {
             if item.stickerId == nil {
                 item.category = MessageCategory.SIGNAL_TEXT.rawValue
                 item.content = R.string.localizable.notification_content_sticker()
@@ -605,7 +605,7 @@ extension StaticMessagesViewController: StaticAudioMessagePlayingManagerDelegate
             return nil
         }
         indexPath.row += 1
-        if let message = viewModel(at: indexPath)?.message, message.category == MessageCategory.SIGNAL_AUDIO.rawValue {
+        if let message = viewModel(at: indexPath)?.message, message.category.hasSuffix("_AUDIO") {
             return message
         } else {
             return nil

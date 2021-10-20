@@ -319,10 +319,10 @@ public enum MessageCategory: String, Decodable {
     }
     
     public static let allMediaCategories: [MessageCategory] = [
-        .SIGNAL_IMAGE, .PLAIN_IMAGE,
-        .SIGNAL_VIDEO, .PLAIN_VIDEO,
-        .SIGNAL_AUDIO, .PLAIN_AUDIO,
-        .SIGNAL_DATA, .PLAIN_DATA
+        .SIGNAL_IMAGE, .PLAIN_IMAGE, .ENCRYPTED_IMAGE,
+        .SIGNAL_VIDEO, .PLAIN_VIDEO, .ENCRYPTED_VIDEO,
+        .SIGNAL_AUDIO, .PLAIN_AUDIO, .ENCRYPTED_AUDIO,
+        .SIGNAL_DATA, .PLAIN_DATA, .ENCRYPTED_DATA
     ]
     
     public static let allMediaCategoriesString: Set<String> = Set(allMediaCategories.map(\.rawValue))

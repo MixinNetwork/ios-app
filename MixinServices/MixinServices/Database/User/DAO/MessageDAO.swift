@@ -106,8 +106,13 @@ public final class MessageDAO: UserDatabaseDAO {
     }
     
     public func getTranscriptMessageIds(conversationId: String, database: GRDB.Database) throws -> [String] {
+        let categories = [
+            MessageCategory.SIGNAL_TRANSCRIPT.rawValue,
+            MessageCategory.PLAIN_TRANSCRIPT.rawValue,
+            MessageCategory.ENCRYPTED_TRANSCRIPT.rawValue
+        ]
         let condition: SQLSpecificExpressible = Message.column(of: .conversationId) == conversationId
-            && [MessageCategory.SIGNAL_TRANSCRIPT.rawValue, MessageCategory.PLAIN_TRANSCRIPT.rawValue].contains(Message.column(of: .category))
+            && categories.contains(Message.column(of: .category))
         return try Message
             .select(Message.column(of: .messageId))
             .filter(condition)

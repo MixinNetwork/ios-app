@@ -45,7 +45,7 @@ class PhotoRepresentableMessageCell: ImageMessageCell {
             }
             selectedOverlapView.frame = contentImageWrapperView.bounds
             contentImageWrapperView.position = viewModel.layoutPosition
-            contentImageWrapperView.aspectRatio = viewModel.contentRatio
+            contentImageWrapperView.aspectRatio = viewModel.contentSize
             trailingInfoBackgroundView.frame = viewModel.trailingInfoBackgroundFrame
             if let origin = viewModel.expandIconOrigin {
                 expandImageView.isHidden = false

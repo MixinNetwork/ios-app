@@ -36,20 +36,20 @@ class PhotoDisplayTests: XCTestCase {
         let expected = [
             // Bad input
             CGSize(width: 120, height: 120),
-            
+
             // General photos
             CGSize(width: 210, height: 280),
             CGSize(width: 210, height: 158),
             
             // Panoramas
             CGSize(width: 210, height: 120),
-            CGSize(width: 97, height: 280),
+            CGSize(width: 120, height: 280),
             
             // Article
-            CGSize(width: 8, height: 280),
+            CGSize(width: 120, height: 280),
             
             // Irregular shapes
-            CGSize(width: 112, height: 280),
+            CGSize(width: 120, height: 280),
             CGSize(width: 120, height: 280),
             CGSize(width: 120, height: 280),
             

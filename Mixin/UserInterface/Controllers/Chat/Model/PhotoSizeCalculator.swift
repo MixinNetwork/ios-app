@@ -20,10 +20,10 @@ enum PhotoSizeCalculator {
             if contentRatio > 1 {
                 if contentRatio > Height.max / Width.max {
                     height = Height.max
-                    width = round(height / contentRatio)
+                    width = max(Width.min, round(height / contentRatio))
                 } else {
                     width = Width.max
-                    height = round(width * contentRatio)
+                    height = min(Height.max, round(width * contentRatio))
                 }
             } else {
                 width = Width.max

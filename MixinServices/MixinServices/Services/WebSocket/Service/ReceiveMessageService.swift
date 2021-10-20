@@ -540,10 +540,11 @@ public class ReceiveMessageService: MixinService {
             let decryptedData = try EncryptedProtocol.decrypt(cipher: cipher, with: pk, sessionId: mySessionId)
             _ = syncUser(userId: data.getSenderId())
             processDecryptSuccess(data: data, decryptedData: decryptedData)
-            updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
         } catch {
             reporter.report(error: error)
+            ReceiveMessageService.shared.processUnknownMessage(data: data)
         }
+        updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
     }
     
     private func refreshKeys(conversationId: String) {

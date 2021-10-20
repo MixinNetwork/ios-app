@@ -9,6 +9,7 @@ class StickerAddViewController: UIViewController {
     enum Source {
         case message(MessageItem)
         case asset(PHAsset)
+        case image(UIImage)
     }
     
     @IBOutlet weak var previewImageView: YYAnimatedImageView!
@@ -67,6 +68,9 @@ class StickerAddViewController: UIViewController {
                     self.container?.rightButton.isEnabled = true
                 })
             }
+        case .image(let image):
+            previewImageView.image = image
+            container?.rightButton.isEnabled = true
         }
     }
     

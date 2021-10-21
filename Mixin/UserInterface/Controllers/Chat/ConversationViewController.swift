@@ -1898,9 +1898,19 @@ extension ConversationViewController {
         if ConversationViewController.allowReportSingleMessage {
             actions.append(.report)
         }
-        if canPinMessages, status != MessageStatus.SENDING.rawValue, let replyIndex = actions.firstIndex(where: { $0 == .reply }) {
-            let action: MessageAction = pinnedMessageIds.contains(message.messageId) ? .unpin : .pin
-            actions.insert(action, at: replyIndex + 1)
+        if canPinMessages, status != MessageStatus.SENDING.rawValue {
+            let index: Int?
+            if let replyIndex = actions.firstIndex(where: { $0 == .reply }) {
+                index = replyIndex + 1
+            } else if category == MessageCategory.APP_BUTTON_GROUP.rawValue {
+                index = 0
+            } else {
+                index = nil
+            }
+            if let index = index {
+                let action: MessageAction = pinnedMessageIds.contains(message.messageId) ? .unpin : .pin
+                actions.insert(action, at: index)
+            }
         }
         return actions
     }

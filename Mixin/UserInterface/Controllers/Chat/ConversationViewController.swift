@@ -1900,7 +1900,7 @@ extension ConversationViewController {
         }
         if canPinMessages, status != MessageStatus.SENDING.rawValue {
             let index: Int?
-            if let replyIndex = actions.firstIndex(where: { $0 == .reply }) {
+            if let replyIndex = actions.firstIndex(of: .reply) {
                 index = replyIndex + 1
             } else if category == MessageCategory.APP_BUTTON_GROUP.rawValue {
                 index = 0

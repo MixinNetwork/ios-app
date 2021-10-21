@@ -187,9 +187,7 @@ extension StickerManagerViewController {
     private func handlePhotoAuthorizationStatus(_ status: PHAuthorizationStatus) {
         switch status {
         case .limited:
-            DispatchQueue.main.async {
-                self.showAlert()
-            }
+            DispatchQueue.main.async(execute: showAuthorizationLimitedAlert)
         case .authorized:
             DispatchQueue.main.async {
                 let picker = PhotoAssetPickerNavigationController.instance(pickerDelegate: self, showImageOnly: true, scrollToOffset: self.pickerContentOffset)
@@ -208,7 +206,7 @@ extension StickerManagerViewController {
         }
     }
     
-    private func showAlert() {
+    private func showAuthorizationLimitedAlert() {
         let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         if #available(iOS 14, *) {
             sheet.addAction(UIAlertAction(title: R.string.localizable.chat_pick_from_library(), style: .default, handler: { _ in
@@ -229,7 +227,12 @@ extension StickerManagerViewController {
     }
     
     private func load(itemProvider: NSItemProvider) {
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         itemProvider.loadObject(ofClass: UIImage.self) { [weak self] (rawImage, error) in
+            DispatchQueue.main.async {
+                hud.hide()
+            }
             guard
                 let rawImage = rawImage as? UIImage,
                 let image = ImageUploadSanitizer.sanitizedImage(from: rawImage).image

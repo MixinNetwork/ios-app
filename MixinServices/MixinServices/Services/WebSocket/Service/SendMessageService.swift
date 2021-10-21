@@ -663,6 +663,19 @@ extension SendMessageService {
                 let sessionId = UUID(uuidString: sid)
             else {
                 try sendPlainMessage()
+                let hasPublicKey = participantSessionKey?.publicKey != nil
+                let hasSessionId = participantSessionKey?.sessionId != nil
+                let info = [
+                    "has_content": contentData != nil,
+                    "has_pk": RequestSigning.edDSAPrivateKey != nil,
+                    "has_psk": participantSessionKey != nil,
+                    "has_pub": hasPublicKey,
+                    "is_pub_valid": hasPublicKey && Data(base64URLEncoded: participantSessionKey!.publicKey!) != nil,
+                    "has_sid": hasSessionId,
+                    "is_sid_valid": hasSessionId && UUID(uuidString: participantSessionKey!.sessionId) != nil
+                ]
+                Logger.conversation(id: message.conversationId).error(category: "EncryptedBotMessage", message: "Failed to encrypt", userInfo: info)
+                reporter.report(error: MixinServicesError.encryptBotMessage(info))
                 return
             }
             let extensionSession: (id: UUID, key: Data)?
@@ -673,6 +686,14 @@ extension SendMessageService {
                     let publicKey = Data(base64URLEncoded: publicKeyBase64)
                 else {
                     try sendPlainMessage()
+                    let publicKeyBase64 = ParticipantSessionDAO.shared.getParticipantSession(conversationId: message.conversationId, userId: myUserId, sessionId: id)?.publicKey
+                    let info = [
+                        "is_sid_valid": UUID(uuidString: id) != nil,
+                        "has_pub": publicKeyBase64 != nil,
+                        "is_pub_valid": publicKeyBase64 != nil && Data(base64URLEncoded: publicKeyBase64!) != nil
+                    ]
+                    Logger.conversation(id: message.conversationId).error(category: "EncryptedBotMessage", message: "Failed to encrypt for extension session", userInfo: info)
+                    reporter.report(error: MixinServicesError.encryptBotMessage(info))
                     return
                 }
                 extensionSession = (id: sessionId, key: publicKey)

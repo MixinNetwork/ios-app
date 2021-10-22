@@ -431,14 +431,8 @@ public class ReceiveMessageService: MixinService {
                         self.updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
                         MessageHistoryDAO.shared.replaceMessageHistory(messageId: data.messageId)
                     } else {
-                        if data.category.hasSuffix("_TEXT") || data.category.hasSuffix("_POST") {
+                        if ["_TEXT", "_POST", "_LOCATION", "_TRANSCRIPT"].contains(where: data.category.hasSuffix(_:)) {
                             self.processDecryptSuccess(data: data, decryptedData: plain)
-                        } else if data.category.hasSuffix("_LOCATION") || data.category.hasSuffix("_TRANSCRIPT") {
-                            if let decryptedData = plainText.data(using: .utf8) {
-                                self.processDecryptSuccess(data: data, decryptedData: decryptedData)
-                            } else {
-                                self.processUnknownMessage(data: data)
-                            }
                         } else if let decryptedData = Data(base64Encoded: plainText) {
                             self.processDecryptSuccess(data: data, decryptedData: decryptedData)
                         } else {

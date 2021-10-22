@@ -24,6 +24,11 @@ public final class ParticipantSessionDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [conversationId, sessionId])
     }
     
+    public func getParticipantSessionKey(conversationId: String, userId: String) -> ParticipantSession.Key? {
+        let sql = "SELECT * FROM participant_session WHERE conversation_id = ? AND user_id = ? LIMIT 1"
+        return db.select(with: sql, arguments: [conversationId, userId])
+    }
+    
     public func getParticipantSessionKeyWithoutSelf(conversationId: String, userId: String) -> ParticipantSession.Key? {
         let sql = "SELECT * FROM participant_session WHERE conversation_id = ? AND user_id != ?"
         return db.select(with: sql, arguments: [conversationId, userId])

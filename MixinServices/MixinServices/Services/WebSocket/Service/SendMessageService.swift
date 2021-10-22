@@ -631,10 +631,18 @@ extension SendMessageService {
             // This may cause a few PLAIN messages sent out instead of ENCRYPTED ones
             try checkConversationExist(conversation: conversation)
             
-            var participantSessionKey = ParticipantSessionDAO.shared.getParticipantSessionKeyWithoutSelf(conversationId: message.conversationId, userId: myUserId)
+            func getBotSessionKey() -> ParticipantSession.Key? {
+                if let id = blazeMessage.params?.recipientId {
+                    return ParticipantSessionDAO.shared.getParticipantSessionKey(conversationId: message.conversationId, userId: id)
+                } else {
+                    return ParticipantSessionDAO.shared.getParticipantSessionKeyWithoutSelf(conversationId: message.conversationId, userId: myUserId)
+                }
+            }
+            
+            var participantSessionKey = getBotSessionKey()
             if participantSessionKey == nil || participantSessionKey?.publicKey == nil {
                 syncConversation(conversationId: message.conversationId)
-                participantSessionKey = ParticipantSessionDAO.shared.getParticipantSessionKeyWithoutSelf(conversationId: message.conversationId, userId: myUserId)
+                participantSessionKey = getBotSessionKey()
             }
             
             func sendPlainMessage() throws {

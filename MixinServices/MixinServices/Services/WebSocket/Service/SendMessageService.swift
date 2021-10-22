@@ -663,16 +663,17 @@ extension SendMessageService {
                 let sessionId = UUID(uuidString: sid)
             else {
                 try sendPlainMessage()
-                let hasPublicKey = participantSessionKey?.publicKey != nil
-                let hasSessionId = participantSessionKey?.sessionId != nil
+                let maybePublicKey = participantSessionKey?.publicKey ?? ""
+                let maybePublicKeyData = Data(base64URLEncoded: maybePublicKey) ?? Data()
+                let maybeSessionId = participantSessionKey?.sessionId ?? ""
                 let info = [
                     "has_content": contentData != nil,
                     "has_pk": RequestSigning.edDSAPrivateKey != nil,
                     "has_psk": participantSessionKey != nil,
-                    "has_pub": hasPublicKey,
-                    "is_pub_valid": hasPublicKey && Data(base64URLEncoded: participantSessionKey!.publicKey!) != nil,
-                    "has_sid": hasSessionId,
-                    "is_sid_valid": hasSessionId && UUID(uuidString: participantSessionKey!.sessionId) != nil
+                    "has_pub": !maybePublicKey.isEmpty,
+                    "is_pub_valid": !maybePublicKeyData.isEmpty,
+                    "has_sid": !maybeSessionId.isEmpty,
+                    "is_sid_valid": UUID(uuidString: maybeSessionId) != nil
                 ]
                 Logger.conversation(id: message.conversationId).error(category: "EncryptedBotMessage", message: "Failed to encrypt", userInfo: info)
                 reporter.report(error: MixinServicesError.encryptBotMessage(info))
@@ -686,11 +687,12 @@ extension SendMessageService {
                     let publicKey = Data(base64URLEncoded: publicKeyBase64)
                 else {
                     try sendPlainMessage()
-                    let publicKeyBase64 = ParticipantSessionDAO.shared.getParticipantSession(conversationId: message.conversationId, userId: myUserId, sessionId: id)?.publicKey
+                    let publicKeyBase64 = ParticipantSessionDAO.shared.getParticipantSession(conversationId: message.conversationId, userId: myUserId, sessionId: id)?.publicKey ?? ""
+                    let publicKeyData = Data(base64URLEncoded: publicKeyBase64) ?? Data()
                     let info = [
                         "is_sid_valid": UUID(uuidString: id) != nil,
-                        "has_pub": publicKeyBase64 != nil,
-                        "is_pub_valid": publicKeyBase64 != nil && Data(base64URLEncoded: publicKeyBase64!) != nil
+                        "has_pub": !publicKeyBase64.isEmpty,
+                        "is_pub_valid": !publicKeyData.isEmpty
                     ]
                     Logger.conversation(id: message.conversationId).error(category: "EncryptedBotMessage", message: "Failed to encrypt for extension session", userInfo: info)
                     reporter.report(error: MixinServicesError.encryptBotMessage(info))

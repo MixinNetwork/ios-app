@@ -32,6 +32,7 @@ public enum MixinServicesError: Error {
     case missingConversationId
     case invalidScalingContextParameter([String: Any])
     case encryptBotMessage([String: Any])
+    case decryptBotMessage([String: Any])
     
 }
 
@@ -89,6 +90,8 @@ extension MixinServicesError: CustomNSError {
             return 24
         case .encryptBotMessage:
             return 25
+        case .decryptBotMessage:
+            return 26
         }
     }
     
@@ -142,7 +145,7 @@ extension MixinServicesError: CustomNSError {
             userInfo["size"] = "\(gzipSize / 1024)kb"
         case let .invalidScalingContextParameter(info):
             userInfo = info
-        case .encryptBotMessage(let info):
+        case .encryptBotMessage(let info), .decryptBotMessage(let info):
             userInfo = info
         default:
             userInfo = [:]

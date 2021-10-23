@@ -244,7 +244,11 @@ public class ReceiveMessageService: MixinService {
     }
 
     private func processUnknownMessage(data: BlazeMessageData) {
-        var unknownMessage = Message.createMessage(messageId: data.messageId, category: data.category, conversationId: data.conversationId, createdAt: data.createdAt, userId: data.userId)
+        var unknownMessage = Message.createMessage(messageId: data.messageId,
+                                                   category: data.category,
+                                                   conversationId: data.conversationId,
+                                                   createdAt: data.createdAt,
+                                                   userId: data.getSenderId())
         unknownMessage.status = MessageStatus.UNKNOWN.rawValue
         unknownMessage.content = data.data
         MessageDAO.shared.insertMessage(message: unknownMessage, messageSource: data.source, silentNotification: data.silentNotification)

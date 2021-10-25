@@ -10,19 +10,19 @@ class StickerManagerViewController: UICollectionViewController {
     private var stickers = [StickerItem]()
     private var isDeleteStickers = false
     private var pickerContentOffset = CGPoint.zero
+    private var gifTypeIdentifier: String {
+        if #available(iOS 14.0, *) {
+            return UTType.gif.identifier
+        } else {
+            return kUTTypeGIF as String
+        }
+    }
     
     private lazy var itemSize: CGSize = {
         let minWidth: CGFloat = UIScreen.main.bounds.width > 400 ? 120 : 100
         let rowCount = floor(UIScreen.main.bounds.size.width / minWidth)
         let itemWidth = (UIScreen.main.bounds.size.width - (rowCount + 1) * 8) / rowCount
         return CGSize(width: itemWidth, height: itemWidth)
-    }()
-    private lazy var gifTypeIdentifier: String = {
-        if #available(iOS 14.0, *) {
-            return UTType.gif.identifier
-        } else {
-            return kUTTypeGIF as String
-        }
     }()
     
     class func instance() -> UIViewController {
@@ -238,14 +238,27 @@ extension StickerManagerViewController {
     private func load(itemProvider: NSItemProvider) {
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        let hideHud = {
+            DispatchQueue.main.async {
+                hud.hide()
+            }
+        }
+        let handleError = { (error: Error?) in
+            if let error = error {
+                reporter.report(error: error)
+            }
+            DispatchQueue.main.async {
+                showAutoHiddenHud(style: .error, text: R.string.localizable.error_operation_failed())
+            }
+        }
         if itemProvider.hasItemConformingToTypeIdentifier(gifTypeIdentifier) {
-            copyFile(from: itemProvider, identifier: gifTypeIdentifier) { _ in
-                FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ExtensionName.gif.withDot)
-            } completion: { [weak self] url in
-                DispatchQueue.main.async {
-                    hud.hide()
-                }
-                guard let image = YYImage(contentsOfFile: url.path) else {
+            itemProvider.loadFileRepresentation(forTypeIdentifier: gifTypeIdentifier) { [weak self] (source, error) in
+                hideHud()
+                guard
+                    let source = source,
+                    let image = YYImage(contentsOfFile: source.path)
+                else {
+                    handleError(error)
                     return
                 }
                 DispatchQueue.main.async {
@@ -258,19 +271,12 @@ extension StickerManagerViewController {
             }
         } else if itemProvider.canLoadObject(ofClass: UIImage.self) {
             itemProvider.loadObject(ofClass: UIImage.self) { [weak self] (rawImage, error) in
-                DispatchQueue.main.async {
-                    hud.hide()
-                }
+                hideHud()
                 guard
                     let rawImage = rawImage as? UIImage,
                     let image = ImageUploadSanitizer.sanitizedImage(from: rawImage).image
                 else {
-                    if let error = error {
-                        reporter.report(error: error)
-                    }
-                    DispatchQueue.main.async {
-                        showAutoHiddenHud(style: .error, text: R.string.localizable.error_operation_failed())
-                    }
+                    handleError(error)
                     return
                 }
                 DispatchQueue.main.async {
@@ -280,28 +286,6 @@ extension StickerManagerViewController {
                     let vc = StickerAddViewController.instance(source: .image(image))
                     self.navigationController?.pushViewController(vc, animated: true)
                 }
-            }
-        }
-        
-    }
-    
-    private func copyFile(
-        from provider: NSItemProvider,
-        identifier: String,
-        to makeDestinationURL: @escaping (URL) -> URL,
-        completion: @escaping (URL) -> Void
-    ) {
-        provider.loadFileRepresentation(forTypeIdentifier: identifier) { (source, error) in
-            if let source = source {
-                do {
-                    let destination = makeDestinationURL(source)
-                    try FileManager.default.copyItem(at: source, to: destination)
-                    completion(destination)
-                } catch {
-                    reporter.report(error: error)
-                }
-            } else if let error = error {
-                reporter.report(error: error)
             }
         }
     }

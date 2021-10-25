@@ -10,19 +10,19 @@ class StickerManagerViewController: UICollectionViewController {
     private var stickers = [StickerItem]()
     private var isDeleteStickers = false
     private var pickerContentOffset = CGPoint.zero
-    private var gifTypeIdentifier: String {
-        if #available(iOS 14.0, *) {
-            return UTType.gif.identifier
-        } else {
-            return kUTTypeGIF as String
-        }
-    }
     
     private lazy var itemSize: CGSize = {
         let minWidth: CGFloat = UIScreen.main.bounds.width > 400 ? 120 : 100
         let rowCount = floor(UIScreen.main.bounds.size.width / minWidth)
         let itemWidth = (UIScreen.main.bounds.size.width - (rowCount + 1) * 8) / rowCount
         return CGSize(width: itemWidth, height: itemWidth)
+    }()
+    private lazy var gifTypeIdentifier: String = {
+        if #available(iOS 14.0, *) {
+            return UTType.gif.identifier
+        } else {
+            return kUTTypeGIF as String
+        }
     }()
     
     class func instance() -> UIViewController {

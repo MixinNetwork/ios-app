@@ -1,6 +1,8 @@
 import UIKit
 import Photos
 import PhotosUI
+import YYImage
+import CoreServices
 import MixinServices
 
 class StickerManagerViewController: UICollectionViewController {
@@ -8,6 +10,13 @@ class StickerManagerViewController: UICollectionViewController {
     private var stickers = [StickerItem]()
     private var isDeleteStickers = false
     private var pickerContentOffset = CGPoint.zero
+    private var gifTypeIdentifier: String {
+        if #available(iOS 14.0, *) {
+            return UTType.gif.identifier
+        } else {
+            return kUTTypeGIF as String
+        }
+    }
     
     private lazy var itemSize: CGSize = {
         let minWidth: CGFloat = UIScreen.main.bounds.width > 400 ? 120 : 100
@@ -161,8 +170,8 @@ extension StickerManagerViewController: PhotoAssetPickerDelegate {
 extension StickerManagerViewController: PHPickerViewControllerDelegate {
     
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
-        dismiss(animated: true) {
-            guard let provider = results.first?.itemProvider, provider.canLoadObject(ofClass: UIImage.self) else {
+        picker.dismiss(animated: true) {
+            guard let provider = results.first?.itemProvider else {
                 return
             }
             self.load(itemProvider: provider)
@@ -173,7 +182,7 @@ extension StickerManagerViewController: PHPickerViewControllerDelegate {
 
 // MARK: - Private works
 extension StickerManagerViewController {
-        
+    
     private func handleAddStickerAction() {
         let status: PHAuthorizationStatus
         if #available(iOS 14.0, *) {
@@ -229,28 +238,70 @@ extension StickerManagerViewController {
     private func load(itemProvider: NSItemProvider) {
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-        itemProvider.loadObject(ofClass: UIImage.self) { [weak self] (rawImage, error) in
-            DispatchQueue.main.async {
-                hud.hide()
-            }
-            guard
-                let rawImage = rawImage as? UIImage,
-                let image = ImageUploadSanitizer.sanitizedImage(from: rawImage).image
-            else {
-                if let error = error {
-                    reporter.report(error: error)
-                }
+        if itemProvider.hasItemConformingToTypeIdentifier(gifTypeIdentifier) {
+            copyFile(from: itemProvider, identifier: gifTypeIdentifier) { _ in
+                FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ExtensionName.gif.withDot)
+            } completion: { [weak self] url in
                 DispatchQueue.main.async {
-                    showAutoHiddenHud(style: .error, text: R.string.localizable.error_operation_failed())
+                    hud.hide()
                 }
-                return
-            }
-            DispatchQueue.main.async {
-                guard let self = self else {
+                guard let image = YYImage(contentsOfFile: url.path) else {
                     return
                 }
-                let vc = StickerAddViewController.instance(source: .image(image))
-                self.navigationController?.pushViewController(vc, animated: true)
+                DispatchQueue.main.async {
+                    guard let self = self else {
+                        return
+                    }
+                    let vc = StickerAddViewController.instance(source: .image(image))
+                    self.navigationController?.pushViewController(vc, animated: true)
+                }
+            }
+        } else if itemProvider.canLoadObject(ofClass: UIImage.self) {
+            itemProvider.loadObject(ofClass: UIImage.self) { [weak self] (rawImage, error) in
+                DispatchQueue.main.async {
+                    hud.hide()
+                }
+                guard
+                    let rawImage = rawImage as? UIImage,
+                    let image = ImageUploadSanitizer.sanitizedImage(from: rawImage).image
+                else {
+                    if let error = error {
+                        reporter.report(error: error)
+                    }
+                    DispatchQueue.main.async {
+                        showAutoHiddenHud(style: .error, text: R.string.localizable.error_operation_failed())
+                    }
+                    return
+                }
+                DispatchQueue.main.async {
+                    guard let self = self else {
+                        return
+                    }
+                    let vc = StickerAddViewController.instance(source: .image(image))
+                    self.navigationController?.pushViewController(vc, animated: true)
+                }
+            }
+        }
+        
+    }
+    
+    private func copyFile(
+        from provider: NSItemProvider,
+        identifier: String,
+        to makeDestinationURL: @escaping (URL) -> URL,
+        completion: @escaping (URL) -> Void
+    ) {
+        provider.loadFileRepresentation(forTypeIdentifier: identifier) { (source, error) in
+            if let source = source {
+                do {
+                    let destination = makeDestinationURL(source)
+                    try FileManager.default.copyItem(at: source, to: destination)
+                    completion(destination)
+                } catch {
+                    reporter.report(error: error)
+                }
+            } else if let error = error {
+                reporter.report(error: error)
             }
         }
     }

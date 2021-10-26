@@ -1435,7 +1435,10 @@ extension ConversationViewController: UITableViewDataSource {
             cell.audioMessagePlayingManager = AudioMessagePlayingManager.shared
         }
         if let cell = cell as? MessageCell {
-            cell.render(viewModel: viewModel)
+            CATransaction.performWithoutAnimation {
+                cell.render(viewModel: viewModel)
+                cell.layoutIfNeeded()
+            }
         }
         return cell
     }
@@ -1497,20 +1500,23 @@ extension ConversationViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if let cell = cell as? MessageCell, let viewModel = cell.viewModel {
-            if tableView.allowsMultipleSelection {
-                let intent = multipleSelectionActionView.intent
-                let availability = self.viewModel(viewModel, availabilityForMultipleSelectionWith: intent)
-                switch availability {
-                case .available:
-                    cell.setMultipleSelecting(true, animated: false)
-                case .visibleButUnavailable:
-                    cell.setMultipleSelecting(true, animated: false)
-                    cell.checkmarkView.status = .nonSelectable
-                case .invisible:
+            CATransaction.performWithoutAnimation {
+                if tableView.allowsMultipleSelection {
+                    let intent = multipleSelectionActionView.intent
+                    let availability = self.viewModel(viewModel, availabilityForMultipleSelectionWith: intent)
+                    switch availability {
+                    case .available:
+                        cell.setMultipleSelecting(true, animated: false)
+                    case .visibleButUnavailable:
+                        cell.setMultipleSelecting(true, animated: false)
+                        cell.checkmarkView.status = .nonSelectable
+                    case .invisible:
+                        cell.setMultipleSelecting(false, animated: false)
+                    }
+                } else {
                     cell.setMultipleSelecting(false, animated: false)
                 }
-            } else {
-                cell.setMultipleSelecting(false, animated: false)
+                cell.layoutIfNeeded()
             }
         }
         guard let dataSource = dataSource else {

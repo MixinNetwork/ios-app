@@ -42,7 +42,7 @@ class VerticalPositioningImageView: UIView {
         }
         switch position {
         case .center:
-            imageView.frame.size = CGSize(width: bounds.width, height: bounds.width / aspectRatio.width * aspectRatio.height)
+            imageView.frame.size = CGSize(width: bounds.width, height: max(bounds.height, bounds.width / aspectRatio.width * aspectRatio.height))
             imageView.center = CGPoint(x: bounds.width / 2, y: bounds.height / 2)
         case .relativeOffset(let offset):
             imageView.frame.size = CGSize(width: bounds.width, height: bounds.width * aspectRatio.height / aspectRatio.width)

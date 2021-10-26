@@ -14,7 +14,7 @@ class GalleryTransitionFromMessageCellView: GalleryTransitionView {
         guard let viewModel = cell.viewModel as? PhotoRepresentableMessageViewModel else {
             return
         }
-        contentRatio = viewModel.contentRatio
+        contentRatio = viewModel.contentSize
         frame = cell.contentImageWrapperView.convert(cell.contentImageWrapperView.bounds, to: superview)
         imageView.image = cell.contentImageView.image
         imageWrapperView.imageView.contentMode = cell.contentImageView.contentMode

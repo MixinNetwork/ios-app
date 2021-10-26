@@ -3,42 +3,28 @@ import MixinServices
 
 class PhotoRepresentableMessageViewModel: ImageMessageViewModel {
     
-    let contentRatio: CGSize
+    let contentSize: CGSize
     
     var operationButtonStyle = NetworkOperationButton.Style.finished(showPlayIcon: false)
     var layoutPosition = VerticalPositioningImageView.Position.center
     var expandIconOrigin: CGPoint?
     
-    private var maxPresentationHeight: CGFloat {
-        return Queue.main.autoSync {
-            AppDelegate.current.mainWindow.bounds.height / 2
-        }
-    }
-    
     override init(message: MessageItem) {
         let mediaWidth = abs(CGFloat(message.mediaWidth ?? 0))
         let mediaHeight = abs(CGFloat(message.mediaHeight ?? 0))
         if mediaWidth < 1 || mediaHeight < 1 {
-            contentRatio = CGSize(width: 1, height: 1)
+            contentSize = CGSize(width: 1, height: 1)
         } else {
-            contentRatio = CGSize(width: mediaWidth, height: mediaHeight)
+            contentSize = CGSize(width: mediaWidth, height: mediaHeight)
         }
         super.init(message: message)
     }
     
     override func layout(width: CGFloat, style: MessageViewModel.Style) {
-        let ratio = contentRatio.width / contentRatio.height
-        if quotedMessageViewModel == nil {
-            let photoHeight = min(maxPresentationHeight, round(Self.bubbleWidth / ratio))
-            photoFrame.size = CGSize(width: Self.bubbleWidth, height: photoHeight)
-        } else {
-            let photoWidth = Self.bubbleWidth - Self.quotingMessageMargin.horizontal
-            let photoHeight = min(maxPresentationHeight, round(photoWidth / ratio))
-            photoFrame.size = CGSize(width: photoWidth, height: photoHeight)
-        }
+        photoFrame.size = PhotoSizeCalculator.displaySize(for: contentSize)
         super.layout(width: width, style: style)
         layoutTrailingInfoBackgroundFrame()
-        if imageWithRatioMaybeAnArticle(contentRatio) {
+        if imageWithRatioMaybeAnArticle(contentSize) {
             let margin: CGFloat
             if style.contains(.received) {
                 margin = 9

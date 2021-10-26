@@ -10,7 +10,7 @@ extension UIViewController {
         let alc = UIAlertController(title: message, message: nil, preferredStyle: .alert)
         alc.addAction(UIAlertAction(title: actionTitle, style: .default, handler: cancelHandler))
 
-        if let window = UIApplication.shared.windows.last, window.windowLevel.rawValue == 10000001.0, window.isOpaque {
+        if let window = UIApplication.shared.windows.last, window.windowLevel.rawValue == 10000001.0 {
             window.rootViewController?.present(alc, animated: true, completion: nil)
         } else {
             present(alc, animated: true, completion: nil)

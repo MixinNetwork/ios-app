@@ -112,7 +112,9 @@ extension StickerAddViewController {
     
     private func showMalformedAlert() {
         container?.rightButton.isBusy = false
-        alert(Localized.STICKER_ADD_REQUIRED)
+        let alert = UIAlertController(title: Localized.STICKER_ADD_REQUIRED, message: nil, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_OK, style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
     
     private func showFailureAlert() {

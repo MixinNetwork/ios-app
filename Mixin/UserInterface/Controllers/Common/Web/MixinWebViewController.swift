@@ -12,6 +12,7 @@ class MixinWebViewController: WebViewController {
         static let mixinContext = "MixinContext"
         static let reloadTheme = "reloadTheme"
         static let playlist = "playlist"
+        static let close = "close"
     }
     
     weak var associatedClip: Clip?
@@ -29,6 +30,7 @@ class MixinWebViewController: WebViewController {
         config.userContentController.add(scriptMessageProxy, name: HandlerName.mixinContext)
         config.userContentController.add(scriptMessageProxy, name: HandlerName.reloadTheme)
         config.userContentController.add(scriptMessageProxy, name: HandlerName.playlist)
+        config.userContentController.add(scriptMessageProxy, name: HandlerName.close)
         config.applicationNameForUserAgent = "Mixin/\(Bundle.main.shortVersion)"
         return config
     }
@@ -87,6 +89,7 @@ class MixinWebViewController: WebViewController {
             controller.add(scriptMessageProxy, name: HandlerName.mixinContext)
             controller.add(scriptMessageProxy, name: HandlerName.reloadTheme)
             controller.add(scriptMessageProxy, name: HandlerName.playlist)
+            controller.add(scriptMessageProxy, name: HandlerName.close)
             isMessageHandlerAdded = true
         }
     }
@@ -181,6 +184,7 @@ class MixinWebViewController: WebViewController {
         controller.removeScriptMessageHandler(forName: HandlerName.mixinContext)
         controller.removeScriptMessageHandler(forName: HandlerName.reloadTheme)
         controller.removeScriptMessageHandler(forName: HandlerName.playlist)
+        controller.removeScriptMessageHandler(forName: HandlerName.close)
         isMessageHandlerAdded = false
     }
     
@@ -295,6 +299,8 @@ extension MixinWebViewController: WKScriptMessageHandler {
                     PlaylistManager.shared.play(index: 0, in: playlist, source: .remote)
                 }
             }
+        case HandlerName.close:
+            dismissAsChild(animated: true, completion: nil)
         default:
             break
         }

@@ -21,13 +21,23 @@ class LocationMessageViewModel: ImageMessageViewModel {
     var labelsLeadingConstant: CGFloat = 20
     var maskFrame: CGRect = .zero
     
+    private var bubbleWidth: CGFloat {
+        ScreenWidth.current <= .short ? 260 : 296
+    }
+    
     override init(message: MessageItem) {
         hasAddress = message.location?.address != nil
         super.init(message: message)
     }
     
     override func layout(width: CGFloat, style: MessageViewModel.Style) {
-        photoFrame.size = CGSize(width: ScreenWidth.current <= .short ? 260 : 296, height: 180)
+        let photoWidth: CGFloat
+        if quotedMessageViewModel == nil {
+            photoWidth = bubbleWidth
+        } else {
+            photoWidth = bubbleWidth - Self.quotingMessageMargin.horizontal
+        }
+        photoFrame.size = CGSize(width: photoWidth, height: 180)
         super.layout(width: width, style: style)
         if style.contains(.received) {
             labelsLeadingConstant = 20 - (quotedMessageViewModel == nil ? 0 : Self.quotingMessageMargin.trailing)
@@ -45,7 +55,7 @@ class LocationMessageViewModel: ImageMessageViewModel {
                                           height: informationHeight)
             } else {
                 maskFrame = CGRect(origin: photoFrame.origin,
-                                       size: CGSize(width: photoFrame.width, height: photoFrame.height + informationHeight))
+                                   size: CGSize(width: photoFrame.width, height: photoFrame.height + informationHeight))
                 informationFrame = CGRect(x: 0,
                                           y: photoFrame.height,
                                           width: photoFrame.width,

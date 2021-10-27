@@ -1437,21 +1437,6 @@ extension ConversationViewController: UITableViewDataSource {
         if let cell = cell as? MessageCell {
             CATransaction.performWithoutAnimation {
                 cell.render(viewModel: viewModel)
-                if tableView.allowsMultipleSelection {
-                    let intent = multipleSelectionActionView.intent
-                    let availability = self.viewModel(viewModel, availabilityForMultipleSelectionWith: intent)
-                    switch availability {
-                    case .available:
-                        cell.setMultipleSelecting(true, animated: false)
-                    case .visibleButUnavailable:
-                        cell.setMultipleSelecting(true, animated: false)
-                        cell.checkmarkView.status = .nonSelectable
-                    case .invisible:
-                        cell.setMultipleSelecting(false, animated: false)
-                    }
-                } else {
-                    cell.setMultipleSelecting(false, animated: false)
-                }
                 cell.layoutIfNeeded()
             }
         }
@@ -1514,6 +1499,26 @@ extension ConversationViewController: UIScrollViewDelegate {
 extension ConversationViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if let cell = cell as? MessageCell, let viewModel = cell.viewModel {
+            CATransaction.performWithoutAnimation {
+                if tableView.allowsMultipleSelection {
+                    let intent = multipleSelectionActionView.intent
+                    let availability = self.viewModel(viewModel, availabilityForMultipleSelectionWith: intent)
+                    switch availability {
+                    case .available:
+                        cell.setMultipleSelecting(true, animated: false)
+                    case .visibleButUnavailable:
+                        cell.setMultipleSelecting(true, animated: false)
+                        cell.checkmarkView.status = .nonSelectable
+                    case .invisible:
+                        cell.setMultipleSelecting(false, animated: false)
+                    }
+                } else {
+                    cell.setMultipleSelecting(false, animated: false)
+                }
+                cell.layoutIfNeeded()
+            }
+        }
         guard let dataSource = dataSource else {
             return
         }

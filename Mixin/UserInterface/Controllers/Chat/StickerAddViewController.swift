@@ -9,6 +9,7 @@ class StickerAddViewController: UIViewController {
     enum Source {
         case message(MessageItem)
         case asset(PHAsset)
+        case image(UIImage)
     }
     
     @IBOutlet weak var previewImageView: YYAnimatedImageView!
@@ -67,6 +68,9 @@ class StickerAddViewController: UIViewController {
                     self.container?.rightButton.isEnabled = true
                 })
             }
+        case .image(let image):
+            previewImageView.image = image
+            container?.rightButton.isEnabled = true
         }
     }
     
@@ -108,7 +112,9 @@ extension StickerAddViewController {
     
     private func showMalformedAlert() {
         container?.rightButton.isBusy = false
-        alert(Localized.STICKER_ADD_REQUIRED)
+        let alert = UIAlertController(title: Localized.STICKER_ADD_REQUIRED, message: nil, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_OK, style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
     
     private func showFailureAlert() {

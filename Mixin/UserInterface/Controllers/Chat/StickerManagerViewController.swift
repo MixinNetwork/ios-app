@@ -1,14 +1,23 @@
 import UIKit
-import YYImage
 import Photos
+import PhotosUI
+import YYImage
+import CoreServices
 import MixinServices
 
 class StickerManagerViewController: UICollectionViewController {
-
+    
     private var stickers = [StickerItem]()
     private var isDeleteStickers = false
     private var pickerContentOffset = CGPoint.zero
-
+    private var gifTypeIdentifier: String {
+        if #available(iOS 14.0, *) {
+            return UTType.gif.identifier
+        } else {
+            return kUTTypeGIF as String
+        }
+    }
+    
     private lazy var itemSize: CGSize = {
         let minWidth: CGFloat = UIScreen.main.bounds.width > 400 ? 120 : 100
         let rowCount = floor(UIScreen.main.bounds.size.width / minWidth)
@@ -18,7 +27,7 @@ class StickerManagerViewController: UICollectionViewController {
     
     class func instance() -> UIViewController {
         let vc = R.storyboard.chat.sticker_manager()!
-        return ContainerViewController.instance(viewController: vc, title: Localized.STICKER_MANAGER_TITLE)
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.sticker_manager_title())
     }
     
     override func viewDidLoad() {
@@ -44,30 +53,33 @@ class StickerManagerViewController: UICollectionViewController {
 }
 
 extension StickerManagerViewController: ContainerViewControllerDelegate {
-
+    
     func prepareBar(rightButton: StateResponsiveButton) {
         rightButton.isEnabled = true
         rightButton.setTitleColor(.systemTint, for: .normal)
     }
-
+    
     func barRightButtonTappedAction() {
         if isDeleteStickers {
-            guard !(container?.rightButton.isBusy ?? true), let selectionCells = collectionView?.indexPathsForSelectedItems, selectionCells.count > 0 else {
-                container?.rightButton.setTitle(Localized.ACTION_SELECT, for: .normal)
+            guard
+                !(container?.rightButton.isBusy ?? true),
+                let selectionCells = collectionView?.indexPathsForSelectedItems, selectionCells.count > 0
+            else {
+                container?.rightButton.setTitle(R.string.localizable.action_select(), for: .normal)
                 isDeleteStickers = false
                 collectionView?.allowsMultipleSelection = false
                 collectionView?.reloadData()
                 return
             }
             container?.rightButton.isBusy = true
-
+            
             let stickerIds: [String] = selectionCells.compactMap { (indexPath) -> String? in
                 guard indexPath.row < stickers.count else {
                     return nil
                 }
                 return stickers[indexPath.row].stickerId
             }
-
+            
             StickerAPI.removeSticker(stickerIds: stickerIds, completion: { [weak self] (result) in
                 guard let weakSelf = self else {
                     return
@@ -79,12 +91,12 @@ extension StickerManagerViewController: ContainerViewControllerDelegate {
                         if let album = AlbumDAO.shared.getSelfAlbum() {
                             StickerRelationshipDAO.shared.removeStickers(albumId: album.albumId, stickerIds: stickerIds)
                         }
-
+                        
                         DispatchQueue.main.async {
                             guard let weakSelf = self else {
                                 return
                             }
-                            weakSelf.container?.rightButton.setTitle(Localized.ACTION_SELECT, for: .normal)
+                            weakSelf.container?.rightButton.setTitle(R.string.localizable.action_select(), for: .normal)
                             weakSelf.isDeleteStickers = !weakSelf.isDeleteStickers
                             weakSelf.collectionView?.allowsMultipleSelection = false
                             weakSelf.fetchStickers()
@@ -95,30 +107,29 @@ extension StickerManagerViewController: ContainerViewControllerDelegate {
                 }
             })
         } else {
-            container?.rightButton.setTitle(Localized.ACTION_REMOVE, for: .normal)
+            container?.rightButton.setTitle(R.string.localizable.action_remove(), for: .normal)
             isDeleteStickers = true
             collectionView?.allowsMultipleSelection = true
             collectionView?.reloadData()
         }
     }
-
+    
     func textBarRightButton() -> String? {
-        return Localized.ACTION_SELECT
+        return R.string.localizable.action_select()
     }
-
+    
 }
 
-
 extension StickerManagerViewController: UICollectionViewDelegateFlowLayout {
-
+    
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return isDeleteStickers ? stickers.count : stickers.count + 1
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return itemSize
     }
-
+    
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.favorite_sticker, for: indexPath)!
         if isDeleteStickers {
@@ -133,30 +144,150 @@ extension StickerManagerViewController: UICollectionViewDelegateFlowLayout {
         }
         return cell
     }
-
+    
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard !isDeleteStickers, indexPath.row == 0 else {
             return
         }
-
-        PHPhotoLibrary.checkAuthorization { [weak self](authorized) in
-            guard authorized, let weakSelf = self else {
-                return
-            }
-
-            let picker = PhotoAssetPickerNavigationController.instance(pickerDelegate: weakSelf, showImageOnly: true, scrollToOffset: weakSelf.pickerContentOffset)
-            weakSelf.present(picker, animated: true, completion: nil)
-        }
+        handleAddStickerAction()
     }
+    
 }
 
 // MARK: - PhotoAssetPickerDelegate
 extension StickerManagerViewController: PhotoAssetPickerDelegate {
-
+    
     func pickerController(_ picker: PickerViewController, contentOffset: CGPoint, didFinishPickingMediaWithAsset asset: PHAsset) {
-        self.pickerContentOffset = contentOffset
+        pickerContentOffset = contentOffset
         let vc = StickerAddViewController.instance(source: .asset(asset))
         navigationController?.pushViewController(vc, animated: true)
     }
+    
+}
 
+// MARK: - PHPickerViewControllerDelegate
+@available(iOS 14, *)
+extension StickerManagerViewController: PHPickerViewControllerDelegate {
+    
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        picker.dismiss(animated: true) {
+            guard let provider = results.first?.itemProvider else {
+                return
+            }
+            self.load(itemProvider: provider)
+        }
+    }
+    
+}
+
+// MARK: - Private works
+extension StickerManagerViewController {
+    
+    private func handleAddStickerAction() {
+        let status: PHAuthorizationStatus
+        if #available(iOS 14.0, *) {
+            status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
+        } else {
+            status = PHPhotoLibrary.authorizationStatus()
+        }
+        handlePhotoAuthorizationStatus(status)
+    }
+    
+    private func handlePhotoAuthorizationStatus(_ status: PHAuthorizationStatus) {
+        switch status {
+        case .limited:
+            DispatchQueue.main.async(execute: showAuthorizationLimitedAlert)
+        case .authorized:
+            DispatchQueue.main.async {
+                let picker = PhotoAssetPickerNavigationController.instance(pickerDelegate: self, showImageOnly: true, scrollToOffset: self.pickerContentOffset)
+                self.present(picker, animated: true, completion: nil)
+            }
+        case .notDetermined:
+            PHPhotoLibrary.requestAuthorization(handlePhotoAuthorizationStatus)
+        case .denied, .restricted:
+            DispatchQueue.main.async {
+                self.alertSettings(R.string.localizable.permission_denied_photo_library())
+            }
+        @unknown default:
+            DispatchQueue.main.async {
+                self.alertSettings(R.string.localizable.permission_denied_photo_library())
+            }
+        }
+    }
+    
+    private func showAuthorizationLimitedAlert() {
+        let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        if #available(iOS 14, *) {
+            sheet.addAction(UIAlertAction(title: R.string.localizable.chat_pick_from_library(), style: .default, handler: { _ in
+                var config = PHPickerConfiguration(photoLibrary: .shared())
+                config.preferredAssetRepresentationMode = .current
+                config.selectionLimit = 1
+                config.filter = .images
+                let picker = PHPickerViewController(configuration: config)
+                picker.delegate = self
+                self.present(picker, animated: true, completion: nil)
+            }))
+        }
+        sheet.addAction(UIAlertAction(title: R.string.localizable.action_change_settings(), style: .default, handler: { _ in
+            UIApplication.openAppSettings()
+        }))
+        sheet.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
+        present(sheet, animated: true, completion: nil)
+    }
+    
+    private func load(itemProvider: NSItemProvider) {
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        let hideHud = {
+            DispatchQueue.main.async {
+                hud.hide()
+            }
+        }
+        let handleError = { (error: Error?) in
+            if let error = error {
+                reporter.report(error: error)
+            }
+            DispatchQueue.main.async {
+                showAutoHiddenHud(style: .error, text: R.string.localizable.error_operation_failed())
+            }
+        }
+        if itemProvider.hasItemConformingToTypeIdentifier(gifTypeIdentifier) {
+            itemProvider.loadFileRepresentation(forTypeIdentifier: gifTypeIdentifier) { [weak self] (source, error) in
+                hideHud()
+                guard
+                    let source = source,
+                    let image = YYImage(contentsOfFile: source.path)
+                else {
+                    handleError(error)
+                    return
+                }
+                DispatchQueue.main.async {
+                    guard let self = self else {
+                        return
+                    }
+                    let vc = StickerAddViewController.instance(source: .image(image))
+                    self.navigationController?.pushViewController(vc, animated: true)
+                }
+            }
+        } else if itemProvider.canLoadObject(ofClass: UIImage.self) {
+            itemProvider.loadObject(ofClass: UIImage.self) { [weak self] (rawImage, error) in
+                hideHud()
+                guard
+                    let rawImage = rawImage as? UIImage,
+                    let image = ImageUploadSanitizer.sanitizedImage(from: rawImage).image
+                else {
+                    handleError(error)
+                    return
+                }
+                DispatchQueue.main.async {
+                    guard let self = self else {
+                        return
+                    }
+                    let vc = StickerAddViewController.instance(source: .image(image))
+                    self.navigationController?.pushViewController(vc, animated: true)
+                }
+            }
+        }
+    }
+    
 }

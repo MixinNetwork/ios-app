@@ -300,10 +300,11 @@ extension ShareRecipientViewController {
 
                             weakSelf.sharePhotoMessage(imageData: data, conversation: conversation, typeIdentifier: inUTI)
                         } else if supportedTextUTIs.contains(where: attachment.hasItemConformingToTypeIdentifier) {
-                            guard let content = item as? String else {
-                                return
+                            if let content = item as? String {
+                                weakSelf.shareTextMessage(content: content, conversation: conversation)
+                            } else if let url = item as? URL {
+                                weakSelf.shareFileMessage(url: url, conversation: conversation)
                             }
-                            weakSelf.shareTextMessage(content: content, conversation: conversation)
                         } else if attachment.hasItemConformingToTypeIdentifier(kUTTypeFileURL as String) {
                             guard let url = item as? URL else {
                                 return

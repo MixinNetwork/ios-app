@@ -4,8 +4,8 @@ Mixin iOS messenger, wallet and light node to the Mixin Network
 ## Requirements
 
 ### Build
-- Xcode 12
-- Swift 5
+- Xcode 13.1
+- Swift 5.5.1
 
 ### Deployment target
 - iOS 12.0

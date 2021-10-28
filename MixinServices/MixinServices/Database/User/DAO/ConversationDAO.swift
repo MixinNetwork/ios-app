@@ -544,7 +544,8 @@ public final class ConversationDAO: UserDatabaseDAO {
     }
     
     public func makeConversationId(userId: String, ownerUserId: String) -> String {
-        return (min(userId, ownerUserId) + max(userId, ownerUserId)).toUUID()
+        let merged = min(userId, ownerUserId) + max(userId, ownerUserId)
+        return merged.uuidDigest()
     }
     
 }

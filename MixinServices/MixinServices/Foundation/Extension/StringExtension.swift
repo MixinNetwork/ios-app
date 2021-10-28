@@ -59,6 +59,30 @@ public extension String {
         return digest.map { String(format: "%02hhx", $0) }.joined()
     }
     
+    func uuidDigest() -> String {
+        var digest = utf8.md5.data
+        digest[6] &= 0x0f       // clear version
+        digest[6] |= 0x30       // set to version 3
+        digest[8] &= 0x3f       // clear variant
+        digest[8] |= 0x80       // set to IETF variant
+        
+        var characters: [String] = []
+        characters.reserveCapacity(20)
+        for (index, value) in digest.enumerated() {
+            let character: String
+            if value < 16 {
+                character = "0" + String(value, radix: 16, uppercase: false)
+            } else {
+                character = String(value, radix: 16, uppercase: false)
+            }
+            characters.append(character)
+            if index == 3 || index == 5 || index == 7 || index == 9 {
+                characters.append("-")
+            }
+        }
+        return characters.joined()
+    }
+    
     func md5() -> String {
         guard let messageData = data(using: .utf8) else {
             return self

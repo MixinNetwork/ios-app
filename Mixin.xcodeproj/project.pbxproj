@@ -565,6 +565,8 @@
 		7C0E16A52702A9EF002FC718 /* CollectibleResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0E16A42702A9EF002FC718 /* CollectibleResponse.swift */; };
 		7C0E16A72702AF22002FC718 /* CollectibleAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0E16A62702AF22002FC718 /* CollectibleAPI.swift */; };
 		7C0E16A92702FB85002FC718 /* CollectibleToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0E16A82702FB85002FC718 /* CollectibleToken.swift */; };
+		7C0E15DF27005376002FC718 /* UnknownURLWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0E15DE27005376002FC718 /* UnknownURLWindow.swift */; };
+		7C0E15E1270053AC002FC718 /* UnknownURLWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C0E15E0270053AC002FC718 /* UnknownURLWindow.xib */; };
 		7C14CFC126CA35CF0094AF4A /* StaticMessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C14CFBF26CA35CF0094AF4A /* StaticMessagesViewController.swift */; };
 		7C14CFC226CA35CF0094AF4A /* StaticMessagesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C14CFC026CA35CF0094AF4A /* StaticMessagesView.xib */; };
 		7C5823D5268966A1003AA142 /* HomeAppsFolderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5823D4268966A1003AA142 /* HomeAppsFolderViewController.swift */; };
@@ -1544,6 +1546,8 @@
 		7C0E16A42702A9EF002FC718 /* CollectibleResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectibleResponse.swift; sourceTree = "<group>"; };
 		7C0E16A62702AF22002FC718 /* CollectibleAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectibleAPI.swift; sourceTree = "<group>"; };
 		7C0E16A82702FB85002FC718 /* CollectibleToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectibleToken.swift; sourceTree = "<group>"; };
+		7C0E15DE27005376002FC718 /* UnknownURLWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnknownURLWindow.swift; sourceTree = "<group>"; };
+		7C0E15E0270053AC002FC718 /* UnknownURLWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UnknownURLWindow.xib; sourceTree = "<group>"; };
 		7C14CFBF26CA35CF0094AF4A /* StaticMessagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticMessagesViewController.swift; sourceTree = "<group>"; };
 		7C14CFC026CA35CF0094AF4A /* StaticMessagesView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StaticMessagesView.xib; sourceTree = "<group>"; };
 		7C5823D4268966A1003AA142 /* HomeAppsFolderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsFolderViewController.swift; sourceTree = "<group>"; };
@@ -2825,6 +2829,8 @@
 				DFDD89E822C4B8E600128991 /* DepositTipWindow.xib */,
 				DF846CD823694A2E00AA1197 /* MultisigUsersWindow.swift */,
 				DF846CDA23694A4900AA1197 /* MultisigUsersWindow.xib */,
+				7C0E15DE27005376002FC718 /* UnknownURLWindow.swift */,
+				7C0E15E0270053AC002FC718 /* UnknownURLWindow.xib */,
 			);
 			path = Windows;
 			sourceTree = "<group>";
@@ -3875,6 +3881,7 @@
 				94E34123261D829200E2F9D3 /* code.css in Resources */,
 				7BEC4DF121A7D054003336F2 /* AssetCell.xib in Resources */,
 				949A3686261D9C5C004251B2 /* post.css in Resources */,
+				7C0E15E1270053AC002FC718 /* UnknownURLWindow.xib in Resources */,
 				7B7E7144217D87860052C7DD /* CallView.xib in Resources */,
 				7B2A115D22C1EAC900AD029C /* GalleryVideoControlView.xib in Resources */,
 				7B9A18162428932A00187693 /* PageControlView.xib in Resources */,
@@ -4515,6 +4522,7 @@
 				7B894CD620D24BE2004FA5A8 /* RecorderLockView.swift in Sources */,
 				DFB9B39A1FAB01E6009503CE /* HomeNavigationController.swift in Sources */,
 				7B7FBF8D2282D51100644693 /* IconPrefixedTextMessageViewModel.swift in Sources */,
+				7C0E15DF27005376002FC718 /* UnknownURLWindow.swift in Sources */,
 				7BAECA3A20401DE500AEA42F /* AttachmentLoadingViewModel.swift in Sources */,
 				7BCAF54A216B0C3700D6564A /* GiphyCollectionViewFlowLayout.swift in Sources */,
 				DF5D9F241F9C79E10036D5FD /* Constant.swift in Sources */,

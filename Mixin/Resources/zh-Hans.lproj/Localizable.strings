@@ -657,6 +657,8 @@
 
 // Url
 "url_invalid_payment" = "无效支付信息";
+"url_unrecognized" = "链接识别失败";
+"url_unrecognized_tip" = "%@ 识别失败，请升级至 Mixin 最新版本或联系开发者检查链接";
 
 // Multisig
 "multisig_by_pin" = "通过密码签名";

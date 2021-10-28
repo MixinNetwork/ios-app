@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="dark"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="UnknownURLWindow" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZDk-Bd-aGS">
+                    <rect key="frame" x="0.0" y="429.5" width="414" height="466.5"/>
+                    <subviews>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_link" translatesAutoresizingMaskIntoConstraints="NO" id="8Bb-cI-OLr">
+                            <rect key="frame" x="171" y="70" width="72" height="72"/>
+                            <color key="tintColor" name="text_accessory"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="72" id="NC5-4V-PCO"/>
+                                <constraint firstAttribute="height" constant="72" id="oQ5-bW-8CV"/>
+                            </constraints>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Link recognition failure" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fCB-38-zf8">
+                            <rect key="frame" x="111" y="166" width="192" height="22"/>
+                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                            <color key="textColor" name="title"/>
+                            <nil key="highlightedColor"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="url_unrecognized"/>
+                            </userDefinedRuntimeAttributes>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="mixin://abc failed to recognize, please upgrade Mixin to the latest version or contact the developer to check the link" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0A2-tu-Jsr" customClass="LineHeightLabel" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="30" y="200" width="354" height="50.5"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <color key="textColor" name="text_desc"/>
+                            <nil key="highlightedColor"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="url_unrecognized_tip"/>
+                                <userDefinedRuntimeAttribute type="number" keyPath="lineHeight">
+                                    <real key="value" value="1.1200000000000001"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2jw-2B-YEr" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="149" y="304.5" width="116" height="42"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="42" id="b2W-xJ-N2G"/>
+                                <constraint firstAttribute="width" constant="116" id="bxW-Zj-8fq"/>
+                            </constraints>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="plain" title="Ok">
+                                <fontDescription key="titleFontDescription" type="system" pointSize="15"/>
+                            </buttonConfiguration>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="dialog_button_ok"/>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="okAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="btZ-kI-4Iw"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VRH-cP-BGt">
+                            <rect key="frame" x="177" y="370.5" width="60" height="32"/>
+                            <color key="tintColor" name="theme"/>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="plain" title="Copy">
+                                <fontDescription key="titleFontDescription" type="system" pointSize="15"/>
+                            </buttonConfiguration>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="action_copy"/>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="copyAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="sCh-EE-qxa"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" name="background"/>
+                    <constraints>
+                        <constraint firstItem="8Bb-cI-OLr" firstAttribute="centerX" secondItem="ZDk-Bd-aGS" secondAttribute="centerX" id="3Fc-0M-yxk"/>
+                        <constraint firstItem="0A2-tu-Jsr" firstAttribute="leading" secondItem="ZDk-Bd-aGS" secondAttribute="leading" constant="30" id="5Lv-L9-4jl"/>
+                        <constraint firstItem="0A2-tu-Jsr" firstAttribute="top" secondItem="fCB-38-zf8" secondAttribute="bottom" constant="12" id="7iw-4W-6Ng"/>
+                        <constraint firstItem="8Bb-cI-OLr" firstAttribute="top" secondItem="ZDk-Bd-aGS" secondAttribute="top" constant="70" id="CFK-2W-GaW"/>
+                        <constraint firstAttribute="trailing" secondItem="0A2-tu-Jsr" secondAttribute="trailing" constant="30" id="Cyy-ft-5bl"/>
+                        <constraint firstItem="VRH-cP-BGt" firstAttribute="top" secondItem="2jw-2B-YEr" secondAttribute="bottom" constant="24" id="IZ2-Pw-I4v"/>
+                        <constraint firstItem="2jw-2B-YEr" firstAttribute="centerX" secondItem="ZDk-Bd-aGS" secondAttribute="centerX" id="dag-89-wVw"/>
+                        <constraint firstItem="fCB-38-zf8" firstAttribute="centerX" secondItem="ZDk-Bd-aGS" secondAttribute="centerX" id="fS4-ec-RzE"/>
+                        <constraint firstItem="2jw-2B-YEr" firstAttribute="top" secondItem="0A2-tu-Jsr" secondAttribute="bottom" constant="54" id="iyA-Wd-h96"/>
+                        <constraint firstItem="fCB-38-zf8" firstAttribute="top" secondItem="8Bb-cI-OLr" secondAttribute="bottom" constant="24" id="xLh-yE-R6S"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="13"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.40000000000000002" colorSpace="custom" customColorSpace="displayP3"/>
+            <constraints>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="ZDk-Bd-aGS" secondAttribute="trailing" id="4Vt-cQ-C7W"/>
+                <constraint firstItem="ZDk-Bd-aGS" firstAttribute="bottom" secondItem="iN0-l3-epB" secondAttribute="bottom" id="eF2-2D-yDU"/>
+                <constraint firstItem="VRH-cP-BGt" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="fUK-XQ-ySQ"/>
+                <constraint firstItem="ZDk-Bd-aGS" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="o4l-N5-QNo"/>
+                <constraint firstItem="VRH-cP-BGt" firstAttribute="bottom" secondItem="vUN-kp-3ea" secondAttribute="bottom" constant="-30" id="y8u-8g-bFC"/>
+            </constraints>
+            <connections>
+                <outlet property="popupView" destination="ZDk-Bd-aGS" id="ElM-Xd-Rzj"/>
+                <outlet property="tipLabel" destination="0A2-tu-Jsr" id="DVv-Xd-Vx8"/>
+            </connections>
+            <point key="canvasLocation" x="-94.20289855072464" y="11.383928571428571"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="ic_link" width="72" height="72"/>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_accessory">
+            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_desc">
+            <color red="0.73725490196078436" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="theme">
+            <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="title">
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

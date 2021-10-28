@@ -145,12 +145,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         if ScreenLockManager.shared.isLocked {
             ScreenLockManager.shared.screenLockViewDidHide = {
-                _ = UrlWindow.checkUrl(url: url, ignoreUnsupportMixinSchema: false)
+                _ = UrlWindow.checkUrl(url: url, presentHintOnUnsupportedMixinSchema: false)
                 ScreenLockManager.shared.screenLockViewDidHide = nil
             }
             return true
         } else {
-            return UrlWindow.checkUrl(url: url, ignoreUnsupportMixinSchema: false)
+            return UrlWindow.checkUrl(url: url, presentHintOnUnsupportedMixinSchema: false)
         }
     }
     

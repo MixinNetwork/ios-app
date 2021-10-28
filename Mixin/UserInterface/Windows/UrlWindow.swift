@@ -5,37 +5,54 @@ import MixinServices
 
 class UrlWindow {
     
-    class func checkUrl(url: URL, webContext: MixinWebViewController.Context? = nil, clearNavigationStack: Bool = true, ignoreUnsupportMixinSchema: Bool = true) -> Bool {
+    class func checkUrl(
+        url: URL,
+        webContext: MixinWebViewController.Context? = nil,
+        clearNavigationStack: Bool = true,
+        presentHintOnUnsupportedMixinSchema: Bool = true
+    ) -> Bool {
         if let mixinURL = MixinURL(url: url) {
+            let result: Bool
             switch mixinURL {
             case let .codes(code):
-                return checkCodesUrl(code, clearNavigationStack: clearNavigationStack, webContext: webContext)
+                result = checkCodesUrl(code, clearNavigationStack: clearNavigationStack, webContext: webContext)
             case .pay:
-                return checkPayUrl(url: url.absoluteString, query: url.getKeyVals())
+                result = checkPayUrl(url: url.absoluteString, query: url.getKeyVals())
             case .withdrawal:
-                return checkWithdrawal(url: url)
+                result = checkWithdrawal(url: url)
             case .address:
-                return checkAddress(url: url)
+                result = checkAddress(url: url)
             case let .users(id):
-                return checkUser(id, clearNavigationStack: clearNavigationStack)
+                result = checkUser(id, clearNavigationStack: clearNavigationStack)
             case .snapshots:
-                return checkSnapshot(url: url)
+                result = checkSnapshot(url: url)
             case let .conversations(conversationId, userId):
-                return checkConversation(conversationId: conversationId, userId: userId)
+                result = checkConversation(conversationId: conversationId, userId: userId)
             case let .apps(userId):
-                return checkApp(url: url, userId: userId)
+                result = checkApp(url: url, userId: userId)
             case let .transfer(id):
-                return checkTransferUrl(id, clearNavigationStack: clearNavigationStack)
+                result = checkTransferUrl(id, clearNavigationStack: clearNavigationStack)
             case let .send(context):
-                return checkSendUrl(sharingContext: context, webContext: webContext)
+                result = checkSendUrl(sharingContext: context, webContext: webContext)
             case let .device(id, publicKey):
                 LoginConfirmWindow.instance(id: id, publicKey: publicKey).presentView()
-                return true
+                result = true
             case .upgradeDesktop:
                 UIApplication.currentActivity()?.alert(R.string.localizable.desktop_upgrade())
-                return true
+                result = true
             case .unknown:
-                return ignoreUnsupportMixinSchema ? url.scheme == MixinURL.scheme : false
+                if presentHintOnUnsupportedMixinSchema && url.scheme == MixinURL.scheme {
+                    UnknownURLWindow.instance().render(url: url).presentPopupControllerAnimated()
+                    result = true
+                } else {
+                    result = false
+                }
+            }
+            if !result && presentHintOnUnsupportedMixinSchema {
+                UnknownURLWindow.instance().render(url: url).presentPopupControllerAnimated()
+                return true
+            } else {
+                return result
             }
         } else if let url = MixinInternalURL(url: url) {
             switch url {

@@ -269,18 +269,17 @@ extension AttachmentDownloadJob {
         }
         self.attachResponse = attachResponse
         
-        let encrypts = owner.category.hasPrefix("SIGNAL_")
-        if encrypts {
-            guard let key = owner.mediaKey, let digest = owner.mediaDigest else {
-                return false
-            }
+        let decrypting: Bool
+        if let key = owner.mediaKey, let digest = owner.mediaDigest {
             stream = AttachmentDecryptingOutputStream(url: fileUrl, key: key, digest: digest)
+            decrypting = true
         } else {
             stream = OutputStream(url: fileUrl, append: false)
+            decrypting = false
         }
         
         guard let stream = stream else {
-            let error: MixinServicesError = encrypts ? .initDecryptingOutputStream : .initOutputStream
+            let error: MixinServicesError = decrypting ? .initDecryptingOutputStream : .initOutputStream
             reporter.report(error: error)
             return false
         }

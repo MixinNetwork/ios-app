@@ -9,7 +9,7 @@ extension MessageDAO {
             SELECT id, conversation_id, media_url, name
             FROM messages
             WHERE conversation_id = ?
-                AND category in ('SIGNAL_DATA', 'PLAIN_DATA')
+                AND category in ('SIGNAL_DATA', 'PLAIN_DATA', 'ENCRYPTED_DATA')
                 AND media_mime_type = 'audio/mpeg'
                 AND rowid < ?
             ORDER BY created_at DESC
@@ -30,7 +30,7 @@ extension MessageDAO {
             SELECT id, conversation_id, media_url, name
             FROM messages
             WHERE conversation_id = ?
-                AND category in ('SIGNAL_DATA', 'PLAIN_DATA')
+                AND category in ('SIGNAL_DATA', 'PLAIN_DATA', 'ENCRYPTED_DATA')
                 AND media_mime_type = 'audio/mpeg'
                 AND rowid > ?
             ORDER BY created_at ASC

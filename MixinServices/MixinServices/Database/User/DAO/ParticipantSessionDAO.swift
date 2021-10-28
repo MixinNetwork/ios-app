@@ -23,17 +23,47 @@ public final class ParticipantSessionDAO: UserDatabaseDAO {
         """
         return db.select(with: sql, arguments: [conversationId, sessionId])
     }
-
-    public func provisionSession(userId: String, sessionId: String) {
+    
+    public func getParticipantSessionKey(conversationId: String, userId: String) -> ParticipantSession.Key? {
+        let sql = "SELECT * FROM participant_session WHERE conversation_id = ? AND user_id = ? LIMIT 1"
+        return db.select(with: sql, arguments: [conversationId, userId])
+    }
+    
+    public func getParticipantSessionKeyWithoutSelf(conversationId: String, userId: String) -> ParticipantSession.Key? {
+        let sql = "SELECT * FROM participant_session WHERE conversation_id = ? AND user_id != ?"
+        return db.select(with: sql, arguments: [conversationId, userId])
+    }
+    
+    public func insertParticipantSessionSent(_ object: ParticipantSession.Sent) {
+        db.save(object.participantSession)
+    }
+    
+    public func updateParticipantSessionSent(_ objects: [ParticipantSession.Sent]) {
+        db.write { (db) in
+            for obj in objects {
+                let condition: SQLSpecificExpressible = obj.conversationId == ParticipantSession.column(of: .conversationId)
+                    && obj.userId == ParticipantSession.column(of: .userId)
+                    && obj.sessionId == ParticipantSession.column(of: .sessionId)
+                let assignments = [ParticipantSession.column(of: .sentToServer).set(to: obj.sentToServer)]
+                try ParticipantSession.filter(condition).updateAll(db, assignments)
+            }
+        }
+    }
+    
+    public func provisionSession(userId: String, sessionId: String, publicKey: String?) {
+        let createdAt = Date().toUTCString()
         let sql = """
-        INSERT OR REPLACE INTO participant_session(conversation_id, user_id, session_id, created_at)
-        SELECT c.conversation_id, '%@', '%@', '%@' FROM conversations c
-        INNER JOIN users u ON c.owner_id = u.user_id
+        INSERT OR REPLACE INTO participant_session(conversation_id, user_id, session_id, created_at, public_key)
+        SELECT c.conversation_id, :user_id, :session_id, :created_at, :public_key FROM conversations c
         LEFT JOIN participants p on p.conversation_id = c.conversation_id
-        WHERE p.user_id = ? AND ifnull(u.app_id, '') = ''
+        WHERE p.user_id = :user_id
         """
-        let formatted = String(format: sql, userId, sessionId, Date().toUTCString())
-        db.execute(sql: sql, arguments: [userId])
+        db.execute(sql: sql, arguments: [
+            "user_id": userId,
+            "session_id": sessionId,
+            "created_at": createdAt,
+            "public_key": publicKey
+        ])
     }
 
     public func destorySession(userId: String, sessionId: String) {
@@ -81,7 +111,8 @@ public final class ParticipantSessionDAO: UserDatabaseDAO {
                                    userId: $0.userId,
                                    sessionId: $0.sessionId,
                                    sentToServer: sentToServerMap[$0.uniqueIdentifier] ?? nil,
-                                   createdAt: Date().toUTCString())
+                                   createdAt: Date().toUTCString(),
+                                   publicKey: $0.publicKey)
             }
             try sessionParticipants.save(db)
         }

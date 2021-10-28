@@ -2605,8 +2605,7 @@ extension ConversationViewController {
         guard let url = URL(string: action) else {
             return
         }
-        
-        if let app = conversationInputViewController?.opponentApp, app.appId == sendUserId {
+        if let app = composer.opponentApp, app.appId == sendUserId {
             open(url: url, app: app, shareable: shareable)
         } else {
             DispatchQueue.global().async { [weak self] in

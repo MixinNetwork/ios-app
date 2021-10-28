@@ -300,10 +300,11 @@ extension ShareRecipientViewController {
 
                             weakSelf.sharePhotoMessage(imageData: data, conversation: conversation, typeIdentifier: inUTI)
                         } else if supportedTextUTIs.contains(where: attachment.hasItemConformingToTypeIdentifier) {
-                            guard let content = item as? String else {
-                                return
+                            if let content = item as? String {
+                                weakSelf.shareTextMessage(content: content, conversation: conversation)
+                            } else if let url = item as? URL {
+                                weakSelf.shareFileMessage(url: url, conversation: conversation)
                             }
-                            weakSelf.shareTextMessage(content: content, conversation: conversation)
                         } else if attachment.hasItemConformingToTypeIdentifier(kUTTypeFileURL as String) {
                             guard let url = item as? URL else {
                                 return
@@ -467,6 +468,12 @@ extension ShareRecipientViewController {
         if msg.category.hasSuffix("_TEXT"), let content = msg.content, content.utf8.count > 64 * 1024 {
             msg.content = String(content.prefix(64 * 1024))
         }
+        if conversation.isBot, let app = AppDAO.shared.getApp(ofUserId: conversation.userId) {
+            if (app.capabilities ?? []).contains("ENCRYPTED") {
+                msg.category = msg.category.replacingOccurrences(of: "PLAIN_", with: "ENCRYPTED_")
+            }
+        }
+        
         MessageDAO.shared.insertMessage(message: msg, messageSource: "")
 
         if ["_TEXT", "_POST"].contains(where: msg.category.hasSuffix) {

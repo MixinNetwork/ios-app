@@ -300,7 +300,7 @@ extension ExternalSharingConfirmationViewController {
     }
     
     @objc private func presentPostPreview() {
-        guard let message = message, message.category == MessageCategory.SIGNAL_POST.rawValue else {
+        guard let message = message, message.category.hasSuffix("_POST") else {
             return
         }
         PostWebViewController.presentInstance(message: message, asChildOf: self)

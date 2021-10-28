@@ -546,25 +546,16 @@ public class SendMessageService: MixinService {
 extension SendMessageService {
     
     // When a text message is sent to group with format "^@700\d* ", it will be send directly to the app if the app is in the group
-    public func willTextMessageWithContentSendDirectlyToApp(_ content: String, conversationId: String, inGroup: Bool) -> Bool {
-        guard inGroup else {
-            return false
-        }
-        guard let identityNumber = prefixMentionedAppIdentityNumberFromMessage(with: content) else {
-            return false
-        }
-        if let recipientId = ParticipantDAO.shared.getParticipantId(conversationId: conversationId, identityNumber: identityNumber) {
-            return !recipientId.isEmpty
-        } else {
-            return false
-        }
-    }
-    
-    private func prefixMentionedAppIdentityNumberFromMessage(with content: String) -> String? {
+    public func groupMessageRecipientAppId(_ content: String, conversationId: String) -> String? {
         guard content.hasPrefix("@700"), let botNumberRange = content.range(of: #"^@700\d* "#, options: .regularExpression) else {
             return nil
         }
-        return content[botNumberRange].dropFirstAndLast()
+        let identityNumber = content[botNumberRange].dropFirstAndLast()
+        if let recipientId = ParticipantDAO.shared.getParticipantId(conversationId: conversationId, identityNumber: identityNumber), !recipientId.isEmpty {
+            return recipientId
+        } else {
+            return nil
+        }
     }
     
     private func resendMessage(job: Job) throws {
@@ -604,13 +595,9 @@ extension SendMessageService {
         }
         
         if message.category.hasSuffix("_TEXT"), let text = message.content {
-            if conversation.category == ConversationCategory.GROUP.rawValue, let identityNumber = prefixMentionedAppIdentityNumberFromMessage(with: text) {
-                if let recipientId = ParticipantDAO.shared.getParticipantId(conversationId: conversation.conversationId, identityNumber: identityNumber), !recipientId.isEmpty {
-                    blazeMessage.params?.recipientId = recipientId
-                    blazeMessage.params?.data = nil
-                } else {
-                    message.category = MessageCategory.SIGNAL_TEXT.rawValue
-                }
+            if conversation.category == ConversationCategory.GROUP.rawValue, let recipientId = groupMessageRecipientAppId(text, conversationId: conversation.conversationId) {
+                blazeMessage.params?.recipientId = recipientId
+                blazeMessage.params?.data = nil
             } else {
                 let numbers = MessageMentionDetector.identityNumbers(from: text).filter { $0 != myIdentityNumber }
                 if numbers.count > 0 {
@@ -627,18 +614,104 @@ extension SendMessageService {
             blazeMessage.params?.quoteMessageId = message.quoteMessageId
         }
         
+        let needsEncodeCategories: [MessageCategory] = [
+            .PLAIN_TEXT, .PLAIN_POST, .PLAIN_LOCATION, .PLAIN_TRANSCRIPT
+        ]
         if message.category.hasPrefix("PLAIN_") || message.category == MessageCategory.MESSAGE_RECALL.rawValue || message.category == MessageCategory.APP_CARD.rawValue {
             try checkConversationExist(conversation: conversation)
             if blazeMessage.params?.data == nil {
-                let needsEncodeCategories: [MessageCategory] = [
-                    .PLAIN_TEXT, .PLAIN_POST, .PLAIN_LOCATION, .PLAIN_TRANSCRIPT
-                ]
                 if needsEncodeCategories.map(\.rawValue).contains(message.category) {
                     blazeMessage.params?.data = message.content?.base64Encoded()
                 } else {
                     blazeMessage.params?.data = message.content
                 }
             }
+        } else if message.category.hasPrefix("ENCRYPTED_") {
+            // FIXME: Participant session saving may not finished after the func below returns.
+            // This may cause a few PLAIN messages sent out instead of ENCRYPTED ones
+            try checkConversationExist(conversation: conversation)
+            
+            func getBotSessionKey() -> ParticipantSession.Key? {
+                if let id = blazeMessage.params?.recipientId {
+                    return ParticipantSessionDAO.shared.getParticipantSessionKey(conversationId: message.conversationId, userId: id)
+                } else {
+                    return ParticipantSessionDAO.shared.getParticipantSessionKeyWithoutSelf(conversationId: message.conversationId, userId: myUserId)
+                }
+            }
+            
+            var participantSessionKey = getBotSessionKey()
+            if participantSessionKey == nil || participantSessionKey?.publicKey == nil {
+                syncConversation(conversationId: message.conversationId)
+                participantSessionKey = getBotSessionKey()
+            }
+            
+            func sendPlainMessage() throws {
+                let newCategory = message.category.replacingOccurrences(of: "ENCRYPTED_", with: "PLAIN_")
+                MessageDAO.shared.updateMessageCategory(newCategory, forMessageWithId: message.messageId)
+                blazeMessage.params?.category = newCategory
+                if let data = blazeMessage.params?.data, needsEncodeCategories.map(\.rawValue).contains(newCategory) {
+                    blazeMessage.params?.data = data.base64Encoded()
+                }
+                try sendMessage(blazeMessage: blazeMessage)
+            }
+            
+            let rawContent = blazeMessage.params?.data ?? message.content ?? ""
+            let contentData: Data?
+            if ["_IMAGE", "_VIDEO", "_STICKER", "_DATA", "_CONTACT", "_AUDIO", "_LIVE"].contains(where: message.category.hasSuffix) {
+                contentData = Data(base64Encoded: rawContent)
+            } else {
+                contentData = rawContent.data(using: .utf8)
+            }
+            guard
+                let contentData = contentData,
+                let privateKey = RequestSigning.edDSAPrivateKey,
+                let publicKeyBase64 = participantSessionKey?.publicKey,
+                let publicKey = Data(base64URLEncoded: publicKeyBase64),
+                let sid = participantSessionKey?.sessionId,
+                let sessionId = UUID(uuidString: sid)
+            else {
+                try sendPlainMessage()
+                let maybePublicKey = participantSessionKey?.publicKey ?? ""
+                let maybePublicKeyData = Data(base64URLEncoded: maybePublicKey) ?? Data()
+                let maybeSessionId = participantSessionKey?.sessionId ?? ""
+                let info = [
+                    "has_content": contentData != nil,
+                    "has_pk": RequestSigning.edDSAPrivateKey != nil,
+                    "has_psk": participantSessionKey != nil,
+                    "has_pub": !maybePublicKey.isEmpty,
+                    "is_pub_valid": !maybePublicKeyData.isEmpty,
+                    "has_sid": !maybeSessionId.isEmpty,
+                    "is_sid_valid": UUID(uuidString: maybeSessionId) != nil
+                ]
+                Logger.conversation(id: message.conversationId).error(category: "EncryptedBotMessage", message: "Failed to encrypt", userInfo: info)
+                reporter.report(error: MixinServicesError.encryptBotMessage(info))
+                return
+            }
+            let extensionSession: (id: UUID, key: Data)?
+            if let id = AppGroupUserDefaults.Account.extensionSession {
+                guard
+                    let sessionId = UUID(uuidString: id),
+                    let publicKeyBase64 = ParticipantSessionDAO.shared.getParticipantSession(conversationId: message.conversationId, userId: myUserId, sessionId: id)?.publicKey,
+                    let publicKey = Data(base64URLEncoded: publicKeyBase64)
+                else {
+                    try sendPlainMessage()
+                    let publicKeyBase64 = ParticipantSessionDAO.shared.getParticipantSession(conversationId: message.conversationId, userId: myUserId, sessionId: id)?.publicKey ?? ""
+                    let publicKeyData = Data(base64URLEncoded: publicKeyBase64) ?? Data()
+                    let info = [
+                        "is_sid_valid": UUID(uuidString: id) != nil,
+                        "has_pub": !publicKeyBase64.isEmpty,
+                        "is_pub_valid": !publicKeyData.isEmpty
+                    ]
+                    Logger.conversation(id: message.conversationId).error(category: "EncryptedBotMessage", message: "Failed to encrypt for extension session", userInfo: info)
+                    reporter.report(error: MixinServicesError.encryptBotMessage(info))
+                    return
+                }
+                extensionSession = (id: sessionId, key: publicKey)
+            } else {
+                extensionSession = nil
+            }
+            let content = try EncryptedProtocol.encrypt(contentData, with: privateKey, remotePublicKey: publicKey, remoteSessionID: sessionId, extensionSession: extensionSession)
+            blazeMessage.params?.data = content.base64EncodedString()
         } else {
             if !SignalProtocol.shared.isExistSenderKey(groupId: message.conversationId, senderId: message.userId) {
                 if conversation.isGroup() {

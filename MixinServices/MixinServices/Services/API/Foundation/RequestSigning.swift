@@ -3,6 +3,17 @@ import DeviceGuru
 
 enum RequestSigning {
     
+    static var edDSAPrivateKey: Ed25519PrivateKey? {
+        if let cached = cachedEdDSAPrivateKey {
+            return cachedEdDSAPrivateKey
+        } else if let secret = AppGroupKeychain.sessionSecret, let key = Ed25519PrivateKey(rfc8032Representation: secret) {
+            cachedEdDSAPrivateKey = key
+            return key
+        } else {
+            return nil
+        }
+    }
+    
     static func signedHeaders(for request: URLRequest) -> [String: String] {
         var headers = Self.baseHeaders
         let requestId = UUID().uuidString.lowercased()
@@ -29,16 +40,6 @@ extension RequestSigning {
     ]
     
     private static var cachedEdDSAPrivateKey: Ed25519PrivateKey?
-    private static var edDSAPrivateKey: Ed25519PrivateKey? {
-        if let cached = cachedEdDSAPrivateKey {
-            return cachedEdDSAPrivateKey
-        } else if let secret = AppGroupKeychain.sessionSecret, let key = Ed25519PrivateKey(rfc8032Representation: secret) {
-            cachedEdDSAPrivateKey = key
-            return key
-        } else {
-            return nil
-        }
-    }
     
     private static func signedToken(request: URLRequest, requestId: String) -> String? {
         guard let account = LoginManager.shared.account else {

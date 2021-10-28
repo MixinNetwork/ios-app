@@ -63,10 +63,13 @@ public final class TranscriptMessage {
     
     public init?(transcriptId: String, mediaUrl: String?, thumbImage: String?, messageItem item: MessageItem) {
         let (content, mediaCreatedAt) = { () -> (String?, String?) in
-            switch item.category {
-            case MessageCategory.APP_CARD.rawValue:
+            guard let category = MessageCategory(rawValue: item.category) else {
+                return (item.content, nil)
+            }
+            switch category {
+            case .APP_CARD:
                 return (AppCardContentConverter.transcriptAppCard(from: item.content), nil)
-            case MessageCategory.SIGNAL_VIDEO.rawValue, MessageCategory.PLAIN_VIDEO.rawValue, MessageCategory.SIGNAL_IMAGE.rawValue, MessageCategory.PLAIN_IMAGE.rawValue:
+            case .SIGNAL_VIDEO, .PLAIN_VIDEO, .ENCRYPTED_VIDEO, .SIGNAL_IMAGE, .PLAIN_IMAGE, .ENCRYPTED_IMAGE:
                 if let data = item.content?.data(using: .utf8), let tad = try? JSONDecoder.default.decode(TransferAttachmentData.self, from: data) {
                     return (tad.attachmentId, tad.createdAt)
                 } else if let data = Data(base64Encoded: item.content ?? ""), let tad = try? JSONDecoder.default.decode(TransferAttachmentData.self, from: data) {

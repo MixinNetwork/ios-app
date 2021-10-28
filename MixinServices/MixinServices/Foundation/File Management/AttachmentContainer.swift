@@ -111,13 +111,13 @@ public extension AttachmentContainer {
         public var messageCategory: [MessageCategory] {
             switch self {
             case .photos:
-                return [.SIGNAL_IMAGE, .PLAIN_IMAGE]
+                return [.SIGNAL_IMAGE, .PLAIN_IMAGE, .ENCRYPTED_IMAGE]
             case .files:
-                return [.SIGNAL_DATA, .PLAIN_DATA]
+                return [.SIGNAL_DATA, .PLAIN_DATA, .ENCRYPTED_DATA]
             case .videos:
-                return [.SIGNAL_VIDEO, .PLAIN_VIDEO]
+                return [.SIGNAL_VIDEO, .PLAIN_VIDEO, .ENCRYPTED_VIDEO]
             case .audios:
-                return [.SIGNAL_AUDIO, .PLAIN_AUDIO]
+                return [.SIGNAL_AUDIO, .PLAIN_AUDIO, .ENCRYPTED_AUDIO]
             }
         }
         

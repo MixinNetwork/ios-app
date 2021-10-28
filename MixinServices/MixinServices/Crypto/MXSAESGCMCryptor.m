@@ -135,7 +135,7 @@ static const size_t tagLength = 16;
     }
     
     int finalLength;
-    if (!EVP_DecryptFinal_ex(ctx, output + cipherLength, &finalLength)) {
+    if (!EVP_DecryptFinal_ex(ctx, output + updateLength, &finalLength)) {
         if (outError) {
             *outError = [NSError errorWithDomain:MXSAESCryptorErrorDomain
                                             code:MXSAESCryptorErrorCodeFinalization

@@ -213,6 +213,7 @@ public class ReceiveMessageService: MixinService {
             ReceiveMessageService.shared.processSystemMessage(data: data)
             ReceiveMessageService.shared.processPlainMessage(data: data)
             ReceiveMessageService.shared.processSignalMessage(data: data)
+            ReceiveMessageService.shared.processEncryptedMessage(data: data)
             ReceiveMessageService.shared.processAppButton(data: data)
             ReceiveMessageService.shared.processAppCard(data: data)
             ReceiveMessageService.shared.processCallMessage(data: data)
@@ -238,7 +239,8 @@ public class ReceiveMessageService: MixinService {
                                              userId: data.userId,
                                              sessionId: data.sessionId,
                                              sentToServer: nil,
-                                             createdAt: Date().toUTCString())
+                                             createdAt: Date().toUTCString(),
+                                             publicKey: nil)
             UserDatabase.current.save(session)
         }
     }
@@ -429,7 +431,13 @@ public class ReceiveMessageService: MixinService {
                         self.updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
                         MessageHistoryDAO.shared.replaceMessageHistory(messageId: data.messageId)
                     } else {
-                        self.processDecryptSuccess(data: data, plainText: plainText)
+                        if ["_TEXT", "_POST", "_LOCATION", "_TRANSCRIPT"].contains(where: data.category.hasSuffix(_:)) {
+                            self.processDecryptSuccess(data: data, decryptedData: plain)
+                        } else if let decryptedData = Data(base64Encoded: plainText) {
+                            self.processDecryptSuccess(data: data, decryptedData: decryptedData)
+                        } else {
+                            self.processUnknownMessage(data: data)
+                        }
                     }
                 } else {
                     if data.userId != myUserId {
@@ -511,7 +519,41 @@ public class ReceiveMessageService: MixinService {
             }
         }
     }
-
+    
+    private func processEncryptedMessage(data: BlazeMessageData) {
+        guard data.category.hasPrefix("ENCRYPTED_") else {
+            return
+        }
+        guard
+            let cipher = Data(base64Encoded: data.data),
+            let pk = RequestSigning.edDSAPrivateKey,
+            let sidString = LoginManager.shared.account?.session_id,
+            let mySessionId = UUID(uuidString: sidString)
+        else {
+            let hasSessionId = LoginManager.shared.account?.session_id != nil
+            let info = [
+                "is_cipher_valid": Data(base64Encoded: data.data) != nil,
+                "has_pk": RequestSigning.edDSAPrivateKey != nil,
+                "has_sid": hasSessionId,
+                "is_sid_valid": hasSessionId && UUID(uuidString: LoginManager.shared.account?.session_id ?? "") != nil
+            ]
+            Logger.conversation(id: data.conversationId).error(category: "EncryptedBotMessage", message: "Failed to decrypt", userInfo: info)
+            reporter.report(error: MixinServicesError.decryptBotMessage(info))
+            updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
+            ReceiveMessageService.shared.processUnknownMessage(data: data)
+            return
+        }
+        do {
+            let decryptedData = try EncryptedProtocol.decrypt(cipher: cipher, with: pk, sessionId: mySessionId)
+            _ = syncUser(userId: data.getSenderId())
+            processDecryptSuccess(data: data, decryptedData: decryptedData)
+        } catch {
+            reporter.report(error: error)
+            ReceiveMessageService.shared.processUnknownMessage(data: data)
+        }
+        updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
+    }
+    
     private func refreshKeys(conversationId: String) {
         let now = Date().timeIntervalSince1970
         guard now - (refreshRefreshOneTimePreKeys[conversationId] ?? 0) > 60 else {
@@ -536,29 +578,22 @@ public class ReceiveMessageService: MixinService {
         }
     }
     
-    private func processDecryptSuccess(data: BlazeMessageData, plainText: String) {
+    private func processDecryptSuccess(data: BlazeMessageData, decryptedData: Data) {
         if data.category.hasSuffix("_TEXT") || data.category.hasSuffix("_POST") {
-            var content = plainText
-            if data.category.hasPrefix("PLAIN_") {
-                guard let decoded = plainText.base64Decoded() else {
-                    return
-                }
-                content = decoded
+            guard let content = String(data: decryptedData, encoding: .utf8) else {
+                ReceiveMessageService.shared.processUnknownMessage(data: data)
+                return
             }
             let message = Message.createMessage(textMessage: content, data: data)
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification)
         } else if data.category.hasSuffix("_IMAGE") || data.category.hasSuffix("_VIDEO") {
-            guard let base64Data = Data(base64Encoded: plainText) else {
-                ReceiveMessageService.shared.processUnknownMessage(data: data)
-                return
-            }
-            guard let transferMediaData = (try? JSONDecoder.default.decode(TransferAttachmentData.self, from: base64Data)) else {
-                Logger.conversation(id: data.conversationId).error(category: "DecryptSuccess", message: "Invalid data for category: \(data.category), data: \(String(data: base64Data, encoding: .utf8))")
+            guard let transferMediaData = (try? JSONDecoder.default.decode(TransferAttachmentData.self, from: decryptedData)) else {
+                Logger.conversation(id: data.conversationId).error(category: "DecryptSuccess", message: "Invalid data for category: \(data.category), data: \(String(data: decryptedData, encoding: .utf8))")
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }
             guard let height = transferMediaData.height, let width = transferMediaData.width, height > 0, width > 0 else {
-                Logger.conversation(id: data.conversationId).error(category: "DecryptSuccess", message: "Invalid TransferAttachmentData for category: \(data.category), data: \(String(data: base64Data, encoding: .utf8))")
+                Logger.conversation(id: data.conversationId).error(category: "DecryptSuccess", message: "Invalid TransferAttachmentData for category: \(data.category), data: \(String(data: decryptedData, encoding: .utf8))")
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }
@@ -578,24 +613,18 @@ public class ReceiveMessageService: MixinService {
             let message = Message.createMessage(mediaData: transferMediaData, data: data)
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification)
         } else if data.category.hasSuffix("_LIVE") {
-            guard let base64Data = Data(base64Encoded: plainText) else {
+            guard let live = (try? JSONDecoder.default.decode(TransferLiveData.self, from: decryptedData)) else {
+                Logger.conversation(id: data.conversationId).error(category: "DecryptSuccess", message: "Invalid TransferLiveData for category: \(data.category), data: \(String(data: decryptedData, encoding: .utf8))")
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }
-            guard let live = (try? JSONDecoder.default.decode(TransferLiveData.self, from: base64Data)) else {
-                Logger.conversation(id: data.conversationId).error(category: "DecryptSuccess", message: "Invalid TransferLiveData for category: \(data.category), data: \(String(data: base64Data, encoding: .utf8))")
-                ReceiveMessageService.shared.processUnknownMessage(data: data)
-                return
-            }
-            let message = Message.createMessage(liveData: live, content: plainText.base64Decoded(), data: data)
+            let message = Message.createMessage(liveData: live,
+                                                content: String(data: decryptedData, encoding: .utf8),
+                                                data: data)
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification)
         } else if data.category.hasSuffix("_DATA")  {
-            guard let base64Data = Data(base64Encoded: plainText) else {
-                ReceiveMessageService.shared.processUnknownMessage(data: data)
-                return
-            }
-            guard let transferMediaData = (try? JSONDecoder.default.decode(TransferAttachmentData.self, from: base64Data)) else {
-                Logger.conversation(id: data.conversationId).error(category: "DecryptSuccess", message: "Invalid TransferAttachmentData for category: \(data.category), data: \(String(data: base64Data, encoding: .utf8))")
+            guard let transferMediaData = (try? JSONDecoder.default.decode(TransferAttachmentData.self, from: decryptedData)) else {
+                Logger.conversation(id: data.conversationId).error(category: "DecryptSuccess", message: "Invalid TransferAttachmentData for category: \(data.category), data: \(String(data: decryptedData, encoding: .utf8))")
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }
@@ -606,12 +635,8 @@ public class ReceiveMessageService: MixinService {
             let message = Message.createMessage(mediaData: transferMediaData, data: data)
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification)
         } else if data.category.hasSuffix("_AUDIO") {
-            guard let base64Data = Data(base64Encoded: plainText) else {
-                ReceiveMessageService.shared.processUnknownMessage(data: data)
-                return
-            }
-            guard let transferMediaData = (try? JSONDecoder.default.decode(TransferAttachmentData.self, from: base64Data)) else {
-                Logger.conversation(id: data.conversationId).error(category: "DecryptSuccess", message: "Invalid TransferAttachmentData for category: \(data.category), data: \(String(data: base64Data, encoding: .utf8))")
+            guard let transferMediaData = (try? JSONDecoder.default.decode(TransferAttachmentData.self, from: decryptedData)) else {
+                Logger.conversation(id: data.conversationId).error(category: "DecryptSuccess", message: "Invalid TransferAttachmentData for category: \(data.category), data: \(String(data: decryptedData, encoding: .utf8))")
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }
@@ -620,23 +645,19 @@ public class ReceiveMessageService: MixinService {
             let job = AttachmentDownloadJob(message: message)
             ConcurrentJobQueue.shared.addJob(job: job)
         } else if data.category.hasSuffix("_STICKER") {
-            guard let transferStickerData = parseSticker(data: data, stickerText: plainText) else {
+            guard let transferStickerData = parseSticker(data: data, decryptedData: decryptedData) else {
                 return
             }
             let message = Message.createMessage(stickerData: transferStickerData, data: data)
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification)
         } else if data.category.hasSuffix("_CONTACT") {
-            guard let base64Data = Data(base64Encoded: plainText) else {
-                ReceiveMessageService.shared.processUnknownMessage(data: data)
-                return
-            }
-            guard let transferData = (try? JSONDecoder.default.decode(TransferContactData.self, from: base64Data)) else {
-                Logger.conversation(id: data.conversationId).error(category: "DecryptSuccess", message: "Invalid TransferContactData for category: \(data.category), data: \(String(data: base64Data, encoding: .utf8))")
+            guard let transferData = (try? JSONDecoder.default.decode(TransferContactData.self, from: decryptedData)) else {
+                Logger.conversation(id: data.conversationId).error(category: "DecryptSuccess", message: "Invalid TransferContactData for category: \(data.category), data: \(String(data: decryptedData, encoding: .utf8))")
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }
             guard !transferData.userId.isEmpty, UUID(uuidString: transferData.userId) != nil else {
-                Logger.conversation(id: data.conversationId).error(category: "DecryptSuccess", message: "Invalid TransferContactData for category: \(data.category), data: \(String(data: base64Data, encoding: .utf8))")
+                Logger.conversation(id: data.conversationId).error(category: "DecryptSuccess", message: "Invalid TransferContactData for category: \(data.category), data: \(String(data: decryptedData, encoding: .utf8))")
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }
@@ -646,32 +667,18 @@ public class ReceiveMessageService: MixinService {
             let message = Message.createMessage(contactData: transferData, data: data)
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification)
         } else if data.category.hasSuffix("_LOCATION") {
-            let contentData: Data?
-            if data.category.hasPrefix("PLAIN_") {
-                contentData = Data(base64Encoded: plainText)
-            } else {
-                contentData = plainText.data(using: .utf8)
-            }
-            guard let jsonData = contentData, (try? JSONDecoder.default.decode(Location.self, from: jsonData)) != nil else {
+            guard (try? JSONDecoder.default.decode(Location.self, from: decryptedData)) != nil else {
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }
-            guard let content = String(data: jsonData, encoding: .utf8) else {
+            guard let content = String(data: decryptedData, encoding: .utf8) else {
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }
             let message = Message.createLocationMessage(content: content, data: data)
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification)
         } else if data.category.hasSuffix("_TRANSCRIPT") {
-            var content = plainText
-            if data.category.hasPrefix("PLAIN_") {
-                guard let decoded = plainText.base64Decoded() else {
-                    ReceiveMessageService.shared.processUnknownMessage(data: data)
-                    return
-                }
-                content = decoded
-            }
-            guard let (content, children, hasAttachment) = parseTranscript(plainText: content, transcriptId: data.messageId) else {
+            guard let (content, children, hasAttachment) = parseTranscript(decryptedData: decryptedData, transcriptId: data.messageId) else {
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }
@@ -787,7 +794,7 @@ public class ReceiveMessageService: MixinService {
             }
             MessageDAO.shared.updateLiveMessage(liveData: liveData, content: plainText.base64Decoded(), status: Message.getStatus(data: data), messageId: messageId, category: data.category, conversationId: data.conversationId, messageSource: data.source, silentNotification: data.silentNotification)
         case MessageCategory.SIGNAL_STICKER.rawValue:
-            guard let transferStickerData = parseSticker(data: data, stickerText: plainText) else {
+            guard let decryptedData = plainText.data(using: .utf8), let transferStickerData = parseSticker(data: data, decryptedData: decryptedData) else {
                 return
             }
             MessageDAO.shared.updateStickerMessage(stickerData: transferStickerData, status: Message.getStatus(data: data), messageId: messageId, category: data.category, conversationId: data.conversationId, messageSource: data.source, silentNotification: data.silentNotification)
@@ -805,7 +812,10 @@ public class ReceiveMessageService: MixinService {
             }
             MessageDAO.shared.updateContactMessage(transferData: transferData, status: Message.getStatus(data: data), messageId: messageId, category: data.category, conversationId: data.conversationId, messageSource: data.source, silentNotification: data.silentNotification)
         case MessageCategory.SIGNAL_TRANSCRIPT.rawValue:
-            guard let (content, children, hasAttachment) = parseTranscript(plainText: plainText, transcriptId: messageId) else {
+            guard
+                let decryptedData = plainText.data(using: .utf8),
+                let (content, children, hasAttachment) = parseTranscript(decryptedData: decryptedData, transcriptId: messageId)
+            else {
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }
@@ -826,21 +836,17 @@ public class ReceiveMessageService: MixinService {
             break
         }
     }
-
-    private func parseSticker(data: BlazeMessageData, stickerText: String) -> TransferStickerData? {
-        guard let base64Data = Data(base64Encoded: stickerText) else {
-            ReceiveMessageService.shared.processUnknownMessage(data: data)
-            return nil
-        }
-        guard let transferStickerData = (try? JSONDecoder.default.decode(TransferStickerData.self, from: base64Data)) else {
-            Logger.conversation(id: data.conversationId).error(category: "ParseSticker", message: "Invalid TransferStickerData: \(String(data: base64Data, encoding: .utf8))")
+    
+    private func parseSticker(data: BlazeMessageData, decryptedData: Data) -> TransferStickerData? {
+        guard let transferStickerData = (try? JSONDecoder.default.decode(TransferStickerData.self, from: decryptedData)) else {
+            Logger.conversation(id: data.conversationId).error(category: "ParseSticker", message: "Invalid TransferStickerData: \(String(data: decryptedData, encoding: .utf8))")
             ReceiveMessageService.shared.processUnknownMessage(data: data)
             return nil
         }
 
         if let stickerId = transferStickerData.stickerId {
             guard !stickerId.isEmpty, UUID(uuidString: stickerId) != nil else {
-                Logger.conversation(id: data.conversationId).error(category: "ParseSticker", message: "Invalid TransferStickerData: \(String(data: base64Data, encoding: .utf8))")
+                Logger.conversation(id: data.conversationId).error(category: "ParseSticker", message: "Invalid TransferStickerData: \(String(data: decryptedData, encoding: .utf8))")
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return nil
             }
@@ -869,13 +875,10 @@ public class ReceiveMessageService: MixinService {
         return nil
     }
     
-    private func parseTranscript(plainText: String, transcriptId: String) -> (content: String, children: [TranscriptMessage], hasAttachment: Bool)? {
+    private func parseTranscript(decryptedData: Data, transcriptId: String) -> (content: String, children: [TranscriptMessage], hasAttachment: Bool)? {
         var hasAttachment = false
         
-        guard
-            let jsonData = plainText.data(using: .utf8),
-            let descendants = try? JSONDecoder.default.decode([TranscriptMessage].self, from: jsonData)
-        else {
+        guard let descendants = try? JSONDecoder.default.decode([TranscriptMessage].self, from: decryptedData) else {
             return nil
         }
         
@@ -1074,7 +1077,11 @@ public class ReceiveMessageService: MixinService {
             }
         case MessageCategory.PLAIN_TEXT.rawValue, MessageCategory.PLAIN_IMAGE.rawValue, MessageCategory.PLAIN_DATA.rawValue, MessageCategory.PLAIN_VIDEO.rawValue, MessageCategory.PLAIN_LIVE.rawValue, MessageCategory.PLAIN_AUDIO.rawValue, MessageCategory.PLAIN_STICKER.rawValue, MessageCategory.PLAIN_CONTACT.rawValue, MessageCategory.PLAIN_POST.rawValue, MessageCategory.PLAIN_LOCATION.rawValue, MessageCategory.PLAIN_TRANSCRIPT.rawValue:
             _ = syncUser(userId: data.getSenderId())
-            processDecryptSuccess(data: data, plainText: data.data)
+            if let decoded = Data(base64Encoded: data.data) {
+                processDecryptSuccess(data: data, decryptedData: decoded)
+            } else {
+                processUnknownMessage(data: data)
+            }
             updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
         default:
             break
@@ -1217,7 +1224,9 @@ extension ReceiveMessageService {
 
             Logger.general.info(category: "ProcessSystemSessionMessage", message: "Desktop login")
 
-            ParticipantSessionDAO.shared.provisionSession(userId: systemSession.userId, sessionId: systemSession.sessionId)
+            ParticipantSessionDAO.shared.provisionSession(userId: systemSession.userId,
+                                                          sessionId: systemSession.sessionId,
+                                                          publicKey: systemSession.publicKey)
             NotificationCenter.default.post(onMainThread: Self.userSessionDidChangeNotification, object: self)
         } else if (systemSession.action == SystemSessionMessageAction.DESTROY.rawValue) {
             guard AppGroupUserDefaults.Account.extensionSession == systemSession.sessionId else {

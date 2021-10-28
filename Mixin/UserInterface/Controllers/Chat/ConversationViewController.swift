@@ -1233,7 +1233,14 @@ class ConversationViewController: UIViewController {
     func updateInputWrapper(for preferredContentHeight: CGFloat, animated: Bool) {
         let oldHeight = inputWrapperHeightConstraint.constant
         let newHeight = min(maxInputWrapperHeight, preferredContentHeight)
-        inputWrapperHeightConstraint.constant = newHeight
+        let adjustInputWrapperHeight = {
+            self.inputWrapperHeightConstraint.constant = newHeight
+        }
+        if animated {
+            adjustInputWrapperHeight()
+        } else {
+            UIView.performWithoutAnimation(adjustInputWrapperHeight)
+        }
         updateTableViewBottomInsetWithBottomBarHeight(old: oldHeight, new: newHeight, animated: animated)
     }
     
@@ -2384,37 +2391,41 @@ extension ConversationViewController {
     }
     
     private func updateTableViewBottomInsetWithBottomBarHeight(old: CGFloat, new: CGFloat, animated: Bool) {
-        tableView.scrollIndicatorInsets.bottom = new - view.safeAreaInsets.bottom
-        if animated {
-            UIView.beginAnimations(nil, context: nil)
-            UIView.setAnimationDuration(0.5)
-            UIView.setAnimationCurve(.overdamped)
-        }
-        updateNavigationBarPositionWithInputWrapperViewHeight(oldHeight: old, newHeight: new)
-        let bottomInset = new + MessageViewModel.bottomSeparatorHeight
         
-        var newContentOffsetY = tableView.contentOffset.y + bottomInset - tableView.contentInset.bottom
-        if isAppearanceAnimating, let focusIndexPath = dataSource?.focusIndexPath {
-            let focusRectY = tableView.rectForRow(at: focusIndexPath).origin.y
-            let availableSpace = focusRectY
-                - tableView.contentOffset.y
-                - tableView.contentInset.top
-                - ConversationDateHeaderView.height
-            if availableSpace > 0 {
-                newContentOffsetY = min(newContentOffsetY, tableView.contentOffset.y + availableSpace)
-            } else {
-                newContentOffsetY = tableView.contentOffset.y
+        func layout() {
+            updateNavigationBarPositionWithInputWrapperViewHeight(oldHeight: old, newHeight: new)
+            let bottomInset = new + MessageViewModel.bottomSeparatorHeight
+            
+            var newContentOffsetY = tableView.contentOffset.y + bottomInset - tableView.contentInset.bottom
+            if isAppearanceAnimating, let focusIndexPath = dataSource?.focusIndexPath {
+                let focusRectY = tableView.rectForRow(at: focusIndexPath).origin.y
+                let availableSpace = focusRectY
+                    - tableView.contentOffset.y
+                    - tableView.contentInset.top
+                    - ConversationDateHeaderView.height
+                if availableSpace > 0 {
+                    newContentOffsetY = min(newContentOffsetY, tableView.contentOffset.y + availableSpace)
+                } else {
+                    newContentOffsetY = tableView.contentOffset.y
+                }
+            }
+            tableView.contentInset.bottom = bottomInset
+            if adjustTableViewContentOffsetWhenInputWrapperHeightChanges {
+                tableView.setContentOffsetYSafely(newContentOffsetY)
+            }
+            if view.window != nil {
+                view.layoutIfNeeded()
             }
         }
-        tableView.contentInset.bottom = bottomInset
-        if adjustTableViewContentOffsetWhenInputWrapperHeightChanges {
-            tableView.setContentOffsetYSafely(newContentOffsetY)
-        }
-        if view.window != nil {
-            view.layoutIfNeeded()
-        }
+        
+        tableView.scrollIndicatorInsets.bottom = new - view.safeAreaInsets.bottom
         if animated {
-            UIView.commitAnimations()
+            UIView.animate(withDuration: 0.5) {
+                UIView.setAnimationCurve(.overdamped)
+                layout()
+            }
+        } else {
+            UIView.performWithoutAnimation(layout)
         }
     }
     

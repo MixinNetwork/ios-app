@@ -226,7 +226,7 @@ extension SignalProtocol {
         guard let sessionId = sessionId, !sessionId.isEmpty else {
             return 1
         }
-        return sessionId.toUUID().hashCode()
+        return sessionId.uuidDigest().hashCode()
     }
 
 }

@@ -1,8 +1,0 @@
-framework module "Goutils" {
-	header "ref.h"
-    header "Goutils.objc.h"
-    header "Universe.objc.h"
-    header "Goutils.h"
-
-    export *
-}

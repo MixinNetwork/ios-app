@@ -23,7 +23,6 @@ Mixin Core Services.
 
   s.static_framework = true
 
-  s.vendored_frameworks = 'MixinServices/Goutils.framework'
   s.vendored_libraries = 'MixinServices/libsodium/lib/libsodium.a'
   s.source_files = 'MixinServices/Foundation/**/*', 'MixinServices/Crypto/**/*', 'MixinServices/Database/**/*', 'MixinServices/Services/**/*'
 

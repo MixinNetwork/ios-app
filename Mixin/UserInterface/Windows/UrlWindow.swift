@@ -48,7 +48,7 @@ class UrlWindow {
                     result = false
                 }
             }
-            if !result && presentHintOnUnsupportedMixinSchema {
+            if !result && presentHintOnUnsupportedMixinSchema && url.scheme == MixinURL.scheme {
                 UnknownURLWindow.instance().render(url: url).presentPopupControllerAnimated()
                 return true
             } else {

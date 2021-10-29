@@ -164,6 +164,9 @@ public class SendMessageService: MixinService {
                 resendMessages.append(ResendSessionMessage(messageId: messageId, userId: userId, sessionId: sessionId, status: 0))
                 continue
             }
+            guard needResendMessage.category.hasPrefix("SIGNAL_") else {
+                continue
+            }
             guard needResendMessage.createdAt > participent.createdAt else {
                 continue
             }

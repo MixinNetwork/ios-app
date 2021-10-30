@@ -70,6 +70,10 @@ public enum Logger {
         write(level: .info, category: category, message: message, userInfo: userInfo)
     }
     
+    public func warn(category: StaticString, message: String, userInfo: UserInfo? = nil) {
+        write(level: .warning, category: category, message: message, userInfo: userInfo)
+    }
+    
     public func error(category: StaticString, message: String, userInfo: UserInfo? = nil) {
         write(level: .error, category: category, message: message, userInfo: userInfo)
     }
@@ -80,6 +84,10 @@ public enum Logger {
     
     public func info(category: StaticString, message: String, userInfo: [UserInfo.Key: UserInfo.Value]) {
         write(level: .info, category: category, message: message, userInfo: UserInfo(userInfo))
+    }
+    
+    public func warn(category: StaticString, message: String, userInfo: [UserInfo.Key: UserInfo.Value]) {
+        write(level: .warning, category: category, message: message, userInfo: UserInfo(userInfo))
     }
     
     public func error(category: StaticString, message: String, userInfo: [UserInfo.Key: UserInfo.Value]) {
@@ -115,7 +123,7 @@ extension Logger {
         
         case debug
         case info
-        case warn
+        case warning
         case error
         
         var briefOutput: String {
@@ -124,7 +132,7 @@ extension Logger {
                 return "🛠"
             case .info:
                 return "ℹ️"
-            case .warn:
+            case .warning:
                 return "⚠️"
             case .error:
                 return "❌"
@@ -137,7 +145,7 @@ extension Logger {
                 return "[DEBUG]"
             case .info:
                 return "[INFO] "
-            case .warn:
+            case .warning:
                 return "[WARN] "
             case .error:
                 return "[ERROR]"

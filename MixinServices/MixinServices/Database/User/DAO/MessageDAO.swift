@@ -81,12 +81,6 @@ public final class MessageDAO: UserDatabaseDAO {
         WHERE a.album_id = messages.album_id AND s.name = messages.name
     ) WHERE category LIKE '%_STICKER' AND ifnull(sticker_id, '') = ''
     """
-    private static let sqlUpdateUnseenMessageCount = """
-    UPDATE conversations SET unseen_message_count = (
-        SELECT count(*) FROM messages
-        WHERE conversation_id = ? AND status = 'DELIVERED' AND user_id != ?
-    ) WHERE conversation_id = ?
-    """
     
     private let updateMediaStatusQueue = DispatchQueue(label: "one.mixin.services.queue.media.status.queue")
     
@@ -200,6 +194,15 @@ public final class MessageDAO: UserDatabaseDAO {
         db.recordExists(in: Message.self, where: Message.column(of: .messageId) == messageId)
     }
     
+    public func getExistMessageIds(messageIds: [String]) -> [String] {
+        guard messageIds.count > 0 else {
+            return []
+        }
+        return db.select(column: Message.column(of: .messageId),
+                  from: Message.self,
+                  where: messageIds.contains(Message.column(of: .messageId)))
+    }
+    
     public func batchUpdateMessageStatus(readMessageIds: [String], mentionMessageIds: [String]) {
         var readMessageIds = readMessageIds
         var readMessages: [Message] = []
@@ -228,7 +231,7 @@ public final class MessageDAO: UserDatabaseDAO {
                     .filter(readMessageIds.contains(Message.column(of: .messageId)))
                     .updateAll(db, [Message.column(of: .status).set(to: MessageStatus.READ.rawValue)])
                 for conversationId in conversationIds {
-                    try MessageDAO.shared.updateUnseenMessageCount(database: db, conversationId: conversationId)
+                    try ConversationDAO.shared.updateUnseenMessageCount(database: db, conversationId: conversationId)
                 }
             }
             
@@ -293,7 +296,7 @@ public final class MessageDAO: UserDatabaseDAO {
                 try Message
                     .filter(Message.column(of: .messageId) == messageId)
                     .updateAll(db, [Message.column(of: .status).set(to: status)])
-                try updateUnseenMessageCount(database: db, conversationId: conversationId)
+                try ConversationDAO.shared.updateUnseenMessageCount(database: db, conversationId: conversationId)
                 if let completion = completion {
                     db.afterNextTransactionCommit(completion)
                 }
@@ -306,11 +309,6 @@ public final class MessageDAO: UserDatabaseDAO {
         }
         
         return true
-    }
-    
-    public func updateUnseenMessageCount(database: GRDB.Database, conversationId: String) throws {
-        try database.execute(sql: Self.sqlUpdateUnseenMessageCount,
-                             arguments: [conversationId, myUserId, conversationId])
     }
     
     @discardableResult
@@ -585,7 +583,8 @@ public final class MessageDAO: UserDatabaseDAO {
         if shouldInsertIntoFTSTable {
             try insertFTSContent(database, message: message, children: children)
         }
-        try MessageDAO.shared.updateUnseenMessageCount(database: database, conversationId: message.conversationId)
+        try ConversationDAO.shared.updateUnseenMessageCount(database: database, conversationId: message.conversationId)
+        try ConversationDAO.shared.updateLastMessage(database: database, conversationId: message.conversationId, messageId: message.messageId, createdAt: message.createdAt)
         
         database.afterNextTransactionCommit { (_) in
             // Dispatch to global queue to prevent deadlock
@@ -686,7 +685,7 @@ public final class MessageDAO: UserDatabaseDAO {
         }
         
         if status == MessageStatus.FAILED.rawValue {
-            try MessageDAO.shared.updateUnseenMessageCount(database: database, conversationId: conversationId)
+            try ConversationDAO.shared.updateUnseenMessageCount(database: database, conversationId: conversationId)
         }
         
         
@@ -793,7 +792,7 @@ extension MessageDAO {
                 && Message.column(of: .category) != MessageCategory.MESSAGE_RECALL.rawValue
             let changes = try Message.filter(condition).updateAll(db, assignments)
             if changes > 0 {
-                try MessageDAO.shared.updateUnseenMessageCount(database: db, conversationId: conversationId)
+                try ConversationDAO.shared.updateUnseenMessageCount(database: db, conversationId: conversationId)
                 newMessage = try MessageItem.fetchOne(db, sql: MessageDAO.sqlQueryFullMessageById, arguments: [messageId], adapter: nil)
             }
             
@@ -944,7 +943,7 @@ extension MessageDAO {
 
 extension MessageDAO {
     
-    private func insertFTSContent(_ db: GRDB.Database, message: Message, children: [TranscriptMessage]?) throws {
+    public func insertFTSContent(_ db: GRDB.Database, message: Message, children: [TranscriptMessage]?) throws {
         let shouldInsertIntoFTSTable = AppGroupUserDefaults.Database.isFTSInitialized
             && message.status != MessageStatus.FAILED.rawValue
             && MessageCategory.ftsAvailableCategoryStrings.contains(message.category)

@@ -19,6 +19,12 @@ public final class UserDAO: UserDatabaseDAO {
     LEFT JOIN apps a ON a.app_id = u.app_id
     """
     
+    public func isBotUser(userId: String) -> Bool {
+        db.recordExists(in: User.self, where: User.column(of: .userId) == userId
+                        && User.column(of: .identityNumber) > "0"
+                        && User.column(of: .appId) != nil)
+    }
+    
     public func deleteUser(userId: String) {
         db.delete(User.self, where: User.column(of: .userId) == userId)
     }
@@ -33,6 +39,15 @@ public final class UserDAO: UserDatabaseDAO {
     
     public func isExist(userId: String) -> Bool {
         db.recordExists(in: User.self, where: User.column(of: .userId) == userId)
+    }
+    
+    public func getExistUserIds(userIds: [String]) -> [String] {
+        guard userIds.count > 0 else {
+            return []
+        }
+        return db.select(column: User.column(of: .userId),
+                  from: User.self,
+                  where: userIds.contains(User.column(of: .userId)))
     }
     
     public func getBlockUsers() -> [UserItem] {
@@ -165,7 +180,10 @@ public final class UserDAO: UserDatabaseDAO {
     }
     
     public func mentionRepresentation(identityNumbers: [String]) -> [String: String] {
-        db.select(keyColumn: User.column(of: .identityNumber),
+        guard identityNumbers.count > 0 else {
+            return [:]
+        }
+        return db.select(keyColumn: User.column(of: .identityNumber),
                   valueColumn: User.column(of: .fullName),
                   from: User.self,
                   where: identityNumbers.contains(User.column(of: .identityNumber)))

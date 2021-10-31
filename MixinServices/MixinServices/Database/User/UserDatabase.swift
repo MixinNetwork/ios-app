@@ -322,14 +322,7 @@ public final class UserDatabase: Database {
                 UPDATE conversations SET last_message_id = (select id from messages where conversation_id = old.conversation_id order by created_at DESC limit 1) WHERE conversation_id = old.conversation_id;
             END
             """
-            let lastMessageUpdate = """
-            CREATE TRIGGER IF NOT EXISTS conversation_last_message_update AFTER INSERT ON messages
-            BEGIN
-                UPDATE conversations SET last_message_id = new.id, last_message_created_at = new.created_at WHERE conversation_id = new.conversation_id;
-            END
-            """
             try db.execute(sql: lastMessageDelete)
-            try db.execute(sql: lastMessageUpdate)
         }
         
         migrator.registerMigration("fts5_v3_2") { (db) in
@@ -418,6 +411,10 @@ public final class UserDatabase: Database {
             if !columnNames.contains("public_key") {
                 try db.execute(sql: "ALTER TABLE participant_session ADD COLUMN public_key TEXT")
             }
+        }
+        
+        migrator.registerMigration("batch_process_messages") { (db) in
+            try db.execute(sql: "DROP INDEX IF EXISTS conversation_last_message_update")
         }
         
         /* Remaining works:

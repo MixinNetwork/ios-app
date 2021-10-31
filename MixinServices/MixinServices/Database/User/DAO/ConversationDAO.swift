@@ -84,6 +84,25 @@ public final class ConversationDAO: UserDatabaseDAO {
         return db.select(with: sql)
     }
     
+    public func updateUnseenMessageCount(database: GRDB.Database, conversationId: String) throws {
+        let sql = """
+        UPDATE conversations SET unseen_message_count = (
+            SELECT count(*) FROM messages
+            WHERE conversation_id = ? AND status = 'DELIVERED' AND user_id != ?
+        ) WHERE conversation_id = ?
+        """
+        try database.execute(sql: sql,
+                             arguments: [conversationId, myUserId, conversationId])
+    }
+    
+    public func updateLastMessage(database: GRDB.Database, conversationId: String, messageId: String, createdAt: String) throws {
+        let sql = """
+        UPDATE conversations SET last_message_id = ?, last_message_created_at = ? WHERE conversation_id = ?
+        """
+        try database.execute(sql: sql,
+                             arguments: [messageId, createdAt, conversationId])
+    }
+    
     public func isExist(conversationId: String) -> Bool {
         db.recordExists(in: Conversation.self,
                         where: Conversation.column(of: .conversationId) == conversationId)

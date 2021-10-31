@@ -327,6 +327,17 @@ public enum MessageCategory: String, Decodable {
     
     public static let allMediaCategoriesString: Set<String> = Set(allMediaCategories.map(\.rawValue))
     
+    public static let allBotCategories: [MessageCategory] = [
+        .PLAIN_TEXT, .PLAIN_IMAGE, .PLAIN_VIDEO, .PLAIN_DATA,
+        .PLAIN_STICKER, .PLAIN_CONTACT, .PLAIN_AUDIO, .PLAIN_LIVE,
+        .PLAIN_POST, .PLAIN_LOCATION, .PLAIN_TRANSCRIPT,
+        .ENCRYPTED_TEXT, .ENCRYPTED_IMAGE, .ENCRYPTED_VIDEO, .ENCRYPTED_DATA,
+        .ENCRYPTED_STICKER, .ENCRYPTED_CONTACT, .ENCRYPTED_AUDIO, .ENCRYPTED_LIVE,
+        .ENCRYPTED_POST, .ENCRYPTED_LOCATION, .ENCRYPTED_TRANSCRIPT
+    ]
+    
+    public static let allBotCategoriesString: Set<String> = Set(allBotCategories.map(\.rawValue))
+    
     public static let endCallCategories: [MessageCategory] = [
         .WEBRTC_AUDIO_END,
         .WEBRTC_AUDIO_BUSY,

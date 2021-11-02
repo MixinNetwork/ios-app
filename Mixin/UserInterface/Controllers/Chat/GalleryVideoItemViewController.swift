@@ -219,6 +219,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         controlView.slider.value = controlView.slider.minimumValue
         controlView.playedTimeLabel.text = mediaDurationFormatter.string(from: 0)
         guard let item = item else {
+            Logger.general.error(category: "GalleryVideoItemViewController", message: "Load item failed, it's nil")
             return
         }
         videoRatio = standardizedRatio(of: item.size)
@@ -441,6 +442,24 @@ extension GalleryVideoItemViewController: AVPictureInPictureControllerDelegate {
 
 extension GalleryVideoItemViewController {
     
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        guard keyPath == #keyPath(AVPlayerItem.status) else {
+            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
+            return
+        }
+        if let statusNumber = change?[.newKey] as? NSNumber, let status = AVPlayerItem.Status(rawValue: statusNumber.intValue) {
+            if case .failed = status, let error = player.currentItem?.error {
+                Logger.general.error(category: "GalleryVideoItemViewController", message: "Player item status is failed: \(error)")
+            }
+        } else {
+            Logger.general.error(category: "GalleryVideoItemViewController", message: "Player item status is not yet ready")
+        }
+    }
+    
+}
+
+extension GalleryVideoItemViewController {
+    
     @objc func playAction(_ sender: Any) {
         if let controller = UIApplication.homeContainerViewController?.pipController, controller != self {
             if controller.item == self.item {
@@ -451,6 +470,7 @@ extension GalleryVideoItemViewController {
             }
         }
         guard let item = item else {
+            Logger.general.error(category: "GalleryVideoItemViewController", message: "Play item failed, it's nil")
             return
         }
         playerDidFailedToPlay = false
@@ -462,10 +482,12 @@ extension GalleryVideoItemViewController {
                     try session.setCategory(.playback, mode: .default, options: .defaultToSpeaker)
                 }
                 mute = false
-            } catch AudioSession.Error.insufficientPriority {
+            } catch AudioSession.Error.insufficientPriority(let priority) {
                 mute = true
+                Logger.general.error(category: "GalleryVideoItemViewController", message: "AudioSession activate with insufficient Priority :\(priority)")
             } catch {
                 mute = false
+                Logger.general.error(category: "GalleryVideoItemViewController", message: "AudioSession activate error: \(error)")
             }
             player.isMuted = mute
             addTimeObservers()
@@ -682,6 +704,10 @@ extension GalleryVideoItemViewController {
         itemPresentationSizeObserver = item.observe(\.presentationSize) { [weak self] (item, _) in
             self?.updateVideoViewSize(with: item)
         }
+        item.addObserver(self,
+                        forKeyPath: #keyPath(AVPlayerItem.status),
+                        options: [.old, .new],
+                        context: nil)
         
         let center = NotificationCenter.default
         center.addObserver(self,
@@ -706,10 +732,12 @@ extension GalleryVideoItemViewController {
                     try session.setCategory(.playback, mode: .default, options: .defaultToSpeaker)
                 }
                 mute = false
-            } catch AudioSession.Error.insufficientPriority {
+            } catch AudioSession.Error.insufficientPriority(let priority) {
                 mute = true
+                Logger.general.error(category: "GalleryVideoItemViewController", message: "AudioSession activate with insufficient Priority :\(priority)")
             } catch {
                 mute = false
+                Logger.general.error(category: "GalleryVideoItemViewController", message: "AudioSession activate error: \(error)")
             }
             player.isMuted = mute
             player.play()
@@ -837,6 +865,7 @@ extension GalleryVideoItemViewController {
         itemStatusObserver?.invalidate()
         itemPresentationSizeObserver?.invalidate()
         timeControlObserver?.invalidate()
+        player.currentItem?.removeObserver(self, forKeyPath: #keyPath(AVPlayerItem.status))
         NotificationCenter.default.removeObserver(self)
     }
     

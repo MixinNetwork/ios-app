@@ -92,18 +92,26 @@ public class ReceiveMessageService: MixinService {
                     return
                 } else if let createdAt = BlazeMessageDAO.shared.getMessageBlaze(messageId: messageId)?.createdAt {
                     repeat {
-                        let blazeMessageDatas = BlazeMessageDAO.shared.getBlazeMessageData(createdAt: createdAt, limit: 50)
-                        guard blazeMessageDatas.count > 0 else {
+                        let blazeMessages = BlazeMessageDAO.shared.getBlazeMessages(createdAt: createdAt, limit: 50)
+                        guard blazeMessages.count > 0 else {
                             callback(nil)
                             return
                         }
 
-                        for data in blazeMessageDatas {
+                        for blazeMessage in blazeMessages {
                             guard !AppGroupUserDefaults.isRunningInMainApp, !extensionTimeWillExpire() else {
                                 callback(nil)
                                 return
                             }
-                            ReceiveMessageService.shared.processReceiveMessage(data: data)
+                            guard let data = try? JSONDecoder.default.decode(BlazeMessageData.self, from: blazeMessage.message) else {
+                                ReceiveMessageService.shared.processBadMessage(messageId: blazeMessage.messageId)
+                                continue
+                            }
+                            if MessageCategory.allBotCategoriesString.contains(data.category) && !blazeMessage.conversationId.isEmpty {
+                                ReceiveMessageService.shared.processBotMessages(data: data)
+                            } else {
+                                ReceiveMessageService.shared.processReceiveMessage(data: data)
+                            }
                             if data.messageId == messageId {
                                 callback(MessageDAO.shared.getFullMessage(messageId: messageId))
                                 return
@@ -163,20 +171,25 @@ public class ReceiveMessageService: MixinService {
                 guard LoginManager.shared.isLoggedIn, !MixinService.isStopProcessMessages else {
                     return
                 }
-                let blazeMessageDatas = BlazeMessageDAO.shared.getBlazeMessageData(limit: 50)
-                guard blazeMessageDatas.count > 0 else {
+                let blazeMessages = BlazeMessageDAO.shared.getBlazeMessages(limit: 50)
+                guard blazeMessages.count > 0 else {
                     return
                 }
 
-                for data in blazeMessageDatas {
+                for blazeMessage in blazeMessages {
                     if MixinService.isStopProcessMessages {
                         return
                     }
-                    if MessageCategory.allBotCategoriesString.contains(data.category) {
-                        ReceiveMessageService.shared.processBotMessages(data: data)
-                        break
+                    guard let data = try? JSONDecoder.default.decode(BlazeMessageData.self, from: blazeMessage.message) else {
+                        ReceiveMessageService.shared.processBadMessage(messageId: blazeMessage.messageId)
+                        continue
                     }
-                    ReceiveMessageService.shared.processReceiveMessage(data: data)
+                    
+                    if MessageCategory.allBotCategoriesString.contains(data.category) && !blazeMessage.conversationId.isEmpty {
+                        ReceiveMessageService.shared.processBotMessages(data: data)
+                    } else {
+                        ReceiveMessageService.shared.processReceiveMessage(data: data)
+                    }
                 }
             } while true
         }
@@ -205,6 +218,10 @@ public class ReceiveMessageService: MixinService {
             }
             
             ReceiveMessageService.shared.syncUsers(userIds: blazeMessages.map{ $0.userId })
+            
+            if MixinService.isStopProcessMessages {
+                return
+            }
             
             let messageIds = blazeMessages.map{ $0.messageId }
             let messageSet = Set<String>(messageIds)
@@ -249,6 +266,10 @@ public class ReceiveMessageService: MixinService {
             }
             let messages = pairMessages.compactMap { $0.0 }
             
+            if MixinService.isStopProcessMessages {
+                return
+            }
+            
             UserDatabase.current.write { db in
                 try messages.save(db)
                 try transcriptMessages.save(db)
@@ -287,7 +308,7 @@ public class ReceiveMessageService: MixinService {
             }
             
             BlazeMessageDAO.shared.delete(messageIds: messageIds)
-        } while LoginManager.shared.isLoggedIn && blazeMessages.count >= pageCount
+        } while LoginManager.shared.isLoggedIn && blazeMessages.count >= pageCount && !isAppExtension
     }
 
     private func processReceiveMessage(data: BlazeMessageData) {
@@ -296,7 +317,7 @@ public class ReceiveMessageService: MixinService {
         }
 
         if MessageDAO.shared.isExist(messageId: data.messageId) || MessageHistoryDAO.shared.isExist(messageId: data.messageId) {
-            ReceiveMessageService.shared.processBadMessage(data: data)
+            ReceiveMessageService.shared.processBadMessage(messageId: data.messageId)
             return
         }
 
@@ -323,7 +344,7 @@ public class ReceiveMessageService: MixinService {
             ReceiveMessageService.shared.processUnknownMessage(data: data)
             ReceiveMessageService.shared.updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
         }
-        BlazeMessageDAO.shared.delete(data: data)
+        BlazeMessageDAO.shared.delete(messageId: data.messageId)
     }
 
     private func checkSession(data: BlazeMessageData) {
@@ -360,9 +381,10 @@ public class ReceiveMessageService: MixinService {
         MessageDAO.shared.insertMessage(message: makeUnknownMessage(data: data), messageSource: data.source, silentNotification: data.silentNotification)
     }
 
-    private func processBadMessage(data: BlazeMessageData) {
-        ReceiveMessageService.shared.updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
-        BlazeMessageDAO.shared.delete(data: data)
+    private func processBadMessage(messageId: String) {
+        MessageHistoryDAO.shared.replaceMessageHistory(messageId: messageId)
+        ReceiveMessageService.shared.updateRemoteMessageStatus(messageId: messageId, status: .DELIVERED)
+        BlazeMessageDAO.shared.delete(messageId: messageId)
     }
     
     private func processCallMessage(data: BlazeMessageData) {

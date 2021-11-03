@@ -894,6 +894,7 @@ extension GalleryVideoItemViewController {
         itemPresentationSizeObserver?.invalidate()
         timeControlObserver?.invalidate()
         player.currentItem?.removeObserver(self, forKeyPath: #keyPath(AVPlayerItem.status))
+        player.removeObserver(self, forKeyPath: #keyPath(AVPlayer.status))
         NotificationCenter.default.removeObserver(self)
     }
     

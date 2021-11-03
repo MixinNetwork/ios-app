@@ -236,7 +236,7 @@ extension Database {
     
     public func select<Record: MixinFetchableRecord & TableRecord>(
         where condition: SQLSpecificExpressible? = nil,
-        order orderings: [SQLOrderingTerm] = [],
+        order orderings: [SQLOrderingTerm]? = nil,
         limit: Int? = nil
     ) -> [Record] {
         try! pool.read { (db) -> [Record] in
@@ -244,7 +244,7 @@ extension Database {
             if let condition = condition {
                 request = request.filter(condition)
             }
-            if !orderings.isEmpty {
+            if let orderings = orderings {
                 request = request.order(orderings)
             }
             if let limit = limit {

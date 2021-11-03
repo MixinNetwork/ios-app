@@ -167,6 +167,21 @@ public class ReceiveMessageService: MixinService {
                 } while AppGroupUserDefaults.isProcessingMessagesInAppExtension && !MixinService.isStopProcessMessages
             }
 
+            var finishedJobCount = 0
+            
+            func updateProgress(remainJobCount: Int, finishedJobCount: Int) {
+                guard displaySyncProcess else {
+                    return
+                }
+                var progress = Int(Float(finishedJobCount) / Float(remainJobCount + finishedJobCount) * 100)
+                if progress > 100 {
+                    progress = 100
+                }
+                NotificationCenter.default.post(onMainThread: Self.progressNotification,
+                                                object: self,
+                                                userInfo: [Self.UserInfoKey.progress: progress])
+            }
+            
             repeat {
                 guard LoginManager.shared.isLoggedIn, !MixinService.isStopProcessMessages else {
                     return
@@ -175,19 +190,30 @@ public class ReceiveMessageService: MixinService {
                 guard blazeMessages.count > 0 else {
                     return
                 }
+                
+                let remainJobCount = BlazeMessageDAO.shared.getCount()
+                if remainJobCount + finishedJobCount > 500 {
+                    displaySyncProcess = true
+                    updateProgress(remainJobCount: remainJobCount, finishedJobCount: finishedJobCount)
+                }
 
                 for blazeMessage in blazeMessages {
                     if MixinService.isStopProcessMessages {
                         return
                     }
                     guard let data = try? JSONDecoder.default.decode(BlazeMessageData.self, from: blazeMessage.message) else {
+                        finishedJobCount += 1
                         ReceiveMessageService.shared.processBadMessage(messageId: blazeMessage.messageId)
                         continue
                     }
                     
                     if MessageCategory.allBotCategoriesString.contains(data.category) && !blazeMessage.conversationId.isEmpty {
-                        ReceiveMessageService.shared.processBotMessages(data: data)
+                        ReceiveMessageService.shared.processBotMessages(data: data) { count in
+                            finishedJobCount += count
+                            updateProgress(remainJobCount: remainJobCount, finishedJobCount: finishedJobCount)
+                        }
                     } else {
+                        finishedJobCount += 1
                         ReceiveMessageService.shared.processReceiveMessage(data: data)
                     }
                 }
@@ -195,7 +221,7 @@ public class ReceiveMessageService: MixinService {
         }
     }
     
-    private func processBotMessages(data: BlazeMessageData) {
+    private func processBotMessages(data: BlazeMessageData, finishedBlock: ((Int) -> Void)? = nil) {
         ReceiveMessageService.shared.syncConversation(data: data)
         ReceiveMessageService.shared.checkSession(data: data)
         _ = ReceiveMessageService.shared.syncUser(userId: data.userId)
@@ -308,6 +334,8 @@ public class ReceiveMessageService: MixinService {
             }
             
             BlazeMessageDAO.shared.delete(messageIds: messageIds)
+            
+            finishedBlock?(messageIds.count)
         } while LoginManager.shared.isLoggedIn && blazeMessages.count >= pageCount && !isAppExtension
     }
 
@@ -714,19 +742,16 @@ public class ReceiveMessageService: MixinService {
     private func makeDecryptMessage(data: BlazeMessageData, decryptedData: Data) -> (Message, [TranscriptMessage]?)? {
         if data.category.hasSuffix("_TEXT") || data.category.hasSuffix("_POST") {
             guard let content = String(data: decryptedData, encoding: .utf8) else {
-                ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return nil
             }
             return (Message.createMessage(textMessage: content, data: data), nil)
         } else if data.category.hasSuffix("_IMAGE") || data.category.hasSuffix("_VIDEO") {
             guard let transferMediaData = (try? JSONDecoder.default.decode(TransferAttachmentData.self, from: decryptedData)) else {
                 Logger.conversation(id: data.conversationId).error(category: "DecryptSuccess", message: "Invalid data for category: \(data.category), data: \(String(data: decryptedData, encoding: .utf8))")
-                ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return nil
             }
             guard let height = transferMediaData.height, let width = transferMediaData.width, height > 0, width > 0 else {
                 Logger.conversation(id: data.conversationId).error(category: "DecryptSuccess", message: "Invalid TransferAttachmentData for category: \(data.category), data: \(String(data: decryptedData, encoding: .utf8))")
-                ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return nil
             }
 
@@ -746,7 +771,6 @@ public class ReceiveMessageService: MixinService {
         } else if data.category.hasSuffix("_LIVE") {
             guard let live = (try? JSONDecoder.default.decode(TransferLiveData.self, from: decryptedData)) else {
                 Logger.conversation(id: data.conversationId).error(category: "DecryptSuccess", message: "Invalid TransferLiveData for category: \(data.category), data: \(String(data: decryptedData, encoding: .utf8))")
-                ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return nil
             }
             return (Message.createMessage(liveData: live,
@@ -755,18 +779,15 @@ public class ReceiveMessageService: MixinService {
         } else if data.category.hasSuffix("_DATA")  {
             guard let transferMediaData = (try? JSONDecoder.default.decode(TransferAttachmentData.self, from: decryptedData)) else {
                 Logger.conversation(id: data.conversationId).error(category: "DecryptSuccess", message: "Invalid TransferAttachmentData for category: \(data.category), data: \(String(data: decryptedData, encoding: .utf8))")
-                ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return nil
             }
             guard transferMediaData.size > 0 else {
-                ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return nil
             }
             return (Message.createMessage(mediaData: transferMediaData, data: data), nil)
         } else if data.category.hasSuffix("_AUDIO") {
             guard let transferMediaData = (try? JSONDecoder.default.decode(TransferAttachmentData.self, from: decryptedData)) else {
                 Logger.conversation(id: data.conversationId).error(category: "DecryptSuccess", message: "Invalid TransferAttachmentData for category: \(data.category), data: \(String(data: decryptedData, encoding: .utf8))")
-                ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return nil
             }
             return (Message.createMessage(mediaData: transferMediaData, data: data), nil)
@@ -778,12 +799,10 @@ public class ReceiveMessageService: MixinService {
         } else if data.category.hasSuffix("_CONTACT") {
             guard let transferData = (try? JSONDecoder.default.decode(TransferContactData.self, from: decryptedData)) else {
                 Logger.conversation(id: data.conversationId).error(category: "DecryptSuccess", message: "Invalid TransferContactData for category: \(data.category), data: \(String(data: decryptedData, encoding: .utf8))")
-                ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return nil
             }
             guard !transferData.userId.isEmpty, UUID(uuidString: transferData.userId) != nil else {
                 Logger.conversation(id: data.conversationId).error(category: "DecryptSuccess", message: "Invalid TransferContactData for category: \(data.category), data: \(String(data: decryptedData, encoding: .utf8))")
-                ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return nil
             }
             guard syncUser(userId: transferData.userId) else {
@@ -792,21 +811,17 @@ public class ReceiveMessageService: MixinService {
             return (Message.createMessage(contactData: transferData, data: data), nil)
         } else if data.category.hasSuffix("_LOCATION") {
             guard (try? JSONDecoder.default.decode(Location.self, from: decryptedData)) != nil else {
-                ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return nil
             }
             guard let content = String(data: decryptedData, encoding: .utf8) else {
-                ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return nil
             }
             return (Message.createLocationMessage(content: content, data: data), nil)
         } else if data.category.hasSuffix("_TRANSCRIPT") {
             guard let (content, children, hasAttachment) = parseTranscript(decryptedData: decryptedData, transcriptId: data.messageId) else {
-                ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return nil
             }
             guard !children.isEmpty else {
-                ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return nil
             }
             let message = Message.createTranscriptMessage(content: content,
@@ -820,6 +835,7 @@ public class ReceiveMessageService: MixinService {
     
     private func processDecryptSuccess(data: BlazeMessageData, decryptedData: Data) {
         guard let (message, children) = makeDecryptMessage(data: data, decryptedData: decryptedData) else {
+            ReceiveMessageService.shared.processUnknownMessage(data: data)
             return
         }
         
@@ -1160,7 +1176,7 @@ public class ReceiveMessageService: MixinService {
         guard userIds.count > 0 else {
             return
         }
-        let ids = userIds.distinct().filter({ $0 != User.systemUser && $0 != currentAccountId && !$0.isEmpty })
+        let ids = Array<String>(Set<String>(userIds)).filter({ $0 != User.systemUser && $0 != currentAccountId && !$0.isEmpty })
         let existUserIds = UserDAO.shared.getExistUserIds(userIds: ids)
         let syncUserIds = Array<String>(Set<String>(ids).subtracting(Set<String>(existUserIds)))
         guard syncUserIds.count > 0 else {
@@ -1521,12 +1537,5 @@ extension CiphertextMessage.MessageType {
         default:
             return "unknown"
         }
-    }
-}
-
-extension Array where Iterator.Element: Hashable {
-
-    func distinct() -> [Iterator.Element] {
-        return Array(Set(self))
     }
 }

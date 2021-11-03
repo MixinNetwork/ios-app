@@ -14,6 +14,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     
     private var tapRecognizer: UITapGestureRecognizer!
     private var itemStatusObserver: NSKeyValueObservation?
+    private var playerStatusObserver: NSKeyValueObservation?
     private var timeControlObserver: NSKeyValueObservation?
     private var itemPresentationSizeObserver: NSKeyValueObservation?
     private var sliderObserver: Any?
@@ -442,30 +443,6 @@ extension GalleryVideoItemViewController: AVPictureInPictureControllerDelegate {
 
 extension GalleryVideoItemViewController {
     
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        guard keyPath == #keyPath(AVPlayerItem.status) || keyPath == #keyPath(AVPlayer.status) else {
-            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
-            return
-        }
-        if let statusNumber = change?[.newKey] as? NSNumber {
-            if let player = object as? AVPlayer, case .failed = AVPlayer.Status(rawValue: statusNumber.intValue), let error = player.error {
-                Logger.general.error(category: "GalleryVideoItemViewController", message: "Player can no longer play AVPlayerItem instances because of an error: \(error)")
-            } else if let item = object as? AVPlayerItem, case .failed = AVPlayerItem.Status(rawValue: statusNumber.intValue), let error = item.error {
-                Logger.general.error(category: "GalleryVideoItemViewController", message: "Player item can no longer be played because of an error: \(error)")
-            }
-        } else {
-            if object is AVPlayer {
-                Logger.general.error(category: "GalleryVideoItemViewController", message: "Player has not tried to load new media resources for playback")
-            } else if object is AVPlayerItem {
-                Logger.general.error(category: "GalleryVideoItemViewController", message: "Player item has not tried to load new media resources for playback")
-            }
-        }
-    }
-    
-}
-
-extension GalleryVideoItemViewController {
-    
     @objc func playAction(_ sender: Any) {
         if let controller = UIApplication.homeContainerViewController?.pipController, controller != self {
             if controller.item == self.item {
@@ -720,18 +697,23 @@ extension GalleryVideoItemViewController {
             // Known issue: https://bugs.swift.org/browse/SR-5872
             // 'change' are always nil here
             self?.updateControlView()
+            if case .failed = item.status, let error = item.error {
+                Logger.general.error(category: "GalleryVideoItemViewController", message: "Player item can no longer be played because of an error: \(error)")
+            } else if case .unknown = item.status {
+                Logger.general.error(category: "GalleryVideoItemViewController", message: "Player item has not tried to load new media resources for playback")
+            }
         }
         itemPresentationSizeObserver = item.observe(\.presentationSize) { [weak self] (item, _) in
             self?.updateVideoViewSize(with: item)
         }
-        item.addObserver(self,
-                        forKeyPath: #keyPath(AVPlayerItem.status),
-                        options: [.old, .new],
-                        context: nil)
-        player.addObserver(self,
-                           forKeyPath: #keyPath(AVPlayer.status),
-                           options: [.old, .new],
-                           context: nil)
+                
+        playerStatusObserver = player.observe(\.status, options: [.initial, .new]) { player, _ in
+            if case .failed = player.status, let error = player.error {
+                Logger.general.error(category: "GalleryVideoItemViewController", message: "Player can no longer play AVPlayerItem instances because of an error: \(error)")
+            } else if case .unknown = player.status {
+                Logger.general.error(category: "GalleryVideoItemViewController", message: "Player has not tried to load new media resources for playback")
+            }
+        }
         
         let center = NotificationCenter.default
         center.addObserver(self,
@@ -893,8 +875,7 @@ extension GalleryVideoItemViewController {
         itemStatusObserver?.invalidate()
         itemPresentationSizeObserver?.invalidate()
         timeControlObserver?.invalidate()
-        player.currentItem?.removeObserver(self, forKeyPath: #keyPath(AVPlayerItem.status))
-        player.removeObserver(self, forKeyPath: #keyPath(AVPlayer.status))
+        playerStatusObserver?.invalidate()
         NotificationCenter.default.removeObserver(self)
     }
     

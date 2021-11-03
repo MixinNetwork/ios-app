@@ -443,16 +443,22 @@ extension GalleryVideoItemViewController: AVPictureInPictureControllerDelegate {
 extension GalleryVideoItemViewController {
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        guard keyPath == #keyPath(AVPlayerItem.status) else {
+        guard keyPath == #keyPath(AVPlayerItem.status) || keyPath == #keyPath(AVPlayer.status) else {
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
             return
         }
-        if let statusNumber = change?[.newKey] as? NSNumber, let status = AVPlayerItem.Status(rawValue: statusNumber.intValue) {
-            if case .failed = status, let error = player.currentItem?.error {
-                Logger.general.error(category: "GalleryVideoItemViewController", message: "Player item status is failed: \(error)")
+        if let statusNumber = change?[.newKey] as? NSNumber {
+            if let player = object as? AVPlayer, case .failed = AVPlayer.Status(rawValue: statusNumber.intValue), let error = player.error {
+                Logger.general.error(category: "GalleryVideoItemViewController", message: "Player can no longer play AVPlayerItem instances because of an error: \(error)")
+            } else if let item = object as? AVPlayerItem, case .failed = AVPlayerItem.Status(rawValue: statusNumber.intValue), let error = item.error {
+                Logger.general.error(category: "GalleryVideoItemViewController", message: "Player item can no longer be played because of an error: \(error)")
             }
         } else {
-            Logger.general.error(category: "GalleryVideoItemViewController", message: "Player item status is not yet ready")
+            if object is AVPlayer {
+                Logger.general.error(category: "GalleryVideoItemViewController", message: "Player has not tried to load new media resources for playback")
+            } else if object is AVPlayerItem {
+                Logger.general.error(category: "GalleryVideoItemViewController", message: "Player item has not tried to load new media resources for playback")
+            }
         }
     }
     
@@ -587,6 +593,20 @@ extension GalleryVideoItemViewController {
         updateControlView(playControlsHidden: false, otherControlsHidden: false, animated: true)
         removeTimeObservers()
         AudioSession.shared.deactivateAsynchronously(client: self, notifyOthersOnDeactivation: false)
+        let message: String
+        if let error = notification.userInfo?[AVPlayerItemFailedToPlayToEndTimeErrorKey] as? Error {
+            message = error.localizedDescription
+        } else {
+            message = ""
+        }
+        Logger.general.error(category: "GalleryVideoItemViewController", message: "Player item failed to play to end time: \(message)")
+    }
+    
+    @objc private func playerItemNewErrorLogEntry(_ notification: Notification) {
+        guard let playerItem = notification.object as? AVPlayerItem, let errorLog = playerItem.errorLog() else {
+            return
+        }
+        Logger.general.error(category: "GalleryVideoItemViewController", message: "Player item new error log entry: \(errorLog)")
     }
     
     @objc private func beginScrubbingAction(_ sender: Any) {
@@ -708,6 +728,10 @@ extension GalleryVideoItemViewController {
                         forKeyPath: #keyPath(AVPlayerItem.status),
                         options: [.old, .new],
                         context: nil)
+        player.addObserver(self,
+                           forKeyPath: #keyPath(AVPlayer.status),
+                           options: [.old, .new],
+                           context: nil)
         
         let center = NotificationCenter.default
         center.addObserver(self,
@@ -717,6 +741,10 @@ extension GalleryVideoItemViewController {
         center.addObserver(self,
                            selector: #selector(playerItemFailedToPlayToEndTime(_:)),
                            name: .AVPlayerItemFailedToPlayToEndTime,
+                           object: item)
+        center.addObserver(self,
+                           selector: #selector(playerItemNewErrorLogEntry(_:)),
+                           name: .AVPlayerItemNewErrorLogEntry,
                            object: item)
         
         timeControlObserver = player.observe(\.timeControlStatus, changeHandler: { [weak self] (player, _) in

@@ -500,6 +500,15 @@ public final class MessageDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [conversationId, count])
     }
     
+    public func getMessages(messageIds: [String]) -> [MessageItem] {
+        let sql = """
+        \(Self.sqlQueryFullMessage)
+        WHERE m.id in ('\(messageIds.joined(separator: "', '"))')
+        ORDER BY m.created_at DESC
+        """
+        return db.select(with: sql, arguments: [])
+    }
+    
     public func getFirstNMessages(conversationId: String, count: Int) -> [MessageItem] {
         db.select(with: MessageDAO.sqlQueryFirstNMessages, arguments: [conversationId, count])
     }

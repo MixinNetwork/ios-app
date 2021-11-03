@@ -233,12 +233,13 @@ public class ReceiveMessageService: MixinService {
         }
         
         let pageCount = 200
+        let conversationId = data.conversationId
         var blazeMessages = [BlazeMessageData]()
         repeat {
             if MixinService.isStopProcessMessages {
                 return
             }
-            blazeMessages = BlazeMessageDAO.shared.getBlazeMessageData(conversationId: data.conversationId, limit: pageCount)
+            blazeMessages = BlazeMessageDAO.shared.getBlazeMessageData(conversationId: conversationId, limit: pageCount)
             guard let lastMessage = blazeMessages.last else {
                 return
             }
@@ -249,14 +250,11 @@ public class ReceiveMessageService: MixinService {
                 return
             }
             
+            let blazeMessageDict = Dictionary<String, BlazeMessageData>(uniqueKeysWithValues: blazeMessages.map { ($0.messageId, $0) })
             let messageIds = blazeMessages.map{ $0.messageId }
-            let messageSet = Set<String>(messageIds)
-            
             let existMessageIds = MessageDAO.shared.getExistMessageIds(messageIds: messageIds)
             let existHistoryIds = MessageHistoryDAO.shared.getExistMessageIds(messageIds: messageIds)
             
-            let notExistIds = messageSet.subtracting(existMessageIds).union(messageSet.subtracting(existHistoryIds))
-            let existIds = messageSet.subtracting(notExistIds)
             
             var jobs = [Job]()
             var pairMessages = [(Message, [TranscriptMessage]?)]()
@@ -267,6 +265,7 @@ public class ReceiveMessageService: MixinService {
                 jobs.append(Job(jobId: ackBlazeMessage.id, action: .SEND_DELIVERED_ACK_MESSAGE, blazeMessage: ackBlazeMessage))
                 
                 guard !(existMessageIds.contains(messageId) || existHistoryIds.contains(messageId)) else {
+                    pairMessages.append((makeUnknownMessage(data: blazeMessage), nil))
                     continue
                 }
                 
@@ -277,14 +276,13 @@ public class ReceiveMessageService: MixinService {
                     decryptedData = parseEncryptedMessage(data: data)
                 }
                 
-                if let decryptedData = decryptedData, var (message, children) = makeDecryptMessage(data: blazeMessage, decryptedData: decryptedData) {
+                if let decryptedData = decryptedData, let (message, children) = makeDecryptMessage(data: blazeMessage, decryptedData: decryptedData) {
                     pairMessages.append((message, children))
                 } else {
                     pairMessages.append((makeUnknownMessage(data: blazeMessage), nil))
                 }
             }
 
-            let quoteMessages = pairMessages.compactMap { ($0.0.quoteMessageId?.isEmpty ?? true) ? nil : $0.0}
             let transcriptMessages = pairMessages.compactMap { $0.1 }.flatMap { $0 }
             var ftsMessages = [(Message, [TranscriptMessage]?)]()
             if AppGroupUserDefaults.Database.isFTSInitialized {
@@ -329,8 +327,44 @@ public class ReceiveMessageService: MixinService {
                     try MessageDAO.shared.insertFTSContent(db, message: ftsMessage, children: childrenMessages)
                 }
                 
-                try ConversationDAO.shared.updateUnseenMessageCount(database: db, conversationId: data.conversationId)
-                try ConversationDAO.shared.updateLastMessage(database: db, conversationId: data.conversationId, messageId: lastMessage.messageId, createdAt: lastMessage.createdAt)
+                try ConversationDAO.shared.updateUnseenMessageCount(database: db, conversationId: conversationId)
+                try ConversationDAO.shared.updateLastMessage(database: db, conversationId: conversationId, messageId: lastMessage.messageId, createdAt: lastMessage.createdAt)
+                
+                db.afterNextTransactionCommit { _ in
+                    DispatchQueue.global().async {
+                        if isAppExtension {
+                            if AppGroupUserDefaults.isRunningInMainApp {
+                                DarwinNotificationManager.shared.notifyConversationDidChangeInMainApp()
+                            }
+                            if AppGroupUserDefaults.User.currentConversationId == data.conversationId {
+                                AppGroupUserDefaults.User.reloadConversation = true
+                            }
+                        } else {
+                            guard let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId), conversation.status == ConversationStatus.SUCCESS.rawValue else {
+                                return
+                            }
+                            
+                            if conversation.isMuted && AppGroupUserDefaults.User.currentConversationId != conversationId {
+                                let change = ConversationChange(conversationId: conversationId, action: .reload)
+                                NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: change)
+                            } else {
+                                let messageIds = messages.map{ $0.messageId }
+                                let messages = MessageDAO.shared.getMessages(messageIds: messageIds)
+                                for newMessage in messages {
+                                    var userInfo: [String: Any] = [
+                                        MessageDAO.UserInfoKey.conversationId: newMessage.conversationId,
+                                        MessageDAO.UserInfoKey.message: newMessage,
+                                    ]
+                                    if let data = blazeMessageDict[newMessage.messageId] {
+                                        userInfo[MessageDAO.UserInfoKey.messsageSource] = data.source
+                                        userInfo[MessageDAO.UserInfoKey.silentNotification] = data.silentNotification
+                                    }
+                                    NotificationCenter.default.post(onMainThread: MessageDAO.didInsertMessageNotification, object: self, userInfo: userInfo)
+                                }
+                            }
+                        }
+                    }
+                }
             }
             
             BlazeMessageDAO.shared.delete(messageIds: messageIds)

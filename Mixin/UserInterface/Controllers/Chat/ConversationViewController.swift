@@ -108,7 +108,7 @@ class ConversationViewController: UIViewController {
     private var makeInputTextViewFirstResponderOnAppear = false
     private var canPinMessages = false
     private var pinnedMessageIds = Set<String>()
-    private var keyword: String?
+    private var lastMentionCandidate: String?
     
     private weak var pinMessageBannerViewIfLoaded: PinMessageBannerView?
     
@@ -1246,8 +1246,8 @@ class ConversationViewController: UIViewController {
     }
     
     func inputTextViewDidInputMentionCandidate(_ keyword: String?) {
-        self.keyword = keyword
         if let ownerUser = ownerUser, ownerUser.isBot {
+            self.lastMentionCandidate = keyword
             let conversationId = conversationId
             DispatchQueue.global().async { [weak self] in
                 let users: [UserItem]
@@ -1261,7 +1261,7 @@ class ConversationViewController: UIViewController {
                     guard let self = self else {
                         return
                     }
-                    guard keyword == self.keyword else {
+                    guard keyword == self.lastMentionCandidate else {
                         return
                     }
                     self.userHandleViewController.users = users

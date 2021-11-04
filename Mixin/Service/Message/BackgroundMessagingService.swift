@@ -5,6 +5,11 @@ class BackgroundMessagingService {
     
     static let shared = BackgroundMessagingService()
     
+    var hasBackgroundTaskScheduled: Bool {
+        assert(Thread.isMainThread)
+        return taskIdentifier != .invalid
+    }
+    
     private var taskIdentifier = UIBackgroundTaskIdentifier.invalid
     
     private weak var backgroundTimer: Timer?

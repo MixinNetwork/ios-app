@@ -39,6 +39,22 @@ final class AccountAPI: MixinAPI {
 
     }
     
+    enum VoIPToken {
+        
+        case token(String)
+        case remove
+        
+        var value: String {
+            switch self {
+            case .token(let value):
+                return value
+            case .remove:
+                return "REMOVE"
+            }
+        }
+        
+    }
+    
     static func me(completion: @escaping (MixinAPI.Result<Account>) -> Void) {
         request(method: .get, path: Path.me, completion: completion)
     }
@@ -96,8 +112,8 @@ final class AccountAPI: MixinAPI {
         request(method: .post, path: Path.me, parameters: param, completion: completion)
     }
     
-    static func updateSession(deviceToken: String? = nil, voipToken: String? = nil, deviceCheckToken: String? = nil) {
-        let sessionRequest = SessionRequest(notification_token: deviceToken ?? "", voip_token: voipToken ?? "", device_check_token: deviceCheckToken ?? "")
+    static func updateSession(deviceToken: String? = nil, voipToken: VoIPToken? = nil, deviceCheckToken: String? = nil) {
+        let sessionRequest = SessionRequest(notification_token: deviceToken ?? "", voip_token: voipToken?.value ?? "", device_check_token: deviceCheckToken ?? "")
         request(method: .post, path: Path.session, parameters: sessionRequest) { (result: MixinAPI.Result<Account>) in
             
         }

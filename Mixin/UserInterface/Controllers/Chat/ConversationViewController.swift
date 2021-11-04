@@ -380,11 +380,20 @@ class ConversationViewController: UIViewController {
         center.addObserver(self, selector: #selector(pinMessageBannerDidChange), name: AppGroupUserDefaults.User.pinMessageBannerDidChangeNotification, object: nil)
         
         if dataSource.category == .group {
-            CallService.shared.membersManager.loadMembersAsynchornouslyIfNeverLoaded(forConversationWith: conversationId)
             updateGroupCallIndicatorViewHidden()
-            center.addObserver(self, selector: #selector(updateGroupCallIndicatorViewHidden), name: GroupCallMembersManager.membersDidChangeNotification, object: nil)
-            center.addObserver(self, selector: #selector(updateGroupCallIndicatorViewHidden), name: CallService.willActivateCallNotification, object: nil)
-            center.addObserver(self, selector: #selector(updateGroupCallIndicatorViewHidden), name: CallService.willDeactivateCallNotification, object: nil)
+            CallService.shared.membersManager.loadMembersAsynchornously(forConversationWith: conversationId)
+            center.addObserver(self,
+                               selector: #selector(updateGroupCallIndicatorViewHidden),
+                               name: GroupCallMembersManager.membersDidChangeNotification,
+                               object: nil)
+            center.addObserver(self,
+                               selector: #selector(updateGroupCallIndicatorViewHidden),
+                               name: CallService.didActivateCallNotification,
+                               object: nil)
+            center.addObserver(self,
+                               selector: #selector(updateGroupCallIndicatorViewHidden),
+                               name: CallService.didDeactivateCallNotification,
+                               object: nil)
         }
     }
     
@@ -1161,18 +1170,6 @@ class ConversationViewController: UIViewController {
         }
     }
     
-    @objc func groupCallMembersDidChange(_ notification: Notification) {
-        DispatchQueue.main.async {
-            guard let conversationId = notification.userInfo?[GroupCallMembersManager.UserInfoKey.conversationId] as? String else {
-                return
-            }
-            guard conversationId == self.conversationId else {
-                return
-            }
-            self.updateGroupCallIndicatorViewHidden()
-        }
-    }
-    
     @objc private func pinMessageDidSave(_ notification: Notification) {
         guard let conversationId = notification.userInfo?[PinMessageDAO.UserInfoKey.conversationId] as? String else {
             return
@@ -1316,7 +1313,7 @@ class ConversationViewController: UIViewController {
         guard let ownerUser = dataSource.ownerUser else {
             return
         }
-        CallService.shared.requestStartPeerToPeerCall(remoteUser: ownerUser)
+        CallService.shared.makePeerCall(with: ownerUser)
     }
     
     func pickPhotoOrVideoAction() {
@@ -1342,50 +1339,41 @@ class ConversationViewController: UIViewController {
         guard dataSource.category == .group else {
             return
         }
-        guard WebSocketService.shared.isConnected && !SendMessageService.shared.isRequestingKrakenPeers else {
+        guard WebSocketService.shared.isConnected else {
             CallService.shared.alert(error: CallError.networkFailure)
             return
         }
         
-        func performCall() {
-            let conversation = dataSource.conversation
-            let conversationId = conversation.conversationId
-            let service = CallService.shared
-            service.queue.async {
+        let conversation = dataSource.conversation
+        let conversationId = conversation.conversationId
+        let service = CallService.shared
+        
+        AVAudioSession.sharedInstance().requestRecordPermission { (isGranted) in
+            DispatchQueue.main.async {
+                guard isGranted else {
+                    CallService.shared.alert(error: CallError.microphonePermissionDenied)
+                    return
+                }
                 let activeCall = service.activeCall
-                DispatchQueue.main.sync {
-                    if service.isMinimized, activeCall?.conversationId == conversationId {
-                        service.setInterfaceMinimized(false, animated: true)
-                    } else if activeCall != nil {
-                        service.alert(error: CallError.busy)
+                if service.isInterfaceMinimized, activeCall?.conversationId == conversationId {
+                    service.setInterfaceMinimized(false, animated: true)
+                } else if activeCall != nil {
+                    service.alert(error: CallError.busy)
+                } else {
+                    let inCallIds = service.membersManager.memberIds(forConversationWith: conversationId)
+                    if !inCallIds.isEmpty {
+                        service.showJoinGroupCallConfirmation(conversation: conversation, memberIds: inCallIds)
                     } else {
-                        service.membersManager.getMemberUserIds(forConversationWith: conversationId) { [weak self] (ids) in
-                            if ids.isEmpty {
-                                let picker = GroupCallMemberPickerViewController(conversation: conversation)
-                                picker.appearance = .startNewCall
-                                picker.onConfirmation = { (members) in
-                                    service.requestStartGroupCall(conversation: conversation, invitingMembers: members, animated: true)
-                                }
-                                self?.present(picker, animated: true, completion: nil)
-                            } else {
-                                service.showJoinGroupCallConfirmation(conversation: conversation, memberIds: ids)
-                            }
+                        let picker = GroupCallMemberPickerViewController(conversation: conversation)
+                        picker.appearance = .startNewCall
+                        picker.onConfirmation = { (members) in
+                            service.makeGroupCall(conversation: conversation, invitees: members)
                         }
+                        self.present(picker, animated: true, completion: nil)
                     }
                 }
             }
         }
-        
-        AVAudioSession.sharedInstance().requestRecordPermission { (isGranted) in
-            DispatchQueue.main.async {
-                if isGranted {
-                    performCall()
-                } else {
-                    CallService.shared.alert(error: CallError.microphonePermissionDenied)
-                }
-            }
-        }
-        
     }
     
 }
@@ -2497,18 +2485,11 @@ extension ConversationViewController {
     
     @objc private func updateGroupCallIndicatorViewHidden() {
         let service = CallService.shared
-        let conversationId = self.conversationId
-        service.queue.async {
-            if let call = service.activeCall as? GroupCall, call.conversationId == conversationId {
-                DispatchQueue.main.async {
-                    self.groupCallIndicatorView.isHidden = true
-                }
-            } else {
-                let ids = service.membersManager.members[conversationId] ?? []
-                DispatchQueue.main.async {
-                    self.groupCallIndicatorView.isHidden = ids.isEmpty
-                }
-            }
+        if let call = service.activeCall, call.conversationId == conversationId {
+            groupCallIndicatorView.isHidden = true
+        } else {
+            let ids = service.membersManager.memberIds(forConversationWith: conversationId)
+            groupCallIndicatorView.isHidden = ids.isEmpty
         }
     }
     

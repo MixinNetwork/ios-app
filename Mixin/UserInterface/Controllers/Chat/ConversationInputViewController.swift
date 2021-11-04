@@ -70,6 +70,15 @@ class ConversationInputViewController: UIViewController {
         return customInputViewController is ConversationInputInteractiveResizableViewController
     }
     
+    var currentKeyword: String? {
+        if let range = textView.inputingMentionTokenRange, !mentionRanges.contains(where: { $0.intersection(range) != nil }) {
+            let keywordRange = NSRange(location: range.location + 1, length: range.length - 1)
+            let text = (textView.text as NSString).substring(with: keywordRange)
+            return text
+        }
+        return nil
+    }
+    
     private let interactiveDismissResponder = InteractiveDismissResponder(height: 50)
     private let maxInputRow: Int = {
         if ScreenHeight.current <= .short {

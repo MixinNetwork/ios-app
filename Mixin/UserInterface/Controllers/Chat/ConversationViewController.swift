@@ -1247,16 +1247,19 @@ class ConversationViewController: UIViewController {
     func inputTextViewDidInputMentionCandidate(_ keyword: String?) {
         if let ownerUser = ownerUser, ownerUser.isBot {
             let conversationId = conversationId
-            dataSource.queue.async { [weak self] in
+            DispatchQueue.global().async { [weak self] in
                 let users: [UserItem]
                 if let keyword = keyword, !keyword.isEmpty {
-                    let oneWeekAgo = Calendar.current.date(byAdding: .weekOfYear, value: -1, to: Date())?.toUTCString() ?? ""
+                    let oneWeekAgo = Date().addingTimeInterval(-7 * TimeInterval.oneDay).toUTCString()
                     users = UserDAO.shared.botGroupUsers(conversationId: conversationId, keyword: keyword, createAt: oneWeekAgo)
                 } else {
                     users = UserDAO.shared.contacts(count: 20)
                 }
                 DispatchQueue.main.async {
                     guard let self = self else {
+                        return
+                    }
+                    guard keyword == self.conversationInputViewController.currentKeyword else {
                         return
                     }
                     self.userHandleViewController.users = users

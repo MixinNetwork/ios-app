@@ -158,14 +158,18 @@ public final class UserDAO: UserDatabaseDAO {
         let sql = """
         SELECT u.*
         FROM users u
-        WHERE (u.user_id in (SELECT m.user_id FROM messages m WHERE conversation_id = ? AND m.created_at > ?)
+        WHERE (u.user_id in (SELECT m.user_id FROM messages m WHERE conversation_id = :conversationId AND m.created_at > :createAt)
         OR u.user_id in (SELECT f.user_id FROM users f WHERE relationship = 'FRIEND'))
-        AND u.user_id != ?
-        AND (u.full_name LIKE '%' || ? || '%' ESCAPE '/' OR u.identity_number like '%' || ? || '%' ESCAPE '/')
+        AND u.user_id != :myUserId
+        AND (u.full_name LIKE '%' || :keyword || '%' ESCAPE '/' OR u.identity_number like '%' || :keyword || '%' ESCAPE '/')
         ORDER BY CASE u.relationship WHEN 'FRIEND' THEN 1 ELSE 2 END,
-        u.relationship OR u.full_name = ? COLLATE NOCASE OR u.identity_number = ? COLLATE NOCASE DESC
+        u.relationship OR u.full_name = :keyword COLLATE NOCASE OR u.identity_number = :keyword COLLATE NOCASE DESC
         """
-        return db.select(with: sql, arguments: [conversationId, createAt, myUserId, keyword, keyword, keyword, keyword])
+        let arguments = ["conversationId": conversationId,
+                         "keyword": keyword,
+                         "createAt": createAt,
+                         "myUserId": myUserId]
+        return db.select(with: sql, arguments: StatementArguments(arguments))
     }
     
     public func contacts(count: Int) -> [UserItem] {

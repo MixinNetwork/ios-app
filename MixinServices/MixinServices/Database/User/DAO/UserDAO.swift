@@ -154,6 +154,25 @@ public final class UserDAO: UserDatabaseDAO {
         return db.select(where: condition)
     }
     
+    public func botGroupUsers(conversationId: String, keyword: String, createAt: String) -> [UserItem] {
+        let sql = """
+        SELECT u.*
+        FROM users u
+        WHERE (u.user_id in (SELECT m.user_id FROM messages m WHERE conversation_id = ? AND m.created_at > ?)
+        OR u.user_id in (SELECT f.user_id FROM users f WHERE relationship = 'FRIEND'))
+        AND u.user_id != ?
+        AND (u.full_name LIKE '%' || ? || '%' ESCAPE '/' OR u.identity_number like '%' || ? || '%' ESCAPE '/')
+        ORDER BY CASE u.relationship WHEN 'FRIEND' THEN 1 ELSE 2 END,
+        u.relationship OR u.full_name = ? COLLATE NOCASE OR u.identity_number = ? COLLATE NOCASE DESC
+        """
+        return db.select(with: sql, arguments: [conversationId, createAt, myUserId, keyword, keyword, keyword, keyword])
+    }
+    
+    public func contacts(count: Int) -> [UserItem] {
+        let sql = "\(Self.sqlQueryColumns) WHERE u.relationship = 'FRIEND' AND u.identity_number > '0' ORDER BY u.created_at DESC LIMIT ?"
+        return db.select(with: sql, arguments: [count])
+    }
+    
     public func contacts() -> [UserItem] {
         let sql = "\(Self.sqlQueryColumns) WHERE u.relationship = 'FRIEND' AND u.identity_number > '0' ORDER BY u.created_at DESC"
         return db.select(with: sql)

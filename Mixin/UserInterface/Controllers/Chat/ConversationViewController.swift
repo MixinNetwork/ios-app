@@ -360,7 +360,7 @@ class ConversationViewController: UIViewController {
         } else if let user = ownerUser {
             conversationInputViewController.inputBarView.isHidden = false
             conversationInputViewController.update(opponentUser: user)
-            conversationInputViewController.detectsMentionToken = false
+            conversationInputViewController.detectsMentionToken = user.isBot
         }
         AppGroupUserDefaults.User.currentConversationId = conversationId
         dataSource.initData(completion: finishInitialLoading)
@@ -1245,8 +1245,30 @@ class ConversationViewController: UIViewController {
     }
     
     func inputTextViewDidInputMentionCandidate(_ keyword: String?) {
-        userHandleViewController.reload(with: keyword) { (hasContent) in
-            self.isUserHandleHidden = !hasContent
+        if let ownerUser = ownerUser, ownerUser.isBot {
+            let conversationId = conversationId
+            dataSource.queue.async { [weak self] in
+                let users: [UserItem]
+                if let keyword = keyword, !keyword.isEmpty {
+                    let oneWeekAgo = Calendar.current.date(byAdding: .weekOfYear, value: -1, to: Date())?.toUTCString() ?? ""
+                    users = UserDAO.shared.botGroupUsers(conversationId: conversationId, keyword: keyword, createAt: oneWeekAgo)
+                } else {
+                    users = UserDAO.shared.contacts(count: 20)
+                }
+                DispatchQueue.main.async {
+                    guard let self = self else {
+                        return
+                    }
+                    self.userHandleViewController.users = users
+                    self.userHandleViewController.reload(with: keyword) { (hasContent) in
+                        self.isUserHandleHidden = !hasContent
+                    }
+                }
+            }
+        } else {
+            userHandleViewController.reload(with: keyword) { (hasContent) in
+                self.isUserHandleHidden = !hasContent
+            }
         }
     }
     

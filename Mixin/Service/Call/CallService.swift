@@ -1,176 +1,378 @@
 import Foundation
+import AVFoundation
 import PushKit
 import CallKit
 import WebRTC
 import MixinServices
 
+fileprivate let isCallKitForbidden = false
+fileprivate let listPendingMessageDelay: DispatchTimeInterval = .seconds(2)
+
 class CallService: NSObject {
     
     static let shared = CallService()
-    static let maxNumberOfKrakenRetries: UInt = 30
-    static let mutenessDidChangeNotification = Notification.Name("one.mixin.messenger.CallService.MutenessDidChange")
-    static let willStartCallNotification = Notification.Name("one.mixin.messenger.CallService.WillStartCall")
-    static let willActivateCallNotification = Notification.Name("one.mixin.messenger.CallService.WillActivateCall")
-    static let willDeactivateCallNotification = Notification.Name("one.mixin.messenger.CallService.WillDeactivateCall")
+    static let didActivateCallNotification = Notification.Name("one.mixin.messenger.CallService.DidActivateCall")
+    static let didDeactivateCallNotification = Notification.Name("one.mixin.messenger.CallService.DidDeactivateCall")
     static let callUserInfoKey = "call"
     
-    let queue = Queue(label: "one.mixin.messenger.CallService")
-    
-    var isMuted = false {
-        didSet {
-            NotificationCenter.default.post(onMainThread: Self.mutenessDidChangeNotification, object: self)
-            updateAudioTrackEnabling()
-        }
-    }
+    let membersManager = GroupCallMembersManager()
     
     var usesSpeaker = false {
         didSet {
-            updateAudioSessionConfiguration()
-            Logger.call.info(category: "CallService", message: "usesSpeaker: \(usesSpeaker)")
+            updateAudioSessionConfiguration(usesSpeaker: usesSpeaker)
         }
     }
     
-    var hasCall: Bool {
-        queue.sync {
-            activeCall != nil || !pendingAnswerCalls.isEmpty
-        }
-    }
+    private(set) var isInterfaceMinimized = false
     
-    var connectionDuration: String? {
-        guard let connectedDate = activeCall?.connectedDate else {
-            return nil
-        }
-        let duration = abs(connectedDate.timeIntervalSinceNow)
-        return CallDurationFormatter.string(from: duration)
-    }
+    // If PushKit is not registered, call notification is delivered with UserNotification
+    // That will be annoying if app is active, or user has already chose to pick or decline
+    // the call. Save any handled offer/invitation uuid here, user notifications will not
+    // present after then. See NotificationManager's
+    // [userNotificationCenter:willPresentNotification:withCompletionHandler:] for details.
+    // Access on main queue
+    private(set) var handledUUIDs: Set<UUID> = []
     
-    private(set) lazy var ringtonePlayer = RingtonePlayer()
-    private(set) lazy var membersManager = GroupCallMembersManager(workingQueue: queue.dispatchQueue)
-    
-    private(set) var handledUUIDs = Set<UUID>() // Access from main queue
-    private(set) var isMinimized = false
-    
-    // Access from CallService.queue
+    private(set) var calls: [UUID: Call] = [:]
     private(set) var activeCall: Call? {
-        willSet {
-            if let call = activeCall, newValue == nil {
-                NotificationCenter.default.post(name: Self.willDeactivateCallNotification, object: self, userInfo: [Self.callUserInfoKey: call])
-            } else if activeCall == nil, let call = newValue {
-                NotificationCenter.default.post(name: Self.willActivateCallNotification, object: self, userInfo: [Self.callUserInfoKey: call])
+        didSet {
+            assert(Thread.isMainThread)
+            if let deactivatedCall = oldValue {
+                NotificationCenter.default.post(name: Self.didDeactivateCallNotification,
+                                                object: self,
+                                                userInfo: [Self.callUserInfoKey: deactivatedCall])
+            }
+            if let call = activeCall {
+                NotificationCenter.default.post(name: Self.didActivateCallNotification,
+                                                object: self,
+                                                userInfo: [Self.callUserInfoKey: call])
             }
         }
     }
     
-    private let listPendingCallDelay = DispatchTimeInterval.seconds(2)
-    private let retryInterval = DispatchTimeInterval.seconds(3)
-    private let isMainlandChina = false
+    private let ringtonePlayer = RingtonePlayer()
+    private let blazeProcessingQueue = DispatchQueue(label: "one.mixin.messenger.CallService.BlazeProcessing")
     
-    private lazy var nativeCallInterface = NativeCallInterface(service: self)
-    private lazy var listPendingInvitationCounter = Counter(value: 0)
+    private lazy var callKitAdapter = CallKitAdapter(service: self)
     
+    private var adapter: CallAdapter!
     private var pushRegistry: PKPushRegistry?
-    
-    private var pendingAnswerCalls = [UUID: Call]()
-    private var pendingSDPs = [UUID: RTCSessionDescription]()
-    private var pendingCandidates = [UUID: [RTCIceCandidate]]()
-    private var pendingTrickles = [UUID: [String]]() // Key is Call's UUID, Value is array of candidate string
-    private var listPendingCallWorkItems = [UUID: DispatchWorkItem]()
-    private var listPendingInvitations = [Int: BlazeMessageData]()
+    private var backgroundTaskIdentifier: UIBackgroundTaskIdentifier = .invalid
+    private var viewController: CallViewController?
     
     // CallKit identify a call with an *unique* UUID, any duplication will cause undocumented behavior
     // Since there's no unique id provided by backend, but only one call is allowed per-conversation,
-    // We map conversation id with uuid here
-    private var groupCallUUIDs = [String: UUID]()
+    // We map conversation id to call's uuid here
+    private var groupCallUUIDs: [String: UUID] = [:]
     
-    private var viewController: CallViewController?
+    // Access these 2 on blazeProcessingQueue
+    private var listPendingWorkItems: [UUID: DispatchWorkItem] = [:]
+    private var listPendingCandidates: [UUID: [BlazeMessageData]] = [:]
     
-    // Access from CallService.queue
-    private var callInterface: CallInterface!
-    
-    private var isUsingCallKit: Bool {
-        callInterface.isEqual(nativeCallInterface)
+    var hasCall: Bool {
+        assert(Thread.isMainThread)
+        return activeCall != nil || !calls.isEmpty
     }
     
     override init() {
         super.init()
-        updateCallKitAvailability()
-        KrakenMessageRetriever.shared.delegate = self
-        RTCAudioSession.sharedInstance().add(self)
+        reloadCallAdapter()
+        let center = NotificationCenter.default
+        center.addObserver(self,
+                           selector: #selector(callStateDidChange(_:)),
+                           name: Call.stateDidChangeNotification,
+                           object: nil)
+        center.addObserver(self,
+                           selector: #selector(callDidEnd(_:)),
+                           name: Call.didEndNotification,
+                           object: nil)
+        center.addObserver(self,
+                           selector: #selector(callDidUpdateLocalizedName(_:)),
+                           name: Call.localizedNameDidUpdateNotification,
+                           object: nil)
     }
     
     func registerForPushKitNotificationsIfAvailable() {
-        queue.autoAsync {
-            guard self.pushRegistry == nil else {
-                return
-            }
-            guard self.isUsingCallKit else {
-                AccountAPI.updateSession(voipToken: voipTokenRemove)
-                return
-            }
-            let registry = PKPushRegistry(queue: self.queue.dispatchQueue)
-            registry.desiredPushTypes = [.voIP]
-            registry.delegate = self
-            if let token = registry.pushToken(for: .voIP)?.toHexString() {
-                AccountAPI.updateSession(voipToken: token)
-            }
-            self.pushRegistry = registry
+        assert(Thread.isMainThread)
+        guard self.pushRegistry == nil else {
+            return
         }
+        guard adapter is CallKitAdapter else {
+            AccountAPI.updateSession(voipToken: .remove)
+            Logger.call.info(category: "CallService", message: "PushKit invalidated")
+            return
+        }
+        let registry = PKPushRegistry(queue: .main)
+        registry.desiredPushTypes = [.voIP]
+        registry.delegate = self
+        if let token = registry.pushToken(for: .voIP)?.toHexString() {
+            AccountAPI.updateSession(voipToken: .token(token))
+            Logger.call.info(category: "CallService", message: "PushKit registered")
+        }
+        self.pushRegistry = registry
     }
     
     func handlePendingWebRTCJobs() {
-        queue.async {
-            let jobs = JobDAO.shared.nextBatchJobs(category: .Task, action: .PENDING_WEBRTC, limit: nil)
-            for job in jobs {
-                let data = job.toBlazeMessageData()
-                let isOffer = data.category == MessageCategory.WEBRTC_AUDIO_OFFER.rawValue
-                let isTimedOut = abs(data.createdAt.toUTCDate().timeIntervalSinceNow) >= callTimeoutInterval
-                if isOffer && isTimedOut {
-                    let msg = Message.createWebRTCMessage(messageId: data.messageId,
-                                                          conversationId: data.conversationId,
-                                                          userId: data.userId,
-                                                          category: .WEBRTC_AUDIO_CANCEL,
-                                                          mediaDuration: 0,
-                                                          status: .DELIVERED)
-                    MessageDAO.shared.insertMessage(message: msg, messageSource: "")
-                } else if !isOffer || !MessageDAO.shared.isExist(messageId: data.messageId) {
-                    self.handleIncomingBlazeMessageData(data)
-                }
-                JobDAO.shared.removeJob(jobId: job.jobId)
+        let jobs = JobDAO.shared.nextBatchJobs(category: .Task, action: .PENDING_WEBRTC, limit: nil)
+        for job in jobs {
+            let data = job.toBlazeMessageData()
+            let isOffer = data.category == MessageCategory.WEBRTC_AUDIO_OFFER.rawValue
+            let isTimedOut = abs(data.createdAt.toUTCDate().timeIntervalSinceNow) >= Call.timeoutInterval
+            if isOffer && isTimedOut {
+                let msg = Message.createWebRTCMessage(messageId: data.messageId,
+                                                      conversationId: data.conversationId,
+                                                      userId: data.userId,
+                                                      category: .WEBRTC_AUDIO_CANCEL,
+                                                      mediaDuration: 0,
+                                                      status: .DELIVERED)
+                MessageDAO.shared.insertMessage(message: msg, messageSource: "")
+            } else if !isOffer || !MessageDAO.shared.isExist(messageId: data.messageId) {
+                self.handleIncomingBlazeMessageData(data)
             }
+            JobDAO.shared.removeJob(jobId: job.jobId)
         }
-    }
-    
-    func hasPendingSDP(for uuid: UUID) -> Bool {
-        pendingSDPs[uuid] != nil
-    }
-    
-    func hasPendingAnswerGroupCall(with uuid: UUID) -> Bool {
-        if let call = activeCall, call.uuid == uuid {
-            return true
-        } else if let call = pendingAnswerCalls[uuid], call is GroupCall {
-            return true
-        } else {
-            return false
-        }
-    }
-    
-    func hasCall(with uuid: UUID) -> Bool {
-        activeOrPendingAnswerCall(with: uuid) != nil
     }
     
     func minimizeIfThereIsAnActiveCall() {
-        queue.async {
-            guard self.activeCall != nil else {
-                return
+        assert(Thread.isMainThread)
+        guard activeCall != nil, isInterfaceMinimized else {
+            return
+        }
+        setInterfaceMinimized(true, animated: true)
+    }
+    
+}
+
+// MARK: - AudioSessionClient
+extension CallService: AudioSessionClient {
+    
+    var priority: AudioSessionClientPriority {
+        .voiceCall
+    }
+    
+}
+
+// MARK: - PKPushRegistryDelegate
+extension CallService: PKPushRegistryDelegate {
+    
+    func pushRegistry(_ registry: PKPushRegistry, didUpdate pushCredentials: PKPushCredentials, for type: PKPushType) {
+        guard LoginManager.shared.isLoggedIn else {
+            return
+        }
+        let token = pushCredentials.token.toHexString()
+        AccountAPI.updateSession(voipToken: .token(token))
+        Logger.call.info(category: "CallService", message: "PushKit registered")
+    }
+    
+    func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType, completion: @escaping () -> Void) {
+        guard type == .voIP else {
+            completion()
+            return
+        }
+        beginBackgroundTaskIfNeeded()
+        guard
+            LoginManager.shared.isLoggedIn,
+            !AppGroupUserDefaults.User.needsUpgradeInMainApp,
+            adapter is CallKitAdapter,
+            let userId = payload.dictionaryPayload["user_id"] as? String,
+            let name = payload.dictionaryPayload["name"] as? String,
+            let messageId = payload.dictionaryPayload["message_id"] as? String,
+            !MessageDAO.shared.isExist(messageId: messageId)
+        else {
+            callKitAdapter.reportImmediateFailureCall()
+            completion()
+            endBackgroundTaskIfNeeded()
+            return
+        }
+        
+        if !name.isEmpty, let conversationId = payload.dictionaryPayload["conversation_id"] as? String, let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId) {
+            let inviters: [UserItem]
+            if let inviter = UserDAO.shared.getUser(userId: userId) {
+                inviters = [inviter]
+            } else {
+                inviters = []
             }
-            DispatchQueue.main.sync {
-                guard !self.isMinimized else {
+            let call = GroupCall(conversation: conversation,
+                                 isOutgoing: false,
+                                 inviters: inviters,
+                                 invitees: [])
+            adapter.reportNewIncomingCall(call) { error in
+                if let error = error {
+                    let reason = Call.EndedReason(error: error)
+                    call.end(reason: reason, by: .local)
+                    Logger.call.error(category: "CallService", message: "Incoming group call is blocked by adapter: \(error)")
+                } else {
+                    Queue.main.autoSync {
+                        self.groupCallUUIDs[conversation.conversationId] = call.uuid
+                        self.calls[call.uuid] = call
+                    }
+                }
+                completion()
+            }
+            MixinService.isStopProcessMessages = false
+            WebSocketService.shared.connectIfNeeded()
+            Logger.call.info(category: "CallService", message: "Report incoming group call from PushKit notification. UUID: \(call.uuidString)")
+        } else if name.isEmpty, let username = payload.dictionaryPayload["full_name"] as? String, let uuid = UUID(uuidString: messageId) {
+            let call = IncomingPeerCall(uuid: uuid,
+                                        remoteUserId: userId,
+                                        remoteUsername: username)
+            adapter.reportNewIncomingCall(call) { error in
+                if let error = error {
+                    let reason = Call.EndedReason(error: error)
+                    call.end(reason: reason, by: .local)
+                    Logger.call.error(category: "CallService", message: "Incoming peer call is blocked by adapter: \(error)")
+                } else {
+                    Queue.main.autoSync {
+                        self.calls[call.uuid] = call
+                    }
+                }
+                completion()
+            }
+            MixinService.isStopProcessMessages = false
+            WebSocketService.shared.connectIfNeeded()
+            Logger.call.info(category: "CallService", message: "New incoming peer call from: \(username), uuid: \(call.uuidString)")
+        } else {
+            Logger.call.info(category: "CallService", message: "report failed incoming call from PushKit notification")
+            callKitAdapter.reportImmediateFailureCall()
+            completion()
+            endBackgroundTaskIfNeeded()
+        }
+    }
+    
+    func pushRegistry(_ registry: PKPushRegistry, didInvalidatePushTokenFor type: PKPushType) {
+        guard type == .voIP, registry.pushToken(for: .voIP) == nil else {
+            return
+        }
+        AccountAPI.updateSession(voipToken: .remove)
+        Logger.call.info(category: "CallService", message: "PushKit invalidated")
+    }
+    
+}
+
+// MARK: - CallMessageCoordinator
+extension CallService: CallMessageCoordinator {
+    
+    func shouldSendRtcBlazeMessage(with category: MessageCategory) -> Bool {
+        if [.WEBRTC_AUDIO_OFFER, .WEBRTC_AUDIO_ANSWER, .WEBRTC_ICE_CANDIDATE].contains(category) {
+            return Queue.main.autoSync {
+                self.hasCall
+            }
+        } else {
+            return true
+        }
+    }
+    
+    func handleIncomingBlazeMessageData(_ data: BlazeMessageData) {
+        guard let category = MessageCategory(rawValue: data.category) else {
+            Logger.call.error(category: "CallService", message: "Invalid message category: \(data.category)")
+            return
+        }
+        blazeProcessingQueue.async {
+            let isListPendingMessage = data.source == BlazeMessageAction.listPendingMessages.rawValue
+            let isTimedOut = -data.createdAt.toUTCDate().timeIntervalSinceNow >= Call.timeoutInterval
+            
+            switch category {
+            case .WEBRTC_AUDIO_OFFER:
+                guard let uuid = UUID(uuidString: data.messageId) else {
+                    Logger.call.error(category: "CallService", message: "Offer with invalid UUID: \(data.messageId)")
                     return
                 }
-                self.setInterfaceMinimized(true, animated: true)
+                let isCallRinging: Bool = DispatchQueue.main.sync {
+                    self.handledUUIDs.insert(uuid)
+                    return self.call(with: uuid) != nil
+                }
+                if isListPendingMessage && !isCallRinging {
+                    if isTimedOut {
+                        Logger.call.info(category: "CallService", message: "[\(data.messageId)] Offer from LIST_PENDING is timed out")
+                        let cancel = Message.createWebRTCMessage(data: data, category: .WEBRTC_AUDIO_CANCEL, status: .DELIVERED)
+                        MessageDAO.shared.insertMessage(message: cancel, messageSource: data.source)
+                    } else {
+                        let item = DispatchWorkItem {
+                            Logger.call.info(category: "CallService", message: "[\(data.messageId)] Wakes from listPendingWorkItems")
+                            self.listPendingWorkItems.removeValue(forKey: uuid)
+                            self.handleOffer(data: data, uuid: uuid)
+                            if let candidates = self.listPendingCandidates.removeValue(forKey: uuid) {
+                                Logger.call.info(category: "CallService", message: "[\(data.messageId)] \(candidates.count) candidates wakes from listPendingCandidates")
+                                for candidate in candidates {
+                                    self.handleCandidate(callUUID: uuid, data: candidate)
+                                }
+                            } else {
+                                Logger.call.info(category: "CallService", message: "[\(data.messageId)] No candidates wakes from listPendingCandidates")
+                            }
+                        }
+                        self.listPendingWorkItems[uuid] = item
+                        self.blazeProcessingQueue.asyncAfter(deadline: .now() + listPendingMessageDelay, execute: item)
+                        Logger.call.info(category: "CallService", message: "[\(data.messageId)] Outdated offer from LIST_PENDING is saved")
+                    }
+                } else {
+                    self.handleOffer(data: data, uuid: uuid)
+                }
+            case .WEBRTC_AUDIO_ANSWER:
+                self.handleAnswer(data: data)
+            case .WEBRTC_AUDIO_CANCEL, .WEBRTC_AUDIO_DECLINE, .WEBRTC_AUDIO_BUSY, .WEBRTC_AUDIO_FAILED, .WEBRTC_AUDIO_END:
+                guard let callUUID = UUID(uuidString: data.quoteMessageId) else {
+                    Logger.call.error(category: "CallService", message: "End with invalid UUID: \(data.messageId)")
+                    return
+                }
+                if let item = self.listPendingWorkItems.removeValue(forKey: callUUID) {
+                    item.cancel()
+                    self.listPendingCandidates.removeValue(forKey: callUUID)
+                    let cancel = Message.createWebRTCMessage(messageId: data.quoteMessageId,
+                                                             conversationId: data.conversationId,
+                                                             userId: data.userId,
+                                                             category: category,
+                                                             status: .DELIVERED)
+                    MessageDAO.shared.insertMessage(message: cancel, messageSource: data.source)
+                    Logger.call.info(category: "CallService", message: "[\(data.quoteMessageId)] Removed from listPendingWorkItems due to: \(category)")
+                } else {
+                    self.handlePeerCallEnd(uuid: callUUID, category: category, data: data)
+                }
+            case .WEBRTC_ICE_CANDIDATE:
+                guard let callUUID = UUID(uuidString: data.quoteMessageId) else {
+                    Logger.call.error(category: "CallService", message: "Candidate with invalid UUID: \(data.messageId)")
+                    return
+                }
+                if self.listPendingWorkItems[callUUID] != nil {
+                    var candidates = self.listPendingCandidates[callUUID] ?? []
+                    candidates.append(data)
+                    self.listPendingCandidates[callUUID] = candidates
+                    Logger.call.info(category: "CallService", message: "[\(data.quoteMessageId)] Candidate is saved")
+                } else {
+                    self.handleCandidate(callUUID: callUUID, data: data)
+                }
+            case .KRAKEN_PUBLISH:
+                self.handlePublish(data: data)
+            case .KRAKEN_INVITE:
+                if isListPendingMessage && isTimedOut {
+                    let invitation = Message.createKrakenMessage(conversationId: data.conversationId,
+                                                                 userId: data.userId,
+                                                                 category: .KRAKEN_INVITE,
+                                                                 createdAt: data.createdAt)
+                    MessageDAO.shared.insertMessage(message: invitation, messageSource: "CallService")
+                    Logger.call.info(category: "CallService", message: "[\(data.conversationId)] Outdated invitation is saved to db")
+                } else {
+                    // TODO: Invitations with LIST_PENDING could be handled more precisely
+                    // For example, A invites me, B invites me, then A cancelled his invitation and invites me again
+                    // Since cancel message is only associated with conversation_id, it needs some ref counting
+                    // mechanism to determine whether this invitation should be presented or not
+                    self.handleInvitation(data: data)
+                }
+            case .KRAKEN_END:
+                self.handleKrakenEnd(data: data)
+            case .KRAKEN_CANCEL:
+                self.handleKrakenCancel(data: data)
+            case .KRAKEN_DECLINE:
+                self.handleKrakenDecline(data: data)
+            default:
+                Logger.call.error(category: "CallService", message: "Unhandled category: \(category)")
             }
         }
     }
+    
+}
+
+// MARK: - UI Interface
+extension CallService {
     
     func alert(error: Error) {
         let content: String
@@ -179,7 +381,7 @@ class CallService: NSObject {
         } else {
             content = R.string.localizable.chat_message_call_failed()
         }
-        DispatchQueue.main.async {
+        Queue.main.autoAsync {
             guard let controller = AppDelegate.current.mainWindow.rootViewController else {
                 return
             }
@@ -192,105 +394,6 @@ class CallService: NSObject {
         }
     }
     
-}
-
-// MARK: - Calling Interface
-extension CallService {
-    
-    func requestStartPeerToPeerCall(remoteUser: UserItem) {
-        queue.async {
-            let activeCall = self.activeCall
-            DispatchQueue.main.sync {
-                if self.isMinimized, let activeCallRemoteUserId = (activeCall as? PeerToPeerCall)?.remoteUserId, activeCallRemoteUserId == remoteUser.userId {
-                    self.setInterfaceMinimized(false, animated: true)
-                } else if activeCall != nil {
-                    self.alert(error: CallError.busy)
-                } else {
-                    Logger.call.info(category: "CallService", message: "Request start p2p call with user: \(remoteUser.fullName)")
-                    let handle = CXHandle(type: .generic, value: remoteUser.userId)
-                    let call = PeerToPeerCall(uuid: UUID(), isOutgoing: true, remoteUser: remoteUser, rtcClient: self.makeRtcClient())
-                    self.requestStartCall(call, handle: handle, playOutgoingRingtone: true)
-                }
-            }
-        }
-    }
-    
-    func requestStartGroupCall(conversation: ConversationItem, invitingMembers: [UserItem], animated: Bool) {
-        Logger.call.info(category: "CallService", message: "Request start group call with conversation: \(conversation.getConversationName())")
-        guard var members = self.membersManager.members(inConversationWith: conversation.conversationId) else {
-            alert(error: CallError.networkFailure)
-            return
-        }
-        if let account = LoginManager.shared.account {
-            let me = UserItem.createUser(from: account)
-            members.append(me)
-        }
-        if let confirmation = UIApplication.homeContainerViewController?.children.compactMap({ $0 as? GroupCallConfirmationViewController }).first {
-            removeViewControllerAsContainersChildIfNeeded(confirmation)
-        }
-        if let uuid = groupCallUUIDs[conversation.conversationId], let call = activeOrPendingAnswerCall(with: uuid) {
-            Logger.call.info(category: "CallService", message: "Request to start but we found existed group call: \(uuid)")
-            showCallingInterface(call: call, animated: animated)
-            callInterface.requestAnswerCall(uuid: uuid)
-        } else {
-            Logger.call.info(category: "CallService", message: "Making call with members: \(members.map(\.fullName))")
-            let call = GroupCall(uuid: UUID(),
-                                 isOutgoing: true,
-                                 conversation: conversation,
-                                 members: members,
-                                 invitingMembers: invitingMembers,
-                                 rtcClient: makeRtcClient())
-            showCallingInterface(call: call, animated: animated)
-            let handle = CXHandle(type: .generic, value: conversation.conversationId)
-            requestStartCall(call, handle: handle, playOutgoingRingtone: false)
-        }
-    }
-    
-    func requestAnswerCall() {
-        queue.async {
-            guard let uuid = self.pendingAnswerCalls.first?.key else {
-                Logger.call.info(category: "CallService", message: "Request answer call but finds no pending answer call")
-                return
-            }
-            Logger.call.info(category: "CallService", message: "Request answer call")
-            self.callInterface.requestAnswerCall(uuid: uuid)
-        }
-    }
-    
-    func requestEndCall() {
-        queue.async {
-            guard let uuid = self.activeCall?.uuid ?? self.pendingAnswerCalls.first?.key else {
-                Logger.call.info(category: "CallService", message: "Request end call but finds no pending answer call")
-                return
-            }
-            Logger.call.info(category: "CallService", message: "Request end call")
-            self.callInterface.requestEndCall(uuid: uuid) { (error) in
-                if let error = error {
-                    Logger.call.info(category: "CallService", message: "Error request end call: \(error)")
-                    // Don't think we would get error here
-                    reporter.report(error: error)
-                    self.endCall(uuid: uuid)
-                }
-            }
-        }
-    }
-    
-    func requestSetMute(_ muted: Bool) {
-        queue.async {
-            guard let uuid = self.activeCall?.uuid ?? self.pendingAnswerCalls.first?.key else {
-                Logger.call.info(category: "CallService", message: "Request set mute but finds no pending answer call")
-                return
-            }
-            Logger.call.info(category: "CallService", message: "Request set mute")
-            self.callInterface.requestSetMute(uuid: uuid, muted: muted) { (_) in }
-        }
-    }
-    
-}
-
-// MARK: - UI Related Interface
-extension CallService {
-    
     func showJoinGroupCallConfirmation(conversation: ConversationItem, memberIds ids: [String]) {
         let controller = GroupCallConfirmationViewController(conversation: conversation, service: self)
         controller.loadMembers(with: ids)
@@ -299,42 +402,12 @@ extension CallService {
         controller.showContentViewIfNeeded(animated: true)
     }
     
-    func showCallingInterface(call: Call, animated: Bool) {
-        Logger.call.info(category: "CallService", message: "show calling interface for call: \(call.debugDescription)")
-        
-        if isMinimized {
-            setInterfaceMinimized(false, animated: animated)
-        }
-        
-        func makeViewController() -> CallViewController {
-            let viewController = CallViewController(service: self)
-            viewController.loadViewIfNeeded()
-            self.viewController = viewController
-            return viewController
-        }
-        
-        let viewController = self.viewController ?? makeViewController()
-        addViewControllerAsContainersChildIfNeeded(viewController)
-        
-        UIView.performWithoutAnimation {
-            viewController.reload(call: call)
-            viewController.view.layoutIfNeeded()
-        }
-        viewController.showContentViewIfNeeded(animated: animated)
-    }
-    
-    func showCallingInterfaceIfHasCall(with uuid: UUID) {
-        guard let call = activeOrPendingAnswerCall(with: uuid) else {
-            return
-        }
-        showCallingInterface(call: call, animated: true)
-    }
-    
     func setInterfaceMinimized(_ minimized: Bool, animated: Bool, completion: (() -> Void)? = nil) {
-        guard self.isMinimized != minimized else {
+        assert(Thread.isMainThread)
+        guard self.isInterfaceMinimized != minimized else {
             return
         }
-        self.isMinimized = minimized
+        self.isInterfaceMinimized = minimized
         guard let min = UIApplication.homeContainerViewController?.minimizedCallViewController else {
             return
         }
@@ -352,7 +425,7 @@ extension CallService {
                 min.view.alpha = 1
             }
             animationCompletion = { (_) in
-                if self.isMinimized {
+                if self.isInterfaceMinimized {
                     self.removeViewControllerAsContainersChildIfNeeded(max)
                 }
                 completion?()
@@ -380,6 +453,23 @@ extension CallService {
         }
     }
     
+    func showCallingInterface(call: Call, animated: Bool) {
+        let viewController: CallViewController
+        if let controller = self.viewController {
+            viewController = controller
+        } else {
+            viewController = CallViewController(service: self)
+            viewController.loadViewIfNeeded()
+            self.viewController = viewController
+        }
+        addViewControllerAsContainersChildIfNeeded(viewController)
+        UIView.performWithoutAnimation {
+            viewController.reload(call: call)
+            viewController.view.layoutIfNeeded()
+        }
+        viewController.showContentViewIfNeeded(animated: animated)
+    }
+    
     func dismissCallingInterface() {
         var needsLockScreen: Bool {
             !ScreenLockManager.shared.isLastAuthenticationStillValid && ScreenLockManager.shared.needsBiometricAuthentication
@@ -405,1002 +495,599 @@ extension CallService {
             mini.updateViewSize()
             mini.panningController.placeViewNextToLastOverlayOrTopRight()
         }
-        Logger.call.info(category: "CallService", message: "calling interface dismissed")
     }
     
-}
-
-// MARK: - Callback
-extension CallService {
-    
-    func startCall(uuid: UUID, handle: CXHandle, completion: ((Bool) -> Void)?) {
-        queue.autoAsync {
-            DispatchQueue.main.sync {
-                NotificationCenter.default.post(name: Self.willStartCallNotification, object: self)
-            }
-            guard WebSocketService.shared.isConnected else {
-                self.alert(error: CallError.networkFailure)
-                self.close(uuid: uuid)
-                completion?(false)
-                return
-            }
-            if let call = self.activeCall as? PeerToPeerCall, call.remoteUserId == handle.value, call.status != .disconnecting {
-                self.startPeerToPeerCall(call, completion: completion)
-                Logger.call.info(category: "CallService", message: "start p2p call")
-            } else if let call = self.activeCall as? GroupCall, call.uuid == uuid, call.status != .disconnecting {
-                self.startGroupCall(call, isRestarting: false, completion: completion)
-                Logger.call.info(category: "CallService", message: "start group call")
-            } else {
-                self.alert(error: CallError.inconsistentCallStarted)
-                Logger.call.info(category: "CallService", message: "inconsistentCallStarted")
-                completion?(false)
-            }
-        }
-    }
-    
-    func answerCall(uuid: UUID, completion: ((Bool) -> Void)?) {
-        queue.autoAsync {
-            if let call = self.pendingAnswerCalls[uuid] as? PeerToPeerCall, call.status != .disconnecting, let sdp = self.pendingSDPs[uuid] {
-                Logger.call.info(category: "CallService", message: "answer p2p call: \(call.debugDescription)")
-                call.timer?.invalidate()
-                self.pendingAnswerCalls.removeValue(forKey: uuid)
-                self.pendingSDPs.removeValue(forKey: uuid)
-                self.answer(peerToPeerCall: call, sdp: sdp, completion: completion)
-            } else if let call = self.pendingAnswerCalls[uuid] as? GroupCall, call.status != .disconnecting {
-                DispatchQueue.main.sync {
-                    _ = self.handledUUIDs.insert(uuid)
-                }
-                Logger.call.info(category: "CallService", message: "answer group call: \(call.debugDescription)")
-                call.timer?.invalidate()
-                self.pendingAnswerCalls.removeValue(forKey: uuid)
-                self.activeCall = call
-                self.ringtonePlayer.stop()
-                call.status = .connecting
-                self.startGroupCall(call, isRestarting: false, completion: completion)
-            } else {
-                Logger.call.info(category: "CallService", message: "answer call failed, call: \(self.pendingAnswerCalls[uuid]?.debugDescription)")
-            }
-        }
-    }
-    
-    func endCall(uuid: UUID) {
-        queue.autoAsync {
-            DispatchQueue.main.sync(execute: self.beginAutoCancellingBackgroundTaskIfNotActive)
-            if let call = self.activeOrPendingAnswerCall(with: uuid) {
-                let callStatusWasIncoming = call.status == .incoming
-                call.status = .disconnecting
-                call.timer?.invalidate()
-                Logger.call.info(category: "CallService", message: "ending call: \(call.debugDescription)")
-                if let call = call as? PeerToPeerCall {
-                    let category: MessageCategory
-                    if call.connectedDate != nil {
-                        category = .WEBRTC_AUDIO_END
-                    } else if call.isOutgoing {
-                        category = .WEBRTC_AUDIO_CANCEL
-                    } else {
-                        category = .WEBRTC_AUDIO_DECLINE
-                    }
-                    let msg = Message.createWebRTCMessage(conversationId: call.conversationId,
-                                                          category: category,
-                                                          status: .SENDING,
-                                                          quoteMessageId: call.uuidString)
-                    SendMessageService.shared.sendWebRTCMessage(message: msg,
-                                                                recipientId: call.remoteUserId)
-                    self.insertCallCompletedMessage(call: call,
-                                                    isUserInitiated: true,
-                                                    category: category)
-                } else if let call = call as? GroupCall {
-                    DispatchQueue.main.sync {
-                        _ = self.handledUUIDs.insert(uuid)
-                    }
-                    if callStatusWasIncoming, !call.inviters.isEmpty {
-                        for userId in call.inviters.map(\.userId) {
-                            let declining = KrakenRequest(callUUID: call.uuid,
-                                                          conversationId: call.conversationId,
-                                                          trackId: nil,
-                                                          action: .decline(recipientId: userId))
-                            KrakenMessageRetriever.shared.request(declining, completion: nil)
-                            Logger.call.info(category: "CallService", message: "[KrakenMessageRetriever] Request \(declining.debugDescription)")
-                        }
-                        let message = Message.createKrakenMessage(conversationId: call.conversationId,
-                                                                  userId: myUserId,
-                                                                  category: .KRAKEN_DECLINE,
-                                                                  createdAt: Date().toUTCString())
-                        MessageDAO.shared.insertMessage(message: message, messageSource: "CallService")
-                    } else {
-                        let action: KrakenRequest.Action
-                        let messageCategory: MessageCategory
-                        if call.isOutgoing, call.trackId == nil {
-                            action = .cancel
-                            messageCategory = .KRAKEN_CANCEL
-                        } else {
-                            action = .end
-                            messageCategory = .KRAKEN_END
-                        }
-                        let mediaDuration: Int64?
-                        if let date = call.connectedDate {
-                            mediaDuration = Int64(abs(date.timeIntervalSinceNow) * millisecondsPerSecond)
-                        } else {
-                            mediaDuration = nil
-                        }
-                        let end = KrakenRequest(callUUID: uuid,
-                                                conversationId: call.conversationId,
-                                                trackId: call.trackId,
-                                                action: action)
-                        KrakenMessageRetriever.shared.request(end, completion: nil)
-                        Logger.call.info(category: "CallService", message: "[KrakenMessageRetriever] Request \(end.debugDescription)")
-                        let message = Message.createKrakenMessage(conversationId: call.conversationId,
-                                                                  userId: myUserId,
-                                                                  category: messageCategory,
-                                                                  mediaDuration: mediaDuration,
-                                                                  createdAt: Date().toUTCString())
-                        MessageDAO.shared.insertMessage(message: message, messageSource: "CallService")
-                    }
-                    self.membersManager.removeMember(with: myUserId, fromConversationWith: call.conversationId)
-                }
-            }
-            self.close(uuid: uuid)
-        }
-    }
-    
-    func closeAll() {
-        Logger.call.info(category: "CallService", message: "close all call")
-        activeCall?.timer?.invalidate()
-        activeCall?.rtcClient.close()
-        activeCall = nil
-        for timer in pendingAnswerCalls.values.compactMap(\.timer) {
-            timer.invalidate()
-        }
-        pendingAnswerCalls = [:]
-        pendingSDPs = [:]
-        pendingCandidates = [:]
-        pendingTrickles = [:]
-        ringtonePlayer.stop()
-        Queue.main.autoSync {
-            dismissCallingInterface()
-        }
-        isMuted = false
-        usesSpeaker = false
-        if !isUsingCallKit {
-            RTCDispatcher.dispatchAsync(on: .typeAudioSession) {
-                RTCAudioSession.sharedInstance().isAudioEnabled = false
-            }
-        }
-        updateCallKitAvailability()
-        registerForPushKitNotificationsIfAvailable()
-        try? AudioSession.shared.deactivate(client: self, notifyOthersOnDeactivation: false)
-    }
-    
-    func close(uuid: UUID) {
-        Logger.call.info(category: "CallService", message: "close call: \(uuid)")
-        if let call = activeCall, call.uuid == uuid {
-            activeCall = nil
-            call.rtcClient.close()
-            call.timer?.invalidate()
-        }
-        if let call = pendingAnswerCalls.removeValue(forKey: uuid) {
-            call.timer?.invalidate()
-        }
-        pendingSDPs.removeValue(forKey: uuid)
-        pendingCandidates.removeValue(forKey: uuid)
-        pendingTrickles.removeValue(forKey: uuid)
-        if pendingAnswerCalls.isEmpty && activeCall == nil {
-            ringtonePlayer.stop()
-            Queue.main.autoSync {
-                dismissCallingInterface()
-            }
-            isMuted = false
-            usesSpeaker = false
-            if !isUsingCallKit {
-                RTCDispatcher.dispatchAsync(on: .typeAudioSession) {
-                    RTCAudioSession.sharedInstance().isAudioEnabled = false
-                }
-            }
-            updateCallKitAvailability()
-            registerForPushKitNotificationsIfAvailable()
-            try? AudioSession.shared.deactivate(client: self, notifyOthersOnDeactivation: false)
-        }
-    }
-    
-}
-
-// MARK: - CallMessageCoordinator
-extension CallService: CallMessageCoordinator {
-    
-    func shouldSendRtcBlazeMessage(with category: MessageCategory) -> Bool {
-        let onlySendIfThereIsAnActiveCall = [.WEBRTC_AUDIO_OFFER, .WEBRTC_AUDIO_ANSWER, .WEBRTC_ICE_CANDIDATE].contains(category)
-        return activeCall != nil || !onlySendIfThereIsAnActiveCall
-    }
-    
-    func handleIncomingBlazeMessageData(_ data: BlazeMessageData) {
-        
-        func hasCall(uuid: UUID) -> Bool {
-            activeCall?.uuid == uuid || pendingAnswerCalls[uuid] != nil
-        }
-        
-        func handle(data: BlazeMessageData) {
-            switch MessageCategory(rawValue: data.category) {
-            case .WEBRTC_AUDIO_OFFER:
-                self.handleOffer(data: data)
-            case .WEBRTC_ICE_CANDIDATE:
-                self.handleIceCandidate(data: data)
-            case .KRAKEN_PUBLISH:
-                self.handlePublishing(data: data)
-            case .KRAKEN_INVITE:
-                self.handleInvitation(data: data)
-            case .KRAKEN_DECLINE:
-                self.handleKrakenDecline(data: data)
-            case .KRAKEN_END, .KRAKEN_CANCEL:
-                self.handleKrakenEnd(data: data)
-            default:
-                self.handleCallStatusChange(data: data)
-            }
-        }
-        
-        queue.autoAsync {
-            if data.source != BlazeMessageAction.listPendingMessages.rawValue {
-                handle(data: data)
-            } else {
-                let isOffer = data.category == MessageCategory.WEBRTC_AUDIO_OFFER.rawValue
-                let isTimedOut = abs(data.createdAt.toUTCDate().timeIntervalSinceNow) >= callTimeoutInterval
-                if isOffer, let uuid = UUID(uuidString: data.messageId), !hasCall(uuid: uuid) {
-                    if isTimedOut {
-                        let msg = Message.createWebRTCMessage(data: data, category: .WEBRTC_AUDIO_CANCEL, status: .DELIVERED)
-                        MessageDAO.shared.insertMessage(message: msg, messageSource: data.source)
-                    } else {
-                        let workItem = DispatchWorkItem(block: {
-                            handle(data: data)
-                            self.listPendingCallWorkItems.removeValue(forKey: uuid)
-                        })
-                        self.listPendingCallWorkItems[uuid] = workItem
-                        self.queue.asyncAfter(deadline: .now() + self.listPendingCallDelay, execute: workItem)
-                    }
-                } else if !isOffer, let uuid = UUID(uuidString: data.quoteMessageId), let workItem = self.listPendingCallWorkItems[uuid], !hasCall(uuid: uuid), let category = MessageCategory(rawValue: data.category), MessageCategory.endCallCategories.contains(category) {
-                    workItem.cancel()
-                    self.listPendingCallWorkItems.removeValue(forKey: uuid)
-                    self.pendingCandidates.removeValue(forKey: uuid)
-                    let msg = Message.createWebRTCMessage(messageId: data.quoteMessageId,
-                                                          conversationId: data.conversationId,
-                                                          userId: data.userId,
-                                                          category: category,
-                                                          status: .DELIVERED)
-                    MessageDAO.shared.insertMessage(message: msg, messageSource: data.source)
-                } else if data.category == MessageCategory.KRAKEN_INVITE.rawValue {
-                    if isTimedOut {
-                        let message = Message.createKrakenMessage(conversationId: data.conversationId,
-                                                                  userId: data.userId,
-                                                                  category: .KRAKEN_INVITE,
-                                                                  createdAt: data.createdAt)
-                        MessageDAO.shared.insertMessage(message: message, messageSource: "CallService")
-                    } else {
-                        let index = self.listPendingInvitationCounter.advancedValue
-                        self.listPendingInvitations[index] = data
-                        self.queue.asyncAfter(deadline: .now() + self.listPendingCallDelay, execute: {
-                            guard let invitation = self.listPendingInvitations[index] else {
-                                return
-                            }
-                            handle(data: invitation)
-                        })
-                    }
-                } else if data.category == MessageCategory.KRAKEN_END.rawValue {
-                    self.listPendingInvitations = self.listPendingInvitations.filter({ (index, invitation) -> Bool in
-                        if invitation.conversationId == data.conversationId {
-                            let message = Message.createKrakenMessage(conversationId: invitation.conversationId,
-                                                                      userId: invitation.userId,
-                                                                      category: .KRAKEN_INVITE,
-                                                                      createdAt: invitation.createdAt)
-                            MessageDAO.shared.insertMessage(message: message, messageSource: "CallService")
-                            return false
-                        } else {
-                            return true
-                        }
-                    })
-                } else {
-                    handle(data: data)
-                }
-            }
-        }
-        
-    }
-    
-}
-
-// MARK: - BlazeMessageData handlers
-extension CallService {
-    
-    private func handleOffer(data: BlazeMessageData) {
-        guard !MessageDAO.shared.isExist(messageId: data.messageId) else {
+    func addViewControllerAsContainersChildIfNeeded(_ viewController: CallViewController) {
+        guard let container = UIApplication.homeContainerViewController else {
             return
         }
-        
-        func handle(error: Error, username: String?) {
-            
-            func declineOffer(data: BlazeMessageData, category: MessageCategory) {
-                let offer = Message.createWebRTCMessage(data: data, category: category, status: .DELIVERED)
-                MessageDAO.shared.insertMessage(message: offer, messageSource: "")
-                let reply = Message.createWebRTCMessage(quote: data, category: category, status: .SENDING)
-                SendMessageService.shared.sendWebRTCMessage(message: reply, recipientId: data.getSenderId())
-                if let uuid = UUID(uuidString: data.messageId) {
-                    close(uuid: uuid)
-                }
+        guard viewController.parent == nil else {
+            return
+        }
+        container.addChild(viewController)
+        container.view.addSubview(viewController.view)
+        viewController.view.snp.makeEdgesEqualToSuperview()
+        viewController.didMove(toParent: container)
+    }
+    
+    func removeViewControllerAsContainersChildIfNeeded(_ viewController: CallViewController) {
+        guard viewController.parent != nil else {
+            return
+        }
+        viewController.willMove(toParent: nil)
+        viewController.view.removeFromSuperview()
+        viewController.removeFromParent()
+    }
+    
+}
+
+// MARK: - Calling Interface
+extension CallService {
+    
+    func makePeerCall(with remoteUser: UserItem) {
+        assert(Thread.isMainThread)
+        let call = OutgoingPeerCall(uuid: UUID(),
+                                    remoteUser: remoteUser)
+        makeCall(call)
+    }
+    
+    func makeGroupCall(conversation: ConversationItem, invitees: [UserItem]) {
+        assert(Thread.isMainThread)
+        let call = GroupCall(conversation: conversation,
+                             isOutgoing: true,
+                             inviters: [],
+                             invitees: invitees)
+        makeCall(call)
+    }
+    
+    func requestAnswerCall(with uuid: UUID) {
+        assert(Thread.isMainThread)
+        guard let call = call(with: uuid) else {
+            dismissCallingInterface()
+            return
+        }
+        adapter.requestAnswerCall(call) { error in
+            guard let error = error else {
+                return
             }
-            
-            queue.autoAsync {
-                switch error {
-                case CallError.busy:
-                    declineOffer(data: data, category: .WEBRTC_AUDIO_BUSY)
-                case CallError.microphonePermissionDenied:
-                    declineOffer(data: data, category: .WEBRTC_AUDIO_DECLINE)
-                    DispatchQueue.main.sync {
-                        self.alert(error: CallError.microphonePermissionDenied)
-                        if UIApplication.shared.applicationState != .active {
-                            NotificationManager.shared.requestDeclinedCallNotification(username: username, messageId: data.messageId)
-                        }
-                    }
-                default:
-                    declineOffer(data: data, category: .WEBRTC_AUDIO_FAILED)
-                }
+            Queue.main.autoSync(execute: self.dismissCallingInterface)
+            Logger.call.error(category: "CallService", message: "Request answer call failed: \(error)")
+        }
+    }
+    
+    /// completion is called on main queue with true on success, false on failure
+    func requestSetMute(with uuid: UUID, muted: Bool, completion: @escaping Call.Completion) {
+        assert(Thread.isMainThread)
+        guard let call = call(with: uuid) else {
+            completion(CallError.missingCall(uuid: uuid))
+            return
+        }
+        adapter.requestSetMute(call, muted: muted) { error in
+            Queue.main.autoSync {
+                completion(error)
             }
         }
-        
-        do {
-            DispatchQueue.main.sync(execute: beginAutoCancellingBackgroundTaskIfNotActive)
-            guard let user = UserDAO.shared.getUser(userId: data.userId) else {
-                handle(error: CallError.missingUser(userId: data.userId), username: nil)
+    }
+    
+    func requestEndCall(with uuid: UUID) {
+        assert(Thread.isMainThread)
+        guard let call = call(with: uuid) else {
+            dismissCallingInterface()
+            return
+        }
+        Logger.call.info(category: "CallService", message: "Request end call: \(call.uuidString)")
+        adapter.requestEndCall(call) { error in
+            guard let error = error else {
                 return
             }
-            guard let uuid = UUID(uuidString: data.messageId) else {
-                handle(error: CallError.invalidUUID(uuid: data.messageId), username: user.fullName)
-                return
+            Queue.main.autoSync(execute: self.dismissCallingInterface)
+            Logger.call.error(category: "CallService", message: "Request end call failed: \(error)")
+        }
+    }
+    
+}
+
+// MARK: - CallAdapter Callback
+extension CallService {
+    
+    func performStartCall(uuid: UUID, completion: @escaping Call.Completion) {
+        assert(Thread.isMainThread)
+        Logger.call.info(category: "CallService", message: "Perform start call: \(uuid)")
+        guard let call = call(with: uuid) else {
+            completion(CallError.missingCall(uuid: uuid))
+            Logger.call.error(category: "CallService", message: "Missing call with: \(uuid) in performStartCall")
+            return
+        }
+        if let call = call as? OutgoingPeerCall {
+            call.sendOffer(completion: completion)
+            showCallingInterface(call: call, animated: true)
+        } else if let call = call as? GroupCall {
+            self.groupCallUUIDs[call.conversationId] = uuid
+            call.connect(isRestarting: false, completion: completion)
+            showCallingInterface(call: call, animated: true)
+        } else {
+            completion(CallError.inconsistentCallStarted)
+            Logger.call.error(category: "CallService", message: "Call cannot be started: \(call)")
+        }
+    }
+    
+    func performAnswerCall(uuid: UUID, completion: @escaping Call.Completion) {
+        assert(Thread.isMainThread)
+        Logger.call.info(category: "CallService", message: "Perform answer call: \(uuid)")
+        guard let call = calls[uuid] else {
+            completion(CallError.missingCall(uuid: uuid))
+            Logger.call.error(category: "CallService", message: "Missing call with: \(uuid) in performAnswerCall")
+            return
+        }
+        calls.removeValue(forKey: uuid)
+        activeCall = call
+        if let call = call as? IncomingPeerCall {
+            call.requestAnswer(completion: completion)
+            showCallingInterface(call: call, animated: true)
+        } else if let call = call as? GroupCall {
+            call.connect(isRestarting: false, completion: completion)
+            showCallingInterface(call: call, animated: true)
+        } else {
+            completion(CallError.inconsistentCallAnswered)
+            Logger.call.error(category: "CallService", message: "Call cannot be answered: \(call)")
+        }
+    }
+    
+    func performEndCall(uuid: UUID, completion: @escaping Call.Completion) {
+        assert(Thread.isMainThread)
+        Logger.call.info(category: "CallService", message: "Perform end call: \(uuid)")
+        guard let call = call(with: uuid) else {
+            completion(CallError.missingCall(uuid: uuid))
+            Logger.call.error(category: "CallService", message: "Missing call with: \(uuid) in performEndCall")
+            return
+        }
+        let reason: Call.EndedReason
+        switch call.state {
+        case .incoming:
+            reason = .declined
+        case .outgoing:
+            reason = .cancelled
+        default:
+            reason = .ended
+        }
+        call.end(reason: reason, by: .local) {
+            completion(nil)
+        }
+    }
+    
+    /// Returns nil on success, error on failure
+    func performSetMute(uuid: UUID, muted: Bool) -> Error? {
+        assert(Thread.isMainThread)
+        if let call = call(with: uuid) {
+            call.isMuted = muted
+            return nil
+        } else {
+            return CallError.missingCall(uuid: uuid)
+        }
+    }
+    
+    func audioSessionDidActivated(_ audioSession: AVAudioSession) {
+        assert(Thread.isMainThread)
+        if let call = activeCall as? PeerCall, call.state == .outgoing {
+            ringtonePlayer.play(ringtone: .outgoing)
+        }
+    }
+    
+}
+
+// MARK: - Call Workers
+extension CallService {
+    
+    private func makeCall(_ call: Call) {
+        assert(Thread.isMainThread)
+        guard WebSocketService.shared.isConnected else {
+            alert(error: CallError.networkFailure)
+            return
+        }
+        guard !hasCall else {
+            alert(error: CallError.busy)
+            return
+        }
+        requestRecordPermission {
+            self.reloadCallAdapter()
+            Logger.call.info(category: "CallService", message: "Call started with UUID: \(call.uuid)")
+            if let confirmation = UIApplication.homeContainerViewController?.children.compactMap({ $0 as? GroupCallConfirmationViewController }).first {
+                self.removeViewControllerAsContainersChildIfNeeded(confirmation)
+                self.showCallingInterface(call: call, animated: false)
             }
-            DispatchQueue.main.async {
-                self.handledUUIDs.insert(uuid)
-            }
-            guard let sdpString = data.data.base64Decoded(), let sdp = RTCSessionDescription(jsonString: sdpString) else {
-                handle(error: CallError.invalidSdp(sdp: data.data), username: user.fullName)
-                return
-            }
-            if !data.quoteMessageId.isEmpty {
-                if let call = activeCall as? PeerToPeerCall, call.uuid == UUID(uuidString: data.quoteMessageId), !call.isOutgoing {
-                    Logger.call.info(category: "CallService", message: "Got restart offer, setting it")
-                    call.rtcClient.set(remoteSdp: sdp) { (error) in
-                        self.handleResultFromSettingRemoteSdpWhenAnsweringPeerToPeerCall(call, error: error, completion: nil)
-                    }
-                }
-            } else {
+            self.blazeProcessingQueue.async {
                 try? AudioSession.shared.activate(client: self)
-                let call = PeerToPeerCall(uuid: uuid, isOutgoing: false, remoteUser: user, rtcClient: makeRtcClient())
-                pendingAnswerCalls[uuid] = call
-                pendingSDPs[uuid] = sdp
-                beginUnanswerCountDown(for: call)
-                DispatchQueue.main.sync {
-                    NotificationCenter.default.post(name: Self.willStartCallNotification, object: self)
-                }
-                callInterface.reportIncomingCall(call) { (error) in
-                    if let error = error {
-                        handle(error: error, username: user.fullName)
+                DispatchQueue.main.async {
+                    self.adapter.requestStartCall(call) { error in
+                        Queue.main.autoSync {
+                            if let error = error {
+                                self.alert(error: error)
+                                Logger.call.warn(category: "CallService", message: "Adapter reports error on start call: \(error)")
+                            } else {
+                                self.activeCall = call
+                            }
+                        }
                     }
                 }
             }
         }
     }
     
-    private func handleIceCandidate(data: BlazeMessageData) {
+}
+
+// MARK: - Call Update Handlers
+extension CallService {
+    
+    @objc private func callStateDidChange(_ notification: Notification) {
+        guard let call = notification.object as? Call else {
+            return
+        }
+        guard let oldState = notification.userInfo?[Call.UserInfoKey.oldState] as? Call.State else {
+            return
+        }
+        switch call.state {
+        case .incoming, .outgoing:
+            break
+        case .connecting:
+            ringtonePlayer.stop()
+            if call is OutgoingPeerCall {
+                adapter.reportOutgoingCallStartedConnecting(call)
+            }
+        case .connected:
+            let justConnected = oldState == .connecting
+            if justConnected {
+                Vibrator.vibrateOnce()
+            }
+            if call is OutgoingPeerCall {
+                adapter.reportOutgoingCallConnected(call)
+            }
+            if justConnected {
+                updateAudioSessionConfiguration(usesSpeaker: usesSpeaker)
+            }
+        case .restarting:
+            break
+        case .disconnecting:
+            ringtonePlayer.stop()
+        }
+    }
+    
+    @objc private func callDidEnd(_ notification: Notification) {
+        guard
+            let call = notification.object as? Call,
+            let reason = notification.userInfo?[Call.UserInfoKey.endedReason] as? Call.EndedReason,
+            let side = notification.userInfo?[Call.UserInfoKey.endedSide] as? Call.EndedSide
+        else {
+            return
+        }
+        if activeCall == call {
+            activeCall = nil
+        }
+        calls.removeValue(forKey: call.uuid)
+        adapter.reportCall(call, endedByReason: reason, side: side)
+        if !hasCall {
+            dismissCallingInterface()
+            reloadCallAdapter()
+            blazeProcessingQueue.async {
+                try? AudioSession.shared.deactivate(client: self, notifyOthersOnDeactivation: false)
+            }
+            if UIApplication.shared.applicationState == .background {
+                Logger.call.info(category: "CallService", message: "Scheduled bg task ending")
+                DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
+                    // This could be done better with per-message notification about delivery status
+                    // Currently there's no such mechanism, leave it with time-based delay
+                    guard !self.hasCall else {
+                        return
+                    }
+                    self.endBackgroundTaskIfNeeded()
+                }
+            } else {
+                endBackgroundTaskIfNeeded()
+            }
+        }
+    }
+    
+    @objc private func callDidUpdateLocalizedName(_ notification: Notification) {
+        guard let call = notification.object as? Call else {
+            return
+        }
+        adapter.reportCall(call, callerNameUpdatedWith: call.localizedName)
+    }
+    
+}
+
+// MARK: - Peer Call Handlers
+extension CallService {
+    
+    private func handleOffer(data: BlazeMessageData, uuid: UUID) {
+        guard let user = UserDAO.shared.getUser(userId: data.userId) else {
+            Logger.call.error(category: "CallService", message: "Offer with inexisted user id: \(data.userId)")
+            return
+        }
+        guard let sdpString = data.data.base64Decoded(), let sdp = RTCSessionDescription(jsonString: sdpString) else {
+            Logger.call.error(category: "CallService", message: "Offer with invalid content: \(data.data)")
+            return
+        }
+        if data.quoteMessageId.isEmpty {
+            let (call, reportNewIncomingCall) = DispatchQueue.main.sync { () -> (IncomingPeerCall, Bool) in
+                if let call = self.call(with: uuid) as? IncomingPeerCall {
+                    call.remoteUser = user
+                    return (call, false)
+                } else {
+                    let call = IncomingPeerCall(uuid: uuid, remoteUser: user)
+                    self.calls[uuid] = call
+                    return (call, true)
+                }
+            }
+            Logger.call.info(category: "CallService", message: "New incoming peer call from: \(user.fullName), uuid: \(call.uuidString)")
+            try? AudioSession.shared.activate(client: self)
+            call.takeRemoteSDP(sdp) { error in
+                if let error = error {
+                    call.end(reason: .failed, by: .local)
+                    Logger.call.error(category: "CallService", message: "Failed to take remote SDP from offer: \(error)")
+                } else {
+                    DispatchQueue.main.async {
+                        guard reportNewIncomingCall else {
+                            return
+                        }
+                        self.adapter.reportNewIncomingCall(call) { error in
+                            guard let error = error else {
+                                return
+                            }
+                            let reason = Call.EndedReason(error: error)
+                            call.end(reason: reason, by: .local)
+                            Logger.call.info(category: "CallService", message: "Incoming call is blocked by adapter: \(error)")
+                        }
+                    }
+                }
+            }
+        } else {
+            DispatchQueue.main.sync {
+                guard let uuid = UUID(uuidString: data.quoteMessageId) else {
+                    Logger.call.error(category: "CallService", message: "Restart offer with invalid UUID: \(data.quoteMessageId)")
+                    return
+                }
+                guard let call = self.activeCall as? IncomingPeerCall, call.uuid == uuid else {
+                    Logger.call.info(category: "CallService", message: "No corresponding call with: \(data.quoteMessageId), drop the restart offer")
+                    return
+                }
+                Logger.call.info(category: "CallService", message: "Got restart offer for: \(call.uuidString)")
+                call.takeRemoteSDP(sdp) { error in
+                    guard let error = error else {
+                        return
+                    }
+                    Logger.call.error(category: "CallService", message: "Failed to restart call: \(call.uuidString), reason: \(error)")
+                    call.end(reason: .failed, by: .local)
+                }
+            }
+        }
+    }
+    
+    private func handleAnswer(data: BlazeMessageData) {
+        guard let uuid = UUID(uuidString: data.quoteMessageId) else {
+            Logger.call.error(category: "CallService", message: "Answer with invalid UUID: \(data.messageId)")
+            return
+        }
+        guard let sdpString = data.data.base64Decoded(), let sdp = RTCSessionDescription(jsonString: sdpString) else {
+            Logger.call.error(category: "CallService", message: "Answer with invalid content: \(data.data)")
+            return
+        }
+        DispatchQueue.main.async {
+            guard let call = self.call(with: uuid) as? OutgoingPeerCall else {
+                Logger.call.info(category: "CallService", message: "Got answer without corresponding call: \(data.quoteMessageId)")
+                return
+            }
+            call.takeRemoteAnswer(sdp: sdp) { error in
+                guard let error = error else {
+                    return
+                }
+                call.end(reason: .failed, by: .local)
+                Logger.call.error(category: "CallService", message: "Failed to take remote SDP from answer: \(error)")
+            }
+        }
+    }
+    
+    private func handlePeerCallEnd(uuid: UUID, category: MessageCategory, data: BlazeMessageData) {
+        let reason: Call.EndedReason
+        switch category {
+        case .WEBRTC_AUDIO_CANCEL:
+            reason = .cancelled
+        case .WEBRTC_AUDIO_DECLINE:
+            reason = .declined
+        case .WEBRTC_AUDIO_BUSY:
+            reason = .busy
+        case .WEBRTC_AUDIO_FAILED:
+            reason = .failed
+        case.WEBRTC_AUDIO_END:
+            reason = .ended
+        default:
+            Logger.call.info(category: "CallService", message: "Invalid end call category: \(data.category)")
+            return
+        }
+        DispatchQueue.main.async {
+            guard let call = self.call(with: uuid) as? PeerCall else {
+                Logger.call.info(category: "CallService", message: "Got \(data.category) without corresponding call: \(data.quoteMessageId)")
+                return
+            }
+            call.end(reason: reason, by: .remote)
+        }
+    }
+    
+    private func handleCandidate(callUUID: UUID, data: BlazeMessageData) {
         guard let candidatesString = data.data.base64Decoded() else {
+            Logger.call.error(category: "CallService", message: "Candidate with invalid content: \(data.data)")
             return
         }
         let newCandidates = [RTCIceCandidate](jsonString: candidatesString)
-        if let call = activeCall, data.quoteMessageId == call.uuidString, call.rtcClient.canAddRemoteCandidate {
-            newCandidates.forEach(call.rtcClient.add(remoteCandidate:))
-        } else if let uuid = UUID(uuidString: data.quoteMessageId) {
-            var candidates = pendingCandidates[uuid] ?? []
-            candidates.append(contentsOf: newCandidates)
-            pendingCandidates[uuid] = candidates
-        }
-    }
-    
-    private func handleCallStatusChange(data: BlazeMessageData) {
-        guard let uuid = UUID(uuidString: data.quoteMessageId) else {
+        guard !newCandidates.isEmpty else {
+            Logger.call.error(category: "CallService", message: "Got empty candidates for: \(callUUID)")
             return
         }
-        if let call = activeCall as? PeerToPeerCall, uuid == call.uuid, call.isOutgoing, call.status != .disconnecting, data.category == MessageCategory.WEBRTC_AUDIO_ANSWER.rawValue, let sdpString = data.data.base64Decoded(), let sdp = RTCSessionDescription(jsonString: sdpString) {
-            callInterface.reportOutgoingCallStartedConnecting(uuid: uuid)
-            call.hasReceivedRemoteAnswer = true
-            call.timer?.invalidate()
-            ringtonePlayer.stop()
-            call.status = .connecting
-            call.rtcClient.set(remoteSdp: sdp) { (error) in
-                if let error = error {
-                    self.failCurrentCall(sendFailedMessageToRemote: true,
-                                         error: .setRemoteAnswer(error))
-                    self.callInterface.reportCall(uuid: uuid,
-                                                  endedByReason: .failed)
-                }
+        DispatchQueue.main.async {
+            guard let call = self.call(with: callUUID) as? PeerCall else {
+                Logger.call.info(category: "CallService", message: "Got candidate without corresponding call: \(data.quoteMessageId)")
+                return
             }
-        } else if let category = MessageCategory(rawValue: data.category), MessageCategory.endCallCategories.contains(category) {
-            if let call = activeOrPendingAnswerCall(with: uuid) as? PeerToPeerCall {
-                call.status = .disconnecting
-                call.timer?.invalidate()
-                insertCallCompletedMessage(call: call, isUserInitiated: false, category: category)
-            } else if category == .WEBRTC_AUDIO_CANCEL {
-                // When a call is pushed via APN User Notifications and gets cancelled before app is launched
-                // This routine may execute when app is launched manually, sometimes before pending WebRTC jobs are awake
-                let msg = Message.createWebRTCMessage(messageId: data.quoteMessageId,
-                                                      conversationId: data.conversationId,
-                                                      userId: data.userId,
-                                                      category: category,
-                                                      status: .DELIVERED)
-                MessageDAO.shared.insertMessage(message: msg, messageSource: "")
-            }
-            callInterface.reportCall(uuid: uuid, endedByReason: .remoteEnded)
-            close(uuid: uuid)
+            call.addRemoteCandidates(newCandidates)
         }
-    }
-    
-    private func insertCallCompletedMessage(call: PeerToPeerCall, isUserInitiated: Bool, category: MessageCategory) {
-        let timeIntervalSinceNow: TimeInterval
-        if let date = call.connectedDate {
-            timeIntervalSinceNow = date.timeIntervalSinceNow
-            Logger.call.info(category: "CallService", message: "insert message using valid date: \(date), interval since now: \(timeIntervalSinceNow)")
-        } else {
-            timeIntervalSinceNow = 0
-            Logger.call.info(category: "CallService", message: "insert message with nil date, using 0 as interval")
-        }
-        let duration = Int64(abs(timeIntervalSinceNow * millisecondsPerSecond))
-        Logger.call.info(category: "CallService", message: "insert message with duration: \(duration)")
-        let shouldMarkMessageRead = call.isOutgoing
-            || category == .WEBRTC_AUDIO_END
-            || (category == .WEBRTC_AUDIO_DECLINE && isUserInitiated)
-        let status: MessageStatus = shouldMarkMessageRead ? .READ : .DELIVERED
-        let userId = call.isOutgoing ? myUserId : call.remoteUserId
-        let msg = Message.createWebRTCMessage(messageId: call.uuidString,
-                                              conversationId: call.conversationId,
-                                              userId: userId,
-                                              category: category,
-                                              mediaDuration: duration,
-                                              status: status)
-        MessageDAO.shared.insertMessage(message: msg, messageSource: "")
     }
     
 }
 
-// MARK: - Kraken response handlers
+// MARK: - Group Call Handlers
 extension CallService {
     
-    private func handlePublishing(data: BlazeMessageData) {
-        Logger.call.info(category: "CallService", message: "Got publish from: \(data.userId), conversation: \(data.conversationId)")
+    private func handlePublish(data: BlazeMessageData) {
         membersManager.addMember(with: data.userId, toConversationWith: data.conversationId)
-        guard let uuid = groupCallUUIDs[data.conversationId] else {
-            return
-        }
-        let groupCall: GroupCall?
-        if let call = activeCall as? GroupCall, call.uuid == uuid {
-            groupCall = call
-            if call.trackId != nil {
-                Logger.call.info(category: "CallService", message: "The call is active with valid track id, subscribe the user: \(data.userId)")
-                subscribe(userId: data.userId, of: call)
-            } else {
-                Logger.call.info(category: "CallService", message: "no track id is found. do not subscribe it")
+        DispatchQueue.main.sync {
+            guard let call = self.groupCall(with: data.conversationId) else {
+                return
             }
-        } else if let call = pendingAnswerCalls[uuid] as? GroupCall {
-            groupCall = call
-        } else {
-            groupCall = nil
-        }
-        if let call = groupCall {
-            Logger.call.info(category: "CallService", message: "reportMemberWithIdDidConnected: \(data.userId)")
-            call.reportMemberWithIdDidConnected(data.userId)
-        } else {
-            Logger.call.info(category: "CallService", message: "no group call, drops: \(data.userId)")
+            call.subscribe(userId: data.userId)
         }
     }
     
     private func handleInvitation(data: BlazeMessageData) {
-        do {
-            DispatchQueue.main.sync(execute: beginAutoCancellingBackgroundTaskIfNotActive)
-            Logger.call.info(category: "CallService", message: "Got Invitation from: \(data.userId)")
-            guard activeCall?.conversationId != data.conversationId else {
-                return
-            }
-            if let uuid = groupCallUUIDs[data.conversationId], let call = pendingAnswerCalls[uuid] as? GroupCall, !call.inviters.contains(where: { $0.userId == data.userId }), let user = UserDAO.shared.getUser(userId: data.userId) {
-                call.inviters.append(user)
-                callInterface.reportIncomingCall(call, completion: { _ in })
-                return
-            }
-            let uuid = UUID(uuidString: data.messageId) ?? UUID()
-            let isUUIDHandled = DispatchQueue.main.sync {
-                self.handledUUIDs.contains(uuid)
-            }
-            guard !isUUIDHandled else {
-                // TODO: The only reason this UUID is already handled is that the user had pick accept/decline
-                // from the CallKit's calling interface. Reporting incoming call will be confusing to user.
-                // But I think this could be managed with an invitation message in the database
-                return
-            }
-            guard let conversation = ConversationDAO.shared.getConversation(conversationId: data.conversationId) else {
-                Logger.call.info(category: "CallService", message: "no conversation: \(data.conversationId)")
-                return
-            }
-            guard var members = membersManager.members(inConversationWith: data.conversationId) else {
-                Logger.call.info(category: "CallService", message: "failed to load members: \(data.conversationId)")
-                return
-            }
-            if let account = LoginManager.shared.account {
-                let me = UserItem.createUser(from: account)
-                members.append(me)
-            }
-            let call = GroupCall(uuid: uuid,
-                                 isOutgoing: false,
-                                 conversation: conversation,
-                                 members: members,
-                                 invitingMembers: [],
-                                 rtcClient: makeRtcClient())
-            if let user = UserDAO.shared.getUser(userId: data.userId) {
-                call.inviters = [user]
-            }
-            groupCallUUIDs[conversation.conversationId] = uuid
-            Logger.call.info(category: "CallService", message: "reporting incoming group call invitation: \(call.debugDescription), members: \(members.map(\.fullName))")
-            pendingAnswerCalls[uuid] = call
-            try? AudioSession.shared.activate(client: self)
-            DispatchQueue.main.sync {
-                NotificationCenter.default.post(name: Self.willStartCallNotification, object: self)
-            }
-            beginUnanswerCountDown(for: call)
-            callInterface.reportIncomingCall(call) { (error) in
-                let invitationStatus: MessageStatus
-                defer {
-                    let message = Message.createKrakenMessage(conversationId: data.conversationId,
-                                                              userId: data.userId,
-                                                              category: .KRAKEN_INVITE,
-                                                              status: invitationStatus.rawValue,
-                                                              createdAt: data.createdAt)
-                    MessageDAO.shared.insertMessage(message: message, messageSource: "CallService")
+        let reportNewIncomingCall: Bool = DispatchQueue.main.sync {
+            if let call = self.groupCall(with: data.conversationId) {
+                if call.state == .incoming {
+                    call.appendInviter(with: data.userId)
                 }
-                guard let error = error else {
-                    invitationStatus = .READ
-                    return
-                }
-                Logger.call.info(category: "CallService", message: "incoming call reporting error: \(error)")
-                let declining = KrakenRequest(callUUID: uuid,
-                                              conversationId: data.conversationId,
-                                              trackId: nil,
-                                              action: .decline(recipientId: data.userId))
-                KrakenMessageRetriever.shared.request(declining, completion: nil)
-                Logger.call.info(category: "CallService", message: "[KrakenMessageRetriever] Request \(declining.debugDescription)")
-                self.close(uuid: uuid)
-                switch error {
-                case CallError.microphonePermissionDenied:
-                    DispatchQueue.main.async {
-                        if UIApplication.shared.applicationState != .active {
-                            NotificationManager.shared.requestDeclinedGroupCallNotification(localizedName: call.localizedName,
-                                                                                            messageId: data.messageId)
-                        }
+                return false
+            } else {
+                return true
+            }
+        }
+        guard reportNewIncomingCall else {
+            return
+        }
+        guard let conversation = ConversationDAO.shared.getConversation(conversationId: data.conversationId) else {
+            Logger.call.error(category: "CallService", message: "No conversation: \(data.conversationId)")
+            return
+        }
+        let inviters: [UserItem]
+        if let user = UserDAO.shared.getUser(userId: data.userId) {
+            inviters = [user]
+        } else {
+            inviters = []
+        }
+        let call = GroupCall(conversation: conversation,
+                             isOutgoing: false,
+                             inviters: inviters,
+                             invitees: [])
+        try? AudioSession.shared.activate(client: self)
+        DispatchQueue.main.async {
+            self.groupCallUUIDs[data.conversationId] = call.uuid
+            self.calls[call.uuid] = call
+            self.adapter.reportNewIncomingCall(call) { error in
+                if let error = error {
+                    let reason = Call.EndedReason(error: error)
+                    call.end(reason: reason, by: .local)
+                    Logger.call.error(category: "CallService", message: "Incoming call is blocked by adapter: \(error)")
+                } else {
+                    call.scheduleUnansweredTimer()
+                    DispatchQueue.global().async {
+                        let invitation = Message.createKrakenMessage(conversationId: data.conversationId,
+                                                                     userId: data.userId,
+                                                                     category: .KRAKEN_INVITE,
+                                                                     status: MessageStatus.READ.rawValue,
+                                                                     createdAt: data.createdAt)
+                        MessageDAO.shared.insertMessage(message: invitation, messageSource: "CallService")
                     }
-                    self.alert(error: error)
-                    invitationStatus = .READ
-                case CallError.busy:
-                    invitationStatus = .DELIVERED
-                default:
-                    self.alert(error: error)
-                    invitationStatus = .READ
-                    reporter.report(error: error)
                 }
             }
+        }
+        
+    }
+    
+    private func handleKrakenEnd(data: BlazeMessageData) {
+        Logger.call.info(category: "CallService", message: "KRAKEN_END from \(data.userId)")
+        membersManager.removeMember(with: data.userId, fromConversationWith: data.conversationId)
+        DispatchQueue.main.async {
+            guard let call = self.groupCall(with: data.conversationId) else {
+                return
+            }
+            call.reportEnd(fromUserWith: data.userId)
+        }
+    }
+    
+    private func handleKrakenCancel(data: BlazeMessageData) {
+        Logger.call.info(category: "CallService", message: "KRAKEN_CANCEL from \(data.userId)")
+        DispatchQueue.main.async {
+            guard let call = self.groupCall(with: data.conversationId) else {
+                return
+            }
+            call.removeInviter(with: data.userId, createdAt: data.createdAt)
         }
     }
     
     private func handleKrakenDecline(data: BlazeMessageData) {
-        Logger.call.info(category: "CallService", message: "Got \(data.category), report member: \(data.userId) disconnected")
-        reportMember(withUserId: data.userId,
-                     didDisconnectFromConversationWithId: data.conversationId)
-        if let call = activeCall, call.status == .connected, call.conversationId == data.conversationId {
-            let message = Message.createKrakenMessage(conversationId: data.conversationId,
-                                                      userId: data.userId,
-                                                      category: .KRAKEN_DECLINE,
-                                                      createdAt: data.createdAt)
-            MessageDAO.shared.insertMessage(message: message, messageSource: "CallService")
-        }
-    }
-    
-    private func handleKrakenEnd(data: BlazeMessageData) {
-        Logger.call.info(category: "CallService", message: "Got kraken end from \(data.userId)")
-        reportMember(withUserId: data.userId,
-                     didDisconnectFromConversationWithId: data.conversationId)
-        
-        func shouldClose(call: GroupCall) -> Bool {
-            call.inviters.removeAll(where: { $0.userId == data.userId })
-            return call.conversationId == data.conversationId
-                && call.inviters.isEmpty
-                && call.status == .incoming
-        }
-        
-        var calls = [GroupCall]()
-        if let call = activeCall as? GroupCall, shouldClose(call: call) {
-            calls.append(call)
-        }
-        for case let (uuid, call as GroupCall) in pendingAnswerCalls where shouldClose(call: call) {
-            pendingAnswerCalls.removeValue(forKey: uuid)
-            calls.append(call)
-        }
-        
-        for call in calls {
-            call.status = .disconnecting
-            close(uuid: call.uuid)
-            callInterface.reportCall(uuid: call.uuid, endedByReason: .remoteEnded)
-            let message = Message.createKrakenMessage(conversationId: data.conversationId,
-                                                      userId: data.userId,
-                                                      category: .KRAKEN_CANCEL,
-                                                      createdAt: data.createdAt)
-            MessageDAO.shared.insertMessage(message: message, messageSource: "CallService")
-        }
-    }
-    
-    private func reportMember(withUserId userId: String, didDisconnectFromConversationWithId conversationId: String) {
-        membersManager.removeMember(with: userId, fromConversationWith: conversationId)
-        if let call = activeCall as? GroupCall {
-            call.reportMemberWithIdDidDisconnected(userId)
-        }
-    }
-    
-}
-
-// MARK: - Kraken response handlers
-extension CallService: KrakenMessageRetrieverDelegate {
-    
-    func krakenMessageRetriever(_ retriever: KrakenMessageRetriever, shouldRetryRequest request: KrakenRequest, error: Swift.Error, numberOfRetries: UInt) -> Bool {
-        guard LoginManager.shared.isLoggedIn else {
-            return false
-        }
-        guard let call = activeOrPendingAnswerCall(with: request.callUUID) else {
-            Logger.call.info(category: "CallService", message: "no active or pending call, give up kraken retrying")
-            return false
-        }
-        guard call.status != .disconnecting else {
-            Logger.call.info(category: "CallService", message: "finds a disconnecting call, give up kraken request")
-            return false
-        }
-        switch error {
-        case MixinAPIError.unauthorized:
-            Logger.call.info(category: "CallService", message: "Got 401 when requesting: \(request.debugDescription)")
-            let error = CallError.invalidPeerConnection(.unauthorized)
-            failCurrentCall(sendFailedMessageToRemote: false, error: error)
-            callInterface.reportCall(uuid: request.callUUID, endedByReason: .failed)
-            return false
-        case MixinAPIError.peerNotFound, MixinAPIError.peerClosed, MixinAPIError.trackNotFound:
-            Logger.call.info(category: "CallService", message: "Got \(error) when requesting: \(request.debugDescription)")
-            return false
-        case MixinAPIError.roomFull:
-            return false
-        default:
-            let shouldRetry = numberOfRetries < Self.maxNumberOfKrakenRetries
-            Logger.call.info(category: "CallService", message: "got error: \(error), numberOfRetries: \(numberOfRetries), returns shouldRetry: \(shouldRetry)")
-            return shouldRetry
-        }
-    }
-    
-}
-
-// MARK: - WebRTCClientDelegate
-extension CallService: WebRTCClientDelegate {
-    
-    func webRTCClient(_ client: WebRTCClient, didGenerateLocalCandidate candidate: RTCIceCandidate) {
-        if let call = activeCall as? PeerToPeerCall, let content = [candidate].jsonString {
-            let msg = Message.createWebRTCMessage(conversationId: call.conversationId,
-                                                  category: .WEBRTC_ICE_CANDIDATE,
-                                                  content: content,
-                                                  status: .SENDING,
-                                                  quoteMessageId: call.uuidString)
-            SendMessageService.shared.sendMessage(message: msg,
-                                                  ownerUser: call.remoteUser,
-                                                  isGroupMessage: false)
-        } else if let call = self.activeCall as? GroupCall, let json = candidate.jsonString?.base64Encoded() {
-            if let trackId = call.trackId {
-                let trickle = KrakenRequest(callUUID: call.uuid,
-                                            conversationId: call.conversationId,
-                                            trackId: trackId,
-                                            action: .trickle(candidate: json))
-                KrakenMessageRetriever.shared.request(trickle, completion: nil)
-                Logger.call.info(category: "CallService", message: "[KrakenMessageRetriever] Request \(trickle.debugDescription)")
-            } else {
-                var trickles = pendingTrickles[call.uuid] ?? []
-                trickles.append(json)
-                pendingTrickles[call.uuid] = trickles
-            }
-        }
-    }
-    
-    func webRTCClientDidConnected(_ client: WebRTCClient) {
-        guard let call = activeCall else {
-            return
-        }
-        Logger.call.info(category: "CallService", message: "RTC connected, reporting with: \(call.debugDescription)")
-        if call.connectedDate == nil {
-            let date = Date()
-            call.connectedDate = date
-            call.status = .connected
-            if call.isOutgoing {
-                callInterface.reportOutgoingCall(uuid: call.uuid, connectedAtDate: date)
-            } else {
-                callInterface.reportIncomingCall(call, connectedAtDate: date)
-            }
-            AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
-            if !isUsingCallKit {
-                RTCDispatcher.dispatchAsync(on: .typeAudioSession) {
-                    RTCAudioSession.sharedInstance().isAudioEnabled = true
-                }
-            }
-            updateAudioSessionConfiguration()
-        }
+        Logger.call.info(category: "CallService", message: "KRAKEN_DECLINE from \(data.userId)")
+        membersManager.removeMember(with: data.userId, fromConversationWith: data.conversationId)
         DispatchQueue.main.async {
-            self.viewController?.isConnectionUnstable = false
-        }
-    }
-    
-    func webRTCClientDidDisconnected(_ client: WebRTCClient) {
-        Logger.call.info(category: "CallService", message: "RTC Disconnected")
-        guard let call = activeCall, call.status == .connected else {
-            return
-        }
-        DispatchQueue.main.async {
-            self.viewController?.isConnectionUnstable = true
-        }
-    }
-    
-    func webRTCClient(_ client: WebRTCClient, didChangeIceConnectionStateTo newState: RTCIceConnectionState) {
-        Logger.call.info(category: "CallService", message: "RTC IceConnectionState change to: \(newState.rawValue)")
-        guard newState == .failed else {
-            return
-        }
-        Logger.call.info(category: "CallService", message: "RTC IceConnectionState change to failed")
-        if let call = activeCall as? PeerToPeerCall, call.isOutgoing {
-            call.rtcClient.offer(key: nil, withIceRestartConstraint: true) { (result) in
-                switch result {
-                case .success(let sdpJson):
-                    Logger.call.info(category: "CallService", message: "Sending restart offer")
-                    let msg = Message.createWebRTCMessage(messageId: UUID().uuidString.lowercased(),
-                                                          conversationId: call.conversationId,
-                                                          userId: myUserId,
-                                                          category: .WEBRTC_AUDIO_OFFER,
-                                                          content: sdpJson,
-                                                          mediaDuration: nil,
-                                                          status: .SENDING,
-                                                          quoteMessageId: call.uuidString)
-                    SendMessageService.shared.sendMessage(message: msg,
-                                                          ownerUser: call.remoteUser,
-                                                          isGroupMessage: false)
-                case .failure(let error):
-                    Logger.call.info(category: "CallService", message: "Restart offer generation failed: \(error)")
-                    self.failCurrentCall(sendFailedMessageToRemote: true, error: .networkFailure)
-                    self.callInterface.reportCall(uuid: call.uuid, endedByReason: .failed)
-                }
+            guard let call = self.groupCall(with: data.conversationId) else {
+                return
             }
-        } else if let call = activeCall as? GroupCall {
-            Logger.call.info(category: "CallService", message: "Restart group call on ice failure, with restarting constraint")
-            startGroupCall(call, isRestarting: true, completion: { success in
-                if !success {
-                    self.restartCurrentGroupCall()
-                }
-            })
-        }
-    }
-    
-    func webRTCClient(_ client: WebRTCClient, senderPublicKeyForUserWith userId: String, sessionId: String) -> Data? {
-        guard let call = self.activeCall as? GroupCall else {
-            Logger.call.info(category: "CallService", message: "request sender public key but there's no active call")
-            return nil
-        }
-        let frameKey = SignalProtocol.shared.getSenderKeyPublic(groupId: call.conversationId,
-                                                                userId: userId,
-                                                                sessionId: sessionId)?.dropFirst()
-        Logger.call.info(category: "CallService", message: "request sender public key for userId: \(userId), sessionId: \(sessionId), returns: \(frameKey?.count ?? -1)")
-        return frameKey
-    }
-    
-    func webRTCClient(_ client: WebRTCClient, didAddReceiverWith userId: String) {
-        guard let call = activeCall as? GroupCall else {
-            return
-        }
-        Logger.call.info(category: "CallService", message: "Add member: \(userId), to: \(call.conversationId), from receiver delegation")
-        membersManager.addMember(with: userId, toConversationWith: call.conversationId)
-        call.reportMemberWithIdDidConnected(userId)
-    }
-    
-}
-
-// MARK: - PKPushRegistryDelegate
-extension CallService: PKPushRegistryDelegate {
-    
-    func pushRegistry(_ registry: PKPushRegistry, didUpdate pushCredentials: PKPushCredentials, for type: PKPushType) {
-        guard LoginManager.shared.isLoggedIn else {
-            return
-        }
-        let token = pushCredentials.token.toHexString()
-        AccountAPI.updateSession(voipToken: token)
-    }
-    
-    func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType, completion: @escaping () -> Void) {
-        guard LoginManager.shared.isLoggedIn, !AppGroupUserDefaults.User.needsUpgradeInMainApp else {
-            nativeCallInterface.reportImmediateFailureCall()
-            completion()
-            return
-        }
-        guard let userId = payload.dictionaryPayload["user_id"] as? String, let name = payload.dictionaryPayload["name"] as? String else {
-            nativeCallInterface.reportImmediateFailureCall()
-            completion()
-            return
-        }
-        guard let messageId = payload.dictionaryPayload["message_id"] as? String, !MessageDAO.shared.isExist(messageId: messageId), let uuid = UUID(uuidString: messageId) else {
-            nativeCallInterface.reportImmediateFailureCall()
-            completion()
-            return
-        }
-        DispatchQueue.main.async {
-            self.beginAutoCancellingBackgroundTaskIfNotActive()
-            MixinService.isStopProcessMessages = false
-            WebSocketService.shared.connectIfNeeded()
-        }
-        if isUsingCallKit, !name.isEmpty, let conversationId = payload.dictionaryPayload["conversation_id"] as? String, let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId) {
-            let members: [UserItem]
-            if let account = LoginManager.shared.account {
-                let me = UserItem.createUser(from: account)
-                members = [me]
-            } else {
-                members = []
-            }
-            let call = GroupCall(uuid: uuid,
-                                 isOutgoing: false,
-                                 conversation: conversation,
-                                 members: members,
-                                 invitingMembers: [],
-                                 rtcClient: makeRtcClient())
-            if let user = UserDAO.shared.getUser(userId: userId) {
-                call.inviters = [user]
-            }
-            groupCallUUIDs[conversationId] = uuid
-            pendingAnswerCalls[uuid] = call
-            beginUnanswerCountDown(for: call)
-            nativeCallInterface.reportIncomingCall(uuid: uuid, handleId: conversationId, localizedName: name) { (error) in
-                completion()
-            }
-            Logger.call.info(category: "CallService", message: "report incoming group call from PushKit notification: \(call.debugDescription)")
-        } else if isUsingCallKit, name.isEmpty, let username = payload.dictionaryPayload["full_name"] as? String {
-            let call = PeerToPeerCall(uuid: uuid, isOutgoing: false, remoteUserId: userId, remoteUsername: username, rtcClient: makeRtcClient())
-            pendingAnswerCalls[uuid] = call
-            beginUnanswerCountDown(for: call)
-            nativeCallInterface.reportIncomingCall(uuid: uuid, handleId: userId, localizedName: username) { (error) in
-                completion()
-            }
-            Logger.call.info(category: "CallService", message: "report incoming p2p call from PushKit notification: \(call.debugDescription)")
-        } else {
-            Logger.call.info(category: "CallService", message: "report failed incoming call from PushKit notification")
-            nativeCallInterface.reportImmediateFailureCall()
-            completion()
-        }
-    }
-    
-    func pushRegistry(_ registry: PKPushRegistry, didInvalidatePushTokenFor type: PKPushType) {
-        guard type == .voIP, registry.pushToken(for: .voIP) == nil else {
-            return
-        }
-        AccountAPI.updateSession(voipToken: voipTokenRemove)
-    }
-    
-}
-
-// MARK: - RTCAudioSessionDelegate
-extension CallService: RTCAudioSessionDelegate {
-    
-    func audioSessionDidBeginInterruption(_ session: RTCAudioSession) {
-        if !isUsingCallKit {
-            requestEndCall()
-        }
-    }
-    
-    func audioSessionDidChangeRoute(_ session: RTCAudioSession, reason: AVAudioSession.RouteChangeReason, previousRoute: AVAudioSessionRouteDescription) {
-        let deviceChangedReasons: [AVAudioSession.RouteChangeReason] = [.newDeviceAvailable, .oldDeviceUnavailable]
-        let isDeviceChanged = deviceChangedReasons.contains(reason)
-        if isDeviceChanged {
-            updateAudioSessionConfiguration()
+            call.reportDecline(fromUserWith: data.userId, createdAt: data.createdAt)
         }
     }
     
 }
 
-// MARK: - AudioSessionClient
-extension CallService: AudioSessionClient {
-    
-    var priority: AudioSessionClientPriority {
-        .voiceCall
-    }
-    
-}
-
-// MARK: - Workers
+// MARK: - Private Works
 extension CallService {
     
-    private func beginUnanswerCountDown(for call: Call) {
-        guard call.timer == nil else {
-            return
-        }
-        let timer = Timer(timeInterval: callTimeoutInterval,
-                          target: self,
-                          selector: #selector(self.unansweredTimeout),
-                          userInfo: call.uuid,
-                          repeats: false)
-        RunLoop.main.add(timer, forMode: .default)
-        call.timer = timer
-    }
-    
-    @objc private func unansweredTimeout(_ timer: Timer) {
-        guard timer.isValid, let uuid = timer.userInfo as? UUID else {
-            return
-        }
-        queue.async {
-            timer.invalidate()
-            guard let call = self.activeCall ?? self.pendingAnswerCalls[uuid] else {
-                return
-            }
-            guard call.uuid == uuid, call.status == .incoming || call.status == .outgoing else {
-                return
-            }
-            if let call = call as? PeerToPeerCall {
-                call.status = .disconnecting
-                if call.isOutgoing {
-                    let msg = Message.createWebRTCMessage(conversationId: call.conversationId,
-                                                          category: .WEBRTC_AUDIO_CANCEL,
-                                                          status: .SENDING,
-                                                          quoteMessageId: call.uuidString)
-                    SendMessageService.shared.sendWebRTCMessage(message: msg,
-                                                                recipientId: call.remoteUserId)
-                }
-                self.insertCallCompletedMessage(call: call,
-                                                isUserInitiated: false,
-                                                category: .WEBRTC_AUDIO_CANCEL)
-            } else if let call = call as? GroupCall, !call.inviters.isEmpty {
-                for userId in call.inviters.map(\.userId) {
-                    let declining = KrakenRequest(callUUID: call.uuid,
-                                                  conversationId: call.conversationId,
-                                                  trackId: call.trackId,
-                                                  action: .decline(recipientId: userId))
-                    KrakenMessageRetriever.shared.request(declining, completion: nil)
-                    Logger.call.info(category: "CallService", message: "[KrakenMessageRetriever] Request \(declining.debugDescription)")
-                }
-            }
-            self.close(uuid: call.uuid)
-            DispatchQueue.main.async(execute: self.dismissCallingInterface)
-            self.callInterface.reportCall(uuid: call.uuid, endedByReason: .unanswered)
-        }
-    }
-    
-    private func updateCallKitAvailability() {
-        let usesCallKit = !isMainlandChina
-            && AVAudioSession.sharedInstance().recordPermission == .granted
-        if usesCallKit && !(callInterface is NativeCallInterface) {
-            callInterface = nativeCallInterface
-        } else if !usesCallKit && !(callInterface is MixinCallInterface) {
-            callInterface = MixinCallInterface(service: self)
-        }
-    }
-    
-    private func activeOrPendingAnswerCall(with uuid: UUID) -> Call? {
+    private func call(with uuid: UUID) -> Call? {
+        assert(Thread.isMainThread)
         if let call = activeCall, call.uuid == uuid {
             return call
         } else {
-            return pendingAnswerCalls[uuid]
+            return calls[uuid]
         }
     }
     
-    private func updateAudioTrackEnabling() {
-        if let audioTrack = activeCall?.rtcClient.audioTrack {
-            audioTrack.isEnabled = !isMuted
-            Logger.call.info(category: "CallService", message: "isMuted: \(isMuted)")
+    private func groupCall(with conversationId: String) -> GroupCall? {
+        assert(Thread.isMainThread)
+        guard let uuid = groupCallUUIDs[conversationId] else {
+            return nil
+        }
+        if let call = call(with: uuid) as? GroupCall {
+            return call
         } else {
-            Logger.call.info(category: "CallService", message: "isMuted: \(isMuted), finds no audio track")
+            Logger.call.error(category: "CallService", message: "Inconsistent group call with cid: \(conversationId), uuid: \(uuid)")
+            return nil
         }
     }
     
-    private func updateAudioSessionConfiguration() {
-        let usesSpeaker = self.usesSpeaker
+    private func requestRecordPermission(onGranted: @escaping () -> Void) {
+        AVAudioSession.sharedInstance().requestRecordPermission { isGranted in
+            if isGranted {
+                Queue.main.autoAsync(execute: onGranted)
+            } else {
+                self.alert(error: CallError.microphonePermissionDenied)
+            }
+        }
+    }
+    
+    private func reloadCallAdapter() {
+        assert(Thread.isMainThread)
+        guard !hasCall else {
+            return
+        }
+        let usesCallKit = !isCallKitForbidden && AVAudioSession.sharedInstance().recordPermission == .granted
+        if usesCallKit {
+            if adapter == nil || !(adapter is CallKitAdapter) {
+                Logger.call.info(category: "CallService", message: "Using CallKitAdapter")
+                adapter = callKitAdapter
+            }
+        } else {
+            if adapter == nil || !(adapter is GeneralAdapter) {
+                Logger.call.info(category: "CallService", message: "Using GeneralAdapter")
+                adapter = GeneralAdapter(service: self)
+            }
+        }
+    }
+    
+    private func updateAudioSessionConfiguration(usesSpeaker: Bool) {
         RTCDispatcher.dispatchAsync(on: .typeAudioSession) {
             let session = RTCAudioSession.sharedInstance()
             
@@ -1432,496 +1119,42 @@ extension CallService {
                     try session.overrideOutputAudioPort(.none)
                 }
             } catch {
-                reporter.report(error: error)
-            }
-        }
-    }
-    
-    private func beginAutoCancellingBackgroundTaskIfNotActive() {
-        let application = UIApplication.shared
-        guard application.applicationState != .active else {
-            return
-        }
-        var identifier: UIBackgroundTaskIdentifier = .invalid
-        var cancelBackgroundTask: DispatchWorkItem!
-        cancelBackgroundTask = DispatchWorkItem {
-            let disconnectWebSocket = application.applicationState != .active
-                && !CallService.shared.hasCall
-            if disconnectWebSocket {
-                MixinService.isStopProcessMessages = true
-                WebSocketService.shared.disconnect()
-            }
-            if identifier != .invalid {
-                application.endBackgroundTask(identifier)
-            }
-            if let task = cancelBackgroundTask {
-                task.cancel()
-            }
-        }
-        identifier = application.beginBackgroundTask {
-            cancelBackgroundTask.perform()
-        }
-        let duration = max(10, min(29, application.backgroundTimeRemaining - 1))
-        DispatchQueue.main.asyncAfter(deadline: .now() + duration, execute: cancelBackgroundTask)
-    }
-    
-}
-
-// MARK: - Call Workers
-extension CallService {
-    
-    private func failCurrentCall(sendFailedMessageToRemote: Bool, error: CallError) {
-        guard let activeCall = activeCall else {
-            Logger.call.info(category: "CallService", message: "fail current call but there's none")
-            return
-        }
-        Logger.call.info(category: "CallService", message: "fail current call: \(sendFailedMessageToRemote), error: \(error)")
-        if let call = activeCall as? PeerToPeerCall {
-            if sendFailedMessageToRemote {
-                let msg = Message.createWebRTCMessage(conversationId: call.conversationId,
-                                                      category: .WEBRTC_AUDIO_FAILED,
-                                                      status: .SENDING,
-                                                      quoteMessageId: call.uuidString)
-                SendMessageService.shared.sendMessage(message: msg,
-                                                      ownerUser: call.remoteUser,
-                                                      isGroupMessage: false)
-            }
-            let failedMessage = Message.createWebRTCMessage(messageId: call.uuidString,
-                                                            conversationId: call.conversationId,
-                                                            category: .WEBRTC_AUDIO_FAILED,
-                                                            status: .DELIVERED)
-            MessageDAO.shared.insertMessage(message: failedMessage, messageSource: "")
-        } else if let call = activeCall as? GroupCall {
-            membersManager.removeMember(with: myUserId, fromConversationWith: call.conversationId)
-            if sendFailedMessageToRemote {
-                let end = KrakenRequest(callUUID: call.uuid,
-                                        conversationId: call.conversationId,
-                                        trackId: call.trackId,
-                                        action: .end)
-                KrakenMessageRetriever.shared.request(end, completion: nil)
-                Logger.call.info(category: "CallService", message: "[KrakenMessageRetriever] Request \(end.debugDescription)")
-            }
-        }
-        close(uuid: activeCall.uuid)
-        reporter.report(error: error)
-    }
-    
-    private func requestStartCall(_ call: Call, handle: CXHandle, playOutgoingRingtone: Bool) {
-        
-        func performRequest() {
-            guard activeCall == nil else {
-                alert(error: CallError.busy)
-                Logger.call.info(category: "CallService", message: "request start call impl reports busy")
-                return
-            }
-            updateCallKitAvailability()
-            registerForPushKitNotificationsIfAvailable()
-            activeCall = call
-            if let call = call as? GroupCall {
-                groupCallUUIDs[call.conversationId] = call.uuid
-            }
-            try? AudioSession.shared.activate(client: self)
-            callInterface.requestStartCall(uuid: call.uuid, handle: handle, playOutgoingRingtone: playOutgoingRingtone) { (error) in
-                guard let error = error else {
-                    return
-                }
-                self.close(uuid: call.uuid)
-                if let error = error as? CallError {
-                    self.alert(error: error)
-                } else {
-                    showAutoHiddenHud(style: .error, text: R.string.localizable.chat_message_call_failed())
-                }
-                Logger.call.info(category: "CallService", message: "request start call impl reports: \(error)")
-                reporter.report(error: error)
-            }
-        }
-        
-        AVAudioSession.sharedInstance().requestRecordPermission { (isGranted) in
-            if isGranted {
-                self.queue.autoAsync(execute: performRequest)
-            } else {
-                DispatchQueue.main.async {
-                    self.alert(error: CallError.microphonePermissionDenied)
-                }
-            }
-        }
-        
-    }
-    
-}
-
-// MARK: - Peer-to-Peer Call Workers
-extension CallService {
-    
-    private func startPeerToPeerCall(_ call: PeerToPeerCall, completion: ((Bool) -> Void)?) {
-        guard let remoteUser = call.remoteUser ?? UserDAO.shared.getUser(userId: call.remoteUserId) else {
-            self.activeCall = nil
-            self.alert(error: CallError.missingUser(userId: call.remoteUserId))
-            completion?(false)
-            return
-        }
-        call.remoteUser = remoteUser
-        DispatchQueue.main.sync {
-            self.showCallingInterface(call: call, animated: true)
-        }
-        beginUnanswerCountDown(for: call)
-        call.rtcClient.offer(key: nil, withIceRestartConstraint: false) { (result) in
-            switch result {
-            case .success(let sdpJson):
-                let msg = Message.createWebRTCMessage(messageId: call.uuidString,
-                                                      conversationId: call.conversationId,
-                                                      category: .WEBRTC_AUDIO_OFFER,
-                                                      content: sdpJson,
-                                                      status: .SENDING)
-                SendMessageService.shared.sendMessage(message: msg,
-                                                      ownerUser: remoteUser,
-                                                      isGroupMessage: false)
-                completion?(true)
-            case .failure(let error):
-                self.failCurrentCall(sendFailedMessageToRemote: false, error: error)
-                completion?(false)
-            }
-        }
-    }
-    
-    private func answer(peerToPeerCall call: PeerToPeerCall, sdp: RTCSessionDescription, completion: ((Bool) -> Void)?) {
-        self.activeCall = call
-        call.status = .connecting
-        DispatchQueue.main.sync {
-            self.showCallingInterface(call: call, animated: true)
-        }
-        
-        for uuid in pendingAnswerCalls.keys {
-            endCall(uuid: uuid)
-        }
-        self.ringtonePlayer.stop()
-        call.rtcClient.set(remoteSdp: sdp) { (error) in
-            self.handleResultFromSettingRemoteSdpWhenAnsweringPeerToPeerCall(call, error: error, completion: completion)
-        }
-    }
-    
-    private func handleResultFromSettingRemoteSdpWhenAnsweringPeerToPeerCall(_ call: PeerToPeerCall, error: Error?, completion: ((Bool) -> Void)?) {
-        if let error = error {
-            self.failCurrentCall(sendFailedMessageToRemote: true,
-                                 error: .setRemoteSdp(error))
-            completion?(false)
-        } else {
-            call.rtcClient.answer(completion: { result in
-                switch result {
-                case .success(let sdpJson):
-                    Logger.call.info(category: "CallService", message: "Sending answer")
-                    let msg = Message.createWebRTCMessage(conversationId: call.conversationId,
-                                                          category: .WEBRTC_AUDIO_ANSWER,
-                                                          content: sdpJson,
-                                                          status: .SENDING,
-                                                          quoteMessageId: call.uuidString)
-                    SendMessageService.shared.sendMessage(message: msg,
-                                                          ownerUser: call.remoteUser,
-                                                          isGroupMessage: false)
-                    if let candidates = self.pendingCandidates.removeValue(forKey: call.uuid) {
-                        candidates.forEach(call.rtcClient.add(remoteCandidate:))
-                    }
-                    completion?(true)
-                case .failure(let error):
-                    self.failCurrentCall(sendFailedMessageToRemote: true,
-                                         error: error)
-                    completion?(false)
-                }
-            })
-        }
-    }
-    
-}
-
-// MARK: - Group Call Workers
-extension CallService {
-    
-    private typealias SdpResult = Result<(trackId: String, sdp: RTCSessionDescription), CallError>
-    
-    private func makeRtcClient() -> WebRTCClient {
-        let client = WebRTCClient(delegateQueue: queue.dispatchQueue)
-        client.delegate = self
-        return client
-    }
-    
-    private func request(_ request: KrakenRequest, completion: @escaping (SdpResult) -> Void) {
-        Logger.call.info(category: "CallService", message: "[KrakenMessageRetriever] Request \(request.debugDescription)")
-        KrakenMessageRetriever.shared.request(request) { (result) in
-            switch result {
-            case .success(let data):
-                guard let responseData = Data(base64Encoded: data.data) else {
-                    Logger.call.info(category: "CallService", message: "[KrakenMessageRetriever] invalid response data: \(data.data)")
-                    completion(.failure(.invalidKrakenResponse))
-                    return
-                }
-                guard let data = try? JSONDecoder.default.decode(KrakenPublishResponse.self, from: responseData) else {
-                    Logger.call.info(category: "CallService", message: "[KrakenMessageRetriever] invalid KrakenPublishResponse: \(String(data: responseData, encoding: .utf8))")
-                    completion(.failure(.invalidKrakenResponse))
-                    return
-                }
-                guard let sdpJson = data.jsep.base64Decoded(), let sdp = RTCSessionDescription(jsonString: sdpJson) else {
-                    Logger.call.info(category: "CallService", message: "[KrakenMessageRetriever] invalid JSEP: \(data.jsep)")
-                    completion(.failure(.invalidKrakenResponse))
-                    return
-                }
-                completion(.success((data.trackId, sdp)))
-            case let .failure(error):
-                switch error {
-                case MixinAPIError.roomFull:
-                    completion(.failure(.roomFull))
-                case MixinAPIError.peerNotFound, MixinAPIError.peerClosed, MixinAPIError.trackNotFound:
-                    completion(.failure(.invalidPeerConnection(error as! MixinAPIError)))
-                default:
-                    completion(.failure(.networkFailure))
-                }
-            }
-        }
-    }
-    
-    // Call this func on backend error
-    private func restartCurrentGroupCall() {
-        guard let call = activeCall as? GroupCall else {
-            return
-        }
-        Logger.call.info(category: "CallService", message: "restart Current GroupCall \(call.debugDescription)")
-        call.frameKey = nil
-        call.rtcClient.close()
-        pendingTrickles.removeValue(forKey: call.uuid)
-        startGroupCall(call, isRestarting: false) { (success) in
-            if !success {
-                Logger.call.info(category: "CallService", message: "failed to restart \(call.debugDescription), will restart again")
-                self.restartCurrentGroupCall()
-            }
-        }
-        
-        // Disable audio track if muted since audio track is replaced with a new one
-        updateAudioTrackEnabling()
-    }
-    
-    // Call this func for a new initiated call, or on ICE Connection reports failure
-    private func startGroupCall(_ call: GroupCall, isRestarting: Bool, completion: ((Bool) -> Void)?) {
-        Logger.call.info(category: "CallService", message: "start group call impl \(call.debugDescription), isRestarting: \(isRestarting)")
-        DispatchQueue.main.sync {
-            self.showCallingInterface(call: call, animated: true)
-        }
-        let frameKey: Data?
-        if isRestarting {
-            if let key = call.frameKey {
-                frameKey = key
-            } else {
-                completion?(false)
-                return
-            }
-        } else {
-            try? ReceiveMessageService.shared.checkSessionSenderKey(conversationId: call.conversationId)
-            frameKey = SignalProtocol.shared.getSenderKeyPublic(groupId: call.conversationId, userId: myUserId)?.dropFirst()
-            call.frameKey = frameKey
-        }
-        Logger.call.info(category: "CallService", message: "start group call impl, framekey: \(frameKey)")
-        beginUnanswerCountDown(for: call)
-        call.rtcClient.offer(key: frameKey, withIceRestartConstraint: isRestarting) { result in
-            switch result {
-            case .success(let sdp):
-                self.publish(sdp: sdp, to: call, isRestarting: isRestarting, completion: completion)
-            case .failure(let error):
-                Logger.call.info(category: "CallService", message: "start group call impl got error: \(error)")
-                self.failCurrentCall(sendFailedMessageToRemote: false, error: error)
-                if call.status != .disconnecting {
-                    self.alert(error: CallError.offerConstruction(error))
-                }
-                completion?(false)
-            }
-        }
-    }
-    
-    private func publish(sdp: String, to call: GroupCall, isRestarting: Bool, completion: ((Bool) -> Void)?) {
-        let action: KrakenRequest.Action = isRestarting ? .restart(sdp: sdp) : .publish(sdp: sdp)
-        let publishing = KrakenRequest(callUUID: call.uuid,
-                                       conversationId: call.conversationId,
-                                       trackId: call.trackId,
-                                       action: action)
-        request(publishing) { (result) in
-            switch result {
-            case let .success((trackId, sdp)):
-                self.handlePublishingResponse(to: call, trackId: trackId, sdp: sdp, completion: completion)
-            case let .failure(error):
-                if case let .invalidPeerConnection(code) = error {
-                    completion?(true)
-                    Logger.call.info(category: "CallService", message: "Got invalid peer connection \(code), try to restart")
-                    self.restartCurrentGroupCall()
-                } else {
-                    Logger.call.info(category: "CallService", message: "publish failed for invalid response: \(error)")
-                    self.failCurrentCall(sendFailedMessageToRemote: true, error: error)
-                    self.callInterface.reportCall(uuid: call.uuid, endedByReason: .failed)
-                    self.alert(error: error)
-                    completion?(false)
-                }
-            }
-        }
-    }
-    
-    private func handlePublishingResponse(to call: GroupCall, trackId: String, sdp: RTCSessionDescription, completion: ((Bool) -> Void)?) {
-        NotificationCenter.default.addObserver(self, selector: #selector(senderKeyChange(_:)), name: ReceiveMessageService.senderKeyDidChangeNotification, object: nil)
-        call.trackId = trackId
-        if call.isOutgoing {
-            callInterface.reportOutgoingCallStartedConnecting(uuid: call.uuid)
-            call.invitePendingUsers()
-        }
-        call.rtcClient.set(remoteSdp: sdp) { (error) in
-            if let error = error {
-                Logger.call.info(category: "CallService", message: "group call publish impl set sdp from publishing response failed: \(error)")
-                let end = KrakenRequest(callUUID: call.uuid,
-                                        conversationId: call.conversationId,
-                                        trackId: trackId,
-                                        action: .end)
-                KrakenMessageRetriever.shared.request(end, completion: nil)
-                Logger.call.info(category: "CallService", message: "[KrakenMessageRetriever] Request \(end.debugDescription)")
-                if call.status != .disconnecting {
-                    self.alert(error: CallError.setRemoteAnswer(error))
-                }
-                self.close(uuid: call.uuid)
-                completion?(false)
-            } else {
-                completion?(true)
-                Logger.call.info(category: "CallService", message: "group call successfully set sdp from publishing response")
-                self.queue.async {
-                    self.subscribe(userId: myUserId, of: call)
-                    self.pendingTrickles.removeValue(forKey: call.uuid)?.forEach({ (candidate) in
-                        let trickle = KrakenRequest(callUUID: call.uuid,
-                                                    conversationId: call.conversationId,
-                                                    trackId: trackId,
-                                                    action: .trickle(candidate: candidate))
-                        KrakenMessageRetriever.shared.request(trickle, completion: nil)
-                        Logger.call.info(category: "CallService", message: "[KrakenMessageRetriever] Request \(trickle.debugDescription)")
-                    })
-                }
-            }
-        }
-    }
-    
-    private func subscribe(userId: String, of call: GroupCall) {
-        let subscribing = KrakenRequest(callUUID: call.uuid,
-                                        conversationId: call.conversationId,
-                                        trackId: call.trackId,
-                                        action: .subscribe)
-        Logger.call.info(category: "CallService", message: "subscribe is sent")
-        request(subscribing) { (result) in
-            switch result {
-            case let .success((_, sdp)) where sdp.type == .offer:
-                Logger.call.info(category: "CallService", message: "setting sdp from subscribe response")
-                call.rtcClient.set(remoteSdp: sdp) { (error) in
-                    if let error = error {
-                        reporter.report(error: error)
-                        Logger.call.info(category: "CallService", message: "subscribe failed to setting sdp: \(error)")
-                        self.queue.asyncAfter(deadline: .now() + self.retryInterval) {
-                            guard self.activeCall == call, call.status != .disconnecting else {
-                                return
-                            }
-                            self.subscribe(userId: userId, of: call)
-                        }
-                    } else {
-                        Logger.call.info(category: "CallService", message: "successfully set sdp from subscribe response")
-                        self.answer(userId: userId, of: call)
-                    }
-                }
-            case .success:
-                Logger.call.info(category: "CallService", message: "dropping subscribing result for non-offer sdp")
-            case .failure(let error):
-                switch error {
-                case .invalidKrakenResponse:
-                    Logger.call.info(category: "CallService", message: "dropping subscribing result for invalid response")
-                case .invalidPeerConnection:
-                    Logger.call.info(category: "CallService", message: "dropping subscribing result and restart the call")
-                    self.restartCurrentGroupCall()
-                default:
-                    Logger.call.info(category: "CallService", message: "subscribing result reports \(error)")
-                    self.alert(error: error)
-                    self.failCurrentCall(sendFailedMessageToRemote: true, error: error)
-                    self.callInterface.reportCall(uuid: call.uuid, endedByReason: .failed)
-                }
-            }
-        }
-    }
-    
-    private func answer(userId: String, of call: GroupCall) {
-        call.rtcClient.answer { (result) in
-            switch result {
-            case .success(let sdpJson):
-                let answer = KrakenRequest(callUUID: call.uuid,
-                                           conversationId: call.conversationId,
-                                           trackId: call.trackId,
-                                           action: .answer(sdp: sdpJson))
-                KrakenMessageRetriever.shared.request(answer, completion: nil)
-                Logger.call.info(category: "CallService", message: "[KrakenMessageRetriever] Request \(answer.debugDescription)")
-            case .failure(let error):
-                Logger.call.info(category: "CallService", message: "group call answer failed setting sdp: \(error)")
-                reporter.report(error: error)
-                self.queue.asyncAfter(deadline: .now() + self.retryInterval) {
-                    guard self.activeCall == call, call.status != .disconnecting else {
-                        return
-                    }
-                    self.answer(userId: userId, of: call)
-                }
-            }
-        }
-    }
-    
-    @objc private func senderKeyChange(_ notification: Notification) {
-        guard let userInfo = notification.userInfo else {
-            return
-        }
-        guard let conversationId = userInfo[ReceiveMessageService.UserInfoKey.conversationId] as? String else {
-            return
-        }
-        queue.async {
-            guard let call = self.activeCall as? GroupCall, call.conversationId == conversationId else {
-                Logger.call.info(category: "CallService", message: "sender key changed but there's no active call has same conversation id")
-                return
-            }
-            Logger.call.info(category: "CallService", message: "sender key is updated")
-            let userId = userInfo[ReceiveMessageService.UserInfoKey.userId] as? String
-            let sessionId = userInfo[ReceiveMessageService.UserInfoKey.sessionId] as? String
-            if let userId = userId, let sessionId = sessionId, !userId.isEmpty && !sessionId.isEmpty {
-                let userIds = self.membersManager.members[conversationId] ?? [] // Since there's an active call it won't be nil
-                if userIds.contains(userId) {
-                    let frameKey = SignalProtocol.shared.getSenderKeyPublic(groupId: conversationId, userId: userId)
-                    call.rtcClient.setFrameDecryptorKey(frameKey, forReceiverWith: userId, sessionId: sessionId)
-                }
-            } else if let userId = userId, !userId.isEmpty {
-                try? ReceiveMessageService.shared.checkSessionSenderKey(conversationId: call.conversationId)
-            } else {
-                try? ReceiveMessageService.shared.checkSessionSenderKey(conversationId: call.conversationId)
-                let frameKey = SignalProtocol.shared.getSenderKeyPublic(groupId: conversationId, userId: myUserId)
-                call.rtcClient.setFrameEncryptorKey(frameKey)
+                Logger.call.error(category: "CallService", message: "RTCAudioSession failed to update config: \(error)")
             }
         }
     }
     
 }
 
-// MARK: - UI Workers
+// MARK: - Background Task
 extension CallService {
     
-    func addViewControllerAsContainersChildIfNeeded(_ viewController: CallViewController) {
-        guard let container = UIApplication.homeContainerViewController else {
+    private func beginBackgroundTaskIfNeeded() {
+        assert(Thread.isMainThread)
+        guard backgroundTaskIdentifier == .invalid else {
             return
         }
-        guard viewController.parent == nil else {
-            return
+        let app = UIApplication.shared
+        backgroundTaskIdentifier = app.beginBackgroundTask(withName: "CallService") {
+            Logger.call.warn(category: "CallService", message: "Background task about to expire with: \(self.backgroundTaskIdentifier)")
+            self.endBackgroundTaskIfNeeded()
         }
-        container.addChild(viewController)
-        container.view.addSubview(viewController.view)
-        viewController.view.snp.makeEdgesEqualToSuperview()
-        viewController.didMove(toParent: container)
+        Logger.call.info(category: "CallService", message: "Background task started with: \(backgroundTaskIdentifier)")
     }
     
-    func removeViewControllerAsContainersChildIfNeeded(_ viewController: CallViewController) {
-        guard viewController.parent != nil else {
+    private func endBackgroundTaskIfNeeded() {
+        assert(Thread.isMainThread)
+        guard backgroundTaskIdentifier != .invalid else {
             return
         }
-        viewController.willMove(toParent: nil)
-        viewController.view.removeFromSuperview()
-        viewController.removeFromParent()
+        if UIApplication.shared.applicationState == .background && !BackgroundMessagingService.shared.hasBackgroundTaskScheduled {
+            MixinService.isStopProcessMessages = true
+            WebSocketService.shared.disconnect()
+            Logger.call.info(category: "CallService", message: "WS disconnected by bg task")
+        }
+        UIApplication.shared.endBackgroundTask(backgroundTaskIdentifier)
+        Logger.call.info(category: "CallService", message: "Background task ended with: \(backgroundTaskIdentifier)")
+        backgroundTaskIdentifier = .invalid
     }
     
 }

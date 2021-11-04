@@ -4,19 +4,19 @@ import MixinServices
 enum CallError: Error {
     
     case busy
-    case invalidUUID(uuid: String)
-    case invalidSdp(sdp: String?)
-    case missingUser(userId: String)
-    case networkFailure
     case microphonePermissionDenied
-    case inconsistentCallStarted
     
+    case missingCall(uuid: UUID)
+    case invalidState(description: String)
+    case missingUser(userId: String)
+    case inconsistentCallStarted
+    case inconsistentCallAnswered
+    
+    case offerConstruction(Error?)
     case setRemoteSdp(Error)
     case answerConstruction(Error?)
-    case setRemoteAnswer(Error)
-    case clientDisconnected
-    case offerConstruction(Error?)
     
+    case networkFailure
     case invalidKrakenResponse
     case roomFull
     case invalidPeerConnection(MixinAPIError)
@@ -31,8 +31,6 @@ enum CallError: Error {
             return R.string.localizable.call_no_microphone_permission()
         case .roomFull:
             return R.string.localizable.error_room_full()
-        case .clientDisconnected:
-            return R.string.localizable.call_webrtc_disconnected()
         case .invalidPeerConnection(let error):
             return R.string.localizable.call_remote_error("\(error)")
         default:

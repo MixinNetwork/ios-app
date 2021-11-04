@@ -23,7 +23,7 @@ open class MixinAPI {
         }
         return request(makeRequest: { (session) -> DataRequest in
             session.request(url, method: method, parameters: parameters, encoder: JSONParameterEncoder.default)
-        }, requiresLogin: requiresLogin, isAsync: true, completion: completion)
+        }, requiresLogin: requiresLogin, isAsync: true, queue: queue, completion: completion)
     }
     
     @discardableResult
@@ -43,7 +43,7 @@ open class MixinAPI {
         }
         return request(makeRequest: { (session) -> DataRequest in
             session.request(url, method: method, parameters: parameters, encoding: JSONEncoding.default)
-        }, requiresLogin: requiresLogin, isAsync: true, completion: completion)
+        }, requiresLogin: requiresLogin, isAsync: true, queue: queue, completion: completion)
     }
     
     @discardableResult

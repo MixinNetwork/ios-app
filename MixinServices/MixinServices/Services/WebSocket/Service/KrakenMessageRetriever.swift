@@ -6,16 +6,17 @@ public protocol KrakenMessageRetrieverDelegate: AnyObject {
 
 public class KrakenMessageRetriever {
     
-    public typealias Completion = (Result<BlazeMessageData, Error>) -> Void
-    
     public static let shared = KrakenMessageRetriever()
     
     public weak var delegate: KrakenMessageRetrieverDelegate?
     
-    private let queue = DispatchQueue(label: "one.mixin.service.KrakenMessageRetriever")
+    public init() {
+        
+    }
     
-    public func request(_ request: KrakenRequest, completion: Completion?) {
-        self.request(request, numberOfRetries: 0, completion: completion)
+    @discardableResult
+    public func request(_ request: KrakenRequest) -> Result<BlazeMessageData, Error> {
+        self.request(request, numberOfRetries: 0)
     }
     
     public func requestPeers(forConversationWith id: String) -> [KrakenPeer]? {
@@ -25,7 +26,7 @@ public class KrakenMessageRetriever {
         param.category = "KRAKEN_LIST"
         param.conversationChecksum = ConversationChecksumCalculator.checksum(conversationId: id)
         let blazeMessage = BlazeMessage(params: param, action: BlazeMessageAction.listKrakenPeers.rawValue)
-
+        
         Logger.call.info(category: "KrakenMessageRetriever", message: "Requesting peers for conversation: \(id)")
         do {
             if let peers = try WebSocketService.shared.respondedMessage(for: blazeMessage).blazeMessage?.toKrakenPeers() {
@@ -42,10 +43,9 @@ public class KrakenMessageRetriever {
         }
     }
     
-    private func request(_ request: KrakenRequest, numberOfRetries: UInt, completion: Completion?) {
+    private func request(_ request: KrakenRequest, numberOfRetries: UInt) -> Result<BlazeMessageData, Error> {
         guard LoginManager.shared.isLoggedIn else {
-            completion?(.failure(MixinServicesError.logout(isAsyncRequest: true)))
-            return
+            return .failure(MixinServicesError.logout(isAsyncRequest: false))
         }
         
         var blazeMessage = request.blazeMessage
@@ -54,32 +54,29 @@ public class KrakenMessageRetriever {
             blazeMessage.params?.conversationChecksum = checksum
         }
         
-        queue.async {
-            do {
-                let blazeMessage = try WebSocketService.shared.respondedMessage(for: blazeMessage).blazeMessage
-                if let data = blazeMessage?.toBlazeMessageData() {
-                    completion?(.success(data))
-                } else {
-                    let error: Error = blazeMessage?.error ?? MixinServicesError.badKrakenBlazeMessage
-                    completion?(.failure(error))
-                }
-            } catch MixinAPIError.invalidConversationChecksum {
-                if let conversationId = blazeMessage.params?.conversationId {
-                    SendMessageService.shared.syncConversation(conversationId: conversationId)
-                    try? ReceiveMessageService.shared.checkSessionSenderKey(conversationId: conversationId)
-                    self.request(request, completion: completion)
-                } else {
-                    completion?(.failure(MixinServicesError.missingConversationId))
-                    assertionFailure()
-                }
-            } catch {
-                self.queue.asyncAfter(deadline: .now() + 2) {
-                    if let delegate = self.delegate, delegate.krakenMessageRetriever(self, shouldRetryRequest: request, error: error, numberOfRetries: numberOfRetries) {
-                        self.request(request, numberOfRetries: numberOfRetries + 1, completion: completion)
-                    } else {
-                        completion?(.failure(error))
-                    }
-                }
+        do {
+            let blazeMessage = try WebSocketService.shared.respondedMessage(for: blazeMessage).blazeMessage
+            if let data = blazeMessage?.toBlazeMessageData() {
+                return .success(data)
+            } else {
+                let error: Error = blazeMessage?.error ?? MixinServicesError.badKrakenBlazeMessage
+                return .failure(error)
+            }
+        } catch MixinAPIError.invalidConversationChecksum {
+            if let conversationId = blazeMessage.params?.conversationId {
+                SendMessageService.shared.syncConversation(conversationId: conversationId)
+                try? ReceiveMessageService.shared.checkSessionSenderKey(conversationId: conversationId)
+                return self.request(request)
+            } else {
+                assertionFailure()
+                return .failure(MixinServicesError.missingConversationId)
+            }
+        } catch {
+            sleep(2)
+            if let delegate = self.delegate, delegate.krakenMessageRetriever(self, shouldRetryRequest: request, error: error, numberOfRetries: numberOfRetries) {
+                return self.request(request, numberOfRetries: numberOfRetries + 1)
+            } else {
+                return .failure(error)
             }
         }
     }

@@ -450,7 +450,7 @@ extension UserProfileViewController {
     @objc func callWithMixin() {
         let user = self.user!
         dismiss(animated: true) {
-            CallService.shared.requestStartPeerToPeerCall(remoteUser: user)
+            CallService.shared.makePeerCall(with: user)
         }
     }
 

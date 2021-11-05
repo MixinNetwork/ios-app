@@ -223,17 +223,17 @@ public class ReceiveMessageService: MixinService {
     }
     
     private func processBotMessages(data: BlazeMessageData, finishedBlock: ((Int) -> Void)? = nil) {
+        let conversationId = data.conversationId
         ReceiveMessageService.shared.syncConversation(data: data)
         ReceiveMessageService.shared.checkSession(data: data)
         _ = ReceiveMessageService.shared.syncUser(userId: data.userId)
-
-        guard UserDAO.shared.isBotUser(userId: data.userId) else {
+        
+        guard ConversationDAO.shared.isBotConversation(conversationId: conversationId) else {
             // plain message in group chat
             ReceiveMessageService.shared.processReceiveMessage(data: data)
             return
         }
         
-        let conversationId = data.conversationId
         let pageCount = 200
         var loopEnd = false
         repeat {

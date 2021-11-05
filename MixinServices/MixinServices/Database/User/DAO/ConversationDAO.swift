@@ -46,6 +46,16 @@ public final class ConversationDAO: UserDatabaseDAO {
         return value > 0
     }
     
+    public func isBotConversation(conversationId: String) -> Bool {
+        let sql = """
+        SELECT 1 FROM conversations c
+        INNER JOIN users u ON u.user_id = c.owner_id AND u.app_id IS NOT NULL AND u.identity_number > '0'
+        WHERE c.conversation_id = ? AND c.category = 'CONTACT'
+        """
+        let value: Int64 = db.select(with: sql, arguments: [conversationId]) ?? 0
+        return value > 0
+    }
+    
     public func getUnreadMessageCount() -> Int {
         let sql = "SELECT ifnull(SUM(unseen_message_count),0) FROM conversations WHERE category IS NOT NULL"
         return db.select(with: sql) ?? 0

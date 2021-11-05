@@ -19,12 +19,6 @@ public final class UserDAO: UserDatabaseDAO {
     LEFT JOIN apps a ON a.app_id = u.app_id
     """
     
-    public func isBotUser(userId: String) -> Bool {
-        db.recordExists(in: User.self, where: User.column(of: .userId) == userId
-                        && User.column(of: .identityNumber) > "0"
-                        && User.column(of: .appId) != nil)
-    }
-    
     public func deleteUser(userId: String) {
         db.delete(User.self, where: User.column(of: .userId) == userId)
     }

@@ -27,7 +27,7 @@ final class CollectibleAPI: MixinAPI {
             self.request(method: .post,
                          path: Path.sign(id: requestId),
                          parameters: ["pin": encryptedPin],
-                         retry: false,
+                         retryOnHTTPTimeOut: false,
                          completion: completion)
         }
     }
@@ -37,7 +37,7 @@ final class CollectibleAPI: MixinAPI {
             self.request(method: .post,
                          path: Path.unlock(id: requestId),
                          parameters: ["pin": encryptedPin],
-                         retry: false,
+                         retryOnHTTPTimeOut: false,
                          completion: completion)
         }
     }

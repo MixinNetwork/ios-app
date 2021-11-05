@@ -19,7 +19,9 @@ enum PINEncryptor {
             case .success(let encrypted):
                 onSuccess(encrypted)
             case .failure(let error):
-                onFailure(.failure(.pinEncryption(error)))
+                DispatchQueue.main.async {
+                    onFailure(.failure(.pinEncryption(error)))
+                }
             }
         }
     }

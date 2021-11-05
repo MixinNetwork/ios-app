@@ -33,7 +33,7 @@ final class EmergencyAPI: MixinAPI {
             request(method: .post,
                     path: Path.verify(id: id),
                     parameters: req,
-                    retry: false,
+                    retryOnHTTPTimeOut: false,
                     completion: completion)
         }
     }
@@ -65,14 +65,14 @@ final class EmergencyAPI: MixinAPI {
     static func show(pin: String, completion: @escaping (MixinAPI.Result<User>) -> Void) {
         PINEncryptor.encrypt(pin: pin, onFailure: completion) { (encryptedPin) in
             let param = ["pin": encryptedPin]
-            request(method: .post, path: Path.show, parameters: param, retry: false, completion: completion)
+            request(method: .post, path: Path.show, parameters: param, retryOnHTTPTimeOut: false, completion: completion)
         }
     }
     
     static func delete(pin: String, completion: @escaping (MixinAPI.Result<Account>) -> Void) {
         PINEncryptor.encrypt(pin: pin, onFailure: completion) { (encryptedPin) in
             let param = ["pin": encryptedPin]
-            request(method: .post, path: Path.delete, parameters: param, retry: false, completion: completion)
+            request(method: .post, path: Path.delete, parameters: param, retryOnHTTPTimeOut: false, completion: completion)
         }
     }
     

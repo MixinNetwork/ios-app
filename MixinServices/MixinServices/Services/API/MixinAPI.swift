@@ -12,7 +12,7 @@ open class MixinAPI {
         path: String,
         parameters: Parameters,
         requiresLogin: Bool = true,
-        retry: Bool = true,
+        retryOnHTTPTimeOut: Bool = true,
         queue: DispatchQueue = .main,
         completion: @escaping (MixinAPI.Result<Response>) -> Void
     ) -> Request? {
@@ -24,7 +24,7 @@ open class MixinAPI {
         }
         return request(makeRequest: { (session) -> DataRequest in
             session.request(url, method: method, parameters: parameters, encoder: JSONParameterEncoder.default)
-        }, requiresLogin: requiresLogin, isAsync: true, retry: retry, completion: completion)
+        }, requiresLogin: requiresLogin, isAsync: true, retryOnHTTPTimeOut: retryOnHTTPTimeOut, completion: completion)
     }
     
     @discardableResult
@@ -129,7 +129,7 @@ extension MixinAPI {
         makeRequest: @escaping (Alamofire.Session) -> DataRequest,
         requiresLogin: Bool = true,
         isAsync: Bool,
-        retry: Bool = true,
+        retryOnHTTPTimeOut: Bool = true,
         queue: DispatchQueue = .main,
         completion: @escaping (MixinAPI.Result<Response>) -> Void
     ) -> Request? {
@@ -143,7 +143,7 @@ extension MixinAPI {
             let xServerTime = TimeInterval(response?.allHeaderFields[caseInsensitive: "x-server-time"] ?? "0") ?? 0
             let serverTimeIntervalSince1970 = xServerTime / TimeInterval(NSEC_PER_SEC)
             let serverTime = Date(timeIntervalSince1970: serverTimeIntervalSince1970)
-            if retry, abs(requestTime.timeIntervalSinceNow) > secondsPerMinute {
+            if abs(requestTime.timeIntervalSinceNow) > secondsPerMinute {
                 request(makeRequest: makeRequest, requiresLogin: requiresLogin, isAsync: isAsync, completion: completion)
             } else if abs(serverTime.timeIntervalSinceNow) > 5 * secondsPerMinute {
                 AppGroupUserDefaults.Account.isClockSkewed = true
@@ -178,7 +178,11 @@ extension MixinAPI {
                         if let data = responseObject.data {
                             completion(.success(data))
                         } else if case .unauthorized = responseObject.error {
-                            handleDeauthorization(response: response.response)
+                            if retryOnHTTPTimeOut {
+                                handleDeauthorization(response: response.response)
+                            } else {
+                                completion(.failure(.httpTimeOut))
+                            }
                         } else if let error = responseObject.error {
                             completion(.failure(error))
                         } else {

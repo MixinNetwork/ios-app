@@ -97,24 +97,48 @@ public class ReceiveMessageService: MixinService {
                             callback(nil)
                             return
                         }
-
+                        
+                        var nonBotMessages = [BlazeMessageData]()
+                        var botMessages = [String: BlazeMessageData]()
+                        
                         for blazeMessage in blazeMessages {
-                            guard !AppGroupUserDefaults.isRunningInMainApp, !extensionTimeWillExpire() else {
-                                callback(nil)
-                                return
-                            }
                             guard let data = try? JSONDecoder.default.decode(BlazeMessageData.self, from: blazeMessage.message) else {
                                 ReceiveMessageService.shared.processBadMessage(messageId: blazeMessage.messageId)
                                 continue
                             }
+                            
                             if MessageCategory.allBotCategoriesString.contains(data.category) && !blazeMessage.conversationId.isEmpty {
-                                ReceiveMessageService.shared.processBotMessages(data: data)
+                                if botMessages[data.conversationId] == nil {
+                                    botMessages[data.conversationId] = data
+                                }
                             } else {
-                                ReceiveMessageService.shared.processReceiveMessage(data: data)
+                                nonBotMessages.append(data)
                             }
-                            if data.messageId == messageId {
+                        }
+                        
+                        for blazeMessage in nonBotMessages {
+                            guard !AppGroupUserDefaults.isRunningInMainApp, !extensionTimeWillExpire() else {
+                                callback(nil)
+                                return
+                            }
+                            ReceiveMessageService.shared.processReceiveMessage(data: blazeMessage)
+                            if blazeMessage.messageId == messageId {
                                 callback(MessageDAO.shared.getFullMessage(messageId: messageId))
                                 return
+                            }
+                        }
+                        
+                        for blazeMessage in botMessages.values {
+                            ReceiveMessageService.shared.processBotMessages(data: blazeMessage) { messageIds in
+                                guard !AppGroupUserDefaults.isRunningInMainApp, !extensionTimeWillExpire() else {
+                                    callback(nil)
+                                    return false
+                                }
+                                guard !messageIds.contains(messageId) else {
+                                    callback(MessageDAO.shared.getFullMessage(messageId: messageId))
+                                    return false
+                                }
+                                return true
                             }
                         }
                     } while true
@@ -196,11 +220,11 @@ public class ReceiveMessageService: MixinService {
                     displaySyncProcess = true
                     updateProgress(remainJobCount: remainJobCount, finishedJobCount: finishedJobCount)
                 }
-
+                
+                var nonBotMessages = [BlazeMessageData]()
+                var botMessages = [String: BlazeMessageData]()
+                
                 for blazeMessage in blazeMessages {
-                    if MixinService.isStopProcessMessages {
-                        return
-                    }
                     guard let data = try? JSONDecoder.default.decode(BlazeMessageData.self, from: blazeMessage.message) else {
                         finishedJobCount += 1
                         ReceiveMessageService.shared.processBadMessage(messageId: blazeMessage.messageId)
@@ -208,14 +232,27 @@ public class ReceiveMessageService: MixinService {
                     }
                     
                     if MessageCategory.allBotCategoriesString.contains(data.category) && !blazeMessage.conversationId.isEmpty {
-                        ReceiveMessageService.shared.processBotMessages(data: data) { count in
-                            finishedJobCount += count
-                            updateProgress(remainJobCount: remainJobCount, finishedJobCount: finishedJobCount)
+                        if botMessages[data.conversationId] == nil {
+                            botMessages[data.conversationId] = data
                         }
-                        break
                     } else {
-                        finishedJobCount += 1
-                        ReceiveMessageService.shared.processReceiveMessage(data: data)
+                        nonBotMessages.append(data)
+                    }
+                }
+                
+                for blazeMessage in nonBotMessages {
+                    if MixinService.isStopProcessMessages {
+                        return
+                    }
+                    ReceiveMessageService.shared.processReceiveMessage(data: blazeMessage)
+                }
+                finishedJobCount += nonBotMessages.count
+                
+                for blazeMessage in botMessages.values {
+                    ReceiveMessageService.shared.processBotMessages(data: blazeMessage) { messageIds in
+                        finishedJobCount += messageIds.count
+                        updateProgress(remainJobCount: remainJobCount, finishedJobCount: finishedJobCount)
+                        return true
                     }
                 }
             } while true
@@ -225,14 +262,14 @@ public class ReceiveMessageService: MixinService {
     private func processBotMessages(data: BlazeMessageData, finishedBlock: ((Int) -> Void)? = nil) {
         let conversationId = data.conversationId
         ReceiveMessageService.shared.syncConversation(data: data)
-        ReceiveMessageService.shared.checkSession(data: data)
-        _ = ReceiveMessageService.shared.syncUser(userId: data.userId)
-        
         guard ConversationDAO.shared.isBotConversation(conversationId: conversationId) else {
             // plain message in group chat
             ReceiveMessageService.shared.processReceiveMessage(data: data)
             return
         }
+        
+        ReceiveMessageService.shared.checkSession(data: data)
+        _ = ReceiveMessageService.shared.syncUser(userId: data.userId)
         
         let pageCount = 200
         var loopEnd = false
@@ -377,8 +414,10 @@ public class ReceiveMessageService: MixinService {
             
             BlazeMessageDAO.shared.delete(messageIds: messageIds)
             
-            finishedBlock?(messageIds.count)
-        } while LoginManager.shared.isLoggedIn && !loopEnd && !isAppExtension
+            if !processBlock(messageIds) {
+                return
+            }
+        } while LoginManager.shared.isLoggedIn && !loopEnd
     }
 
     private func processReceiveMessage(data: BlazeMessageData) {

@@ -11,16 +11,20 @@ enum PINEncryptor {
         case encryption(Swift.Error)
     }
     
+    private static let queue = DispatchQueue(label: "one.mixin.service.PINEncryptor")
+
     static func encrypt<Response>(pin: String, onFailure: @escaping (MixinAPI.Result<Response>) -> Void, onSuccess: @escaping (String) -> Void) {
-        switch encrypt(pin: pin) {
-        case .success(let encrypted):
-            onSuccess(encrypted)
-        case .failure(let error):
-            onFailure(.failure(.pinEncryption(error)))
+        queue.async {
+            switch encrypt(pin: pin) {
+            case .success(let encrypted):
+                onSuccess(encrypted)
+            case .failure(let error):
+                onFailure(.failure(.pinEncryption(error)))
+            }
         }
     }
     
-    static func encrypt(pin: String) -> Result<String, Error> {
+    private static func encrypt(pin: String) -> Result<String, Error> {
         let pinToken: Data
         if let token = AppGroupKeychain.pinToken {
             pinToken = token

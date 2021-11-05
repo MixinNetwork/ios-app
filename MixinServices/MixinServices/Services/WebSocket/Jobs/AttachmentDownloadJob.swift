@@ -270,7 +270,7 @@ extension AttachmentDownloadJob {
         self.attachResponse = attachResponse
         
         let decrypting: Bool
-        if let key = owner.mediaKey, let digest = owner.mediaDigest {
+        if let key = owner.mediaKey, !key.isEmpty, let digest = owner.mediaDigest, !digest.isEmpty {
             stream = AttachmentDecryptingOutputStream(url: fileUrl, key: key, digest: digest)
             decrypting = true
         } else {

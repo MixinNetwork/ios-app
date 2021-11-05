@@ -46,7 +46,9 @@ final class TranscriptAttachmentUploadJob: AsynchronousJob {
             guard MessageCategory.allMediaCategoriesString.contains(child.category) else {
                 continue
             }
-            let areKeyDigestReady = isPlainTranscript || (child.mediaKey != nil && child.mediaDigest != nil)
+            let isMediaKeyReady = child.mediaKey != nil && !child.mediaKey!.isEmpty
+            let isMediaDigestReady = child.mediaDigest != nil && !child.mediaDigest!.isEmpty
+            let areKeyDigestReady = isPlainTranscript || (isMediaKeyReady && isMediaDigestReady)
             if let content = child.content,
                UUID(uuidString: content) != nil,
                areKeyDigestReady,
@@ -242,15 +244,15 @@ extension TranscriptAttachmentUploadJob {
                     if let error = self.stream.streamError {
                         self.job?.request(self, failedWith: error)
                     } else if let stream = self.stream as? AttachmentEncryptingInputStream {
-                        if let key = stream.key, let digest = stream.digest {
+                        if let key = stream.key, !key.isEmpty, let digest = stream.digest, !digest.isEmpty {
                             let metadata = Metadata(mediaKey: key,
                                                     mediaDigest: digest,
                                                     attachmentId: attachmentResponse.attachmentId)
                             let createdAt = attachmentResponse.createdAt ?? Date().toUTCString()
                             self.job?.request(self, succeedWith: metadata, createdAt: createdAt)
                         } else {
-                            let error = Error.missingMetadata(hasKey: stream.key != nil,
-                                                              hasDigest: stream.digest != nil)
+                            let error = Error.missingMetadata(hasKey: (stream.key != nil && !stream.key!.isEmpty),
+                                                              hasDigest: (stream.digest != nil && !stream.digest!.isEmpty))
                             self.job?.request(self, failedWith: error)
                         }
                     } else {

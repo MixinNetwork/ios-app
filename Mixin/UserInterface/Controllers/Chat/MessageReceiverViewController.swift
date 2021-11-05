@@ -501,8 +501,10 @@ extension MessageReceiverViewController {
             || message.category.hasSuffix("_VIDEO")
             || message.category.hasSuffix("_AUDIO")
             || message.category.hasSuffix("_DATA")
+        let isMediaKeyReady = message.mediaKey != nil && !message.mediaKey!.isEmpty
+        let isMediaDigestReady = message.mediaDigest != nil && !message.mediaDigest!.isEmpty
         let isAttachmentMetadataReady = message.category.hasPrefix("PLAIN_")
-            || (message.mediaKey != nil && message.mediaDigest != nil)
+            || (isMediaKeyReady && isMediaDigestReady)
         let copyAttachmentMetadata = hasAttachment
             && isAttachmentMetadataReady
             && !message.content.isNilOrEmpty

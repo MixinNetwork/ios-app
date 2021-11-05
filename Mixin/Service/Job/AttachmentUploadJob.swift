@@ -39,8 +39,9 @@ class AttachmentUploadJob: AttachmentLoadingJob {
         }
         
         let isMessageEncrypted = message.category.hasPrefix("SIGNAL_") || message.category.hasPrefix("ENCRYPTED_")
-        let isAttachmentMetadataReady = message.category.hasPrefix("PLAIN_")
-            || (isMessageEncrypted && message.mediaKey != nil && message.mediaDigest != nil)
+        let isMediaKeyReady = message.mediaKey != nil && !message.mediaKey!.isEmpty
+        let isMediaDigestReady = message.mediaDigest != nil && !message.mediaDigest!.isEmpty
+        let isAttachmentMetadataReady = message.category.hasPrefix("PLAIN_") || (isMessageEncrypted && isMediaKeyReady && isMediaDigestReady)
         if let content = message.content,
            !content.isEmpty,
            isAttachmentMetadataReady,

@@ -294,7 +294,6 @@ public class ReceiveMessageService: MixinService {
             let existMessageIds = MessageDAO.shared.getExistMessageIds(messageIds: messageIds)
             let existHistoryIds = MessageHistoryDAO.shared.getExistMessageIds(messageIds: messageIds)
             
-            
             var jobs = [Job]()
             var pairMessages = [(Message, [TranscriptMessage]?)]()
             var sharedContactIds = [String]()

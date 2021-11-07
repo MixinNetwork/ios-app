@@ -20,6 +20,7 @@ open class Database {
                         \(statement.sql)
                         
                     """
+                    print("[SQL]\(message)")
                     Logger.database.info(category: "Trace", message: message)
                 }
             }
@@ -346,6 +347,21 @@ extension Database {
                 if let completion = completion {
                     db.afterNextTransactionCommit(completion)
                 }
+            })
+            return numberOfChanges
+        } catch {
+            return 0
+        }
+    }
+    
+    @discardableResult
+    public func deleteAll<Record: PersistableRecord>(
+        _ record: Record.Type
+    ) -> Int {
+        do {
+            var numberOfChanges = 0
+            try pool.write({ (db) -> Void in
+                numberOfChanges = try record.deleteAll(db)
             })
             return numberOfChanges
         } catch {

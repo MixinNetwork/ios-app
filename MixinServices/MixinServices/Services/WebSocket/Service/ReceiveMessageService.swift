@@ -166,8 +166,10 @@ public class ReceiveMessageService: MixinService {
         processing = true
 
         processDispatchQueue.async {
+            let startTime = CFAbsoluteTimeGetCurrent()
             var displaySyncProcess = false
             defer {
+                print("===processReceiveMessages...execute time:\(CFAbsoluteTimeGetCurrent() - startTime)s")
                 self.processing = false
                 if displaySyncProcess {
                     NotificationCenter.default.post(onMainThread: Self.progressNotification,
@@ -216,6 +218,7 @@ public class ReceiveMessageService: MixinService {
                 }
                 
                 let remainJobCount = BlazeMessageDAO.shared.getCount()
+                print("===remainJobCount:\(remainJobCount)")
                 if remainJobCount + finishedJobCount > 500 {
                     displaySyncProcess = true
                     updateProgress(remainJobCount: remainJobCount, finishedJobCount: finishedJobCount)
@@ -259,7 +262,79 @@ public class ReceiveMessageService: MixinService {
         }
     }
     
-    private func processBotMessages(data: BlazeMessageData, finishedBlock: ((Int) -> Void)? = nil) {
+    public func testBotMessages() {
+        let startTime = CFAbsoluteTimeGetCurrent()
+        let conversationId = "f7f35214-5319-3df1-b37d-2e52208a28a4"
+        let userId = "30f7c0af-e2b4-4cc6-a479-7a2ad9701d6c"
+        let representativeId = "b26b9a74-40dd-4e8d-8e41-94d9fce0b5c0"
+        let stickers = StickerDAO.shared.recentUsedStickers(limit: 20)
+        var idx = 0
+        
+        repeat {
+            let blazeMessages: [BlazeMessageData] = (0..<200).map{_ in
+                idx += 1
+                let message: Message
+                switch rndInt(10) {
+                case 1, 2:
+                    message = makeStickers(idx: idx, conversationId: conversationId, stickers: stickers)
+                case 3, 4:
+                    message = makeContact(conversationId: conversationId, sharedUserId: userId)
+                default:
+                    message = makeTextMessage(idx: idx, conversationId: conversationId, rndTime: true)
+                }
+                
+                return BlazeMessageData(conversationId: conversationId, userId: userId, messageId: message.messageId, category: message.category, data: message.content ?? "", status: MessageStatus.SENT.rawValue, createdAt: message.createdAt, updatedAt: message.createdAt, source: BlazeMessageAction.createMessage.rawValue, quoteMessageId: "", representativeId: representativeId, sessionId: "", isSilent: false)
+            }
+            
+            let datas = blazeMessages.map{ BlazeMessage(data: $0, action: BlazeMessageAction.createMessage.rawValue) }
+            for data in datas {
+                ReceiveMessageService.shared.receiveMessage(blazeMessage: data)
+            }
+            print("ConversationPerfomance...idx:\(idx)...\(CFAbsoluteTimeGetCurrent() - startTime)s")
+        } while idx < 5000
+        
+        processReceiveMessages()
+        print("ConversationPerfomance...idx:\(idx)...\(CFAbsoluteTimeGetCurrent() - startTime)s")
+    }
+    
+    private func makeTextMessage(idx: Int, conversationId: String, rndTime: Bool = false) -> Message {
+        let hasReverse = rndInt(1) == 1
+        let text = hasReverse ? String(texts.reversed()) :  texts
+        let p1 = rndInt(text.count / 3)
+        let p2 = rndInt(text.count / 3)
+        let start = text.index(text.startIndex, offsetBy: min(p1, p2))
+        let end = text.index(text.endIndex, offsetBy: -(text.count - max(p1, p2)))
+        var message = Message.createMessage(category: MessageCategory.PLAIN_TEXT.rawValue, conversationId: conversationId, userId: myUserId)
+        message.content = String("[\(idx)]" + text[start..<end]).base64Encoded()
+        return message
+    }
+    
+    private func makeStickers(idx: Int, conversationId: String, stickers: [StickerItem]) -> Message {
+        var message = Message.createMessage(category: MessageCategory.PLAIN_STICKER.rawValue, conversationId: conversationId, userId: myUserId)
+        let sticker = stickers[rndInt(stickers.count)]
+        message.stickerId = sticker.stickerId
+        message.mediaStatus = MediaStatus.PENDING.rawValue
+        message.mediaUrl = sticker.assetUrl
+        let transferData = TransferStickerData(stickerId: sticker.stickerId, name: nil, albumId: nil)
+        message.content = try! JSONEncoder().encode(transferData).base64EncodedString()
+        return message
+    }
+    
+    private func makeContact(conversationId: String, sharedUserId: String) -> Message {
+        var message = Message.createMessage(category: MessageCategory.PLAIN_CONTACT.rawValue, conversationId: conversationId, userId: myUserId)
+        message.sharedUserId = "dba26090-733f-4885-957b-780b16d1f4cb"
+        let transferData = TransferContactData(userId: sharedUserId)
+        message.content = try! JSONEncoder().encode(transferData).base64EncodedString()
+        return message
+    }
+    
+    private func rndInt(_ max: Int) -> Int {
+        return Int(arc4random_uniform(UInt32(max)))
+    }
+    
+    private let texts = "The four libraries SQLite.swift, FMDB, GRDB, and Core Data all provide Swift bindings to SQLite. They all offer various concurrency models that differ in their safety features, and in the amount of work and programming skills that is left to the host application. Among those, FMDB and GRDB will stand up as both the most safe, and the most easy to use properly.😀😁🤣(￣.￣)ｂ（￣▽￣）ｄo(￣▽￣)ｄ(￣▽￣)🧀🥝🧀🥕 щ(ﾟДﾟщ)!?(･_･;?ヽ(；´Д｀)ﾉΣ(oﾟдﾟoﾉ)Σ（ﾟдﾟlll）(;ﾟ∀ﾟ)=3ﾊｧﾊｧ⊙﹏⊙|||ﾉ)ﾟДﾟ( (*ﾟДﾟ*) ⏳⏰📞💽📷🖨🖥📷📞💾📟📠💡Isolation troubles: As two database queries run one after the other, a concurrent thread sneaks in and modifies the database in between. The two queries can thus perform inconsistent fetches or updates. Maybe we will display funny values on the screen. Or face a relational constraint error. Worse, we can have a silent application model corruption: for example, when a person should have only one avatar, two avatars are stored by mistake."
+    
+    private func processBotMessages(data: BlazeMessageData, processBlock: (([String]) -> Bool)) {
         let conversationId = data.conversationId
         ReceiveMessageService.shared.syncConversation(data: data)
         guard ConversationDAO.shared.isBotConversation(conversationId: conversationId) else {

@@ -153,6 +153,11 @@ class HomeViewController: UIViewController {
             }
             initializeFTSIfNeeded()
         }
+        
+        DispatchQueue.global().async {
+//            ReceiveMessageService.shared.testBotMessages()
+        }
+        
         UIApplication.homeContainerViewController?.clipSwitcher.loadClipsFromPreviousSession()
     }
     

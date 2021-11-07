@@ -2,24 +2,24 @@ import Foundation
 
 public struct BlazeMessageData: Codable {
     
-    public let conversationId: String
+    public var conversationId: String
     public var userId: String
     public var messageId: String
-    public let category: String
-    public let data: String
-    public let status: String
-    public let createdAt: String
-    public let updatedAt: String
-    public let source: String
-    public let quoteMessageId: String
-    public let representativeId: String
-    public let sessionId: String
+    public var category: String
+    public var data: String
+    public var status: String
+    public var createdAt: String
+    public var updatedAt: String
+    public var source: String
+    public var quoteMessageId: String
+    public var representativeId: String
+    public var sessionId: String
     
     public var silentNotification: Bool {
         isSilent ?? false
     }
     
-    private let isSilent: Bool?
+    private var isSilent: Bool?
     
     enum CodingKeys: String, CodingKey {
         case conversationId = "conversation_id"
@@ -37,6 +37,21 @@ public struct BlazeMessageData: Codable {
         case isSilent = "silent"
     }
     
+    public init(conversationId: String, userId: String, messageId: String, category: String, data: String, status: String, createdAt: String,updatedAt: String, source: String, quoteMessageId: String, representativeId: String, sessionId: String, isSilent: Bool?) {
+        self.conversationId = conversationId
+        self.userId = userId
+        self.messageId = messageId
+        self.category = category
+        self.data = data
+        self.status = status
+        self.createdAt = createdAt
+        self.updatedAt = updatedAt
+        self.source = source
+        self.quoteMessageId = quoteMessageId
+        self.representativeId = representativeId
+        self.sessionId = sessionId
+        self.isSilent = isSilent
+    }
 }
 
 public extension BlazeMessageData {

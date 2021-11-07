@@ -62,5 +62,7 @@ public final class BlazeMessageDAO {
                                     where: messageIds.contains(MessageBlaze.column(of: .messageId)))
     }
     
-    
+    public func deleteAll() {
+        TaskDatabase.current.deleteAll(MessageBlaze.self)
+    }
 }

@@ -71,3 +71,15 @@ public extension Data {
     
 }
 
+public extension Optional where Wrapped == Data {
+    
+    var isNilOrEmpty: Bool {
+        switch self {
+        case .some(let value):
+            return value.isEmpty
+        case .none:
+            return true
+        }
+    }
+    
+}

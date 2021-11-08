@@ -46,9 +46,7 @@ final class TranscriptAttachmentUploadJob: AsynchronousJob {
             guard MessageCategory.allMediaCategoriesString.contains(child.category) else {
                 continue
             }
-            let isMediaKeyReady = child.mediaKey != nil && !child.mediaKey!.isEmpty
-            let isMediaDigestReady = child.mediaDigest != nil && !child.mediaDigest!.isEmpty
-            let areKeyDigestReady = isPlainTranscript || (isMediaKeyReady && isMediaDigestReady)
+            let areKeyDigestReady = isPlainTranscript || (!child.mediaDigest.isNilOrEmpty && !child.mediaKey.isNilOrEmpty)
             if let content = child.content,
                UUID(uuidString: content) != nil,
                areKeyDigestReady,
@@ -251,8 +249,8 @@ extension TranscriptAttachmentUploadJob {
                             let createdAt = attachmentResponse.createdAt ?? Date().toUTCString()
                             self.job?.request(self, succeedWith: metadata, createdAt: createdAt)
                         } else {
-                            let error = Error.missingMetadata(hasKey: (stream.key != nil && !stream.key!.isEmpty),
-                                                              hasDigest: (stream.digest != nil && !stream.digest!.isEmpty))
+                            let error = Error.missingMetadata(hasKey: !stream.key.isNilOrEmpty,
+                                                              hasDigest: !stream.digest.isNilOrEmpty)
                             self.job?.request(self, failedWith: error)
                         }
                     } else {

@@ -216,24 +216,23 @@ extension BackupViewController {
         alc.addAction(UIAlertAction(title: Localized.REPORT_BUTTON, style: .default, handler: { (_) in
             self.report()
         }))
-        alc.addAction(UIAlertAction(title: R.string.localizable.report_compress_database(), style: .default, handler: { (_) in
-            self.compressDatabase()
-        }))
+        alc.addAction(UIAlertAction(title: R.string.localizable.report_compress_database(), style: .default, handler: compressDatabase))
+        alc.addAction(UIAlertAction(title: R.string.localizable.report_optimize_database(), style: .default, handler: optimizeDatabase))
         alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         self.present(alc, animated: true, completion: nil)
     }
     
-    private func compressDatabase() {
+    private func compressDatabase(_ action: UIAlertAction) {
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         DispatchQueue.global().async {
             do {
-                Logger.database.info(category: "BackupViewController", message: "Start maintaining database, size: \(AppGroupContainer.userDatabaseUrl.fileSize.sizeRepresentation())")
+                Logger.database.info(category: "DB Compressor", message: "Start compressing database, size: \(AppGroupContainer.userDatabaseUrl.fileSize.sizeRepresentation())")
                 try UserDatabase.current.pool.write({ (db) -> Void in
                     try db.checkpoint(.full, on: nil)
                 })
                 try UserDatabase.current.pool.vacuum()
-                Logger.database.info(category: "BackupViewController", message: "Database maintaining finished, size: \(AppGroupContainer.userDatabaseUrl.fileSize.sizeRepresentation())")
+                Logger.database.info(category: "DB Compressor", message: "Database compression finished, size: \(AppGroupContainer.userDatabaseUrl.fileSize.sizeRepresentation())")
                 DispatchQueue.main.async {
                     hud.set(style: .notification, text: R.string.localizable.report_compress_database_success())
                     hud.scheduleAutoHidden()
@@ -243,7 +242,34 @@ extension BackupViewController {
                     hud.set(style: .error, text: R.string.localizable.error_operation_failed())
                     hud.scheduleAutoHidden()
                 }
-                Logger.database.error(category: "BackupViewController", message: "Backup failed: \(error)")
+                Logger.database.error(category: "DB Compressor", message: "Compression failed: \(error)")
+            }
+        }
+    }
+    
+    private func optimizeDatabase(_ action: UIAlertAction) {
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        DispatchQueue.global().async {
+            do {
+                Logger.database.info(category: "DB Optimizer", message: "Start optimizing database")
+                try UserDatabase.current.pool.write({ (db) -> Void in
+                    try db.checkpoint(.full, on: nil)
+                })
+                try UserDatabase.current.pool.write({ db in
+                    try db.execute(sql: "ANALYZE")
+                })
+                Logger.database.info(category: "DB Optimizer", message: "Database optimization finished")
+                DispatchQueue.main.async {
+                    hud.set(style: .notification, text: R.string.localizable.report_optimize_database_success())
+                    hud.scheduleAutoHidden()
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    hud.set(style: .error, text: R.string.localizable.error_operation_failed())
+                    hud.scheduleAutoHidden()
+                }
+                Logger.database.error(category: "DB Optimizer", message: "Optimization failed: \(error)")
             }
         }
     }

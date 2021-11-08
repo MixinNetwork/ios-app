@@ -926,6 +926,8 @@
 "report_message"="Allow Manual Report Message";
 "report_compress_database"="Compress Database";
 "report_compress_database_success"="Compressed";
+"report_optimize_database"="Optimize Database";
+"report_optimize_database_success"="Optimized";
 
 // Playlist
 "playlist" = "Playlist";

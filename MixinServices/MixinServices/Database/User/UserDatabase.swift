@@ -414,7 +414,7 @@ public final class UserDatabase: Database {
         }
         
         migrator.registerMigration("batch_process_messages") { (db) in
-            try db.execute(sql: "DROP INDEX IF EXISTS conversation_last_message_update")
+            try db.execute(sql: "DROP TRIGGER IF EXISTS conversation_last_message_update")
         }
         
         /* Remaining works:

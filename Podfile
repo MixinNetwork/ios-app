@@ -7,7 +7,7 @@ def mixin_services
   pod 'libsignal-protocol-c', :git => 'https://github.com/MixinNetwork/libsignal-protocol-c.git'
   pod 'lottie-ios', :git => 'https://github.com/airbnb/lottie-ios.git', :branch => 'lottie/objectiveC'
   pod 'YYImage', :git => 'https://github.com/wuyuehyang/YYImage.git'
-  pod 'DeviceGuru', :git => 'https://github.com/InderKumarRathore/DeviceGuru.git', :commit => '474373384f6812807e568132b876d70d0c45ab48'
+  pod 'DeviceGuru', :git => 'https://github.com/InderKumarRathore/DeviceGuru.git'
   pod 'MixinServices', :path => './MixinServices', :testspecs => ['Tests']
 end
 

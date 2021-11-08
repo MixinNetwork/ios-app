@@ -213,7 +213,7 @@ PODS:
 DEPENDENCIES:
   - AcknowList
   - AlignedCollectionViewFlowLayout
-  - DeviceGuru (from `https://github.com/InderKumarRathore/DeviceGuru.git`, commit `474373384f6812807e568132b876d70d0c45ab48`)
+  - DeviceGuru (from `https://github.com/InderKumarRathore/DeviceGuru.git`)
   - Firebase/Analytics
   - Firebase/Core
   - Firebase/Crashlytics
@@ -266,7 +266,6 @@ SPEC REPOS:
 
 EXTERNAL SOURCES:
   DeviceGuru:
-    :commit: 474373384f6812807e568132b876d70d0c45ab48
     :git: https://github.com/InderKumarRathore/DeviceGuru.git
   libsignal-protocol-c:
     :git: https://github.com/MixinNetwork/libsignal-protocol-c.git
@@ -336,6 +335,6 @@ SPEC CHECKSUMS:
   YYImage: 6db68da66f20d9f169ceb94dfb9947c3867b9665
   Zip: 414f59909701fda9a84ab774ebe0f5449b1082cc
 
-PODFILE CHECKSUM: 74c9472f82b429fb1d0869f5fe25d32085a8f44c
+PODFILE CHECKSUM: a3fe7eb183d2140af1b4df8ed9c775c6dc976e06
 
 COCOAPODS: 1.11.2

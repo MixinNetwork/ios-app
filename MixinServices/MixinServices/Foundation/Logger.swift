@@ -146,7 +146,7 @@ extension Logger {
         
     }
     
-    private static let maxFileSize = 5 * bytesPerMegaByte
+    private static let maxFileSize = 2 * bytesPerMegaByte
     private static let preservedTrailingLogSize = 1 * bytesPerMegaByte // Last 1MB of old logs will be preserved when size exceeds maximum
     private static let queue = DispatchQueue(label: "one.mixin.services.log", qos: .utility)
     private static let dateFormatter: DateFormatter = {

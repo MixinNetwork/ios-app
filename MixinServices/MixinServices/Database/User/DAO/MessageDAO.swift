@@ -398,19 +398,27 @@ public final class MessageDAO: UserDatabaseDAO {
         guard hasUnreadMessage(conversationId: conversationId) else {
             return nil
         }
-        let myLastMessage: Message? = db.select(where: Message.column(of: .conversationId) == conversationId && Message.column(of: .userId) == myUserId,
+        let statuses = [
+            MessageStatus.SENDING.rawValue,
+            MessageStatus.DELIVERED.rawValue,
+            MessageStatus.SENT.rawValue,
+            MessageStatus.READ.rawValue
+        ]
+        let myLastMessage: Message? = db.select(where: Message.column(of: .conversationId) == conversationId
+                                                     && statuses.contains(Message.column(of: .status))
+                                                     && Message.column(of: .userId) == myUserId,
                                                 order: [Message.column(of: .createdAt).desc])
         let lastReadCondition: SQLSpecificExpressible
         if let myLastMessage = myLastMessage {
             lastReadCondition = Message.column(of: .conversationId) == conversationId
-                && Message.column(of: .category) != MessageCategory.SYSTEM_CONVERSATION.rawValue
                 && Message.column(of: .status) == MessageStatus.READ.rawValue
+                && Message.column(of: .category) != MessageCategory.SYSTEM_CONVERSATION.rawValue
                 && Message.column(of: .userId) != myUserId
                 && Message.column(of: .createdAt) > myLastMessage.createdAt
         } else {
             lastReadCondition = Message.column(of: .conversationId) == conversationId
-                && Message.column(of: .category) != MessageCategory.SYSTEM_CONVERSATION.rawValue
                 && Message.column(of: .status) == MessageStatus.READ.rawValue
+                && Message.column(of: .category) != MessageCategory.SYSTEM_CONVERSATION.rawValue
                 && Message.column(of: .userId) != myUserId
         }
         let lastReadMessage: Message? = db.select(where: lastReadCondition, order: [Message.column(of: .createdAt).desc])

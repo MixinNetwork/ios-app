@@ -6,7 +6,8 @@ final class PinSettingsViewController: SettingsTableViewController {
     private let pinIntervals: [Double] = [60 * 15, 60 * 30, 60 * 60, 60 * 60 * 2, 60 * 60 * 6, 60 * 60 * 12, 60 * 60 * 24]
     private let dataSource = SettingsDataSource(sections: [
         SettingsSection(rows: [
-            SettingsRow(title: R.string.localizable.wallet_change_password(), accessory: .disclosure)
+            SettingsRow(title: R.string.localizable.wallet_change_password(), accessory: .disclosure),
+            SettingsRow(title: R.string.localizable.setting_pin_logs(), accessory: .disclosure)
         ])
     ])
     
@@ -38,6 +39,7 @@ final class PinSettingsViewController: SettingsTableViewController {
                                                    name: SettingsRow.accessoryDidChangeNotification,
                                                    object: biometricSwitchRow)
         }
+        tableView.tableHeaderView = R.nib.pinSettingTableHeaderView(owner: nil)
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
     }
@@ -124,6 +126,9 @@ extension PinSettingsViewController: UITableViewDelegate {
             }
         } else if indexPath.row == 0 {
             let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep1, dismissTarget: nil)
+            navigationController?.pushViewController(vc, animated: true)
+        } else if indexPath.row == 1 {
+            let vc = LogViewController.instance(category: "PIN_INCORRECT")
             navigationController?.pushViewController(vc, animated: true)
         }
     }

@@ -4,7 +4,7 @@ import MixinServices
 class WalletPasswordViewController: ContinueButtonViewController {
 
     @IBOutlet weak var pinField: PinField!
-    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var textView: IntroTextView!
     @IBOutlet weak var subtitleLabel: UILabel!
     @IBOutlet weak var backButton: UIButton!
     
@@ -41,29 +41,30 @@ class WalletPasswordViewController: ContinueButtonViewController {
         super.viewDidLoad()
         pinField.delegate = self
         pinField.becomeFirstResponder()
+        textView.font = .scaledFont(ofSize: 18, weight: .semibold)
         switch walletPasswordType {
         case .initPinStep1:
-            titleLabel.text = Localized.WALLET_PIN_CREATE_TITLE
+            updateTextViewText()
             subtitleLabel.text = ""
             backButton.setImage(R.image.ic_title_close(), for: .normal)
         case .initPinStep2, .changePinStep3:
-            titleLabel.text = Localized.WALLET_PIN_CONFIRM_TITLE
+            textView.text = Localized.WALLET_PIN_CONFIRM_TITLE
             subtitleLabel.text = Localized.WALLET_PIN_CONFIRM_SUBTITLE
             backButton.setImage(R.image.ic_title_back(), for: .normal)
         case .initPinStep3, .changePinStep4:
-            titleLabel.text = Localized.WALLET_PIN_CONFIRM_AGAIN_TITLE
+            textView.text = Localized.WALLET_PIN_CONFIRM_AGAIN_TITLE
             subtitleLabel.text = Localized.WALLET_PIN_CONFIRM_AGAIN_SUBTITLE
             backButton.setImage(R.image.ic_title_back(), for: .normal)
         case .initPinStep4, .changePinStep5:
-            titleLabel.text = Localized.WALLET_PIN_CONFIRM_AGAIN_TITLE
+            textView.text = Localized.WALLET_PIN_CONFIRM_AGAIN_TITLE
             subtitleLabel.text = R.string.localizable.wallet_pin_more_confirm()
             backButton.setImage(R.image.ic_title_back(), for: .normal)
         case .changePinStep1:
-            titleLabel.text = Localized.WALLET_PIN_VERIFY_TITLE
+            textView.text = Localized.WALLET_PIN_VERIFY_TITLE
             subtitleLabel.text = ""
             backButton.setImage(R.image.ic_title_close(), for: .normal)
         case .changePinStep2:
-            titleLabel.text = Localized.WALLET_PIN_NEW_TITLE
+            textView.text = Localized.WALLET_PIN_NEW_TITLE
             subtitleLabel.text = ""
             backButton.setImage(R.image.ic_title_back(), for: .normal)
         }
@@ -149,6 +150,25 @@ class WalletPasswordViewController: ContinueButtonViewController {
         })
     }
     
+    private func updateTextViewText() {
+        let text = R.string.localizable.wallet_pin_create_title()
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.alignment = .center
+        paragraphStyle.lineHeightMultiple = 1.16
+        let attrs: [NSAttributedString.Key: Any] = [
+            .font: UIFont.scaledFont(ofSize: 18, weight: .semibold),
+            .foregroundColor: UIColor.title,
+            .paragraphStyle: paragraphStyle
+        ]
+        let str = NSMutableAttributedString(string: text, attributes: attrs)
+        let linkRange = (text as NSString)
+            .range(of: R.string.localizable.action_learn_more(), options: [.backwards, .caseInsensitive])
+        if linkRange.location != NSNotFound && linkRange.length != 0 {
+            str.addAttribute(.link, value: URL.pinTIP, range: linkRange)
+        }
+        textView.attributedText = str
+    }
+
 }
 
 extension WalletPasswordViewController: MixinNavigationAnimating {

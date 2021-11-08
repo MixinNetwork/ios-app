@@ -541,7 +541,7 @@
 "wallet_withdrawal_pay_password" = "通过密码提现";
 "wallet_withdrawal_reserve" = " %@ 要求账号至少保留 %@。";
 "wallet_no_price" = "暂无价格";
-"wallet_pin_create_title" = "设置 6 位数字密码创建你的第一个数字钱包";
+"wallet_pin_create_title" = "设置 6 位数字密码创建你的第一个数字钱包，阅读文档以了解更多。";
 "wallet_pin_confirm_title" = "确认 6 位数字密码并牢记它";
 "wallet_pin_confirm_subtitle" = "如果忘记，你的钱包将无法找回。";
 "wallet_pin_confirm_again_title" = "请再次确认您的 6 位数字密码";
@@ -887,6 +887,8 @@
 "setting_appearance_language_alert_title" = "设置语言";
 "setting_appearance_language_alert_description" = "前往系统设置修改语言偏好";
 "setting_pin" = "密码";
+"setting_pin_hint" = "请记住，如果密码丢失后将无法恢复。密码是基于 Throttled Identity Protocol，即去中心化的密钥推导协议，阅读文档以了解更多。";
+"setting_pin_logs" = "密码错误日志";
 "setting_feedback" = "反馈";
 "setting_share_this_app" = "分享此 App";
 "setting_share_this_app_content" = "快来 Mixin 与我聊天！简单、安全好用还支持比特币、以太坊等加密货币，下载 https://mixin.one/messenger 后搜索 %@ 加我好友。";

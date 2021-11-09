@@ -224,7 +224,8 @@ extension MixinAPI {
                 NSURLErrorCannotConnectToHost,
                 NSURLErrorCannotFindHost,
                 NSURLErrorDNSLookupFailed,
-                NSURLErrorResourceUnavailable
+                NSURLErrorResourceUnavailable,
+                NSURLErrorSecureConnectionFailed,
             ]
             return nsError.domain == NSURLErrorDomain
                 && codes.contains(nsError.code)

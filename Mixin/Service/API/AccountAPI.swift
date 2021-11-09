@@ -73,7 +73,7 @@ final class AccountAPI: MixinAPI {
             self.request(method: .post,
                          path: Path.verifications(id: verificationId),
                          parameters: parameters,
-                         retryOnHTTPTimeOut: false,
+                         retry: false,
                          completion: completion)
         }
     }
@@ -119,7 +119,7 @@ final class AccountAPI: MixinAPI {
             self.request(method: .post,
                          path: Path.verifyPin,
                          parameters: ["pin": encryptedPin],
-                         retryOnHTTPTimeOut: false,
+                         retry: false,
                          completion: completion)
         }
     }
@@ -128,7 +128,7 @@ final class AccountAPI: MixinAPI {
         func encryptNewPinThenStartRequest() {
             PINEncryptor.encrypt(pin: new, onFailure: completion) { encryptedPin in
                 param["pin"] = encryptedPin
-                request(method: .post, path: Path.updatePin, parameters: param, retryOnHTTPTimeOut: false, completion: completion)
+                request(method: .post, path: Path.updatePin, parameters: param, retry: false, completion: completion)
             }
         }
         var param: [String: String] = [:]

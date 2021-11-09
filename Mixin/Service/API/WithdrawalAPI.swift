@@ -38,7 +38,7 @@ final class WithdrawalAPI: MixinAPI {
             self.request(method: .post,
                          path: Path.addresses,
                          parameters: address,
-                         retryOnHTTPTimeOut: false,
+                         retry: false,
                          completion: completion)
         }
     }
@@ -50,7 +50,7 @@ final class WithdrawalAPI: MixinAPI {
             self.request(method: .post,
                          path: Path.withdrawals,
                          parameters: withdrawal,
-                         retryOnHTTPTimeOut: false,
+                         retry: false,
                          completion: completion)
         }
     }
@@ -60,7 +60,7 @@ final class WithdrawalAPI: MixinAPI {
             self.request(method: .post,
                          path: Path.delete(addressId: addressId),
                          parameters: ["PIN": encryptedPin],
-                         retryOnHTTPTimeOut: false,
+                         retry: false,
                          completion: completion)
         }
     }

@@ -12,7 +12,7 @@ open class MixinAPI {
         path: String,
         parameters: Parameters,
         requiresLogin: Bool = true,
-        retryOnHTTPTimeOut: Bool = true,
+        retry: Bool = true,
         queue: DispatchQueue = .main,
         completion: @escaping (MixinAPI.Result<Response>) -> Void
     ) -> Request? {
@@ -24,7 +24,7 @@ open class MixinAPI {
         }
         return request(makeRequest: { (session) -> DataRequest in
             session.request(url, method: method, parameters: parameters, encoder: JSONParameterEncoder.default)
-        }, requiresLogin: requiresLogin, isAsync: true, retryOnHTTPTimeOut: retryOnHTTPTimeOut, completion: completion)
+        }, requiresLogin: requiresLogin, isAsync: true, retry: retry, completion: completion)
     }
     
     @discardableResult
@@ -129,7 +129,7 @@ extension MixinAPI {
         makeRequest: @escaping (Alamofire.Session) -> DataRequest,
         requiresLogin: Bool = true,
         isAsync: Bool,
-        retryOnHTTPTimeOut: Bool = true,
+        retry: Bool = true,
         queue: DispatchQueue = .main,
         completion: @escaping (MixinAPI.Result<Response>) -> Void
     ) -> Request? {
@@ -178,7 +178,7 @@ extension MixinAPI {
                         if let data = responseObject.data {
                             completion(.success(data))
                         } else if case .unauthorized = responseObject.error {
-                            if retryOnHTTPTimeOut {
+                            if retry {
                                 handleDeauthorization(response: response.response)
                             } else {
                                 completion(.failure(.httpTimeOut))

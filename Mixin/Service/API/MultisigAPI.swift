@@ -24,7 +24,7 @@ final class MultisigAPI: MixinAPI {
             self.request(method: .post,
                          path: Path.sign(id: requestId),
                          parameters: ["pin": encryptedPin],
-                         retryOnHTTPTimeOut: false,
+                         retry: false,
                          completion: completion)
         }
     }
@@ -34,7 +34,7 @@ final class MultisigAPI: MixinAPI {
             self.request(method: .post,
                          path: Path.unlock(id: requestId),
                          parameters: ["pin": encryptedPin],
-                         retryOnHTTPTimeOut: false,
+                         retry: false,
                          completion: completion)
         }
     }

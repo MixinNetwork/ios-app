@@ -144,7 +144,17 @@ extension MixinAPI {
             let serverTimeIntervalSince1970 = xServerTime / TimeInterval(NSEC_PER_SEC)
             let serverTime = Date(timeIntervalSince1970: serverTimeIntervalSince1970)
             if abs(requestTime.timeIntervalSinceNow) > secondsPerMinute {
-                request(makeRequest: makeRequest, requiresLogin: requiresLogin, isAsync: isAsync, completion: completion)
+                let info: Logger.UserInfo = [
+                    "retry": retry,
+                    "isAsync": isAsync,
+                    "url": (response as? HTTPURLResponse)?.url?.path ?? ""
+                ]
+                Logger.general.info(category: "MixinAPI", message: "Request network again", userInfo: info)
+                if retry {
+                    request(makeRequest: makeRequest, requiresLogin: requiresLogin, isAsync: isAsync, completion: completion)
+                } else {
+                    completion(.failure(.httpTimeOut))
+                }
             } else if abs(serverTime.timeIntervalSinceNow) > 5 * secondsPerMinute {
                 AppGroupUserDefaults.Account.isClockSkewed = true
                 DispatchQueue.main.async {
@@ -178,11 +188,7 @@ extension MixinAPI {
                         if let data = responseObject.data {
                             completion(.success(data))
                         } else if case .unauthorized = responseObject.error {
-                            if retry {
-                                handleDeauthorization(response: response.response)
-                            } else {
-                                completion(.failure(.httpTimeOut))
-                            }
+                            handleDeauthorization(response: response.response)
                         } else if let error = responseObject.error {
                             completion(.failure(error))
                         } else {

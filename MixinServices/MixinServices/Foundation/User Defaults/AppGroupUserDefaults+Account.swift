@@ -16,6 +16,8 @@ extension AppGroupUserDefaults {
             case lastDesktopLoginDate = "last_desktop_login_date"
         }
         
+        public static let extensionSessionDidChangeNotification = Notification.Name("one.mixin.services.extensionSessionDidChange")
+
         @Default(namespace: .account, key: Key.account, defaultValue: nil)
         public static var serializedAccount: Data?
         
@@ -40,7 +42,11 @@ extension AppGroupUserDefaults {
         public static var hasUnfinishedBackup: Bool
         
         @Default(namespace: .account, key: Key.extensionSession, defaultValue: nil)
-        public static var extensionSession: String?
+        public static var extensionSession: String? {
+            didSet {
+                NotificationCenter.default.post(onMainThread: extensionSessionDidChangeNotification, object: self)
+            }
+        }
         
         @Default(namespace: .account, key: Key.lastDesktopLoginDate, defaultValue: nil)
         public static var lastDesktopLoginDate: Date?

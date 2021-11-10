@@ -116,8 +116,6 @@ class GroupCall: Call {
                 NotificationCenter.default.post(name: Self.didEndNotification,
                                                 object: self,
                                                 userInfo: userInfo)
-                CallService.shared.membersManager.removeMember(with: myUserId,
-                                                               fromConversationWith: self.conversationId)
             }
             
             for completion in self.endCallCompletions {

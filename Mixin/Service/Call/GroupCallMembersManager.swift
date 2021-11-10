@@ -4,6 +4,7 @@ import MixinServices
 // This is a global storage for group call's members
 // Members are first retrived when user opens a conversation or a KRAKEN_PUBLISH is received,
 // then they are in sync with corresponding Kraken messages
+// User himself is NOT stored here
 
 class GroupCallMembersManager {
     

@@ -10,7 +10,7 @@ protocol WebRTCClientDelegate: AnyObject {
     
     // Group call only
     func webRTCClient(_ client: WebRTCClient, senderPublicKeyForUserWith userId: String, sessionId: String) -> Data?
-    func webRTCClient(_ client: WebRTCClient, didAddReceiverWith userId: String)
+    func webRTCClient(_ client: WebRTCClient, didAddReceiverWith userId: String, trackDisabled: Bool)
 }
 
 class WebRTCClient: NSObject {
@@ -27,6 +27,8 @@ class WebRTCClient: NSObject {
         }
     }
     
+    private(set) var trackDisabledUserIds: Set<String> = []
+    
     private let queue = DispatchQueue(label: "one.mixin.messenger.WebRTCClient")
     
     private var isClosed = false
@@ -35,7 +37,7 @@ class WebRTCClient: NSObject {
     private var pendingCandidates: [RTCIceCandidate] = []
     
     private var rtpSender: RTCRtpSender?
-    private var rtpReceivers: [String: RTCRtpReceiver] = [:]
+    private var rtpReceivers: [String: RTCRtpReceiver] = [:] // Access on self.queue
     
     // Key is track id, value is user id
     // RTCPeerConnection call delegate functions in its private signaling queue, including
@@ -128,13 +130,23 @@ class WebRTCClient: NSObject {
     }
     
     func setFrameEncryptorKey(_ key: Data) {
-        rtpSender?.setFrameEncryptorKey(key)
+        Queue.main.autoSync {
+            self.rtpSender?.setFrameEncryptorKey(key)
+        }
     }
     
-    func setFrameDecryptorKey(_ key: Data?, forReceiverWith userId: String, sessionId: String) {
-        let streamId = StreamId(userId: userId, sessionId: sessionId).rawValue
-        if let receiver = rtpReceivers[streamId], let key = key {
+    func setFrameDecryptorKey(_ key: Data, forReceiverWith userId: String, sessionId: String, onTrackEnabled: @escaping () -> Void) {
+        queue.async {
+            let streamId = StreamId(userId: userId, sessionId: sessionId).rawValue
+            guard let receiver = self.rtpReceivers[streamId] else {
+                return
+            }
             receiver.setFrameDecryptorKey(key)
+            receiver.track?.isEnabled = true
+            DispatchQueue.main.sync {
+                _ = self.trackDisabledUserIds.remove(userId)
+                onTrackEnabled()
+            }
         }
     }
     
@@ -184,8 +196,10 @@ class WebRTCClient: NSObject {
         peerConnection = nil
         audioTrack = nil
         rtpSender = nil
-        rtpReceivers = [:]
         pendingCandidates = []
+        queue.async { [weak self] in
+            self?.rtpReceivers = [:]
+        }
     }
     
     private func addPendingCandidate(to connection: RTCPeerConnection) {
@@ -253,26 +267,31 @@ extension WebRTCClient: RTCPeerConnectionDelegate {
             .map(\.streamId)
             .compactMap(StreamId.init(rawValue:))
             .filter({ $0.userId != myUserId })
-        var tracksUserId: [String: String] = [:]
-        for id in streamIds {
-            let frameKey = delegate?.webRTCClient(self, senderPublicKeyForUserWith: id.userId, sessionId: id.sessionId)
-            if let frameKey = frameKey {
-                rtpReceivers[id.rawValue] = rtpReceiver
-                rtpReceiver.setFrameDecryptorKey(frameKey)
-            } else {
-                Logger.call.error(category: "WebRTCClient", message: "No frame key for: \(id.rawValue)")
-            }
-            if let trackId = rtpReceiver.track?.trackId {
-                tracksUserId[trackId] = id.userId
-            }
-            delegate?.webRTCClient(self, didAddReceiverWith: id.userId)
+        assert(streamIds.count == 1)
+        guard let id = streamIds.first else {
+            Logger.call.error(category: "WebRTCClient", message: "RtpReceiver: \(rtpReceiver) comes with empty stream")
+            return
+        }
+        let frameKey = delegate?.webRTCClient(self, senderPublicKeyForUserWith: id.userId, sessionId: id.sessionId)
+        let disableTrack = frameKey == nil
+        if let frameKey = frameKey {
+            rtpReceiver.setFrameDecryptorKey(frameKey)
+        }
+        if let track = rtpReceiver.track {
+            track.isEnabled = !disableTrack
         }
         queue.sync {
-            // See self.tracksUserId for queue dispatching
-            for (trackId, userId) in tracksUserId {
-                self.tracksUserId[trackId] = userId
+            self.rtpReceivers[id.rawValue] = rtpReceiver
+            if let trackId = rtpReceiver.track?.trackId {
+                self.tracksUserId[trackId] = id.userId
+            }
+            if disableTrack {
+                DispatchQueue.main.sync {
+                    _ = self.trackDisabledUserIds.insert(id.userId)
+                }
             }
         }
+        delegate?.webRTCClient(self, didAddReceiverWith: id.userId, trackDisabled: disableTrack)
     }
     
 }

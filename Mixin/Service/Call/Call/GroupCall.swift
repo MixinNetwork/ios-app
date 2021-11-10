@@ -116,6 +116,8 @@ class GroupCall: Call {
                 NotificationCenter.default.post(name: Self.didEndNotification,
                                                 object: self,
                                                 userInfo: userInfo)
+                CallService.shared.membersManager.removeMember(with: myUserId,
+                                                               fromConversationWith: self.conversationId)
             }
             
             for completion in self.endCallCompletions {
@@ -267,7 +269,11 @@ extension GroupCall {
             if let userId = userId, !userId.isEmpty {
                 if let sessionId = sessionId, !sessionId.isEmpty {
                     let frameKey = SignalProtocol.shared.getSenderKeyPublic(groupId: conversationId, userId: userId)
-                    self.rtcClient.setFrameDecryptorKey(frameKey, forReceiverWith: userId, sessionId: sessionId)
+                    if let key = frameKey {
+                        self.rtcClient.setFrameDecryptorKey(key, forReceiverWith: userId, sessionId: sessionId) {
+                            self.membersDataSource.setMember(with: userId, isTrackDisabled: false)
+                        }
+                    }
                 } else {
                     try? ReceiveMessageService.shared.checkSessionSenderKey(conversationId: conversationId)
                 }
@@ -355,15 +361,15 @@ extension GroupCall {
     func subscribe(userId: String) {
         queue.async {
             let isSubscribingMySelf = userId == myUserId
-            guard self.internalState == .connected || isSubscribingMySelf else {
-                Logger.call.warn(category: "GroupCall", message: "[\(self.uuidString)] Not subscribing: \(userId) for internalState: \(self.internalState), track id: \(self.trackId)")
-                return
-            }
             if !isSubscribingMySelf, let item = UserDAO.shared.getUser(userId: userId) {
-                let member = GroupCallMembersDataSource.Member(item: item, isSpeaking: false, isConnected: false)
+                let member = GroupCallMembersDataSource.Member(item: item, status: nil, isConnected: false)
                 DispatchQueue.main.async {
                     self.membersDataSource.addMember(member, onConflict: .discard)
                 }
+            }
+            guard self.trackId != nil || isSubscribingMySelf else {
+                Logger.call.warn(category: "GroupCall", message: "[\(self.uuidString)] Not subscribing: \(userId)")
+                return
             }
             let subscribe = KrakenRequest(callUUID: self.uuid,
                                           conversationId: self.conversationId,
@@ -554,9 +560,10 @@ extension GroupCall: WebRTCClientDelegate {
         SignalProtocol.shared.getSenderKeyPublic(groupId: conversationId, userId: userId, sessionId: sessionId)?.dropFirst()
     }
     
-    func webRTCClient(_ client: WebRTCClient, didAddReceiverWith userId: String) {
+    func webRTCClient(_ client: WebRTCClient, didAddReceiverWith userId: String, trackDisabled: Bool) {
         DispatchQueue.main.async {
             self.membersDataSource.setMember(with: userId, isConnected: true)
+            self.membersDataSource.setMember(with: userId, isTrackDisabled: trackDisabled)
         }
     }
     

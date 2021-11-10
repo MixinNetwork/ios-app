@@ -74,7 +74,7 @@ extension IncomingPeerCall: WebRTCClientDelegate {
         nil
     }
     
-    func webRTCClient(_ client: WebRTCClient, didAddReceiverWith userId: String) {
+    func webRTCClient(_ client: WebRTCClient, didAddReceiverWith userId: String, trackDisabled: Bool) {
         
     }
     

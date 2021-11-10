@@ -61,7 +61,7 @@ class GroupCallMembersDataSource: NSObject {
         }
         
         let allMembers = memberItems.map { item in
-            Member(item: item, isSpeaking: false, isConnected: false)
+            Member(item: item, status: nil, isConnected: false)
         }
         let indices = allMembers.enumerated().reduce(into: [:]) { map, enumerated in
             map[enumerated.element.item.userId] = enumerated.offset
@@ -90,7 +90,7 @@ extension GroupCallMembersDataSource {
                 members[index] = member
                 if let cell = cellForMember(at: index) {
                     cell.connectingView.isHidden = member.isConnected
-                    cell.isSpeaking = member.isSpeaking
+                    cell.status = member.status
                 }
                 if member.isConnected {
                     inviteeUserIds.remove(member.item.userId)
@@ -138,15 +138,36 @@ extension GroupCallMembersDataSource {
     func updateMembers(with audioLevels: [String: Double]) {
         assert(Thread.isMainThread)
         for (index, member) in members.enumerated() {
-            let wasSpeaking = member.isSpeaking
+            let oldStatus = member.status
             let audioLevel = audioLevels[member.item.userId] ?? 0
             member.update(with: audioLevel)
-            if member.isSpeaking != wasSpeaking {
+            if member.status != oldStatus {
                 let indexPath = indexPathForMember(at: index)
                 if let cell = collectionView?.cellForItem(at: indexPath) as? CallMemberCell {
-                    cell.isSpeaking = member.isSpeaking
+                    cell.status = member.status
                 }
             }
+        }
+    }
+    
+    func setMember(with userId: String, isTrackDisabled: Bool) {
+        assert(Thread.isMainThread)
+        guard let index = indices[userId] else {
+            return
+        }
+        guard index >= 0 && index < members.count else {
+            Logger.call.error(category: "GroupCallMembersDataSource", message: "Invalid index for: \(userId)")
+            assertionFailure()
+            return
+        }
+        let member = members[index]
+        assert(member.item.userId == userId)
+        guard member.status == .isTrackDisabled else {
+            return
+        }
+        member.status = isTrackDisabled ? .isTrackDisabled : nil
+        if let cell = cellForMember(at: index) {
+            cell.status = member.status
         }
     }
     
@@ -158,7 +179,7 @@ extension GroupCallMembersDataSource {
                 guard let item = UserDAO.shared.getUser(userId: userId) else {
                     return
                 }
-                let member = Member(item: item, isSpeaking: false, isConnected: true)
+                let member = Member(item: item, status: nil, isConnected: true)
                 DispatchQueue.main.async {
                     self.addMember(member, onConflict: .overwrite)
                 }
@@ -208,7 +229,7 @@ extension GroupCallMembersDataSource {
     func reportInviting(with userItems: [UserItem]) {
         assert(Thread.isMainThread)
         let insertedUserIds: [String] = userItems.compactMap { item in
-            let member = Member(item: item, isSpeaking: false, isConnected: false)
+            let member = Member(item: item, status: nil, isConnected: false)
             return addMember(member, onConflict: .discard) ? item.userId : nil
         }
         inviteeUserIds.formUnion(insertedUserIds)
@@ -227,20 +248,33 @@ extension GroupCallMembersDataSource {
     
     class Member {
         
+        enum Status {
+            case isSpeaking
+            case isTrackDisabled
+        }
+        
         let item: UserItem
         
-        private(set) var isSpeaking: Bool
-        
+        var status: Status?
         var isConnected: Bool
         
-        init(item: UserItem, isSpeaking: Bool, isConnected: Bool) {
+        init(item: UserItem, status: Status?, isConnected: Bool) {
             self.item = item
-            self.isSpeaking = isSpeaking
+            self.status = status
             self.isConnected = isConnected
         }
         
         func update(with audioLevel: Double) {
-            isSpeaking = audioLevel > 0.01
+            switch status {
+            case .isTrackDisabled:
+                break
+            case .isSpeaking, .none:
+                if audioLevel > 0.01 {
+                    status = .isSpeaking
+                } else {
+                    status = nil
+                }
+            }
         }
         
     }
@@ -280,7 +314,7 @@ extension GroupCallMembersDataSource: UICollectionViewDataSource {
                 cell.avatarImageView.setImage(with: member.item)
                 cell.connectingView.isHidden = member.isConnected
                 cell.label.text = member.item.fullName
-                cell.isSpeaking = member.isSpeaking
+                cell.status = member.status
             }
         }
         cell.hasBiggerLayout = false

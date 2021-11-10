@@ -202,6 +202,11 @@ class HomeViewController: UIViewController {
         DispatchQueue.main.async(execute: layoutBulletinView)
     }
     
+
+    @IBAction func showDesktopAction() {
+        navigationController?.pushViewController(DesktopViewController.instance(), animated: true)
+    }
+    
     @IBAction func showSearchAction() {
         searchViewController.prepareForReuse()
         searchContainerTopConstraint.constant = 0

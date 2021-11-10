@@ -103,7 +103,7 @@ class HomeViewController: UIViewController {
         if let account = LoginManager.shared.account {
             myAvatarImageView.setImage(with: account)
         }
-        desktopButton.isHidden = !AppGroupUserDefaults.Account.isDesktopLoggedIn
+        updateDesktopButtonHidden()
         updateBulletinView()
         searchContainerBeginTopConstant = searchContainerTopConstraint.constant
         searchViewController.cancelButton.addTarget(self, action: #selector(hideSearch), for: .touchUpInside)

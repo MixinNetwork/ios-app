@@ -194,14 +194,19 @@ extension CallKitAdapter: CXProviderDelegate {
         let semaphore = DispatchSemaphore(value: 0)
         var fulfilled = false
         DispatchQueue.main.async {
+            let isEndingActiveCall = self.service.activeCall?.uuid == action.callUUID
             self.service.performEndCall(uuid: action.callUUID) { error in
                 fulfilled = error == nil
-                RTCDispatcher.dispatchAsync(on: .typeAudioSession) {
+                if isEndingActiveCall {
                     // XXX: Alice and Bob are in a call, Carol calls Alice, Alice choose to hangup the call
                     // with Bob and pick the one with Carol, after the second call is connected, Alice will
                     // hear nothing from Carol, but Carol can hear from Alice.
                     // Don't quite know the reason, but disabling RTCAudioSession here will do the magic
-                    RTCAudioSession.sharedInstance().isAudioEnabled = false
+                    RTCDispatcher.dispatchAsync(on: .typeAudioSession) {
+                        RTCAudioSession.sharedInstance().isAudioEnabled = false
+                        semaphore.signal()
+                    }
+                } else {
                     semaphore.signal()
                 }
             }

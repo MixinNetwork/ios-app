@@ -362,7 +362,7 @@ extension WebRTCClient {
                 rtpSender.setFrameEncryptorKey(key)
                 Logger.call.info(category: "WebRTCClient", message: "Set encrypt key: \(key.count) bytes for myself")
             } else {
-                Logger.call.error(category: "WebRTCClient", message: "No encrypt key for myself")
+                Logger.call.warn(category: "WebRTCClient", message: "No encrypt key for myself")
             }
             peerConnection.delegate = self
             

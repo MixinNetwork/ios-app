@@ -131,14 +131,21 @@ class WebRTCClient: NSObject {
     
     func setFrameEncryptorKey(_ key: Data) {
         Queue.main.autoSync {
-            self.rtpSender?.setFrameEncryptorKey(key)
+            guard let sender = self.rtpSender else {
+                Logger.call.error(category: "WebRTCClient", message: "Set encrypt key: \(key.count) bytes but finds no sender")
+                return
+            }
+            sender.setFrameEncryptorKey(key)
+            Logger.call.info(category: "WebRTCClient", message: "Set encrypt key: \(key.count) bytes for myself")
         }
     }
     
     func setFrameDecryptorKey(_ key: Data, forReceiverWith userId: String, sessionId: String, onTrackEnabled: @escaping () -> Void) {
         queue.async {
             let streamId = StreamId(userId: userId, sessionId: sessionId).rawValue
+            Logger.call.info(category: "WebRTCClient", message: "Set decrypt key: \(key.count) bytes for uid: \(userId), sid: \(sessionId)")
             guard let receiver = self.rtpReceivers[streamId] else {
+                Logger.call.warn(category: "WebRTCClient", message: "No such receiver")
                 return
             }
             receiver.setFrameDecryptorKey(key)
@@ -276,6 +283,9 @@ extension WebRTCClient: RTCPeerConnectionDelegate {
         let disableTrack = frameKey == nil
         if let frameKey = frameKey {
             rtpReceiver.setFrameDecryptorKey(frameKey)
+            Logger.call.info(category: "WebRTCClient", message: "Set decrypt key: \(frameKey.count) bytes for stream: \(id)")
+        } else {
+            Logger.call.warn(category: "WebRTCClient", message: "No decrypt key for stream: \(id)")
         }
         if let track = rtpReceiver.track {
             track.isEnabled = !disableTrack
@@ -350,6 +360,9 @@ extension WebRTCClient {
             let rtpSender = peerConnection.add(audioTrack, streamIds: [Self.streamId])
             if let key = key {
                 rtpSender.setFrameEncryptorKey(key)
+                Logger.call.info(category: "WebRTCClient", message: "Set encrypt key: \(key.count) bytes for myself")
+            } else {
+                Logger.call.error(category: "WebRTCClient", message: "No encrypt key for myself")
             }
             peerConnection.delegate = self
             

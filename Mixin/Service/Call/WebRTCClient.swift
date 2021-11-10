@@ -274,7 +274,7 @@ extension WebRTCClient: RTCPeerConnectionDelegate {
             .map(\.streamId)
             .compactMap(StreamId.init(rawValue:))
             .filter({ $0.userId != myUserId })
-        assert(streamIds.count == 1)
+        assert(streamIds.count <= 1)
         guard let id = streamIds.first else {
             Logger.call.error(category: "WebRTCClient", message: "RtpReceiver: \(rtpReceiver) comes with empty stream")
             return

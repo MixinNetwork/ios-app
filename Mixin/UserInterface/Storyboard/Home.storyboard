@@ -408,6 +408,7 @@
                         <outlet property="bulletinWrapperViewHeightConstraint" destination="yDn-Wa-bH8" id="Pu2-Qk-NIY"/>
                         <outlet property="circlesContainerView" destination="tgL-jC-hwU" id="Jbu-y0-Oeu"/>
                         <outlet property="connectingView" destination="px1-MZ-UBh" id="pJF-Aq-gui"/>
+                        <outlet property="desktopButton" destination="TGh-b1-PmH" id="cGR-Th-xsn"/>
                         <outlet property="guideButton" destination="mGh-0e-UXt" id="luZ-zh-eKQ"/>
                         <outlet property="guideLabel" destination="ihi-Yl-qaN" id="8oB-nb-bkP"/>
                         <outlet property="guideView" destination="L82-pj-DlR" id="X4h-WI-gQy"/>

@@ -21,6 +21,7 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var bottomBarView: UIView!
     @IBOutlet weak var appStackView: UIStackView!
     @IBOutlet weak var myAvatarImageView: AvatarImageView!
+    @IBOutlet weak var desktopButton: UIButton!
     
     @IBOutlet weak var bulletinWrapperViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var searchContainerTopConstraint: NSLayoutConstraint!
@@ -102,6 +103,7 @@ class HomeViewController: UIViewController {
         if let account = LoginManager.shared.account {
             myAvatarImageView.setImage(with: account)
         }
+        desktopButton.isHidden = !AppGroupUserDefaults.Account.isDesktopLoggedIn
         updateBulletinView()
         searchContainerBeginTopConstant = searchContainerTopConstraint.constant
         searchViewController.cancelButton.addTarget(self, action: #selector(hideSearch), for: .touchUpInside)
@@ -139,6 +141,7 @@ class HomeViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(groupConversationParticipantDidChange(_:)), name: ReceiveMessageService.groupConversationParticipantDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(circleNameDidChange), name: AppGroupUserDefaults.User.circleNameDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateHomeApps), name: AppGroupUserDefaults.User.homeAppIdsDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateDesktopButtonHidden), name: AppGroupUserDefaults.Account.extensionSessionDidChangeNotification, object: nil)
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             NotificationManager.shared.registerForRemoteNotificationsIfAuthorized()
             CallService.shared.registerForPushKitNotificationsIfAvailable()
@@ -433,6 +436,10 @@ class HomeViewController: UIViewController {
                 }
             }
         }
+    }
+    
+    @objc private func updateDesktopButtonHidden() {
+        desktopButton.isHidden = !AppGroupUserDefaults.Account.isDesktopLoggedIn
     }
     
     func dismissAppsWindow() {

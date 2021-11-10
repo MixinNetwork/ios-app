@@ -201,7 +201,7 @@ class ConversationViewController: UIViewController {
         didSet {
             let wrapperAlpha: CGFloat
             if mentionScrollingDestinations.isEmpty {
-                mentionWrapperHeightConstraint.constant = 4
+                mentionWrapperHeightConstraint.constant = 5
                 mentionCountLabel.isHidden = true
                 wrapperAlpha = 0
             } else {
@@ -2188,7 +2188,7 @@ extension ConversationViewController {
                 UIView.commitAnimations()
             }
         } else if scrollToBottomWrapperView.alpha > 0.9 && !shouldShowScrollToBottomButton {
-            scrollToBottomWrapperHeightConstraint.constant = 4
+            scrollToBottomWrapperHeightConstraint.constant = 5
             if animated {
                 UIView.beginAnimations(nil, context: nil)
                 UIView.setAnimationDuration(animationDuration)

@@ -28,6 +28,7 @@ class GroupCallConfirmationViewController: CallViewController {
         acceptStackView.alpha = 1
         acceptButtonTrailingConstraint.priority = .defaultLow
         acceptButtonCenterXConstraint.priority = .defaultHigh
+        updateMembersCountLabel()
     }
     
     override func minimizeAction(_ sender: Any) {

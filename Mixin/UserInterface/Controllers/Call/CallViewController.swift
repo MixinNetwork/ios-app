@@ -440,6 +440,16 @@ extension CallViewController: UICollectionViewDelegate {
 
 extension CallViewController {
     
+    @objc func updateMembersCountLabel() {
+        if let call = call as? GroupCall {
+            membersCountLabel.text = R.string.localizable.group_call_participants_count(call.membersDataSource.members.count)
+        } else {
+            membersCountLabel.text = ""
+        }
+        updateMembersCountPosition()
+        updateCollectionViewBottomInset()
+    }
+    
     @objc private func callMutenessDidChange() {
         guard let call = call else {
             return
@@ -472,16 +482,6 @@ extension CallViewController {
                 call.endSpeakingStatusPolling()
             }
         }
-    }
-    
-    @objc private func updateMembersCountLabel() {
-        if let call = call as? GroupCall {
-            membersCountLabel.text = R.string.localizable.group_call_participants_count(call.membersDataSource.members.count)
-        } else {
-            membersCountLabel.text = ""
-        }
-        updateMembersCountPosition()
-        updateCollectionViewBottomInset()
     }
     
 }

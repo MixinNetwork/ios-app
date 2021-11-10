@@ -12,6 +12,7 @@ open class MixinAPI {
         path: String,
         parameters: Parameters,
         requiresLogin: Bool = true,
+        retry: Bool = true,
         queue: DispatchQueue = .main,
         completion: @escaping (MixinAPI.Result<Response>) -> Void
     ) -> Request? {
@@ -23,7 +24,7 @@ open class MixinAPI {
         }
         return request(makeRequest: { (session) -> DataRequest in
             session.request(url, method: method, parameters: parameters, encoder: JSONParameterEncoder.default)
-        }, requiresLogin: requiresLogin, isAsync: true, completion: completion)
+        }, requiresLogin: requiresLogin, isAsync: true, retry: retry, completion: completion)
     }
     
     @discardableResult
@@ -128,6 +129,7 @@ extension MixinAPI {
         makeRequest: @escaping (Alamofire.Session) -> DataRequest,
         requiresLogin: Bool = true,
         isAsync: Bool,
+        retry: Bool = true,
         queue: DispatchQueue = .main,
         completion: @escaping (MixinAPI.Result<Response>) -> Void
     ) -> Request? {
@@ -142,7 +144,17 @@ extension MixinAPI {
             let serverTimeIntervalSince1970 = xServerTime / TimeInterval(NSEC_PER_SEC)
             let serverTime = Date(timeIntervalSince1970: serverTimeIntervalSince1970)
             if abs(requestTime.timeIntervalSinceNow) > secondsPerMinute {
-                request(makeRequest: makeRequest, requiresLogin: requiresLogin, isAsync: isAsync, completion: completion)
+                let info: Logger.UserInfo = [
+                    "retry": retry,
+                    "isAsync": isAsync,
+                    "url": (response as? HTTPURLResponse)?.url?.path ?? ""
+                ]
+                Logger.general.info(category: "MixinAPI", message: "Request network again", userInfo: info)
+                if retry {
+                    request(makeRequest: makeRequest, requiresLogin: requiresLogin, isAsync: isAsync, completion: completion)
+                } else {
+                    completion(.failure(.httpTimeOut))
+                }
             } else if abs(serverTime.timeIntervalSinceNow) > 5 * secondsPerMinute {
                 AppGroupUserDefaults.Account.isClockSkewed = true
                 DispatchQueue.main.async {

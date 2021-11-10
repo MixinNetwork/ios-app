@@ -73,6 +73,7 @@ final class AccountAPI: MixinAPI {
             self.request(method: .post,
                          path: Path.verifications(id: verificationId),
                          parameters: parameters,
+                         retry: false,
                          completion: completion)
         }
     }
@@ -118,29 +119,27 @@ final class AccountAPI: MixinAPI {
             self.request(method: .post,
                          path: Path.verifyPin,
                          parameters: ["pin": encryptedPin],
+                         retry: false,
                          completion: completion)
         }
     }
     
     static func updatePin(old: String?, new: String, completion: @escaping (MixinAPI.Result<Account>) -> Void) {
-        var param: [String: String] = [:]
-        if let old = old {
-            switch PINEncryptor.encrypt(pin: old) {
-            case .success(let encryptedOld):
-                param["old_pin"] = encryptedOld
-            case .failure(let error):
-                completion(.failure(.pinEncryption(error)))
-                return
+        func encryptNewPinThenStartRequest() {
+            PINEncryptor.encrypt(pin: new, onFailure: completion) { encryptedPin in
+                param["pin"] = encryptedPin
+                request(method: .post, path: Path.updatePin, parameters: param, retry: false, completion: completion)
             }
         }
-        switch PINEncryptor.encrypt(pin: new) {
-        case .success(let encryptedNew):
-            param["pin"] = encryptedNew
-        case .failure(let error):
-            completion(.failure(.pinEncryption(error)))
-            return
+        var param: [String: String] = [:]
+        if let old = old {
+            PINEncryptor.encrypt(pin: old, onFailure: completion) { encryptedPin in
+                param["old_pin"] = encryptedPin
+                encryptNewPinThenStartRequest()
+            }
+        } else {
+            encryptNewPinThenStartRequest()
         }
-        request(method: .post, path: Path.updatePin, parameters: param, completion: completion)
     }
     
     static func logs(offset: String? = nil, category: String? = nil, limit: Int? = nil, completion: @escaping (MixinAPI.Result<[LogResponse]>) -> Void) {

@@ -108,6 +108,7 @@ class ConversationViewController: UIViewController {
     private var makeInputTextViewFirstResponderOnAppear = false
     private var canPinMessages = false
     private var pinnedMessageIds = Set<String>()
+    private var lastMentionCandidate: String?
     
     private weak var pinMessageBannerViewIfLoaded: PinMessageBannerView?
     
@@ -360,7 +361,7 @@ class ConversationViewController: UIViewController {
         } else if let user = ownerUser {
             conversationInputViewController.inputBarView.isHidden = false
             conversationInputViewController.update(opponentUser: user)
-            conversationInputViewController.detectsMentionToken = false
+            conversationInputViewController.detectsMentionToken = user.isBot
         }
         AppGroupUserDefaults.User.currentConversationId = conversationId
         dataSource.initData(completion: finishInitialLoading)
@@ -1245,8 +1246,34 @@ class ConversationViewController: UIViewController {
     }
     
     func inputTextViewDidInputMentionCandidate(_ keyword: String?) {
-        userHandleViewController.reload(with: keyword) { (hasContent) in
-            self.isUserHandleHidden = !hasContent
+        if let ownerUser = ownerUser, ownerUser.isBot {
+            self.lastMentionCandidate = keyword
+            let conversationId = conversationId
+            DispatchQueue.global().async { [weak self] in
+                let users: [UserItem]
+                if let keyword = keyword, !keyword.isEmpty {
+                    let oneWeekAgo = Date().addingTimeInterval(-7 * TimeInterval.oneDay).toUTCString()
+                    users = UserDAO.shared.botGroupUsers(conversationId: conversationId, keyword: keyword, createAt: oneWeekAgo)
+                } else {
+                    users = UserDAO.shared.contacts(count: 20)
+                }
+                DispatchQueue.main.async {
+                    guard let self = self else {
+                        return
+                    }
+                    guard keyword == self.lastMentionCandidate else {
+                        return
+                    }
+                    self.userHandleViewController.users = users
+                    self.userHandleViewController.reload(with: keyword) { (hasContent) in
+                        self.isUserHandleHidden = !hasContent
+                    }
+                }
+            }
+        } else {
+            userHandleViewController.reload(with: keyword) { (hasContent) in
+                self.isUserHandleHidden = !hasContent
+            }
         }
     }
     

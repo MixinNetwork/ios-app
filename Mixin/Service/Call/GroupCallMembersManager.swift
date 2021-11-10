@@ -15,13 +15,14 @@ class GroupCallMembersManager {
     
     static let membersDidChangeNotification = Notification.Name("one.mixin.messenger.GroupCallMembersManager.MembersDidChange")
     
-    // Access on main queue
-    private var memberIds = [String: [String]]()
-    
     // Modification to memberIds will happen on this queue
+    private let messenger = KrakenMessageRetriever()
     private let queue = Queue(label: "one.mixin.messenger.GroupCallMembersManager")
     private let pollingInterval: TimeInterval = 30
     private let pollingTimers = NSMapTable<NSString, Timer>(keyOptions: .copyIn, valueOptions: .weakMemory)
+    
+    // Access on main queue
+    private var memberIds = [String: [String]]()
     
     func loadMembersAsynchornously(forConversationWith id: String) {
         queue.async {
@@ -59,7 +60,7 @@ class GroupCallMembersManager {
         guard !isConversationLoaded else {
             return
         }
-        guard let peers = KrakenMessageRetriever.shared.requestPeers(forConversationWith: id) else {
+        guard let peers = messenger.requestPeers(forConversationWith: id) else {
             Logger.call.info(category: "GroupCallMembersManager", message: "Load members failed for conversation: \(id)")
             return
         }
@@ -142,7 +143,7 @@ extension GroupCallMembersManager {
                 return
             }
             self.queue.async {
-                guard let peers = KrakenMessageRetriever.shared.requestPeers(forConversationWith: conversationId) else {
+                guard let peers = self.messenger.requestPeers(forConversationWith: conversationId) else {
                     Logger.call.info(category: "PeerPolling", message: "Peer request failed. cid: \(conversationId)")
                     return
                 }

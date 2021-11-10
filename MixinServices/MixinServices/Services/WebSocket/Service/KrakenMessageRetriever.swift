@@ -6,8 +6,6 @@ public protocol KrakenMessageRetrieverDelegate: AnyObject {
 
 public class KrakenMessageRetriever {
     
-    public static let shared = KrakenMessageRetriever()
-    
     public weak var delegate: KrakenMessageRetrieverDelegate?
     
     public init() {

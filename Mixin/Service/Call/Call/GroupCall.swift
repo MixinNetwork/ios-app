@@ -277,8 +277,8 @@ extension GroupCall {
                 }
             } else {
                 try? ReceiveMessageService.shared.checkSessionSenderKey(conversationId: conversationId)
-                let frameKey = SignalProtocol.shared.getSenderKeyPublic(groupId: conversationId, userId: myUserId)
-                if let key = frameKey {
+                self.frameKey = SignalProtocol.shared.getSenderKeyPublic(groupId: conversationId, userId: myUserId)
+                if let key = self.frameKey {
                     self.rtcClient.setFrameEncryptorKey(key)
                 }
             }
@@ -314,6 +314,9 @@ extension GroupCall {
                 switch result {
                 case .failure(let error):
                     Logger.call.error(category: "GroupCall", message: "[\(self.uuidString)] Failed to make offer: \(error)")
+                    self.queue.async {
+                        self.pendingCandidates = []
+                    }
                     completion(error)
                 case .success(let sdp):
                     let publish = KrakenRequest(callUUID: self.uuid,
@@ -323,6 +326,9 @@ extension GroupCall {
                     switch self.request(publish) {
                     case let .failure(error):
                         Logger.call.error(category: "GroupCall", message: "[\(self.uuidString)] Failed to publish: \(error)")
+                        self.queue.async {
+                            self.pendingCandidates = []
+                        }
                         completion(error)
                     case let .success((trackId, sdp)):
                         self.queue.async {
@@ -414,7 +420,7 @@ extension GroupCall {
                                            conversationId: self.conversationId,
                                            trackId: self.trackId,
                                            action: .answer(sdp: sdpJson))
-                KrakenMessageRetriever.shared.request(answer)
+                self.messenger.request(answer)
                 Logger.call.info(category: "GroupCall", message: "[\(self.uuidString)] Request \(answer.debugDescription)")
             case .failure(let error):
                 Logger.call.info(category: "GroupCall", message: "[\(self.uuidString)] Failed to generate answer: \(error)")
@@ -430,7 +436,7 @@ extension GroupCall {
     
     private func restart() {
         assert(queue.isCurrent)
-        Logger.call.error(category: "GroupCall", message: "[\(self.uuidString)] Restarting")
+        Logger.call.warn(category: "GroupCall", message: "[\(self.uuidString)] Restarting")
         connect(isRestarting: true) { error in
             guard let error = error else {
                 return
@@ -485,7 +491,7 @@ extension GroupCall: WebRTCClientDelegate {
             return
         }
         queue.async {
-            if let trackId = self.trackId {
+            if let trackId = self.trackId, self.internalState != .restarting {
                 let trickle = KrakenRequest(callUUID: self.uuid,
                                             conversationId: self.conversationId,
                                             trackId: trackId,
@@ -591,7 +597,7 @@ extension GroupCall {
     
     private func request(_ request: KrakenRequest) -> Result<(trackId: String, sdp: RTCSessionDescription), CallError> {
         Logger.call.info(category: "GroupCall", message: "[\(self.uuidString)] Request \(request.debugDescription)")
-        switch KrakenMessageRetriever.shared.request(request) {
+        switch messenger.request(request) {
         case .success(let data):
             guard let responseData = Data(base64Encoded: data.data) else {
                 Logger.call.info(category: "GroupCall", message: "[\(self.uuidString)] invalid response data: \(data.data)")

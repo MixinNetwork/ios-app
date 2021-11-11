@@ -251,35 +251,37 @@ extension GroupCall {
 extension GroupCall {
     
     @objc private func senderKeyDidChange(_ notification: Notification) {
-        guard let userInfo = notification.userInfo else {
-            return
-        }
-        guard let conversationId = userInfo[ReceiveMessageService.UserInfoKey.conversationId] as? String else {
-            return
-        }
-        guard self.conversationId == conversationId else {
+        guard
+            let userInfo = notification.userInfo,
+            let conversationId = userInfo[ReceiveMessageService.UserInfoKey.conversationId] as? String,
+            self.conversationId == conversationId
+        else {
             return
         }
         let userId = userInfo[ReceiveMessageService.UserInfoKey.userId] as? String
         let sessionId = userInfo[ReceiveMessageService.UserInfoKey.sessionId] as? String
         queue.async {
-            Logger.call.info(category: "GroupCall", message: "Updating sender key")
+            Logger.call.info(category: "GroupCall", message: "[\(self.uuidString)] Updating sender key for uid: \(userId ?? "(null)"), sid: \(sessionId ?? "(null)")")
             if let userId = userId, !userId.isEmpty {
                 if let sessionId = sessionId, !sessionId.isEmpty {
-                    let frameKey = SignalProtocol.shared.getSenderKeyPublic(groupId: conversationId, userId: userId)
+                    let frameKey = SignalProtocol.shared.getSenderKeyPublic(groupId: conversationId, userId: userId, sessionId: sessionId)?.dropFirst()
                     if let key = frameKey {
                         self.rtcClient.setFrameDecryptorKey(key, forReceiverWith: userId, sessionId: sessionId) {
                             self.membersDataSource.setMember(with: userId, isTrackDisabled: false)
                         }
+                    } else {
+                        Logger.call.error(category: "GroupCall", message: "[\(self.uuidString)] SignalProtocol reports no sender key")
                     }
                 } else {
                     try? ReceiveMessageService.shared.checkSessionSenderKey(conversationId: conversationId)
                 }
             } else {
                 try? ReceiveMessageService.shared.checkSessionSenderKey(conversationId: conversationId)
-                self.frameKey = SignalProtocol.shared.getSenderKeyPublic(groupId: conversationId, userId: myUserId)
+                self.frameKey = SignalProtocol.shared.getSenderKeyPublic(groupId: conversationId, userId: myUserId)?.dropFirst()
                 if let key = self.frameKey {
                     self.rtcClient.setFrameEncryptorKey(key)
+                } else {
+                    Logger.call.error(category: "GroupCall", message: "[\(self.uuidString)] SignalProtocol reports no sender key")
                 }
             }
         }
@@ -585,8 +587,7 @@ extension GroupCall {
         queue.async {
             let cid = self.conversationId
             try? ReceiveMessageService.shared.checkSessionSenderKey(conversationId: cid)
-            let key = SignalProtocol.shared.getSenderKeyPublic(groupId: cid, userId: myUserId)
-            self.frameKey = key?.dropFirst()
+            self.frameKey = SignalProtocol.shared.getSenderKeyPublic(groupId: cid, userId: myUserId)?.dropFirst()
             Logger.call.info(category: "GroupCall", message: "[\(self.uuidString)] Frame key initialized: \(self.frameKey?.count ?? -1)")
             NotificationCenter.default.addObserver(self,
                                                    selector: #selector(self.senderKeyDidChange(_:)),

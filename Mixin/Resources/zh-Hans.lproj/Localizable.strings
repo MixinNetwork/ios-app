@@ -532,14 +532,15 @@
 "wallet_hide_asset_empty" = "没有需要隐藏的资产";
 "wallet_send_amount" = "数量";
 "wallet_button_add_address" = "点击添加地址";
-"wallet_hint_transaction_fee" = "需要 %@ 作为 %@ 提现手续费。";
 "wallet_password_address_tips" = "通过密码保存";
+"wallet_withdrawal_network_fee" = "提现的手续费: %@";
+"wallet_withdrawal_minimum_reserve" = "账号至少保留: %@";
+"wallet_withdrawal_minimum_amount" = "提现最小金额: %@";
 "wallet_withdrawal_change_amount" = "修改金额";
 "wallet_withdrawal_change_amount_count" = "修改金额 (%@)";
 "wallet_withdrawal_address_tips" = "首次提现到新地址，建议小额尝试！如果您提现到错误的地址资产将无法找回！";
 "wallet_withdrawal_asset" = "%@ 提现";
 "wallet_withdrawal_pay_password" = "通过密码提现";
-"wallet_withdrawal_reserve" = " %@ 要求账号至少保留 %@。";
 "wallet_no_price" = "暂无价格";
 "wallet_pin_create_title" = "设置 6 位数字密码创建你的第一个数字钱包";
 "wallet_pin_confirm_title" = "确认 6 位数字密码并牢记它";

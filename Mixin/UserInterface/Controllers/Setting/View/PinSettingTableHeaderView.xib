@@ -31,11 +31,11 @@
             </subviews>
             <color key="backgroundColor" name="background"/>
             <constraints>
+                <constraint firstAttribute="trailing" secondItem="VXY-wH-bkZ" secondAttribute="trailing" priority="999" constant="30" id="048-G5-pr1"/>
                 <constraint firstItem="ID0-mr-BPj" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="60" id="3hL-Pl-P2i"/>
-                <constraint firstAttribute="trailing" secondItem="VXY-wH-bkZ" secondAttribute="trailing" constant="30" id="7ae-6v-zO5"/>
                 <constraint firstItem="VXY-wH-bkZ" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="152" id="DH0-Rq-jmH"/>
+                <constraint firstItem="VXY-wH-bkZ" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" priority="999" constant="30" id="Dex-bE-ae9"/>
                 <constraint firstItem="ID0-mr-BPj" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="Lc1-OQ-hP7"/>
-                <constraint firstItem="VXY-wH-bkZ" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="30" id="wUd-S4-CX9"/>
                 <constraint firstAttribute="bottom" secondItem="VXY-wH-bkZ" secondAttribute="bottom" constant="30" id="ydV-YY-N33"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

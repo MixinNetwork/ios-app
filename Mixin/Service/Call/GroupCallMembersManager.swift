@@ -24,6 +24,13 @@ class GroupCallMembersManager {
     // Access on main queue
     private var memberIds = [String: [String]]()
     
+    init() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(participantDidChange(_:)),
+                                               name: ParticipantDAO.participantDidChangeNotification,
+                                               object: nil)
+    }
+    
     func loadMembersAsynchornously(forConversationWith id: String) {
         queue.async {
             self.load(forConversationWith: id)
@@ -60,24 +67,62 @@ class GroupCallMembersManager {
         guard !isConversationLoaded else {
             return
         }
-        guard let peers = messenger.requestPeers(forConversationWith: id) else {
-            Logger.call.info(category: "GroupCallMembersManager", message: "Load members failed for conversation: \(id)")
+        if ParticipantDAO.shared.userId(myUserId, isParticipantOfConversationId: id) {
+            guard let peers = messenger.requestPeers(forConversationWith: id) else {
+                Logger.call.info(category: "GroupCallMembersManager", message: "Load members failed for conversation: \(id)")
+                return
+            }
+            Logger.call.info(category: "GroupCallMembersManager", message: "\(peers.count) members are loaded for conversation: \(id)")
+            let memberIds = peers.map(\.userId)
+            DispatchQueue.main.sync {
+                self.memberIds[id] = memberIds
+                let userInfo: [String: Any] = [
+                    Self.UserInfoKey.conversationId: id,
+                    Self.UserInfoKey.userIds: memberIds
+                ]
+                NotificationCenter.default.post(name: Self.membersDidChangeNotification,
+                                                object: self,
+                                                userInfo: userInfo)
+                if !memberIds.isEmpty {
+                    self.beginPolling(forConversationWith: id)
+                }
+            }
+        } else {
+            DispatchQueue.main.sync {
+                guard self.memberIds[id] != [] else {
+                    return
+                }
+                self.memberIds[id] = []
+                let userInfo: [String: Any] = [
+                    Self.UserInfoKey.conversationId: id,
+                    Self.UserInfoKey.userIds: []
+                ]
+                NotificationCenter.default.post(name: Self.membersDidChangeNotification,
+                                                object: self,
+                                                userInfo: userInfo)
+            }
+        }
+    }
+    
+    @objc func participantDidChange(_ notification: Notification) {
+        guard let conversationId = notification.userInfo?[ParticipantDAO.UserInfoKey.conversationId] as? String else {
             return
         }
-        Logger.call.info(category: "GroupCallMembersManager", message: "\(peers.count) members are loaded for conversation: \(id)")
-        let memberIds = peers.map(\.userId)
-        DispatchQueue.main.sync {
-            self.memberIds[id] = memberIds
+        guard let memberIds = memberIds[conversationId], !memberIds.isEmpty else {
+            return
+        }
+        queue.async {
+            guard !ParticipantDAO.shared.userId(myUserId, isParticipantOfConversationId: conversationId) else {
+                return
+            }
+            self.memberIds[conversationId] = []
             let userInfo: [String: Any] = [
-                Self.UserInfoKey.conversationId: id,
-                Self.UserInfoKey.userIds: memberIds
+                Self.UserInfoKey.conversationId: conversationId,
+                Self.UserInfoKey.userIds: []
             ]
-            NotificationCenter.default.post(name: Self.membersDidChangeNotification,
+            NotificationCenter.default.post(onMainThread: Self.membersDidChangeNotification,
                                             object: self,
                                             userInfo: userInfo)
-            if !memberIds.isEmpty {
-                self.beginPolling(forConversationWith: id)
-            }
         }
     }
     

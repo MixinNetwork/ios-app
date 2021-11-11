@@ -145,10 +145,10 @@ public final class ParticipantDAO: UserDatabaseDAO {
                 .filter(ParticipantSession.column(of: .conversationId) == conversationId)
                 .updateAll(db, ParticipantSession.column(of: .sentToServer).set(to: nil))
             try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: source, silentNotification: silentNotification)
-            NotificationCenter.default.post(name: ReceiveMessageService.senderKeyDidChangeNotification,
-                                            object: self,
-                                            userInfo: [ReceiveMessageService.UserInfoKey.conversationId: conversationId])
             db.afterNextTransactionCommit { (_) in
+                NotificationCenter.default.post(name: ReceiveMessageService.senderKeyDidChangeNotification,
+                                                object: self,
+                                                userInfo: [ReceiveMessageService.UserInfoKey.conversationId: conversationId])
                 NotificationCenter.default.post(onMainThread: Self.participantDidChangeNotification,
                                                 object: self,
                                                 userInfo: [Self.UserInfoKey.conversationId: conversationId])

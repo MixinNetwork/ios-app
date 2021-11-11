@@ -39,6 +39,11 @@ final class AccountAPI: MixinAPI {
 
     }
     
+    enum LogCategory: String {
+        case incorrectPin = "PIN_INCORRECT"
+        case all = ""
+    }
+    
     static func me(completion: @escaping (MixinAPI.Result<Account>) -> Void) {
         request(method: .get, path: Path.me, completion: completion)
     }
@@ -142,8 +147,8 @@ final class AccountAPI: MixinAPI {
         }
     }
     
-    static func logs(offset: String? = nil, category: String? = nil, limit: Int? = nil, completion: @escaping (MixinAPI.Result<[LogResponse]>) -> Void) {
-        request(method: .get, path: Path.logs(offset: offset, category: category, limit: limit), completion: completion)
+    static func logs(offset: String? = nil, category: LogCategory = .all, limit: Int? = nil, completion: @escaping (MixinAPI.Result<[LogResponse]>) -> Void) {
+        request(method: .get, path: Path.logs(offset: offset, category: category.rawValue, limit: limit), completion: completion)
     }
     
     static func logoutSession(sessionId: String, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {

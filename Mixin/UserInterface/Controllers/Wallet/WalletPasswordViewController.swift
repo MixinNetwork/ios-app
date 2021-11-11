@@ -165,6 +165,7 @@ class WalletPasswordViewController: ContinueButtonViewController {
             .range(of: R.string.localizable.action_learn_more(), options: [.backwards, .caseInsensitive])
         if linkRange.location != NSNotFound && linkRange.length != 0 {
             str.addAttribute(.link, value: URL.pinTIP, range: linkRange)
+            textView.linkTextAttributes = [.foregroundColor: UIColor.theme]
         }
         textView.attributedText = str
     }

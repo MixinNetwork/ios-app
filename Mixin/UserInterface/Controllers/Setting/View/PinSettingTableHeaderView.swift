@@ -2,7 +2,7 @@ import UIKit
 
 class PinSettingTableHeaderView: UIView {
 
-    @IBOutlet weak var textView: UITextView!
+    @IBOutlet weak var textView: IntroTextView!
 
     @IBOutlet weak var textViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var textViewBottomConstraint: NSLayoutConstraint!
@@ -22,6 +22,7 @@ class PinSettingTableHeaderView: UIView {
         let linkRange = (text as NSString).range(of: R.string.localizable.action_learn_more(), options: [.backwards, .caseInsensitive])
         if linkRange.location != NSNotFound && linkRange.length != 0 {
             attributedText.addAttribute(.link, value: URL.pinTIP, range: linkRange)
+            textView.linkTextAttributes = [.foregroundColor: UIColor.theme]
         }
         textView.attributedText = attributedText
         textView.sizeToFit()

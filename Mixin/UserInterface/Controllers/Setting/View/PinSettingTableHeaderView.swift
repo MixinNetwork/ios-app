@@ -1,11 +1,16 @@
 import UIKit
 
 class PinSettingTableHeaderView: UIView {
-
+    
     @IBOutlet weak var textView: IntroTextView!
-
+    @IBOutlet weak var imageView: UIImageView!
+    
+    @IBOutlet weak var imageViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var textViewTopConstraint: NSLayoutConstraint!
-    @IBOutlet weak var textViewBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var textViewLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var textViewTrailingConstraint: NSLayoutConstraint!
+    
+    private let textViewBottomMargin: CGFloat = 30
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -25,8 +30,20 @@ class PinSettingTableHeaderView: UIView {
             textView.linkTextAttributes = [.foregroundColor: UIColor.theme]
         }
         textView.attributedText = attributedText
-        textView.sizeToFit()
-        frame.size.height = textViewTopConstraint.constant + textViewBottomConstraint.constant + textView.contentSize.height
+    }
+    
+    override func sizeThatFits(_ size: CGSize) -> CGSize {
+        let textViewWidthToFit = size.width
+            - textViewLeadingConstraint.constant
+            - textViewTrailingConstraint.constant
+        let textViewSizeToFit = CGSize(width: textViewWidthToFit, height: size.height)
+        let textViewHeight = textView.sizeThatFits(textViewSizeToFit).height
+        let height = imageViewTopConstraint.constant
+            + (imageView.image?.size.height ?? 68)
+            + textViewTopConstraint.constant
+            + textViewHeight
+            + textViewBottomMargin
+        return CGSize(width: size.width, height: ceil(height))
     }
     
 }

@@ -14,15 +14,11 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="285"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_pin_setting" translatesAutoresizingMaskIntoConstraints="NO" id="ID0-mr-BPj">
+                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_pin_setting" translatesAutoresizingMaskIntoConstraints="NO" id="ID0-mr-BPj">
                     <rect key="frame" x="153.5" y="60" width="68" height="68"/>
-                    <constraints>
-                        <constraint firstAttribute="width" secondItem="ID0-mr-BPj" secondAttribute="height" multiplier="1:1" id="6X9-pU-BZZ"/>
-                        <constraint firstAttribute="width" constant="68" id="R7T-hg-7sb"/>
-                    </constraints>
                 </imageView>
                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" editable="NO" textAlignment="center" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VXY-wH-bkZ" customClass="IntroTextView" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="30" y="152" width="315" height="103"/>
+                    <rect key="frame" x="30" y="152" width="315" height="100"/>
                     <string key="text">Please remember the PIN is unrecoverable if lost. The PIN is based on the Throttled Identity Protocol, which is the decentralized key derivation protocol, read the documentation to learn more.</string>
                     <color key="textColor" name="text_accessory"/>
                     <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="14"/>
@@ -33,16 +29,18 @@
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="VXY-wH-bkZ" secondAttribute="trailing" priority="999" constant="30" id="048-G5-pr1"/>
                 <constraint firstItem="ID0-mr-BPj" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="60" id="3hL-Pl-P2i"/>
-                <constraint firstItem="VXY-wH-bkZ" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="152" id="DH0-Rq-jmH"/>
-                <constraint firstItem="VXY-wH-bkZ" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" priority="999" constant="30" id="Dex-bE-ae9"/>
+                <constraint firstItem="VXY-wH-bkZ" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="30" id="Dex-bE-ae9"/>
                 <constraint firstItem="ID0-mr-BPj" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="Lc1-OQ-hP7"/>
-                <constraint firstAttribute="bottom" secondItem="VXY-wH-bkZ" secondAttribute="bottom" constant="30" id="ydV-YY-N33"/>
+                <constraint firstItem="VXY-wH-bkZ" firstAttribute="top" secondItem="ID0-mr-BPj" secondAttribute="bottom" constant="24" id="WSj-av-LuT"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
+                <outlet property="imageView" destination="ID0-mr-BPj" id="Ryp-if-Ke1"/>
+                <outlet property="imageViewTopConstraint" destination="3hL-Pl-P2i" id="YOS-QM-JFy"/>
                 <outlet property="textView" destination="VXY-wH-bkZ" id="A6J-bV-POP"/>
-                <outlet property="textViewBottomConstraint" destination="ydV-YY-N33" id="E8q-HD-6We"/>
-                <outlet property="textViewTopConstraint" destination="DH0-Rq-jmH" id="jza-gW-6ou"/>
+                <outlet property="textViewLeadingConstraint" destination="Dex-bE-ae9" id="hp4-Af-B8m"/>
+                <outlet property="textViewTopConstraint" destination="WSj-av-LuT" id="ILl-FA-zuC"/>
+                <outlet property="textViewTrailingConstraint" destination="048-G5-pr1" id="69h-6L-ZU2"/>
             </connections>
             <point key="canvasLocation" x="115.21739130434783" y="179.79910714285714"/>
         </view>
@@ -53,7 +51,7 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

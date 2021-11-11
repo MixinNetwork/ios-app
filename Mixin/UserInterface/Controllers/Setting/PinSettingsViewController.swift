@@ -4,6 +4,7 @@ import MixinServices
 final class PinSettingsViewController: SettingsTableViewController {
     
     private let pinIntervals: [Double] = [60 * 15, 60 * 30, 60 * 60, 60 * 60 * 2, 60 * 60 * 6, 60 * 60 * 12, 60 * 60 * 24]
+    private let tableHeaderView = R.nib.pinSettingTableHeaderView(owner: nil)!
     private let dataSource = SettingsDataSource(sections: [
         SettingsSection(rows: [
             SettingsRow(title: R.string.localizable.wallet_change_password(), accessory: .disclosure),
@@ -39,7 +40,7 @@ final class PinSettingsViewController: SettingsTableViewController {
                                                    name: SettingsRow.accessoryDidChangeNotification,
                                                    object: biometricSwitchRow)
         }
-        tableView.tableHeaderView = R.nib.pinSettingTableHeaderView(owner: nil)
+        updateTableHeaderView()
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
     }
@@ -47,6 +48,13 @@ final class PinSettingsViewController: SettingsTableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         updatePinIntervalRow()
+    }
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        if view.bounds.width != tableHeaderView.frame.width {
+            updateTableHeaderView()
+        }
     }
     
     @objc func biometricPaymentDidChange(_ notification: Notification) {
@@ -136,6 +144,13 @@ extension PinSettingsViewController: UITableViewDelegate {
 }
 
 extension PinSettingsViewController {
+    
+    private func updateTableHeaderView() {
+        let sizeToFit = CGSize(width: view.bounds.width, height: UIView.layoutFittingExpandedSize.height)
+        let headerHeight = tableHeaderView.sizeThatFits(sizeToFit).height
+        tableHeaderView.frame.size = CGSize(width: view.bounds.width, height: headerHeight)
+        tableView.tableHeaderView = tableHeaderView
+    }
     
     private func setNewPinInterval(interval: Double) {
         let validator = PinValidationViewController(tips: Localized.WALLET_PIN_PAY_INTERVAL_CONFIRM, onSuccess: { (_) in

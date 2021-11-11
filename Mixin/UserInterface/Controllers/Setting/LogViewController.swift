@@ -15,7 +15,7 @@ class LogViewController: UIViewController {
     private var isPageEnded = false
     private var category: AccountAPI.LogCategory = .all
 
-    class func instance(category: AccountAPI.LogCategory = .all) -> UIViewController {
+    class func instance(category: AccountAPI.LogCategory) -> UIViewController {
         let vc = R.storyboard.wallet.logs()!
         vc.category = category
         let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.setting_logs())

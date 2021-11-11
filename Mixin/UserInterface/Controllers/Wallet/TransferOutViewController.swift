@@ -359,8 +359,8 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
             let feeRepresentation = address.fee + " " + chainAsset.symbol
             let feeHint = R.string.localizable.wallet_withdrawal_network_fee(feeRepresentation)
             hint = feeHint
-            let rang = (hint as NSString).range(of: feeRepresentation)
-            highlightRanges.append(rang)
+            let range = (hint as NSString).range(of: feeRepresentation)
+            highlightRanges.append(range)
             
             if address.dust.doubleValue > 0 {
                 let dustRepresentation = address.dust + " " + chainAsset.symbol

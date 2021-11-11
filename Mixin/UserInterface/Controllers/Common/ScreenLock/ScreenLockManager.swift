@@ -136,7 +136,7 @@ extension ScreenLockManager {
     private func updateState(from: State, to: State) {
         switch to {
         case .willResignActive:
-            if from == .didBecomeActive && CallService.shared.hasCall && !CallService.shared.isMinimized {
+            if from == .didBecomeActive && CallService.shared.hasCall && !CallService.shared.isInterfaceMinimized {
                 return
             }
             if isBiometricAuthenticationEnabled {
@@ -149,7 +149,7 @@ extension ScreenLockManager {
             if from == .didEnterBackground {
                 if needsBiometricAuthentication {
                     if CallService.shared.hasCall {
-                        if CallService.shared.isMinimized {
+                        if CallService.shared.isInterfaceMinimized {
                             showScreenLockView()
                             performBiometricAuthentication()
                         } else {

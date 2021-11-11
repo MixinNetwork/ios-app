@@ -67,7 +67,6 @@ class AudioInputViewController: UIViewController, ConversationInputAccessible {
     override func viewDidLoad() {
         super.viewDidLoad()
         recordGestureRecognizer.delegate = self
-        NotificationCenter.default.addObserver(self, selector: #selector(cancelAction(_:)), name: CallService.willStartCallNotification, object: nil)
     }
     
     @IBAction func tapAction(_ sender: Any) {

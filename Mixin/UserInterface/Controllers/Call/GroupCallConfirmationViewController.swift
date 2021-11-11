@@ -28,16 +28,17 @@ class GroupCallConfirmationViewController: CallViewController {
         acceptStackView.alpha = 1
         acceptButtonTrailingConstraint.priority = .defaultLow
         acceptButtonCenterXConstraint.priority = .defaultHigh
+        updateMembersCountLabel()
     }
     
     override func minimizeAction(_ sender: Any) {
         hideContentView {
-            CallService.shared.removeViewControllerAsContainersChildIfNeeded(self)
+            self.service.removeViewControllerAsContainersChildIfNeeded(self)
         }
     }
     
     override func acceptAction(_ sender: Any) {
-        CallService.shared.requestStartGroupCall(conversation: conversation, invitingMembers: [], animated: false)
+        service.makeGroupCall(conversation: conversation, invitees: [])
     }
     
     override func learnMoreAboutEncryption() {
@@ -45,7 +46,7 @@ class GroupCallConfirmationViewController: CallViewController {
             return
         }
         hideContentView {
-            CallService.shared.removeViewControllerAsContainersChildIfNeeded(self)
+            self.service.removeViewControllerAsContainersChildIfNeeded(self)
             MixinWebViewController.presentInstance(with: .init(conversationId: "", initialUrl: .aboutEncryption), asChildOf: container)
         }
     }

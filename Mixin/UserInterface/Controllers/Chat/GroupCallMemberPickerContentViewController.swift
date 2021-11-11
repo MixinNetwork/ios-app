@@ -125,6 +125,9 @@ class GroupCallMemberPickerContentViewController: UserItemPeerViewController<Che
     override func setCollectionViewHidden(_ hidden: Bool, animated: Bool) {
         centerWrapperViewBottomConstraint.constant = hidden ? -8 : -13
         centerWrapperViewHeightConstraint.constant = hidden ? 0 : 90
+        guard view.window != nil else {
+            return
+        }
         if animated {
             UIView.animate(withDuration: 0.3, animations: view.layoutIfNeeded)
         } else {

@@ -37,7 +37,7 @@ class CallViewController: ResizablePopupViewController {
     @IBOutlet weak var trayContentViewBottomConstraint: NSLayoutConstraint!
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
-        if service.isMinimized {
+        if service.isInterfaceMinimized {
             return AppDelegate.current.mainWindow.rootViewController?.preferredStatusBarStyle ?? .default
         } else {
             return .lightContent
@@ -52,17 +52,9 @@ class CallViewController: ResizablePopupViewController {
         false
     }
     
-    var members: [UserItem] = []
-    var isConnectionUnstable = false {
-        didSet {
-            guard let call = call else {
-                return
-            }
-            updateStatusLabel(call: call)
-        }
-    }
+    unowned let service: CallService
     
-    private unowned let service: CallService
+    var members: [UserItem] = []
     
     private let membersCountBottomMargin: CGFloat = 32
     private let numberOfGroupCallMembersPerRow: CGFloat = 4
@@ -122,25 +114,17 @@ class CallViewController: ResizablePopupViewController {
         trayView.layer.shadowOpacity = 1
         trayView.layer.shadowRadius = 10
         trayView.layer.shadowOffset = CGSize(width: 0, height: 2)
-        let center = NotificationCenter.default
-        center.addObserver(self,
-                           selector: #selector(callServiceMutenessDidChange),
-                           name: CallService.mutenessDidChangeNotification,
-                           object: nil)
-        center.addObserver(self,
-                           selector: #selector(audioSessionRouteChange(_:)),
-                           name: AVAudioSession.routeChangeNotification,
-                           object: nil)
-        center.addObserver(self,
-                           selector: #selector(callStatusDidChange(_:)),
-                           name: Call.statusDidChangeNotification,
-                           object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(updateSpeakerSwitch),
+                                               name: CallService.audioOutputDidChangeNotification,
+                                               object: nil)
+        updateSpeakerSwitch()
     }
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         let labelHeight: CGFloat = ceil(CallMemberCell.labelFont.lineHeight)
-        if call is PeerToPeerCall {
+        if call is PeerCall {
             let itemSize = CGSize(width: CallMemberCell.Layout.bigger.avatarWrapperWidth,
                                   height: CallMemberCell.Layout.bigger.avatarWrapperWidth + labelHeight + CallMemberCell.Layout.bigger.labelTopMargin)
             membersCollectionLayout.itemSize = itemSize
@@ -247,14 +231,28 @@ class CallViewController: ResizablePopupViewController {
     }
     
     func reload(call: Call?) {
-        self.call = call
-        isConnectionUnstable = false
-        
         let notificationCenter = NotificationCenter.default
-        notificationCenter.removeObserver(self,
-                                          name: GroupCallMemberDataSource.visibleMembersDidChangeNotification,
-                                          object: nil)
-        if let call = call as? PeerToPeerCall {
+        if let call = self.call {
+            notificationCenter.removeObserver(self, name: Call.mutenessDidChangeNotification, object: call)
+            notificationCenter.removeObserver(self, name: Call.stateDidChangeNotification, object: call)
+            if let call = call as? GroupCall {
+                notificationCenter.removeObserver(self, name: GroupCallMembersDataSource.membersCountDidChangeNotification, object: call.membersDataSource)
+            }
+        }
+        self.call = call
+        
+        guard let call = call else {
+            return
+        }
+        notificationCenter.addObserver(self,
+                                       selector: #selector(callMutenessDidChange),
+                                       name: Call.mutenessDidChangeNotification,
+                                       object: call)
+        notificationCenter.addObserver(self,
+                                       selector: #selector(callStateDidChange(_:)),
+                                       name: Call.stateDidChangeNotification,
+                                       object: call)
+        if let call = call as? PeerCall {
             titleLabel.text = R.string.localizable.chat_menu_call()
             if let user = call.remoteUser {
                 members = [user]
@@ -263,25 +261,20 @@ class CallViewController: ResizablePopupViewController {
                 members = [item]
             }
             membersCollectionView.reloadData()
-            membersCountLabel.text = ""
         } else if let call = call as? GroupCall {
+            notificationCenter.addObserver(self,
+                                           selector: #selector(updateMembersCountLabel),
+                                           name: GroupCallMembersDataSource.membersCountDidChangeNotification,
+                                           object: call.membersDataSource)
             titleLabel.text = call.conversationName
             membersCollectionView.isHidden = false
             call.membersDataSource.collectionView = membersCollectionView
-            membersCountLabel.text = R.string.localizable.group_call_participants_count(call.membersDataSource.members.count)
             view.layoutIfNeeded()
-            notificationCenter.addObserver(self,
-                                           selector: #selector(groupCallVisibleMembersDidChange),
-                                           name: GroupCallMemberDataSource.visibleMembersDidChangeNotification,
-                                           object: call.membersDataSource)
             call.beginSpeakingStatusPolling()
         }
-        if let call = call {
-            updateViews(call: call)
-        }
-        
-        muteSwitch.isSelected = service.isMuted
-        speakerSwitch.isSelected = service.usesSpeaker
+        updateMembersCountLabel()
+        updateViews(call: call)
+        muteSwitch.isSelected = call.isMuted
     }
     
     func setAcceptButtonHidden(_ hidden: Bool) {
@@ -335,25 +328,42 @@ class CallViewController: ResizablePopupViewController {
     }
     
     @IBAction func hangUpAction(_ sender: Any) {
-        // Signaling may take a while, update views first
-        if let call = call {
-            updateViews(call: call)
+        guard let call = call else {
+            return
         }
-        service.requestEndCall()
+        updateViews(call: call) // Signaling may take a while, update views first
+        service.requestEndCall(with: call.uuid)
     }
     
     @IBAction func acceptAction(_ sender: Any) {
-        service.requestAnswerCall()
+        guard let call = call else {
+            return
+        }
+        service.requestAnswerCall(with: call.uuid)
     }
     
     @IBAction func setMuteAction(_ sender: Any) {
-        muteSwitch.isSelected = !muteSwitch.isSelected
-        service.requestSetMute(muteSwitch.isSelected)
+        guard let call = call else {
+            return
+        }
+        muteSwitch.isSelected.toggle()
+        let isMuted = muteSwitch.isSelected
+        service.requestSetMute(with: call.uuid, muted: isMuted) { error in
+            guard let error = error else {
+                return
+            }
+            self.muteSwitch.isSelected = !isMuted
+            Logger.call.error(category: "CallViewController", message: "Failed to set mute: \(error)")
+        }
     }
     
     @IBAction func setSpeakerAction(_ sender: Any) {
-        speakerSwitch.isSelected = !speakerSwitch.isSelected
-        service.usesSpeaker = speakerSwitch.isSelected
+        speakerSwitch.isSelected.toggle()
+        if speakerSwitch.isSelected {
+            service.setAudioOutput(.builtInSpeaker)
+        } else {
+            service.setAudioOutput(.builtInReceiver)
+        }
     }
     
 }
@@ -368,7 +378,7 @@ extension CallViewController: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.call_member, for: indexPath)!
         let member = members[indexPath.row]
         if let call = call {
-            cell.hasBiggerLayout = call is PeerToPeerCall
+            cell.hasBiggerLayout = call is PeerCall
         }
         cell.avatarImageView.setImage(with: member)
         cell.connectingView.isHidden = true
@@ -389,7 +399,7 @@ extension CallViewController: UIScrollViewDelegate {
 extension CallViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if let call = call as? PeerToPeerCall {
+        if let call = call as? PeerCall {
             guard let user = call.remoteUser else {
                 return
             }
@@ -402,17 +412,14 @@ extension CallViewController: UICollectionViewDelegate {
                 if call.membersDataSource.members.count < GroupCall.maxNumberOfMembers {
                     let picker = GroupCallMemberPickerViewController(conversation: call.conversation)
                     picker.appearance = .appendToExistedCall
-                    picker.fixedSelections = call.membersDataSource.members
+                    picker.fixedSelections = call.membersDataSource.members.map(\.item)
                     picker.onConfirmation = { members in
-                        let inCallUserIds = call.membersDataSource.memberUserIds
-                        CallService.shared.queue.async {
-                            let filteredMembers = members.filter { (member) -> Bool in
-                                !inCallUserIds.contains(member.userId)
-                            }
-                            if !filteredMembers.isEmpty {
-                                call.invite(members: filteredMembers)
-                                CallService.shared.membersManager.beginPolling(forConversationWith: call.conversationId)
-                            }
+                        let inCallUserIds = call.membersDataSource.members.map(\.item.userId)
+                        let filteredMembers = members.filter { (member) -> Bool in
+                            !inCallUserIds.contains(member.userId)
+                        }
+                        if !filteredMembers.isEmpty {
+                            call.invite(members: filteredMembers)
                         }
                     }
                     present(picker, animated: true, completion: nil)
@@ -422,7 +429,7 @@ extension CallViewController: UICollectionViewDelegate {
                 }
             } else if let member = call.membersDataSource.member(at: indexPath) {
                 minimize {
-                    let profile = UserProfileViewController(user: member)
+                    let profile = UserProfileViewController(user: member.item)
                     UIApplication.homeContainerViewController?.present(profile, animated: true, completion: nil)
                 }
             }
@@ -433,51 +440,7 @@ extension CallViewController: UICollectionViewDelegate {
 
 extension CallViewController {
     
-    @objc private func callServiceMutenessDidChange() {
-        muteSwitch.isSelected = service.isMuted
-    }
-    
-    @objc private func audioSessionRouteChange(_ notification: Notification) {
-        let currentRoutePortTypes = AVAudioSession.sharedInstance().currentRoute.outputs.map(\.portType)
-        let routeContainsBuiltInSpeaker = currentRoutePortTypes.contains(.builtInSpeaker)
-        let routeContainsBuiltInReceiver = currentRoutePortTypes.contains(.builtInReceiver)
-        DispatchQueue.main.async {
-            if !(routeContainsBuiltInSpeaker || routeContainsBuiltInReceiver) {
-                self.speakerSwitch.isEnabled = false
-            } else if UIApplication.shared.applicationState == .active && (self.service.usesSpeaker != routeContainsBuiltInSpeaker) {
-                // The audio route changes for mysterious reason on iOS 13, It says category changes
-                // but I have intercept every category change request only to find AVAudioSessionCategoryPlayAndRecord
-                // with AVAudioSessionCategoryOptionDefaultToSpeaker is properly passed into AVAudioSession.
-                // According to stack trace result, the route changes is triggered by avfaudio::AVAudioSessionPropertyListener
-                // Don't quite know why the heck this is happening, but overriding the port immediately like this seems to work
-                self.service.usesSpeaker = self.service.usesSpeaker
-                
-                self.speakerSwitch.isEnabled = true
-                self.speakerSwitch.isSelected = self.service.usesSpeaker
-            } else {
-                self.speakerSwitch.isEnabled = true
-                self.speakerSwitch.isSelected = routeContainsBuiltInSpeaker
-            }
-        }
-    }
-    
-    @objc private func callStatusDidChange(_ notification: Notification) {
-        guard let call = (notification.object as? Call), call == self.call else {
-            return
-        }
-        DispatchQueue.main.async {
-            self.updateViews(call: call)
-        }
-        if let call = call as? GroupCall {
-            if call.status == .connected {
-                DispatchQueue.main.async(execute: call.beginSpeakingStatusPolling)
-            } else {
-                DispatchQueue.main.async(execute: call.endSpeakingStatusPolling)
-            }
-        }
-    }
-    
-    @objc private func groupCallVisibleMembersDidChange() {
+    @objc func updateMembersCountLabel() {
         if let call = call as? GroupCall {
             membersCountLabel.text = R.string.localizable.group_call_participants_count(call.membersDataSource.members.count)
         } else {
@@ -485,6 +448,40 @@ extension CallViewController {
         }
         updateMembersCountPosition()
         updateCollectionViewBottomInset()
+    }
+    
+    @objc private func callMutenessDidChange() {
+        guard let call = call else {
+            return
+        }
+        muteSwitch.isSelected = call.isMuted
+    }
+    
+    @objc private func updateSpeakerSwitch() {
+        switch service.audioOutput {
+        case .builtInReceiver:
+            speakerSwitch.isSelected = false
+            speakerSwitch.isEnabled = true
+        case .builtInSpeaker:
+            speakerSwitch.isSelected = true
+            speakerSwitch.isEnabled = true
+        case .other:
+            speakerSwitch.isEnabled = false
+        }
+    }
+    
+    @objc private func callStateDidChange(_ notification: Notification) {
+        guard let call = (notification.object as? Call), call == self.call else {
+            return
+        }
+        updateViews(call: call)
+        if let call = call as? GroupCall {
+            if call.state == .connected {
+                call.beginSpeakingStatusPolling()
+            } else {
+                call.endSpeakingStatusPolling()
+            }
+        }
     }
     
 }
@@ -525,9 +522,9 @@ extension CallViewController {
     }
     
     private func minimize(completion: (() -> Void)?) {
-        let needsAuthentication = !ScreenLockManager.shared.isLastAuthenticationStillValid &&
-            ScreenLockManager.shared.needsBiometricAuthentication &&
-            !service.isMinimized
+        let needsAuthentication = !ScreenLockManager.shared.isLastAuthenticationStillValid
+            && ScreenLockManager.shared.needsBiometricAuthentication
+            && !service.isInterfaceMinimized
         if needsAuthentication {
             ScreenLockManager.shared.performBiometricAuthentication { success in
                 if success {
@@ -540,23 +537,14 @@ extension CallViewController {
     }
     
     private func updateStatusLabel(call: Call) {
-        if isConnectionUnstable {
-            let description = R.string.localizable.group_call_bad_network()
-            statusLabel.text = description
-        } else {
-            if call.status == .connected {
-                statusLabel.text = service.connectionDuration
-            } else {
-                statusLabel.text = call.status.localizedDescription
-            }
-        }
+        statusLabel.text = call.localizedState
         trayView.layoutIfNeeded()
     }
     
     private func updateViews(call: Call) {
         updateStatusLabel(call: call)
         let animationDuration: TimeInterval = 0.3
-        switch call.status {
+        switch call.state {
         case .incoming:
             minimizeButton.isHidden = true
             setFunctionSwitchesHidden(true)
@@ -584,6 +572,8 @@ extension CallViewController {
                 self.view.layoutIfNeeded()
             }
             setConnectionDurationTimerEnabled(true)
+        case .restarting:
+            break
         case .disconnecting:
             minimizeButton.isHidden = true
             setAcceptButtonHidden(true)

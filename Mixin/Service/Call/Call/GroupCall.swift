@@ -265,12 +265,8 @@ extension GroupCall {
             if let userId = userId, !userId.isEmpty {
                 if let sessionId = sessionId, !sessionId.isEmpty {
                     let frameKey = SignalProtocol.shared.getSenderKeyPublic(groupId: conversationId, userId: userId, sessionId: sessionId)?.dropFirst()
-                    if let key = frameKey {
-                        self.rtcClient.setFrameDecryptorKey(key, forReceiverWith: userId, sessionId: sessionId) {
-                            self.membersDataSource.setMember(with: userId, isTrackDisabled: false)
-                        }
-                    } else {
-                        Logger.call.error(category: "GroupCall", message: "[\(self.uuidString)] SignalProtocol reports no sender key")
+                    self.rtcClient.setFrameDecryptorKey(frameKey, forReceiverWith: userId, sessionId: sessionId) { (isTrackEnabled) in
+                        self.membersDataSource.setMember(with: userId, isTrackDisabled: !isTrackEnabled)
                     }
                 } else {
                     try? ReceiveMessageService.shared.checkSessionSenderKey(conversationId: conversationId)

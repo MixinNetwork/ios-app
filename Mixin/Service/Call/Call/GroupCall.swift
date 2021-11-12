@@ -300,7 +300,14 @@ extension GroupCall {
 extension GroupCall {
     
     func connect(isRestarting: Bool, completion: @escaping Call.Completion) {
-        invalidateUnansweredTimer()
+        Queue.main.autoSync {
+            // The call starts to connect from now, but the `state` property is updated in self.queue right
+            // after internalState is updated. Therefore, if any UI components access `state` synchornouly
+            // after connect, it will find an `incoming` as state.
+            // For correct UI display, change `state` here first
+            self.state = .connecting
+            invalidateUnansweredTimer()
+        }
         Queue.main.autoSync {
             self.localizedName = self.conversationName
         }

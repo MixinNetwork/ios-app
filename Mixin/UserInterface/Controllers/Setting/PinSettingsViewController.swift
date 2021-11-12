@@ -8,7 +8,6 @@ final class PinSettingsViewController: SettingsTableViewController {
     private let dataSource = SettingsDataSource(sections: [
         SettingsSection(rows: [
             SettingsRow(title: R.string.localizable.wallet_change_password(), accessory: .disclosure),
-            SettingsRow(title: R.string.localizable.setting_pin_logs(), accessory: .disclosure)
         ])
     ])
     
@@ -134,9 +133,6 @@ extension PinSettingsViewController: UITableViewDelegate {
             }
         } else if indexPath.row == 0 {
             let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep1, dismissTarget: nil)
-            navigationController?.pushViewController(vc, animated: true)
-        } else if indexPath.row == 1 {
-            let vc = LogViewController.instance(category: .incorrectPin)
             navigationController?.pushViewController(vc, animated: true)
         }
     }

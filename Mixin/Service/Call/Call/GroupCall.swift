@@ -13,6 +13,7 @@ class GroupCall: Call {
     let membersDataSource: GroupCallMembersDataSource
     
     private let retryInterval: DispatchTimeInterval = .seconds(3)
+    private let speakingStatusPollingInterval: TimeInterval = 0.6
     private let messenger = KrakenMessageRetriever()
     
     private var frameKey: Data?
@@ -230,7 +231,7 @@ extension GroupCall {
         guard speakingTimer == nil else {
             return
         }
-        let timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self] _ in
+        let timer = Timer.scheduledTimer(withTimeInterval: speakingStatusPollingInterval, repeats: true, block: { [weak self] _ in
             self?.rtcClient.audioLevels(completion: { levels in
                 self?.membersDataSource.updateMembers(with: levels)
             })

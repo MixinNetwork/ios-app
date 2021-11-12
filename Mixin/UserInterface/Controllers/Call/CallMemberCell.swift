@@ -40,12 +40,12 @@ class CallMemberCell: UICollectionViewCell {
             switch status {
             case .isSpeaking:
                 statusIndicatorLayer.strokeColor = UIColor(displayP3RgbValue: 0x50BD5C).cgColor
-                statusIndicatorLayer.isHidden = false
+                statusIndicatorLayer.opacity = 1
             case .isTrackDisabled:
                 statusIndicatorLayer.strokeColor = UIColor.mixinRed.cgColor
-                statusIndicatorLayer.isHidden = false
+                statusIndicatorLayer.opacity = 1
             case .none:
-                statusIndicatorLayer.isHidden = true
+                statusIndicatorLayer.opacity = 0
             }
         }
     }
@@ -62,7 +62,7 @@ class CallMemberCell: UICollectionViewCell {
         layer.fillColor = UIColor.clear.cgColor
         layer.lineWidth = 2
         layer.path = path.cgPath
-        layer.isHidden = true
+        layer.opacity = 0
         return layer
     }()
     

@@ -887,7 +887,7 @@
 "setting_appearance_language_alert_title" = "设置语言";
 "setting_appearance_language_alert_description" = "前往系统设置修改语言偏好";
 "setting_pin" = "密码";
-"setting_pin_hint" = "请记住，如果密码丢失后将无法恢复。密码是基于 Throttled Identity Protocol，即去中心化的密钥推导协议，阅读文档以了解更多。";
+"setting_pin_hint" = "注意密码丢失无法找回，6 位数字密码是基于去中心化密钥派生协议 Throttled Identity Protocol，阅读文档以了解更多。";
 "setting_feedback" = "反馈";
 "setting_share_this_app" = "分享此 App";
 "setting_share_this_app_content" = "快来 Mixin 与我聊天！简单、安全好用还支持比特币、以太坊等加密货币，下载 https://mixin.one/messenger 后搜索 %@ 加我好友。";

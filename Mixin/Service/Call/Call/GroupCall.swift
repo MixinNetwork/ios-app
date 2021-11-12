@@ -13,6 +13,7 @@ class GroupCall: Call {
     let membersDataSource: GroupCallMembersDataSource
     
     private let retryInterval: DispatchTimeInterval = .seconds(3)
+    private let speakingStatusPollingInterval: TimeInterval = 0.6
     private let messenger = KrakenMessageRetriever()
     
     private var frameKey: Data?
@@ -230,7 +231,7 @@ extension GroupCall {
         guard speakingTimer == nil else {
             return
         }
-        let timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self] _ in
+        let timer = Timer.scheduledTimer(withTimeInterval: speakingStatusPollingInterval, repeats: true, block: { [weak self] _ in
             self?.rtcClient.audioLevels(completion: { levels in
                 self?.membersDataSource.updateMembers(with: levels)
             })
@@ -265,12 +266,8 @@ extension GroupCall {
             if let userId = userId, !userId.isEmpty {
                 if let sessionId = sessionId, !sessionId.isEmpty {
                     let frameKey = SignalProtocol.shared.getSenderKeyPublic(groupId: conversationId, userId: userId, sessionId: sessionId)?.dropFirst()
-                    if let key = frameKey {
-                        self.rtcClient.setFrameDecryptorKey(key, forReceiverWith: userId, sessionId: sessionId) {
-                            self.membersDataSource.setMember(with: userId, isTrackDisabled: false)
-                        }
-                    } else {
-                        Logger.call.error(category: "GroupCall", message: "[\(self.uuidString)] SignalProtocol reports no sender key")
+                    self.rtcClient.setFrameDecryptorKey(frameKey, forReceiverWith: userId, sessionId: sessionId) { (isTrackEnabled) in
+                        self.membersDataSource.setMember(with: userId, isTrackDisabled: !isTrackEnabled)
                     }
                 } else {
                     try? ReceiveMessageService.shared.checkSessionSenderKey(conversationId: conversationId)
@@ -300,7 +297,14 @@ extension GroupCall {
 extension GroupCall {
     
     func connect(isRestarting: Bool, completion: @escaping Call.Completion) {
-        invalidateUnansweredTimer()
+        Queue.main.autoSync {
+            // The call starts to connect from now, but the `state` property is updated in self.queue right
+            // after internalState is updated. Therefore, if any UI components access `state` synchornouly
+            // after connect, it will find an `incoming` as state.
+            // For correct UI display, change `state` here first
+            self.state = .connecting
+            invalidateUnansweredTimer()
+        }
         Queue.main.autoSync {
             self.localizedName = self.conversationName
         }

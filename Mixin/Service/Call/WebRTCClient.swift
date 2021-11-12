@@ -140,19 +140,27 @@ class WebRTCClient: NSObject {
         }
     }
     
-    func setFrameDecryptorKey(_ key: Data, forReceiverWith userId: String, sessionId: String, onTrackEnabled: @escaping () -> Void) {
+    func setFrameDecryptorKey(_ key: Data?, forReceiverWith userId: String, sessionId: String, completion: @escaping (_ isTrackEnabled: Bool) -> Void) {
         queue.async {
             let streamId = StreamId(userId: userId, sessionId: sessionId).rawValue
-            Logger.call.info(category: "WebRTCClient", message: "Set decrypt key: \(key.count) bytes for uid: \(userId), sid: \(sessionId)")
+            Logger.call.info(category: "WebRTCClient", message: "Set decrypt key: \(key?.count ?? -1) bytes for uid: \(userId), sid: \(sessionId)")
             guard let receiver = self.rtpReceivers[streamId] else {
                 Logger.call.warn(category: "WebRTCClient", message: "No such receiver")
                 return
             }
-            receiver.setFrameDecryptorKey(key)
-            receiver.track?.isEnabled = true
+            let hasKey: Bool
+            if let key = key {
+                hasKey = true
+                receiver.setFrameDecryptorKey(key)
+            } else {
+                hasKey = false
+            }
+            receiver.track?.isEnabled = hasKey
             DispatchQueue.main.sync {
-                _ = self.trackDisabledUserIds.remove(userId)
-                onTrackEnabled()
+                if hasKey {
+                    _ = self.trackDisabledUserIds.remove(userId)
+                }
+                completion(hasKey)
             }
         }
     }

@@ -162,9 +162,6 @@ extension GroupCallMembersDataSource {
         }
         let member = members[index]
         assert(member.item.userId == userId)
-        guard member.status == .isTrackDisabled else {
-            return
-        }
         member.status = isTrackDisabled ? .isTrackDisabled : nil
         if let cell = cellForMember(at: index) {
             cell.status = member.status

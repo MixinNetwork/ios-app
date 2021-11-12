@@ -7,7 +7,7 @@ final class PinSettingsViewController: SettingsTableViewController {
     private let tableHeaderView = R.nib.pinSettingTableHeaderView(owner: nil)!
     private let dataSource = SettingsDataSource(sections: [
         SettingsSection(rows: [
-            SettingsRow(title: R.string.localizable.wallet_change_password(), accessory: .disclosure),
+            SettingsRow(title: R.string.localizable.wallet_change_password(), accessory: .disclosure)
         ])
     ])
     

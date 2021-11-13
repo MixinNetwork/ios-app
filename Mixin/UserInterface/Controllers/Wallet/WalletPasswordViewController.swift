@@ -37,6 +37,10 @@ class WalletPasswordViewController: ContinueButtonViewController {
         }
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         pinField.delegate = self
@@ -68,6 +72,7 @@ class WalletPasswordViewController: ContinueButtonViewController {
             subtitleLabel.text = ""
             backButton.setImage(R.image.ic_title_back(), for: .normal)
         }
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -168,6 +173,12 @@ class WalletPasswordViewController: ContinueButtonViewController {
             textView.linkTextAttributes = [.foregroundColor: UIColor.theme]
         }
         textView.attributedText = str
+    }
+    
+    @objc private func applicationDidBecomeActive() {
+        if !pinField.isFirstResponder {
+            pinField.becomeFirstResponder()
+        }
     }
 
 }

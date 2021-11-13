@@ -2,7 +2,7 @@ import UIKit
 
 class PinSettingTableHeaderView: UIView {
     
-    @IBOutlet weak var textView: IntroTextView!
+    @IBOutlet weak var textView: UITextView!
     @IBOutlet weak var imageView: UIImageView!
     
     @IBOutlet weak var imageViewTopConstraint: NSLayoutConstraint!

@@ -67,7 +67,7 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
         tableView.delegate = self
         tableView.reloadData()
         NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: AssetDAO.assetsDidChangeNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: Application.assetVisibilityDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: AppGroupUserDefaults.Wallet.assetVisibilityDidChangeNotification, object: nil)
         fetchAssets()
         ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob())
     }
@@ -229,7 +229,6 @@ extension WalletViewController {
         assets.remove(at: index)
         tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .fade)
         AppGroupUserDefaults.Wallet.hiddenAssetIds[assetId] = true
-        fetchAssets()
     }
     
 }

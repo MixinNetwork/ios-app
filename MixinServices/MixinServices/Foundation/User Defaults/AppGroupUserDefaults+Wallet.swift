@@ -21,6 +21,8 @@ extension AppGroupUserDefaults {
             case currencyCode = "currency_code"
         }
         
+        public static let assetVisibilityDidChangeNotification = Notification.Name("one.mixin.messenger.service.assetVisibilityDidChange")
+        
         @Default(namespace: .wallet, key: Key.lastPinVerifiedDate, defaultValue: nil)
         public static var lastPinVerifiedDate: Date?
         
@@ -40,7 +42,11 @@ extension AppGroupUserDefaults {
         public static var withdrawnAddressIds: [String: Bool]
         
         @Default(namespace: .wallet, key: Key.hiddenAssetIds, defaultValue: [:])
-        public static var hiddenAssetIds: [String: Bool]
+        public static var hiddenAssetIds: [String: Bool] {
+            didSet {
+                NotificationCenter.default.post(onMainThread: assetVisibilityDidChangeNotification, object: self)
+            }
+        }
         
         @Default(namespace: .wallet, key: Key.allTransactionsOffset, defaultValue: nil)
         public static var allTransactionsOffset: String?

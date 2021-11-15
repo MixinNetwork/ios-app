@@ -229,6 +229,7 @@ extension WalletViewController {
         assets.remove(at: index)
         tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .fade)
         AppGroupUserDefaults.Wallet.hiddenAssetIds[assetId] = true
+        fetchAssets()
     }
     
 }

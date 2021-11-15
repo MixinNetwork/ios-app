@@ -259,7 +259,7 @@ public class ReceiveMessageService: MixinService {
         }
     }
     
-    private func processBotMessages(data: BlazeMessageData, finishedBlock: ((Int) -> Void)? = nil) {
+    private func processBotMessages(data: BlazeMessageData, processBlock: ([String]) -> Bool) {
         let conversationId = data.conversationId
         ReceiveMessageService.shared.syncConversation(data: data)
         guard ConversationDAO.shared.isBotConversation(conversationId: conversationId) else {
@@ -295,6 +295,7 @@ public class ReceiveMessageService: MixinService {
             let existHistoryIds = MessageHistoryDAO.shared.getExistMessageIds(messageIds: messageIds)
             
             var jobs = [Job]()
+            var downloadJobs = [AttachmentDownloadJob]()
             var pairMessages = [(Message, [TranscriptMessage]?)]()
             var sharedContactIds = [String]()
             
@@ -318,6 +319,9 @@ public class ReceiveMessageService: MixinService {
                 if let decryptedData = decryptedData, let (message, children) = makeDecryptMessage(data: blazeMessage, decryptedData: decryptedData) {
                     if message.category.hasSuffix("_CONTACT"), let sharedUserId = message.sharedUserId {
                         sharedContactIds.append(sharedUserId)
+                    }
+                    if message.category.hasSuffix("_AUDIO") {
+                        downloadJobs.append(AttachmentDownloadJob(message: message))
                     }
                     pairMessages.append((message, children))
                 } else {
@@ -376,6 +380,10 @@ public class ReceiveMessageService: MixinService {
                 
                 db.afterNextTransactionCommit { _ in
                     DispatchQueue.global().async {
+                        for job in downloadJobs {
+                            ConcurrentJobQueue.shared.addJob(job: job)
+                        }
+                        
                         if isAppExtension {
                             if AppGroupUserDefaults.isRunningInMainApp {
                                 DarwinNotificationManager.shared.notifyConversationDidChangeInMainApp()

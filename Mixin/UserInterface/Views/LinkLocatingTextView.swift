@@ -3,9 +3,6 @@ import UIKit
 class LinkLocatingTextView: UITextView {
     
     func hasLinkAttribute(on point: CGPoint) -> Bool {
-        guard layoutManager.usedRect(for: textContainer).contains(point) else {
-            return false
-        }
         guard let position = closestPosition(to: point) else {
             return false
         }

@@ -404,12 +404,13 @@
 "call_encryption_title" = "This call is secured with end-to-end encryption";
 "call_encryption_description" = "No one outside of this call can view or listen to it. Not even Mixin.";
 "call_hint_on_another_call" = "You are already on another call. Try after it was ended.";
-"call_status_outgoing" = "Calling...";
-"call_status_incoming" = "Incoming voice call";
-"call_status_connecting" = "Connecting";
-"call_status_disconnecting" = "Disconnecting";
-"call_status_waiting" = "Waiting";
-"call_status_done" = "Done";
+"call_state_outgoing" = "Calling...";
+"call_state_incoming" = "Incoming voice call";
+"call_state_connecting" = "Connecting";
+"call_state_stalled" = "Connection unstable";
+"call_state_disconnecting" = "Disconnecting";
+"call_state_brief_waiting" = "Waiting";
+"call_state_brief_done" = "Done";
 "call_func_accept" = "Accept";
 "call_func_mute" = "Mute";
 "call_func_speaker" = "Speaker";
@@ -926,6 +927,8 @@
 "report_message"="Allow Manual Report Message";
 "report_compress_database"="Compress Database";
 "report_compress_database_success"="Compressed";
+"report_optimize_database"="Optimize Database";
+"report_optimize_database_success"="Optimized";
 
 // Playlist
 "playlist" = "Playlist";
@@ -960,34 +963,34 @@
 "notification_content_post" = "[Post]";
 "notification_content_unknown" = "[Unknown]";
 
-"alert_key_contact_message" = "send you a message";
-"alert_key_contact_text_message" = "send you a message";
-"alert_key_contact_image_message" = "send you a photo";
-"alert_key_contact_video_message" = "send you a video";
-"alert_key_contact_live_message" = "send you a live stream";
-"alert_key_contact_transfer_message" = "send you a transfer";
-"alert_key_contact_data_message" = "send you a file";
-"alert_key_contact_sticker_message" = "send you a sticker";
-"alert_key_contact_contact_message" = "send you a contact";
-"alert_key_contact_audio_message" = "send you an audio";
+"alert_key_contact_message" = "sent you a message";
+"alert_key_contact_text_message" = "sent you a message";
+"alert_key_contact_image_message" = "sent you a photo";
+"alert_key_contact_video_message" = "sent you a video";
+"alert_key_contact_live_message" = "sent you a live stream";
+"alert_key_contact_transfer_message" = "sent you a transfer";
+"alert_key_contact_data_message" = "sent you a file";
+"alert_key_contact_sticker_message" = "sent you a sticker";
+"alert_key_contact_contact_message" = "sent you a contact";
+"alert_key_contact_audio_message" = "sent you an audio";
 "alert_key_contact_audio_call_message" = "invites you to a voice call";
 "alert_key_contact_audio_call_cancelled_message" = "voice call cancelled";
-"alert_key_contact_post_message" = "send you a post";
-"alert_key_contact_location_message" = "send you a location";
-"alert_key_contact_transcript_message" = "send you a transcript";
+"alert_key_contact_post_message" = "sent you a post";
+"alert_key_contact_location_message" = "sent you a location";
+"alert_key_contact_transcript_message" = "sent you a transcript";
 
-"alert_key_group_message" = "%@ send a message";
-"alert_key_group_text_message" = "%@ send a message";
-"alert_key_group_image_message" = "%@ send a photo";
-"alert_key_group_video_message" = "%@ send a video";
-"alert_key_group_live_message" = "%@ send a live stream";
-"alert_key_group_data_message" = "%@ send a file";
-"alert_key_group_sticker_message" = "%@ send a sticker";
-"alert_key_group_contact_message" = "%@ send a contact";
-"alert_key_group_audio_message" = "%@ send an audio";
-"alert_key_group_post_message" = "%@ send a post";
-"alert_key_group_location_message" = "%@ send a location";
-"alert_key_group_transcript_message" = "%@ send a transcript";
+"alert_key_group_message" = "%@ sent a message";
+"alert_key_group_text_message" = "%@ sent a message";
+"alert_key_group_image_message" = "%@ sent a photo";
+"alert_key_group_video_message" = "%@ sent a video";
+"alert_key_group_live_message" = "%@ sent a live stream";
+"alert_key_group_data_message" = "%@ sent a file";
+"alert_key_group_sticker_message" = "%@ sent a sticker";
+"alert_key_group_contact_message" = "%@ sent a contact";
+"alert_key_group_audio_message" = "%@ sent an audio";
+"alert_key_group_post_message" = "%@ sent a post";
+"alert_key_group_location_message" = "%@ sent a location";
+"alert_key_group_transcript_message" = "%@ sent a transcript";
 "alert_key_group_audio_invite_message" = "%@ invites you to a voice call";
 
 // Error

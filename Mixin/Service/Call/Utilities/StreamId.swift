@@ -26,3 +26,11 @@ struct StreamId: RawRepresentable {
     }
     
 }
+
+extension StreamId: CustomDebugStringConvertible {
+    
+    var debugDescription: String {
+        "<StreamID: \(rawValue)>"
+    }
+    
+}

@@ -7,7 +7,20 @@ class MinimizedCallViewController: HomeOverlayViewController {
     
     weak var call: Call? {
         didSet {
-            updateLabel(status: call?.status)
+            let center = NotificationCenter.default
+            if let old = oldValue {
+                center.removeObserver(self,
+                                      name: Call.stateDidChangeNotification,
+                                      object: old)
+            }
+            if let call = call {
+                center.addObserver(self,
+                                   selector: #selector(callStatusDidChange(_:)),
+                                   name: Call.stateDidChangeNotification,
+                                   object: call)
+            }
+            loadViewIfNeeded()
+            updateLabel(call: call)
         }
     }
     
@@ -16,11 +29,6 @@ class MinimizedCallViewController: HomeOverlayViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         statusLabel.font = .monospacedDigitSystemFont(ofSize: 14, weight: .regular)
-        updateLabel(status: CallService.shared.activeCall?.status)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(callStatusDidChange(_:)),
-                                               name: Call.statusDidChangeNotification,
-                                               object: nil)
     }
     
     @IBAction func maximizeAction(_ sender: Any) {
@@ -28,15 +36,7 @@ class MinimizedCallViewController: HomeOverlayViewController {
     }
     
     @objc private func callStatusDidChange(_ notification: Notification) {
-        guard (notification.object as? Call) == self.call else {
-            return
-        }
-        guard let status = notification.userInfo?[Call.statusUserInfoKey] as? Call.Status else {
-            return
-        }
-        DispatchQueue.main.async {
-            self.updateLabel(status: status)
-        }
+        updateLabel(call: call)
     }
     
     private func beginUpdatingDuration() {
@@ -44,7 +44,9 @@ class MinimizedCallViewController: HomeOverlayViewController {
             return
         }
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (_) in
-            self.statusLabel.text = CallService.shared.connectionDuration
+            if let call = self.call {
+                self.statusLabel.text = call.briefLocalizedState
+            }
             self.updateViewSize()
             self.panningController.stickViewToEdgeIfNotPanning(animated: true)
         })
@@ -54,22 +56,21 @@ class MinimizedCallViewController: HomeOverlayViewController {
         timer?.invalidate()
     }
     
-    private func updateLabel(status: Call.Status?) {
+    private func updateLabel(call: Call?) {
         defer {
             updateViewSize()
             panningController.stickViewToEdgeIfNotPanning(animated: true)
         }
-        guard let status = status else {
+        guard let call = call else {
             endUpdatingDuration()
             statusLabel.text = nil
             return
         }
-        if status == .connected {
-            statusLabel.text = CallService.shared.connectionDuration
+        statusLabel.text = call.briefLocalizedState
+        if call.state == .connected {
             beginUpdatingDuration()
         } else {
             endUpdatingDuration()
-            statusLabel.text = status.briefLocalizedDescription
         }
     }
     

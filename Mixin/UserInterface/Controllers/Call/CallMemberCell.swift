@@ -32,13 +32,25 @@ class CallMemberCell: UICollectionViewCell {
         }
     }
     
-    var isSpeaking = false {
+    var status: GroupCallMembersDataSource.Member.Status? {
         didSet {
-            speakingIndicatorLayer.isHidden = !isSpeaking
+            guard status != oldValue else {
+                return
+            }
+            switch status {
+            case .isSpeaking:
+                statusIndicatorLayer.strokeColor = UIColor(displayP3RgbValue: 0x50BD5C).cgColor
+                statusIndicatorLayer.opacity = 1
+            case .isTrackDisabled:
+                statusIndicatorLayer.strokeColor = UIColor.mixinRed.cgColor
+                statusIndicatorLayer.opacity = 1
+            case .none:
+                statusIndicatorLayer.opacity = 0
+            }
         }
     }
     
-    private let speakingIndicatorLayer: CALayer = {
+    private let statusIndicatorLayer: CAShapeLayer = {
         let size = CGSize(width: 74, height: 74)
         let path = UIBezierPath(arcCenter: CGPoint(x: size.width / 2, y: size.height / 2),
                                 radius: size.width / 2,
@@ -48,10 +60,9 @@ class CallMemberCell: UICollectionViewCell {
         let layer = CAShapeLayer()
         layer.bounds = CGRect(origin: .zero, size: size)
         layer.fillColor = UIColor.clear.cgColor
-        layer.strokeColor = UIColor(displayP3RgbValue: 0x50BD5C).cgColor
         layer.lineWidth = 2
         layer.path = path.cgPath
-        layer.isHidden = true
+        layer.opacity = 0
         return layer
     }()
     
@@ -59,21 +70,21 @@ class CallMemberCell: UICollectionViewCell {
         super.awakeFromNib()
         label.font = Self.labelFont
         label.adjustsFontForContentSizeCategory = true
-        avatarWrapperView.layer.insertSublayer(speakingIndicatorLayer, at: 0)
+        avatarWrapperView.layer.insertSublayer(statusIndicatorLayer, at: 0)
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
         avatarWrapperView.layer.cornerRadius = avatarWrapperView.frame.width / 2
         connectingView.layer.cornerRadius = connectingView.frame.width / 2
-        speakingIndicatorLayer.position = CGPoint(x: avatarWrapperView.bounds.midX,
-                                                  y: avatarWrapperView.bounds.midY)
+        statusIndicatorLayer.position = CGPoint(x: avatarWrapperView.bounds.midX,
+                                                y: avatarWrapperView.bounds.midY)
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
         avatarImageView.prepareForReuse()
-        isSpeaking = false
+        status = nil
     }
     
 }

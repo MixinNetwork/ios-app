@@ -159,7 +159,7 @@ extension Database {
         where condition: SQLSpecificExpressible? = nil
     ) -> Value? {
         try! pool.read { (db) -> Value? in
-            var request = Record.select([column])
+            var request = Record.select([column]).limit(1)
             if let condition = condition {
                 request = request.filter(condition)
             }
@@ -230,6 +230,7 @@ extension Database {
         try! pool.read { (db) -> Record? in
             try Record.filter(condition)
                 .order(orderings)
+                .limit(1)
                 .fetchOne(db)
         }
     }

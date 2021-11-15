@@ -41,9 +41,10 @@ class DatabaseDiagnosticViewController: UIViewController {
             }
         }()
         queue.async {
-            guard sql.prefix(6).uppercased() == "SELECT" else {
+            let prefix = sql.prefix(6).uppercased()
+            guard prefix == "SELECT" || prefix == "EXPLAI" else {
                 DispatchQueue.main.sync {
-                    self.outputTextView.text = "Only select statements are supported"
+                    self.outputTextView.text = "Only queries are supported"
                 }
                 return
             }

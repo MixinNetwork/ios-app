@@ -125,7 +125,6 @@ extension AssetViewController: ContainerViewControllerDelegate {
             } else {
                 AppGroupUserDefaults.Wallet.hiddenAssetIds[asset.assetId] = true
             }
-            NotificationCenter.default.post(onMainThread: Application.assetVisibilityDidChangeNotification, object: self)
             weakSelf.navigationController?.popViewController(animated: true)
         }))
         alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))

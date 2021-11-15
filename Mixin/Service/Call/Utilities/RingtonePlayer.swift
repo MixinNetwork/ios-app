@@ -32,6 +32,7 @@ class RingtonePlayer {
     private weak var outgoingPlayerIfLoaded: AVAudioPlayer?
     
     func play(ringtone: Ringtone) {
+        assert(Thread.isMainThread)
         stop()
         let audioSession = AudioSession.shared.avAudioSession
         let options: AVAudioSession.CategoryOptions = [
@@ -53,6 +54,7 @@ class RingtonePlayer {
     }
     
     func stop() {
+        assert(Thread.isMainThread)
         incomingPlayerIfLoaded?.stop()
         outgoingPlayerIfLoaded?.stop()
     }

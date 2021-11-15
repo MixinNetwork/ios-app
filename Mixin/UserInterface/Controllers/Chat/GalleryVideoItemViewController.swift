@@ -692,10 +692,6 @@ extension GalleryVideoItemViewController {
                            selector: #selector(playerItemFailedToPlayToEndTime(_:)),
                            name: .AVPlayerItemFailedToPlayToEndTime,
                            object: item)
-        center.addObserver(self,
-                           selector: #selector(pauseAction(_:)),
-                           name: CallService.willStartCallNotification,
-                           object: nil)
         
         timeControlObserver = player.observe(\.timeControlStatus, changeHandler: { [weak self] (player, _) in
             self?.updateControlView()

@@ -53,13 +53,18 @@ class GroupCallMemberPickerContentViewController: UserItemPeerViewController<Che
         super.viewDidLoad()
         
         searchBoxTrailingConstraint.isActive = false
+        searchBoxView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        searchBoxView.textField.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        
         cancelButton.setTitle(R.string.localizable.dialog_button_cancel(), for: .normal)
         cancelButton.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 16), adjustForContentSize: true)
         cancelButton.addTarget(self, action: #selector(cancelAction), for: .touchUpInside)
         cancelButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+        cancelButton.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         view.addSubview(cancelButton)
         cancelButton.snp.makeConstraints { (make) in
             make.centerY.equalTo(searchBoxView)
+            make.height.greaterThanOrEqualTo(44)
             make.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing)
             make.leading.equalTo(searchBoxView.snp.trailing)
         }
@@ -125,6 +130,9 @@ class GroupCallMemberPickerContentViewController: UserItemPeerViewController<Che
     override func setCollectionViewHidden(_ hidden: Bool, animated: Bool) {
         centerWrapperViewBottomConstraint.constant = hidden ? -8 : -13
         centerWrapperViewHeightConstraint.constant = hidden ? 0 : 90
+        guard view.window != nil else {
+            return
+        }
         if animated {
             UIView.animate(withDuration: 0.3, animations: view.layoutIfNeeded)
         } else {

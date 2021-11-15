@@ -13,9 +13,6 @@ public class SendMessageService: MixinService {
     
     public let jobCreationQueue = DispatchQueue(label: "one.mixin.services.queue.send.message.job.creation")
     
-    @Synchronized(value: false)
-    public private(set) var isRequestingKrakenPeers: Bool
-    
     private let dispatchQueue = DispatchQueue(label: "one.mixin.services.queue.send.messages")
     private let httpDispatchQueue = DispatchQueue(label: "one.mixin.services.queue.send.http.messages")
     private var httpProcessing = false
@@ -200,10 +197,11 @@ public class SendMessageService: MixinService {
                 let ids = Array(messageIds[position..<nextPosition])
                 var jobs = [Job]()
                 
-                guard let lastMessageId = ids.last else {
+                guard let lastMessageId = ids.last,
+                      let lastRowID: Int = UserDatabase.current.select(column: .rowID, from: Message.self, where: Message.column(of: .messageId) == lastMessageId)
+                else {
                     return
                 }
-                let lastRowID: Int = UserDatabase.current.select(column: .rowID, from: Message.self, where: Message.column(of: .messageId) == lastMessageId)!
                 if ids.count == 1 {
                     let messageId = ids[0]
                     let blazeMessage = BlazeMessage(ackBlazeMessage: messageId, status: MessageStatus.READ.rawValue)

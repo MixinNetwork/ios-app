@@ -416,13 +416,12 @@ public final class UserDatabase: Database {
         migrator.registerMigration("batch_process_messages") { (db) in
             try db.execute(sql: "DROP TRIGGER IF EXISTS conversation_last_message_update")
         }
-        
-        /* Remaining works:
-         try db.execute(sql: "DROP INDEX IF EXISTS messages_unread_indexs")
-         try db.execute(sql: "DROP INDEX IF EXISTS messages_user_indexs")
-         
-         try db.execute(sql: "CREATE INDEX IF NOT EXISTS index_messages_pick ON messages(conversation_id, status, user_id, created_at)")
-         */
+
+        migrator.registerMigration("index_optimization_2") { (db) in
+            try db.execute(sql: "DROP INDEX IF EXISTS messages_unread_indexs")
+            try db.execute(sql: "DROP INDEX IF EXISTS messages_user_indexs")
+            try db.execute(sql: "CREATE INDEX IF NOT EXISTS index_messages_pick ON messages(conversation_id, status, user_id, created_at)")
+        }
         
         return migrator
     }

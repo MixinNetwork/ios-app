@@ -16,7 +16,6 @@ class HiddenAssetViewController: UIViewController {
             weakSelf.assets.remove(at: indexPath.row)
             weakSelf.tableView.deleteRows(at: [indexPath], with: .fade)
             AppGroupUserDefaults.Wallet.hiddenAssetIds[assetId] = nil
-            NotificationCenter.default.post(onMainThread: Application.assetVisibilityDidChangeNotification, object: self)
         })
         action.backgroundColor = .theme
         return action
@@ -30,7 +29,7 @@ class HiddenAssetViewController: UIViewController {
         tableView.delegate = self
         tableView.tableFooterView = UIView()
         tableView.reloadData()
-        NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: Application.assetVisibilityDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: AppGroupUserDefaults.Wallet.assetVisibilityDidChangeNotification, object: nil)
         fetchAssets()
     }
     

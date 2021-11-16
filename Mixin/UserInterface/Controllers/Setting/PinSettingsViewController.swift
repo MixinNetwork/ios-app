@@ -142,8 +142,7 @@ extension PinSettingsViewController: UITableViewDelegate {
 extension PinSettingsViewController {
     
     private func updateTableHeaderView() {
-        let sizeToFit = CGSize(width: view.bounds.width, height: UIView.layoutFittingExpandedSize.height)
-        let headerHeight = tableHeaderView.sizeThatFits(sizeToFit).height
+        let headerHeight = tableHeaderView.contentHeight
         tableHeaderView.frame.size = CGSize(width: view.bounds.width, height: headerHeight)
         tableView.tableHeaderView = tableHeaderView
     }

@@ -850,7 +850,13 @@ extension PayWindow {
                     return
                 }
             case let .withdraw(_, address, _, _):
-                if let amount = Decimal(string: amount, locale: .current), let dust = Decimal(string: address.dust, locale: .us), amount < dust {
+                let decimalAmount: Decimal?
+                if let decimalSeparator = Locale.current.decimalSeparator, decimalSeparator != ".", amount.contains(decimalSeparator) {
+                    decimalAmount = Decimal(string: amount, locale: .current)
+                } else {
+                    decimalAmount = Decimal(string: amount, locale: .us)
+                }
+                if let amount = decimalAmount, let dust = Decimal(string: address.dust, locale: .us), amount < dust {
                     completion(false, R.string.localizable.withdrawal_minimum_amount(address.dust, asset.symbol))
                     return
                 }

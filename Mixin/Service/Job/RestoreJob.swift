@@ -179,7 +179,7 @@ class RestoreJob: BaseJob {
         }
 
         NotificationCenter.default.removeObserver(observer)
-        NotificationCenter.default.post(onMainThread: Application.backupDidChangeNotification, object: self)
+        NotificationCenter.default.post(onMainThread: BackupJob.backupDidChangeNotification, object: self)
     }
 
     func monitorURL(cloudURL: URL, localURL: URL, category: AttachmentContainer.Category, isZipFile: Bool = false) {

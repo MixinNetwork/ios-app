@@ -215,51 +215,63 @@ extension CallService: PKPushRegistryDelegate {
         }
         
         if !name.isEmpty, let conversationId = payload.dictionaryPayload["conversation_id"] as? String, let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId) {
-            let inviters: [UserItem]
-            if let inviter = UserDAO.shared.getUser(userId: userId) {
-                inviters = [inviter]
+            if let call = groupCall(with: conversationId) {
+                // PushKit notifications may deliver AFTER the invitation was delivered with WebSocket
+                // Report that call again to exonerate from PushKit abusing
+                adapter.reportNewIncomingCall(call) { _ in }
             } else {
-                inviters = []
-            }
-            let call = GroupCall(conversation: conversation,
-                                 isOutgoing: false,
-                                 inviters: inviters,
-                                 invitees: [])
-            adapter.reportNewIncomingCall(call) { error in
-                if let error = error {
-                    let reason = Call.EndedReason(error: error)
-                    call.end(reason: reason, by: .local)
-                    Logger.call.error(category: "CallService", message: "Incoming group call is blocked by adapter: \(error)")
+                let inviters: [UserItem]
+                if let inviter = UserDAO.shared.getUser(userId: userId) {
+                    inviters = [inviter]
                 } else {
-                    Queue.main.autoSync {
-                        self.groupCallUUIDs[conversation.conversationId] = call.uuid
-                        self.calls[call.uuid] = call
-                    }
+                    inviters = []
                 }
-                completion()
+                let call = GroupCall(conversation: conversation,
+                                     isOutgoing: false,
+                                     inviters: inviters,
+                                     invitees: [])
+                adapter.reportNewIncomingCall(call) { error in
+                    if let error = error {
+                        let reason = Call.EndedReason(error: error)
+                        call.end(reason: reason, by: .local)
+                        Logger.call.error(category: "CallService", message: "Incoming group call is blocked by adapter: \(error)")
+                    } else {
+                        Queue.main.autoSync {
+                            self.groupCallUUIDs[conversation.conversationId] = call.uuid
+                            self.calls[call.uuid] = call
+                        }
+                    }
+                    completion()
+                }
+                MixinService.isStopProcessMessages = false
+                WebSocketService.shared.connectIfNeeded()
+                Logger.call.info(category: "CallService", message: "Report incoming group call from PushKit notification. UUID: \(call.uuidString)")
             }
-            MixinService.isStopProcessMessages = false
-            WebSocketService.shared.connectIfNeeded()
-            Logger.call.info(category: "CallService", message: "Report incoming group call from PushKit notification. UUID: \(call.uuidString)")
         } else if name.isEmpty, let username = payload.dictionaryPayload["full_name"] as? String, let uuid = UUID(uuidString: messageId) {
-            let call = IncomingPeerCall(uuid: uuid,
-                                        remoteUserId: userId,
-                                        remoteUsername: username)
-            adapter.reportNewIncomingCall(call) { error in
-                if let error = error {
-                    let reason = Call.EndedReason(error: error)
-                    call.end(reason: reason, by: .local)
-                    Logger.call.error(category: "CallService", message: "Incoming peer call is blocked by adapter: \(error)")
-                } else {
-                    Queue.main.autoSync {
-                        self.calls[call.uuid] = call
+            if let call = call(with: uuid) as? PeerCall {
+                // PushKit notifications may deliver AFTER the offer was delivered with WebSocket
+                // Report that call again to exonerate from PushKit abusing
+                adapter.reportNewIncomingCall(call) { _ in }
+            } else {
+                let call = IncomingPeerCall(uuid: uuid,
+                                            remoteUserId: userId,
+                                            remoteUsername: username)
+                adapter.reportNewIncomingCall(call) { error in
+                    if let error = error {
+                        let reason = Call.EndedReason(error: error)
+                        call.end(reason: reason, by: .local)
+                        Logger.call.error(category: "CallService", message: "Incoming peer call is blocked by adapter: \(error)")
+                    } else {
+                        Queue.main.autoSync {
+                            self.calls[call.uuid] = call
+                        }
                     }
+                    completion()
                 }
-                completion()
+                MixinService.isStopProcessMessages = false
+                WebSocketService.shared.connectIfNeeded()
+                Logger.call.info(category: "CallService", message: "New incoming peer call from: \(username), uuid: \(call.uuidString)")
             }
-            MixinService.isStopProcessMessages = false
-            WebSocketService.shared.connectIfNeeded()
-            Logger.call.info(category: "CallService", message: "New incoming peer call from: \(username), uuid: \(call.uuidString)")
         } else {
             Logger.call.info(category: "CallService", message: "report failed incoming call from PushKit notification")
             callKitAdapter.reportImmediateFailureCall()

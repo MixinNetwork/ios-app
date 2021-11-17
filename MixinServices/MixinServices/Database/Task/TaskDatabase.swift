@@ -40,7 +40,7 @@ public class TaskDatabase: Database {
             let infos = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(messages_blaze)")
             let columnNames = infos.map(\.name)
             if !columnNames.contains("conversation_id") {
-                try db.execute(sql: "ALTER TABLE messages_blaze ADD COLUMN conversation_id TEXT")
+                try db.execute(sql: "ALTER TABLE messages_blaze ADD COLUMN conversation_id TEXT NOT NULL DEFAULT ''")
             }
             
             try db.execute(sql: "CREATE INDEX IF NOT EXISTS index_conversation_messages ON messages_blaze(conversation_id, created_at)")

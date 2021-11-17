@@ -14,6 +14,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     
     private var tapRecognizer: UITapGestureRecognizer!
     private var itemStatusObserver: NSKeyValueObservation?
+    private var playerStatusObserver: NSKeyValueObservation?
     private var timeControlObserver: NSKeyValueObservation?
     private var itemPresentationSizeObserver: NSKeyValueObservation?
     private var sliderObserver: Any?
@@ -219,6 +220,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         controlView.slider.value = controlView.slider.minimumValue
         controlView.playedTimeLabel.text = mediaDurationFormatter.string(from: 0)
         guard let item = item else {
+            Logger.general.error(category: "GalleryVideoItemViewController", message: "Load item failed, it's nil")
             return
         }
         videoRatio = standardizedRatio(of: item.size)
@@ -451,6 +453,7 @@ extension GalleryVideoItemViewController {
             }
         }
         guard let item = item else {
+            Logger.general.error(category: "GalleryVideoItemViewController", message: "Play item failed, it's nil")
             return
         }
         playerDidFailedToPlay = false
@@ -462,10 +465,12 @@ extension GalleryVideoItemViewController {
                     try session.setCategory(.playback, mode: .default, options: .defaultToSpeaker)
                 }
                 mute = false
-            } catch AudioSession.Error.insufficientPriority {
+            } catch AudioSession.Error.insufficientPriority(let priority) {
                 mute = true
+                Logger.general.error(category: "GalleryVideoItemViewController", message: "AudioSession activate with insufficient Priority :\(priority)")
             } catch {
                 mute = false
+                Logger.general.error(category: "GalleryVideoItemViewController", message: "AudioSession activate error: \(error)")
             }
             player.isMuted = mute
             addTimeObservers()
@@ -473,6 +478,7 @@ extension GalleryVideoItemViewController {
                 playerDidReachEnd = false
                 player.seek(to: .zero)
             }
+            Logger.general.info(category: "GalleryVideoItemViewController", message: "Playing video")
             player.play()
         } else if let url = item.url {
             controlView.style.insert(.loading)
@@ -565,6 +571,20 @@ extension GalleryVideoItemViewController {
         updateControlView(playControlsHidden: false, otherControlsHidden: false, animated: true)
         removeTimeObservers()
         AudioSession.shared.deactivateAsynchronously(client: self, notifyOthersOnDeactivation: false)
+        let errorDescription: String
+        if let error = notification.userInfo?[AVPlayerItemFailedToPlayToEndTimeErrorKey] as? Error {
+            errorDescription = error.localizedDescription
+        } else {
+            errorDescription = "(null)"
+        }
+        Logger.general.error(category: "GalleryVideoItemViewController", message: "Player item failed to play to end time: \(errorDescription)")
+    }
+    
+    @objc private func playerItemNewErrorLogEntry(_ notification: Notification) {
+        guard let playerItem = notification.object as? AVPlayerItem, let errorLog = playerItem.errorLog() else {
+            return
+        }
+        Logger.general.error(category: "GalleryVideoItemViewController", message: "Player item new error log entry: \(errorLog)")
     }
     
     @objc private func beginScrubbingAction(_ sender: Any) {
@@ -638,6 +658,7 @@ extension GalleryVideoItemViewController {
         func showReloadAndReport(error: Error?) {
             if let error = error {
                 reporter.report(error: error)
+                Logger.general.error(category: "GalleryVideoItemViewController", message: "Failed to load asset: \(error)")
             }
             controlView.style.remove(.loading)
             controlView.playControlStyle = .reload
@@ -669,6 +690,7 @@ extension GalleryVideoItemViewController {
     private func load(playableAsset asset: AVURLAsset, playAfterLoaded: Bool) {
         guard asset.isPlayable else {
             // TODO: UI Update
+            Logger.general.error(category: "GalleryVideoItemViewController", message: "Asset is not playable")
             return
         }
         removeAllObservers()
@@ -676,11 +698,34 @@ extension GalleryVideoItemViewController {
         let item = AVPlayerItem(asset: asset)
         itemStatusObserver = item.observe(\.status, options: [.initial, .new]) { [weak self] (item, change) in
             // Known issue: https://bugs.swift.org/browse/SR-5872
-            // 'change' are always nil here
+            // 'change' is always nil here
             self?.updateControlView()
+            switch item.status {
+            case .readyToPlay:
+                break
+            case .failed:
+                Logger.general.error(category: "GalleryVideoItemViewController", message: "Player item failed: \(item.error?.localizedDescription ?? "(null)")")
+            case .unknown:
+                Logger.general.info(category: "GalleryVideoItemViewController", message: "Player item becomes unknown")
+            @unknown default:
+                Logger.general.info(category: "GalleryVideoItemViewController", message: "Player item status: \(item.status.rawValue)")
+            }
         }
         itemPresentationSizeObserver = item.observe(\.presentationSize) { [weak self] (item, _) in
             self?.updateVideoViewSize(with: item)
+        }
+        
+        playerStatusObserver = player.observe(\.status, options: [.initial, .new]) { player, _ in
+            switch player.status {
+            case .readyToPlay:
+                break
+            case .failed:
+                Logger.general.error(category: "GalleryVideoItemViewController", message: "Player failed: \(player.error?.localizedDescription ?? "(null)")")
+            case .unknown:
+                Logger.general.info(category: "GalleryVideoItemViewController", message: "Player becomes unknown")
+            @unknown default:
+                Logger.general.info(category: "GalleryVideoItemViewController", message: "Player status: \(player.status.rawValue)")
+            }
         }
         
         let center = NotificationCenter.default
@@ -691,6 +736,10 @@ extension GalleryVideoItemViewController {
         center.addObserver(self,
                            selector: #selector(playerItemFailedToPlayToEndTime(_:)),
                            name: .AVPlayerItemFailedToPlayToEndTime,
+                           object: item)
+        center.addObserver(self,
+                           selector: #selector(playerItemNewErrorLogEntry(_:)),
+                           name: .AVPlayerItemNewErrorLogEntry,
                            object: item)
         
         timeControlObserver = player.observe(\.timeControlStatus, changeHandler: { [weak self] (player, _) in
@@ -706,12 +755,15 @@ extension GalleryVideoItemViewController {
                     try session.setCategory(.playback, mode: .default, options: .defaultToSpeaker)
                 }
                 mute = false
-            } catch AudioSession.Error.insufficientPriority {
+            } catch AudioSession.Error.insufficientPriority(let priority) {
                 mute = true
+                Logger.general.error(category: "GalleryVideoItemViewController", message: "AudioSession activate with insufficient Priority :\(priority)")
             } catch {
                 mute = false
+                Logger.general.error(category: "GalleryVideoItemViewController", message: "AudioSession activate error: \(error)")
             }
             player.isMuted = mute
+            Logger.general.info(category: "GalleryVideoItemViewController", message: "Playing video")
             player.play()
         }
     }
@@ -837,6 +889,7 @@ extension GalleryVideoItemViewController {
         itemStatusObserver?.invalidate()
         itemPresentationSizeObserver?.invalidate()
         timeControlObserver?.invalidate()
+        playerStatusObserver?.invalidate()
         NotificationCenter.default.removeObserver(self)
     }
     

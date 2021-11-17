@@ -4,7 +4,7 @@ import MixinServices
 class WalletPasswordViewController: ContinueButtonViewController {
 
     @IBOutlet weak var pinField: PinField!
-    @IBOutlet weak var textView: IntroTextView!
+    @IBOutlet weak var textLabel: TextLabel!
     @IBOutlet weak var subtitleLabel: UILabel!
     @IBOutlet weak var backButton: UIButton!
     
@@ -45,30 +45,41 @@ class WalletPasswordViewController: ContinueButtonViewController {
         super.viewDidLoad()
         pinField.delegate = self
         pinField.becomeFirstResponder()
-        textView.font = .scaledFont(ofSize: 18, weight: .semibold)
+        
+        textLabel.font = .systemFont(ofSize: 18, weight: .semibold)
+        textLabel.lineSpacing = 4
+        textLabel.textColor = .title
+
         switch walletPasswordType {
         case .initPinStep1:
-            updateTextViewText()
-            subtitleLabel.text = ""
+            let text = R.string.localizable.wallet_pin_create_title()
+            textLabel.text = text
+            textLabel.delegate = self
+            let linkRange = (text as NSString)
+                .range(of: R.string.localizable.action_learn_more(), options: [.backwards, .caseInsensitive])
+            if linkRange.location != NSNotFound && linkRange.length != 0 {
+                textLabel.linkColor = .theme
+                textLabel.linksMap = [linkRange: URL.pinTIP]
+            }
             backButton.setImage(R.image.ic_title_close(), for: .normal)
         case .initPinStep2, .changePinStep3:
-            textView.text = Localized.WALLET_PIN_CONFIRM_TITLE
+            textLabel.text = Localized.WALLET_PIN_CONFIRM_TITLE
             subtitleLabel.text = Localized.WALLET_PIN_CONFIRM_SUBTITLE
             backButton.setImage(R.image.ic_title_back(), for: .normal)
         case .initPinStep3, .changePinStep4:
-            textView.text = Localized.WALLET_PIN_CONFIRM_AGAIN_TITLE
+            textLabel.text = Localized.WALLET_PIN_CONFIRM_AGAIN_TITLE
             subtitleLabel.text = Localized.WALLET_PIN_CONFIRM_AGAIN_SUBTITLE
             backButton.setImage(R.image.ic_title_back(), for: .normal)
         case .initPinStep4, .changePinStep5:
-            textView.text = Localized.WALLET_PIN_CONFIRM_AGAIN_TITLE
+            textLabel.text = Localized.WALLET_PIN_CONFIRM_AGAIN_TITLE
             subtitleLabel.text = R.string.localizable.wallet_pin_more_confirm()
             backButton.setImage(R.image.ic_title_back(), for: .normal)
         case .changePinStep1:
-            textView.text = Localized.WALLET_PIN_VERIFY_TITLE
+            textLabel.text = Localized.WALLET_PIN_VERIFY_TITLE
             subtitleLabel.text = ""
             backButton.setImage(R.image.ic_title_close(), for: .normal)
         case .changePinStep2:
-            textView.text = Localized.WALLET_PIN_NEW_TITLE
+            textLabel.text = Localized.WALLET_PIN_NEW_TITLE
             subtitleLabel.text = ""
             backButton.setImage(R.image.ic_title_back(), for: .normal)
         }
@@ -153,26 +164,6 @@ class WalletPasswordViewController: ContinueButtonViewController {
         navigationController.present(viewController, animated: true, completion: {
             navigationController.setViewControllers(viewControllers, animated: false)
         })
-    }
-    
-    private func updateTextViewText() {
-        let text = R.string.localizable.wallet_pin_create_title()
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.alignment = .center
-        paragraphStyle.lineHeightMultiple = 1.16
-        let attrs: [NSAttributedString.Key: Any] = [
-            .font: UIFont.scaledFont(ofSize: 18, weight: .semibold),
-            .foregroundColor: UIColor.title,
-            .paragraphStyle: paragraphStyle
-        ]
-        let str = NSMutableAttributedString(string: text, attributes: attrs)
-        let linkRange = (text as NSString)
-            .range(of: R.string.localizable.action_learn_more(), options: [.backwards, .caseInsensitive])
-        if linkRange.location != NSNotFound && linkRange.length != 0 {
-            str.addAttribute(.link, value: URL.pinTIP, range: linkRange)
-            textView.linkTextAttributes = [.foregroundColor: UIColor.theme]
-        }
-        textView.attributedText = str
     }
     
     @objc private func applicationDidBecomeActive() {
@@ -334,4 +325,16 @@ extension WalletPasswordViewController: PinFieldDelegate {
             }
         }
     }
+}
+
+extension WalletPasswordViewController: CoreTextLabelDelegate {
+    
+    func coreTextLabel(_ label: CoreTextLabel, didSelectURL url: URL) {
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    }
+    
+    func coreTextLabel(_ label: CoreTextLabel, didLongPressOnURL url: URL) {
+        
+    }
+    
 }

@@ -2028,18 +2028,17 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ylq-8e-5gl">
                                 <rect key="frame" x="0.0" y="44" width="414" height="186"/>
                                 <subviews>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" editable="NO" text="Set a 6 digit Wallet PIN to create your first digital wallet" textAlignment="center" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="l4r-AJ-wRc" customClass="IntroTextView" customModule="Mixin" customModuleProvider="target">
-                                        <rect key="frame" x="27" y="74.333333333333329" width="360" height="37.333333333333329"/>
-                                        <color key="textColor" name="title"/>
-                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
-                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                    </textView>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Kw-kt-MQT" customClass="TextLabel" customModule="Mixin" customModuleProvider="target">
+                                        <rect key="frame" x="27" y="0.0" width="360" height="146"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </view>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="l4r-AJ-wRc" secondAttribute="trailing" constant="27" id="KzT-z9-7d2"/>
-                                    <constraint firstItem="l4r-AJ-wRc" firstAttribute="centerY" secondItem="ylq-8e-5gl" secondAttribute="centerY" id="WIt-cx-c97"/>
-                                    <constraint firstItem="l4r-AJ-wRc" firstAttribute="leading" secondItem="ylq-8e-5gl" secondAttribute="leading" constant="27" id="i60-lq-DtR"/>
+                                    <constraint firstItem="5Kw-kt-MQT" firstAttribute="leading" secondItem="ylq-8e-5gl" secondAttribute="leading" constant="27" id="8Cu-gh-JCB"/>
+                                    <constraint firstItem="5Kw-kt-MQT" firstAttribute="top" secondItem="ylq-8e-5gl" secondAttribute="top" id="HRj-R3-7XD"/>
+                                    <constraint firstAttribute="bottom" secondItem="5Kw-kt-MQT" secondAttribute="bottom" constant="40" id="fex-fl-h9u"/>
+                                    <constraint firstAttribute="trailing" secondItem="5Kw-kt-MQT" secondAttribute="trailing" constant="27" id="p7F-pF-S2D"/>
                                 </constraints>
                             </view>
                             <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ToH-VW-Iy6" customClass="PinField" customModule="Mixin" customModuleProvider="target">
@@ -2082,7 +2081,7 @@
                         <outlet property="backButton" destination="IJi-Z4-Yxb" id="0o6-xM-427"/>
                         <outlet property="pinField" destination="ToH-VW-Iy6" id="7pB-na-S42"/>
                         <outlet property="subtitleLabel" destination="ssW-jL-Bg4" id="O5e-uB-OJF"/>
-                        <outlet property="textView" destination="l4r-AJ-wRc" id="KcM-B0-6Zs"/>
+                        <outlet property="textLabel" destination="5Kw-kt-MQT" id="HTK-bs-Q9l"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FGA-IM-Cax" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2108,7 +2107,7 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_input">
-            <color red="0.96100002527236938" green="0.96899998188018799" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_secondary">
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -2120,7 +2119,7 @@
             <color red="0.90980392156862744" green="0.41960784313725491" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
             <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

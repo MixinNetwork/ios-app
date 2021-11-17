@@ -17,19 +17,21 @@ class PinSettingTableHeaderView: UIView {
         textLabel.textColor = .accessoryText
         textLabel.lineSpacing = 10
         textLabel.linkColor = .theme
+        textLabel.detectLinks = false
         let text = R.string.localizable.setting_pin_hint()
         textLabel.text = text
         let linkRange = (text as NSString).range(of: R.string.localizable.action_learn_more(), options: [.backwards, .caseInsensitive])
         if linkRange.location != NSNotFound && linkRange.length != 0 {
-            textLabel.linksMap = [linkRange: URL.pinTIP]
+            textLabel.additionalLinksMap = [linkRange: URL.pinTIP]
         }
     }
 
     override func sizeThatFits(_ size: CGSize) -> CGSize {
-        let textLabelWidthToTypeset = size.width
+        let labelWidth = size.width
             - textLabelLeadingConstraint.constant
             - textLabelTrailingConstraint.constant
-        let textLabelHeight = textLabel.typeset(width: textLabelWidthToTypeset).height
+        let sizeToFitLabel = CGSize(width: labelWidth, height: UIView.layoutFittingExpandedSize.height)
+        let textLabelHeight = textLabel.sizeThatFits(sizeToFitLabel).height
         let height = imageViewTopConstraint.constant
             + (imageView.image?.size.height ?? 68)
             + textLabelTopConstraint.constant

@@ -50,7 +50,8 @@ class WalletPasswordViewController: ContinueButtonViewController {
         textLabel.font = .systemFont(ofSize: 18, weight: .semibold)
         textLabel.lineSpacing = 4
         textLabel.textColor = .title
-
+        textLabel.detectLinks = false
+        
         switch walletPasswordType {
         case .initPinStep1:
             let text = R.string.localizable.wallet_pin_create_title()
@@ -60,7 +61,7 @@ class WalletPasswordViewController: ContinueButtonViewController {
                 .range(of: R.string.localizable.action_learn_more(), options: [.backwards, .caseInsensitive])
             if linkRange.location != NSNotFound && linkRange.length != 0 {
                 textLabel.linkColor = .theme
-                textLabel.linksMap = [linkRange: URL.pinTIP]
+                textLabel.additionalLinksMap = [linkRange: URL.pinTIP]
             }
             backButton.setImage(R.image.ic_title_close(), for: .normal)
         case .initPinStep2, .changePinStep3:
@@ -98,10 +99,11 @@ class WalletPasswordViewController: ContinueButtonViewController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         if view.bounds.width != lastViewWidth {
-            let widthToTypeset = view.bounds.width
+            let labelWidth = view.bounds.width
                 - textLabelLeadingConstraint.constant
                 - textLabelTrailingConstraint.constant
-            textLabelHeightConstraint.constant = textLabel.typeset(width: widthToTypeset).height
+            let sizeToFitLabel = CGSize(width: labelWidth, height: UIView.layoutFittingExpandedSize.height)
+            textLabelHeightConstraint.constant = textLabel.sizeThatFits(sizeToFitLabel).height
             lastViewWidth = view.bounds.width
         }
     }

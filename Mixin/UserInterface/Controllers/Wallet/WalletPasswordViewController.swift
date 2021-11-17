@@ -8,6 +8,10 @@ class WalletPasswordViewController: ContinueButtonViewController {
     @IBOutlet weak var subtitleLabel: UILabel!
     @IBOutlet weak var backButton: UIButton!
     
+    @IBOutlet weak var textLabelHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var textLabelLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var textLabelTrailingConstraint: NSLayoutConstraint!
+    
     enum WalletPasswordType {
         case initPinStep1
         case initPinStep2(previous: String)
@@ -26,7 +30,8 @@ class WalletPasswordViewController: ContinueButtonViewController {
         case changePhone
         case setEmergencyContact
     }
-
+    
+    private var lastViewWidth: CGFloat = 0
     private var dismissTarget: DismissTarget?
     private var walletPasswordType = WalletPasswordType.initPinStep1
     private var isBusy = false {
@@ -93,6 +98,17 @@ class WalletPasswordViewController: ContinueButtonViewController {
             pinField.becomeFirstResponder()
         }
         pinField.clear()
+    }
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        if view.bounds.width != lastViewWidth {
+            let widthToTypeset = view.bounds.width
+                - textLabelLeadingConstraint.constant
+                - textLabelTrailingConstraint.constant
+            textLabelHeightConstraint.constant = textLabel.typeset(width: widthToTypeset).height
+            lastViewWidth = view.bounds.width
+        }
     }
     
     @IBAction func backAction(_ sender: Any) {

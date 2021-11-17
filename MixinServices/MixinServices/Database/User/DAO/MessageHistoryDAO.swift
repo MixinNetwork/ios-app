@@ -10,12 +10,12 @@ public final class MessageHistoryDAO: UserDatabaseDAO {
     }
     
     public func getExistMessageIds(messageIds: [String]) -> [String] {
-        guard messageIds.count > 0 else {
+        guard !messageIds.isEmpty else {
             return []
         }
         return db.select(column: MessageHistory.column(of: .messageId),
-                  from: MessageHistory.self,
-                  where: messageIds.contains(MessageHistory.column(of: .messageId)))
+                         from: MessageHistory.self,
+                         where: messageIds.contains(MessageHistory.column(of: .messageId)))
     }
     
     public func replaceMessageHistory(messageId: String) {

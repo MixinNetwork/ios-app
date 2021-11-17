@@ -195,12 +195,12 @@ public final class MessageDAO: UserDatabaseDAO {
     }
     
     public func getExistMessageIds(messageIds: [String]) -> [String] {
-        guard messageIds.count > 0 else {
+        guard !messageIds.isEmpty else {
             return []
         }
         return db.select(column: Message.column(of: .messageId),
-                  from: Message.self,
-                  where: messageIds.contains(Message.column(of: .messageId)))
+                         from: Message.self,
+                         where: messageIds.contains(Message.column(of: .messageId)))
     }
     
     public func batchUpdateMessageStatus(readMessageIds: [String], mentionMessageIds: [String]) {

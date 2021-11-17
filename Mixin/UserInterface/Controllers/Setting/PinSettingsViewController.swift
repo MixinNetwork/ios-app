@@ -56,6 +56,13 @@ final class PinSettingsViewController: SettingsTableViewController {
         }
     }
     
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if traitCollection.preferredContentSizeCategory != previousTraitCollection?.preferredContentSizeCategory {
+            updateTableHeaderView()
+        }
+    }
+    
     @objc func biometricPaymentDidChange(_ notification: Notification) {
         guard !isBiometricPaymentChangingInProgress else {
             let needsInsertIntervalRow = AppGroupUserDefaults.Wallet.payWithBiometricAuthentication
@@ -142,7 +149,8 @@ extension PinSettingsViewController: UITableViewDelegate {
 extension PinSettingsViewController {
     
     private func updateTableHeaderView() {
-        let headerHeight = tableHeaderView.contentHeight
+        let sizeToFit = CGSize(width: view.bounds.width, height: UIView.layoutFittingExpandedSize.height)
+        let headerHeight = tableHeaderView.sizeThatFits(sizeToFit).height
         tableHeaderView.frame.size = CGSize(width: view.bounds.width, height: headerHeight)
         tableView.tableHeaderView = tableHeaderView
     }

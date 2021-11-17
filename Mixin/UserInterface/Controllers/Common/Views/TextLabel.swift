@@ -51,6 +51,11 @@ class TextLabel: CoreTextLabel {
             typesetIfNeeded(oldValue: oldValue, newValue: linksMap)
         }
     }
+    var maxLineCount: Int = .max {
+        didSet {
+            typesetIfNeeded(oldValue: oldValue, newValue: maxLineCount)
+        }
+    }
     
     override var bounds: CGRect {
         didSet {
@@ -63,7 +68,6 @@ class TextLabel: CoreTextLabel {
     }
     
     private let linkBackgroundCornerRadius: CGFloat =  4
-    private let maxLineCount = 8
     
     private var textSize = CGSize.zero
     
@@ -76,30 +80,11 @@ class TextLabel: CoreTextLabel {
         typeset()
     }
     
-}
-
-// MARK: - Private works
-extension TextLabel {
-    
-    private func typesetIfNeeded(oldValue: CGFloat, newValue: CGFloat, epsilon: CGFloat = 0.1) {
-        guard abs(oldValue - newValue) > epsilon else {
-            return
-        }
-        typeset()
-    }
-    
-    private func typesetIfNeeded<T: Equatable>(oldValue: T, newValue: T) {
-        guard oldValue != newValue else {
-            return
-        }
-        typeset()
-    }
-    
-    private func typeset() {
+    func typeset(width: CGFloat) -> CGSize {
         guard !text.isEmpty else {
             content = nil
             textSize = .zero
-            return
+            return textSize
         }
         let str = NSMutableAttributedString(string: text)
         let fullRange = NSRange(location: 0, length: str.mutableString.length)
@@ -159,7 +144,7 @@ extension TextLabel {
         }
         // Make CTLine and Origins
         let framesetter = CTFramesetterCreateWithAttributedString(str as CFAttributedString)
-        let layoutSize = CGSize(width: bounds.width, height: UIView.layoutFittingExpandedSize.height)
+        let layoutSize = CGSize(width: width, height: UIView.layoutFittingExpandedSize.height)
         textSize = ceil(CTFramesetterSuggestFrameSizeWithConstraints(framesetter, .zero, nil, layoutSize, nil))
         textSize.height = min(font.lineHeight * CGFloat(maxLineCount), textSize.height)
         let path = CGPath(rect: CGRect(origin: .zero, size: textSize), transform: nil)
@@ -186,6 +171,31 @@ extension TextLabel {
         
         invalidateIntrinsicContentSize()
         setNeedsDisplay()
+        
+        return textSize
+    }
+    
+}
+
+// MARK: - Private works
+extension TextLabel {
+    
+    private func typesetIfNeeded(oldValue: CGFloat, newValue: CGFloat, epsilon: CGFloat = 0.1) {
+        guard abs(oldValue - newValue) > epsilon else {
+            return
+        }
+        typeset()
+    }
+    
+    private func typesetIfNeeded<T: Equatable>(oldValue: T, newValue: T) {
+        guard oldValue != newValue else {
+            return
+        }
+        typeset()
+    }
+    
+    private func typeset() {
+        _ = typeset(width: bounds.width)
     }
     
     private func links(fromLinksMap linksMap: [NSRange: URL], forLines lines: [CTLine], lineOrigins: [CGPoint]) -> [Link] {

@@ -17,12 +17,12 @@ final class PermissionsViewController: UIViewController {
         }
     }()
     
-    private var authorization: AuthorizationResponse!
+    private var appId: String?
+    private var authorization: AuthorizationResponse?
     private var scopes = [(scope: Scope, name: String, desc: String)]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        (scopes, _) = Scope.getCompleteScopeInfo(authInfo: authorization)
         view.addSubview(tableView)
         tableView.snp.makeEdgesEqualToSuperview()
         tableView.separatorStyle = .none
@@ -35,17 +35,47 @@ final class PermissionsViewController: UIViewController {
                            forHeaderFooterViewReuseIdentifier: footerReuseId)
         tableView.estimatedSectionFooterHeight = 10
         tableView.sectionFooterHeight = UITableView.automaticDimension
-        prepareNavigationBar()
+        
+        if let authorization = authorization {
+            (scopes, _) = Scope.getCompleteScopeInfo(authInfo: authorization)
+            prepareNavigationBar()
+        } else if let appId = appId {
+            DispatchQueue.global().async {
+                AuthorizeAPI.authorizations(appId: appId) { [weak self] result in
+                    switch result {
+                    case let .success(response):
+                        if let authorization = response.first {
+                            DispatchQueue.main.async {
+                                guard let self = self else {
+                                    return
+                                }
+                                self.authorization = authorization
+                                self.scopes = Scope.getCompleteScopeInfo(authInfo: authorization).0
+                                self.prepareNavigationBar()
+                                self.tableView.reloadData()
+                            }
+                        } else {
+                            showAutoHiddenHud(style: .error, text: R.string.localizable.setting_no_authorizations())
+                        }
+                    case let .failure(error):
+                        showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                    }
+                }
+            }
+        }
     }
     
-    class func instance(authorization: AuthorizationResponse) -> UIViewController {
+    class func instance(appId: String? = nil, authorization: AuthorizationResponse? = nil) -> UIViewController {
         let vc = PermissionsViewController()
         vc.authorization = authorization
+        vc.appId = appId
         return ContainerViewController.instance(viewController: vc, title: R.string.localizable.setting_permissions())
     }
     
     @objc func profileAction() {
-        let appId = authorization.app.appId
+        guard let appId = authorization?.app.appId else {
+            return
+        }
         DispatchQueue.global().async { [weak self] in
             guard let user = UserDAO.shared.getUsers(ofAppIds: [appId]).first else {
                 return
@@ -58,8 +88,11 @@ final class PermissionsViewController: UIViewController {
     }
     
     private func removeAuthozationAction() {
+        guard let authorization = authorization else {
+            return
+        }
         let appHomeUri = authorization.app.homeUri
-        let appId = self.authorization.app.appId
+        let appId = authorization.app.appId
         let alert = UIAlertController(title: R.string.localizable.setting_revoke_confirmation(authorization.app.name), message: nil, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CONFIRM, style: .destructive, handler: { (action) in
@@ -88,6 +121,9 @@ final class PermissionsViewController: UIViewController {
     }
     
     private func prepareNavigationBar() {
+        guard let authorization = authorization else {
+            return
+        }
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(profileAction))
         iconView.addGestureRecognizer(tapRecognizer)
         iconView.isUserInteractionEnabled = true
@@ -113,6 +149,9 @@ extension PermissionsViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        guard let authorization = authorization else {
+            return 0
+        }
         if section == 0 {
             return authorization.scopes.count
         } else {
@@ -182,7 +221,7 @@ extension PermissionsViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: footerReuseId) as! SettingsFooterView
-        if section == 0 {
+        if section == 0, let authorization = authorization {
             let createDate = DateFormatter.dateFull.string(from: authorization.createdAt.toUTCDate())
             let accessedDate = DateFormatter.dateFull.string(from: authorization.accessedAt.toUTCDate())
             view.text = R.string.localizable.setting_permissions_date(createDate, accessedDate)

@@ -25,6 +25,7 @@
 "action_more" = "More";
 "action_open_browser" = "Open in Browser";
 "action_refresh" = "Refresh";
+"action_view_authorization" = "View Authorization";
 "action_select" = "Select";
 "action_clear" = "Clear";
 "action_send" = "Send";

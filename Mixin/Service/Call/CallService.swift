@@ -1002,6 +1002,7 @@ extension CallService {
 extension CallService {
     
     private func handlePublish(data: BlazeMessageData) {
+        Logger.call.info(category: "CallService", message: "Got publish from: \(data.userId), conversation: \(data.conversationId)")
         membersManager.addMember(with: data.userId, toConversationWith: data.conversationId)
         DispatchQueue.main.sync {
             guard let call = self.groupCall(with: data.conversationId) else {

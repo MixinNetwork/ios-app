@@ -377,7 +377,7 @@ extension GroupCall {
                     self.membersDataSource.addMember(member, onConflict: .discard)
                 }
             }
-            guard self.trackId != nil || isSubscribingMySelf else {
+            guard (self.trackId != nil && self.internalState != .restarting) || isSubscribingMySelf else {
                 Logger.call.warn(category: "GroupCall", message: "[\(self.uuidString)] Not subscribing: \(userId)")
                 return
             }

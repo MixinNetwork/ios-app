@@ -20,6 +20,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
     @IBOutlet weak var switchAssetButton: UIButton!
     @IBOutlet weak var assetSwitchImageView: UIImageView!
     @IBOutlet weak var amountSymbolLabel: UILabel!
+    @IBOutlet weak var transcationFeeHintView: UIView!
     @IBOutlet weak var transactionFeeHintLabel: UILabel!
     @IBOutlet weak var continueWrapperView: UIView!
     @IBOutlet weak var switchAmountButton: UIButton!
@@ -47,21 +48,6 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         let view = R.nib.balanceInputAccessoryView(owner: nil)!
         view.button.addTarget(self, action: #selector(fillBalanceAction(_:)), for: .touchUpInside)
         return view
-    }()
-    private lazy var transactionLabelAttribute: [NSAttributedString.Key: Any] = {
-        return [.font: transactionFeeHintLabel.font ?? UIFont.systemFont(ofSize: 12),
-                .foregroundColor: transactionFeeHintLabel.textColor ?? UIColor.accessoryText]
-    }()
-    private lazy var transactionLabelBoldAttribute: [NSAttributedString.Key: Any] = {
-        let normalFont = transactionFeeHintLabel.font!
-        let boldFont: UIFont
-        if let descriptor = normalFont.fontDescriptor.withSymbolicTraits(.traitBold) {
-            boldFont = UIFont(descriptor: descriptor, size: normalFont.pointSize)
-        } else {
-            boldFont = UIFont.boldSystemFont(ofSize: normalFont.pointSize)
-        }
-        return [.font: boldFont,
-                .foregroundColor: transactionFeeHintLabel.textColor ?? UIColor.accessoryText]
     }()
     
     override func viewDidLoad() {
@@ -351,37 +337,56 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
     
     private func displayFeeHint(loading: Bool) {
         DispatchQueue.main.async { [weak self] in
-            self?.transactionFeeHintLabel.isHidden = loading
+            self?.transcationFeeHintView.isHidden = loading
         }
     }
     
     private func fillFeeHint(address: Address) {
         DispatchQueue.global().async { [weak self] in
-            guard let asset = AssetDAO.shared.getAsset(assetId: address.assetId), let chainAsset = AssetDAO.shared.getAsset(assetId: asset.chainId) else {
+            guard
+                let asset = AssetDAO.shared.getAsset(assetId: address.assetId),
+                let chainAsset = AssetDAO.shared.getAsset(assetId: asset.chainId)
+            else {
                 self?.transactionFeeHintLabel.text = ""
                 self?.displayFeeHint(loading: false)
                 return
             }
             self?.chainAsset = chainAsset
+            
+            var hint: String
+            var highlightRanges = [NSRange]()
+
             let feeRepresentation = address.fee + " " + chainAsset.symbol
-            var hint = Localized.WALLET_HINT_TRANSACTION_FEE(feeRepresentation: feeRepresentation, name: asset.name)
-            var ranges = [(hint as NSString).range(of: feeRepresentation)]
-            if address.reserve.doubleValue > 0 {
-                let reserveRepresentation = address.reserve + " " + chainAsset.symbol
-                let reserveHint = Localized.WALLET_WITHDRAWAL_RESERVE(reserveRepresentation: reserveRepresentation, name: chainAsset.name)
-                let reserveRange = (reserveHint as NSString).range(of: reserveRepresentation)
-                ranges.append(NSRange(location: hint.count + reserveRange.location, length: reserveRange.length))
-                hint += reserveHint
+            let feeHint = R.string.localizable.wallet_withdrawal_network_fee(feeRepresentation)
+            hint = feeHint
+            let range = (hint as NSString).range(of: feeRepresentation)
+            highlightRanges.append(range)
+            
+            if address.dust.doubleValue > 0 {
+                let dustRepresentation = address.dust + " " + chainAsset.symbol
+                let dustHint = R.string.localizable.wallet_withdrawal_minimum_amount(dustRepresentation)
+                hint += "\n" + dustHint
+                let range = (hint as NSString).range(of: dustRepresentation, options: .backwards)
+                highlightRanges.append(range)
             }
             
+            if address.reserve.doubleValue > 0 {
+                let reserveRepresentation = address.reserve + " " + chainAsset.symbol
+                let reserveHint = R.string.localizable.wallet_withdrawal_minimum_reserve(reserveRepresentation)
+                hint += "\n" + reserveHint
+                let range = (hint as NSString).range(of: reserveRepresentation, options: .backwards)
+                highlightRanges.append(range)
+            }
+            
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.lineSpacing = 4
+            let attributedHint = NSMutableAttributedString(string: hint, attributes: [.paragraphStyle: paragraphStyle])
+            highlightRanges.forEach { range in
+                attributedHint.addAttribute(.foregroundColor, value: UIColor.text, range: range)
+            }
             DispatchQueue.main.async {
                 guard let weakSelf = self else {
                     return
-                }
-                
-                let attributedHint = NSMutableAttributedString(string: hint, attributes: weakSelf.transactionLabelAttribute)
-                for range in ranges {
-                    attributedHint.addAttributes(weakSelf.transactionLabelBoldAttribute, range: range)
                 }
                 weakSelf.transactionFeeHintLabel.attributedText = attributedHint
                 weakSelf.displayFeeHint(loading: false)

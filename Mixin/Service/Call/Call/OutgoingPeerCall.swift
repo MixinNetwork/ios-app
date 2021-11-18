@@ -53,7 +53,7 @@ extension OutgoingPeerCall: WebRTCClientDelegate {
             }
             self.internalState = .restarting
             Logger.call.info(category: "PeerCall", message: "[\(self.uuidString)] Restarting the call")
-            self.rtcClient.offer(key: nil, withIceRestartConstraint: true) { result in
+            self.rtcClient.offer(key: nil, restartIce: true) { result in
                 switch result {
                 case .success(let sdp):
                     let offer = Message.createWebRTCMessage(messageId: UUID().uuidString.lowercased(),
@@ -104,7 +104,7 @@ extension OutgoingPeerCall {
                 self.remoteUser = remoteUser
             }
             self.scheduleUnansweredTimer()
-            self.rtcClient.offer(key: nil, withIceRestartConstraint: false) { result in
+            self.rtcClient.offer(key: nil, restartIce: false) { result in
                 switch result {
                 case .success(let sdp):
                     let offer = Message.createWebRTCMessage(messageId: self.uuidString,

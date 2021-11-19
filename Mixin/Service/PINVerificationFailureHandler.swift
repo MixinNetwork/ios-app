@@ -17,7 +17,7 @@ enum PINVerificationFailureHandler {
         case .tooManyRequests:
             completion(R.string.localizable.wallet_password_too_many_requests())
         case .incorrectPin:
-            AccountAPI.logs(category: "PIN_INCORRECT", limit: 5) { (result) in
+            AccountAPI.logs(category: .incorrectPin, limit: 5) { (result) in
                 switch result {
                 case let .success(logs):
                     var errorCount = 0

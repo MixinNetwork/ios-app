@@ -3,6 +3,11 @@ import Alamofire
 
 final class AccountAPI: MixinAPI {
     
+    enum LogCategory {
+        case incorrectPin
+        case all
+    }
+    
     enum Path {
         static let verifications = "/verifications"
         static func verifications(id: String) -> String {
@@ -17,13 +22,17 @@ final class AccountAPI: MixinAPI {
         
         static let verifyPin = "/pin/verify"
         static let updatePin = "/pin/update"
-        static func logs(offset: String? = nil, category: String? = nil, limit: Int? = nil) -> String {
+        
+        static func logs(offset: String? = nil, category: LogCategory, limit: Int? = nil) -> String {
             var params = [String]()
             if let offset = offset {
                 params.append("offset=\(offset)")
             }
-            if let category = category {
-                params.append("category=\(category)")
+            switch category {
+            case .incorrectPin:
+                params.append("category=PIN_INCORRECT")
+            case .all:
+                break
             }
             if let limit = limit {
                 params.append("limit=\(limit)")
@@ -158,7 +167,7 @@ final class AccountAPI: MixinAPI {
         }
     }
     
-    static func logs(offset: String? = nil, category: String? = nil, limit: Int? = nil, completion: @escaping (MixinAPI.Result<[LogResponse]>) -> Void) {
+    static func logs(offset: String? = nil, category: LogCategory, limit: Int? = nil, completion: @escaping (MixinAPI.Result<[LogResponse]>) -> Void) {
         request(method: .get, path: Path.logs(offset: offset, category: category, limit: limit), completion: completion)
     }
     

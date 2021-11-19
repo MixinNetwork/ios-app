@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="PinSettingTableHeaderView" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="258"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_pin_setting" translatesAutoresizingMaskIntoConstraints="NO" id="ID0-mr-BPj">
+                    <rect key="frame" x="153.5" y="60" width="68" height="68"/>
+                </imageView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yz5-Pf-cKE" customClass="TextLabel" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="30" y="152" width="315" height="76"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </view>
+            </subviews>
+            <color key="backgroundColor" name="background"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="yz5-Pf-cKE" secondAttribute="trailing" priority="999" constant="30" id="2BW-Gw-N82"/>
+                <constraint firstItem="ID0-mr-BPj" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="60" id="3hL-Pl-P2i"/>
+                <constraint firstItem="ID0-mr-BPj" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="Lc1-OQ-hP7"/>
+                <constraint firstItem="yz5-Pf-cKE" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="30" id="ffa-7A-gar"/>
+                <constraint firstItem="yz5-Pf-cKE" firstAttribute="top" secondItem="ID0-mr-BPj" secondAttribute="bottom" constant="24" id="mUW-Nf-ftI"/>
+                <constraint firstAttribute="bottom" secondItem="yz5-Pf-cKE" secondAttribute="bottom" constant="30" id="qEY-JV-nO9"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="imageView" destination="ID0-mr-BPj" id="Ryp-if-Ke1"/>
+                <outlet property="imageViewTopConstraint" destination="3hL-Pl-P2i" id="YOS-QM-JFy"/>
+                <outlet property="textLabel" destination="yz5-Pf-cKE" id="sOR-yK-MLP"/>
+                <outlet property="textLabelBottomConstraint" destination="qEY-JV-nO9" id="0WO-g1-57c"/>
+                <outlet property="textLabelLeadingConstraint" destination="ffa-7A-gar" id="Sz9-Mc-oRL"/>
+                <outlet property="textLabelTopConstraint" destination="mUW-Nf-ftI" id="AU3-Fd-w1W"/>
+                <outlet property="textLabelTrailingConstraint" destination="2BW-Gw-N82" id="Wvy-ED-b16"/>
+            </connections>
+            <point key="canvasLocation" x="260.14492753623188" y="172.09821428571428"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="ic_pin_setting" width="68" height="68"/>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

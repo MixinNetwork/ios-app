@@ -15,6 +15,7 @@ final class ProfileDescriptionView: UIView {
     }
     
     private func prepare() {
+        label.maxLineCount = 8
         label.textColor = .text
         label.backgroundColor = .clear
         addSubview(label)

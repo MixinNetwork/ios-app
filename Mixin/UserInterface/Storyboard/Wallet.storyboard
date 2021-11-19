@@ -2041,21 +2041,19 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ylq-8e-5gl">
                                 <rect key="frame" x="0.0" y="44" width="414" height="186"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Set a 6 digit Wallet PIN to create your first digital wallet" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xZL-nb-tSx">
-                                        <rect key="frame" x="30" y="75" width="354" height="43"/>
-                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
-                                        <color key="textColor" name="title"/>
-                                        <nil key="highlightedColor"/>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
-                                        </userDefinedRuntimeAttributes>
-                                    </label>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Kw-kt-MQT" customClass="TextLabel" customModule="Mixin" customModuleProvider="target">
+                                        <rect key="frame" x="27" y="43" width="360" height="100"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="100" id="rtD-ec-PRl"/>
+                                        </constraints>
+                                    </view>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstItem="xZL-nb-tSx" firstAttribute="centerY" secondItem="ylq-8e-5gl" secondAttribute="centerY" multiplier="1.05" constant="-1" id="ADb-9e-duy"/>
-                                    <constraint firstAttribute="trailing" secondItem="xZL-nb-tSx" secondAttribute="trailing" constant="30" id="QiV-hY-TuZ"/>
-                                    <constraint firstItem="xZL-nb-tSx" firstAttribute="leading" secondItem="ylq-8e-5gl" secondAttribute="leading" constant="30" id="vkl-o2-wpy"/>
+                                    <constraint firstItem="5Kw-kt-MQT" firstAttribute="leading" secondItem="ylq-8e-5gl" secondAttribute="leading" constant="27" id="8Cu-gh-JCB"/>
+                                    <constraint firstItem="5Kw-kt-MQT" firstAttribute="centerY" secondItem="ylq-8e-5gl" secondAttribute="centerY" id="MW8-Ri-bAv"/>
+                                    <constraint firstAttribute="trailing" secondItem="5Kw-kt-MQT" secondAttribute="trailing" constant="27" id="p7F-pF-S2D"/>
                                 </constraints>
                             </view>
                             <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ToH-VW-Iy6" customClass="PinField" customModule="Mixin" customModuleProvider="target">
@@ -2098,7 +2096,10 @@
                         <outlet property="backButton" destination="IJi-Z4-Yxb" id="0o6-xM-427"/>
                         <outlet property="pinField" destination="ToH-VW-Iy6" id="7pB-na-S42"/>
                         <outlet property="subtitleLabel" destination="ssW-jL-Bg4" id="O5e-uB-OJF"/>
-                        <outlet property="titleLabel" destination="xZL-nb-tSx" id="LFE-de-wB8"/>
+                        <outlet property="textLabel" destination="5Kw-kt-MQT" id="HTK-bs-Q9l"/>
+                        <outlet property="textLabelHeightConstraint" destination="rtD-ec-PRl" id="cga-kG-g3L"/>
+                        <outlet property="textLabelLeadingConstraint" destination="8Cu-gh-JCB" id="dfW-Uv-odB"/>
+                        <outlet property="textLabelTrailingConstraint" destination="p7F-pF-S2D" id="HQZ-AG-1O1"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FGA-IM-Cax" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2136,7 +2137,7 @@
             <color red="0.90980392156862744" green="0.41960784313725491" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
             <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

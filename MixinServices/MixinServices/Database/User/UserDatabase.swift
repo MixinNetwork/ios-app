@@ -412,14 +412,6 @@ public final class UserDatabase: Database {
             try db.execute(sql: sql)
             try db.execute(sql: "CREATE INDEX IF NOT EXISTS index_pin_messages_conversation_id ON pin_messages(conversation_id)")
         }
-            
-        migrator.registerMigration("sticker_store") { db in
-            let infos = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(albums)")
-            let columnNames = infos.map(\.name)
-            if !columnNames.contains("banner") {
-                try db.execute(sql: "ALTER TABLE albums ADD COLUMN banner TEXT")
-            }
-        }
         
         migrator.registerMigration("encrypted_app_messages") { (db) in
             let infos = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(participant_session)")
@@ -433,6 +425,14 @@ public final class UserDatabase: Database {
             try db.execute(sql: "DROP INDEX IF EXISTS messages_unread_indexs")
             try db.execute(sql: "DROP INDEX IF EXISTS messages_user_indexs")
             try db.execute(sql: "CREATE INDEX IF NOT EXISTS index_messages_pick ON messages(conversation_id, status, user_id, created_at)")
+        }
+        
+        migrator.registerMigration("sticker_store") { db in
+            let infos = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(albums)")
+            let columnNames = infos.map(\.name)
+            if !columnNames.contains("banner") {
+                try db.execute(sql: "ALTER TABLE albums ADD COLUMN banner TEXT")
+            }
         }
         
         return migrator

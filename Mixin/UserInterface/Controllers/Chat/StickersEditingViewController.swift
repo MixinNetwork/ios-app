@@ -59,8 +59,8 @@ extension StickersEditingViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.stickers_editing, for: indexPath)!
         if indexPath.row < stickerInfos.count {
             let stickerInfo = stickerInfos[indexPath.row]
-            cell.stickerInfos = stickerInfo
-            cell.onDeleteSticker = { [weak self] in
+            cell.stickerInfo = stickerInfo
+            cell.onDelete = { [weak self] in
                 guard let self = self else {
                     return
                 }

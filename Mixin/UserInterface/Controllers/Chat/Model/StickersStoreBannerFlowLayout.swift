@@ -12,8 +12,11 @@ class StickersStoreBannerFlowLayout: UICollectionViewFlowLayout {
     }
     
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
-        guard let collectionView = collectionView, let layoutAttributes = super.layoutAttributesForElements(in: rect) else {
-            return super.layoutAttributesForElements(in: rect)
+        guard
+            let collectionView = collectionView,
+            let layoutAttributes = copy(super.layoutAttributesForElements(in: rect))
+        else {
+            return nil
         }
         let centerX = collectionView.contentOffset.x + collectionView.bounds.size.width / 2
         layoutAttributes.forEach { attributes in
@@ -30,8 +33,13 @@ class StickersStoreBannerFlowLayout: UICollectionViewFlowLayout {
     }
     
     override func targetContentOffset(forProposedContentOffset proposedContentOffset: CGPoint, withScrollingVelocity velocity: CGPoint) -> CGPoint {
-        guard let collectionView = collectionView,
-              let attributes = layoutAttributesForElements(in: CGRect(x: proposedContentOffset.x, y: proposedContentOffset.y, width: collectionView.bounds.size.width, height: collectionView.bounds.size.height)) else {
+        guard
+            let collectionView = collectionView,
+            let attributes = layoutAttributesForElements(in: CGRect(x: proposedContentOffset.x,
+                                                                    y: proposedContentOffset.y,
+                                                                    width: collectionView.bounds.size.width,
+                                                                    height: collectionView.bounds.size.height))
+        else {
             return super.targetContentOffset(forProposedContentOffset: proposedContentOffset, withScrollingVelocity: velocity)
         }
         var targetPoint = proposedContentOffset
@@ -46,6 +54,10 @@ class StickersStoreBannerFlowLayout: UICollectionViewFlowLayout {
             targetPoint.x += moveDistance
         }
         return targetPoint
+    }
+    
+    private func copy(_ layoutAttributesArray: [UICollectionViewLayoutAttributes]?) -> [UICollectionViewLayoutAttributes]? {
+        return layoutAttributesArray?.map{ $0.copy() } as? [UICollectionViewLayoutAttributes]
     }
     
 }

@@ -7,10 +7,10 @@ class StickersEditingCell: UITableViewCell {
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var countLabel: UILabel!
     
-    var onDeleteSticker: (() -> Void)?
-    var stickerInfos: StickerStore.StickerInfo? {
+    var onDelete: (() -> Void)?
+    var stickerInfo: StickerStore.StickerInfo? {
         didSet {
-            guard let stickerInfos = stickerInfos else {
+            guard let stickerInfos = stickerInfo else {
                 return
             }
             nameLabel.text = stickerInfos.album.name
@@ -28,7 +28,7 @@ class StickersEditingCell: UITableViewCell {
     }
     
     @IBAction func deleteAction(_ sender: Any) {
-        onDeleteSticker?()
+        onDelete?()
     }
     
 }

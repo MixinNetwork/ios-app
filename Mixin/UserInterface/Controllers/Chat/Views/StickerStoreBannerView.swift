@@ -5,7 +5,7 @@ class StickerStoreBannerView: UICollectionReusableView {
     
     @IBOutlet weak var collectionView: UICollectionView!
     
-    var onSelectSticker: ((StickerStore.StickerInfo) -> Void)?
+    var onSelected: ((StickerStore.StickerInfo) -> Void)?
     var stickerInfos: [StickerStore.StickerInfo] = [] {
         didSet {
             collectionView.reloadData()
@@ -32,7 +32,7 @@ extension StickerStoreBannerView: UICollectionViewDataSource, UICollectionViewDe
         guard indexPath.item < stickerInfos.count else {
             return
         }
-        onSelectSticker?(stickerInfos[indexPath.item])
+        onSelected?(stickerInfos[indexPath.item])
     }
     
 }

@@ -10,7 +10,7 @@ class StickerStorePreviewCell: UICollectionViewCell {
     @IBOutlet weak var collectionViewLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var collectionViewTrailingConstraint: NSLayoutConstraint!
     
-    var onStickerOperation: (() -> Void)?
+    var onToggle: (() -> Void)?
     var stickerInfo: StickerStore.StickerInfo? {
         didSet {
             guard let stickerInfo = stickerInfo else {
@@ -32,7 +32,7 @@ class StickerStorePreviewCell: UICollectionViewCell {
     private let cellCountPerRow = 4
     
     @IBAction func stickerAction(_ sender: Any) {
-        onStickerOperation?()
+        onToggle?()
     }
     
     override func awakeFromNib() {

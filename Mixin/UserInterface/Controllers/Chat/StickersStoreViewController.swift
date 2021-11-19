@@ -61,7 +61,7 @@ extension StickersStoreViewController: UICollectionViewDataSource {
         if indexPath.item < listStickerInfos.count {
             let stickerInfo = listStickerInfos[indexPath.item]
             cell.stickerInfo = stickerInfo
-            cell.onStickerOperation = {
+            cell.onToggle = {
                 if stickerInfo.isAdded {
                     StickerStore.remove(stickers: stickerInfo)
                 } else {
@@ -75,7 +75,7 @@ extension StickersStoreViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: R.reuseIdentifier.sticker_banner, for: indexPath)!
         header.stickerInfos = bannerStickerInfos
-        header.onSelectSticker = { [weak self] stickerInfo in
+        header.onSelected = { [weak self] stickerInfo in
             self?.showStickerAlbumPreviewController(with: stickerInfo)
         }
         return header

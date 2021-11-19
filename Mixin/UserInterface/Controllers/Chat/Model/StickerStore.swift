@@ -10,7 +10,7 @@ enum StickerStore {
         var isAdded: Bool = false
     }
     
-    private static let bannerMaxCount = 3
+    private static let maxBannerCount = 3
     
     static func add(stickers stickerInfo: StickerInfo) {
         let albumId = stickerInfo.album.albumId
@@ -34,8 +34,7 @@ enum StickerStore {
     }
         
     static func refreshStickersIfNeeded() {
-        let date = AppGroupUserDefaults.User.stickerUpdateDate
-        guard date == nil || -date!.timeIntervalSinceNow > TimeInterval.oneDay else {
+        if let date = AppGroupUserDefaults.User.stickerUpdateDate, date.timeIntervalSinceNow < .oneDay {
             return
         }
         AppGroupUserDefaults.User.stickerUpdateDate = Date()
@@ -52,7 +51,7 @@ enum StickerStore {
                 let stickers = StickerDAO.shared.getStickers(albumId: album.albumId)
                 let isAdded = stickerAblums?.contains(album.albumId) ?? false
                 let stickerInfo = StickerInfo(album: album, stickers: stickers, isAdded: isAdded)
-                if !album.banner.isNilOrEmpty, bannerStickerInfos.count < bannerMaxCount {
+                if !album.banner.isNilOrEmpty, bannerStickerInfos.count < maxBannerCount {
                     bannerStickerInfos.append(stickerInfo)
                 } else {
                     listStickerInfos.append(stickerInfo)
@@ -84,7 +83,6 @@ enum StickerStore {
             completion(items)
         }
     }
-    
     
     static func loadSticker(stickerId: String, completion: @escaping (StickerInfo?) -> Void) {
         DispatchQueue.global(qos: .userInitiated).async {

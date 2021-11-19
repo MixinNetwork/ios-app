@@ -11,13 +11,13 @@ class StickerStorePreviewCell: UICollectionViewCell {
     @IBOutlet weak var collectionViewTrailingConstraint: NSLayoutConstraint!
     
     var onStickerOperation: (() -> Void)?
-    var stickerStoreItem: StickerStoreItem? {
+    var stickerInfo: StickerStore.StickerInfo? {
         didSet {
-            guard let stickerStoreItem = stickerStoreItem else {
+            guard let stickerInfo = stickerInfo else {
                 return
             }
-            nameLabel.text = stickerStoreItem.album.name
-            if stickerStoreItem.isAdded {
+            nameLabel.text = stickerInfo.album.name
+            if stickerInfo.isAdded {
                 addButton.setTitle(R.string.localizable.sticker_store_added(), for: .normal)
                 addButton.backgroundColor = R.color.sticker_button_background_disabled()
                 addButton.setTitleColor(R.color.sticker_button_text_disabled(), for: .normal)
@@ -47,16 +47,16 @@ class StickerStorePreviewCell: UICollectionViewCell {
 extension StickerStorePreviewCell: UICollectionViewDataSource, UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        guard let stickerStoreItem = stickerStoreItem else {
+        guard let stickerInfo = stickerInfo else {
             return 0
         }
-        return min(cellCountPerRow, stickerStoreItem.stickers.count)
+        return min(cellCountPerRow, stickerInfo.stickers.count)
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.sticker_preview, for: indexPath)!
-        if let stickerStoreItem = stickerStoreItem, indexPath.item < stickerStoreItem.stickers.count {
-            cell.stickerView.load(sticker: stickerStoreItem.stickers[indexPath.item])
+        if let stickerInfo = stickerInfo, indexPath.item < stickerInfo.stickers.count {
+            cell.stickerView.load(sticker: stickerInfo.stickers[indexPath.item])
         }
         return cell
     }

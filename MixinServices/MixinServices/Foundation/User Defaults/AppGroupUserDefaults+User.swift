@@ -75,6 +75,7 @@ extension AppGroupUserDefaults {
         public static let homeAppIdsDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.home.app.ids.change")
         public static let pinMessageBannerDidChangeNotification = Notification.Name("one.mixin.services.pinMessageBannerDidChange")
         public static let stickerAlbumIdsDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.chat.sticker.album.ids.change")
+        public static let hasNewStickersDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.hasNewStickersDidChangeNotification")
 
         private static let maxNumberOfAssetSearchHistory = 2
         
@@ -238,7 +239,11 @@ extension AppGroupUserDefaults {
         public static var stickerUpdateDate: Date?
         
         @Default(namespace: .user, key: Key.hasNewStickers, defaultValue: false)
-        public static var hasNewStickers: Bool
+        public static var hasNewStickers: Bool {
+            didSet {
+                NotificationCenter.default.post(onMainThread: hasNewStickersDidChangeNotification, object: self)
+            }
+        }
         
         public static func insertRecentlyUsedAppId(id: String) {
             let maxNumberOfIds = 12

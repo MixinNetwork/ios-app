@@ -246,7 +246,6 @@ class ConversationViewController: UIViewController {
     
     deinit {
         AppGroupUserDefaults.User.currentConversationId = nil
-        StickersStoreManager.destroy()
         NotificationCenter.default.removeObserver(self)
     }
     
@@ -874,8 +873,8 @@ class ConversationViewController: UIViewController {
                 let vc = TranscriptPreviewViewController(transcriptMessage: message)
                 vc.presentAsChild(of: self)
             } else if message.category.hasSuffix("_STICKER") {
-                let vc = R.storyboard.chat.sticker_preview()!
-                vc.message = message
+                conversationInputViewController.dismiss()
+                let vc = StickerPreviewViewController.instance(message: message)
                 vc.presentAsChild(of: self)
             } else {
                 conversationInputViewController.dismiss()

@@ -8,15 +8,15 @@ class StickersEditingCell: UITableViewCell {
     @IBOutlet weak var countLabel: UILabel!
     
     var onDeleteSticker: (() -> Void)?
-    var stickerStoreItem: StickerStoreItem? {
+    var stickerInfos: StickerStore.StickerInfo? {
         didSet {
-            guard let stickerStoreItem = stickerStoreItem else {
+            guard let stickerInfos = stickerInfos else {
                 return
             }
-            nameLabel.text = stickerStoreItem.album.name
-            countLabel.text = R.string.localizable.sticker_count(stickerStoreItem.stickers.count)
-            if let url = URL(string: stickerStoreItem.album.iconUrl) {
-                let context = stickerLoadContext(category: stickerStoreItem.album.category)
+            nameLabel.text = stickerInfos.album.name
+            countLabel.text = R.string.localizable.sticker_count(stickerInfos.stickers.count)
+            if let url = URL(string: stickerInfos.album.iconUrl) {
+                let context = stickerLoadContext(category: stickerInfos.album.category)
                 stickerImageView.sd_setImage(with: url, placeholderImage: nil, context: context)
             }
         }

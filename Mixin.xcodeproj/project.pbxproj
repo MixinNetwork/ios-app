@@ -594,14 +594,13 @@
 		7CB0955726CE5F040049F4C7 /* TransferPinAction+Description.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB0955626CE5F040049F4C7 /* TransferPinAction+Description.swift */; };
 		7CB0955926CE69250049F4C7 /* PinMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB0955826CE69250049F4C7 /* PinMessageViewModel.swift */; };
 		7CB0955B26CF4DDC0049F4C7 /* PinMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB0955A26CF4DDC0049F4C7 /* PinMessageCell.swift */; };
-		7CB23AA226B8D9690084E4A3 /* StickersStoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB23AA126B8D9690084E4A3 /* StickersStoreManager.swift */; };
 		7CBD2EFA268FF6BB00AA0847 /* HomeAppsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBD2EF9268FF6BB00AA0847 /* HomeAppsStorage.swift */; };
-		7CC3B1A026C21F7E0018B0D1 /* ScriptMessageProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC3B19F26C21F7E0018B0D1 /* ScriptMessageProxy.swift */; };
 		7CC2BDB926A7CAD6001749B1 /* StickersStoreBannerFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC2BDB826A7CAD6001749B1 /* StickersStoreBannerFlowLayout.swift */; };
+		7CC3B1A026C21F7E0018B0D1 /* ScriptMessageProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC3B19F26C21F7E0018B0D1 /* ScriptMessageProxy.swift */; };
+		7CC730502745F95D002780F5 /* StickerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC7304F2745F95D002780F5 /* StickerStore.swift */; };
 		7CE5E7A8269BDA29000B7904 /* HomeAppsPinTipsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE5E7A6269BDA29000B7904 /* HomeAppsPinTipsViewController.swift */; };
 		7CE5E7A9269BDA29000B7904 /* HomeAppsPinTipsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CE5E7A7269BDA29000B7904 /* HomeAppsPinTipsView.xib */; };
 		7CF2FEA626AA89BA00D3A5B3 /* StickersAlbumPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF2FEA526AA89BA00D3A5B3 /* StickersAlbumPreviewViewController.swift */; };
-		7CF2FEA826AAC1EA00D3A5B3 /* StickerStoreItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF2FEA726AAC1EA00D3A5B3 /* StickerStoreItem.swift */; };
 		811C8154F03C8CBB72DBA1F4 /* Pods_MixinShare.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67A8E0E9B65F16ADB27E6F25 /* Pods_MixinShare.framework */; };
 		842347EE2695BA6400009A39 /* InitializeBotJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842347ED2695BA6400009A39 /* InitializeBotJob.swift */; };
 		84A10E96256B63B4006AC741 /* AssetAPI+Ticker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A10E95256B63B4006AC741 /* AssetAPI+Ticker.swift */; };
@@ -1592,14 +1591,13 @@
 		7CB0955626CE5F040049F4C7 /* TransferPinAction+Description.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TransferPinAction+Description.swift"; sourceTree = "<group>"; };
 		7CB0955826CE69250049F4C7 /* PinMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinMessageViewModel.swift; sourceTree = "<group>"; };
 		7CB0955A26CF4DDC0049F4C7 /* PinMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinMessageCell.swift; sourceTree = "<group>"; };
-		7CB23AA126B8D9690084E4A3 /* StickersStoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersStoreManager.swift; sourceTree = "<group>"; };
 		7CBD2EF9268FF6BB00AA0847 /* HomeAppsStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsStorage.swift; sourceTree = "<group>"; };
-		7CC3B19F26C21F7E0018B0D1 /* ScriptMessageProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptMessageProxy.swift; sourceTree = "<group>"; };
 		7CC2BDB826A7CAD6001749B1 /* StickersStoreBannerFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersStoreBannerFlowLayout.swift; sourceTree = "<group>"; };
+		7CC3B19F26C21F7E0018B0D1 /* ScriptMessageProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptMessageProxy.swift; sourceTree = "<group>"; };
+		7CC7304F2745F95D002780F5 /* StickerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerStore.swift; sourceTree = "<group>"; };
 		7CE5E7A6269BDA29000B7904 /* HomeAppsPinTipsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsPinTipsViewController.swift; sourceTree = "<group>"; };
 		7CE5E7A7269BDA29000B7904 /* HomeAppsPinTipsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomeAppsPinTipsView.xib; sourceTree = "<group>"; };
 		7CF2FEA526AA89BA00D3A5B3 /* StickersAlbumPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersAlbumPreviewViewController.swift; sourceTree = "<group>"; };
-		7CF2FEA726AAC1EA00D3A5B3 /* StickerStoreItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerStoreItem.swift; sourceTree = "<group>"; };
 		842347ED2695BA6400009A39 /* InitializeBotJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitializeBotJob.swift; sourceTree = "<group>"; };
 		84A10E95256B63B4006AC741 /* AssetAPI+Ticker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AssetAPI+Ticker.swift"; sourceTree = "<group>"; };
 		84A10E99256B6416006AC741 /* TickerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TickerResponse.swift; sourceTree = "<group>"; };
@@ -2136,15 +2134,10 @@
 				7B9D825622F1BFEA0099381E /* LargeNetworkOperationIconSet.swift */,
 				7B91055F22CF4A1E002E3608 /* LiveMessageViewModel.swift */,
 				7BF196AE24115F9100CC8325 /* LocationMessageViewModel.swift */,
-				7BA41A9224E123F50042ED03 /* MentionToken.swift */,
-				7B91AB69251A2BAC00879812 /* Message+ExternalSharing.swift */,
-				7BE6C7EB242DF07B00A0F2AE /* MessageAction.swift */,
 				7BEB97172366CF42002DB190 /* MessageFontSet.swift */,
 				7BFE47E622845DE100FC4379 /* MessageReceiver.swift */,
 				7BAB76AB228AAE00009ECB8C /* MessageReceiverSearchResult.swift */,
 				7B09E5591FD157EB002E45D3 /* MessageViewModel.swift */,
-				94D63DD52646C29100FD7EE8 /* MessageViewModelFactory.swift */,
-				7B082D17242CA19F00C5E163 /* MultipleSelectionIntent.swift */,
 				7B9D825722F1BFEA0099381E /* NetworkOperationIconSet.swift */,
 				7B9D825522F1BFE90099381E /* NormalNetworkOperationIconSet.swift */,
 				7B09E55B1FD15B9B002E45D3 /* PhotoMessageViewModel.swift */,
@@ -2154,7 +2147,6 @@
 				7BFDB73820DA41E3005673CC /* Quote.swift */,
 				7B81D91523E93F470031E945 /* QuotedMessageViewModel.swift */,
 				7B7FBF8E2282D75400644693 /* RecalledMessageViewModel.swift */,
-				7B015F4E241F91A60004A563 /* SearchResultAnnotation.swift */,
 				7B7DACA923505F06006AA2AC /* SharedMediaAudio.swift */,
 				7B8BB587234F160C00991ACB /* SharedMediaCategorizer.swift */,
 				7B8BB581234DDA0000991ACB /* SharedMediaDataSource.swift */,
@@ -2178,8 +2170,7 @@
 				7B91AB69251A2BAC00879812 /* Message+ExternalSharing.swift */,
 				94D63DD52646C29100FD7EE8 /* MessageViewModelFactory.swift */,
 				7CC2BDB826A7CAD6001749B1 /* StickersStoreBannerFlowLayout.swift */,
-				7CF2FEA726AAC1EA00D3A5B3 /* StickerStoreItem.swift */,
-				7CB23AA126B8D9690084E4A3 /* StickersStoreManager.swift */,
+				7CC7304F2745F95D002780F5 /* StickerStore.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -4410,7 +4401,6 @@
 				7C1A6C4326C6580600A1D6CE /* StickerPreviewItemCell.swift in Sources */,
 				DFFDCF8420AD8A7A00B4956E /* FileSendViewController.swift in Sources */,
 				94D9DF5725F889BC00FC2F28 /* BulletinContentView.swift in Sources */,
-				7CB23AA226B8D9690084E4A3 /* StickersStoreManager.swift in Sources */,
 				7B09E55A1FD157EB002E45D3 /* MessageViewModel.swift in Sources */,
 				7BF071C02244E6A1007240AD /* UploadContactCell.swift in Sources */,
 				7B7DACA823505B41006AA2AC /* SharedMediaAudioMessagePlayingManager.swift in Sources */,
@@ -4768,7 +4758,7 @@
 				7BC80A62221D1C07008586AD /* AssetTableHeaderView.swift in Sources */,
 				7B9553402243860C00CE95E6 /* PinValidationPresentationManager.swift in Sources */,
 				94046B93272DC28B007C1D4A /* GroupCallMembersManager.swift in Sources */,
-				7CC2BDB926A7CAD6001749B1 /* StickerStoreBannerFlowLayout.swift in Sources */,
+				7CC2BDB926A7CAD6001749B1 /* StickersStoreBannerFlowLayout.swift in Sources */,
 				7CC2BDB926A7CAD6001749B1 /* StickersStoreBannerFlowLayout.swift in Sources */,
 				7B4C6571242358D5003B78F9 /* LocationSearchNoResultView.swift in Sources */,
 				DF5D9F291F9C79E10036D5FD /* UIColorExtension.swift in Sources */,
@@ -4848,7 +4838,6 @@
 				DFC0ECD023BB5FDE0091E7AC /* AccountRequest.swift in Sources */,
 				7B8A6A6D2456C39F00ADC9EB /* SharedMediaPostTableViewController.swift in Sources */,
 				E0A14D3C2372F0340044D131 /* GroupProfileViewController.swift in Sources */,
-				7CF2FEA826AAC1EA00D3A5B3 /* StickerStoreItem.swift in Sources */,
 				7B7FBF8F2282D75400644693 /* RecalledMessageViewModel.swift in Sources */,
 				7B9D825A22F1BFEA0099381E /* NormalNetworkOperationIconSet.swift in Sources */,
 				7B6E5503223F69D90060E6FC /* KeyboardBasedLayoutViewController.swift in Sources */,
@@ -4935,6 +4924,7 @@
 				DF1ED8D920BBECFF003E10E8 /* AlbumViewController.swift in Sources */,
 				7BEE5351222D0E5C008D3911 /* ConversationExtensionCell.swift in Sources */,
 				DF8CECF21FC4256D00E40064 /* BlockUserCell.swift in Sources */,
+				7CC730502745F95D002780F5 /* StickerStore.swift in Sources */,
 				7B2E56B0244EA6BB0073102C /* SettingsFooterView.swift in Sources */,
 				7BD7534E2182CDCE00BAC172 /* IconPrefixedTextMessageCell.swift in Sources */,
 				7B369206233A3314007321A7 /* SharedMediaViewController.swift in Sources */,

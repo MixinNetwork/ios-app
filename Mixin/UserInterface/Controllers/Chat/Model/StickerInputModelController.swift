@@ -35,8 +35,8 @@ class StickerInputModelController: NSObject {
         }
     }
     
-    func reloadOfficialStickers(albums: [Album]) {
-        officialStickers = albums.map{ StickerDAO.shared.getStickers(albumId: $0.albumId) }
+    func reloadOfficialStickers(stickers: [[StickerItem]]) {
+        officialStickers = stickers
     }
     
     func dequeueReusableStickersViewController(withIndex index: Int) -> StickersCollectionViewController? {

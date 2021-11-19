@@ -40,17 +40,16 @@ class StickerInputViewController: UIViewController {
                                                selector: #selector(reload),
                                                name: AppGroupUserDefaults.User.stickerAlbumIdsDidChangeNotification,
                                                object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(hasNewStickersNotification),
+                                               name: AppGroupUserDefaults.User.hasNewStickersDidChangeNotification,
+                                               object: nil)
+        StickerStore.refreshStickersIfNeeded()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.animated = true
-        StickersStoreManager.shared().checkNewStickersIfNeeded { hasNewStickers in
-            guard hasNewStickers else {
-                return
-            }
-            self.albumsCollectionView.reloadItems(at: [IndexPath(item: 0, section: 0)])
-        }
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -66,10 +65,10 @@ class StickerInputViewController: UIViewController {
     }
     
     @objc func reload() {
-        StickersStoreManager.shared().loadMyStickers { items in
-            self.officialAlbums = items.map(\.album)
+        StickerStore.loadMyStickers { stickerInfos in
+            self.officialAlbums = stickerInfos.map(\.album)
             self.modelController.reloadRecentFavoriteStickers()
-            self.modelController.reloadOfficialStickers(albums: self.officialAlbums)
+            self.modelController.reloadOfficialStickers(stickers: stickerInfos.map(\.stickers))
             DispatchQueue.main.async {
                 self.albumsCollectionView.reloadData()
                 let initialViewControllers: [UIViewController]
@@ -146,7 +145,6 @@ extension StickerInputViewController: UICollectionViewDelegate {
             collectionView.selectItem(at: IndexPath(item: currentIndex, section: 0), animated: false, scrollPosition: .centeredVertically)
             if AppGroupUserDefaults.User.hasNewStickers {
                 AppGroupUserDefaults.User.hasNewStickers = false
-                collectionView.reloadItems(at: [IndexPath(item: 0, section: 0)])
             }
             return
         }
@@ -269,6 +267,10 @@ extension StickerInputViewController {
                 vc.animated = false
             }
         }
+    }
+    
+    @objc private func hasNewStickersNotification() {
+        albumsCollectionView.reloadItems(at: [IndexPath(item: 0, section: 0)])
     }
     
 }

@@ -414,8 +414,11 @@ public final class UserDatabase: Database {
         }
             
         migrator.registerMigration("sticker_store") { db in
-            let sql = "ALTER TABLE albums ADD banner TEXT"
-            try db.execute(sql: sql)
+            let infos = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(albums)")
+            let columnNames = infos.map(\.name)
+            if !columnNames.contains("banner") {
+                try db.execute(sql: "ALTER TABLE albums ADD COLUMN banner TEXT")
+            }
         }
         
         migrator.registerMigration("encrypted_app_messages") { (db) in

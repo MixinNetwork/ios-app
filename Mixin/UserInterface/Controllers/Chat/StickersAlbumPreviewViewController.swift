@@ -19,14 +19,14 @@ class StickersAlbumPreviewViewController: ResizablePopupViewController {
     
     private lazy var resizeRecognizerDelegate = PopupResizeGestureCoordinator(scrollView: resizableScrollView)
     
-    private var stickerStoreItem: StickerStoreItem!
+    private var stickerInfo: StickerStore.StickerInfo!
     private var isShowingContentView = false
     private let cellCountPerRow = 3
     private let defaultCountOfRows = 3
     
-    class func instance(with stickerStoreItem: StickerStoreItem) -> StickersAlbumPreviewViewController {
+    class func instance(with stickerInfo: StickerStore.StickerInfo) -> StickersAlbumPreviewViewController {
         let vc = R.storyboard.chat.stickers_album_preview()!
-        vc.stickerStoreItem = stickerStoreItem
+        vc.stickerInfo = stickerInfo
         return vc
     }
     
@@ -48,7 +48,7 @@ class StickersAlbumPreviewViewController: ResizablePopupViewController {
         contentView.layer.cornerRadius = 13
         showContentViewConstraint.priority = .defaultLow
         hideContentViewConstraint.priority = .defaultHigh
-        titleLabel.text = stickerStoreItem.album.name
+        titleLabel.text = stickerInfo.album.name
         actionBarHeightConstraint.constant = AppDelegate.current.mainWindow.safeAreaInsets.bottom
             + actionBarContentHeightConstraint.constant
         updateStickerActionButton()
@@ -66,7 +66,7 @@ class StickersAlbumPreviewViewController: ResizablePopupViewController {
         let countOfRows: CGFloat
         switch size {
         case .expanded, .unavailable:
-            countOfRows = ceil(CGFloat(stickerStoreItem.stickers.count) / CGFloat(cellCountPerRow))
+            countOfRows = ceil(CGFloat(stickerInfo.stickers.count) / CGFloat(cellCountPerRow))
         case .compressed:
             countOfRows = CGFloat(defaultCountOfRows)
         }
@@ -96,8 +96,12 @@ class StickersAlbumPreviewViewController: ResizablePopupViewController {
     }
     
     @IBAction func stickerButtonAction(_ sender: Any) {
-        StickersStoreManager.shared().handleStickerOperation(with: stickerStoreItem)
-        stickerStoreItem.isAdded.toggle()
+        if stickerInfo.isAdded {
+            StickerStore.remove(stickers: stickerInfo)
+        } else {
+            StickerStore.add(stickers: stickerInfo)
+        }
+        stickerInfo.isAdded.toggle()
         updateStickerActionButton()
     }
     
@@ -146,7 +150,7 @@ extension StickersAlbumPreviewViewController {
     }
     
     private func updateStickerActionButton() {
-        if stickerStoreItem.isAdded {
+        if stickerInfo.isAdded {
             stickerActionButton.backgroundColor = R.color.red()
             stickerActionButton.setTitle(R.string.localizable.sticker_remove_title(), for: .normal)
         } else {
@@ -160,13 +164,13 @@ extension StickersAlbumPreviewViewController {
 extension StickersAlbumPreviewViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return stickerStoreItem.stickers.count
+        return stickerInfo.stickers.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.stickers_preview_cell, for: indexPath)!
-        if indexPath.row < stickerStoreItem.stickers.count {
-            cell.stickerView.load(sticker: stickerStoreItem.stickers[indexPath.item])
+        if indexPath.row < stickerInfo.stickers.count {
+            cell.stickerView.load(sticker: stickerInfo.stickers[indexPath.item])
         }
         return cell
     }

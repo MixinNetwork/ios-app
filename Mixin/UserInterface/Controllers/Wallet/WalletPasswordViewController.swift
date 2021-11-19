@@ -42,6 +42,10 @@ class WalletPasswordViewController: ContinueButtonViewController {
         }
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         pinField.delegate = self
@@ -63,6 +67,7 @@ class WalletPasswordViewController: ContinueButtonViewController {
                 textLabel.linkColor = .theme
                 textLabel.additionalLinksMap = [linkRange: URL.pinTIP]
             }
+            subtitleLabel.text = ""
             backButton.setImage(R.image.ic_title_close(), for: .normal)
         case .initPinStep2, .changePinStep3:
             textLabel.text = Localized.WALLET_PIN_CONFIRM_TITLE
@@ -85,6 +90,7 @@ class WalletPasswordViewController: ContinueButtonViewController {
             subtitleLabel.text = ""
             backButton.setImage(R.image.ic_title_back(), for: .normal)
         }
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -179,6 +185,11 @@ class WalletPasswordViewController: ContinueButtonViewController {
         })
     }
     
+    @objc private func applicationDidBecomeActive() {
+        if !pinField.isFirstResponder {
+            pinField.becomeFirstResponder()
+        }
+    }
 }
 
 extension WalletPasswordViewController: MixinNavigationAnimating {

@@ -82,7 +82,7 @@ public class RefreshStickerJob: AsynchronousJob {
                             AppGroupUserDefaults.User.hasNewStickers = true
                         }
                     }
-                    for album in albums {
+                    for album in newAlbums {
                         DispatchQueue.global().async {
                             guard !MixinService.isStopProcessMessages else {
                                 return

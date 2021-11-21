@@ -138,7 +138,7 @@ class CallService: NSObject {
     
     func minimizeIfThereIsAnActiveCall() {
         assert(Thread.isMainThread)
-        guard activeCall != nil, isInterfaceMinimized else {
+        guard activeCall != nil, !isInterfaceMinimized else {
             return
         }
         setInterfaceMinimized(true, animated: true)

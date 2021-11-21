@@ -138,7 +138,7 @@ class CallService: NSObject {
     
     func minimizeIfThereIsAnActiveCall() {
         assert(Thread.isMainThread)
-        guard activeCall != nil, isInterfaceMinimized else {
+        guard activeCall != nil, !isInterfaceMinimized else {
             return
         }
         setInterfaceMinimized(true, animated: true)
@@ -509,6 +509,7 @@ extension CallService {
             viewController.view.layoutIfNeeded()
         }
         viewController.showContentViewIfNeeded(animated: animated)
+        isInterfaceMinimized = false
     }
     
     func dismissCallingInterface() {
@@ -831,6 +832,7 @@ extension CallService {
         adapter.reportCall(call, endedByReason: reason, side: side)
         if !hasCall {
             dismissCallingInterface()
+            isInterfaceMinimized = false
             reloadCallAdapter()
             blazeProcessingQueue.async {
                 try? AudioSession.shared.deactivate(client: self, notifyOthersOnDeactivation: false)

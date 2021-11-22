@@ -58,7 +58,7 @@ extension AuthorizationsContentViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let permissionvc = PermissionsViewController.instance(authorization: authorizations[indexPath.row])
+        let permissionvc = PermissionsViewController.instance(dataSource: .all(authorizations[indexPath.row]))
         self.navigationController?.pushViewController(permissionvc, animated: true)
     }
     

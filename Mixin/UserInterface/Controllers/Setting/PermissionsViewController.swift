@@ -7,6 +7,11 @@ final class PermissionsViewController: UIViewController {
     static let authorizationRevokedNotification = Notification.Name("one.mixin.messenger.PermissionsViewController.authorizationRevoked")
     static let appIdUserInfoKey = "aid"
     
+    enum DataSource {
+        case app(id: String)
+        case all(AuthorizationResponse)
+    }
+    
     private let iconView = NavigationAvatarIconView()
     private let footerReuseId = "footer"
     private let tableView: UITableView = {
@@ -17,8 +22,7 @@ final class PermissionsViewController: UIViewController {
         }
     }()
     
-    private var appId: String?
-    private var authorization: AuthorizationResponse?
+    private var dataSource: DataSource!
     private var scopes = [(scope: Scope, name: String, desc: String)]()
     
     override func viewDidLoad() {
@@ -36,14 +40,12 @@ final class PermissionsViewController: UIViewController {
         tableView.estimatedSectionFooterHeight = 10
         tableView.sectionFooterHeight = UITableView.automaticDimension
         
-        if let authorization = authorization {
-            (scopes, _) = Scope.getCompleteScopeInfo(authInfo: authorization)
-            prepareNavigationBar()
-        } else if let appId = appId {
+        switch dataSource {
+        case .app(let id):
             let hud = Hud()
             hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
             DispatchQueue.global().async {
-                AuthorizeAPI.authorizations(appId: appId) { [weak self] result in
+                AuthorizeAPI.authorizations(appId: id) { [weak self] result in
                     DispatchQueue.main.async {
                         hud.hide()
                     }
@@ -54,7 +56,7 @@ final class PermissionsViewController: UIViewController {
                                 guard let self = self else {
                                     return
                                 }
-                                self.authorization = authorization
+                                self.dataSource = .all(authorization)
                                 self.scopes = Scope.getCompleteScopeInfo(authInfo: authorization).0
                                 self.prepareNavigationBar()
                                 self.tableView.reloadData()
@@ -67,20 +69,25 @@ final class PermissionsViewController: UIViewController {
                     }
                 }
             }
+        case .all(let authorization):
+            (scopes, _) = Scope.getCompleteScopeInfo(authInfo: authorization)
+            prepareNavigationBar()
+        case .none:
+            break
         }
     }
     
-    class func instance(appId: String? = nil, authorization: AuthorizationResponse? = nil) -> UIViewController {
+    class func instance(dataSource: DataSource) -> UIViewController {
         let vc = PermissionsViewController()
-        vc.authorization = authorization
-        vc.appId = appId
+        vc.dataSource = dataSource
         return ContainerViewController.instance(viewController: vc, title: R.string.localizable.setting_permissions())
     }
     
     @objc func profileAction() {
-        guard let appId = authorization?.app.appId else {
+        guard case let .all(authorization) = dataSource else {
             return
         }
+        let appId = authorization.app.appId
         DispatchQueue.global().async { [weak self] in
             guard let user = UserDAO.shared.getUsers(ofAppIds: [appId]).first else {
                 return
@@ -93,7 +100,7 @@ final class PermissionsViewController: UIViewController {
     }
     
     private func removeAuthozationAction() {
-        guard let authorization = authorization else {
+        guard case let .all(authorization) = dataSource else {
             return
         }
         let appHomeUri = authorization.app.homeUri
@@ -126,7 +133,7 @@ final class PermissionsViewController: UIViewController {
     }
     
     private func prepareNavigationBar() {
-        guard let authorization = authorization else {
+        guard case let .all(authorization) = dataSource else {
             return
         }
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(profileAction))
@@ -154,7 +161,7 @@ extension PermissionsViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let authorization = authorization else {
+        guard case let .all(authorization) = dataSource else {
             return 0
         }
         if section == 0 {
@@ -226,7 +233,7 @@ extension PermissionsViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: footerReuseId) as! SettingsFooterView
-        if section == 0, let authorization = authorization {
+        if section == 0, case let .all(authorization) = dataSource {
             let createDate = DateFormatter.dateFull.string(from: authorization.createdAt.toUTCDate())
             let accessedDate = DateFormatter.dateFull.string(from: authorization.accessedAt.toUTCDate())
             view.text = R.string.localizable.setting_permissions_date(createDate, accessedDate)

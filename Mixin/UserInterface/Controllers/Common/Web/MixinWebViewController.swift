@@ -353,7 +353,7 @@ extension MixinWebViewController: WebMoreMenuControllerDelegate {
             case .openInBrowser:
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             case .viewAuthorization(let appId):
-                let vc = PermissionsViewController.instance(appId: appId)
+                let vc = PermissionsViewController.instance(dataSource: .app(id: appId))
                 navigationController?.pushViewController(vc, animated: true)
             }
         }

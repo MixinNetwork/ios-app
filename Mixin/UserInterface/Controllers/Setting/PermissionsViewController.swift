@@ -40,8 +40,13 @@ final class PermissionsViewController: UIViewController {
             (scopes, _) = Scope.getCompleteScopeInfo(authInfo: authorization)
             prepareNavigationBar()
         } else if let appId = appId {
+            let hud = Hud()
+            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
             DispatchQueue.global().async {
                 AuthorizeAPI.authorizations(appId: appId) { [weak self] result in
+                    DispatchQueue.main.async {
+                        hud.hide()
+                    }
                     switch result {
                     case let .success(response):
                         if let authorization = response.first {

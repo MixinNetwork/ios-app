@@ -16,11 +16,11 @@ PODS:
   - BoringSSL/Implementation (10.0.6):
     - BoringSSL/Interface (= 10.0.6)
   - BoringSSL/Interface (10.0.6)
-  - DeviceGuru (7.0.1):
-    - DeviceGuru/DeviceGuru (= 7.0.1)
-  - DeviceGuru/DeviceGuru (7.0.1):
+  - DeviceGuru (7.0.3):
+    - DeviceGuru/DeviceGuru (= 7.0.3)
+  - DeviceGuru/DeviceGuru (7.0.3):
     - DeviceGuru/Resources
-  - DeviceGuru/Resources (7.0.1)
+  - DeviceGuru/Resources (7.0.3)
   - Firebase/Analytics (8.9.1):
     - Firebase/Core
   - Firebase/Core (8.9.1):
@@ -186,7 +186,7 @@ PODS:
   - PhoneNumberKit/UIKit (3.3.3):
     - PhoneNumberKit/PhoneNumberKitCore
   - PromisesObjC (2.0.0)
-  - R.swift (5.4.0):
+  - R.swift (6.0.0):
     - R.swift.Library (~> 5.3.0)
   - R.swift.Library (5.3.0)
   - RSKImageCropper (3.0.2)
@@ -213,7 +213,6 @@ PODS:
 DEPENDENCIES:
   - AcknowList
   - AlignedCollectionViewFlowLayout
-  - DeviceGuru (from `https://github.com/InderKumarRathore/DeviceGuru.git`)
   - Firebase/Analytics
   - Firebase/Core
   - Firebase/Crashlytics
@@ -237,6 +236,7 @@ SPEC REPOS:
     - AlignedCollectionViewFlowLayout
     - AppCenter
     - BoringSSL
+    - DeviceGuru
     - Firebase
     - FirebaseABTesting
     - FirebaseAnalytics
@@ -265,8 +265,6 @@ SPEC REPOS:
     - Zip
 
 EXTERNAL SOURCES:
-  DeviceGuru:
-    :git: https://github.com/InderKumarRathore/DeviceGuru.git
   libsignal-protocol-c:
     :git: https://github.com/MixinNetwork/libsignal-protocol-c.git
   lottie-ios:
@@ -280,9 +278,6 @@ EXTERNAL SOURCES:
     :git: https://github.com/wuyuehyang/YYImage.git
 
 CHECKOUT OPTIONS:
-  DeviceGuru:
-    :commit: 474373384f6812807e568132b876d70d0c45ab48
-    :git: https://github.com/InderKumarRathore/DeviceGuru.git
   libsignal-protocol-c:
     :commit: f55d4e7b94f388a1ad5e3c6835c3bf4c335283d4
     :git: https://github.com/MixinNetwork/libsignal-protocol-c.git
@@ -302,7 +297,7 @@ SPEC CHECKSUMS:
   AlignedCollectionViewFlowLayout: ee2ef451e741ec08f8e0967d828001e2f051c20a
   AppCenter: 883369ab78427b0561c688158d689dfe1f993ea9
   BoringSSL: e10f92a27043805c01071fe815a5cd98ae8212e7
-  DeviceGuru: 73d82f34cddee25d215b35eb4d094b7a44ec187a
+  DeviceGuru: 257ae5fa0c7e9bb0c11d0f620b30d3407e3e5a07
   Firebase: fb5114cd2bf96e2ff7bcb01d0d9a156cf5fd2f07
   FirebaseABTesting: 9de50b34bf9eb4a07d4edb7af82c14152fd905aa
   FirebaseAnalytics: 4ab446ce08a3fe52e8a4303dd997cf26276bf968
@@ -324,7 +319,7 @@ SPEC CHECKSUMS:
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   PhoneNumberKit: 4ce83273551c4d2ae10b7361162f4283dd02835f
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
-  R.swift: c533450b0f7dc494e0993f5f1a1db925d84c3006
+  R.swift: 5ec056f5ba2744de1c3f6deeb4882ae2630f6e63
   R.swift.Library: 0fc583cb55a99e28901299cc451614cad1161962
   RSKImageCropper: 1ac71e9a82e3f41eea3eedfff8eacb0d3821c9ec
   SDWebImage: 4dc3e42d9ec0c1028b960a33ac6b637bb432207b
@@ -335,6 +330,6 @@ SPEC CHECKSUMS:
   YYImage: 6db68da66f20d9f169ceb94dfb9947c3867b9665
   Zip: 414f59909701fda9a84ab774ebe0f5449b1082cc
 
-PODFILE CHECKSUM: a3fe7eb183d2140af1b4df8ed9c775c6dc976e06
+PODFILE CHECKSUM: bbfd01b45711669bce2e94cde99db211655f024d
 
 COCOAPODS: 1.11.2

@@ -235,7 +235,6 @@ extension GroupCall {
                 self?.membersDataSource.updateMembers(with: levels)
             })
         })
-        timer.fire()
         speakingTimer = timer
     }
     

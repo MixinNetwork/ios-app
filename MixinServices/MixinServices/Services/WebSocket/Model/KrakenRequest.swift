@@ -2,7 +2,8 @@ import Foundation
 
 public struct KrakenRequest {
     
-    public enum Action {
+    public enum Action: CustomDebugStringConvertible {
+        
         case invite(recipients: [String])
         case publish(sdp: String)
         case subscribe
@@ -12,6 +13,30 @@ public struct KrakenRequest {
         case cancel
         case decline(recipientId: String)
         case restart(sdp: String)
+        
+        public var debugDescription: String {
+            switch self {
+            case .invite(let recipients):
+                return "invite \(recipients)"
+            case .publish:
+                return "publish"
+            case .subscribe:
+                return "subscribe"
+            case .answer:
+                return "answer"
+            case .trickle:
+                return "trickle"
+            case .end:
+                return "end"
+            case .cancel:
+                return "cancel"
+            case .decline(let recipient):
+                return "decline \(recipient)"
+            case .restart:
+                return "restart"
+            }
+        }
+        
     }
     
     public let callUUID: UUID

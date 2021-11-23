@@ -235,7 +235,6 @@ extension GroupCall {
                 self?.membersDataSource.updateMembers(with: levels)
             })
         })
-        timer.fire()
         speakingTimer = timer
     }
     
@@ -403,6 +402,9 @@ extension GroupCall {
                     }
                 }
             case .success:
+                DispatchQueue.main.async {
+                    self.membersDataSource.setMember(with: userId, isConnected: true)
+                }
                 Logger.call.info(category: "GroupCall", message: "[\(self.uuidString)] Subscribe responded with a non-offer sdp. Drop it")
             case .failure(let error):
                 switch error {

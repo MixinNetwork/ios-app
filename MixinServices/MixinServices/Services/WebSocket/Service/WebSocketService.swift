@@ -131,7 +131,7 @@ public class WebSocketService {
                 return (false, nil)
             }
             var response: BlazeMessage?
-            var err = MixinAPIError.webSocketTimeOut
+            var err = MixinAPIError.webSocketTimeout
             
             let semaphore = DispatchSemaphore(value: 0)
             messageHandlers[message.id] = { (jobResult) in
@@ -284,7 +284,7 @@ extension WebSocketService {
         queue.autoAsync {
             ReceiveMessageService.shared.refreshRefreshOneTimePreKeys = [String: TimeInterval]()
             for handler in self.messageHandlers.values {
-                handler(.failure(.webSocketTimeOut))
+                handler(.failure(.webSocketTimeout))
             }
             self.messageHandlers.removeAll()
             ConcurrentJobQueue.shared.suspend()

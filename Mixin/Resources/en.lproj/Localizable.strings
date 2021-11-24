@@ -941,6 +941,8 @@
 // Diagnose
 "diagnose_database" = "Database Diagnostics";
 "diagnose_database_description" = "Database Diagnostics";
+"diagnose_backup_restore" = "Backup & Restore";
+"diagnose_copy_output" = "Copy Output";
 
 // Notifications
 "notification_reply" = "Reply";

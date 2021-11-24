@@ -38,7 +38,7 @@ class StickerInputViewController: UIViewController {
         pageScrollView?.delegate = self
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(reload),
-                                               name: AppGroupUserDefaults.User.stickerAlbumIdsDidChangeNotification,
+                                               name: AppGroupUserDefaults.User.favoriteAlbumsDidChangeNotification,
                                                object: nil)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(hasNewStickersNotification),
@@ -122,8 +122,7 @@ extension StickerInputViewController: UICollectionViewDataSource {
         default:
             let album = officialAlbums[indexPath.row - modelController.numberOfFixedControllers]
             if let url = URL(string: album.iconUrl) {
-                let context = stickerLoadContext(category: album.category)
-                cell.imageView.sd_setImage(with: url, placeholderImage: nil, context: context)
+                cell.imageView.sd_setImage(with: url, placeholderImage: nil, context: persistentStickerContext)
             }
             cell.imageView.contentMode = .scaleAspectFit
         }

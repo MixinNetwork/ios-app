@@ -60,10 +60,10 @@ extension AppGroupUserDefaults {
 
             case pinMessageBanners = "pin_message_banners"
             
-            case stickerAblums = "sticker_albums"
-            case stickerUpdateDate = "sticker_update_date"
+            case favoriteAlbums = "favorite_albums"
+            case favoriteAlbumStickers = "favorite_album_stickers"
+            case stickerRefreshDate = "sticker_refresh_date"
             case hasNewStickers = "has_new_stickers"
-
         }
         
         public static let version = 27
@@ -74,7 +74,7 @@ extension AppGroupUserDefaults {
         public static let circleNameDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.circle.name.change")
         public static let homeAppIdsDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.home.app.ids.change")
         public static let pinMessageBannerDidChangeNotification = Notification.Name("one.mixin.services.pinMessageBannerDidChange")
-        public static let stickerAlbumIdsDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.chat.sticker.album.ids.change")
+        public static let favoriteAlbumsDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.favoriteAlbumsDidChangeNotification")
         public static let hasNewStickersDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.hasNewStickersDidChangeNotification")
 
         private static let maxNumberOfAssetSearchHistory = 2
@@ -228,15 +228,18 @@ extension AppGroupUserDefaults {
             }
         }
                 
-        @Default(namespace: .user, key: Key.stickerAblums, defaultValue: nil)
-        public static var stickerAblums: [String]? {
+        @Default(namespace: .user, key: Key.favoriteAlbums, defaultValue: nil)
+        public static var favoriteAlbums: [String]? {
             didSet {
-                NotificationCenter.default.post(onMainThread: stickerAlbumIdsDidChangeNotification, object: self)
+                NotificationCenter.default.post(onMainThread: favoriteAlbumsDidChangeNotification, object: self)
             }
         }
         
-        @Default(namespace: .user, key: Key.stickerUpdateDate, defaultValue: nil)
-        public static var stickerUpdateDate: Date?
+        @Default(namespace: .user, key: Key.favoriteAlbumStickers, defaultValue: [])
+        public static var favoriteAlbumStickers: [String]
+        
+        @Default(namespace: .user, key: Key.stickerRefreshDate, defaultValue: nil)
+        public static var stickerRefreshDate: Date?
         
         @Default(namespace: .user, key: Key.hasNewStickers, defaultValue: false)
         public static var hasNewStickers: Bool {

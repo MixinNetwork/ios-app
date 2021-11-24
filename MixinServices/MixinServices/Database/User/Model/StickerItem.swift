@@ -14,7 +14,7 @@ public struct StickerItem {
     public let category: String?
     
     public var shouldCachePersistently: Bool {
-        return shouldCacheStickerWithCategoryPersistently(category: category)
+        return shouldCacheStickerPersistently(stickerId: stickerId)
     }
     
     public var imageLoadContext: [SDWebImageContextOption: Any]? {
@@ -58,11 +58,12 @@ extension StickerItem {
     
 }
 
-@inlinable public func shouldCacheStickerWithCategoryPersistently(category: String?) -> Bool {
-    if let category = category {
-        return !category.isEmpty
-    } else {
+@inlinable public func shouldCacheStickerPersistently(stickerId: String?) -> Bool {
+    let stickerIds = AppGroupUserDefaults.User.favoriteAlbumStickers
+    if stickerIds.isEmpty {
         return false
+    } else {
+        return stickerIds.contains(where: { $0 == stickerId })
     }
 }
 
@@ -70,7 +71,7 @@ public func stickerLoadContext(persistent: Bool) -> [SDWebImageContextOption: An
     return persistent ? persistentStickerContext : nil
 }
 
-public func stickerLoadContext(category: String?) -> [SDWebImageContextOption: Any]? {
-    let persistent = shouldCacheStickerWithCategoryPersistently(category: category)
+public func stickerLoadContext(stickerId: String?) -> [SDWebImageContextOption: Any]? {
+    let persistent = shouldCacheStickerPersistently(stickerId: stickerId)
     return stickerLoadContext(persistent: persistent)
 }

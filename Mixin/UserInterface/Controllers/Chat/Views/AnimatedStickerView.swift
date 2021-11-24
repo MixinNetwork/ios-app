@@ -1,6 +1,7 @@
 import UIKit
 import SDWebImage
 import Lottie
+import SDWebImage
 import MixinServices
 
 class AnimatedStickerView: UIView {
@@ -93,7 +94,7 @@ class AnimatedStickerView: UIView {
         } else {
             animationViewIfLoaded?.isHidden = true
             imageView.isHidden = false
-            let context = stickerLoadContext(category: message.assetCategory)
+            let context = stickerLoadContext(stickerId: message.stickerId)
             imageView.sd_setImage(with: url,
                                   placeholderImage: nil,
                                   context: context)
@@ -107,10 +108,10 @@ class AnimatedStickerView: UIView {
         imageView.contentMode = contentMode
     }
     
-    func load(imageURL url: URL, contentMode: UIView.ContentMode) {
+    func load(imageURL url: URL, contentMode: UIView.ContentMode, context: [SDWebImageContextOption : Any]? = nil) {
         imageView.isHidden = false
         animationViewIfLoaded?.isHidden = true
-        imageView.sd_setImage(with: url)
+        imageView.sd_setImage(with: url, placeholderImage: nil, context: context)
         imageView.contentMode = contentMode
     }
     

@@ -3,75 +3,49 @@ import SDWebImage
 
 public class RefreshStickerJob: AsynchronousJob {
     
-    private let albumId: String?
-    private let stickerId: String?
-    private let prefetchStickers: Bool
+    public enum Content {
+        case albums
+        case sticker(id: String)
+        case stickers(albumId: String, prefetch: Bool)
+    }
     
-    public init(albumId: String? = nil, stickerId: String? = nil, prefetchStickers: Bool = true) {
-        self.albumId = albumId
-        self.stickerId = stickerId
-        self.prefetchStickers = prefetchStickers
+    private let content: Content?
+    
+    public init(_ content: Content) {
+        self.content = content
     }
     
     override public func getJobId() -> String {
-        if let stickerId = self.stickerId {
-            return "refresh-sticker-\(stickerId)"
-        } else if let albumId = self.albumId {
+        switch content {
+        case .albums:
+            return "refresh-albums"
+        case let .sticker(id):
+            return "refresh-sticker-\(id)"
+        case let .stickers(albumId, _):
             return "refresh-album-\(albumId)"
+        case .none:
+            assertionFailure("No content")
+            return ""
         }
-        return "refresh-albums"
     }
-
+    
     public override func execute() -> Bool {
-        if let stickerId = self.stickerId {
-            StickerAPI.sticker(stickerId: stickerId) { (result) in
-                switch result {
-                case let .success(sticker):
-                    DispatchQueue.global().async {
-                        guard !MixinService.isStopProcessMessages else {
-                            return
-                        }
-                        guard let stickerItem = StickerDAO.shared.insertOrUpdateSticker(sticker: sticker) else {
-                            return
-                        }
-                        StickerPrefetcher.prefetch(stickers: [stickerItem])
-                    }
-                case let .failure(error):
-                    reporter.report(error: error)
-                }
-                self.finishJob()
-            }
-        } else if let albumId = self.albumId {
-            StickerAPI.stickers(albumId: albumId) { (result) in
-                switch result {
-                case let .success(stickers):
-                    DispatchQueue.global().async {
-                        guard !MixinService.isStopProcessMessages else {
-                            return
-                        }
-                        let stickers = StickerDAO.shared.insertOrUpdateStickers(stickers: stickers, albumId: albumId)
-                        if self.prefetchStickers {
-                            StickerPrefetcher.prefetch(stickers: stickers)
-                        }
-                    }
-                case let .failure(error):
-                    reporter.report(error: error)
-                }
-                self.finishJob()
-            }
-        } else {
+        switch content {
+        case .albums:
             let stickerAlbums = AlbumDAO.shared.getAblumsUpdateAt()
             StickerAPI.albums { (result) in
                 switch result {
                 case let .success(albums):
-                    let icons = albums.compactMap({ URL(string: $0.iconUrl) })
-                    let banners = albums.compactMap { album -> URL? in
-                        if let banner = album.banner {
-                            return URL(string: banner)
+                    var urls = [URL]()
+                    albums.forEach { album in
+                        if let url = URL(string: album.iconUrl) {
+                            urls.append(url)
                         }
-                        return nil
+                        if let banner = album.banner, let url = URL(string: banner) {
+                            urls.append(url)
+                        }
                     }
-                    StickerPrefetcher.persistent.prefetchURLs(icons + banners)
+                    StickerPrefetcher.persistent.prefetchURLs(urls)
                     
                     let newAlbums = albums.filter { stickerAlbums[$0.albumId] != $0.updatedAt }
                     guard !newAlbums.isEmpty else {
@@ -89,7 +63,7 @@ public class RefreshStickerJob: AsynchronousJob {
                             }
                             AlbumDAO.shared.insertOrUpdateAblum(album: album)
                             DispatchQueue.main.async {
-                                ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob(albumId: album.albumId, prefetchStickers: !album.banner.isNilOrEmpty))
+                                ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob(.stickers(albumId: album.albumId, prefetch: !album.banner.isNilOrEmpty)))
                             }
                         }
                     }
@@ -98,6 +72,46 @@ public class RefreshStickerJob: AsynchronousJob {
                 }
                 self.finishJob()
             }
+        case let .sticker(id):
+            StickerAPI.sticker(stickerId: id) { (result) in
+                switch result {
+                case let .success(sticker):
+                    DispatchQueue.global().async {
+                        guard !MixinService.isStopProcessMessages else {
+                            return
+                        }
+                        guard let stickerItem = StickerDAO.shared.insertOrUpdateSticker(sticker: sticker) else {
+                            return
+                        }
+                        StickerPrefetcher.prefetch(stickers: [stickerItem])
+                    }
+                case let .failure(error):
+                    reporter.report(error: error)
+                }
+                self.finishJob()
+            }
+        case let .stickers(albumId, prefetch):
+            StickerAPI.stickers(albumId: albumId) { (result) in
+                switch result {
+                case let .success(stickers):
+                    DispatchQueue.global().async {
+                        guard !MixinService.isStopProcessMessages else {
+                            return
+                        }
+                        let stickers = StickerDAO.shared.insertOrUpdateStickers(stickers: stickers, albumId: albumId)
+                        if prefetch {
+                            let urls = stickers.map(\.assetUrl).compactMap(URL.init)
+                            StickerPrefetcher.persistent.prefetchURLs(urls)
+                        }
+                    }
+                case let .failure(error):
+                    reporter.report(error: error)
+                }
+                self.finishJob()
+            }
+        case .none:
+            assertionFailure("No content")
+            finishJob()
         }
         return true
     }

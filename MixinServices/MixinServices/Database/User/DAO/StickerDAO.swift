@@ -116,7 +116,7 @@ public final class StickerDAO: UserDatabaseDAO {
                     break
                 }
             case .failure:
-                ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob())
+                ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob(.albums))
             }
         }
     }

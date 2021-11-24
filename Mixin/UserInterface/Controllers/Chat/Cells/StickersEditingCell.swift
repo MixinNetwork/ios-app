@@ -16,8 +16,7 @@ class StickersEditingCell: UITableViewCell {
             nameLabel.text = stickerInfos.album.name
             countLabel.text = R.string.localizable.sticker_count(stickerInfos.stickers.count)
             if let url = URL(string: stickerInfos.album.iconUrl) {
-                let context = stickerLoadContext(category: stickerInfos.album.category)
-                stickerImageView.sd_setImage(with: url, placeholderImage: nil, context: context)
+                stickerImageView.sd_setImage(with: url, placeholderImage: nil, context: persistentStickerContext)
             }
         }
     }

@@ -14,31 +14,48 @@ enum StickerStore {
     
     static func add(stickers stickerInfo: StickerInfo) {
         let albumId = stickerInfo.album.albumId
-        if var albumIds = AppGroupUserDefaults.User.stickerAblums {
-            albumIds.insert(albumId, at: 0)
-            AppGroupUserDefaults.User.stickerAblums = albumIds
+        let stickers = stickerInfo.stickers
+        let stickerIds = stickers.map(\.stickerId)
+
+        let jobId = RefreshStickerCacheJob(.remove(stickers: stickers, albumId: albumId)).getJobId()
+        ConcurrentJobQueue.shared.cancelJob(jobId: jobId)
+        
+        if var albums = AppGroupUserDefaults.User.favoriteAlbums {
+            let favoriteStickers = AppGroupUserDefaults.User.favoriteAlbumStickers
+            AppGroupUserDefaults.User.favoriteAlbumStickers = Array(Set(stickerIds).union(favoriteStickers))
+            albums.insert(albumId, at: 0)
+            AppGroupUserDefaults.User.favoriteAlbums = albums
         } else {
-            AppGroupUserDefaults.User.stickerAblums = [albumId]
+            AppGroupUserDefaults.User.favoriteAlbumStickers = stickerIds
+            AppGroupUserDefaults.User.favoriteAlbums = [albumId]
         }
-        ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob(albumId: albumId))
+        
+        ConcurrentJobQueue.shared.addJob(job: RefreshStickerCacheJob(.add(stickers: stickers, albumId: albumId)))
     }
     
     static func remove(stickers stickerInfo: StickerInfo) {
-        guard let albumIds = AppGroupUserDefaults.User.stickerAblums else {
-            return
-        }
-        let jobId = RefreshStickerJob(albumId: stickerInfo.album.albumId).getJobId()
+        let albumId = stickerInfo.album.albumId
+        let stickers = stickerInfo.stickers
+        let stickerIds = stickers.map(\.stickerId)
+
+        let jobId = RefreshStickerCacheJob(.add(stickers: stickers, albumId: albumId)).getJobId()
         ConcurrentJobQueue.shared.cancelJob(jobId: jobId)
-        stickerInfo.stickers.forEach { SDImageCache.persistentSticker.removeImageFromDisk(forKey: $0.assetUrl) }
-        AppGroupUserDefaults.User.stickerAblums = albumIds.filter({ $0 != stickerInfo.album.albumId })
-    }
         
+        let favoriteStickers = AppGroupUserDefaults.User.favoriteAlbumStickers
+        AppGroupUserDefaults.User.favoriteAlbumStickers = Array(Set(favoriteStickers).subtracting(Set(stickerIds)))
+        if let albumIds = AppGroupUserDefaults.User.favoriteAlbums?.filter({ $0 != albumId }) {
+            AppGroupUserDefaults.User.favoriteAlbums = albumIds
+        }
+
+        ConcurrentJobQueue.shared.addJob(job: RefreshStickerCacheJob(.remove(stickers: stickerInfo.stickers, albumId: albumId)))
+    }
+    
     static func refreshStickersIfNeeded() {
-        if let date = AppGroupUserDefaults.User.stickerUpdateDate, date.timeIntervalSinceNow < .oneDay {
+        if let date = AppGroupUserDefaults.User.stickerRefreshDate, date.timeIntervalSinceNow < .oneDay {
             return
         }
-        AppGroupUserDefaults.User.stickerUpdateDate = Date()
-        ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob())
+        ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob(.albums))
+        AppGroupUserDefaults.User.stickerRefreshDate = Date()
     }
     
     static func loadStoreStickers(completion: @escaping (_ bannerStickerInfos: [StickerInfo], _ listStickerInfos: [StickerInfo]) -> Void) {
@@ -46,10 +63,10 @@ enum StickerStore {
             var bannerStickerInfos: [StickerInfo] = []
             var listStickerInfos: [StickerInfo] = []
             let albums = AlbumDAO.shared.getAlbums()
-            let stickerAblums = AppGroupUserDefaults.User.stickerAblums
+            let favoriteAlbums = AppGroupUserDefaults.User.favoriteAlbums
             albums.forEach { album in
                 let stickers = StickerDAO.shared.getStickers(albumId: album.albumId)
-                let isAdded = stickerAblums?.contains(album.albumId) ?? false
+                let isAdded = favoriteAlbums?.contains(album.albumId) ?? false
                 let stickerInfo = StickerInfo(album: album, stickers: stickers, isAdded: isAdded)
                 if !album.banner.isNilOrEmpty, bannerStickerInfos.count < maxBannerCount {
                     bannerStickerInfos.append(stickerInfo)
@@ -65,22 +82,27 @@ enum StickerStore {
     
     static func loadMyStickers(completion: @escaping ([StickerInfo]) -> Void) {
         DispatchQueue.global(qos: .userInitiated).async {
-            let albums: [Album]
-            if let albumIds = AppGroupUserDefaults.User.stickerAblums {
-                albums = AlbumDAO.shared.getAlbums(with: albumIds)
+            let stickerInfos: [StickerStore.StickerInfo]
+            if let favoriteAlbums = AppGroupUserDefaults.User.favoriteAlbums {
+                let albums = AlbumDAO.shared.getAlbums(with: favoriteAlbums)
+                stickerInfos = albums.map({
+                    StickerInfo(album: $0, stickers: StickerDAO.shared.getStickers(albumId: $0.albumId), isAdded: true)
+                })
             } else {
-                albums = AlbumDAO.shared.getAlbums().filter({ !$0.banner.isNilOrEmpty })
+                let albums = AlbumDAO.shared.getAlbums().filter({ !$0.banner.isNilOrEmpty })
+                stickerInfos = albums.map({
+                    StickerInfo(album: $0, stickers: StickerDAO.shared.getStickers(albumId: $0.albumId), isAdded: true)
+                })
+                let stickerIds = stickerInfos.reduce(into: [String]()) { result, stickerInfo in
+                    result.append(contentsOf: stickerInfo.stickers.map(\.stickerId))
+                }
                 DispatchQueue.main.async {
                     AppGroupUserDefaults.User.hasNewStickers = true
-                    AppGroupUserDefaults.User.stickerAblums = albums.map(\.albumId)
+                    AppGroupUserDefaults.User.favoriteAlbumStickers = stickerIds
+                    AppGroupUserDefaults.User.favoriteAlbums = albums.map(\.albumId)
                 }
             }
-            let items = albums.map({
-                StickerInfo(album: $0,
-                            stickers: StickerDAO.shared.getStickers(albumId: $0.albumId),
-                            isAdded: true)
-            })
-            completion(items)
+            completion(stickerInfos)
         }
     }
     
@@ -88,8 +110,8 @@ enum StickerStore {
         DispatchQueue.global(qos: .userInitiated).async {
             if let album = AlbumDAO.shared.getAlbum(stickerId: stickerId) {
                 let stickers = StickerDAO.shared.getStickers(albumId: album.albumId)
-                let albumIds = AppGroupUserDefaults.User.stickerAblums
-                let isAdded = albumIds != nil && albumIds!.contains(album.albumId)
+                let favoriteAlbums = AppGroupUserDefaults.User.favoriteAlbums
+                let isAdded = favoriteAlbums != nil && favoriteAlbums!.contains(album.albumId)
                 DispatchQueue.main.async {
                     completion(StickerInfo(album: album, stickers: stickers, isAdded: isAdded))
                 }

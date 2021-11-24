@@ -99,7 +99,7 @@ extension StickersEditingViewController: UITableViewDelegate {
         }
         let stickerInfo = stickerInfos.remove(at: sourceIndexPath.row)
         stickerInfos.insert(stickerInfo, at: destinationIndexPath.row)
-        AppGroupUserDefaults.User.stickerAblums = stickerInfos.map({ $0.album.albumId })
+        AppGroupUserDefaults.User.favoriteAlbums = stickerInfos.map({ $0.album.albumId })
         tableView.reloadData()
     }
     

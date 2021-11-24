@@ -913,7 +913,7 @@ public class ReceiveMessageService: MixinService {
                 if StickerDAO.shared.isExist(stickerId: stickerId) {
                     continue
                 }
-                ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob(stickerId: stickerId))
+                ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob(.sticker(id: stickerId)))
             }
         }
         if !absentUserIds.isEmpty {

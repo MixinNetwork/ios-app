@@ -33,7 +33,7 @@ final class EmergencyAPI: MixinAPI {
             request(method: .post,
                     path: Path.verify(id: id),
                     parameters: req,
-                    retry: false,
+                    options: .disableRetryOnRequestSigningTimeout,
                     completion: completion)
         }
     }
@@ -47,7 +47,7 @@ final class EmergencyAPI: MixinAPI {
         request(method: .post,
                 path: Path.create,
                 parameters: req,
-                requiresLogin: false,
+                options: .authIndependent,
                 completion: completion)
     }
     
@@ -58,21 +58,21 @@ final class EmergencyAPI: MixinAPI {
         request(method: .post,
                 path: Path.verify(id: id),
                 parameters: req,
-                requiresLogin: false,
+                options: .authIndependent,
                 completion: completion)
     }
     
     static func show(pin: String, completion: @escaping (MixinAPI.Result<User>) -> Void) {
         PINEncryptor.encrypt(pin: pin, onFailure: completion) { (encryptedPin) in
             let param = ["pin": encryptedPin]
-            request(method: .post, path: Path.show, parameters: param, retry: false, completion: completion)
+            request(method: .post, path: Path.show, parameters: param, options: .disableRetryOnRequestSigningTimeout, completion: completion)
         }
     }
     
     static func delete(pin: String, completion: @escaping (MixinAPI.Result<Account>) -> Void) {
         PINEncryptor.encrypt(pin: pin, onFailure: completion) { (encryptedPin) in
             let param = ["pin": encryptedPin]
-            request(method: .post, path: Path.delete, parameters: param, retry: false, completion: completion)
+            request(method: .post, path: Path.delete, parameters: param, options: .disableRetryOnRequestSigningTimeout, completion: completion)
         }
     }
     

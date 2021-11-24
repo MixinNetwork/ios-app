@@ -83,11 +83,11 @@ final class AccountAPI: MixinAPI {
         if let bundleIdentifier = Bundle.main.bundleIdentifier {
             param["package_name"] = bundleIdentifier
         }
-        return request(method: .post, path: Path.verifications, parameters: param, requiresLogin: false, completion: completion)
+        return request(method: .post, path: Path.verifications, parameters: param, options: .authIndependent, completion: completion)
     }
     
     static func login(verificationId: String, accountRequest: AccountRequest, completion: @escaping (MixinAPI.Result<Account>) -> Void) {
-        request(method: .post, path: Path.verifications(id: verificationId), parameters: accountRequest, requiresLogin: false, completion: completion)
+        request(method: .post, path: Path.verifications(id: verificationId), parameters: accountRequest, options: .authIndependent, completion: completion)
     }
     
     static func changePhoneNumber(verificationId: String, accountRequest: AccountRequest, completion: @escaping (MixinAPI.Result<Account>) -> Void) {
@@ -98,7 +98,7 @@ final class AccountAPI: MixinAPI {
             self.request(method: .post,
                          path: Path.verifications(id: verificationId),
                          parameters: parameters,
-                         retry: false,
+                         options: .disableRetryOnRequestSigningTimeout,
                          completion: completion)
         }
     }
@@ -144,7 +144,7 @@ final class AccountAPI: MixinAPI {
             self.request(method: .post,
                          path: Path.verifyPin,
                          parameters: ["pin": encryptedPin],
-                         retry: false,
+                         options: .disableRetryOnRequestSigningTimeout,
                          completion: completion)
         }
     }
@@ -153,7 +153,7 @@ final class AccountAPI: MixinAPI {
         func encryptNewPinThenStartRequest() {
             PINEncryptor.encrypt(pin: new, onFailure: completion) { encryptedPin in
                 param["pin"] = encryptedPin
-                request(method: .post, path: Path.updatePin, parameters: param, retry: false, completion: completion)
+                request(method: .post, path: Path.updatePin, parameters: param, options: .disableRetryOnRequestSigningTimeout, completion: completion)
             }
         }
         var param: [String: String] = [:]

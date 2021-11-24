@@ -22,14 +22,14 @@ final class PaymentAPI: MixinAPI {
         var transactionRequest = transactionRequest
         PINEncryptor.encrypt(pin: pin, onFailure: completion) { (encryptedPin) in
             transactionRequest.pin = encryptedPin
-            request(method: .post, path: Path.transactions, parameters: transactionRequest, retry: false, completion: completion)
+            request(method: .post, path: Path.transactions, parameters: transactionRequest, options: .disableRetryOnRequestSigningTimeout, completion: completion)
         }
     }
     
     static func transfer(assetId: String, opponentId: String, amount: String, memo: String, pin: String, traceId: String, completion: @escaping (MixinAPI.Result<Snapshot>) -> Void) {
         PINEncryptor.encrypt(pin: pin, onFailure: completion) { (encryptedPin) in
             let param = ["asset_id": assetId, "opponent_id": opponentId, "amount": amount, "memo": memo, "pin": encryptedPin, "trace_id": traceId]
-            request(method: .post, path: Path.transfers, parameters: param, retry: false, completion: completion)
+            request(method: .post, path: Path.transfers, parameters: param, options: .disableRetryOnRequestSigningTimeout, completion: completion)
         }
     }
     

@@ -12,14 +12,15 @@ enum PINEncryptor {
     }
     
     private static let queue = DispatchQueue(label: "one.mixin.service.PINEncryptor")
-
+    
     static func encrypt<Response>(pin: String, onFailure: @escaping (MixinAPI.Result<Response>) -> Void, onSuccess: @escaping (String) -> Void) {
         queue.async {
-            switch encrypt(pin: pin) {
-            case .success(let encrypted):
-                onSuccess(encrypted)
-            case .failure(let error):
-                DispatchQueue.main.async {
+            let results = encrypt(pin: pin)
+            DispatchQueue.main.async {
+                switch results {
+                case .success(let encrypted):
+                    onSuccess(encrypted)
+                case .failure(let error):
                     onFailure(.failure(.pinEncryption(error)))
                 }
             }
@@ -43,9 +44,11 @@ enum PINEncryptor {
         }
         var time = UInt64(Date().timeIntervalSince1970).littleEndian
         let timeData = Data(bytes: &time, count: MemoryLayout<UInt64>.size)
-        var iterator = AppGroupUserDefaults.Crypto.iterator.littleEndian
-        AppGroupUserDefaults.Crypto.iterator += 1
-        let iteratorData = Data(bytes: &iterator, count: MemoryLayout<UInt64>.size)
+        let iterator = AppGroupUserDefaults.Crypto.iterator
+        AppGroupUserDefaults.Crypto.iterator = iterator + 1
+        let iteratorData = withUnsafeBytes(of: iterator.littleEndian) { buffer in
+            Data(bytes: buffer.baseAddress!, count: buffer.count)
+        }
         let plain = pinData + timeData + iteratorData
         do {
             let encrypted = try AESCryptor.encrypt(plain, with: pinToken, iv: iv, padding: .pkcs7)

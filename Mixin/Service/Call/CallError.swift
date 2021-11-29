@@ -18,6 +18,7 @@ enum CallError: Error {
     
     case networkFailure
     case invalidKrakenResponse
+    case invalidJSEP
     case roomFull
     case peerNotFound
     case peerClosed

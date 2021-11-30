@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>hCaptcha</key>
+	<string></string>
+	<key>ReCaptcha</key>
+	<string></string>
+	<key>Bugsnag</key>
+	<string></string>
+	<key>Foursquare</key>
+	<dict>
+		<key>ClientID</key>
+		<string></string>
+		<key>ClientSecret</key>
+		<string></string>
+	</dict>
+	<key>Giphy</key>
+	<string></string>
+	<key>AppCenter</key>
+	<string></string>
+</dict>
+</plist>

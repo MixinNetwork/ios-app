@@ -102,14 +102,14 @@ final class Clip: Codable {
             }
         }
         func removeMessageHandlersIfNeeded() {
-            if let controller = controllerIfLoaded, controller.viewIfLoaded == nil || controller.view.window == nil {
+            if let controller = controllerIfLoaded, controller.view.window == nil {
                 controller.removeAllMessageHandlers()
             }
         }
         if Thread.isMainThread {
             removeMessageHandlersIfNeeded()
         } else {
-            DispatchQueue.main.sync {
+            Queue.main.sync {
                 removeMessageHandlersIfNeeded()
             }
         }

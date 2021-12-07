@@ -101,16 +101,9 @@ final class Clip: Codable {
                 try? FileManager.default.removeItem(at: url)
             }
         }
-        func removeMessageHandlersIfNeeded() {
+        Queue.main.autoSync {
             if let controller = controllerIfLoaded, controller.view.window == nil {
                 controller.removeAllMessageHandlers()
-            }
-        }
-        if Thread.isMainThread {
-            removeMessageHandlersIfNeeded()
-        } else {
-            Queue.main.sync {
-                removeMessageHandlersIfNeeded()
             }
         }
     }

@@ -94,7 +94,7 @@ class AnimatedStickerView: UIView {
         } else {
             animationViewIfLoaded?.isHidden = true
             imageView.isHidden = false
-            let context = stickerLoadContext(stickerId: message.stickerId)
+            let context = stickerLoadContext(persistent: message.isStickerAdded)
             imageView.sd_setImage(with: url,
                                   placeholderImage: nil,
                                   context: context)

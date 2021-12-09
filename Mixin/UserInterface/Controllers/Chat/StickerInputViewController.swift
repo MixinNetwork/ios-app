@@ -7,14 +7,14 @@ class StickerInputViewController: UIViewController {
     
     private var pageViewController: UIPageViewController!
     private let modelController = StickerInputModelController()
-    private var officialAlbums = [Album]()
+    private var addedAlbums = [Album]()
     private var currentIndex = NSNotFound
     private var pageScrollView: UIScrollView?
     private var isScrollingByAlbumSelection = false
     private var currentPage: StickersCollectionViewController!
     
     var numberOfAllAlbums: Int {
-        return officialAlbums.count + modelController.numberOfFixedControllers
+        return addedAlbums.count + modelController.numberOfFixedControllers
     }
     
     var animated = false {
@@ -38,7 +38,11 @@ class StickerInputViewController: UIViewController {
         pageScrollView?.delegate = self
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(reload),
-                                               name: AppGroupUserDefaults.User.favoriteAlbumsDidChangeNotification,
+                                               name: AlbumDAO.addedAlbumsDidChangeNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(reload),
+                                               name: AlbumDAO.albumsOrderDidChangeNotification,
                                                object: nil)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(hasNewStickersNotification),
@@ -65,10 +69,10 @@ class StickerInputViewController: UIViewController {
     }
     
     @objc func reload() {
-        StickerStore.loadMyStickers { stickerInfos in
-            self.officialAlbums = stickerInfos.map(\.album)
+        StickerStore.loadAddedStickers { stickerInfos in
+            self.addedAlbums = stickerInfos.map(\.album)
             self.modelController.reloadRecentFavoriteStickers()
-            self.modelController.reloadOfficialStickers(stickers: stickerInfos.map(\.stickers))
+            self.modelController.reloadAddedStickers(stickers: stickerInfos.map(\.stickers))
             DispatchQueue.main.async {
                 self.albumsCollectionView.reloadData()
                 let initialViewControllers: [UIViewController]
@@ -120,7 +124,7 @@ extension StickerInputViewController: UICollectionViewDataSource {
             cell.imageView.image = R.image.ic_gif()
             cell.imageView.contentMode = .center
         default:
-            let album = officialAlbums[indexPath.row - modelController.numberOfFixedControllers]
+            let album = addedAlbums[indexPath.row - modelController.numberOfFixedControllers]
             if let url = URL(string: album.iconUrl) {
                 cell.imageView.sd_setImage(with: url, placeholderImage: nil, context: persistentStickerContext)
             }

@@ -16,7 +16,7 @@ class StickersEditingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         updateEmptyViewLayout()
-        StickerStore.loadMyStickers { stickerInfos in
+        StickerStore.loadAddedStickers { stickerInfos in
             DispatchQueue.main.async {
                 if stickerInfos.isEmpty {
                     self.stickerEmptyWrapperView.isHidden = false
@@ -97,9 +97,10 @@ extension StickersEditingViewController: UITableViewDelegate {
         guard sourceIndexPath.row < stickerInfos.count && destinationIndexPath.row < stickerInfos.count else {
             return
         }
-        let stickerInfo = stickerInfos.remove(at: sourceIndexPath.row)
-        stickerInfos.insert(stickerInfo, at: destinationIndexPath.row)
-        AppGroupUserDefaults.User.favoriteAlbums = stickerInfos.map({ $0.album.albumId })
+        let moved = stickerInfos.remove(at: sourceIndexPath.row)
+        stickerInfos.insert(moved, at: destinationIndexPath.row)
+        let albumIds = stickerInfos.map { $0.album.albumId }
+        StickerStore.updateAlbumsOrder(albumIds: albumIds)
         tableView.reloadData()
     }
     

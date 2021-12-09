@@ -21,8 +21,8 @@ class StickersStoreViewController: UIViewController {
             self.collectionView.reloadData()
         }
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(syncFavoriteAlbums),
-                                               name: AppGroupUserDefaults.User.favoriteAlbumsDidChangeNotification,
+                                               selector: #selector(updateAlbumAddStatus(_:)),
+                                               name: AlbumDAO.addedAlbumsDidChangeNotification,
                                                object: nil)
     }
     
@@ -95,16 +95,18 @@ extension StickersStoreViewController: UICollectionViewDelegate {
 }
 
 extension StickersStoreViewController {
-    
-    @objc private func syncFavoriteAlbums() {
-        guard let favoriteAlbums = AppGroupUserDefaults.User.favoriteAlbums else {
+
+    @objc private func updateAlbumAddStatus(_ notification: Notification) {
+        guard
+            let albumId = notification.userInfo?[AlbumDAO.UserInfoKey.albumId] as? String,
+            let isAdded = notification.userInfo?[AlbumDAO.UserInfoKey.isAdded] as? Bool
+        else {
             return
         }
-        for (index, stickerInfo) in bannerStickerInfos.enumerated() {
-            bannerStickerInfos[index].isAdded = favoriteAlbums.contains(stickerInfo.album.albumId)
-        }
-        for (index, stickerInfo) in listStickerInfos.enumerated() {
-            listStickerInfos[index].isAdded = favoriteAlbums.contains(stickerInfo.album.albumId)
+        if let index = bannerStickerInfos.firstIndex(where: { $0.album.albumId == albumId }) {
+            bannerStickerInfos[index].isAdded = isAdded
+        } else if let index = listStickerInfos.firstIndex(where: { $0.album.albumId == albumId }) {
+            listStickerInfos[index].isAdded = isAdded
         }
         collectionView.reloadData()
     }

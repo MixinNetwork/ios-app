@@ -60,8 +60,6 @@ extension AppGroupUserDefaults {
 
             case pinMessageBanners = "pin_message_banners"
             
-            case favoriteAlbums = "favorite_albums"
-            case favoriteAlbumStickers = "favorite_album_stickers"
             case stickerRefreshDate = "sticker_refresh_date"
             case hasNewStickers = "has_new_stickers"
         }
@@ -74,7 +72,6 @@ extension AppGroupUserDefaults {
         public static let circleNameDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.circle.name.change")
         public static let homeAppIdsDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.home.app.ids.change")
         public static let pinMessageBannerDidChangeNotification = Notification.Name("one.mixin.services.pinMessageBannerDidChange")
-        public static let favoriteAlbumsDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.favoriteAlbumsDidChangeNotification")
         public static let hasNewStickersDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.hasNewStickersDidChangeNotification")
 
         private static let maxNumberOfAssetSearchHistory = 2
@@ -227,16 +224,6 @@ extension AppGroupUserDefaults {
                 NotificationCenter.default.post(onMainThread: Self.pinMessageBannerDidChangeNotification, object: self)
             }
         }
-                
-        @Default(namespace: .user, key: Key.favoriteAlbums, defaultValue: nil)
-        public static var favoriteAlbums: [String]? {
-            didSet {
-                NotificationCenter.default.post(onMainThread: favoriteAlbumsDidChangeNotification, object: self)
-            }
-        }
-        
-        @Default(namespace: .user, key: Key.favoriteAlbumStickers, defaultValue: [])
-        public static var favoriteAlbumStickers: [String]
         
         @Default(namespace: .user, key: Key.stickerRefreshDate, defaultValue: nil)
         public static var stickerRefreshDate: Date?

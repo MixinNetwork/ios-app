@@ -5,7 +5,7 @@ public final class StickerDAO: UserDatabaseDAO {
     public static let favoriteStickersDidChangeNotification = NSNotification.Name("one.mixin.services.StickerDAO.favoriteStickersDidChange")
     
     private static let sqlQueryColumns = """
-    SELECT s.sticker_id, s.name, s.asset_url, s.asset_type, s.asset_width, s.asset_height, s.last_used_at, a.category
+    SELECT s.sticker_id, s.name, s.asset_url, s.asset_type, s.asset_width, s.asset_height, s.last_used_at, a.category, CASE WHEN a.added IS NULL THEN 0 ELSE a.added END AS added
     FROM stickers s
     """
     private static let relationShipJoinClause = "INNER JOIN sticker_relationships sa ON sa.sticker_id = s.sticker_id"
@@ -44,6 +44,14 @@ public final class StickerDAO: UserDatabaseDAO {
     ORDER BY s.last_used_at DESC
     LIMIT ?
     """
+    private static let sqlQueryIsFavoriteSticker = """
+    SELECT 1
+    FROM stickers s
+    \(relationShipJoinClause)
+    \(albumJoinClause)
+    WHERE s.sticker_id = ? AND a.category = 'PERSONAL'
+    """
+    
     public static let shared = StickerDAO()
     
     public func isExist(stickerId: String) -> Bool {
@@ -64,6 +72,11 @@ public final class StickerDAO: UserDatabaseDAO {
     
     public func getFavoriteStickers() -> [StickerItem] {
         db.select(with: StickerDAO.sqlQueryFavoriteStickers)
+    }
+    
+    public func isFavoriteSticker(stickerId: String) -> Bool {
+        let value: Int64 = db.select(with: StickerDAO.sqlQueryIsFavoriteSticker, arguments: [stickerId]) ?? 0
+        return value > 0
     }
     
     public func recentUsedStickers(limit: Int) -> [StickerItem] {
@@ -116,7 +129,7 @@ public final class StickerDAO: UserDatabaseDAO {
                     break
                 }
             case .failure:
-                ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob(.albums))
+                ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob(.albums(needsMigration: false)))
             }
         }
     }

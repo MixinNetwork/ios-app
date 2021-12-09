@@ -48,6 +48,8 @@ public final class UserDatabase: Database {
             .init(key: .category, constraints: "TEXT NOT NULL"),
             .init(key: .description, constraints: "TEXT NOT NULL"),
             .init(key: .banner, constraints: "TEXT"),
+            .init(key: .orderedAt, constraints: "TEXT"),
+            .init(key: .isAdded, constraints: "NUMERIC")
         ]),
         ColumnMigratableTableDefinition<App>(constraints: nil, columns: [
             .init(key: .appId, constraints: "TEXT PRIMARY KEY"),
@@ -427,11 +429,29 @@ public final class UserDatabase: Database {
             try db.execute(sql: "CREATE INDEX IF NOT EXISTS index_messages_pick ON messages(conversation_id, status, user_id, created_at)")
         }
         
-        migrator.registerMigration("sticker_store") { db in
+        // "2" used to enable migration of users who have been installed during sticker store feature development
+        migrator.registerMigration("sticker_store_2") { db in
             let infos = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(albums)")
             let columnNames = infos.map(\.name)
             if !columnNames.contains("banner") {
                 try db.execute(sql: "ALTER TABLE albums ADD COLUMN banner TEXT")
+            }
+            if !columnNames.contains("added") {
+                try db.execute(sql: "ALTER TABLE albums ADD COLUMN added NUMERIC")
+                try Album.updateAll(db, [Album.column(of: .isAdded).set(to: true)])
+            }
+            if !columnNames.contains("ordered_at") {
+                try db.execute(sql: "ALTER TABLE albums ADD COLUMN ordered_at TEXT")
+                let albumIds: [String] = try Album
+                    .select(Album.column(of: .albumId))
+                    .filter(Album.column(of: .category) != AlbumCategory.PERSONAL.rawValue)
+                    .order(Album.column(of: .updatedAt).desc)
+                    .fetchAll(db)
+                for (index, albumId) in albumIds.enumerated() {
+                    try Album
+                        .filter(Album.column(of: .albumId) == albumId)
+                        .updateAll(db, Album.column(of: .orderedAt).set(to: "\(index)"))
+                }
             }
         }
         

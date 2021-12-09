@@ -3,7 +3,15 @@ import GRDB
 
 public final class AlbumDAO: UserDatabaseDAO {
     
+    public enum UserInfoKey {
+        public static let albumId = "aid"
+        public static let isAdded = "added"
+    }
+    
     public static let shared = AlbumDAO()
+    
+    public static let addedAlbumsDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.AlbumDAO.addedAlbumsDidChangeNotification")
+    public static let albumsOrderDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.AlbumDAO.albumsOrderDidChangeNotification")
     
     public func getAlbum(stickerId: String) -> Album? {
         let sql = """
@@ -49,8 +57,65 @@ public final class AlbumDAO: UserDatabaseDAO {
                   from: Album.self)
     }
     
+    public func getAddedAlbums() -> [Album] {
+        let condition: SQLSpecificExpressible = Album.column(of: .isAdded) == true
+            && Album.column(of: .category) != AlbumCategory.PERSONAL.rawValue
+        return db.select(where: condition,
+                         order: [Album.column(of: .orderedAt)])
+    }
+    
     public func insertOrUpdateAblum(album: Album) {
         db.save(album)
+    }
+    
+    public func updateAlbumAddedStatus(isAdded: Bool, forAlbumWithId id: String) {
+        db.write { db in
+            try Album
+                .filter(Album.column(of: .albumId) == id)
+                .updateAll(db, [Album.column(of: .isAdded).set(to: isAdded)])
+            if isAdded {
+                let condition: SQLSpecificExpressible = Album.column(of: .isAdded) == true
+                    && Album.column(of: .category) != AlbumCategory.PERSONAL.rawValue
+                    && Album.column(of: .albumId) != id
+                let albumIds: [String] = try Album
+                    .select(Album.column(of: .albumId))
+                    .filter(condition)
+                    .fetchAll(db)
+                let addedAlbumIds = [id] + albumIds
+                for (index, albumId) in addedAlbumIds.enumerated() {
+                    try Album
+                        .filter(Album.column(of: .albumId) == albumId)
+                        .updateAll(db, [Album.column(of: .orderedAt).set(to: "\(index)")])
+                }
+            } else {
+                try Album
+                    .filter(Album.column(of: .albumId) == id)
+                    .updateAll(db, [Album.column(of: .orderedAt).set(to: nil)])
+            }
+            db.afterNextTransactionCommit { db in
+                let userInfo: [String: Any] = [
+                    AlbumDAO.UserInfoKey.albumId: id,
+                    AlbumDAO.UserInfoKey.isAdded: isAdded
+                ]
+                NotificationCenter.default.post(onMainThread: AlbumDAO.addedAlbumsDidChangeNotification,
+                                                object: self,
+                                                userInfo: userInfo)
+            }
+        }
+    }
+    
+    public func updateAlbumsOrder(albumdIds: [String]) {
+        db.write { db in
+            for (index, albumId) in albumdIds.enumerated() {
+                try Album
+                    .filter(Album.column(of: .albumId) == albumId)
+                    .updateAll(db, [Album.column(of: .orderedAt).set(to: "\(index)")])
+            }
+            db.afterNextTransactionCommit { _ in
+                NotificationCenter.default.post(onMainThread: AlbumDAO.albumsOrderDidChangeNotification,
+                                                object: self)
+            }
+        }
     }
     
 }

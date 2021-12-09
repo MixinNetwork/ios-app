@@ -14,7 +14,7 @@ class StickersStoreBannerFlowLayout: UICollectionViewFlowLayout {
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         guard
             let collectionView = collectionView,
-            let layoutAttributes = copy(super.layoutAttributesForElements(in: rect))
+            let layoutAttributes = super.layoutAttributesForElements(in: rect)?.map({ $0.copy() }) as? [UICollectionViewLayoutAttributes]
         else {
             return nil
         }
@@ -54,10 +54,6 @@ class StickersStoreBannerFlowLayout: UICollectionViewFlowLayout {
             targetPoint.x += moveDistance
         }
         return targetPoint
-    }
-    
-    private func copy(_ layoutAttributesArray: [UICollectionViewLayoutAttributes]?) -> [UICollectionViewLayoutAttributes]? {
-        return layoutAttributesArray?.map{ $0.copy() } as? [UICollectionViewLayoutAttributes]
     }
     
 }

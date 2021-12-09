@@ -16,9 +16,9 @@ public enum StickerPrefetcher {
         return prefetcher
     }()
     
-    public static func prefetch(stickers: [StickerItem], albumId: String? = nil) {
+    public static func prefetch(stickers: [StickerItem]) {
         let purgableUrls = stickers
-            .filter(\.shouldCachePersistently)
+            .filter({ !$0.shouldCachePersistently })
             .map(\.assetUrl)
             .compactMap(URL.init)
         let persistentUrls = stickers
@@ -26,7 +26,14 @@ public enum StickerPrefetcher {
             .map(\.assetUrl)
             .compactMap(URL.init)
         purgable.prefetchURLs(purgableUrls)
-        if let token = persistent.prefetchURLs(persistentUrls), let albumId = albumId {
+        persistent.prefetchURLs(persistentUrls)
+    }
+    
+    public static func prefetchPersistently(urls: [URL], albumId: String) {
+        guard !urls.isEmpty else {
+            return
+        }
+        if let token = persistent.prefetchURLs(urls) {
             prefetchTokens[albumId] = token
         }
     }

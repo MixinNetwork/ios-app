@@ -21,9 +21,9 @@ extension StickerStoreBannerView: UICollectionViewDataSource, UICollectionViewDe
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.sticker_preview, for: indexPath)!
-        if indexPath.item < stickerInfos.count,  let banner = stickerInfos[indexPath.item].album.banner, let url = URL(string: banner) {
-            cell.stickerView.load(imageURL: url, contentMode: .scaleAspectFill, context: persistentStickerContext)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.sticker_store_banner, for: indexPath)!
+        if indexPath.item < stickerInfos.count, let banner = stickerInfos[indexPath.item].album.banner, let url = URL(string: banner) {
+            cell.load(url: url, isStickerAdded: stickerInfos[indexPath.item].album.isAdded ?? false)
         }
         return cell
     }
@@ -33,6 +33,20 @@ extension StickerStoreBannerView: UICollectionViewDataSource, UICollectionViewDe
             return
         }
         onSelected?(stickerInfos[indexPath.item])
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        guard let cell = cell as? StickerStoreBannerCell else {
+            return
+        }
+        cell.startAnimating()
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        guard let cell = cell as? StickerStoreBannerCell else {
+            return
+        }
+        cell.stopAnimating()
     }
     
 }

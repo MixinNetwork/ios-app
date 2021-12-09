@@ -29,6 +29,7 @@ class StickerStorePreviewCell: UICollectionViewCell {
             collectionView.reloadData()
         }
     }
+    
     private let cellCountPerRow = 4
     
     @IBAction func stickerAction(_ sender: Any) {
@@ -57,22 +58,9 @@ extension StickerStorePreviewCell: UICollectionViewDataSource, UICollectionViewD
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.sticker_preview, for: indexPath)!
         if let stickerInfo = stickerInfo, indexPath.item < stickerInfo.stickers.count {
             cell.stickerView.load(sticker: stickerInfo.stickers[indexPath.item])
+            cell.stickerView.startAnimating()
         }
         return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        guard let cell = cell as? StickerPreviewCell else {
-            return
-        }
-        cell.stickerView.startAnimating()
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        guard let cell = cell as? StickerPreviewCell else {
-            return
-        }
-        cell.stickerView.stopAnimating()
     }
     
 }

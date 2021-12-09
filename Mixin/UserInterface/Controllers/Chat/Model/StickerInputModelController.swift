@@ -12,7 +12,7 @@ class StickerInputModelController: NSObject {
     let giphyViewController = GiphyViewController(index: 3)
     let numberOfFixedControllers = 4
     
-    private var officialStickers = [[StickerItem]]()
+    private var addedStickers = [[StickerItem]]()
     
     private var reusableStickerViewControllers = Set<StickersViewController>()
     
@@ -20,7 +20,7 @@ class StickerInputModelController: NSObject {
         if let vc = dequeueReusableStickersViewController(withIndex: 0), !vc.isEmpty {
             return vc
         } else {
-            let index = officialStickers.isEmpty ? numberOfFixedControllers - 1 : numberOfFixedControllers
+            let index = addedStickers.isEmpty ? numberOfFixedControllers - 1 : numberOfFixedControllers
             return dequeueReusableStickersViewController(withIndex: index)
         }
     }
@@ -35,12 +35,12 @@ class StickerInputModelController: NSObject {
         }
     }
     
-    func reloadOfficialStickers(stickers: [[StickerItem]]) {
-        officialStickers = stickers
+    func reloadAddedStickers(stickers: [[StickerItem]]) {
+        addedStickers = stickers
     }
     
     func dequeueReusableStickersViewController(withIndex index: Int) -> StickersCollectionViewController? {
-        guard index > 0 && index - numberOfFixedControllers < officialStickers.count else {
+        guard index > 0 && index - numberOfFixedControllers < addedStickers.count else {
             return nil
         }
         switch index {
@@ -59,7 +59,7 @@ class StickerInputModelController: NSObject {
                 reusableStickerViewControllers.insert(viewController)
             }
             viewController.index = index
-            viewController.load(stickers: officialStickers[index - numberOfFixedControllers])
+            viewController.load(stickers: addedStickers[index - numberOfFixedControllers])
             return viewController
         }
     }

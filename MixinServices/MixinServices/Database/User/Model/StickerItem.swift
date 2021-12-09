@@ -12,9 +12,10 @@ public struct StickerItem {
     public let assetHeight: Int
     public var lastUseAt: String?
     public let category: String?
+    public let isAdded: Bool?
     
     public var shouldCachePersistently: Bool {
-        return shouldCacheStickerPersistently(stickerId: stickerId)
+        return isAdded ?? false
     }
     
     public var imageLoadContext: [SDWebImageContextOption: Any]? {
@@ -34,6 +35,7 @@ extension StickerItem: Codable, DatabaseColumnConvertible, MixinFetchableRecord 
         case assetHeight = "asset_height"
         case lastUseAt = "last_used_at"
         case category
+        case isAdded = "added"
     }
     
     public init(from decoder: Decoder) throws {
@@ -46,6 +48,7 @@ extension StickerItem: Codable, DatabaseColumnConvertible, MixinFetchableRecord 
         assetHeight = try container.decodeIfPresent(Int.self, forKey: .assetHeight) ?? 0
         lastUseAt = try container.decodeIfPresent(String.self, forKey: .lastUseAt)
         category = try container.decodeIfPresent(String.self, forKey: .category)
+        isAdded = try container.decode(Bool.self, forKey: .isAdded)
     }
     
 }
@@ -58,20 +61,6 @@ extension StickerItem {
     
 }
 
-@inlinable public func shouldCacheStickerPersistently(stickerId: String?) -> Bool {
-    let stickerIds = AppGroupUserDefaults.User.favoriteAlbumStickers
-    if stickerIds.isEmpty {
-        return false
-    } else {
-        return stickerIds.contains(where: { $0 == stickerId })
-    }
-}
-
-public func stickerLoadContext(persistent: Bool) -> [SDWebImageContextOption: Any]? {
-    return persistent ? persistentStickerContext : nil
-}
-
-public func stickerLoadContext(stickerId: String?) -> [SDWebImageContextOption: Any]? {
-    let persistent = shouldCacheStickerPersistently(stickerId: stickerId)
-    return stickerLoadContext(persistent: persistent)
+public func stickerLoadContext(persistent: Bool?) -> [SDWebImageContextOption: Any]? {
+    return (persistent ?? false) ? persistentStickerContext : nil
 }

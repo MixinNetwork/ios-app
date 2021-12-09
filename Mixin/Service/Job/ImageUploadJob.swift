@@ -59,7 +59,7 @@ class ImageUploadJob: AttachmentUploadJob {
             try? FileManager.default.removeItem(at: fileUrl)
             return
         }
-        updateMediaUrlAndPostNotification(filename: filename, url: url)
+        updateMessage(filename: filename, url: url)
     }
     
     private func updateMessageMediaUrl(with mediaLocalIdentifier: String) {
@@ -79,6 +79,8 @@ class ImageUploadJob: AttachmentUploadJob {
         let extensionName: String
         var image: UIImage?
         var imageData: Data?
+        var updatedWidth: Int?
+        var updatedHeight: Int?
         if UTTypeConformsTo(uti, kUTTypeGIF) {
             extensionName = ExtensionName.gif.rawValue
             PHImageManager.default().requestImageData(for: asset, options: options) { (data, uti, orientation, info) in
@@ -97,6 +99,14 @@ class ImageUploadJob: AttachmentUploadJob {
                         return
                     }
                     (image, imageData) = ImageUploadSanitizer.sanitizedImage(from: rawImage)
+                    if let image = image {
+                        if image.size.width != rawImage.size.width {
+                            updatedWidth = Int(image.size.width)
+                        }
+                        if image.size.height != rawImage.size.height {
+                            updatedHeight = Int(image.size.height)
+                        }
+                    }
                 }
             }
         } else {
@@ -107,6 +117,14 @@ class ImageUploadJob: AttachmentUploadJob {
                     return
                 }
                 (image, imageData) = ImageUploadSanitizer.sanitizedImage(from: rawImage)
+                if let image = image {
+                    if image.size.width != rawImage.size.width {
+                        updatedWidth = Int(image.size.width)
+                    }
+                    if image.size.height != rawImage.size.height {
+                        updatedHeight = Int(image.size.height)
+                    }
+                }
             }
         }
         
@@ -126,20 +144,28 @@ class ImageUploadJob: AttachmentUploadJob {
                 try FileManager.default.removeItem(at: url)
                 return
             }
-            updateMediaUrlAndPostNotification(filename: filename, url: url)
+            updateMessage(filename: filename, url: url, mediaWidth: updatedWidth, mediaHeight: updatedHeight)
         } catch {
             reporter.report(error: error)
         }
     }
     
-    private func updateMediaUrlAndPostNotification(filename: String, url: URL) {
+    private func updateMessage(filename: String, url: URL, mediaWidth: Int? = nil, mediaHeight: Int? = nil) {
         let mediaSize = FileManager.default.fileSize(url.path)
         message.mediaUrl = filename
         message.mediaSize = mediaSize
-        let assignments = [
+        var assignments = [
             Message.column(of: .mediaUrl).set(to: filename),
             Message.column(of: .mediaSize).set(to: mediaSize)
         ]
+        if let mediaWidth = mediaWidth {
+            assignments.append(Message.column(of: .mediaWidth).set(to: mediaWidth))
+            message.mediaWidth = mediaWidth
+        }
+        if let mediaHeight = mediaHeight {
+            assignments.append(Message.column(of: .mediaHeight).set(to: mediaHeight))
+            message.mediaHeight = mediaHeight
+        }
         let change = ConversationChange(conversationId: message.conversationId,
                                         action: .updateMediaContent(messageId: message.messageId, message: message))
         MessageDAO.shared.updateMediaMessage(messageId: message.messageId, assignments: assignments) { _ in

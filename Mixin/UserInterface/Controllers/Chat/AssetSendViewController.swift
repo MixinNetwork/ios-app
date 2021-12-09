@@ -213,7 +213,9 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
             let messageId = UUID().uuidString.lowercased()
             let outputURL = AttachmentContainer.url(for: .videos, filename: messageId + ExtensionName.mp4.withDot)
             let exportSession = AssetExportSession(asset: asset, outputURL: outputURL)
-            exportSession.exportAsynchronously { [weak self] in
+            exportSession.exportAsynchronously { _ in
+                // Message is generated in composer with file of outputURL, no need to update
+            } completionHandler: { [weak self] in
                 guard let weakSelf = self else {
                     return
                 }

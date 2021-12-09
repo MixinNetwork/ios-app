@@ -25,6 +25,7 @@
 "action_more" = "更多";
 "action_open_browser" = "在浏览器中打开";
 "action_refresh" = "刷新";
+"action_view_authorization" = "查看授权";
 "action_select" = "选择";
 "action_clear" = "清理";
 "action_send" = "发送";

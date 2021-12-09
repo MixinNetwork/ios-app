@@ -4,13 +4,18 @@ import MixinServices
 final class AuthorizeAPI: MixinAPI {
     
     private enum Path {
-        static let authorizations = "/authorizations"
+        static func authorizations(appId: String? = nil) -> String {
+            if let appId = appId {
+                return "/authorizations?app=\(appId)"
+            }
+            return "/authorizations"
+        }
         static let cancel = "/oauth/cancel"
         static let authorize = "/oauth/authorize"
     }
     
-    static func authorizations(completion: @escaping (MixinAPI.Result<[AuthorizationResponse]>) -> Void) {
-        request(method: .get, path: Path.authorizations, completion: completion)
+    static func authorizations(appId: String? = nil, completion: @escaping (MixinAPI.Result<[AuthorizationResponse]>) -> Void) {
+        request(method: .get, path: Path.authorizations(appId: appId), completion: completion)
     }
     
     static func cancel(clientId: String, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {

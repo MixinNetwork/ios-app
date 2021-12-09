@@ -119,6 +119,7 @@ extension WebMoreMenuViewController {
         case copyLink
         case refresh
         case openInBrowser
+        case viewAuthorization(String)
         
         var image: UIImage? {
             switch self {
@@ -136,6 +137,8 @@ extension WebMoreMenuViewController {
                 return R.image.web.ic_action_refresh()
             case .openInBrowser:
                 return R.image.web.ic_action_open_in_browser()
+            case .viewAuthorization:
+                return R.image.web.ic_action_view_authorization()
             }
         }
         
@@ -155,6 +158,8 @@ extension WebMoreMenuViewController {
                 return R.string.localizable.action_refresh()
             case .openInBrowser:
                 return R.string.localizable.action_open_browser()
+            case .viewAuthorization:
+                return R.string.localizable.action_view_authorization()
             }
         }
         

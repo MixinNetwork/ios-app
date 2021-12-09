@@ -18,11 +18,10 @@ public class AssetExportSession {
     let fileType = AVFileType.mp4
     let timeRange = CMTimeRange(start: .zero, end: .positiveInfinity)
     let shouldOptimizeForNetworkUse = true
-
+    
+    private let maxOutputSize = CGSize(width: 1280, height: 720)
     private let videoSettings: [String: Any] = [
         AVVideoCodecKey: AVVideoCodecType.h264,
-        AVVideoWidthKey: 1280,
-        AVVideoHeightKey: 720,
         AVVideoCompressionPropertiesKey: [
             AVVideoAverageBitRateKey: 1500000,
             AVVideoProfileLevelKey: AVVideoProfileLevelH264MainAutoLevel
@@ -57,7 +56,7 @@ public class AssetExportSession {
         self.outputURL = outputURL
     }
 
-    public func exportAsynchronously(completionHandler handler: @escaping CompletionHandler) {
+    public func exportAsynchronously(onSizeAdjusted: (CGSize) -> Void, completionHandler handler: @escaping CompletionHandler) {
         status = .waiting
         self.completionHandler = handler
         do {
@@ -114,27 +113,26 @@ public class AssetExportSession {
                 }
 
                 composition.renderSize = naturalSize
-
-                let targetWidth = CGFloat((videoSettings[AVVideoWidthKey] as! NSNumber).floatValue)
-                let targetHeight = CGFloat((videoSettings[AVVideoHeightKey] as! NSNumber).floatValue)
-                let longSideRatio = max(targetWidth, targetHeight) / max(naturalSize.width, naturalSize.height)
-                let shortSideRatio = min(targetWidth, targetHeight) / min(naturalSize.width, naturalSize.height)
-                let targetSize: CGSize
+                
+                let longSideRatio = max(maxOutputSize.width, maxOutputSize.height) / max(naturalSize.width, naturalSize.height)
+                let shortSideRatio = min(maxOutputSize.width, maxOutputSize.height) / min(naturalSize.width, naturalSize.height)
+                let adjustedSize: CGSize
                 if longSideRatio < 1 || shortSideRatio < 1 {
                     let ratio = min(longSideRatio, shortSideRatio)
-                    targetSize = CGSize(width: round(naturalSize.width * ratio),
-                                        height: round(naturalSize.height * ratio))
+                    adjustedSize = CGSize(width: round(naturalSize.width * ratio),
+                                          height: round(naturalSize.height * ratio))
+                    onSizeAdjusted(adjustedSize)
                 } else {
-                    targetSize = naturalSize
+                    adjustedSize = naturalSize
                 }
-                sizeAdjustedVideoSettings[AVVideoWidthKey] = targetSize.width
-                sizeAdjustedVideoSettings[AVVideoHeightKey] = targetSize.height
-
-                let xRatio = targetSize.width / naturalSize.width
-                let yRatio = targetSize.height / naturalSize.height
+                sizeAdjustedVideoSettings[AVVideoWidthKey] = adjustedSize.width
+                sizeAdjustedVideoSettings[AVVideoHeightKey] = adjustedSize.height
+                
+                let xRatio = adjustedSize.width / naturalSize.width
+                let yRatio = adjustedSize.height / naturalSize.height
                 let ratio = min(xRatio, yRatio)
-                let offset = CGPoint(x: (targetSize.width - naturalSize.width * ratio) / 2,
-                                     y: (targetSize.height - naturalSize.height * ratio) / 2)
+                let offset = CGPoint(x: (adjustedSize.width - naturalSize.width * ratio) / 2,
+                                     y: (adjustedSize.height - naturalSize.height * ratio) / 2)
                 var matrix = CGAffineTransform(translationX: offset.x / xRatio, y: offset.y / yRatio)
                 matrix = matrix.scaledBy(x: ratio / xRatio, y: ratio / yRatio)
                 transform = transform.concatenating(matrix)

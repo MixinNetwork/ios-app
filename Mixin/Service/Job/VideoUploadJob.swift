@@ -58,7 +58,12 @@ class VideoUploadJob: AttachmentUploadJob {
         let videoFilename = filename + ExtensionName.mp4.withDot
         let videoUrl = AttachmentContainer.url(for: .videos, filename: videoFilename)
         let exportSession = AssetExportSession(asset: asset, outputURL: videoUrl)
-        exportSession.exportAsynchronously {
+        var isSizeUpdated = false
+        exportSession.exportAsynchronously { newSize in
+            message.mediaWidth = Int(newSize.width)
+            message.mediaHeight = Int(newSize.height)
+            isSizeUpdated = true
+        } completionHandler: {
             semaphore.signal()
         }
         semaphore.wait()
@@ -75,11 +80,15 @@ class VideoUploadJob: AttachmentUploadJob {
         message.mediaUrl = videoFilename
         message.mediaDuration = mediaDuration
         message.mediaSize = mediaSize
-        let assignments = [
+        var assignments = [
             Message.column(of: .mediaUrl).set(to: videoFilename),
             Message.column(of: .mediaSize).set(to: mediaSize),
             Message.column(of: .mediaDuration).set(to: mediaDuration)
         ]
+        if isSizeUpdated {
+            assignments.append(Message.column(of: .mediaWidth).set(to: message.mediaWidth))
+            assignments.append(Message.column(of: .mediaHeight).set(to: message.mediaHeight))
+        }
         let change = ConversationChange(conversationId: message.conversationId,
                                         action: .updateMediaContent(messageId: message.messageId, message: message))
         MessageDAO.shared.updateMediaMessage(messageId: message.messageId, assignments: assignments) { _ in

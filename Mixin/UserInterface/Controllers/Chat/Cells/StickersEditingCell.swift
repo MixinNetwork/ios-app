@@ -10,12 +10,12 @@ class StickersEditingCell: UITableViewCell {
     var onDelete: (() -> Void)?
     var stickerInfo: StickerStore.StickerInfo? {
         didSet {
-            guard let stickerInfos = stickerInfo else {
+            guard let stickerInfo = stickerInfo else {
                 return
             }
-            nameLabel.text = stickerInfos.album.name
-            countLabel.text = R.string.localizable.sticker_count(stickerInfos.stickers.count)
-            if let url = URL(string: stickerInfos.album.iconUrl) {
+            nameLabel.text = stickerInfo.album.name
+            countLabel.text = R.string.localizable.sticker_count(stickerInfo.stickers.count)
+            if let url = URL(string: stickerInfo.album.iconUrl) {
                 stickerImageView.sd_setImage(with: url, placeholderImage: nil, context: persistentStickerContext)
             }
         }

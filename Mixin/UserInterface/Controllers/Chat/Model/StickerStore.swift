@@ -10,7 +10,7 @@ enum StickerStore {
         var isAdded: Bool = false
     }
     
-    private static let queue = DispatchQueue(label: "one.mixin.services.queue.StickerStore")
+    private static let queue = DispatchQueue(label: "one.mixin.messenger.queue.StickerStore.operation")
     private static let maxBannerCount = 3
 
     static func updateAlbumsOrder(albumIds: [String]) {
@@ -39,7 +39,7 @@ enum StickerStore {
             AppGroupUserDefaults.User.stickerRefreshDate = Date()
         }
         if let date = AppGroupUserDefaults.User.stickerRefreshDate {
-            if date.timeIntervalSinceNow >= .oneDay {
+            if -date.timeIntervalSinceNow >= .oneDay {
                 refreshSticker(false)
             }
         } else {
@@ -158,7 +158,7 @@ extension StickerStore {
     
     private static func fetchSticker(stickerId: String, completion: @escaping (StickerInfo?) -> Void) {
         var stickerInfo: StickerInfo?
-        let queue = DispatchQueue(label: "one.mixin.messenger.StickerStore", attributes: .concurrent)
+        let queue = DispatchQueue(label: "one.mixin.messenger.StickerStore.fetchSticker", attributes: .concurrent)
         let group = DispatchGroup()
         group.enter()
         queue.async(group: group) {

@@ -401,11 +401,11 @@ extension GroupCall {
                         self.answer(userId: userId)
                     }
                 }
-            case .success:
+            case .success, .failure(.invalidJSEP):
                 DispatchQueue.main.async {
                     self.membersDataSource.setMember(with: userId, isConnected: true)
                 }
-                Logger.call.info(category: "GroupCall", message: "[\(self.uuidString)] Subscribe responded with a non-offer sdp. Drop it")
+                Logger.call.info(category: "GroupCall", message: "[\(self.uuidString)] Subscribe responded with a non-offer sdp")
             case .failure(let error):
                 switch error {
                 case .invalidKrakenResponse:
@@ -629,11 +629,11 @@ extension GroupCall {
                 Logger.call.info(category: "GroupCall", message: "[\(self.uuidString)] invalid KrakenPublishResponse: \(response)")
                 return .failure(.invalidKrakenResponse)
             }
-            guard let sdpString = data.jsep.base64Decoded(), let sdp = RTCSessionDescription(jsonString: sdpString) else {
-                Logger.call.info(category: "GroupCall", message: "[\(self.uuidString)] invalid JSEP: \(data.jsep)")
-                return .failure(.invalidKrakenResponse)
+            if let sdpString = data.jsep.base64Decoded(), let sdp = RTCSessionDescription(jsonString: sdpString) {
+                return .success((data.trackId, sdp))
+            } else {
+                return .failure(.invalidJSEP)
             }
-            return .success((data.trackId, sdp))
         case let .failure(error):
             switch error {
             case MixinAPIError.roomFull:

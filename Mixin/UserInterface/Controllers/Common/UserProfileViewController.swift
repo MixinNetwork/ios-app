@@ -400,7 +400,7 @@ extension UserProfileViewController {
             UserAPI.remarkFriend(userId: userId, full_name: name) { [weak self] (result) in
                 switch result {
                 case let .success(response):
-                    self?.handle(userResponse: response, postContactDidChangeNotificationOnSuccess: false)
+                    self?.handle(userResponse: response, postContactDidChangeNotificationOnSuccess: true)
                     hud.set(style: .notification, text: Localized.TOAST_CHANGED)
                 case let .failure(error):
                     hud.set(style: .error, text: error.localizedDescription)

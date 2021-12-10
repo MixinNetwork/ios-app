@@ -70,13 +70,13 @@ public final class AlbumDAO: UserDatabaseDAO {
     
     public func updateAlbumAddedStatus(isAdded: Bool, forAlbumWithId id: String) {
         db.write { db in
+            let assignments = [
+                Album.column(of: .isAdded).set(to: isAdded),
+                Album.column(of: .orderedAt).set(to: isAdded ? Date().toUTCString() : "0")
+            ]
             try Album
                 .filter(Album.column(of: .albumId) == id)
-                .updateAll(db, [Album.column(of: .isAdded).set(to: isAdded)])
-            let orderedAt = isAdded ? Date().toUTCString() : "0"
-            try Album
-                .filter(Album.column(of: .albumId) == id)
-                .updateAll(db, [Album.column(of: .orderedAt).set(to: orderedAt)])
+                .updateAll(db, assignments)
             db.afterNextTransactionCommit { db in
                 let userInfo: [String: Any] = [
                     AlbumDAO.UserInfoKey.albumId: id,

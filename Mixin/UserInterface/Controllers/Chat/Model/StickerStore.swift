@@ -54,8 +54,7 @@ enum StickerStore {
             let albums = AlbumDAO.shared.getAlbums()
             albums.forEach { album in
                 let stickers = StickerDAO.shared.getStickers(albumId: album.albumId)
-                let isAdded = album.isAdded ?? false
-                let stickerInfo = StickerInfo(album: album, stickers: stickers, isAdded: isAdded)
+                let stickerInfo = StickerInfo(album: album, stickers: stickers, isAdded: album.isAdded)
                 if !album.banner.isNilOrEmpty, bannerStickerInfos.count < maxBannerCount {
                     bannerStickerInfos.append(stickerInfo)
                 } else {
@@ -88,9 +87,8 @@ enum StickerStore {
                     }
                 } else {
                     let stickers = StickerDAO.shared.getStickers(albumId: album.albumId)
-                    let isAdded = album.isAdded ?? false
                     DispatchQueue.main.async {
-                        completion(StickerInfo(album: album, stickers: stickers, isAdded: isAdded))
+                        completion(StickerInfo(album: album, stickers: stickers, isAdded: album.isAdded))
                     }
                 }
             } else {

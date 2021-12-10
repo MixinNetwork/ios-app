@@ -62,7 +62,7 @@ public class RefreshStickerJob: AsynchronousJob {
                     var persistentBannerUrls = [URL]()
                     for album in newAlbums {
                         if let banner = album.banner, let url = URL(string: banner) {
-                            if album.isAdded ?? false {
+                            if album.isAdded {
                                 persistentBannerUrls.append(url)
                             } else {
                                 purgableBannerUrls.append(url)

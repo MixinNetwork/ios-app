@@ -48,8 +48,8 @@ public final class UserDatabase: Database {
             .init(key: .category, constraints: "TEXT NOT NULL"),
             .init(key: .description, constraints: "TEXT NOT NULL"),
             .init(key: .banner, constraints: "TEXT"),
-            .init(key: .orderedAt, constraints: "TEXT"),
-            .init(key: .isAdded, constraints: "NUMERIC")
+            .init(key: .orderedAt, constraints: "TEXT NOT NULL DEFAULT '0'"),
+            .init(key: .isAdded, constraints: "INTEGER NOT NULL DEFAULT 0")
         ]),
         ColumnMigratableTableDefinition<App>(constraints: nil, columns: [
             .init(key: .appId, constraints: "TEXT PRIMARY KEY"),
@@ -437,11 +437,10 @@ public final class UserDatabase: Database {
                 try db.execute(sql: "ALTER TABLE albums ADD COLUMN banner TEXT")
             }
             if !columnNames.contains("added") {
-                try db.execute(sql: "ALTER TABLE albums ADD COLUMN added NUMERIC")
-                try Album.updateAll(db, [Album.column(of: .isAdded).set(to: true)])
+                try db.execute(sql: "ALTER TABLE albums ADD COLUMN added INTEGER NOT NULL DEFAULT 1")
             }
             if !columnNames.contains("ordered_at") {
-                try db.execute(sql: "ALTER TABLE albums ADD COLUMN ordered_at TEXT")
+                try db.execute(sql: "ALTER TABLE albums ADD COLUMN ordered_at TEXT NOT NULL DEFAULT '0'")
                 let albumIds: [String] = try Album
                     .select(Album.column(of: .albumId))
                     .filter(Album.column(of: .category) != AlbumCategory.PERSONAL.rawValue)

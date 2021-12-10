@@ -90,7 +90,7 @@ public final class AlbumDAO: UserDatabaseDAO {
             } else {
                 try Album
                     .filter(Album.column(of: .albumId) == id)
-                    .updateAll(db, [Album.column(of: .orderedAt).set(to: nil)])
+                    .updateAll(db, [Album.column(of: .orderedAt).set(to: "0")])
             }
             db.afterNextTransactionCommit { db in
                 let userInfo: [String: Any] = [

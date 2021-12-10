@@ -17,8 +17,8 @@ public struct Album {
     public let category: String
     public let description: String
     public let banner: String?
-    public var orderedAt: String?
-    public var isAdded: Bool?
+    public var orderedAt: String
+    public var isAdded: Bool
     
     public var automaticallyDownloads: Bool {
         !banner.isNilOrEmpty || category == AlbumCategory.PERSONAL.rawValue
@@ -53,8 +53,8 @@ extension Album: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mixin
         category = try container.decodeIfPresent(String.self, forKey: .category) ?? ""
         description = try container.decodeIfPresent(String.self, forKey: .description) ?? ""
         banner = try container.decodeIfPresent(String.self, forKey: .banner)
-        orderedAt = try container.decodeIfPresent(String.self, forKey: .orderedAt)
-        isAdded = try container.decodeIfPresent(Bool.self, forKey: .isAdded)
+        orderedAt = try container.decodeIfPresent(String.self, forKey: .orderedAt) ?? "0"
+        isAdded = try container.decodeIfPresent(Bool.self, forKey: .isAdded) ?? false
     }
     
 }

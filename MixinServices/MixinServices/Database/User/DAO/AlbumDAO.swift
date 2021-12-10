@@ -61,7 +61,7 @@ public final class AlbumDAO: UserDatabaseDAO {
         let condition: SQLSpecificExpressible = Album.column(of: .isAdded) == true
             && Album.column(of: .category) != AlbumCategory.PERSONAL.rawValue
         return db.select(where: condition,
-                         order: [Album.column(of: .orderedAt)])
+                         order: [Album.column(of: .orderedAt).desc])
     }
     
     public func insertOrUpdateAblum(album: Album) {
@@ -73,25 +73,10 @@ public final class AlbumDAO: UserDatabaseDAO {
             try Album
                 .filter(Album.column(of: .albumId) == id)
                 .updateAll(db, [Album.column(of: .isAdded).set(to: isAdded)])
-            if isAdded {
-                let condition: SQLSpecificExpressible = Album.column(of: .isAdded) == true
-                    && Album.column(of: .category) != AlbumCategory.PERSONAL.rawValue
-                    && Album.column(of: .albumId) != id
-                let albumIds: [String] = try Album
-                    .select(Album.column(of: .albumId))
-                    .filter(condition)
-                    .fetchAll(db)
-                let addedAlbumIds = [id] + albumIds
-                for (index, albumId) in addedAlbumIds.enumerated() {
-                    try Album
-                        .filter(Album.column(of: .albumId) == albumId)
-                        .updateAll(db, [Album.column(of: .orderedAt).set(to: "\(index)")])
-                }
-            } else {
-                try Album
-                    .filter(Album.column(of: .albumId) == id)
-                    .updateAll(db, [Album.column(of: .orderedAt).set(to: "0")])
-            }
+            let orderedAt = isAdded ? Date().toUTCString() : "0"
+            try Album
+                .filter(Album.column(of: .albumId) == id)
+                .updateAll(db, [Album.column(of: .orderedAt).set(to: orderedAt)])
             db.afterNextTransactionCommit { db in
                 let userInfo: [String: Any] = [
                     AlbumDAO.UserInfoKey.albumId: id,
@@ -106,10 +91,12 @@ public final class AlbumDAO: UserDatabaseDAO {
     
     public func updateAlbumsOrder(albumdIds: [String]) {
         db.write { db in
-            for (index, albumId) in albumdIds.enumerated() {
+            let now = Date()
+            for (index, albumId) in albumdIds.reversed().enumerated() {
+                let orderedAt = now.addingTimeInterval(Double(index) / millisecondsPerSecond).toUTCString()
                 try Album
                     .filter(Album.column(of: .albumId) == albumId)
-                    .updateAll(db, [Album.column(of: .orderedAt).set(to: "\(index)")])
+                    .updateAll(db, [Album.column(of: .orderedAt).set(to: orderedAt)])
             }
             db.afterNextTransactionCommit { _ in
                 NotificationCenter.default.post(onMainThread: AlbumDAO.albumsOrderDidChangeNotification,

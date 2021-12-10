@@ -46,13 +46,10 @@ public class RefreshStickerJob: AsynchronousJob {
                         }
                     }
                     if needsMigration {
-                        newAlbums = newAlbums.sorted(by: { $0.updatedAt > $1.updatedAt })
-                        var order = 0
                         for (index, album) in newAlbums.enumerated() {
                             if !album.banner.isNilOrEmpty {
                                 newAlbums[index].isAdded = true
-                                newAlbums[index].orderedAt = "\(order)"
-                                order += 1
+                                newAlbums[index].orderedAt = album.updatedAt
                             } else if album.category == AlbumCategory.PERSONAL.rawValue {
                                 newAlbums[index].isAdded = true
                             }

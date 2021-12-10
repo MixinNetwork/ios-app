@@ -437,20 +437,12 @@ public final class UserDatabase: Database {
                 try db.execute(sql: "ALTER TABLE albums ADD COLUMN banner TEXT")
             }
             if !columnNames.contains("added") {
-                try db.execute(sql: "ALTER TABLE albums ADD COLUMN added INTEGER NOT NULL DEFAULT 1")
+                try db.execute(sql: "ALTER TABLE albums ADD COLUMN added INTEGER NOT NULL DEFAULT 0")
+                try db.execute(sql: "UPDATE albums SET added = 1 WHERE added = 0")
             }
             if !columnNames.contains("ordered_at") {
                 try db.execute(sql: "ALTER TABLE albums ADD COLUMN ordered_at TEXT NOT NULL DEFAULT '0'")
-                let albumIds: [String] = try Album
-                    .select(Album.column(of: .albumId))
-                    .filter(Album.column(of: .category) != AlbumCategory.PERSONAL.rawValue)
-                    .order(Album.column(of: .updatedAt).desc)
-                    .fetchAll(db)
-                for (index, albumId) in albumIds.enumerated() {
-                    try Album
-                        .filter(Album.column(of: .albumId) == albumId)
-                        .updateAll(db, Album.column(of: .orderedAt).set(to: "\(index)"))
-                }
+                try db.execute(sql: "UPDATE albums SET ordered_at = update_at WHERE ordered_at = '0'")
             }
         }
         

@@ -44,13 +44,6 @@ public final class StickerDAO: UserDatabaseDAO {
     ORDER BY s.last_used_at DESC
     LIMIT ?
     """
-    private static let sqlQueryIsFavoriteSticker = """
-    SELECT 1
-    FROM stickers s
-    \(relationShipJoinClause)
-    \(albumJoinClause)
-    WHERE s.sticker_id = ? AND a.category = 'PERSONAL'
-    """
     
     public static let shared = StickerDAO()
     
@@ -75,7 +68,14 @@ public final class StickerDAO: UserDatabaseDAO {
     }
     
     public func isFavoriteSticker(stickerId: String) -> Bool {
-        let value: Int64 = db.select(with: StickerDAO.sqlQueryIsFavoriteSticker, arguments: [stickerId]) ?? 0
+        let sql = """
+            SELECT 1
+            FROM stickers s
+            \(Self.relationShipJoinClause)
+            \(Self.albumJoinClause)
+            WHERE s.sticker_id = ? AND a.category = 'PERSONAL'
+        """
+        let value: Int64 = db.select(with: sql, arguments: [stickerId]) ?? 0
         return value > 0
     }
     
@@ -115,7 +115,7 @@ public final class StickerDAO: UserDatabaseDAO {
     }
     
     public func insertOrUpdateFavoriteSticker(sticker: StickerResponse) {
-        if let albumId = AlbumDAO.shared.getSelfAlbumId() {
+        if let albumId = AlbumDAO.shared.getPersonalAlbum()?.albumId {
             insertOrUpdateStickers(stickers: [sticker], albumId: albumId)
         } else {
             switch StickerAPI.albums() {

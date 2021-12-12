@@ -21,14 +21,14 @@ enum StickerStore {
     
     static func add(stickers stickerInfo: StickerInfo) {
         queue.async {
-            AlbumDAO.shared.updateAlbumAddedStatus(isAdded: true, forAlbumWithId: stickerInfo.album.albumId)
+            AlbumDAO.shared.updateAlbum(with: stickerInfo.album.albumId, isAdded: true)
             moveStickerCacheInPersistentStorage(stickerInfo: stickerInfo)
         }
     }
     
     static func remove(stickers stickerInfo: StickerInfo) {
         queue.async {
-            AlbumDAO.shared.updateAlbumAddedStatus(isAdded: false, forAlbumWithId: stickerInfo.album.albumId)
+            AlbumDAO.shared.updateAlbum(with: stickerInfo.album.albumId, isAdded: false)
             moveStickerCacheInPurgableStorage(stickerInfo: stickerInfo)
         }
     }
@@ -51,7 +51,7 @@ enum StickerStore {
         DispatchQueue.global(qos: .userInitiated).async {
             var bannerStickerInfos: [StickerInfo] = []
             var listStickerInfos: [StickerInfo] = []
-            let albums = AlbumDAO.shared.getAlbums()
+            let albums = AlbumDAO.shared.getNonPersonalAlbums()
             albums.forEach { album in
                 let stickers = StickerDAO.shared.getStickers(albumId: album.albumId)
                 let stickerInfo = StickerInfo(album: album, stickers: stickers, isAdded: album.isAdded)

@@ -17,7 +17,7 @@ public struct Album {
     public let category: String
     public let description: String
     public let banner: String?
-    public var orderedAt: String
+    public var orderedAt: Int
     public var isAdded: Bool
     
     public var automaticallyDownloads: Bool {
@@ -53,7 +53,7 @@ extension Album: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mixin
         category = try container.decodeIfPresent(String.self, forKey: .category) ?? ""
         description = try container.decodeIfPresent(String.self, forKey: .description) ?? ""
         banner = try container.decodeIfPresent(String.self, forKey: .banner)
-        orderedAt = try container.decodeIfPresent(String.self, forKey: .orderedAt) ?? "0"
+        orderedAt = try container.decodeIfPresent(Int.self, forKey: .orderedAt) ?? 0
         isAdded = try container.decodeIfPresent(Bool.self, forKey: .isAdded) ?? false
     }
     

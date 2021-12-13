@@ -2,15 +2,6 @@ import UIKit
 
 class StickersStoreBannerFlowLayout: UICollectionViewFlowLayout {
     
-    override func prepare() {
-        super.prepare()
-        collectionView?.decelerationRate = .fast
-        itemSize = ScreenWidth.current <= .short ? CGSize(width: 273, height: 170) : CGSize(width: 320, height: 200)
-        let horizontalInset = floor((UIScreen.main.bounds.width - itemSize.width) / 2)
-        sectionInset = UIEdgeInsets(top: 0, left: horizontalInset, bottom: 0, right: horizontalInset)
-        minimumLineSpacing = 6
-    }
-    
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         guard
             let collectionView = collectionView,

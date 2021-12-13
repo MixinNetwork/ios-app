@@ -51,9 +51,22 @@ public final class AlbumDAO: UserDatabaseDAO {
     
     public func updateAlbum(with id: String, isAdded: Bool) {
         db.write { db in
+            let orderedAt: Int
+            if isAdded {
+                let maxOrderedAt: Int? = try Album
+                    .select(max(Album.column(of: .orderedAt)))
+                    .fetchOne(db)
+                if let maxOrderedAt = maxOrderedAt {
+                    orderedAt = maxOrderedAt + 1
+                } else {
+                    orderedAt = 0
+                }
+            } else {
+                orderedAt = 0
+            }
             let assignments = [
                 Album.column(of: .isAdded).set(to: isAdded),
-                Album.column(of: .orderedAt).set(to: isAdded ? Date().toUTCString() : "0")
+                Album.column(of: .orderedAt).set(to: orderedAt)
             ]
             try Album
                 .filter(Album.column(of: .albumId) == id)
@@ -72,12 +85,10 @@ public final class AlbumDAO: UserDatabaseDAO {
     
     public func updateAlbumsOrder(albumdIds: [String]) {
         db.write { db in
-            let now = Date()
             for (index, albumId) in albumdIds.reversed().enumerated() {
-                let orderedAt = now.addingTimeInterval(Double(index) / millisecondsPerSecond).toUTCString()
                 try Album
                     .filter(Album.column(of: .albumId) == albumId)
-                    .updateAll(db, [Album.column(of: .orderedAt).set(to: orderedAt)])
+                    .updateAll(db, [Album.column(of: .orderedAt).set(to: index)])
             }
             db.afterNextTransactionCommit { _ in
                 NotificationCenter.default.post(onMainThread: AlbumDAO.albumsOrderDidChangeNotification,

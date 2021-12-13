@@ -3,13 +3,7 @@ import SDWebImage
 import MixinServices
 
 enum StickerStore {
-    
-    struct StickerInfo {
-        let album: Album
-        let stickers: [StickerItem]
-        var isAdded: Bool = false
-    }
-    
+        
     private static let queue = DispatchQueue(label: "one.mixin.messenger.queue.StickerStore.operation")
     private static let maxBannerCount = 3
 
@@ -19,17 +13,17 @@ enum StickerStore {
         }
     }
     
-    static func add(stickers stickerInfo: StickerInfo) {
+    static func addAlbum(_ albumItem: AlbumItem) {
         queue.async {
-            AlbumDAO.shared.updateAlbum(with: stickerInfo.album.albumId, isAdded: true)
-            moveStickerCacheInPersistentStorage(stickerInfo: stickerInfo)
+            AlbumDAO.shared.updateAlbum(with: albumItem.album.albumId, isAdded: true)
+            moveStickerCacheInPersistentStorage(item: albumItem)
         }
     }
     
-    static func remove(stickers stickerInfo: StickerInfo) {
+    static func removeAlbum(_ albumItem: AlbumItem) {
         queue.async {
-            AlbumDAO.shared.updateAlbum(with: stickerInfo.album.albumId, isAdded: false)
-            moveStickerCacheInPurgableStorage(stickerInfo: stickerInfo)
+            AlbumDAO.shared.updateAlbum(with: albumItem.album.albumId, isAdded: false)
+            moveStickerCacheInPurgableStorage(item: albumItem)
         }
     }
     
@@ -47,49 +41,46 @@ enum StickerStore {
         }
     }
     
-    static func loadStoreStickers(completion: @escaping (_ bannerStickerInfos: [StickerInfo], _ listStickerInfos: [StickerInfo]) -> Void) {
+    static func loadStoreAlbums(completion: @escaping (_ bannerItems: [AlbumItem], _ listItems: [AlbumItem]) -> Void) {
         DispatchQueue.global(qos: .userInitiated).async {
-            var bannerStickerInfos: [StickerInfo] = []
-            var listStickerInfos: [StickerInfo] = []
+            var bannerItems: [AlbumItem] = []
+            var listItems: [AlbumItem] = []
             let albums = AlbumDAO.shared.getNonPersonalAlbums()
             albums.forEach { album in
                 let stickers = StickerDAO.shared.getStickers(albumId: album.albumId)
-                let stickerInfo = StickerInfo(album: album, stickers: stickers, isAdded: album.isAdded)
-                if !album.banner.isNilOrEmpty, bannerStickerInfos.count < maxBannerCount {
-                    bannerStickerInfos.append(stickerInfo)
+                let item = AlbumItem(album: album, stickers: stickers)
+                if !album.banner.isNilOrEmpty, bannerItems.count < maxBannerCount {
+                    bannerItems.append(item)
                 } else {
-                    listStickerInfos.append(stickerInfo)
+                    listItems.append(item)
                 }
             }
             DispatchQueue.main.async {
-                completion(bannerStickerInfos, listStickerInfos)
+                completion(bannerItems, listItems)
             }
         }
     }
     
-    static func loadAddedStickers(completion: @escaping ([StickerInfo]) -> Void) {
+    static func loadAddedAlbums(completion: @escaping ([AlbumItem]) -> Void) {
         DispatchQueue.global(qos: .userInitiated).async {
-            let stickerInfos = AlbumDAO.shared.getAddedAlbums().map({
-                StickerInfo(album: $0,
-                            stickers: StickerDAO.shared.getStickers(albumId: $0.albumId),
-                            isAdded: true)
+            let items = AlbumDAO.shared.getAddedAlbums().map({
+                AlbumItem(album: $0, stickers: StickerDAO.shared.getStickers(albumId: $0.albumId))
             })
-            completion(stickerInfos)
+            completion(items)
         }
     }
     
-    static func loadSticker(stickerId: String, completion: @escaping (StickerInfo?) -> Void) {
+    static func loadSticker(stickerId: String, completion: @escaping (AlbumItem?) -> Void) {
         DispatchQueue.global(qos: .userInitiated).async {
             if let album = AlbumDAO.shared.getAlbum(stickerId: stickerId) {
+                let albumItem: AlbumItem?
                 if album.category == AlbumCategory.PERSONAL.rawValue {
-                    DispatchQueue.main.async {
-                        completion(nil)
-                    }
+                    albumItem = nil
                 } else {
-                    let stickers = StickerDAO.shared.getStickers(albumId: album.albumId)
-                    DispatchQueue.main.async {
-                        completion(StickerInfo(album: album, stickers: stickers, isAdded: album.isAdded))
-                    }
+                    albumItem = AlbumItem(album: album, stickers: StickerDAO.shared.getStickers(albumId: album.albumId))
+                }
+                DispatchQueue.main.async {
+                    completion(albumItem)
                 }
             } else {
                 fetchSticker(stickerId: stickerId, completion: completion)
@@ -101,11 +92,11 @@ enum StickerStore {
 
 extension StickerStore {
     
-    private static func moveStickerCacheInPersistentStorage(stickerInfo: StickerInfo) {
+    private static func moveStickerCacheInPersistentStorage(item: AlbumItem) {
         let purgable = SDImageCache.shared
         let persistent = SDImageCache.persistentSticker
         var prefetchUrls = [String]()
-        for sticker in stickerInfo.stickers {
+        for sticker in item.stickers {
             if persistent.diskImageDataExists(withKey: sticker.assetUrl) {
                 purgable.removeImageFromDisk(forKey: sticker.assetUrl)
             } else if let data = purgable.diskImageData(forKey: sticker.assetUrl) {
@@ -115,7 +106,7 @@ extension StickerStore {
                 prefetchUrls.append(sticker.assetUrl)
             }
         }
-        if let banner = stickerInfo.album.banner {
+        if let banner = item.album.banner {
             if persistent.diskImageDataExists(withKey: banner) {
                 purgable.removeImageFromDisk(forKey: banner)
             } else if let data = purgable.diskImageData(forKey: banner) {
@@ -126,14 +117,14 @@ extension StickerStore {
             }
         }
         let urls = prefetchUrls.compactMap(URL.init)
-        StickerPrefetcher.prefetchPersistently(urls: urls, albumId: stickerInfo.album.albumId)
+        StickerPrefetcher.prefetchPersistently(urls: urls, albumId: item.album.albumId)
     }
     
-    private static func moveStickerCacheInPurgableStorage(stickerInfo: StickerInfo) {
-        StickerPrefetcher.cancelPrefetching(albumId: stickerInfo.album.albumId)
+    private static func moveStickerCacheInPurgableStorage(item: AlbumItem) {
+        StickerPrefetcher.cancelPrefetching(albumId: item.album.albumId)
         let purgable = SDImageCache.shared
         let persistent = SDImageCache.persistentSticker
-        for sticker in stickerInfo.stickers {
+        for sticker in item.stickers {
             guard !StickerDAO.shared.isFavoriteSticker(stickerId: sticker.stickerId) else {
                 continue
             }
@@ -142,7 +133,7 @@ extension StickerStore {
             }
             persistent.removeImageFromDisk(forKey: sticker.assetUrl)
         }
-        if let banner = stickerInfo.album.banner {
+        if let banner = item.album.banner {
             if !purgable.diskImageDataExists(withKey: banner), let data = persistent.diskImageData(forKey: banner) {
                 purgable.storeImageData(toDisk: data, forKey: banner)
             }
@@ -154,8 +145,8 @@ extension StickerStore {
 
 extension StickerStore {
     
-    private static func fetchSticker(stickerId: String, completion: @escaping (StickerInfo?) -> Void) {
-        var stickerInfo: StickerInfo?
+    private static func fetchSticker(stickerId: String, completion: @escaping (AlbumItem?) -> Void) {
+        var item: AlbumItem?
         let queue = DispatchQueue(label: "one.mixin.messenger.StickerStore.fetchSticker", attributes: .concurrent)
         let group = DispatchGroup()
         group.enter()
@@ -178,7 +169,7 @@ extension StickerStore {
                                 case let .success(stickers):
                                     let stickers = StickerDAO.shared.insertOrUpdateStickers(stickers: stickers, albumId: album.albumId)
                                     if stickers.contains(where: { $0.stickerId == stickerId }) {
-                                        stickerInfo = StickerInfo(album: album, stickers: stickers)
+                                        item = AlbumItem(album: album, stickers: stickers)
                                     }
                                 case let .failure(error):
                                     reporter.report(error: error)
@@ -194,7 +185,7 @@ extension StickerStore {
             }
         }
         group.notify(queue: .main) {
-            completion(stickerInfo)
+            completion(item)
         }
     }
     

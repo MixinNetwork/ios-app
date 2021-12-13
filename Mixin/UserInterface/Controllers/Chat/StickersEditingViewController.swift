@@ -4,38 +4,17 @@ import MixinServices
 class StickersEditingViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var stickerEmptyImageView: UIImageView!
-    @IBOutlet weak var stickerEmptyWrapperView: UIView!
     
-    @IBOutlet weak var stickerEmptyWrapperViewTopConstraint: NSLayoutConstraint!
-    @IBOutlet weak var stickerEmptyWrapperViewHeightConstraint: NSLayoutConstraint!
-    
-    private var stickerInfos = [StickerStore.StickerInfo]()
-    private var lastViewHeight: CGFloat = 0
+    private var albumItems = [AlbumItem]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        updateEmptyViewLayout()
-        StickerStore.loadAddedStickers { stickerInfos in
+        tableView.isEditing = true
+        StickerStore.loadAddedAlbums { albumItems in
             DispatchQueue.main.async {
-                if stickerInfos.isEmpty {
-                    self.stickerEmptyWrapperView.isHidden = false
-                    self.tableView.isHidden = true
-                } else {
-                    self.stickerInfos = stickerInfos
-                    self.stickerEmptyWrapperView.isHidden = true
-                    self.tableView.isHidden = false
-                    self.tableView.isEditing = true
-                    self.tableView.reloadData()
-                }
+                self.albumItems = albumItems
+                self.reloadData()
             }
-        }
-    }
-    
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        if view.bounds.height != lastViewHeight {
-            updateEmptyViewLayout()
         }
     }
     
@@ -43,8 +22,11 @@ class StickersEditingViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
     
-    private func updateEmptyViewLayout() {
-        stickerEmptyWrapperViewTopConstraint.constant = round((view.bounds.height - stickerEmptyWrapperViewHeightConstraint.constant) / 7 * 3)
+    private func reloadData() {
+        tableView.reloadData()
+        tableView.checkEmpty(dataCount: albumItems.count,
+                             text: R.string.localizable.sticker_edit_no_stickers(),
+                             photo: R.image.ic_sticker_smile()!)
     }
     
 }
@@ -52,29 +34,24 @@ class StickersEditingViewController: UIViewController {
 extension StickersEditingViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return stickerInfos.count
+        return albumItems.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.stickers_editing, for: indexPath)!
-        if indexPath.row < stickerInfos.count {
-            let stickerInfo = stickerInfos[indexPath.row]
-            cell.stickerInfo = stickerInfo
+        if indexPath.row < albumItems.count {
+            let albumItem = albumItems[indexPath.row]
+            cell.albumItem = albumItem
             cell.onDelete = { [weak self] in
                 guard let self = self else {
                     return
                 }
                 tableView.performBatchUpdates {
-                    StickerStore.remove(stickers: stickerInfo)
-                    self.stickerInfos.remove(at: indexPath.row)
+                    StickerStore.removeAlbum(albumItem)
+                    self.albumItems.remove(at: indexPath.row)
                     tableView.deleteRows(at: [indexPath], with: .fade)
                 } completion: { _ in
-                    if self.stickerInfos.isEmpty {
-                        self.stickerEmptyWrapperView.isHidden = false
-                        tableView.isHidden = true
-                    } else {
-                        tableView.reloadData()
-                    }
+                    self.reloadData()
                 }
             }
         }
@@ -94,12 +71,12 @@ extension StickersEditingViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        guard sourceIndexPath.row < stickerInfos.count && destinationIndexPath.row < stickerInfos.count else {
+        guard sourceIndexPath.row < albumItems.count && destinationIndexPath.row < albumItems.count else {
             return
         }
-        let moved = stickerInfos.remove(at: sourceIndexPath.row)
-        stickerInfos.insert(moved, at: destinationIndexPath.row)
-        let albumIds = stickerInfos.map { $0.album.albumId }
+        let moved = albumItems.remove(at: sourceIndexPath.row)
+        albumItems.insert(moved, at: destinationIndexPath.row)
+        let albumIds = albumItems.map { $0.album.albumId }
         StickerStore.updateAlbumsOrder(albumIds: albumIds)
         tableView.reloadData()
     }

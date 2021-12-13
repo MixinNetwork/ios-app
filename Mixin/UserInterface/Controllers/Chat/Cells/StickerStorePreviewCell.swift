@@ -11,13 +11,13 @@ class StickerStorePreviewCell: UICollectionViewCell {
     @IBOutlet weak var collectionViewTrailingConstraint: NSLayoutConstraint!
     
     var onToggle: (() -> Void)?
-    var stickerInfo: StickerStore.StickerInfo? {
+    var albumItem: AlbumItem? {
         didSet {
-            guard let stickerInfo = stickerInfo else {
+            guard let albumItem = albumItem else {
                 return
             }
-            nameLabel.text = stickerInfo.album.name
-            if stickerInfo.isAdded {
+            nameLabel.text = albumItem.album.name
+            if albumItem.isAdded {
                 addButton.setTitle(R.string.localizable.sticker_store_added(), for: .normal)
                 addButton.backgroundColor = R.color.sticker_button_background_disabled()
                 addButton.setTitleColor(R.color.sticker_button_text_disabled(), for: .normal)
@@ -48,16 +48,16 @@ class StickerStorePreviewCell: UICollectionViewCell {
 extension StickerStorePreviewCell: UICollectionViewDataSource, UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        guard let stickerInfo = stickerInfo else {
+        guard let albumItem = albumItem else {
             return 0
         }
-        return min(cellCountPerRow, stickerInfo.stickers.count)
+        return min(cellCountPerRow, albumItem.stickers.count)
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.sticker_preview, for: indexPath)!
-        if let stickerInfo = stickerInfo, indexPath.item < stickerInfo.stickers.count {
-            cell.stickerView.load(sticker: stickerInfo.stickers[indexPath.item])
+        if let albumItem = albumItem, indexPath.item < albumItem.stickers.count {
+            cell.stickerView.load(sticker: albumItem.stickers[indexPath.item])
             cell.stickerView.startAnimating()
         }
         return cell

@@ -14,7 +14,7 @@ class StickerPreviewViewController: UIViewController {
     @IBOutlet weak var stickerPreviewViewHeightConstraint: NSLayoutConstraint!
     
     private var message: MessageItem!
-    private var stickerInfo: StickerStore.StickerInfo?
+    private var albumItem: AlbumItem?
     
     private lazy var backgroundButton: UIButton = {
         let button = UIButton()
@@ -55,15 +55,15 @@ class StickerPreviewViewController: UIViewController {
     }
     
     @IBAction func stickerButtonAction(_ sender: Any) {
-        guard let stickerInfo = stickerInfo else {
+        guard let albumItem = albumItem else {
             return
         }
-        if stickerInfo.isAdded {
-            StickerStore.remove(stickers: stickerInfo)
+        if albumItem.isAdded {
+            StickerStore.removeAlbum(albumItem)
         } else {
-            StickerStore.add(stickers: stickerInfo)
+            StickerStore.addAlbum(albumItem)
         }
-        self.stickerInfo?.isAdded.toggle()
+        self.albumItem?.isAdded.toggle()
         updateStickerActionButton()
     }
     
@@ -91,23 +91,23 @@ extension StickerPreviewViewController {
         let contentHeight = stickerPreviewViewTopConstraint.constant
             + stickerPreviewViewHeightConstraint.constant
             + window.safeAreaInsets.bottom
-            + ((stickerInfo != nil && !stickerInfo!.stickers.isEmpty) ? 168 : 90)
+            + ((albumItem != nil && !albumItem!.stickers.isEmpty) ? 168 : 90)
         return min(maxHeight, contentHeight)
     }
     
     private func loadSticker(with stickerId: String) {
         activityIndicatorView.startAnimating()
-        StickerStore.loadSticker(stickerId: stickerId) { stickerInfo in
+        StickerStore.loadSticker(stickerId: stickerId) { albumItem in
             self.activityIndicatorView.stopAnimating()
-            if let stickerInfo = stickerInfo {
-                self.stickerInfo = stickerInfo
-                self.titleLabel.text = stickerInfo.album.name
+            if let albumItem = albumItem {
+                self.albumItem = albumItem
+                self.titleLabel.text = albumItem.album.name
                 self.updateStickerActionButton()
                 self.stickersContentView.isHidden = false
                 self.collectionView.isHidden = false
                 self.collectionView.reloadData()
                 self.updatePreferredContentSizeHeight()
-                if let index = stickerInfo.stickers.firstIndex(where: { $0.stickerId == stickerId }) {
+                if let index = albumItem.stickers.firstIndex(where: { $0.stickerId == stickerId }) {
                     self.collectionView.selectItem(at: IndexPath(item: index, section: 0), animated: false, scrollPosition: .centeredHorizontally)
                 }
             } else {
@@ -118,10 +118,10 @@ extension StickerPreviewViewController {
     }
     
     private func updateStickerActionButton() {
-        guard let stickerInfo = stickerInfo else {
+        guard let albumItem = albumItem else {
             return
         }
-        if stickerInfo.isAdded {
+        if albumItem.isAdded {
             stickerActionButton.setTitle(R.string.localizable.sticker_store_added(), for: .normal)
             stickerActionButton.backgroundColor = R.color.sticker_button_background_disabled()
             stickerActionButton.setTitleColor(R.color.sticker_button_text_disabled(), for: .normal)
@@ -137,16 +137,16 @@ extension StickerPreviewViewController {
 extension StickerPreviewViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        guard let stickerInfo = stickerInfo else {
+        guard let albumItem = albumItem else {
             return 0
         }
-        return stickerInfo.stickers.count
+        return albumItem.stickers.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.sticker_item_preview, for: indexPath)!
-        if let stickerInfo = stickerInfo, indexPath.row < stickerInfo.stickers.count {
-            cell.stickerView.load(sticker: stickerInfo.stickers[indexPath.item])
+        if let albumItem = albumItem, indexPath.row < albumItem.stickers.count {
+            cell.stickerView.load(sticker: albumItem.stickers[indexPath.item])
         }
         return cell
     }
@@ -174,10 +174,10 @@ extension StickerPreviewViewController: UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let stickerInfo = stickerInfo, indexPath.item < stickerInfo.stickers.count else {
+        guard let albumItem = albumItem, indexPath.item < albumItem.stickers.count else {
             return
         }
-        stickerView.load(sticker: stickerInfo.stickers[indexPath.item])
+        stickerView.load(sticker: albumItem.stickers[indexPath.item])
         collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
     }
     

@@ -938,6 +938,7 @@
                                     </constraints>
                                     <connections>
                                         <outlet property="collectionView" destination="TCC-kH-Uue" id="3yD-H0-m5c"/>
+                                        <outlet property="layout" destination="0dd-GT-YgM" id="HGT-VE-V35"/>
                                     </connections>
                                 </collectionReusableView>
                                 <connections>
@@ -976,37 +977,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VQb-jg-hyf">
-                                <rect key="frame" x="145.5" y="277.5" width="84" height="112"/>
-                                <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_sticker_smile" translatesAutoresizingMaskIntoConstraints="NO" id="BKT-LH-hhp">
-                                        <rect key="frame" x="7" y="0.0" width="70" height="70"/>
-                                        <color key="tintColor" red="0.75294117647058822" green="0.77254901960784317" blue="0.83137254901960778" alpha="0.69999999999999996" colorSpace="custom" customColorSpace="displayP3"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="70" id="HHY-5d-Z9n"/>
-                                            <constraint firstAttribute="height" constant="70" id="lZR-7K-qkZ"/>
-                                        </constraints>
-                                    </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="NO STICKERS" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="heK-BE-rkk">
-                                        <rect key="frame" x="-3.5" y="94" width="91" height="17"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <color key="textColor" name="text_placeholder"/>
-                                        <nil key="highlightedColor"/>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="sticker_edit_no_stickers"/>
-                                        </userDefinedRuntimeAttributes>
-                                    </label>
-                                </subviews>
-                                <color key="backgroundColor" name="background"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="112" id="A1i-0h-nha"/>
-                                    <constraint firstAttribute="width" constant="84" id="FGi-7f-Tz9"/>
-                                    <constraint firstItem="BKT-LH-hhp" firstAttribute="centerX" secondItem="VQb-jg-hyf" secondAttribute="centerX" id="NGg-8e-MoB"/>
-                                    <constraint firstItem="heK-BE-rkk" firstAttribute="top" secondItem="BKT-LH-hhp" secondAttribute="bottom" constant="24" id="XAe-nm-7AM"/>
-                                    <constraint firstItem="BKT-LH-hhp" firstAttribute="top" secondItem="VQb-jg-hyf" secondAttribute="top" id="mBF-Ye-V43"/>
-                                    <constraint firstItem="heK-BE-rkk" firstAttribute="centerX" secondItem="VQb-jg-hyf" secondAttribute="centerX" id="p1Z-hs-igi"/>
-                                </constraints>
-                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yo8-bu-OCT">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                 <subviews>
@@ -1113,8 +1083,6 @@
                         <viewLayoutGuide key="safeArea" id="jO6-ng-v0g"/>
                         <color key="backgroundColor" name="background"/>
                         <constraints>
-                            <constraint firstItem="VQb-jg-hyf" firstAttribute="centerX" secondItem="jO6-ng-v0g" secondAttribute="centerX" id="4sV-47-wOY"/>
-                            <constraint firstItem="VQb-jg-hyf" firstAttribute="top" secondItem="Lgs-O1-ewM" secondAttribute="top" constant="277.5" id="6Fh-uw-p13"/>
                             <constraint firstItem="rzI-WK-GNv" firstAttribute="top" secondItem="yo8-bu-OCT" secondAttribute="bottom" id="7w8-5X-iys"/>
                             <constraint firstItem="yo8-bu-OCT" firstAttribute="top" secondItem="jO6-ng-v0g" secondAttribute="top" id="DGp-k4-6h2"/>
                             <constraint firstAttribute="bottom" secondItem="rzI-WK-GNv" secondAttribute="bottom" id="Dvf-bJ-Tec"/>
@@ -1125,10 +1093,6 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="stickerEmptyImageView" destination="BKT-LH-hhp" id="Gvd-wx-kb5"/>
-                        <outlet property="stickerEmptyWrapperView" destination="VQb-jg-hyf" id="kqr-2d-Ekb"/>
-                        <outlet property="stickerEmptyWrapperViewHeightConstraint" destination="A1i-0h-nha" id="P6d-79-1w3"/>
-                        <outlet property="stickerEmptyWrapperViewTopConstraint" destination="6Fh-uw-p13" id="qAO-Q3-SXX"/>
                         <outlet property="tableView" destination="rzI-WK-GNv" id="4HS-F5-K6C"/>
                     </connections>
                 </viewController>
@@ -2831,7 +2795,6 @@
         <image name="ic_sticker_frame" width="325" height="325"/>
         <image name="ic_sticker_normal" width="20" height="20"/>
         <image name="ic_sticker_setting" width="24" height="24"/>
-        <image name="ic_sticker_smile" width="70" height="70"/>
         <image name="ic_title_back" width="9" height="17"/>
         <image name="ic_title_close" width="15" height="15"/>
         <image name="ic_user_bot" width="14" height="11"/>
@@ -2854,13 +2817,10 @@
             <color red="0.89803921568627454" green="0.90588235294117647" blue="0.92156862745098034" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
             <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
-        <namedColor name="text_placeholder">
-            <color red="0.73725490196078436" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="theme">
             <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

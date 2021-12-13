@@ -12,10 +12,10 @@ public struct StickerItem {
     public let assetHeight: Int
     public var lastUseAt: String?
     public let category: String?
-    public let isAdded: Bool?
+    public let isAdded: Bool
     
     public var shouldCachePersistently: Bool {
-        return isAdded ?? false
+        return isAdded
     }
     
     public var imageLoadContext: [SDWebImageContextOption: Any]? {
@@ -48,7 +48,7 @@ extension StickerItem: Codable, DatabaseColumnConvertible, MixinFetchableRecord 
         assetHeight = try container.decodeIfPresent(Int.self, forKey: .assetHeight) ?? 0
         lastUseAt = try container.decodeIfPresent(String.self, forKey: .lastUseAt)
         category = try container.decodeIfPresent(String.self, forKey: .category)
-        isAdded = try container.decode(Bool.self, forKey: .isAdded)
+        isAdded = try container.decode(Bool.self, forKey: .isAdded) ?? false
     }
     
 }

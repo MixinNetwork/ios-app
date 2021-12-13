@@ -19,14 +19,14 @@ class StickersAlbumPreviewViewController: ResizablePopupViewController {
     
     private lazy var resizeRecognizerDelegate = PopupResizeGestureCoordinator(scrollView: resizableScrollView)
     
-    private var stickerInfo: StickerStore.StickerInfo!
+    private var albumItem: AlbumItem!
     private var isShowingContentView = false
     private let cellCountPerRow = 3
     private let defaultCountOfRows = 3
     
-    class func instance(with stickerInfo: StickerStore.StickerInfo) -> StickersAlbumPreviewViewController {
+    class func instance(with albumItem: AlbumItem) -> StickersAlbumPreviewViewController {
         let vc = R.storyboard.chat.stickers_album_preview()!
-        vc.stickerInfo = stickerInfo
+        vc.albumItem = albumItem
         return vc
     }
     
@@ -48,7 +48,7 @@ class StickersAlbumPreviewViewController: ResizablePopupViewController {
         contentView.layer.cornerRadius = 13
         showContentViewConstraint.priority = .defaultLow
         hideContentViewConstraint.priority = .defaultHigh
-        titleLabel.text = stickerInfo.album.name
+        titleLabel.text = albumItem.album.name
         actionBarHeightConstraint.constant = AppDelegate.current.mainWindow.safeAreaInsets.bottom
             + actionBarContentHeightConstraint.constant
         updateStickerActionButton()
@@ -57,8 +57,11 @@ class StickersAlbumPreviewViewController: ResizablePopupViewController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         let cellCount = CGFloat(cellCountPerRow)
-        flowLayout.itemSize = ScreenWidth.current <= .short ? CGSize(width: 87, height: 87) : CGSize(width: 104, height: 104)
-        flowLayout.minimumInteritemSpacing = (view.bounds.width - cellCount * flowLayout.itemSize.width - flowLayout.sectionInset.horizontal) / (cellCount - 1)
+        flowLayout.itemSize = ScreenWidth.current <= .short
+            ? CGSize(width: 87, height: 87)
+            : CGSize(width: 104, height: 104)
+        let totalSpacing = view.bounds.width - cellCount * flowLayout.itemSize.width - flowLayout.sectionInset.horizontal
+        flowLayout.minimumInteritemSpacing = totalSpacing / (cellCount - 1)
     }
     
     override func preferredContentHeight(forSize size: Size) -> CGFloat {
@@ -66,7 +69,7 @@ class StickersAlbumPreviewViewController: ResizablePopupViewController {
         let countOfRows: CGFloat
         switch size {
         case .expanded, .unavailable:
-            countOfRows = ceil(CGFloat(stickerInfo.stickers.count) / CGFloat(cellCountPerRow))
+            countOfRows = ceil(CGFloat(albumItem.stickers.count) / CGFloat(cellCountPerRow))
         case .compressed:
             countOfRows = CGFloat(defaultCountOfRows)
         }
@@ -96,12 +99,12 @@ class StickersAlbumPreviewViewController: ResizablePopupViewController {
     }
     
     @IBAction func stickerButtonAction(_ sender: Any) {
-        if stickerInfo.isAdded {
-            StickerStore.remove(stickers: stickerInfo)
+        if albumItem.isAdded {
+            StickerStore.removeAlbum(albumItem)
         } else {
-            StickerStore.add(stickers: stickerInfo)
+            StickerStore.addAlbum(albumItem)
         }
-        stickerInfo.isAdded.toggle()
+        albumItem.isAdded.toggle()
         updateStickerActionButton()
     }
     
@@ -150,7 +153,7 @@ extension StickersAlbumPreviewViewController {
     }
     
     private func updateStickerActionButton() {
-        if stickerInfo.isAdded {
+        if albumItem.isAdded {
             stickerActionButton.backgroundColor = R.color.red()
             stickerActionButton.setTitle(R.string.localizable.sticker_remove_title(), for: .normal)
         } else {
@@ -164,13 +167,13 @@ extension StickersAlbumPreviewViewController {
 extension StickersAlbumPreviewViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return stickerInfo.stickers.count
+        return albumItem.stickers.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.stickers_preview_cell, for: indexPath)!
-        if indexPath.row < stickerInfo.stickers.count {
-            cell.stickerView.load(sticker: stickerInfo.stickers[indexPath.item])
+        if indexPath.row < albumItem.stickers.count {
+            cell.stickerView.load(sticker: albumItem.stickers[indexPath.item])
         }
         return cell
     }

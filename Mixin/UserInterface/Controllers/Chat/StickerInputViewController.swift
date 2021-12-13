@@ -69,10 +69,10 @@ class StickerInputViewController: UIViewController {
     }
     
     @objc func reload() {
-        StickerStore.loadAddedStickers { stickerInfos in
-            self.addedAlbums = stickerInfos.map(\.album)
+        StickerStore.loadAddedAlbums { albumItems in
+            self.addedAlbums = albumItems.map(\.album)
             self.modelController.reloadRecentFavoriteStickers()
-            self.modelController.reloadAddedStickers(stickers: stickerInfos.map(\.stickers))
+            self.modelController.reloadAddedStickers(stickers: albumItems.map(\.stickers))
             DispatchQueue.main.async {
                 self.albumsCollectionView.reloadData()
                 let initialViewControllers: [UIViewController]

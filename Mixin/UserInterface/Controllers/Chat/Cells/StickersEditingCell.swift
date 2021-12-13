@@ -10,13 +10,17 @@ class StickersEditingCell: UITableViewCell {
     var onDelete: (() -> Void)?
     var albumItem: AlbumItem? {
         didSet {
-            guard let albumItem = albumItem else {
-                return
-            }
-            nameLabel.text = albumItem.album.name
-            countLabel.text = R.string.localizable.sticker_count(albumItem.stickers.count)
-            if let url = URL(string: albumItem.album.iconUrl) {
-                stickerImageView.sd_setImage(with: url, placeholderImage: nil, context: persistentStickerContext)
+            if let albumItem = albumItem {
+                nameLabel.text = albumItem.album.name
+                countLabel.text = R.string.localizable.sticker_count(albumItem.stickers.count)
+                if let url = URL(string: albumItem.album.iconUrl) {
+                    stickerImageView.sd_setImage(with: url, placeholderImage: nil, context: persistentStickerContext)
+                }
+            } else {
+                nameLabel.text = nil
+                countLabel.text = nil
+                stickerImageView.sd_cancelCurrentImageLoad()
+                stickerImageView.image = nil
             }
         }
     }
@@ -24,6 +28,7 @@ class StickersEditingCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         stickerImageView.sd_cancelCurrentImageLoad()
+        stickerImageView.image = nil
     }
     
     @IBAction func deleteAction(_ sender: Any) {

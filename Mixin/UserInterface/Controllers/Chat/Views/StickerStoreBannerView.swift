@@ -38,8 +38,9 @@ extension StickerStoreBannerView: UICollectionViewDataSource, UICollectionViewDe
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.sticker_store_banner, for: indexPath)!
-        if indexPath.item < albumItems.count, let banner = albumItems[indexPath.item].album.banner, let url = URL(string: banner) {
-            cell.load(url: url, isStickerAdded: albumItems[indexPath.item].isAdded)
+        if indexPath.item < albumItems.count {
+            let item = albumItems[indexPath.item]
+            cell.load(item: item)
         }
         return cell
     }

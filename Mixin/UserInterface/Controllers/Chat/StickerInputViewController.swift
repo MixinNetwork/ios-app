@@ -45,7 +45,7 @@ class StickerInputViewController: UIViewController {
                                                name: AlbumDAO.albumsOrderDidChangeNotification,
                                                object: nil)
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(hasNewStickersNotification),
+                                               selector: #selector(reloadStoreCell),
                                                name: AppGroupUserDefaults.User.hasNewStickersDidChangeNotification,
                                                object: nil)
         StickerStore.refreshStickersIfNeeded()
@@ -70,10 +70,10 @@ class StickerInputViewController: UIViewController {
     
     @objc func reload() {
         StickerStore.loadAddedAlbums { albumItems in
-            self.addedAlbums = albumItems.map(\.album)
             self.modelController.reloadRecentFavoriteStickers()
-            self.modelController.reloadAddedStickers(stickers: albumItems.map(\.stickers))
             DispatchQueue.main.async {
+                self.addedAlbums = albumItems.map(\.album)
+                self.modelController.reloadAddedStickers(stickers: albumItems.map(\.stickers))
                 self.albumsCollectionView.reloadData()
                 let initialViewControllers: [UIViewController]
                 if let initialViewController = self.modelController.initialViewController {
@@ -272,7 +272,7 @@ extension StickerInputViewController {
         }
     }
     
-    @objc private func hasNewStickersNotification() {
+    @objc private func reloadStoreCell() {
         albumsCollectionView.reloadItems(at: [IndexPath(item: 0, section: 0)])
     }
     

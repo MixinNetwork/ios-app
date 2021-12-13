@@ -14,20 +14,3 @@ public struct AlbumItem {
     }
     
 }
-
-extension AlbumItem: Codable, DatabaseColumnConvertible, MixinFetchableRecord {
-
-    public enum CodingKeys: String, CodingKey {
-        case album
-        case stickers
-        case isAdded = "added"
-    }
-    
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        album = try container.decode(Album.self, forKey: .album)
-        stickers = try container.decodeIfPresent([StickerItem].self, forKey: .stickers) ?? []
-        isAdded = try container.decodeIfPresent(Bool.self, forKey: .isAdded) ?? false
-    }
-    
-}

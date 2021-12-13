@@ -108,10 +108,10 @@ class AnimatedStickerView: UIView {
         imageView.contentMode = contentMode
     }
     
-    func load(imageURL url: URL, contentMode: UIView.ContentMode, context: [SDWebImageContextOption : Any]? = nil) {
+    func load(imageURL url: URL, contentMode: UIView.ContentMode) {
         imageView.isHidden = false
         animationViewIfLoaded?.isHidden = true
-        imageView.sd_setImage(with: url, placeholderImage: nil, context: context)
+        imageView.sd_setImage(with: url)
         imageView.contentMode = contentMode
     }
     

@@ -32,7 +32,7 @@ public final class AlbumDAO: UserDatabaseDAO {
                   order: [Album.column(of: .updatedAt).desc])
     }
     
-    public func getAblumsUpdateAt() -> [String: String] {
+    public func getAlbumsUpdatedAt() -> [String: String] {
         db.select(keyColumn: Album.column(of: .albumId),
                   valueColumn: Album.column(of: .updatedAt),
                   from: Album.self)

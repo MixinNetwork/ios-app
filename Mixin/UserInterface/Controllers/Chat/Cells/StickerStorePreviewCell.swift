@@ -13,24 +13,26 @@ class StickerStorePreviewCell: UICollectionViewCell {
     var onToggle: (() -> Void)?
     var albumItem: AlbumItem? {
         didSet {
-            guard let albumItem = albumItem else {
-                return
-            }
-            nameLabel.text = albumItem.album.name
-            if albumItem.isAdded {
-                addButton.setTitle(R.string.localizable.sticker_store_added(), for: .normal)
-                addButton.backgroundColor = R.color.sticker_button_background_disabled()
-                addButton.setTitleColor(R.color.sticker_button_text_disabled(), for: .normal)
+            if let albumItem = albumItem {
+                nameLabel.text = albumItem.album.name
+                if albumItem.isAdded {
+                    addButton.setTitle(R.string.localizable.sticker_store_added(), for: .normal)
+                    addButton.backgroundColor = R.color.sticker_button_background_disabled()
+                    addButton.setTitleColor(R.color.sticker_button_text_disabled(), for: .normal)
+                } else {
+                    addButton.setTitle(R.string.localizable.sticker_store_add(), for: .normal)
+                    addButton.backgroundColor = R.color.theme()
+                    addButton.setTitleColor(.white, for: .normal)
+                }
             } else {
-                addButton.setTitle(R.string.localizable.sticker_store_add(), for: .normal)
-                addButton.backgroundColor = R.color.theme()
-                addButton.setTitleColor(.white, for: .normal)
+                nameLabel.text = nil
+                addButton.setTitle(nil, for: .normal)
             }
             collectionView.reloadData()
         }
     }
     
-    private let cellCountPerRow = 4
+    private let maxStickerPreviewCount = 4
     
     @IBAction func stickerAction(_ sender: Any) {
         onToggle?()
@@ -51,7 +53,7 @@ extension StickerStorePreviewCell: UICollectionViewDataSource, UICollectionViewD
         guard let albumItem = albumItem else {
             return 0
         }
-        return min(cellCountPerRow, albumItem.stickers.count)
+        return min(maxStickerPreviewCount, albumItem.stickers.count)
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

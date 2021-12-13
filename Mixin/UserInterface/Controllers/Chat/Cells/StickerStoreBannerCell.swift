@@ -23,8 +23,11 @@ class StickerStoreBannerCell: UICollectionViewCell {
         imageView.image = nil
     }
     
-    func load(url: URL, isStickerAdded: Bool) {
-        let context = stickerLoadContext(persistent: isStickerAdded)
+    func load(item: AlbumItem) {
+        guard let banner = item.album.banner, let url = URL(string: banner) else {
+            return
+        }
+        let context = stickerLoadContext(persistent: item.isAdded)
         imageView.sd_setImage(with: url, placeholderImage: nil, context: context)
     }
     

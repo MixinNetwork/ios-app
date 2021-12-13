@@ -100,9 +100,9 @@ class StickersAlbumPreviewViewController: ResizablePopupViewController {
     
     @IBAction func stickerButtonAction(_ sender: Any) {
         if albumItem.isAdded {
-            StickerStore.removeAlbum(albumItem)
+            StickerStore.remove(item: albumItem)
         } else {
-            StickerStore.addAlbum(albumItem)
+            StickerStore.add(item: albumItem)
         }
         albumItem.isAdded.toggle()
         updateStickerActionButton()

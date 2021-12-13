@@ -37,8 +37,8 @@ class StickerPreviewViewController: UIViewController {
         updatePreferredContentSizeHeight()
         stickerView.load(message: message)
         stickerView.startAnimating()
-        if message.assetCategory == "SYSTEM", let stickerId = message.stickerId {
-            loadSticker(with: stickerId)
+        if message.assetCategory == AlbumCategory.SYSTEM.rawValue, let stickerId = message.stickerId {
+            loadAlbum(stickerId: stickerId)
         }
     }
     
@@ -59,9 +59,9 @@ class StickerPreviewViewController: UIViewController {
             return
         }
         if albumItem.isAdded {
-            StickerStore.removeAlbum(albumItem)
+            StickerStore.remove(item: albumItem)
         } else {
-            StickerStore.addAlbum(albumItem)
+            StickerStore.add(item: albumItem)
         }
         self.albumItem?.isAdded.toggle()
         updateStickerActionButton()
@@ -95,9 +95,9 @@ extension StickerPreviewViewController {
         return min(maxHeight, contentHeight)
     }
     
-    private func loadSticker(with stickerId: String) {
+    private func loadAlbum(stickerId: String) {
         activityIndicatorView.startAnimating()
-        StickerStore.loadSticker(stickerId: stickerId) { albumItem in
+        StickerStore.loadAlbum(stickerId: stickerId) { albumItem in
             self.activityIndicatorView.stopAnimating()
             if let albumItem = albumItem {
                 self.albumItem = albumItem

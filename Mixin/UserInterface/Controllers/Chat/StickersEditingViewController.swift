@@ -47,7 +47,7 @@ extension StickersEditingViewController: UITableViewDataSource {
                     return
                 }
                 tableView.performBatchUpdates {
-                    StickerStore.removeAlbum(albumItem)
+                    StickerStore.remove(item: albumItem)
                     self.albumItems.remove(at: indexPath.row)
                     tableView.deleteRows(at: [indexPath], with: .fade)
                 } completion: { _ in

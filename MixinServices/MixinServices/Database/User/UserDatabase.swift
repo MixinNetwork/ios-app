@@ -437,7 +437,7 @@ public final class UserDatabase: Database {
             }
             if !columnNames.contains("added") {
                 try db.execute(sql: "ALTER TABLE albums ADD COLUMN added INTEGER NOT NULL DEFAULT 0")
-                try db.execute(sql: "UPDATE albums SET added = 1 WHERE added = 0")
+                try db.execute(sql: "UPDATE albums SET added = 1")
             }
             if !columnNames.contains("ordered_at") {
                 try db.execute(sql: "ALTER TABLE albums ADD COLUMN ordered_at INTEGER NOT NULL DEFAULT 0")

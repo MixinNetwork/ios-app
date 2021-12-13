@@ -4,7 +4,7 @@ import SDWebImage
 public class RefreshStickerJob: AsynchronousJob {
     
     public enum Content {
-        case albums(needsMigration: Bool)
+        case albums
         case sticker(id: String)
         case stickers(albumId: String, automaticallyDownloads: Bool)
     }
@@ -28,8 +28,8 @@ public class RefreshStickerJob: AsynchronousJob {
     
     public override func execute() -> Bool {
         switch content {
-        case let .albums(needsMigration):
-            let stickerAlbums = AlbumDAO.shared.getAblumsUpdateAt()
+        case let .albums:
+            let stickerAlbums = AlbumDAO.shared.getAlbumsUpdatedAt()
             StickerAPI.albums { (result) in
                 switch result {
                 case let .success(albums):
@@ -37,22 +37,17 @@ public class RefreshStickerJob: AsynchronousJob {
                     StickerPrefetcher.persistent.prefetchURLs(urls)
                     
                     var newAlbums = albums.filter { stickerAlbums[$0.albumId] != $0.updatedAt }
-                    if newAlbums.isEmpty {
+                    guard !newAlbums.isEmpty else {
                         return
                     }
-                    DispatchQueue.main.async {
-                        if !AppGroupUserDefaults.User.hasNewStickers {
-                            AppGroupUserDefaults.User.hasNewStickers = true
-                        }
-                    }
-                    if needsMigration {
-                        var order = 0
+                    
+                    if AppGroupUserDefaults.User.stickerRefreshDate == nil {
                         newAlbums = newAlbums.sorted { $0.updatedAt < $1.updatedAt }
+                        let counter = Counter(value: 0)
                         for (index, album) in newAlbums.enumerated() {
                             if !album.banner.isNilOrEmpty {
                                 newAlbums[index].isAdded = true
-                                newAlbums[index].orderedAt = order
-                                order += 1
+                                newAlbums[index].orderedAt = counter.advancedValue
                             } else if album.category == AlbumCategory.PERSONAL.rawValue {
                                 newAlbums[index].isAdded = true
                             }
@@ -81,6 +76,8 @@ public class RefreshStickerJob: AsynchronousJob {
                     }
                     StickerPrefetcher.persistent.prefetchURLs(persistentBannerUrls)
                     StickerPrefetcher.purgable.prefetchURLs(purgableBannerUrls)
+                    AppGroupUserDefaults.User.hasNewStickers = true
+                    AppGroupUserDefaults.User.stickerRefreshDate = Date()
                 case let .failure(error):
                     reporter.report(error: error)
                 }

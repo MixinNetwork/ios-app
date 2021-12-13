@@ -63,9 +63,9 @@ extension StickersStoreViewController: UICollectionViewDataSource {
             cell.albumItem = item
             cell.onToggle = {
                 if item.isAdded {
-                    StickerStore.removeAlbum(item)
+                    StickerStore.remove(item: item)
                 } else {
-                    StickerStore.addAlbum(item)
+                    StickerStore.add(item: item)
                 }
             }
         }

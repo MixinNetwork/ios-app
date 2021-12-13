@@ -13,31 +13,29 @@ enum StickerStore {
         }
     }
     
-    static func addAlbum(_ albumItem: AlbumItem) {
+    static func add(item: AlbumItem) {
         queue.async {
-            AlbumDAO.shared.updateAlbum(with: albumItem.album.albumId, isAdded: true)
-            moveStickerCacheInPersistentStorage(item: albumItem)
+            AlbumDAO.shared.updateAlbum(with: item.album.albumId, isAdded: true)
+            moveStickerCacheInPersistentStorage(item: item)
         }
     }
     
-    static func removeAlbum(_ albumItem: AlbumItem) {
+    static func remove(item: AlbumItem) {
         queue.async {
-            AlbumDAO.shared.updateAlbum(with: albumItem.album.albumId, isAdded: false)
-            moveStickerCacheInPurgableStorage(item: albumItem)
+            AlbumDAO.shared.updateAlbum(with: item.album.albumId, isAdded: false)
+            moveStickerCacheInPurgableStorage(item: item)
         }
     }
     
     static func refreshStickersIfNeeded() {
-        let refreshSticker = { (needsMigration: Bool) in
-            ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob(.albums(needsMigration: needsMigration)))
-            AppGroupUserDefaults.User.stickerRefreshDate = Date()
-        }
+        let shouldRefresh: Bool
         if let date = AppGroupUserDefaults.User.stickerRefreshDate {
-            if -date.timeIntervalSinceNow >= .oneDay {
-                refreshSticker(false)
-            }
+            shouldRefresh = -date.timeIntervalSinceNow >= .oneDay
         } else {
-            refreshSticker(true)
+            shouldRefresh = true
+        }
+        if shouldRefresh {
+            ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob(.albums))
         }
     }
     
@@ -70,7 +68,7 @@ enum StickerStore {
         }
     }
     
-    static func loadSticker(stickerId: String, completion: @escaping (AlbumItem?) -> Void) {
+    static func loadAlbum(stickerId: String, completion: @escaping (AlbumItem?) -> Void) {
         DispatchQueue.global(qos: .userInitiated).async {
             if let album = AlbumDAO.shared.getAlbum(stickerId: stickerId) {
                 let albumItem: AlbumItem?
@@ -151,7 +149,7 @@ extension StickerStore {
         let group = DispatchGroup()
         group.enter()
         queue.async(group: group) {
-            let stickerAlbums = AlbumDAO.shared.getAblumsUpdateAt()
+            let stickerAlbums = AlbumDAO.shared.getAlbumsUpdatedAt()
             StickerAPI.albums { (result) in
                 switch result {
                 case let .success(albums):

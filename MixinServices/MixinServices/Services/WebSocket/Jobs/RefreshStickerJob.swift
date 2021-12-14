@@ -38,6 +38,7 @@ public class RefreshStickerJob: AsynchronousJob {
                     
                     var newAlbums = albums.filter { stickerAlbums[$0.albumId] != $0.updatedAt }
                     guard !newAlbums.isEmpty else {
+                        AppGroupUserDefaults.User.stickerRefreshDate = Date()
                         return
                     }
                     

@@ -24,6 +24,11 @@ class AddressViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // UIButton with image and title failed to calculate intrinsicContentSize if bold text is turned on in iOS Display Settings
+        // Set lineBreakMode to byClipping as a workaround. Tested on iOS 15.1
+        newAddressButton.titleLabel?.lineBreakMode = .byClipping
+        
         searchBoxView.textField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
         tableView.dataSource = self
         tableView.delegate = self

@@ -1,12 +1,12 @@
 import UIKit
-import YYImage
+import SDWebImage
 import Photos
 import MixinServices
 
 final class GalleryImageItemViewController: GalleryItemViewController {
     
     let scrollView = UIScrollView()
-    let imageView = YYAnimatedImageView()
+    let imageView = SDAnimatedImageView()
     
     private(set) var detectedUrl: URL?
     
@@ -258,15 +258,15 @@ extension GalleryImageItemViewController {
         guard isFocused else {
             return
         }
-        guard let image = image as? YYAnimatedImage, image.animatedImageFrameCount() > 1 else {
+        guard let image = image as? SDAnimatedImage, image.sd_imageFrameCount > 1 else {
             return
         }
         if displayAwakeningToken == nil {
             displayAwakeningToken = DisplayAwakener.shared.retain()
         }
         if animatedImageRepeatObserver == nil {
-            animatedImageRepeatObserver = imageView.observe(\.currentAnimatedImageIndex) { (imageView, _) in
-                if imageView.currentAnimatedImageIndex == 0 {
+            animatedImageRepeatObserver = imageView.observe(\.currentLoopCount) { (imageView, _) in
+                if imageView.currentLoopCount == 1 {
                     self.stopAwakeningDisplay()
                 }
             }

@@ -143,6 +143,15 @@ PODS:
     - SQLCipher (>= 3.4.0)
   - GzipSwift (5.1.1)
   - libsignal-protocol-c (2.3.2)
+  - libwebp (1.2.1):
+    - libwebp/demux (= 1.2.1)
+    - libwebp/mux (= 1.2.1)
+    - libwebp/webp (= 1.2.1)
+  - libwebp/demux (1.2.1):
+    - libwebp/webp
+  - libwebp/mux (1.2.1):
+    - libwebp/demux
+  - libwebp/webp (1.2.1)
   - lottie-ios (2.5.3)
   - MixinServices (0.1.0):
     - Alamofire
@@ -154,10 +163,8 @@ PODS:
     - libsignal-protocol-c
     - lottie-ios
     - SDWebImage
-    - SDWebImageYYPlugin/YYImage
     - SocketRocket
     - SQLCipher (~> 4.0)
-    - YYImage/WebP
     - Zip
   - MixinServices/Tests (0.1.0):
     - Alamofire
@@ -169,10 +176,8 @@ PODS:
     - libsignal-protocol-c
     - lottie-ios
     - SDWebImage
-    - SDWebImageYYPlugin/YYImage
     - SocketRocket
     - SQLCipher (~> 4.0)
-    - YYImage/WebP
     - Zip
   - nanopb (2.30908.0):
     - nanopb/decode (= 2.30908.0)
@@ -193,9 +198,6 @@ PODS:
   - SDWebImage (5.12.1):
     - SDWebImage/Core (= 5.12.1)
   - SDWebImage/Core (5.12.1)
-  - SDWebImageYYPlugin/YYImage (0.7.0):
-    - SDWebImage/Core (~> 5.10)
-    - YYImage/Core
   - SnapKit (5.0.1)
   - SocketRocket (0.6.0)
   - SQLCipher (4.5.0):
@@ -203,11 +205,6 @@ PODS:
   - SQLCipher/common (4.5.0)
   - SQLCipher/standard (4.5.0):
     - SQLCipher/common
-  - YYImage (1.0.4):
-    - YYImage/Core (= 1.0.4)
-  - YYImage/Core (1.0.4)
-  - YYImage/WebP (1.0.4):
-    - YYImage/Core
   - Zip (2.1.1)
 
 DEPENDENCIES:
@@ -220,6 +217,7 @@ DEPENDENCIES:
   - GCDWebServer
   - GCDWebServer/WebDAV
   - libsignal-protocol-c (from `https://github.com/MixinNetwork/libsignal-protocol-c.git`)
+  - libwebp
   - lottie-ios (from `https://github.com/airbnb/lottie-ios.git`, branch `lottie/objectiveC`)
   - MixinServices (from `./MixinServices`)
   - MixinServices/Tests (from `./MixinServices`)
@@ -227,7 +225,6 @@ DEPENDENCIES:
   - R.swift
   - RSKImageCropper
   - SnapKit
-  - YYImage (from `https://github.com/wuyuehyang/YYImage.git`)
 
 SPEC REPOS:
   trunk:
@@ -252,13 +249,13 @@ SPEC REPOS:
     - GoogleUtilities
     - GRDB.swift
     - GzipSwift
+    - libwebp
     - nanopb
     - PromisesObjC
     - R.swift
     - R.swift.Library
     - RSKImageCropper
     - SDWebImage
-    - SDWebImageYYPlugin
     - SnapKit
     - SocketRocket
     - SQLCipher
@@ -274,8 +271,6 @@ EXTERNAL SOURCES:
     :path: "./MixinServices"
   PhoneNumberKit:
     :git: https://github.com/MixinNetwork/PhoneNumberKit.git
-  YYImage:
-    :git: https://github.com/wuyuehyang/YYImage.git
 
 CHECKOUT OPTIONS:
   libsignal-protocol-c:
@@ -287,9 +282,6 @@ CHECKOUT OPTIONS:
   PhoneNumberKit:
     :commit: 33fe0be8838850564343e1d5ae8e9685461ddae4
     :git: https://github.com/MixinNetwork/PhoneNumberKit.git
-  YYImage:
-    :commit: 7acf346c746f6685f46c2fbc3edb1a05a12be827
-    :git: https://github.com/wuyuehyang/YYImage.git
 
 SPEC CHECKSUMS:
   AcknowList: 6d4faca4c3e0173377fe5649e086d627cd60b003
@@ -314,8 +306,9 @@ SPEC CHECKSUMS:
   GRDB.swift: 8a1e24a61dd9efe7ba82e393a6555720d3ec07f4
   GzipSwift: 893f3e48e597a1a4f62fafcb6514220fcf8287fa
   libsignal-protocol-c: 2fecccb06cc14bdbd28e76a656c0c8c648a482a0
+  libwebp: 98a37e597e40bfdb4c911fc98f2c53d0b12d05fc
   lottie-ios: 0e760146411886f6104050c932a8e6964853267f
-  MixinServices: c0f0f45ac5229ad0472f8883c081be2eb8f1727f
+  MixinServices: cdb9a9cdbbb39fb6ab45101d598a24de6395cd23
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   PhoneNumberKit: 4ce83273551c4d2ae10b7361162f4283dd02835f
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
@@ -323,13 +316,11 @@ SPEC CHECKSUMS:
   R.swift.Library: 0fc583cb55a99e28901299cc451614cad1161962
   RSKImageCropper: 1ac71e9a82e3f41eea3eedfff8eacb0d3821c9ec
   SDWebImage: 4dc3e42d9ec0c1028b960a33ac6b637bb432207b
-  SDWebImageYYPlugin: 91d664f814860c27bd4298b32d961f05d342a041
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   SQLCipher: 98dc22f27c0b1790d39e710d440f22a466ebdb59
-  YYImage: 6db68da66f20d9f169ceb94dfb9947c3867b9665
   Zip: 414f59909701fda9a84ab774ebe0f5449b1082cc
 
-PODFILE CHECKSUM: bbfd01b45711669bce2e94cde99db211655f024d
+PODFILE CHECKSUM: 7f1507ceeca3b4c41b41442ff6db5f6a860c9b47
 
 COCOAPODS: 1.11.2

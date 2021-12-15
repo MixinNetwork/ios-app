@@ -1,5 +1,5 @@
 import UIKit
-import YYImage
+import SDWebImage
 import MixinServices
 
 class SharedMediaCell: UICollectionViewCell {
@@ -9,7 +9,7 @@ class SharedMediaCell: UICollectionViewCell {
     
     var item: GalleryItem?
     
-    var imageView: YYAnimatedImageView {
+    var imageView: SDAnimatedImageView {
         return imageWrapperView.imageView
     }
     

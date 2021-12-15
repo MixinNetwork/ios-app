@@ -1,5 +1,5 @@
 import UIKit
-import YYImage
+import SDWebImage
 
 protocol GalleryTransitionSource: UIView {
     var imageWrapperView: VerticalPositioningImageView! { get }
@@ -13,7 +13,7 @@ class GalleryTransitionView: UIView, GalleryAnimatable {
     
     var contentRatio: CGSize?
     
-    var imageView: YYAnimatedImageView {
+    var imageView: SDAnimatedImageView {
         return imageWrapperView.imageView
     }
     

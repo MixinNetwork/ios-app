@@ -1,6 +1,5 @@
 import UIKit
 import SDWebImage
-import YYImage
 
 class PhotoRepresentableMessageCell: ImageMessageCell {
     

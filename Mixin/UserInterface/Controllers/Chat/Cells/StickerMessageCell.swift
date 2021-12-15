@@ -1,5 +1,4 @@
 import UIKit
-import YYImage
 import Lottie
 import Alamofire
 import MixinServices

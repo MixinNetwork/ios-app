@@ -1,12 +1,12 @@
 import UIKit
 import WebKit
 import Photos
-import YYImage
+import SDWebImage
 import MixinServices
 
 class AssetSendViewController: UIViewController, MixinNavigationAnimating {
 
-    @IBOutlet weak var photoImageView: YYAnimatedImageView!
+    @IBOutlet weak var photoImageView: SDAnimatedImageView!
     @IBOutlet weak var videoView: AssetSendVideoView!
     @IBOutlet weak var playButton: UIButton!
     @IBOutlet weak var saveButton: UIButton!

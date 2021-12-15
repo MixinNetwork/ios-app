@@ -1,7 +1,6 @@
 import UIKit
 import UserNotifications
 import SDWebImage
-import YYImage
 import AVFoundation
 import WebKit
 import FirebaseCore
@@ -24,7 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         reporterClass = CrashlyticalReporter.self
         reporter.configure()
         AppGroupUserDefaults.migrateIfNeeded()
-        updateSharedImageCacheConfig()
+        updateImageManagerConfig()
         _ = ReachabilityManger.shared
         _ = DarwinNotificationManager.shared
         _ = CacheableAssetFileManager.shared
@@ -307,10 +306,11 @@ extension AppDelegate {
         Keychain.shared.clearPIN()
     }
     
-    private func updateSharedImageCacheConfig() {
+    private func updateImageManagerConfig() {
         SDImageCacheConfig.default.maxDiskSize = 1024 * bytesPerMegaByte
         SDImageCacheConfig.default.maxDiskAge = -1
         SDImageCacheConfig.default.diskCacheExpireType = .accessDate
+        SDImageCodersManager.shared.addCoder(WebPImageDecoder.shared)
     }
     
 }

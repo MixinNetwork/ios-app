@@ -588,6 +588,7 @@ extension GroupCall: WebRTCClientDelegate {
     
     func webRTCClient(_ client: WebRTCClient, didAddReceiverWith userId: String, trackDisabled: Bool) {
         DispatchQueue.main.async {
+            CallService.shared.membersManager.addMember(with: userId, toConversationWith: self.conversationId)
             self.membersDataSource.setMember(with: userId, isConnected: true)
             self.membersDataSource.setMember(with: userId, isTrackDisabled: trackDisabled)
         }

@@ -803,15 +803,12 @@
 
 // Setting
 "setting_title" = "设置";
-"setting_notification" = "通知和确认";
+"setting_notification" = "通知";
 "setting_notification_show" = "显示通知";
 "setting_notification_sound" = "提醒音";
-"setting_notification_message" = "信息通知";
-"setting_notification_message_summary" = "你可以在用户信息页单独设置通知";
+"setting_notification_message" = "消息通知";
 "setting_notification_group" = "群组通知";
-"setting_notification_group_summary" = "你可以在群组信息页单独设置通知";
-"setting_privacy_and_security" = "隐私和安全";
-"setting_privacy_and_security_title" = "隐私";
+"setting_notification_badge" = "角标";
 "setting_privacy_and_security_summary" = "设置谁可以给你发消息或添加到群组";
 "setting_logs" = "日志";
 "setting_logs_empty" = "没有日志";
@@ -847,7 +844,7 @@
 "setting_change_emergency_contact_success" = "成功设置紧急联系人";
 "setting_logout" = "退出登录";
 "setting_notification_message_preview" = "显示消息内容";
-"setting_notification_message_preview_description" = "在推送通知中显示消息内容";
+"setting_notification_count_unread_messages" = "统计未读消息数";
 "setting_notification_transfer" = "转账通知";
 "setting_notification_transfer_amount" = "转账金额（%@）";
 "setting_notification_transfer_summary" = "当收到不少于 %@ 转账时显示通知";
@@ -857,6 +854,8 @@
 "setting_duplicate_transfer_title" = "重复转账确认";
 "setting_duplicate_transfer_summary" = "当你在 6 个小时内给相同的人转相同的金额时显示确认弹窗";
 "setting_backup_title" = "聊天记录备份";
+"setting_restore_title" = "聊天记录恢复";
+"setting_clear_chat_history" = "清除聊天记录";
 "setting_backup_now" = "立即备份";
 "setting_backing" = "正在备份...";
 "setting_restoring" = "正在恢复...";
@@ -910,6 +909,15 @@
 "setting_screen_lock_timeout_minutes" = "%@ 分钟";
 "setting_screen_lock_timeout_hour" = "1 小时";
 "setting_screen_lock_timeout_off" = "关闭";
+"setting_delete_account" = "删除我的账户";
+"setting_delete_account_hint" = "这将删除您的账户信息、个人资料和所有的消息。您的区块链钱包不会被删除。";
+"setting_change_number_instead" = "更换手机号";
+"setting_account" = "账户";
+"setting_account_privacy" = "隐私";
+"setting_account_security" = "安全";
+"setting_account_change_number" = "更换手机号";
+"setting_chat_title" = "聊天";
+"setting_security_confirmations" = "确认";
 
 // ScreenLock
 "screen_lock_locked" = "Mixin 已锁定";

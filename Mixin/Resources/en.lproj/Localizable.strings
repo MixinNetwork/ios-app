@@ -802,15 +802,12 @@
 
 // Setting
 "setting_title" = "Settings";
-"setting_notification" = "Notification and Confirmation";
+"setting_notification" = "Notifications";
 "setting_notification_show" = "Show Notifications";
 "setting_notification_sound" = "Sound";
-"setting_notification_message" = "MESSAGE NOTIFICATIONS";
-"setting_notification_message_summary" = "You can set custom notifications for specific users on their Contact page.";
-"setting_notification_group" = "GROUP NOTIFICATIONS";
-"setting_notification_group_summary" = "You can set custom notifications for specific groups on their Group Info page.";
-"setting_privacy_and_security" = "Privacy and Security";
-"setting_privacy_and_security_title" = "PRIVACY";
+"setting_notification_message" = "Message Notifications";
+"setting_notification_group" = "Group Notifications";
+"setting_notification_badge" = "Badge";
 "setting_privacy_and_security_summary" = "Change who can add you to conversation and groups.";
 "setting_data_and_storage" = "Data and Storage Usage";
 "setting_blocked_user_count_suffix" = " contacts";
@@ -846,7 +843,7 @@
 "setting_change_emergency_contact_success" = "Successfully changed emergency contact";
 "setting_logout" = "Log Out";
 "setting_notification_message_preview" = "Message Preview";
-"setting_notification_message_preview_description" = "Preview message text inside new message notifications";
+"setting_notification_count_unread_messages" = "Count Unread Messages";
 "setting_notification_transfer" = "Transfer Notifications";
 "setting_notification_transfer_amount" = "Transfer Amount(%@)";
 "setting_notification_transfer_summary" = "Display notifications when receiving a transfer greater than or equal to %@.";
@@ -856,6 +853,8 @@
 "setting_duplicate_transfer_title" = "Duplicate Transfer Confirmation";
 "setting_duplicate_transfer_summary" = "Display confirmation dialog when you transfer the same amount to the same person within 6 hours.";
 "setting_backup_title" = "Chat Backup";
+"setting_restore_title" = "Chat Restore";
+"setting_clear_chat_history" = "Clear Chat History";
 "setting_backup_now" = "Back Up Now";
 "setting_backing" = "Backing Up...";
 "setting_restoring" = "Restoring...";
@@ -909,6 +908,16 @@
 "setting_screen_lock_timeout_minutes" = "%@ Minutes";
 "setting_screen_lock_timeout_hour" = "1 Hour";
 "setting_screen_lock_timeout_off" = "Off";
+"setting_delete_account" = "Delete My Account";
+"setting_delete_account_hint" = "This will delete your account info, profile, and all of your messages. Your blockchain wallet cannot be deleted.";
+"setting_change_number_instead" = "Change Number Instead";
+"setting_account" = "Account";
+"setting_account_privacy" = "Privacy";
+"setting_account_security" = "Security";
+"setting_account_change_number" = "Change Number";
+"setting_chat_title" = "Chat";
+"setting_security_confirmations" = "Confirmations";
+
 
 // ScreenLock
 "screen_lock_locked" = "Mixin Locked";

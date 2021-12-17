@@ -8,6 +8,9 @@ final class PinSettingsViewController: SettingsTableViewController {
     private let dataSource = SettingsDataSource(sections: [
         SettingsSection(rows: [
             SettingsRow(title: R.string.localizable.wallet_change_password(), accessory: .disclosure)
+        ]),
+        SettingsSection(rows: [
+            SettingsRow(title: R.string.localizable.setting_logs(), accessory: .disclosure)
         ])
     ])
     
@@ -20,8 +23,7 @@ final class PinSettingsViewController: SettingsTableViewController {
     
     class func instance() -> UIViewController {
         let vc = PinSettingsViewController()
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.setting_pin())
-        return container
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.setting_pin())
     }
     
     override func viewDidLoad() {
@@ -127,19 +129,20 @@ extension PinSettingsViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if indexPath.section == 0 && biometryType != .none {
-            if indexPath.row == 1 {
-                let alert = UIAlertController(title: nil, message: R.string.localizable.wallet_pin_pay_interval_tips(), preferredStyle: .actionSheet)
-                for interval in pinIntervals {
-                    alert.addAction(UIAlertAction(title: Localized.WALLET_PIN_PAY_INTERVAL(interval), style: .default, handler: { (_) in
-                        self.setNewPinInterval(interval: interval)
-                    }))
-                }
-                alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
-                present(alert, animated: true, completion: nil)
+        if indexPath.section == 0 && indexPath.row == 1 && biometryType != .none {
+            let alert = UIAlertController(title: nil, message: R.string.localizable.wallet_pin_pay_interval_tips(), preferredStyle: .actionSheet)
+            for interval in pinIntervals {
+                alert.addAction(UIAlertAction(title: Localized.WALLET_PIN_PAY_INTERVAL(interval), style: .default, handler: { (_) in
+                    self.setNewPinInterval(interval: interval)
+                }))
             }
-        } else if indexPath.row == 0 {
+            alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
+            present(alert, animated: true, completion: nil)
+        } else if (indexPath.section == 1 && biometryType != .none) || (indexPath.section == 0 && biometryType == .none) {
             let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep1, dismissTarget: nil)
+            navigationController?.pushViewController(vc, animated: true)
+        } else if (indexPath.section == 2 && biometryType != .none) || (indexPath.section == 1 && biometryType == .none) {
+            let vc = LogViewController.instance(category: .all)
             navigationController?.pushViewController(vc, animated: true)
         }
     }

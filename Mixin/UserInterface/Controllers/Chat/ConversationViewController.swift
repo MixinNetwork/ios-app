@@ -1925,7 +1925,7 @@ extension ConversationViewController {
         if ConversationViewController.allowReportSingleMessage {
             actions.append(.report)
         }
-        if canPinMessages, status != MessageStatus.SENDING.rawValue {
+        if canPinMessages, status != MessageStatus.SENDING.rawValue, status != MessageStatus.UNKNOWN.rawValue {
             let index: Int?
             if let replyIndex = actions.firstIndex(of: .reply) {
                 index = replyIndex + 1

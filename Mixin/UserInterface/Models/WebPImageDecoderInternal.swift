@@ -59,10 +59,10 @@ class WebPImageDecoderInternal {
     private var blendContext: CGContext?
     
     init?(data: Data, scale: CGFloat) {
-        let demux: OpaquePointer? = data.withUnsafeUInt8Pointer { ptr in
+        let demux: OpaquePointer? = data.withUnsafeBytes { bytes in
             var webpData = WebPData()
-            webpData.bytes = ptr
-            webpData.size = data.count
+            webpData.bytes = bytes.baseAddress?.assumingMemoryBound(to: UInt8.self)
+            webpData.size = bytes.count
             return WebPDemux(&webpData)
         }
         guard let demux = demux else {
@@ -149,11 +149,7 @@ class WebPImageDecoderInternal {
             WebPDemuxDelete(demux)
             return nil
         }
-        if scale < 1 {
-            self.scale = 1
-        } else {
-            self.scale = scale
-        }
+        self.scale = max(1, scale)
         self.frameCount = UInt(frameCount)
         self.loopCount = UInt(loopCount)
         self.data = data
@@ -181,7 +177,7 @@ class WebPImageDecoderInternal {
         defer {
             lock.unlock()
         }
-        guard index <= frames.count else {
+        guard index < frames.count else {
             return nil
         }
         let frame = frames[Int(index)]
@@ -287,37 +283,16 @@ extension WebPImageDecoderInternal {
         return image
     }
     
-    private func blendImage(imageFrame: ImageFrame, with context: CGContext) -> CGImage? {
-        var image: CGImage?
+    private func blend(imageFrame: ImageFrame, with context: CGContext) -> CGImage? {
+        if let unblended = makeUnblendedImage(at: imageFrame.index) {
+            if !imageFrame.blend {
+                context.clear(imageFrame.frame)
+            }
+            context.draw(unblended, in: imageFrame.frame)
+        }
+        let image = context.makeImage()
         if imageFrame.disposeBackground {
-            if imageFrame.blend {
-                // TODO: This routine has not been tested. Find a image that matches
-                if let unblended = makeUnblendedImage(at: imageFrame.index) {
-                    context.draw(unblended, in: imageFrame.frame)
-                }
-                image = context.makeImage()
-                context.clear(imageFrame.frame)
-            } else {
-                if let unblended = makeUnblendedImage(at: imageFrame.index) {
-                    context.clear(imageFrame.frame)
-                    context.draw(unblended, in: imageFrame.frame)
-                }
-                image = context.makeImage()
-                context.clear(imageFrame.frame)
-            }
-        } else {
-            if imageFrame.blend {
-                if let unblended = makeUnblendedImage(at: imageFrame.index) {
-                    context.draw(unblended, in: imageFrame.frame)
-                }
-                image = context.makeImage()
-            } else {
-                if let unblended = makeUnblendedImage(at: imageFrame.index) {
-                    context.clear(imageFrame.frame)
-                    context.draw(unblended, in: imageFrame.frame)
-                }
-                image = context.makeImage()
-            }
+            context.clear(imageFrame.frame)
         }
         return image
     }
@@ -342,10 +317,9 @@ extension WebPImageDecoderInternal {
         let imageFrame = frames[Int(index)]
         var cgImage: CGImage?
         if let blendFrameIndex = blendFrameIndex, blendFrameIndex + 1 == imageFrame.index {
-            cgImage = blendImage(imageFrame: imageFrame, with: context)
+            cgImage = blend(imageFrame: imageFrame, with: context)
             self.blendFrameIndex = index
         } else {
-            blendFrameIndex = nil
             context.clear(CGRect(origin: .zero, size: canvasSize))
             if imageFrame.blendFromIndex == imageFrame.index {
                 if let unblended = makeUnblendedImage(at: index) {
@@ -356,30 +330,23 @@ extension WebPImageDecoderInternal {
                     context.clear(imageFrame.frame)
                 }
             } else {
-                for i in imageFrame.blendFromIndex...imageFrame.index {
-                    if i == imageFrame.index {
-                        if cgImage == nil {
-                            cgImage = blendImage(imageFrame: imageFrame, with: context)
-                        }
+                for _ in imageFrame.blendFromIndex..<imageFrame.index {
+                    if imageFrame.disposeBackground {
+                        context.clear(imageFrame.frame)
                     } else {
-                        if imageFrame.disposeBackground {
+                        if !imageFrame.blend {
                             context.clear(imageFrame.frame)
-                        } else {
-                            if imageFrame.blend {
-                                if let unblended = makeUnblendedImage(at: imageFrame.index) {
-                                    context.draw(unblended, in: imageFrame.frame)
-                                }
-                            } else {
-                                context.clear(imageFrame.frame)
-                                if let unblended = makeUnblendedImage(at: imageFrame.index) {
-                                    context.draw(unblended, in: imageFrame.frame)
-                                }
-                            }
+                        }
+                        if let unblended = makeUnblendedImage(at: imageFrame.index) {
+                            context.draw(unblended, in: imageFrame.frame)
                         }
                     }
                 }
-                blendFrameIndex = index
+                if cgImage == nil {
+                    cgImage = blend(imageFrame: imageFrame, with: context)
+                }
             }
+            blendFrameIndex = index
         }
         return cgImage
     }

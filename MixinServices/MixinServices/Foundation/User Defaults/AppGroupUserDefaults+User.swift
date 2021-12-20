@@ -23,6 +23,11 @@ extension AppGroupUserDefaults {
             case lastAttachmentCleanUpDate = "last_attachment_cleanup_date"
             
             case showMessagePreviewInNotification = "show_message_preview_in_notification"
+            case showGroupMessagePreviewInNotification = "show_grup_message_preview_in_notification"
+            case showMessageNotification = "show_message_notification"
+            case showGroupMessageNotification = "show_group_message_notification"
+            case countUnreadMessages = "count_unread_messages"
+
             case duplicateTransferConfirmation = "duplicate_transfer_confirmation"
             case conversationDraft = "conversation_draft"
             case currentConversationId = "current_conversation_id"
@@ -74,7 +79,8 @@ extension AppGroupUserDefaults {
         public static let homeAppIdsDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.home.app.ids.change")
         public static let pinMessageBannerDidChangeNotification = Notification.Name("one.mixin.services.pinMessageBannerDidChange")
         public static let hasNewStickersDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.hasNewStickersDidChangeNotification")
-
+        public static let countUnreadMessagesNofitication = Notification.Name(rawValue: "one.mixin.services.countUnreadMessagesNofitication")
+        
         private static let maxNumberOfAssetSearchHistory = 2
         
         public static var needsUpgradeInMainApp: Bool {
@@ -126,6 +132,22 @@ extension AppGroupUserDefaults {
         
         @Default(namespace: .user, key: Key.showMessagePreviewInNotification, defaultValue: true)
         public static var showMessagePreviewInNotification: Bool
+        
+        @Default(namespace: .user, key: Key.showGroupMessagePreviewInNotification, defaultValue: true)
+        public static var showGroupMessagePreviewInNotification: Bool
+
+        @Default(namespace: .user, key: Key.showMessageNotification, defaultValue: true)
+        public static var showMessageNotification: Bool
+        
+        @Default(namespace: .user, key: Key.showGroupMessageNotification, defaultValue: true)
+        public static var showGroupMessageNotification: Bool
+        
+        @Default(namespace: .user, key: Key.countUnreadMessages, defaultValue: true)
+        public static var countUnreadMessages: Bool {
+            didSet {
+                NotificationCenter.default.post(onMainThread: countUnreadMessagesNofitication, object: self)
+            }
+        }
         
         @Default(namespace: .user, key: Key.duplicateTransferConfirmation, defaultValue: true)
         public static var duplicateTransferConfirmation: Bool

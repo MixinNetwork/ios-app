@@ -17,8 +17,8 @@ public extension UNMutableNotificationContent {
         } else {
             title = message.userFullName ?? ""
         }
-        
-        if AppGroupUserDefaults.User.showMessagePreviewInNotification {
+        if (conversationIsGroup && AppGroupUserDefaults.User.showGroupMessagePreviewInNotification) ||
+           (!conversationIsGroup && AppGroupUserDefaults.User.showMessagePreviewInNotification) {
             body = messagePreview(conversationIsGroup: conversationIsGroup,
                                   isRepresentativeMessage: isRepresentativeMessage,
                                   message: message)

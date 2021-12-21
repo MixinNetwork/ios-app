@@ -164,6 +164,7 @@ PODS:
     - lottie-ios
     - SDWebImage
     - SocketRocket
+    - Sodium
     - SQLCipher (~> 4.0)
     - Zip
   - MixinServices/Tests (0.1.0):
@@ -177,6 +178,7 @@ PODS:
     - lottie-ios
     - SDWebImage
     - SocketRocket
+    - Sodium
     - SQLCipher (~> 4.0)
     - Zip
   - nanopb (2.30908.0):
@@ -200,6 +202,7 @@ PODS:
   - SDWebImage/Core (5.12.1)
   - SnapKit (5.0.1)
   - SocketRocket (0.6.0)
+  - Sodium (0.9.1)
   - SQLCipher (4.5.0):
     - SQLCipher/standard (= 4.5.0)
   - SQLCipher/common (4.5.0)
@@ -258,6 +261,7 @@ SPEC REPOS:
     - SDWebImage
     - SnapKit
     - SocketRocket
+    - Sodium
     - SQLCipher
     - Zip
 
@@ -308,7 +312,7 @@ SPEC CHECKSUMS:
   libsignal-protocol-c: 2fecccb06cc14bdbd28e76a656c0c8c648a482a0
   libwebp: 98a37e597e40bfdb4c911fc98f2c53d0b12d05fc
   lottie-ios: 0e760146411886f6104050c932a8e6964853267f
-  MixinServices: cdb9a9cdbbb39fb6ab45101d598a24de6395cd23
+  MixinServices: 3508f78651d58c2de8f2d68a702d927f92995efc
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   PhoneNumberKit: 4ce83273551c4d2ae10b7361162f4283dd02835f
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
@@ -318,6 +322,7 @@ SPEC CHECKSUMS:
   SDWebImage: 4dc3e42d9ec0c1028b960a33ac6b637bb432207b
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
+  Sodium: 23d11554ecd556196d313cf6130d406dfe7ac6da
   SQLCipher: 98dc22f27c0b1790d39e710d440f22a466ebdb59
   Zip: 414f59909701fda9a84ab774ebe0f5449b1082cc
 

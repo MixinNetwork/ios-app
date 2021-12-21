@@ -42,6 +42,14 @@ open class Location: NSObject, Codable {
         "Location { latitude: \(latitude), longitude: \(longitude), name: \(name ?? "(null)"), address: \(address ?? "(null)"), venueType: \(venueType) }"
     }
     
+    public var prettyLatitude: String {
+        String(format: "%.6f", latitude)
+    }
+    
+    public var prettyLongitude: String {
+        String(format: "%.6f", longitude)
+    }
+    
     public init(latitude: Degrees, longitude: Degrees, name: String?, address: String?, venueType: String?) {
         self.latitude = latitude
         self.longitude = longitude

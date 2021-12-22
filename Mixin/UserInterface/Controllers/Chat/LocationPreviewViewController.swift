@@ -12,19 +12,31 @@ class LocationPreviewViewController: LocationViewController {
     }
     
     // https://developers.google.com/maps/documentation/urls/ios-urlscheme
-    private lazy var googleMapUrl = URL(string: "comgooglemaps://?center=\(location.latitude),\(location.longitude)")!
+    private lazy var googleMapUrl: URL? = {
+        guard var components = URLComponents(string: "comgooglemaps://") else {
+            return nil
+        }
+        let center = "\(location.prettyLatitude),\(location.prettyLongitude)"
+        components.queryItems = [
+            URLQueryItem(name: "q", value: center),
+            URLQueryItem(name: "center", value: center),
+        ]
+        return components.url
+    }()
     
     // https://lbs.amap.com/api/amap-mobile/guide/ios/marker
-    private lazy var gaodeMapUrl: URL = {
-        var components = URLComponents(string: "iosamap://viewMap")!
+    private lazy var amapUrl: URL? = {
+        guard var components = URLComponents(string: "iosamap://viewMap") else {
+            return nil
+        }
         components.queryItems = [
             URLQueryItem(name: "sourceApplication", value: "Mixin Messenger"),
             URLQueryItem(name: "poiname", value: location.name ?? R.string.localizable.chat_location_unnamed()),
-            URLQueryItem(name: "lat", value: "\(location.latitude)"),
-            URLQueryItem(name: "lon", value: "\(location.longitude)"),
+            URLQueryItem(name: "lat", value: location.prettyLatitude),
+            URLQueryItem(name: "lon", value: location.prettyLongitude),
             URLQueryItem(name: "dev", value: "0"),
         ]
-        return components.url!
+        return components.url
     }()
     
     private var location: Location!
@@ -71,22 +83,22 @@ class LocationPreviewViewController: LocationViewController {
     }
     
     private func openLocationInExternalMapApp() {
-        let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        if UIApplication.shared.canOpenURL(googleMapUrl) {
-            controller.addAction(UIAlertAction(title: R.string.localizable.chat_open_external_maps_google(), style: .default, handler: { (_) in
-                UIApplication.shared.open(self.googleMapUrl, options: [:], completionHandler: nil)
+        let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        if let url = googleMapUrl, UIApplication.shared.canOpenURL(url) {
+            sheet.addAction(UIAlertAction(title: R.string.localizable.chat_open_external_maps_google(), style: .default, handler: { (_) in
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }))
         }
-        if UIApplication.shared.canOpenURL(gaodeMapUrl) {
-            controller.addAction(UIAlertAction(title: R.string.localizable.chat_open_external_maps_gaode(), style: .default, handler: { (_) in
-                UIApplication.shared.open(self.gaodeMapUrl, options: [:], completionHandler: nil)
+        if let url = amapUrl, UIApplication.shared.canOpenURL(url) {
+            sheet.addAction(UIAlertAction(title: R.string.localizable.chat_open_external_maps_gaode(), style: .default, handler: { (_) in
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }))
         }
-        controller.addAction(UIAlertAction(title: R.string.localizable.chat_open_external_maps_apple(), style: .default, handler: { (_) in
+        sheet.addAction(UIAlertAction(title: R.string.localizable.chat_open_external_maps_apple(), style: .default, handler: { (_) in
             self.location.mapItem.openInMaps(launchOptions: nil)
         }))
-        controller.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
-        present(controller, animated: true, completion: nil)
+        sheet.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
+        present(sheet, animated: true, completion: nil)
     }
     
 }

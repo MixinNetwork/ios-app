@@ -5,6 +5,10 @@ class GroupCallConfirmationViewController: CallViewController {
     
     private let conversation: ConversationItem
     
+    override var membersCountText: String? {
+        R.string.localizable.group_call_participants_count(members.count)
+    }
+    
     init(conversation: ConversationItem, service: CallService) {
         self.conversation = conversation
         super.init(service: service)
@@ -28,7 +32,6 @@ class GroupCallConfirmationViewController: CallViewController {
         acceptStackView.alpha = 1
         acceptButtonTrailingConstraint.priority = .defaultLow
         acceptButtonCenterXConstraint.priority = .defaultHigh
-        updateMembersCountLabel()
     }
     
     override func minimizeAction(_ sender: Any) {
@@ -61,6 +64,7 @@ class GroupCallConfirmationViewController: CallViewController {
                     self.membersCountLabel.text = R.string.localizable.group_call_participants_count(members.count)
                     self.view.setNeedsLayout()
                     self.view.layoutIfNeeded()
+                    self.updateMembersCountLabel()
                 }
             }
         }

@@ -1,6 +1,5 @@
 import Foundation
 import SDWebImage
-import YYImage
 
 class LocalImageLoader: NSObject {
     
@@ -42,8 +41,8 @@ extension LocalImageLoader: SDImageLoader {
                     completedBlock?(nil, nil, Error.cancelled, true)
                     return
                 }
-                let imageClass = (context?[.animatedImageClass] as? UIImage.Type) ?? YYImage.self
-                guard let image = imageClass.init(data: data) else {
+                let Image = (context?[.animatedImageClass] as? UIImage.Type) ?? SDAnimatedImage.self
+                guard let image = Image.init(data: data) ?? UIImage(data: data) else {
                     completedBlock?(nil, nil, Error.generateImage, true)
                     return
                 }

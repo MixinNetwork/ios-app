@@ -1,5 +1,4 @@
 import UIKit
-import YYImage
 import SDWebImage
 
 class VerticalPositioningImageView: UIView {
@@ -9,7 +8,7 @@ class VerticalPositioningImageView: UIView {
         case center
     }
     
-    let imageView = YYAnimatedImageView()
+    let imageView = SDAnimatedImageView()
     
     var position = Position.center {
         didSet {

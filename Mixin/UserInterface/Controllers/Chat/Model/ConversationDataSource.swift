@@ -2,7 +2,6 @@ import UIKit
 import AVKit
 import Photos
 import SDWebImage
-import YYImage
 import CoreServices
 import MixinServices
 

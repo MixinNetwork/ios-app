@@ -29,8 +29,6 @@ Mixin Core Services.
   s.dependency 'AppCenter'
   s.dependency 'Alamofire'
   s.dependency 'SDWebImage'
-  s.dependency 'SDWebImageYYPlugin/YYImage'
-  s.dependency 'YYImage/WebP'
   s.dependency 'DeviceGuru'
   s.dependency 'GzipSwift'
   s.dependency 'Zip'

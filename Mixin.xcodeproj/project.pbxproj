@@ -608,11 +608,13 @@
 		941655C425CD7DA7007E76D0 /* AudioSessionClientPriority.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941655C325CD7DA7007E76D0 /* AudioSessionClientPriority.swift */; };
 		9419374525DFBE7D00F81A9C /* MinimizedPlaylistWaveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9419374425DFBE7D00F81A9C /* MinimizedPlaylistWaveView.swift */; };
 		9419374D25DFF3EE00F81A9C /* GroupIconSaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9419374C25DFF3EE00F81A9C /* GroupIconSaver.swift */; };
+		941CAE00276A3F17008F42D6 /* WebPImageDecoderInternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941CADFF276A3F17008F42D6 /* WebPImageDecoderInternal.swift */; };
 		9424C64B259246B600FFDAE0 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9424C64A259246B600FFDAE0 /* main.swift */; };
 		9427D51525E0D31100B1EF0E /* MusicInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9427D51425E0D31100B1EF0E /* MusicInfoView.xib */; };
 		9427D51A25E0D42E00B1EF0E /* MusicInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9427D51925E0D42E00B1EF0E /* MusicInfoView.swift */; };
 		9427D52225E0E8DE00B1EF0E /* PlaylistItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9427D52125E0E8DE00B1EF0E /* PlaylistItemCell.swift */; };
 		9427D52725E0EB5B00B1EF0E /* PlaylistItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9427D52625E0EB5B00B1EF0E /* PlaylistItem.swift */; };
+		942F25BD274903550040E585 /* WebPImageDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942F25BC274903550040E585 /* WebPImageDecoder.swift */; };
 		942F829825DD56E3004F913B /* opusenc_set_bitrate.c in Sources */ = {isa = PBXBuildFile; fileRef = 942F829725DD56E3004F913B /* opusenc_set_bitrate.c */; };
 		9430F9C525E38AB5001CCA2F /* MessageDAO+PlaylistItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9430F9C425E38AB5001CCA2F /* MessageDAO+PlaylistItem.swift */; };
 		9438252725EE697300709B7D /* CacheableAssetFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9438252625EE697300709B7D /* CacheableAssetFileManager.swift */; };
@@ -1593,11 +1595,13 @@
 		941655C325CD7DA7007E76D0 /* AudioSessionClientPriority.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSessionClientPriority.swift; sourceTree = "<group>"; };
 		9419374425DFBE7D00F81A9C /* MinimizedPlaylistWaveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinimizedPlaylistWaveView.swift; sourceTree = "<group>"; };
 		9419374C25DFF3EE00F81A9C /* GroupIconSaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupIconSaver.swift; sourceTree = "<group>"; };
+		941CADFF276A3F17008F42D6 /* WebPImageDecoderInternal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebPImageDecoderInternal.swift; sourceTree = "<group>"; };
 		9424C64A259246B600FFDAE0 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		9427D51425E0D31100B1EF0E /* MusicInfoView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MusicInfoView.xib; sourceTree = "<group>"; };
 		9427D51925E0D42E00B1EF0E /* MusicInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicInfoView.swift; sourceTree = "<group>"; };
 		9427D52125E0E8DE00B1EF0E /* PlaylistItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistItemCell.swift; sourceTree = "<group>"; };
 		9427D52625E0EB5B00B1EF0E /* PlaylistItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistItem.swift; sourceTree = "<group>"; };
+		942F25BC274903550040E585 /* WebPImageDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebPImageDecoder.swift; sourceTree = "<group>"; };
 		942F829625DD56E3004F913B /* opusenc_set_bitrate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = opusenc_set_bitrate.h; sourceTree = "<group>"; };
 		942F829725DD56E3004F913B /* opusenc_set_bitrate.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = opusenc_set_bitrate.c; sourceTree = "<group>"; };
 		9430F9C425E38AB5001CCA2F /* MessageDAO+PlaylistItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MessageDAO+PlaylistItem.swift"; sourceTree = "<group>"; };
@@ -2313,6 +2317,8 @@
 				7B5A748E230274E200C6107E /* GroupIconMaker.swift */,
 				9419374C25DFF3EE00F81A9C /* GroupIconSaver.swift */,
 				7BF196B02411625300CC8325 /* UserInterfaceStyle.swift */,
+				942F25BC274903550040E585 /* WebPImageDecoder.swift */,
+				941CADFF276A3F17008F42D6 /* WebPImageDecoderInternal.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -4072,10 +4078,8 @@
 				"${BUILT_PRODUCTS_DIR}/GRDB.swift/GRDB.framework",
 				"${BUILT_PRODUCTS_DIR}/GzipSwift/Gzip.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
-				"${BUILT_PRODUCTS_DIR}/SDWebImageYYPlugin/SDWebImageYYPlugin.framework",
 				"${BUILT_PRODUCTS_DIR}/SQLCipher/SQLCipher.framework",
 				"${BUILT_PRODUCTS_DIR}/SocketRocket/SocketRocket.framework",
-				"${BUILT_PRODUCTS_DIR}/YYImage/YYImage.framework",
 				"${BUILT_PRODUCTS_DIR}/Zip/Zip.framework",
 				"${BUILT_PRODUCTS_DIR}/libsignal-protocol-c/libsignal_protocol_c.framework",
 				"${BUILT_PRODUCTS_DIR}/lottie-ios/Lottie.framework",
@@ -4089,10 +4093,8 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GRDB.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Gzip.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImageYYPlugin.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SQLCipher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SocketRocket.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YYImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Zip.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libsignal_protocol_c.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Lottie.framework",
@@ -4117,7 +4119,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				$SRCROOT/MixinNotificationService/R.generated.swift,
+				"$SRCROOT/MixinNotificationService/R.generated.swift",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -4214,7 +4216,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				$SRCROOT/MixinShare/R.generated.swift,
+				"$SRCROOT/MixinShare/R.generated.swift",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -4234,7 +4236,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				$SRCROOT/R.generated.swift,
+				"$SRCROOT/R.generated.swift",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -4268,13 +4270,12 @@
 				"${BUILT_PRODUCTS_DIR}/R.swift.Library/Rswift.framework",
 				"${BUILT_PRODUCTS_DIR}/RSKImageCropper/RSKImageCropper.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
-				"${BUILT_PRODUCTS_DIR}/SDWebImageYYPlugin/SDWebImageYYPlugin.framework",
 				"${BUILT_PRODUCTS_DIR}/SQLCipher/SQLCipher.framework",
 				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
 				"${BUILT_PRODUCTS_DIR}/SocketRocket/SocketRocket.framework",
-				"${BUILT_PRODUCTS_DIR}/YYImage/YYImage.framework",
 				"${BUILT_PRODUCTS_DIR}/Zip/Zip.framework",
 				"${BUILT_PRODUCTS_DIR}/libsignal-protocol-c/libsignal_protocol_c.framework",
+				"${BUILT_PRODUCTS_DIR}/libwebp/libwebp.framework",
 				"${BUILT_PRODUCTS_DIR}/lottie-ios/Lottie.framework",
 				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
@@ -4301,13 +4302,12 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Rswift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RSKImageCropper.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImageYYPlugin.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SQLCipher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SocketRocket.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YYImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Zip.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libsignal_protocol_c.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libwebp.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Lottie.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
@@ -4588,6 +4588,7 @@
 				842347EE2695BA6400009A39 /* InitializeBotJob.swift in Sources */,
 				DF886D452440B2F800F44BCC /* ConversationCircleRequest.swift in Sources */,
 				7BEBCE2D228185130037BF18 /* MediaPreviewViewController.swift in Sources */,
+				942F25BD274903550040E585 /* WebPImageDecoder.swift in Sources */,
 				7BF39FC9219AA8B000950F06 /* AssetHeaderView.swift in Sources */,
 				7C66F1BD268B2F23006D8462 /* HomeAppsManager+DragInteraction.swift in Sources */,
 				7BF196B12411625300CC8325 /* UserInterfaceStyle.swift in Sources */,
@@ -4789,6 +4790,7 @@
 				7CB0955B26CF4DDC0049F4C7 /* PinMessageCell.swift in Sources */,
 				7B1D61132512773F00BD6B15 /* ExternalSharingConfirmationViewController.swift in Sources */,
 				7B9D825422F1BFC40099381E /* LargeModernNetworkOperationButton.swift in Sources */,
+				941CAE00276A3F17008F42D6 /* WebPImageDecoderInternal.swift in Sources */,
 				DF5BF55F1FBB281E0092AFB8 /* AssetViewController.swift in Sources */,
 				7B8BB57E234DD18C00991ACB /* SharedMediaTableHeaderView.swift in Sources */,
 				7C0E16A72702AF22002FC718 /* CollectibleAPI.swift in Sources */,

@@ -1,17 +1,16 @@
 import Foundation
 import SDWebImage
-import YYImage
 
 public enum StickerPrefetcher {
     
     public static let persistent: SDWebImagePrefetcher = {
         let prefetcher = SDWebImagePrefetcher(imageManager: .persistentSticker)
-        prefetcher.animatedImageClass = YYImage.self
+        prefetcher.animatedImageClass = SDAnimatedImage.self
         return prefetcher
     }()
     public static let purgable: SDWebImagePrefetcher = {
         let prefetcher = SDWebImagePrefetcher(imageManager: .shared)
-        prefetcher.animatedImageClass = YYImage.self
+        prefetcher.animatedImageClass = SDAnimatedImage.self
         return prefetcher
     }()
     
@@ -38,7 +37,7 @@ public extension SDWebImagePrefetcher {
         }
         set {
             var newContext = context ?? [:]
-            newContext[.animatedImageClass] = YYImage.self
+            newContext[.animatedImageClass] = SDAnimatedImage.self
             context = newContext
         }
     }

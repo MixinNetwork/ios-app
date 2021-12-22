@@ -715,34 +715,30 @@ class ConversationViewController: UIViewController {
         guard let inviterId = myInvitation?.userId else {
             return
         }
-        
-        let conversationId = self.conversationId
-        
-        func work(_: UIAlertAction) {
+        let alert = UIAlertController(title: R.string.localizable.chat_exit_group_and_report_inviter_confirmation(), message: nil, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_confirm(), style: .destructive, handler: { _ in
             let hud = Hud()
-            if let view = navigationController?.view {
+            if let view = self.navigationController?.view {
                 hud.show(style: .busy, text: "", on: view)
             }
-            
-            DispatchQueue.global().async {
-                switch UserAPI.reportUser(userId: inviterId) {
+            UserAPI.reportUser(userId: inviterId) { result in
+                switch result {
                 case let .success(user):
-                    UserDAO.shared.updateUsers(users: [user], sendNotificationAfterFinished: false)
-                    ConversationDAO.shared.deleteChat(conversationId: conversationId)
-                    DispatchQueue.main.async {
-                        hud.set(style: .notification, text: R.string.localizable.profile_report_success())
-                        hud.scheduleAutoHidden()
-                        UIApplication.homeNavigationController?.backToHome()
+                    DispatchQueue.global().async {
+                        UserDAO.shared.updateUsers(users: [user], sendNotificationAfterFinished: false)
+                        ConversationDAO.shared.deleteChat(conversationId: self.conversationId)
+                        DispatchQueue.main.async {
+                            hud.set(style: .notification, text: R.string.localizable.profile_report_success())
+                            hud.scheduleAutoHidden()
+                            UIApplication.homeNavigationController?.backToHome()
+                        }
                     }
                 case let .failure(error):
                     hud.set(style: .error, text: error.localizedDescription)
                     hud.scheduleAutoHidden()
                 }
             }
-        }
-        
-        let alert = UIAlertController(title: R.string.localizable.chat_exit_group_and_report_inviter_confirmation(), message: nil, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_confirm(), style: .destructive, handler: work))
+        }))
         alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
         present(alert, animated: true, completion: nil)
     }

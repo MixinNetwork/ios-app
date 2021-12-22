@@ -1496,7 +1496,10 @@ extension ConversationViewController: UIScrollViewDelegate {
     }
     
     func scrollViewShouldScrollToTop(_ scrollView: UIScrollView) -> Bool {
-        tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+        // With this implementation tableView will scroll to {0, 0}, or it will scrolls all the way up to first message in this conversation
+        if tableView.numberOfSections >= 1, tableView.numberOfRows(inSection: 0) >= 1 {
+            tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+        }
         return false
     }
     

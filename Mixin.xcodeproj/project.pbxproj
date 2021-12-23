@@ -567,7 +567,11 @@
 		7C4E2B0426A9BDAD008190F5 /* StickersEditingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4E2B0326A9BDAC008190F5 /* StickersEditingViewController.swift */; };
 		7C4E2B0626A9BE50008190F5 /* StickersEditingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4E2B0526A9BE50008190F5 /* StickersEditingCell.swift */; };
 		7C4FF5AA26AE614C003E39AC /* StickerPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4FF5A926AE614C003E39AC /* StickerPreviewViewController.swift */; };
+		7C1EDAB42772FF8B00193917 /* VerifyNumberContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1EDAB32772FF8B00193917 /* VerifyNumberContext.swift */; };
 		7C5823D5268966A1003AA142 /* HomeAppsFolderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5823D4268966A1003AA142 /* HomeAppsFolderViewController.swift */; };
+		7C5B65CE27701A49004EDD53 /* DeleteAccountHintWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5B65CD27701A49004EDD53 /* DeleteAccountHintWindow.swift */; };
+		7C5B65D027701A62004EDD53 /* DeleteAccountHintWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C5B65CF27701A62004EDD53 /* DeleteAccountHintWindow.xib */; };
+		7C5B65D6277084CB004EDD53 /* DeleteAccountVerifyNumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5B65D5277084CB004EDD53 /* DeleteAccountVerifyNumberViewController.swift */; };
 		7C66E7B82743988500FF24C1 /* ProfileDescriptionLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66E7B72743988500FF24C1 /* ProfileDescriptionLabel.swift */; };
 		7C66F0272689D1FE006D8462 /* HomeAppsDragInteraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F0262689D1FE006D8462 /* HomeAppsDragInteraction.swift */; };
 		7C66F029268A0384006D8462 /* AppPageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F028268A0384006D8462 /* AppPageCell.swift */; };
@@ -580,12 +584,10 @@
 		7C66F1C1268C0250006D8462 /* HomeAppsFolderInteraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1C0268C0250006D8462 /* HomeAppsFolderInteraction.swift */; };
 		7C6AD1F526A6794F00E6C41D /* StickersStoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6AD1F426A6794F00E6C41D /* StickersStoreViewController.swift */; };
 		7C7635B826A13461006101DB /* HomeAppsConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7635B726A13461006101DB /* HomeAppsConstants.swift */; };
-		7C8FA78D27687D1500855AFD /* DeleteAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8FA78C27687D1500855AFD /* DeleteAccountViewController.swift */; };
+		7C8FA78D27687D1500855AFD /* DeleteAccountSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8FA78C27687D1500855AFD /* DeleteAccountSettingViewController.swift */; };
 		7C8FA78F2768822800855AFD /* DeleteAccountTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C8FA78E2768822800855AFD /* DeleteAccountTableHeaderView.xib */; };
 		7C8FA8F42768909300855AFD /* AccountSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8FA8F32768909300855AFD /* AccountSettingViewController.swift */; };
 		7C8FA8F62768926D00855AFD /* SecuritySettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8FA8F52768926D00855AFD /* SecuritySettingViewController.swift */; };
-		7C8FA8F82768939200855AFD /* ChatSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8FA8F72768939200855AFD /* ChatSettingViewController.swift */; };
-		7C8FA8FA27689A0600855AFD /* ConfirmationSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8FA8F927689A0600855AFD /* ConfirmationSettingViewController.swift */; };
 		7C9A734027392FAF00E0127A /* PinSettingTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9A733F27392FAF00E0127A /* PinSettingTableHeaderView.swift */; };
 		7C9DCDF1273901D500395F4A /* PinSettingTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C9DCDF0273901D500395F4A /* PinSettingTableHeaderView.xib */; };
 		7CB0954F26CCED2E0049F4C7 /* PinMessageBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB0954E26CCED2E0049F4C7 /* PinMessageBannerView.swift */; };
@@ -594,10 +596,13 @@
 		7CB0955726CE5F040049F4C7 /* TransferPinAction+Description.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB0955626CE5F040049F4C7 /* TransferPinAction+Description.swift */; };
 		7CB0955926CE69250049F4C7 /* PinMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB0955826CE69250049F4C7 /* PinMessageViewModel.swift */; };
 		7CB0955B26CF4DDC0049F4C7 /* PinMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB0955A26CF4DDC0049F4C7 /* PinMessageCell.swift */; };
+		7CB17B642771602A00CF4C94 /* DeleteAccountConfirmWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB17B632771602A00CF4C94 /* DeleteAccountConfirmWindow.swift */; };
+		7CB17B662771608400CF4C94 /* DeleteAccountConfirmWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CB17B652771608400CF4C94 /* DeleteAccountConfirmWindow.xib */; };
 		7CBD2EFA268FF6BB00AA0847 /* HomeAppsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBD2EF9268FF6BB00AA0847 /* HomeAppsStorage.swift */; };
 		7CC2BDB926A7CAD6001749B1 /* StickersStoreBannerFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC2BDB826A7CAD6001749B1 /* StickersStoreBannerFlowLayout.swift */; };
 		7CC3B1A026C21F7E0018B0D1 /* ScriptMessageProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC3B19F26C21F7E0018B0D1 /* ScriptMessageProxy.swift */; };
 		7CC730502745F95D002780F5 /* StickerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC7304F2745F95D002780F5 /* StickerStore.swift */; };
+		7CE3A25C2771A8AB006BE765 /* DeleteAccountVerifyCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE3A25B2771A8AB006BE765 /* DeleteAccountVerifyCodeViewController.swift */; };
 		7CE5E7A8269BDA29000B7904 /* HomeAppsPinTipsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE5E7A6269BDA29000B7904 /* HomeAppsPinTipsViewController.swift */; };
 		7CE5E7A9269BDA29000B7904 /* HomeAppsPinTipsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CE5E7A7269BDA29000B7904 /* HomeAppsPinTipsView.xib */; };
 		7CF2FEA626AA89BA00D3A5B3 /* StickersAlbumPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF2FEA526AA89BA00D3A5B3 /* StickersAlbumPreviewViewController.swift */; };
@@ -793,7 +798,7 @@
 		DF8CECE11FC3054700E40064 /* TransferTypeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8CECE01FC3054700E40064 /* TransferTypeCell.swift */; };
 		DF8CECE51FC3177100E40064 /* BottomSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8CECE41FC3177100E40064 /* BottomSheetView.swift */; };
 		DF8CECE71FC317BF00E40064 /* PayWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF8CECE61FC317BF00E40064 /* PayWindow.xib */; };
-		DF8CECE91FC411AB00E40064 /* NotificationSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8CECE81FC411AB00E40064 /* NotificationSettingViewController.swift */; };
+		DF8CECE91FC411AB00E40064 /* NotificationAndConfirmationSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8CECE81FC411AB00E40064 /* NotificationAndConfirmationSettingsViewController.swift */; };
 		DF8CECED1FC41A9A00E40064 /* ConversationSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8CECEC1FC41A9A00E40064 /* ConversationSettingViewController.swift */; };
 		DF8CECEF1FC4240500E40064 /* BlockedUsersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8CECEE1FC4240500E40064 /* BlockedUsersViewController.swift */; };
 		DF8CECF21FC4256D00E40064 /* BlockUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8CECF11FC4256D00E40064 /* BlockUserCell.swift */; };
@@ -1569,7 +1574,11 @@
 		7C4E2B0326A9BDAC008190F5 /* StickersEditingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersEditingViewController.swift; sourceTree = "<group>"; };
 		7C4E2B0526A9BE50008190F5 /* StickersEditingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersEditingCell.swift; sourceTree = "<group>"; };
 		7C4FF5A926AE614C003E39AC /* StickerPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerPreviewViewController.swift; sourceTree = "<group>"; };
+		7C1EDAB32772FF8B00193917 /* VerifyNumberContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyNumberContext.swift; sourceTree = "<group>"; };
 		7C5823D4268966A1003AA142 /* HomeAppsFolderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsFolderViewController.swift; sourceTree = "<group>"; };
+		7C5B65CD27701A49004EDD53 /* DeleteAccountHintWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountHintWindow.swift; sourceTree = "<group>"; };
+		7C5B65CF27701A62004EDD53 /* DeleteAccountHintWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeleteAccountHintWindow.xib; sourceTree = "<group>"; };
+		7C5B65D5277084CB004EDD53 /* DeleteAccountVerifyNumberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountVerifyNumberViewController.swift; sourceTree = "<group>"; };
 		7C66E7B72743988500FF24C1 /* ProfileDescriptionLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDescriptionLabel.swift; sourceTree = "<group>"; };
 		7C66F0262689D1FE006D8462 /* HomeAppsDragInteraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsDragInteraction.swift; sourceTree = "<group>"; };
 		7C66F028268A0384006D8462 /* AppPageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppPageCell.swift; sourceTree = "<group>"; };
@@ -1582,12 +1591,10 @@
 		7C66F1C0268C0250006D8462 /* HomeAppsFolderInteraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsFolderInteraction.swift; sourceTree = "<group>"; };
 		7C6AD1F426A6794F00E6C41D /* StickersStoreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersStoreViewController.swift; sourceTree = "<group>"; };
 		7C7635B726A13461006101DB /* HomeAppsConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsConstants.swift; sourceTree = "<group>"; };
-		7C8FA78C27687D1500855AFD /* DeleteAccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountViewController.swift; sourceTree = "<group>"; };
+		7C8FA78C27687D1500855AFD /* DeleteAccountSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountSettingViewController.swift; sourceTree = "<group>"; };
 		7C8FA78E2768822800855AFD /* DeleteAccountTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeleteAccountTableHeaderView.xib; sourceTree = "<group>"; };
 		7C8FA8F32768909300855AFD /* AccountSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSettingViewController.swift; sourceTree = "<group>"; };
 		7C8FA8F52768926D00855AFD /* SecuritySettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecuritySettingViewController.swift; sourceTree = "<group>"; };
-		7C8FA8F72768939200855AFD /* ChatSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatSettingViewController.swift; sourceTree = "<group>"; };
-		7C8FA8F927689A0600855AFD /* ConfirmationSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationSettingViewController.swift; sourceTree = "<group>"; };
 		7C9A733F27392FAF00E0127A /* PinSettingTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinSettingTableHeaderView.swift; sourceTree = "<group>"; };
 		7C9DCDF0273901D500395F4A /* PinSettingTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PinSettingTableHeaderView.xib; sourceTree = "<group>"; };
 		7CB0954E26CCED2E0049F4C7 /* PinMessageBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinMessageBannerView.swift; sourceTree = "<group>"; };
@@ -1596,10 +1603,13 @@
 		7CB0955626CE5F040049F4C7 /* TransferPinAction+Description.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TransferPinAction+Description.swift"; sourceTree = "<group>"; };
 		7CB0955826CE69250049F4C7 /* PinMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinMessageViewModel.swift; sourceTree = "<group>"; };
 		7CB0955A26CF4DDC0049F4C7 /* PinMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinMessageCell.swift; sourceTree = "<group>"; };
+		7CB17B632771602A00CF4C94 /* DeleteAccountConfirmWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountConfirmWindow.swift; sourceTree = "<group>"; };
+		7CB17B652771608400CF4C94 /* DeleteAccountConfirmWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeleteAccountConfirmWindow.xib; sourceTree = "<group>"; };
 		7CBD2EF9268FF6BB00AA0847 /* HomeAppsStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsStorage.swift; sourceTree = "<group>"; };
 		7CC2BDB826A7CAD6001749B1 /* StickersStoreBannerFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersStoreBannerFlowLayout.swift; sourceTree = "<group>"; };
 		7CC3B19F26C21F7E0018B0D1 /* ScriptMessageProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptMessageProxy.swift; sourceTree = "<group>"; };
 		7CC7304F2745F95D002780F5 /* StickerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerStore.swift; sourceTree = "<group>"; };
+		7CE3A25B2771A8AB006BE765 /* DeleteAccountVerifyCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountVerifyCodeViewController.swift; sourceTree = "<group>"; };
 		7CE5E7A6269BDA29000B7904 /* HomeAppsPinTipsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsPinTipsViewController.swift; sourceTree = "<group>"; };
 		7CE5E7A7269BDA29000B7904 /* HomeAppsPinTipsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomeAppsPinTipsView.xib; sourceTree = "<group>"; };
 		7CF2FEA526AA89BA00D3A5B3 /* StickersAlbumPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersAlbumPreviewViewController.swift; sourceTree = "<group>"; };
@@ -1805,7 +1815,7 @@
 		DF8CECE01FC3054700E40064 /* TransferTypeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferTypeCell.swift; sourceTree = "<group>"; };
 		DF8CECE41FC3177100E40064 /* BottomSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetView.swift; sourceTree = "<group>"; };
 		DF8CECE61FC317BF00E40064 /* PayWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PayWindow.xib; sourceTree = "<group>"; };
-		DF8CECE81FC411AB00E40064 /* NotificationSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSettingViewController.swift; sourceTree = "<group>"; };
+		DF8CECE81FC411AB00E40064 /* NotificationAndConfirmationSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationAndConfirmationSettingsViewController.swift; sourceTree = "<group>"; };
 		DF8CECEC1FC41A9A00E40064 /* ConversationSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationSettingViewController.swift; sourceTree = "<group>"; };
 		DF8CECEE1FC4240500E40064 /* BlockedUsersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockedUsersViewController.swift; sourceTree = "<group>"; };
 		DF8CECF11FC4256D00E40064 /* BlockUserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockUserCell.swift; sourceTree = "<group>"; };
@@ -2898,6 +2908,7 @@
 				7BEED0D6244D74FC00F3A2B9 /* SettingsSection.swift */,
 				7BB78727245136850057B4ED /* SettingsRadioSection.swift */,
 				7BEED0D8244D752700F3A2B9 /* SettingsRow.swift */,
+				7C1EDAB32772FF8B00193917 /* VerifyNumberContext.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -2953,6 +2964,10 @@
 				DF846CDA23694A4900AA1197 /* MultisigUsersWindow.xib */,
 				7C0E15DE27005376002FC718 /* UnknownURLWindow.swift */,
 				7C0E15E0270053AC002FC718 /* UnknownURLWindow.xib */,
+				7C5B65CD27701A49004EDD53 /* DeleteAccountHintWindow.swift */,
+				7C5B65CF27701A62004EDD53 /* DeleteAccountHintWindow.xib */,
+				7CB17B632771602A00CF4C94 /* DeleteAccountConfirmWindow.swift */,
+				7CB17B652771608400CF4C94 /* DeleteAccountConfirmWindow.xib */,
 			);
 			path = Windows;
 			sourceTree = "<group>";
@@ -3644,16 +3659,16 @@
 				7BC022E4214A13DC00B7A398 /* AuthorizationsViewController.swift */,
 				DF1F277B21A53585009A74C6 /* BackupViewController.swift */,
 				DF8CECEE1FC4240500E40064 /* BlockedUsersViewController.swift */,
-				7C8FA8F72768939200855AFD /* ChatSettingViewController.swift */,
 				DFE48ADD20EBADEE003E0BF8 /* ClearStorageViewController.swift */,
-				7C8FA8F927689A0600855AFD /* ConfirmationSettingViewController.swift */,
 				DF8CECEC1FC41A9A00E40064 /* ConversationSettingViewController.swift */,
 				7BC1466C230D12680060FE19 /* CurrencySelectorViewController.swift */,
 				7BCB8C8322BB56B8002A13CC /* DataAndStorageSettingsViewController.swift */,
-				7C8FA78C27687D1500855AFD /* DeleteAccountViewController.swift */,
+				7C8FA78C27687D1500855AFD /* DeleteAccountSettingViewController.swift */,
+				7C5B65D5277084CB004EDD53 /* DeleteAccountVerifyNumberViewController.swift */,
+				7CE3A25B2771A8AB006BE765 /* DeleteAccountVerifyCodeViewController.swift */,
 				7B9E7ABF21E6F8F000012A28 /* DesktopViewController.swift */,
 				DFB19001233219650021CAF3 /* LogViewController.swift */,
-				DF8CECE81FC411AB00E40064 /* NotificationSettingViewController.swift */,
+				DF8CECE81FC411AB00E40064 /* NotificationAndConfirmationSettingsViewController.swift */,
 				ABCB87DC23F18A3D00780E60 /* PermissionsViewController.swift */,
 				DFD1FBC422FD809700C570D4 /* PhoneContactsSettingViewController.swift */,
 				7B9C1029245588DA00B2718F /* PhoneNumberSettingViewController.swift */,
@@ -3931,6 +3946,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7B833E9C22C4AED20063929D /* ic_app_loading@2x.webp in Resources */,
+				7CB17B662771608400CF4C94 /* DeleteAccountConfirmWindow.xib in Resources */,
 				7B833E9D22C4AED20063929D /* ic_app_loading@3x.webp in Resources */,
 				274264A920011C79000A8808 /* mixin.caf in Resources */,
 				94095BB725BE8BC100F44832 /* TextPreviewView.xib in Resources */,
@@ -3946,6 +3962,7 @@
 				E041064E23C6076F00A6F08E /* FullscreenPopupView.xib in Resources */,
 				DF8A7523236301DB00765A82 /* AuthorizationWindow.xib in Resources */,
 				944ED8D22646535B00C97215 /* WebContentView.xib in Resources */,
+				7C5B65D027701A62004EDD53 /* DeleteAccountHintWindow.xib in Resources */,
 				7BA91A2222B391A40038664F /* HudView.xib in Resources */,
 				7BBCEC2025232FC700F270DF /* PopupTitleView.xib in Resources */,
 				DFC2647624E933B700BF954D /* BigAmountConfirmationWindow.xib in Resources */,
@@ -4594,7 +4611,6 @@
 				DF75FF4424FE61E1008A7CF3 /* UpdateViewController.swift in Sources */,
 				7C66F1BB268B2CE5006D8462 /* HomeAppsManager.swift in Sources */,
 				7C14CFC126CA35CF0094AF4A /* StaticMessagesViewController.swift in Sources */,
-				7C8FA8F82768939200855AFD /* ChatSettingViewController.swift in Sources */,
 				DFA5B5931FB051BB00549728 /* WalletViewController.swift in Sources */,
 				DF53BB71202362F1002BF028 /* AuthorizationScopeCell.swift in Sources */,
 				7B86B1F323F6AA5C00C80AD9 /* AudioMessageProgressView.swift in Sources */,
@@ -4696,7 +4712,7 @@
 				7B51DDB8223A50D5008ACDBB /* VerificationCodeViewController.swift in Sources */,
 				DF048CCE223FCA02005F1EF5 /* ModernSelectedBackgroundCell.swift in Sources */,
 				7BA9D9F0226F32EA00255943 /* SearchNavigationBar.swift in Sources */,
-				7C8FA78D27687D1500855AFD /* DeleteAccountViewController.swift in Sources */,
+				7C8FA78D27687D1500855AFD /* DeleteAccountSettingViewController.swift in Sources */,
 				7B59534D226720F700D59DB4 /* TopShadowView.swift in Sources */,
 				7B1ABB0E21196B24009FAA6C /* TilingCollectionViewFlowLayout.swift in Sources */,
 				7B015D7F21A81C81000C9F1E /* SearchBoxView.swift in Sources */,
@@ -4721,9 +4737,11 @@
 				7C66F029268A0384006D8462 /* AppPageCell.swift in Sources */,
 				7B2A116122C20F5F00AD029C /* PlayerView.swift in Sources */,
 				7BB3855821E770BE0070FF8F /* ProvisionMessage.swift in Sources */,
+				7CE3A25C2771A8AB006BE765 /* DeleteAccountVerifyCodeViewController.swift in Sources */,
 				7B9863931FA3141F00D4B16C /* XibDesignable.swift in Sources */,
 				DF46B4051FA9B48500243A8B /* ContactsManager.swift in Sources */,
 				7B1456921FCC186E001B6DED /* TextMessageViewModel.swift in Sources */,
+				7C5B65CE27701A49004EDD53 /* DeleteAccountHintWindow.swift in Sources */,
 				7B35AF7A228AA61400E8101D /* MessagesWithGroupSearchResult.swift in Sources */,
 				DFF4417A223BC63100DDD5F8 /* ContactCell.swift in Sources */,
 				7B955338224375D600CE95E6 /* SearchFooterView.swift in Sources */,
@@ -4776,6 +4794,7 @@
 				7BFDB73920DA41E3005673CC /* Quote.swift in Sources */,
 				7B51DDB5223A489F008ACDBB /* LoginContext.swift in Sources */,
 				DFC0ECFB23BB610C0091E7AC /* ProvisioningAPI.swift in Sources */,
+				7C5B65D6277084CB004EDD53 /* DeleteAccountVerifyNumberViewController.swift in Sources */,
 				DF5D9F281F9C79E10036D5FD /* UIApplicationExtension.swift in Sources */,
 				DF7A4B4A1FCE6EE200F21BCB /* UIViewExtension.swift in Sources */,
 				7C5823D5268966A1003AA142 /* HomeAppsFolderViewController.swift in Sources */,
@@ -4924,6 +4943,7 @@
 				7B68F78B2191741300B79978 /* BiometryType.swift in Sources */,
 				7BD0532820A41F6A00C36F69 /* RangeExtension.swift in Sources */,
 				7BC022E5214A13DC00B7A398 /* AuthorizationsViewController.swift in Sources */,
+				7C1EDAB42772FF8B00193917 /* VerifyNumberContext.swift in Sources */,
 				DF46B40B1FA9E7CF00243A8B /* CornerView.swift in Sources */,
 				7B59534B2267206D00D59DB4 /* OneSideShadowView.swift in Sources */,
 				7BC681AA1FA1DD5600BAB85F /* UsernameViewController.swift in Sources */,
@@ -5091,7 +5111,7 @@
 				7B81BF2822893F8B00266A77 /* GroupParticipantCell.swift in Sources */,
 				E0B53A6D23B0C4D3008DA9F1 /* MessageItem+Quote.swift in Sources */,
 				DFCF3BEE20CF6ECD0030AD4A /* StickerManagerViewController.swift in Sources */,
-				DF8CECE91FC411AB00E40064 /* NotificationSettingViewController.swift in Sources */,
+				DF8CECE91FC411AB00E40064 /* NotificationAndConfirmationSettingsViewController.swift in Sources */,
 				7BFD375624936763006D758F /* GroupCallIndicatorView.swift in Sources */,
 				DFE356B81FB4994200E0E3A8 /* SettingsViewController.swift in Sources */,
 				7BF9969520CA6F3800FD948F /* Waveform.swift in Sources */,
@@ -5110,6 +5130,7 @@
 				7B5E9B4C2437434D000AE24E /* CircleEditingButton.swift in Sources */,
 				7B4CBDC22528533600BA66D0 /* ClipSwitcher.swift in Sources */,
 				DFC0ECFD23BB610C0091E7AC /* AccountAPI.swift in Sources */,
+				7CB17B642771602A00CF4C94 /* DeleteAccountConfirmWindow.swift in Sources */,
 				7BFE47E52284530200FC4379 /* PeerHeaderView.swift in Sources */,
 				7BFE47DF228432C800FC4379 /* PeerInfoView.swift in Sources */,
 				9427D52225E0E8DE00B1EF0E /* PlaylistItemCell.swift in Sources */,

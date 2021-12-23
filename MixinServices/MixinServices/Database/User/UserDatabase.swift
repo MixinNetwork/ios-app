@@ -473,6 +473,15 @@ public final class UserDatabase: Database {
 
 extension UserDatabase {
     
+    public func erase() {
+        do {
+            try pool.erase()
+        } catch {
+            Logger.database.error(category: "UserDatabase", message: "Failed to erase the pool: \(error)")
+            reporter.report(error: error)
+        }
+    }
+    
     public static func reloadCurrent(with db: UserDatabase? = nil) {
         current = db ?? makeDatabaseWithDefaultLocation()
         current.migrate()

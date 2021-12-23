@@ -8,8 +8,8 @@ class SettingsViewController: SettingsTableViewController {
             SettingsRow(icon: R.image.setting.ic_category_account(),
                         title: R.string.localizable.setting_account(),
                         accessory: .disclosure),
-            SettingsRow(icon: R.image.setting.ic_category_chat(),
-                        title: R.string.localizable.setting_chat_title(),
+            SettingsRow(icon: R.image.setting.ic_category_backup(),
+                        title: R.string.localizable.setting_backup_title(),
                         accessory: .disclosure),
             SettingsRow(icon: R.image.setting.ic_category_notification(),
                         title: R.string.localizable.setting_notification(),
@@ -67,9 +67,9 @@ extension SettingsViewController: UITableViewDelegate {
             case 0:
                 vc = AccountSettingViewController.instance()
             case 1:
-                vc = ChatSettingViewController.instance()
+                vc = BackupViewController.instance()
             case 2:
-                vc = NotificationSettingViewController.instance()
+                vc = NotificationAndConfirmationSettingsViewController.instance()
             default:
                 vc = DataAndStorageSettingsViewController.instance()
             }

@@ -40,13 +40,6 @@ final class NotificationService: UNNotificationServiceExtension {
             guard let weakSelf = self else {
                 return
             }
-            guard
-                AppGroupUserDefaults.User.showMessageNotification ||
-                AppGroupUserDefaults.User.showGroupMessageNotification
-            else {
-                weakSelf.deliverUpdateBadgeIconContentIfNeeded()
-                return
-            }
             if let message = messageItem {
                 weakSelf.deliverNotification(with: message)
             } else {
@@ -76,10 +69,6 @@ final class NotificationService: UNNotificationServiceExtension {
         }
         guard let conversation = ConversationDAO.shared.getConversation(conversationId: message.conversationId) else {
             deliverRawContent(from: "no conversation")
-            return
-        }
-        if (!AppGroupUserDefaults.User.showMessageNotification && !conversation.isGroup()) ||
-           (!AppGroupUserDefaults.User.showGroupMessageNotification && conversation.isGroup()) {
             return
         }
         let ownerUser: UserItem?
@@ -130,18 +119,8 @@ final class NotificationService: UNNotificationServiceExtension {
         notificationContent.categoryIdentifier = content.categoryIdentifier
         notificationContent.threadIdentifier = content.threadIdentifier
         notificationContent.attachments = content.attachments
-        notificationContent.badge = AppGroupUserDefaults.User.countUnreadMessages
-            ? NSNumber(value: ConversationDAO.shared.getUnreadMessageCountWithoutMuted())
-            : NSNumber(0)
-        contentHandler?(notificationContent)
-    }
-    
-    private func deliverUpdateBadgeIconContentIfNeeded() {
-        guard AppGroupUserDefaults.User.countUnreadMessages else {
-            return
-        }
-        let notificationContent = UNMutableNotificationContent()
         notificationContent.badge = NSNumber(value: ConversationDAO.shared.getUnreadMessageCountWithoutMuted())
+        
         contentHandler?(notificationContent)
     }
     

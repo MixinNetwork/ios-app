@@ -802,12 +802,9 @@
 
 // Setting
 "setting_title" = "Settings";
-"setting_notification" = "Notifications";
+"setting_notification" = "Notification and Confirmation";
 "setting_notification_show" = "Show Notifications";
 "setting_notification_sound" = "Sound";
-"setting_notification_message" = "Message Notifications";
-"setting_notification_group" = "Group Notifications";
-"setting_notification_badge" = "Badge";
 "setting_privacy_and_security_summary" = "Change who can add you to conversation and groups.";
 "setting_data_and_storage" = "Data and Storage Usage";
 "setting_blocked_user_count_suffix" = " contacts";
@@ -843,7 +840,7 @@
 "setting_change_emergency_contact_success" = "Successfully changed emergency contact";
 "setting_logout" = "Log Out";
 "setting_notification_message_preview" = "Message Preview";
-"setting_notification_count_unread_messages" = "Count Unread Messages";
+"setting_notification_message_preview_description" = "Preview message text inside new message notifications";
 "setting_notification_transfer" = "Transfer Notifications";
 "setting_notification_transfer_amount" = "Transfer Amount(%@)";
 "setting_notification_transfer_summary" = "Display notifications when receiving a transfer greater than or equal to %@.";
@@ -853,8 +850,6 @@
 "setting_duplicate_transfer_title" = "Duplicate Transfer Confirmation";
 "setting_duplicate_transfer_summary" = "Display confirmation dialog when you transfer the same amount to the same person within 6 hours.";
 "setting_backup_title" = "Chat Backup";
-"setting_restore_title" = "Chat Restore";
-"setting_clear_chat_history" = "Clear Chat History";
 "setting_backup_now" = "Back Up Now";
 "setting_backing" = "Backing Up...";
 "setting_restoring" = "Restoring...";
@@ -915,9 +910,10 @@
 "setting_account_privacy" = "Privacy";
 "setting_account_security" = "Security";
 "setting_account_change_number" = "Change Number";
-"setting_chat_title" = "Chat";
-"setting_security_confirmations" = "Confirmations";
-
+"setting_delete_account_content" = "Your Mixin wallet still has some assets that can be withdrawn to other wallets or exchanges. Once the account is cancelled, these assets will be abandoned along with the wallet and cannot be recovered.";
+"setting_delete_account_view_wallet" = "View Wallet";
+"setting_delete_account_confirm_title" = "Enter your PIN to delete your account";
+"setting_delete_account_confirm_hint" = "If you continue, your profile and account details will be delete on January 18,2022. read our document to Learn more.";
 
 // ScreenLock
 "screen_lock_locked" = "Mixin Locked";

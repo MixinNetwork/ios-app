@@ -43,6 +43,15 @@ public class TaskDatabase: Database {
         current.migrate()
     }
     
+    public func erase() {
+        do {
+            try pool.erase()
+        } catch {
+            Logger.database.error(category: "TaskDatabase", message: "Failed to erase the pool: \(error)")
+            reporter.report(error: error)
+        }
+    }
+
     private func migrate() {
         try! migrator.migrate(pool)
     }

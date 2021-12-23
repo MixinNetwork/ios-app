@@ -31,17 +31,10 @@ class RequestInAppNotificationJob: BaseJob {
     
     override func main() {
         let message = self.message
-        guard
-            let conversation = ConversationDAO.shared.getConversation(conversationId: message.conversationId),
-            conversation.status == ConversationStatus.SUCCESS.rawValue
-        else {
+        guard let conversation = ConversationDAO.shared.getConversation(conversationId: message.conversationId), conversation.status == ConversationStatus.SUCCESS.rawValue else {
             return
         }
-        if (!AppGroupUserDefaults.User.showMessageNotification && !conversation.isGroup()) ||
-           (!AppGroupUserDefaults.User.showGroupMessageNotification && conversation.isGroup()) {
-            AppDelegate.current.updateApplicationIconBadgeNumber()
-            return
-        }
+        
         let isMentioned = message.mentions?[myIdentityNumber] != nil
         guard !conversation.isMuted || isMentioned else {
             return

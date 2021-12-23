@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class AccountSettingViewController: SettingsTableViewController {
+final class AccountSettingViewController: SettingsTableViewController {
     
     private let dataSource = SettingsDataSource(sections: [
         SettingsSection(rows: [
@@ -10,19 +10,19 @@ class AccountSettingViewController: SettingsTableViewController {
             SettingsRow(title: R.string.localizable.setting_account_change_number(), accessory: .disclosure)
         ]),
         SettingsSection(rows: [
-            SettingsRow(title: R.string.localizable.setting_delete_account())
+            SettingsRow(title: R.string.localizable.setting_delete_account(), accessory: .disclosure)
         ])
     ])
-    
-    class func instance() -> UIViewController {
-        let vc = AccountSettingViewController()
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.setting_account())
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
+    }
+
+    class func instance() -> UIViewController {
+        let vc = AccountSettingViewController()
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.setting_account())
     }
     
 }
@@ -48,7 +48,7 @@ extension AccountSettingViewController: UITableViewDelegate {
                 }
             }
         } else {
-            viewController = DeleteAccountViewController.instance()
+            viewController = DeleteAccountSettingViewController.instance()
         }
         if let viewController = viewController {
             navigationController?.pushViewController(viewController, animated: true)

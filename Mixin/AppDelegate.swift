@@ -196,7 +196,6 @@ extension AppDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(handleClockSkew), name: MixinService.clockSkewDetectedNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(webSocketDidConnect), name: WebSocketService.didConnectNotification, object: nil)
         NotificationCenter.default.addObserver(JobService.shared, selector: #selector(JobService.restoreJobs), name: WebSocketService.didSendListPendingMessageNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(resetApplicationIconBadgeNumber), name: AppGroupUserDefaults.User.countUnreadMessagesNofitication, object: nil)
     }
 
     @objc func webSocketDidConnect() {
@@ -223,34 +222,10 @@ extension AppDelegate {
     
     @objc func updateApplicationIconBadgeNumber() {
         DispatchQueue.global().async {
-            guard LoginManager.shared.isLoggedIn,
-                  !AppGroupUserDefaults.User.needsUpgradeInMainApp,
-                  !MixinService.isStopProcessMessages,
-                  AppGroupUserDefaults.User.countUnreadMessages
-            else {
+            guard LoginManager.shared.isLoggedIn, !AppGroupUserDefaults.User.needsUpgradeInMainApp, !MixinService.isStopProcessMessages else {
                 return
             }
             let number = min(99, ConversationDAO.shared.getUnreadMessageCountWithoutMuted())
-            DispatchQueue.main.async {
-                UIApplication.shared.applicationIconBadgeNumber = number
-            }
-        }
-    }
-    
-    @objc func resetApplicationIconBadgeNumber() {
-        DispatchQueue.global().async {
-            guard LoginManager.shared.isLoggedIn,
-                  !AppGroupUserDefaults.User.needsUpgradeInMainApp,
-                  !MixinService.isStopProcessMessages
-            else {
-                return
-            }
-            let number: Int
-            if AppGroupUserDefaults.User.countUnreadMessages {
-                number = min(99, ConversationDAO.shared.getUnreadMessageCountWithoutMuted())
-            } else {
-                number = 0
-            }
             DispatchQueue.main.async {
                 UIApplication.shared.applicationIconBadgeNumber = number
             }

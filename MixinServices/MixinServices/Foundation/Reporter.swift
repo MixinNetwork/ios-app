@@ -55,11 +55,6 @@ open class Reporter {
             return
         }
         AppCenter.userId = account.user_id
-
-        var properties = CustomProperties()
-        properties.set(account.identity_number, forKey: "IdentityNumber")
-        properties.set(account.full_name, forKey: "FullName")
-        AppCenter.setCustomProperties(properties)
     }
     
     open func report(event: Event, userInfo: UserInfo? = nil) {

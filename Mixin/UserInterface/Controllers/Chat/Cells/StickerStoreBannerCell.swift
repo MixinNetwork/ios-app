@@ -1,11 +1,10 @@
 import UIKit
-import YYImage
 import SDWebImage
 import MixinServices
 
 class StickerStoreBannerCell: UICollectionViewCell {
     
-    private let imageView = YYAnimatedImageView()
+    private let imageView = SDAnimatedImageView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)

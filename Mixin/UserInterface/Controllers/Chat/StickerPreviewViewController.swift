@@ -11,7 +11,8 @@ class StickerPreviewViewController: UIViewController {
     @IBOutlet weak var stickerActionButton: UIButton!
     
     @IBOutlet weak var stickerPreviewViewTopConstraint: NSLayoutConstraint!
-    @IBOutlet weak var stickerPreviewViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var stickerPreviewViewLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var stickerPreviewViewTrailingConstraint: NSLayoutConstraint!
     
     private var message: MessageItem!
     private var albumItem: AlbumItem?
@@ -33,7 +34,6 @@ class StickerPreviewViewController: UIViewController {
         super.viewDidLoad()
         view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         view.layer.cornerRadius = 13
-        stickerPreviewViewHeightConstraint.constant = ScreenWidth.current <= .short ? 280 : 320
         updatePreferredContentSizeHeight()
         stickerView.load(message: message)
         stickerView.startAnimating()
@@ -88,8 +88,9 @@ extension StickerPreviewViewController {
         view.layoutIfNeeded()
         let window = AppDelegate.current.mainWindow
         let maxHeight = window.bounds.height - window.safeAreaInsets.top
+        let previewHeight = window.bounds.width - stickerPreviewViewLeadingConstraint.constant - stickerPreviewViewTrailingConstraint.constant
         let contentHeight = stickerPreviewViewTopConstraint.constant
-            + stickerPreviewViewHeightConstraint.constant
+            + previewHeight
             + window.safeAreaInsets.bottom
             + ((albumItem != nil && !albumItem!.stickers.isEmpty) ? 168 : 90)
         return min(maxHeight, contentHeight)

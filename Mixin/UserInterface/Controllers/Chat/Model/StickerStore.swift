@@ -139,48 +139,43 @@ extension StickerStore {
         }
     }
     
-}
-
-extension StickerStore {
-    
     private static func fetchSticker(stickerId: String, completion: @escaping (AlbumItem?) -> Void) {
         var item: AlbumItem?
         let queue = DispatchQueue(label: "one.mixin.messenger.StickerStore.fetchSticker", attributes: .concurrent)
         let group = DispatchGroup()
+        
+        func fetchStickers(in albums: [Album]) {
+            for album in albums {
+                group.enter()
+                queue.async(group: group) {
+                    AlbumDAO.shared.insertOrUpdateAblum(album: album)
+                    switch StickerAPI.stickers(albumId: album.albumId) {
+                    case let .success(stickers):
+                        let stickers = StickerDAO.shared.insertOrUpdateStickers(stickers: stickers, albumId: album.albumId)
+                        if stickers.contains(where: { $0.stickerId == stickerId }) {
+                            item = AlbumItem(album: album, stickers: stickers)
+                        }
+                    case let .failure(error):
+                        reporter.report(error: error)
+                    }
+                    group.leave()
+                }
+            }
+        }
+        
         group.enter()
         queue.async(group: group) {
             let stickerAlbums = AlbumDAO.shared.getAlbumsUpdatedAt()
-            StickerAPI.albums { (result) in
-                switch result {
-                case let .success(albums):
-                    let newAlbums = albums.filter { stickerAlbums[$0.albumId] != $0.updatedAt }
-                    guard !newAlbums.isEmpty else {
-                        group.leave()
-                        return
-                    }
-                    for album in newAlbums {
-                        group.enter()
-                        queue.async(group: group) {
-                            AlbumDAO.shared.insertOrUpdateAblum(album: album)
-                            StickerAPI.stickers(albumId: album.albumId) { (result) in
-                                switch result {
-                                case let .success(stickers):
-                                    let stickers = StickerDAO.shared.insertOrUpdateStickers(stickers: stickers, albumId: album.albumId)
-                                    if stickers.contains(where: { $0.stickerId == stickerId }) {
-                                        item = AlbumItem(album: album, stickers: stickers)
-                                    }
-                                case let .failure(error):
-                                    reporter.report(error: error)
-                                }
-                                group.leave()
-                            }
-                        }
-                    }
-                case let .failure(error):
-                    reporter.report(error: error)
+            switch StickerAPI.albums() {
+            case let .success(albums):
+                let newAlbums = albums.filter { stickerAlbums[$0.albumId] != $0.updatedAt }
+                if !newAlbums.isEmpty {
+                    fetchStickers(in: newAlbums)
                 }
-                group.leave()
+            case let .failure(error):
+                reporter.report(error: error)
             }
+            group.leave()
         }
         group.notify(queue: .main) {
             completion(item)

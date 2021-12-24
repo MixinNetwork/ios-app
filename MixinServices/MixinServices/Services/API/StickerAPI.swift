@@ -28,6 +28,10 @@ public class StickerAPI : MixinAPI {
         request(method: .get, path: Path.albums(id: albumId), completion: completion)
     }
     
+    public static func stickers(albumId: String) -> MixinAPI.Result<[StickerResponse]> {
+        request(method: .get, path: Path.albums(id: albumId))
+    }
+    
     public static func addSticker(stickerBase64: String, completion: @escaping (MixinAPI.Result<StickerResponse>) -> Void) {
         request(method: .post, path: Path.add, parameters: ["data_base64": stickerBase64], completion: completion)
     }

@@ -5,7 +5,6 @@ platform :ios, '12.0'
 
 def mixin_services
   pod 'libsignal-protocol-c', :git => 'https://github.com/MixinNetwork/libsignal-protocol-c.git'
-  pod 'lottie-ios', :git => 'https://github.com/airbnb/lottie-ios.git', :branch => 'lottie/objectiveC'
   pod 'MixinServices', :path => './MixinServices', :testspecs => ['Tests']
 end
 
@@ -24,6 +23,7 @@ target 'Mixin' do
   pod 'R.swift'
   pod 'AcknowList'
   pod 'libwebp'
+  pod 'SDWebImageLottieCoder'
   mixin_services
 end
 

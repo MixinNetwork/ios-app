@@ -5,7 +5,7 @@ class StickerPreviewItemCell: UICollectionViewCell {
     let stickerView = AnimatedStickerView()
     
     var image: UIImage? {
-        stickerView.imageViewIfLoaded?.image
+        stickerView.imageView.image
     }
     
     override init(frame: CGRect) {

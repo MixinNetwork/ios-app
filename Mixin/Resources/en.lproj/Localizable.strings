@@ -904,13 +904,14 @@
 "setting_screen_lock_timeout_hour" = "1 Hour";
 "setting_screen_lock_timeout_off" = "Off";
 "setting_delete_account" = "Delete My Account";
-"setting_delete_account_hint" = "This will delete your account info, profile, and all of your messages. Your blockchain wallet cannot be deleted.";
 "setting_change_number_instead" = "Change Number Instead";
 "setting_account" = "Account";
 "setting_account_privacy" = "Privacy";
 "setting_account_security" = "Security";
 "setting_account_change_number" = "Change Number";
-"setting_delete_account_content" = "Your Mixin wallet still has some assets that can be withdrawn to other wallets or exchanges. Once the account is cancelled, these assets will be abandoned along with the wallet and cannot be recovered.";
+"setting_delete_account_hint_profile" = "Delete your account info and profile photo";
+"setting_delete_account_hint_message" = "Local messages and iCloud Backups will not be beleted automatically";
+"setting_delete_account_hint_transaction" = "Transactions cannot be deleted";
 "setting_delete_account_view_wallet" = "View Wallet";
 "setting_delete_account_confirm_title" = "Enter your PIN to delete your account";
 "setting_delete_account_confirm_hint" = "If you continue, your profile and account details will be delete on January 18,2022. read our document to Learn more.";

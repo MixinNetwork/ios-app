@@ -10,6 +10,7 @@ extension URL {
     static let emergencyContact = URL(string: "https://mixinmessenger.zendesk.com/hc/articles/360029154692")!
     static let unknownCategory = URL(string: "https://mixinmessenger.zendesk.com/hc/articles/360043776071")!
     static let pinTIP = URL(string: "https://tip.id")!
+    static let deleteAccount = URL(string: "https://mixinmessenger.zendesk.com/hc/articles/4414170627988")!
     
     func getKeyVals() -> [String: String] {
         return URLComponents(url: self, resolvingAgainstBaseURL: true)?.getKeyVals() ?? [:]

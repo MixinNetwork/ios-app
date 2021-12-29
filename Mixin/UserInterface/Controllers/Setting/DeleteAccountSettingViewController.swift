@@ -3,6 +3,7 @@ import MixinServices
 
 final class DeleteAccountSettingViewController: SettingsTableViewController {
 
+    private let tableHeaderView = R.nib.deleteAccountTableHeaderView(owner: nil)!
     private let dataSource = SettingsDataSource(sections: [
         SettingsSection(rows: [
             SettingsRow(title: R.string.localizable.setting_delete_account(), titleStyle: .destructive)
@@ -14,9 +15,23 @@ final class DeleteAccountSettingViewController: SettingsTableViewController {
         
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.tableHeaderView = R.nib.deleteAccountTableHeaderView(owner: nil)
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
+        updateTableHeaderView()
+    }
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        if view.bounds.width != tableHeaderView.frame.width {
+            updateTableHeaderView()
+        }
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if traitCollection.preferredContentSizeCategory != previousTraitCollection?.preferredContentSizeCategory {
+            updateTableHeaderView()
+        }
     }
     
     class func instance() -> UIViewController {
@@ -30,11 +45,7 @@ extension DeleteAccountSettingViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if LoginManager.shared.account?.has_pin ?? false {
-            if indexPath.section == 0 {
-                deleteAccount()
-            } else {
-                changeNumber()
-            }
+            indexPath.section == 0 ? verifyPIN() : changeNumber()
         } else {
             let vc = WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil)
             navigationController?.pushViewController(vc, animated: true)
@@ -44,6 +55,13 @@ extension DeleteAccountSettingViewController: UITableViewDelegate {
 }
 
 extension DeleteAccountSettingViewController {
+    
+    private func updateTableHeaderView() {
+        let sizeToFit = CGSize(width: view.bounds.width, height: UIView.layoutFittingExpandedSize.height)
+        let headerHeight = tableHeaderView.sizeThatFits(sizeToFit).height
+        tableHeaderView.frame.size = CGSize(width: view.bounds.width, height: headerHeight)
+        tableView.tableHeaderView = tableHeaderView
+    }
     
     private func deleteAccount() {
         DispatchQueue.global().async { [weak self] in
@@ -63,6 +81,7 @@ extension DeleteAccountSettingViewController {
     
     private func changeNumber() {
         let vc = VerifyPinNavigationController(rootViewController: ChangeNumberVerifyPinViewController())
+        vc.modalPresentationStyle = .overFullScreen
         present(vc, animated: true, completion: nil)
     }
     
@@ -71,43 +90,25 @@ extension DeleteAccountSettingViewController {
         navigationController?.pushViewController(vc, animated: true)
     }
     
-    private func presentDeleteAccountHintWindow(assets: [AssetItem]) {
-        func presentWindow() {
-            let window = DeleteAccountHintWindow.instance()
-            window.onViewWallet = presentWallet
-            window.onContinue = verifyNumber
-            window.render(assets: assets)
-            window.presentPopupControllerAnimated()
-        }
-        if shouldValidatePin {
-            let validator = PinValidationViewController(onSuccess: { (_) in
-                presentWindow()
-            })
-            present(validator, animated: true, completion: nil)
-        } else {
-            presentWindow()
-        }
+    private func verifyPIN() {
+        let vc = DeleteAccountVerifyPINViewController()
+        vc.onSuccess = deleteAccount
+        let navi = VerifyPinNavigationController(rootViewController: vc)
+        navi.modalPresentationStyle = .overFullScreen
+        present(navi, animated: true, completion: nil)
     }
     
+    private func presentDeleteAccountHintWindow(assets: [AssetItem]) {
+        let window = DeleteAccountHintWindow.instance()
+        window.onViewWallet = presentWallet
+        window.onContinue = verifyNumber
+        window.render(assets: assets)
+        window.presentPopupControllerAnimated()
+    }
+ 
     private func presentWallet() {
         let wallet = R.storyboard.wallet.wallet()!
-        if shouldValidatePin {
-            let validator = PinValidationViewController(onSuccess: { (_) in
-                self.navigationController?.pushViewController(wallet, animated: true)
-            })
-            present(validator, animated: true, completion: nil)
-        } else {
-            navigationController?.pushViewController(wallet, animated: true)
-        }
-    }
-    
-    private var shouldValidatePin: Bool {
-        if let date = AppGroupUserDefaults.Wallet.lastPinVerifiedDate {
-             return -date.timeIntervalSinceNow > AppGroupUserDefaults.Wallet.periodicPinVerificationInterval
-        } else {
-            AppGroupUserDefaults.Wallet.periodicPinVerificationInterval = PeriodicPinVerificationInterval.min
-            return true
-        }
+        navigationController?.pushViewController(wallet, animated: true)
     }
     
 }

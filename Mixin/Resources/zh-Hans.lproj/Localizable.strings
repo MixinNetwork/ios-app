@@ -905,13 +905,14 @@
 "setting_screen_lock_timeout_hour" = "1 小时";
 "setting_screen_lock_timeout_off" = "关闭";
 "setting_delete_account" = "删除我的账户";
-"setting_delete_account_hint" = "这将删除您的账户信息、个人资料和所有的消息。您的区块链钱包不会被删除。";
 "setting_change_number_instead" = "更换手机号";
 "setting_account" = "账户";
 "setting_account_privacy" = "隐私";
 "setting_account_security" = "安全";
 "setting_account_change_number" = "更换手机号";
-"setting_delete_account_content" = "您的 Mixin 钱包还有一些资产，可以提现至其他钱包或交易所。账户一旦注销，这些资产将和钱包一起被弃用无法找回。";
+"setting_delete_account_hint_profile" = "删除您的账户和个人照片";
+"setting_delete_account_hint_message" = "本地消息和 iCloud 备份不会被自动删除";
+"setting_delete_account_hint_transaction" = "交易不能被删除";
 "setting_delete_account_view_wallet" = "查看钱包";
 "setting_delete_account_confirm_title" = "输入您的钱包密码以删除账户";
 "setting_delete_account_confirm_hint" = "如果继续，您的个人资料和账户信息将在%@被删除。阅读文档以了解更多。";

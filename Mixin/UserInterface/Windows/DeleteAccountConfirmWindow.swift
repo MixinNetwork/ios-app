@@ -28,7 +28,6 @@ final class DeleteAccountConfirmWindow: BottomSheetView {
         textLabel.textColor = .title
         textLabel.detectLinks = false
         
-        //TODO: ‼️ what is delete data?
         let date = DateFormatter.deleteAccountFormatter.string(from: Date())
         let text = R.string.localizable.setting_delete_account_confirm_hint(date)
         textLabel.text = text
@@ -37,8 +36,7 @@ final class DeleteAccountConfirmWindow: BottomSheetView {
             .range(of: R.string.localizable.action_learn_more(), options: [.backwards, .caseInsensitive])
         if linkRange.location != NSNotFound && linkRange.length != 0 {
             textLabel.linkColor = .theme
-            //TODO: ‼️ update link url
-            textLabel.additionalLinksMap = [linkRange: URL.pinTIP]
+            textLabel.additionalLinksMap = [linkRange: URL.deleteAccount]
         }
     }
     
@@ -79,7 +77,7 @@ extension DeleteAccountConfirmWindow {
     private func deleteAccount() {
         UserDatabase.current.erase()
         TaskDatabase.current.erase()
-        //TODO: ‼️ logout desktop ?
+        //TODO: ‼️ logout desktop ? delete messages ?
         LoginManager.shared.logout(from: "DeleteAccount")
     }
     
@@ -88,6 +86,7 @@ extension DeleteAccountConfirmWindow {
 extension DeleteAccountConfirmWindow: PinFieldDelegate {
     
     func inputFinished(pin: String) {
+        //TODO: ‼️ new delete account api ?
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         AccountAPI.verify(pin: pin, completion: { [weak self] (result) in

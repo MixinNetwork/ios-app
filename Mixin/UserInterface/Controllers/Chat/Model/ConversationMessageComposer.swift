@@ -158,7 +158,7 @@ final class ConversationMessageComposer {
             message.stickerId = sticker.stickerId
             queue.async {
                 reporter.report(event: .sendSticker, userInfo: ["stickerId": sticker.stickerId])
-                let albumId = AlbumDAO.shared.getAlbum(stickerId: sticker.stickerId)?.albumId
+                let albumId = sticker.albumId ?? AlbumDAO.shared.getAlbum(stickerId: sticker.stickerId)?.albumId
                 let transferData = TransferStickerData(stickerId: sticker.stickerId, name: sticker.name, albumId: albumId)
                 message.content = try! JSONEncoder().encode(transferData).base64EncodedString()
                 SendMessageService.shared.sendMessage(message: message,

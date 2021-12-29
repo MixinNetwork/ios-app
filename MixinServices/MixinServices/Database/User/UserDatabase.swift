@@ -166,6 +166,7 @@ public final class UserDatabase: Database {
             .init(key: .quoteMessageId, constraints: "TEXT"),
             .init(key: .quoteContent, constraints: "BLOB"),
             .init(key: .createdAt, constraints: "TEXT NOT NULL"),
+            .init(key: .albumId, constraints: "TEXT"),
         ]),
         ColumnMigratableTableDefinition<MessageHistory>(constraints: nil, columns: [
             .init(key: .messageId, constraints: "TEXT PRIMARY KEY"),
@@ -218,6 +219,7 @@ public final class UserDatabase: Database {
             .init(key: .assetWidth, constraints: "INTEGER NOT NULL"),
             .init(key: .assetHeight, constraints: "INTEGER NOT NULL"),
             .init(key: .lastUseAt, constraints: "TEXT"),
+            .init(key: .albumId, constraints: "TEXT")
         ]),
         ColumnMigratableTableDefinition<TopAsset>(constraints: nil, columns: [
             .init(key: .assetId, constraints: "TEXT PRIMARY KEY"),
@@ -429,17 +431,17 @@ public final class UserDatabase: Database {
             try db.execute(sql: "CREATE INDEX IF NOT EXISTS index_messages_pick ON messages(conversation_id, status, user_id, created_at)")
         }
         
-        migrator.registerMigration("stickers_store") { db in
-            let infos = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(albums)")
-            let columnNames = infos.map(\.name)
-            if !columnNames.contains("banner") {
+        migrator.registerMigration("stickers_store_1") { db in
+            let albumInfos = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(albums)")
+            let albumColumnNames = albumInfos.map(\.name)
+            if !albumColumnNames.contains("banner") {
                 try db.execute(sql: "ALTER TABLE albums ADD COLUMN banner TEXT")
             }
-            if !columnNames.contains("added") {
+            if !albumColumnNames.contains("added") {
                 try db.execute(sql: "ALTER TABLE albums ADD COLUMN added INTEGER NOT NULL DEFAULT 0")
                 try db.execute(sql: "UPDATE albums SET added = 1")
             }
-            if !columnNames.contains("ordered_at") {
+            if !albumColumnNames.contains("ordered_at") {
                 try db.execute(sql: "ALTER TABLE albums ADD COLUMN ordered_at INTEGER NOT NULL DEFAULT 0")
                 let albums = try Album
                     .order(Album.column(of: .updatedAt).asc)
@@ -449,6 +451,14 @@ public final class UserDatabase: Database {
                         .filter(Album.column(of: .albumId) == album.albumId)
                         .updateAll(db, [Album.column(of: .orderedAt).set(to: index)])
                 }
+            }
+            let messageInfos = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(messages)")
+            if !messageInfos.map(\.name).contains("album_id") {
+                try db.execute(sql: "ALTER TABLE messages ADD COLUMN album_id TEXT")
+            }
+            let stickerInfos = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(stickers)")
+            if !stickerInfos.map(\.name).contains("album_id") {
+                try db.execute(sql: "ALTER TABLE stickers ADD COLUMN album_id TEXT")
             }
         }
         

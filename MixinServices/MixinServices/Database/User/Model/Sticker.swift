@@ -10,8 +10,9 @@ public struct Sticker {
     public let assetWidth: Int
     public let assetHeight: Int
     public var lastUseAt: String?
+    public let albumId: String?
     
-    public init(stickerId: String, name: String, assetUrl: String, assetType: String, assetWidth: Int, assetHeight: Int, lastUseAt: String?) {
+    public init(stickerId: String, name: String, assetUrl: String, assetType: String, assetWidth: Int, assetHeight: Int, lastUseAt: String?, albumId: String?) {
         self.stickerId = stickerId
         self.name = name
         self.assetUrl = assetUrl
@@ -19,6 +20,7 @@ public struct Sticker {
         self.assetWidth = assetWidth
         self.assetHeight = assetHeight
         self.lastUseAt = lastUseAt
+        self.albumId = albumId
     }
     
     public init(response: StickerResponse) {
@@ -28,7 +30,8 @@ public struct Sticker {
                   assetType: response.assetType,
                   assetWidth: response.assetWidth,
                   assetHeight: response.assetHeight,
-                  lastUseAt: nil)
+                  lastUseAt: nil,
+                  albumId: response.albumId)
     }
     
 }
@@ -43,6 +46,7 @@ extension Sticker: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mix
         case assetWidth = "asset_width"
         case assetHeight = "asset_height"
         case lastUseAt = "last_used_at"
+        case albumId = "album_id"
     }
     
     public init(from decoder: Decoder) throws {
@@ -54,6 +58,7 @@ extension Sticker: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mix
         assetWidth = try container.decodeIfPresent(Int.self, forKey: .assetWidth) ?? 0
         assetHeight = try container.decodeIfPresent(Int.self, forKey: .assetHeight) ?? 0
         lastUseAt = try container.decodeIfPresent(String.self, forKey: .lastUseAt)
+        albumId = try container.decodeIfPresent(String.self, forKey: .albumId)
     }
     
 }

@@ -69,6 +69,7 @@ public final class MessageItem {
     public var isPinned: Bool?
     
     public var isStickerAdded: Bool?
+    public var albumId: String?
 
     public lazy var appButtons: [AppButtonData]? = {
         guard category == MessageCategory.APP_BUTTON_GROUP.rawValue, let content = content, let data = Data(base64Encoded: content) else {
@@ -247,6 +248,7 @@ extension MessageItem: Codable, MixinFetchableRecord {
         case isPinned = "pinned"
         
         case isStickerAdded
+        case albumId = "album_id"
     }
     
 }

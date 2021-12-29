@@ -13,6 +13,7 @@ public struct StickerItem {
     public var lastUseAt: String?
     public let category: String?
     public let isAdded: Bool
+    public let albumId: String?
     
     public var shouldCachePersistently: Bool {
         return isAdded
@@ -36,6 +37,7 @@ extension StickerItem: Codable, DatabaseColumnConvertible, MixinFetchableRecord 
         case lastUseAt = "last_used_at"
         case category
         case isAdded = "added"
+        case albumId = "album_id"
     }
     
     public init(from decoder: Decoder) throws {
@@ -49,6 +51,7 @@ extension StickerItem: Codable, DatabaseColumnConvertible, MixinFetchableRecord 
         lastUseAt = try container.decodeIfPresent(String.self, forKey: .lastUseAt)
         category = try container.decodeIfPresent(String.self, forKey: .category)
         isAdded = try container.decode(Bool.self, forKey: .isAdded) ?? false
+        albumId = try container.decode(String.self, forKey: .isAdded)
     }
     
 }

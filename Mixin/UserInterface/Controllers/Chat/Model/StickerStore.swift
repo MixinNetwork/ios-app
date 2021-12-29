@@ -68,20 +68,19 @@ enum StickerStore {
         }
     }
     
-    static func loadAlbum(stickerId: String, completion: @escaping (AlbumItem?) -> Void) {
+    static func loadAlbum(stickerId: String, albumId: String?, category: String?, completion: @escaping (AlbumItem?) -> Void) {
         DispatchQueue.global(qos: .userInitiated).async {
-            if let album = AlbumDAO.shared.getAlbum(stickerId: stickerId) {
-                let albumItem: AlbumItem?
-                if album.category == AlbumCategory.PERSONAL.rawValue {
-                    albumItem = nil
-                } else {
-                    albumItem = AlbumItem(album: album, stickers: StickerDAO.shared.getStickers(albumId: album.albumId))
+            if category == AlbumCategory.SYSTEM.rawValue {
+                if let album = AlbumDAO.shared.getAlbum(stickerId: stickerId, category: category) {
+                    let albumItem = AlbumItem(album: album, stickers: StickerDAO.shared.getStickers(albumId: album.albumId))
+                    DispatchQueue.main.async {
+                        completion(albumItem)
+                    }
+                } else if let albumId = albumId {
+                    fetchStickers(albumId: albumId, completion: completion)
                 }
-                DispatchQueue.main.async {
-                    completion(albumItem)
-                }
-            } else {
-                fetchSticker(stickerId: stickerId, completion: completion)
+            } else if let albumId = albumId {
+                fetchStickers(albumId: albumId, completion: completion)
             }
         }
     }
@@ -139,46 +138,23 @@ extension StickerStore {
         }
     }
     
-    private static func fetchSticker(stickerId: String, completion: @escaping (AlbumItem?) -> Void) {
-        var item: AlbumItem?
-        let queue = DispatchQueue(label: "one.mixin.messenger.StickerStore.fetchSticker", attributes: .concurrent)
-        let group = DispatchGroup()
-        
-        func fetchStickers(in albums: [Album]) {
-            for album in albums {
-                group.enter()
-                queue.async(group: group) {
-                    AlbumDAO.shared.insertOrUpdateAblum(album: album)
-                    switch StickerAPI.stickers(albumId: album.albumId) {
-                    case let .success(stickers):
-                        let stickers = StickerDAO.shared.insertOrUpdateStickers(stickers: stickers, albumId: album.albumId)
-                        if stickers.contains(where: { $0.stickerId == stickerId }) {
-                            item = AlbumItem(album: album, stickers: stickers)
-                        }
-                    case let .failure(error):
-                        reporter.report(error: error)
-                    }
-                    group.leave()
-                }
-            }
-        }
-        
-        group.enter()
-        queue.async(group: group) {
-            let stickerAlbums = AlbumDAO.shared.getAlbumsUpdatedAt()
-            switch StickerAPI.albums() {
-            case let .success(albums):
-                let newAlbums = albums.filter { stickerAlbums[$0.albumId] != $0.updatedAt }
-                if !newAlbums.isEmpty {
-                    fetchStickers(in: newAlbums)
-                }
+    private static func fetchStickers(albumId: String, completion: @escaping (AlbumItem?) -> Void) {
+        var albumItem: AlbumItem?
+        switch StickerAPI.album(albumId: albumId) {
+        case let .success(album):
+            AlbumDAO.shared.insertOrUpdateAblum(album: album)
+            switch StickerAPI.stickers(albumId: albumId) {
+            case let .success(stickers):
+                let stickers = StickerDAO.shared.insertOrUpdateStickers(stickers: stickers, albumId: albumId)
+                albumItem = AlbumItem(album: album, stickers: stickers)
             case let .failure(error):
                 reporter.report(error: error)
             }
-            group.leave()
+        case let .failure(error):
+            reporter.report(error: error)
         }
-        group.notify(queue: .main) {
-            completion(item)
+        DispatchQueue.main.async {
+            completion(albumItem)
         }
     }
     

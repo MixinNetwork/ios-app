@@ -13,13 +13,17 @@ public final class AlbumDAO: UserDatabaseDAO {
     public static let addedAlbumsDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.AlbumDAO.AddedAlbumsDidChange")
     public static let albumsOrderDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.AlbumDAO.AlbumsOrderDidChange")
     
-    public func getAlbum(stickerId: String) -> Album? {
-        let sql = """
-            SELECT a.*
-            FROM albums a
-            INNER JOIN sticker_relationships sa ON sa.album_id = a.album_id AND sa.sticker_id = ?
-            LIMIT 1
+    public func getAlbum(stickerId: String, category: String? = nil) -> Album? {
+        var sql = """
+        SELECT a.*
+        FROM albums a
+        INNER JOIN sticker_relationships sa ON sa.album_id = a.album_id AND sa.sticker_id = ?
         """
+        if let category = category {
+            sql += " WHERE a.category = '\(category)'"
+        } else {
+            sql += " LIMIT 1"
+        }
         return db.select(with: sql, arguments: [stickerId])
     }
     

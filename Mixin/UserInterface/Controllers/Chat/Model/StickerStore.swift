@@ -68,9 +68,9 @@ enum StickerStore {
         }
     }
     
-    static func loadAlbum(stickerId: String, albumId: String?, category: String?, completion: @escaping (AlbumItem?) -> Void) {
+    static func loadAlbum(stickerId: String, albumId: String?, category: AlbumCategory?, completion: @escaping (AlbumItem?) -> Void) {
         DispatchQueue.global(qos: .userInitiated).async {
-            if category == AlbumCategory.SYSTEM.rawValue {
+            if category == AlbumCategory.SYSTEM {
                 if let album = AlbumDAO.shared.getAlbum(stickerId: stickerId, category: category) {
                     let albumItem = AlbumItem(album: album, stickers: StickerDAO.shared.getStickers(albumId: album.albumId))
                     DispatchQueue.main.async {
@@ -81,6 +81,10 @@ enum StickerStore {
                 }
             } else if let albumId = albumId {
                 fetchStickers(albumId: albumId, completion: completion)
+            } else {
+                DispatchQueue.main.async {
+                    completion(nil)
+                }
             }
         }
     }

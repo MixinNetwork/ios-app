@@ -37,8 +37,15 @@ class StickerPreviewViewController: UIViewController {
         updatePreferredContentSizeHeight()
         stickerView.load(message: message)
         stickerView.startAnimating()
-        if message.assetCategory != AlbumCategory.PERSONAL.rawValue, let stickerId = message.stickerId {
-            loadAlbum(stickerId: stickerId, albumId: message.albumId, category: message.assetCategory)
+        
+        let category: AlbumCategory?
+        if let assetCategory = message.assetCategory {
+            category = AlbumCategory(rawValue: assetCategory)
+        } else {
+            category = nil
+        }
+        if category != AlbumCategory.PERSONAL, let stickerId = message.stickerId {
+            loadAlbum(stickerId: stickerId, albumId: message.albumId, category: category)
         }
     }
     
@@ -96,7 +103,7 @@ extension StickerPreviewViewController {
         return min(maxHeight, contentHeight)
     }
     
-    private func loadAlbum(stickerId: String, albumId: String?, category: String?) {
+    private func loadAlbum(stickerId: String, albumId: String?, category: AlbumCategory?) {
         activityIndicatorView.startAnimating()
         StickerStore.loadAlbum(stickerId: stickerId, albumId: albumId, category: category) { albumItem in
             self.activityIndicatorView.stopAnimating()

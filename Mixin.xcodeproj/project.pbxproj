@@ -563,6 +563,10 @@
 		7C4E2B0426A9BDAD008190F5 /* StickersEditingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4E2B0326A9BDAC008190F5 /* StickersEditingViewController.swift */; };
 		7C4E2B0626A9BE50008190F5 /* StickersEditingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4E2B0526A9BE50008190F5 /* StickersEditingCell.swift */; };
 		7C4FF5AA26AE614C003E39AC /* StickerPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4FF5A926AE614C003E39AC /* StickerPreviewViewController.swift */; };
+		7C247AA5277AED6800112A30 /* StackedPhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C247AA4277AED6800112A30 /* StackedPhotoView.swift */; };
+		7C247AA7277AEDD100112A30 /* StackedPhotoLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C247AA6277AEDD100112A30 /* StackedPhotoLayout.swift */; };
+		7C247AA9277AF2DA00112A30 /* StackedPhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C247AA8277AF2DA00112A30 /* StackedPhotoCell.swift */; };
+		7C247C67277C0DC100112A30 /* BadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C247C66277C0DC100112A30 /* BadgeView.swift */; };
 		7C5823D5268966A1003AA142 /* HomeAppsFolderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5823D4268966A1003AA142 /* HomeAppsFolderViewController.swift */; };
 		7C5B65CE27701A49004EDD53 /* DeleteAccountHintWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5B65CD27701A49004EDD53 /* DeleteAccountHintWindow.swift */; };
 		7C5B65D027701A62004EDD53 /* DeleteAccountHintWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C5B65CF27701A62004EDD53 /* DeleteAccountHintWindow.xib */; };
@@ -1536,6 +1540,10 @@
 		7C4E2B0326A9BDAC008190F5 /* StickersEditingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersEditingViewController.swift; sourceTree = "<group>"; };
 		7C4E2B0526A9BE50008190F5 /* StickersEditingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersEditingCell.swift; sourceTree = "<group>"; };
 		7C4FF5A926AE614C003E39AC /* StickerPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerPreviewViewController.swift; sourceTree = "<group>"; };
+		7C247AA4277AED6800112A30 /* StackedPhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackedPhotoView.swift; sourceTree = "<group>"; };
+		7C247AA6277AEDD100112A30 /* StackedPhotoLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackedPhotoLayout.swift; sourceTree = "<group>"; };
+		7C247AA8277AF2DA00112A30 /* StackedPhotoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackedPhotoCell.swift; sourceTree = "<group>"; };
+		7C247C66277C0DC100112A30 /* BadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BadgeView.swift; sourceTree = "<group>"; };
 		7C5823D4268966A1003AA142 /* HomeAppsFolderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsFolderViewController.swift; sourceTree = "<group>"; };
 		7C5B65CD27701A49004EDD53 /* DeleteAccountHintWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountHintWindow.swift; sourceTree = "<group>"; };
 		7C5B65CF27701A62004EDD53 /* DeleteAccountHintWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeleteAccountHintWindow.xib; sourceTree = "<group>"; };
@@ -2134,6 +2142,7 @@
 				94D63DD52646C29100FD7EE8 /* MessageViewModelFactory.swift */,
 				7CC7304F2745F95D002780F5 /* StickerStore.swift */,
 				7CF7416D27DAD93000DA0004 /* SnapCenterFlowLayout.swift */,
+				7C247AA6277AEDD100112A30 /* StackedPhotoLayout.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -3346,6 +3355,9 @@
 				7CB0954E26CCED2E0049F4C7 /* PinMessageBannerView.swift */,
 				7C14CFC026CA35CF0094AF4A /* StaticMessagesView.xib */,
 				7C359DCF26A6C173001D3AE4 /* StickerStoreBannerView.swift */,
+				7C247AA4277AED6800112A30 /* StackedPhotoView.swift */,
+				7C247AA8277AF2DA00112A30 /* StackedPhotoCell.swift */,
+				7C247C66277C0DC100112A30 /* BadgeView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -4389,6 +4401,7 @@
 				7B1C8B992513265200F7A817 /* ExternalSharingPreviewWrapperView.swift in Sources */,
 				E081796A23C32ACA005FEEAC /* PostMessageCell.swift in Sources */,
 				DFD089E21FE4041400A7D815 /* AttachmentUploadJob.swift in Sources */,
+				7C247AA9277AF2DA00112A30 /* StackedPhotoCell.swift in Sources */,
 				7B56DBD11FEFC5B900B50D82 /* PinField.swift in Sources */,
 				7B2E3E581FA0815B00DDDDEB /* LoginNavigationController.swift in Sources */,
 				941655C425CD7DA7007E76D0 /* AudioSessionClientPriority.swift in Sources */,
@@ -4440,6 +4453,7 @@
 				7BDBDE6C223636B8006220DF /* ShadowImageView.swift in Sources */,
 				7BBC6EA81FA98D1A00DC130A /* AddPeopleViewController.swift in Sources */,
 				7CB0955926CE69250049F4C7 /* PinMessageViewModel.swift in Sources */,
+				7C247C67277C0DC100112A30 /* BadgeView.swift in Sources */,
 				DFD93F1E2111C0030013401A /* UIDeviceExtension.swift in Sources */,
 				7B35AF78228AA3BD00E8101D /* MessagesWithUserSearchResult.swift in Sources */,
 				7B61B9CA2538E1C8001F94A3 /* ScreenHeightCompatibleLayoutConstraint.swift in Sources */,
@@ -4642,6 +4656,7 @@
 				E090B91123B0B2F20012C7E9 /* MessageDAO+Search.swift in Sources */,
 				E05D991B2390C632009F9E8D /* FavoriteAppCell.swift in Sources */,
 				7B894AF3205BF8660065A1B8 /* AddressViewController.swift in Sources */,
+				7C247AA7277AEDD100112A30 /* StackedPhotoLayout.swift in Sources */,
 				7B95533A224380B200CE95E6 /* PinValidationViewController.swift in Sources */,
 				7B09E5581FD1264C002E45D3 /* TextMessageLabel.swift in Sources */,
 				7BAE1B44223B51F3004F2D16 /* ChangeNumberContext.swift in Sources */,
@@ -4756,6 +4771,8 @@
 				7B4ADAA7243C7C8400F04CA6 /* HomeAppsViewController.swift in Sources */,
 				94659DAA25C13793003403E5 /* DevicePerformance.swift in Sources */,
 				DF43304522648B32006D971D /* AssetInfoWindow.swift in Sources */,
+				7C247AA5277AED6800112A30 /* StackedPhotoView.swift in Sources */,
+				84A10E9A256B6416006AC741 /* TickerResponse.swift in Sources */,
 				7B492F982252159B00C05A45 /* ActivityIndicatorView.swift in Sources */,
 				7BC022E7214A150400B7A398 /* AuthorizationTableViewCell.swift in Sources */,
 				7B7ABBE02539799900070B71 /* ScreenWidth.swift in Sources */,

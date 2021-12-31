@@ -150,6 +150,7 @@ public final class StickerDAO: UserDatabaseDAO {
                 Sticker.column(of: .assetType).set(to: response.assetType),
                 Sticker.column(of: .assetWidth).set(to: response.assetWidth),
                 Sticker.column(of: .assetHeight).set(to: response.assetHeight),
+                Sticker.column(of: .albumId).set(to: response.albumId)
             ]
             try Sticker
                 .filter(Sticker.column(of: .stickerId) == response.stickerId)

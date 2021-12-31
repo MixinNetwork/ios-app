@@ -51,7 +51,7 @@ extension StickerItem: Codable, DatabaseColumnConvertible, MixinFetchableRecord 
         lastUseAt = try container.decodeIfPresent(String.self, forKey: .lastUseAt)
         category = try container.decodeIfPresent(String.self, forKey: .category)
         isAdded = try container.decode(Bool.self, forKey: .isAdded) ?? false
-        albumId = try container.decode(String.self, forKey: .isAdded)
+        albumId = try container.decode(String.self, forKey: .albumId)
     }
     
 }

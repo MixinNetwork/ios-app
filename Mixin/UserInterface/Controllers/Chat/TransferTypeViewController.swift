@@ -29,10 +29,6 @@ class TransferTypeViewController: PopupSearchableTableViewController {
             reordered.insert(selected, at: 0)
             self.assets = reordered
         }
-        let hiddenAssets = AppGroupUserDefaults.Wallet.hiddenAssetIds
-        self.assets = self.assets.filter({ (asset) -> Bool in
-            return hiddenAssets[asset.assetId] == nil
-        })
         tableView.register(R.nib.transferTypeCell)
         tableView.dataSource = self
         tableView.delegate = self

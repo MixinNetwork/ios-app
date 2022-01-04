@@ -33,6 +33,10 @@ public enum AppGroupContainer {
         return url
     }
     
+    public static var webRTCLogURL: URL {
+        logUrl.appendingPathComponent("webrtc")
+    }
+    
     public static var userDatabaseUrl: URL {
         accountUrl.appendingPathComponent("mixin.db", isDirectory: false)
     }

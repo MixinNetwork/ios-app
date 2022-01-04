@@ -24,6 +24,28 @@ class CallService: NSObject {
     
     let membersManager = GroupCallMembersManager()
     
+    var isWebRTCLogEnabled = false {
+        didSet {
+            if isWebRTCLogEnabled {
+                if rtcFileLogger == nil {
+                    RTCSetMinDebugLogLevel(.warning)
+                    let logger = RTCFileLogger(dirPath: AppGroupContainer.webRTCLogURL.path,
+                                               maxFileSize: 2 * bytesPerMegaByte,
+                                               rotationType: .typeApp)
+                    logger.severity = .warning
+                    logger.start()
+                    rtcFileLogger = logger
+                }
+            } else {
+                if let logger = rtcFileLogger {
+                    RTCSetMinDebugLogLevel(.none)
+                    logger.stop()
+                    rtcFileLogger = nil
+                }
+            }
+        }
+    }
+    
     private(set) var isInterfaceMinimized = false
     private(set) var audioOutput: AudioOutput = .builtInReceiver
     
@@ -58,6 +80,7 @@ class CallService: NSObject {
     private lazy var callKitAdapter = CallKitAdapter(service: self)
     
     private var adapter: CallAdapter!
+    private var rtcFileLogger: RTCFileLogger?
     private var pushRegistry: PKPushRegistry?
     private var backgroundTaskIdentifier: UIBackgroundTaskIdentifier = .invalid
     private var viewController: CallViewController?

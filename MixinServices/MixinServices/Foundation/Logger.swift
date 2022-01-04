@@ -51,7 +51,10 @@ public enum Logger {
     
     public static func export(conversationId: String) -> URL? {
         let subsystems = [general, database, call, conversation(id: conversationId)]
-        let files = subsystems.compactMap(\.fileURL)
+        var files = subsystems.compactMap(\.fileURL)
+        if FileManager.default.fileExists(atPath: AppGroupContainer.webRTCLogURL.path) {
+            files.append(AppGroupContainer.webRTCLogURL)
+        }
         let filename = "\(myIdentityNumber)_\(DateFormatter.filename.string(from: Date()))"
         do {
             return try Zip.quickZipFiles(files, fileName: filename)

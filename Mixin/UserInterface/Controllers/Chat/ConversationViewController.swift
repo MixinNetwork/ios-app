@@ -1648,7 +1648,12 @@ extension ConversationViewController: UITableViewDelegate {
 extension ConversationViewController: DetailInfoMessageCellDelegate {
     
     func detailInfoMessageCellDidSelectFullname(_ cell: DetailInfoMessageCell) {
-        guard let indexPath = tableView.indexPath(for: cell), let message = dataSource?.viewModel(for: indexPath)?.message, let user = UserDAO.shared.getUser(userId: message.userId) else {
+        guard
+            let indexPath = tableView.indexPath(for: cell),
+            let message = dataSource?.viewModel(for: indexPath)?.message,
+            let user = UserDAO.shared.getUser(userId: message.userId),
+            user.isCreatedByMessenger
+        else {
             return
         }
         let vc = UserProfileViewController(user: user)

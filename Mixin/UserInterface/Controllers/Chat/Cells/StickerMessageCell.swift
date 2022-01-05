@@ -1,5 +1,4 @@
 import UIKit
-import Lottie
 import Alamofire
 import MixinServices
 
@@ -20,8 +19,6 @@ class StickerMessageCell: DetailInfoMessageCell {
         return imageView
     }()
     
-    private weak var lottieAnimationDownloadToken: LottieAnimationLoader.Token?
-    
     override var contentFrame: CGRect {
         return imageWrapperView.frame
     }
@@ -40,7 +37,7 @@ class StickerMessageCell: DetailInfoMessageCell {
     }
     
     override func updateAppearance(highlight: Bool, animated: Bool) {
-        let overlapImage = stickerView.imageViewIfLoaded?.image ?? Self.defaultOverlapImage
+        let overlapImage = stickerView.imageView.image ?? Self.defaultOverlapImage
         selectedOverlapImageView.image = overlapImage?.withRenderingMode(.alwaysTemplate)
         selectedOverlapImageView.frame = imageWrapperView.bounds
         let shouldHighlight = highlight && !isMultipleSelecting

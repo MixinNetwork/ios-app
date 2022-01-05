@@ -142,6 +142,7 @@ PODS:
   - GRDB.swift/SQLCipher (5.17.0):
     - SQLCipher (>= 3.4.0)
   - GzipSwift (5.1.1)
+  - librlottie (0.2.1)
   - libsignal-protocol-c (2.3.2)
   - libwebp (1.2.1):
     - libwebp/demux (= 1.2.1)
@@ -152,7 +153,6 @@ PODS:
   - libwebp/mux (1.2.1):
     - libwebp/demux
   - libwebp/webp (1.2.1)
-  - lottie-ios (2.5.3)
   - MixinServices (0.1.0):
     - Alamofire
     - AppCenter
@@ -161,7 +161,6 @@ PODS:
     - GRDB.swift/SQLCipher
     - GzipSwift
     - libsignal-protocol-c
-    - lottie-ios
     - SDWebImage
     - SocketRocket
     - Sodium
@@ -175,7 +174,6 @@ PODS:
     - GRDB.swift/SQLCipher
     - GzipSwift
     - libsignal-protocol-c
-    - lottie-ios
     - SDWebImage
     - SocketRocket
     - Sodium
@@ -200,6 +198,9 @@ PODS:
   - SDWebImage (5.12.1):
     - SDWebImage/Core (= 5.12.1)
   - SDWebImage/Core (5.12.1)
+  - SDWebImageLottieCoder (0.2.0):
+    - librlottie (~> 0.2)
+    - SDWebImage (~> 5.10)
   - SnapKit (5.0.1)
   - SocketRocket (0.6.0)
   - Sodium (0.9.1)
@@ -221,12 +222,12 @@ DEPENDENCIES:
   - GCDWebServer/WebDAV
   - libsignal-protocol-c (from `https://github.com/MixinNetwork/libsignal-protocol-c.git`)
   - libwebp
-  - lottie-ios (from `https://github.com/airbnb/lottie-ios.git`, branch `lottie/objectiveC`)
   - MixinServices (from `./MixinServices`)
   - MixinServices/Tests (from `./MixinServices`)
   - PhoneNumberKit (from `https://github.com/MixinNetwork/PhoneNumberKit.git`)
   - R.swift
   - RSKImageCropper
+  - SDWebImageLottieCoder
   - SnapKit
 
 SPEC REPOS:
@@ -252,6 +253,7 @@ SPEC REPOS:
     - GoogleUtilities
     - GRDB.swift
     - GzipSwift
+    - librlottie
     - libwebp
     - nanopb
     - PromisesObjC
@@ -259,6 +261,7 @@ SPEC REPOS:
     - R.swift.Library
     - RSKImageCropper
     - SDWebImage
+    - SDWebImageLottieCoder
     - SnapKit
     - SocketRocket
     - Sodium
@@ -268,9 +271,6 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   libsignal-protocol-c:
     :git: https://github.com/MixinNetwork/libsignal-protocol-c.git
-  lottie-ios:
-    :branch: lottie/objectiveC
-    :git: https://github.com/airbnb/lottie-ios.git
   MixinServices:
     :path: "./MixinServices"
   PhoneNumberKit:
@@ -280,9 +280,6 @@ CHECKOUT OPTIONS:
   libsignal-protocol-c:
     :commit: f55d4e7b94f388a1ad5e3c6835c3bf4c335283d4
     :git: https://github.com/MixinNetwork/libsignal-protocol-c.git
-  lottie-ios:
-    :commit: 44bda1253360b7ea5698f058f8483e42e26e65bd
-    :git: https://github.com/airbnb/lottie-ios.git
   PhoneNumberKit:
     :commit: 33fe0be8838850564343e1d5ae8e9685461ddae4
     :git: https://github.com/MixinNetwork/PhoneNumberKit.git
@@ -309,10 +306,10 @@ SPEC CHECKSUMS:
   GoogleUtilities: 684ee790a24f73ebb2d1d966e9711c203f2a4237
   GRDB.swift: 1c8a479b2723beab39ed8609fe25513483a0f282
   GzipSwift: 893f3e48e597a1a4f62fafcb6514220fcf8287fa
+  librlottie: 31aadd1f842008260fa7387f7fcb837b2fabeeea
   libsignal-protocol-c: 2fecccb06cc14bdbd28e76a656c0c8c648a482a0
   libwebp: 98a37e597e40bfdb4c911fc98f2c53d0b12d05fc
-  lottie-ios: 0e760146411886f6104050c932a8e6964853267f
-  MixinServices: 3508f78651d58c2de8f2d68a702d927f92995efc
+  MixinServices: e4f81c265b7d9384b6c25d28f784c16d13142358
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   PhoneNumberKit: 4ce83273551c4d2ae10b7361162f4283dd02835f
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
@@ -320,12 +317,13 @@ SPEC CHECKSUMS:
   R.swift.Library: 0fc583cb55a99e28901299cc451614cad1161962
   RSKImageCropper: 1ac71e9a82e3f41eea3eedfff8eacb0d3821c9ec
   SDWebImage: 4dc3e42d9ec0c1028b960a33ac6b637bb432207b
+  SDWebImageLottieCoder: 827c9c82bbaae89627391b4d6fdf39bb89be3336
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   Sodium: 23d11554ecd556196d313cf6130d406dfe7ac6da
   SQLCipher: 98dc22f27c0b1790d39e710d440f22a466ebdb59
   Zip: 414f59909701fda9a84ab774ebe0f5449b1082cc
 
-PODFILE CHECKSUM: 7f1507ceeca3b4c41b41442ff6db5f6a860c9b47
+PODFILE CHECKSUM: 45522c2793a6d9b87e1808e84fb90e09eafdc2d1
 
 COCOAPODS: 1.11.2

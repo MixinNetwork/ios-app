@@ -24,7 +24,7 @@ class MixinWebViewController: WebViewController {
         config.preferences.minimumFontSize = 12
         config.preferences.javaScriptEnabled = true
         config.allowsInlineMediaPlayback = true
-        config.mediaTypesRequiringUserActionForPlayback = .video
+        config.mediaTypesRequiringUserActionForPlayback = []
         config.preferences.javaScriptCanOpenWindowsAutomatically = true
         config.userContentController.addUserScript(Script.disableImageSelection)
         config.userContentController.add(scriptMessageProxy, name: HandlerName.mixinContext)

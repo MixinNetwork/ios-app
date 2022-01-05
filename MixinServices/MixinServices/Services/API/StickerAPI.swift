@@ -8,7 +8,9 @@ public class StickerAPI : MixinAPI {
         static func albums(id: String) -> String {
             "/stickers/albums/\(id)"
         }
-        
+        static func album(id: String) -> String {
+            "/albums/\(id)"
+        }
         static let add = "/stickers/favorite/add"
         static let remove = "/stickers/favorite/remove"
         static func stickers(id: String) -> String {
@@ -24,8 +26,16 @@ public class StickerAPI : MixinAPI {
         request(method: .get, path: Path.albums, completion: completion)
     }
     
+    public static func album(albumId: String) -> MixinAPI.Result<Album> {
+        return request(method: .get, path: Path.album(id: albumId))
+    }
+    
     public static func stickers(albumId: String, completion: @escaping (MixinAPI.Result<[StickerResponse]>) -> Void) {
         request(method: .get, path: Path.albums(id: albumId), completion: completion)
+    }
+    
+    public static func stickers(albumId: String) -> MixinAPI.Result<[StickerResponse]> {
+        request(method: .get, path: Path.albums(id: albumId))
     }
     
     public static func addSticker(stickerBase64: String, completion: @escaping (MixinAPI.Result<StickerResponse>) -> Void) {

@@ -872,6 +872,10 @@ class ConversationViewController: UIViewController {
             } else if message.category.hasSuffix("_TRANSCRIPT") {
                 let vc = TranscriptPreviewViewController(transcriptMessage: message)
                 vc.presentAsChild(of: self)
+            } else if message.category.hasSuffix("_STICKER") {
+                conversationInputViewController.dismiss()
+                let vc = StickerPreviewViewController.instance(message: message)
+                vc.presentAsChild(of: self)
             } else {
                 conversationInputViewController.dismiss()
             }

@@ -3,26 +3,89 @@ import SDWebImage
 
 public class RefreshStickerJob: AsynchronousJob {
     
-    private let albumId: String?
-    private let stickerId: String?
+    public enum Content {
+        case albums
+        case sticker(id: String)
+        case stickers(albumId: String, automaticallyDownloads: Bool)
+    }
     
-    public init(albumId: String? = nil, stickerId: String? = nil) {
-        self.albumId = albumId
-        self.stickerId = stickerId
+    private let content: Content
+    
+    public init(_ content: Content) {
+        self.content = content
     }
     
     override public func getJobId() -> String {
-        if let stickerId = self.stickerId {
-            return "refresh-sticker-\(stickerId)"
-        } else if let albumId = self.albumId {
+        switch content {
+        case .albums:
+            return "refresh-albums"
+        case let .sticker(id):
+            return "refresh-sticker-\(id)"
+        case let .stickers(albumId, _):
             return "refresh-album-\(albumId)"
         }
-        return "refresh-albums"
     }
-
+    
     public override func execute() -> Bool {
-        if let stickerId = self.stickerId {
-            StickerAPI.sticker(stickerId: stickerId) { (result) in
+        switch content {
+        case let .albums:
+            let stickerAlbums = AlbumDAO.shared.getAlbumsUpdatedAt()
+            StickerAPI.albums { (result) in
+                switch result {
+                case let .success(albums):
+                    let urls = albums.map(\.iconUrl).compactMap(URL.init)
+                    StickerPrefetcher.persistent.prefetchURLs(urls)
+                    
+                    var newAlbums = albums.filter { stickerAlbums[$0.albumId] != $0.updatedAt }
+                    guard !newAlbums.isEmpty else {
+                        AppGroupUserDefaults.User.stickerRefreshDate = Date()
+                        return
+                    }
+                    
+                    if AppGroupUserDefaults.User.stickerRefreshDate == nil {
+                        newAlbums = newAlbums.sorted { $0.updatedAt < $1.updatedAt }
+                        let counter = Counter(value: 0)
+                        for (index, album) in newAlbums.enumerated() {
+                            if !album.banner.isNilOrEmpty {
+                                newAlbums[index].isAdded = true
+                                newAlbums[index].orderedAt = counter.advancedValue
+                            } else if album.category == AlbumCategory.PERSONAL.rawValue {
+                                newAlbums[index].isAdded = true
+                            }
+                        }
+                    }
+                    var purgableBannerUrls = [URL]()
+                    var persistentBannerUrls = [URL]()
+                    for album in newAlbums {
+                        if let banner = album.banner, let url = URL(string: banner) {
+                            if album.isAdded {
+                                persistentBannerUrls.append(url)
+                            } else {
+                                purgableBannerUrls.append(url)
+                            }
+                        }
+                        DispatchQueue.global().async {
+                            guard !MixinService.isStopProcessMessages else {
+                                return
+                            }
+                            AlbumDAO.shared.insertOrUpdateAblum(album: album)
+                            DispatchQueue.main.async {
+                                let job = RefreshStickerJob(.stickers(albumId: album.albumId, automaticallyDownloads: album.automaticallyDownloads))
+                                ConcurrentJobQueue.shared.addJob(job: job)
+                            }
+                        }
+                    }
+                    StickerPrefetcher.persistent.prefetchURLs(persistentBannerUrls)
+                    StickerPrefetcher.purgable.prefetchURLs(purgableBannerUrls)
+                    AppGroupUserDefaults.User.hasNewStickers = true
+                    AppGroupUserDefaults.User.stickerRefreshDate = Date()
+                case let .failure(error):
+                    reporter.report(error: error)
+                }
+                self.finishJob()
+            }
+        case let .sticker(id):
+            StickerAPI.sticker(stickerId: id) { (result) in
                 switch result {
                 case let .success(sticker):
                     DispatchQueue.global().async {
@@ -39,7 +102,7 @@ public class RefreshStickerJob: AsynchronousJob {
                 }
                 self.finishJob()
             }
-        } else if let albumId = self.albumId {
+        case let .stickers(albumId, automaticallyDownloads):
             StickerAPI.stickers(albumId: albumId) { (result) in
                 switch result {
                 case let .success(stickers):
@@ -47,34 +110,9 @@ public class RefreshStickerJob: AsynchronousJob {
                         guard !MixinService.isStopProcessMessages else {
                             return
                         }
-
                         let stickers = StickerDAO.shared.insertOrUpdateStickers(stickers: stickers, albumId: albumId)
-                        StickerPrefetcher.prefetch(stickers: stickers)
-                    }
-                case let .failure(error):
-                    reporter.report(error: error)
-                }
-                self.finishJob()
-            }
-        } else {
-            let stickerAlbums = AlbumDAO.shared.getAblumsUpdateAt()
-            StickerAPI.albums { (result) in
-                switch result {
-                case let .success(albums):
-                    let icons = albums.compactMap({ URL(string: $0.iconUrl) })
-                    StickerPrefetcher.persistent.prefetchURLs(icons)
-                    for album in albums {
-                        guard stickerAlbums[album.albumId] != album.updatedAt else {
-                            continue
-                        }
-                        DispatchQueue.global().async {
-                            guard !MixinService.isStopProcessMessages else {
-                                return
-                            }
-                            AlbumDAO.shared.insertOrUpdateAblum(album: album)
-                            DispatchQueue.main.async {
-                                ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob(albumId: album.albumId))
-                            }
+                        if automaticallyDownloads {
+                            StickerPrefetcher.prefetch(stickers: stickers)
                         }
                     }
                 case let .failure(error):

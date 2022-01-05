@@ -3,6 +3,8 @@ import SDWebImage
 
 public enum StickerPrefetcher {
     
+    private static var prefetchTokens = SafeDictionary<String, SDWebImagePrefetchToken>()
+    
     public static let persistent: SDWebImagePrefetcher = {
         let prefetcher = SDWebImagePrefetcher(imageManager: .persistentSticker)
         prefetcher.animatedImageClass = SDAnimatedImage.self
@@ -15,16 +17,32 @@ public enum StickerPrefetcher {
     }()
     
     public static func prefetch(stickers: [StickerItem]) {
-        let persistentUrls = stickers
-            .filter({ $0.shouldCachePersistently })
-            .map({ $0.assetUrl })
-            .compactMap(URL.init)
         let purgableUrls = stickers
             .filter({ !$0.shouldCachePersistently })
-            .map({ $0.assetUrl })
+            .map(\.assetUrl)
             .compactMap(URL.init)
-        persistent.prefetchURLs(persistentUrls)
+        let persistentUrls = stickers
+            .filter(\.shouldCachePersistently)
+            .map(\.assetUrl)
+            .compactMap(URL.init)
         purgable.prefetchURLs(purgableUrls)
+        persistent.prefetchURLs(persistentUrls)
+    }
+    
+    public static func prefetchPersistently(urls: [URL], albumId: String) {
+        guard !urls.isEmpty else {
+            return
+        }
+        if let token = persistent.prefetchURLs(urls) {
+            prefetchTokens[albumId] = token
+        }
+    }
+    
+    public static func cancelPrefetching(albumId: String) {
+        if let token = prefetchTokens[albumId] {
+            token.cancel()
+            prefetchTokens.removeValue(forKey: albumId)
+        }
     }
     
 }

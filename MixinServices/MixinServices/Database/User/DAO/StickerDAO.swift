@@ -5,7 +5,7 @@ public final class StickerDAO: UserDatabaseDAO {
     public static let favoriteStickersDidChangeNotification = NSNotification.Name("one.mixin.services.StickerDAO.favoriteStickersDidChange")
     
     private static let sqlQueryColumns = """
-    SELECT s.sticker_id, s.name, s.asset_url, s.asset_type, s.asset_width, s.asset_height, s.last_used_at, a.category
+    SELECT s.sticker_id, s.name, s.asset_url, s.asset_type, s.asset_width, s.asset_height, s.last_used_at, a.category, a.added, s.album_id
     FROM stickers s
     """
     private static let relationShipJoinClause = "INNER JOIN sticker_relationships sa ON sa.sticker_id = s.sticker_id"
@@ -44,6 +44,7 @@ public final class StickerDAO: UserDatabaseDAO {
     ORDER BY s.last_used_at DESC
     LIMIT ?
     """
+    
     public static let shared = StickerDAO()
     
     public func isExist(stickerId: String) -> Bool {
@@ -64,6 +65,18 @@ public final class StickerDAO: UserDatabaseDAO {
     
     public func getFavoriteStickers() -> [StickerItem] {
         db.select(with: StickerDAO.sqlQueryFavoriteStickers)
+    }
+    
+    public func isFavoriteSticker(stickerId: String) -> Bool {
+        let sql = """
+            SELECT 1
+            FROM stickers s
+            \(Self.relationShipJoinClause)
+            \(Self.albumJoinClause)
+            WHERE s.sticker_id = ? AND a.category = 'PERSONAL'
+        """
+        let value: Int64 = db.select(with: sql, arguments: [stickerId]) ?? 0
+        return value > 0
     }
     
     public func recentUsedStickers(limit: Int) -> [StickerItem] {
@@ -102,7 +115,7 @@ public final class StickerDAO: UserDatabaseDAO {
     }
     
     public func insertOrUpdateFavoriteSticker(sticker: StickerResponse) {
-        if let albumId = AlbumDAO.shared.getSelfAlbumId() {
+        if let albumId = AlbumDAO.shared.getPersonalAlbum()?.albumId {
             insertOrUpdateStickers(stickers: [sticker], albumId: albumId)
         } else {
             switch StickerAPI.albums() {
@@ -116,7 +129,7 @@ public final class StickerDAO: UserDatabaseDAO {
                     break
                 }
             case .failure:
-                ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob())
+                ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob(.albums))
             }
         }
     }
@@ -137,6 +150,7 @@ public final class StickerDAO: UserDatabaseDAO {
                 Sticker.column(of: .assetType).set(to: response.assetType),
                 Sticker.column(of: .assetWidth).set(to: response.assetWidth),
                 Sticker.column(of: .assetHeight).set(to: response.assetHeight),
+                Sticker.column(of: .albumId).set(to: response.albumId)
             ]
             try Sticker
                 .filter(Sticker.column(of: .stickerId) == response.stickerId)

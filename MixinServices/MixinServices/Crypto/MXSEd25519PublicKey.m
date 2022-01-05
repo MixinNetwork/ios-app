@@ -1,5 +1,4 @@
 #import "MXSEd25519PublicKey.h"
-#import <openssl/curve25519.h>
 #import "sodium.h"
 
 @implementation MXSEd25519PublicKey {

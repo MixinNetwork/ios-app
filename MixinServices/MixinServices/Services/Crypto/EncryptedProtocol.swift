@@ -153,7 +153,7 @@ extension EncryptedProtocol {
     
     // Returns IV + Cipher
     private static func encrypt(messageKey: Data, privateKey: Ed25519PrivateKey, remotePublicKey: Data) throws -> Data {
-        guard let sharedSecret = AgreementCalculator.agreement(fromPublicKeyData: remotePublicKey, privateKeyData: privateKey.x25519Representation) else {
+        guard let sharedSecret = AgreementCalculator.agreement(publicKey: remotePublicKey, privateKey: privateKey.x25519Representation) else {
             throw Error.agreementCalculation
         }
         guard let iv = Data(withNumberOfSecuredRandomBytes: Length.keyIV) else {
@@ -164,7 +164,7 @@ extension EncryptedProtocol {
     }
     
     private static func decrypt(messageKey cipher: Data, iv: Data, privateKey: Ed25519PrivateKey, remotePublicKey: Data) throws -> Data {
-        guard let sharedSecret = AgreementCalculator.agreement(fromPublicKeyData: remotePublicKey, privateKeyData: privateKey.x25519Representation) else {
+        guard let sharedSecret = AgreementCalculator.agreement(publicKey: remotePublicKey, privateKey: privateKey.x25519Representation) else {
             throw Error.invalidAgreement
         }
         return try AESCryptor.decrypt(cipher, with: sharedSecret, iv: iv)

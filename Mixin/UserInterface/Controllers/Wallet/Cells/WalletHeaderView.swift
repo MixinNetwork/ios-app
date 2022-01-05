@@ -22,14 +22,77 @@ class WalletHeaderView: InfiniteTopView {
     @IBOutlet weak var rightAssetSymbolLabel: UILabel!
     @IBOutlet weak var rightAssetPercentLabel: UILabel!
     
-    private var contentHeight: CGFloat = 159
+    var showSnowfallEffect = false {
+        didSet {
+            if showSnowfallEffect {
+                if snowfallLayer.superlayer == nil {
+                    layer.insertSublayer(snowfallLayer, at: 0)
+                }
+            } else {
+                snowfallLayerIfLoaded?.removeFromSuperlayer()
+            }
+        }
+    }
+    
     private let btcValueAttributes: [NSAttributedString.Key: Any] = [
         .font: UIFont.condensed(size: 14).scaled(),
         .kern: 0.7
     ]
     
+    private lazy var snowfallLayer: CAEmitterLayer = {
+        let cell = CAEmitterCell()
+        cell.birthRate = 3
+        cell.lifetime = 10
+        cell.emissionRange = .pi
+        cell.velocity = 5
+        cell.velocityRange = 10
+        cell.yAcceleration = 5
+        cell.scale = 0.15
+        cell.scaleRange = 0.12
+        cell.spinRange = 1
+        cell.color = snowflakeColor
+        cell.contents = R.image.snowflake()!.cgImage
+        
+        let layer = CAEmitterLayer()
+        layoutSnowfallLayer(layer)
+        layer.masksToBounds = true
+        layer.emitterShape = .line
+        layer.emitterCells = [cell]
+        
+        snowfallLayerIfLoaded = layer
+        return layer
+    }()
+    
+    private weak var snowfallLayerIfLoaded: CAEmitterLayer?
+    
+    private var contentHeight: CGFloat = 159
+    
+    private var snowflakeColor: CGColor {
+        if traitCollection.userInterfaceStyle == .dark {
+            return UIColor.white.cgColor
+        } else {
+            return UIColor.lightGray.cgColor
+        }
+    }
+    
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         return CGSize(width: size.width, height: contentHeight)
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        if let layer = snowfallLayerIfLoaded {
+            layoutSnowfallLayer(layer)
+        }
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if #available(iOS 13.0, *), traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection), let cells = snowfallLayerIfLoaded?.emitterCells {
+            for cell in cells {
+                cell.color = snowflakeColor
+            }
+        }
     }
     
     func render(assets: [AssetItem]) {
@@ -118,6 +181,12 @@ extension WalletHeaderView {
                                                      format: .fiatMoney,
                                                      sign: .never)
         }
+    }
+    
+    private func layoutSnowfallLayer(_ layer: CAEmitterLayer) {
+        layer.frame = bounds
+        layer.emitterPosition = CGPoint(x: layer.bounds.width / 2, y: -20)
+        layer.emitterSize = CGSize(width: layer.bounds.width, height: 0)
     }
     
 }

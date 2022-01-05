@@ -66,8 +66,10 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.reloadData()
+        updateTableHeaderVisualEffect()
         NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: AssetDAO.assetsDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: AppGroupUserDefaults.Wallet.assetVisibilityDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateTableHeaderVisualEffect), name: UIApplication.significantTimeChangeNotification, object: nil)
         fetchAssets()
         ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob())
     }
@@ -210,6 +212,12 @@ extension WalletViewController {
                 weakSelf.tableView.reloadData()
             }
         }
+    }
+    
+    @objc private func updateTableHeaderVisualEffect() {
+        let now = Date()
+        let showSnowfall = now.isChristmas || now.isChineseNewYear
+        tableHeaderView.showSnowfallEffect = showSnowfall
     }
     
     private func confirmHideAsset(at indexPath: IndexPath) {

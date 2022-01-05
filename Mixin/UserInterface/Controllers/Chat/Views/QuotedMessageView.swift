@@ -76,9 +76,9 @@ class QuotedMessageView: UIView {
             case let .local(url):
                 imageView.sd_setImage(with: url, placeholderImage: nil, context: localImageContext)
             case let .purgableRemote(url):
-                imageView.sd_setImage(with: url)
+                imageView.sd_setImage(with: url, placeholderImage: nil, options: .decodeFirstFrameOnly)
             case let .persistentSticker(url):
-                imageView.sd_setImage(with: url, placeholderImage: nil, context: persistentStickerContext)
+                imageView.sd_setImage(with: url, placeholderImage: nil, options: .decodeFirstFrameOnly, context: persistentStickerContext)
             case let .user(url, userId, name):
                 avatarImageView.setImage(with: url, userId: userId, name: name)
             case let .thumbnail(thumbnail):

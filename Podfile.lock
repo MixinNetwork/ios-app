@@ -1,6 +1,6 @@
 PODS:
   - AcknowList (2.0.3)
-  - Alamofire (5.5.0)
+  - Alamofire (5.4.4)
   - AlignedCollectionViewFlowLayout (1.1.2)
   - AppCenter (4.4.1):
     - AppCenter/Analytics (= 4.4.1)
@@ -139,7 +139,7 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (7.6.0):
     - GoogleUtilities/Logger
-  - GRDB.swift/SQLCipher (5.17.0):
+  - GRDB.swift/SQLCipher (5.16.0):
     - SQLCipher (>= 3.4.0)
   - GzipSwift (5.1.1)
   - librlottie (0.2.1)
@@ -213,6 +213,7 @@ PODS:
 
 DEPENDENCIES:
   - AcknowList
+  - Alamofire (= 5.4.4)
   - AlignedCollectionViewFlowLayout
   - Firebase/Analytics
   - Firebase/Core
@@ -220,6 +221,7 @@ DEPENDENCIES:
   - Firebase/Performance
   - GCDWebServer
   - GCDWebServer/WebDAV
+  - GRDB.swift/SQLCipher (= 5.16.0)
   - libsignal-protocol-c (from `https://github.com/MixinNetwork/libsignal-protocol-c.git`)
   - libwebp
   - MixinServices (from `./MixinServices`)
@@ -286,7 +288,7 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   AcknowList: 6d4faca4c3e0173377fe5649e086d627cd60b003
-  Alamofire: 1c4fb5369c3fe93d2857c780d8bbe09f06f97e7c
+  Alamofire: f3b09a368f1582ab751b3fff5460276e0d2cf5c9
   AlignedCollectionViewFlowLayout: ee2ef451e741ec08f8e0967d828001e2f051c20a
   AppCenter: b0b6f1190215b5f983c42934db718f3b46fff3c0
   BoringSSL: e10f92a27043805c01071fe815a5cd98ae8212e7
@@ -304,7 +306,7 @@ SPEC CHECKSUMS:
   GoogleAppMeasurement: a3311dbcf3ea651e5a070fe8559b57c174ada081
   GoogleDataTransport: 629c20a4d363167143f30ea78320d5a7eb8bd940
   GoogleUtilities: 684ee790a24f73ebb2d1d966e9711c203f2a4237
-  GRDB.swift: 1c8a479b2723beab39ed8609fe25513483a0f282
+  GRDB.swift: 180e55fec683c77c917dc80db33e1e4d472ec83d
   GzipSwift: 893f3e48e597a1a4f62fafcb6514220fcf8287fa
   librlottie: 31aadd1f842008260fa7387f7fcb837b2fabeeea
   libsignal-protocol-c: 2fecccb06cc14bdbd28e76a656c0c8c648a482a0
@@ -324,6 +326,6 @@ SPEC CHECKSUMS:
   SQLCipher: 98dc22f27c0b1790d39e710d440f22a466ebdb59
   Zip: 414f59909701fda9a84ab774ebe0f5449b1082cc
 
-PODFILE CHECKSUM: 45522c2793a6d9b87e1808e84fb90e09eafdc2d1
+PODFILE CHECKSUM: 30a99fddbe283f829a6483a4508e168c43cdcc67
 
 COCOAPODS: 1.11.2

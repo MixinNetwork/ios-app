@@ -17,13 +17,14 @@ class StickerStorePreviewCell: UICollectionViewCell {
                 nameLabel.text = albumItem.album.name
                 if albumItem.isAdded {
                     addButton.setTitle(R.string.localizable.sticker_store_added(), for: .normal)
-                    addButton.backgroundColor = R.color.sticker_button_background_disabled()
+                    addButtonBackgroundColor = R.color.sticker_button_background_disabled()
                     addButton.setTitleColor(R.color.sticker_button_text_disabled(), for: .normal)
                 } else {
                     addButton.setTitle(R.string.localizable.sticker_store_add(), for: .normal)
-                    addButton.backgroundColor = R.color.theme()
+                    addButtonBackgroundColor = R.color.theme()
                     addButton.setTitleColor(.white, for: .normal)
                 }
+                addButton.backgroundColor = addButtonBackgroundColor
             } else {
                 nameLabel.text = nil
                 addButton.setTitle(nil, for: .normal)
@@ -34,6 +35,8 @@ class StickerStorePreviewCell: UICollectionViewCell {
     
     private let maxStickerPreviewCount = 4
     
+    private var addButtonBackgroundColor: UIColor?
+    
     @IBAction func stickerAction(_ sender: Any) {
         onToggle?()
     }
@@ -43,6 +46,17 @@ class StickerStorePreviewCell: UICollectionViewCell {
         let margin: CGFloat = ScreenWidth.current <= .short ? 10 : 20
         collectionViewLeadingConstraint.constant = margin
         collectionViewTrailingConstraint.constant = margin
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if #available(iOS 13.0, *) {
+            
+        } else {
+            // Fix wrong background color on iOS 12
+            // https://procrastinative.ninja/2018/07/16/debugging-ios-named-colors/
+            addButton.backgroundColor = addButtonBackgroundColor
+        }
     }
     
 }

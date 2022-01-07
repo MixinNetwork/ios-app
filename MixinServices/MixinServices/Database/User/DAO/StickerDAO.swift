@@ -41,6 +41,7 @@ public final class StickerDAO: UserDatabaseDAO {
     \(relationShipJoinClause)
     \(albumJoinClause)
     WHERE s.last_used_at IS NOT NULL
+    GROUP BY s.sticker_id
     ORDER BY s.last_used_at DESC
     LIMIT ?
     """

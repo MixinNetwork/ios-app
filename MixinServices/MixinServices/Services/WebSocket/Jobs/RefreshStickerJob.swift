@@ -37,6 +37,12 @@ public class RefreshStickerJob: AsynchronousJob {
                     StickerPrefetcher.persistent.prefetchURLs(urls)
                     
                     var newAlbums = albums.filter { stickerAlbums[$0.albumId] != $0.updatedAt }
+                    if AppGroupUserDefaults.User.stickerRefreshDate.isNil {
+                        let newAlbumIds = newAlbums.map(\.albumId)
+                        let bannerAlbums = albums
+                            .filter { !$0.banner.isNilOrEmpty && !newAlbumIds.contains($0.albumId) }
+                        newAlbums.append(contentsOf: bannerAlbums)
+                    }
                     guard !newAlbums.isEmpty else {
                         AppGroupUserDefaults.User.stickerRefreshDate = Date()
                         return

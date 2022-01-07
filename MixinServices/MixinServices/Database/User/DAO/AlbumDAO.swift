@@ -51,6 +51,12 @@ public final class AlbumDAO: UserDatabaseDAO {
     }
     
     public func insertOrUpdateAblum(album: Album) {
+        let existedAlbum: Album? = db.select(where: Album.column(of: .albumId) == album.albumId)
+        var album = album
+        if let existedAlbum = existedAlbum, existedAlbum.isAdded {
+            album.isAdded = true
+            album.orderedAt = existedAlbum.orderedAt
+        }
         db.save(album)
     }
     

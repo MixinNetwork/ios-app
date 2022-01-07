@@ -4,9 +4,13 @@ import MixinServices
 class WalletPasswordViewController: ContinueButtonViewController {
 
     @IBOutlet weak var pinField: PinField!
-    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var textLabel: TextLabel!
     @IBOutlet weak var subtitleLabel: UILabel!
     @IBOutlet weak var backButton: UIButton!
+    
+    @IBOutlet weak var textLabelHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var textLabelLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var textLabelTrailingConstraint: NSLayoutConstraint!
     
     enum WalletPasswordType {
         case initPinStep1
@@ -26,7 +30,8 @@ class WalletPasswordViewController: ContinueButtonViewController {
         case changePhone
         case setEmergencyContact
     }
-
+    
+    private var lastViewWidth: CGFloat = 0
     private var dismissTarget: DismissTarget?
     private var walletPasswordType = WalletPasswordType.initPinStep1
     private var isBusy = false {
@@ -37,36 +42,55 @@ class WalletPasswordViewController: ContinueButtonViewController {
         }
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         pinField.delegate = self
         pinField.becomeFirstResponder()
+        
+        textLabel.font = .systemFont(ofSize: 18, weight: .semibold)
+        textLabel.lineSpacing = 4
+        textLabel.textColor = .title
+        textLabel.detectLinks = false
+        
         switch walletPasswordType {
         case .initPinStep1:
-            titleLabel.text = Localized.WALLET_PIN_CREATE_TITLE
+            let text = R.string.localizable.wallet_pin_create_title()
+            textLabel.text = text
+            textLabel.delegate = self
+            let linkRange = (text as NSString)
+                .range(of: R.string.localizable.action_learn_more(), options: [.backwards, .caseInsensitive])
+            if linkRange.location != NSNotFound && linkRange.length != 0 {
+                textLabel.linkColor = .theme
+                textLabel.additionalLinksMap = [linkRange: URL.pinTIP]
+            }
             subtitleLabel.text = ""
             backButton.setImage(R.image.ic_title_close(), for: .normal)
         case .initPinStep2, .changePinStep3:
-            titleLabel.text = Localized.WALLET_PIN_CONFIRM_TITLE
+            textLabel.text = Localized.WALLET_PIN_CONFIRM_TITLE
             subtitleLabel.text = Localized.WALLET_PIN_CONFIRM_SUBTITLE
             backButton.setImage(R.image.ic_title_back(), for: .normal)
         case .initPinStep3, .changePinStep4:
-            titleLabel.text = Localized.WALLET_PIN_CONFIRM_AGAIN_TITLE
+            textLabel.text = Localized.WALLET_PIN_CONFIRM_AGAIN_TITLE
             subtitleLabel.text = Localized.WALLET_PIN_CONFIRM_AGAIN_SUBTITLE
             backButton.setImage(R.image.ic_title_back(), for: .normal)
         case .initPinStep4, .changePinStep5:
-            titleLabel.text = Localized.WALLET_PIN_CONFIRM_AGAIN_TITLE
+            textLabel.text = Localized.WALLET_PIN_CONFIRM_AGAIN_TITLE
             subtitleLabel.text = R.string.localizable.wallet_pin_more_confirm()
             backButton.setImage(R.image.ic_title_back(), for: .normal)
         case .changePinStep1:
-            titleLabel.text = Localized.WALLET_PIN_VERIFY_TITLE
+            textLabel.text = Localized.WALLET_PIN_VERIFY_TITLE
             subtitleLabel.text = ""
             backButton.setImage(R.image.ic_title_close(), for: .normal)
         case .changePinStep2:
-            titleLabel.text = Localized.WALLET_PIN_NEW_TITLE
+            textLabel.text = Localized.WALLET_PIN_NEW_TITLE
             subtitleLabel.text = ""
             backButton.setImage(R.image.ic_title_back(), for: .normal)
         }
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -76,6 +100,18 @@ class WalletPasswordViewController: ContinueButtonViewController {
             pinField.becomeFirstResponder()
         }
         pinField.clear()
+    }
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        if view.bounds.width != lastViewWidth {
+            let labelWidth = view.bounds.width
+                - textLabelLeadingConstraint.constant
+                - textLabelTrailingConstraint.constant
+            let sizeToFitLabel = CGSize(width: labelWidth, height: UIView.layoutFittingExpandedSize.height)
+            textLabelHeightConstraint.constant = textLabel.sizeThatFits(sizeToFitLabel).height
+            lastViewWidth = view.bounds.width
+        }
     }
     
     @IBAction func backAction(_ sender: Any) {
@@ -149,6 +185,11 @@ class WalletPasswordViewController: ContinueButtonViewController {
         })
     }
     
+    @objc private func applicationDidBecomeActive() {
+        if !pinField.isFirstResponder {
+            pinField.becomeFirstResponder()
+        }
+    }
 }
 
 extension WalletPasswordViewController: MixinNavigationAnimating {
@@ -302,4 +343,16 @@ extension WalletPasswordViewController: PinFieldDelegate {
             }
         }
     }
+}
+
+extension WalletPasswordViewController: CoreTextLabelDelegate {
+    
+    func coreTextLabel(_ label: CoreTextLabel, didSelectURL url: URL) {
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    }
+    
+    func coreTextLabel(_ label: CoreTextLabel, didLongPressOnURL url: URL) {
+        
+    }
+    
 }

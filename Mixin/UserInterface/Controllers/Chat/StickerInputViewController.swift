@@ -7,14 +7,14 @@ class StickerInputViewController: UIViewController {
     
     private var pageViewController: UIPageViewController!
     private let modelController = StickerInputModelController()
-    private var officialAlbums = [Album]()
+    private var addedAlbums = [Album]()
     private var currentIndex = NSNotFound
     private var pageScrollView: UIScrollView?
     private var isScrollingByAlbumSelection = false
     private var currentPage: StickersCollectionViewController!
     
     var numberOfAllAlbums: Int {
-        return officialAlbums.count + modelController.numberOfFixedControllers
+        return addedAlbums.count + modelController.numberOfFixedControllers
     }
     
     var animated = false {
@@ -36,6 +36,19 @@ class StickerInputViewController: UIViewController {
         albumsCollectionView.delegate = self
         pageScrollView = pageViewController.view.subviews.first(where: { $0 is UIScrollView }) as? UIScrollView
         pageScrollView?.delegate = self
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(reload),
+                                               name: AlbumDAO.addedAlbumsDidChangeNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(reload),
+                                               name: AlbumDAO.albumsOrderDidChangeNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(reloadStoreCell),
+                                               name: AppGroupUserDefaults.User.hasNewStickersDidChangeNotification,
+                                               object: nil)
+        StickerStore.refreshStickersIfNeeded()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -55,12 +68,12 @@ class StickerInputViewController: UIViewController {
         }
     }
     
-    func reload() {
-        DispatchQueue.global(qos: .userInitiated).async {
-            self.officialAlbums = AlbumDAO.shared.getAlbums()
+    @objc func reload() {
+        StickerStore.loadAddedAlbums { albumItems in
             self.modelController.reloadRecentFavoriteStickers()
-            self.modelController.reloadOfficialStickers(albums: self.officialAlbums)
             DispatchQueue.main.async {
+                self.addedAlbums = albumItems.map(\.album)
+                self.modelController.reloadAddedStickers(stickers: albumItems.map(\.stickers))
                 self.albumsCollectionView.reloadData()
                 let initialViewControllers: [UIViewController]
                 if let initialViewController = self.modelController.initialViewController {
@@ -98,19 +111,22 @@ extension StickerInputViewController: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.sticker_album, for: indexPath)!
         switch indexPath.row {
         case 0:
+            cell.imageView.image = R.image.ic_sticker_store()
+            cell.imageView.contentMode = .center
+            cell.dotImageView.isHidden = !AppGroupUserDefaults.User.hasNewStickers
+        case 1:
             cell.imageView.image = R.image.ic_recent_stickers()
             cell.imageView.contentMode = .center
-        case 1:
+        case 2:
             cell.imageView.image = R.image.ic_sticker_favorite()
             cell.imageView.contentMode = .center
-        case 2:
+        case 3:
             cell.imageView.image = R.image.ic_gif()
             cell.imageView.contentMode = .center
         default:
-            let album = officialAlbums[indexPath.row - modelController.numberOfFixedControllers]
+            let album = addedAlbums[indexPath.row - modelController.numberOfFixedControllers]
             if let url = URL(string: album.iconUrl) {
-                let context = stickerLoadContext(category: album.category)
-                cell.imageView.sd_setImage(with: url, placeholderImage: nil, context: context)
+                cell.imageView.sd_setImage(with: url, placeholderImage: nil, context: persistentStickerContext)
             }
             cell.imageView.contentMode = .scaleAspectFit
         }
@@ -123,6 +139,18 @@ extension StickerInputViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let selectedIndex = indexPath.item
+        if selectedIndex == 0 {
+            let viewController = R.storyboard.chat.sticker_store()!
+            let navigationController = UINavigationController(rootViewController: viewController)
+            navigationController.modalPresentationStyle = .fullScreen
+            navigationController.setNavigationBarHidden(true, animated: false)
+            present(navigationController, animated: true, completion: nil)
+            collectionView.selectItem(at: IndexPath(item: currentIndex, section: 0), animated: false, scrollPosition: .centeredVertically)
+            if AppGroupUserDefaults.User.hasNewStickers {
+                AppGroupUserDefaults.User.hasNewStickers = false
+            }
+            return
+        }
         guard selectedIndex != currentIndex, !isScrollingByAlbumSelection else {
             return
         }
@@ -199,7 +227,7 @@ extension StickerInputViewController: UIScrollViewDelegate {
 extension StickerInputViewController {
     
     private func selectAlbum(at index: Int) {
-        guard index >= 0 && index < numberOfAllAlbums else {
+        guard index > 0 && index < numberOfAllAlbums else {
             return
         }
         let indexPath = IndexPath(item: index, section: 0)
@@ -242,6 +270,10 @@ extension StickerInputViewController {
                 vc.animated = false
             }
         }
+    }
+    
+    @objc private func reloadStoreCell() {
+        albumsCollectionView.reloadItems(at: [IndexPath(item: 0, section: 0)])
     }
     
 }

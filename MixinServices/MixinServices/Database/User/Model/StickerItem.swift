@@ -12,9 +12,11 @@ public struct StickerItem {
     public let assetHeight: Int
     public var lastUseAt: String?
     public let category: String?
+    public let isAdded: Bool
+    public let albumId: String?
     
     public var shouldCachePersistently: Bool {
-        return shouldCacheStickerWithCategoryPersistently(category: category)
+        return isAdded
     }
     
     public var imageLoadContext: [SDWebImageContextOption: Any]? {
@@ -34,6 +36,8 @@ extension StickerItem: Codable, DatabaseColumnConvertible, MixinFetchableRecord 
         case assetHeight = "asset_height"
         case lastUseAt = "last_used_at"
         case category
+        case isAdded = "added"
+        case albumId = "album_id"
     }
     
     public init(from decoder: Decoder) throws {
@@ -46,6 +50,8 @@ extension StickerItem: Codable, DatabaseColumnConvertible, MixinFetchableRecord 
         assetHeight = try container.decodeIfPresent(Int.self, forKey: .assetHeight) ?? 0
         lastUseAt = try container.decodeIfPresent(String.self, forKey: .lastUseAt)
         category = try container.decodeIfPresent(String.self, forKey: .category)
+        isAdded = try container.decode(Bool.self, forKey: .isAdded) ?? false
+        albumId = try container.decodeIfPresent(String.self, forKey: .albumId)
     }
     
 }
@@ -58,19 +64,6 @@ extension StickerItem {
     
 }
 
-@inlinable public func shouldCacheStickerWithCategoryPersistently(category: String?) -> Bool {
-    if let category = category {
-        return !category.isEmpty
-    } else {
-        return false
-    }
-}
-
-public func stickerLoadContext(persistent: Bool) -> [SDWebImageContextOption: Any]? {
-    return persistent ? persistentStickerContext : nil
-}
-
-public func stickerLoadContext(category: String?) -> [SDWebImageContextOption: Any]? {
-    let persistent = shouldCacheStickerWithCategoryPersistently(category: category)
-    return stickerLoadContext(persistent: persistent)
+public func stickerLoadContext(persistent: Bool?) -> [SDWebImageContextOption: Any]? {
+    return (persistent ?? false) ? persistentStickerContext : nil
 }

@@ -39,7 +39,7 @@ class PeerCall: Call {
             Logger.call.info(category: "PeerCall", message: "[\(self.uuidString)] End with reason: \(reason), side: \(side)")
             DispatchQueue.main.sync {
                 self.invalidateUnansweredTimer()
-                self.rtcClient.close()
+                self.rtcClient.close(permanently: true)
             }
             
             let category: MessageCategory

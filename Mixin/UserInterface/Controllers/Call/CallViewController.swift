@@ -56,6 +56,15 @@ class CallViewController: ResizablePopupViewController {
     
     var members: [UserItem] = []
     
+    var membersCountText: String? {
+        if let call = call as? GroupCall {
+            let count = call.membersDataSource.members.count
+            return R.string.localizable.group_call_participants_count(count)
+        } else {
+            return nil
+        }
+    }
+    
     private let membersCountBottomMargin: CGFloat = 32
     private let numberOfGroupCallMembersPerRow: CGFloat = 4
     
@@ -441,11 +450,7 @@ extension CallViewController: UICollectionViewDelegate {
 extension CallViewController {
     
     @objc func updateMembersCountLabel() {
-        if let call = call as? GroupCall {
-            membersCountLabel.text = R.string.localizable.group_call_participants_count(call.membersDataSource.members.count)
-        } else {
-            membersCountLabel.text = ""
-        }
+        membersCountLabel.text = membersCountText
         updateMembersCountPosition()
         updateCollectionViewBottomInset()
     }

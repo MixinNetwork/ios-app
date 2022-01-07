@@ -5,6 +5,8 @@ import MixinServices
 class BackupJob: BaseJob {
     
     static let sharedId = "backup"
+    
+    static let backupDidChangeNotification = Notification.Name("one.mixin.messenger.Application.backupDidChange")
 
     private let monitorQueue = DispatchQueue(label: "one.mixin.messenger.queue.backup")
     private let immediatelyBackup: Bool
@@ -222,7 +224,7 @@ class BackupJob: BaseJob {
             AppGroupUserDefaults.Account.hasUnfinishedBackup = false
         }
 
-        NotificationCenter.default.post(onMainThread: Application.backupDidChangeNotification, object: self)
+        NotificationCenter.default.post(onMainThread: BackupJob.backupDidChangeNotification, object: self)
     }
 
     private func getDatabaseFileSize() -> Int64 {

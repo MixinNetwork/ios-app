@@ -5,6 +5,9 @@ extension WKWebsiteDataStore {
     
     func removeAuthenticationRelatedData() {
         let types: Set<String> = [
+            WKWebsiteDataTypeFetchCache,
+            WKWebsiteDataTypeDiskCache,
+            WKWebsiteDataTypeMemoryCache,
             WKWebsiteDataTypeOfflineWebApplicationCache,
             WKWebsiteDataTypeCookies,
             WKWebsiteDataTypeSessionStorage,

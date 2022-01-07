@@ -18,8 +18,11 @@ enum CallError: Error {
     
     case networkFailure
     case invalidKrakenResponse
+    case invalidJSEP
     case roomFull
-    case invalidPeerConnection(MixinAPIError)
+    case peerNotFound
+    case peerClosed
+    case trackNotFound
     
     var alertContent: String {
         switch self {
@@ -31,8 +34,12 @@ enum CallError: Error {
             return R.string.localizable.call_no_microphone_permission()
         case .roomFull:
             return R.string.localizable.error_room_full()
-        case .invalidPeerConnection(let error):
-            return R.string.localizable.call_remote_error("\(error)")
+        case .peerNotFound:
+            return R.string.localizable.call_remote_error("5002001")
+        case .peerClosed:
+            return R.string.localizable.call_remote_error("5002002")
+        case .trackNotFound:
+            return R.string.localizable.call_remote_error("5002003")
         default:
             return R.string.localizable.chat_message_call_failed()
         }

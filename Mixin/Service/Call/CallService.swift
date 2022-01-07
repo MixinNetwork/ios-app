@@ -24,6 +24,28 @@ class CallService: NSObject {
     
     let membersManager = GroupCallMembersManager()
     
+    var isWebRTCLogEnabled = false {
+        didSet {
+            if isWebRTCLogEnabled {
+                if rtcFileLogger == nil {
+                    RTCSetMinDebugLogLevel(.warning)
+                    let logger = RTCFileLogger(dirPath: AppGroupContainer.webRTCLogURL.path,
+                                               maxFileSize: 2 * bytesPerMegaByte,
+                                               rotationType: .typeApp)
+                    logger.severity = .warning
+                    logger.start()
+                    rtcFileLogger = logger
+                }
+            } else {
+                if let logger = rtcFileLogger {
+                    RTCSetMinDebugLogLevel(.none)
+                    logger.stop()
+                    rtcFileLogger = nil
+                }
+            }
+        }
+    }
+    
     private(set) var isInterfaceMinimized = false
     private(set) var audioOutput: AudioOutput = .builtInReceiver
     
@@ -58,6 +80,7 @@ class CallService: NSObject {
     private lazy var callKitAdapter = CallKitAdapter(service: self)
     
     private var adapter: CallAdapter!
+    private var rtcFileLogger: RTCFileLogger?
     private var pushRegistry: PKPushRegistry?
     private var backgroundTaskIdentifier: UIBackgroundTaskIdentifier = .invalid
     private var viewController: CallViewController?
@@ -138,7 +161,7 @@ class CallService: NSObject {
     
     func minimizeIfThereIsAnActiveCall() {
         assert(Thread.isMainThread)
-        guard activeCall != nil, isInterfaceMinimized else {
+        guard activeCall != nil, !isInterfaceMinimized else {
             return
         }
         setInterfaceMinimized(true, animated: true)
@@ -215,51 +238,63 @@ extension CallService: PKPushRegistryDelegate {
         }
         
         if !name.isEmpty, let conversationId = payload.dictionaryPayload["conversation_id"] as? String, let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId) {
-            let inviters: [UserItem]
-            if let inviter = UserDAO.shared.getUser(userId: userId) {
-                inviters = [inviter]
+            if let call = groupCall(with: conversationId) {
+                // PushKit notifications may deliver AFTER the invitation was delivered with WebSocket
+                // Report that call again to exonerate from PushKit abusing
+                adapter.reportNewIncomingCall(call) { _ in }
             } else {
-                inviters = []
-            }
-            let call = GroupCall(conversation: conversation,
-                                 isOutgoing: false,
-                                 inviters: inviters,
-                                 invitees: [])
-            adapter.reportNewIncomingCall(call) { error in
-                if let error = error {
-                    let reason = Call.EndedReason(error: error)
-                    call.end(reason: reason, by: .local)
-                    Logger.call.error(category: "CallService", message: "Incoming group call is blocked by adapter: \(error)")
+                let inviters: [UserItem]
+                if let inviter = UserDAO.shared.getUser(userId: userId) {
+                    inviters = [inviter]
                 } else {
-                    Queue.main.autoSync {
-                        self.groupCallUUIDs[conversation.conversationId] = call.uuid
-                        self.calls[call.uuid] = call
-                    }
+                    inviters = []
                 }
-                completion()
+                let call = GroupCall(conversation: conversation,
+                                     isOutgoing: false,
+                                     inviters: inviters,
+                                     invitees: [])
+                adapter.reportNewIncomingCall(call) { error in
+                    if let error = error {
+                        let reason = Call.EndedReason(error: error)
+                        call.end(reason: reason, by: .local)
+                        Logger.call.error(category: "CallService", message: "Incoming group call is blocked by adapter: \(error)")
+                    } else {
+                        Queue.main.autoSync {
+                            self.groupCallUUIDs[conversation.conversationId] = call.uuid
+                            self.calls[call.uuid] = call
+                        }
+                    }
+                    completion()
+                }
+                MixinService.isStopProcessMessages = false
+                WebSocketService.shared.connectIfNeeded()
+                Logger.call.info(category: "CallService", message: "Report incoming group call from PushKit notification. UUID: \(call.uuidString)")
             }
-            MixinService.isStopProcessMessages = false
-            WebSocketService.shared.connectIfNeeded()
-            Logger.call.info(category: "CallService", message: "Report incoming group call from PushKit notification. UUID: \(call.uuidString)")
         } else if name.isEmpty, let username = payload.dictionaryPayload["full_name"] as? String, let uuid = UUID(uuidString: messageId) {
-            let call = IncomingPeerCall(uuid: uuid,
-                                        remoteUserId: userId,
-                                        remoteUsername: username)
-            adapter.reportNewIncomingCall(call) { error in
-                if let error = error {
-                    let reason = Call.EndedReason(error: error)
-                    call.end(reason: reason, by: .local)
-                    Logger.call.error(category: "CallService", message: "Incoming peer call is blocked by adapter: \(error)")
-                } else {
-                    Queue.main.autoSync {
-                        self.calls[call.uuid] = call
+            if let call = call(with: uuid) as? PeerCall {
+                // PushKit notifications may deliver AFTER the offer was delivered with WebSocket
+                // Report that call again to exonerate from PushKit abusing
+                adapter.reportNewIncomingCall(call) { _ in }
+            } else {
+                let call = IncomingPeerCall(uuid: uuid,
+                                            remoteUserId: userId,
+                                            remoteUsername: username)
+                adapter.reportNewIncomingCall(call) { error in
+                    if let error = error {
+                        let reason = Call.EndedReason(error: error)
+                        call.end(reason: reason, by: .local)
+                        Logger.call.error(category: "CallService", message: "Incoming peer call is blocked by adapter: \(error)")
+                    } else {
+                        Queue.main.autoSync {
+                            self.calls[call.uuid] = call
+                        }
                     }
+                    completion()
                 }
-                completion()
+                MixinService.isStopProcessMessages = false
+                WebSocketService.shared.connectIfNeeded()
+                Logger.call.info(category: "CallService", message: "New incoming peer call from: \(username), uuid: \(call.uuidString)")
             }
-            MixinService.isStopProcessMessages = false
-            WebSocketService.shared.connectIfNeeded()
-            Logger.call.info(category: "CallService", message: "New incoming peer call from: \(username), uuid: \(call.uuidString)")
         } else {
             Logger.call.info(category: "CallService", message: "report failed incoming call from PushKit notification")
             callKitAdapter.reportImmediateFailureCall()
@@ -497,6 +532,7 @@ extension CallService {
             viewController.view.layoutIfNeeded()
         }
         viewController.showContentViewIfNeeded(animated: animated)
+        isInterfaceMinimized = false
     }
     
     func dismissCallingInterface() {
@@ -819,6 +855,7 @@ extension CallService {
         adapter.reportCall(call, endedByReason: reason, side: side)
         if !hasCall {
             dismissCallingInterface()
+            isInterfaceMinimized = false
             reloadCallAdapter()
             blazeProcessingQueue.async {
                 try? AudioSession.shared.deactivate(client: self, notifyOthersOnDeactivation: false)
@@ -990,6 +1027,7 @@ extension CallService {
 extension CallService {
     
     private func handlePublish(data: BlazeMessageData) {
+        Logger.call.info(category: "CallService", message: "Got publish from: \(data.userId), conversation: \(data.conversationId)")
         membersManager.addMember(with: data.userId, toConversationWith: data.conversationId)
         DispatchQueue.main.sync {
             guard let call = self.groupCall(with: data.conversationId) else {

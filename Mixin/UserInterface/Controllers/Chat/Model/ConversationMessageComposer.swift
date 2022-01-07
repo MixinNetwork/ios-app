@@ -156,9 +156,10 @@ final class ConversationMessageComposer {
             message.mediaStatus = MediaStatus.PENDING.rawValue
             message.mediaUrl = sticker.assetUrl
             message.stickerId = sticker.stickerId
+            message.albumId = sticker.albumId
             queue.async {
                 reporter.report(event: .sendSticker, userInfo: ["stickerId": sticker.stickerId])
-                let albumId = AlbumDAO.shared.getAlbum(stickerId: sticker.stickerId)?.albumId
+                let albumId = sticker.albumId.isNilOrEmpty ? AlbumDAO.shared.getAlbum(stickerId: sticker.stickerId)?.albumId : sticker.albumId
                 let transferData = TransferStickerData(stickerId: sticker.stickerId, name: sticker.name, albumId: albumId)
                 message.content = try! JSONEncoder().encode(transferData).base64EncodedString()
                 SendMessageService.shared.sendMessage(message: message,

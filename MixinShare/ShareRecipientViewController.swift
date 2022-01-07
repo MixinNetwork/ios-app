@@ -232,7 +232,9 @@ extension ShareRecipientViewController {
                         let asset = AVAsset(url: url)
 
                         let exportSession = AssetExportSession(asset: asset, outputURL: videoUrl)
-                        exportSession.exportAsynchronously {
+                        exportSession.exportAsynchronously { _ in
+                            // Message is generated in completionHandler with file of videoUrl, no need to update
+                        } completionHandler: {
                             if exportSession.status == .completed {
                                 self?.shareVideoMessage(url: videoUrl, conversation: conversation, messageId: messageId)
                             }

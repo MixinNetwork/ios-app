@@ -80,7 +80,11 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
     func handleLoginResult(_ result: MixinAPI.Result<Account>, key: Ed25519PrivateKey) {
         switch result {
         case let .success(account):
-            guard !account.pin_token.isEmpty, let remotePublicKey = Data(base64Encoded: account.pin_token), let pinToken = AgreementCalculator.agreement(fromPublicKeyData: remotePublicKey, privateKeyData: key.x25519Representation) else {
+            guard
+                !account.pin_token.isEmpty,
+                let remotePublicKey = Data(base64Encoded: account.pin_token),
+                let pinToken = AgreementCalculator.agreement(publicKey: remotePublicKey, privateKey: key.x25519Representation)
+            else {
                 DispatchQueue.main.async {
                     self.handleVerificationCodeError(.invalidServerPinToken)
                 }

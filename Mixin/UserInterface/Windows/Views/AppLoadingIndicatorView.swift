@@ -1,7 +1,7 @@
 import UIKit
-import YYImage
+import SDWebImage
 
-class AppLoadingIndicatorView: YYAnimatedImageView {
+class AppLoadingIndicatorView: SDAnimatedImageView {
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -31,7 +31,7 @@ class AppLoadingIndicatorView: YYAnimatedImageView {
         guard let data = try? Data(contentsOf: url) else {
             return
         }
-        self.image = YYImage(data: data, scale: UIScreen.main.scale)
+        self.image = SDAnimatedImage(data: data, scale: UIScreen.main.scale)
     }
     
 }

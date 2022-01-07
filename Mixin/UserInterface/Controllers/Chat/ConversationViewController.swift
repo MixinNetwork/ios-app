@@ -715,34 +715,30 @@ class ConversationViewController: UIViewController {
         guard let inviterId = myInvitation?.userId else {
             return
         }
-        
-        let conversationId = self.conversationId
-        
-        func work(_: UIAlertAction) {
+        let alert = UIAlertController(title: R.string.localizable.chat_exit_group_and_report_inviter_confirmation(), message: nil, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_confirm(), style: .destructive, handler: { _ in
             let hud = Hud()
-            if let view = navigationController?.view {
+            if let view = self.navigationController?.view {
                 hud.show(style: .busy, text: "", on: view)
             }
-            
-            DispatchQueue.global().async {
-                switch UserAPI.reportUser(userId: inviterId) {
+            UserAPI.reportUser(userId: inviterId) { result in
+                switch result {
                 case let .success(user):
-                    UserDAO.shared.updateUsers(users: [user], sendNotificationAfterFinished: false)
-                    ConversationDAO.shared.deleteChat(conversationId: conversationId)
-                    DispatchQueue.main.async {
-                        hud.set(style: .notification, text: R.string.localizable.profile_report_success())
-                        hud.scheduleAutoHidden()
-                        UIApplication.homeNavigationController?.backToHome()
+                    DispatchQueue.global().async {
+                        UserDAO.shared.updateUsers(users: [user], sendNotificationAfterFinished: false)
+                        ConversationDAO.shared.deleteChat(conversationId: self.conversationId)
+                        DispatchQueue.main.async {
+                            hud.set(style: .notification, text: R.string.localizable.profile_report_success())
+                            hud.scheduleAutoHidden()
+                            UIApplication.homeNavigationController?.backToHome()
+                        }
                     }
                 case let .failure(error):
                     hud.set(style: .error, text: error.localizedDescription)
                     hud.scheduleAutoHidden()
                 }
             }
-        }
-        
-        let alert = UIAlertController(title: R.string.localizable.chat_exit_group_and_report_inviter_confirmation(), message: nil, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_confirm(), style: .destructive, handler: work))
+        }))
         alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
         present(alert, animated: true, completion: nil)
     }
@@ -875,6 +871,10 @@ class ConversationViewController: UIViewController {
                 navigationController?.pushViewController(container, animated: true)
             } else if message.category.hasSuffix("_TRANSCRIPT") {
                 let vc = TranscriptPreviewViewController(transcriptMessage: message)
+                vc.presentAsChild(of: self)
+            } else if message.category.hasSuffix("_STICKER") {
+                conversationInputViewController.dismiss()
+                let vc = StickerPreviewViewController.instance(message: message)
                 vc.presentAsChild(of: self)
             } else {
                 conversationInputViewController.dismiss()
@@ -1500,7 +1500,10 @@ extension ConversationViewController: UIScrollViewDelegate {
     }
     
     func scrollViewShouldScrollToTop(_ scrollView: UIScrollView) -> Bool {
-        tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+        // With this implementation tableView will scroll to {0, 0}, or it will scrolls all the way up to first message in this conversation
+        if tableView.numberOfSections >= 1, tableView.numberOfRows(inSection: 0) >= 1 {
+            tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+        }
         return false
     }
     
@@ -1645,7 +1648,12 @@ extension ConversationViewController: UITableViewDelegate {
 extension ConversationViewController: DetailInfoMessageCellDelegate {
     
     func detailInfoMessageCellDidSelectFullname(_ cell: DetailInfoMessageCell) {
-        guard let indexPath = tableView.indexPath(for: cell), let message = dataSource?.viewModel(for: indexPath)?.message, let user = UserDAO.shared.getUser(userId: message.userId) else {
+        guard
+            let indexPath = tableView.indexPath(for: cell),
+            let message = dataSource?.viewModel(for: indexPath)?.message,
+            let user = UserDAO.shared.getUser(userId: message.userId),
+            user.isCreatedByMessenger
+        else {
             return
         }
         let vc = UserProfileViewController(user: user)
@@ -1925,7 +1933,7 @@ extension ConversationViewController {
         if ConversationViewController.allowReportSingleMessage {
             actions.append(.report)
         }
-        if canPinMessages, status != MessageStatus.SENDING.rawValue {
+        if canPinMessages, status != MessageStatus.SENDING.rawValue, status != MessageStatus.UNKNOWN.rawValue {
             let index: Int?
             if let replyIndex = actions.firstIndex(of: .reply) {
                 index = replyIndex + 1

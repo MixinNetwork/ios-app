@@ -1,11 +1,10 @@
 import UIKit
 import UserNotifications
-import SDWebImage
-import YYImage
 import AVFoundation
 import WebKit
 import FirebaseCore
-import Lottie
+import SDWebImage
+import SDWebImageLottieCoder
 import MixinServices
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -24,7 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         reporterClass = CrashlyticalReporter.self
         reporter.configure()
         AppGroupUserDefaults.migrateIfNeeded()
-        updateSharedImageCacheConfig()
+        updateImageManagerConfig()
         _ = ReachabilityManger.shared
         _ = DarwinNotificationManager.shared
         _ = CacheableAssetFileManager.shared
@@ -123,7 +122,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func applicationDidReceiveMemoryWarning(_ application: UIApplication) {
-        LOTAnimationCache.shared().clear()
+        
     }
     
     func applicationWillTerminate(_ application: UIApplication) {
@@ -307,10 +306,12 @@ extension AppDelegate {
         Keychain.shared.clearPIN()
     }
     
-    private func updateSharedImageCacheConfig() {
+    private func updateImageManagerConfig() {
         SDImageCacheConfig.default.maxDiskSize = 1024 * bytesPerMegaByte
         SDImageCacheConfig.default.maxDiskAge = -1
         SDImageCacheConfig.default.diskCacheExpireType = .accessDate
+        SDImageCodersManager.shared.addCoder(WebPImageDecoder.shared)
+        SDImageCodersManager.shared.addCoder(SDImageLottieCoder.shared)
     }
     
 }

@@ -26,13 +26,10 @@ class GroupCall: Call {
     private var inviters: [UserItem] {
         didSet {
             assert(queue.isCurrent)
-            guard self.internalState == .incoming else {
+            guard self.internalState == .incoming, !inviters.isEmpty else {
                 return
             }
-            guard !inviters.isEmpty else {
-                return
-            }
-            let name = Self.localizedInvitationName(inviters: self.inviters)
+            let name = Self.localizedInvitationName(inviters: inviters)
             DispatchQueue.main.sync {
                 self.localizedName = name
             }
@@ -70,13 +67,9 @@ class GroupCall: Call {
     
     override func end(reason: EndedReason, by side: EndedSide, completion: (() -> Void)? = nil) {
         queue.async {
-            guard side == .local || reason == .cancelled else {
-                assertionFailure("Group call can only be ended by remote side with cancellation")
-                if let completion = completion {
-                    self.endCallCompletions.append(completion)
-                }
-                return
-            }
+            // Group call can only be ended by remote side with cancellation
+            assert(side == .local || reason == .cancelled)
+            
             guard self.internalState != .disconnecting else {
                 if let completion = completion {
                     self.endCallCompletions.append(completion)
@@ -90,7 +83,7 @@ class GroupCall: Call {
                 for timer in self.inviteeTimers {
                     timer.invalidate()
                 }
-                self.rtcClient.close()
+                self.rtcClient.close(permanently: true)
             }
             if side == .local {
                 if reason == .declined {
@@ -133,6 +126,9 @@ class GroupCall: Call {
     
     func appendInviter(with userId: String) {
         queue.async {
+            guard self.internalState != .disconnecting else {
+                return
+            }
             guard !self.inviters.contains(where: { $0.userId == userId }) else {
                 return
             }
@@ -145,6 +141,9 @@ class GroupCall: Call {
     
     func removeInviter(with userId: String, createdAt: String) {
         queue.async {
+            guard self.internalState != .disconnecting else {
+                return
+            }
             guard let index = self.inviters.firstIndex(where: { $0.userId == userId }) else {
                 return
             }
@@ -236,7 +235,6 @@ extension GroupCall {
                 self?.membersDataSource.updateMembers(with: levels)
             })
         })
-        timer.fire()
         speakingTimer = timer
     }
     
@@ -302,10 +300,8 @@ extension GroupCall {
             // after internalState is updated. Therefore, if any UI components access `state` synchornouly
             // after connect, it will find an `incoming` as state.
             // For correct UI display, change `state` here first
-            self.state = .connecting
+            self.state = isRestarting ? .restarting : .connecting
             invalidateUnansweredTimer()
-        }
-        Queue.main.autoSync {
             self.localizedName = self.conversationName
         }
         queue.autoAsync {
@@ -316,13 +312,10 @@ extension GroupCall {
             DispatchQueue.main.async {
                 self.membersDataSource.setMember(with: myUserId, isConnected: false)
             }
-            self.rtcClient.offer(key: self.frameKey, withIceRestartConstraint: isRestarting) { result in
+            self.rtcClient.offer(key: self.frameKey, restartIce: isRestarting) { result in
                 switch result {
                 case .failure(let error):
                     Logger.call.error(category: "GroupCall", message: "[\(self.uuidString)] Failed to make offer: \(error)")
-                    self.queue.async {
-                        self.pendingCandidates = []
-                    }
                     completion(error)
                 case .success(let sdp):
                     let publish = KrakenRequest(callUUID: self.uuid,
@@ -331,11 +324,18 @@ extension GroupCall {
                                                 action: isRestarting ? .restart(sdp: sdp) : .publish(sdp: sdp))
                     switch self.request(publish) {
                     case let .failure(error):
-                        Logger.call.error(category: "GroupCall", message: "[\(self.uuidString)] Failed to publish: \(error)")
-                        self.queue.async {
-                            self.pendingCandidates = []
+                        switch error {
+                        case .peerNotFound, .trackNotFound:
+                            // These two errors are not likely to show up here. However, rebuild it is always safe
+                            Logger.call.warn(category: "GroupCall", message: "[\(self.uuidString)] Failed to publish: \(error)")
+                            fallthrough
+                        case .peerClosed:
+                            self.rebuild()
+                            completion(nil)
+                        default:
+                            Logger.call.error(category: "GroupCall", message: "[\(self.uuidString)] Failed to publish: \(error)")
+                            completion(error)
                         }
-                        completion(error)
                     case let .success((trackId, sdp)):
                         self.queue.async {
                             Logger.call.info(category: "GroupCall", message: "[\(self.uuidString)] Got track id from publish response")
@@ -377,8 +377,8 @@ extension GroupCall {
                     self.membersDataSource.addMember(member, onConflict: .discard)
                 }
             }
-            guard self.trackId != nil || isSubscribingMySelf else {
-                Logger.call.warn(category: "GroupCall", message: "[\(self.uuidString)] Not subscribing: \(userId)")
+            guard (self.trackId != nil && self.internalState != .restarting) || isSubscribingMySelf else {
+                Logger.call.warn(category: "GroupCall", message: "[\(self.uuidString)] Not subscribing: \(userId), trackId: \(self.trackId ?? "(null)"), internalState: \(self.internalState), isMyself: \(isSubscribingMySelf)")
                 return
             }
             let subscribe = KrakenRequest(callUUID: self.uuid,
@@ -401,15 +401,22 @@ extension GroupCall {
                         self.answer(userId: userId)
                     }
                 }
-            case .success:
-                Logger.call.info(category: "GroupCall", message: "[\(self.uuidString)] Subscribe responded with a non-offer sdp. Drop it")
+            case .success, .failure(.invalidJSEP):
+                DispatchQueue.main.async {
+                    self.membersDataSource.setMember(with: userId, isConnected: true)
+                }
+                Logger.call.info(category: "GroupCall", message: "[\(self.uuidString)] Subscribe responded with a non-offer sdp")
             case .failure(let error):
                 switch error {
                 case .invalidKrakenResponse:
                     Logger.call.info(category: "GroupCall", message: "[\(self.uuidString)] Invalid subscribe response. Drop it")
-                case .invalidPeerConnection(let error):
-                    Logger.call.error(category: "GroupCall", message: "[\(self.uuidString)] Subscribe responded with: \(error)")
-                    self.restart()
+                case .peerClosed:
+                    Logger.call.warn(category: "GroupCall", message: "[\(self.uuidString)] Subscribe responded with peerClosed")
+                    self.rebuild()
+                case .peerNotFound:
+                    Logger.call.warn(category: "GroupCall", message: "[\(self.uuidString)] Subscribe responded with peerNotFound")
+                case .trackNotFound:
+                    Logger.call.warn(category: "GroupCall", message: "[\(self.uuidString)] Subscribe responded with trackNotFound")
                 default:
                     Logger.call.info(category: "GroupCall", message: "[\(self.uuidString)] subscribing result reports \(error)")
                     self.end(reason: .failed, by: .local)
@@ -440,17 +447,26 @@ extension GroupCall {
         }
     }
     
-    private func restart() {
-        assert(queue.isCurrent)
-        Logger.call.warn(category: "GroupCall", message: "[\(self.uuidString)] Restarting")
-        connect(isRestarting: true) { error in
-            guard let error = error else {
+    // Group call is rebuilt when a request is responded with 5002002 peerClosed
+    private func rebuild() {
+        queue.async {
+            guard self.internalState != .disconnecting else {
                 return
             }
-            Logger.call.error(category: "GroupCall", message: "[\(self.uuidString)] Failed to restart: \(error)")
-            
-            // Dispatch restart impl asynchornously to break the call loop, this also gives a chance to end the call
-            self.queue.async(execute: self.restart)
+            self.internalState = .restarting
+            DispatchQueue.main.sync {
+                self.rtcClient.close(permanently: false)
+            }
+            self.frameKey = nil
+            self.trackId = nil
+            self.pendingCandidates = []
+            self.connect(isRestarting: false) { error in
+                guard let error = error else {
+                    return
+                }
+                Logger.call.error(category: "GroupCall", message: "[\(self.uuidString)] Failed to rebuild call: \(error)")
+                self.rebuild()
+            }
         }
     }
     
@@ -476,10 +492,7 @@ extension GroupCall: KrakenMessageRetrieverDelegate {
             Logger.call.info(category: "GroupCall", message: "Got 401 when requesting: \(request.debugDescription)")
             self.end(reason: .failed, by: .local)
             return false
-        case MixinAPIError.peerNotFound, MixinAPIError.peerClosed, MixinAPIError.trackNotFound:
-            Logger.call.info(category: "GroupCall", message: "Got \(error) when requesting: \(request.debugDescription)")
-            return false
-        case MixinAPIError.roomFull:
+        case MixinAPIError.peerNotFound, MixinAPIError.peerClosed, MixinAPIError.trackNotFound, MixinAPIError.roomFull:
             return false
         default:
             let shouldRetry = numberOfRetries < Self.maxNumberOfKrakenRetries
@@ -554,15 +567,18 @@ extension GroupCall: WebRTCClientDelegate {
         }
         Logger.call.info(category: "GroupCall", message: "[\(self.uuidString)] ICE connection state: \(stateDescription)")
         queue.async {
-            guard newState == .failed else {
-                return
-            }
-            guard self.internalState == .connected else {
+            guard self.internalState == .connected, newState == .failed else {
                 return
             }
             Logger.call.warn(category: "GroupCall", message: "[\(self.uuidString)] Restarting call because ICE connection failed")
             self.internalState = .restarting
-            self.restart()
+            self.connect(isRestarting: true) { error in
+                guard let error = error else {
+                    return
+                }
+                Logger.call.error(category: "GroupCall", message: "[\(self.uuidString)] Failed to restart: \(error)")
+                self.rebuild()
+            }
         }
     }
     
@@ -572,6 +588,7 @@ extension GroupCall: WebRTCClientDelegate {
     
     func webRTCClient(_ client: WebRTCClient, didAddReceiverWith userId: String, trackDisabled: Bool) {
         DispatchQueue.main.async {
+            CallService.shared.membersManager.addMember(with: userId, toConversationWith: self.conversationId)
             self.membersDataSource.setMember(with: userId, isConnected: true)
             self.membersDataSource.setMember(with: userId, isTrackDisabled: trackDisabled)
         }
@@ -613,17 +630,21 @@ extension GroupCall {
                 Logger.call.info(category: "GroupCall", message: "[\(self.uuidString)] invalid KrakenPublishResponse: \(response)")
                 return .failure(.invalidKrakenResponse)
             }
-            guard let sdpString = data.jsep.base64Decoded(), let sdp = RTCSessionDescription(jsonString: sdpString) else {
-                Logger.call.info(category: "GroupCall", message: "[\(self.uuidString)] invalid JSEP: \(data.jsep)")
-                return .failure(.invalidKrakenResponse)
+            if let sdpString = data.jsep.base64Decoded(), let sdp = RTCSessionDescription(jsonString: sdpString) {
+                return .success((data.trackId, sdp))
+            } else {
+                return .failure(.invalidJSEP)
             }
-            return .success((data.trackId, sdp))
         case let .failure(error):
             switch error {
             case MixinAPIError.roomFull:
                 return .failure(.roomFull)
-            case MixinAPIError.peerNotFound, MixinAPIError.peerClosed, MixinAPIError.trackNotFound:
-                return .failure(.invalidPeerConnection(error as! MixinAPIError))
+            case MixinAPIError.peerNotFound:
+                return .failure(.peerNotFound)
+            case MixinAPIError.peerClosed:
+                return .failure(.peerClosed)
+            case MixinAPIError.trackNotFound:
+                return .failure(.trackNotFound)
             default:
                 return .failure(.networkFailure)
             }

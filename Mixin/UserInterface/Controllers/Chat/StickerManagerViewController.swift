@@ -1,8 +1,8 @@
 import UIKit
 import Photos
 import PhotosUI
-import YYImage
 import CoreServices
+import SDWebImage
 import MixinServices
 
 class StickerManagerViewController: UICollectionViewController {
@@ -88,7 +88,7 @@ extension StickerManagerViewController: ContainerViewControllerDelegate {
                 switch result {
                 case .success:
                     DispatchQueue.global().async {
-                        if let album = AlbumDAO.shared.getSelfAlbum() {
+                        if let album = AlbumDAO.shared.getPersonalAlbum() {
                             StickerRelationshipDAO.shared.removeStickers(albumId: album.albumId, stickerIds: stickerIds)
                         }
                         
@@ -256,7 +256,7 @@ extension StickerManagerViewController {
                 hideHud()
                 guard
                     let source = source,
-                    let image = YYImage(contentsOfFile: source.path)
+                    let image = SDAnimatedImage(contentsOfFile: source.path)
                 else {
                     handleError(error)
                     return

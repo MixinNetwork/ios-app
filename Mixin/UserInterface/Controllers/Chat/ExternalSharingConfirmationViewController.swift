@@ -1,6 +1,6 @@
 import UIKit
 import WebKit
-import YYImage
+import SDWebImage
 import MixinServices
 
 class ExternalSharingConfirmationViewController: UIViewController {
@@ -10,7 +10,7 @@ class ExternalSharingConfirmationViewController: UIViewController {
     @IBOutlet weak var previewWrapperView: UIView!
     @IBOutlet weak var sendButton: RoundedButton!
     
-    private lazy var imageView = YYAnimatedImageView()
+    private lazy var imageView = SDAnimatedImageView()
     private lazy var label = UILabel()
     
     private var sharingContext: ExternalSharingContext!

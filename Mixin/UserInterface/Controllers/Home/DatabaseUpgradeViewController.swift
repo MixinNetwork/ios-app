@@ -62,6 +62,12 @@ class DatabaseUpgradeViewController: UIViewController {
             if localVersion < 27 {
                 Logger.migrate()
             }
+            if localVersion < 28 {
+                let lottieCacheURL = AppGroupContainer.documentsUrl
+                    .appendingPathComponent("Sticker")
+                    .appendingPathComponent("Lottie")
+                try? FileManager.default.removeItem(at: lottieCacheURL)
+            }
             
             AppGroupUserDefaults.User.needsRebuildDatabase = false
             AppGroupUserDefaults.User.localVersion = AppGroupUserDefaults.User.version

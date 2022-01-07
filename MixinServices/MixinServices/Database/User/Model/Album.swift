@@ -16,6 +16,13 @@ public struct Album {
     public let userId: String
     public let category: String
     public let description: String
+    public let banner: String?
+    public var orderedAt: Int
+    public var isAdded: Bool
+    
+    public var automaticallyDownloads: Bool {
+        !banner.isNilOrEmpty || category == AlbumCategory.PERSONAL.rawValue
+    }
     
 }
 
@@ -30,6 +37,9 @@ extension Album: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mixin
         case userId = "user_id"
         case category
         case description
+        case banner
+        case orderedAt = "ordered_at"
+        case isAdded = "added"
     }
     
     public init(from decoder: Decoder) throws {
@@ -42,6 +52,9 @@ extension Album: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mixin
         userId = try container.decodeIfPresent(String.self, forKey: .userId) ?? ""
         category = try container.decodeIfPresent(String.self, forKey: .category) ?? ""
         description = try container.decodeIfPresent(String.self, forKey: .description) ?? ""
+        banner = try container.decodeIfPresent(String.self, forKey: .banner)
+        orderedAt = try container.decodeIfPresent(Int.self, forKey: .orderedAt) ?? 0
+        isAdded = try container.decodeIfPresent(Bool.self, forKey: .isAdded) ?? false
     }
     
 }

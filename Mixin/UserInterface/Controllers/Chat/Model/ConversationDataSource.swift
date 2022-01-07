@@ -2,7 +2,6 @@ import UIKit
 import AVKit
 import Photos
 import SDWebImage
-import YYImage
 import CoreServices
 import MixinServices
 
@@ -47,15 +46,14 @@ class ConversationDataSource {
     private var canInsertUnreadHint = true
     private var messageProcessingIsCancelled = false
     private var didInitializedData = false
-    private var tableViewContentInset: UIEdgeInsets {
-        return Queue.main.autoSync {
-            self.tableView?.contentInset ?? .zero
-        }
-    }
     
     var layoutSize: CGSize {
         Queue.main.autoSync {
-            AppDelegate.current.mainWindow.bounds.inset(by: tableViewContentInset).size
+            var size = AppDelegate.current.mainWindow.bounds.size
+            if UIApplication.shared.statusBarOrientation.isLandscape {
+                swap(&size.width, &size.height)
+            }
+            return size
         }
     }
     

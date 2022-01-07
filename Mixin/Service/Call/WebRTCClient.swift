@@ -18,6 +18,8 @@ class WebRTCClient: NSObject {
     private static let audioId = "audio0"
     private static let streamId = "stream0"
     
+    private typealias Session = UInt
+    
     weak var delegate: WebRTCClientDelegate?
     
     var isMuted = false {
@@ -31,7 +33,7 @@ class WebRTCClient: NSObject {
     
     private let queue = DispatchQueue(label: "one.mixin.messenger.WebRTCClient")
     
-    private var isClosed = false
+    private var session: Session? = 0
     private var peerConnection: RTCPeerConnection?
     private var audioTrack: RTCAudioTrack?
     private var pendingCandidates: [RTCIceCandidate] = []
@@ -46,18 +48,17 @@ class WebRTCClient: NSObject {
     // To prevent any potential data races, we dispatch any r/w to our queue
     private var tracksUserId: [String: String] = [:]
     
-    func offer(
-        key: Data?,
-        withIceRestartConstraint: Bool,
-        completion: @escaping (Result<String, CallError>) -> Void
-    ) {
+    func offer(key: Data?, restartIce: Bool, completion: @escaping (Result<String, CallError>) -> Void) {
         guard let connection = loadPeerConnection(key: key) else {
             // loadPeerConnection returns nil when self is closed or released,
             // it's OK to just return here without calling completion
             return
         }
+        if restartIce {
+            connection.restartIce()
+        }
         let mandatoryConstraints: [String: String]
-        if withIceRestartConstraint {
+        if restartIce {
             mandatoryConstraints = [kRTCMediaConstraintsIceRestart: kRTCMediaConstraintsValueTrue]
         } else {
             mandatoryConstraints = [:]
@@ -123,7 +124,7 @@ class WebRTCClient: NSObject {
     func addRemoteCandidates(_ candidate: RTCIceCandidate) {
         assert(Thread.isMainThread)
         if let connection = peerConnection {
-            connection.add(candidate)
+            addCandidate(candidate, to: connection)
         } else {
             pendingCandidates.append(candidate)
         }
@@ -204,9 +205,16 @@ class WebRTCClient: NSObject {
         }
     }
     
-    func close() {
+    func close(permanently: Bool) {
         assert(Thread.isMainThread)
-        isClosed = true
+        guard let oldSession = session else {
+            return
+        }
+        if permanently {
+            session = nil
+        } else {
+            session = oldSession + 1
+        }
         peerConnection?.close()
         peerConnection = nil
         audioTrack = nil
@@ -217,12 +225,22 @@ class WebRTCClient: NSObject {
         }
     }
     
+    private func addCandidate(_ candidate: RTCIceCandidate, to connection: RTCPeerConnection) {
+        connection.add(candidate) { error in
+            if let error = error {
+                Logger.call.error(category: "WebRTCClient", message: "Failed to add candidate: \(error)")
+            }
+        }
+    }
+    
     private func addPendingCandidate(to connection: RTCPeerConnection) {
         assert(Thread.isMainThread)
         guard !pendingCandidates.isEmpty else {
             return
         }
-        pendingCandidates.forEach(connection.add(_:))
+        for candidate in pendingCandidates {
+            addCandidate(candidate, to: connection)
+        }
         pendingCandidates = []
     }
     
@@ -283,6 +301,9 @@ extension WebRTCClient: RTCPeerConnectionDelegate {
             .compactMap(StreamId.init(rawValue:))
             .filter({ $0.userId != myUserId })
         assert(streamIds.count <= 1)
+        if streamIds.count > 1 {
+            Logger.call.warn(category: "WebRTCClient", message: "RtpReceiver: \(rtpReceiver) comes with multiple streams: \(streamIds)")
+        }
         guard let id = streamIds.first else {
             Logger.call.error(category: "WebRTCClient", message: "RtpReceiver: \(rtpReceiver) comes with empty stream")
             return
@@ -316,7 +337,7 @@ extension WebRTCClient: RTCPeerConnectionDelegate {
 
 extension WebRTCClient {
     
-    private func loadIceServers(completion: @escaping ([RTCIceServer]) -> Void) {
+    private func loadIceServers(session: Session, completion: @escaping ([RTCIceServer]) -> Void) {
         CallAPI.turn(queue: queue) { [weak self] result in
             switch result {
             case let .success(servers):
@@ -327,10 +348,10 @@ extension WebRTCClient {
             case let .failure(error):
                 Logger.call.error(category: "WebRTCClient", message: "ICE Server fetching fails: \(error)")
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                    guard let self = self, !self.isClosed else {
+                    guard let self = self, self.session == session else {
                         return
                     }
-                    self.loadIceServers(completion: completion)
+                    self.loadIceServers(session: session, completion: completion)
                 }
             }
         }
@@ -338,15 +359,17 @@ extension WebRTCClient {
     
     // Returns nil only when self is closed or released
     private func loadPeerConnection(key: Data?) -> RTCPeerConnection? {
-        var result = DispatchQueue.main.sync {
-            self.peerConnection
+        var (result, session) = DispatchQueue.main.sync {
+            (self.peerConnection, self.session)
         }
         if let connection = result {
             return connection
         }
-        
+        guard let session = session else {
+            return nil
+        }
         let semaphore = DispatchSemaphore(value: 0)
-        loadIceServers { [weak self] iceServers in
+        loadIceServers(session: session) { [weak self] iceServers in
             let config = RTCConfiguration()
             config.tcpCandidatePolicy = .enabled
             config.iceTransportPolicy = .relay
@@ -360,22 +383,25 @@ extension WebRTCClient {
                                                    decoderFactory: RTCDefaultVideoDecoderFactory())
             let mediaConstraints = RTCMediaConstraints(mandatoryConstraints: nil, optionalConstraints: [:])
             let peerConnection = factory.peerConnection(with: config, constraints: mediaConstraints, delegate: nil)
-            
             let audioConstraints = RTCMediaConstraints(mandatoryConstraints: nil, optionalConstraints: nil)
             let audioSource = factory.audioSource(with: audioConstraints)
             let audioTrack = factory.audioTrack(with: audioSource, trackId: Self.audioId)
             
-            let rtpSender = peerConnection.add(audioTrack, streamIds: [Self.streamId])
+            let rtpSender = peerConnection?.add(audioTrack, streamIds: [Self.streamId])
             if let key = key {
-                rtpSender.setFrameEncryptorKey(key)
+                rtpSender?.setFrameEncryptorKey(key)
                 Logger.call.info(category: "WebRTCClient", message: "Set encrypt key: \(key.count) bytes for myself")
             } else {
                 Logger.call.warn(category: "WebRTCClient", message: "No encrypt key for myself")
             }
-            peerConnection.delegate = self
+            peerConnection?.delegate = self
             
             DispatchQueue.main.sync {
-                guard let self = self, !self.isClosed else {
+                guard let self = self, self.session == session else {
+                    return
+                }
+                guard let rtpSender = rtpSender, let peerConnection = peerConnection else {
+                    Logger.call.error(category: "WebRTCClient", message: "Failed to generate peer connection")
                     return
                 }
                 if self.isMuted {

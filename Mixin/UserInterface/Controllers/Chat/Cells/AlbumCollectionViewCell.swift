@@ -3,6 +3,7 @@ import UIKit
 class AlbumCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var dotImageView: UIImageView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -16,6 +17,7 @@ class AlbumCollectionViewCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         imageView.sd_cancelCurrentImageLoad()
+        dotImageView.isHidden = true
     }
     
 }

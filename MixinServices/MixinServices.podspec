@@ -23,14 +23,11 @@ Mixin Core Services.
 
   s.static_framework = true
 
-  s.vendored_libraries = 'MixinServices/libsodium/lib/libsodium.a'
   s.source_files = 'MixinServices/Foundation/**/*', 'MixinServices/Crypto/**/*', 'MixinServices/Database/**/*', 'MixinServices/Services/**/*'
 
   s.dependency 'AppCenter'
   s.dependency 'Alamofire'
   s.dependency 'SDWebImage'
-  s.dependency 'SDWebImageYYPlugin/YYImage'
-  s.dependency 'YYImage/WebP'
   s.dependency 'DeviceGuru'
   s.dependency 'GzipSwift'
   s.dependency 'Zip'
@@ -38,10 +35,8 @@ Mixin Core Services.
   s.dependency 'SocketRocket'
   s.dependency 'GRDB.swift/SQLCipher'
   s.dependency 'SQLCipher', '~> 4.0'
-  s.dependency 'lottie-ios'
   s.dependency 'BoringSSL'
-
-  s.xcconfig = { 'USER_HEADER_SEARCH_PATHS' => '${PODS_ROOT}/../MixinServices/MixinServices/libsodium/include/**' }
+  s.dependency 'Sodium'
 
   s.test_spec 'Tests' do |tests|
     tests.source_files = 'MixinServicesTests/**/*'

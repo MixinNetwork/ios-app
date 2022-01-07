@@ -13,9 +13,11 @@ class LogViewController: UIViewController {
     private var logs = [LogResponse]()
     private var isLoading = false
     private var isPageEnded = false
-    
-    class func instance() -> UIViewController {
+    private var category: AccountAPI.LogCategory = .all
+
+    class func instance(category: AccountAPI.LogCategory) -> UIViewController {
         let vc = R.storyboard.wallet.logs()!
+        vc.category = category
         let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.setting_logs())
         return container
     }
@@ -33,7 +35,7 @@ class LogViewController: UIViewController {
             return
         }
         isLoading = true
-        AccountAPI.logs(offset: logs.last?.createdAt) { [weak self](result) in
+        AccountAPI.logs(offset: logs.last?.createdAt, category: category) { [weak self](result) in
             guard let self = self else {
                 return
             }

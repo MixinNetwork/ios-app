@@ -7,20 +7,20 @@ class StickerInputModelController: NSObject {
     static let maxNumberOfRecentStickerRows = 6
     static let maxNumberOfRecentStickers = maxNumberOfRecentStickerRows * StickerInputModelController.numberOfItemsPerRow
     
-    let recentStickersViewController = RecentStickersViewController(index: 0)
-    let favoriteStickersViewController = FavoriteStickersViewController(index: 1)
-    let giphyViewController = GiphyViewController(index: 2)
-    let numberOfFixedControllers = 3
+    let recentStickersViewController = RecentStickersViewController(index: 1)
+    let favoriteStickersViewController = FavoriteStickersViewController(index: 2)
+    let giphyViewController = GiphyViewController(index: 3)
+    let numberOfFixedControllers = 4
     
-    private var officialStickers = [[StickerItem]]()
+    private var addedStickers = [[StickerItem]]()
     
     private var reusableStickerViewControllers = Set<StickersViewController>()
     
     var initialViewController: StickersCollectionViewController? {
-        if let vc = dequeueReusableStickersViewController(withIndex: 0), !vc.isEmpty {
+        if let vc = dequeueReusableStickersViewController(withIndex: 1), !vc.isEmpty {
             return vc
         } else {
-            let index = officialStickers.isEmpty ? numberOfFixedControllers - 1 : numberOfFixedControllers
+            let index = addedStickers.isEmpty ? numberOfFixedControllers - 1 : numberOfFixedControllers
             return dequeueReusableStickersViewController(withIndex: index)
         }
     }
@@ -35,20 +35,20 @@ class StickerInputModelController: NSObject {
         }
     }
     
-    func reloadOfficialStickers(albums: [Album]) {
-        officialStickers = albums.map{ StickerDAO.shared.getStickers(albumId: $0.albumId) }
+    func reloadAddedStickers(stickers: [[StickerItem]]) {
+        addedStickers = stickers
     }
     
     func dequeueReusableStickersViewController(withIndex index: Int) -> StickersCollectionViewController? {
-        guard index >= 0 && index - numberOfFixedControllers < officialStickers.count else {
+        guard index > 0 && index - numberOfFixedControllers < addedStickers.count else {
             return nil
         }
         switch index {
-        case 0:
-            return recentStickersViewController
         case 1:
-            return favoriteStickersViewController
+            return recentStickersViewController
         case 2:
+            return favoriteStickersViewController
+        case 3:
             return giphyViewController
         default:
             let viewController: StickersViewController
@@ -59,7 +59,7 @@ class StickerInputModelController: NSObject {
                 reusableStickerViewControllers.insert(viewController)
             }
             viewController.index = index
-            viewController.load(stickers: officialStickers[index - numberOfFixedControllers])
+            viewController.load(stickers: addedStickers[index - numberOfFixedControllers])
             return viewController
         }
     }

@@ -1,81 +1,58 @@
 import UIKit
-import YYImage
-import Lottie
+import SDWebImage
 import MixinServices
 
 class AnimatedStickerView: UIView {
     
     override var contentMode: UIView.ContentMode {
         didSet {
-            imageViewIfLoaded?.contentMode = contentMode
-            animationViewIfLoaded?.contentMode = contentMode
+            imageView.contentMode = contentMode
         }
     }
     
     var autoPlayAnimatedImage = false {
         didSet {
-            imageViewIfLoaded?.autoPlayAnimatedImage = autoPlayAnimatedImage
+            imageView.autoPlayAnimatedImage = autoPlayAnimatedImage
         }
     }
     
-    private(set) weak var imageViewIfLoaded: YYAnimatedImageView?
-    private(set) weak var animationViewIfLoaded: LOTAnimationView?
+    let imageView = SDAnimatedImageView()
     
-    private lazy var imageView: YYAnimatedImageView = {
-        let view = YYAnimatedImageView()
-        view.autoPlayAnimatedImage = autoPlayAnimatedImage
-        view.contentMode = contentMode
-        addSubview(view)
-        view.snp.makeConstraints { (make) in
-            make.edges.equalToSuperview()
-        }
-        imageViewIfLoaded = view
-        return view
-    }()
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        loadSubview()
+    }
     
-    private lazy var animationView: LOTAnimationView = {
-        let view = LOTAnimationView()
-        view.contentMode = contentMode
-        addSubview(view)
-        view.snp.makeConstraints { (make) in
-            make.edges.equalToSuperview()
-        }
-        animationViewIfLoaded = view
-        return view
-    }()
-    
-    private weak var animationDownloadToken: LottieAnimationLoader.Token?
-    
-    deinit {
-        animationDownloadToken?.cancel()
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        loadSubview()
     }
     
     func prepareForReuse() {
-        if let imageView = imageViewIfLoaded {
-            imageView.sd_cancelCurrentImageLoad()
-            imageView.image = nil
-            imageView.contentMode = contentMode
-        }
-        animationDownloadToken?.cancel()
-        if let animationView = animationViewIfLoaded {
-            animationView.animation = nil
-            animationView.contentMode = contentMode
-        }
+        imageView.sd_cancelCurrentImageLoad()
+        imageView.image = nil
+        imageView.contentMode = contentMode
     }
+    
+    private func loadSubview() {
+        imageView.autoPlayAnimatedImage = autoPlayAnimatedImage
+        imageView.contentMode = contentMode
+        imageView.maxBufferSize = .max
+        addSubview(imageView)
+        imageView.snp.makeEdgesEqualToSuperview()
+    }
+    
+}
+
+extension AnimatedStickerView {
     
     func load(sticker: StickerItem) {
         guard let url = URL(string: sticker.assetUrl) else {
             return
         }
-        if sticker.assetTypeIsJSON {
-            loadAnimation(url: url)
-        } else {
-            imageView.isHidden = false
-            animationViewIfLoaded?.isHidden = true
-            imageView.sd_setImage(with: url,
-                                  placeholderImage: nil,
-                                  context: sticker.imageLoadContext)
-        }
+        imageView.sd_setImage(with: url,
+                              placeholderImage: nil,
+                              context: sticker.imageLoadContext)
     }
     
     func load(message: MessageItem) {
@@ -87,66 +64,34 @@ class AnimatedStickerView: UIView {
         } else {
             return
         }
-        if message.assetTypeIsJSON {
-            loadAnimation(url: url)
-        } else {
-            animationViewIfLoaded?.isHidden = true
-            imageView.isHidden = false
-            let context = stickerLoadContext(category: message.assetCategory)
-            imageView.sd_setImage(with: url,
-                                  placeholderImage: nil,
-                                  context: context)
-        }
+        let context = stickerLoadContext(persistent: message.isStickerAdded)
+        imageView.sd_setImage(with: url,
+                              placeholderImage: nil,
+                              context: context)
     }
     
     func load(image: UIImage?, contentMode: UIView.ContentMode) {
-        imageView.isHidden = false
-        animationViewIfLoaded?.isHidden = true
         imageView.image = image
         imageView.contentMode = contentMode
     }
     
     func load(imageURL url: URL, contentMode: UIView.ContentMode) {
-        imageView.isHidden = false
-        animationViewIfLoaded?.isHidden = true
         imageView.sd_setImage(with: url)
         imageView.contentMode = contentMode
     }
     
+}
+
+extension AnimatedStickerView {
+    
     func startAnimating() {
-        if let imageView = imageViewIfLoaded {
-            imageView.autoPlayAnimatedImage = true
-            imageView.startAnimating()
-        }
-        if let animationView = animationViewIfLoaded {
-            animationView.loopAnimation = true
-            animationView.play()
-        }
+        imageView.autoPlayAnimatedImage = true
+        imageView.startAnimating()
     }
     
     func stopAnimating() {
-        if let imageView = imageViewIfLoaded {
-            imageView.autoPlayAnimatedImage = false
-            imageView.stopAnimating()
-        }
-        if let animationView = animationViewIfLoaded {
-            animationView.pause()
-        }
-    }
-    
-    private func loadAnimation(url: URL) {
-        animationView.isHidden = false
-        imageViewIfLoaded?.isHidden = true
-        animationDownloadToken = LottieAnimationLoader.shared.loadAnimation(with: url, completion: { [weak self] (composition) in
-            guard let self = self else {
-                return
-            }
-            self.animationView.sceneModel = composition
-            if self.autoPlayAnimatedImage {
-                self.animationView.loopAnimation = true
-                self.animationView.play()
-            }
-        })
+        imageView.autoPlayAnimatedImage = false
+        imageView.stopAnimating()
     }
     
 }

@@ -9,6 +9,7 @@ public struct StickerResponse: Codable {
     public let assetWidth: Int
     public let assetHeight: Int
     public let createdAt: String
+    public let albumId: String?
     
     enum CodingKeys: String, CodingKey {
         case stickerId = "sticker_id"
@@ -18,6 +19,7 @@ public struct StickerResponse: Codable {
         case assetWidth = "asset_width"
         case assetHeight = "asset_height"
         case createdAt = "created_at"
+        case albumId = "album_id"
     }
     
 }

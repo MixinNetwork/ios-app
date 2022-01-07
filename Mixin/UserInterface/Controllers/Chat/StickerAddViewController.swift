@@ -1,5 +1,5 @@
+import CoreServices
 import UIKit
-import YYImage
 import Photos
 import SDWebImage
 import MixinServices
@@ -12,7 +12,7 @@ class StickerAddViewController: UIViewController {
         case image(UIImage)
     }
     
-    @IBOutlet weak var previewImageView: YYAnimatedImageView!
+    @IBOutlet weak var previewImageView: SDAnimatedImageView!
     
     private var source: Source!
     
@@ -30,7 +30,7 @@ class StickerAddViewController: UIViewController {
                 self?.container?.rightButton.isEnabled = image != nil
             }
             if let assetUrl = item.assetUrl {
-                let context = [SDWebImageContextOption.animatedImageClass: YYImage.self]
+                let context = [SDWebImageContextOption.animatedImageClass: SDAnimatedImage.self]
                 previewImageView.sd_setImage(with: URL(string: assetUrl),
                                              placeholderImage: nil,
                                              context: context,
@@ -47,26 +47,27 @@ class StickerAddViewController: UIViewController {
                 // container's right button will keep disabled if no image is loaded
             }
         case .asset(let asset):
+            let manager = PHImageManager.default()
             let options = PHImageRequestOptions()
             options.version = .current
             options.deliveryMode = .opportunistic
             options.isNetworkAccessAllowed = true
             if asset.playbackStyle == .imageAnimated {
-                PHImageManager.default().requestImageData(for: asset, options: options) { [weak self] (data, _, _, _) in
-                    guard let self = self, let data = data, let image = YYImage(data: data) else {
+                manager.requestImageData(for: asset, options: options) { [weak self] (data, _, _, _) in
+                    guard let self = self, let data = data, let image = SDAnimatedImage(data: data) else {
                         return
                     }
                     self.previewImageView.image = image
                     self.container?.rightButton.isEnabled = true
                 }
             } else {
-                PHImageManager.default().requestImage(for: asset, targetSize: PHImageManagerMaximumSize, contentMode: .default, options: options, resultHandler: { [weak self] (image, _) in
+                manager.requestImage(for: asset, targetSize: PHImageManagerMaximumSize, contentMode: .default, options: options) { [weak self] (image, _) in
                     guard let self = self, let image = image else {
                         return
                     }
                     self.previewImageView.image = image
                     self.container?.rightButton.isEnabled = true
-                })
+                }
             }
         case .image(let image):
             previewImageView.image = image
@@ -88,7 +89,7 @@ extension StickerAddViewController: ContainerViewControllerDelegate {
             return
         }
         rightButton.isBusy = true
-        if let image = previewImageView.image as? YYImage, image.animatedImageFrameCount() > 1, let data = image.animatedImageData {
+        if let image = previewImageView.image as? SDAnimatedImage, image.animatedImageFrameCount > 1, let data = image.animatedImageData {
             if isValid(animatedImageData: data) {
                 performAddition(data: data)
             } else {
@@ -165,7 +166,7 @@ extension StickerAddViewController {
         if let width = properties?[kCGImagePropertyPixelWidth] as? NSNumber, let height = properties?[kCGImagePropertyPixelHeight] as? NSNumber {
             size = CGSize(width: width.doubleValue, height: height.doubleValue)
         } else {
-            size = YYImage(data: data)?.size ?? .zero
+            size = SDAnimatedImage(data: data)?.size ?? .zero
         }
         return min(size.width, size.height) >= 64
             && max(size.width, size.height) <= 512

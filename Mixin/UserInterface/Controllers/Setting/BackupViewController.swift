@@ -74,7 +74,7 @@ class BackupViewController: SettingsTableViewController {
                            object: backupVideosRow)
         center.addObserver(self,
                            selector: #selector(backupChanged),
-                           name: Application.backupDidChangeNotification,
+                           name: BackupJob.backupDidChangeNotification,
                            object: nil)
         
         if BackupJobQueue.shared.isBackingUp || BackupJobQueue.shared.isRestoring {

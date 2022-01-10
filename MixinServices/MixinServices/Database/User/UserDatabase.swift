@@ -462,6 +462,10 @@ public final class UserDatabase: Database {
             }
         }
         
+        migrator.registerMigration("properties") { db in
+            try db.execute(sql: "CREATE TABLE IF NOT EXISTS properties (key TEXT NOT NULL, value TEXT NOT NULL, updated_at TEXT NOT NULL, PRIMARY KEY(key))")
+        }
+        
         return migrator
     }
     

@@ -68,6 +68,11 @@ class DatabaseUpgradeViewController: UIViewController {
                     .appendingPathComponent("Lottie")
                 try? FileManager.default.removeItem(at: lottieCacheURL)
             }
+            if localVersion < 29 {
+                let it = AppGroupUserDefaults.Crypto.iterator + 100
+                Logger.general.info(category: "PIN", message: "Updated iterator from: \(AppGroupUserDefaults.Crypto.iterator), to: \(it)")
+                PropertiesDAO.shared.set(it, forKey: .iterator)
+            }
             
             AppGroupUserDefaults.User.needsRebuildDatabase = false
             AppGroupUserDefaults.User.localVersion = AppGroupUserDefaults.User.version

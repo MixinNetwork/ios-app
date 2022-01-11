@@ -32,8 +32,7 @@ final class DeleteAccountVerifyNumberViewController: MobileNumberViewController 
 extension DeleteAccountVerifyNumberViewController {
     
     private func requestVerificationCode(captchaToken token: CaptchaToken?) {
-        //TODO: ‼️ add new purpose
-        AccountAPI.sendCode(to: context.number, captchaToken: token, purpose: .phone) { [weak self] (result) in
+        AccountAPI.sendCode(to: context.number, captchaToken: token, purpose: .deactivated) { [weak self] (result) in
             guard let weakSelf = self else {
                 return
             }

@@ -12,6 +12,7 @@ final class DeleteAccountConfirmWindow: BottomSheetView {
     @IBOutlet weak var textLabelTrailingConstraint: NSLayoutConstraint!
     
     private var lastViewWidth: CGFloat = 0
+    private var context: VerifyNumberContext!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -28,11 +29,12 @@ final class DeleteAccountConfirmWindow: BottomSheetView {
         textLabel.textColor = .title
         textLabel.detectLinks = false
         
-        let date = DateFormatter.deleteAccountFormatter.string(from: Date())
-        let text = R.string.localizable.setting_delete_account_confirm_hint(date)
-        textLabel.text = text
+        let thirtyDaysLater = Date().addingTimeInterval(30 * .oneDay)
+        let date = DateFormatter.deleteAccountFormatter.string(from: thirtyDaysLater)
+        let hint = R.string.localizable.setting_delete_account_confirm_hint(date)
+        textLabel.text = hint
         textLabel.delegate = self
-        let linkRange = (text as NSString)
+        let linkRange = (hint as NSString)
             .range(of: R.string.localizable.action_learn_more(), options: [.backwards, .caseInsensitive])
         if linkRange.location != NSNotFound && linkRange.length != 0 {
             textLabel.linkColor = .theme
@@ -52,13 +54,15 @@ final class DeleteAccountConfirmWindow: BottomSheetView {
         textLabelHeightConstraint.constant = textLabel.sizeThatFits(sizeToFitLabel).height
         lastViewWidth = bounds.width
     }
-
+    
     @IBAction func closeAction(_ sender: Any) {
         dismissPopupControllerAnimated()
     }
     
-    class func instance() -> DeleteAccountConfirmWindow {
-        return R.nib.deleteAccountConfirmWindow(owner: self)!
+    class func instance(context: VerifyNumberContext) -> DeleteAccountConfirmWindow {
+        let window = R.nib.deleteAccountConfirmWindow(owner: self)!
+        window.context = context
+        return window
     }
     
 }
@@ -74,37 +78,30 @@ extension DeleteAccountConfirmWindow {
         layoutIfNeeded()
     }
     
-    private func deleteAccount() {
-        UserDatabase.current.erase()
-        TaskDatabase.current.erase()
-        //TODO: ‼️ logout desktop ? delete messages ?
-        LoginManager.shared.logout(from: "DeleteAccount")
-    }
-    
 }
 
 extension DeleteAccountConfirmWindow: PinFieldDelegate {
     
     func inputFinished(pin: String) {
-        //TODO: ‼️ new delete account api ?
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-        AccountAPI.verify(pin: pin, completion: { [weak self] (result) in
-            guard let self = self else {
+        AccountAPI.deactiveAccount(pin: pin, verificationID: context.verificationId) { [weak self] (result) in
+            hud.hide()
+            guard let weakSelf = self else {
                 return
             }
             switch result {
             case .success:
-                self.deleteAccount()
-                hud.hide()
+                LoginManager.shared.logout(from: "DeleteAccount")
             case let .failure(error):
-                hud.hide()
-                self.pinField.clear()
-                PINVerificationFailureHandler.handle(error: error) { (description) in
-                    self.alert(description)
+                weakSelf.pinField.clear()
+                PINVerificationFailureHandler.handle(error: error) { [weak self] (description) in
+                    self?.alert(description, cancelHandler: { _ in
+                        self?.pinField.becomeFirstResponder()
+                    })
                 }
             }
-        })
+        }
     }
     
 }

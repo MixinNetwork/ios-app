@@ -1,8 +1,7 @@
 import Foundation
 
 struct VerifyNumberContext {
-    //TODO: ‼️ rmove pin ?
-    var pin = ""
+    var code = ""
     var verificationId = ""
     var number = ""
     var numberRepresentation = ""

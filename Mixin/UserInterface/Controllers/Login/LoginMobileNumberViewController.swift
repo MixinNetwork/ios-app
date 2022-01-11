@@ -73,9 +73,16 @@ final class LoginMobileNumberViewController: MobileNumberViewController {
             case let .success(verification):
                 ctx.verificationId = verification.id
                 ctx.hasEmergencyContact = verification.hasEmergencyContact
-                let vc = PhoneNumberLoginVerificationCodeViewController()
-                vc.context = ctx
-                weakSelf.navigationController?.pushViewController(vc, animated: true)
+                if verification.isDeleting {
+                    ctx.deactivatedAt = verification.deactivatedAt
+                    let vc = AbortAccountDeletionViewController()
+                    vc.context = ctx
+                    weakSelf.navigationController?.pushViewController(vc, animated: true)
+                } else {
+                    let vc = PhoneNumberLoginVerificationCodeViewController()
+                    vc.context = ctx
+                    weakSelf.navigationController?.pushViewController(vc, animated: true)
+                }
                 weakSelf.continueButton.isBusy = false
             case let .failure(error):
                 switch error {

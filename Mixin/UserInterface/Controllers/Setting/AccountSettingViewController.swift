@@ -50,9 +50,10 @@ extension AccountSettingViewController: UITableViewDelegate {
         } else {
             viewController = DeleteAccountSettingViewController.instance()
         }
-        if let viewController = viewController {
-            navigationController?.pushViewController(viewController, animated: true)
+        guard let viewController = viewController else {
+            return
         }
+        navigationController?.pushViewController(viewController, animated: true)
     }
     
 }

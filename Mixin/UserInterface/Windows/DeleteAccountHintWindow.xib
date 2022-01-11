@@ -17,7 +17,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gRH-PG-bOu" customClass="TopRoundedView" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="0.0" y="252.5" width="414" height="643.5"/>
+                    <rect key="frame" x="0.0" y="284.5" width="414" height="611.5"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PVY-2L-BkX">
                             <rect key="frame" x="348" y="0.0" width="66" height="70"/>
@@ -42,31 +42,31 @@
                             </userDefinedRuntimeAttributes>
                         </label>
                         <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="7lh-s3-poK">
-                            <rect key="frame" x="60" y="121" width="274" height="198"/>
+                            <rect key="frame" x="16" y="117" width="382" height="198"/>
                             <color key="backgroundColor" name="background"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="198" id="HsN-jZ-RZD"/>
                             </constraints>
                         </tableView>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XwZ-No-lpS">
-                            <rect key="frame" x="22" y="332" width="370" height="108"/>
+                            <rect key="frame" x="22" y="330" width="370" height="92.5"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cik-uN-5Ia">
-                                    <rect key="frame" x="14" y="12" width="342" height="84"/>
+                                    <rect key="frame" x="14" y="12" width="342" height="62.5"/>
                                     <string key="text">Your Mixin wallet still has some assets that can be withdrawn to other wallets or exchanges, once the account is cancelled these assets will be abandoned along with the wallet and cannot be recovered.</string>
-                                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="13"/>
                                     <color key="textColor" name="red"/>
                                     <nil key="highlightedColor"/>
                                     <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="setting_delete_account_content"/>
-                                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="medium14"/>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="setting_delete_account_assets_hint"/>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="medium13"/>
                                     </userDefinedRuntimeAttributes>
                                 </label>
                             </subviews>
                             <color key="backgroundColor" name="background_selection"/>
                             <constraints>
                                 <constraint firstItem="cik-uN-5Ia" firstAttribute="leading" secondItem="XwZ-No-lpS" secondAttribute="leading" constant="14" id="NZs-9D-HZn"/>
-                                <constraint firstAttribute="bottom" secondItem="cik-uN-5Ia" secondAttribute="bottom" constant="12" id="Uxv-bw-sXE"/>
+                                <constraint firstAttribute="bottom" secondItem="cik-uN-5Ia" secondAttribute="bottom" constant="18" id="Uxv-bw-sXE"/>
                                 <constraint firstItem="cik-uN-5Ia" firstAttribute="top" secondItem="XwZ-No-lpS" secondAttribute="top" constant="12" id="Wwj-Na-O3T"/>
                                 <constraint firstAttribute="trailing" secondItem="cik-uN-5Ia" secondAttribute="trailing" constant="14" id="sUL-Rn-bX9"/>
                             </constraints>
@@ -77,7 +77,7 @@
                             </userDefinedRuntimeAttributes>
                         </view>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rg7-jN-Pgj" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="147" y="480" width="120" height="42"/>
+                            <rect key="frame" x="147" y="454.5" width="120" height="42"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="42" id="KWT-Z1-5FI"/>
                                 <constraint firstAttribute="width" constant="120" id="uwP-A5-fj9"/>
@@ -98,11 +98,10 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MtM-g1-SJU">
-                            <rect key="frame" x="162.5" y="546" width="89.5" height="33.5"/>
-                            <state key="normal" title="Button"/>
-                            <buttonConfiguration key="configuration" style="plain" title="Continue">
-                                <fontDescription key="titleFontDescription" type="system" pointSize="16"/>
-                            </buttonConfiguration>
+                            <rect key="frame" x="166" y="516.5" width="82.5" height="31"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" title="Continue"/>
+                            <buttonConfiguration key="configuration" style="plain" title="Continue"/>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="action_continue"/>
                                 <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
@@ -115,18 +114,18 @@
                     <color key="backgroundColor" name="background"/>
                     <constraints>
                         <constraint firstItem="PVY-2L-BkX" firstAttribute="top" secondItem="gRH-PG-bOu" secondAttribute="top" id="2kj-59-7BL"/>
-                        <constraint firstItem="7lh-s3-poK" firstAttribute="leading" secondItem="gRH-PG-bOu" secondAttribute="leading" constant="60" id="5Ez-Tu-IPq"/>
+                        <constraint firstItem="7lh-s3-poK" firstAttribute="leading" secondItem="gRH-PG-bOu" secondAttribute="leading" constant="16" id="5Ez-Tu-IPq"/>
                         <constraint firstAttribute="trailing" secondItem="XwZ-No-lpS" secondAttribute="trailing" constant="22" id="8x5-ey-09s"/>
-                        <constraint firstAttribute="trailing" secondItem="7lh-s3-poK" secondAttribute="trailing" constant="80" id="E1R-5T-Smr"/>
+                        <constraint firstAttribute="trailing" secondItem="7lh-s3-poK" secondAttribute="trailing" constant="16" id="E1R-5T-Smr"/>
                         <constraint firstItem="MtM-g1-SJU" firstAttribute="centerX" secondItem="gRH-PG-bOu" secondAttribute="centerX" id="Gkb-0C-iIE"/>
                         <constraint firstAttribute="trailing" secondItem="PVY-2L-BkX" secondAttribute="trailing" id="MG6-i2-YAl"/>
                         <constraint firstItem="XwZ-No-lpS" firstAttribute="leading" secondItem="gRH-PG-bOu" secondAttribute="leading" constant="22" id="PsK-5T-91B"/>
                         <constraint firstItem="Agb-iB-MbX" firstAttribute="top" secondItem="gRH-PG-bOu" secondAttribute="top" constant="70" id="Pz4-9w-CUj"/>
                         <constraint firstItem="Rg7-jN-Pgj" firstAttribute="centerX" secondItem="gRH-PG-bOu" secondAttribute="centerX" id="Zac-zi-mRD"/>
-                        <constraint firstItem="MtM-g1-SJU" firstAttribute="top" secondItem="Rg7-jN-Pgj" secondAttribute="bottom" constant="24" id="bhp-cx-wNY"/>
-                        <constraint firstItem="XwZ-No-lpS" firstAttribute="top" secondItem="7lh-s3-poK" secondAttribute="bottom" constant="13" id="hr7-zT-SHF"/>
-                        <constraint firstItem="7lh-s3-poK" firstAttribute="top" secondItem="Agb-iB-MbX" secondAttribute="bottom" constant="29" id="kAC-z1-mPn"/>
-                        <constraint firstItem="Rg7-jN-Pgj" firstAttribute="top" secondItem="XwZ-No-lpS" secondAttribute="bottom" constant="40" id="omw-7A-geD"/>
+                        <constraint firstItem="MtM-g1-SJU" firstAttribute="top" secondItem="Rg7-jN-Pgj" secondAttribute="bottom" constant="20" id="bhp-cx-wNY"/>
+                        <constraint firstItem="XwZ-No-lpS" firstAttribute="top" secondItem="7lh-s3-poK" secondAttribute="bottom" constant="15" id="hr7-zT-SHF"/>
+                        <constraint firstItem="7lh-s3-poK" firstAttribute="top" secondItem="Agb-iB-MbX" secondAttribute="bottom" constant="25" id="kAC-z1-mPn"/>
+                        <constraint firstItem="Rg7-jN-Pgj" firstAttribute="top" secondItem="XwZ-No-lpS" secondAttribute="bottom" constant="32" id="omw-7A-geD"/>
                         <constraint firstItem="Agb-iB-MbX" firstAttribute="centerX" secondItem="gRH-PG-bOu" secondAttribute="centerX" id="uAh-Rb-g4t"/>
                     </constraints>
                 </view>

@@ -10,11 +10,10 @@ final class DeleteAccountHintWindow: BottomSheetView {
     var onContinue: (() -> Void)?
     
     private var assets = [AssetItem]()
-    private let cellHeight: CGFloat = 66
-    private let maxTableHeight: CGFloat = 198
+    private let maxTableHeight: CGFloat = AssetCell.height * 3
     
     class func instance() -> DeleteAccountHintWindow {
-        return R.nib.deleteAccountHintWindow(owner: self)!
+        R.nib.deleteAccountHintWindow(owner: self)!
     }
     
     override func awakeFromNib() {
@@ -27,7 +26,7 @@ final class DeleteAccountHintWindow: BottomSheetView {
     
     func render(assets: [AssetItem]) {
         self.assets = assets
-        tableViewHeightConstraint.constant = min(maxTableHeight, CGFloat(assets.count) * cellHeight)
+        tableViewHeightConstraint.constant = min(maxTableHeight, CGFloat(assets.count) * AssetCell.height)
         tableView.reloadData()
     }
     
@@ -50,19 +49,18 @@ final class DeleteAccountHintWindow: BottomSheetView {
 extension DeleteAccountHintWindow: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return assets.count
+        assets.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.asset, for: indexPath)!
         if indexPath.row < assets.count {
-            cell.render(asset: assets[indexPath.row], showBalanceOnly: true)
+            cell.render(asset: assets[indexPath.row])
         }
         return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return cellHeight
+        AssetCell.height
     }
-    
 }

@@ -35,8 +35,7 @@ final class DeleteAccountVerifyCodeViewController: VerificationCodeViewControlle
     }
     
     override func requestVerificationCode(captchaToken token: CaptchaToken?) {
-        //TODO: ‼️ add new purpose
-        AccountAPI.sendCode(to: context.number, captchaToken: token, purpose: .phone) { [weak self] (result) in
+        AccountAPI.sendCode(to: context.number, captchaToken: token, purpose: .deactivated) { [weak self] (result) in
             guard let weakSelf = self else {
                 return
             }
@@ -75,29 +74,26 @@ final class DeleteAccountVerifyCodeViewController: VerificationCodeViewControlle
 extension DeleteAccountVerifyCodeViewController {
     
     private func verifyCode() {
-        //TODO: ‼️ new api verify number without pin and process failure 
         isBusy = true
+        verificationCodeField.resignFirstResponder()
         let code = verificationCodeField.text
-        let request = AccountRequest(code: code, registrationId: nil, pin: context.pin, sessionSecret: nil)
-        AccountAPI.changePhoneNumber(verificationId: context.verificationId, accountRequest: request, completion: { [weak self] (result) in
+        AccountAPI.deactiveVerification(verificationId: context.verificationId, code: code) { [weak self] (result) in
             guard let weakSelf = self else {
                 return
             }
             switch result {
             case .success:
-                UIView.animate(withDuration: 0.3) {
-                    weakSelf.verificationCodeField.resignFirstResponder()
-                } completion: { _ in
-                    DeleteAccountConfirmWindow.instance().presentPopupControllerAnimated()
-                }
+                DeleteAccountConfirmWindow.instance(context: weakSelf.context).presentPopupControllerAnimated()
             case let .failure(error):
-                weakSelf.isBusy = false
                 weakSelf.verificationCodeField.clear()
                 PINVerificationFailureHandler.handle(error: error) { [weak self] (description) in
-                    self?.alert(description)
+                    self?.alert(description, cancelHandler: { _ in
+                        self?.verificationCodeField.becomeFirstResponder()
+                    })
                 }
             }
-        })
+            weakSelf.isBusy = false
+        }
     }
     
 }

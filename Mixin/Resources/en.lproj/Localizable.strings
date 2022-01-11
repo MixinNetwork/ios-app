@@ -165,6 +165,8 @@
 "toast_captcha_timeout" = "Validation timed out";
 "desktop_login_confim" = "Confirm login to Mixin Messenger Desktop";
 "desktop_upgrade" = "Please upgrade Mixin Messenger Desktop to the latest version.";
+"abort_account_deletion_title" = "Continue to log in and abort account deletion";
+"abort_account_deletion_hint" = "Your account will be deleted on %@, if you continue to log in, the request to delete your account will be cancelled.";
 
 // Contacts
 "contact_title" = "Contacts";
@@ -910,11 +912,12 @@
 "setting_account_security" = "Security";
 "setting_account_change_number" = "Change Number";
 "setting_delete_account_hint_profile" = "Delete your account info and profile photo";
-"setting_delete_account_hint_message" = "Local messages and iCloud Backups will not be beleted automatically";
+"setting_delete_account_hint_message" = "Local messages and iCloud Backups will not be deleted automatically";
 "setting_delete_account_hint_transaction" = "Transactions cannot be deleted";
 "setting_delete_account_view_wallet" = "View Wallet";
+"setting_delete_account_assets_hint" = "Your Mixin wallet still has some assets that can be withdrawn to other wallets or exchanges, once the account is cancelled these assets will be abandoned along with the wallet and cannot be recovered.";
 "setting_delete_account_confirm_title" = "Enter your PIN to delete your account";
-"setting_delete_account_confirm_hint" = "If you continue, your profile and account details will be delete on January 18,2022. read our document to Learn more.";
+"setting_delete_account_confirm_hint" = "If you continue, your profile and account details will be delete on %@. read our document to Learn more.";
 
 // ScreenLock
 "screen_lock_locked" = "Mixin Locked";

@@ -30,7 +30,7 @@ class AssetCell: ModernSelectedBackgroundCell {
         assetIconView.prepareForReuse()
     }
     
-    func render(asset: AssetItem, attributedSymbol: NSAttributedString? = nil, showBalanceOnly: Bool = false) {
+    func render(asset: AssetItem, attributedSymbol: NSAttributedString? = nil) {
         assetIconView.setIcon(asset: asset)
         let balance: String
         if asset.balance == "0" {
@@ -44,34 +44,25 @@ class AssetCell: ModernSelectedBackgroundCell {
         } else {
             symbolLabel.attributedText = NSAttributedString(string: asset.symbol, attributes: AssetCell.symbolAttributes)
         }
-        fiatMoneyBalanceLabel.text = asset.localizedFiatMoneyBalance
-        if showBalanceOnly {
-            changeLabel.isHidden = true
-            fiatMoneyPriceLabel.isHidden = true
-            noFiatMoneyPriceIndicatorLabel.isHidden = true
-        } else {
-            changeLabel.isHidden = false
-            fiatMoneyPriceLabel.isHidden = false
-            noFiatMoneyPriceIndicatorLabel.isHidden = false
-            if asset.priceUsd.doubleValue > 0 {
-                changeLabel.text = " \(asset.localizedUsdChange)%"
-                if asset.changeUsd.doubleValue > 0 {
-                    changeLabel.textColor = .walletGreen
-                } else {
-                    changeLabel.textColor = .walletRed
-                }
-                fiatMoneyPriceLabel.text = Currency.current.symbol + asset.localizedFiatMoneyPrice
-                changeLabel.alpha = 1
-                fiatMoneyPriceLabel.alpha = 1
-                noFiatMoneyPriceIndicatorLabel.alpha = 0
+        if asset.priceUsd.doubleValue > 0 {
+            changeLabel.text = " \(asset.localizedUsdChange)%"
+            if asset.changeUsd.doubleValue > 0 {
+                changeLabel.textColor = .walletGreen
             } else {
-                changeLabel.text = Localized.WALLET_NO_PRICE // Just for layout guidance
-                fiatMoneyPriceLabel.text = nil
-                changeLabel.alpha = 0
-                fiatMoneyPriceLabel.alpha = 0
-                noFiatMoneyPriceIndicatorLabel.alpha = 1
+                changeLabel.textColor = .walletRed
             }
+            fiatMoneyPriceLabel.text = Currency.current.symbol + asset.localizedFiatMoneyPrice
+            changeLabel.alpha = 1
+            fiatMoneyPriceLabel.alpha = 1
+            noFiatMoneyPriceIndicatorLabel.alpha = 0
+        } else {
+            changeLabel.text = Localized.WALLET_NO_PRICE // Just for layout guidance
+            fiatMoneyPriceLabel.text = nil
+            changeLabel.alpha = 0
+            fiatMoneyPriceLabel.alpha = 0
+            noFiatMoneyPriceIndicatorLabel.alpha = 1
         }
+        fiatMoneyBalanceLabel.text = asset.localizedFiatMoneyBalance
     }
     
 }

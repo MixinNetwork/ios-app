@@ -23,6 +23,8 @@ final class AccountAPI: MixinAPI {
         static let verifyPin = "/pin/verify"
         static let updatePin = "/pin/update"
         
+        static let deactivate = "/me/deactivate"
+        
         static func logs(offset: String? = nil, category: LogCategory, limit: Int? = nil) -> String {
             var params = [String]()
             if let offset = offset {
@@ -175,4 +177,23 @@ final class AccountAPI: MixinAPI {
         request(method: .post, path: Path.logout, parameters: ["session_id": sessionId], completion: completion)
     }
     
+    static func deactiveVerification(verificationId: String, code: String, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {
+        let parameters = ["code": code, "purpose": VerificationPurpose.deactivated.rawValue]
+        request(method: .post, path: Path.verifications(id: verificationId),
+                parameters: parameters,
+                retry: false,
+                completion: completion)
+    }
+    
+    static func deactiveAccount(pin: String, verificationID: String, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {
+        PINEncryptor.encrypt(pin: pin, onFailure: completion) { (encryptedPin) in
+            let parameters = ["pin_base64": encryptedPin, "verification_id": verificationID]
+            request(method: .post,
+                    path: Path.deactivate,
+                    parameters: parameters,
+                    retry: false,
+                    completion: completion)
+        }
+    }
+
 }

@@ -165,6 +165,8 @@
 "toast_captcha_timeout" = "验证超时";
 "desktop_login_confim" = "确认登录 Mixin Messenger 桌面端？";
 "desktop_upgrade" = "请升级 Mixin Messenger 桌面端至最新版！";
+"abort_account_deletion_title" = "继续登录并放弃删除账户";
+"abort_account_deletion_hint" = "您的账户将在%@被删除，如果您继续登录，删除账户的请求将被取消。";
 
 // Contacts
 "contact_title" = "联系人";
@@ -914,6 +916,7 @@
 "setting_delete_account_hint_message" = "本地消息和 iCloud 备份不会被自动删除";
 "setting_delete_account_hint_transaction" = "交易不能被删除";
 "setting_delete_account_view_wallet" = "查看钱包";
+"setting_delete_account_assets_hint" = "你的 Mixin 钱包还有一些资产，可以提现至其他钱包或交易所，账户一旦注销，这些资产将和钱包一起被弃用无法找回。";
 "setting_delete_account_confirm_title" = "输入您的钱包密码以删除账户";
 "setting_delete_account_confirm_hint" = "如果继续，您的个人资料和账户信息将在%@被删除。阅读文档以了解更多。";
 

@@ -44,6 +44,7 @@ final class DeleteAccountSettingViewController: SettingsTableViewController {
 extension DeleteAccountSettingViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         if LoginManager.shared.account?.has_pin ?? false {
             indexPath.section == 0 ? verifyPIN() : changeNumber()
         } else {
@@ -63,10 +64,13 @@ extension DeleteAccountSettingViewController {
         tableView.tableHeaderView = tableHeaderView
     }
     
-    private func deleteAccount() {
+    private func checkAvailableAssets() {
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         DispatchQueue.global().async { [weak self] in
             let assets = AssetDAO.shared.getAvailableAssets()
             DispatchQueue.main.async {
+                hud.hide()
                 guard let self = self else {
                     return
                 }
@@ -92,7 +96,7 @@ extension DeleteAccountSettingViewController {
     
     private func verifyPIN() {
         let vc = DeleteAccountVerifyPINViewController()
-        vc.onSuccess = deleteAccount
+        vc.onSuccess = checkAvailableAssets
         let navi = VerifyPinNavigationController(rootViewController: vc)
         navi.modalPresentationStyle = .overFullScreen
         present(navi, animated: true, completion: nil)

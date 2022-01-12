@@ -13,15 +13,11 @@ class DeleteAccountTableHeaderView: UIView {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        let strings = [
-            R.string.localizable.setting_delete_account_hint_profile(),
-            R.string.localizable.setting_delete_account_hint_message(),
-            R.string.localizable.setting_delete_account_hint_transaction()
-        ]
-        label.attributedText = bulletAttributedString(with: strings)
+        updateLabelText()
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
+        updateLabelText()
         let labelWidth = size.width
             - labelLeadingConstraint.constant
             - labelTrailingConstraint.constant
@@ -39,7 +35,7 @@ class DeleteAccountTableHeaderView: UIView {
 
 extension DeleteAccountTableHeaderView {
     
-    private func bulletAttributedString(with strings: [String]) -> NSAttributedString {
+    private func updateLabelText() {
         let indentation: CGFloat = 10
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.tabStops = [NSTextTab(textAlignment: .left, location: indentation)]
@@ -48,15 +44,20 @@ extension DeleteAccountTableHeaderView {
         paragraphStyle.paragraphSpacing = 6
         paragraphStyle.headIndent = indentation
         let textAttributes: [NSAttributedString.Key: Any] = [
-            .font: UIFont.systemFont(ofSize: 14),
+            .font: UIFont.scaledFont(ofSize: 14, weight: .regular),
             .foregroundColor: UIColor.title,
             .paragraphStyle: paragraphStyle
         ]
         let bulletAttributes: [NSAttributedString.Key: Any] = [
-            .font: UIFont.systemFont(ofSize: 14),
+            .font: UIFont.scaledFont(ofSize: 14, weight: .regular),
             .foregroundColor: UIColor.textAccessory
         ]
         let bullet = "• "
+        let strings = [
+            R.string.localizable.setting_delete_account_hint_profile(),
+            R.string.localizable.setting_delete_account_hint_message(),
+            R.string.localizable.setting_delete_account_hint_transaction()
+        ]
         let bulletListString = NSMutableAttributedString()
         for string in strings {
             let formattedString: String
@@ -70,7 +71,7 @@ extension DeleteAccountTableHeaderView {
             attributedString.addAttributes(bulletAttributes, range: rangeForBullet)
             bulletListString.append(attributedString)
         }
-        return bulletListString
+        label.attributedText = bulletListString
     }
     
 }

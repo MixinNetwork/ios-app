@@ -945,10 +945,6 @@
 "playlist_stop_confirmation" = "Stop playing this list？";
 "playlist_stop" = "Stop Playing";
 
-// Diagnose
-"diagnose_database" = "Database Diagnostics";
-"diagnose_database_description" = "Database Diagnostics";
-
 // Notifications
 "notification_reply" = "Reply";
 "notification_mute" = "Mute";

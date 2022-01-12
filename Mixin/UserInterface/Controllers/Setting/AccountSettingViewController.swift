@@ -19,7 +19,7 @@ final class AccountSettingViewController: SettingsTableViewController {
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
     }
-
+    
     class func instance() -> UIViewController {
         let vc = AccountSettingViewController()
         return ContainerViewController.instance(viewController: vc, title: R.string.localizable.setting_account())
@@ -50,10 +50,9 @@ extension AccountSettingViewController: UITableViewDelegate {
         } else {
             viewController = DeleteAccountSettingViewController.instance()
         }
-        guard let viewController = viewController else {
-            return
+        if let viewController = viewController {
+            navigationController?.pushViewController(viewController, animated: true)
         }
-        navigationController?.pushViewController(viewController, animated: true)
     }
     
 }

@@ -179,7 +179,8 @@ final class AccountAPI: MixinAPI {
     
     static func deactiveVerification(verificationId: String, code: String, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {
         let parameters = ["code": code, "purpose": VerificationPurpose.deactivated.rawValue]
-        request(method: .post, path: Path.verifications(id: verificationId),
+        request(method: .post,
+                path: Path.verifications(id: verificationId),
                 parameters: parameters,
                 retry: false,
                 completion: completion)

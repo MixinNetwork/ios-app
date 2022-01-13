@@ -120,13 +120,7 @@ account</string>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="jRc-z4-LS2" secondAttribute="bottom" id="8Cr-vK-6kX"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="Lxb-rN-kdH" secondAttribute="bottom" constant="207" id="OtX-Er-Yw8">
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
-                            <real key="value" value="10"/>
-                        </userDefinedRuntimeAttribute>
-                    </userDefinedRuntimeAttributes>
-                </constraint>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="Lxb-rN-kdH" secondAttribute="bottom" constant="207" id="OtX-Er-Yw8"/>
                 <constraint firstAttribute="trailing" secondItem="jRc-z4-LS2" secondAttribute="trailing" id="Qw9-1u-Old"/>
                 <constraint firstItem="jRc-z4-LS2" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="bsu-mG-uEg"/>
             </constraints>

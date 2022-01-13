@@ -249,16 +249,18 @@ extension HomeAppsManager {
         guard case let .app(app) = interaction.item else {
             return
         }
-        pinnedItems.insert(app, at: destinationIndexPath.row)
         let didRestoreSavedState: Bool
         if let savedState = interaction.savedState {
             items = savedState
             interaction.savedState = nil
             didRestoreSavedState = true
-        } else {
+        } else if interaction.currentIndexPath.row < items[currentPage].count {
             items[currentPage].remove(at: interaction.currentIndexPath.row)
             didRestoreSavedState = false
+        } else {
+            return
         }
+        pinnedItems.insert(app, at: destinationIndexPath.row)
         pageCell.items = pinnedItems.map { .app($0) }
         pageCell.draggedItem = interaction.item
         pageCell.collectionView.performBatchUpdates({
@@ -279,6 +281,9 @@ extension HomeAppsManager {
     }
     
     private func moveFromPinned(interaction: HomeAppsDragInteraction, pageCell: AppPageCell, destinationIndexPath: IndexPath) {
+        guard interaction.currentIndexPath.row < pinnedItems.count else {
+            return
+        }
         let didMoveLastItem: Bool
         // Need to move last item to next page
         if items[currentPage].count == HomeAppsMode.regular.appsPerPage {

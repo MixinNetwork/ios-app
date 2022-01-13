@@ -26,9 +26,6 @@
                     <color key="textColor" name="title"/>
                     <nil key="highlightedColor"/>
                     <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="number" keyPath="lineHeight">
-                            <real key="value" value="24"/>
-                        </userDefinedRuntimeAttribute>
                         <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
                     </userDefinedRuntimeAttributes>
                 </label>

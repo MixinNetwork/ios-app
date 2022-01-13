@@ -17,7 +17,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gRH-PG-bOu" customClass="TopRoundedView" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="0.0" y="284.5" width="414" height="611.5"/>
+                    <rect key="frame" x="0.0" y="293" width="414" height="603"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PVY-2L-BkX">
                             <rect key="frame" x="348" y="0.0" width="66" height="70"/>
@@ -77,34 +77,29 @@
                             </userDefinedRuntimeAttributes>
                         </view>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rg7-jN-Pgj" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="147" y="454.5" width="120" height="42"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="42" id="KWT-Z1-5FI"/>
-                                <constraint firstAttribute="width" constant="120" id="uwP-A5-fj9"/>
-                            </constraints>
+                            <rect key="frame" x="153" y="454.5" width="108" height="33.5"/>
                             <state key="normal" title="Button"/>
                             <buttonConfiguration key="configuration" style="plain" title="View Wallet">
                                 <fontDescription key="titleFontDescription" type="system" pointSize="16"/>
                             </buttonConfiguration>
                             <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                    <real key="value" value="21"/>
-                                </userDefinedRuntimeAttribute>
                                 <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="setting_delete_account_view_wallet"/>
                                 <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
+                                <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
                             </userDefinedRuntimeAttributes>
                             <connections>
                                 <action selector="viewWalletAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="tf3-3C-mFU"/>
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MtM-g1-SJU">
-                            <rect key="frame" x="166" y="516.5" width="82.5" height="31"/>
+                            <rect key="frame" x="166" y="508" width="82.5" height="31"/>
                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                             <state key="normal" title="Continue"/>
                             <buttonConfiguration key="configuration" style="plain" title="Continue"/>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="action_continue"/>
                                 <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
+                                <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
                             </userDefinedRuntimeAttributes>
                             <connections>
                                 <action selector="continueAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="hks-xt-Ofd"/>
@@ -120,12 +115,36 @@
                         <constraint firstItem="MtM-g1-SJU" firstAttribute="centerX" secondItem="gRH-PG-bOu" secondAttribute="centerX" id="Gkb-0C-iIE"/>
                         <constraint firstAttribute="trailing" secondItem="PVY-2L-BkX" secondAttribute="trailing" id="MG6-i2-YAl"/>
                         <constraint firstItem="XwZ-No-lpS" firstAttribute="leading" secondItem="gRH-PG-bOu" secondAttribute="leading" constant="22" id="PsK-5T-91B"/>
-                        <constraint firstItem="Agb-iB-MbX" firstAttribute="top" secondItem="gRH-PG-bOu" secondAttribute="top" constant="70" id="Pz4-9w-CUj"/>
+                        <constraint firstItem="Agb-iB-MbX" firstAttribute="top" secondItem="gRH-PG-bOu" secondAttribute="top" constant="70" id="Pz4-9w-CUj" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
+                                    <real key="value" value="50"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </constraint>
                         <constraint firstItem="Rg7-jN-Pgj" firstAttribute="centerX" secondItem="gRH-PG-bOu" secondAttribute="centerX" id="Zac-zi-mRD"/>
-                        <constraint firstItem="MtM-g1-SJU" firstAttribute="top" secondItem="Rg7-jN-Pgj" secondAttribute="bottom" constant="20" id="bhp-cx-wNY"/>
+                        <constraint firstItem="MtM-g1-SJU" firstAttribute="top" secondItem="Rg7-jN-Pgj" secondAttribute="bottom" constant="20" id="bhp-cx-wNY" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
+                                    <real key="value" value="10"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </constraint>
                         <constraint firstItem="XwZ-No-lpS" firstAttribute="top" secondItem="7lh-s3-poK" secondAttribute="bottom" constant="15" id="hr7-zT-SHF"/>
-                        <constraint firstItem="7lh-s3-poK" firstAttribute="top" secondItem="Agb-iB-MbX" secondAttribute="bottom" constant="25" id="kAC-z1-mPn"/>
-                        <constraint firstItem="Rg7-jN-Pgj" firstAttribute="top" secondItem="XwZ-No-lpS" secondAttribute="bottom" constant="32" id="omw-7A-geD"/>
+                        <constraint firstItem="7lh-s3-poK" firstAttribute="top" secondItem="Agb-iB-MbX" secondAttribute="bottom" constant="25" id="kAC-z1-mPn" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
+                                    <real key="value" value="5"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </constraint>
+                        <constraint firstItem="Rg7-jN-Pgj" firstAttribute="top" secondItem="XwZ-No-lpS" secondAttribute="bottom" constant="32" id="omw-7A-geD" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
+                                    <real key="value" value="15"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </constraint>
                         <constraint firstItem="Agb-iB-MbX" firstAttribute="centerX" secondItem="gRH-PG-bOu" secondAttribute="centerX" id="uAh-Rb-g4t"/>
                     </constraints>
                 </view>
@@ -152,7 +171,7 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_selection">
-            <color red="0.96100002527236938" green="0.96899998188018799" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="red">
             <color red="0.90980392156862744" green="0.41960784313725491" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

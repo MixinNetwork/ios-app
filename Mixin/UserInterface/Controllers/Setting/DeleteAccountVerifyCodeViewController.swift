@@ -14,13 +14,6 @@ final class DeleteAccountVerifyCodeViewController: VerificationCodeViewControlle
         titleLabel.text = R.string.localizable.navigation_title_enter_verification_code(context.numberRepresentation)
     }
     
-    override func layout(for keyboardFrame: CGRect) {
-        if keyboardFrame.height > keyboardLayoutGuideHeightConstraint.constant {
-            keyboardLayoutGuideHeightConstraint.constant = keyboardFrame.height
-        }
-        view.layoutIfNeeded()
-    }
-    
     override func verificationCodeFieldEditingChanged(_ sender: Any) {
         let code = verificationCodeField.text
         let codeCountMeetsRequirement = code.count == verificationCodeField.numberOfDigits

@@ -8,13 +8,6 @@ final class DeleteAccountVerifyNumberViewController: MobileNumberViewController 
         CaptchaManager.shared.clean()
     }
     
-    override func layout(for keyboardFrame: CGRect) {
-        if keyboardFrame.height > keyboardLayoutGuideHeightConstraint.constant {
-            keyboardLayoutGuideHeightConstraint.constant = keyboardFrame.height
-        }
-        view.layoutIfNeeded()
-    }
-    
     override func continueAction(_ sender: Any) {
         continueButton.isBusy = true
         context.number = fullNumber(withSpacing: false)

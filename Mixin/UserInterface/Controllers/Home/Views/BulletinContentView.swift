@@ -15,6 +15,9 @@ class BulletinContentView: UIView {
             case .emergencyContact:
                 titleLabel.text = R.string.localizable.home_bulletin_title_emergency_contact()
                 descriptionLabel.text = R.string.localizable.emergency_tip_before()
+            case .initializePIN:
+                titleLabel.text = R.string.localizable.home_bulletin_title_initialize_pin()
+                descriptionLabel.text = R.string.localizable.home_bulletin_description_initialize_pin()
             case .none:
                 titleLabel.text = nil
                 descriptionLabel.text = nil

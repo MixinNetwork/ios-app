@@ -224,8 +224,10 @@
 "home_cell_action_unpin" = "取消置顶";
 "home_title" = "聊天";
 "home_bulletin_title_notification" = "打开推送消息";
-"home_bulletin_description_notification" = "及时获取朋友们的最新消息";
 "home_bulletin_title_emergency_contact" = "紧急联系人";
+"home_bulletin_title_initialize_pin" = "创建钱包";
+"home_bulletin_description_notification" = "及时获取朋友们的最新消息";
+"home_bulletin_description_initialize_pin" = "创建你的第一个数字钱包，所有资产都在一个钱包，收发加密资产简单易用。";
 "home_bulletin_button_notification" = "设置";
 "home_title_apps" = "机器人";
 "home_apps_candidate_empty" = "可以添加你喜欢的机器人";

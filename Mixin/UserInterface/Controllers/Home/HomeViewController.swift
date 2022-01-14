@@ -5,6 +5,12 @@ import MixinServices
 
 class HomeViewController: UIViewController {
     
+    private enum BulletinDetectInterval {
+        static let notificationAuthorization: TimeInterval = 2 * .oneDay
+        static let emergencyContact: TimeInterval = 7 * .oneDay
+        static let initializePIN: TimeInterval = .oneDay
+    }
+    
     static var hasTriedToRequestReview = false
     static var showChangePhoneNumberTips = false
     
@@ -33,8 +39,6 @@ class HomeViewController: UIViewController {
     private let messageCountPerPage = 30
     private let numberOfHomeApps = 3
     private let bulletinContentTopMargin: CGFloat = 10
-    private let notificationAuthorizationAlertingInterval = 2 * secondsPerDay
-    private let emergencyContactAlertingInterval = 7 * secondsPerDay
     private let emergencyContactAlertingUSDBalance = 100
     private let insufficientBalanceForEmergencyContactBulletinReconfirmInterval = secondsPerHour
     
@@ -242,6 +246,8 @@ class HomeViewController: UIViewController {
         case .emergencyContact:
             let vc = EmergencyContactViewController.instance()
             navigationController?.pushViewController(vc, animated: true)
+        case .initializePIN:
+            WalletViewController.presentWallet()
         case .none:
             break
         }
@@ -253,6 +259,8 @@ class HomeViewController: UIViewController {
             AppGroupUserDefaults.notificationBulletinDismissalDate = Date()
         case .emergencyContact:
             AppGroupUserDefaults.User.emergencyContactBulletinDismissalDate = Date()
+        case .initializePIN:
+            AppGroupUserDefaults.User.initializePINBulletinDismissalDate = Date()
         case .none:
             break
         }
@@ -824,19 +832,24 @@ extension HomeViewController {
     }
     
     private func updateBulletinView() {
-        func isDateNonNil(_ date: Date?, hasLessIntervalSinceNowThan interval: TimeInterval) -> Bool {
-            guard let date = date else {
+        func isDate(_ date: Date?, fallsInto interval: TimeInterval) -> Bool {
+            if let date = date {
+                return -date.timeIntervalSinceNow < interval
+            } else {
                 return false
             }
-            return -date.timeIntervalSinceNow < interval
         }
         
-        let userJustDismissedNotificationBulletin = isDateNonNil(AppGroupUserDefaults.notificationBulletinDismissalDate, hasLessIntervalSinceNowThan: notificationAuthorizationAlertingInterval)
+        let userJustDismissedNotificationBulletin = isDate(AppGroupUserDefaults.notificationBulletinDismissalDate, fallsInto: BulletinDetectInterval.notificationAuthorization)
         let checkNotificationSettings = !userJustDismissedNotificationBulletin
         
+        let hasPIN = LoginManager.shared.account?.has_pin ?? false
+        let userJustDismissedInitializePINBulletin = isDate(AppGroupUserDefaults.User.initializePINBulletinDismissalDate, fallsInto: BulletinDetectInterval.initializePIN)
+        let checkIsPinInitialized = !hasPIN && !userJustDismissedInitializePINBulletin
+        
         let checkWalletBalanceForEmergencyContactBulletin: Bool
-        let userJustDismissedEmergencyContactBulletin = isDateNonNil(AppGroupUserDefaults.User.emergencyContactBulletinDismissalDate, hasLessIntervalSinceNowThan: emergencyContactAlertingInterval)
-        let justConfirmedUserHasInsufficientBalanceForEmergencyContactBulletin = isDateNonNil(insufficientBalanceForEmergencyContactBulletinConfirmedDate, hasLessIntervalSinceNowThan: insufficientBalanceForEmergencyContactBulletinReconfirmInterval)
+        let userJustDismissedEmergencyContactBulletin = isDate(AppGroupUserDefaults.User.emergencyContactBulletinDismissalDate, fallsInto: BulletinDetectInterval.emergencyContact)
+        let justConfirmedUserHasInsufficientBalanceForEmergencyContactBulletin = isDate(insufficientBalanceForEmergencyContactBulletinConfirmedDate, fallsInto: insufficientBalanceForEmergencyContactBulletinReconfirmInterval)
         if bulletinContent == .notification
             || userJustDismissedEmergencyContactBulletin
             || justConfirmedUserHasInsufficientBalanceForEmergencyContactBulletin
@@ -847,7 +860,7 @@ extension HomeViewController {
             checkWalletBalanceForEmergencyContactBulletin = true
         }
         
-        guard checkNotificationSettings || checkWalletBalanceForEmergencyContactBulletin else {
+        guard checkNotificationSettings || checkIsPinInitialized || checkWalletBalanceForEmergencyContactBulletin else {
             return
         }
         
@@ -877,6 +890,8 @@ extension HomeViewController {
                 DispatchQueue.main.async {
                     if settings.authorizationStatus == .denied {
                         show(content: .notification)
+                    } else if checkIsPinInitialized {
+                        show(content: .initializePIN)
                     } else if checkWalletBalanceForEmergencyContactBulletin {
                         showEmergencyContactBulletinIfNeeded()
                     } else {
@@ -884,6 +899,8 @@ extension HomeViewController {
                     }
                 }
             }
+        } else if checkIsPinInitialized {
+            show(content: .initializePIN)
         } else if checkWalletBalanceForEmergencyContactBulletin {
             showEmergencyContactBulletinIfNeeded()
         }

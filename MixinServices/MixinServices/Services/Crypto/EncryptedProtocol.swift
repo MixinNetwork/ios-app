@@ -41,7 +41,7 @@ public enum EncryptedProtocol {
             throw Error.invalidEncryptedKey
         }
         let encryptedMessage = try AESGCMCryptor.encrypt(message, with: key, iv: iv)
-        if let extensionSession = extensionSession {
+        if let extensionSession = extensionSession, extensionSession.key.count == Length.publicKey {
             let encryptedExtensionMessageKey = try encrypt(messageKey: key, privateKey: privateKey, remotePublicKey: extensionSession.key)
             let cipher = Data([Self.version])
                 + numberOfSessions(2)

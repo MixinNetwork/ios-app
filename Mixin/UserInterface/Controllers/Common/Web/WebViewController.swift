@@ -81,11 +81,7 @@ class WebViewController: FullscreenPopupViewController {
         
         titleLabel.textColor = isThemeColorDark ? .white : textDarkColor
         pageControlView.style = isThemeColorDark ? .dark : .light
-        if #available(iOS 13.0, *) {
-            statusBarStyle = isThemeColorDark ? .lightContent : .darkContent
-        } else {
-            statusBarStyle = isThemeColorDark ? .lightContent : .default
-        }
+        statusBarStyle = isThemeColorDark ? .lightContent : .darkContent
         setNeedsStatusBarAppearanceUpdate()
     }
     

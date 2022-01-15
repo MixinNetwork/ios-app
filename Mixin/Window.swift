@@ -55,9 +55,6 @@ class Window: UIWindow {
     }
     
     @objc private func updateUserInterfaceStyle() {
-        guard #available(iOS 13.0, *) else {
-            return
-        }
         overrideUserInterfaceStyle = AppGroupUserDefaults.User.userInterfaceStyle
     }
     

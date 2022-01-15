@@ -226,20 +226,14 @@ extension CacheableAssetLoader: URLSessionDataDelegate {
         }
         
         debugInfo("[CacheableAssetLoader] ℹ️ write asset file from: \(fileOffset)")
-        if #available(iOS 13.0, *) {
-            do {
-                try assetFileHandle.seek(toOffset: fileOffset)
-                assetFileHandle.write(data)
-                try assetFileHandle.synchronize()
-            } catch {
-                debugInfo("[CacheableAssetLoader] ❌ Asset file writing failed for \(error)")
-                finishCurrentRequest(with: error)
-                return
-            }
-        } else {
-            assetFileHandle.seek(toFileOffset: fileOffset)
+        do {
+            try assetFileHandle.seek(toOffset: fileOffset)
             assetFileHandle.write(data)
-            assetFileHandle.synchronizeFile()
+            try assetFileHandle.synchronize()
+        } catch {
+            debugInfo("[CacheableAssetLoader] ❌ Asset file writing failed for \(error)")
+            finishCurrentRequest(with: error)
+            return
         }
         debugInfo("[CacheableAssetLoader] ℹ️ Update fileDescription with: \(receivedDataRange)")
         fileDescription.add(range: receivedDataRange)
@@ -301,26 +295,21 @@ extension CacheableAssetLoader {
             let offset = UInt64(fragmentRange.lowerBound)
             let length = Int(fragmentRange.upperBound - fragmentRange.lowerBound + 1)
             let data: Data
-            if #available(iOS 13.0, *) {
-                do {
-                    try assetFileHandle.seek(toOffset: offset)
-                    if #available(iOS 13.4, *) {
-                        if let d = try assetFileHandle.read(upToCount: length) {
-                            data = d
-                        } else {
-                            throw Error.readsNothing
-                        }
+            do {
+                try assetFileHandle.seek(toOffset: offset)
+                if #available(iOS 13.4, *) {
+                    if let d = try assetFileHandle.read(upToCount: length) {
+                        data = d
                     } else {
-                        data = assetFileHandle.readData(ofLength: length)
+                        throw Error.readsNothing
                     }
-                } catch {
-                    debugInfo("[CacheableAssetLoader] ❌ Failed to read local data: \(error)")
-                    finishCurrentRequest(with: error)
-                    return
+                } else {
+                    data = assetFileHandle.readData(ofLength: length)
                 }
-            } else {
-                assetFileHandle.seek(toFileOffset: offset)
-                data = assetFileHandle.readData(ofLength: length)
+            } catch {
+                debugInfo("[CacheableAssetLoader] ❌ Failed to read local data: \(error)")
+                finishCurrentRequest(with: error)
+                return
             }
             dataRequest.respond(with: data)
             debugInfo("[CacheableAssetLoader] ✅ \(data.count) bytes of data is reported to loadingRequest: \(request.opaque)")

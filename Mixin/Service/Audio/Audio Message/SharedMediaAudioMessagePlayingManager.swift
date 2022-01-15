@@ -46,16 +46,14 @@ class SharedMediaAudioMessagePlayingManager: AudioMessagePlayingManager {
     
     override func handleStatusChange(player: OggOpusPlayer) {
         super.handleStatusChange(player: player)
-        if #available(iOS 13.0, *) {
-            let center = MPNowPlayingInfoCenter.default()
-            switch player.status {
-            case .playing:
-                center.playbackState = .playing
-            case .paused:
-                center.playbackState = .paused
-            case .stopped:
-                center.playbackState = .stopped
-            }
+        let center = MPNowPlayingInfoCenter.default()
+        switch player.status {
+        case .playing:
+            center.playbackState = .playing
+        case .paused:
+            center.playbackState = .paused
+        case .stopped:
+            center.playbackState = .stopped
         }
         switch player.status {
         case .playing:

@@ -2,13 +2,7 @@ import UIKit
 
 class SettingsTableViewController: UIViewController {
     
-    let tableView: UITableView = {
-        if #available(iOS 13.0, *) {
-            return UITableView(frame: .zero, style: .insetGrouped)
-        } else {
-            return LayoutMarginsInsetedTableView(frame: .zero, style: .grouped)
-        }
-    }()
+    let tableView = UITableView(frame: .zero, style: .insetGrouped)
     
     override func viewDidLoad() {
         super.viewDidLoad()

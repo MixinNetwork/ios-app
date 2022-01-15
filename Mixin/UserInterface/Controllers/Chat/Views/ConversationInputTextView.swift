@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class ConversationInputTextView: UITextView {
+class ConversationInputTextView: PlaceholderTextView {
     
     weak var overrideNext: UIResponder?
     

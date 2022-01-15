@@ -29,6 +29,7 @@ class ConversationInputViewController: UIViewController {
     @IBOutlet weak var quotePreviewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var quotePreviewWrapperHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var textViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var textViewRightAccessoryWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var beginEditingTextViewTrailingConstraint: NSLayoutConstraint!
     @IBOutlet weak var beginEditingRightActionsStackLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var endEditingTextViewTrailingConstraint: NSLayoutConstraint!
@@ -165,8 +166,14 @@ class ConversationInputViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(saveDraft), name: UIApplication.willTerminateNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(participantDidChange(_:)), name: ParticipantDAO.participantDidChangeNotification, object: nil)
+        textView.textContainer.lineFragmentPadding = 0
         textView.inputAccessoryView = interactiveDismissResponder
         textView.textContainerInset = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
+        textView.placeholderLabel.adjustsFontSizeToFitWidth = true
+        textView.placeholderPadding = UIEdgeInsets(top: textView.textContainerInset.top,
+                                                   left: textView.textContainerInset.left,
+                                                   bottom: textView.textContainerInset.bottom,
+                                                   right: textViewRightAccessoryWidthConstraint.constant)
         textView.delegate = self
         let recognizer = PreviewGestureRecognizer(target: self, action: #selector(previewSilentNotificationMessage(_:)))
         sendButton.addGestureRecognizer(recognizer)
@@ -346,17 +353,29 @@ class ConversationInputViewController: UIViewController {
             composer.queue.async {
                 let apps = AppDAO.shared.getConversationBots(conversationId: conversationId)
                 DispatchQueue.main.async { [weak self] in
-                    self?.extensionViewController.apps = apps.map { ($0, nil) }
-                    self?.reloadFixedExtensions()
+                    guard let self = self else {
+                        return
+                    }
+                    self.extensionViewController.apps = apps.map { ($0, nil) }
+                    self.reloadFixedExtensions()
+                    self.textView.placeholder = R.string.localizable.e2e_encrypted()
                 }
             }
         } else if let ownerUser = composer.ownerUser {
             composer.loadOpponentApp(userId: ownerUser.userId) { [weak self] app in
+                guard let self = self else {
+                    return
+                }
+                let isEncrypted: Bool
                 if let app = app {
                     AppGroupUserDefaults.User.insertRecentlyUsedAppId(id: app.appId)
+                    isEncrypted = app.capabilities?.contains("ENCRYPTED") ?? false
+                } else {
+                    isEncrypted = true
                 }
-                self?.loadFavoriteApps(ownerUser: ownerUser)
-                self?.reloadFixedExtensions()
+                self.loadFavoriteApps(ownerUser: ownerUser)
+                self.reloadFixedExtensions()
+                self.textView.placeholder = isEncrypted ? R.string.localizable.e2e_encrypted() : nil
             }
         }
         

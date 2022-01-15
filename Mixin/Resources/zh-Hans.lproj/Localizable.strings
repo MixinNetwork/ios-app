@@ -64,6 +64,7 @@
 "title_loading" = "正在加载...";
 "all_photos" = "所有照片";
 "title_help" = "帮助";
+"e2e_encrypted" = "端对端加密";
 
 "connection_hint_connecting" = "正在连接";
 "connection_hint_progress" = "正在同步 %@%%";
@@ -401,7 +402,6 @@
 "web_export_failed" = "导出失败";
 
 // Call
-"call_encryption" = "端对端加密";
 "call_encryption_title" = "此通话使用端对端加密进行保护";
 "call_encryption_description" = "除了参与通话的人，其他人包含Mixin在内都无法听取或查看。";
 "call_hint_on_another_call" = "正在通话中，请挂断当前电话后重试";

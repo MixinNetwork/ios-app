@@ -169,6 +169,7 @@ class ConversationInputViewController: UIViewController {
         textView.textContainer.lineFragmentPadding = 0
         textView.inputAccessoryView = interactiveDismissResponder
         textView.textContainerInset = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
+        textView.placeholderLabel.font = .systemFont(ofSize: 13)
         textView.placeholderLabel.adjustsFontSizeToFitWidth = true
         textView.placeholderPadding = UIEdgeInsets(top: textView.textContainerInset.top,
                                                    left: textView.textContainerInset.left,

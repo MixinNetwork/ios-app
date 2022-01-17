@@ -78,16 +78,23 @@ extension RequestSigning {
     }
     
     private static func sig(from request: URLRequest) -> String? {
-        guard let url = request.url else {
+        guard
+            let url = request.url,
+            let components = URLComponents(url: url, resolvingAgainstBaseURL: true),
+            var uri = components.string
+        else {
             return nil
         }
-        
-        var uri = url.path
-        if let query = url.query {
-            uri += "?" + query
+        if let range = components.rangeOfHost {
+            uri.removeSubrange(range)
         }
-        if let fragment = url.fragment {
-            uri += "#" + fragment
+        if let range = components.rangeOfScheme {
+            uri.removeSubrange(range)
+        }
+        if uri.hasPrefix("://") {
+            let start = uri.startIndex
+            let end = uri.index(uri.startIndex, offsetBy: 2)
+            uri.removeSubrange(start...end)
         }
         
         var sig = ""

@@ -76,10 +76,14 @@ enum StickerStore {
                     DispatchQueue.main.async {
                         completion(albumItem)
                     }
-                } else if let albumId = albumId {
+                } else if let albumId = albumId, !albumId.isEmpty {
                     fetchStickers(albumId: albumId, completion: completion)
+                } else {
+                    DispatchQueue.main.async {
+                        completion(nil)
+                    }
                 }
-            } else if let albumId = albumId {
+            } else if let albumId = albumId, !albumId.isEmpty {
                 fetchStickers(albumId: albumId, completion: completion)
             } else {
                 DispatchQueue.main.async {

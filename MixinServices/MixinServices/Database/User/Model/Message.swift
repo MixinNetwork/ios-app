@@ -115,7 +115,7 @@ extension Message {
     }
     
     public static func createMessage(stickerData: TransferStickerData, data: BlazeMessageData) -> Message {
-        return createMessage(messageId: data.messageId, conversationId: data.conversationId, userId: data.getSenderId(), category: data.category, status: getStatus(data: data), stickerId: stickerData.stickerId, createdAt: data.createdAt, albumId: stickerData.albumId)
+        return createMessage(messageId: data.messageId, conversationId: data.conversationId, userId: data.getSenderId(), category: data.category, status: getStatus(data: data), stickerId: stickerData.stickerId, createdAt: data.createdAt, albumId: stickerData.albumId.isNilOrEmpty ? nil : stickerData.albumId)
     }
     
     public static func createMessage(contactData: TransferContactData, data: BlazeMessageData) -> Message {

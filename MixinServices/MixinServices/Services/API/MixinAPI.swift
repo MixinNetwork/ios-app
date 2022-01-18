@@ -93,7 +93,8 @@ extension MixinAPI {
         config.timeoutIntervalForRequest = 10
         config.requestCachePolicy = .reloadIgnoringLocalCacheData
         let tokenInterceptor = AccessTokenInterceptor()
-        let session = Alamofire.Session(configuration: config, interceptor: tokenInterceptor)
+        let redirector = Redirector(behavior: .doNotFollow)
+        let session = Alamofire.Session(configuration: config, interceptor: tokenInterceptor, redirectHandler: redirector)
         return session
     }()
     

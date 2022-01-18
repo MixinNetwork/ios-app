@@ -6,6 +6,7 @@ class StickerStorePreviewCell: UICollectionViewCell {
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var addButton: UIButton!
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var layout: UICollectionViewFlowLayout!
     
     @IBOutlet weak var collectionViewLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var collectionViewTrailingConstraint: NSLayoutConstraint!
@@ -33,8 +34,7 @@ class StickerStorePreviewCell: UICollectionViewCell {
         }
     }
     
-    private let maxStickerPreviewCount = 4
-    
+    private var maxStickerPreviewCount = 4
     private var addButtonBackgroundColor: UIColor?
     
     @IBAction func stickerAction(_ sender: Any) {
@@ -46,6 +46,9 @@ class StickerStorePreviewCell: UICollectionViewCell {
         let margin: CGFloat = ScreenWidth.current <= .short ? 10 : 20
         collectionViewLeadingConstraint.constant = margin
         collectionViewTrailingConstraint.constant = margin
+        let totalWidth = UIScreen.main.bounds.width - 2 * margin
+        let itemWidth = layout.itemSize.width + layout.minimumLineSpacing
+        maxStickerPreviewCount = Int(totalWidth / itemWidth)
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

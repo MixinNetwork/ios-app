@@ -107,7 +107,7 @@ extension StickerPreviewViewController {
         activityIndicatorView.startAnimating()
         StickerStore.loadAlbum(stickerId: stickerId, albumId: albumId, category: category) { albumItem in
             self.activityIndicatorView.stopAnimating()
-            if let albumItem = albumItem {
+            if let albumItem = albumItem, !albumItem.stickers.isEmpty {
                 self.albumItem = albumItem
                 self.titleLabel.text = albumItem.album.name
                 self.updateStickerActionButton()

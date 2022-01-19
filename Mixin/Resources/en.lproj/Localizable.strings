@@ -918,6 +918,7 @@
 "setting_delete_account_assets_hint" = "Your Mixin wallet still has some assets that can be withdrawn to other wallets or exchanges, once the account is cancelled these assets will be abandoned along with the wallet and cannot be recovered.";
 "setting_delete_account_confirm_title" = "Enter your PIN to delete your account";
 "setting_delete_account_confirm_hint" = "If you continue, your profile and account details will be delete on %@. read our document to Learn more.";
+"setting_delete_account_verify_pin" = "Enter your PIN to continue";
 
 // ScreenLock
 "screen_lock_locked" = "Mixin Locked";

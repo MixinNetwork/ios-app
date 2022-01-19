@@ -7,6 +7,7 @@ struct LoginContext {
     let fullNumber: String
     var verificationId = ""
     var hasEmergencyContact = false
+    var isDeleting: Bool = false
     var deactivatedAt: String?
     
     init(callingCode: String, mobileNumber: String, fullNumber: String) {

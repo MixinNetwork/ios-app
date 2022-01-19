@@ -919,6 +919,7 @@
 "setting_delete_account_assets_hint" = "你的 Mixin 钱包还有一些资产，可以提现至其他钱包或交易所，账户一旦注销，这些资产将和钱包一起被弃用无法找回。";
 "setting_delete_account_confirm_title" = "输入您的钱包密码以删除账户";
 "setting_delete_account_confirm_hint" = "如果继续，您的个人资料和账户信息将在%@被删除。阅读文档以了解更多。";
+"setting_delete_account_verify_pin" = "输入您的钱包密码以继续";
 
 // ScreenLock
 "screen_lock_locked" = "Mixin 已锁定";

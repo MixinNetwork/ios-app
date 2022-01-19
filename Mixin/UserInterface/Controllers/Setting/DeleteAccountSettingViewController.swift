@@ -95,11 +95,9 @@ extension DeleteAccountSettingViewController {
     }
     
     private func verifyPIN() {
-        let verifyPIN = DeleteAccountVerifyPINViewController()
-        verifyPIN.onSuccess = checkAvailableAssets
-        let navigation = VerifyPinNavigationController(rootViewController: verifyPIN)
-        navigation.modalPresentationStyle = .overFullScreen
-        present(navigation, animated: true, completion: nil)
+        let window = DeleteAccountVerifyPinWindow.instance()
+        window.onSuccess = checkAvailableAssets
+        window.presentPopupControllerAnimated()
     }
     
     private func presentDeleteAccountHintWindow(assets: [AssetItem]) {

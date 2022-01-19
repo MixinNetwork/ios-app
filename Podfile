@@ -49,7 +49,7 @@ target 'MixinShare' do
   mixin_services
 end
 
-target 'MixinAppGroupAccess' do
+target 'MixinDebug' do
   use_frameworks!
   inhibit_all_warnings!
 

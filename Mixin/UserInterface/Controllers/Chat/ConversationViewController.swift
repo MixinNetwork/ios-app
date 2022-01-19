@@ -1651,8 +1651,7 @@ extension ConversationViewController: DetailInfoMessageCellDelegate {
         guard
             let indexPath = tableView.indexPath(for: cell),
             let message = dataSource?.viewModel(for: indexPath)?.message,
-            let user = UserDAO.shared.getUser(userId: message.userId),
-            user.isCreatedByMessenger
+            let user = UserDAO.shared.getUser(userId: message.userId)
         else {
             return
         }

@@ -19,7 +19,6 @@
                 <outlet property="hideContentConstraint" destination="Cba-Nz-vQg" id="mZh-uf-O1m"/>
                 <outlet property="menuStackView" destination="Vct-6M-HB1" id="gO6-ij-NNF"/>
                 <outlet property="menuStackViewTopConstraint" destination="tbU-OG-tOZ" id="aO1-0w-Qzp"/>
-                <outlet property="placeholderView" destination="fa0-BQ-Y2b" id="8gu-NX-kfz"/>
                 <outlet property="scrollView" destination="11M-an-G3B" id="zfL-ul-lAW"/>
                 <outlet property="scrollViewContentView" destination="QK7-x5-erA" id="Cxs-M9-JkL"/>
                 <outlet property="subtitleLabel" destination="G6c-CA-ndz" id="icm-jc-6ea"/>
@@ -119,15 +118,6 @@
                                         </view>
                                         <stackView opaque="NO" contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="50" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="hlu-Uq-je9">
                                             <rect key="frame" x="0.0" y="147" width="414" height="50"/>
-                                            <subviews>
-                                                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fa0-BQ-Y2b">
-                                                    <rect key="frame" x="0.0" y="0.0" width="414" height="24"/>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="24" id="RbK-hQ-8l2"/>
-                                                    </constraints>
-                                                </view>
-                                            </subviews>
                                         </stackView>
                                         <stackView opaque="NO" contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="200" axis="vertical" distribution="equalSpacing" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Vct-6M-HB1">
                                             <rect key="frame" x="0.0" y="221" width="414" height="200"/>
@@ -210,7 +200,7 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="title">
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

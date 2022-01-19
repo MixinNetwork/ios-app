@@ -13,7 +13,6 @@ class ProfileViewController: ResizablePopupViewController {
     @IBOutlet weak var subtitleLabel: IdentityNumberLabel!
     @IBOutlet weak var centerStackView: UIStackView!
     @IBOutlet weak var menuStackView: UIStackView!
-    @IBOutlet weak var placeholderView: UIView!
     
     @IBOutlet weak var hideContentConstraint: NSLayoutConstraint!
     @IBOutlet weak var titleViewHeightConstraint: NSLayoutConstraint!

@@ -82,8 +82,10 @@ final class UserProfileViewController: ProfileViewController {
             avatarImageView.setImage(with: user)
             titleLabel.text = user.fullName
             subtitleLabel.isHidden = true
-            placeholderView.isHidden = false
-            contentView.removeGestureRecognizer(resizeRecognizer)
+            centerStackView.snp.makeConstraints { make in
+                make.height.equalTo(24)
+            }
+            resizeRecognizer.isEnabled = false
         }
     }
 

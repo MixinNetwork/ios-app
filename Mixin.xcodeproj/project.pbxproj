@@ -645,6 +645,8 @@
 		947B36A925DEB72A00146111 /* PlaylistManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947B36A825DEB72A00146111 /* PlaylistManager.swift */; };
 		947B36AE25DEB75A00146111 /* PlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947B36AD25DEB75A00146111 /* PlaylistViewController.swift */; };
 		947B36B325DEB79100146111 /* PlaylistView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 947B36B225DEB79100146111 /* PlaylistView.xib */; };
+		947E06572798562B0002669B /* PINIteratorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947E06562798562B0002669B /* PINIteratorView.swift */; };
+		947E0659279867870002669B /* PINIteratorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947E0658279867870002669B /* PINIteratorTest.swift */; };
 		947F4AD625866D6C00B0A5F9 /* InitializeFTSJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947F4AD525866D6C00B0A5F9 /* InitializeFTSJob.swift */; };
 		94812DDA26E082C400213F79 /* mixin_condensed.otf in Resources */ = {isa = PBXBuildFile; fileRef = 94812DD926E082C400213F79 /* mixin_condensed.otf */; };
 		9489E3A025C5B150000319F8 /* AcknowledgementsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9489E39F25C5B150000319F8 /* AcknowledgementsViewController.swift */; };
@@ -1640,6 +1642,8 @@
 		947B36AD25DEB75A00146111 /* PlaylistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistViewController.swift; sourceTree = "<group>"; };
 		947B36B225DEB79100146111 /* PlaylistView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlaylistView.xib; sourceTree = "<group>"; };
 		947E01EE2797FE6A0002669B /* MixinDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MixinDebug.entitlements; sourceTree = "<group>"; };
+		947E06562798562B0002669B /* PINIteratorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINIteratorView.swift; sourceTree = "<group>"; };
+		947E0658279867870002669B /* PINIteratorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINIteratorTest.swift; sourceTree = "<group>"; };
 		947F4AD525866D6C00B0A5F9 /* InitializeFTSJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitializeFTSJob.swift; sourceTree = "<group>"; };
 		94812DD926E082C400213F79 /* mixin_condensed.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = mixin_condensed.otf; sourceTree = "<group>"; };
 		94841CC72797D89500B3593B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -2667,10 +2671,10 @@
 			children = (
 				947E01EE2797FE6A0002669B /* MixinDebug.entitlements */,
 				94841CC72797D89500B3593B /* Info.plist */,
+				947E065A27986CB50002669B /* PIN Iterator Test */,
+				947E065B27986CC50002669B /* AppGroup Server */,
 				94656C192795395D006C3F1D /* MixinDebugApp.swift */,
 				94656C1B2795395D006C3F1D /* FunctionsView.swift */,
-				94DA5E60279694E200FCE99A /* AppGroupServer.swift */,
-				9463AFC527972AC70093BB08 /* LocalNetworkAuthorization.swift */,
 				94656C1D2795395E006C3F1D /* Assets.xcassets */,
 				94656C1F2795395E006C3F1D /* Preview Content */,
 			);
@@ -2710,6 +2714,24 @@
 				94571E0825CC48AE001980DA /* AudioSession.swift */,
 			);
 			path = AudioSession;
+			sourceTree = "<group>";
+		};
+		947E065A27986CB50002669B /* PIN Iterator Test */ = {
+			isa = PBXGroup;
+			children = (
+				947E0658279867870002669B /* PINIteratorTest.swift */,
+				947E06562798562B0002669B /* PINIteratorView.swift */,
+			);
+			path = "PIN Iterator Test";
+			sourceTree = "<group>";
+		};
+		947E065B27986CC50002669B /* AppGroup Server */ = {
+			isa = PBXGroup;
+			children = (
+				94DA5E60279694E200FCE99A /* AppGroupServer.swift */,
+				9463AFC527972AC70093BB08 /* LocalNetworkAuthorization.swift */,
+			);
+			path = "AppGroup Server";
 			sourceTree = "<group>";
 		};
 		94B7642D25EA673300EDF9C6 /* Cacheable Asset */ = {
@@ -5139,10 +5161,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				947E06572798562B0002669B /* PINIteratorView.swift in Sources */,
 				9463AFC627972AC70093BB08 /* LocalNetworkAuthorization.swift in Sources */,
 				94DA5E61279694E200FCE99A /* AppGroupServer.swift in Sources */,
 				94656C1C2795395D006C3F1D /* FunctionsView.swift in Sources */,
 				94656C1A2795395D006C3F1D /* MixinDebugApp.swift in Sources */,
+				947E0659279867870002669B /* PINIteratorTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

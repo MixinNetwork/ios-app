@@ -51,6 +51,9 @@ extension HomeSearchViewController where Self: UIViewController {
     func pushViewController(keyword: String?, result: SearchResult) {
         switch result {
         case let result as UserSearchResult:
+            guard result.user.isCreatedByMessenger else {
+                return
+            }
             let vc = ConversationViewController.instance(ownerUser: result.user)
             homeNavigationController?.pushViewController(vc, animated: true)
         case let result as ConversationSearchResult:

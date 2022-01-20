@@ -485,7 +485,7 @@ class ConversationViewController: UIViewController {
                                                 numberOfParticipants: numberOfParticipants,
                                                 isMember: isMember)
             present(vc, animated: true, completion: nil)
-        } else if let user = ownerUser, user.isCreatedByMessenger {
+        } else if let user = ownerUser {
             let vc = UserProfileViewController(user: user)
             present(vc, animated: true, completion: nil)
         }
@@ -842,7 +842,7 @@ class ConversationViewController: UIViewController {
                     let user = UserItem.createUser(from: account)
                     let vc = UserProfileViewController(user: user)
                     present(vc, animated: true, completion: nil)
-                } else if let user = UserDAO.shared.getUser(userId: shareUserId), user.isCreatedByMessenger {
+                } else if let user = UserDAO.shared.getUser(userId: shareUserId) {
                     let vc = UserProfileViewController(user: user)
                     present(vc, animated: true, completion: nil)
                 }

@@ -261,10 +261,8 @@ extension ContactViewController {
         tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.section == 0 {
             let contact = contacts[indexPath.row]
-            if contact.isCreatedByMessenger {
-                let vc = ConversationViewController.instance(ownerUser: contact)
-                navigationController?.pushViewController(vc, animated: true)
-            }
+            let vc = ConversationViewController.instance(ownerUser: contact)
+            navigationController?.pushViewController(vc, animated: true)
         } else if !isPhoneContactAuthorized {
             requestPhoneContactAuthorization()
         }

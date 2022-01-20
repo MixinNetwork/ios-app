@@ -143,7 +143,7 @@ class SearchConversationViewController: UIViewController, HomeSearchViewControll
     }
     
     @objc func profileAction() {
-        guard let user = user, user.isCreatedByMessenger else {
+        guard let user = user else {
             return
         }
         let vc = UserProfileViewController(user: user)

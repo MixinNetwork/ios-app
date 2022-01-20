@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 final class SecuritySettingViewController: SettingsTableViewController {
 
@@ -11,6 +12,9 @@ final class SecuritySettingViewController: SettingsTableViewController {
         ]),
         SettingsSection(rows: [
             SettingsRow(title: R.string.localizable.setting_authorizations(), accessory: .disclosure)
+        ]),
+        SettingsSection(rows: [
+            SettingsRow(title: R.string.localizable.setting_logs(), accessory: .disclosure)
         ])
     ])
     
@@ -33,11 +37,21 @@ extension SecuritySettingViewController: UITableViewDelegate {
         let vc: UIViewController
         switch indexPath.section {
         case 0:
-            vc = PinSettingsViewController.instance()
+            if LoginManager.shared.account?.has_pin ?? false {
+                vc = PinSettingsViewController.instance()
+            } else {
+                vc = WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil)
+            }
         case 1:
-            vc = EmergencyContactViewController.instance()
-        default:
+            if LoginManager.shared.account?.has_pin ?? false {
+                vc = EmergencyContactViewController.instance()
+            } else {
+                vc = WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil)
+            }
+        case 2:
             vc = AuthorizationsViewController.instance()
+        default:
+            vc = LogViewController.instance(category: .all)
         }
         navigationController?.pushViewController(vc, animated: true)
     }

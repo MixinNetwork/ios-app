@@ -9,6 +9,7 @@ final class PrivacySettingViewController: SettingsTableViewController {
             SettingsRow(title: R.string.localizable.setting_conversation(), accessory: .disclosure)
         ]),
         SettingsSection(rows: [
+            SettingsRow(title: R.string.localizable.setting_phone_number_title(), accessory: .disclosure),
             SettingsRow(title: R.string.localizable.setting_contacts_title(), accessory: .disclosure)
         ])
     ])
@@ -96,9 +97,17 @@ extension PrivacySettingViewController: UITableViewDelegate {
                 vc = ConversationSettingViewController.instance()
             }
         case 1:
-            vc = PhoneContactsSettingViewController.instance()
+            if indexPath.row == 0 {
+                vc = PhoneNumberSettingViewController.instance()
+            } else {
+                vc = PhoneContactsSettingViewController.instance()
+            }
         default:
-            vc = ScreenLockSettingViewController.instance()
+            if LoginManager.shared.account?.has_pin ?? false {
+                vc = ScreenLockSettingViewController.instance()
+            } else {
+                vc = WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil)
+            }
         }
         navigationController?.pushViewController(vc, animated: true)
     }

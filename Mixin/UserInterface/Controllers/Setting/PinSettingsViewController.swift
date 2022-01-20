@@ -9,9 +9,6 @@ final class PinSettingsViewController: SettingsTableViewController {
         SettingsSection(rows: [
             SettingsRow(title: R.string.localizable.wallet_change_password(), accessory: .disclosure)
         ]),
-        SettingsSection(rows: [
-            SettingsRow(title: R.string.localizable.setting_logs(), accessory: .disclosure)
-        ])
     ])
     
     private lazy var biometricSwitchRow = SettingsRow(title: R.string.localizable.wallet_enable_biometric_pay_title(biometryType.localizedName),
@@ -140,9 +137,6 @@ extension PinSettingsViewController: UITableViewDelegate {
             present(alert, animated: true, completion: nil)
         } else if (indexPath.section == 1 && biometryType != .none) || (indexPath.section == 0 && biometryType == .none) {
             let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep1, dismissTarget: nil)
-            navigationController?.pushViewController(vc, animated: true)
-        } else if (indexPath.section == 2 && biometryType != .none) || (indexPath.section == 1 && biometryType == .none) {
-            let vc = LogViewController.instance(category: .all)
             navigationController?.pushViewController(vc, animated: true)
         }
     }

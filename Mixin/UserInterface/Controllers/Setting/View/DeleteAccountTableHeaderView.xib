@@ -18,7 +18,7 @@
                     <rect key="frame" x="152.5" y="60" width="70" height="72"/>
                 </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ffd-31-Gae">
-                    <rect key="frame" x="30" y="156" width="315" height="78"/>
+                    <rect key="frame" x="30" y="156" width="315" height="88"/>
                     <string key="text">• Delete your account into and profile photo
 • Local messages and iCloud Backups will not be Deleted automatically
 • Transactions CANNOT be deleted</string>
@@ -35,7 +35,7 @@
                 <constraint firstItem="Ffd-31-Gae" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="30" id="02f-Ba-cj9"/>
                 <constraint firstItem="Ffd-31-Gae" firstAttribute="top" secondItem="2zO-rp-fbX" secondAttribute="bottom" constant="24" id="aXi-QE-Yik"/>
                 <constraint firstAttribute="trailing" secondItem="Ffd-31-Gae" secondAttribute="trailing" priority="999" constant="30" id="dtl-2y-Rh5"/>
-                <constraint firstAttribute="bottom" secondItem="Ffd-31-Gae" secondAttribute="bottom" constant="30" id="eGh-SS-lNU"/>
+                <constraint firstAttribute="bottom" secondItem="Ffd-31-Gae" secondAttribute="bottom" constant="20" id="eGh-SS-lNU"/>
                 <constraint firstItem="2zO-rp-fbX" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="f8u-zA-2V1"/>
                 <constraint firstItem="2zO-rp-fbX" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="60" id="tCm-Wn-GCx"/>
             </constraints>

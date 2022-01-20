@@ -67,7 +67,12 @@ extension SettingsViewController: UITableViewDelegate {
             case 0:
                 vc = AccountSettingViewController.instance()
             case 1:
-                vc = BackupViewController.instance()
+                if FileManager.default.ubiquityIdentityToken == nil {
+                    alert(Localized.SETTING_BACKUP_DISABLE_TIPS)
+                    return
+                } else {
+                    vc = BackupViewController.instance()
+                }
             case 2:
                 vc = NotificationAndConfirmationSettingsViewController.instance()
             default:

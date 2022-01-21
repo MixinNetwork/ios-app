@@ -21,6 +21,14 @@ class PhotoInputViewController: UIViewController, ConversationInputAccessible {
         }
     }
     
+    private weak var mediasPreviewControllerIfLoaded: MediasPreviewViewController?
+    private lazy var mediasPreviewViewController: MediasPreviewViewController = {
+        let controller = R.storyboard.chat.selected_medias()!
+        controller.gridViewController = gridViewController
+        controller.delegate = self
+        mediasPreviewControllerIfLoaded = controller
+        return controller
+    }()
     private var allPhotos: PHFetchResult<PHAsset>?
     private var smartAlbums: PHFetchResult<PHAssetCollection>?
     private var sortedSmartAlbums: [PHAssetCollection]?
@@ -70,6 +78,7 @@ class PhotoInputViewController: UIViewController, ConversationInputAccessible {
         if let vc = segue.destination as? PhotoInputGridViewController {
             vc.fetchResult = allPhotos
             gridViewController = vc
+            gridViewController.delegate = self
         }
     }
     
@@ -215,6 +224,222 @@ extension PhotoInputViewController: PHPickerViewControllerDelegate {
             vc.transitioningDelegate = PopupPresentationManager.shared
             vc.modalPresentationStyle = .custom
             self.present(vc, animated: true, completion: nil)
+        }
+    }
+    
+}
+
+extension PhotoInputViewController: PhotoInputGridViewControllerDelegate {
+    
+    func photoInputGridViewController(_ controller: PhotoInputGridViewController, didSelect asset: PHAsset) {
+        if !controller.selectedAssets.isEmpty {
+            presentMediasPreviewControllerAnimated()
+        }
+        mediasPreviewViewController.add(asset)
+    }
+    
+    func photoInputGridViewController(_ controller: PhotoInputGridViewController, didDeselect asset: PHAsset) {
+        if controller.selectedAssets.isEmpty {
+            dismissMediasPreviewControllerAnimated()
+        } else {
+            mediasPreviewViewController.remove(asset)
+        }
+    }
+    
+    func photoInputGridViewControllerDidTapCamera(_ controller: PhotoInputGridViewController) {
+        dismissMediasPreviewControllerIfNeeded()
+    }
+    
+}
+
+extension PhotoInputViewController: MediasPreviewViewControllerDelegate {
+    
+    func mediasPreviewViewController(_ controller: MediasPreviewViewController, didSend assets: [PHAsset]) {
+        sendItems(assets: assets)
+    }
+    
+    func mediasPreviewViewControllerDidCancelSend(_ controller: MediasPreviewViewController) {
+        conversationInputViewController?.dismiss()
+    }
+    
+    func mediasPreviewViewController(_ controller: MediasPreviewViewController, didRemove asset: PHAsset) {
+        gridViewController.deselect(asset)
+        if gridViewController.selectedAssets.isEmpty {
+            dismissMediasPreviewControllerAnimated()
+        }
+    }
+   
+    func mediasPreviewViewController(_ controller: MediasPreviewViewController, didSelectAssetAt index: Int) {
+        conversationInputViewController?.setPreferredContentHeightAnimated(.regular)
+        let assets = gridViewController.selectedAssets
+        let window = MediasPreviewWindow.instance()
+        window.load(assets: assets, initIndex: index)
+        window.delegate = self
+        window.presentPopupControllerAnimated()
+    }
+    
+}
+
+extension PhotoInputViewController: MediasPreviewWindowDelegate {
+
+    func mediasPreviewWindow(_ window: MediasPreviewWindow, willDismiss assets: [PHAsset]) {
+        if assets.isEmpty {
+            gridViewController.deselectAll()
+            dismissMediasPreviewControllerAnimated()
+        } else {
+            gridViewController.updateSelectdAssets(assets)
+            mediasPreviewViewController.updateAssets()
+        }
+    }
+    
+    func mediasPreviewWindow(_ window: MediasPreviewWindow, didSendItems assets: [PHAsset]) {
+        sendItems(assets: assets)
+    }
+    
+    func mediasPreviewWindow(_ window: MediasPreviewWindow, didSendFiles assets: [PHAsset]) {
+        sendAsFiles(assets: assets)
+    }
+    
+}
+
+extension PhotoInputViewController {
+    
+    private func sendItems(assets: [PHAsset]) {
+        guard let controller = conversationInputViewController else {
+            return
+        }
+        assets.forEach(controller.send(asset:))
+        gridViewController.deselectAll()
+        dismissMediasPreviewControllerAnimated()
+    }
+    
+    private func sendAsFiles(assets: [PHAsset]) {
+        guard let controller = conversationInputViewController else {
+            return
+        }
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        requestURLs(for: assets) { [weak self] urls in
+            hud.hide()
+            guard let self = self else {
+                return
+            }
+            urls.forEach(controller.sendFile(url:))
+            self.gridViewController.deselectAll()
+            self.dismissMediasPreviewControllerAnimated()
+        }
+    }
+    
+    func dismissMediasPreviewControllerIfNeeded() {
+        guard let previewController = mediasPreviewControllerIfLoaded, previewController.parent != nil else {
+            return
+        }
+        gridViewController.view.isUserInteractionEnabled = false
+        gridViewController.deselectAll()
+        previewController.removeAllAssets()
+        previewController.view.removeFromSuperview()
+        previewController.removeFromParent()
+        previewController.view.snp.removeConstraints()
+        gridViewController.view.isUserInteractionEnabled = true
+    }
+    
+    private func presentMediasPreviewControllerAnimated() {
+        guard
+            mediasPreviewViewController.parent == nil,
+            let conversationInputViewController = conversationInputViewController,
+            let inputBarView = conversationInputViewController.inputBarView,
+            let conversationViewController = conversationInputViewController.parent
+        else {
+            return
+        }
+        gridViewController.view.isUserInteractionEnabled = false
+        let previewController = mediasPreviewViewController
+        let previewHeight = MediasPreviewViewController.viewHeight
+        addChild(previewController)
+        view.insertSubview(previewController.view, at: 0)
+        previewController.view.snp.makeConstraints({ (make) in
+            make.left.right.equalToSuperview()
+            make.top.equalTo(inputBarView.snp.bottom).offset(0)
+        })
+        view.layoutIfNeeded()
+        
+        previewController.view.snp.updateConstraints { make in
+            make.top.equalTo(inputBarView.snp.bottom).offset(-previewHeight)
+        }
+        UIView.animate(withDuration: 0.3) {
+            UIView.setAnimationCurve(.overdamped)
+            self.view.layoutIfNeeded()
+        } completion: { _ in
+            conversationViewController.addChild(previewController)
+            conversationViewController.view.addSubview(previewController.view)
+            previewController.view.snp.remakeConstraints({ (make) in
+                make.left.right.equalToSuperview()
+                make.top.equalTo(inputBarView.snp.bottom).offset(-previewHeight)
+            })
+            self.gridViewController.view.isUserInteractionEnabled = true
+        }
+    }
+    
+    private func dismissMediasPreviewControllerAnimated() {
+        guard
+            mediasPreviewViewController.parent != nil,
+            let conversationInputViewController = conversationInputViewController,
+            let inputBarView = conversationInputViewController.inputBarView
+        else {
+            return
+        }
+        gridViewController.view.isUserInteractionEnabled = false
+        let previewController = mediasPreviewViewController
+        let previewHeight = MediasPreviewViewController.viewHeight
+        addChild(previewController)
+        view.insertSubview(previewController.view, at: 0)
+        previewController.view.snp.remakeConstraints({ (make) in
+            make.left.right.equalToSuperview()
+            make.top.equalTo(inputBarView.snp.bottom).offset(-previewHeight)
+        })
+        view.layoutIfNeeded()
+        
+        previewController.view.snp.updateConstraints { make in
+            make.top.equalTo(inputBarView.snp.bottom).offset(0)
+        }
+        UIView.animate(withDuration: 0.3) {
+            UIView.setAnimationCurve(.overdamped)
+            self.view.layoutIfNeeded()
+        } completion: { _ in
+            previewController.removeAllAssets()
+            previewController.view.removeFromSuperview()
+            previewController.removeFromParent()
+            previewController.view.snp.removeConstraints()
+            self.gridViewController.view.isUserInteractionEnabled = true
+        }
+    }
+    
+    private func requestURLs(for assets: [PHAsset], completion: @escaping ((_ urls : [URL]) -> Void)) {
+        let group = DispatchGroup()
+        let queue = DispatchQueue(label: "one.mixin.messager.PhotoInputViewController.requestPHAssetsURLs", attributes: .concurrent)
+        var urls: [URL?] = Array(repeating: nil, count: assets.count)
+        for (index, asset) in assets.enumerated() {
+            group.enter()
+            queue.async(group: group) {
+                if asset.mediaType == .image {
+                    let options = PHContentEditingInputRequestOptions()
+                    options.canHandleAdjustmentData = { (adjustmeta: PHAdjustmentData) -> Bool in true }
+                    asset.requestContentEditingInput(with: options, completionHandler: { (contentEditingInput, info) in
+                        urls.insert(contentEditingInput?.fullSizeImageURL, at: index)
+                        group.leave()
+                    })
+                } else if asset.mediaType == .video {
+                    let options: PHVideoRequestOptions = PHVideoRequestOptions()
+                    options.version = .original
+                    PHImageManager.default().requestAVAsset(forVideo: asset, options: options, resultHandler: { (asset, audioMix, info) in
+                        urls.insert((asset as? AVURLAsset)?.url, at: index)
+                        group.leave()
+                    })
+                }
+            }
+        }
+        group.notify(queue: .main) {
+            completion(urls.compactMap { $0 })
         }
     }
     

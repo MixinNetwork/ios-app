@@ -406,6 +406,7 @@ class ConversationInputViewController: UIViewController {
         if minimize {
             setPreferredContentHeightAnimated(.minimized)
         }
+        photoViewController.dismissMediasPreviewControllerIfNeeded()
         UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
             self.customInputContainerView.alpha = 0
         } completion: { _ in

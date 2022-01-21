@@ -3,10 +3,18 @@ import Photos
 import MobileCoreServices
 import MixinServices
 
+protocol PhotoInputGridViewControllerDelegate: AnyObject {
+    func photoInputGridViewController(_ controller: PhotoInputGridViewController, didSelect asset: PHAsset)
+    func photoInputGridViewController(_ controller: PhotoInputGridViewController, didDeselect asset: PHAsset)
+    func photoInputGridViewControllerDidTapCamera(_ controller: PhotoInputGridViewController)
+}
+
 class PhotoInputGridViewController: UIViewController, ConversationAccessible, ConversationInputAccessible {
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var collectionViewLayout: UICollectionViewFlowLayout!
+    
+    weak var delegate: PhotoInputGridViewControllerDelegate?
     
     var fetchResult: PHFetchResult<PHAsset>? {
         didSet {
@@ -20,6 +28,9 @@ class PhotoInputGridViewController: UIViewController, ConversationAccessible, Co
     
     var firstCellIsCamera = true
     
+    private(set) var selectedAssets = [PHAsset]()
+
+    private let maxSelectedCount = 99
     private let interitemSpacing: CGFloat = 0
     private let columnCount: CGFloat = 3
     private let imageManager = PHCachingImageManager()
@@ -71,6 +82,39 @@ class PhotoInputGridViewController: UIViewController, ConversationAccessible, Co
     
 }
 
+extension PhotoInputGridViewController {
+    
+    func deselectAll() {
+        guard !selectedAssets.isEmpty else {
+            return
+        }
+        selectedAssets.removeAll()
+        collectionView.reloadData()
+    }
+    
+    func deselect(_ assset: PHAsset) {
+        guard let index = selectedAssets.firstIndex(of: assset) else {
+            return
+        }
+        selectedAssets.remove(at: index)
+        collectionView.reloadData()
+    }
+    
+    func select(_ asset: PHAsset) {
+        guard !selectedAssets.contains(asset) else {
+            return
+        }
+        selectedAssets.append(asset)
+        collectionView.reloadData()
+    }
+    
+    func updateSelectdAssets(_ assets: [PHAsset]) {
+        selectedAssets = assets
+        collectionView.reloadData()
+    }
+    
+}
+
 extension PhotoInputGridViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -89,10 +133,13 @@ extension PhotoInputGridViewController: UICollectionViewDataSource {
             cell.imageView.image = R.image.conversation.ic_camera()
             cell.imageView.backgroundColor = R.color.camera_background()
             cell.mediaTypeView.style = .hidden
+            cell.badge.isHidden = true
         } else if let asset = asset(at: indexPath) {
             cell.identifier = asset.localIdentifier
             cell.imageView.contentMode = .scaleAspectFill
             cell.imageView.backgroundColor = .background
+            cell.badge.isHidden = false
+            cell.updateSelectedIndex(selectedAssets.firstIndex(of: asset))
             imageManager.requestImage(for: asset, targetSize: thumbnailSize, contentMode: .aspectFill, options: imageRequestOptions) { [weak cell] (image, _) in
                 guard let cell = cell, cell.identifier == asset.localIdentifier else {
                     return
@@ -125,13 +172,17 @@ extension PhotoInputGridViewController: UICollectionViewDelegate {
         if firstCellIsCamera && indexPath.item == 0 {
             UIApplication.homeContainerViewController?.pipController?.pauseAction(self)
             conversationViewController?.imagePickerController.presentCamera()
+            delegate?.photoInputGridViewControllerDidTapCamera(self)
         } else if let asset = asset(at: indexPath) {
-            let vc = R.storyboard.chat.media_preview()!
-            vc.load(asset: asset)
-            vc.conversationInputViewController = conversationInputViewController
-            vc.transitioningDelegate = PopupPresentationManager.shared
-            vc.modalPresentationStyle = .custom
-            present(vc, animated: true, completion: nil)
+            if let index = selectedAssets.firstIndex(of: asset) {
+                selectedAssets.remove(at: index)
+                delegate?.photoInputGridViewController(self, didDeselect: asset)
+                collectionView.reloadData()
+            } else if selectedAssets.count < maxSelectedCount {
+                selectedAssets.append(asset)
+                delegate?.photoInputGridViewController(self, didSelect: asset)
+                collectionView.reloadData()
+            }
         }
     }
     

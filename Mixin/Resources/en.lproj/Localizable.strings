@@ -375,6 +375,22 @@
 "chat_pick_from_library" = "Pick from Library";
 "chat_manage_photo_auth" = "Manage";
 "chat_photo_select_more" = "Select More Photos";
+"chat_media_preview_select_photos" = "Selected %d Photos";
+"chat_media_preview_select_photo" = "Selected 1 Photo";
+"chat_media_preview_select_videos" = "Selected %d Videos";
+"chat_media_preview_select_video" = "Selected 1 Video";
+"chat_media_preview_select_items" = "Selected %d Items";
+"chat_media_preview_select_item" = "Selected 1 Item";
+"chat_media_preview_select_no_item" = "No Items Selected";
+"chat_media_preview_send_photos" = "Send %d Photos";
+"chat_media_preview_send_photo" = "Send 1 Photo";
+"chat_media_preview_send_videos" = "Send %d Videos";
+"chat_media_preview_send_video" = "Send 1 Video";
+"chat_media_preview_send_items" = "Send %d Items";
+"chat_media_preview_send_item" = "Send 1 Item";
+"chat_media_preview_send_files" = "Send as Files";
+"chat_media_preview_send_file" = "Send as File";
+"chat_media_send_count" = "Send(%d)";
 
 // Pin
 "chat_pinned_general_message" = "%@ pinned a message";

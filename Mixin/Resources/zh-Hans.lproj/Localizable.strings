@@ -375,6 +375,22 @@
 "chat_pick_from_library" = "打开相册";
 "chat_manage_photo_auth" = "更改设置";
 "chat_photo_select_more" = "选择更多照片";
+"chat_media_preview_select_photos" = "已选择 %d 张图片";
+"chat_media_preview_select_photo" = "已选择 1 张图片";
+"chat_media_preview_select_videos" = "已选择 %d 个视频";
+"chat_media_preview_select_video" = "已选择 1 个视频";
+"chat_media_preview_select_items" = "已选择 %d 项";
+"chat_media_preview_select_item" = "已选择 1 项";
+"chat_media_preview_select_no_item" = "未选定项目";
+"chat_media_preview_send_photos" = "发送 %d 张图片";
+"chat_media_preview_send_photo" = "发送 1 张图片";
+"chat_media_preview_send_videos" = "发送 %d 个视频";
+"chat_media_preview_send_video" = "发送 1 个视频";
+"chat_media_preview_send_items" = "发送 %d 项";
+"chat_media_preview_send_item" = "发送 1 项";
+"chat_media_preview_send_files" = "发送为文件";
+"chat_media_preview_send_file" = "发送为文件";
+"chat_media_send_count" = "发送(%d)";
 
 // Pin
 "chat_pinned_general_message" = "%@置顶了一条消息";

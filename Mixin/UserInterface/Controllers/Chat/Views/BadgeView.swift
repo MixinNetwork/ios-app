@@ -1,12 +1,6 @@
 import UIKit
 
-protocol BadgeViewDelegate: AnyObject {
-    func didTapBadgeView(_ badgeView: BadgeView)
-}
-
 class BadgeView: UILabel {
-    
-    weak var delegate: BadgeViewDelegate?
     
     var badgeColor: UIColor = .clear {
         didSet {
@@ -15,12 +9,12 @@ class BadgeView: UILabel {
     }
     var borderWidth: CGFloat = 0 {
         didSet {
-            invalidateIntrinsicContentSize()
+            setNeedsDisplay()
         }
     }
     var borderColor: UIColor = .clear {
         didSet {
-            invalidateIntrinsicContentSize()
+            setNeedsDisplay()
         }
     }
     var cornerRadius: CGFloat = 0 {
@@ -31,13 +25,12 @@ class BadgeView: UILabel {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        textAlignment = NSTextAlignment.center
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTap))
-        addGestureRecognizer(tapGesture)
+        prepare()
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        prepare()
     }
     
     override func draw(_ rect: CGRect) {
@@ -58,8 +51,8 @@ class BadgeView: UILabel {
         super.draw(rect)
     }
     
-    @objc private func didTap() {
-        delegate?.didTapBadgeView(self)
+    private func  prepare() {
+        textAlignment = NSTextAlignment.center
     }
-  
+    
 }

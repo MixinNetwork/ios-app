@@ -20,16 +20,14 @@ class StickersViewController: StickersCollectionViewController, ConversationInpu
     
     func send(sticker: StickerItem) {
         composer?.sendMessage(type: .SIGNAL_STICKER, value: sticker)
-        if updateUsedAtAfterSent {
-            DispatchQueue.global().async {
-                let newUsedAt = Date().toUTCString()
-                StickerDAO.shared.updateUsedAt(stickerId: sticker.stickerId, usedAt: newUsedAt)
-                var newSticker = sticker
-                newSticker.lastUseAt = newUsedAt
-                NotificationCenter.default.post(onMainThread: Self.stickerUsedAtDidUpdateNotification,
-                                                object: self,
-                                                userInfo: [Self.stickerUserInfoKey: newSticker])
-            }
+        DispatchQueue.global().async {
+            let newUsedAt = Date().toUTCString()
+            StickerDAO.shared.updateUsedAt(stickerId: sticker.stickerId, usedAt: newUsedAt)
+            var newSticker = sticker
+            newSticker.lastUseAt = newUsedAt
+            NotificationCenter.default.post(onMainThread: Self.stickerUsedAtDidUpdateNotification,
+                                            object: self,
+                                            userInfo: [Self.stickerUserInfoKey: newSticker])
         }
     }
     

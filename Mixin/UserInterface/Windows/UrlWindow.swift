@@ -278,11 +278,6 @@ class UrlWindow {
             guard let (user, updateUserFromRemoteAfterReloaded) = syncUser(userId: userId, hud: hud) else {
                 return
             }
-            guard user.isCreatedByMessenger else {
-                hud.hideInMainThread()
-                return
-            }
-
             DispatchQueue.main.async {
                 hud.hide()
                 let vc = UserProfileViewController(user: user)
@@ -314,7 +309,7 @@ class UrlWindow {
                     return
                 }
             }
-            guard let user = userItem, user.isCreatedByMessenger else {
+            guard let user = userItem else {
                 return
             }
             DispatchQueue.main.async {

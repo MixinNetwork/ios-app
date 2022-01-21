@@ -67,16 +67,26 @@ final class UserProfileViewController: ProfileViewController {
     override func viewDidLoad() {
         size = isMe ? .unavailable : .compressed
         super.viewDidLoad()
-        reloadData()
-        reloadFavoriteApps(userId: user.userId, fromRemote: true)
-        if !isMe {
-            reloadCircles(conversationId: conversationId, userId: user.userId)
+        if user.isCreatedByMessenger {
+            reloadData()
+            reloadFavoriteApps(userId: user.userId, fromRemote: true)
+            if !isMe {
+                reloadCircles(conversationId: conversationId, userId: user.userId)
+            }
+            let recognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction(_:)))
+            recognizer.delegate = self
+            view.addGestureRecognizer(recognizer)
+            NotificationCenter.default.addObserver(self, selector: #selector(willHideMenu(_:)), name: UIMenuController.willHideMenuNotification, object: nil)
+            NotificationCenter.default.addObserver(self, selector: #selector(accountDidChange(_:)), name: LoginManager.accountDidChangeNotification, object: nil)
+        } else {
+            avatarImageView.setImage(with: user)
+            titleLabel.text = user.fullName
+            subtitleLabel.isHidden = true
+            centerStackView.snp.makeConstraints { make in
+                make.height.equalTo(24)
+            }
+            resizeRecognizer.isEnabled = false
         }
-        let recognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction(_:)))
-        recognizer.delegate = self
-        view.addGestureRecognizer(recognizer)
-        NotificationCenter.default.addObserver(self, selector: #selector(willHideMenu(_:)), name: UIMenuController.willHideMenuNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(accountDidChange(_:)), name: LoginManager.accountDidChangeNotification, object: nil)
     }
 
     override func dismissAction(_ sender: Any) {

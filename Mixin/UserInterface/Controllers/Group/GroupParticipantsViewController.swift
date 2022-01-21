@@ -192,6 +192,9 @@ extension GroupParticipantsViewController {
     }
     
     private func sendMessage(to user: UserItem) {
+        guard user.isCreatedByMessenger else {
+            return
+        }
         let vc = ConversationViewController.instance(ownerUser: user)
         navigationController?.pushViewController(withBackRoot: vc)
     }

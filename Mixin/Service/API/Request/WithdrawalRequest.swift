@@ -13,7 +13,7 @@ struct WithdrawalRequest: Codable {
         case amount
         case traceId = "trace_id"
         case memo
-        case pin
+        case pin = "pin_base64"
     }
     
 }

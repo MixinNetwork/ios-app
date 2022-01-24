@@ -64,14 +64,14 @@ final class EmergencyAPI: MixinAPI {
     
     static func show(pin: String, completion: @escaping (MixinAPI.Result<User>) -> Void) {
         PINEncryptor.encrypt(pin: pin, onFailure: completion) { (encryptedPin) in
-            let param = ["pin": encryptedPin]
+            let param = ["pin_base64": encryptedPin]
             request(method: .post, path: Path.show, parameters: param, options: .disableRetryOnRequestSigningTimeout, completion: completion)
         }
     }
     
     static func delete(pin: String, completion: @escaping (MixinAPI.Result<Account>) -> Void) {
         PINEncryptor.encrypt(pin: pin, onFailure: completion) { (encryptedPin) in
-            let param = ["pin": encryptedPin]
+            let param = ["pin_base64": encryptedPin]
             request(method: .post, path: Path.delete, parameters: param, options: .disableRetryOnRequestSigningTimeout, completion: completion)
         }
     }

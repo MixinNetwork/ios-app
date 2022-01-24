@@ -28,7 +28,7 @@ final class PaymentAPI: MixinAPI {
     
     static func transfer(assetId: String, opponentId: String, amount: String, memo: String, pin: String, traceId: String, completion: @escaping (MixinAPI.Result<Snapshot>) -> Void) {
         PINEncryptor.encrypt(pin: pin, onFailure: completion) { (encryptedPin) in
-            let param = ["asset_id": assetId, "opponent_id": opponentId, "amount": amount, "memo": memo, "pin": encryptedPin, "trace_id": traceId]
+            let param = ["asset_id": assetId, "opponent_id": opponentId, "amount": amount, "memo": memo, "pin_base64": encryptedPin, "trace_id": traceId]
             request(method: .post, path: Path.transfers, parameters: param, options: .disableRetryOnRequestSigningTimeout, completion: completion)
         }
     }

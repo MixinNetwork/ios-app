@@ -67,7 +67,7 @@ enum PINEncryptor {
         let plain = pinData + timeData + iteratorData
         do {
             let encrypted = try AESCryptor.encrypt(plain, with: pinToken, iv: iv, padding: .pkcs7)
-            let base64Encoded = (iv + encrypted).base64EncodedString()
+            let base64Encoded = (iv + encrypted).base64URLEncodedString()
             return .success(base64Encoded)
         } catch {
             return .failure(.encryption(error))

@@ -6,7 +6,7 @@ struct RawTransactionRequest: Encodable {
         case assetId = "asset_id"
         case opponentMultisig = "opponent_multisig"
         case amount
-        case pin
+        case pin = "pin_base64"
         case traceId = "trace_id"
         case memo
     }

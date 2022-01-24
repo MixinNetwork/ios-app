@@ -59,7 +59,7 @@ final class WithdrawalAPI: MixinAPI {
         PINEncryptor.encrypt(pin: pin, onFailure: completion) { (encryptedPin) in
             self.request(method: .post,
                          path: Path.delete(addressId: addressId),
-                         parameters: ["PIN": encryptedPin],
+                         parameters: ["pin_base64": encryptedPin],
                          options: .disableRetryOnRequestSigningTimeout,
                          completion: completion)
         }

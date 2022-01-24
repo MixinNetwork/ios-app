@@ -145,7 +145,7 @@ final class AccountAPI: MixinAPI {
         PINEncryptor.encrypt(pin: pin, onFailure: completion) { (encryptedPin) in
             self.request(method: .post,
                          path: Path.verifyPin,
-                         parameters: ["pin": encryptedPin],
+                         parameters: ["pin_base64": encryptedPin],
                          options: .disableRetryOnRequestSigningTimeout,
                          completion: completion)
         }
@@ -154,14 +154,14 @@ final class AccountAPI: MixinAPI {
     static func updatePin(old: String?, new: String, completion: @escaping (MixinAPI.Result<Account>) -> Void) {
         func encryptNewPinThenStartRequest() {
             PINEncryptor.encrypt(pin: new, onFailure: completion) { encryptedPin in
-                param["pin"] = encryptedPin
+                param["pin_base64"] = encryptedPin
                 request(method: .post, path: Path.updatePin, parameters: param, options: .disableRetryOnRequestSigningTimeout, completion: completion)
             }
         }
         var param: [String: String] = [:]
         if let old = old {
             PINEncryptor.encrypt(pin: old, onFailure: completion) { encryptedPin in
-                param["old_pin"] = encryptedPin
+                param["old_pin_base64"] = encryptedPin
                 encryptNewPinThenStartRequest()
             }
         } else {

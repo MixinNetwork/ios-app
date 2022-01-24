@@ -20,7 +20,7 @@ struct AccountRequest: Codable {
         case appVersion = "app_version"
         case packageName = "package_name"
         case purpose
-        case pin
+        case pin = "pin_base64"
         case sessionSecret = "session_secret"
     }
     

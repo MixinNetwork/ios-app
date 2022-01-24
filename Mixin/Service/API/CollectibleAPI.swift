@@ -26,7 +26,7 @@ final class CollectibleAPI: MixinAPI {
         PINEncryptor.encrypt(pin: pin, onFailure: completion) { (encryptedPin) in
             self.request(method: .post,
                          path: Path.sign(id: requestId),
-                         parameters: ["pin": encryptedPin],
+                         parameters: ["pin_base64": encryptedPin],
                          options: .disableRetryOnRequestSigningTimeout,
                          completion: completion)
         }
@@ -36,7 +36,7 @@ final class CollectibleAPI: MixinAPI {
         PINEncryptor.encrypt(pin: pin, onFailure: completion) { (encryptedPin) in
             self.request(method: .post,
                          path: Path.unlock(id: requestId),
-                         parameters: ["pin": encryptedPin],
+                         parameters: ["pin_base64": encryptedPin],
                          options: .disableRetryOnRequestSigningTimeout,
                          completion: completion)
         }

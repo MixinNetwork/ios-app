@@ -10,7 +10,7 @@ struct EmergencyRequest: Encodable {
     enum CodingKeys: String, CodingKey {
         case phone
         case identityNumber = "identity_number"
-        case pin
+        case pin = "pin_base64"
         case code
         case purpose
     }

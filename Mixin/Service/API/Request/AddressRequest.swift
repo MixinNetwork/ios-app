@@ -14,7 +14,7 @@ struct AddressRequest: Codable {
         case destination
         case label
         case tag
-        case pin
+        case pin = "pin_base64"
     }
 }
 

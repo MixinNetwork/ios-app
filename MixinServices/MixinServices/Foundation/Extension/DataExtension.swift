@@ -47,12 +47,11 @@ public extension Data {
         return isEqual
     }
     
-    func base64UrlEncodedString() -> String {
-        var str = base64EncodedString()
-        str = str.replacingOccurrences(of: "+", with: "-")
-        str = str.replacingOccurrences(of: "/", with: "_")
-        str = str.replacingOccurrences(of: "=", with: "")
-        return str
+    func base64URLEncodedString() -> String {
+        base64EncodedString()
+            .replacingOccurrences(of: "+", with: "-")
+            .replacingOccurrences(of: "/", with: "_")
+            .replacingOccurrences(of: "=", with: "")
     }
     
     @inlinable func withUnsafeUInt8Pointer<ResultType>(_ body: (UnsafePointer<UInt8>?) throws -> ResultType) rethrows -> ResultType {

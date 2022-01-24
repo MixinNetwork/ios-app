@@ -3,6 +3,18 @@ import MixinServices
 
 class RecentStickersViewController: StickersViewController {
     
+    override var isDisplaying: Bool {
+        didSet {
+            guard !isDisplaying else {
+                return
+            }
+            stickersToInsertOnEndDisplaying?.forEach(insert(sticker:))
+            stickersToInsertOnEndDisplaying = nil
+        }
+    }
+    
+    private var stickersToInsertOnEndDisplaying: [StickerItem]?
+    
     init(index: Int) {
         super.init(nibName: nil, bundle: nil)
         self.index = index
@@ -16,14 +28,20 @@ class RecentStickersViewController: StickersViewController {
         super.init(coder: aDecoder)
     }
     
-    override var updateUsedAtAfterSent: Bool {
-        return false
-    }
-    
-    @objc func stickerUsedAtDidUpdate(_ notification: Notification) {
+    @objc private func stickerUsedAtDidUpdate(_ notification: Notification) {
         guard let sticker = notification.userInfo?[StickersViewController.stickerUserInfoKey] as? StickerItem else {
             return
         }
+        if notification.object as? UIViewController == self {
+            var stickers = stickersToInsertOnEndDisplaying ?? []
+            stickers.append(sticker)
+            stickersToInsertOnEndDisplaying = stickers
+        } else {
+            insert(sticker: sticker)
+        }
+    }
+    
+    private func insert(sticker: StickerItem) {
         if let index = stickers.firstIndex(where: { $0.stickerId == sticker.stickerId }) {
             collectionView.performBatchUpdates({
                 stickers.remove(at: index)

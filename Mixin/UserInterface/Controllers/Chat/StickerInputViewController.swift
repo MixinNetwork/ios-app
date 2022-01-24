@@ -263,12 +263,10 @@ extension StickerInputViewController {
     }
     
     private func updatePagesAnimation() {
-        for case let vc as StickersCollectionViewController in pageViewController.children {
-            if vc.index == currentIndex {
-                vc.animated = true
-            } else {
-                vc.animated = false
-            }
+        for case let child as StickersCollectionViewController in pageViewController.children {
+            let isDisplaying = child.index == currentIndex
+            child.isDisplaying = isDisplaying
+            child.animated = isDisplaying
         }
     }
     

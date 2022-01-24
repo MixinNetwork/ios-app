@@ -14,10 +14,6 @@ class StickersCollectionViewController: UIViewController, ConversationAccessible
         return view as! UICollectionView
     }
     
-    var updateUsedAtAfterSent: Bool {
-        return true
-    }
-    
     var isEmpty: Bool {
         return true
     }
@@ -33,6 +29,8 @@ class StickersCollectionViewController: UIViewController, ConversationAccessible
             }
         }
     }
+    
+    var isDisplaying = false
     
     override func loadView() {
         let frame = CGRect(x: 0, y: 0, width: 375, height: 200)

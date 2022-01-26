@@ -49,6 +49,9 @@ enum PINEncryptor {
         PropertiesDAO.shared.updateValue(forKey: .iterator, type: UInt64.self) { databaseValue in
             let userDefaultsValue = AppGroupUserDefaults.Crypto.iterator
             if let databaseValue = databaseValue {
+                if databaseValue != userDefaultsValue {
+                    Logger.general.warn(category: "PIN", message: "database: \(databaseValue), defaults: \(userDefaultsValue)")
+                }
                 iterator = max(databaseValue, userDefaultsValue)
             } else {
                 iterator = userDefaultsValue

@@ -7,10 +7,13 @@
 //
 
 import SwiftUI
+import MixinServices
 
 struct FunctionsView: View {
     
     @ObservedObject private var server = AppGroupServer()
+    
+    @State private var userDefaultsVersion = AppGroupUserDefaults.User.localVersion
     
     var body: some View {
         NavigationView {
@@ -30,6 +33,13 @@ struct FunctionsView: View {
                     if server.address != nil {
                         Text("Tap to copy address")
                     }
+                }
+                
+                Section {
+                    Stepper("UserDefaults version: \(userDefaultsVersion)", value: $userDefaultsVersion)
+                        .onChange(of: userDefaultsVersion) { newValue in
+                            AppGroupUserDefaults.User.localVersion = newValue
+                        }
                 }
                 
                 Section {

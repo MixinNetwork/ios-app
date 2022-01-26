@@ -70,7 +70,8 @@ class DatabaseUpgradeViewController: UIViewController {
             }
             if localVersion < 29 {
                 let it = AppGroupUserDefaults.Crypto.iterator + 100
-                Logger.general.info(category: "PIN", message: "Updated iterator from: \(AppGroupUserDefaults.Crypto.iterator), to: \(it)")
+                Logger.general.info(category: "PIN", message: "Update iterator from: \(AppGroupUserDefaults.Crypto.iterator), to: \(it)")
+                AppGroupUserDefaults.Crypto.iterator = it
                 PropertiesDAO.shared.set(it, forKey: .iterator)
             }
             

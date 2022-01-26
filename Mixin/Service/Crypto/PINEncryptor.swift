@@ -46,14 +46,17 @@ enum PINEncryptor {
         let timeData = withUnsafeBytes(of: time.littleEndian, { Data($0) })
         
         var iterator: UInt64 = 0
-        PropertiesDAO.shared.updateValue(forKey: .iterator, type: UInt64.self) { current in
-            if let current = current {
-                iterator = current + 1
+        PropertiesDAO.shared.updateValue(forKey: .iterator, type: UInt64.self) { databaseValue in
+            let userDefaultsValue = AppGroupUserDefaults.Crypto.iterator
+            if let databaseValue = databaseValue {
+                iterator = max(databaseValue, userDefaultsValue)
             } else {
-                iterator = 1
-                Logger.general.info(category: "PIN", message: "Iterator initialized")
+                iterator = userDefaultsValue
+                Logger.general.info(category: "PIN", message: "Iterator initialized to \(userDefaultsValue)")
             }
-            return iterator
+            let nextIterator = iterator + 1
+            AppGroupUserDefaults.Crypto.iterator = nextIterator
+            return nextIterator
         }
         let iteratorData = withUnsafeBytes(of: iterator.littleEndian, { Data($0) })
         Logger.general.info(category: "PIN", message: "Encrypt with it: \(iterator)")

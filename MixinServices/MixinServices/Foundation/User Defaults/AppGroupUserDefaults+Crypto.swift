@@ -36,7 +36,6 @@ extension AppGroupUserDefaults {
         @Default(namespace: .crypto, key: Key.oneTimePrekeyRefreshDate, defaultValue: nil)
         public static var oneTimePrekeyRefreshDate: Date?
         
-        @available(*, deprecated, message: "Use only for migration")
         @Default(namespace: .crypto, key: Key.iterator, defaultValue: 1)
         public static var iterator: UInt64
         

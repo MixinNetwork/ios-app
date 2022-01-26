@@ -65,7 +65,7 @@ extension AppGroupUserDefaults {
             case hasNewStickers = "has_new_stickers"
         }
         
-        public static let version = 28
+        public static let version = 29
         public static let uninitializedVersion = -1
         
         public static let didChangeRecentlyUsedAppIdsNotification = Notification.Name(rawValue: "one.mixin.services.recently.used.app.ids.change")

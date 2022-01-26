@@ -41,11 +41,29 @@ enum PINEncryptor {
         guard let iv = Data(withNumberOfSecuredRandomBytes: kCCBlockSizeAES128) else {
             return .failure(.ivGeneration)
         }
-        var time = UInt64(Date().timeIntervalSince1970).littleEndian
-        let timeData = Data(bytes: &time, count: MemoryLayout<UInt64>.size)
-        var iterator = AppGroupUserDefaults.Crypto.iterator.littleEndian
-        AppGroupUserDefaults.Crypto.iterator += 1
-        let iteratorData = Data(bytes: &iterator, count: MemoryLayout<UInt64>.size)
+        
+        let time = UInt64(Date().timeIntervalSince1970)
+        let timeData = withUnsafeBytes(of: time.littleEndian, { Data($0) })
+        
+        var iterator: UInt64 = 0
+        PropertiesDAO.shared.updateValue(forKey: .iterator, type: UInt64.self) { databaseValue in
+            let userDefaultsValue = AppGroupUserDefaults.Crypto.iterator
+            if let databaseValue = databaseValue {
+                if databaseValue != userDefaultsValue {
+                    Logger.general.warn(category: "PIN", message: "database: \(databaseValue), defaults: \(userDefaultsValue)")
+                }
+                iterator = max(databaseValue, userDefaultsValue)
+            } else {
+                iterator = userDefaultsValue
+                Logger.general.info(category: "PIN", message: "Iterator initialized to \(userDefaultsValue)")
+            }
+            let nextIterator = iterator + 1
+            AppGroupUserDefaults.Crypto.iterator = nextIterator
+            return nextIterator
+        }
+        let iteratorData = withUnsafeBytes(of: iterator.littleEndian, { Data($0) })
+        Logger.general.info(category: "PIN", message: "Encrypt with it: \(iterator)")
+        
         let plain = pinData + timeData + iteratorData
         do {
             let encrypted = try AESCryptor.encrypt(plain, with: pinToken, iv: iv, padding: .pkcs7)

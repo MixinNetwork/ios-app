@@ -120,6 +120,7 @@ public final class LoginManager {
                 AppGroupKeychain.removeAllItems()
                 RequestSigning.removeCachedKey()
                 SignalDatabase.current.erase()
+                PropertiesDAO.shared.removeValue(forKey: .iterator)
                 AppGroupUserDefaults.Crypto.clearAll()
                 NotificationCenter.default.post(name: LoginManager.didLogoutNotification, object: self)
             }

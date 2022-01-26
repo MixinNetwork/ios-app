@@ -45,6 +45,8 @@ class WebViewController: FullscreenPopupViewController {
         let webView = WKWebView(frame: webViewWrapperView.bounds, configuration: webViewConfiguration)
         webView.backgroundColor = .clear
         webView.isOpaque = false
+        webView.scrollView.backgroundColor = .clear
+        webView.scrollView.contentInsetAdjustmentBehavior = .never
         webViewWrapperView.addSubview(webView)
         webView.snp.makeEdgesEqualToSuperview()
         webView.scrollView.panGestureRecognizer.require(toFail: edgePanGestureRecognizer)

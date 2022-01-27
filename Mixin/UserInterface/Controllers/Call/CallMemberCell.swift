@@ -2,6 +2,17 @@ import UIKit
 
 class CallMemberCell: UICollectionViewCell {
     
+    @objc(CallMemberAvatarWrapperView)
+    class AvatarWrapperView: UIView {
+        
+        override func layoutSubviews() {
+            super.layoutSubviews()
+            // `frame` could be incorrect in [CallMemberCell layoutSubviews]
+            layer.cornerRadius = frame.width / 2
+        }
+        
+    }
+    
     enum Layout {
         
         struct Constant {
@@ -75,7 +86,6 @@ class CallMemberCell: UICollectionViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        avatarWrapperView.layer.cornerRadius = avatarWrapperView.frame.width / 2
         connectingView.layer.cornerRadius = connectingView.frame.width / 2
         statusIndicatorLayer.position = CGPoint(x: avatarWrapperView.bounds.midX,
                                                 y: avatarWrapperView.bounds.midY)

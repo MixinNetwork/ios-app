@@ -269,6 +269,7 @@ class CallViewController: ResizablePopupViewController {
                 let item = UserItem.createUser(userId: call.remoteUserId, fullName: call.remoteUsername, identityNumber: "", avatarUrl: "", appId: nil)
                 members = [item]
             }
+            membersCollectionView.dataSource = self
             membersCollectionView.reloadData()
         } else if let call = call as? GroupCall {
             notificationCenter.addObserver(self,
@@ -278,9 +279,10 @@ class CallViewController: ResizablePopupViewController {
             titleLabel.text = call.conversationName
             membersCollectionView.isHidden = false
             call.membersDataSource.collectionView = membersCollectionView
-            view.layoutIfNeeded()
             call.beginSpeakingStatusPolling()
         }
+        view.setNeedsLayout()
+        view.layoutIfNeeded()
         updateMembersCountLabel()
         updateViews(call: call)
         muteSwitch.isSelected = call.isMuted

@@ -52,7 +52,7 @@ class ImageUploadJob: AttachmentUploadJob {
         }
         if message.thumbImage == nil {
             let image = UIImage(contentsOfFile: fileUrl.path)
-            message.thumbImage = image?.base64Thumbnail() ?? ""
+            message.thumbImage = image?.blurHash() ?? ""
         }
 
         guard !isCancelled else {
@@ -120,7 +120,7 @@ class ImageUploadJob: AttachmentUploadJob {
             try data.write(to: url)
             if message.thumbImage == nil {
                 let thumbnail = image ?? UIImage(data: data)
-                message.thumbImage = thumbnail?.base64Thumbnail() ?? ""
+                message.thumbImage = thumbnail?.blurHash() ?? ""
             }
             guard !isCancelled else {
                 try FileManager.default.removeItem(at: url)

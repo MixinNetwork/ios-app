@@ -279,7 +279,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
                 do {
                     try FileManager.default.copyItem(at: assetUrl, to: targetUrl)
                     
-                    message.thumbImage = image.base64Thumbnail()
+                    message.thumbImage = image.blurHash()
                     message.mediaSize = FileManager.default.fileSize(targetUrl.path)
                     message.mediaWidth = Int(image.size.width)
                     message.mediaHeight = Int(image.size.height)
@@ -306,7 +306,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
                         Logger.general.error(category: "AssetSendViewController", message: "Unable to write the file: \(error)")
                         fallthrough
                     }
-                    message.thumbImage = image.base64Thumbnail()
+                    message.thumbImage = image.blurHash()
                     message.mediaSize = FileManager.default.fileSize(targetUrl.path)
                     message.mediaWidth = Int(image.size.width)
                     message.mediaHeight = Int(image.size.height)

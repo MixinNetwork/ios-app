@@ -102,24 +102,4 @@ public extension UIImage {
         return UIImage(cgImage: scaled, scale: scale, orientation: imageOrientation)
     }
     
-    public func base64Thumbnail(maxLength: CGFloat = 48) -> String {
-        let scaledImage: UIImage?
-        if max(size.width, size.height) > maxLength {
-            var targetSize = size.sizeThatFits(CGSize(width: maxLength, height: maxLength))
-            targetSize = CGSize(width: max(1, targetSize.width),
-                                height: max(1, targetSize.height))
-            scaledImage = self.imageByScaling(to: targetSize)
-        } else {
-            scaledImage = self
-        }
-        if let ciImage = scaledImage?.ciImage, let filter = CIFilter(name: "CIGaussianBlur") {
-            filter.setValue(ciImage, forKey: kCIInputImageKey)
-            filter.setValue(4, forKey: kCIInputRadiusKey)
-            if let blurImage = filter.outputImage {
-                return UIImage(ciImage: blurImage).base64 ?? ""
-            }
-        }
-        return scaledImage?.base64 ?? ""
-    }
-    
 }

@@ -111,7 +111,7 @@ final class ConversationMessageComposer {
                 if let thumbnail = UIImage(withFirstFrameOfVideoAtURL: url) {
                     let thumbnailURL = AttachmentContainer.videoThumbnailURL(videoFilename: url.lastPathComponent)
                     thumbnail.saveToFile(path: thumbnailURL)
-                    message.thumbImage = thumbnail.base64Thumbnail()
+                    message.thumbImage = thumbnail.blurHash()
                 } else {
                     showAutoHiddenHud(style: .error, text: R.string.localizable.error_operation_failed())
                     return
@@ -189,7 +189,7 @@ final class ConversationMessageComposer {
             message.mediaWidth = image.size.width
             message.mediaHeight = image.size.height
             if let thumbnail = thumbnail {
-                message.thumbImage = thumbnail.base64Thumbnail()
+                message.thumbImage = thumbnail.blurHash()
             }
             message.mediaMimeType = "image/gif"
             SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, opponentApp: app, isGroupMessage: isGroupMessage)
@@ -214,7 +214,7 @@ final class ConversationMessageComposer {
             message.mediaWidth = Int(image.size.width)
             message.mediaHeight = Int(image.size.height)
             message.quoteMessageId = quoteMessageId
-            message.thumbImage = image.base64Thumbnail()
+            message.thumbImage = image.blurHash()
             message.mediaMimeType = "image/jpeg"
             SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, opponentApp: app, isGroupMessage: isGroupMessage)
         }
@@ -240,7 +240,7 @@ final class ConversationMessageComposer {
                 if let thumbnail = UIImage(withFirstFrameOfVideoAtURL: url) {
                     let thumbnailURL = AttachmentContainer.videoThumbnailURL(videoFilename: url.lastPathComponent)
                     thumbnail.saveToFile(path: thumbnailURL)
-                    message.thumbImage = thumbnail.base64Thumbnail()
+                    message.thumbImage = thumbnail.blurHash()
                 } else {
                     showAutoHiddenHud(style: .error, text: R.string.localizable.error_operation_failed())
                     return
@@ -278,7 +278,7 @@ final class ConversationMessageComposer {
                 message.mediaUrl = filename
                 message.mediaWidth = Int(image.size.width * image.scale)
                 message.mediaHeight = Int(image.size.height * image.scale)
-                message.thumbImage = image.base64Thumbnail()
+                message.thumbImage = image.blurHash()
                 message.mediaMimeType = "image/gif"
                 SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, opponentApp: app, isGroupMessage: isGroupMessage)
             } catch {
@@ -313,7 +313,7 @@ final class ConversationMessageComposer {
             let thumbnailSize = CGSize(width: 48, height: 48)
             PHImageManager.default().requestImage(for: asset, targetSize: thumbnailSize, contentMode: .aspectFit, options: options) { (image, info) in
                 if let image = image {
-                    message.thumbImage = image.base64Thumbnail()
+                    message.thumbImage = image.blurHash()
                 }
             }
             SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, opponentApp: app, isGroupMessage: isGroupMessage)

@@ -383,7 +383,7 @@ extension ShareRecipientViewController {
 
         let filename = "\(message.messageId).\(extensionName)"
         let url = AttachmentContainer.url(for: .photos, filename: filename)
-        message.thumbImage = targetImage.base64Thumbnail()
+        message.thumbImage = targetImage.blurHash()
 
         do {
             try imageData.write(to: url)
@@ -413,7 +413,7 @@ extension ShareRecipientViewController {
         let category: MessageCategory = conversation.isSignalConversation ? .SIGNAL_VIDEO : .PLAIN_VIDEO
         var message = Message.createMessage(category: category.rawValue, conversationId: conversation.conversationId, userId: myUserId)
         message.messageId = messageId
-        message.thumbImage = thumbnail.base64Thumbnail()
+        message.thumbImage = thumbnail.blurHash()
         message.mediaDuration = Int64(asset.duration.seconds * millisecondsPerSecond)
         let size = videoTrack.naturalSize.applying(videoTrack.preferredTransform)
         message.mediaWidth = Int(abs(size.width))

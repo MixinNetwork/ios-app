@@ -41,6 +41,7 @@ final class UserProfileViewController: ProfileViewController {
     private var favoriteAppViewIfLoaded: ProfileFavoriteAppsView?
     private var sharedAppUsers: [User]?
     private var dismissHomeAppsWindow = true
+    private var centerStackViewHeightConstraint: NSLayoutConstraint?
     
     init(user: UserItem) {
         super.init(nibName: R.nib.profileView.name, bundle: R.nib.profileView.bundle)
@@ -67,8 +68,8 @@ final class UserProfileViewController: ProfileViewController {
     override func viewDidLoad() {
         size = isMe ? .unavailable : .compressed
         super.viewDidLoad()
+        reloadData()
         if user.isCreatedByMessenger {
-            reloadData()
             reloadFavoriteApps(userId: user.userId, fromRemote: true)
             if !isMe {
                 reloadCircles(conversationId: conversationId, userId: user.userId)
@@ -79,12 +80,6 @@ final class UserProfileViewController: ProfileViewController {
             NotificationCenter.default.addObserver(self, selector: #selector(willHideMenu(_:)), name: UIMenuController.willHideMenuNotification, object: nil)
             NotificationCenter.default.addObserver(self, selector: #selector(accountDidChange(_:)), name: LoginManager.accountDidChangeNotification, object: nil)
         } else {
-            avatarImageView.setImage(with: user)
-            titleLabel.text = user.fullName
-            subtitleLabel.isHidden = true
-            centerStackView.snp.makeConstraints { make in
-                make.height.equalTo(24)
-            }
             resizeRecognizer.isEnabled = false
         }
     }
@@ -593,10 +588,15 @@ extension UserProfileViewController {
         for view in menuStackView.subviews {
             view.removeFromSuperview()
         }
+        let isMessengerUser = user.isCreatedByMessenger
         
         avatarImageView.setImage(with: user)
         titleLabel.text = user.fullName
-        subtitleLabel.identityNumber = user.identityNumber
+        if isMessengerUser {
+            subtitleLabel.identityNumber = user.identityNumber
+        } else {
+            subtitleLabel.identityNumber = nil
+        }
         
         if user.isVerified {
             badgeImageView.image = R.image.ic_user_verified()
@@ -608,23 +608,25 @@ extension UserProfileViewController {
             badgeImageView.isHidden = true
         }
         
-        switch relationship {
-        case .ME, .FRIEND:
-            relationshipView.style = .none
-        case .STRANGER:
-            if user.isBot {
-                relationshipView.style = .addBot
-            } else {
-                relationshipView.style = .addContact
+        if isMessengerUser {
+            switch relationship {
+            case .ME, .FRIEND:
+                relationshipView.style = .none
+            case .STRANGER:
+                if user.isBot {
+                    relationshipView.style = .addBot
+                } else {
+                    relationshipView.style = .addContact
+                }
+                relationshipView.button.removeTarget(nil, action: nil, for: .allEvents)
+                relationshipView.button.addTarget(self, action: #selector(addContact), for: .touchUpInside)
+                centerStackView.addArrangedSubview(relationshipView)
+            case .BLOCKING:
+                relationshipView.style = .unblock
+                relationshipView.button.removeTarget(nil, action: nil, for: .allEvents)
+                relationshipView.button.addTarget(self, action: #selector(unblockUser), for: .touchUpInside)
+                centerStackView.addArrangedSubview(relationshipView)
             }
-            relationshipView.button.removeTarget(nil, action: nil, for: .allEvents)
-            relationshipView.button.addTarget(self, action: #selector(addContact), for: .touchUpInside)
-            centerStackView.addArrangedSubview(relationshipView)
-        case .BLOCKING:
-            relationshipView.style = .unblock
-            relationshipView.button.removeTarget(nil, action: nil, for: .allEvents)
-            relationshipView.button.addTarget(self, action: #selector(unblockUser), for: .touchUpInside)
-            centerStackView.addArrangedSubview(relationshipView)
         }
         
         if !user.biography.isEmpty {
@@ -632,7 +634,7 @@ extension UserProfileViewController {
             centerStackView.addArrangedSubview(descriptionView)
         }
         
-        if !isMe {
+        if !isMe, isMessengerUser {
             if let view = favoriteAppViewIfLoaded {
                 centerStackView.addArrangedSubview(view)
             }
@@ -657,6 +659,17 @@ extension UserProfileViewController {
             menuStackViewTopConstraint.constant = 24
         } else {
             menuStackViewTopConstraint.constant = 0
+        }
+        if !isMessengerUser && centerStackView.arrangedSubviews.isEmpty {
+            if let constraint = centerStackViewHeightConstraint {
+                constraint.isActive = true
+            } else {
+                let constraint = centerStackView.heightAnchor.constraint(equalToConstant: 38)
+                constraint.isActive = true
+                centerStackViewHeightConstraint = constraint
+            }
+        } else {
+            centerStackViewHeightConstraint?.isActive = false
         }
         
         if isMe {
@@ -706,7 +719,7 @@ extension UserProfileViewController {
                 footerLabel.text = R.string.localizable.profile_join_in(rep)
                 menuStackView.addArrangedSubview(footerLabel)
             }
-        } else {
+        } else if isMessengerUser {
             var groups = [[ProfileMenuItem]]()
             
             let shareUserItem = ProfileMenuItem(title: R.string.localizable.profile_share_card(),
@@ -830,6 +843,8 @@ extension UserProfileViewController {
             
             reloadMenu(groups: groups)
             menuStackView.insertArrangedSubview(circleItemView, at: groups.count - 2)
+        } else {
+            reloadMenu(groups: [])
         }
         
         view.frame.size.width = AppDelegate.current.mainWindow.bounds.width

@@ -611,7 +611,7 @@ class UrlWindow {
                         hud.hideInMainThread()
                         return
                     }
-                    message.thumbImage = image.base64Thumbnail()
+                    message.thumbImage = image.blurHash()
                     message.mediaMimeType = mimeType
                     message.mediaWidth = Int(image.size.width)
                     message.mediaHeight = Int(image.size.height)

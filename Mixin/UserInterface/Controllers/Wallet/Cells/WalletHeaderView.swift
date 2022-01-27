@@ -47,10 +47,10 @@ class WalletHeaderView: InfiniteTopView {
         cell.velocity = 5
         cell.velocityRange = 10
         cell.yAcceleration = 5
-        cell.scale = 0.15
-        cell.scaleRange = 0.12
+        cell.scale = 0.3
+        cell.scaleRange = 0.15
         cell.spinRange = 1
-        cell.color = snowflakeColor
+        cell.color = UIColor(displayP3RgbValue: 0x9CABE9, alpha: 0.4).cgColor
         cell.contents = R.image.snowflake()!.cgImage
         
         let layer = CAEmitterLayer()
@@ -67,14 +67,6 @@ class WalletHeaderView: InfiniteTopView {
     
     private var contentHeight: CGFloat = 159
     
-    private var snowflakeColor: CGColor {
-        if traitCollection.userInterfaceStyle == .dark {
-            return UIColor.white.cgColor
-        } else {
-            return UIColor.lightGray.cgColor
-        }
-    }
-    
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         return CGSize(width: size.width, height: contentHeight)
     }
@@ -83,15 +75,6 @@ class WalletHeaderView: InfiniteTopView {
         super.layoutSubviews()
         if let layer = snowfallLayerIfLoaded {
             layoutSnowfallLayer(layer)
-        }
-    }
-    
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        if #available(iOS 13.0, *), traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection), let cells = snowfallLayerIfLoaded?.emitterCells {
-            for cell in cells {
-                cell.color = snowflakeColor
-            }
         }
     }
     

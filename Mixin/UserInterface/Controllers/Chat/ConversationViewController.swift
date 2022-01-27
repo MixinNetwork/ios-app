@@ -84,6 +84,7 @@ class ConversationViewController: UIViewController {
     private let fastReplyConfirmedDistance: CGFloat = 30
     private let fastReplyMaxDistance: CGFloat = 60
     private let feedback = UIImpactFeedbackGenerator()
+    private let pinMessageBannerHeight: CGFloat = 60
     
     private var ownerUser: UserItem?
     private var quotingMessageId: String?
@@ -104,13 +105,14 @@ class ConversationViewController: UIViewController {
     private var previewDocumentMessageId: String?
     private var myInvitation: Message?
     private var isShowingKeyboard = false
-    private var groupCallIndicatorCenterYConstraint: NSLayoutConstraint!
+    private var groupCallIndicatorCenterYConstraint: NSLayoutConstraint?
     private var makeInputTextViewFirstResponderOnAppear = false
     private var canPinMessages = false
     private var pinnedMessageIds = Set<String>()
     private var lastMentionCandidate: String?
     
     private weak var pinMessageBannerViewIfLoaded: PinMessageBannerView?
+    private weak var groupCallIndicatorViewIfLoaded: GroupCallIndicatorView?
     
     private(set) lazy var imagePickerController = ImagePickerController(initialCameraPosition: .rear, cropImageAfterPicked: false, parent: self, delegate: self)
     
@@ -144,13 +146,20 @@ class ConversationViewController: UIViewController {
     private lazy var groupCallIndicatorView: GroupCallIndicatorView = {
         let indicator = R.nib.groupCallIndicatorView(owner: self)!
         indicator.isHidden = true
-        view.addSubview(indicator)
+        if let banner = pinMessageBannerViewIfLoaded {
+            view.insertSubview(indicator, aboveSubview: banner)
+        } else {
+            view.addSubview(indicator)
+        }
         indicator.snp.makeConstraints { (make) in
             make.trailing.equalToSuperview()
         }
-        groupCallIndicatorCenterYConstraint = indicator.centerYAnchor.constraint(equalTo: view.topAnchor)
-        groupCallIndicatorCenterYConstraint.constant = groupCallIndicatorCenterYLimitation.min
-        groupCallIndicatorCenterYConstraint.isActive = true
+        let constraint = indicator.centerYAnchor.constraint(equalTo: view.topAnchor)
+        constraint.constant = groupCallIndicatorCenterYLimitation.min
+        constraint.isActive = true
+        
+        groupCallIndicatorViewIfLoaded = indicator
+        groupCallIndicatorCenterYConstraint = constraint
         return indicator
     }()
     
@@ -176,11 +185,15 @@ class ConversationViewController: UIViewController {
         let banner = R.nib.pinMessageBannerView(owner: nil)!
         banner.isHidden = true
         banner.delegate = self
-        view.addSubview(banner)
+        if let indicator = groupCallIndicatorViewIfLoaded {
+            view.insertSubview(banner, belowSubview: indicator)
+        } else {
+            view.addSubview(banner)
+        }
         banner.snp.makeConstraints { make in
             make.top.equalTo(navigationBarView.snp.bottom)
             make.left.right.equalTo(0)
-            make.height.equalTo(60)
+            make.height.equalTo(pinMessageBannerHeight)
         }
         pinMessageBannerViewIfLoaded = banner
         return banner
@@ -239,7 +252,12 @@ class ConversationViewController: UIViewController {
     }
     
     private var groupCallIndicatorCenterYLimitation: (min: CGFloat, max: CGFloat) {
-        let min = navigationBarView.frame.maxY + 30
+        let min: CGFloat
+        if let banner = pinMessageBannerViewIfLoaded, !banner.isHidden {
+            min = navigationBarView.frame.maxY + pinMessageBannerHeight + 33
+        } else {
+            min = AppDelegate.current.mainWindow.safeAreaInsets.top + titleViewHeightConstraint.constant + 30
+        }
         let max = inputWrapperView.frame.minY - 30
         return (min, max)
     }
@@ -584,12 +602,10 @@ class ConversationViewController: UIViewController {
         case .began:
             recognizer.setTranslation(.zero, in: nil)
         case .changed:
-            groupCallIndicatorCenterYConstraint.constant += recognizer.translation(in: nil).y
+            groupCallIndicatorCenterYConstraint?.constant += recognizer.translation(in: nil).y
             recognizer.setTranslation(.zero, in: nil)
         case .ended:
-            let (minY, maxY) = groupCallIndicatorCenterYLimitation
-            let y = max(minY, min(maxY, groupCallIndicatorView.center.y))
-            groupCallIndicatorCenterYConstraint.constant = y
+            layoutGroupCallIndicatorView()
             UIView.animate(withDuration: 0.3,
                            delay: 0,
                            options: .curveEaseOut,
@@ -1192,6 +1208,7 @@ class ConversationViewController: UIViewController {
                 self.pinnedMessageIds.insert(referencedMessageId)
                 self.pinMessageBannerView.isHidden = false
                 self.updatePinMessagePreview(item: message)
+                self.layoutGroupCallIndicatorView()
             }
         }
     }
@@ -2493,11 +2510,26 @@ extension ConversationViewController {
     @objc private func updateGroupCallIndicatorViewHidden() {
         let service = CallService.shared
         if let call = service.activeCall, call.conversationId == conversationId {
-            groupCallIndicatorView.isHidden = true
+            if let view = groupCallIndicatorViewIfLoaded {
+                view.isHidden = true
+            }
         } else {
             let ids = service.membersManager.memberIds(forConversationWith: conversationId)
-            groupCallIndicatorView.isHidden = ids.isEmpty
+            if ids.isEmpty {
+                groupCallIndicatorViewIfLoaded?.isHidden = true
+            } else {
+                groupCallIndicatorView.isHidden = false
+            }
         }
+    }
+    
+    private func layoutGroupCallIndicatorView() {
+        guard let indicator = groupCallIndicatorViewIfLoaded, let constraint = groupCallIndicatorCenterYConstraint else {
+            return
+        }
+        let (minY, maxY) = groupCallIndicatorCenterYLimitation
+        let y = max(minY, min(maxY, indicator.center.y))
+        constraint.constant = y
     }
     
     private func updatePinMessagePreview(item: MessageItem) {
@@ -2569,6 +2601,7 @@ extension ConversationViewController {
                         } else {
                             self.hidePinMessagePreview()
                         }
+                        self.layoutGroupCallIndicatorView()
                     }
                 }
             }

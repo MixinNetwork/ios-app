@@ -919,6 +919,7 @@
 "setting_delete_account_confirm_title" = "Enter your PIN to delete your account";
 "setting_delete_account_confirm_hint" = "If you continue, your profile and account details will be delete on %@. read our document to Learn more.";
 "setting_delete_account_verify_pin" = "Enter your PIN to continue";
+"setting_delete_account_send_code" = "We will send a 4-digit code to %@";
 
 // ScreenLock
 "screen_lock_locked" = "Mixin Locked";

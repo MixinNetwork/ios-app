@@ -572,7 +572,6 @@
 		7C5823D5268966A1003AA142 /* HomeAppsFolderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5823D4268966A1003AA142 /* HomeAppsFolderViewController.swift */; };
 		7C5B65CE27701A49004EDD53 /* DeleteAccountHintWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5B65CD27701A49004EDD53 /* DeleteAccountHintWindow.swift */; };
 		7C5B65D027701A62004EDD53 /* DeleteAccountHintWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C5B65CF27701A62004EDD53 /* DeleteAccountHintWindow.xib */; };
-		7C5B65D6277084CB004EDD53 /* DeleteAccountVerifyNumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5B65D5277084CB004EDD53 /* DeleteAccountVerifyNumberViewController.swift */; };
 		7C6132B627953B15002777EE /* DeleteAccountAbortWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6132B527953B15002777EE /* DeleteAccountAbortWindow.swift */; };
 		7C6132B827953B4F002777EE /* DeleteAccountAbortWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C6132B727953B4F002777EE /* DeleteAccountAbortWindow.xib */; };
 		7C66E7B82743988500FF24C1 /* ProfileDescriptionLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66E7B72743988500FF24C1 /* ProfileDescriptionLabel.swift */; };
@@ -1584,7 +1583,6 @@
 		7C5823D4268966A1003AA142 /* HomeAppsFolderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsFolderViewController.swift; sourceTree = "<group>"; };
 		7C5B65CD27701A49004EDD53 /* DeleteAccountHintWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountHintWindow.swift; sourceTree = "<group>"; };
 		7C5B65CF27701A62004EDD53 /* DeleteAccountHintWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeleteAccountHintWindow.xib; sourceTree = "<group>"; };
-		7C5B65D5277084CB004EDD53 /* DeleteAccountVerifyNumberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountVerifyNumberViewController.swift; sourceTree = "<group>"; };
 		7C6132B527953B15002777EE /* DeleteAccountAbortWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountAbortWindow.swift; sourceTree = "<group>"; };
 		7C6132B727953B4F002777EE /* DeleteAccountAbortWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeleteAccountAbortWindow.xib; sourceTree = "<group>"; };
 		7C66E7B72743988500FF24C1 /* ProfileDescriptionLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDescriptionLabel.swift; sourceTree = "<group>"; };
@@ -3679,7 +3677,6 @@
 				7BC1466C230D12680060FE19 /* CurrencySelectorViewController.swift */,
 				7BCB8C8322BB56B8002A13CC /* DataAndStorageSettingsViewController.swift */,
 				7C8FA78C27687D1500855AFD /* DeleteAccountSettingViewController.swift */,
-				7C5B65D5277084CB004EDD53 /* DeleteAccountVerifyNumberViewController.swift */,
 				7CE3A25B2771A8AB006BE765 /* DeleteAccountVerifyCodeViewController.swift */,
 				7B9E7ABF21E6F8F000012A28 /* DesktopViewController.swift */,
 				DFB19001233219650021CAF3 /* LogViewController.swift */,
@@ -4812,7 +4809,6 @@
 				7BFDB73920DA41E3005673CC /* Quote.swift in Sources */,
 				7B51DDB5223A489F008ACDBB /* LoginContext.swift in Sources */,
 				DFC0ECFB23BB610C0091E7AC /* ProvisioningAPI.swift in Sources */,
-				7C5B65D6277084CB004EDD53 /* DeleteAccountVerifyNumberViewController.swift in Sources */,
 				DF5D9F281F9C79E10036D5FD /* UIApplicationExtension.swift in Sources */,
 				DF7A4B4A1FCE6EE200F21BCB /* UIViewExtension.swift in Sources */,
 				7C5823D5268966A1003AA142 /* HomeAppsFolderViewController.swift in Sources */,

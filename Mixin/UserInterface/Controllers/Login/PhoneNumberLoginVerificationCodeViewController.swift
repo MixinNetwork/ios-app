@@ -27,7 +27,7 @@ class PhoneNumberLoginVerificationCodeViewController: LoginVerificationCodeViewC
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if context.isDeleting, let deactivatedAt = context.deactivatedAt {
+        if let deactivatedAt = context.deactivatedAt {
             verificationCodeField.resignFirstResponder()
             let window = DeleteAccountAbortWindow.instance()
             window.render(deactivatedAt: deactivatedAt) { abort in

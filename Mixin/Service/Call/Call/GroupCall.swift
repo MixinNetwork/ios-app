@@ -453,11 +453,11 @@ extension GroupCall {
             guard self.internalState != .disconnecting else {
                 return
             }
+            Logger.call.error(category: "GroupCall", message: "[\(self.uuidString)] Rebuilding")
             self.internalState = .restarting
             DispatchQueue.main.sync {
                 self.rtcClient.close(permanently: false)
             }
-            self.frameKey = nil
             self.trackId = nil
             self.pendingCandidates = []
             self.connect(isRestarting: false) { error in

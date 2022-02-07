@@ -97,6 +97,7 @@ final class GalleryImageItemViewController: GalleryItemViewController {
         scrollView.contentSize = pageSize
         detectedUrl = nil
         imageView.sd_cancelCurrentImageLoad()
+        imageView.image = nil
     }
     
     override func beginDownload() {

@@ -2533,7 +2533,7 @@ extension ConversationViewController {
     }
     
     private func updatePinMessagePreview(item: MessageItem) {
-        let preview = TransferPinAction.pinMessage(item: item)
+        let preview = TransferPinAction.pinMessage(item: item).replacingOccurrences(of: "\n\n", with: "\n")
         pinMessageBannerView.update(preview: preview)
         pinMessageBannerView.snp.updateConstraints { make in
             make.left.equalTo(0)

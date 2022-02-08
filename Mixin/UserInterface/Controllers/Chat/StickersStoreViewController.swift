@@ -15,11 +15,8 @@ class StickersStoreViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        StickerStore.loadStoreAlbums { bannerItems, listItems in
-            self.bannerItems = bannerItems
-            self.listItems = listItems
-            self.collectionView.reloadData()
-        }
+        loadAlbums()
+        fetchAlbums()
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(updateAlbumAddStatus(_:)),
                                                name: AlbumDAO.addedAlbumsDidChangeNotification,
@@ -96,6 +93,67 @@ extension StickersStoreViewController: UICollectionViewDelegate {
 
 extension StickersStoreViewController {
 
+    private func loadAlbums() {
+        DispatchQueue.global().async { [weak self] in
+            var bannerItems = [AlbumItem]()
+            var listItems = [AlbumItem]()
+            let albums = AlbumDAO.shared.getNonPersonalAlbums()
+            albums.forEach { album in
+                let stickers = StickerDAO.shared.getStickers(albumId: album.albumId)
+                let item = AlbumItem(album: album, stickers: stickers)
+                if !album.banner.isNilOrEmpty, bannerItems.count < 3 {
+                    bannerItems.append(item)
+                } else {
+                    listItems.append(item)
+                }
+            }
+            DispatchQueue.main.async {
+                guard let self = self else {
+                    return
+                }
+                self.bannerItems = bannerItems
+                self.listItems = listItems
+                self.collectionView.reloadData()
+            }
+        }
+    }
+    
+    private func fetchAlbums() {
+        let queue = DispatchQueue(label:"one.mixin.messenger.StickerStore.fetchAlbums", attributes: .concurrent)
+        let group = DispatchGroup()
+        group.enter()
+        queue.async(group: group) {
+            let albumsUpdatedAt = AlbumDAO.shared.getAlbumsUpdatedAt()
+            switch StickerAPI.albums() {
+            case let .success (albums):
+                let newAlbums = albums.filter { albumsUpdatedAt[$0.albumId] != $0.updatedAt }
+                for album in newAlbums {
+                    group.enter()
+                    queue.async(group: group) {
+                        switch StickerAPI.stickers (albumId: album.albumId) {
+                        case let .success (stickers):
+                            AlbumDAO.shared.insertOrUpdateAblum(album: album)
+                            _ = StickerDAO.shared.insertOrUpdateStickers(stickers: stickers, albumId: album.albumId)
+                        case let .failure(error):
+                            reporter.report(error: error)
+                        }
+                        group.leave()
+                    }
+                }
+            case let .failure(error):
+                reporter.report(error: error)
+            }
+            group.leave()
+        }
+        group.notify(queue: .main) { [weak self] in
+            guard let self = self else {
+                return
+            }
+            self.loadAlbums()
+            AppGroupUserDefaults.User.stickerRefreshDate = Date()
+        }
+    }
+    
     @objc private func updateAlbumAddStatus(_ notification: Notification) {
         guard
             let albumId = notification.userInfo?[AlbumDAO.UserInfoKey.albumId] as? String,

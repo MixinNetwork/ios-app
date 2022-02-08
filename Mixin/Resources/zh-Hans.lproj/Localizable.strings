@@ -920,7 +920,7 @@
 "setting_delete_account_confirm_title" = "输入您的钱包密码以删除账户";
 "setting_delete_account_confirm_hint" = "如果继续，您的个人资料和账户信息将在%@被删除。阅读文档以了解更多。";
 "setting_delete_account_verify_pin" = "输入您的钱包密码以继续";
-"setting_delete_account_send_code" = "我们将发送一个4位验证码到 %@";
+"setting_delete_account_send_code" = "我们将发送一个 4 位验证码到 %@";
 
 // ScreenLock
 "screen_lock_locked" = "Mixin 已锁定";

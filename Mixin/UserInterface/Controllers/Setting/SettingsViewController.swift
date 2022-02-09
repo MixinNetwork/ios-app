@@ -5,18 +5,18 @@ class SettingsViewController: SettingsTableViewController {
     
     private let dataSource = SettingsDataSource(sections: [
         SettingsSection(rows: [
-            SettingsRow(icon: R.image.setting.ic_category_security(),
-                        title: R.string.localizable.setting_privacy_and_security(),
-                        accessory: .disclosure),
-            SettingsRow(icon: R.image.setting.ic_category_notification(),
-                        title: R.string.localizable.setting_notification(),
+            SettingsRow(icon: R.image.setting.ic_category_account(),
+                        title: R.string.localizable.setting_account(),
                         accessory: .disclosure),
             SettingsRow(icon: R.image.setting.ic_category_backup(),
                         title: R.string.localizable.setting_backup_title(),
                         accessory: .disclosure),
+            SettingsRow(icon: R.image.setting.ic_category_notification(),
+                        title: R.string.localizable.setting_notification(),
+                        accessory: .disclosure),
             SettingsRow(icon: R.image.setting.ic_category_storage(),
                         title: R.string.localizable.setting_data_and_storage(),
-                        accessory: .disclosure),
+                        accessory: .disclosure)
         ]),
         SettingsSection(rows: [
             SettingsRow(icon: R.image.setting.ic_category_appearance(),
@@ -65,16 +65,16 @@ extension SettingsViewController: UITableViewDelegate {
         case 0:
             switch indexPath.row {
             case 0:
-                vc = PrivacyViewController.instance()
+                vc = AccountSettingViewController.instance()
             case 1:
-                vc = NotificationAndConfirmationSettingsViewController.instance()
-            case 2:
                 if FileManager.default.ubiquityIdentityToken == nil {
                     alert(Localized.SETTING_BACKUP_DISABLE_TIPS)
                     return
                 } else {
                     vc = BackupViewController.instance()
                 }
+            case 2:
+                vc = NotificationAndConfirmationSettingsViewController.instance()
             default:
                 vc = DataAndStorageSettingsViewController.instance()
             }

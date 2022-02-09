@@ -38,4 +38,5 @@ struct AccountRequest: Codable {
 enum VerificationPurpose: String {
     case session = "SESSION"
     case phone = "PHONE"
+    case deactivated = "DEACTIVATED"
 }

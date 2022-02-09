@@ -42,6 +42,7 @@ class ContinueButtonViewController: KeyboardBasedLayoutViewController {
     }
     
     override func layout(for keyboardFrame: CGRect) {
+        UIView.performWithoutAnimation(view.layoutIfNeeded)
         let height = view.frame.height - keyboardFrame.origin.y
         if height > keyboardLayoutGuideHeightConstraint.constant {
             keyboardLayoutGuideHeightConstraint.constant = height

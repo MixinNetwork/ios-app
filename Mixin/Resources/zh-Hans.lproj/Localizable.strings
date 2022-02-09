@@ -165,6 +165,8 @@
 "toast_captcha_timeout" = "验证超时";
 "desktop_login_confim" = "确认登录 Mixin Messenger 桌面端？";
 "desktop_upgrade" = "请升级 Mixin Messenger 桌面端至最新版！";
+"abort_account_deletion_title" = "继续登录并放弃删除账户";
+"abort_account_deletion_hint" = "您的账户将在%@被删除，如果您继续登录，删除账户的请求将被取消。";
 
 // Contacts
 "contact_title" = "联系人";
@@ -806,12 +808,6 @@
 "setting_notification" = "通知和确认";
 "setting_notification_show" = "显示通知";
 "setting_notification_sound" = "提醒音";
-"setting_notification_message" = "信息通知";
-"setting_notification_message_summary" = "你可以在用户信息页单独设置通知";
-"setting_notification_group" = "群组通知";
-"setting_notification_group_summary" = "你可以在群组信息页单独设置通知";
-"setting_privacy_and_security" = "隐私和安全";
-"setting_privacy_and_security_title" = "隐私";
 "setting_privacy_and_security_summary" = "设置谁可以给你发消息或添加到群组";
 "setting_logs" = "日志";
 "setting_logs_empty" = "没有日志";
@@ -910,6 +906,21 @@
 "setting_screen_lock_timeout_minutes" = "%@ 分钟";
 "setting_screen_lock_timeout_hour" = "1 小时";
 "setting_screen_lock_timeout_off" = "关闭";
+"setting_delete_account" = "删除我的账户";
+"setting_change_number_instead" = "更换手机号";
+"setting_account" = "账户";
+"setting_account_privacy" = "隐私";
+"setting_account_security" = "安全";
+"setting_account_change_number" = "更换手机号";
+"setting_delete_account_hint_profile" = "删除您的账户和个人照片";
+"setting_delete_account_hint_message" = "本地消息和 iCloud 备份不会被自动删除";
+"setting_delete_account_hint_transaction" = "交易不能被删除";
+"setting_delete_account_view_wallet" = "查看钱包";
+"setting_delete_account_assets_hint" = "你的 Mixin 钱包还有一些资产，可以提现至其他钱包或交易所，账户一旦注销，这些资产将和钱包一起被弃用无法找回。";
+"setting_delete_account_confirm_title" = "输入您的钱包密码以删除账户";
+"setting_delete_account_confirm_hint" = "如果继续，您的个人资料和账户信息将在%@被删除。阅读文档以了解更多。";
+"setting_delete_account_verify_pin" = "输入您的钱包密码以继续";
+"setting_delete_account_send_code" = "我们将发送一个 4 位验证码到 %@";
 
 // ScreenLock
 "screen_lock_locked" = "Mixin 已锁定";

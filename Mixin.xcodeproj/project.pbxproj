@@ -561,6 +561,8 @@
 		7C14CFC126CA35CF0094AF4A /* StaticMessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C14CFBF26CA35CF0094AF4A /* StaticMessagesViewController.swift */; };
 		7C14CFC226CA35CF0094AF4A /* StaticMessagesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C14CFC026CA35CF0094AF4A /* StaticMessagesView.xib */; };
 		7C1A6C4326C6580600A1D6CE /* StickerPreviewItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1A6C4226C6580600A1D6CE /* StickerPreviewItemCell.swift */; };
+		7C1EDAB42772FF8B00193917 /* VerifyNumberContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1EDAB32772FF8B00193917 /* VerifyNumberContext.swift */; };
+		7C2475C727795BC100112A30 /* DeleteAccountTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2475C627795BC100112A30 /* DeleteAccountTableHeaderView.swift */; };
 		7C359DCE26A6C15A001D3AE4 /* StickerStorePreviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C359DCD26A6C15A001D3AE4 /* StickerStorePreviewCell.swift */; };
 		7C359DD026A6C173001D3AE4 /* StickerStoreBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C359DCF26A6C173001D3AE4 /* StickerStoreBannerView.swift */; };
 		7C36BE88274F248C00089B6D /* StickerStoreBannerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C36BE87274F248C00089B6D /* StickerStoreBannerCell.swift */; };
@@ -568,6 +570,10 @@
 		7C4E2B0626A9BE50008190F5 /* StickersEditingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4E2B0526A9BE50008190F5 /* StickersEditingCell.swift */; };
 		7C4FF5AA26AE614C003E39AC /* StickerPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4FF5A926AE614C003E39AC /* StickerPreviewViewController.swift */; };
 		7C5823D5268966A1003AA142 /* HomeAppsFolderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5823D4268966A1003AA142 /* HomeAppsFolderViewController.swift */; };
+		7C5B65CE27701A49004EDD53 /* DeleteAccountHintWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5B65CD27701A49004EDD53 /* DeleteAccountHintWindow.swift */; };
+		7C5B65D027701A62004EDD53 /* DeleteAccountHintWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C5B65CF27701A62004EDD53 /* DeleteAccountHintWindow.xib */; };
+		7C6132B627953B15002777EE /* DeleteAccountAbortWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6132B527953B15002777EE /* DeleteAccountAbortWindow.swift */; };
+		7C6132B827953B4F002777EE /* DeleteAccountAbortWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C6132B727953B4F002777EE /* DeleteAccountAbortWindow.xib */; };
 		7C66E7B82743988500FF24C1 /* ProfileDescriptionLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66E7B72743988500FF24C1 /* ProfileDescriptionLabel.swift */; };
 		7C66F0272689D1FE006D8462 /* HomeAppsDragInteraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F0262689D1FE006D8462 /* HomeAppsDragInteraction.swift */; };
 		7C66F029268A0384006D8462 /* AppPageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F028268A0384006D8462 /* AppPageCell.swift */; };
@@ -580,6 +586,10 @@
 		7C66F1C1268C0250006D8462 /* HomeAppsFolderInteraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1C0268C0250006D8462 /* HomeAppsFolderInteraction.swift */; };
 		7C6AD1F526A6794F00E6C41D /* StickersStoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6AD1F426A6794F00E6C41D /* StickersStoreViewController.swift */; };
 		7C7635B826A13461006101DB /* HomeAppsConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7635B726A13461006101DB /* HomeAppsConstants.swift */; };
+		7C8FA78D27687D1500855AFD /* DeleteAccountSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8FA78C27687D1500855AFD /* DeleteAccountSettingViewController.swift */; };
+		7C8FA78F2768822800855AFD /* DeleteAccountTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C8FA78E2768822800855AFD /* DeleteAccountTableHeaderView.xib */; };
+		7C8FA8F42768909300855AFD /* AccountSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8FA8F32768909300855AFD /* AccountSettingViewController.swift */; };
+		7C8FA8F62768926D00855AFD /* SecuritySettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8FA8F52768926D00855AFD /* SecuritySettingViewController.swift */; };
 		7C9A734027392FAF00E0127A /* PinSettingTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9A733F27392FAF00E0127A /* PinSettingTableHeaderView.swift */; };
 		7C9DCDF1273901D500395F4A /* PinSettingTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C9DCDF0273901D500395F4A /* PinSettingTableHeaderView.xib */; };
 		7CB0954F26CCED2E0049F4C7 /* PinMessageBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB0954E26CCED2E0049F4C7 /* PinMessageBannerView.swift */; };
@@ -588,13 +598,18 @@
 		7CB0955726CE5F040049F4C7 /* TransferPinAction+Description.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB0955626CE5F040049F4C7 /* TransferPinAction+Description.swift */; };
 		7CB0955926CE69250049F4C7 /* PinMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB0955826CE69250049F4C7 /* PinMessageViewModel.swift */; };
 		7CB0955B26CF4DDC0049F4C7 /* PinMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB0955A26CF4DDC0049F4C7 /* PinMessageCell.swift */; };
+		7CB17B642771602A00CF4C94 /* DeleteAccountConfirmWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB17B632771602A00CF4C94 /* DeleteAccountConfirmWindow.swift */; };
+		7CB17B662771608400CF4C94 /* DeleteAccountConfirmWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CB17B652771608400CF4C94 /* DeleteAccountConfirmWindow.xib */; };
 		7CBD2EFA268FF6BB00AA0847 /* HomeAppsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBD2EF9268FF6BB00AA0847 /* HomeAppsStorage.swift */; };
 		7CC2BDB926A7CAD6001749B1 /* StickersStoreBannerFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC2BDB826A7CAD6001749B1 /* StickersStoreBannerFlowLayout.swift */; };
 		7CC3B1A026C21F7E0018B0D1 /* ScriptMessageProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC3B19F26C21F7E0018B0D1 /* ScriptMessageProxy.swift */; };
 		7CC730502745F95D002780F5 /* StickerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC7304F2745F95D002780F5 /* StickerStore.swift */; };
+		7CE3A25C2771A8AB006BE765 /* DeleteAccountVerifyCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE3A25B2771A8AB006BE765 /* DeleteAccountVerifyCodeViewController.swift */; };
 		7CE5E7A8269BDA29000B7904 /* HomeAppsPinTipsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE5E7A6269BDA29000B7904 /* HomeAppsPinTipsViewController.swift */; };
 		7CE5E7A9269BDA29000B7904 /* HomeAppsPinTipsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CE5E7A7269BDA29000B7904 /* HomeAppsPinTipsView.xib */; };
 		7CF2FEA626AA89BA00D3A5B3 /* StickersAlbumPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF2FEA526AA89BA00D3A5B3 /* StickersAlbumPreviewViewController.swift */; };
+		7CF5929627979CBB00015495 /* DeleteAccountVerifyPinWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF5929527979CBB00015495 /* DeleteAccountVerifyPinWindow.swift */; };
+		7CF5929827979CCF00015495 /* DeleteAccountVerifyPinWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CF5929727979CCF00015495 /* DeleteAccountVerifyPinWindow.xib */; };
 		811C8154F03C8CBB72DBA1F4 /* Pods_MixinShare.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67A8E0E9B65F16ADB27E6F25 /* Pods_MixinShare.framework */; };
 		842347EE2695BA6400009A39 /* InitializeBotJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842347ED2695BA6400009A39 /* InitializeBotJob.swift */; };
 		84A10E96256B63B4006AC741 /* AssetAPI+Ticker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A10E95256B63B4006AC741 /* AssetAPI+Ticker.swift */; };
@@ -796,7 +811,7 @@
 		DF8EF6BA2033FD1800E99CE8 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF5D9F2D1F9C941D0036D5FD /* AudioToolbox.framework */; };
 		DF8EF6BC2034737F00E99CE8 /* payment_success.caf in Resources */ = {isa = PBXBuildFile; fileRef = DF8EF6BB2034737F00E99CE8 /* payment_success.caf */; };
 		DF9E66E5205B9AF300F1A0B9 /* HiddenAssetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF9E66E4205B9AF300F1A0B9 /* HiddenAssetViewController.swift */; };
-		DFA063D222B0D0E80031E151 /* PrivacyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA063D122B0D0E70031E151 /* PrivacyViewController.swift */; };
+		DFA063D222B0D0E80031E151 /* PrivacySettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA063D122B0D0E70031E151 /* PrivacySettingViewController.swift */; };
 		DFA5B58E1FADC88D00549728 /* Group.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DFA5B58D1FADC88D00549728 /* Group.storyboard */; };
 		DFA5B5911FB04C9C00549728 /* Wallet.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DFA5B5901FB04C9C00549728 /* Wallet.storyboard */; };
 		DFA5B5931FB051BB00549728 /* WalletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA5B5921FB051BB00549728 /* WalletViewController.swift */; };
@@ -1557,6 +1572,8 @@
 		7C14CFBF26CA35CF0094AF4A /* StaticMessagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticMessagesViewController.swift; sourceTree = "<group>"; };
 		7C14CFC026CA35CF0094AF4A /* StaticMessagesView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StaticMessagesView.xib; sourceTree = "<group>"; };
 		7C1A6C4226C6580600A1D6CE /* StickerPreviewItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerPreviewItemCell.swift; sourceTree = "<group>"; };
+		7C1EDAB32772FF8B00193917 /* VerifyNumberContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyNumberContext.swift; sourceTree = "<group>"; };
+		7C2475C627795BC100112A30 /* DeleteAccountTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountTableHeaderView.swift; sourceTree = "<group>"; };
 		7C359DCD26A6C15A001D3AE4 /* StickerStorePreviewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerStorePreviewCell.swift; sourceTree = "<group>"; };
 		7C359DCF26A6C173001D3AE4 /* StickerStoreBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerStoreBannerView.swift; sourceTree = "<group>"; };
 		7C36BE87274F248C00089B6D /* StickerStoreBannerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerStoreBannerCell.swift; sourceTree = "<group>"; };
@@ -1564,6 +1581,10 @@
 		7C4E2B0526A9BE50008190F5 /* StickersEditingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersEditingCell.swift; sourceTree = "<group>"; };
 		7C4FF5A926AE614C003E39AC /* StickerPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerPreviewViewController.swift; sourceTree = "<group>"; };
 		7C5823D4268966A1003AA142 /* HomeAppsFolderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsFolderViewController.swift; sourceTree = "<group>"; };
+		7C5B65CD27701A49004EDD53 /* DeleteAccountHintWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountHintWindow.swift; sourceTree = "<group>"; };
+		7C5B65CF27701A62004EDD53 /* DeleteAccountHintWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeleteAccountHintWindow.xib; sourceTree = "<group>"; };
+		7C6132B527953B15002777EE /* DeleteAccountAbortWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountAbortWindow.swift; sourceTree = "<group>"; };
+		7C6132B727953B4F002777EE /* DeleteAccountAbortWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeleteAccountAbortWindow.xib; sourceTree = "<group>"; };
 		7C66E7B72743988500FF24C1 /* ProfileDescriptionLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDescriptionLabel.swift; sourceTree = "<group>"; };
 		7C66F0262689D1FE006D8462 /* HomeAppsDragInteraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsDragInteraction.swift; sourceTree = "<group>"; };
 		7C66F028268A0384006D8462 /* AppPageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppPageCell.swift; sourceTree = "<group>"; };
@@ -1576,6 +1597,10 @@
 		7C66F1C0268C0250006D8462 /* HomeAppsFolderInteraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsFolderInteraction.swift; sourceTree = "<group>"; };
 		7C6AD1F426A6794F00E6C41D /* StickersStoreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersStoreViewController.swift; sourceTree = "<group>"; };
 		7C7635B726A13461006101DB /* HomeAppsConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsConstants.swift; sourceTree = "<group>"; };
+		7C8FA78C27687D1500855AFD /* DeleteAccountSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountSettingViewController.swift; sourceTree = "<group>"; };
+		7C8FA78E2768822800855AFD /* DeleteAccountTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeleteAccountTableHeaderView.xib; sourceTree = "<group>"; };
+		7C8FA8F32768909300855AFD /* AccountSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSettingViewController.swift; sourceTree = "<group>"; };
+		7C8FA8F52768926D00855AFD /* SecuritySettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecuritySettingViewController.swift; sourceTree = "<group>"; };
 		7C9A733F27392FAF00E0127A /* PinSettingTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinSettingTableHeaderView.swift; sourceTree = "<group>"; };
 		7C9DCDF0273901D500395F4A /* PinSettingTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PinSettingTableHeaderView.xib; sourceTree = "<group>"; };
 		7CB0954E26CCED2E0049F4C7 /* PinMessageBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinMessageBannerView.swift; sourceTree = "<group>"; };
@@ -1584,13 +1609,18 @@
 		7CB0955626CE5F040049F4C7 /* TransferPinAction+Description.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TransferPinAction+Description.swift"; sourceTree = "<group>"; };
 		7CB0955826CE69250049F4C7 /* PinMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinMessageViewModel.swift; sourceTree = "<group>"; };
 		7CB0955A26CF4DDC0049F4C7 /* PinMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinMessageCell.swift; sourceTree = "<group>"; };
+		7CB17B632771602A00CF4C94 /* DeleteAccountConfirmWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountConfirmWindow.swift; sourceTree = "<group>"; };
+		7CB17B652771608400CF4C94 /* DeleteAccountConfirmWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeleteAccountConfirmWindow.xib; sourceTree = "<group>"; };
 		7CBD2EF9268FF6BB00AA0847 /* HomeAppsStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsStorage.swift; sourceTree = "<group>"; };
 		7CC2BDB826A7CAD6001749B1 /* StickersStoreBannerFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersStoreBannerFlowLayout.swift; sourceTree = "<group>"; };
 		7CC3B19F26C21F7E0018B0D1 /* ScriptMessageProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptMessageProxy.swift; sourceTree = "<group>"; };
 		7CC7304F2745F95D002780F5 /* StickerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerStore.swift; sourceTree = "<group>"; };
+		7CE3A25B2771A8AB006BE765 /* DeleteAccountVerifyCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountVerifyCodeViewController.swift; sourceTree = "<group>"; };
 		7CE5E7A6269BDA29000B7904 /* HomeAppsPinTipsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsPinTipsViewController.swift; sourceTree = "<group>"; };
 		7CE5E7A7269BDA29000B7904 /* HomeAppsPinTipsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomeAppsPinTipsView.xib; sourceTree = "<group>"; };
 		7CF2FEA526AA89BA00D3A5B3 /* StickersAlbumPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersAlbumPreviewViewController.swift; sourceTree = "<group>"; };
+		7CF5929527979CBB00015495 /* DeleteAccountVerifyPinWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountVerifyPinWindow.swift; sourceTree = "<group>"; };
+		7CF5929727979CCF00015495 /* DeleteAccountVerifyPinWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeleteAccountVerifyPinWindow.xib; sourceTree = "<group>"; };
 		842347ED2695BA6400009A39 /* InitializeBotJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitializeBotJob.swift; sourceTree = "<group>"; };
 		84A10E95256B63B4006AC741 /* AssetAPI+Ticker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AssetAPI+Ticker.swift"; sourceTree = "<group>"; };
 		84A10E99256B6416006AC741 /* TickerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TickerResponse.swift; sourceTree = "<group>"; };
@@ -1802,7 +1832,7 @@
 		DF8EF6AE2030679100E99CE8 /* UrlWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrlWindow.swift; sourceTree = "<group>"; };
 		DF8EF6BB2034737F00E99CE8 /* payment_success.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = payment_success.caf; sourceTree = "<group>"; };
 		DF9E66E4205B9AF300F1A0B9 /* HiddenAssetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HiddenAssetViewController.swift; sourceTree = "<group>"; };
-		DFA063D122B0D0E70031E151 /* PrivacyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyViewController.swift; sourceTree = "<group>"; };
+		DFA063D122B0D0E70031E151 /* PrivacySettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacySettingViewController.swift; sourceTree = "<group>"; };
 		DFA5B58D1FADC88D00549728 /* Group.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Group.storyboard; sourceTree = "<group>"; };
 		DFA5B5901FB04C9C00549728 /* Wallet.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Wallet.storyboard; sourceTree = "<group>"; };
 		DFA5B5921FB051BB00549728 /* WalletViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletViewController.swift; sourceTree = "<group>"; };
@@ -2265,9 +2295,11 @@
 				7B2E56AF244EA6BB0073102C /* SettingsFooterView.swift */,
 				7BB78723245132570057B4ED /* SettingsHeaderView.swift */,
 				7C9A733F27392FAF00E0127A /* PinSettingTableHeaderView.swift */,
+				7C2475C627795BC100112A30 /* DeleteAccountTableHeaderView.swift */,
 				7C9DCDF0273901D500395F4A /* PinSettingTableHeaderView.xib */,
 				7B2E5881244F10FB0073102C /* EmergencyContactTableHeaderView.xib */,
 				7BB7872A24514ACC0057B4ED /* PhoneContactsSettingTableHeaderView.xib */,
+				7C8FA78E2768822800855AFD /* DeleteAccountTableHeaderView.xib */,
 				7BBB6F522451C9E7002798F2 /* BackupTableHeaderView.xib */,
 				7BCA2E2F2452CBF6005BD2E4 /* AboutTableHeaderView.xib */,
 				7B600D272453186B001D8146 /* DesktopTableHeaderView.xib */,
@@ -2885,6 +2917,7 @@
 				7BEED0D6244D74FC00F3A2B9 /* SettingsSection.swift */,
 				7BB78727245136850057B4ED /* SettingsRadioSection.swift */,
 				7BEED0D8244D752700F3A2B9 /* SettingsRow.swift */,
+				7C1EDAB32772FF8B00193917 /* VerifyNumberContext.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -2940,6 +2973,14 @@
 				DF846CDA23694A4900AA1197 /* MultisigUsersWindow.xib */,
 				7C0E15DE27005376002FC718 /* UnknownURLWindow.swift */,
 				7C0E15E0270053AC002FC718 /* UnknownURLWindow.xib */,
+				7CF5929527979CBB00015495 /* DeleteAccountVerifyPinWindow.swift */,
+				7CF5929727979CCF00015495 /* DeleteAccountVerifyPinWindow.xib */,
+				7C5B65CD27701A49004EDD53 /* DeleteAccountHintWindow.swift */,
+				7C5B65CF27701A62004EDD53 /* DeleteAccountHintWindow.xib */,
+				7CB17B632771602A00CF4C94 /* DeleteAccountConfirmWindow.swift */,
+				7CB17B652771608400CF4C94 /* DeleteAccountConfirmWindow.xib */,
+				7C6132B527953B15002777EE /* DeleteAccountAbortWindow.swift */,
+				7C6132B727953B4F002777EE /* DeleteAccountAbortWindow.xib */,
 			);
 			path = Windows;
 			sourceTree = "<group>";
@@ -3267,16 +3308,16 @@
 		DF8CECF01FC4255700E40064 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				DF8CECF11FC4256D00E40064 /* BlockUserCell.swift */,
 				7BC022E6214A150400B7A398 /* AuthorizationTableViewCell.swift */,
+				DF8CECF11FC4256D00E40064 /* BlockUserCell.swift */,
+				7BC1466E230D12B70060FE19 /* CurrencyCell.swift */,
+				7B7B5DB6230EC16A00D0F463 /* CurrencyCell.xib */,
+				ABE865C023F260FE00C0167D /* PermissionsActionCell.swift */,
+				ABE865BF23F260FE00C0167D /* PermissionsActionCell.xib */,
+				ABCB87DF23F1A56B00780E60 /* PermissionsTableViewCell.swift */,
+				ABCB87DE23F1A56B00780E60 /* PermissionsTableViewCell.xib */,
 				7BDBDE6D22363E82006220DF /* SettingCell.swift */,
 				7BDBDE6F22365017006220DF /* SettingCell.xib */,
-				7B7B5DB6230EC16A00D0F463 /* CurrencyCell.xib */,
-				7BC1466E230D12B70060FE19 /* CurrencyCell.swift */,
-				ABCB87DE23F1A56B00780E60 /* PermissionsTableViewCell.xib */,
-				ABCB87DF23F1A56B00780E60 /* PermissionsTableViewCell.swift */,
-				ABE865BF23F260FE00C0167D /* PermissionsActionCell.xib */,
-				ABE865C023F260FE00C0167D /* PermissionsActionCell.swift */,
 				7BC03AB12424EA9B00931D21 /* StorageUsageCell.swift */,
 			);
 			path = Cells;
@@ -3623,30 +3664,34 @@
 				ABE865BC23F2453D00C0167D /* Model */,
 				7B2E56AE244EA6A20073102C /* View */,
 				DF8CECF01FC4255700E40064 /* Cells */,
+				DFBADC111FD1211E00722929 /* AboutViewController.swift */,
+				7C8FA8F32768909300855AFD /* AccountSettingViewController.swift */,
+				9489E39F25C5B150000319F8 /* AcknowledgementsViewController.swift */,
+				7BB8E2D024529E910098B1E8 /* AppearanceSettingsViewController.swift */,
+				940BAE212629741C00FFF753 /* AuthorizationsContentViewController.swift */,
+				7BC022E4214A13DC00B7A398 /* AuthorizationsViewController.swift */,
+				DF1F277B21A53585009A74C6 /* BackupViewController.swift */,
+				DF8CECEE1FC4240500E40064 /* BlockedUsersViewController.swift */,
+				DFE48ADD20EBADEE003E0BF8 /* ClearStorageViewController.swift */,
+				DF8CECEC1FC41A9A00E40064 /* ConversationSettingViewController.swift */,
+				7BC1466C230D12680060FE19 /* CurrencySelectorViewController.swift */,
+				7BCB8C8322BB56B8002A13CC /* DataAndStorageSettingsViewController.swift */,
+				7C8FA78C27687D1500855AFD /* DeleteAccountSettingViewController.swift */,
+				7CE3A25B2771A8AB006BE765 /* DeleteAccountVerifyCodeViewController.swift */,
+				7B9E7ABF21E6F8F000012A28 /* DesktopViewController.swift */,
+				DFB19001233219650021CAF3 /* LogViewController.swift */,
+				DF8CECE81FC411AB00E40064 /* NotificationAndConfirmationSettingsViewController.swift */,
+				ABCB87DC23F18A3D00780E60 /* PermissionsViewController.swift */,
+				DFD1FBC422FD809700C570D4 /* PhoneContactsSettingViewController.swift */,
+				7B9C1029245588DA00B2718F /* PhoneNumberSettingViewController.swift */,
+				7B2E56B1244EC44E0073102C /* PinSettingsViewController.swift */,
+				DFA063D122B0D0E70031E151 /* PrivacySettingViewController.swift */,
+				5E5CA86C2674B09100C1E113 /* ScreenLockSettingViewController.swift */,
+				7C8FA8F52768926D00855AFD /* SecuritySettingViewController.swift */,
 				7BEED0DA244DC1F300F3A2B9 /* SettingsTableViewController.swift */,
 				DFE356B71FB4994200E0E3A8 /* SettingsViewController.swift */,
-				DFA063D122B0D0E70031E151 /* PrivacyViewController.swift */,
-				DFB19001233219650021CAF3 /* LogViewController.swift */,
-				7B2E56B1244EC44E0073102C /* PinSettingsViewController.swift */,
-				5E5CA86C2674B09100C1E113 /* ScreenLockSettingViewController.swift */,
-				7BB78729245149040057B4ED /* Emergency Contact */,
-				DF8CECEE1FC4240500E40064 /* BlockedUsersViewController.swift */,
-				DF8CECEC1FC41A9A00E40064 /* ConversationSettingViewController.swift */,
-				7B9C1029245588DA00B2718F /* PhoneNumberSettingViewController.swift */,
-				DFD1FBC422FD809700C570D4 /* PhoneContactsSettingViewController.swift */,
-				DF8CECE81FC411AB00E40064 /* NotificationAndConfirmationSettingsViewController.swift */,
-				DF1F277B21A53585009A74C6 /* BackupViewController.swift */,
-				7BCB8C8322BB56B8002A13CC /* DataAndStorageSettingsViewController.swift */,
 				DFE48AD920E69B31003E0BF8 /* StorageUsageViewController.swift */,
-				DFE48ADD20EBADEE003E0BF8 /* ClearStorageViewController.swift */,
-				7BB8E2D024529E910098B1E8 /* AppearanceSettingsViewController.swift */,
-				9489E39F25C5B150000319F8 /* AcknowledgementsViewController.swift */,
-				DFBADC111FD1211E00722929 /* AboutViewController.swift */,
-				7BC022E4214A13DC00B7A398 /* AuthorizationsViewController.swift */,
-				940BAE212629741C00FFF753 /* AuthorizationsContentViewController.swift */,
-				7B9E7ABF21E6F8F000012A28 /* DesktopViewController.swift */,
-				7BC1466C230D12680060FE19 /* CurrencySelectorViewController.swift */,
-				ABCB87DC23F18A3D00780E60 /* PermissionsViewController.swift */,
+				7BB78729245149040057B4ED /* Emergency Contact */,
 				94B8D186266E412B00F43CBB /* Diagnose */,
 			);
 			path = Setting;
@@ -3913,6 +3958,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7B833E9C22C4AED20063929D /* ic_app_loading@2x.webp in Resources */,
+				7CB17B662771608400CF4C94 /* DeleteAccountConfirmWindow.xib in Resources */,
 				7B833E9D22C4AED20063929D /* ic_app_loading@3x.webp in Resources */,
 				274264A920011C79000A8808 /* mixin.caf in Resources */,
 				94095BB725BE8BC100F44832 /* TextPreviewView.xib in Resources */,
@@ -3928,6 +3974,7 @@
 				E041064E23C6076F00A6F08E /* FullscreenPopupView.xib in Resources */,
 				DF8A7523236301DB00765A82 /* AuthorizationWindow.xib in Resources */,
 				944ED8D22646535B00C97215 /* WebContentView.xib in Resources */,
+				7C5B65D027701A62004EDD53 /* DeleteAccountHintWindow.xib in Resources */,
 				7BA91A2222B391A40038664F /* HudView.xib in Resources */,
 				7BBCEC2025232FC700F270DF /* PopupTitleView.xib in Resources */,
 				DFC2647624E933B700BF954D /* BigAmountConfirmationWindow.xib in Resources */,
@@ -3950,6 +3997,7 @@
 				94E8913925C019F000F1E5D4 /* Pods-Mixin-acknowledgements.plist in Resources */,
 				7BD3880024DC66F900A3035C /* Localizable.strings in Resources */,
 				94B7B6DC26B43562000B0AC5 /* SilentNotificationMessagePreviewView.xib in Resources */,
+				7C8FA78F2768822800855AFD /* DeleteAccountTableHeaderView.xib in Resources */,
 				7BE73BFD230A8D0300B97FC6 /* group_separator_4.png in Resources */,
 				E05D992923911D55009F9E8D /* ProfileFavoriteAppsView.xib in Resources */,
 				7B869C6E202D7D90009930BA /* NumberPadView.xib in Resources */,
@@ -3978,6 +4026,7 @@
 				E09C5EC223703FEE0095F729 /* ProfileShortcutView.xib in Resources */,
 				7BBCEC342523A1FF00F270DF /* MinimizedClipSwitcherView.xib in Resources */,
 				7BBD8A3320C1D51C00DF2735 /* captcha.html in Resources */,
+				7CF5929827979CCF00015495 /* DeleteAccountVerifyPinWindow.xib in Resources */,
 				7B2C4B112436FF5E00D2EB99 /* CircleCell.xib in Resources */,
 				94E619B92645BAA000A38049 /* SuspiciousLinkView.xib in Resources */,
 				7B2D175022B11A8600AE3DD8 /* LoginInfoInputView.xib in Resources */,
@@ -4043,6 +4092,7 @@
 				7B8BB58E234F34FE00991ACB /* SharedMediaAudioCell.xib in Resources */,
 				7BCA2E302452CBF6005BD2E4 /* AboutTableHeaderView.xib in Resources */,
 				DF8CECE71FC317BF00E40064 /* PayWindow.xib in Resources */,
+				7C6132B827953B4F002777EE /* DeleteAccountAbortWindow.xib in Resources */,
 				DFC2646E24E585CE00BF954D /* DuplicateConfirmationWindow.xib in Resources */,
 				DF8CECFD1FC58DBD00E40064 /* InfoPlist.strings in Resources */,
 				DF2081B22005FF3500B87DB0 /* Camera.storyboard in Resources */,
@@ -4542,7 +4592,7 @@
 				7B8871A025061577001FB418 /* PINEncryptor.swift in Sources */,
 				7BA9F32024A22EC200D7C091 /* CallMemberCell.swift in Sources */,
 				7BBAE9DA244ADB3800CC8670 /* AssetQrCodeScanningController.swift in Sources */,
-				DFA063D222B0D0E80031E151 /* PrivacyViewController.swift in Sources */,
+				DFA063D222B0D0E80031E151 /* PrivacySettingViewController.swift in Sources */,
 				7BEFDC191FB05B3E00F66885 /* NewGroupViewController.swift in Sources */,
 				DF06D91F222FAE1400FE7FBC /* TransferOutViewController.swift in Sources */,
 				7B595353226736BD00D59DB4 /* SearchHeaderView.swift in Sources */,
@@ -4589,6 +4639,7 @@
 				DFD1FBC522FD809700C570D4 /* PhoneContactsSettingViewController.swift in Sources */,
 				7B4CA8BE249B3F840048E46D /* PeerCall.swift in Sources */,
 				7B2E56B2244EC44E0073102C /* PinSettingsViewController.swift in Sources */,
+				7C2475C727795BC100112A30 /* DeleteAccountTableHeaderView.swift in Sources */,
 				7BACFED32459C47C0033A3CD /* BubblePath.swift in Sources */,
 				ABE865BE23F2455800C0167D /* Scope.swift in Sources */,
 				DF121F351FA1C809000F701D /* CornerImageView.swift in Sources */,
@@ -4676,6 +4727,7 @@
 				7B51DDB8223A50D5008ACDBB /* VerificationCodeViewController.swift in Sources */,
 				DF048CCE223FCA02005F1EF5 /* ModernSelectedBackgroundCell.swift in Sources */,
 				7BA9D9F0226F32EA00255943 /* SearchNavigationBar.swift in Sources */,
+				7C8FA78D27687D1500855AFD /* DeleteAccountSettingViewController.swift in Sources */,
 				7B59534D226720F700D59DB4 /* TopShadowView.swift in Sources */,
 				7B1ABB0E21196B24009FAA6C /* TilingCollectionViewFlowLayout.swift in Sources */,
 				7B015D7F21A81C81000C9F1E /* SearchBoxView.swift in Sources */,
@@ -4700,9 +4752,11 @@
 				7C66F029268A0384006D8462 /* AppPageCell.swift in Sources */,
 				7B2A116122C20F5F00AD029C /* PlayerView.swift in Sources */,
 				7BB3855821E770BE0070FF8F /* ProvisionMessage.swift in Sources */,
+				7CE3A25C2771A8AB006BE765 /* DeleteAccountVerifyCodeViewController.swift in Sources */,
 				7B9863931FA3141F00D4B16C /* XibDesignable.swift in Sources */,
 				DF46B4051FA9B48500243A8B /* ContactsManager.swift in Sources */,
 				7B1456921FCC186E001B6DED /* TextMessageViewModel.swift in Sources */,
+				7C5B65CE27701A49004EDD53 /* DeleteAccountHintWindow.swift in Sources */,
 				7B35AF7A228AA61400E8101D /* MessagesWithGroupSearchResult.swift in Sources */,
 				DFF4417A223BC63100DDD5F8 /* ContactCell.swift in Sources */,
 				7B955338224375D600CE95E6 /* SearchFooterView.swift in Sources */,
@@ -4804,6 +4858,7 @@
 				DF0A0A5E24476EA000378B4F /* RefreshOffsetJob.swift in Sources */,
 				DFFDCF8C20ADC83900B4956E /* RecognizeWindow.swift in Sources */,
 				E0C510D723B0A7AE00A1BEE9 /* WKWebsiteDataStore+Clear.swift in Sources */,
+				7CF5929627979CBB00015495 /* DeleteAccountVerifyPinWindow.swift in Sources */,
 				7B51DDB2223A408A008ACDBB /* LoginMobileNumberViewController.swift in Sources */,
 				DFC0ECD423BB5FDE0091E7AC /* AuthorizationRequest.swift in Sources */,
 				7B21782122C4E70B00C08106 /* OggOpusPlayer.swift in Sources */,
@@ -4903,6 +4958,7 @@
 				7B68F78B2191741300B79978 /* BiometryType.swift in Sources */,
 				7BD0532820A41F6A00C36F69 /* RangeExtension.swift in Sources */,
 				7BC022E5214A13DC00B7A398 /* AuthorizationsViewController.swift in Sources */,
+				7C1EDAB42772FF8B00193917 /* VerifyNumberContext.swift in Sources */,
 				DF46B40B1FA9E7CF00243A8B /* CornerView.swift in Sources */,
 				7B59534B2267206D00D59DB4 /* OneSideShadowView.swift in Sources */,
 				7BC681AA1FA1DD5600BAB85F /* UsernameViewController.swift in Sources */,
@@ -5088,11 +5144,13 @@
 				7B5E9B4C2437434D000AE24E /* CircleEditingButton.swift in Sources */,
 				7B4CBDC22528533600BA66D0 /* ClipSwitcher.swift in Sources */,
 				DFC0ECFD23BB610C0091E7AC /* AccountAPI.swift in Sources */,
+				7CB17B642771602A00CF4C94 /* DeleteAccountConfirmWindow.swift in Sources */,
 				7BFE47E52284530200FC4379 /* PeerHeaderView.swift in Sources */,
 				7BFE47DF228432C800FC4379 /* PeerInfoView.swift in Sources */,
 				9427D52225E0E8DE00B1EF0E /* PlaylistItemCell.swift in Sources */,
 				7B86B1E923F69E3600C80AD9 /* ContactMessageCellRightView.swift in Sources */,
 				94438D57252DAD73005760AF /* Clip.swift in Sources */,
+				7C6132B627953B15002777EE /* DeleteAccountAbortWindow.swift in Sources */,
 				7BC3EBF72497507900E81FD8 /* GroupCallMemberPickerContentViewController.swift in Sources */,
 				7B86B1E723F6885800C80AD9 /* CardMessageTitleView.swift in Sources */,
 				DFB6CE2523C48A8E00FB6615 /* DateExtension.swift in Sources */,
@@ -5133,6 +5191,7 @@
 				94B7B6DE26B43581000B0AC5 /* SilentNotificationMessagePreviewViewController.swift in Sources */,
 				7B37B16323ED483D00590215 /* GalleryTransitionFromNonQuotingMessageCellView.swift in Sources */,
 				7B40207E215B7046008FF42E /* AttachmentExpirationHintingMessageCell.swift in Sources */,
+				7C8FA8F42768909300855AFD /* AccountSettingViewController.swift in Sources */,
 				7B78B2461FF2170400371632 /* InviteLinkViewController.swift in Sources */,
 				DFC0ECF623BB610C0091E7AC /* CallAPI.swift in Sources */,
 				E09C5EBD237007650095F729 /* ProfileDescriptionView.swift in Sources */,
@@ -5145,6 +5204,7 @@
 				7BC2D27F21992FA9002FAC1D /* SnapshotCell.swift in Sources */,
 				94D9DF6125F89D6E00FC2F28 /* BulletinContent.swift in Sources */,
 				7B3CDA6824FFF2D8003A3E80 /* AnimatedStickerView.swift in Sources */,
+				7C8FA8F62768926D00855AFD /* SecuritySettingViewController.swift in Sources */,
 				DF1F278421A5637B009A74C6 /* BackupJob.swift in Sources */,
 				7B36919F233A1962007321A7 /* LocationPickerViewController.swift in Sources */,
 				7B7E7146217D89790052C7DD /* CallViewController.swift in Sources */,

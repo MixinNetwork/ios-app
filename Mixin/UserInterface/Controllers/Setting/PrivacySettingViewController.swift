@@ -1,13 +1,9 @@
 import UIKit
 import MixinServices
 
-final class PrivacyViewController: SettingsTableViewController {
+final class PrivacySettingViewController: SettingsTableViewController {
     
     private let dataSource = SettingsDataSource(sections: [
-        SettingsSection(rows: [
-            SettingsRow(title: R.string.localizable.setting_pin(), accessory: .disclosure),
-            SettingsRow(title: R.string.localizable.setting_emergency_contact(), accessory: .disclosure)
-        ]),
         SettingsSection(footer: R.string.localizable.setting_privacy_and_security_summary(), rows: [
             SettingsRow(title: R.string.localizable.setting_blocked(), accessory: .disclosure),
             SettingsRow(title: R.string.localizable.setting_conversation(), accessory: .disclosure)
@@ -15,31 +11,26 @@ final class PrivacyViewController: SettingsTableViewController {
         SettingsSection(rows: [
             SettingsRow(title: R.string.localizable.setting_phone_number_title(), accessory: .disclosure),
             SettingsRow(title: R.string.localizable.setting_contacts_title(), accessory: .disclosure)
-        ]),
-        SettingsSection(rows: [
-            SettingsRow(title: R.string.localizable.setting_authorizations(), accessory: .disclosure)
-        ]),
-        SettingsSection(rows: [
-            SettingsRow(title: R.string.localizable.setting_logs(), accessory: .disclosure)
         ])
     ])
     
-    private lazy var screenLockRow = SettingsRow(title: R.string.localizable.setting_screen_lock_title(), subtitle: screenLockTimeoutInterval, accessory: .disclosure)
+    private lazy var screenLockSection = SettingsSection(rows: [
+        SettingsRow(title: R.string.localizable.setting_screen_lock_title(), subtitle: screenLockTimeoutInterval, accessory: .disclosure)
+    ])
     
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
     
     class func instance() -> UIViewController {
-        let vc = PrivacyViewController()
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.setting_privacy_and_security())
-        return container
+        let vc = PrivacySettingViewController()
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.setting_account_privacy())
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         if biometryType != .none {
-            dataSource.appendRows([screenLockRow], into: 0, animation: .none)
+            dataSource.insertSection(screenLockSection, at: 2, animation: .none)
         }
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
@@ -56,7 +47,7 @@ final class PrivacyViewController: SettingsTableViewController {
     
 }
 
-extension PrivacyViewController {
+extension PrivacySettingViewController {
     
     @objc func updateBlockedUserCell() {
         DispatchQueue.global().async {
@@ -65,7 +56,7 @@ extension PrivacyViewController {
                 guard let self = self else {
                     return
                 }
-                let indexPath = IndexPath(row: 0, section: 1)
+                let indexPath = IndexPath(row: 0, section: 0)
                 let row = self.dataSource.row(at: indexPath)
                 if blocked.count > 0 {
                     row.subtitle = "\(blocked.count)" + R.string.localizable.setting_blocked_user_count_suffix()
@@ -77,7 +68,7 @@ extension PrivacyViewController {
     }
     
     @objc private func updateScreenLockRow() {
-        let indexPath = IndexPath(row: 2, section: 0)
+        let indexPath = IndexPath(row: 0, section: 2)
         let row = dataSource.row(at: indexPath)
         row.subtitle = screenLockTimeoutInterval
     }
@@ -93,40 +84,30 @@ extension PrivacyViewController {
     
 }
 
-extension PrivacyViewController: UITableViewDelegate {
+extension PrivacySettingViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let vc: UIViewController
         switch indexPath.section {
         case 0:
-            if LoginManager.shared.account?.has_pin ?? false {
-                if indexPath.row == 0 {
-                    vc = PinSettingsViewController.instance()
-                } else if indexPath.row == 1 {
-                    vc = EmergencyContactViewController.instance()
-                } else {
-                    vc = ScreenLockSettingViewController.instance()
-                }
-            } else {
-                vc = WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil)
-            }
-        case 1:
             if indexPath.row == 0 {
                 vc = BlockedUsersViewController.instance()
             } else {
                 vc = ConversationSettingViewController.instance()
             }
-        case 2:
+        case 1:
             if indexPath.row == 0 {
                 vc = PhoneNumberSettingViewController.instance()
             } else {
                 vc = PhoneContactsSettingViewController.instance()
             }
-        case 3:
-            vc = AuthorizationsViewController.instance()
         default:
-            vc = LogViewController.instance(category: .all)
+            if LoginManager.shared.account?.has_pin ?? false {
+                vc = ScreenLockSettingViewController.instance()
+            } else {
+                vc = WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil)
+            }
         }
         navigationController?.pushViewController(vc, animated: true)
     }

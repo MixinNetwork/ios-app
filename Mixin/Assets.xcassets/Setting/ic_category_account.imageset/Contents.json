@@ -5,12 +5,12 @@
       "scale" : "1x"
     },
     {
-      "filename" : "ic_category_security@2x.png",
+      "filename" : "ic_category_account@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "ic_category_security@3x.png",
+      "filename" : "ic_category_account@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

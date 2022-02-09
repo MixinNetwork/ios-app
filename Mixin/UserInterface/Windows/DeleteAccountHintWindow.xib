@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="dark"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="DeleteAccountHintWindow" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gRH-PG-bOu" customClass="TopRoundedView" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="293" width="414" height="603"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PVY-2L-BkX">
+                            <rect key="frame" x="348" y="0.0" width="66" height="70"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="70" id="FoE-ty-k2w"/>
+                                <constraint firstAttribute="width" constant="66" id="sJ1-Bb-lGP"/>
+                            </constraints>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" image="ic_dialog_close"/>
+                            <connections>
+                                <action selector="closeAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="afj-gM-oWP"/>
+                            </connections>
+                        </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Delete My Account" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Agb-iB-MbX">
+                            <rect key="frame" x="127.5" y="70" width="159" height="22"/>
+                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                            <color key="textColor" name="title"/>
+                            <nil key="highlightedColor"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="setting_delete_account"/>
+                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
+                            </userDefinedRuntimeAttributes>
+                        </label>
+                        <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="7lh-s3-poK">
+                            <rect key="frame" x="16" y="117" width="382" height="198"/>
+                            <color key="backgroundColor" name="background"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="198" id="HsN-jZ-RZD"/>
+                            </constraints>
+                        </tableView>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XwZ-No-lpS">
+                            <rect key="frame" x="22" y="330" width="370" height="92.5"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cik-uN-5Ia">
+                                    <rect key="frame" x="14" y="12" width="342" height="62.5"/>
+                                    <string key="text">Your Mixin wallet still has some assets that can be withdrawn to other wallets or exchanges, once the account is cancelled these assets will be abandoned along with the wallet and cannot be recovered.</string>
+                                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="13"/>
+                                    <color key="textColor" name="red"/>
+                                    <nil key="highlightedColor"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="setting_delete_account_assets_hint"/>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="medium13"/>
+                                    </userDefinedRuntimeAttributes>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" name="background_selection"/>
+                            <constraints>
+                                <constraint firstItem="cik-uN-5Ia" firstAttribute="leading" secondItem="XwZ-No-lpS" secondAttribute="leading" constant="14" id="NZs-9D-HZn"/>
+                                <constraint firstAttribute="bottom" secondItem="cik-uN-5Ia" secondAttribute="bottom" constant="18" id="Uxv-bw-sXE"/>
+                                <constraint firstItem="cik-uN-5Ia" firstAttribute="top" secondItem="XwZ-No-lpS" secondAttribute="top" constant="12" id="Wwj-Na-O3T"/>
+                                <constraint firstAttribute="trailing" secondItem="cik-uN-5Ia" secondAttribute="trailing" constant="14" id="sUL-Rn-bX9"/>
+                            </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <integer key="value" value="8"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </view>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rg7-jN-Pgj" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="153" y="454.5" width="108" height="33.5"/>
+                            <inset key="contentEdgeInsets" minX="26" minY="12" maxX="26" maxY="12"/>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="plain" title="View Wallet">
+                                <fontDescription key="titleFontDescription" type="system" pointSize="16"/>
+                            </buttonConfiguration>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="setting_delete_account_view_wallet"/>
+                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
+                                <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="viewWalletAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="tf3-3C-mFU"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MtM-g1-SJU">
+                            <rect key="frame" x="166" y="508" width="82.5" height="31"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" title="Continue"/>
+                            <buttonConfiguration key="configuration" style="plain" title="Continue"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="action_continue"/>
+                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
+                                <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="continueAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="hks-xt-Ofd"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" name="background"/>
+                    <constraints>
+                        <constraint firstItem="PVY-2L-BkX" firstAttribute="top" secondItem="gRH-PG-bOu" secondAttribute="top" id="2kj-59-7BL"/>
+                        <constraint firstItem="7lh-s3-poK" firstAttribute="leading" secondItem="gRH-PG-bOu" secondAttribute="leading" constant="16" id="5Ez-Tu-IPq"/>
+                        <constraint firstAttribute="trailing" secondItem="XwZ-No-lpS" secondAttribute="trailing" constant="22" id="8x5-ey-09s"/>
+                        <constraint firstAttribute="trailing" secondItem="7lh-s3-poK" secondAttribute="trailing" constant="16" id="E1R-5T-Smr"/>
+                        <constraint firstItem="MtM-g1-SJU" firstAttribute="centerX" secondItem="gRH-PG-bOu" secondAttribute="centerX" id="Gkb-0C-iIE"/>
+                        <constraint firstAttribute="trailing" secondItem="PVY-2L-BkX" secondAttribute="trailing" id="MG6-i2-YAl"/>
+                        <constraint firstItem="XwZ-No-lpS" firstAttribute="leading" secondItem="gRH-PG-bOu" secondAttribute="leading" constant="22" id="PsK-5T-91B"/>
+                        <constraint firstItem="Agb-iB-MbX" firstAttribute="top" secondItem="gRH-PG-bOu" secondAttribute="top" constant="70" id="Pz4-9w-CUj" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
+                                    <real key="value" value="50"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </constraint>
+                        <constraint firstItem="Rg7-jN-Pgj" firstAttribute="centerX" secondItem="gRH-PG-bOu" secondAttribute="centerX" id="Zac-zi-mRD"/>
+                        <constraint firstItem="MtM-g1-SJU" firstAttribute="top" secondItem="Rg7-jN-Pgj" secondAttribute="bottom" constant="20" id="bhp-cx-wNY" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
+                                    <real key="value" value="5"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </constraint>
+                        <constraint firstItem="XwZ-No-lpS" firstAttribute="top" secondItem="7lh-s3-poK" secondAttribute="bottom" constant="15" id="hr7-zT-SHF"/>
+                        <constraint firstItem="7lh-s3-poK" firstAttribute="top" secondItem="Agb-iB-MbX" secondAttribute="bottom" constant="25" id="kAC-z1-mPn" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
+                                    <real key="value" value="5"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </constraint>
+                        <constraint firstItem="Rg7-jN-Pgj" firstAttribute="top" secondItem="XwZ-No-lpS" secondAttribute="bottom" constant="32" id="omw-7A-geD" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
+                                    <real key="value" value="5"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </constraint>
+                        <constraint firstItem="Agb-iB-MbX" firstAttribute="centerX" secondItem="gRH-PG-bOu" secondAttribute="centerX" id="uAh-Rb-g4t"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.40000000000000002" colorSpace="custom" customColorSpace="displayP3"/>
+            <constraints>
+                <constraint firstItem="gRH-PG-bOu" firstAttribute="bottom" secondItem="iN0-l3-epB" secondAttribute="bottom" id="6zN-Qj-tqi"/>
+                <constraint firstItem="gRH-PG-bOu" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="cJe-19-rnL"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="MtM-g1-SJU" secondAttribute="bottom" constant="30" id="dqh-nB-5uK" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
+                            <real key="value" value="15"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </constraint>
+                <constraint firstAttribute="trailing" secondItem="gRH-PG-bOu" secondAttribute="trailing" id="zVm-Jd-p57"/>
+            </constraints>
+            <connections>
+                <outlet property="popupView" destination="gRH-PG-bOu" id="gis-Rw-cra"/>
+                <outlet property="tableView" destination="7lh-s3-poK" id="eca-M1-iQG"/>
+                <outlet property="tableViewHeightConstraint" destination="HsN-jZ-RZD" id="2aq-0s-1LA"/>
+            </connections>
+            <point key="canvasLocation" x="137.68115942028987" y="152.67857142857142"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="ic_dialog_close" width="26" height="26"/>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="background_selection">
+            <color red="0.96100002527236938" green="0.96899998188018799" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="red">
+            <color red="0.90980392156862744" green="0.41960784313725491" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="title">
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

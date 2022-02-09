@@ -34,6 +34,12 @@ public extension DateFormatter {
         formatter.timeStyle = .short
         return formatter
     }()
+    
+    static let deleteAccountFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        return formatter
+    }()
 }
 
 public extension Date {

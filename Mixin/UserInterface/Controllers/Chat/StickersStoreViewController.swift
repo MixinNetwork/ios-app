@@ -131,13 +131,13 @@ extension StickersStoreViewController {
             }
             let albumsUpdatedAt = AlbumDAO.shared.getAlbumsUpdatedAt()
             switch StickerAPI.albums() {
-            case let .success (albums):
+            case let .success(albums):
                 let newAlbums = albums.filter { albumsUpdatedAt[$0.albumId] != $0.updatedAt }
                 for album in newAlbums {
                     group.enter()
                     self.queue.async(group: group) {
-                        switch StickerAPI.stickers (albumId: album.albumId) {
-                        case let .success (stickers):
+                        switch StickerAPI.stickers(albumId: album.albumId) {
+                        case let .success(stickers):
                             group.enter()
                             AlbumDAO.shared.insertOrUpdateAblum(album: album, completion: group.leave)
                             group.enter()
@@ -154,10 +154,7 @@ extension StickersStoreViewController {
             group.leave()
         }
         group.notify(queue: .main) { [weak self] in
-            guard let self = self else {
-                return
-            }
-            self.reloadData()
+            self?.reloadData()
             AppGroupUserDefaults.User.stickerRefreshDate = Date()
         }
     }

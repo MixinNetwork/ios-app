@@ -50,7 +50,6 @@
                     <inset key="contentEdgeInsets" minX="20" minY="10" maxX="20" maxY="10"/>
                     <state key="normal" title="Settings"/>
                     <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="home_bulletin_button_notification"/>
                         <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
@@ -83,6 +82,7 @@
             </userDefinedRuntimeAttributes>
             <connections>
                 <outlet property="closeButton" destination="nfF-CQ-J2g" id="70n-Y9-DaN"/>
+                <outlet property="continueButton" destination="hod-Fn-TX6" id="hgO-4M-Lj6"/>
                 <outlet property="descriptionLabel" destination="JkV-zm-zGT" id="M4r-W2-HUt"/>
                 <outlet property="titleLabel" destination="d3C-kA-sfw" id="iHi-Ap-D12"/>
             </connections>

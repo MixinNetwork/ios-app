@@ -55,6 +55,7 @@
 "action_close" = "Close";
 "action_change_settings" = "Change Settings";
 "action_open" = "Open";
+"action_settings" = "Settings";
 "menu_delete" = "Delete";
 "menu_edit" = "Edit";
 "menu_report" = "Report";
@@ -231,7 +232,6 @@
 "home_bulletin_title_initialize_pin" = "Get a new wallet";
 "home_bulletin_description_notification" = "Don’t miss messages from your friends";
 "home_bulletin_description_initialize_pin" = "Create your first digital wallet, all your digital assets in one wallet, easily send and receive cryptocurrenty.";
-"home_bulletin_button_notification" = "Settings";
 "home_title_apps" = "Bots";
 "home_apps_candidate_empty" = "Please add your favorite bot first.";
 

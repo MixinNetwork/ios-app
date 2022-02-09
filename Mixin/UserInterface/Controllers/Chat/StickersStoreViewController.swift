@@ -6,6 +6,9 @@ class StickersStoreViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
     
+    private let queue = DispatchQueue(label:"one.mixin.messenger.StickersStoreViewController.fetchAlbums", attributes: .concurrent)
+    private let maxBannerCount = 3
+
     private var bannerItems = [AlbumItem]()
     private var listItems = [AlbumItem]()
     
@@ -15,8 +18,8 @@ class StickersStoreViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadAlbums()
-        fetchAlbums()
+        reloadData()
+        reloadRemoteAlbums()
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(updateAlbumAddStatus(_:)),
                                                name: AlbumDAO.addedAlbumsDidChangeNotification,
@@ -93,7 +96,8 @@ extension StickersStoreViewController: UICollectionViewDelegate {
 
 extension StickersStoreViewController {
 
-    private func loadAlbums() {
+    private func reloadData() {
+        let maxBannerCount = maxBannerCount
         DispatchQueue.global().async { [weak self] in
             var bannerItems = [AlbumItem]()
             var listItems = [AlbumItem]()
@@ -101,7 +105,7 @@ extension StickersStoreViewController {
             albums.forEach { album in
                 let stickers = StickerDAO.shared.getStickers(albumId: album.albumId)
                 let item = AlbumItem(album: album, stickers: stickers)
-                if !album.banner.isNilOrEmpty, bannerItems.count < 3 {
+                if !album.banner.isNilOrEmpty, bannerItems.count < maxBannerCount {
                     bannerItems.append(item)
                 } else {
                     listItems.append(item)
@@ -118,22 +122,26 @@ extension StickersStoreViewController {
         }
     }
     
-    private func fetchAlbums() {
-        let queue = DispatchQueue(label:"one.mixin.messenger.StickerStore.fetchAlbums", attributes: .concurrent)
+    private func reloadRemoteAlbums() {
         let group = DispatchGroup()
         group.enter()
-        queue.async(group: group) {
+        queue.async(group: group) { [weak self] in
+            guard let self = self else {
+                return
+            }
             let albumsUpdatedAt = AlbumDAO.shared.getAlbumsUpdatedAt()
             switch StickerAPI.albums() {
             case let .success (albums):
                 let newAlbums = albums.filter { albumsUpdatedAt[$0.albumId] != $0.updatedAt }
                 for album in newAlbums {
                     group.enter()
-                    queue.async(group: group) {
+                    self.queue.async(group: group) {
                         switch StickerAPI.stickers (albumId: album.albumId) {
                         case let .success (stickers):
-                            AlbumDAO.shared.insertOrUpdateAblum(album: album)
-                            _ = StickerDAO.shared.insertOrUpdateStickers(stickers: stickers, albumId: album.albumId)
+                            group.enter()
+                            AlbumDAO.shared.insertOrUpdateAblum(album: album, completion: group.leave)
+                            group.enter()
+                            _ = StickerDAO.shared.insertOrUpdateStickers(stickers: stickers, albumId: album.albumId, completion: group.leave)
                         case let .failure(error):
                             reporter.report(error: error)
                         }
@@ -149,7 +157,7 @@ extension StickersStoreViewController {
             guard let self = self else {
                 return
             }
-            self.loadAlbums()
+            self.reloadData()
             AppGroupUserDefaults.User.stickerRefreshDate = Date()
         }
     }

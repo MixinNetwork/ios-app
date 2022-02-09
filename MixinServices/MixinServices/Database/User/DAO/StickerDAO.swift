@@ -97,7 +97,7 @@ public final class StickerDAO: UserDatabaseDAO {
         return stickerItem
     }
     
-    public func insertOrUpdateStickers(stickers: [StickerResponse], albumId: String) -> [StickerItem] {
+    public func insertOrUpdateStickers(stickers: [StickerResponse], albumId: String, completion: (() -> Void)? = nil) -> [StickerItem] {
         var stickerItems: [StickerItem] = []
         db.write { (db) in
             for response in stickers {
@@ -110,6 +110,7 @@ public final class StickerDAO: UserDatabaseDAO {
                 stickerItems = (try? StickerItem.fetchAll(db,
                                                           sql: StickerDAO.sqlQueryStickersByAlbum,
                                                           arguments: [albumId])) ?? []
+                completion?()
             }
         }
         return stickerItems

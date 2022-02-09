@@ -50,14 +50,23 @@ public final class AlbumDAO: UserDatabaseDAO {
                          order: [Album.column(of: .orderedAt).desc])
     }
     
-    public func insertOrUpdateAblum(album: Album) {
-        let existedAlbum: Album? = db.select(where: Album.column(of: .albumId) == album.albumId)
-        var album = album
-        if let existedAlbum = existedAlbum, existedAlbum.isAdded {
-            album.isAdded = true
-            album.orderedAt = existedAlbum.orderedAt
+    public func insertOrUpdateAblum(album: Album, completion: (() -> Void)? = nil) {
+        db.write { db in
+            let existedAlbum = try Album
+                .filter(Album.column(of: .albumId) == album.albumId)
+                .fetchOne(db)
+            var album = album
+            if let existedAlbum = existedAlbum, existedAlbum.isAdded {
+                album.isAdded = true
+                album.orderedAt = existedAlbum.orderedAt
+            }
+            try album.save(db)
+            if let completion = completion {
+                db.afterNextTransactionCommit { _ in
+                    completion()
+                }
+            }
         }
-        db.save(album)
     }
     
     public func updateAlbum(with id: String, isAdded: Bool) {

@@ -26,7 +26,7 @@ public class RefreshUserJob: BaseJob {
             guard !userId.isEmpty && UUID(uuidString: userId) != nil else {
                 return
             }
-            switch UserSessionAPI.showUser(userId: userId) {
+            switch UserAPI.showUser(userId: userId) {
             case let .success(response):
                 UserDAO.shared.updateUsers(users: [response], updateParticipantStatus: updateParticipantStatus)
             case .failure(.notFound):
@@ -35,7 +35,7 @@ public class RefreshUserJob: BaseJob {
                 throw error
             }
         } else {
-            switch UserSessionAPI.showUsers(userIds: userIds) {
+            switch UserAPI.showUsers(userIds: userIds) {
             case let .success(users):
                 if users.count != userIds.count {
                     let serverUserIds = users.map{ $0.userId }

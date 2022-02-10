@@ -6,7 +6,6 @@ class StickersStoreViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
     
-    private let queue = DispatchQueue(label:"one.mixin.messenger.StickersStoreViewController.fetchAlbums", attributes: .concurrent)
     private let maxBannerCount = 3
 
     private var bannerItems = [AlbumItem]()

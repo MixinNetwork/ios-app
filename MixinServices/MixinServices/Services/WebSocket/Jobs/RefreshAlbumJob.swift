@@ -18,7 +18,7 @@ public class RefreshAlbumJob: AsynchronousJob {
         case let .success(albums):
             let albumsUpdatedAt = AlbumDAO.shared.getAlbumsUpdatedAt()
             var newAlbums = albums.filter { albumsUpdatedAt[$0.albumId] != $0.updatedAt }
-            if AppGroupUserDefaults.User.stickerRefreshDate.isNil {
+            if AppGroupUserDefaults.User.stickerRefreshDate == nil {
                 let newAlbumIds = newAlbums.map(\.albumId)
                 let bannerAlbums = albums
                     .filter { !$0.banner.isNilOrEmpty && !newAlbumIds.contains($0.albumId) }
@@ -75,6 +75,7 @@ public class RefreshAlbumJob: AsynchronousJob {
             group.notify(queue: .main) {
                 NotificationCenter.default.post(name: Self.didRefreshNotification, object: self)
             }
+            group.wait()
         case let .failure(error):
             reporter.report(error: error)
         }

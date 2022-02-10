@@ -617,6 +617,7 @@
 		9419374525DFBE7D00F81A9C /* MinimizedPlaylistWaveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9419374425DFBE7D00F81A9C /* MinimizedPlaylistWaveView.swift */; };
 		9419374D25DFF3EE00F81A9C /* GroupIconSaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9419374C25DFF3EE00F81A9C /* GroupIconSaver.swift */; };
 		941CAE00276A3F17008F42D6 /* WebPImageDecoderInternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941CADFF276A3F17008F42D6 /* WebPImageDecoderInternal.swift */; };
+		941D93FE27B4E315007F2F95 /* TextFieldAlertModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941D93FD27B4E315007F2F95 /* TextFieldAlertModifier.swift */; };
 		9424C64B259246B600FFDAE0 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9424C64A259246B600FFDAE0 /* main.swift */; };
 		9427D51525E0D31100B1EF0E /* MusicInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9427D51425E0D31100B1EF0E /* MusicInfoView.xib */; };
 		9427D51A25E0D42E00B1EF0E /* MusicInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9427D51925E0D42E00B1EF0E /* MusicInfoView.swift */; };
@@ -671,6 +672,8 @@
 		94CEEAC4277E06A9001E7A24 /* Date+Holiday.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CEEAC2277E06A9001E7A24 /* Date+Holiday.swift */; };
 		94D1E28625EA36B100B58B82 /* CacheableAssetLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D1E28525EA36B100B58B82 /* CacheableAssetLoader.swift */; };
 		94D63DD62646C29100FD7EE8 /* MessageViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D63DD52646C29100FD7EE8 /* MessageViewModelFactory.swift */; };
+		94D72C1F27A293CE00E328F0 /* PINAPITestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D72C1E27A293CE00E328F0 /* PINAPITestView.swift */; };
+		94D72C2127A2944600E328F0 /* PINAPITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D72C2027A2944600E328F0 /* PINAPITest.swift */; };
 		94D8426C2654D4800011DACD /* TranscriptAudioMessagePlayingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D8426B2654D4800011DACD /* TranscriptAudioMessagePlayingManager.swift */; };
 		94D9DF5725F889BC00FC2F28 /* BulletinContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D9DF5625F889BC00FC2F28 /* BulletinContentView.swift */; };
 		94D9DF5C25F889C600FC2F28 /* BulletinContentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94D9DF5B25F889C600FC2F28 /* BulletinContentView.xib */; };
@@ -1583,6 +1586,7 @@
 		9419374425DFBE7D00F81A9C /* MinimizedPlaylistWaveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinimizedPlaylistWaveView.swift; sourceTree = "<group>"; };
 		9419374C25DFF3EE00F81A9C /* GroupIconSaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupIconSaver.swift; sourceTree = "<group>"; };
 		941CADFF276A3F17008F42D6 /* WebPImageDecoderInternal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebPImageDecoderInternal.swift; sourceTree = "<group>"; };
+		941D93FD27B4E315007F2F95 /* TextFieldAlertModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldAlertModifier.swift; sourceTree = "<group>"; };
 		9424C64A259246B600FFDAE0 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		9427D51425E0D31100B1EF0E /* MusicInfoView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MusicInfoView.xib; sourceTree = "<group>"; };
 		9427D51925E0D42E00B1EF0E /* MusicInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicInfoView.swift; sourceTree = "<group>"; };
@@ -1641,6 +1645,8 @@
 		94CEEAC2277E06A9001E7A24 /* Date+Holiday.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Date+Holiday.swift"; sourceTree = "<group>"; };
 		94D1E28525EA36B100B58B82 /* CacheableAssetLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheableAssetLoader.swift; sourceTree = "<group>"; };
 		94D63DD52646C29100FD7EE8 /* MessageViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageViewModelFactory.swift; sourceTree = "<group>"; };
+		94D72C1E27A293CE00E328F0 /* PINAPITestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINAPITestView.swift; sourceTree = "<group>"; };
+		94D72C2027A2944600E328F0 /* PINAPITest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINAPITest.swift; sourceTree = "<group>"; };
 		94D8426B2654D4800011DACD /* TranscriptAudioMessagePlayingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptAudioMessagePlayingManager.swift; sourceTree = "<group>"; };
 		94D9DF5625F889BC00FC2F28 /* BulletinContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulletinContentView.swift; sourceTree = "<group>"; };
 		94D9DF5B25F889C600FC2F28 /* BulletinContentView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BulletinContentView.xib; sourceTree = "<group>"; };
@@ -2614,6 +2620,7 @@
 			children = (
 				947E01EE2797FE6A0002669B /* MixinDebug.entitlements */,
 				94841CC72797D89500B3593B /* Info.plist */,
+				94D72C1D27A2938B00E328F0 /* PIN API Test */,
 				947E065A27986CB50002669B /* PIN Iterator Test */,
 				947E065B27986CC50002669B /* AppGroup Server */,
 				94656C192795395D006C3F1D /* MixinDebugApp.swift */,
@@ -2696,6 +2703,16 @@
 				94B8D187266E41D300F43CBB /* DatabaseDiagnosticViewController.swift */,
 			);
 			path = Diagnose;
+			sourceTree = "<group>";
+		};
+		94D72C1D27A2938B00E328F0 /* PIN API Test */ = {
+			isa = PBXGroup;
+			children = (
+				941D93FD27B4E315007F2F95 /* TextFieldAlertModifier.swift */,
+				94D72C2027A2944600E328F0 /* PINAPITest.swift */,
+				94D72C1E27A293CE00E328F0 /* PINAPITestView.swift */,
+			);
+			path = "PIN API Test";
 			sourceTree = "<group>";
 		};
 		94E3411E261D827300E2F9D3 /* highlight */ = {
@@ -5037,8 +5054,11 @@
 				9463AFC627972AC70093BB08 /* LocalNetworkAuthorization.swift in Sources */,
 				94DA5E61279694E200FCE99A /* AppGroupServer.swift in Sources */,
 				94656C1C2795395D006C3F1D /* FunctionsView.swift in Sources */,
+				94D72C2127A2944600E328F0 /* PINAPITest.swift in Sources */,
 				94656C1A2795395D006C3F1D /* MixinDebugApp.swift in Sources */,
 				947E0659279867870002669B /* PINIteratorTest.swift in Sources */,
+				941D93FE27B4E315007F2F95 /* TextFieldAlertModifier.swift in Sources */,
+				94D72C1F27A293CE00E328F0 /* PINAPITestView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

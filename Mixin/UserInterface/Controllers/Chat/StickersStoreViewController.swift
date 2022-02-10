@@ -18,12 +18,16 @@ class StickersStoreViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        reloadData()
-        reloadRemoteAlbums()
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(updateAlbumAddStatus(_:)),
                                                name: AlbumDAO.addedAlbumsDidChangeNotification,
                                                object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(reloadData),
+                                               name: RefreshAlbumJob.didRefreshNotification,
+                                               object: nil)
+        reloadData()
+        ConcurrentJobQueue.shared.addJob(job: RefreshAlbumJob())
     }
     
     override func viewWillLayoutSubviews() {
@@ -96,7 +100,10 @@ extension StickersStoreViewController: UICollectionViewDelegate {
 
 extension StickersStoreViewController {
 
-    private func reloadData() {
+    @objc private func reloadData() {
+        if AppGroupUserDefaults.User.hasNewStickers {
+            AppGroupUserDefaults.User.hasNewStickers = false
+        }
         let maxBannerCount = maxBannerCount
         DispatchQueue.global().async { [weak self] in
             var bannerItems = [AlbumItem]()
@@ -119,43 +126,6 @@ extension StickersStoreViewController {
                 self.listItems = listItems
                 self.collectionView.reloadData()
             }
-        }
-    }
-    
-    private func reloadRemoteAlbums() {
-        let group = DispatchGroup()
-        group.enter()
-        queue.async(group: group) { [weak self] in
-            guard let self = self else {
-                return
-            }
-            let albumsUpdatedAt = AlbumDAO.shared.getAlbumsUpdatedAt()
-            switch StickerAPI.albums() {
-            case let .success(albums):
-                let newAlbums = albums.filter { albumsUpdatedAt[$0.albumId] != $0.updatedAt }
-                for album in newAlbums {
-                    group.enter()
-                    self.queue.async(group: group) {
-                        switch StickerAPI.stickers(albumId: album.albumId) {
-                        case let .success(stickers):
-                            group.enter()
-                            AlbumDAO.shared.insertOrUpdateAblum(album: album, completion: group.leave)
-                            group.enter()
-                            _ = StickerDAO.shared.insertOrUpdateStickers(stickers: stickers, albumId: album.albumId, completion: group.leave)
-                        case let .failure(error):
-                            reporter.report(error: error)
-                        }
-                        group.leave()
-                    }
-                }
-            case let .failure(error):
-                reporter.report(error: error)
-            }
-            group.leave()
-        }
-        group.notify(queue: .main) { [weak self] in
-            self?.reloadData()
-            AppGroupUserDefaults.User.stickerRefreshDate = Date()
         }
     }
     

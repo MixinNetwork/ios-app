@@ -39,7 +39,7 @@ class QuotePreviewView: UIView, XibDesignable {
             contentImageWrapperView.isHidden = false
             avatarImageView.isHidden = false
             imageView.isHidden = true
-        } else if ["_STICKER", "_IMAGE", "_VIDEO", "_LIVE"].contains(where: message.category.hasSuffix) {
+        } else if ["_STICKER", "_IMAGE", "_VIDEO", "_LIVE"].contains(where: message.category.hasSuffix) || message.category == MessageCategory.STACKED_PHOTO.rawValue {
             contentImageWrapperView.isHidden = false
             avatarImageView.isHidden = true
             imageView.isHidden = false
@@ -75,6 +75,13 @@ class QuotePreviewView: UIView, XibDesignable {
             avatarImageView.setImage(with: message.sharedUserAvatarUrl ?? "",
                                      userId: message.sharedUserId ?? "",
                                      name: message.sharedUserFullName ?? "")
+        } else if message.category == MessageCategory.STACKED_PHOTO.rawValue {
+            if let mediaUrl = message.messageItems?.first?.mediaUrl, !mediaUrl.isEmpty {
+                let url = AttachmentContainer.url(for: .photos, filename: mediaUrl)
+                imageView.sd_setImage(with: url, placeholderImage: contentImageThumbnail, context: localImageContext)
+            } else {
+                imageView.image = contentImageThumbnail
+            }
         }
         UIView.performWithoutAnimation {
             iconImageView.image = MessageCategory.iconImage(forMessageCategoryString: message.category)

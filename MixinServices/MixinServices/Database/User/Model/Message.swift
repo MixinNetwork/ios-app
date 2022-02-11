@@ -306,6 +306,7 @@ public enum MessageCategory: String, Decodable {
     case ENCRYPTED_TRANSCRIPT
     case EXT_UNREAD
     case EXT_ENCRYPTION
+    case STACKED_PHOTO
     case UNKNOWN
     
     public static func isLegal(category: String) -> Bool {

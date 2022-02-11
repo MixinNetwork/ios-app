@@ -391,6 +391,7 @@
 "chat_media_preview_send_files" = "Send as Files";
 "chat_media_preview_send_file" = "Send as File";
 "chat_media_send_count" = "Send(%d)";
+"chat_photo_preview_count" = "%d Photos";
 
 // Pin
 "chat_pinned_general_message" = "%@ pinned a message";

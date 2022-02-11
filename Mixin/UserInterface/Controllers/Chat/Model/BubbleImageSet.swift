@@ -115,3 +115,23 @@ class AppCardBubbleImageSet: GeneralBubbleImageSet {
     }
     
 }
+
+class StackedPhotoBubbleImageSet: GeneralBubbleImageSet {
+
+    override class var leftTail: UIImage {
+        return R.image.ic_chat_bubble_left()!
+    }
+    
+    override class var leftTailHighlight: UIImage {
+        return R.image.ic_chat_bubble_left_highlight()!
+    }
+    
+    override class var rightTail: UIImage {
+        return R.image.ic_chat_bubble_right_white()!
+    }
+    
+    override class var rightTailHighlight: UIImage {
+        return R.image.ic_chat_bubble_right_white_highlight()!
+    }
+    
+}

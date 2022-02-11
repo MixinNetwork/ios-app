@@ -17,6 +17,7 @@ class MessageViewModel: CustomDebugStringConvertible {
     let isEncrypted: Bool
     let isPinned: Bool
     let time: String
+    let isStackedPhoto: Bool
     let quotedMessageViewModel: QuotedMessageViewModel?
     
     private(set) var layoutWidth: CGFloat = 414
@@ -63,6 +64,7 @@ class MessageViewModel: CustomDebugStringConvertible {
         self.isEncrypted = message.category.hasPrefix("SIGNAL_") || message.category.hasPrefix("ENCRYPTED_")
         self.isPinned = message.isPinned ?? false
         self.time = message.createdAt.toUTCDate().timeHoursAndMinutes()
+        self.isStackedPhoto = message.category == MessageCategory.STACKED_PHOTO.rawValue
         thumbnail = UIImage(thumbnailString: message.thumbImage)
         
         var quoteIfExist: Quote? = nil

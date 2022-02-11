@@ -1,12 +1,6 @@
 import UIKit
 
-protocol StackedPhotoViewDelegate: AnyObject {
-    func stackedPhotoViewDidTapPhoto(_ stackedPhotoView: StackedPhotoView)
-}
-
 final class StackedPhotoView: UIView {
-
-    weak var deletegate: StackedPhotoViewDelegate?
     
     var viewModels = [PhotoMessageViewModel]() {
         didSet {
@@ -32,7 +26,6 @@ final class StackedPhotoView: UIView {
         collectionView.backgroundColor = .clear
         collectionView.isScrollEnabled = false
         collectionView.dataSource = self
-        collectionView.delegate = self
         collectionView.register(StackedPhotoCell.self, forCellWithReuseIdentifier: StackedPhotoCell.reuseIdentifier)
         addSubview(collectionView)
         collectionView.snp.makeEdgesEqualToSuperview()
@@ -50,7 +43,7 @@ extension StackedPhotoView: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         min(stackedPhotoLayout.visibleItemCount, viewModels.count)
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: StackedPhotoCell.reuseIdentifier, for: indexPath) as! StackedPhotoCell
         cell.layer.cornerRadius = cornerRadius
@@ -60,14 +53,6 @@ extension StackedPhotoView: UICollectionViewDataSource {
         cell.center = CGPoint(x: centerX, y: centerY)
         cell.viewModel = viewModels[indexPath.row]
         return  cell
-    }
-
-}
-
-extension StackedPhotoView: UICollectionViewDelegate {
-
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        deletegate?.stackedPhotoViewDidTapPhoto(self)
     }
     
 }

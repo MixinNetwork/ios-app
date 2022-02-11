@@ -545,6 +545,7 @@
 		7BFE47E32284394000FC4379 /* CheckmarkPeerCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BFE47E12284394000FC4379 /* CheckmarkPeerCell.xib */; };
 		7BFE47E52284530200FC4379 /* PeerHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFE47E42284530200FC4379 /* PeerHeaderView.swift */; };
 		7BFE47E722845DE100FC4379 /* MessageReceiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFE47E622845DE100FC4379 /* MessageReceiver.swift */; };
+		7C09947627A0D88B00A9D888 /* StackedPhotoMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C09947527A0D88B00A9D888 /* StackedPhotoMessageViewModel.swift */; };
 		7C0D997F26CA62CD00356655 /* StaticAudioMessagePlayingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0D997E26CA62CD00356655 /* StaticAudioMessagePlayingManager.swift */; };
 		7C0E15DF27005376002FC718 /* UnknownURLWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0E15DE27005376002FC718 /* UnknownURLWindow.swift */; };
 		7C0E15E1270053AC002FC718 /* UnknownURLWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C0E15E0270053AC002FC718 /* UnknownURLWindow.xib */; };
@@ -553,6 +554,8 @@
 		7C0E16A72702AF22002FC718 /* CollectibleAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0E16A62702AF22002FC718 /* CollectibleAPI.swift */; };
 		7C0E16A92702FB85002FC718 /* CollectibleToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0E16A82702FB85002FC718 /* CollectibleToken.swift */; };
 		7C0E1D0D2786EAC900762FBE /* SnappingFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0E1D0C2786EAC900762FBE /* SnappingFlowLayout.swift */; };
+		7C13BF76279EA4E90027FF25 /* StackedPhotoMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C13BF75279EA4E90027FF25 /* StackedPhotoMessageCell.swift */; };
+		7C148ED227A3E7FA00599E76 /* StackedPhotoPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C148ED127A3E7FA00599E76 /* StackedPhotoPreviewViewController.swift */; };
 		7C14CFC126CA35CF0094AF4A /* StaticMessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C14CFBF26CA35CF0094AF4A /* StaticMessagesViewController.swift */; };
 		7C14CFC226CA35CF0094AF4A /* StaticMessagesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C14CFC026CA35CF0094AF4A /* StaticMessagesView.xib */; };
 		7C1A6C4326C6580600A1D6CE /* StickerPreviewItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1A6C4226C6580600A1D6CE /* StickerPreviewItemCell.swift */; };
@@ -561,16 +564,16 @@
 		7C225E8927C4C5FE00154143 /* GroupInCommonCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C225E8727C4C5FE00154143 /* GroupInCommonCell.xib */; };
 		7C2475C727795BC100112A30 /* DeleteAccountTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2475C627795BC100112A30 /* DeleteAccountTableHeaderView.swift */; };
 		7C2ACDAE27D73F7C00E9DDB3 /* LeftAlignedCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2ACDAD27D73F7C00E9DDB3 /* LeftAlignedCollectionViewFlowLayout.swift */; };
+		7C247AA5277AED6800112A30 /* StackedPhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C247AA4277AED6800112A30 /* StackedPhotoView.swift */; };
+		7C247AA7277AEDD100112A30 /* StackedPhotoLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C247AA6277AEDD100112A30 /* StackedPhotoLayout.swift */; };
+		7C247AA9277AF2DA00112A30 /* StackedPhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C247AA8277AF2DA00112A30 /* StackedPhotoCell.swift */; };
+		7C247C67277C0DC100112A30 /* BadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C247C66277C0DC100112A30 /* BadgeView.swift */; };
 		7C359DCE26A6C15A001D3AE4 /* StickerStorePreviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C359DCD26A6C15A001D3AE4 /* StickerStorePreviewCell.swift */; };
 		7C359DD026A6C173001D3AE4 /* StickerStoreBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C359DCF26A6C173001D3AE4 /* StickerStoreBannerView.swift */; };
 		7C36BE88274F248C00089B6D /* StickerStoreBannerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C36BE87274F248C00089B6D /* StickerStoreBannerCell.swift */; };
 		7C4E2B0426A9BDAD008190F5 /* StickersEditingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4E2B0326A9BDAC008190F5 /* StickersEditingViewController.swift */; };
 		7C4E2B0626A9BE50008190F5 /* StickersEditingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4E2B0526A9BE50008190F5 /* StickersEditingCell.swift */; };
 		7C4FF5AA26AE614C003E39AC /* StickerPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4FF5A926AE614C003E39AC /* StickerPreviewViewController.swift */; };
-		7C247AA5277AED6800112A30 /* StackedPhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C247AA4277AED6800112A30 /* StackedPhotoView.swift */; };
-		7C247AA7277AEDD100112A30 /* StackedPhotoLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C247AA6277AEDD100112A30 /* StackedPhotoLayout.swift */; };
-		7C247AA9277AF2DA00112A30 /* StackedPhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C247AA8277AF2DA00112A30 /* StackedPhotoCell.swift */; };
-		7C247C67277C0DC100112A30 /* BadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C247C66277C0DC100112A30 /* BadgeView.swift */; };
 		7C5823D5268966A1003AA142 /* HomeAppsFolderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5823D4268966A1003AA142 /* HomeAppsFolderViewController.swift */; };
 		7C5B65CE27701A49004EDD53 /* DeleteAccountHintWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5B65CD27701A49004EDD53 /* DeleteAccountHintWindow.swift */; };
 		7C5B65D027701A62004EDD53 /* DeleteAccountHintWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C5B65CF27701A62004EDD53 /* DeleteAccountHintWindow.xib */; };
@@ -1532,6 +1535,7 @@
 		7BFE47E12284394000FC4379 /* CheckmarkPeerCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CheckmarkPeerCell.xib; sourceTree = "<group>"; };
 		7BFE47E42284530200FC4379 /* PeerHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerHeaderView.swift; sourceTree = "<group>"; };
 		7BFE47E622845DE100FC4379 /* MessageReceiver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageReceiver.swift; sourceTree = "<group>"; };
+		7C09947527A0D88B00A9D888 /* StackedPhotoMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackedPhotoMessageViewModel.swift; sourceTree = "<group>"; };
 		7C0D997E26CA62CD00356655 /* StaticAudioMessagePlayingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticAudioMessagePlayingManager.swift; sourceTree = "<group>"; };
 		7C0E15DE27005376002FC718 /* UnknownURLWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnknownURLWindow.swift; sourceTree = "<group>"; };
 		7C0E15E0270053AC002FC718 /* UnknownURLWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UnknownURLWindow.xib; sourceTree = "<group>"; };
@@ -1540,6 +1544,8 @@
 		7C0E16A62702AF22002FC718 /* CollectibleAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectibleAPI.swift; sourceTree = "<group>"; };
 		7C0E16A82702FB85002FC718 /* CollectibleToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectibleToken.swift; sourceTree = "<group>"; };
 		7C0E1D0C2786EAC900762FBE /* SnappingFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnappingFlowLayout.swift; sourceTree = "<group>"; };
+		7C13BF75279EA4E90027FF25 /* StackedPhotoMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackedPhotoMessageCell.swift; sourceTree = "<group>"; };
+		7C148ED127A3E7FA00599E76 /* StackedPhotoPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackedPhotoPreviewViewController.swift; sourceTree = "<group>"; };
 		7C14CFBF26CA35CF0094AF4A /* StaticMessagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticMessagesViewController.swift; sourceTree = "<group>"; };
 		7C14CFC026CA35CF0094AF4A /* StaticMessagesView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StaticMessagesView.xib; sourceTree = "<group>"; };
 		7C1A6C4226C6580600A1D6CE /* StickerPreviewItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerPreviewItemCell.swift; sourceTree = "<group>"; };
@@ -1548,16 +1554,16 @@
 		7C225E8727C4C5FE00154143 /* GroupInCommonCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GroupInCommonCell.xib; sourceTree = "<group>"; };
 		7C2475C627795BC100112A30 /* DeleteAccountTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountTableHeaderView.swift; sourceTree = "<group>"; };
 		7C2ACDAD27D73F7C00E9DDB3 /* LeftAlignedCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeftAlignedCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
+		7C247AA4277AED6800112A30 /* StackedPhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackedPhotoView.swift; sourceTree = "<group>"; };
+		7C247AA6277AEDD100112A30 /* StackedPhotoLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackedPhotoLayout.swift; sourceTree = "<group>"; };
+		7C247AA8277AF2DA00112A30 /* StackedPhotoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackedPhotoCell.swift; sourceTree = "<group>"; };
+		7C247C66277C0DC100112A30 /* BadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BadgeView.swift; sourceTree = "<group>"; };
 		7C359DCD26A6C15A001D3AE4 /* StickerStorePreviewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerStorePreviewCell.swift; sourceTree = "<group>"; };
 		7C359DCF26A6C173001D3AE4 /* StickerStoreBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerStoreBannerView.swift; sourceTree = "<group>"; };
 		7C36BE87274F248C00089B6D /* StickerStoreBannerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerStoreBannerCell.swift; sourceTree = "<group>"; };
 		7C4E2B0326A9BDAC008190F5 /* StickersEditingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersEditingViewController.swift; sourceTree = "<group>"; };
 		7C4E2B0526A9BE50008190F5 /* StickersEditingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersEditingCell.swift; sourceTree = "<group>"; };
 		7C4FF5A926AE614C003E39AC /* StickerPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerPreviewViewController.swift; sourceTree = "<group>"; };
-		7C247AA4277AED6800112A30 /* StackedPhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackedPhotoView.swift; sourceTree = "<group>"; };
-		7C247AA6277AEDD100112A30 /* StackedPhotoLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackedPhotoLayout.swift; sourceTree = "<group>"; };
-		7C247AA8277AF2DA00112A30 /* StackedPhotoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackedPhotoCell.swift; sourceTree = "<group>"; };
-		7C247C66277C0DC100112A30 /* BadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BadgeView.swift; sourceTree = "<group>"; };
 		7C5823D4268966A1003AA142 /* HomeAppsFolderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsFolderViewController.swift; sourceTree = "<group>"; };
 		7C5B65CD27701A49004EDD53 /* DeleteAccountHintWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountHintWindow.swift; sourceTree = "<group>"; };
 		7C5B65CF27701A62004EDD53 /* DeleteAccountHintWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeleteAccountHintWindow.xib; sourceTree = "<group>"; };
@@ -2125,10 +2131,15 @@
 				7B9D825622F1BFEA0099381E /* LargeNetworkOperationIconSet.swift */,
 				7B91055F22CF4A1E002E3608 /* LiveMessageViewModel.swift */,
 				7BF196AE24115F9100CC8325 /* LocationMessageViewModel.swift */,
+				7BA41A9224E123F50042ED03 /* MentionToken.swift */,
+				7B91AB69251A2BAC00879812 /* Message+ExternalSharing.swift */,
+				7BE6C7EB242DF07B00A0F2AE /* MessageAction.swift */,
 				7BEB97172366CF42002DB190 /* MessageFontSet.swift */,
 				7BFE47E622845DE100FC4379 /* MessageReceiver.swift */,
 				7BAB76AB228AAE00009ECB8C /* MessageReceiverSearchResult.swift */,
 				7B09E5591FD157EB002E45D3 /* MessageViewModel.swift */,
+				94D63DD52646C29100FD7EE8 /* MessageViewModelFactory.swift */,
+				7B082D17242CA19F00C5E163 /* MultipleSelectionIntent.swift */,
 				7B9D825722F1BFEA0099381E /* NetworkOperationIconSet.swift */,
 				7B9D825522F1BFE90099381E /* NormalNetworkOperationIconSet.swift */,
 				7B09E55B1FD15B9B002E45D3 /* PhotoMessageViewModel.swift */,
@@ -2138,12 +2149,17 @@
 				7BFDB73820DA41E3005673CC /* Quote.swift */,
 				7B81D91523E93F470031E945 /* QuotedMessageViewModel.swift */,
 				7B7FBF8E2282D75400644693 /* RecalledMessageViewModel.swift */,
+				7B015F4E241F91A60004A563 /* SearchResultAnnotation.swift */,
 				7B7DACA923505F06006AA2AC /* SharedMediaAudio.swift */,
 				7B8BB587234F160C00991ACB /* SharedMediaCategorizer.swift */,
 				7B8BB581234DDA0000991ACB /* SharedMediaDataSource.swift */,
 				7B8BB589234F28A700991ACB /* SharedMediaGroupedByDateCategorizer.swift */,
+				7C247AA6277AEDD100112A30 /* StackedPhotoLayout.swift */,
+				7C09947527A0D88B00A9D888 /* StackedPhotoMessageViewModel.swift */,
 				7B8ED47F21198EC20039946B /* StickerInputModelController.swift */,
 				7B28FA13201195E40023B28D /* StickerMessageViewModel.swift */,
+				7CC2BDB826A7CAD6001749B1 /* StickersStoreBannerFlowLayout.swift */,
+				7CC7304F2745F95D002780F5 /* StickerStore.swift */,
 				7B8144621FDD62B900404431 /* SystemMessageViewModel.swift */,
 				7B1456911FCC186E001B6DED /* TextMessageViewModel.swift */,
 				7B1ABB0D21196B24009FAA6C /* TilingCollectionViewFlowLayout.swift */,
@@ -2879,6 +2895,7 @@
 				7C14CFBF26CA35CF0094AF4A /* StaticMessagesViewController.swift */,
 				94FCB5FE264673C400CCC8FD /* TranscriptPreviewViewController.swift */,
 				7CB0955226CD18F70049F4C7 /* PinMessagesPreviewViewController.swift */,
+				7C148ED127A3E7FA00599E76 /* StackedPhotoPreviewViewController.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -3549,6 +3566,7 @@
 				7B91056122CF4A58002E3608 /* LiveMessageCell.swift */,
 				E081796923C32ACA005FEEAC /* PostMessageCell.swift */,
 				7BF196B42411650900CC8325 /* LocationMessageCell.swift */,
+				7C13BF75279EA4E90027FF25 /* StackedPhotoMessageCell.swift */,
 				7BD7534D2182CDCE00BAC172 /* IconPrefixedTextMessageCell.swift */,
 				949569A5263B12FE00E043FE /* TranscriptMessageCell.swift */,
 				7BEE5350222D0E5C008D3911 /* ConversationExtensionCell.swift */,
@@ -4513,6 +4531,7 @@
 				DF17B51520525B47006447C2 /* ArrayExtension.swift in Sources */,
 				DFD294351FA6EC0D00FADAAD /* ContactViewController.swift in Sources */,
 				7BA9F32024A22EC200D7C091 /* CallMemberCell.swift in Sources */,
+				7C13BF76279EA4E90027FF25 /* StackedPhotoMessageCell.swift in Sources */,
 				7BBAE9DA244ADB3800CC8670 /* AssetQrCodeScanningController.swift in Sources */,
 				DFA063D222B0D0E80031E151 /* PrivacySettingViewController.swift in Sources */,
 				7BEFDC191FB05B3E00F66885 /* NewGroupViewController.swift in Sources */,
@@ -4711,6 +4730,7 @@
 				7CE5E7A8269BDA29000B7904 /* HomeAppsPinTipsViewController.swift in Sources */,
 				7B4E3078229565C200A03F6E /* SearchBoxLeftView.swift in Sources */,
 				7B710DFC243637A5008F0D73 /* CirclesTableFooterView.swift in Sources */,
+				7C09947627A0D88B00A9D888 /* StackedPhotoMessageViewModel.swift in Sources */,
 				7BF3F67C22AE64FA007B6C77 /* ImageUploadJob.swift in Sources */,
 				7BAD333A216E1DFA006C0309 /* RTCIceCandidate+JSON.swift in Sources */,
 				7BA514862499D96300261289 /* GroupCall.swift in Sources */,
@@ -4759,6 +4779,7 @@
 				7C359DD026A6C173001D3AE4 /* StickerStoreBannerView.swift in Sources */,
 				7B015F51241FA4EC0004A563 /* SearchResultAnnotationView.swift in Sources */,
 				E090B9EB23B0BF940012C7E9 /* MessageDAO+Gallery.swift in Sources */,
+				7C148ED227A3E7FA00599E76 /* StackedPhotoPreviewViewController.swift in Sources */,
 				7BC80A62221D1C07008586AD /* AssetTableHeaderView.swift in Sources */,
 				7B9553402243860C00CE95E6 /* PinValidationPresentationManager.swift in Sources */,
 				94046B93272DC28B007C1D4A /* GroupCallMembersManager.swift in Sources */,

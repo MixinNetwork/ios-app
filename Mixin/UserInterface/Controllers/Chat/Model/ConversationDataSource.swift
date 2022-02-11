@@ -23,6 +23,7 @@ class ConversationDataSource {
     
     weak var tableView: ConversationTableView?
     
+    private let stackConsecutiveImageMessagesThreshold = 4
     private let numberOfMessagesOnPaging = 100
     private let numberOfMessagesOnReloading = 35
     private let me = LoginManager.shared.account!
@@ -46,6 +47,7 @@ class ConversationDataSource {
     private var canInsertUnreadHint = true
     private var messageProcessingIsCancelled = false
     private var didInitializedData = false
+    private var stackedPhotoMessages = [MessageItem]()
     
     var layoutSize: CGSize {
         Queue.main.autoSync {
@@ -140,6 +142,7 @@ class ConversationDataSource {
             self.firstUnreadMessageId = nil
             canInsertUnreadHint = false
         }
+        messages = stackConsecutiveImageMessagesIfMeetThreshold(messages)
         var (dates, viewModels) = factory.viewModels(with: messages, fits: layoutSize.width)
         if canInsertEncryptionHint && didLoadEarliestMessage {
             let date: String
@@ -299,6 +302,7 @@ class ConversationDataSource {
             let shouldInsertEncryptionHint = self.canInsertEncryptionHint && didLoadEarliestMessage
             messages = messages.filter{ !self.loadedMessageIds.contains($0.messageId) }
             self.loadedMessageIds.formUnion(messages.map({ $0.messageId }))
+            messages = self.stackConsecutiveImageMessagesIfMeetThreshold(messages)
             var (dates, viewModels) = self.factory.viewModels(with: messages, fits: layoutWidth)
             if shouldInsertEncryptionHint {
                 let hint = MessageItem.encryptionHintMessage(conversationId: conversationId)
@@ -382,6 +386,7 @@ class ConversationDataSource {
                 messages.insert(hint, at: index)
                 self.canInsertUnreadHint = false
             }
+            messages = self.stackConsecutiveImageMessagesIfMeetThreshold(messages)
             let (dates, viewModels) = self.factory.viewModels(with: messages, fits: layoutWidth)
             if let firstDate = dates.first, let messagesBeforeAppend = self.viewModels[firstDate]?.suffix(2).map({ $0.message }) {
                 let messagesForTheDate = messagesBeforeAppend + messages.prefix(2)
@@ -945,6 +950,127 @@ extension ConversationDataSource {
                                             object: self,
                                             userInfo: userInfo)
         }
+    }
+    
+    private func stackConsecutiveImageMessagesIfMeetThreshold(_ messages: [MessageItem]) -> [MessageItem] {
+        guard messages.count >= stackConsecutiveImageMessagesThreshold else {
+            return messages
+        }
+        
+        func createStackedPhotoMessage(_ messages: [MessageItem]) -> MessageItem {
+            let message = messages[0]
+            let item = MessageItem(messageId: UUID().uuidString.lowercased(),
+                                   conversationId: message.conversationId,
+                                   userId: message.userId,
+                                   category: MessageCategory.STACKED_PHOTO.rawValue,
+                                   content: message.content,
+                                   mediaUrl: message.mediaUrl,
+                                   mediaMimeType: message.mediaMimeType,
+                                   mediaSize: message.mediaSize,
+                                   mediaWidth: message.mediaWidth,
+                                   mediaHeight: message.mediaHeight,
+                                   mediaKey: message.mediaKey,
+                                   mediaDigest: message.mediaDigest,
+                                   mediaStatus: message.status,
+                                   mediaLocalIdentifier: message.mediaLocalIdentifier,
+                                   thumbImage: message.thumbImage,
+                                   thumbUrl: message.thumbUrl,
+                                   status: message.status,
+                                   name: message.name,
+                                   createdAt: message.createdAt,
+                                   userFullName: message.userFullName,
+                                   userIdentityNumber: message.userIdentityNumber,
+                                   userAvatarUrl: message.userAvatarUrl,
+                                   messageItems: messages)
+            stackedPhotoMessages.append(item)
+            return item
+        }
+        
+        var result = [MessageItem]()
+        var messagesToStack = [MessageItem]()
+        var left = 0
+        var right = 1
+        var unableToStack: Bool {
+            messagesToStack.count < stackConsecutiveImageMessagesThreshold ||
+            messagesToStack.contains(where: { $0.mediaStatus != MediaStatus.DONE.rawValue })
+        }
+        
+        while right < messages.count {
+            if !messages[left].category.hasSuffix("_IMAGE") {
+                result.append(messages[left])
+                left += 1
+                right += 1
+            } else if !messages[left].quoteMessageId.isNilOrEmpty {
+                result.append(messages[left])
+                left += 1
+                right += 1
+            } else if !messages[right].category.hasSuffix("_IMAGE") {
+                if messagesToStack.isEmpty {
+                    result.append(contentsOf: messages[left...right])
+                } else if unableToStack {
+                    result.append(contentsOf: messagesToStack)
+                    result.append(messages[right])
+                    messagesToStack.removeAll()
+                } else {
+                    result.append(createStackedPhotoMessage(messagesToStack))
+                    result.append(messages[right])
+                    messagesToStack.removeAll()
+                }
+                left = right + 1
+                right = left + 1
+            } else if messages[left].userId != messages[right].userId {
+                if messagesToStack.isEmpty {
+                    result.append(messages[left])
+                } else if unableToStack {
+                    result.append(contentsOf: messagesToStack)
+                    messagesToStack.removeAll()
+                } else {
+                    result.append(createStackedPhotoMessage(messagesToStack))
+                    messagesToStack.removeAll()
+                }
+                left = right
+                right += 1
+            } else if !messages[right].quoteMessageId.isNilOrEmpty {
+                if messagesToStack.isEmpty {
+                    result.append(messages[left])
+                } else if unableToStack {
+                    result.append(contentsOf: messagesToStack)
+                    messagesToStack.removeAll()
+                } else {
+                    result.append(createStackedPhotoMessage(messagesToStack))
+                    messagesToStack.removeAll()
+                }
+                result.append(messages[right])
+                left = right + 1
+                right += 1
+            } else {
+                messagesToStack = Array(messages[left...right])
+                right += 1
+            }
+        }
+        if left == messages.count - 1 {
+            result.append(messages[left])
+        }
+        if !messagesToStack.isEmpty {
+            if unableToStack {
+                result.append(contentsOf: messagesToStack)
+            } else {
+                result.append(createStackedPhotoMessage(messagesToStack))
+            }
+            messagesToStack.removeAll()
+        }
+        
+        //TODO: ‼️ delete
+        let totalCount = result.reduce(0) { partialResult, item in
+            if item.category == MessageCategory.STACKED_PHOTO.rawValue {
+                return partialResult + item.messageItems!.count
+            } else {
+                return partialResult + 1
+            }
+        }
+        assert(totalCount == messages.count)
+        
+        return result
     }
     
 }

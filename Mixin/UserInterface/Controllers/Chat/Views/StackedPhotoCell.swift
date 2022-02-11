@@ -4,24 +4,21 @@ import MixinServices
 
 class StackedPhotoCell: UICollectionViewCell {
 
-    static let reuseIdentifier = "StackedPhotoCell"
+    static let reuseIdentifier = "cell_identifier_stacked_photo_cell"
 
     var viewModel: PhotoMessageViewModel! {
         didSet {
             if let url = viewModel.attachmentURL {
-                contentImageView.sd_setImage(with: url,
+                imageView.sd_setImage(with: url,
                                              placeholderImage: viewModel.thumbnail,
                                              context: localImageContext)
             } else {
-                contentImageView.image = viewModel.thumbnail
+                imageView.image = viewModel.thumbnail
             }
         }
     }
     
-    private let contentImageWrapperView = VerticalPositioningImageView()
-    private var contentImageView: UIImageView {
-        return contentImageWrapperView.imageView
-    }
+    private var imageView = UIImageView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -35,13 +32,16 @@ class StackedPhotoCell: UICollectionViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        contentImageView.sd_cancelCurrentImageLoad()
+        imageView.sd_cancelCurrentImageLoad()
     }
     
     private func loadSubview() {
         clipsToBounds = true
-        contentView.addSubview(contentImageWrapperView)
-        contentImageWrapperView.snp.makeEdgesEqualToSuperview()
+        contentView.addSubview(imageView)
+        imageView.snp.makeEdgesEqualToSuperview()
+        imageView.layer.shouldRasterize = true
+        imageView.layer.allowsEdgeAntialiasing = true
+        imageView.contentMode = .scaleAspectFill
     }
     
 }

@@ -861,6 +861,9 @@ class ConversationViewController: UIViewController {
                 conversationInputViewController.dismiss()
                 let vc = StickerPreviewViewController.instance(message: message)
                 vc.presentAsChild(of: self)
+            } else if message.category == MessageCategory.STACKED_PHOTO.rawValue {
+                let vc = StackedPhotoPreviewViewController(stackedPhotoMessage: message)
+                vc.presentAsChild(of: self)
             } else {
                 conversationInputViewController.dismiss()
             }
@@ -1878,6 +1881,8 @@ extension ConversationViewController {
             actions = [.delete]
         } else if category == MessageCategory.MESSAGE_RECALL.rawValue {
             actions = [.delete]
+        } else if category == MessageCategory.STACKED_PHOTO.rawValue {
+            actions = []
         } else {
             actions = []
         }

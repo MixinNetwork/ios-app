@@ -391,6 +391,7 @@
 "chat_media_preview_send_files" = "发送为文件";
 "chat_media_preview_send_file" = "发送为文件";
 "chat_media_send_count" = "发送(%d)";
+"chat_photo_preview_count" = "%d 张图片";
 
 // Pin
 "chat_pinned_general_message" = "%@置顶了一条消息";

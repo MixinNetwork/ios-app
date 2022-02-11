@@ -2,7 +2,7 @@ import UIKit
 
 class StackedPhotoLayout: UICollectionViewLayout {
     
-    var itemSize: CGSize = .zero  {
+    var itemSize: CGSize = CGSize(width: 210, height: 280)  {
         didSet {
             guard itemSize != oldValue else {
                 return
@@ -43,6 +43,12 @@ class StackedPhotoLayout: UICollectionViewLayout {
     
     private var layoutAttributes = [UICollectionViewLayoutAttributes]()
     private var contentWidth: CGFloat = 0
+    private var numberOfItems: Int {
+        guard let collectionView = collectionView else {
+            return 0
+        }
+        return collectionView.numberOfItems(inSection: 0)
+    }
     
     class func intrinsicContentSize(
         itemSize: CGSize,
@@ -107,10 +113,4 @@ class StackedPhotoLayout: UICollectionViewLayout {
         return layoutAttributes[indexPath.row]
     }
     
-    private var numberOfItems: Int {
-        guard let collectionView = collectionView else {
-            return 0
-        }
-        return collectionView.numberOfItems(inSection: 0)
-    }
 }

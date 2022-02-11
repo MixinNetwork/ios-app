@@ -154,6 +154,8 @@ class MessageViewModelFactory {
                 viewModel.cellHeight = 38
             } else if message.category == MessageCategory.EXT_ENCRYPTION.rawValue {
                 viewModel = EncryptionHintViewModel(message: message)
+            } else if message.category == MessageCategory.STACKED_PHOTO.rawValue {
+                viewModel = StackedPhotoMessageViewModel(message: message)
             } else if MessageCategory.krakenCategories.contains(message.category) {
                 viewModel = SystemMessageViewModel(message: message)
             } else {

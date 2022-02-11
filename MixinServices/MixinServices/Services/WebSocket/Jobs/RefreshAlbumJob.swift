@@ -1,19 +1,14 @@
 import Foundation
 
-public class RefreshAlbumJob: AsynchronousJob {
+public class RefreshAlbumJob: BaseJob {
     
     public static let didRefreshNotification = Notification.Name("one.mixin.services.RefreshAlbumJob.DidRefresh")
     
-    private let group = DispatchGroup()
-    
-    override public func getJobId() -> String {
+    public override func getJobId() -> String {
         "refresh-albums"
     }
     
-    public override func execute() -> Bool {
-        defer {
-            finishJob()
-        }
+    public override func run() throws {
         switch StickerAPI.albums() {
         case let .success(albums):
             let albumsUpdatedAt = AlbumDAO.shared.getAlbumsUpdatedAt()
@@ -26,7 +21,7 @@ public class RefreshAlbumJob: AsynchronousJob {
             }
             guard !newAlbums.isEmpty else {
                 AppGroupUserDefaults.User.stickerRefreshDate = Date()
-                return true
+                return
             }
             let urls = newAlbums.map(\.iconUrl).compactMap(URL.init)
             StickerPrefetcher.persistent.prefetchURLs(urls)
@@ -55,12 +50,10 @@ public class RefreshAlbumJob: AsynchronousJob {
                 switch StickerAPI.stickers(albumId: album.albumId) {
                 case let .success(stickers):
                     guard !MixinService.isStopProcessMessages else {
-                        return true
+                        return
                     }
-                    group.enter()
-                    AlbumDAO.shared.insertOrUpdateAblum(album: album, completion: group.leave)
-                    group.enter()
-                    let stickers = StickerDAO.shared.insertOrUpdateStickers(stickers: stickers, albumId: album.albumId, completion: group.leave)
+                    AlbumDAO.shared.insertOrUpdateAblum(album: album)
+                    let stickers = StickerDAO.shared.insertOrUpdateStickers(stickers: stickers, albumId: album.albumId)
                     if album.automaticallyDownloads {
                         StickerPrefetcher.prefetch(stickers: stickers)
                     }
@@ -72,14 +65,10 @@ public class RefreshAlbumJob: AsynchronousJob {
             StickerPrefetcher.purgable.prefetchURLs(purgableBannerUrls)
             AppGroupUserDefaults.User.hasNewStickers = true
             AppGroupUserDefaults.User.stickerRefreshDate = Date()
-            group.notify(queue: .main) {
-                NotificationCenter.default.post(name: Self.didRefreshNotification, object: self)
-            }
-            group.wait()
+            NotificationCenter.default.post(onMainThread: Self.didRefreshNotification, object: self)
         case let .failure(error):
             reporter.report(error: error)
         }
-        return true
     }
     
 }

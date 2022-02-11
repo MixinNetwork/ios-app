@@ -1,6 +1,6 @@
 import Foundation
 
-public class RefreshStickerJob: AsynchronousJob {
+public class RefreshStickerJob: BaseJob {
     
     private let stickerId: String
     
@@ -12,23 +12,19 @@ public class RefreshStickerJob: AsynchronousJob {
         "refresh-sticker-\(stickerId)"
     }
     
-    public override func execute() -> Bool {
-        defer {
-            finishJob()
-        }
+    public override func run() throws {
         switch StickerAPI.sticker(stickerId: stickerId) {
         case let .success(sticker):
             guard !MixinService.isStopProcessMessages else {
-                return true
+                return
             }
             guard let stickerItem = StickerDAO.shared.insertOrUpdateSticker(sticker: sticker) else {
-                return true
+                return
             }
             StickerPrefetcher.prefetch(stickers: [stickerItem])
         case let .failure(error):
             reporter.report(error: error)
         }
-        return true
     }
     
 }

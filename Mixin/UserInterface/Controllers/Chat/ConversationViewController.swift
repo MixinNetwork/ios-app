@@ -67,17 +67,6 @@ class ConversationViewController: UIViewController {
         }
     }()
     
-    private let menuItems: [MessageAction: UIMenuItem] = [
-        .reply: UIMenuItem(title: R.string.localizable.chat_message_menu_reply(), action: #selector(replyMessage(_:))),
-        .forward: UIMenuItem(title: R.string.localizable.chat_message_menu_forward(), action: #selector(forwardMessage(_:))),
-        .copy: UIMenuItem(title: R.string.localizable.action_copy(), action: #selector(copyMessage(_:))),
-        .delete: UIMenuItem(title: R.string.localizable.menu_delete(), action: #selector(deleteMessage(_:))),
-        .addToStickers: UIMenuItem(title: R.string.localizable.chat_message_sticker(), action: #selector(addToStickers(_:))),
-        .report: UIMenuItem(title: R.string.localizable.menu_report(), action: #selector(reportMessage(_:))),
-        .pin: UIMenuItem(title: R.string.localizable.menu_pin(), action: #selector(pinMessage(_:))),
-        .unpin: UIMenuItem(title: R.string.localizable.menu_unpin(), action: #selector(unpinMessage(_:)))
-    ]
-    
     private let showScrollToBottomButtonThreshold: CGFloat = 150
     private let loadMoreMessageThreshold = 20
     private let animationDuration: TimeInterval = 0.3
@@ -88,7 +77,6 @@ class ConversationViewController: UIViewController {
     
     private var ownerUser: UserItem?
     private var quotingMessageId: String?
-    private var isShowingMenu = false
     private var isAppearanceAnimating = true
     private var adjustTableViewContentOffsetWhenInputWrapperHeightChanges = true
     private var didManuallyStoppedTableViewDecelerating = false
@@ -119,7 +107,6 @@ class ConversationViewController: UIViewController {
     private lazy var userHandleViewController = R.storyboard.chat.user_handle()!
     private lazy var multipleSelectionActionView = R.nib.multipleSelectionActionView(owner: self)!
     private lazy var announcementBadgeContentView = R.nib.announcementBadgeContentView(owner: self)!
-    private lazy var availableMessageActions = Set(menuItems.values.map({ $0.action }))
     
     private lazy var strangerHintView: StrangerHintView = {
         let view = R.nib.strangerHintView(owner: nil)!
@@ -295,10 +282,6 @@ class ConversationViewController: UIViewController {
         return vc
     }
     
-    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
-        availableMessageActions.contains(action)
-    }
-    
     // MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -339,16 +322,7 @@ class ConversationViewController: UIViewController {
         tableView.addGestureRecognizer(textPreviewRecognizer)
         
         tableView.dataSource = self
-        if #available(iOS 13.0, *) {
-            // Use context menu managed by UITableViewDelegate
-            tableView.delegate = self
-        } else {
-            // Use UIMenuController on long press
-            tableView.delegate = self
-            let recognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction(_:)))
-            recognizer.delegate = TextMessageLabel.gestureRecognizerBypassingDelegateObject
-            tableView.addGestureRecognizer(recognizer)
-        }
+        tableView.delegate = self
         
         if dataSource.category == .group {
             let hasUnreadAnnouncement = AppGroupUserDefaults.User.hasUnreadAnnouncement[conversationId] ?? false
@@ -438,7 +412,6 @@ class ConversationViewController: UIViewController {
             makeInputTextViewFirstResponderOnAppear = true
         }
         super.viewWillDisappear(animated)
-        dismissMenu(animated: true)
         isAppearanceAnimating = true
     }
     
@@ -768,10 +741,6 @@ class ConversationViewController: UIViewController {
         if conversationInputViewController.audioViewController.hideLongPressHint() {
             return
         }
-        if isShowingMenu {
-            dismissMenu(animated: true)
-            return
-        }
         let tappedIndexPath = tableView.indexPathForRow(at: recognizer.location(in: tableView))
         let tappedViewModel: MessageViewModel? = {
             if let indexPath = tappedIndexPath {
@@ -1000,31 +969,6 @@ class ConversationViewController: UIViewController {
         
         alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         self.present(alc, animated: true, completion: nil)
-    }
-    
-    @objc func longPressAction(_ recognizer: UIGestureRecognizer) {
-        guard recognizer.state == .began, !tableView.allowsMultipleSelection else {
-            return
-        }
-        let location = recognizer.location(in: tableView)
-        guard
-            let indexPath = tableView.indexPathForRow(at: location),
-            let cell = tableView.cellForRow(at: indexPath) as? MessageCell,
-            let message = cell.viewModel?.message
-        else {
-            return
-        }
-        let actions = availableActions(for: message)
-        guard !actions.isEmpty else {
-            return
-        }
-        tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
-        if conversationInputViewController.textView.isFirstResponder {
-            conversationInputViewController.textView.overrideNext = self
-        } else {
-            becomeFirstResponder()
-        }
-        showMenu(for: actions, targetRect: cell.contentFrame, in: cell)
     }
     
     // MARK: - Callbacks
@@ -1428,9 +1372,7 @@ extension ConversationViewController: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         switch gestureRecognizer {
         case tapRecognizer:
-            if isShowingMenu {
-                return true
-            } else if let view = touch.view as? TextMessageLabel {
+            if let view = touch.view as? TextMessageLabel {
                 return !view.canResponseTouch(at: touch.location(in: view))
             } else {
                 return true
@@ -1499,7 +1441,6 @@ extension ConversationViewController: UIScrollViewDelegate {
         didManuallyStoppedTableViewDecelerating = false
         UIView.animate(withDuration: animationDuration) {
             self.tableView.setFloatingHeaderViewsHidden(false, animated: false)
-            self.dismissMenu(animated: false)
         }
     }
     
@@ -1640,7 +1581,6 @@ extension ConversationViewController: UITableViewDelegate {
         nil
     }
     
-    @available(iOS 13.0, *)
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         if let label = tableView.hitTest(point, with: nil) as? TextMessageLabel, label.canResponseTouch(at: tableView.convert(point, to: label)) {
             return nil
@@ -1649,12 +1589,10 @@ extension ConversationViewController: UITableViewDelegate {
         }
     }
     
-    @available(iOS 13.0, *)
     func tableView(_ tableView: UITableView, previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
         previewForContextMenu(with: configuration)
     }
     
-    @available(iOS 13.0, *)
     func tableView(_ tableView: UITableView, previewForDismissingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
         previewForContextMenu(with: configuration)
     }
@@ -1688,7 +1626,6 @@ extension ConversationViewController: AppButtonGroupMessageCellDelegate {
         openAction(action: appButtons[index].action, sendUserId: message.userId)
     }
     
-    @available(iOS 13.0, *)
     func contextMenuConfigurationForAppButtonGroupMessageCell(_ cell: AppButtonGroupMessageCell) -> UIContextMenuConfiguration? {
         guard let indexPath = tableView.indexPath(for: cell) else {
             return nil
@@ -1696,12 +1633,10 @@ extension ConversationViewController: AppButtonGroupMessageCellDelegate {
         return contextMenuConfigurationForRow(at: indexPath)
     }
     
-    @available(iOS 13.0, *)
     func previewForHighlightingContextMenuOfAppButtonGroupMessageCell(_ cell: AppButtonGroupMessageCell, with configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
         previewForContextMenu(with: configuration)
     }
     
-    @available(iOS 13.0, *)
     func previewForDismissingContextMenuOfAppButtonGroupMessageCell(_ cell: AppButtonGroupMessageCell, with configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
         previewForContextMenu(with: configuration)
     }
@@ -2017,88 +1952,6 @@ extension ConversationViewController {
     
 }
 
-// MARK: - UIMenu Workers
-extension ConversationViewController {
-    
-    private func showMenu(for actions: [MessageAction], targetRect: CGRect, in view: UIView) {
-        let items = actions.compactMap { menuItems[$0] }
-        guard !items.isEmpty else {
-            return
-        }
-        let center = NotificationCenter.default
-        center.addObserver(self,
-                           selector: #selector(menuControllerDidShowMenu(_:)),
-                           name: UIMenuController.didShowMenuNotification,
-                           object: nil)
-        center.addObserver(self,
-                           selector: #selector(menuControllerWillHideMenu(_:)),
-                           name: UIMenuController.willHideMenuNotification,
-                           object: nil)
-        center.addObserver(self,
-                           selector: #selector(menuControllerDidHideMenu(_:)),
-                           name: UIMenuController.didHideMenuNotification,
-                           object: nil)
-        DispatchQueue.main.async {
-            UIMenuController.shared.menuItems = items
-            UIMenuController.shared.setTargetRect(targetRect, in: view)
-            UIMenuController.shared.setMenuVisible(true, animated: true)
-        }
-    }
-    
-    @objc private func copyMessage(_ sender: Any?) {
-        performActionOnSelectedRow(.copy)
-    }
-    
-    @objc private func deleteMessage(_ sender: Any?) {
-        performActionOnSelectedRow(.delete)
-    }
-    
-    @objc private func replyMessage(_ sender: Any?) {
-        performActionOnSelectedRow(.reply)
-    }
-    
-    @objc private func forwardMessage(_ sender: Any?) {
-        performActionOnSelectedRow(.forward)
-    }
-    
-    @objc private func addToStickers(_ sender: Any?) {
-        performActionOnSelectedRow(.addToStickers)
-    }
-    
-    @objc private func reportMessage(_ sender: Any?) {
-        performActionOnSelectedRow(.report)
-    }
-    
-    @objc private func pinMessage(_ sender: Any?) {
-        performActionOnSelectedRow(.pin)
-    }
-    
-    @objc private func unpinMessage(_ sender: Any?) {
-        performActionOnSelectedRow(.unpin)
-    }
-    
-    @objc private func menuControllerDidShowMenu(_ notification: Notification) {
-        isShowingMenu = true
-    }
-    
-    @objc private func menuControllerWillHideMenu(_ notification: Notification) {
-        if let indexPath = tableView.indexPathForSelectedRow {
-            tableView.deselectRow(at: indexPath, animated: true)
-        }
-    }
-    
-    @objc private func menuControllerDidHideMenu(_ notification: Notification) {
-        UIMenuController.shared.menuItems = nil
-        let center = NotificationCenter.default
-        center.removeObserver(self, name: UIMenuController.didShowMenuNotification, object: nil)
-        center.removeObserver(self, name: UIMenuController.willHideMenuNotification, object: nil)
-        center.removeObserver(self, name: UIMenuController.didHideMenuNotification, object: nil)
-        conversationInputViewController.textView.overrideNext = nil
-        isShowingMenu = false
-    }
-    
-}
-
 // MARK: - UI Related Helpers
 extension ConversationViewController {
     
@@ -2213,13 +2066,6 @@ extension ConversationViewController {
             unreadBadgeValue = 0
             dataSource?.firstUnreadMessageId = nil
         }
-    }
-    
-    private func dismissMenu(animated: Bool) {
-        guard UIMenuController.shared.isMenuVisible else {
-            return
-        }
-        UIMenuController.shared.setMenuVisible(false, animated: animated)
     }
     
     private func updateStrangerActionView() {
@@ -2952,7 +2798,6 @@ extension ConversationViewController {
 }
 
 // MARK: - Context menu configs
-@available(iOS 13.0, *)
 extension ConversationViewController {
     
     private func contextMenuConfigurationForRow(at indexPath: IndexPath) -> UIContextMenuConfiguration? {

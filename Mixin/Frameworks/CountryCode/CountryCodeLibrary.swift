@@ -28,15 +28,8 @@ struct CountryCodeLibrary {
         self.countries = countries
         
         let networkInfo = CTTelephonyNetworkInfo()
-        let dataServiceIdentifier: String? = {
-            if #available(iOS 13.0, *) {
-                return networkInfo.dataServiceIdentifier
-            } else {
-                return nil
-            }
-        }()
         let carrierCountryCode: String? = {
-            if let id = dataServiceIdentifier, let code = networkInfo.serviceSubscriberCellularProviders?[id]?.isoCountryCode {
+            if let id = networkInfo.dataServiceIdentifier, let code = networkInfo.serviceSubscriberCellularProviders?[id]?.isoCountryCode {
                 return code.uppercased()
             } else if let code = networkInfo.serviceSubscriberCellularProviders?.values.compactMap(\.isoCountryCode).first {
                 return code.uppercased()

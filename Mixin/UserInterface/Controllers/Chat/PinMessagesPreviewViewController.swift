@@ -37,10 +37,6 @@ final class PinMessagesPreviewViewController: StaticMessagesViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
-        super.canPerformAction(action, withSender: sender) || action == #selector(unpinSelectedMessage)
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         factory.delegate = self
@@ -58,16 +54,6 @@ final class PinMessagesPreviewViewController: StaticMessagesViewController {
         reloadData()
     }
     
-    override func menuItems(for viewModel: MessageViewModel) -> [UIMenuItem]? {
-        guard canUnpinMessages else {
-            return super.menuItems(for: viewModel)
-        }
-        var items = super.menuItems(for: viewModel) ?? []
-        items.append(UIMenuItem(title: R.string.localizable.menu_unpin(), action: #selector(unpinSelectedMessage)))
-        return items
-    }
-    
-    @available(iOS 13.0, *)
     override func contextMenuActions(for viewModel: MessageViewModel) -> [UIAction]? {
         guard canUnpinMessages else {
             return super.contextMenuActions(for: viewModel)
@@ -143,18 +129,6 @@ extension PinMessagesPreviewViewController: MessageViewModelFactoryDelegate {
 
 // MARK: - Actions
 extension PinMessagesPreviewViewController {
-    
-    @objc private func unpinSelectedMessage() {
-        guard let indexPath = tableView.indexPathForSelectedRow else {
-            return
-        }
-        guard let message = viewModel(at: indexPath)?.message else {
-            return
-        }
-        SendMessageService.shared.sendPinMessages(items: [message],
-                                                  conversationId: conversationId,
-                                                  action: .unpin)
-    }
     
     @objc private func unpinAllAction() {
         let controller = UIAlertController(title: R.string.localizable.chat_alert_unpin_all_messages(), message: nil, preferredStyle: .alert)

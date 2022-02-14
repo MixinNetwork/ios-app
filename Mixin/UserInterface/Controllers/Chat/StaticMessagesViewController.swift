@@ -20,7 +20,6 @@ class StaticMessagesViewController: UIViewController {
     
     private let conversationId: String
     private let audioManager: StaticAudioMessagePlayingManager
-    private let alwaysUsesLegacyMenu = false
     
     private var didPlayAudioMessage = false
     private var indexPathToFlashAfterAnimationFinished: IndexPath?
@@ -40,10 +39,6 @@ class StaticMessagesViewController: UIViewController {
         true
     }
     
-    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
-        action == #selector(copySelectedMessage)
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black.withAlphaComponent(0)
@@ -53,13 +48,8 @@ class StaticMessagesViewController: UIViewController {
         tableView.backgroundColor = .clear
         tableView.separatorStyle = .none
         tableView.dataSource = self
-        if #available(iOS 13.0, *), !alwaysUsesLegacyMenu {
-            tableView.delegate = self
-        } else {
-            tableView.delegate = self
-            let recognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction(_:)))
-            tableView.addGestureRecognizer(recognizer)
-        }
+        tableView.delegate = self
+   
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapAction(_:)))
         tapRecognizer.delegate = self
         tableView.addGestureRecognizer(tapRecognizer)
@@ -103,15 +93,6 @@ class StaticMessagesViewController: UIViewController {
         
     }
     
-    func menuItems(for viewModel: MessageViewModel) -> [UIMenuItem]? {
-        if viewModel.message.category.hasSuffix("_TEXT") {
-            return [UIMenuItem(title: R.string.localizable.action_copy(), action: #selector(copySelectedMessage))]
-        } else {
-            return nil
-        }
-    }
-    
-    @available(iOS 13.0, *)
     func contextMenuActions(for viewModel: MessageViewModel) -> [UIAction]? {
         if viewModel.message.category.hasSuffix("_TEXT") {
             let copyAction = UIAction(title: R.string.localizable.action_copy(), image: R.image.conversation.ic_action_copy()) { _ in
@@ -206,10 +187,6 @@ class StaticMessagesViewController: UIViewController {
 extension StaticMessagesViewController {
     
     @objc private func tapAction(_ recognizer: UIGestureRecognizer) {
-        if UIMenuController.shared.isMenuVisible {
-            UIMenuController.shared.setMenuVisible(false, animated: true)
-            return
-        }
         let tappedIndexPath = tableView.indexPathForRow(at: recognizer.location(in: tableView))
         let tappedViewModel: MessageViewModel? = {
             if let indexPath = tappedIndexPath {
@@ -340,61 +317,6 @@ extension StaticMessagesViewController {
         }
     }
     
-    @objc private func menuControllerWillHideMenu(_ notification: Notification) {
-        if let indexPath = tableView.indexPathForSelectedRow {
-            tableView.deselectRow(at: indexPath, animated: true)
-        }
-        NotificationCenter.default.removeObserver(self,
-                                                  name: UIMenuController.willHideMenuNotification,
-                                                  object: nil)
-    }
-    
-    @objc private func menuControllerDidHideMenu(_ notification: Notification) {
-        UIMenuController.shared.menuItems = nil
-        NotificationCenter.default.removeObserver(self,
-                                                  name: UIMenuController.didHideMenuNotification,
-                                                  object: nil)
-    }
-    
-    @objc private func longPressAction(_ recognizer: UIGestureRecognizer) {
-        guard recognizer.state == .began else {
-            return
-        }
-        let location = recognizer.location(in: tableView)
-        guard
-            let cell = tableView.messageCellForRow(at: location),
-            let indexPath = tableView.indexPath(for: cell),
-            let viewModel = viewModel(at: indexPath),
-            let menuItems = self.menuItems(for: viewModel)
-        else {
-            return
-        }
-        tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
-        becomeFirstResponder()
-        UIMenuController.shared.menuItems = menuItems
-        UIMenuController.shared.setTargetRect(cell.contentFrame, in: cell)
-        UIMenuController.shared.setMenuVisible(true, animated: true)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(menuControllerWillHideMenu(_:)),
-                                               name: UIMenuController.willHideMenuNotification,
-                                               object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(menuControllerDidHideMenu(_:)),
-                                               name: UIMenuController.didHideMenuNotification,
-                                               object: nil)
-        AppDelegate.current.mainWindow.addDismissMenuResponder()
-    }
-    
-    @objc private func copySelectedMessage() {
-        guard let indexPath = tableView.indexPathForSelectedRow else {
-            return
-        }
-        guard let message = viewModel(at: indexPath)?.message else {
-            return
-        }
-        UIPasteboard.general.string = message.content
-    }
-    
 }
 
 // MARK: - UITableViewDataSource
@@ -490,7 +412,6 @@ extension StaticMessagesViewController: UITableViewDelegate {
         nil
     }
     
-    @available(iOS 13.0, *)
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         if let label = tableView.hitTest(point, with: nil) as? TextMessageLabel, label.canResponseTouch(at: tableView.convert(point, to: label)) {
             return nil
@@ -499,12 +420,10 @@ extension StaticMessagesViewController: UITableViewDelegate {
         }
     }
     
-    @available(iOS 13.0, *)
     func tableView(_ tableView: UITableView, previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
         previewForContextMenu(with: configuration)
     }
     
-    @available(iOS 13.0, *)
     func tableView(_ tableView: UITableView, previewForDismissingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
         previewForContextMenu(with: configuration)
     }
@@ -735,11 +654,7 @@ extension StaticMessagesViewController {
         MixinWebViewController.presentInstance(with: .init(conversationId: "", initialUrl: url), asChildOf: parent)
     }
     
-    @available(iOS 13.0, *)
     private func contextMenuConfigurationForRow(at indexPath: IndexPath) -> UIContextMenuConfiguration? {
-        guard !alwaysUsesLegacyMenu else {
-            return nil
-        }
         guard !tableView.allowsMultipleSelection, let viewModel = viewModel(at: indexPath) else {
             return nil
         }
@@ -752,11 +667,7 @@ extension StaticMessagesViewController {
         }
     }
     
-    @available(iOS 13.0, *)
     private func previewForContextMenu(with configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
-        guard !alwaysUsesLegacyMenu else {
-            return nil
-        }
         guard let identifier = configuration.identifier as? NSString else {
             return nil
         }

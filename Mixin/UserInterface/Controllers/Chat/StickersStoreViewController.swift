@@ -108,8 +108,11 @@ extension StickersStoreViewController {
             var bannerItems = [AlbumItem]()
             var listItems = [AlbumItem]()
             let albums = AlbumDAO.shared.getNonPersonalAlbums()
-            albums.forEach { album in
-                let stickers = StickerDAO.shared.getStickers(albumId: album.albumId)
+            let albumStickers = StickerDAO.shared.getStickers(albumIds: albums.map(\.albumId))
+            for album in albums {
+                guard let stickers = albumStickers[album.albumId] else {
+                    continue
+                }
                 let item = AlbumItem(album: album, stickers: stickers)
                 if !album.banner.isNilOrEmpty, bannerItems.count < maxBannerCount {
                     bannerItems.append(item)

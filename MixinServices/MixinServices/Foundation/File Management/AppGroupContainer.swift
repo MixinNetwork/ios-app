@@ -45,6 +45,10 @@ public enum AppGroupContainer {
         accountUrl.appendingPathComponent("task.db", isDirectory: false)
     }
     
+    public static var workDatabaseURL: URL {
+        accountUrl.appendingPathComponent("work.db", isDirectory: false)
+    }
+    
     @available(iOSApplicationExtension, unavailable)
     public static func migrateIfNeeded() {
         guard !AppGroupUserDefaults.isDocumentsMigrated else {

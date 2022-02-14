@@ -75,7 +75,7 @@ public enum AttachmentContainer {
 
 public extension AttachmentContainer {
     
-    enum Category: CaseIterable {
+    enum Category: String, CaseIterable, Codable {
         
         case audios
         case files

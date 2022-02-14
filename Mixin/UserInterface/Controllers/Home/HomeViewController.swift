@@ -153,9 +153,11 @@ class HomeViewController: UIViewController {
         Logger.general.info(category: "HomeViewController", message: "View did load with app state: \(UIApplication.shared.applicationStateString)")
         if UIApplication.shared.applicationState != .background {
             ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())
-            ConcurrentJobQueue.shared.addJob(job: CleanUpUnusedAttachmentJob())
             if AppGroupUserDefaults.User.hasRecoverMedia {
                 ConcurrentJobQueue.shared.addJob(job: RecoverMediaJob())
+            }
+            WorkManager.general.wakeUpPersistedWorks(with: [AttachmentCleaningWork.self]) { manager in
+                manager.addWork(AttachmentCleaningWork())
             }
             initializeFTSIfNeeded()
         }

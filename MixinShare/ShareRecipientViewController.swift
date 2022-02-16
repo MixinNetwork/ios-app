@@ -37,11 +37,9 @@ class ShareRecipientViewController: UIViewController {
             return
         }
         
-        if #available(iOSApplicationExtension 13.0, *) {
-            if let messageIntent = extensionContext?.intent as? INSendMessageIntent, let conversationId = messageIntent.conversationIdentifier, !conversationId.isEmpty, let conversationItem = ConversationDAO.shared.getConversation(conversationId: conversationId), let conversation = RecipientSearchItem(conversation: conversationItem) {
-                shareAction(conversation: conversation, avatarImage: nil, fromIntent: true)
-                return
-            }
+        if let messageIntent = extensionContext?.intent as? INSendMessageIntent, let conversationId = messageIntent.conversationIdentifier, !conversationId.isEmpty, let conversationItem = ConversationDAO.shared.getConversation(conversationId: conversationId), let conversation = RecipientSearchItem(conversation: conversationItem) {
+            shareAction(conversation: conversation, avatarImage: nil, fromIntent: true)
+            return
         }
 
         searchView.isHidden = false
@@ -491,9 +489,6 @@ extension ShareRecipientViewController {
 extension ShareRecipientViewController {
     
     private func sendMessageIntent(conversation: RecipientSearchItem, avatarImage: UIImage?) {
-        guard #available(iOSApplicationExtension 12.0, *) else {
-            return
-        }
         let recipientHandle = INPersonHandle(value: conversation.conversationId, type: .unknown)
         let recipient = INPerson(personHandle: recipientHandle, nameComponents: nil, displayName: conversation.name, image: nil, contactIdentifier: nil, customIdentifier: conversation.conversationId)
         let messageIntent = INSendMessageIntent(recipients: [recipient],

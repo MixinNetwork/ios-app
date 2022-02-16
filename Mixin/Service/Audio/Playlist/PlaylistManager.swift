@@ -726,17 +726,13 @@ extension PlaylistManager {
             mini.show()
             mini.waveView.startAnimating()
         }
-        if #available(iOS 13.0, *) {
-            infoCenter.playbackState = .playing
-        }
+        infoCenter.playbackState = .playing
         resetPlayingInfoAndRemoteCommandTarget(item: item)
     }
     
     private func playerDidPause() {
         delegate?.playlistManagerDidPause(self)
-        if #available(iOS 13.0, *) {
-            infoCenter.playbackState = .paused
-        }
+        infoCenter.playbackState = .paused
         if let mini = UIApplication.homeContainerViewController?.minimizedPlaylistViewController {
             mini.waveView.stopAnimating()
         }
@@ -750,9 +746,7 @@ extension PlaylistManager {
             mini.hide()
         }
         try? AudioSession.shared.deactivate(client: self, notifyOthersOnDeactivation: false)
-        if #available(iOS 13.0, *) {
-            infoCenter.playbackState = .stopped
-        }
+        infoCenter.playbackState = .stopped
         removePlayingInfoAndRemoteCommandTarget()
     }
     

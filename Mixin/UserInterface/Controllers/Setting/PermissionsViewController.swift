@@ -14,13 +14,7 @@ final class PermissionsViewController: UIViewController {
     
     private let iconView = NavigationAvatarIconView()
     private let footerReuseId = "footer"
-    private let tableView: UITableView = {
-        if #available(iOS 13.0, *) {
-            return UITableView(frame: .zero, style: .insetGrouped)
-        } else {
-            return LayoutMarginsInsetedTableView(frame: .zero, style: .grouped)
-        }
-    }()
+    private let tableView = UITableView(frame: .zero, style: .insetGrouped)
     
     private var dataSource: DataSource?
     

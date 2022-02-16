@@ -104,9 +104,7 @@ final class OggOpusRecorder {
                     try session.setCategory(.playAndRecord,
                                             mode: .default,
                                             options: [.allowBluetooth])
-                    if #available(iOS 13.0, *) {
-                        try session.setAllowHapticsAndSystemSoundsDuringRecording(true)
-                    }
+                    try session.setAllowHapticsAndSystemSoundsDuringRecording(true)
                     try session.setPreferredIOBufferDuration(0.005)
                 }
             } catch {

@@ -12,8 +12,8 @@ public enum MixinAPIError: Error {
     case invalidServerPinToken
     case invalidPath
     case httpTransport(AFError)
-    case webSocketTimeOut
-    case httpTimeOut
+    case webSocketTimeout
+    case requestSigningTimeout
     case clockSkewDetected
     case pinEncryption(Error)
     case unknown(status: Int, code: Int, description: String)
@@ -196,7 +196,7 @@ extension MixinAPIError {
     
     public var isTransportTimedOut: Bool {
         switch self {
-        case .webSocketTimeOut, .clockSkewDetected, .httpTimeOut:
+        case .webSocketTimeout, .clockSkewDetected, .requestSigningTimeout:
             return true
         case let .httpTransport(error):
             guard let underlying = (error.underlyingError as NSError?) else {
@@ -241,7 +241,7 @@ extension MixinAPIError {
         switch self {
         case .httpTransport(let error):
             return error.worthRetrying
-        case .webSocketTimeOut, .clockSkewDetected:
+        case .webSocketTimeout, .clockSkewDetected:
             return true
         default:
             return false

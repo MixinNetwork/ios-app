@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 protocol PhoneContactCellDelegate: AnyObject {
     func phoneContactCellDidSelectInvite(_ cell: PhoneContactCell)

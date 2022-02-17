@@ -320,7 +320,7 @@ public class ReceiveMessageService: MixinService {
         guard app == nil || app?.updatedAt != cardUpdatedAt else {
             return
         }
-        if case let .success(response) = UserSessionAPI.showUser(userId: appId) {
+        if case let .success(response) = UserAPI.showUser(userId: appId) {
             UserDAO.shared.updateUsers(users: [response], sendNotificationAfterFinished: false)
         } else {
             ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: [appId]))
@@ -945,7 +945,7 @@ public class ReceiveMessageService: MixinService {
                 .map{ $0.userId }
                 .filter{ $0 != currentAccountId }
             if userIds.count > 0 {
-                switch UserSessionAPI.showUsers(userIds: userIds) {
+                switch UserAPI.showUsers(userIds: userIds) {
                 case let .success(users):
                     UserDAO.shared.updateUsers(users: users)
                 case .failure:
@@ -979,7 +979,7 @@ public class ReceiveMessageService: MixinService {
         guard User.systemUser != userId, userId != currentAccountId, !UserDAO.shared.isExist(userId: userId) else {
             return .SUCCESS
         }
-        switch UserSessionAPI.showUser(userId: userId) {
+        switch UserAPI.showUser(userId: userId) {
         case let .success(response):
             UserDAO.shared.updateUsers(users: [response])
             return .SUCCESS
@@ -1002,7 +1002,7 @@ public class ReceiveMessageService: MixinService {
         }
 
         repeat {
-            switch UserSessionAPI.showUser(userId: userId) {
+            switch UserAPI.showUser(userId: userId) {
             case let .success(response):
                 UserDAO.shared.updateUsers(users: [response])
                 return true

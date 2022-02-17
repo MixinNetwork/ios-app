@@ -27,7 +27,7 @@ extension MixinAPIError {
                     return R.string.localizable.error_network_task_failed()
                 }
             }
-        case .webSocketTimeOut, .clockSkewDetected, .httpTimeOut:
+        case .webSocketTimeout, .clockSkewDetected, .requestSigningTimeout:
             return R.string.localizable.error_connection_timeout()
         case let .unknown(_, code, description):
             return R.string.localizable.error_two_parts("\(code)", description)

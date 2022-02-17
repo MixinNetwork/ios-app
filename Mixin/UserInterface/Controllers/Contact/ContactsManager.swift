@@ -1,18 +1,7 @@
 import Foundation
 import Contacts
 import PhoneNumberKit
-
-class PhoneContact: NSObject, Codable {
-    
-    @objc let fullName: String
-    let phoneNumber: String
-    
-    init(fullName: String, phoneNumber: String) {
-        self.fullName = fullName
-        self.phoneNumber = phoneNumber
-    }
-    
-}
+import MixinServices
 
 class ContactsManager {
     

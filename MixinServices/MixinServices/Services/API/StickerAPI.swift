@@ -1,7 +1,7 @@
 import Foundation
 import Alamofire
 
-public class StickerAPI : MixinAPI {
+public final class StickerAPI : MixinAPI {
     
     private enum Path {
         static let albums = "/stickers/albums"

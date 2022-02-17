@@ -45,6 +45,10 @@ struct FunctionsView: View {
                 Section {
                     NavigationLink("PIN Iterator Test", destination: PINIteratorView())
                 }
+                
+                Section {
+                    NavigationLink("PIN API Test", destination: PINAPITestView())
+                }
             }
             .navigationTitle("Mixin DebugKit")
             .listStyle(GroupedListStyle())

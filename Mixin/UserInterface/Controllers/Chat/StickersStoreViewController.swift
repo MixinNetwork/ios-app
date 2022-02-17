@@ -6,6 +6,8 @@ class StickersStoreViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
     
+    private let maxBannerCount = 3
+
     private var bannerItems = [AlbumItem]()
     private var listItems = [AlbumItem]()
     
@@ -15,15 +17,16 @@ class StickersStoreViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        StickerStore.loadStoreAlbums { bannerItems, listItems in
-            self.bannerItems = bannerItems
-            self.listItems = listItems
-            self.collectionView.reloadData()
-        }
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(updateAlbumAddStatus(_:)),
                                                name: AlbumDAO.addedAlbumsDidChangeNotification,
                                                object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(reloadData),
+                                               name: RefreshAlbumJob.didRefreshNotification,
+                                               object: nil)
+        reloadData()
+        ConcurrentJobQueue.shared.addJob(job: RefreshAlbumJob())
     }
     
     override func viewWillLayoutSubviews() {
@@ -96,6 +99,38 @@ extension StickersStoreViewController: UICollectionViewDelegate {
 
 extension StickersStoreViewController {
 
+    @objc private func reloadData() {
+        if AppGroupUserDefaults.User.hasNewStickers {
+            AppGroupUserDefaults.User.hasNewStickers = false
+        }
+        let maxBannerCount = maxBannerCount
+        DispatchQueue.global().async { [weak self] in
+            var bannerItems = [AlbumItem]()
+            var listItems = [AlbumItem]()
+            let albums = AlbumDAO.shared.getNonPersonalAlbums()
+            let albumStickers = StickerDAO.shared.getStickers(albumIds: albums.map(\.albumId))
+            for album in albums {
+                guard let stickers = albumStickers[album.albumId] else {
+                    continue
+                }
+                let item = AlbumItem(album: album, stickers: stickers)
+                if !album.banner.isNilOrEmpty, bannerItems.count < maxBannerCount {
+                    bannerItems.append(item)
+                } else {
+                    listItems.append(item)
+                }
+            }
+            DispatchQueue.main.async {
+                guard let self = self else {
+                    return
+                }
+                self.bannerItems = bannerItems
+                self.listItems = listItems
+                self.collectionView.reloadData()
+            }
+        }
+    }
+    
     @objc private func updateAlbumAddStatus(_ notification: Notification) {
         guard
             let albumId = notification.userInfo?[AlbumDAO.UserInfoKey.albumId] as? String,

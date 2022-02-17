@@ -4,13 +4,6 @@ import MixinServices
 class AppearanceSettingsViewController: SettingsTableViewController {
     
     private let currencyRow = SettingsRow(title: R.string.localizable.wallet_currency(), accessory: .disclosure)
-    private let isUserInterfaceStyleAvailable: Bool = {
-        if #available(iOS 13.0, *) {
-            return true
-        } else {
-            return false
-        }
-    }()
     private let isLanguageAvailable: Bool = {
         if #available(iOS 14.0, *) {
             return true
@@ -40,35 +33,12 @@ class AppearanceSettingsViewController: SettingsTableViewController {
         if isLanguageAvailable {
             dataSource.insertSection(SettingsSection(rows: [languageRow]), at: 0, animation: .none)
         }
-        if isUserInterfaceStyleAvailable {
-            updateUserInterfaceStyleSubtitle()
-            dataSource.insertSection(SettingsSection(rows: [userInterfaceStyleRow]), at: 0, animation: .none)
-        }
+        updateUserInterfaceStyleSubtitle()
+        dataSource.insertSection(SettingsSection(rows: [userInterfaceStyleRow]), at: 0, animation: .none)
         NotificationCenter.default.addObserver(self, selector: #selector(updateCurrencySubtitle), name: Currency.currentCurrencyDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateUserInterfaceStyleSubtitle), name: AppGroupUserDefaults.User.didChangeUserInterfaceStyleNotification, object: nil)
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
-    }
-    
-    @objc func updateCurrencySubtitle() {
-        let currency = Currency.current
-        let subtitle = currency.code + " (" + currency.symbol + ")"
-        currencyRow.subtitle = subtitle
-    }
-    
-    @objc func updateUserInterfaceStyleSubtitle() {
-        let subtitle: String
-        switch AppGroupUserDefaults.User.userInterfaceStyle {
-        case .light:
-            subtitle = R.string.localizable.setting_appearance_ui_style_light()
-        case .dark:
-            subtitle = R.string.localizable.setting_appearance_ui_style_dark()
-        case .unspecified:
-            subtitle = R.string.localizable.setting_appearance_ui_style_auto()
-        @unknown default:
-            subtitle = ""
-        }
-        userInterfaceStyleRow.subtitle = subtitle
     }
     
 }
@@ -79,15 +49,9 @@ extension AppearanceSettingsViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         switch indexPath.section {
         case 0:
-            if isUserInterfaceStyleAvailable {
-                pickUserInterfaceStyle()
-            } else if isLanguageAvailable {
-                pickLanguage()
-            } else {
-                pickCurrency()
-            }
+            pickUserInterfaceStyle()
         case 1:
-            if isUserInterfaceStyleAvailable && isLanguageAvailable {
+            if isLanguageAvailable {
                 pickLanguage()
             } else {
                 pickCurrency()
@@ -102,6 +66,27 @@ extension AppearanceSettingsViewController: UITableViewDelegate {
 }
 
 extension AppearanceSettingsViewController {
+    
+    @objc private func updateCurrencySubtitle() {
+        let currency = Currency.current
+        let subtitle = currency.code + " (" + currency.symbol + ")"
+        currencyRow.subtitle = subtitle
+    }
+    
+    @objc private func updateUserInterfaceStyleSubtitle() {
+        let subtitle: String
+        switch AppGroupUserDefaults.User.userInterfaceStyle {
+        case .light:
+            subtitle = R.string.localizable.setting_appearance_ui_style_light()
+        case .dark:
+            subtitle = R.string.localizable.setting_appearance_ui_style_dark()
+        case .unspecified:
+            subtitle = R.string.localizable.setting_appearance_ui_style_auto()
+        @unknown default:
+            subtitle = ""
+        }
+        userInterfaceStyleRow.subtitle = subtitle
+    }
     
     private func pickUserInterfaceStyle() {
         let sheet = UIAlertController(title: R.string.localizable.setting_appearance_ui_style(), message: nil, preferredStyle: .actionSheet)

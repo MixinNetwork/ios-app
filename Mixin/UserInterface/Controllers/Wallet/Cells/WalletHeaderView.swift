@@ -88,7 +88,7 @@ class WalletHeaderView: InfiniteTopView {
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        if #available(iOS 13.0, *), traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+        if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
             snowfallLayerIfLoaded?.emitterCells?.forEach { cell in
                 cell.color = snowflakeColor
             }

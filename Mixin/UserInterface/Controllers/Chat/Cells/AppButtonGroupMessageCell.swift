@@ -4,11 +4,8 @@ protocol AppButtonGroupMessageCellDelegate: AnyObject {
     
     func appButtonGroupMessageCell(_ cell: AppButtonGroupMessageCell, didSelectActionAt index: Int)
     
-    @available(iOS 13.0, *)
     func contextMenuConfigurationForAppButtonGroupMessageCell(_ cell: AppButtonGroupMessageCell) -> UIContextMenuConfiguration?
-    @available(iOS 13.0, *)
     func previewForHighlightingContextMenuOfAppButtonGroupMessageCell(_ cell: AppButtonGroupMessageCell, with configuration: UIContextMenuConfiguration) -> UITargetedPreview?
-    @available(iOS 13.0, *)
     func previewForDismissingContextMenuOfAppButtonGroupMessageCell(_ cell: AppButtonGroupMessageCell, with configuration: UIContextMenuConfiguration) -> UITargetedPreview?
     
 }
@@ -65,7 +62,6 @@ class AppButtonGroupMessageCell: DetailInfoMessageCell {
     
 }
 
-@available(iOS 13.0, *)
 extension AppButtonGroupMessageCell: UIContextMenuInteractionDelegate {
     
     func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {

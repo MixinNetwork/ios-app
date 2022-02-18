@@ -406,7 +406,7 @@ class ConversationInputViewController: UIViewController {
         if minimize {
             setPreferredContentHeightAnimated(.minimized)
         }
-        UIView.animate(withDuration: 0.5, delay: 0, options: .overdamped) {
+        UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
             self.customInputContainerView.alpha = 0
         } completion: { _ in
             self.customInputViewController = nil
@@ -918,7 +918,7 @@ extension ConversationInputViewController {
         customInputContainerView.alpha = 0
         customInputViewController = viewController
         customInputContainerView.layoutIfNeeded()
-        UIView.animate(withDuration: 0.5, delay: 0, options: .overdamped) {
+        UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
             self.customInputContainerView.alpha = 1
         }
     }

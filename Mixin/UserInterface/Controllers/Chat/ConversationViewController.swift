@@ -2303,7 +2303,7 @@ extension ConversationViewController {
         
         tableView.verticalScrollIndicatorInsets.bottom = new - view.safeAreaInsets.bottom
         if animated {
-            UIView.animate(withDuration: 0.5, delay: 0, options: .overdamped) {
+            UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
                 layout()
             }
         } else {

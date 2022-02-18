@@ -206,14 +206,14 @@ extension StickerPreviewViewController {
                             height: backgroundButton.bounds.height)
         view.autoresizingMask = .flexibleTopMargin
         backgroundButton.addSubview(view)
-        UIView.animate(withDuration: 0.5, delay: 0, options: .overdamped) {
+        UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
             self.view.frame.origin.y = self.backgroundButton.bounds.height - self.preferredContentSize.height
             self.backgroundButton.backgroundColor = .black.withAlphaComponent(0.3)
         }
     }
     
     func dismissAsChild() {
-        UIView.animate(withDuration: 0.5, delay: 0, options: .overdamped) {
+        UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
             self.view.frame.origin.y = self.backgroundButton.bounds.height
             self.backgroundButton.backgroundColor = .black.withAlphaComponent(0)
         } completion: { _ in

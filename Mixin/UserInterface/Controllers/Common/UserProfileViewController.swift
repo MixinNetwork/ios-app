@@ -148,7 +148,7 @@ final class UserProfileViewController: ProfileViewController {
         avatarPreviewImageView = imageView
         view.isUserInteractionEnabled = false
         hideContentConstraint.priority = .defaultHigh
-        UIView.animate(withDuration: 0.5, delay: 0, options: .overdamped) {
+        UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
             self.view.layoutIfNeeded()
             let width = window.bounds.width - 28 * 2
             imageView.bounds = CGRect(x: 0, y: 0, width: width, height: width)

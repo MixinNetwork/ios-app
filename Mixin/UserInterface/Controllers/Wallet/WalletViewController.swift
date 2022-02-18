@@ -98,7 +98,7 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
         constraint.isActive = true
         controller.didMove(toParent: self)
         view.layoutIfNeeded()
-        UIView.animate(withDuration: 0.5, delay: 0, options: .overdamped) {
+        UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
             controller.view.alpha = 1
             constraint.constant = 0
             self.view.layoutIfNeeded()
@@ -123,7 +123,7 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
         guard let searchViewController = searchViewController else {
             return
         }
-        UIView.animate(withDuration: 0.5, delay: 0, options: .overdamped) {
+        UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
             searchViewController.view.alpha = 0
             self.searchCenterYConstraint?.constant = -self.searchAppearingAnimationDistance
             self.view.layoutIfNeeded()

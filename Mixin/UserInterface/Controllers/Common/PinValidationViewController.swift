@@ -81,7 +81,7 @@ class PinValidationViewController: UIViewController {
             limitationHintView.isHidden = false
             descriptionLabel.isHidden = true
             numberPadViewBottomConstraint.constant = numberPadView.frame.height
-            UIView.animate(withDuration: 0.5, delay: 0, options: .overdamped) {
+            UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
                 self.view.layoutIfNeeded()
             }
         default:

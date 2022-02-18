@@ -149,7 +149,7 @@ class StaticMessagesViewController: UIViewController {
         }
         showContentConstraint.priority = .defaultLow
         hideContentConstraint.priority = .defaultHigh
-        UIView.animate(withDuration: 0.5, delay: 0, options: .overdamped) {
+        UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
             self.view.layoutIfNeeded()
             self.view.backgroundColor = .black.withAlphaComponent(0)
         } completion: { _ in
@@ -172,7 +172,7 @@ class StaticMessagesViewController: UIViewController {
         UIView.performWithoutAnimation(view.layoutIfNeeded)
         showContentConstraint.priority = .defaultHigh
         hideContentConstraint.priority = .defaultLow
-        UIView.animate(withDuration: 0.5, delay: 0, options: .overdamped) {
+        UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
             self.view.layoutIfNeeded()
             self.view.backgroundColor = .black.withAlphaComponent(0.3)
             self.viewDidPresentAsChild()

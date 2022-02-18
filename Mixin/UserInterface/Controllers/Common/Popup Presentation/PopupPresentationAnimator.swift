@@ -35,13 +35,13 @@ extension PopupPresentationAnimator: UIViewControllerAnimatedTransitioning {
                                 width: finalFrame.width,
                                 height: finalFrame.height)
             container.addSubview(view)
-            UIView.animate(withDuration: duration, delay: 0, options: .overdamped, animations: {
+            UIView.animate(withDuration: duration, delay: 0, options: .overdampedCurve, animations: {
                 view.frame = finalFrame
             }, completion: transitionContext.completeTransition(_:))
         } else {
             vc = transitionContext.viewController(forKey: .from)!
             let view = transitionContext.view(forKey: .from)!
-            UIView.animate(withDuration: duration, delay: 0, options: .overdamped, animations: {
+            UIView.animate(withDuration: duration, delay: 0, options: .overdampedCurve, animations: {
                 view.frame = CGRect(x: view.frame.origin.x,
                                     y: container.bounds.height,
                                     width: view.frame.width,

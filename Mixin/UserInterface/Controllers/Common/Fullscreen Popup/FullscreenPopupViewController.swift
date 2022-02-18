@@ -78,7 +78,7 @@ class FullscreenPopupViewController: UIViewController {
         didMove(toParent: parent)
         
         view.center.y = parent.view.bounds.height * 3 / 2
-        UIView.animate(withDuration: 0.5, delay: 0, options: .overdamped) {
+        UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
             self.view.center.y = parent.view.bounds.height / 2
         } completion: { _ in
             completion?()
@@ -102,7 +102,7 @@ class FullscreenPopupViewController: UIViewController {
             self.popupDidDismissAsChild()
         }
         if animated {
-            UIView.animate(withDuration: 0.5, delay: 0, options: .overdamped) {
+            UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
                 self.view.center.y = parent.view.bounds.height * 3 / 2
             } completion: { _ in
                 animationCompletion()

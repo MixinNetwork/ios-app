@@ -292,11 +292,11 @@ extension VerificationCodeField: UITextInput {
         }
     }
     
-    func baseWritingDirection(for position: UITextPosition, in direction: UITextStorageDirection) -> UITextWritingDirection {
+    func baseWritingDirection(for position: UITextPosition, in direction: UITextStorageDirection) -> NSWritingDirection {
         return .natural
     }
     
-    func setBaseWritingDirection(_ writingDirection: UITextWritingDirection, for range: UITextRange) {
+    func setBaseWritingDirection(_ writingDirection: NSWritingDirection, for range: UITextRange) {
         
     }
     

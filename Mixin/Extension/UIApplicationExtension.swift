@@ -103,6 +103,14 @@ extension UIApplication {
     
 }
 
+extension UIApplication {
+    
+    var keyWindow: UIWindow? {
+        windows.first { $0.isKeyWindow }
+    }
+        
+}
+
 extension UIApplicationShortcutItem {
     
     enum ItemType: String {

@@ -99,6 +99,11 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         view = GalleryView()
     }
     
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        (view as? GalleryView)?.orientationDidChanged()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .clear

@@ -28,14 +28,16 @@ class VerifyPinNavigationController: LoneBackButtonNavigationController {
             backButtonAlpha = 1
         }
         let dismissButtonAlpha = 1 - backButtonAlpha
-        if animated {
-            UIView.beginAnimations(nil, context: nil)
-            UIView.setAnimationDuration(0.25)
+        func update() {
+            backButton.alpha = backButtonAlpha
+            dismissButton.alpha = dismissButtonAlpha
         }
-        backButton.alpha = backButtonAlpha
-        dismissButton.alpha = dismissButtonAlpha
         if animated {
-            UIView.commitAnimations()
+            UIView.animate(withDuration: 0.25) {
+                update()
+            }
+        } else {
+            update()
         }
     }
     

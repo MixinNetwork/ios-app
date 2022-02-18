@@ -150,7 +150,7 @@ extension PickerViewController: UICollectionViewDataSource {
             cell.durationLabel.text = mediaDurationFormatter.string(from: asset.duration)
             cell.fileTypeView.isHidden = false
         } else {
-            PHImageManager.default().requestImageData(for: asset, options: utiCheckingImageRequestOptions, resultHandler: { (_, uti, _, _) in
+            PHImageManager.default().requestImageDataAndOrientation(for: asset, options: utiCheckingImageRequestOptions, resultHandler: { (_, uti, _, _) in
                 if let uti = uti, UTTypeConformsTo(uti as CFString, kUTTypeGIF) {
                     cell.gifLabel.isHidden = false
                     cell.videoImageView.isHidden = true

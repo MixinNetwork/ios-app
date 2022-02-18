@@ -107,7 +107,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     }
     
     override var canPerformInteractiveDismissal: Bool {
-        UIApplication.shared.statusBarOrientation.isPortrait
+        UIWindow.isPortrait
     }
     
     private var player: AVPlayer {
@@ -621,7 +621,7 @@ extension GalleryVideoItemViewController {
     }
     
     private func executeInPortraitOrientation(_ work: @escaping () -> Void) {
-        if UIApplication.shared.statusBarOrientation.isLandscape {
+        if UIWindow.isLandscape {
             let portrait = Int(UIInterfaceOrientation.portrait.rawValue)
             UIDevice.current.setValue(portrait, forKey: "orientation")
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.33, execute: work)

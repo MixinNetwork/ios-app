@@ -9,8 +9,6 @@ class AddressViewController: UIViewController {
     
     private let cellReuseId = "address"
     
-    private lazy var deleteAction = UITableViewRowAction(style: .destructive, title: Localized.MENU_DELETE, handler: tableViewCommitDeleteAction)
-    
     private var asset: AssetItem!
     private var addresses = [Address]()
     private var searchResult = [Address]()
@@ -120,8 +118,8 @@ extension AddressViewController: UITableViewDataSource, UITableViewDelegate {
         return !isSearching
     }
     
-    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        return [deleteAction]
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        UISwipeActionsConfiguration(actions: [deleteContextualAction(forRowAt: indexPath)])
     }
     
 }
@@ -144,14 +142,18 @@ extension AddressViewController {
         }
     }
     
-    private func tableViewCommitDeleteAction(action: UITableViewRowAction, indexPath: IndexPath) {
-        if searchBoxView.textField.isFirstResponder {
-            searchBoxView.textField.resignFirstResponder()
+    private func deleteContextualAction(forRowAt indexPath: IndexPath) -> UIContextualAction {
+        UIContextualAction(style: .destructive, title: R.string.localizable.menu_delete()) { [weak self] (action, _, completionHandler: (Bool) -> Void) in
+            guard let self = self else {
+                return
+            }
+            if self.searchBoxView.textField.isFirstResponder {
+                self.searchBoxView.textField.resignFirstResponder()
+            }
+            let address = self.addresses[indexPath.row]
+            AddressWindow.instance().presentPopupControllerAnimated(action: .delete, asset: self.asset, addressRequest: nil, address: address, dismissCallback: nil)
+            completionHandler(true)
         }
-        let address = addresses[indexPath.row]
-        tableView.setEditing(false, animated: true)
-        
-        AddressWindow.instance().presentPopupControllerAnimated(action: .delete, asset: asset, addressRequest: nil, address: address, dismissCallback: nil)
     }
     
 }

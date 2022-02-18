@@ -6,20 +6,6 @@ class HiddenAssetViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     
     private var assets = [AssetItem]()
-
-    private lazy var assetAction: UITableViewRowAction = {
-        let action = UITableViewRowAction(style: .destructive, title: Localized.ACTION_SHOW, handler: { [weak self] (_, indexPath) in
-            guard let weakSelf = self else {
-                return
-            }
-            let assetId = weakSelf.assets[indexPath.row].assetId
-            weakSelf.assets.remove(at: indexPath.row)
-            weakSelf.tableView.deleteRows(at: [indexPath], with: .fade)
-            AppGroupUserDefaults.Wallet.hiddenAssetIds[assetId] = nil
-        })
-        action.backgroundColor = .theme
-        return action
-    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -79,6 +65,21 @@ class HiddenAssetViewController: UIViewController {
         }
     }
     
+    private func showAssetContextualAction(forRowAt indexPath: IndexPath) -> UIContextualAction {
+        let action = UIContextualAction(style: .destructive, title: R.string.localizable.action_show()) { [weak self] (action, _, completionHandler: (Bool) -> Void) in
+            guard let self = self else {
+                return
+            }
+            let assetId = self.assets[indexPath.row].assetId
+            self.assets.remove(at: indexPath.row)
+            self.tableView.deleteRows(at: [indexPath], with: .fade)
+            AppGroupUserDefaults.Wallet.hiddenAssetIds[assetId] = nil
+            completionHandler(true)
+        }
+        action.backgroundColor = .theme
+        return action
+    }
+    
 }
 
 extension HiddenAssetViewController: UITableViewDataSource, UITableViewDelegate {
@@ -99,8 +100,8 @@ extension HiddenAssetViewController: UITableViewDataSource, UITableViewDelegate 
         navigationController?.pushViewController(AssetViewController.instance(asset: assets[indexPath.row]), animated: true)
     }
     
-    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        return [assetAction]
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        UISwipeActionsConfiguration(actions: [showAssetContextualAction(forRowAt: indexPath)])
     }
     
 }

@@ -207,7 +207,7 @@ class ConversationInputViewController: UIViewController {
     
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
-        guard UIApplication.shared.statusBarOrientation.isPortrait else {
+        guard UIWindow.isPortrait else {
             return
         }
         let diff = view.safeAreaInsets.bottom - lastSafeAreaInsetsBottom
@@ -406,10 +406,9 @@ class ConversationInputViewController: UIViewController {
         if minimize {
             setPreferredContentHeightAnimated(.minimized)
         }
-        UIView.animate(withDuration: 0.5, animations: {
-            UIView.setAnimationCurve(.overdamped)
+        UIView.animate(withDuration: 0.5, delay: 0, options: .overdamped) {
             self.customInputContainerView.alpha = 0
-        }) { (_) in
+        } completion: { _ in
             self.customInputViewController = nil
         }
     }
@@ -919,8 +918,7 @@ extension ConversationInputViewController {
         customInputContainerView.alpha = 0
         customInputViewController = viewController
         customInputContainerView.layoutIfNeeded()
-        UIView.animate(withDuration: 0.5) {
-            UIView.setAnimationCurve(.overdamped)
+        UIView.animate(withDuration: 0.5, delay: 0, options: .overdamped) {
             self.customInputContainerView.alpha = 1
         }
     }
@@ -1001,32 +999,34 @@ extension ConversationInputViewController {
     }
     
     private func layoutForTextViewIsEmpty(_ isEmpty: Bool, animated: Bool) {
-        if animated {
-            UIView.beginAnimations(nil, context: nil)
-            UIView.setAnimationDuration(0.2)
+        func update() {
+            if isEmpty {
+                beginEditingTextViewTrailingConstraint.priority = .almostInexist
+                beginEditingRightActionsStackLeadingConstraint.priority = .almostInexist
+                endEditingTextViewTrailingConstraint.priority = .almostRequired
+                endEditingRightActionsStackTrailingConstraint.priority = .almostRequired
+                sendButton.alpha = 0
+                rightActionsStackView.alpha = 1
+                audioInputContainerView.alpha = 1
+                textViewRightAccessoryView.alpha = 1
+            } else {
+                beginEditingTextViewTrailingConstraint.priority = .almostRequired
+                beginEditingRightActionsStackLeadingConstraint.priority = .almostRequired
+                endEditingTextViewTrailingConstraint.priority = .almostInexist
+                endEditingRightActionsStackTrailingConstraint.priority = .almostInexist
+                sendButton.alpha = 1
+                rightActionsStackView.alpha = 0
+                audioInputContainerView.alpha = 0
+                textViewRightAccessoryView.alpha = 0
+            }
+            inputBarView.layoutIfNeeded()
         }
-        if isEmpty {
-            beginEditingTextViewTrailingConstraint.priority = .almostInexist
-            beginEditingRightActionsStackLeadingConstraint.priority = .almostInexist
-            endEditingTextViewTrailingConstraint.priority = .almostRequired
-            endEditingRightActionsStackTrailingConstraint.priority = .almostRequired
-            sendButton.alpha = 0
-            rightActionsStackView.alpha = 1
-            audioInputContainerView.alpha = 1
-            textViewRightAccessoryView.alpha = 1
+        if animated {
+            UIView.animate(withDuration: 0.2) {
+                update()
+            }
         } else {
-            beginEditingTextViewTrailingConstraint.priority = .almostRequired
-            beginEditingRightActionsStackLeadingConstraint.priority = .almostRequired
-            endEditingTextViewTrailingConstraint.priority = .almostInexist
-            endEditingRightActionsStackTrailingConstraint.priority = .almostInexist
-            sendButton.alpha = 1
-            rightActionsStackView.alpha = 0
-            audioInputContainerView.alpha = 0
-            textViewRightAccessoryView.alpha = 0
-        }
-        inputBarView.layoutIfNeeded()
-        if animated {
-            UIView.commitAnimations()
+            update()
         }
     }
     

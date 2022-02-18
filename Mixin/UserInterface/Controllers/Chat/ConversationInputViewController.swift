@@ -207,7 +207,7 @@ class ConversationInputViewController: UIViewController {
     
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
-        guard UIWindow.isPortrait else {
+        guard UIApplication.shared.isPortrait else {
             return
         }
         let diff = view.safeAreaInsets.bottom - lastSafeAreaInsetsBottom

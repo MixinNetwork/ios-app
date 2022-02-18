@@ -108,6 +108,18 @@ extension UIApplication {
     var keyWindow: UIWindow? {
         windows.first { $0.isKeyWindow }
     }
+    
+    var statusBarHeight: CGFloat {
+        keyWindow?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0
+    }
+    
+    var isLandscape: Bool {
+        keyWindow?.windowScene?.interfaceOrientation.isLandscape ?? false
+    }
+    
+    var isPortrait: Bool {
+        keyWindow?.windowScene?.interfaceOrientation.isPortrait ?? false
+    }
         
 }
 

@@ -17,7 +17,7 @@ class GalleryView: UIView {
     }
     
     func orientationDidChanged() {
-        scrollView?.isScrollEnabled = UIWindow.isPortrait
+        scrollView?.isScrollEnabled = UIApplication.shared.isPortrait
     }
     
 }

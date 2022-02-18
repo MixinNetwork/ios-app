@@ -2177,7 +2177,7 @@ extension ConversationViewController {
     
     private func frameOfPhotoRepresentableCell(_ cell: PhotoRepresentableMessageCell) -> CGRect {
         var rect = cell.contentImageView.convert(cell.contentImageView.bounds, to: view)
-        if UIWindow.statusBarHeight == StatusBarHeight.inCall {
+        if UIApplication.shared.statusBarHeight == StatusBarHeight.inCall {
             rect.origin.y += (StatusBarHeight.inCall - StatusBarHeight.normal)
         }
         return rect

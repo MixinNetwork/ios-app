@@ -72,9 +72,7 @@ final class GalleryVideoControlView: UIView, GalleryAnimatable {
         self.playControlsHidden = playControlsHidden
         self.otherControlsHidden = otherControlsHidden
         if animated {
-            UIView.animate(withDuration: animationDuration) {
-                self.updateControls()
-            }
+            UIView.animate(withDuration: animationDuration, animations: updateControls)
         } else {
             updateControls()
         }

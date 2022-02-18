@@ -92,7 +92,10 @@ class FullscreenPopupViewController: UIViewController {
         }
         isBeingDismissedAsChild = true
         parent.setNeedsStatusBarAppearanceUpdate()
-        let animationCompletion = {
+        let layout = {
+            self.view.center.y = parent.view.bounds.height * 3 / 2
+        }
+        let layoutCompletion = { (_: Bool) in
             self.willMove(toParent: nil)
             self.view.removeFromSuperview()
             self.removeFromParent()
@@ -102,14 +105,14 @@ class FullscreenPopupViewController: UIViewController {
             self.popupDidDismissAsChild()
         }
         if animated {
-            UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
-                self.view.center.y = parent.view.bounds.height * 3 / 2
-            } completion: { _ in
-                animationCompletion()
-            }
+            UIView.animate(withDuration: 0.5,
+                           delay: 0,
+                           options: .overdampedCurve,
+                           animations: layout,
+                           completion: layoutCompletion)
         } else {
-            view.center.y = parent.view.bounds.height * 3 / 2
-            animationCompletion()
+            layout()
+            layoutCompletion(true)
         }
     }
     

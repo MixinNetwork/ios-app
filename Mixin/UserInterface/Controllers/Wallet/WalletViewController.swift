@@ -167,7 +167,7 @@ extension WalletViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        UISwipeActionsConfiguration(actions: [hideAssetContextualAction(forRowAt: indexPath)])
+        UISwipeActionsConfiguration(actions: [hideAssetAction(forRowAt: indexPath)])
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -178,7 +178,7 @@ extension WalletViewController: UITableViewDelegate {
 
 extension WalletViewController {
     
-    private func hideAssetContextualAction(forRowAt indexPath: IndexPath) -> UIContextualAction {
+    private func hideAssetAction(forRowAt indexPath: IndexPath) -> UIContextualAction {
         let action = UIContextualAction(style: .destructive, title: R.string.localizable.action_hide()) { [weak self] (action, _, completionHandler: (Bool) -> Void) in
             guard let self = self else {
                 return

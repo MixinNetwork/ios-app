@@ -65,7 +65,7 @@ class HiddenAssetViewController: UIViewController {
         }
     }
     
-    private func showAssetContextualAction(forRowAt indexPath: IndexPath) -> UIContextualAction {
+    private func showAssetAction(forRowAt indexPath: IndexPath) -> UIContextualAction {
         let action = UIContextualAction(style: .destructive, title: R.string.localizable.action_show()) { [weak self] (action, _, completionHandler: (Bool) -> Void) in
             guard let self = self else {
                 return
@@ -101,7 +101,7 @@ extension HiddenAssetViewController: UITableViewDataSource, UITableViewDelegate 
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        UISwipeActionsConfiguration(actions: [showAssetContextualAction(forRowAt: indexPath)])
+        UISwipeActionsConfiguration(actions: [showAssetAction(forRowAt: indexPath)])
     }
     
 }

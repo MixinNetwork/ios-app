@@ -207,9 +207,10 @@ class CallViewController: ResizablePopupViewController {
             self.view.backgroundColor = .black.withAlphaComponent(0.4)
         }
         if animated {
-            UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
-                layout()
-            }
+            UIView.animate(withDuration: 0.5,
+                           delay: 0,
+                           options: .overdampedCurve,
+                           animations: layout)
         } else {
             layout()
         }

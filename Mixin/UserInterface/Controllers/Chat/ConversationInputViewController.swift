@@ -999,7 +999,8 @@ extension ConversationInputViewController {
     }
     
     private func layoutForTextViewIsEmpty(_ isEmpty: Bool, animated: Bool) {
-        func update() {
+        
+        func layout() {
             if isEmpty {
                 beginEditingTextViewTrailingConstraint.priority = .almostInexist
                 beginEditingRightActionsStackLeadingConstraint.priority = .almostInexist
@@ -1021,12 +1022,11 @@ extension ConversationInputViewController {
             }
             inputBarView.layoutIfNeeded()
         }
+        
         if animated {
-            UIView.animate(withDuration: 0.2) {
-                update()
-            }
+            UIView.animate(withDuration: 0.2, animations: layout)
         } else {
-            update()
+            layout()
         }
     }
     

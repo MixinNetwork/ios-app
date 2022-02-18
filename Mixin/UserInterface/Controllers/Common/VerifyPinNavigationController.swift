@@ -33,9 +33,7 @@ class VerifyPinNavigationController: LoneBackButtonNavigationController {
             dismissButton.alpha = dismissButtonAlpha
         }
         if animated {
-            UIView.animate(withDuration: 0.25) {
-                update()
-            }
+            UIView.animate(withDuration: 0.25, animations: update)
         } else {
             update()
         }

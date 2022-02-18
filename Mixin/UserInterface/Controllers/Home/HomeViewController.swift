@@ -522,9 +522,9 @@ extension HomeViewController: UITableViewDelegate {
         let conversation = conversations[indexPath.row]
         let actions: [UIContextualAction]
         if conversation.pinTime == nil {
-            actions = [deleteContextualAction(forRowAt: indexPath), pinContextualAction(forRowAt: indexPath)]
+            actions = [deleteAction(forRowAt: indexPath), pinAction(forRowAt: indexPath)]
         } else {
-            actions = [deleteContextualAction(forRowAt: indexPath), unpinContextualAction(forRowAt: indexPath)]
+            actions = [deleteAction(forRowAt: indexPath), unpinAction(forRowAt: indexPath)]
         }
         return UISwipeActionsConfiguration(actions: actions)
     }
@@ -898,27 +898,27 @@ extension HomeViewController {
         }
     }
     
-    private func deleteContextualAction(forRowAt indexPath: IndexPath) -> UIContextualAction {
+    private func deleteAction(forRowAt indexPath: IndexPath) -> UIContextualAction {
         UIContextualAction(style: .destructive, title: R.string.localizable.menu_delete()) { [weak self] (action, _, completionHandler: (Bool) -> Void) in
             self?.tableViewCommitDeleteAction(action: action, indexPath: indexPath)
             completionHandler(true)
         }
     }
     
-    private func pinContextualAction(forRowAt indexPath: IndexPath) -> UIContextualAction {
-        let contextualAction = UIContextualAction(style: .destructive, title: R.string.localizable.home_cell_action_pin()) { [weak self] (action, _, completionHandler: (Bool) -> Void) in
+    private func pinAction(forRowAt indexPath: IndexPath) -> UIContextualAction {
+        let action = UIContextualAction(style: .destructive, title: R.string.localizable.home_cell_action_pin()) { [weak self] (action, _, completionHandler: (Bool) -> Void) in
             self?.tableViewCommitPinAction(action: action, indexPath: indexPath, completionHandler: completionHandler)
         }
-        contextualAction.backgroundColor = .theme
-        return contextualAction
+        action.backgroundColor = .theme
+        return action
     }
     
-    private func unpinContextualAction(forRowAt indexPath: IndexPath) -> UIContextualAction {
-        let contextualAction = UIContextualAction(style: .normal, title: R.string.localizable.home_cell_action_unpin()) { [weak self] (action, _, completionHandler: (Bool) -> Void) in
+    private func unpinAction(forRowAt indexPath: IndexPath) -> UIContextualAction {
+        let action = UIContextualAction(style: .normal, title: R.string.localizable.home_cell_action_unpin()) { [weak self] (action, _, completionHandler: (Bool) -> Void) in
             self?.tableViewCommitPinAction(action: action, indexPath: indexPath, completionHandler: completionHandler)
         }
-        contextualAction.backgroundColor = .theme
-        return contextualAction
+        action.backgroundColor = .theme
+        return action
     }
     
 }

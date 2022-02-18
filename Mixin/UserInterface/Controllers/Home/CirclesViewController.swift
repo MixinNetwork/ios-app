@@ -154,7 +154,7 @@ extension CirclesViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        UISwipeActionsConfiguration(actions: [deleteContextualAction(forRowAt: indexPath), editContextualAction(forRowAt: indexPath)])
+        UISwipeActionsConfiguration(actions: [deleteAction(forRowAt: indexPath), editAction(forRowAt: indexPath)])
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -360,15 +360,15 @@ extension CirclesViewController {
         }
         currentCircleIndexPath = indexPath
     }
- 
-    private func deleteContextualAction(forRowAt indexPath: IndexPath) -> UIContextualAction {
+    
+    private func deleteAction(forRowAt indexPath: IndexPath) -> UIContextualAction {
         UIContextualAction(style: .destructive, title: R.string.localizable.menu_delete()) { [weak self] (action, _, completionHandler: (Bool) -> Void) in
             self?.tableViewCommitDeleteAction(action: action, indexPath: indexPath)
             completionHandler(true)
         }
     }
     
-    private func editContextualAction(forRowAt indexPath: IndexPath) -> UIContextualAction {
+    private func editAction(forRowAt indexPath: IndexPath) -> UIContextualAction {
         let action = UIContextualAction(style: .normal, title: R.string.localizable.menu_edit()) { [weak self] (action, _, completionHandler: (Bool) -> Void) in
             self?.tableViewCommitEditAction(action: action, indexPath: indexPath)
             completionHandler(true)

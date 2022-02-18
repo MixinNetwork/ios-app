@@ -119,7 +119,7 @@ extension AddressViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        UISwipeActionsConfiguration(actions: [deleteContextualAction(forRowAt: indexPath)])
+        UISwipeActionsConfiguration(actions: [deleteAction(forRowAt: indexPath)])
     }
     
 }
@@ -142,7 +142,7 @@ extension AddressViewController {
         }
     }
     
-    private func deleteContextualAction(forRowAt indexPath: IndexPath) -> UIContextualAction {
+    private func deleteAction(forRowAt indexPath: IndexPath) -> UIContextualAction {
         UIContextualAction(style: .destructive, title: R.string.localizable.menu_delete()) { [weak self] (action, _, completionHandler: (Bool) -> Void) in
             guard let self = self else {
                 return

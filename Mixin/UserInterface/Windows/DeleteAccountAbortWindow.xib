@@ -16,7 +16,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1Vo-0t-6vQ" customClass="TopRoundedView" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="0.0" y="399" width="414" height="497"/>
+                    <rect key="frame" x="0.0" y="390.5" width="414" height="505.5"/>
                     <subviews>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Setting/ic_delete_account" translatesAutoresizingMaskIntoConstraints="NO" id="m97-62-oZ6">
                             <rect key="frame" x="172" y="70" width="70" height="72"/>
@@ -49,12 +49,11 @@
                             </userDefinedRuntimeAttributes>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wvn-2g-8pH" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="162.5" y="345.5" width="89.5" height="33.5"/>
+                            <rect key="frame" x="148" y="345.5" width="118" height="44"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
                             <inset key="contentEdgeInsets" minX="26" minY="11" maxX="26" maxY="13"/>
-                            <state key="normal" title="Button"/>
-                            <buttonConfiguration key="configuration" style="plain" title="Continue">
-                                <fontDescription key="titleFontDescription" type="system" pointSize="16"/>
-                            </buttonConfiguration>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" title="Continue"/>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
                             </userDefinedRuntimeAttributes>
@@ -63,12 +62,11 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SsQ-Pa-U23">
-                            <rect key="frame" x="170" y="399" width="74" height="34"/>
+                            <rect key="frame" x="182" y="409.5" width="50" height="32"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
                             <color key="tintColor" name="theme"/>
-                            <state key="normal" title="Button"/>
-                            <buttonConfiguration key="configuration" style="plain" title="Cancel">
-                                <fontDescription key="titleFontDescription" type="system" pointSize="16"/>
-                            </buttonConfiguration>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" title="Cancel"/>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="dialog_button_cancel"/>
                                 <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>

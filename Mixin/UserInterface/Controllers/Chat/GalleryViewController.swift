@@ -95,13 +95,11 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         NotificationCenter.default.removeObserver(self)
     }
     
-    override func loadView() {
-        view = GalleryView()
-    }
-    
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        (view as? GalleryView)?.orientationDidChanged()
+        if let scrollView = pageViewController.view.subviews.first(where: { $0 is UIScrollView }) as? UIScrollView {
+            scrollView.isScrollEnabled = UIApplication.shared.isPortrait
+        }
     }
     
     override func viewDidLoad() {
@@ -118,9 +116,6 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         pageViewController.didMove(toParent: self)
         pageViewController.dataSource = modelController
         pageViewController.delegate = self
-        if let scrollView = pageViewController.view.subviews.first(where: { $0 is UIScrollView }) {
-            (view as? GalleryView)?.scrollView = scrollView as? UIScrollView
-        }
         
         panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panAction(_:)))
         panRecognizer.delegate = self

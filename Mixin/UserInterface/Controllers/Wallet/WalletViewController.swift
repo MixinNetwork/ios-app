@@ -15,14 +15,6 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
     private var isSearchViewControllerPreloaded = false
     private var assets = [AssetItem]()
     
-    private lazy var assetActions: [UITableViewRowAction] = {
-        let action = UITableViewRowAction(style: .destructive, title: Localized.ACTION_HIDE, handler: { [weak self] (_, indexPath) in
-            self?.confirmHideAsset(at: indexPath)
-        })
-        action.backgroundColor = .theme
-        return [action]
-    }()
-    
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
@@ -105,9 +97,8 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
                                                                   constant: -searchAppearingAnimationDistance)
         constraint.isActive = true
         controller.didMove(toParent: self)
-        self.view.layoutIfNeeded()
-        UIView.animate(withDuration: 0.5) {
-            UIView.setAnimationCurve(.overdamped)
+        view.layoutIfNeeded()
+        UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
             controller.view.alpha = 1
             constraint.constant = 0
             self.view.layoutIfNeeded()
@@ -132,12 +123,11 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
         guard let searchViewController = searchViewController else {
             return
         }
-        UIView.animate(withDuration: 0.5) {
-            UIView.setAnimationCurve(.overdamped)
+        UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
             searchViewController.view.alpha = 0
             self.searchCenterYConstraint?.constant = -self.searchAppearingAnimationDistance
             self.view.layoutIfNeeded()
-        } completion: { (_) in
+        } completion: { _ in
             searchViewController.willMove(toParent: nil)
             searchViewController.view.removeFromSuperview()
             searchViewController.removeFromParent()
@@ -176,8 +166,8 @@ extension WalletViewController: UITableViewDelegate {
         navigationController?.pushViewController(vc, animated: true)
     }
     
-    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        assetActions
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        UISwipeActionsConfiguration(actions: [hideAssetAction(forRowAt: indexPath)])
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -187,6 +177,24 @@ extension WalletViewController: UITableViewDelegate {
 }
 
 extension WalletViewController {
+    
+    private func hideAssetAction(forRowAt indexPath: IndexPath) -> UIContextualAction {
+        let action = UIContextualAction(style: .destructive, title: R.string.localizable.action_hide()) { [weak self] (action, _, completionHandler: (Bool) -> Void) in
+            guard let self = self else {
+                return
+            }
+            let asset = self.assets[indexPath.row]
+            let alert = UIAlertController(title: R.string.localizable.wallet_hide_asset_confirmation(asset.symbol), message: nil, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: R.string.localizable.action_hide(), style: .default, handler: { (_) in
+                self.hideAsset(of: asset.assetId)
+            }))
+            self.present(alert, animated: true, completion: nil)
+            completionHandler(true)
+        }
+        action.backgroundColor = .theme
+        return action
+    }
     
     private func updateTableViewContentInset() {
         if view.safeAreaInsets.bottom < 1 {
@@ -218,16 +226,6 @@ extension WalletViewController {
         let now = Date()
         let showSnowfall = now.isChristmas || now.isChineseNewYear
         tableHeaderView.showSnowfallEffect = showSnowfall
-    }
-    
-    private func confirmHideAsset(at indexPath: IndexPath) {
-        let asset = assets[indexPath.row]
-        let alert = UIAlertController(title: R.string.localizable.wallet_hide_asset_confirmation(asset.symbol), message: nil, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: R.string.localizable.action_hide(), style: .default, handler: { (_) in
-            self.hideAsset(of: asset.assetId)
-        }))
-        present(alert, animated: true, completion: nil)
     }
     
     private func hideAsset(of assetId: String) {

@@ -148,8 +148,7 @@ final class UserProfileViewController: ProfileViewController {
         avatarPreviewImageView = imageView
         view.isUserInteractionEnabled = false
         hideContentConstraint.priority = .defaultHigh
-        UIView.animate(withDuration: 0.5, animations: {
-            UIView.setAnimationCurve(.overdamped)
+        UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
             self.view.layoutIfNeeded()
             let width = window.bounds.width - 28 * 2
             imageView.bounds = CGRect(x: 0, y: 0, width: width, height: width)
@@ -158,7 +157,7 @@ final class UserProfileViewController: ProfileViewController {
             backgroundView.effect = .regularBlur
             dismissButton.alpha = 1
             imageView.alpha = 1
-        })
+        }
     }
     
     override func updateMuteInterval(inSeconds interval: Int64) {
@@ -210,9 +209,7 @@ final class UserProfileViewController: ProfileViewController {
         becomeFirstResponder()
         subtitleLabel.highlightIdentityNumber = true
         if let highlightedRect = subtitleLabel.highlightedRect {
-            let menu = UIMenuController.shared
-            menu.setTargetRect(highlightedRect, in: subtitleLabel)
-            menu.setMenuVisible(true, animated: true)
+            UIMenuController.shared.showMenu(from: subtitleLabel, rect: highlightedRect)
             AppDelegate.current.mainWindow.addDismissMenuResponder()
         }
     }

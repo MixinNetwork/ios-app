@@ -20,18 +20,6 @@ class CirclesViewController: UIViewController {
         }
         return view
     }()
-    private lazy var deleteAction = {
-        UITableViewRowAction(style: .destructive,
-                             title: Localized.MENU_DELETE,
-                             handler: tableViewCommitDeleteAction(action:indexPath:))
-    }()
-    private lazy var editAction: UITableViewRowAction = {
-        let action = UITableViewRowAction(style: .normal,
-                                          title: R.string.localizable.menu_edit(),
-                                          handler: tableViewCommitEditAction(action:indexPath:))
-        action.backgroundColor = .theme
-        return action
-    }()
     private lazy var editNameController = AlertEditorController(presentingViewController: self)
     
     private var embeddedCircles = CircleDAO.shared.embeddedCircles()
@@ -165,8 +153,8 @@ extension CirclesViewController: UITableViewDelegate {
         indexPath.section == Section.user.rawValue
     }
     
-    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        [deleteAction, editAction]
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        UISwipeActionsConfiguration(actions: [deleteAction(forRowAt: indexPath), editAction(forRowAt: indexPath)])
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -183,7 +171,7 @@ extension CirclesViewController {
         case user
     }
     
-    private func tableViewCommitEditAction(action: UITableViewRowAction, indexPath: IndexPath) {
+    private func tableViewCommitEditAction(action: UIContextualAction, indexPath: IndexPath) {
         let circle = userCircles[indexPath.row]
         let editName = R.string.localizable.circle_action_edit_name()
         let change = R.string.localizable.dialog_button_change()
@@ -210,7 +198,7 @@ extension CirclesViewController {
         present(sheet, animated: true, completion: nil)
     }
     
-    private func tableViewCommitDeleteAction(action: UITableViewRowAction, indexPath: IndexPath) {
+    private func tableViewCommitDeleteAction(action: UIContextualAction, indexPath: IndexPath) {
         let circle = userCircles[indexPath.row]
         let delete = R.string.localizable.circle_action_delete()
         let cancel = R.string.localizable.dialog_button_cancel()
@@ -371,6 +359,22 @@ extension CirclesViewController {
             cell.isCurrent = true
         }
         currentCircleIndexPath = indexPath
+    }
+    
+    private func deleteAction(forRowAt indexPath: IndexPath) -> UIContextualAction {
+        UIContextualAction(style: .destructive, title: R.string.localizable.menu_delete()) { [weak self] (action, _, completionHandler: (Bool) -> Void) in
+            self?.tableViewCommitDeleteAction(action: action, indexPath: indexPath)
+            completionHandler(true)
+        }
+    }
+    
+    private func editAction(forRowAt indexPath: IndexPath) -> UIContextualAction {
+        let action = UIContextualAction(style: .normal, title: R.string.localizable.menu_edit()) { [weak self] (action, _, completionHandler: (Bool) -> Void) in
+            self?.tableViewCommitEditAction(action: action, indexPath: indexPath)
+            completionHandler(true)
+        }
+        action.backgroundColor = .theme
+        return action
     }
     
 }

@@ -6,7 +6,7 @@ class ProfileDescriptionLabel: TextLabel {
         super.touchesBegan(touches, with: event)
         if selectedLink == nil {
             if UIMenuController.shared.isMenuVisible {
-                UIMenuController.shared.setMenuVisible(false, animated: true)
+                UIMenuController.shared.hideMenu()
             } else {
                 perform(#selector(showCopyMenu), with: nil, afterDelay: longPressDuration)
             }
@@ -19,8 +19,7 @@ class ProfileDescriptionLabel: TextLabel {
     
     @objc private func showCopyMenu() {
         becomeFirstResponder()
-        UIMenuController.shared.setTargetRect(bounds, in: self)
-        UIMenuController.shared.setMenuVisible(true, animated: true)
+        UIMenuController.shared.showMenu(from: self, rect: bounds)
     }
     
     override func copy(_ sender: Any?) {

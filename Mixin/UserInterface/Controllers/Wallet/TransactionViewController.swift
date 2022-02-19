@@ -99,9 +99,7 @@ class TransactionViewController: UIViewController {
             return
         }
         becomeFirstResponder()
-        let menu = UIMenuController.shared
-        menu.setTargetRect(amountLabel.bounds, in: amountLabel)
-        menu.setMenuVisible(true, animated: true)
+        UIMenuController.shared.showMenu(from: amountLabel, rect: amountLabel.bounds)
         AppDelegate.current.mainWindow.addDismissMenuResponder()
     }
     

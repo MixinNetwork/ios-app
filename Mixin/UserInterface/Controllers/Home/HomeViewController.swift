@@ -78,17 +78,6 @@ class HomeViewController: UIViewController {
         bulletinContentViewIfLoaded = view
         return view
     }()
-    private lazy var deleteAction = UITableViewRowAction(style: .destructive, title: Localized.MENU_DELETE, handler: tableViewCommitDeleteAction)
-    private lazy var pinAction: UITableViewRowAction = {
-        let action = UITableViewRowAction(style: .normal, title: Localized.HOME_CELL_ACTION_PIN, handler: tableViewCommitPinAction)
-        action.backgroundColor = .theme
-        return action
-    }()
-    private lazy var unpinAction: UITableViewRowAction = {
-        let action = UITableViewRowAction(style: .normal, title: Localized.HOME_CELL_ACTION_UNPIN, handler: tableViewCommitPinAction)
-        action.backgroundColor = .theme
-        return action
-    }()
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -529,13 +518,15 @@ extension HomeViewController: UITableViewDelegate {
         fetchConversations()
     }
     
-    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let conversation = conversations[indexPath.row]
+        let actions: [UIContextualAction]
         if conversation.pinTime == nil {
-            return [deleteAction, pinAction]
+            actions = [deleteAction(forRowAt: indexPath), pinAction(forRowAt: indexPath)]
         } else {
-            return [deleteAction, unpinAction]
+            actions = [deleteAction(forRowAt: indexPath), unpinAction(forRowAt: indexPath)]
         }
+        return UISwipeActionsConfiguration(actions: actions)
     }
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -672,7 +663,7 @@ extension HomeViewController {
         guideView.isHidden = false
     }
     
-    private func tableViewCommitPinAction(action: UITableViewRowAction, indexPath: IndexPath) {
+    private func tableViewCommitPinAction(action: UIContextualAction, indexPath: IndexPath, completionHandler: (Bool) -> Void) {
         let dao = ConversationDAO.shared
         let conversation = conversations[indexPath.row]
         let destinationIndex: Int
@@ -698,10 +689,11 @@ extension HomeViewController {
         if let cell = tableView.cellForRow(at: destinationIndexPath) as? ConversationCell {
             cell.render(item: conversation)
         }
+        completionHandler(true)
         tableView.setEditing(false, animated: true)
     }
     
-    private func tableViewCommitDeleteAction(action: UITableViewRowAction, indexPath: IndexPath) {
+    private func tableViewCommitDeleteAction(action: UIContextualAction, indexPath: IndexPath) {
         let conversation = conversations[indexPath.row]
         let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
@@ -904,6 +896,29 @@ extension HomeViewController {
         } else if checkWalletBalanceForEmergencyContactBulletin {
             showEmergencyContactBulletinIfNeeded()
         }
+    }
+    
+    private func deleteAction(forRowAt indexPath: IndexPath) -> UIContextualAction {
+        UIContextualAction(style: .destructive, title: R.string.localizable.menu_delete()) { [weak self] (action, _, completionHandler: (Bool) -> Void) in
+            self?.tableViewCommitDeleteAction(action: action, indexPath: indexPath)
+            completionHandler(true)
+        }
+    }
+    
+    private func pinAction(forRowAt indexPath: IndexPath) -> UIContextualAction {
+        let action = UIContextualAction(style: .destructive, title: R.string.localizable.home_cell_action_pin()) { [weak self] (action, _, completionHandler: (Bool) -> Void) in
+            self?.tableViewCommitPinAction(action: action, indexPath: indexPath, completionHandler: completionHandler)
+        }
+        action.backgroundColor = .theme
+        return action
+    }
+    
+    private func unpinAction(forRowAt indexPath: IndexPath) -> UIContextualAction {
+        let action = UIContextualAction(style: .normal, title: R.string.localizable.home_cell_action_unpin()) { [weak self] (action, _, completionHandler: (Bool) -> Void) in
+            self?.tableViewCommitPinAction(action: action, indexPath: indexPath, completionHandler: completionHandler)
+        }
+        action.backgroundColor = .theme
+        return action
     }
     
 }

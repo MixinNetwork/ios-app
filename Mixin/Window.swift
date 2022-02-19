@@ -43,7 +43,7 @@ class Window: UIWindow {
     }
     
     @objc private func dismissMenu(_ sender: Any) {
-        UIMenuController.shared.setMenuVisible(false, animated: true)
+        UIMenuController.shared.hideMenu()
     }
     
     @objc private func menuControllerWillHideMenu(_ notification: Notification) {

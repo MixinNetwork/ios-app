@@ -106,7 +106,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         let keyboardHeight = view.frame.height - keyboardFrame.origin.y
         continueWrapperBottomConstraint.constant = keyboardHeight
         scrollView.contentInset.bottom = keyboardHeight + continueWrapperView.frame.height
-        scrollView.scrollIndicatorInsets.bottom = keyboardHeight
+        scrollView.verticalScrollIndicatorInsets.bottom = keyboardHeight
         view.layoutIfNeeded()
         if !viewHasAppeared, ScreenHeight.current <= .short {
             scrollView.contentOffset.y = opponentImageView.frame.maxY

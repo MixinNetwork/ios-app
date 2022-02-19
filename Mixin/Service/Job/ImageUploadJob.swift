@@ -81,13 +81,13 @@ class ImageUploadJob: AttachmentUploadJob {
         var imageData: Data?
         if UTTypeConformsTo(uti, kUTTypeGIF) {
             extensionName = ExtensionName.gif.rawValue
-            PHImageManager.default().requestImageData(for: asset, options: options) { (data, uti, orientation, info) in
+            PHImageManager.default().requestImageDataAndOrientation(for: asset, options: options) { (data, uti, orientation, info) in
                 imageData = data
             }
         } else if imageWithRatioMaybeAnArticle(CGSize(width: asset.pixelWidth, height: asset.pixelHeight)) {
             extensionName = ExtensionName.jpeg.rawValue
             if UTTypeConformsTo(uti, kUTTypeJPEG) {
-                PHImageManager.default().requestImageData(for: asset, options: options) { (data, _, _, _) in
+                PHImageManager.default().requestImageDataAndOrientation(for: asset, options: options) { (data, _, _, _) in
                     imageData = data
                 }
             } else {

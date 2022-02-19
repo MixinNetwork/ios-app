@@ -207,10 +207,10 @@ class CallViewController: ResizablePopupViewController {
             self.view.backgroundColor = .black.withAlphaComponent(0.4)
         }
         if animated {
-            UIView.animate(withDuration: 0.5) {
-                UIView.setAnimationCurve(.overdamped)
-                layout()
-            }
+            UIView.animate(withDuration: 0.5,
+                           delay: 0,
+                           options: .overdampedCurve,
+                           animations: layout)
         } else {
             layout()
         }
@@ -223,8 +223,7 @@ class CallViewController: ResizablePopupViewController {
         isShowingContentView = false
         hideContentViewConstraint.priority = .defaultHigh
         showContentViewConstraint.priority = .defaultLow
-        UIView.animate(withDuration: 0.5) {
-            UIView.setAnimationCurve(.overdamped)
+        UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
             self.view.layoutIfNeeded()
             self.view.backgroundColor = .black.withAlphaComponent(0)
         } completion: { _ in

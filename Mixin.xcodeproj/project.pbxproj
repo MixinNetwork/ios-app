@@ -240,7 +240,6 @@
 		7B81BF2922893F8B00266A77 /* GroupParticipantCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B81BF2722893F8B00266A77 /* GroupParticipantCell.xib */; };
 		7B81D91423E93ECA0031E945 /* QuotedMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B81D91323E93ECA0031E945 /* QuotedMessageView.swift */; };
 		7B81D91623E93F470031E945 /* QuotedMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B81D91523E93F470031E945 /* QuotedMessageViewModel.swift */; };
-		7B81DD6822EACF7500A36186 /* GalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B81DD6722EACF7400A36186 /* GalleryView.swift */; };
 		7B8261D124D9548E00A39635 /* PINVerificationFailureHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8261D024D9548E00A39635 /* PINVerificationFailureHandler.swift */; };
 		7B833E9922C4904F0063929D /* AppLoadingIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B833E9822C4904F0063929D /* AppLoadingIndicatorView.swift */; };
 		7B833E9C22C4AED20063929D /* ic_app_loading@2x.webp in Resources */ = {isa = PBXBuildFile; fileRef = 7B833E9A22C4AEB90063929D /* ic_app_loading@2x.webp */; };
@@ -551,6 +550,7 @@
 		7C0E15E1270053AC002FC718 /* UnknownURLWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C0E15E0270053AC002FC718 /* UnknownURLWindow.xib */; };
 		7C14CFC126CA35CF0094AF4A /* StaticMessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C14CFBF26CA35CF0094AF4A /* StaticMessagesViewController.swift */; };
 		7C14CFC226CA35CF0094AF4A /* StaticMessagesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C14CFC026CA35CF0094AF4A /* StaticMessagesView.xib */; };
+		7C1686BB27BDF1D5004393DD /* StickersStoreBannerFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1686BA27BDF1D5004393DD /* StickersStoreBannerFlowLayout.swift */; };
 		7C1A6C4326C6580600A1D6CE /* StickerPreviewItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1A6C4226C6580600A1D6CE /* StickerPreviewItemCell.swift */; };
 		7C1EDAB42772FF8B00193917 /* VerifyNumberContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1EDAB32772FF8B00193917 /* VerifyNumberContext.swift */; };
 		7C2475C727795BC100112A30 /* DeleteAccountTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2475C627795BC100112A30 /* DeleteAccountTableHeaderView.swift */; };
@@ -592,7 +592,6 @@
 		7CB17B642771602A00CF4C94 /* DeleteAccountConfirmWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB17B632771602A00CF4C94 /* DeleteAccountConfirmWindow.swift */; };
 		7CB17B662771608400CF4C94 /* DeleteAccountConfirmWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CB17B652771608400CF4C94 /* DeleteAccountConfirmWindow.xib */; };
 		7CBD2EFA268FF6BB00AA0847 /* HomeAppsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBD2EF9268FF6BB00AA0847 /* HomeAppsStorage.swift */; };
-		7CC2BDB926A7CAD6001749B1 /* StickersStoreBannerFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC2BDB826A7CAD6001749B1 /* StickersStoreBannerFlowLayout.swift */; };
 		7CC3B1A026C21F7E0018B0D1 /* ScriptMessageProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC3B19F26C21F7E0018B0D1 /* ScriptMessageProxy.swift */; };
 		7CC730502745F95D002780F5 /* StickerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC7304F2745F95D002780F5 /* StickerStore.swift */; };
 		7CE3A25C2771A8AB006BE765 /* DeleteAccountVerifyCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE3A25B2771A8AB006BE765 /* DeleteAccountVerifyCodeViewController.swift */; };
@@ -1205,7 +1204,6 @@
 		7B81BF2722893F8B00266A77 /* GroupParticipantCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GroupParticipantCell.xib; sourceTree = "<group>"; };
 		7B81D91323E93ECA0031E945 /* QuotedMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuotedMessageView.swift; sourceTree = "<group>"; };
 		7B81D91523E93F470031E945 /* QuotedMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuotedMessageViewModel.swift; sourceTree = "<group>"; };
-		7B81DD6722EACF7400A36186 /* GalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryView.swift; sourceTree = "<group>"; };
 		7B8261D024D9548E00A39635 /* PINVerificationFailureHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINVerificationFailureHandler.swift; sourceTree = "<group>"; };
 		7B833E9822C4904F0063929D /* AppLoadingIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLoadingIndicatorView.swift; sourceTree = "<group>"; };
 		7B833E9A22C4AEB90063929D /* ic_app_loading@2x.webp */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ic_app_loading@2x.webp"; sourceTree = "<group>"; };
@@ -1520,6 +1518,7 @@
 		7C0E15E0270053AC002FC718 /* UnknownURLWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UnknownURLWindow.xib; sourceTree = "<group>"; };
 		7C14CFBF26CA35CF0094AF4A /* StaticMessagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticMessagesViewController.swift; sourceTree = "<group>"; };
 		7C14CFC026CA35CF0094AF4A /* StaticMessagesView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StaticMessagesView.xib; sourceTree = "<group>"; };
+		7C1686BA27BDF1D5004393DD /* StickersStoreBannerFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StickersStoreBannerFlowLayout.swift; sourceTree = "<group>"; };
 		7C1A6C4226C6580600A1D6CE /* StickerPreviewItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerPreviewItemCell.swift; sourceTree = "<group>"; };
 		7C1EDAB32772FF8B00193917 /* VerifyNumberContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyNumberContext.swift; sourceTree = "<group>"; };
 		7C2475C627795BC100112A30 /* DeleteAccountTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountTableHeaderView.swift; sourceTree = "<group>"; };
@@ -1561,7 +1560,6 @@
 		7CB17B632771602A00CF4C94 /* DeleteAccountConfirmWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountConfirmWindow.swift; sourceTree = "<group>"; };
 		7CB17B652771608400CF4C94 /* DeleteAccountConfirmWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeleteAccountConfirmWindow.xib; sourceTree = "<group>"; };
 		7CBD2EF9268FF6BB00AA0847 /* HomeAppsStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsStorage.swift; sourceTree = "<group>"; };
-		7CC2BDB826A7CAD6001749B1 /* StickersStoreBannerFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersStoreBannerFlowLayout.swift; sourceTree = "<group>"; };
 		7CC3B19F26C21F7E0018B0D1 /* ScriptMessageProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptMessageProxy.swift; sourceTree = "<group>"; };
 		7CC7304F2745F95D002780F5 /* StickerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerStore.swift; sourceTree = "<group>"; };
 		7CE3A25B2771A8AB006BE765 /* DeleteAccountVerifyCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountVerifyCodeViewController.swift; sourceTree = "<group>"; };
@@ -2123,7 +2121,7 @@
 				7BA41A9224E123F50042ED03 /* MentionToken.swift */,
 				7B91AB69251A2BAC00879812 /* Message+ExternalSharing.swift */,
 				94D63DD52646C29100FD7EE8 /* MessageViewModelFactory.swift */,
-				7CC2BDB826A7CAD6001749B1 /* StickersStoreBannerFlowLayout.swift */,
+				7C1686BA27BDF1D5004393DD /* StickersStoreBannerFlowLayout.swift */,
 				7CC7304F2745F95D002780F5 /* StickerStore.swift */,
 			);
 			path = Model;
@@ -3280,7 +3278,6 @@
 				7BC51F032227E69B0032BA15 /* InteractiveDismissResponder.swift */,
 				7B49E01E22DC5D9700807F70 /* VerticalPositioningImageView.swift */,
 				7B362BB422E87D38009BB0BF /* AssetSendVideoView.swift */,
-				7B81DD6722EACF7400A36186 /* GalleryView.swift */,
 				7BB2831B22D88F07000731E8 /* GalleryTransitionView.swift */,
 				7B333A8523406AD000FDA848 /* GalleryTransitionFromMessageCellView.swift */,
 				7B37B16023ED480000590215 /* GalleryTransitionFromQuotingMessageCellView.swift */,
@@ -4385,6 +4382,7 @@
 				7B09664620E0B018007DC179 /* PhotoAssetPickerNavigationController.swift in Sources */,
 				7BA9D9BD226D8BF700255943 /* SearchCategoryViewController.swift in Sources */,
 				5EBD8CD1267B37D20026A248 /* ScreenLockViewController.swift in Sources */,
+				7C1686BB27BDF1D5004393DD /* StickersStoreBannerFlowLayout.swift in Sources */,
 				DF2A0D972295734C00CA0280 /* AddressView.swift in Sources */,
 				7BDBDE5F22327698006220DF /* TransferTypeViewController.swift in Sources */,
 				7B9650B42487EBE000DE86B9 /* BackgroundMessagingService.swift in Sources */,
@@ -4694,8 +4692,6 @@
 				7BC80A62221D1C07008586AD /* AssetTableHeaderView.swift in Sources */,
 				7B9553402243860C00CE95E6 /* PinValidationPresentationManager.swift in Sources */,
 				94046B93272DC28B007C1D4A /* GroupCallMembersManager.swift in Sources */,
-				7CC2BDB926A7CAD6001749B1 /* StickersStoreBannerFlowLayout.swift in Sources */,
-				7CC2BDB926A7CAD6001749B1 /* StickersStoreBannerFlowLayout.swift in Sources */,
 				7B4C6571242358D5003B78F9 /* LocationSearchNoResultView.swift in Sources */,
 				DF5D9F291F9C79E10036D5FD /* UIColorExtension.swift in Sources */,
 				DF0A0A5E24476EA000378B4F /* RefreshOffsetJob.swift in Sources */,
@@ -4997,7 +4993,6 @@
 				DFE1F9811FAB40A800537D43 /* CornerButton.swift in Sources */,
 				7C359DCE26A6C15A001D3AE4 /* StickerStorePreviewCell.swift in Sources */,
 				DF846CD923694A2E00AA1197 /* MultisigUsersWindow.swift in Sources */,
-				7B81DD6822EACF7500A36186 /* GalleryView.swift in Sources */,
 				94DCDAA0262DAF5B0064D1F3 /* DisplayAwakener.swift in Sources */,
 				9430F9C525E38AB5001CCA2F /* MessageDAO+PlaylistItem.swift in Sources */,
 				7B1F5371219D3B90006D6983 /* RoundCornerSelectionView.swift in Sources */,

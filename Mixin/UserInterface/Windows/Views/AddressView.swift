@@ -188,17 +188,15 @@ extension AddressView {
             return
         }
         let options = UIView.AnimationOptions(rawValue: UInt(animation << 16))
-
-        UIView.animate(withDuration: duration, delay: 0, options: options, animations: {
-            UIView.setAnimationCurve(.overdamped)
+        UIView.animate(withDuration: duration, delay: 0, options: [options, .overdampedCurve]) {
             superView.contentBottomConstraint.constant = 0
             superView.alpha = 0
             superView.layoutIfNeeded()
-        }, completion: { (_) in
+        } completion: { _ in
             superView.isShowing = false
             superView.removeFromSuperview()
             self.dismissCallback?(true)
-        })
+        }
     }
 
 }

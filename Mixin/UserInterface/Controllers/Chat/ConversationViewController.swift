@@ -2008,7 +2008,7 @@ extension ConversationViewController {
             let navigationBarTop = min(maxTop, max(0, top))
             navigationBarTopConstraint.constant = navigationBarTop
             tableView.contentInset.top = max(view.safeAreaInsets.top, navigationBarView.frame.height - navigationBarTop)
-            tableView.scrollIndicatorInsets.top = tableView.contentInset.top
+            tableView.verticalScrollIndicatorInsets.top = tableView.contentInset.top
             if !statusBarHidden {
                 UIView.animate(withDuration: 0.2, delay: 0, options: [.beginFromCurrentState], animations: {
                     self.statusBarHidden = true
@@ -2017,7 +2017,7 @@ extension ConversationViewController {
         } else {
             navigationBarTopConstraint.constant = 0
             tableView.contentInset.top = titleViewTopConstraint.constant + titleViewHeightConstraint.constant
-            tableView.scrollIndicatorInsets.top = tableView.contentInset.top
+            tableView.verticalScrollIndicatorInsets.top = tableView.contentInset.top
             if statusBarHidden {
                 UIView.animate(withDuration: 0.2, delay: 0, options: [.beginFromCurrentState], animations: {
                     self.statusBarHidden = false
@@ -2044,24 +2044,22 @@ extension ConversationViewController {
         if scrollToBottomWrapperView.alpha < 0.1 && shouldShowScrollToBottomButton {
             scrollToBottomWrapperHeightConstraint.constant = 48
             if animated {
-                UIView.beginAnimations(nil, context: nil)
-                UIView.setAnimationDuration(animationDuration)
-            }
-            scrollToBottomWrapperView.alpha = 1
-            if animated {
-                view.layoutIfNeeded()
-                UIView.commitAnimations()
+                UIView.animate(withDuration: animationDuration) {
+                    self.scrollToBottomWrapperView.alpha = 1
+                    self.view.layoutIfNeeded()
+                }
+            } else {
+                scrollToBottomWrapperView.alpha = 1
             }
         } else if scrollToBottomWrapperView.alpha > 0.9 && !shouldShowScrollToBottomButton {
             scrollToBottomWrapperHeightConstraint.constant = 5
             if animated {
-                UIView.beginAnimations(nil, context: nil)
-                UIView.setAnimationDuration(animationDuration)
-            }
-            scrollToBottomWrapperView.alpha = 0
-            if animated {
-                view.layoutIfNeeded()
-                UIView.commitAnimations()
+                UIView.animate(withDuration: animationDuration) {
+                    self.scrollToBottomWrapperView.alpha = 0
+                    self.view.layoutIfNeeded()
+                }
+            } else {
+                scrollToBottomWrapperView.alpha = 0
             }
             unreadBadgeValue = 0
             dataSource?.firstUnreadMessageId = nil
@@ -2119,7 +2117,7 @@ extension ConversationViewController {
     private func updateNavigationBarHeightAndTableViewTopInset() {
         titleViewTopConstraint.constant = max(20, AppDelegate.current.mainWindow.safeAreaInsets.top)
         tableView.contentInset.top = titleViewTopConstraint.constant + titleViewHeightConstraint.constant
-        tableView.scrollIndicatorInsets.top = tableView.contentInset.top
+        tableView.verticalScrollIndicatorInsets.top = tableView.contentInset.top
     }
     
     // Returns true if the animation succeeds to perform, or false if cell not found
@@ -2179,7 +2177,7 @@ extension ConversationViewController {
     
     private func frameOfPhotoRepresentableCell(_ cell: PhotoRepresentableMessageCell) -> CGRect {
         var rect = cell.contentImageView.convert(cell.contentImageView.bounds, to: view)
-        if UIApplication.shared.statusBarFrame.height == StatusBarHeight.inCall {
+        if UIApplication.shared.statusBarHeight == StatusBarHeight.inCall {
             rect.origin.y += (StatusBarHeight.inCall - StatusBarHeight.normal)
         }
         return rect
@@ -2303,12 +2301,12 @@ extension ConversationViewController {
             }
         }
         
-        tableView.scrollIndicatorInsets.bottom = new - view.safeAreaInsets.bottom
+        tableView.verticalScrollIndicatorInsets.bottom = new - view.safeAreaInsets.bottom
         if animated {
-            UIView.animate(withDuration: 0.5) {
-                UIView.setAnimationCurve(.overdamped)
-                layout()
-            }
+            UIView.animate(withDuration: 0.5,
+                           delay: 0,
+                           options: .overdampedCurve,
+                           animations: layout)
         } else {
             UIView.performWithoutAnimation(layout)
         }

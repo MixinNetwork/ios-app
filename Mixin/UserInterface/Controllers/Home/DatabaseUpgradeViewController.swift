@@ -68,6 +68,9 @@ class DatabaseUpgradeViewController: UIViewController {
                     .appendingPathComponent("Lottie")
                 try? FileManager.default.removeItem(at: lottieCacheURL)
             }
+            if localVersion < 30 {
+                ConcurrentJobQueue.shared.addJob(job: RefreshAlbumJob())
+            }
             
             AppGroupUserDefaults.User.needsRebuildDatabase = false
             AppGroupUserDefaults.User.localVersion = AppGroupUserDefaults.User.version

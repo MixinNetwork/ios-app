@@ -32,9 +32,10 @@ public final class AlbumDAO: UserDatabaseDAO {
         db.select(where: Album.column(of: .category) == AlbumCategory.PERSONAL.rawValue)
     }
     
-    public func getNonPersonalAlbums() -> [Album] {
-        db.select(where: Album.column(of: .category) != AlbumCategory.PERSONAL.rawValue,
-                  order: [Album.column(of: .updatedAt).desc])
+    public func getVerifiedSystemAlbums() -> [Album] {
+        let condition = Album.column(of: .category) == AlbumCategory.SYSTEM.rawValue
+            && Album.column(of: .isVerified) == true
+        return db.select(where: condition, order: [Album.column(of: .updatedAt).desc])
     }
     
     public func getAlbumsUpdatedAt() -> [String: String] {

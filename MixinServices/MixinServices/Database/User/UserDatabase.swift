@@ -49,7 +49,8 @@ public final class UserDatabase: Database {
             .init(key: .description, constraints: "TEXT NOT NULL"),
             .init(key: .banner, constraints: "TEXT"),
             .init(key: .orderedAt, constraints: "INTEGER NOT NULL DEFAULT 0"),
-            .init(key: .isAdded, constraints: "INTEGER NOT NULL DEFAULT 0")
+            .init(key: .isAdded, constraints: "INTEGER NOT NULL DEFAULT 0"),
+            .init(key: .isVerified, constraints: "INTEGER NOT NULL DEFAULT 0"),
         ]),
         ColumnMigratableTableDefinition<App>(constraints: nil, columns: [
             .init(key: .appId, constraints: "TEXT PRIMARY KEY"),
@@ -464,6 +465,14 @@ public final class UserDatabase: Database {
         
         migrator.registerMigration("properties") { db in
             try db.execute(sql: "CREATE TABLE IF NOT EXISTS properties (key TEXT NOT NULL, value TEXT NOT NULL, updated_at TEXT NOT NULL, PRIMARY KEY(key))")
+        }
+        
+        migrator.registerMigration("albums") { db in
+            let albumInfos = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(albums)")
+            if !albumInfos.map(\.name).contains("is_verified") {
+                try db.execute(sql: "ALTER TABLE albums ADD COLUMN is_verified INTEGER NOT NULL DEFAULT 0")
+                try db.execute(sql: "UPDATE albums SET update_at = ''")
+            }
         }
         
         return migrator

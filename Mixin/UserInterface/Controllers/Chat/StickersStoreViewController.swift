@@ -107,7 +107,7 @@ extension StickersStoreViewController {
         DispatchQueue.global().async { [weak self] in
             var bannerItems = [AlbumItem]()
             var listItems = [AlbumItem]()
-            let albums = AlbumDAO.shared.getNonPersonalAlbums()
+            let albums = AlbumDAO.shared.getVerifiedSystemAlbums()
             let albumStickers = StickerDAO.shared.getStickers(albumIds: albums.map(\.albumId))
             for album in albums {
                 guard let stickers = albumStickers[album.albumId] else {

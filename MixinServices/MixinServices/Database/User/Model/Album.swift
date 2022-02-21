@@ -19,6 +19,7 @@ public struct Album {
     public let banner: String?
     public var orderedAt: Int
     public var isAdded: Bool
+    public var isVerified: Bool
     
     public var automaticallyDownloads: Bool {
         !banner.isNilOrEmpty || category == AlbumCategory.PERSONAL.rawValue
@@ -40,6 +41,7 @@ extension Album: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mixin
         case banner
         case orderedAt = "ordered_at"
         case isAdded = "added"
+        case isVerified = "is_verified"
     }
     
     public init(from decoder: Decoder) throws {
@@ -55,6 +57,7 @@ extension Album: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mixin
         banner = try container.decodeIfPresent(String.self, forKey: .banner)
         orderedAt = try container.decodeIfPresent(Int.self, forKey: .orderedAt) ?? 0
         isAdded = try container.decodeIfPresent(Bool.self, forKey: .isAdded) ?? false
+        isVerified = try container.decodeIfPresent(Bool.self, forKey: .isVerified) ?? false
     }
     
 }

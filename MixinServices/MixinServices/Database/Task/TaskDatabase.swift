@@ -11,10 +11,10 @@ public class TaskDatabase: Database {
     }
     
     public override var needsMigration: Bool {
-        try! pool.read({ (db) -> Bool in
+        try! read { (db) -> Bool in
             let migrationsCompleted = try migrator.hasCompletedMigrations(db)
             return !migrationsCompleted
-        })
+        }
     }
     
     private var migrator: DatabaseMigrator {

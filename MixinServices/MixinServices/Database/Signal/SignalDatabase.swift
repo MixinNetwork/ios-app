@@ -73,7 +73,13 @@ public final class SignalDatabase: Database {
     }
     
     private static func makeDatabaseWithDefaultLocation() -> SignalDatabase {
-        try! SignalDatabase(url: AppGroupContainer.signalDatabaseUrl)
+        let db = try! SignalDatabase(url: AppGroupContainer.signalDatabaseUrl)
+        if AppGroupUserDefaults.User.needsRebuildDatabase {
+            try? db.pool.barrierWriteWithoutTransaction { (db) -> Void in
+                try db.execute(sql: "DROP TABLE IF EXISTS grdb_migrations")
+            }
+        }
+        return db
     }
     
     public func erase() {

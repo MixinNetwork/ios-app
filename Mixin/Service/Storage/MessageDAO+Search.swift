@@ -50,7 +50,7 @@ extension MessageDAO {
         }
         
         do {
-            try UserDatabase.current.pool.read { (db) -> Void in
+            try UserDatabase.current.read { (db) -> Void in
                 let rows = try Row.fetchCursor(db, sql: sql, arguments: StatementArguments(arguments), adapter: nil)
                 while let row = try rows.next() {
                     let counter = Counter(value: -1)

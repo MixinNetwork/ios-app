@@ -228,10 +228,10 @@ extension BackupViewController {
         DispatchQueue.global().async {
             do {
                 Logger.database.info(category: "DB Compressor", message: "Start compressing database, size: \(AppGroupContainer.userDatabaseUrl.fileSize.sizeRepresentation())")
-                try UserDatabase.current.pool.write({ (db) -> Void in
+                try UserDatabase.current.writeAndReturnError { (db) -> Void in
                     try db.checkpoint(.full, on: nil)
-                })
-                try UserDatabase.current.pool.vacuum()
+                }
+                try UserDatabase.current.vacuum()
                 Logger.database.info(category: "DB Compressor", message: "Database compression finished, size: \(AppGroupContainer.userDatabaseUrl.fileSize.sizeRepresentation())")
                 DispatchQueue.main.async {
                     hud.set(style: .notification, text: R.string.localizable.report_compress_database_success())
@@ -253,12 +253,12 @@ extension BackupViewController {
         DispatchQueue.global().async {
             do {
                 Logger.database.info(category: "DB Optimizer", message: "Start optimizing database")
-                try UserDatabase.current.pool.write({ (db) -> Void in
+                try UserDatabase.current.writeAndReturnError { db in
                     try db.checkpoint(.full, on: nil)
-                })
-                try UserDatabase.current.pool.write({ db in
+                }
+                try UserDatabase.current.writeAndReturnError { db in
                     try db.execute(sql: "ANALYZE")
-                })
+                }
                 Logger.database.info(category: "DB Optimizer", message: "Database optimization finished")
                 DispatchQueue.main.async {
                     hud.set(style: .notification, text: R.string.localizable.report_optimize_database_success())

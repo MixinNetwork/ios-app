@@ -351,7 +351,7 @@ public final class ConversationDAO: UserDatabaseDAO {
         participants.append(me)
         
         do {
-            try db.pool.write { (db) -> Void in
+            try db.writeAndReturnError { (db) -> Void in
                 try conversation.insert(db)
                 try participants.save(db)
                 db.afterNextTransactionCommit { (_) in

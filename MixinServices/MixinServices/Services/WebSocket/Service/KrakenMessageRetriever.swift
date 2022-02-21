@@ -71,7 +71,7 @@ public class KrakenMessageRetriever {
             }
         } catch {
             sleep(2)
-            if let delegate = self.delegate, delegate.krakenMessageRetriever(self, shouldRetryRequest: request, error: error, numberOfRetries: numberOfRetries) {
+            if request.retryOnFailure, let delegate = self.delegate, delegate.krakenMessageRetriever(self, shouldRetryRequest: request, error: error, numberOfRetries: numberOfRetries) {
                 return self.request(request, numberOfRetries: numberOfRetries + 1)
             } else {
                 return .failure(error)

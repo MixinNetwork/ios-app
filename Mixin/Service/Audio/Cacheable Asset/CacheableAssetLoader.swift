@@ -25,7 +25,6 @@ final class CacheableAssetLoader: NSObject {
     let assetFileHandle: FileHandle
     let assetFileDescriptionURL: URL
     
-    private let isDebugging = false
     private let decoder = PropertyListDecoder()
     private let encoder = PropertyListEncoder()
     
@@ -91,14 +90,14 @@ extension CacheableAssetLoader: AVAssetResourceLoaderDelegate {
             info.fill(into: request)
             if loadingRequest.dataRequest == nil {
                 loadingRequest.finishLoading()
-                debugInfo("[CacheableAssetLoader] ✅ Finish loading: \(loadingRequest.opaque) with existed content info")
+                Logger.general.debug(category: "CacheableAssetLoader", message: "Finish loading: \(loadingRequest.opaque) with existed content info")
                 return true
             }
         }
         
         if currentRequest != nil {
             pendingRequests.append(loadingRequest)
-            debugInfo("[CacheableAssetLoader] 🕒 Add pending request: \(loadingRequest.opaque)")
+            Logger.general.debug(category: "CacheableAssetLoader", message: "Add pending request: \(loadingRequest.opaque)")
             return true
         }
         
@@ -106,10 +105,10 @@ extension CacheableAssetLoader: AVAssetResourceLoaderDelegate {
             try start(loadingRequest: loadingRequest)
             return true
         } catch Error.requestNothing {
-            debugInfo("[CacheableAssetLoader] ❓ Loading request: \(loadingRequest.opaque) wants nothing")
+            Logger.general.debug(category: "CacheableAssetLoader", message: "Loading request: \(loadingRequest.opaque) wants nothing")
             return false
         } catch Error.invalidURL {
-            debugInfo("[CacheableAssetLoader] ❌ Refused to load invalid request: \(loadingRequest.request)")
+            Logger.general.debug(category: "CacheableAssetLoader", message: "Refused to load invalid request: \(loadingRequest.request)")
             return false
         } catch {
             return false
@@ -122,10 +121,10 @@ extension CacheableAssetLoader: AVAssetResourceLoaderDelegate {
             currentDataTask?.cancel()
             currentDataTask = nil
             fragments = []
-            debugInfo("[CacheableAssetLoader] 👋 Cancelled current request: \(loadingRequest.opaque)")
+            Logger.general.debug(category: "CacheableAssetLoader", message: "Cancelled current request: \(loadingRequest.opaque)")
         } else if let index = pendingRequests.firstIndex(of: loadingRequest) {
             let request = pendingRequests.remove(at: index)
-            debugInfo("[CacheableAssetLoader] 👋 Cancelled pending request: \(request.opaque)")
+            Logger.general.debug(category: "CacheableAssetLoader", message: "Cancelled pending request: \(request.opaque)")
         }
     }
     
@@ -140,21 +139,21 @@ extension CacheableAssetLoader: URLSessionTaskDelegate {
         if request.dataRequest == nil {
             if fileDescription.contentInfo == nil {
                 finishCurrentRequest(with: Error.missingContentInfo(error))
-                debugInfo("[CacheableAssetLoader] ❌ Content info request \(request.opaque) failed for \(error?.localizedDescription ?? "(nil)")")
+                Logger.general.debug(category: "CacheableAssetLoader", message: "Content info request \(request.opaque) failed for \(error?.localizedDescription ?? "(nil)")")
             } else {
                 finishCurrentRequest()
-                debugInfo("[CacheableAssetLoader] ✅ Finish content info request \(request.opaque) from remote")
+                Logger.general.debug(category: "CacheableAssetLoader", message: "Finish content info request \(request.opaque) from remote")
             }
         } else {
             if fragments.isEmpty {
-                debugInfo("[CacheableAssetLoader] ✅ Finish data request \(request.opaque) from remote")
+                Logger.general.debug(category: "CacheableAssetLoader", message: "Finish data request \(request.opaque) from remote")
                 finishCurrentRequest()
             } else if let error = error {
-                debugInfo("[CacheableAssetLoader] ❌ Failed to fulfill \(request.opaque) because: \(error)")
+                Logger.general.debug(category: "CacheableAssetLoader", message: "Failed to fulfill \(request.opaque) because: \(error)")
                 finishCurrentRequest(with: error)
             } else if let response = task.response as? HTTPURLResponse, response.statusCode >= 400 {
                 let error = Error.invalidResponseCode(response.statusCode)
-                debugInfo("[CacheableAssetLoader] ❌ Failed to fulfill \(request.opaque) because: \(error)")
+                Logger.general.debug(category: "CacheableAssetLoader", message: "Failed to fulfill \(request.opaque) because: \(error)")
                 finishCurrentRequest(with: error)
             } else {
                 loadNextFragment()
@@ -172,7 +171,7 @@ extension CacheableAssetLoader: URLSessionDataDelegate {
             return
         }
         if let info = CacheableAssetFileDescription.ContentInformation(response: response) {
-            debugInfo("[CacheableAssetLoader] ✅ Got content info, type: \(info.contentType ?? "nil"), length: \(info.contentLength), range: \(info.isByteRangeAccessSupported)")
+            Logger.general.debug(category: "CacheableAssetLoader", message: "Got content info, type: \(info.contentType ?? "nil"), length: \(info.contentLength), range: \(info.isByteRangeAccessSupported)")
             fileDescription.contentInfo = info
             saveFileDescription()
             if let infoRequest = request.contentInformationRequest {
@@ -184,7 +183,7 @@ extension CacheableAssetLoader: URLSessionDataDelegate {
                 return
             }
         } else {
-            debugInfo("[CacheableAssetLoader] ❌ Failed to create content info")
+            Logger.general.debug(category: "CacheableAssetLoader", message: "Failed to create content info")
         }
         completionHandler(.allow)
     }
@@ -196,17 +195,17 @@ extension CacheableAssetLoader: URLSessionDataDelegate {
         guard let dataRequest = request.dataRequest, let fragment = fragments.first else {
             return
         }
-        debugInfo("\n[CacheableAssetLoader] ℹ️ Begin receiving data, count: \(data.count)")
+        Logger.general.debug(category: "CacheableAssetLoader", message: "Begin receiving data, count: \(data.count)")
         
         let fileOffset: UInt64
         let receivedDataRange: ClosedRange<Int64>
         let fragmentAfterUpdate: Fragment?
         switch fragment {
         case .local:
-            debugInfo("[CacheableAssetLoader] ❓ Requested local fragment")
+            Logger.general.debug(category: "CacheableAssetLoader", message: "Requested local fragment")
             return
         case .remote(let fragmentRange):
-            debugInfo("[CacheableAssetLoader] ℹ️ first fragment: \(fragmentRange.lowerBound)~\(fragmentRange.upperBound)")
+            Logger.general.debug(category: "CacheableAssetLoader", message: "First fragment: \(fragmentRange.lowerBound)~\(fragmentRange.upperBound)")
             fileOffset = UInt64(fragmentRange.lowerBound)
             receivedDataRange = fragmentRange.lowerBound...(fragmentRange.lowerBound + Int64(data.count) - 1)
             if receivedDataRange.upperBound >= fragmentRange.upperBound {
@@ -215,7 +214,7 @@ extension CacheableAssetLoader: URLSessionDataDelegate {
                 fragmentAfterUpdate = .remote((receivedDataRange.upperBound + 1)...fragmentRange.upperBound)
             }
         case .remoteStartFrom(let start):
-            debugInfo("[CacheableAssetLoader] ℹ️ first fragment: \(start)~")
+            Logger.general.debug(category: "CacheableAssetLoader", message: "First fragment: \(start)~")
             fileOffset = UInt64(start)
             receivedDataRange = start...(start + Int64(data.count) - 1)
             if let contentLength = fileDescription.contentInfo?.contentLength, receivedDataRange.upperBound == contentLength - 1 {
@@ -225,57 +224,50 @@ extension CacheableAssetLoader: URLSessionDataDelegate {
             }
         }
         
-        debugInfo("[CacheableAssetLoader] ℹ️ write asset file from: \(fileOffset)")
+        Logger.general.debug(category: "CacheableAssetLoader", message: "Write asset file from: \(fileOffset)")
         do {
             try assetFileHandle.seek(toOffset: fileOffset)
             assetFileHandle.write(data)
             try assetFileHandle.synchronize()
         } catch {
-            debugInfo("[CacheableAssetLoader] ❌ Asset file writing failed for \(error)")
+            Logger.general.debug(category: "CacheableAssetLoader", message: "Asset file writing failed for \(error)")
             finishCurrentRequest(with: error)
             return
         }
-        debugInfo("[CacheableAssetLoader] ℹ️ Update fileDescription with: \(receivedDataRange)")
+        Logger.general.debug(category: "CacheableAssetLoader", message: "Update fileDescription with: \(receivedDataRange)")
         fileDescription.add(range: receivedDataRange)
         saveFileDescription()
-        debugInfo("[CacheableAssetLoader] ℹ️ Update dataRequest with: \(receivedDataRange)")
+        Logger.general.debug(category: "CacheableAssetLoader", message: "Update dataRequest with: \(receivedDataRange)")
         dataRequest.respond(with: data)
         
         if let fragment = fragmentAfterUpdate {
             switch fragment {
             case .local:
-                debugInfo("[CacheableAssetLoader] ❌ No way this is happening")
+                Logger.general.debug(category: "CacheableAssetLoader", message: "No way this is happening")
             case .remote(let range):
-                debugInfo("[CacheableAssetLoader] ℹ️ first fragment is updated to: \(range.lowerBound)~\(range.upperBound)")
+                Logger.general.debug(category: "CacheableAssetLoader", message: "First fragment is updated to: \(range.lowerBound)~\(range.upperBound)")
             case .remoteStartFrom(let start):
-                debugInfo("[CacheableAssetLoader] ℹ️ first fragment is updated to: \(start)~")
+                Logger.general.debug(category: "CacheableAssetLoader", message: "First fragment is updated to: \(start)~")
             }
             fragments[0] = fragment
         } else {
-            debugInfo("[CacheableAssetLoader] ℹ️ first fragment is fulfilled, remove it")
+            Logger.general.debug(category: "CacheableAssetLoader", message: "First fragment is fulfilled, remove it")
             fragments.removeFirst()
         }
         
-        debugInfo("[CacheableAssetLoader] ℹ️ Finished receiving data\n")
+        Logger.general.debug(category: "CacheableAssetLoader", message: "Finished receiving data")
     }
     
 }
 
 extension CacheableAssetLoader {
     
-    @inline(__always)
-    private func debugInfo(_ item: Any) {
-        if isDebugging {
-            print(item)
-        }
-    }
-    
     private func saveFileDescription() {
         do {
             let data = try encoder.encode(fileDescription)
             try data.write(to: assetFileDescriptionURL, options: .atomic)
         } catch {
-            debugInfo("[CacheableAssetLoader] ❌ Failed to save asset file description: \(error)")
+            Logger.general.debug(category: "CacheableAssetLoader", message: "Failed to save asset file description: \(error)")
             reporter.report(error: error)
         }
     }
@@ -307,16 +299,16 @@ extension CacheableAssetLoader {
                     data = assetFileHandle.readData(ofLength: length)
                 }
             } catch {
-                debugInfo("[CacheableAssetLoader] ❌ Failed to read local data: \(error)")
+                Logger.general.debug(category: "CacheableAssetLoader", message: "Failed to read local data: \(error)")
                 finishCurrentRequest(with: error)
                 return
             }
             dataRequest.respond(with: data)
-            debugInfo("[CacheableAssetLoader] ✅ \(data.count) bytes of data is reported to loadingRequest: \(request.opaque)")
+            Logger.general.debug(category: "CacheableAssetLoader", message: "\(data.count) bytes of data is reported to loadingRequest: \(request.opaque)")
             fragments.removeFirst()
-            debugInfo("[CacheableAssetLoader] ℹ️ fragment \(fragmentRange.lowerBound)~\(fragmentRange.upperBound) is finish and removed")
+            Logger.general.debug(category: "CacheableAssetLoader", message: "Fragment \(fragmentRange.lowerBound)~\(fragmentRange.upperBound) is finish and removed")
             if fragments.isEmpty {
-                debugInfo("[CacheableAssetLoader] ✅ All fragments are loaded & reported. finish loading: \(request.opaque)")
+                Logger.general.debug(category: "CacheableAssetLoader", message: "All fragments are loaded & reported. finish loading: \(request.opaque)")
                 finishCurrentRequest()
             } else {
                 queue.async(execute: loadNextFragment)
@@ -327,14 +319,14 @@ extension CacheableAssetLoader {
             let task = urlSession.dataTask(with: urlRequest)
             currentDataTask = task
             task.resume()
-            debugInfo("[CacheableAssetLoader] 🕒 Start loading remote data for: \(request.opaque), range: \(fragmentRange)")
+            Logger.general.debug(category: "CacheableAssetLoader", message: "Start loading remote data for: \(request.opaque), range: \(fragmentRange)")
         case let .remoteStartFrom(start):
             var urlRequest = URLRequest(url: originalURL)
             urlRequest.setValue("bytes=\(start)-", forHTTPHeaderField: "Range")
             let task = urlSession.dataTask(with: urlRequest)
             currentDataTask = task
             task.resume()
-            debugInfo("[CacheableAssetLoader] 🕒 Start loading remote data for: \(request.opaque), start from: \(start)")
+            Logger.general.debug(category: "CacheableAssetLoader", message: "Start loading remote data for: \(request.opaque), start from: \(start)")
         }
     }
     
@@ -346,7 +338,7 @@ extension CacheableAssetLoader {
             throw Error.requestNothing
         }
         if let dataRequest = loadingRequest.dataRequest {
-            debugInfo("\n[CacheableAssetLoader] ℹ️ Begin composing fragments for \(loadingRequest.opaque)")
+            Logger.general.debug(category: "CacheableAssetLoader", message: "Begin composing fragments for \(loadingRequest.opaque)")
             var fragments: [Fragment] = []
             
             let requestedRange: ClosedRange<Int64>
@@ -356,24 +348,24 @@ extension CacheableAssetLoader {
                 } else {
                     requestedRange = dataRequest.requestedOffset...Int64.max
                 }
-                debugInfo("[CacheableAssetLoader] ℹ️ Request range: \(dataRequest.requestedOffset)~")
+                Logger.general.debug(category: "CacheableAssetLoader", message: "Request range: \(dataRequest.requestedOffset)~")
             } else {
                 requestedRange = dataRequest.requestedOffset...(dataRequest.requestedOffset + Int64(dataRequest.requestedLength) - 1)
-                debugInfo("[CacheableAssetLoader] ℹ️ Request range: \(requestedRange.lowerBound)~\(requestedRange.upperBound)")
+                Logger.general.debug(category: "CacheableAssetLoader", message: "Request range: \(requestedRange.lowerBound)~\(requestedRange.upperBound)")
             }
             
             var localRanges = fileDescription.availableRanges(for: requestedRange)
             if localRanges.isEmpty {
-                debugInfo("[CacheableAssetLoader] ℹ️ Finds no local fragment")
+                Logger.general.debug(category: "CacheableAssetLoader", message: "Finds no local fragment")
                 if dataRequest.requestsAllDataToEndOfResource {
                     fragments = [.remoteStartFrom(dataRequest.requestedOffset)]
                 } else {
                     fragments = [.remote(requestedRange)]
                 }
             } else {
-                debugInfo("[CacheableAssetLoader] ℹ️ Found local fragments:")
+                Logger.general.debug(category: "CacheableAssetLoader", message: "Found local fragments:")
                 for range in localRanges {
-                    debugInfo("\(range.lowerBound)~\(range.upperBound)")
+                    Logger.general.debug(category: "CacheableAssetLoader", message: "Fragment: \(range.lowerBound)~\(range.upperBound)")
                 }
                 while !localRanges.isEmpty {
                     let localRange = localRanges.removeFirst()
@@ -384,7 +376,7 @@ extension CacheableAssetLoader {
                                 fragments.append(.remote((lastFragmentRange.upperBound + 1)...(localRange.lowerBound - 1)))
                             }
                         case .remote, .remoteStartFrom:
-                            debugInfo("[CacheableAssetLoader] ❌ Inconsistent fragment found")
+                            Logger.general.debug(category: "CacheableAssetLoader", message: "Inconsistent fragment found")
                         }
                         fragments.append(.local(localRange))
                     } else {
@@ -403,18 +395,17 @@ extension CacheableAssetLoader {
                 }
             }
             
-            debugInfo("[CacheableAssetLoader] ℹ️ Finish composing fragments for \(loadingRequest.opaque)")
+            Logger.general.debug(category: "CacheableAssetLoader", message: "Finish composing fragments for \(loadingRequest.opaque)")
             for fragment in fragments {
                 switch fragment {
                 case .local(let range):
-                    debugInfo("Local: \(range.lowerBound)~\(range.upperBound)")
+                    Logger.general.debug(category: "CacheableAssetLoader", message: "Local: \(range.lowerBound)~\(range.upperBound)")
                 case .remote(let range):
-                    debugInfo("Remote: \(range.lowerBound)~\(range.upperBound)")
+                    Logger.general.debug(category: "CacheableAssetLoader", message: "Remote: \(range.lowerBound)~\(range.upperBound)")
                 case .remoteStartFrom(let start):
-                    debugInfo("Remote: \(start)~")
+                    Logger.general.debug(category: "CacheableAssetLoader", message: "Remote: \(start)~")
                 }
             }
-            debugInfo("")
             
             self.currentRequest = loadingRequest
             self.fragments = fragments
@@ -431,7 +422,7 @@ extension CacheableAssetLoader {
             self.currentDataTask = task
             
             task.resume()
-            debugInfo("[CacheableAssetLoader] 🕒 Start content info request for: \(loadingRequest.opaque)")
+            Logger.general.debug(category: "CacheableAssetLoader", message: "Start content info request for: \(loadingRequest.opaque)")
         }
     }
     

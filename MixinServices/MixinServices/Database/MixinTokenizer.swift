@@ -51,7 +51,6 @@ class MixinTokenizer: FTS5WrapperTokenizer {
                 return
             }
             let subtoken = String(groupingBuffer)
-            Logger.general.debug(category: "MixinTokenizer", message: "Reporting group: \(subtoken)")
             try tokenCallback(subtoken, [])
             groupingBuffer = []
         }
@@ -97,7 +96,6 @@ class MixinTokenizer: FTS5WrapperTokenizer {
             case .asciiDigits, .grouping:
                 groupingBuffer.append(char)
             case .nonGrouping:
-                Logger.general.debug(category: "MixinTokenizer", message: "Reporting char: \(char)")
                 try tokenCallback(String(char), [])
             }
             index = token.index(after: index)

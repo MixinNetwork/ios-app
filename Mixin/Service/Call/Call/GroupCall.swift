@@ -5,6 +5,23 @@ import MixinServices
 
 class GroupCall: Call {
     
+    enum Subscription: Equatable {
+        
+        case myself
+        case periodic
+        case user(String)
+        
+        var userId: String {
+            switch self {
+            case .myself, .periodic:
+                return myUserId
+            case .user(let id):
+                return id
+            }
+        }
+        
+    }
+    
     static let maxNumberOfMembers = 256
     static let maxNumberOfKrakenRetries: UInt = 30
     
@@ -14,6 +31,7 @@ class GroupCall: Call {
     
     private let retryInterval: DispatchTimeInterval = .seconds(3)
     private let speakingStatusPollingInterval: TimeInterval = 0.6
+    private let periodicSubscriptionInterval: TimeInterval = 3
     private let messenger = KrakenMessageRetriever()
     
     private var frameKey: Data?
@@ -37,6 +55,7 @@ class GroupCall: Call {
     }
     
     private weak var speakingTimer: Timer?
+    private weak var periodicSubscriptionTimer: Timer?
     
     override var cxHandle: CXHandle {
         CXHandle(type: .generic, value: conversationId)
@@ -83,6 +102,7 @@ class GroupCall: Call {
                 for timer in self.inviteeTimers {
                     timer.invalidate()
                 }
+                self.periodicSubscriptionTimer?.invalidate()
                 self.rtcClient.close(permanently: true)
             }
             if side == .local {
@@ -91,14 +111,16 @@ class GroupCall: Call {
                         let decline = KrakenRequest(callUUID: self.uuid,
                                                     conversationId: self.conversationId,
                                                     trackId: self.trackId,
-                                                    action: .decline(recipientId: userId))
+                                                    action: .decline(recipientId: userId),
+                                                    retryOnFailure: true)
                         self.messenger.request(decline)
                     }
                 } else {
                     let end = KrakenRequest(callUUID: self.uuid,
                                             conversationId: self.conversationId,
                                             trackId: self.trackId,
-                                            action: .end)
+                                            action: .end,
+                                            retryOnFailure: true)
                     self.messenger.request(end)
                 }
             }
@@ -189,7 +211,8 @@ class GroupCall: Call {
             let invitation = KrakenRequest(callUUID: self.uuid,
                                            conversationId: self.conversationId,
                                            trackId: trackId,
-                                           action: .invite(recipients: userIds))
+                                           action: .invite(recipients: userIds),
+                                           retryOnFailure: true)
             self.messenger.request(invitation)
         }
     }
@@ -321,7 +344,8 @@ extension GroupCall {
                     let publish = KrakenRequest(callUUID: self.uuid,
                                                 conversationId: self.conversationId,
                                                 trackId: self.queue.sync { self.trackId },
-                                                action: isRestarting ? .restart(sdp: sdp) : .publish(sdp: sdp))
+                                                action: isRestarting ? .restart(sdp: sdp) : .publish(sdp: sdp),
+                                                retryOnFailure: true)
                     switch self.request(publish) {
                     case let .failure(error):
                         switch error {
@@ -347,14 +371,15 @@ extension GroupCall {
                                 } else {
                                     completion(nil)
                                     Logger.call.info(category: "GroupCall", message: "[\(self.uuidString)] SDP from publish response is set")
-                                    self.subscribe(userId: myUserId)
+                                    self.subscribe(to: .myself)
                                 }
                             }
                             for candidate in self.pendingCandidates {
                                 let trickle = KrakenRequest(callUUID: self.uuid,
                                                             conversationId: self.conversationId,
                                                             trackId: trackId,
-                                                            action: .trickle(candidate: candidate))
+                                                            action: .trickle(candidate: candidate),
+                                                            retryOnFailure: true)
                                 self.messenger.request(trickle)
                                 Logger.call.info(category: "GroupCall", message: "[\(self.uuidString)] Request \(trickle.debugDescription)")
                             }
@@ -368,33 +393,34 @@ extension GroupCall {
         }
     }
     
-    func subscribe(userId: String) {
+    func subscribe(to subscription: Subscription) {
         queue.async {
-            let isSubscribingMySelf = userId == myUserId
-            if !isSubscribingMySelf, let item = UserDAO.shared.getUser(userId: userId) {
+            if case let .user(userId) = subscription, let item = UserDAO.shared.getUser(userId: userId) {
                 let member = GroupCallMembersDataSource.Member(item: item, status: nil, isConnected: false)
                 DispatchQueue.main.async {
                     self.membersDataSource.addMember(member, onConflict: .discard)
                 }
             }
-            guard (self.trackId != nil && self.internalState != .restarting) || isSubscribingMySelf else {
-                Logger.call.warn(category: "GroupCall", message: "[\(self.uuidString)] Not subscribing: \(userId), trackId: \(self.trackId ?? "(null)"), internalState: \(self.internalState), isMyself: \(isSubscribingMySelf)")
+            guard (self.trackId != nil && self.internalState != .restarting) || subscription == .myself else {
+                Logger.call.warn(category: "GroupCall", message: "[\(self.uuidString)] Not subscribing: \(subscription), trackId: \(self.trackId ?? "(null)"), internalState: \(self.internalState)")
                 return
             }
             let subscribe = KrakenRequest(callUUID: self.uuid,
                                           conversationId: self.conversationId,
                                           trackId: self.trackId,
-                                          action: .subscribe)
+                                          action: .subscribe,
+                                          retryOnFailure: subscription != .periodic)
             switch self.request(subscribe) {
             case let .success((_, sdp)) where sdp.type == .offer:
                 self.rtcClient.setRemoteSDP(sdp) { error in
                     if let error = error {
                         Logger.call.error(category: "GroupCall", message: "[\(self.uuidString)] Faild to set sdp from subscribe response: \(error)")
                         self.queue.asyncAfter(deadline: .now() + self.retryInterval) {
-                            self.subscribe(userId: userId)
+                            self.subscribe(to: subscription)
                         }
                     } else {
                         Logger.call.info(category: "GroupCall", message: "[\(self.uuidString)] SDP from subscribe response is set")
+                        let userId = subscription.userId
                         DispatchQueue.main.async {
                             self.membersDataSource.setMember(with: userId, isConnected: true)
                         }
@@ -403,7 +429,7 @@ extension GroupCall {
                 }
             case .success, .failure(.invalidJSEP):
                 DispatchQueue.main.async {
-                    self.membersDataSource.setMember(with: userId, isConnected: true)
+                    self.membersDataSource.setMember(with: subscription.userId, isConnected: true)
                 }
                 Logger.call.info(category: "GroupCall", message: "[\(self.uuidString)] Subscribe responded with a non-offer sdp")
             case .failure(let error):
@@ -419,7 +445,9 @@ extension GroupCall {
                     Logger.call.warn(category: "GroupCall", message: "[\(self.uuidString)] Subscribe responded with trackNotFound")
                 default:
                     Logger.call.info(category: "GroupCall", message: "[\(self.uuidString)] subscribing result reports \(error)")
-                    self.end(reason: .failed, by: .local)
+                    if subscription != .periodic {
+                        self.end(reason: .failed, by: .local)
+                    }
                 }
             }
         }
@@ -432,7 +460,8 @@ extension GroupCall {
                 let answer = KrakenRequest(callUUID: self.uuid,
                                            conversationId: self.conversationId,
                                            trackId: self.trackId,
-                                           action: .answer(sdp: sdpJson))
+                                           action: .answer(sdp: sdpJson),
+                                           retryOnFailure: true)
                 self.messenger.request(answer)
                 Logger.call.info(category: "GroupCall", message: "[\(self.uuidString)] Request \(answer.debugDescription)")
             case .failure(let error):
@@ -514,7 +543,8 @@ extension GroupCall: WebRTCClientDelegate {
                 let trickle = KrakenRequest(callUUID: self.uuid,
                                             conversationId: self.conversationId,
                                             trackId: trackId,
-                                            action: .trickle(candidate: json))
+                                            action: .trickle(candidate: json),
+                                            retryOnFailure: true)
                 self.messenger.request(trickle) // FIXME: Handle errors
                 Logger.call.info(category: "GroupCall", message: "[\(self.uuidString)] Request \(trickle.debugDescription)")
             } else {
@@ -533,6 +563,17 @@ extension GroupCall: WebRTCClientDelegate {
                 self.membersDataSource.setMember(with: myUserId, isConnected: true)
                 if self.connectedDate == nil {
                     self.connectedDate = Date()
+                }
+                self.periodicSubscriptionTimer?.invalidate()
+                let uuid = self.uuidString
+                self.periodicSubscriptionTimer = Timer.scheduledTimer(withTimeInterval: self.periodicSubscriptionInterval, repeats: true) { [weak self] timer in
+                    guard let self = self else {
+                        timer.invalidate()
+                        Logger.call.error(category: "GroupCall", message: "[\(uuid)] Periodic subscription fired without call")
+                        return
+                    }
+                    Logger.call.info(category: "GroupCall", message: "[\(uuid)] Periodic subscription fired")
+                    self.subscribe(to: .periodic)
                 }
             }
             self.internalState = .connected
@@ -572,6 +613,9 @@ extension GroupCall: WebRTCClientDelegate {
             }
             Logger.call.warn(category: "GroupCall", message: "[\(self.uuidString)] Restarting call because ICE connection failed")
             self.internalState = .restarting
+            DispatchQueue.main.sync {
+                self.periodicSubscriptionTimer?.invalidate()
+            }
             self.connect(isRestarting: true) { error in
                 guard let error = error else {
                     return

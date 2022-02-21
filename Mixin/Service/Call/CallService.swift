@@ -1033,7 +1033,7 @@ extension CallService {
             guard let call = self.groupCall(with: data.conversationId) else {
                 return
             }
-            call.subscribe(userId: data.userId)
+            call.subscribe(to: .user(data.userId))
         }
     }
     

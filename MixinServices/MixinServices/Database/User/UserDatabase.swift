@@ -478,6 +478,10 @@ public final class UserDatabase: Database {
         return migrator
     }
     
+    public override func tableDidLose() {
+        AppGroupUserDefaults.User.needsRebuildDatabase = true
+    }
+    
 }
 
 extension UserDatabase {

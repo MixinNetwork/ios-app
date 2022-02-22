@@ -2,7 +2,7 @@ import GRDB
 
 public class TaskDatabase: Database {
     
-    public private(set) static var current: TaskDatabase! = try! TaskDatabase(url: AppGroupContainer.taskDatabaseUrl)
+    public private(set) static var current: TaskDatabase! = makeDatabaseWithDefaultLocation()
     
     public override class var config: Configuration {
         var config = super.config
@@ -39,8 +39,22 @@ public class TaskDatabase: Database {
     }
     
     public static func reloadCurrent() {
-        current = try! TaskDatabase(url: AppGroupContainer.taskDatabaseUrl)
+        current = makeDatabaseWithDefaultLocation()
         current.migrate()
+    }
+    
+    private static func makeDatabaseWithDefaultLocation() -> TaskDatabase {
+        let db = try! TaskDatabase(url: AppGroupContainer.taskDatabaseUrl)
+        if AppGroupUserDefaults.User.needsRebuildDatabase {
+            try? db.pool.barrierWriteWithoutTransaction { (db) -> Void in
+                try db.execute(sql: "DROP TABLE IF EXISTS grdb_migrations")
+            }
+        }
+        return db
+    }
+    
+    public override func tableDidLose() {
+        AppGroupUserDefaults.User.needsRebuildDatabase = true
     }
     
     private func migrate() {

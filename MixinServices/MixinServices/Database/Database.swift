@@ -60,6 +60,10 @@ open class Database {
         pool = try DatabasePool(path: url.path, configuration: Self.config)
     }
     
+    open func tableDidLose() {
+        
+    }
+    
     public func read<Value>(_ reader: (GRDB.Database) throws -> Value) throws -> Value {
         do {
             return try pool.read(reader)
@@ -130,7 +134,7 @@ open class Database {
         guard let message = error.message, message.hasPrefix("no such table:"), !message.hasPrefix("no such table: grdb_migrations") else {
             return
         }
-        AppGroupUserDefaults.User.needsRebuildDatabase = true
+        tableDidLose()
     }
     
 }

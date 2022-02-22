@@ -73,13 +73,12 @@ public final class SignalDatabase: Database {
     }
     
     private static func makeDatabaseWithDefaultLocation() -> SignalDatabase {
-        let db = try! SignalDatabase(url: AppGroupContainer.signalDatabaseUrl)
-        if AppGroupUserDefaults.User.needsRebuildDatabase {
-            try? db.pool.barrierWriteWithoutTransaction { (db) -> Void in
-                try db.execute(sql: "DROP TABLE IF EXISTS grdb_migrations")
-            }
-        }
-        return db
+        try! SignalDatabase(url: AppGroupContainer.signalDatabaseUrl)
+    }
+    
+    public override func tableDidLose() {
+        reporter.report(error: MixinServicesError.signalDatabaseCorrupted(isAppExtension))
+        LoginManager.shared.logout(from: "DatabaseCorruption")
     }
     
     public func erase() {

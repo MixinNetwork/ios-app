@@ -777,6 +777,7 @@
 "profile_shared_app_reach_limit" = "已达到上限";
 "profile_call_with_mixin" = "语音通话";
 "profile_call_phone" = "电话呼叫";
+"profile_groups_in_common" = "共同的群聊";
 
 // Emergency
 "emergency_view" = "查看紧急联系人";

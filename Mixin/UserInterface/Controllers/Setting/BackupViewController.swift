@@ -254,7 +254,7 @@ extension BackupViewController {
             do {
                 Logger.database.info(category: "DB Optimizer", message: "Start optimizing database")
                 try UserDatabase.current.writeAndReturnError { db in
-                    try db.checkpoint(.full, on: nil)
+                    _ = try db.checkpoint(.full, on: nil)
                 }
                 try UserDatabase.current.writeAndReturnError { db in
                     try db.execute(sql: "ANALYZE")

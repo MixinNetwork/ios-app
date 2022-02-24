@@ -366,8 +366,7 @@ extension PhotoInputViewController {
         previewController.view.snp.updateConstraints { make in
             make.top.equalTo(inputBarView.snp.bottom).offset(-previewHeight)
         }
-        UIView.animate(withDuration: 0.3) {
-            UIView.setAnimationCurve(.overdamped)
+        UIView.animate(withDuration: 0.3, delay: 0, options: .overdampedCurve) {
             self.view.layoutIfNeeded()
         } completion: { _ in
             conversationViewController.addChild(previewController)
@@ -402,8 +401,7 @@ extension PhotoInputViewController {
         previewController.view.snp.updateConstraints { make in
             make.top.equalTo(inputBarView.snp.bottom).offset(0)
         }
-        UIView.animate(withDuration: 0.3) {
-            UIView.setAnimationCurve(.overdamped)
+        UIView.animate(withDuration: 0.3, delay: 0, options: .overdampedCurve) {
             self.view.layoutIfNeeded()
         } completion: { _ in
             previewController.removeAllAssets()

@@ -41,12 +41,6 @@ class StackedPhotoPreviewViewController: StaticMessagesViewController {
         reloadData()
     }
     
-    override func menuItems(for viewModel: MessageViewModel) -> [UIMenuItem]? {
-        var items = super.menuItems(for: viewModel) ?? []
-        return items
-    }
-    
-    @available(iOS 13.0, *)
     override func contextMenuActions(for viewModel: MessageViewModel) -> [UIAction]? {
         var actions = super.contextMenuActions(for: viewModel) ?? []
         let unpinAction = UIAction(title: R.string.localizable.menu_unpin(), image: R.image.conversation.ic_action_unpin()) { (_) in

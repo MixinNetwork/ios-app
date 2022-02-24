@@ -591,12 +591,12 @@
 		7C66F1C1268C0250006D8462 /* HomeAppsFolderInteraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1C0268C0250006D8462 /* HomeAppsFolderInteraction.swift */; };
 		7C6AD1F526A6794F00E6C41D /* StickersStoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6AD1F426A6794F00E6C41D /* StickersStoreViewController.swift */; };
 		7C7635B826A13461006101DB /* HomeAppsConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7635B726A13461006101DB /* HomeAppsConstants.swift */; };
+		7C870BB1277EAF1D003C2DAE /* MediaPreviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C870BAF277EAF1D003C2DAE /* MediaPreviewCell.swift */; };
+		7C870BB2277EAF1D003C2DAE /* MediaPreviewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C870BB0277EAF1D003C2DAE /* MediaPreviewCell.xib */; };
 		7C8FA78D27687D1500855AFD /* DeleteAccountSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8FA78C27687D1500855AFD /* DeleteAccountSettingViewController.swift */; };
 		7C8FA78F2768822800855AFD /* DeleteAccountTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C8FA78E2768822800855AFD /* DeleteAccountTableHeaderView.xib */; };
 		7C8FA8F42768909300855AFD /* AccountSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8FA8F32768909300855AFD /* AccountSettingViewController.swift */; };
 		7C8FA8F62768926D00855AFD /* SecuritySettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8FA8F52768926D00855AFD /* SecuritySettingViewController.swift */; };
-		7C870BB1277EAF1D003C2DAE /* MediaPreviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C870BAF277EAF1D003C2DAE /* MediaPreviewCell.swift */; };
-		7C870BB2277EAF1D003C2DAE /* MediaPreviewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C870BB0277EAF1D003C2DAE /* MediaPreviewCell.xib */; };
 		7C9A734027392FAF00E0127A /* PinSettingTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9A733F27392FAF00E0127A /* PinSettingTableHeaderView.swift */; };
 		7C9DCDF1273901D500395F4A /* PinSettingTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C9DCDF0273901D500395F4A /* PinSettingTableHeaderView.xib */; };
 		7CB0954F26CCED2E0049F4C7 /* PinMessageBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB0954E26CCED2E0049F4C7 /* PinMessageBannerView.swift */; };
@@ -1581,12 +1581,12 @@
 		7C66F1C0268C0250006D8462 /* HomeAppsFolderInteraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsFolderInteraction.swift; sourceTree = "<group>"; };
 		7C6AD1F426A6794F00E6C41D /* StickersStoreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersStoreViewController.swift; sourceTree = "<group>"; };
 		7C7635B726A13461006101DB /* HomeAppsConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsConstants.swift; sourceTree = "<group>"; };
+		7C870BAF277EAF1D003C2DAE /* MediaPreviewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaPreviewCell.swift; sourceTree = "<group>"; };
+		7C870BB0277EAF1D003C2DAE /* MediaPreviewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MediaPreviewCell.xib; sourceTree = "<group>"; };
 		7C8FA78C27687D1500855AFD /* DeleteAccountSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountSettingViewController.swift; sourceTree = "<group>"; };
 		7C8FA78E2768822800855AFD /* DeleteAccountTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeleteAccountTableHeaderView.xib; sourceTree = "<group>"; };
 		7C8FA8F32768909300855AFD /* AccountSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSettingViewController.swift; sourceTree = "<group>"; };
 		7C8FA8F52768926D00855AFD /* SecuritySettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecuritySettingViewController.swift; sourceTree = "<group>"; };
-		7C870BAF277EAF1D003C2DAE /* MediaPreviewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaPreviewCell.swift; sourceTree = "<group>"; };
-		7C870BB0277EAF1D003C2DAE /* MediaPreviewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MediaPreviewCell.xib; sourceTree = "<group>"; };
 		7C9A733F27392FAF00E0127A /* PinSettingTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinSettingTableHeaderView.swift; sourceTree = "<group>"; };
 		7C9DCDF0273901D500395F4A /* PinSettingTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PinSettingTableHeaderView.xib; sourceTree = "<group>"; };
 		7CB0954E26CCED2E0049F4C7 /* PinMessageBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinMessageBannerView.swift; sourceTree = "<group>"; };
@@ -2131,15 +2131,10 @@
 				7B9D825622F1BFEA0099381E /* LargeNetworkOperationIconSet.swift */,
 				7B91055F22CF4A1E002E3608 /* LiveMessageViewModel.swift */,
 				7BF196AE24115F9100CC8325 /* LocationMessageViewModel.swift */,
-				7BA41A9224E123F50042ED03 /* MentionToken.swift */,
-				7B91AB69251A2BAC00879812 /* Message+ExternalSharing.swift */,
-				7BE6C7EB242DF07B00A0F2AE /* MessageAction.swift */,
 				7BEB97172366CF42002DB190 /* MessageFontSet.swift */,
 				7BFE47E622845DE100FC4379 /* MessageReceiver.swift */,
 				7BAB76AB228AAE00009ECB8C /* MessageReceiverSearchResult.swift */,
 				7B09E5591FD157EB002E45D3 /* MessageViewModel.swift */,
-				94D63DD52646C29100FD7EE8 /* MessageViewModelFactory.swift */,
-				7B082D17242CA19F00C5E163 /* MultipleSelectionIntent.swift */,
 				7B9D825722F1BFEA0099381E /* NetworkOperationIconSet.swift */,
 				7B9D825522F1BFE90099381E /* NormalNetworkOperationIconSet.swift */,
 				7B09E55B1FD15B9B002E45D3 /* PhotoMessageViewModel.swift */,
@@ -2149,17 +2144,13 @@
 				7BFDB73820DA41E3005673CC /* Quote.swift */,
 				7B81D91523E93F470031E945 /* QuotedMessageViewModel.swift */,
 				7B7FBF8E2282D75400644693 /* RecalledMessageViewModel.swift */,
-				7B015F4E241F91A60004A563 /* SearchResultAnnotation.swift */,
 				7B7DACA923505F06006AA2AC /* SharedMediaAudio.swift */,
 				7B8BB587234F160C00991ACB /* SharedMediaCategorizer.swift */,
 				7B8BB581234DDA0000991ACB /* SharedMediaDataSource.swift */,
 				7B8BB589234F28A700991ACB /* SharedMediaGroupedByDateCategorizer.swift */,
-				7C247AA6277AEDD100112A30 /* StackedPhotoLayout.swift */,
 				7C09947527A0D88B00A9D888 /* StackedPhotoMessageViewModel.swift */,
 				7B8ED47F21198EC20039946B /* StickerInputModelController.swift */,
 				7B28FA13201195E40023B28D /* StickerMessageViewModel.swift */,
-				7CC2BDB826A7CAD6001749B1 /* StickersStoreBannerFlowLayout.swift */,
-				7CC7304F2745F95D002780F5 /* StickerStore.swift */,
 				7B8144621FDD62B900404431 /* SystemMessageViewModel.swift */,
 				7B1456911FCC186E001B6DED /* TextMessageViewModel.swift */,
 				7B1ABB0D21196B24009FAA6C /* TilingCollectionViewFlowLayout.swift */,
@@ -4600,7 +4591,6 @@
 				7B6A4046228400AF0037C7E5 /* MessageReceiverViewController.swift in Sources */,
 				7BB0F94F2434D75D00BEDA97 /* CircleMember+Convenience.swift in Sources */,
 				7CF9503F277D8839000AECC7 /* MediasPreviewViewController.swift in Sources */,
-				DFC0ECE723BB60DE0091E7AC /* PaymentCodeResponse.swift in Sources */,
 				7B0B01981FEA63FA000EEE4F /* StrangerHintView.swift in Sources */,
 				DFC2646C24E585C000BF954D /* DuplicateConfirmationWindow.swift in Sources */,
 				7BA4193E209AFAB500DFCD39 /* AppCardMessageCell.swift in Sources */,
@@ -4832,7 +4822,6 @@
 				94659DAA25C13793003403E5 /* DevicePerformance.swift in Sources */,
 				DF43304522648B32006D971D /* AssetInfoWindow.swift in Sources */,
 				7C247AA5277AED6800112A30 /* StackedPhotoView.swift in Sources */,
-				84A10E9A256B6416006AC741 /* TickerResponse.swift in Sources */,
 				7B492F982252159B00C05A45 /* ActivityIndicatorView.swift in Sources */,
 				7BC022E7214A150400B7A398 /* AuthorizationTableViewCell.swift in Sources */,
 				7B7ABBE02539799900070B71 /* ScreenWidth.swift in Sources */,
@@ -4849,7 +4838,6 @@
 				941CAE00276A3F17008F42D6 /* WebPImageDecoderInternal.swift in Sources */,
 				DF5BF55F1FBB281E0092AFB8 /* AssetViewController.swift in Sources */,
 				7B8BB57E234DD18C00991ACB /* SharedMediaTableHeaderView.swift in Sources */,
-				7C0E16A72702AF22002FC718 /* CollectibleAPI.swift in Sources */,
 				7C0E1D0D2786EAC900762FBE /* SnappingFlowLayout.swift in Sources */,
 				7B81D91623E93F470031E945 /* QuotedMessageViewModel.swift in Sources */,
 				7B280DEE22B120A90084E49E /* PhoneNumberLoginVerificationCodeViewController.swift in Sources */,

@@ -55,12 +55,15 @@ open class Database {
     
     let pool: DatabasePool
     
+    private let url: URL
+    
     public init(url: URL) throws {
         Self.registerErrorLogFunction()
-        pool = try DatabasePool(path: url.path, configuration: Self.config)
+        self.pool = try DatabasePool(path: url.path, configuration: Self.config)
+        self.url = url
     }
     
-    open func tableDidLose() {
+    open func tableDidLose(with error: Error?, fileSize: Int64?, fileCreationDate: Date?) {
         
     }
     
@@ -134,7 +137,20 @@ open class Database {
         guard let message = error.message, message.hasPrefix("no such table:"), !message.hasPrefix("no such table: grdb_migrations") else {
             return
         }
-        tableDidLose()
+        let attributesError: Error?
+        let fileSize: Int64?
+        let fileCreationDate: Date?
+        do {
+            let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
+            attributesError = nil
+            fileSize = (attributes[.size] as? NSNumber)?.int64Value
+            fileCreationDate = attributes[.creationDate] as? Date
+        } catch {
+            attributesError = error
+            fileSize = nil
+            fileCreationDate = nil
+        }
+        tableDidLose(with: attributesError, fileSize: fileSize, fileCreationDate: fileCreationDate)
     }
     
 }

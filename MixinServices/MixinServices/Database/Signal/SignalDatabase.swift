@@ -76,8 +76,14 @@ public final class SignalDatabase: Database {
         try! SignalDatabase(url: AppGroupContainer.signalDatabaseUrl)
     }
     
-    public override func tableDidLose() {
-        reporter.report(error: MixinServicesError.signalDatabaseCorrupted(isAppExtension))
+    public override func tableDidLose(with error: Error?, fileSize: Int64?, fileCreationDate: Date?) {
+        let error: MixinServicesError = .databaseCorrupted(database: "signal",
+                                                           isAppExtension: isAppExtension,
+                                                           error: error,
+                                                           fileSize: fileSize,
+                                                           fileCreationDate: fileCreationDate)
+        reporter.report(error: error)
+        Logger.database.error(category: "SignalDatabase", message: "Table lost with error: \(error)")
         LoginManager.shared.logout(from: "DatabaseCorruption")
     }
     

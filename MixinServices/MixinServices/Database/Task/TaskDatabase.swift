@@ -53,7 +53,14 @@ public class TaskDatabase: Database {
         return db
     }
     
-    public override func tableDidLose() {
+    public override func tableDidLose(with error: Error?, fileSize: Int64?, fileCreationDate: Date?) {
+        let error: MixinServicesError = .databaseCorrupted(database: "task",
+                                                           isAppExtension: isAppExtension,
+                                                           error: error,
+                                                           fileSize: fileSize,
+                                                           fileCreationDate: fileCreationDate)
+        reporter.report(error: error)
+        Logger.database.error(category: "TaskDatabase", message: "Table lost with error: \(error)")
         AppGroupUserDefaults.User.needsRebuildDatabase = true
     }
     

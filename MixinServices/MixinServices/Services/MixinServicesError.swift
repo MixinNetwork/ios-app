@@ -33,7 +33,7 @@ public enum MixinServicesError: Error {
     case invalidScalingContextParameter([String: Any])
     case encryptBotMessage([String: Any])
     case decryptBotMessage([String: Any])
-    case signalDatabaseCorrupted(Bool)
+    case databaseCorrupted(database: String, isAppExtension: Bool, error: Error?, fileSize: Int64?, fileCreationDate: Date?)
     
 }
 
@@ -93,7 +93,7 @@ extension MixinServicesError: CustomNSError {
             return 25
         case .decryptBotMessage:
             return 26
-        case .signalDatabaseCorrupted:
+        case .databaseCorrupted:
             return 27
         }
     }
@@ -150,8 +150,14 @@ extension MixinServicesError: CustomNSError {
             userInfo = info
         case .encryptBotMessage(let info), .decryptBotMessage(let info):
             userInfo = info
-        case let .signalDatabaseCorrupted(isAppExtension):
-            userInfo = ["appex": isAppExtension]
+        case let .databaseCorrupted(database, isAppExtension, error, fileSize, fileCreationDate):
+            userInfo = [
+                "db": database,
+                "appex": isAppExtension,
+                "error": error,
+                "fileSize": fileSize,
+                "fileCreationDate": fileCreationDate,
+            ]
         default:
             userInfo = [:]
         }

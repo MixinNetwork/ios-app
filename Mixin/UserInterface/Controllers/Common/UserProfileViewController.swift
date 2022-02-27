@@ -449,6 +449,11 @@ extension UserProfileViewController {
         dismissAndPush(vc)
     }
     
+    @objc func groupsInCommon() {
+        let vc = GroupsInCommonViewController.instance(userId: user.userId)
+        dismissAndPush(vc)
+    }
+    
     @objc func callWithMixin() {
         let user = self.user!
         dismiss(animated: true) {
@@ -800,6 +805,14 @@ extension UserProfileViewController {
             }()
             if !editAliasAndBotRelatedGroup.isEmpty {
                 groups.append(editAliasAndBotRelatedGroup)
+            }
+            
+            if !user.isBot {
+                let groupsInCommonGroup = [ProfileMenuItem(title: R.string.localizable.profile_groups_in_common(),
+                                                           subtitle: nil,
+                                                           style: [],
+                                                           action: #selector(groupsInCommon))]
+                groups.append(groupsInCommonGroup)
             }
             
             let contactRelationshipGroup: [ProfileMenuItem] = {

@@ -776,6 +776,7 @@
 "profile_shared_app_reach_limit" = "The number has reached the limit";
 "profile_call_with_mixin" = "Call with Mixin";
 "profile_call_phone" = "Call Phone";
+"profile_groups_in_common" = "Groups In Common";
 
 // Emergency
 "emergency_view" = "View emergency contact";

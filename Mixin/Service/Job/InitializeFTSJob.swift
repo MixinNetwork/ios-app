@@ -46,7 +46,7 @@ class InitializeFTSJob: BaseJob {
                 return
             }
             do {
-                try UserDatabase.current.pool.write { (db) -> Void in
+                try UserDatabase.current.writeAndReturnError { (db) -> Void in
                     let lastInitializedRowID: Int
                     let lastFTSMessageIDSQL = "SELECT id FROM \(Message.ftsTableName) ORDER BY rowid DESC LIMIT 1"
                     let lastFTSMessageIDToken: String? = try String.fetchOne(db, sql: lastFTSMessageIDSQL)

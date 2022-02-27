@@ -19,10 +19,10 @@ public final class UserDatabase: Database {
     }
     
     public override var needsMigration: Bool {
-        try! pool.read({ (db) -> Bool in
+        try! read { (db) -> Bool in
             let migrationsCompleted = try migrator.hasCompletedMigrations(db)
             return !migrationsCompleted
-        })
+        }
     }
     
     internal lazy var tableMigrations: [ColumnMigratable] = [
@@ -476,6 +476,17 @@ public final class UserDatabase: Database {
         }
         
         return migrator
+    }
+    
+    public override func tableDidLose(with error: Error?, fileSize: Int64?, fileCreationDate: Date?) {
+        let error: MixinServicesError = .databaseCorrupted(database: "user",
+                                                           isAppExtension: isAppExtension,
+                                                           error: error,
+                                                           fileSize: fileSize,
+                                                           fileCreationDate: fileCreationDate)
+        reporter.report(error: error)
+        Logger.database.error(category: "UserDatabase", message: "Table lost with error: \(error)")
+        AppGroupUserDefaults.User.needsRebuildDatabase = true
     }
     
 }

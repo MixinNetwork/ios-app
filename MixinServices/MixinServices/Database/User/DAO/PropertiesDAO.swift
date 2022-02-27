@@ -10,25 +10,25 @@ public final class PropertiesDAO: UserDatabaseDAO {
     public static let shared = PropertiesDAO()
     
     public func value<Value: LosslessStringConvertible>(forKey key: Key) -> Value? {
-        try? db.pool.write { db -> Value? in
+        try? db.writeAndReturnError { db -> Value? in
             try value(forKey: key, db: db)
         }
     }
     
     public func set(_ value: LosslessStringConvertible, forKey key: Key) {
-        try! db.pool.write { db in
+        try! db.writeAndReturnError { db in
             try set(value, forKey: key, db: db)
         }
     }
     
     public func removeValue(forKey key: Key) {
-        try! db.pool.write { db in
+        try! db.writeAndReturnError { db in
             try removeValue(forKey: key, db: db)
         }
     }
     
     public func updateValue<Value: LosslessStringConvertible>(forKey key: Key, type: Value.Type, execute update: (Value?) -> Value?) {
-        try! db.pool.write { db in
+        try! db.writeAndReturnError { db in
             let current: Value? = try value(forKey: key, db: db)
             if let new = update(current) {
                 try set(new, forKey: key, db: db)

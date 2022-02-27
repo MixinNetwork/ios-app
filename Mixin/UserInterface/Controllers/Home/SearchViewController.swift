@@ -146,7 +146,7 @@ class SearchViewController: UIViewController, HomeSearchViewController {
             }
             
             let conversationsByMessage: [MessagesWithinConversationSearchResult]
-            self.snapshot = try? UserDatabase.current.pool.makeSnapshot()
+            self.snapshot = try? UserDatabase.current.makeSnapshot()
             if let snapshot = self.snapshot {
                 conversationsByMessage = ConversationDAO.shared.getConversation(from: snapshot, with: keyword, limit: limit)
             } else {

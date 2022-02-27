@@ -53,11 +53,27 @@ open class Database {
         false
     }
     
-    public let pool: DatabasePool
+    let pool: DatabasePool
+    
+    private let url: URL
     
     public init(url: URL) throws {
         Self.registerErrorLogFunction()
-        pool = try DatabasePool(path: url.path, configuration: Self.config)
+        self.pool = try DatabasePool(path: url.path, configuration: Self.config)
+        self.url = url
+    }
+    
+    open func tableDidLose(with error: Error?, fileSize: Int64?, fileCreationDate: Date?) {
+        
+    }
+    
+    public func read<Value>(_ reader: (GRDB.Database) throws -> Value) throws -> Value {
+        do {
+            return try pool.read(reader)
+        } catch {
+            markDatabaseNeedsRebuildIfNeeded(error: error)
+            throw error
+        }
     }
     
     @discardableResult
@@ -66,8 +82,26 @@ open class Database {
             try pool.write(updates)
             return true
         } catch {
+            markDatabaseNeedsRebuildIfNeeded(error: error)
             return false
         }
+    }
+    
+    public func writeAndReturnError<Value>(_ updates: (GRDB.Database) throws -> Value) throws -> Value {
+        do {
+            return try pool.write(updates)
+        } catch {
+            markDatabaseNeedsRebuildIfNeeded(error: error)
+            throw error
+        }
+    }
+    
+    public func vacuum() throws {
+        try pool.vacuum()
+    }
+    
+    public func makeSnapshot() throws -> DatabaseSnapshot {
+        try pool.makeSnapshot()
     }
     
     @discardableResult
@@ -96,6 +130,29 @@ open class Database {
         }
     }
     
+    private func markDatabaseNeedsRebuildIfNeeded(error: Error) {
+        guard let error = error as? GRDB.DatabaseError else {
+            return
+        }
+        guard let message = error.message, message.hasPrefix("no such table:"), !message.hasPrefix("no such table: grdb_migrations") else {
+            return
+        }
+        let attributesError: Error?
+        let fileSize: Int64?
+        let fileCreationDate: Date?
+        do {
+            let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
+            attributesError = nil
+            fileSize = (attributes[.size] as? NSNumber)?.int64Value
+            fileCreationDate = attributes[.creationDate] as? Date
+        } catch {
+            attributesError = error
+            fileSize = nil
+            fileCreationDate = nil
+        }
+        tableDidLose(with: attributesError, fileSize: fileSize, fileCreationDate: fileCreationDate)
+    }
+    
 }
 
 // MARK: - Metadata Fetching
@@ -105,7 +162,7 @@ extension Database {
         in table: Record.Type,
         where condition: SQLSpecificExpressible
     ) -> Bool {
-        try! pool.read { (db) -> Bool in
+        try! read { (db) -> Bool in
             try table.select(Column.rowID).filter(condition).fetchOne(db) != nil
         }
     }
@@ -114,13 +171,13 @@ extension Database {
         in table: Record.Type,
         where condition: SQLSpecificExpressible? = nil
     ) -> Int {
-        try! pool.read({ (db) -> Int in
+        try! read { (db) -> Int in
             if let condition = condition {
                 return try table.filter(condition).fetchCount(db)
             } else {
                 return try table.fetchCount(db)
             }
-        })
+        }
     }
     
 }
@@ -129,7 +186,7 @@ extension Database {
 extension Database {
     
     public func selectAll<Record: MixinFetchableRecord & TableRecord>() -> [Record] {
-        try! pool.read { (db) -> [Record] in
+        try! read { (db) -> [Record] in
             try Record.fetchAll(db)
         }
     }
@@ -138,19 +195,19 @@ extension Database {
         with sql: String,
         arguments: StatementArguments = StatementArguments()
     ) -> Value? {
-        try! pool.read({ (db) -> Value? in
+        try! read { (db) -> Value? in
             try Value.fetchOne(db, sql: sql, arguments: arguments, adapter: nil)
-        })
+        }
     }
     
     public func select<Value: DatabaseValueConvertible>(
         with sql: String,
         arguments: StatementArguments = StatementArguments()
     ) -> [Value] {
-        try! pool.read({ (db) -> [Value] in
+        try! read { (db) -> [Value] in
             let values = try Value?.fetchAll(db, sql: sql, arguments: arguments, adapter: nil)
             return values.compactMap { $0 }
-        })
+        }
     }
     
     public func select<Record: TableRecord, Value: DatabaseValueConvertible>(
@@ -158,7 +215,7 @@ extension Database {
         from table: Record.Type,
         where condition: SQLSpecificExpressible? = nil
     ) -> Value? {
-        try! pool.read { (db) -> Value? in
+        try! read { (db) -> Value? in
             var request = Record.select([column]).limit(1)
             if let condition = condition {
                 request = request.filter(condition)
@@ -175,7 +232,7 @@ extension Database {
         offset: Int? = nil,
         limit: Int? = nil
     ) -> [Value] {
-        try! pool.read { (db) -> [Value] in
+        try! read { (db) -> [Value] in
             var request = Record.select([column])
             if let condition = condition {
                 request = request.filter(condition)
@@ -200,7 +257,7 @@ extension Database {
         offset: Int? = nil,
         limit: Int? = nil
     ) -> UniqueStringPairs {
-        try! pool.read { (db) -> UniqueStringPairs in
+        try! read { (db) -> UniqueStringPairs in
             var pairs = UniqueStringPairs()
             var request = table.select([keyColumn, valueColumn])
             if let condition = condition {
@@ -227,7 +284,7 @@ extension Database {
         where condition: SQLSpecificExpressible,
         order orderings: [SQLOrderingTerm] = []
     ) -> Record? {
-        try! pool.read { (db) -> Record? in
+        try! read { (db) -> Record? in
             try Record.filter(condition)
                 .order(orderings)
                 .limit(1)
@@ -240,7 +297,7 @@ extension Database {
         order orderings: [SQLOrderingTerm] = [],
         limit: Int? = nil
     ) -> [Record] {
-        try! pool.read { (db) -> [Record] in
+        try! read { (db) -> [Record] in
             var request = Record.filter(condition)
             if !orderings.isEmpty {
                 request = request.order(orderings)
@@ -256,7 +313,7 @@ extension Database {
         with sql: String,
         arguments: StatementArguments = StatementArguments()
     ) -> Record? {
-        try! pool.read { (db) -> Record? in
+        try! read { (db) -> Record? in
             try Record.fetchOne(db, sql: sql, arguments: arguments, adapter: nil)
         }
     }
@@ -265,7 +322,7 @@ extension Database {
         with sql: String,
         arguments: StatementArguments = StatementArguments()
     ) -> [Record] {
-        try! pool.read { (db) -> [Record] in
+        try! read { (db) -> [Record] in
             try Record.fetchAll(db, sql: sql, arguments: arguments, adapter: nil)
         }
     }
@@ -297,16 +354,11 @@ extension Database {
         guard records.count > 0 else {
             return true
         }
-        do {
-            try pool.write { (db) -> Void in
-                try records.save(db)
-                if let completion = completion {
-                    db.afterNextTransactionCommit(completion)
-                }
+        return write { (db) -> Void in
+            try records.save(db)
+            if let completion = completion {
+                db.afterNextTransactionCommit(completion)
             }
-            return true
-        } catch {
-            return false
         }
     }
     
@@ -339,14 +391,15 @@ extension Database {
     ) -> Int {
         do {
             var numberOfChanges = 0
-            try pool.write({ (db) -> Void in
+            try writeAndReturnError { (db) -> Void in
                 numberOfChanges = try record.filter(condition).deleteAll(db)
                 if let completion = completion {
                     db.afterNextTransactionCommit(completion)
                 }
-            })
+            }
             return numberOfChanges
         } catch {
+            markDatabaseNeedsRebuildIfNeeded(error: error)
             return 0
         }
     }

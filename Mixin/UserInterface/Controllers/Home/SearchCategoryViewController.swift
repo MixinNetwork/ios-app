@@ -132,7 +132,7 @@ class SearchCategoryViewController: UIViewController, HomeSearchViewController {
                 models = ConversationDAO.shared.getGroupOrStrangerConversation(withNameLike: keyword, limit: nil)
                     .map { ConversationSearchResult(conversation: $0, keyword: keyword) }
             case .conversationsByMessage:
-                self?.snapshot = try? UserDatabase.current.pool.makeSnapshot()
+                self?.snapshot = try? UserDatabase.current.makeSnapshot()
                 if let snapshot = self?.snapshot {
                     models = ConversationDAO.shared.getConversation(from: snapshot, with: keyword, limit: nil)
                 } else {

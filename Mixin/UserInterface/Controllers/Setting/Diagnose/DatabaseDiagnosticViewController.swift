@@ -30,14 +30,14 @@ class DatabaseDiagnosticViewController: UIViewController {
     @IBAction func run(_ sender: Any) {
         AppDelegate.current.mainWindow.endEditing(true)
         let sql = inputTextView.text.trimmingCharacters(in: .whitespacesAndNewlines)
-        let pool: DatabasePool = {
+        let database: MixinServices.Database = {
             switch databaseSwitcher.selectedSegmentIndex {
             case 0:
-                return SignalDatabase.current.pool
+                return SignalDatabase.current
             case 1:
-                return UserDatabase.current.pool
+                return UserDatabase.current
             default:
-                return TaskDatabase.current.pool
+                return TaskDatabase.current
             }
         }()
         queue.async {
@@ -50,7 +50,7 @@ class DatabaseDiagnosticViewController: UIViewController {
             }
             let output: String
             do {
-                output = try pool.read { db in
+                output = try database.read { db in
                     var rows: [String] = []
                     let cursor = try Row.fetchCursor(db, sql: sql)
                     while let row = try cursor.next() {

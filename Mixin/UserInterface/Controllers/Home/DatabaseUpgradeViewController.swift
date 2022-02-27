@@ -40,8 +40,8 @@ class DatabaseUpgradeViewController: UIViewController {
             
             AppGroupContainer.migrateIfNeeded()
             TaskDatabase.reloadCurrent()
-            
             UserDatabase.reloadCurrent()
+            
             if !AppGroupUserDefaults.Database.isSentSenderKeyCleared {
                 UserDatabase.current.clearSentSenderKey()
                 AppGroupUserDefaults.Database.isSentSenderKeyCleared = true

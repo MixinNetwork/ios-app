@@ -790,8 +790,13 @@ extension CallService {
             self.blazeProcessingQueue.async {
                 try? AudioSession.shared.activate(client: self)
                 DispatchQueue.main.async {
+                    // The completion block passed to CallKit may get called before or after the CXStartCallAction
+                    // is requested to perform by CXProvider. To guarantee the call exists when it trys to start
+                    // with a UUID, we put that call into pending list before requesting the adapter to start it.
+                    self.calls[call.uuid] = call
                     self.adapter.requestStartCall(call) { error in
                         Queue.main.autoSync {
+                            self.calls[call.uuid] = nil
                             if let error = error {
                                 self.alert(error: error)
                                 Logger.call.warn(category: "CallService", message: "Adapter reports error on start call: \(error)")

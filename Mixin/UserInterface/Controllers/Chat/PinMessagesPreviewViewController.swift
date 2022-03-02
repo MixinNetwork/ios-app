@@ -19,12 +19,6 @@ final class PinMessagesPreviewViewController: StaticMessagesViewController {
     private var ignoresPinMessageChangeNotification = false
     private var canUnpinMessages = false
     
-    private var layoutWidth: CGFloat {
-        Queue.main.autoSync {
-            AppDelegate.current.mainWindow.bounds.width
-        }
-    }
-    
     private weak var bottomBarViewIfAdded: UIView?
     
     init(conversationId: String, isGroup: Bool) {

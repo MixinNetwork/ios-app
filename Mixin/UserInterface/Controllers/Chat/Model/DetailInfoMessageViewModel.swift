@@ -63,7 +63,7 @@ class DetailInfoMessageViewModel: MessageViewModel {
     private let minFullnameWidth: CGFloat = 16
     private let minDetailInfoLeftMargin: CGFloat = 8
     private let statusHighlightTintColor = UIColor.theme
-    private let stackedPhotoMargin: CGFloat = 50
+    private let stackedPhotoMargin: CGFloat = 40
     
     override func layout(width: CGFloat, style: MessageViewModel.Style) {
         super.layout(width: width, style: style)

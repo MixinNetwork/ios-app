@@ -558,6 +558,9 @@
 		7C148ED227A3E7FA00599E76 /* StackedPhotoPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C148ED127A3E7FA00599E76 /* StackedPhotoPreviewViewController.swift */; };
 		7C14CFC126CA35CF0094AF4A /* StaticMessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C14CFBF26CA35CF0094AF4A /* StaticMessagesViewController.swift */; };
 		7C14CFC226CA35CF0094AF4A /* StaticMessagesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C14CFC026CA35CF0094AF4A /* StaticMessagesView.xib */; };
+		7C1684ED27BDE393004393DD /* MultipleSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1684EC27BDE393004393DD /* MultipleSelectionView.swift */; };
+		7C1684EF27BDE3A3004393DD /* MultipleSelectionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C1684EE27BDE3A3004393DD /* MultipleSelectionView.xib */; };
+		7C1686BB27BDF1D5004393DD /* StickersStoreBannerFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1686BA27BDF1D5004393DD /* StickersStoreBannerFlowLayout.swift */; };
 		7C1A6C4326C6580600A1D6CE /* StickerPreviewItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1A6C4226C6580600A1D6CE /* StickerPreviewItemCell.swift */; };
 		7C1EDAB42772FF8B00193917 /* VerifyNumberContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1EDAB32772FF8B00193917 /* VerifyNumberContext.swift */; };
 		7C225E8827C4C5FE00154143 /* GroupInCommonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C225E8627C4C5FE00154143 /* GroupInCommonCell.swift */; };
@@ -1548,6 +1551,9 @@
 		7C148ED127A3E7FA00599E76 /* StackedPhotoPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackedPhotoPreviewViewController.swift; sourceTree = "<group>"; };
 		7C14CFBF26CA35CF0094AF4A /* StaticMessagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticMessagesViewController.swift; sourceTree = "<group>"; };
 		7C14CFC026CA35CF0094AF4A /* StaticMessagesView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StaticMessagesView.xib; sourceTree = "<group>"; };
+		7C1684EC27BDE393004393DD /* MultipleSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleSelectionView.swift; sourceTree = "<group>"; };
+		7C1684EE27BDE3A3004393DD /* MultipleSelectionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MultipleSelectionView.xib; sourceTree = "<group>"; };
+		7C1686BA27BDF1D5004393DD /* StickersStoreBannerFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StickersStoreBannerFlowLayout.swift; sourceTree = "<group>"; };
 		7C1A6C4226C6580600A1D6CE /* StickerPreviewItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerPreviewItemCell.swift; sourceTree = "<group>"; };
 		7C1EDAB32772FF8B00193917 /* VerifyNumberContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyNumberContext.swift; sourceTree = "<group>"; };
 		7C225E8627C4C5FE00154143 /* GroupInCommonCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupInCommonCell.swift; sourceTree = "<group>"; };
@@ -3576,6 +3582,8 @@
 				7BA1768D244ACE2E007D50FD /* PickerCell.swift */,
 				7B3CDA6324FFDD1D003A3E80 /* FavoriteStickerCell.swift */,
 				7CF95040277D8904000AECC7 /* SelectedMediaCell.swift */,
+				7C1684EE27BDE3A3004393DD /* MultipleSelectionView.xib */,
+				7C1684EC27BDE393004393DD /* MultipleSelectionView.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -3927,6 +3935,7 @@
 				7CFF1389277D5C6600FA745D /* MediaPreviewWindow.xib in Resources */,
 				7B8BB590234F36C000991ACB /* Colors.xcassets in Resources */,
 				94B8D18A266E41D300F43CBB /* DatabaseDiagnosticView.xib in Resources */,
+				7C1684EF27BDE3A3004393DD /* MultipleSelectionView.xib in Resources */,
 				7BFCB7762419FC5B00E7BC43 /* LocationCell.xib in Resources */,
 				DFD294491FA7145F00FADAAD /* Contact.storyboard in Resources */,
 				94E8913925C019F000F1E5D4 /* Pods-Mixin-acknowledgements.plist in Resources */,
@@ -4553,6 +4562,7 @@
 				E0FE4CCE237421F0009A14F6 /* ProfileMenuItem.swift in Sources */,
 				DF6175BF2223985C00624609 /* MXMProvisionCryptor.m in Sources */,
 				DF75FF4424FE61E1008A7CF3 /* UpdateViewController.swift in Sources */,
+				7C1684ED27BDE393004393DD /* MultipleSelectionView.swift in Sources */,
 				7C66F1BB268B2CE5006D8462 /* HomeAppsManager.swift in Sources */,
 				7C14CFC126CA35CF0094AF4A /* StaticMessagesViewController.swift in Sources */,
 				DFA5B5931FB051BB00549728 /* WalletViewController.swift in Sources */,

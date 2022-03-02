@@ -3,36 +3,36 @@ import Photos
 import MixinServices
 
 protocol MediasPreviewViewControllerDelegate: AnyObject {
-    func mediasPreviewViewControllerDidCancelSend(_ controller: MediasPreviewViewController)
     func mediasPreviewViewController(_ controller: MediasPreviewViewController, didSend assets: [PHAsset])
     func mediasPreviewViewController(_ controller: MediasPreviewViewController, didRemove asset: PHAsset)
     func mediasPreviewViewController(_ controller: MediasPreviewViewController, didSelectAssetAt index: Int)
+    func mediasPreviewViewController(_ controller: MediasPreviewViewController, didCancelSend assets: [PHAsset])
 }
 
 final class MediasPreviewViewController: UIViewController {
     
-    static let viewHeight: CGFloat = 224
-
+    let viewHeight: CGFloat = 224
+    
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var sendButton: UIButton!
     
     weak var delegate: MediasPreviewViewControllerDelegate?
     weak var gridViewController: PhotoInputGridViewController?
     
+    private var cellSizeCache = [String: CGSize]()
+    private var isAddingAsset = false
+    private var isRemovingAsset = false
+    private var selectedAssets: [PHAsset] {
+        gridViewController?.selectedAssets ?? []
+    }
     private var assets = [PHAsset]() {
         didSet {
             sendButton.setTitle(R.string.localizable.chat_media_send_count(assets.count), for: .normal)
         }
     }
-    private var selectedAssets: [PHAsset] {
-        gridViewController?.selectedAssets ?? []
-    }
-    private var cellSizeCache = [String: CGSize]()
-    private var isAddingAsset = false
-    private var isRemovingAsset = false
     
     @IBAction func cancelAction(_ sender: Any) {
-        delegate?.mediasPreviewViewControllerDidCancelSend(self)
+        delegate?.mediasPreviewViewController(self, didCancelSend: assets)
     }
     
     @IBAction func sendAction(_ sender: Any) {
@@ -46,9 +46,7 @@ extension MediasPreviewViewController {
     func add(_ asset: PHAsset) {
         isAddingAsset = true
         assets = selectedAssets
-        UIView.performWithoutAnimation {
-            collectionView.reloadData()
-        }
+        UIView.performWithoutAnimation(collectionView.reloadData)
         collectionView.scrollToItem(at: IndexPath(item: assets.count - 1, section: 0),
                                     at: .centeredHorizontally,
                                     animated: true)
@@ -93,7 +91,7 @@ extension MediasPreviewViewController: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.selected_media, for: indexPath)!
         if indexPath.item < assets.count {
             let asset = assets[indexPath.item]
-            cell.load(asset: asset, size: cellSize(of: asset))
+            cell.load(asset: asset, size: cellSizeForItemAt(indexPath.item))
             cell.onRemove = { [weak self] in
                 guard let self = self else {
                     return
@@ -110,11 +108,7 @@ extension MediasPreviewViewController: UICollectionViewDataSource {
 extension MediasPreviewViewController: UICollectionViewDelegateFlowLayout, UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        if indexPath.item < assets.count {
-            return cellSize(of: assets[indexPath.item])
-        } else {
-            return .zero
-        }
+        cellSizeForItemAt(indexPath.item)
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
@@ -131,11 +125,15 @@ extension MediasPreviewViewController: UICollectionViewDelegateFlowLayout, UICol
 
 extension MediasPreviewViewController {
     
-    private func cellSize(of asset: PHAsset) -> CGSize {
+    private func cellSizeForItemAt(_ index: Int) -> CGSize {
+        guard index < assets.count else {
+            return .zero
+        }
+        let asset = assets[index]
         if let size = cellSizeCache[asset.localIdentifier] {
             return size
         } else {
-            let height = SelectedMediaCell.cellHeight
+            let height: CGFloat = 160
             let width: CGFloat
             let ratio = CGFloat(asset.pixelWidth) / CGFloat(asset.pixelHeight)
             if ratio > 1 {
@@ -145,7 +143,7 @@ extension MediasPreviewViewController {
             } else {
                 width = height
             }
-            let size = CGSize(width: width, height: height)
+            let size = CGSize(width: ceil(width), height: ceil(height))
             cellSizeCache[asset.localIdentifier] = size
             return size
         }

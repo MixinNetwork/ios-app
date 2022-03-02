@@ -35,18 +35,18 @@ class BadgeView: UILabel {
     
     override func draw(_ rect: CGRect) {
         let rectInset = rect.insetBy(dx: borderWidth / 2, dy: borderWidth / 2)
-        var path: UIBezierPath?
+        let path: UIBezierPath
         if cornerRadius > 0 {
             path = UIBezierPath(roundedRect: rectInset, cornerRadius: cornerRadius)
         } else {
             path = UIBezierPath(rect: rectInset)
         }
         badgeColor.setFill()
-        path?.fill()
+        path.fill()
         if borderWidth > 0 {
             borderColor.setStroke()
-            path?.lineWidth = borderWidth
-            path?.stroke()
+            path.lineWidth = borderWidth
+            path.stroke()
         }
         super.draw(rect)
     }

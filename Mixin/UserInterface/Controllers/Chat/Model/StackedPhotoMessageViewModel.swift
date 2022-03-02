@@ -3,43 +3,32 @@ import MixinServices
 
 class StackedPhotoMessageViewModel: ImageMessageViewModel {
     
+    private let stackedPhotoViewHeight: CGFloat = 280
+    
     override class var bubbleWidth: CGFloat {
-        260 + 8
+        258
     }
         
     private(set) var photoMessageViewModels: [PhotoMessageViewModel] = []
-    
-    override class var bubbleImageSet: BubbleImageSet.Type {
-        return StackedPhotoBubbleImageSet.self
-    }
+    private(set) var stackedPhotoViewFrame = CGRect.zero
     
     override init(message: MessageItem) {
         super.init(message: message)
         if let items = message.messageItems, !items.isEmpty {
-            photoMessageViewModels = items.compactMap({ messageItem -> PhotoMessageViewModel? in
-                guard messageItem.category.hasSuffix("_IMAGE") else {
-                    return nil
-                }
-                return PhotoMessageViewModel(message: messageItem)
-            })
+            photoMessageViewModels = items.map({ PhotoMessageViewModel(message: $0) })
         }
     }
     
     override func layout(width: CGFloat, style: MessageViewModel.Style) {
-        let photoWidth: CGFloat
-        if quotedMessageViewModel == nil {
-            photoWidth = Self.bubbleWidth
-        } else {
-            photoWidth = Self.bubbleWidth - Self.quotingMessageMargin.horizontal
-        }
-        photoFrame.size = CGSize(width: photoWidth, height: 280)
+        photoFrame.size = CGSize(width: Self.bubbleWidth, height: stackedPhotoViewHeight + 3)
         super.layout(width: width, style: style)
         if style.contains(.received) {
             photoFrame.origin.x += 8
         }
-        if quotedMessageViewModel != nil {
-            photoFrame.origin = .zero
-        }
+        stackedPhotoViewFrame = CGRect(x: photoFrame.origin.x,
+                                       y: photoFrame.origin.y + 1,
+                                       width: photoFrame.width,
+                                       height: stackedPhotoViewHeight - 1)
         layoutTrailingInfoBackgroundFrame()
     }
     

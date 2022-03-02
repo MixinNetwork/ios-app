@@ -39,7 +39,7 @@ class QuotePreviewView: UIView, XibDesignable {
             contentImageWrapperView.isHidden = false
             avatarImageView.isHidden = false
             imageView.isHidden = true
-        } else if ["_STICKER", "_IMAGE", "_VIDEO", "_LIVE"].contains(where: message.category.hasSuffix) || message.category == MessageCategory.STACKED_PHOTO.rawValue {
+        } else if ["_STICKER", "_IMAGE", "_VIDEO", "_LIVE"].contains(where: message.category.hasSuffix) {
             contentImageWrapperView.isHidden = false
             avatarImageView.isHidden = true
             imageView.isHidden = false
@@ -48,6 +48,11 @@ class QuotePreviewView: UIView, XibDesignable {
             } else {
                 imageView.contentMode = .scaleAspectFill
             }
+        } else if message.category == MessageCategory.STACKED_PHOTO.rawValue {
+            contentImageWrapperView.isHidden = false
+            avatarImageView.isHidden = true
+            imageView.isHidden = false
+            imageView.contentMode = .scaleAspectFill
         } else {
             contentImageWrapperView.isHidden = true
         }

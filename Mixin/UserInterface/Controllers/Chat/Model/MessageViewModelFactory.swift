@@ -68,10 +68,10 @@ class MessageViewModelFactory {
         if message.userId != myUserId {
             style = .received
         }
-        if isLastMessage
-            || messageAtIndex(index + 1).userId != message.userId
-            || messageAtIndex(index + 1).isExtensionMessage
-            || messageAtIndex(index + 1).isSystemMessage {
+        if message.category != MessageCategory.STACKED_PHOTO.rawValue && (isLastMessage
+                                                                          || messageAtIndex(index + 1).userId != message.userId
+                                                                          || messageAtIndex(index + 1).isExtensionMessage
+                                                                          || messageAtIndex(index + 1).isSystemMessage) {
             style.insert(.tail)
         }
         if message.category == MessageCategory.EXT_ENCRYPTION.rawValue {

@@ -20,6 +20,21 @@ class ConversationDataSource {
     var firstUnreadMessageId: String?
     var focusIndexPath: IndexPath?
     var selectedViewModels = [String: MessageViewModel]() // Key is message id
+    var selectedMessageViewModels: [MessageViewModel] {
+        selectedViewModels.values.reduce(into: []) { result, viewModel in
+            if viewModel.message.category == MessageCategory.STACKED_PHOTO.rawValue {
+                if let messages = viewModel.message.messageItems, !messages.isEmpty {
+                    let models: [MessageViewModel] = factory
+                        .viewModels(with: messages, fits: layoutSize.width)
+                        .viewModels
+                        .reduce([]) { $1.value }
+                    result.append(contentsOf: models)
+                }
+            } else {
+                result.append(viewModel)
+            }
+        }
+    }
     
     weak var tableView: ConversationTableView?
     
@@ -38,6 +53,7 @@ class ConversationDataSource {
     private(set) var loadedMessageIds = SafeSet<String>()
     private(set) var didLoadLatestMessage = false
     private(set) var category: Category
+    private(set) var stackedPhotoMessages = [MessageItem]()
     
     private var highlight: Highlight?
     private var viewModels = [String: [MessageViewModel]]()
@@ -47,7 +63,6 @@ class ConversationDataSource {
     private var canInsertUnreadHint = true
     private var messageProcessingIsCancelled = false
     private var didInitializedData = false
-    private var stackedPhotoMessages = [MessageItem]()
     
     var layoutSize: CGSize {
         Queue.main.autoSync {
@@ -95,6 +110,7 @@ class ConversationDataSource {
         NotificationCenter.default.addObserver(self, selector: #selector(updateMessageMediaStatus(_:)), name: MessageDAO.messageMediaStatusDidUpdateNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateMessagePinning(_:)), name: PinMessageDAO.didSaveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateMessagePinning(_:)), name: PinMessageDAO.didDeleteNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(messageDidDelete(_:)), name: MessageDAO.didDeleteMessageNotification, object: nil)
         reload(completion: completion)
     }
     
@@ -511,7 +527,7 @@ extension ConversationDataSource {
         case .updateMediaContent(let messageId, let message):
             updateMediaContent(messageId: messageId, message: message)
         case .recallMessage(let messageId):
-            updateMessage(messageId: messageId)
+            recallMessage(messageId: messageId)
         case .updateConversation, .startedUpdateConversation:
             break
         }
@@ -631,6 +647,100 @@ extension ConversationDataSource {
         }
     }
     
+    @objc private func messageDidDelete(_ notification: Notification) {
+        guard let messageId = notification.userInfo?[MessageDAO.UserInfoKey.messageId] as? String else {
+            return
+        }
+        queue.async {
+            var deletePhotoMessage = false
+            for (index, message) in self.stackedPhotoMessages.enumerated() {
+                guard
+                    var imageMessages = message.messageItems,
+                    let deletedMessageIndex = imageMessages.firstIndex(where: { $0.messageId == messageId }),
+                    let viewModelIndexPath = self.indexPath(where: { $0.messageId == message.messageId })
+                else {
+                    continue
+                }
+                imageMessages.remove(at: deletedMessageIndex)
+                message.messageItems = imageMessages
+                if deletedMessageIndex == 0 {
+                    message.messageId = imageMessages[0].messageId
+                }
+                if imageMessages.count < self.stackConsecutiveImageMessagesThreshold {
+                    DispatchQueue.main.sync {
+                        guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {
+                            return
+                        }
+                        _ = self.removeViewModel(at: viewModelIndexPath)
+                        self.stackedPhotoMessages.remove(at: index)
+                        tableView.reloadData()
+                    }
+                    imageMessages.forEach(self.addMessageAndDisplay(message:))
+                } else {
+                    DispatchQueue.main.sync {
+                        guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {
+                            return
+                        }
+                        let date = DateFormatter.yyyymmdd.string(from: message.createdAt.toUTCDate())
+                        if let style = self.viewModels[date]?[viewModelIndexPath.row].style {
+                            let viewModel = self.factory.viewModel(withMessage: message, style: style, fits: self.layoutSize.width)
+                            self.viewModels[date]?[viewModelIndexPath.row] = viewModel
+                            tableView.reloadData()
+                        }
+                    }
+                }
+                deletePhotoMessage = true
+                break
+            }
+            if !deletePhotoMessage {
+                guard let indexPath = self.indexPath(where: { $0.messageId == messageId }) else {
+                    return
+                }
+                DispatchQueue.main.sync {
+                    guard let tableView = self.tableView else {
+                        return
+                    }
+                    _ = self.removeViewModel(at: indexPath)
+                    tableView.reloadData()
+                }
+            }
+        }
+    }
+    
+    private func recallMessage(messageId: String) {
+        queue.async {
+            guard !self.messageProcessingIsCancelled else {
+                return
+            }
+            var recallStackedPhotoMessage = false
+            for (index, message) in self.stackedPhotoMessages.enumerated() {
+                guard
+                    var imageMessages = message.messageItems,
+                    let recallMessageIndex = imageMessages.firstIndex(where: { $0.messageId == messageId }),
+                    let viewModelIndexPath = self.indexPath(where: { $0.messageId == message.messageId }),
+                    let recalledMessage = MessageDAO.shared.getFullMessage(messageId: messageId)
+                else {
+                    continue
+                }
+                imageMessages[recallMessageIndex] = recalledMessage
+                DispatchQueue.main.sync {
+                    guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {
+                        return
+                    }
+                    _ = self.removeViewModel(at: viewModelIndexPath)
+                    self.stackedPhotoMessages.remove(at: index)
+                    tableView.reloadData()
+                }
+                imageMessages.forEach(self.addMessageAndDisplay(message:))
+                recallStackedPhotoMessage = true
+                break
+            }
+            if !recallStackedPhotoMessage {
+                self.updateMessage(messageId: messageId)
+            }
+        }
+    }
+    
     private func updateMessageStatus(messageId: String, status: MessageStatus) {
         guard let indexPath = indexPath(where: { $0.messageId == messageId }), let viewModel = viewModel(for: indexPath) as? DetailInfoMessageViewModel else {
             return
@@ -708,12 +818,16 @@ extension ConversationDataSource {
                     return
                 }
                 let date = DateFormatter.yyyymmdd.string(from: message.createdAt.toUTCDate())
-                if let style = self.viewModels[date]?[indexPath.row].style {
-                    let viewModel = self.factory.viewModel(withMessage: message, style: style, fits: self.layoutSize.width)
-                    self.viewModels[date]?[indexPath.row] = viewModel
-                    tableView.reloadData()
-                    self.selectTableViewRowsWithPreviousSelection()
+                guard
+                    let viewModel = self.viewModels[date]?[indexPath.row],
+                    viewModel.message.category != MessageCategory.STACKED_PHOTO.rawValue
+                else {
+                    return
                 }
+                let model = self.factory.viewModel(withMessage: message, style: viewModel.style, fits: self.layoutSize.width)
+                self.viewModels[date]?[indexPath.row] = model
+                tableView.reloadData()
+                self.selectTableViewRowsWithPreviousSelection()
             }
         }
     }
@@ -956,27 +1070,14 @@ extension ConversationDataSource {
         guard messages.count >= stackConsecutiveImageMessagesThreshold else {
             return messages
         }
-        
         func createStackedPhotoMessage(_ messages: [MessageItem]) -> MessageItem {
             let message = messages[0]
-            let item = MessageItem(messageId: UUID().uuidString.lowercased(),
+            let item = MessageItem(messageId: message.messageId,
                                    conversationId: message.conversationId,
                                    userId: message.userId,
                                    category: MessageCategory.STACKED_PHOTO.rawValue,
-                                   content: message.content,
-                                   mediaUrl: message.mediaUrl,
-                                   mediaMimeType: message.mediaMimeType,
-                                   mediaSize: message.mediaSize,
-                                   mediaWidth: message.mediaWidth,
-                                   mediaHeight: message.mediaHeight,
-                                   mediaKey: message.mediaKey,
-                                   mediaDigest: message.mediaDigest,
-                                   mediaStatus: message.status,
-                                   mediaLocalIdentifier: message.mediaLocalIdentifier,
                                    thumbImage: message.thumbImage,
-                                   thumbUrl: message.thumbUrl,
                                    status: message.status,
-                                   name: message.name,
                                    createdAt: message.createdAt,
                                    userFullName: message.userFullName,
                                    userIdentityNumber: message.userIdentityNumber,
@@ -985,7 +1086,6 @@ extension ConversationDataSource {
             stackedPhotoMessages.append(item)
             return item
         }
-        
         var result = [MessageItem]()
         var messagesToStack = [MessageItem]()
         var left = 0
@@ -994,7 +1094,6 @@ extension ConversationDataSource {
             messagesToStack.count < stackConsecutiveImageMessagesThreshold ||
             messagesToStack.contains(where: { $0.mediaStatus != MediaStatus.DONE.rawValue })
         }
-        
         while right < messages.count {
             if !messages[left].category.hasSuffix("_IMAGE") {
                 result.append(messages[left])

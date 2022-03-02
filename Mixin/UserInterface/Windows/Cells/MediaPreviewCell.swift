@@ -8,9 +8,9 @@ class MediaPreviewCell: UICollectionViewCell {
 
     static let reuseIdentifier = "cell_identifier_media_preview_cell"
     static let cellSize = CGSize(width: 312, height: 312)
-    
-    @IBOutlet weak var imageView: SDAnimatedImageView!
+
     @IBOutlet weak var badge: BadgeView!
+    @IBOutlet weak var imageView: SDAnimatedImageView!
     @IBOutlet weak var checkmarkImageView: UIImageView!
     @IBOutlet weak var mediaTypeView: MediaTypeOverlayView!
     
@@ -62,8 +62,8 @@ class MediaPreviewCell: UICollectionViewCell {
     }
     
     func updateSelectedStatus(isSelected: Bool) {
-        checkmarkImageView.isHidden = !isSelected
         badge.isHidden = isSelected
+        checkmarkImageView.isHidden = !isSelected
     }
     
 }

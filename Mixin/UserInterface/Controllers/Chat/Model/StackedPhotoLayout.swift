@@ -34,22 +34,10 @@ class StackedPhotoLayout: UICollectionViewLayout {
             invalidateLayout()
         }
     }
-    var intrinsicContentSize: CGSize {
-        Self.intrinsicContentSize(itemSize: itemSize,
-                                  itemScale: itemScale,
-                                  itemRotationDegree: itemRotationDegree,
-                                  itemCount: min(numberOfItems, visibleItemCount))
-    }
     
-    private var layoutAttributes = [UICollectionViewLayoutAttributes]()
     private var contentWidth: CGFloat = 0
-    private var numberOfItems: Int {
-        guard let collectionView = collectionView else {
-            return 0
-        }
-        return collectionView.numberOfItems(inSection: 0)
-    }
-    
+    private var layoutAttributes = [UICollectionViewLayoutAttributes]()
+
     class func intrinsicContentSize(
         itemSize: CGSize,
         itemScale: CGFloat,
@@ -65,13 +53,10 @@ class StackedPhotoLayout: UICollectionViewLayout {
     override func prepare() {
         super.prepare()
         guard let collectionView = collectionView else {
-            return
-        }
-        let numberOfItems = numberOfItems
-        guard numberOfItems > 0, collectionView.bounds.size.width > 0 else {
             layoutAttributes = []
             return
         }
+        let numberOfItems = collectionView.numberOfItems(inSection: 0)
         layoutAttributes = (0 ..< numberOfItems).map { index in
             let itemAttributes = UICollectionViewLayoutAttributes(forCellWith: IndexPath(item: index, section: 0))
             if index < visibleItemCount {

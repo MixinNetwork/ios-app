@@ -17,6 +17,11 @@ class StaticMessagesViewController: UIViewController {
     
     var dates: [String] = []
     var viewModels: [String: [MessageViewModel]] = [:]
+    var layoutWidth: CGFloat {
+        Queue.main.autoSync {
+            AppDelegate.current.mainWindow.bounds.width
+        }
+    }
     
     private let conversationId: String
     private let audioManager: StaticAudioMessagePlayingManager
@@ -179,12 +184,41 @@ class StaticMessagesViewController: UIViewController {
         }
     }
     
+    func removeViewModel(at indexPath: IndexPath) -> (didRemoveRow: Bool, didRemoveSection: Bool) {
+        var didRemoveRow = false
+        var didRemoveSection = false
+        let date = dates[indexPath.section]
+        if let _ = viewModels[date]?.remove(at: indexPath.row) {
+            didRemoveRow = true
+        }
+        if let viewModels = viewModels[date], viewModels.isEmpty {
+            if let index = dates.firstIndex(of: date) {
+                didRemoveSection = true
+                dates.remove(at: index)
+            }
+            self.viewModels[date] = nil
+        }
+        if let viewModels = self.viewModels[date] {
+            let indexBeforeDeletedMessage = indexPath.row - 1
+            let indexAfterDeletedMessage = indexPath.row
+            if indexBeforeDeletedMessage >= 0 {
+                let style = factory.style(forIndex: indexBeforeDeletedMessage, viewModels: viewModels)
+                self.viewModels[date]?[indexBeforeDeletedMessage].style = style
+            }
+            if indexAfterDeletedMessage < viewModels.count {
+                let style = factory.style(forIndex: indexAfterDeletedMessage, viewModels: viewModels)
+                self.viewModels[date]?[indexAfterDeletedMessage].style = style
+            }
+        }
+        return (didRemoveRow, didRemoveSection)
+    }
+    
 }
 
 // MARK: - Actions
 extension StaticMessagesViewController {
     
-    @objc private func tapAction(_ recognizer: UIGestureRecognizer) {
+    @objc func tapAction(_ recognizer: UIGestureRecognizer) {
         let tappedIndexPath = tableView.indexPathForRow(at: recognizer.location(in: tableView))
         let tappedViewModel: MessageViewModel? = {
             if let indexPath = tappedIndexPath {
@@ -554,10 +588,9 @@ extension StaticMessagesViewController {
                     return
                 }
                 DispatchQueue.main.sync {
-                    let layoutWidth = AppDelegate.current.mainWindow.bounds.width
                     let date = DateFormatter.yyyymmdd.string(from: message.createdAt.toUTCDate())
                     if let style = self.viewModels[date]?[indexPath.row].style {
-                        let viewModel = self.factory.viewModel(withMessage: message, style: style, fits: layoutWidth)
+                        let viewModel = self.factory.viewModel(withMessage: message, style: style, fits: self.layoutWidth)
                         self.viewModels[date]?[indexPath.row] = viewModel
                         self.tableView.reloadData()
                     }

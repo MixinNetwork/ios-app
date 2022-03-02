@@ -15,6 +15,7 @@ public final class MessageDAO: UserDatabaseDAO {
     public static let shared = MessageDAO()
     
     public static let willDeleteMessageNotification = Notification.Name("one.mixin.services.MessageDAO.willDeleteMessage")
+    public static let didDeleteMessageNotification = Notification.Name("one.mixin.services.MessageDAO.didDeleteMessage")
     public static let didInsertMessageNotification = Notification.Name("one.mixin.services.did.insert.msg")
     public static let didRedecryptMessageNotification = Notification.Name("one.mixin.services.did.redecrypt.msg")
     public static let messageMediaStatusDidUpdateNotification = Notification.Name("one.mixin.services.MessageDAO.MessageMediaStatusDidUpdate")
@@ -745,6 +746,11 @@ public final class MessageDAO: UserDatabaseDAO {
                 try PinMessageDAO.shared.delete(messageIds: [id], conversationId: conversationId, from: db)
                 try clearPinMessageContent(quoteMessageIds: [id], conversationId: conversationId, from: db)
             }
+        }
+        if deleteCount > 0 {
+            NotificationCenter.default.post(onMainThread: Self.didDeleteMessageNotification,
+                                            object: self,
+                                            userInfo: [UserInfoKey.messageId: id])
         }
         return (deleteCount > 0, childMessageIds)
     }

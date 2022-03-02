@@ -12,29 +12,20 @@ class StackedPhotoMessageCell: ImageMessageCell {
     override func render(viewModel: MessageViewModel) {
         super.render(viewModel: viewModel)
         if let viewModel = viewModel as? StackedPhotoMessageViewModel {
-            if viewModel.quotedMessageViewModel == nil {
-                stackedPhotoView.frame = viewModel.photoFrame
-                if backgroundImageView.superview != nil {
-                    backgroundImageView.removeFromSuperview()
-                }
-            } else {
-                stackedPhotoView.frame = viewModel.photoFrame
-                if backgroundImageView.superview == nil {
-                    messageContentView.insertSubview(backgroundImageView, at: 0)
-                }
-            }
             stackedPhotoView.viewModels = viewModel.photoMessageViewModels
-            selectedOverlapView.frame = stackedPhotoView.frame
+            stackedPhotoView.frame = viewModel.stackedPhotoViewFrame
+            selectedOverlapView.frame = viewModel.photoFrame
             trailingInfoBackgroundView.frame = viewModel.trailingInfoBackgroundFrame
         }
     }
-    
+
     override func prepare() {
         messageContentView.addSubview(stackedPhotoView)
-        updateAppearance(highlight: false, animated: false)
         messageContentView.addSubview(trailingInfoBackgroundView)
+        updateAppearance(highlight: false, animated: false)
         super.prepare()
         messageContentView.addSubview(selectedOverlapView)
+        selectedOverlapView.layer.cornerRadius = 13
         backgroundImageView.removeFromSuperview()
         statusImageView.isHidden = true
         stackedPhotoView.backgroundColor = .clear

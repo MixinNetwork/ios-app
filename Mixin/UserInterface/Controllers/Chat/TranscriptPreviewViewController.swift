@@ -143,7 +143,6 @@ extension TranscriptPreviewViewController {
     }
     
     private func reloadData() {
-        let layoutWidth = AppDelegate.current.mainWindow.bounds.width
         queue.async { [weak self] in
             guard let self = self else {
                 return
@@ -153,7 +152,7 @@ extension TranscriptPreviewViewController {
             let children = items.compactMap { item in
                 TranscriptMessage(transcriptId: transcriptId, mediaUrl: item.mediaUrl, thumbImage: item.thumbImage, messageItem: item)
             }
-            let (dates, viewModels) = self.categorizedViewModels(with: items, fits: layoutWidth)
+            let (dates, viewModels) = self.categorizedViewModels(with: items, fits: self.layoutWidth)
             DispatchQueue.main.async {
                 self.childMessages = children
                 self.dates = dates

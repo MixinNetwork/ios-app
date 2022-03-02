@@ -258,7 +258,7 @@ extension PhotoInputViewController: MediasPreviewViewControllerDelegate {
         sendItems(assets: assets)
     }
     
-    func mediasPreviewViewControllerDidCancelSend(_ controller: MediasPreviewViewController) {
+    func mediasPreviewViewController(_ controller: MediasPreviewViewController, didCancelSend assets: [PHAsset]) {
         conversationInputViewController?.dismiss()
     }
     
@@ -354,7 +354,7 @@ extension PhotoInputViewController {
         }
         gridViewController.view.isUserInteractionEnabled = false
         let previewController = mediasPreviewViewController
-        let previewHeight = MediasPreviewViewController.viewHeight
+        let previewViewHeight = mediasPreviewViewController.viewHeight
         addChild(previewController)
         view.insertSubview(previewController.view, at: 0)
         previewController.view.snp.makeConstraints({ (make) in
@@ -362,9 +362,8 @@ extension PhotoInputViewController {
             make.top.equalTo(inputBarView.snp.bottom).offset(0)
         })
         view.layoutIfNeeded()
-        
         previewController.view.snp.updateConstraints { make in
-            make.top.equalTo(inputBarView.snp.bottom).offset(-previewHeight)
+            make.top.equalTo(inputBarView.snp.bottom).offset(-previewViewHeight)
         }
         UIView.animate(withDuration: 0.3, delay: 0, options: .overdampedCurve) {
             self.view.layoutIfNeeded()
@@ -373,7 +372,7 @@ extension PhotoInputViewController {
             conversationViewController.view.addSubview(previewController.view)
             previewController.view.snp.remakeConstraints({ (make) in
                 make.left.right.equalToSuperview()
-                make.top.equalTo(inputBarView.snp.bottom).offset(-previewHeight)
+                make.top.equalTo(inputBarView.snp.bottom).offset(-previewViewHeight)
             })
             self.gridViewController.view.isUserInteractionEnabled = true
         }
@@ -389,15 +388,14 @@ extension PhotoInputViewController {
         }
         gridViewController.view.isUserInteractionEnabled = false
         let previewController = mediasPreviewViewController
-        let previewHeight = MediasPreviewViewController.viewHeight
+        let previewViewHeight = mediasPreviewViewController.viewHeight
         addChild(previewController)
         view.insertSubview(previewController.view, at: 0)
         previewController.view.snp.remakeConstraints({ (make) in
             make.left.right.equalToSuperview()
-            make.top.equalTo(inputBarView.snp.bottom).offset(-previewHeight)
+            make.top.equalTo(inputBarView.snp.bottom).offset(-previewViewHeight)
         })
         view.layoutIfNeeded()
-        
         previewController.view.snp.updateConstraints { make in
             make.top.equalTo(inputBarView.snp.bottom).offset(0)
         }

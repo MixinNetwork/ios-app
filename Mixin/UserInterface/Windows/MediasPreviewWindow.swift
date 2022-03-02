@@ -64,7 +64,7 @@ final class MediasPreviewWindow: BottomSheetView {
         delegate?.mediasPreviewWindow(self, didSendItems: selectedAssets)
     }
     
-    @IBAction func sendAsFileAction(_ sender: Any) {
+    @IBAction func sendAsFilesAction(_ sender: Any) {
         isSending = true
         dismissPopupControllerAnimated()
         delegate?.mediasPreviewWindow(self, didSendFiles: selectedAssets)

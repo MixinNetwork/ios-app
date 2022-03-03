@@ -24,7 +24,6 @@ class PhotoInputViewController: UIViewController, ConversationInputAccessible {
     private weak var mediasPreviewControllerIfLoaded: MediasPreviewViewController?
     private lazy var mediasPreviewViewController: MediasPreviewViewController = {
         let controller = R.storyboard.chat.selected_medias()!
-        controller.gridViewController = gridViewController
         controller.delegate = self
         mediasPreviewControllerIfLoaded = controller
         return controller
@@ -191,6 +190,7 @@ extension PhotoInputViewController: PHPhotoLibraryChangeObserver {
     
     func photoLibraryDidChange(_ changeInstance: PHChange) {
         DispatchQueue.main.sync {
+            self.dismissMediasPreviewControllerIfNeeded()
             if let allPhotos = self.allPhotos, let changeDetails = changeInstance.changeDetails(for: allPhotos) {
                 self.allPhotos = changeDetails.fetchResultAfterChanges
             }
@@ -288,7 +288,7 @@ extension PhotoInputViewController: MediasPreviewWindowDelegate {
             dismissMediasPreviewControllerAnimated()
         } else {
             gridViewController.updateSelectdAssets(assets)
-            mediasPreviewViewController.updateAssets()
+            mediasPreviewViewController.updateAssets(assets)
         }
     }
     

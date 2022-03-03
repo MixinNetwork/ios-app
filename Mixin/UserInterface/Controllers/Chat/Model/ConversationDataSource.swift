@@ -1158,17 +1158,6 @@ extension ConversationDataSource {
             }
             messagesToStack.removeAll()
         }
-        
-        //TODO: ‼️ delete
-        let totalCount = result.reduce(0) { partialResult, item in
-            if item.category == MessageCategory.STACKED_PHOTO.rawValue {
-                return partialResult + item.messageItems!.count
-            } else {
-                return partialResult + 1
-            }
-        }
-        assert(totalCount == messages.count)
-        
         return result
     }
     

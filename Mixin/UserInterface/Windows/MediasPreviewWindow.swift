@@ -33,7 +33,7 @@ final class MediasPreviewWindow: BottomSheetView {
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.allowsMultipleSelection = true
-        collectionView.register(UINib(resource: R.nib.mediaPreviewCell), forCellWithReuseIdentifier: MediaPreviewCell.reuseIdentifier)
+        collectionView.register(R.nib.mediaPreviewCell)
     }
 
     override func layoutSubviews() {
@@ -93,7 +93,7 @@ extension MediasPreviewWindow: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MediaPreviewCell.reuseIdentifier, for: indexPath) as! MediaPreviewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.media_preview, for: indexPath)!
         if indexPath.item < assets.count {
             let asset = assets[indexPath.item]
             cell.load(asset: asset)

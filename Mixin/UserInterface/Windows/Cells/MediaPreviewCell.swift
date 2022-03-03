@@ -6,7 +6,6 @@ import MixinServices
 
 class MediaPreviewCell: UICollectionViewCell {
 
-    static let reuseIdentifier = "cell_identifier_media_preview_cell"
     static let cellSize = CGSize(width: 312, height: 312)
 
     @IBOutlet weak var badge: BadgeView!
@@ -46,7 +45,7 @@ class MediaPreviewCell: UICollectionViewCell {
         if asset.mediaType == .video {
             mediaTypeView.style = .video(duration: asset.duration)
         } else {
-            if let uti = asset.value(forKey: "uniformTypeIdentifier") as? String, UTTypeConformsTo(uti as CFString, kUTTypeGIF) {
+            if let uti = asset.uniformTypeIdentifier, UTTypeConformsTo(uti as CFString, kUTTypeGIF) {
                 mediaTypeView.style = .gif
             } else {
                 mediaTypeView.style = .hidden

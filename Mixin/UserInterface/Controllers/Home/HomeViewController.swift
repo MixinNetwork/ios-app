@@ -287,6 +287,7 @@ class HomeViewController: UIViewController {
         updateBulletinView()
         fetchConversations()
         initializeFTSIfNeeded()
+        refreshExternalSchemesIfNeeded()
     }
     
     @objc func dataDidChange(_ sender: Notification) {
@@ -573,6 +574,13 @@ extension HomeViewController: UIScrollViewDelegate {
 }
 
 extension HomeViewController {
+    
+    private func refreshExternalSchemesIfNeeded() {
+        let date = AppGroupUserDefaults.User.externalSchemesRefreshDate
+        if date == nil || -date!.timeIntervalSinceNow > .oneDay {
+            ConcurrentJobQueue.shared.addJob(job: RefreshExternalSchemeJob())
+        }
+    }
     
     private func initializeFTSIfNeeded() {
         guard !AppGroupUserDefaults.Database.isFTSInitialized else {

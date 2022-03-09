@@ -63,6 +63,9 @@ extension AppGroupUserDefaults {
             
             case stickerRefreshDate = "sticker_refresh_date"
             case hasNewStickers = "has_new_stickers"
+            
+            case externalSchemes = "external_schemes"
+            case externalSchemesRefreshDate = "external_schemes_refresh_date"
         }
         
         public static let version = 30
@@ -238,6 +241,12 @@ extension AppGroupUserDefaults {
                 NotificationCenter.default.post(onMainThread: hasNewStickersDidChangeNotification, object: self)
             }
         }
+        
+        @Default(namespace: .user, key: Key.externalSchemes, defaultValue: [])
+        public static var externalSchemes: [String]
+        
+        @Default(namespace: .crypto, key: Key.externalSchemesRefreshDate, defaultValue: nil)
+        public static var externalSchemesRefreshDate: Date?
         
         public static func insertRecentlyUsedAppId(id: String) {
             let maxNumberOfIds = 12

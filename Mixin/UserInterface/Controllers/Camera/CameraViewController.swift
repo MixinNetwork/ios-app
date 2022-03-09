@@ -701,9 +701,6 @@ extension CameraViewController: NotificationControllerDelegate {
         if UrlWindow.checkPayUrl(url: string) {
             return
         }
-        if UrlWindow.checkExternalScheme(url: string) {
-            return
-        }
         if let url = URL(string: string), UrlWindow.checkUrl(url: url) {
             return
         }

@@ -576,8 +576,7 @@ extension HomeViewController: UIScrollViewDelegate {
 extension HomeViewController {
     
     private func refreshExternalSchemesIfNeeded() {
-        let date = AppGroupUserDefaults.User.externalSchemesRefreshDate
-        if date == nil || -date!.timeIntervalSinceNow > .oneDay {
+        if -AppGroupUserDefaults.User.externalSchemesRefreshDate.timeIntervalSinceNow > .oneDay {
             ConcurrentJobQueue.shared.addJob(job: RefreshExternalSchemeJob())
         }
     }

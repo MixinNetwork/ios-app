@@ -183,7 +183,7 @@ extension AppGroupUserDefaults {
             }
         }
         
-        @Default(namespace: .user, key: Key.homeApp, defaultValue: [App.walletAppId, App.cameraAppId])
+        @Default(namespace: .user, key: Key.homeApp, defaultValue: [App.walletAppId, App.scanAppId])
         public static var homeAppIds: [String] {
             didSet {
                 NotificationCenter.default.post(onMainThread: homeAppIdsDidChangeNotification, object: self)
@@ -245,8 +245,8 @@ extension AppGroupUserDefaults {
         @Default(namespace: .user, key: Key.externalSchemes, defaultValue: [])
         public static var externalSchemes: [String]
         
-        @Default(namespace: .crypto, key: Key.externalSchemesRefreshDate, defaultValue: nil)
-        public static var externalSchemesRefreshDate: Date?
+        @Default(namespace: .crypto, key: Key.externalSchemesRefreshDate, defaultValue: .distantPast)
+        public static var externalSchemesRefreshDate: Date
         
         public static func insertRecentlyUsedAppId(id: String) {
             let maxNumberOfIds = 12

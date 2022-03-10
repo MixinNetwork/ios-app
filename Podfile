@@ -25,7 +25,6 @@ target 'Mixin' do
   pod 'SnapKit'
   pod 'PhoneNumberKit', :git => 'https://github.com/MixinNetwork/PhoneNumberKit.git'
   pod 'RSKImageCropper'
-  pod 'AlignedCollectionViewFlowLayout'
   pod 'R.swift'
   pod 'AcknowList'
   pod 'libwebp'

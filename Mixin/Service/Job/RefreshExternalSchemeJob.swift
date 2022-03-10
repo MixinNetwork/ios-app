@@ -10,8 +10,8 @@ class RefreshExternalSchemeJob: AsynchronousJob {
     override func execute() -> Bool {
         ExternalSchemeAPI.schemes { result in
             switch result {
-            case let .success(schems):
-                AppGroupUserDefaults.User.externalSchemes = schems
+            case let .success(schemes):
+                AppGroupUserDefaults.User.externalSchemes = schemes
                 AppGroupUserDefaults.User.externalSchemesRefreshDate = Date()
             case .failure:
                 break

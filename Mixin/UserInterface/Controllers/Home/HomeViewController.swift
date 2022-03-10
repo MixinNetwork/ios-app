@@ -147,6 +147,7 @@ class HomeViewController: UIViewController {
                 ConcurrentJobQueue.shared.addJob(job: RecoverMediaJob())
             }
             initializeFTSIfNeeded()
+            refreshExternalSchemesIfNeeded()
         }
         UIApplication.homeContainerViewController?.clipSwitcher.loadClipsFromPreviousSession()
     }

@@ -10,7 +10,12 @@ class StackedPhotoPreviewViewController: StaticMessagesViewController {
     private var selectedViewModels = [String: MessageViewModel]()
     private var pinnedMessageIds = Set<String>()
     
-    private lazy var multipleSelectionView = R.nib.multipleSelectionView(owner: self)!
+    private lazy var multipleSelectionView: MultipleSelectionActionView = {
+        let view = R.nib.multipleSelectionActionView(owner: self)!
+        view.delegate = self
+        view.showCancelButton = true
+        return view
+    }()
     
     init(conversationId: String, stackedPhotoMessage: MessageItem) {
         self.conversationId = conversationId
@@ -101,7 +106,11 @@ class StackedPhotoPreviewViewController: StaticMessagesViewController {
         super.dismissAction(sender)
     }
     
-    @IBAction func performMultipleSelectionAction(_ sender: Any) {
+}
+
+extension StackedPhotoPreviewViewController: MultipleSelectionActionViewDelegate {
+    
+    func multipleSelectionActionViewDidTapAction(_ view: MultipleSelectionActionView) {
         switch multipleSelectionView.intent {
         case .forward:
             let messages = selectedViewModels.values
@@ -143,7 +152,7 @@ class StackedPhotoPreviewViewController: StaticMessagesViewController {
         }
     }
     
-    @IBAction func cancelMultipleSelectionAction(_ sender: Any) {
+    func multipleSelectionActionViewDidTapCancel(_ view: MultipleSelectionActionView) {
         endMultipleSelection()
     }
     

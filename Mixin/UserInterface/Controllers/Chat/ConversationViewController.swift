@@ -105,7 +105,12 @@ class ConversationViewController: UIViewController {
     private(set) lazy var imagePickerController = ImagePickerController(initialCameraPosition: .rear, cropImageAfterPicked: false, parent: self, delegate: self)
     
     private lazy var userHandleViewController = R.storyboard.chat.user_handle()!
-    private lazy var multipleSelectionActionView = R.nib.multipleSelectionActionView(owner: self)!
+    private lazy var multipleSelectionActionView: MultipleSelectionActionView = {
+        let view = R.nib.multipleSelectionActionView(owner: self)!
+        view.delegate = self
+        view.showCancelButton = false
+        return view
+    }()
     private lazy var announcementBadgeContentView = R.nib.announcementBadgeContentView(owner: self)!
     
     private lazy var strangerHintView: StrangerHintView = {
@@ -513,51 +518,6 @@ class ConversationViewController: UIViewController {
             mentionScrollingDestinations.removeFirst()
             messageIdToFlashAfterAnimationFinished = id
             reloadWithMessageId(id, scrollUpwards: true)
-        }
-    }
-    
-    @IBAction func multipleSelectionAction(_ sender: Any) {
-        switch multipleSelectionActionView.intent {
-        case .forward:
-            let messages = dataSource.selectedMessageViewModels
-                .map({ $0.message })
-                .sorted(by: { $0.createdAt < $1.createdAt })
-            let containsTranscriptMessage = messages.contains {
-                $0.category.hasSuffix("_TRANSCRIPT")
-            }
-            if messages.count == 1 || containsTranscriptMessage {
-                let vc = MessageReceiverViewController.instance(content: .messages(messages))
-                navigationController?.pushViewController(vc, animated: true)
-            } else {
-                let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-                alert.addAction(UIAlertAction(title: R.string.localizable.chat_forward_one_by_one(), style: .default, handler: { (_) in
-                    let vc = MessageReceiverViewController.instance(content: .messages(messages))
-                    self.navigationController?.pushViewController(vc, animated: true)
-                }))
-                alert.addAction(UIAlertAction(title: R.string.localizable.chat_forward_combined(), style: .default, handler: { (_) in
-                    let vc = MessageReceiverViewController.instance(content: .transcript(messages))
-                    self.navigationController?.pushViewController(vc, animated: true)
-                }))
-                alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
-                present(alert, animated: true, completion: nil)
-            }
-        case .delete:
-            let viewModels = dataSource.selectedMessageViewModels
-            let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-            if !viewModels.contains(where: { $0.message.userId != myUserId || !$0.message.canRecall }) {
-                controller.addAction(UIAlertAction(title: Localized.ACTION_DELETE_EVERYONE, style: .destructive, handler: { (_) in
-                    if AppGroupUserDefaults.User.hasShownRecallTips {
-                        self.deleteForEveryone(viewModels: viewModels)
-                    } else {
-                        self.showRecallTips(viewModels: viewModels)
-                    }
-                }))
-            }
-            controller.addAction(UIAlertAction(title: Localized.ACTION_DELETE_ME, style: .destructive, handler: { (_) in
-                self.deleteForMe(viewModels: self.dataSource.selectedViewModels.values.map({ $0 }))
-            }))
-            controller.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
-            self.present(controller, animated: true, completion: nil)
         }
     }
     
@@ -1338,6 +1298,55 @@ class ConversationViewController: UIViewController {
                     }
                 }
             }
+        }
+    }
+    
+}
+
+extension ConversationViewController: MultipleSelectionActionViewDelegate {
+    
+    func multipleSelectionActionViewDidTapAction(_ view: MultipleSelectionActionView) {
+        switch view.intent {
+        case .forward:
+            let messages = dataSource.selectedMessageViewModels
+                .map({ $0.message })
+                .sorted(by: { $0.createdAt < $1.createdAt })
+            let containsTranscriptMessage = messages.contains {
+                $0.category.hasSuffix("_TRANSCRIPT")
+            }
+            if messages.count == 1 || containsTranscriptMessage {
+                let vc = MessageReceiverViewController.instance(content: .messages(messages))
+                navigationController?.pushViewController(vc, animated: true)
+            } else {
+                let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+                alert.addAction(UIAlertAction(title: R.string.localizable.chat_forward_one_by_one(), style: .default, handler: { (_) in
+                    let vc = MessageReceiverViewController.instance(content: .messages(messages))
+                    self.navigationController?.pushViewController(vc, animated: true)
+                }))
+                alert.addAction(UIAlertAction(title: R.string.localizable.chat_forward_combined(), style: .default, handler: { (_) in
+                    let vc = MessageReceiverViewController.instance(content: .transcript(messages))
+                    self.navigationController?.pushViewController(vc, animated: true)
+                }))
+                alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
+                present(alert, animated: true, completion: nil)
+            }
+        case .delete:
+            let viewModels = dataSource.selectedMessageViewModels
+            let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+            if !viewModels.contains(where: { $0.message.userId != myUserId || !$0.message.canRecall }) {
+                controller.addAction(UIAlertAction(title: Localized.ACTION_DELETE_EVERYONE, style: .destructive, handler: { (_) in
+                    if AppGroupUserDefaults.User.hasShownRecallTips {
+                        self.deleteForEveryone(viewModels: viewModels)
+                    } else {
+                        self.showRecallTips(viewModels: viewModels)
+                    }
+                }))
+            }
+            controller.addAction(UIAlertAction(title: Localized.ACTION_DELETE_ME, style: .destructive, handler: { (_) in
+                self.deleteForMe(viewModels: self.dataSource.selectedViewModels.values.map({ $0 }))
+            }))
+            controller.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+            self.present(controller, animated: true, completion: nil)
         }
     }
     

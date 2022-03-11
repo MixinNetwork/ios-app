@@ -5294,7 +5294,6 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/Alamofire/Alamofire.framework/Headers\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/AlignedCollectionViewFlowLayout/AlignedCollectionViewFlowLayout.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/Bugsnag/Bugsnag.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/DeviceGuru/DeviceGuru.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseABTesting/FirebaseABTesting.framework/Headers\"",
@@ -5423,7 +5422,6 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/Alamofire/Alamofire.framework/Headers\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/AlignedCollectionViewFlowLayout/AlignedCollectionViewFlowLayout.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/Bugsnag/Bugsnag.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/DeviceGuru/DeviceGuru.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseABTesting/FirebaseABTesting.framework/Headers\"",

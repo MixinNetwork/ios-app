@@ -24,7 +24,7 @@ class SnapCenterFlowLayout: UICollectionViewFlowLayout {
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         let superAttributes = super.layoutAttributesForElements(in: rect)
         guard
-            scale != 0,
+            scale != 1,
             let collectionView = collectionView,
             let layoutAttributes = superAttributes?.map({ $0.copy() }) as? [UICollectionViewLayoutAttributes]
         else {
@@ -41,7 +41,7 @@ class SnapCenterFlowLayout: UICollectionViewFlowLayout {
     }
     
     override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
-        scale != 0
+        scale != 1
     }
     
     override func targetContentOffset(forProposedContentOffset proposedContentOffset: CGPoint, withScrollingVelocity velocity: CGPoint) -> CGPoint {

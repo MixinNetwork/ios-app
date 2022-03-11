@@ -2,28 +2,33 @@ import UIKit
 
 class SnapCenterFlowLayout: UICollectionViewFlowLayout {
     
-    var scale: CGFloat = 0 {
+    var scale: CGFloat {
         didSet {
+            guard oldValue != scale else {
+                return
+            }
             invalidateLayout()
         }
     }
     
-    init(scale: CGFloat = 0) {
-        super.init()
+    init(scale: CGFloat) {
         self.scale = scale
+        super.init()
     }
     
     required init?(coder: NSCoder) {
+        self.scale = 1
         super.init(coder: coder)
     }
     
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
+        let superAttributes = super.layoutAttributesForElements(in: rect)
         guard
             scale != 0,
             let collectionView = collectionView,
-            let layoutAttributes = super.layoutAttributesForElements(in: rect)?.map({ $0.copy() }) as? [UICollectionViewLayoutAttributes]
+            let layoutAttributes = superAttributes?.map({ $0.copy() }) as? [UICollectionViewLayoutAttributes]
         else {
-            return super.layoutAttributesForElements(in: rect)
+            return superAttributes
         }
         let centerX = collectionView.contentOffset.x + collectionView.bounds.size.width / 2
         layoutAttributes.forEach { attributes in

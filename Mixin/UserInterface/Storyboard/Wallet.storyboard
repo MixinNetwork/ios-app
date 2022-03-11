@@ -1930,8 +1930,9 @@
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="PcA-9U-1HE">
                                 <rect key="frame" x="20" y="70" width="374" height="569"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="20" minimumInteritemSpacing="20" id="e6n-mk-Xpq" customClass="AlignedFlowLayout" customModule="Mixin" customModuleProvider="target">
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="20" minimumInteritemSpacing="20" id="e6n-mk-Xpq" customClass="LeftAlignedCollectionViewFlowLayout" customModule="Mixin" customModuleProvider="target">
                                     <size key="itemSize" width="50" height="50"/>
+                                    <size key="estimatedItemSize" width="96" height="42"/>
                                     <size key="headerReferenceSize" width="0.0" height="35"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>

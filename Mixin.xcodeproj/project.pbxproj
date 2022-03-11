@@ -555,7 +555,7 @@
 		7C225E8827C4C5FE00154143 /* GroupInCommonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C225E8627C4C5FE00154143 /* GroupInCommonCell.swift */; };
 		7C225E8927C4C5FE00154143 /* GroupInCommonCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C225E8727C4C5FE00154143 /* GroupInCommonCell.xib */; };
 		7C2475C727795BC100112A30 /* DeleteAccountTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2475C627795BC100112A30 /* DeleteAccountTableHeaderView.swift */; };
-		7C2ACDAE27D73F7C00E9DDB3 /* AlignedFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2ACDAD27D73F7C00E9DDB3 /* AlignedFlowLayout.swift */; };
+		7C2ACDAE27D73F7C00E9DDB3 /* LeftAlignedCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2ACDAD27D73F7C00E9DDB3 /* LeftAlignedCollectionViewFlowLayout.swift */; };
 		7C359DCE26A6C15A001D3AE4 /* StickerStorePreviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C359DCD26A6C15A001D3AE4 /* StickerStorePreviewCell.swift */; };
 		7C359DD026A6C173001D3AE4 /* StickerStoreBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C359DCF26A6C173001D3AE4 /* StickerStoreBannerView.swift */; };
 		7C36BE88274F248C00089B6D /* StickerStoreBannerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C36BE87274F248C00089B6D /* StickerStoreBannerCell.swift */; };
@@ -1527,7 +1527,7 @@
 		7C225E8627C4C5FE00154143 /* GroupInCommonCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupInCommonCell.swift; sourceTree = "<group>"; };
 		7C225E8727C4C5FE00154143 /* GroupInCommonCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GroupInCommonCell.xib; sourceTree = "<group>"; };
 		7C2475C627795BC100112A30 /* DeleteAccountTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountTableHeaderView.swift; sourceTree = "<group>"; };
-		7C2ACDAD27D73F7C00E9DDB3 /* AlignedFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlignedFlowLayout.swift; sourceTree = "<group>"; };
+		7C2ACDAD27D73F7C00E9DDB3 /* LeftAlignedCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeftAlignedCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
 		7C359DCD26A6C15A001D3AE4 /* StickerStorePreviewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerStorePreviewCell.swift; sourceTree = "<group>"; };
 		7C359DCF26A6C173001D3AE4 /* StickerStoreBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerStoreBannerView.swift; sourceTree = "<group>"; };
 		7C36BE87274F248C00089B6D /* StickerStoreBannerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerStoreBannerCell.swift; sourceTree = "<group>"; };
@@ -2062,7 +2062,7 @@
 				7B95533B2243856800CE95E6 /* Pin Validation Presentation */,
 				7B68F78A2191741300B79978 /* BiometryType.swift */,
 				7B07923921AF96F500316BD2 /* SnapshotDataSource.swift */,
-				7C2ACDAD27D73F7C00E9DDB3 /* AlignedFlowLayout.swift */,
+				7C2ACDAD27D73F7C00E9DDB3 /* LeftAlignedCollectionViewFlowLayout.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -5037,7 +5037,7 @@
 				DF1F278421A5637B009A74C6 /* BackupJob.swift in Sources */,
 				7B36919F233A1962007321A7 /* LocationPickerViewController.swift in Sources */,
 				7B7E7146217D89790052C7DD /* CallViewController.swift in Sources */,
-				7C2ACDAE27D73F7C00E9DDB3 /* AlignedFlowLayout.swift in Sources */,
+				7C2ACDAE27D73F7C00E9DDB3 /* LeftAlignedCollectionViewFlowLayout.swift in Sources */,
 				7BD89DBE1FB2D59000665635 /* PlaceholderTextView.swift in Sources */,
 				944ED8D4264666AC00C97215 /* FullscreenPopupViewController.swift in Sources */,
 				9419374D25DFF3EE00F81A9C /* GroupIconSaver.swift in Sources */,

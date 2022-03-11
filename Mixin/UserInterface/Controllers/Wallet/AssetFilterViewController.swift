@@ -74,9 +74,6 @@ class AssetFilterViewController: UIViewController {
         collectionView.allowsMultipleSelection = true
         collectionView.dataSource = self
         collectionView.delegate = self
-        if let layout = collectionView.collectionViewLayout as? AlignedFlowLayout {
-            layout.estimatedItemSize = CGSize(width: 96, height: 42)
-        }
         collectionView.reloadData()
         reloadSelection()
         view.layoutIfNeeded()

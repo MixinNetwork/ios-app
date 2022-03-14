@@ -28,8 +28,7 @@ class AppGroupServer: NSObject, ObservableObject {
     
     override init() {
         let containerURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.one.mixin.messenger")!
-        let documentsURL = containerURL.appendingPathComponent("Documents", isDirectory: true)
-        server = GCDWebDAVServer(uploadDirectory: documentsURL.path)
+        server = GCDWebDAVServer(uploadDirectory: containerURL.path)
         super.init()
         server.delegate = self
     }

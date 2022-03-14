@@ -70,18 +70,10 @@ class Call: NSObject {
     
     var localizedState: String? {
         switch state {
-        case .incoming:
-            return R.string.localizable.call_state_incoming()
-        case .outgoing:
-            return R.string.localizable.call_state_outgoing()
-        case .connecting:
-            return R.string.localizable.call_state_connecting()
         case .connected:
             return formattedConnectionDuration
-        case .restarting:
-            return R.string.localizable.call_state_stalled()
-        case .disconnecting:
-            return R.string.localizable.call_state_disconnecting()
+        default:
+            return state.localizedDescription
         }
     }
     
@@ -157,12 +149,31 @@ class Call: NSObject {
 extension Call {
     
     enum State {
+        
         case incoming
         case outgoing
         case connecting
         case connected
         case restarting
         case disconnecting
+        
+        var localizedDescription: String {
+            switch self {
+            case .incoming:
+                return R.string.localizable.call_state_incoming()
+            case .outgoing:
+                return R.string.localizable.call_state_outgoing()
+            case .connecting:
+                return R.string.localizable.call_state_connecting()
+            case .connected:
+                return R.string.localizable.call_state_connected()
+            case .restarting:
+                return R.string.localizable.call_state_stalled()
+            case .disconnecting:
+                return R.string.localizable.call_state_disconnecting()
+            }
+        }
+        
     }
     
     enum EndedSide {

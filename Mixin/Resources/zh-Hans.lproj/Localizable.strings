@@ -412,6 +412,7 @@
 "call_state_outgoing" = "正在呼叫...";
 "call_state_incoming" = "语音通话来电";
 "call_state_connecting" = "正在连接";
+"call_state_connected" = "已连接";
 "call_state_stalled" = "网络状态不佳";
 "call_state_disconnecting" = "正在断开";
 "call_state_brief_waiting" = "等待接听";

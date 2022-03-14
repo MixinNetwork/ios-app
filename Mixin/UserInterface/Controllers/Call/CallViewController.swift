@@ -341,7 +341,7 @@ class CallViewController: ResizablePopupViewController {
         guard let call = call else {
             return
         }
-        updateViews(call: call) // Signaling may take a while, update views first
+        updateViews(call: call, overrideStateWith: .disconnecting) // Signaling may take a while, update views first
         service.requestEndCall(with: call.uuid)
     }
     
@@ -542,15 +542,16 @@ extension CallViewController {
         }
     }
     
-    private func updateStatusLabel(call: Call) {
-        statusLabel.text = call.localizedState
+    private func updateStatusLabel(call: Call, overrideStateWith overridingState: Call.State? = nil) {
+        statusLabel.text = overridingState?.localizedDescription ?? call.localizedState
         trayView.layoutIfNeeded()
     }
     
-    private func updateViews(call: Call) {
-        updateStatusLabel(call: call)
+    private func updateViews(call: Call, overrideStateWith overridingState: Call.State? = nil) {
+        updateStatusLabel(call: call, overrideStateWith: overridingState)
         let animationDuration: TimeInterval = 0.3
-        switch call.state {
+        let state = overridingState ?? call.state
+        switch state {
         case .incoming:
             minimizeButton.isHidden = true
             setFunctionSwitchesHidden(true)

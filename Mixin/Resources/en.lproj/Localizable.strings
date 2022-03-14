@@ -412,6 +412,7 @@
 "call_state_outgoing" = "Calling...";
 "call_state_incoming" = "Incoming voice call";
 "call_state_connecting" = "Connecting";
+"call_state_connected" = "Connected";
 "call_state_stalled" = "Connection unstable";
 "call_state_disconnecting" = "Disconnecting";
 "call_state_brief_waiting" = "Waiting";

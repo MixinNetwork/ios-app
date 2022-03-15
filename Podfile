@@ -5,12 +5,6 @@ platform :ios, '13.0'
 
 def mixin_services
   pod 'libsignal-protocol-c', :git => 'https://github.com/MixinNetwork/libsignal-protocol-c.git'
-  
-  # Use older version with no back deployed Swift Concurrecy to avoid the bug of Xcode 13.2.1
-  # https://developer.apple.com/documentation/xcode-release-notes/xcode-13_2-release-notes
-  pod 'Alamofire', '5.4.4'
-  pod 'GRDB.swift/SQLCipher', '5.16.0'
-  
   pod 'MixinServices', :path => './MixinServices', :testspecs => ['Tests']
 end
 
@@ -23,7 +17,7 @@ target 'Mixin' do
   pod 'Firebase/Performance'
   pod 'Firebase/Crashlytics'
   pod 'SnapKit'
-  pod 'PhoneNumberKit', :git => 'https://github.com/MixinNetwork/PhoneNumberKit.git'
+  pod 'PhoneNumberKit'
   pod 'RSKImageCropper'
   pod 'R.swift'
   pod 'AcknowList'

@@ -41,6 +41,7 @@ extension LocalImageLoader: SDImageLoader {
                     completedBlock?(nil, nil, Error.cancelled, true)
                     return
                 }
+                let decodeFirstFrame = options.contains(.decodeFirstFrameOnly)
                 let Image = (context?[.animatedImageClass] as? UIImage.Type) ?? SDAnimatedImage.self
                 
                 let decodeOptions: [SDImageCoderOption: Any]?
@@ -51,7 +52,7 @@ extension LocalImageLoader: SDImageLoader {
                 }
                 
                 var image: UIImage?
-                if let Image = Image as? SDAnimatedImage.Type {
+                if !decodeFirstFrame, let Image = Image as? SDAnimatedImage.Type {
                     image = Image.init(data: data, scale: 1, options: decodeOptions)
                 }
                 if image == nil {

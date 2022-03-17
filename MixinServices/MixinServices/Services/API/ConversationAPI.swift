@@ -29,6 +29,14 @@ public class ConversationAPI : MixinAPI {
             return "/conversations/\(conversationId)/rotate"
         }
         
+        static func disappear(id: String) -> String {
+            return "/conversations/\(id)/disappear"
+        }
+        
+        static func appear(id: String) -> String {
+            return "/conversations/\(id)/appear"
+        }
+        
     }
     
     public static func createConversation(conversation: ConversationRequest, completion: @escaping (MixinAPI.Result<ConversationResponse>) -> Void) {
@@ -87,6 +95,14 @@ public class ConversationAPI : MixinAPI {
     
     public static func updateCodeId(conversationId: String, completion: @escaping (MixinAPI.Result<ConversationResponse>) -> Void) {
         request(method: .post, path: Path.reset(conversationId: conversationId), completion: completion)
+    }
+    
+    public static func openDisappearingMessage(conversationId: String, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {
+        request(method: .post, path: Path.disappear(id: conversationId), completion: completion)
+    }
+    
+    public static func closeDisappearingMessage(conversationId: String, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {
+        request(method: .post, path: Path.appear(id: conversationId), completion: completion)
     }
     
 }

@@ -549,6 +549,9 @@
 		7C0E15DF27005376002FC718 /* UnknownURLWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0E15DE27005376002FC718 /* UnknownURLWindow.swift */; };
 		7C0E15E1270053AC002FC718 /* UnknownURLWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C0E15E0270053AC002FC718 /* UnknownURLWindow.xib */; };
 		7C104A8127D83A51004D0530 /* RefreshExternalSchemeJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C104A8027D83A51004D0530 /* RefreshExternalSchemeJob.swift */; };
+		7C0FAAC527E03FBD008D4021 /* DisappearingMessageTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0FAAC427E03FBD008D4021 /* DisappearingMessageTableHeaderView.swift */; };
+		7C0FAAC727E079F1008D4021 /* DisappearingMessageTimePickerWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0FAAC627E079F1008D4021 /* DisappearingMessageTimePickerWindow.swift */; };
+		7C0FAAC927E07A0A008D4021 /* DisappearingMessageTimePickerWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C0FAAC827E07A0A008D4021 /* DisappearingMessageTimePickerWindow.xib */; };
 		7C14CFC126CA35CF0094AF4A /* StaticMessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C14CFBF26CA35CF0094AF4A /* StaticMessagesViewController.swift */; };
 		7C14CFC226CA35CF0094AF4A /* StaticMessagesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C14CFC026CA35CF0094AF4A /* StaticMessagesView.xib */; };
 		7C1A6C4326C6580600A1D6CE /* StickerPreviewItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1A6C4226C6580600A1D6CE /* StickerPreviewItemCell.swift */; };
@@ -584,6 +587,8 @@
 		7C8FA78F2768822800855AFD /* DeleteAccountTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C8FA78E2768822800855AFD /* DeleteAccountTableHeaderView.xib */; };
 		7C8FA8F42768909300855AFD /* AccountSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8FA8F32768909300855AFD /* AccountSettingViewController.swift */; };
 		7C8FA8F62768926D00855AFD /* SecuritySettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8FA8F52768926D00855AFD /* SecuritySettingViewController.swift */; };
+		7C952CFE27E035080083F92B /* DisappearingMessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C952CFD27E035080083F92B /* DisappearingMessageViewController.swift */; };
+		7C952D0027E036240083F92B /* DisappearingMessageTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C952CFF27E036240083F92B /* DisappearingMessageTableHeaderView.xib */; };
 		7C9A734027392FAF00E0127A /* PinSettingTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9A733F27392FAF00E0127A /* PinSettingTableHeaderView.swift */; };
 		7C9DCDF1273901D500395F4A /* PinSettingTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C9DCDF0273901D500395F4A /* PinSettingTableHeaderView.xib */; };
 		7CB0954F26CCED2E0049F4C7 /* PinMessageBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB0954E26CCED2E0049F4C7 /* PinMessageBannerView.swift */; };
@@ -1523,6 +1528,9 @@
 		7C0E15DE27005376002FC718 /* UnknownURLWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnknownURLWindow.swift; sourceTree = "<group>"; };
 		7C0E15E0270053AC002FC718 /* UnknownURLWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UnknownURLWindow.xib; sourceTree = "<group>"; };
 		7C104A8027D83A51004D0530 /* RefreshExternalSchemeJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshExternalSchemeJob.swift; sourceTree = "<group>"; };
+		7C0FAAC427E03FBD008D4021 /* DisappearingMessageTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisappearingMessageTableHeaderView.swift; sourceTree = "<group>"; };
+		7C0FAAC627E079F1008D4021 /* DisappearingMessageTimePickerWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisappearingMessageTimePickerWindow.swift; sourceTree = "<group>"; };
+		7C0FAAC827E07A0A008D4021 /* DisappearingMessageTimePickerWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DisappearingMessageTimePickerWindow.xib; sourceTree = "<group>"; };
 		7C14CFBF26CA35CF0094AF4A /* StaticMessagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticMessagesViewController.swift; sourceTree = "<group>"; };
 		7C14CFC026CA35CF0094AF4A /* StaticMessagesView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StaticMessagesView.xib; sourceTree = "<group>"; };
 		7C1A6C4226C6580600A1D6CE /* StickerPreviewItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerPreviewItemCell.swift; sourceTree = "<group>"; };
@@ -1558,6 +1566,8 @@
 		7C8FA78E2768822800855AFD /* DeleteAccountTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeleteAccountTableHeaderView.xib; sourceTree = "<group>"; };
 		7C8FA8F32768909300855AFD /* AccountSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSettingViewController.swift; sourceTree = "<group>"; };
 		7C8FA8F52768926D00855AFD /* SecuritySettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecuritySettingViewController.swift; sourceTree = "<group>"; };
+		7C952CFD27E035080083F92B /* DisappearingMessageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisappearingMessageViewController.swift; sourceTree = "<group>"; };
+		7C952CFF27E036240083F92B /* DisappearingMessageTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DisappearingMessageTableHeaderView.xib; sourceTree = "<group>"; };
 		7C9A733F27392FAF00E0127A /* PinSettingTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinSettingTableHeaderView.swift; sourceTree = "<group>"; };
 		7C9DCDF0273901D500395F4A /* PinSettingTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PinSettingTableHeaderView.xib; sourceTree = "<group>"; };
 		7CB0954E26CCED2E0049F4C7 /* PinMessageBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinMessageBannerView.swift; sourceTree = "<group>"; };
@@ -2388,6 +2398,9 @@
 				E0A14D3B2372F0340044D131 /* GroupProfileViewController.swift */,
 				7B5E9B3F243700CD000AE24E /* ConversationCircleEditorViewController.swift */,
 				7CB2A57E27C386F0007D9DEE /* GroupsInCommonViewController.swift */,
+				7C952CFF27E036240083F92B /* DisappearingMessageTableHeaderView.xib */,
+				7C0FAAC427E03FBD008D4021 /* DisappearingMessageTableHeaderView.swift */,
+				7C952CFD27E035080083F92B /* DisappearingMessageViewController.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -2921,6 +2934,8 @@
 				7CB17B652771608400CF4C94 /* DeleteAccountConfirmWindow.xib */,
 				7C6132B527953B15002777EE /* DeleteAccountAbortWindow.swift */,
 				7C6132B727953B4F002777EE /* DeleteAccountAbortWindow.xib */,
+				7C0FAAC627E079F1008D4021 /* DisappearingMessageTimePickerWindow.swift */,
+				7C0FAAC827E07A0A008D4021 /* DisappearingMessageTimePickerWindow.xib */,
 			);
 			path = Windows;
 			sourceTree = "<group>";
@@ -3779,7 +3794,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1320;
-				LastUpgradeCheck = 1020;
+				LastUpgradeCheck = 1330;
 				ORGANIZATIONNAME = Mixin;
 				TargetAttributes = {
 					277FF6FE1F909A1200DBB2EB = {
@@ -3851,6 +3866,7 @@
 				7BFE47E32284394000FC4379 /* CheckmarkPeerCell.xib in Resources */,
 				DF846CDF2369551D00AA1197 /* MultisigUserCell.xib in Resources */,
 				5E5CA7872674AC8E00C1E113 /* ScreenLockView.xib in Resources */,
+				7C0FAAC927E07A0A008D4021 /* DisappearingMessageTimePickerWindow.xib in Resources */,
 				7BB0F9162434B03300BEDA97 /* SelectedPeerCell.xib in Resources */,
 				E041064E23C6076F00A6F08E /* FullscreenPopupView.xib in Resources */,
 				DF8A7523236301DB00765A82 /* AuthorizationWindow.xib in Resources */,
@@ -3962,6 +3978,7 @@
 				DF6ABB142295019C00A012B2 /* AddressWindow.xib in Resources */,
 				E0BEB85B236C1BBC001FE534 /* ProfileView.xib in Resources */,
 				7B2E3E541FA07FA300DDDDEB /* CountryCode.plist in Resources */,
+				7C952D0027E036240083F92B /* DisappearingMessageTableHeaderView.xib in Resources */,
 				DFE356B51FB4990100E0E3A8 /* Setting.storyboard in Resources */,
 				7BB788B4216C5AA900EDE7B4 /* NoResultFooterView.xib in Resources */,
 				7BB06F45228EA7720048C2D6 /* NotificationView.xib in Resources */,
@@ -4758,6 +4775,7 @@
 				7B2E3E4D1FA07F5D00DDDDEB /* HairlineLayoutConstraint.swift in Sources */,
 				7B4ADAA7243C7C8400F04CA6 /* HomeAppsViewController.swift in Sources */,
 				94659DAA25C13793003403E5 /* DevicePerformance.swift in Sources */,
+				7C0FAAC727E079F1008D4021 /* DisappearingMessageTimePickerWindow.swift in Sources */,
 				DF43304522648B32006D971D /* AssetInfoWindow.swift in Sources */,
 				7B492F982252159B00C05A45 /* ActivityIndicatorView.swift in Sources */,
 				7BC022E7214A150400B7A398 /* AuthorizationTableViewCell.swift in Sources */,
@@ -4851,6 +4869,7 @@
 				7B28FA12201195A10023B28D /* StickerMessageCell.swift in Sources */,
 				7B4ADA97243C633B00F04CA6 /* ResizablePopupViewController.swift in Sources */,
 				7B869C70202D7DA8009930BA /* NumberPadView.swift in Sources */,
+				7C0FAAC527E03FBD008D4021 /* DisappearingMessageTableHeaderView.swift in Sources */,
 				7BF19C22241E0DB600B192D5 /* UserPickedLocation.swift in Sources */,
 				7B015F4F241F91A60004A563 /* SearchResultAnnotation.swift in Sources */,
 				7B4E30762295659200A03F6E /* SearchBoxTextField.swift in Sources */,
@@ -5047,6 +5066,7 @@
 				7B7E7146217D89790052C7DD /* CallViewController.swift in Sources */,
 				7C2ACDAE27D73F7C00E9DDB3 /* LeftAlignedCollectionViewFlowLayout.swift in Sources */,
 				7BD89DBE1FB2D59000665635 /* PlaceholderTextView.swift in Sources */,
+				7C952CFE27E035080083F92B /* DisappearingMessageViewController.swift in Sources */,
 				944ED8D4264666AC00C97215 /* FullscreenPopupViewController.swift in Sources */,
 				9419374D25DFF3EE00F81A9C /* GroupIconSaver.swift in Sources */,
 				7B4E307A22966FF900A03F6E /* MediaPreviewMaskView.swift in Sources */,
@@ -5194,6 +5214,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -5254,6 +5275,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;

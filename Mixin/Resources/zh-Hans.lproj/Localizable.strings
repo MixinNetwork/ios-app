@@ -781,6 +781,22 @@
 "profile_call_phone" = "电话呼叫";
 "profile_groups_in_common" = "共同的群聊";
 
+// Disappearing Message
+"disappearing_message_title" = "限时消息";
+"disappearing_message_hint" = "启用后，在此聊天中发送和接收的新信息在被看到后会消失，阅读文档以了解更多。";
+"disappearing_message_30seconds" = "30秒";
+"disappearing_message_10minutes" = "10分钟";
+"disappearing_message_2hours" = "2小时";
+"disappearing_message_1day" = "1天";
+"disappearing_message_1week" = "1周";
+"disappearing_message_custom_time" = "自定义时间";
+"disappearing_message_set" = "设定";
+"disappearing_message_seconds_unit" = "秒";
+"disappearing_message_minutes_unit" = "分钟";
+"disappearing_message_hours_unit" = "小时";
+"disappearing_message_days_unit" = "天";
+"disappearing_message_weeks_unit" = "周";
+
 // Emergency
 "emergency_view" = "查看紧急联系人";
 "emergency_change" = "修改紧急联系人";

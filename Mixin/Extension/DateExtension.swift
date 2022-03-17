@@ -62,7 +62,11 @@ extension Date {
 }
 
 extension TimeInterval {
-    
+
+    static let oneSecond: TimeInterval = 1
+    static let oneMinute: TimeInterval = 60
+    static let oneHour: TimeInterval = 60 * 60
     static let oneDay: TimeInterval = 24 * 60 * 60
+    static let oneWeek: TimeInterval = 7 * 24 * 60 * 60
     
 }

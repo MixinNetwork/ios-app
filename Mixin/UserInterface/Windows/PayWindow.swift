@@ -113,6 +113,7 @@ class PayWindow: BottomSheetView {
         token: CollectibleToken? = nil,
         action: PinAction,
         amount: String,
+        isAmountLocalized: Bool = true,
         memo: String,
         error: String? = nil,
         fiatMoneyAmount: String? = nil,
@@ -134,7 +135,11 @@ class PayWindow: BottomSheetView {
             mixinIDPlaceView.isHidden = false
             amountLabelPlaceHeightConstraint.constant = 10
             resultViewPlaceHeightConstraint.constant = 30
-            let amountToken = CurrencyFormatter.localizedString(from: amount, locale: .current, format: .precision, sign: .whenNegative, symbol: .custom(asset.symbol)) ?? amount
+            let amountToken = CurrencyFormatter.localizedString(from: amount,
+                                                                locale: isAmountLocalized ? .current : .us,
+                                                                format: .precision,
+                                                                sign: .whenNegative,
+                                                                symbol: .custom(asset.symbol)) ?? amount
             let amountExchange = CurrencyFormatter.localizedPrice(price: amount, priceUsd: asset.priceUsd)
             if let fiatMoneyAmount = fiatMoneyAmount {
                 amountLabel.text = fiatMoneyAmount + " " + Currency.current.code

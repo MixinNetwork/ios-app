@@ -479,7 +479,7 @@ class UrlWindow {
                 DispatchQueue.main.async {
                     if canPay {
                         hud.hide()
-                        PayWindow.instance().render(asset: asset, action: action, amount: amount, memo: memo ?? "").presentPopupControllerAnimated()
+                        PayWindow.instance().render(asset: asset, action: action, amount: amount, isAmountLocalized: false, memo: memo ?? "").presentPopupControllerAnimated()
                     } else if let error = errorMsg {
                         hud.set(style: .error, text: error)
                         hud.scheduleAutoHidden()

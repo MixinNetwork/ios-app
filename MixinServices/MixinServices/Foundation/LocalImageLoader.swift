@@ -9,7 +9,7 @@ class LocalImageLoader: NSObject {
         case generateImage
     }
     
-    private let queue = DispatchQueue(label: "one.mixin.services.local_image_loader")
+    private let queue = DispatchQueue(label: "one.mixin.services.LocalImageLoader")
     private let tokens = NSHashTable<LocalImageLoadToken>(options: .weakMemory)
     
 }
@@ -17,7 +17,7 @@ class LocalImageLoader: NSObject {
 extension LocalImageLoader: SDImageLoader {
     
     func canRequestImage(for url: URL?) -> Bool {
-        return true
+        url != nil
     }
     
     func requestImage(with url: URL?, options: SDWebImageOptions = [], context: [SDWebImageContextOption : Any]?, progress progressBlock: SDImageLoaderProgressBlock?, completed completedBlock: SDImageLoaderCompletedBlock? = nil) -> SDWebImageOperation? {
@@ -41,8 +41,25 @@ extension LocalImageLoader: SDImageLoader {
                     completedBlock?(nil, nil, Error.cancelled, true)
                     return
                 }
+                let decodeFirstFrame = options.contains(.decodeFirstFrameOnly)
                 let Image = (context?[.animatedImageClass] as? UIImage.Type) ?? SDAnimatedImage.self
-                guard let image = Image.init(data: data) ?? UIImage(data: data) else {
+                
+                let decodeOptions: [SDImageCoderOption: Any]?
+                if let size = context?[.imageThumbnailPixelSize] as? CGSize {
+                    decodeOptions = [.decodeThumbnailPixelSize: size]
+                } else {
+                    decodeOptions = nil
+                }
+                
+                var image: UIImage?
+                if !decodeFirstFrame, let Image = Image as? SDAnimatedImage.Type {
+                    image = Image.init(data: data, scale: 1, options: decodeOptions)
+                }
+                if image == nil {
+                    image = SDImageIOCoder.shared.decodedImage(with: data, options: decodeOptions)
+                }
+                
+                guard let image = image else {
                     completedBlock?(nil, nil, Error.generateImage, true)
                     return
                 }

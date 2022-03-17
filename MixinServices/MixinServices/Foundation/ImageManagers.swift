@@ -32,7 +32,8 @@ extension SDImageCache {
 public let localImageContext: [SDWebImageContextOption: Any] = [
     .customManager: SDWebImageManager.localImage,
     .storeCacheType: SDImageCacheType.memory.rawValue,
-    .originalStoreCacheType: SDImageCacheType.memory.rawValue
+    .originalStoreCacheType: SDImageCacheType.memory.rawValue,
+    .imageThumbnailPixelSize: CGSize(width: 8192, height: 8192),
 ]
 
 public let assetIconContext: [SDWebImageContextOption: Any] = [

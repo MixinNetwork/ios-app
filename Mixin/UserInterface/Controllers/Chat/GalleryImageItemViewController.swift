@@ -75,6 +75,7 @@ final class GalleryImageItemViewController: GalleryItemViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        scrollView.showsHorizontalScrollIndicator = false
         scrollView.contentInsetAdjustmentBehavior = .never
         if let interactiveDismissalGestureRecognizer = galleryViewController?.panRecognizer {
             scrollView.panGestureRecognizer.require(toFail: interactiveDismissalGestureRecognizer)
@@ -162,6 +163,7 @@ final class GalleryImageItemViewController: GalleryItemViewController {
         }
         scrollView.maximumZoomScale = max(fittingScale, maximumZoomScale)
         scrollView.contentOffset = .zero
+        updateVerticalScrollIndicatorVisibility(with: item)
     }
     
     override func saveToLibrary() {
@@ -223,6 +225,7 @@ extension GalleryImageItemViewController: UIScrollViewDelegate {
         } else {
             imageView.center.y = scrollView.contentSize.height / 2
         }
+        updateVerticalScrollIndicatorVisibility(with: item)
     }
     
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
@@ -279,6 +282,14 @@ extension GalleryImageItemViewController {
         if let token = displayAwakeningToken {
             DisplayAwakener.shared.release(token: token)
             displayAwakeningToken = nil
+        }
+    }
+    
+    private func updateVerticalScrollIndicatorVisibility(with item: GalleryItem?) {
+        if scrollView.zoomScale == 1, let item = item {
+            scrollView.showsVerticalScrollIndicator = item.shouldLayoutAsArticle
+        } else {
+            scrollView.showsVerticalScrollIndicator = false
         }
     }
     

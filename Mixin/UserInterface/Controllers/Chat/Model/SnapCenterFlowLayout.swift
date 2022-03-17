@@ -1,37 +1,55 @@
 import UIKit
 
-class StickersStoreBannerFlowLayout: UICollectionViewFlowLayout {
+class SnapCenterFlowLayout: UICollectionViewFlowLayout {
+    
+    var scale: CGFloat {
+        didSet {
+            guard oldValue != scale else {
+                return
+            }
+            invalidateLayout()
+        }
+    }
+    
+    init(scale: CGFloat) {
+        self.scale = scale
+        super.init()
+    }
+    
+    required init?(coder: NSCoder) {
+        self.scale = 1
+        super.init(coder: coder)
+    }
     
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
+        let superAttributes = super.layoutAttributesForElements(in: rect)
         guard
+            scale != 1,
             let collectionView = collectionView,
-            let layoutAttributes = super.layoutAttributesForElements(in: rect)?.map({ $0.copy() }) as? [UICollectionViewLayoutAttributes]
+            let layoutAttributes = superAttributes?.map({ $0.copy() }) as? [UICollectionViewLayoutAttributes]
         else {
-            return nil
+            return superAttributes
         }
         let centerX = collectionView.contentOffset.x + collectionView.bounds.size.width / 2
         layoutAttributes.forEach { attributes in
             let distance = abs(attributes.center.x - centerX)
             let apartScale = distance / collectionView.bounds.size.width
-            let scale = abs(cos(apartScale * .pi / 4))
-            attributes.transform = CGAffineTransform(scaleX: 1.0, y: scale)
+            let scaleY = abs(cos(apartScale * scale))
+            attributes.transform = CGAffineTransform(scaleX: 1.0, y: scaleY)
         }
         return layoutAttributes
     }
     
     override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
-        return true
+        scale != 1
     }
     
     override func targetContentOffset(forProposedContentOffset proposedContentOffset: CGPoint, withScrollingVelocity velocity: CGPoint) -> CGPoint {
         guard
             let collectionView = collectionView,
-            let attributes = layoutAttributesForElements(in: CGRect(x: proposedContentOffset.x,
-                                                                    y: proposedContentOffset.y,
-                                                                    width: collectionView.bounds.size.width,
-                                                                    height: collectionView.bounds.size.height))
+            let attributes = layoutAttributesForElements(in: CGRect(origin: proposedContentOffset, size: collectionView.frame.size))
         else {
-            return super.targetContentOffset(forProposedContentOffset: proposedContentOffset, withScrollingVelocity: velocity)
+            return .zero
         }
         var targetPoint = proposedContentOffset
         var moveDistance = CGFloat.greatestFiniteMagnitude

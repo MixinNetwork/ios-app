@@ -1,7 +1,6 @@
 PODS:
   - AcknowList (2.0.3)
   - Alamofire (5.4.4)
-  - AlignedCollectionViewFlowLayout (1.1.2)
   - AppCenter (4.4.1):
     - AppCenter/Analytics (= 4.4.1)
     - AppCenter/Crashes (= 4.4.1)
@@ -214,7 +213,6 @@ PODS:
 DEPENDENCIES:
   - AcknowList
   - Alamofire (= 5.4.4)
-  - AlignedCollectionViewFlowLayout
   - Firebase/Analytics
   - Firebase/Core
   - Firebase/Crashlytics
@@ -236,7 +234,6 @@ SPEC REPOS:
   trunk:
     - AcknowList
     - Alamofire
-    - AlignedCollectionViewFlowLayout
     - AppCenter
     - BoringSSL
     - DeviceGuru
@@ -289,7 +286,6 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   AcknowList: 6d4faca4c3e0173377fe5649e086d627cd60b003
   Alamofire: f3b09a368f1582ab751b3fff5460276e0d2cf5c9
-  AlignedCollectionViewFlowLayout: ee2ef451e741ec08f8e0967d828001e2f051c20a
   AppCenter: b0b6f1190215b5f983c42934db718f3b46fff3c0
   BoringSSL: e10f92a27043805c01071fe815a5cd98ae8212e7
   DeviceGuru: 257ae5fa0c7e9bb0c11d0f620b30d3407e3e5a07
@@ -326,6 +322,6 @@ SPEC CHECKSUMS:
   SQLCipher: 98dc22f27c0b1790d39e710d440f22a466ebdb59
   Zip: 414f59909701fda9a84ab774ebe0f5449b1082cc
 
-PODFILE CHECKSUM: 69db481cefc5bde9a33c3564b79e246000b2031f
+PODFILE CHECKSUM: 2a55bce2ed4b4ffee86266fed7461c9f1403a2dc
 
 COCOAPODS: 1.11.2

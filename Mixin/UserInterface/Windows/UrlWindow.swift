@@ -660,6 +660,27 @@ class UrlWindow {
         return true
     }
     
+    class func checkExternalScheme(url: String) -> Bool {
+        guard let url = URL(string: url), let host = url.host else {
+            return false
+        }
+        let externalSchemeHosts = AppGroupUserDefaults.User.externalSchemes
+            .compactMap(URL.init)
+            .compactMap(\.host)
+        if externalSchemeHosts.contains(host) {
+            guard let container = UIApplication.homeContainerViewController else {
+                return false
+            }
+            var parent = container.topMostChild
+            if let visibleViewController = (parent as? UINavigationController)?.visibleViewController {
+                parent = visibleViewController
+            }
+            MixinWebViewController.presentInstance(with: .init(conversationId: "", initialUrl: url), asChildOf: parent)
+            return true
+        }
+        return false
+    }
+    
 }
 
 extension UrlWindow {

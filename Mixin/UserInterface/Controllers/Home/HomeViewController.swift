@@ -147,6 +147,7 @@ class HomeViewController: UIViewController {
                 ConcurrentJobQueue.shared.addJob(job: RecoverMediaJob())
             }
             initializeFTSIfNeeded()
+            refreshExternalSchemesIfNeeded()
         }
         UIApplication.homeContainerViewController?.clipSwitcher.loadClipsFromPreviousSession()
     }
@@ -287,6 +288,7 @@ class HomeViewController: UIViewController {
         updateBulletinView()
         fetchConversations()
         initializeFTSIfNeeded()
+        refreshExternalSchemesIfNeeded()
     }
     
     @objc func dataDidChange(_ sender: Notification) {
@@ -573,6 +575,12 @@ extension HomeViewController: UIScrollViewDelegate {
 }
 
 extension HomeViewController {
+    
+    private func refreshExternalSchemesIfNeeded() {
+        if -AppGroupUserDefaults.User.externalSchemesRefreshDate.timeIntervalSinceNow > .oneDay {
+            ConcurrentJobQueue.shared.addJob(job: RefreshExternalSchemeJob())
+        }
+    }
     
     private func initializeFTSIfNeeded() {
         guard !AppGroupUserDefaults.Database.isFTSInitialized else {

@@ -548,6 +548,7 @@
 		7C0D997F26CA62CD00356655 /* StaticAudioMessagePlayingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0D997E26CA62CD00356655 /* StaticAudioMessagePlayingManager.swift */; };
 		7C0E15DF27005376002FC718 /* UnknownURLWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0E15DE27005376002FC718 /* UnknownURLWindow.swift */; };
 		7C0E15E1270053AC002FC718 /* UnknownURLWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C0E15E0270053AC002FC718 /* UnknownURLWindow.xib */; };
+		7C104A8127D83A51004D0530 /* RefreshExternalSchemeJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C104A8027D83A51004D0530 /* RefreshExternalSchemeJob.swift */; };
 		7C14CFC126CA35CF0094AF4A /* StaticMessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C14CFBF26CA35CF0094AF4A /* StaticMessagesViewController.swift */; };
 		7C14CFC226CA35CF0094AF4A /* StaticMessagesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C14CFC026CA35CF0094AF4A /* StaticMessagesView.xib */; };
 		7C1686BB27BDF1D5004393DD /* StickersStoreBannerFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1686BA27BDF1D5004393DD /* StickersStoreBannerFlowLayout.swift */; };
@@ -1519,6 +1520,7 @@
 		7C0D997E26CA62CD00356655 /* StaticAudioMessagePlayingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticAudioMessagePlayingManager.swift; sourceTree = "<group>"; };
 		7C0E15DE27005376002FC718 /* UnknownURLWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnknownURLWindow.swift; sourceTree = "<group>"; };
 		7C0E15E0270053AC002FC718 /* UnknownURLWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UnknownURLWindow.xib; sourceTree = "<group>"; };
+		7C104A8027D83A51004D0530 /* RefreshExternalSchemeJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshExternalSchemeJob.swift; sourceTree = "<group>"; };
 		7C14CFBF26CA35CF0094AF4A /* StaticMessagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticMessagesViewController.swift; sourceTree = "<group>"; };
 		7C14CFC026CA35CF0094AF4A /* StaticMessagesView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StaticMessagesView.xib; sourceTree = "<group>"; };
 		7C1686BA27BDF1D5004393DD /* StickersStoreBannerFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StickersStoreBannerFlowLayout.swift; sourceTree = "<group>"; };
@@ -3604,6 +3606,7 @@
 				DF0A0A5D24476EA000378B4F /* RefreshOffsetJob.swift */,
 				7B0BE46321A59AE400B91A1E /* RefreshTopAssetsJob.swift */,
 				DF2819742014669E001EE5FA /* RefreshAccountJob.swift */,
+				7C104A8027D83A51004D0530 /* RefreshExternalSchemeJob.swift */,
 				DF1A9A791FF206F500A95188 /* RefreshSnapshotsJob.swift */,
 				7B331B6C21B10349000370E9 /* LoadMoreSnapshotsJob.swift */,
 				DF2EB15B23F93870005E5A4F /* CleanUpUnusedAttachmentJob.swift */,
@@ -4379,6 +4382,7 @@
 				9489E3A025C5B150000319F8 /* AcknowledgementsViewController.swift in Sources */,
 				7BC96DE5241779F70047471D /* ExternalApiError.swift in Sources */,
 				DFE48ADE20EBADEE003E0BF8 /* ClearStorageViewController.swift in Sources */,
+				7C104A8127D83A51004D0530 /* RefreshExternalSchemeJob.swift in Sources */,
 				7B3FD4EC241965AB00B58006 /* LocationViewController.swift in Sources */,
 				7BB0F9152434B03300BEDA97 /* SelectedPeerCell.swift in Sources */,
 				7B1C8B992513265200F7A817 /* ExternalSharingPreviewWrapperView.swift in Sources */,

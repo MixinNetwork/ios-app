@@ -175,7 +175,7 @@ fileprivate func bufferCallback(
         return
     }
     let player = Unmanaged<OggOpusPlayer>.fromOpaque(ptr).takeUnretainedValue()
-    guard player.status == .playing else {
+    guard player.status == .playing || player.status == .paused else {
         return
     }
     if let pcmData = try? player.reader.pcmData(maxLength: audioQueueBufferSize), pcmData.count > 0 {

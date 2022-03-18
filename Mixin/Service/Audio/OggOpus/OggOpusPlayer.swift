@@ -178,10 +178,10 @@ fileprivate func bufferCallback(
     guard player.status == .playing || player.status == .paused else {
         return
     }
-    if let pcmData = try? player.reader.pcmData(maxLength: audioQueueBufferSize), pcmData.count > 0 {
-        inBuffer.pointee.mAudioDataByteSize = UInt32(pcmData.count)
-        pcmData.copyBytes(to: inBuffer.pointee.mAudioData.assumingMemoryBound(to: Data.Element.self),
-                          count: pcmData.count)
+    let count = try? player.reader.readPCM(into: inBuffer.pointee.mAudioData,
+                                           size: audioQueueBufferSize)
+    if let count = count, count > 0 {
+        inBuffer.pointee.mAudioDataByteSize = UInt32(count)
         AudioQueueEnqueueBuffer(player.audioQueue, inBuffer, 0, nil)
     } else {
         AudioQueueStop(player.audioQueue, false)

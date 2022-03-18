@@ -3,7 +3,6 @@ import Foundation
 class OggOpusReader {
     
     enum Error: Swift.Error {
-        case memoryAllocation
         case openFile(Int32)
         case read(Int32)
     }
@@ -28,16 +27,9 @@ class OggOpusReader {
         op_free(file)
     }
     
-    func pcmData(maxLength: Int32) throws -> Data {
-        guard let buffer = malloc(Int(maxLength)) else {
-            throw Error.memoryAllocation
-        }
-        defer {
-            free(buffer)
-        }
-        
+    func readPCM(into buffer: UnsafeMutableRawPointer, size: Int32) throws -> Int {
         let output = buffer.assumingMemoryBound(to: opus_int16.self)
-        let outputLength = maxLength / 2
+        let outputLength = size / 2
         var remainingOutputLength = outputLength
         
         var result: Int32 = 1
@@ -53,9 +45,9 @@ class OggOpusReader {
             let count = Int(outputLength - remainingOutputLength) * 2
             if count == 0 {
                 didReachEnd = true
-                return Data()
+                return 0
             } else {
-                return Data(bytes: buffer, count: count)
+                return count
             }
         }
     }

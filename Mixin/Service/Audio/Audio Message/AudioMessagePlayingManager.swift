@@ -154,7 +154,9 @@ class AudioMessagePlayingManager: NSObject, AudioSessionClient {
     }
     
     func unregister(cell: AudioCell, forMessageId messageId: String) {
-        cells[messageId] = nil
+        if let registered = cells[messageId]?.cell, cell == registered {
+            cells[messageId] = nil
+        }
     }
     
     func updateMediaStatusToRead(message: MessageItem) {

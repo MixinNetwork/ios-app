@@ -5,7 +5,8 @@ import MixinServices
 
 enum FoursquareAPI {
     
-    typealias Completion = (Result<[Location], Error>) -> Void
+    typealias Result = Swift.Result<[Location], Error>
+    typealias Completion = (Result) -> Void
     
     static func search(coordinate: CLLocationCoordinate2D, radius: Int?, query: String?, completion: @escaping Completion) -> Request? {
         guard let clientId = MixinKeys.Foursquare.clientId, let clientSecret = MixinKeys.Foursquare.clientSecret else {
@@ -28,18 +29,23 @@ enum FoursquareAPI {
             queryItems.append(item)
         }
         components.queryItems = queryItems
-        return AF.request(components.url!).responseJSON { (response) in
+        return AF.request(components.url!).responseData(queue: .global()) { response in
+            let result: Result
             switch response.result {
-            case .success(let json as Location.FoursquareJson):
-                guard let locations = [Location](json: json) else {
-                    completion(.failure(ExternalApiError.badResponse))
-                    return
+            case .success(let data):
+                let json = try? JSONSerialization.jsonObject(with: data)
+                if let json = json as? Location.FoursquareJson, let locations = [Location](json: json) {
+                    result = .success(locations)
+                } else {
+                    result = .failure(ExternalApiError.badResponse)
                 }
-                completion(.success(locations))
             case .failure(let error):
-                completion(.failure(error))
+                result = .failure(error)
             default:
-                completion(.failure(ExternalApiError.badResponse))
+                result = .failure(ExternalApiError.badResponse)
+            }
+            DispatchQueue.main.async {
+                completion(result)
             }
         }
     }

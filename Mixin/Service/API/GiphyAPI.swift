@@ -3,7 +3,8 @@ import Alamofire
 
 enum GiphyAPI {
     
-    typealias Completion = (Result<[GiphyImage], Error>) -> Void
+    typealias Result = Swift.Result<[GiphyImage], Error>
+    typealias Completion = (Result) -> Void
     
     private static var apiKey = MixinKeys.giphy
     private static var language: String {
@@ -24,7 +25,7 @@ enum GiphyAPI {
         }
         let url = URL(string: "https://api.giphy.com/v1/gifs/trending?offset=\(offset)&limit=\(limit)&rating=r&api_key=\(key)")!
         let handler = GiphyAPI.handler(completion: completion)
-        return AF.request(url).responseJSON(completionHandler: handler)
+        return AF.request(url).responseData(queue: .global(), completionHandler: handler)
     }
     
     static func search(keyword: String, offset: Int = 0, limit: Int, completion: @escaping Completion) -> DataRequest? {
@@ -38,25 +39,26 @@ enum GiphyAPI {
         }
         let url = URL(string: "https://api.giphy.com/v1/gifs/search?q=\(encodedKeyword)&offset=\(offset)&limit=\(limit)&rating=r&lang=\(language)&api_key=\(key)")!
         let handler = GiphyAPI.handler(completion: completion)
-        return AF.request(url).responseJSON(completionHandler: handler)
+        return AF.request(url).responseData(queue: .global(), completionHandler: handler)
     }
     
-    static func handler(completion: @escaping Completion) -> (AFDataResponse<Any>) -> Void {
-        return { (response) in
+    static func handler(completion: @escaping Completion) -> (AFDataResponse<Data>) -> Void {
+        { (response) in
+            let result: Result
             switch response.result {
-            case .success(let json):
-                guard let json = json as? [String: Any] else {
-                    completion(.failure(ExternalApiError.badResponse))
-                    return
+            case .success(let data):
+                let json = try? JSONSerialization.jsonObject(with: data)
+                if let json = json as? [String: Any], let data = json["data"] as? [[String: Any]] {
+                    let images = data.compactMap(GiphyImage.init)
+                    result = .success(images)
+                } else {
+                    result = .failure(ExternalApiError.badResponse)
                 }
-                guard let data = json["data"] as? [[String: Any]] else {
-                    completion(.failure(ExternalApiError.badResponse))
-                    return
-                }
-                let images = data.compactMap(GiphyImage.init)
-                completion(.success(images))
             case .failure(let error):
-                completion(.failure(error))
+                result = .failure(error)
+            }
+            DispatchQueue.main.async {
+                completion(result)
             }
         }
     }

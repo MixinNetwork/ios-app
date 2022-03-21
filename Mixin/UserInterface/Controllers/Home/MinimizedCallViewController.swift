@@ -15,7 +15,7 @@ class MinimizedCallViewController: HomeOverlayViewController {
             }
             if let call = call {
                 center.addObserver(self,
-                                   selector: #selector(callStatusDidChange(_:)),
+                                   selector: #selector(callStateDidChange(_:)),
                                    name: Call.stateDidChangeNotification,
                                    object: call)
             }
@@ -31,11 +31,15 @@ class MinimizedCallViewController: HomeOverlayViewController {
         statusLabel.font = .monospacedDigitSystemFont(ofSize: 14, weight: .regular)
     }
     
+    func setViewHidden(_ hidden: Bool) {
+        view.alpha = hidden ? 0 : 1
+    }
+    
     @IBAction func maximizeAction(_ sender: Any) {
         CallService.shared.setInterfaceMinimized(false, animated: true)
     }
     
-    @objc private func callStatusDidChange(_ notification: Notification) {
+    @objc private func callStateDidChange(_ notification: Notification) {
         updateLabel(call: call)
     }
     
@@ -64,6 +68,8 @@ class MinimizedCallViewController: HomeOverlayViewController {
         guard let call = call else {
             endUpdatingDuration()
             statusLabel.text = nil
+            setViewHidden(true)
+            Logger.call.warn(category: "MinimizedCallViewController", message: "Update label without a call")
             return
         }
         statusLabel.text = call.briefLocalizedState

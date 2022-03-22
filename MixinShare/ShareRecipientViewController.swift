@@ -189,10 +189,32 @@ extension ShareRecipientViewController: UITableViewDataSource, UITableViewDelega
 extension ShareRecipientViewController {
 
     private func shareAction(conversation: RecipientSearchItem, avatarImage: UIImage?, fromIntent: Bool = false) {
-        guard let extensionItems = extensionContext?.inputItems as? [NSExtensionItem], extensionItems.count > 0 else {
+        guard var extensionItems = extensionContext?.inputItems as? [NSExtensionItem] else {
             return
         }
-
+        if extensionItems.count == 2 {
+            // When user initiate a share for a PDF in Safari, there will be 2 input items: the PDF and the URL
+            // We just keep the PDF and drop the URL
+            var pdfIndex: Int?
+            var urlIndex: Int?
+            for (index, item) in extensionItems.enumerated() {
+                guard let attachments = item.attachments, attachments.count == 1 else {
+                    continue
+                }
+                if attachments[0].hasItemConformingToTypeIdentifier(kUTTypeURL as String) {
+                    urlIndex = index
+                } else if attachments[0].hasItemConformingToTypeIdentifier(kUTTypePDF as String) {
+                    pdfIndex = index
+                }
+            }
+            if pdfIndex != nil, let urlIndex = urlIndex {
+                extensionItems.remove(at: urlIndex)
+            }
+        }
+        guard extensionItems.count > 0 else {
+            return
+        }
+        
         let startTime = Date()
         view.endEditing(true)
         loadingView.isHidden = false
@@ -315,6 +337,11 @@ extension ShareRecipientViewController {
                                 return
                             }
                             weakSelf.shareTextMessage(content: url.absoluteString, conversation: conversation)
+                        } else if attachment.hasItemConformingToTypeIdentifier(kUTTypePDF as String) {
+                            guard let url = item as? URL else {
+                                return
+                            }
+                            weakSelf.shareFileMessage(url: url, conversation: conversation)
                         }
                     }
                 }

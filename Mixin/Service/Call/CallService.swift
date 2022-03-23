@@ -483,10 +483,10 @@ extension CallService {
         let animationCompletion: (Bool) -> Void
         if minimized {
             min.call = activeCall
-            min.view.alpha = 0
+            min.setViewHidden(true)
             updateViews = {
                 max.hideContentView(completion: nil)
-                min.view.alpha = 1
+                min.setViewHidden(false)
             }
             animationCompletion = { (_) in
                 if self.isInterfaceMinimized {
@@ -497,7 +497,7 @@ extension CallService {
         } else {
             addViewControllerAsContainersChildIfNeeded(max)
             updateViews = {
-                min.view.alpha = 0
+                min.setViewHidden(true)
                 max.showContentViewIfNeeded(animated: true)
             }
             animationCompletion = { (_) in
@@ -515,6 +515,7 @@ extension CallService {
                 animationCompletion(true)
             }
         }
+        Logger.call.info(category: "CallService", message: "Interface minimized: \(minimized)")
     }
     
     func showCallingInterface(call: Call, animated: Bool) {
@@ -556,9 +557,10 @@ extension CallService {
             }
         })
         if let mini = UIApplication.homeContainerViewController?.minimizedCallViewControllerIfLoaded {
-            mini.view.alpha = 0
+            mini.setViewHidden(true)
             mini.updateViewSize()
             mini.panningController.placeViewNextToLastOverlayOrTopRight()
+            Logger.call.info(category: "CallService", message: "Minimized call view dismissed")
         }
     }
     

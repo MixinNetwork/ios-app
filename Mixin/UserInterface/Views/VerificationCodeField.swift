@@ -11,8 +11,22 @@ class VerificationCodeField: UIControl, UITextInputTraits {
     var keyboardAppearance: UIKeyboardAppearance = .default
     var returnKeyType: UIReturnKeyType = .default
     var enablesReturnKeyAutomatically: Bool = true
-    var keyboardType: UIKeyboardType = .numberPad
-    var textContentType: UITextContentType = .oneTimeCode
+    var keyboardType: UIKeyboardType = {
+        // Crash confirmed with UIKeyboardTypeNumberPad on macOS 12.3
+        if #available(iOS 14.0, *), ProcessInfo.processInfo.isiOSAppOnMac {
+            return .default
+        } else {
+            return .numberPad
+        }
+    }()
+    var textContentType: UITextContentType! = {
+        // Crash confirmed with UITextContentTypeOneTimeCode on macOS 12.3
+        if #available(iOS 14.0, *), ProcessInfo.processInfo.isiOSAppOnMac {
+            return nil
+        } else {
+            return .oneTimeCode
+        }
+    }()
     
     // UITextInput
     var selectedTextRange: UITextRange?

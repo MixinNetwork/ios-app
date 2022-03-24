@@ -544,7 +544,7 @@ extension MessageReceiverViewController {
             showAutoHiddenHud(style: .error, text: R.string.localizable.error_operation_failed())
             return nil
         }
-        message.thumbImage = image.base64Thumbnail()
+        message.thumbImage = image.blurHash()
         message.mediaSize = FileManager.default.fileSize(path.path)
         message.mediaWidth = Int(image.size.width)
         message.mediaHeight = Int(image.size.height)
@@ -581,7 +581,7 @@ extension MessageReceiverViewController {
         if let thumbnail = UIImage(withFirstFrameOfVideoAtURL: videoUrl) {
             let thumbnailURL = AttachmentContainer.videoThumbnailURL(videoFilename: videoUrl.lastPathComponent)
             thumbnail.saveToFile(path: thumbnailURL)
-            message.thumbImage = thumbnail.base64Thumbnail()
+            message.thumbImage = thumbnail.blurHash()
         } else {
             return nil
         }

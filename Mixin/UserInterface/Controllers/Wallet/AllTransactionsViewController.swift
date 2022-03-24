@@ -146,7 +146,7 @@ extension AllTransactionsViewController: SnapshotCellDelegate {
             return
         }
         DispatchQueue.global().async {
-            guard let user = UserDAO.shared.getUser(userId: userId), user.isCreatedByMessenger else {
+            guard let user = UserDAO.shared.getUser(userId: userId) else {
                 return
             }
             DispatchQueue.main.async { [weak self] in

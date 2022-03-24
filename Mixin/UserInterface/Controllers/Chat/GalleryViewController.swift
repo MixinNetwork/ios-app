@@ -95,8 +95,11 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         NotificationCenter.default.removeObserver(self)
     }
     
-    override func loadView() {
-        view = GalleryView()
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        if let scrollView = pageViewController.view.subviews.first(where: { $0 is UIScrollView }) as? UIScrollView {
+            scrollView.isScrollEnabled = UIApplication.shared.isPortrait
+        }
     }
     
     override func viewDidLoad() {
@@ -113,9 +116,6 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         pageViewController.didMove(toParent: self)
         pageViewController.dataSource = modelController
         pageViewController.delegate = self
-        if let scrollView = pageViewController.view.subviews.first(where: { $0 is UIScrollView }) {
-            (view as? GalleryView)?.scrollView = scrollView as? UIScrollView
-        }
         
         panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panAction(_:)))
         panRecognizer.delegate = self
@@ -225,6 +225,11 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
     func dismiss(transitionViewInitialOffsetY: CGFloat, completion: (() -> Void)? = nil) {
         guard let itemViewController = currentItemViewController, let item = itemViewController.item else {
             return
+        }
+        children.forEach { controller in
+            if let vc = controller as? MixinWebViewController {
+                vc.dismissAsChild(animated: false, completion: nil)
+            }
         }
         delegate?.galleryViewController(self, willDismiss: item)
         pageViewController.view.alpha = 0
@@ -362,6 +367,9 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         }
         if let url = (itemViewController as? GalleryImageItemViewController)?.detectedUrl {
             alert.addAction(UIAlertAction(title: Localized.SCAN_QR_CODE, style: .default, handler: { (_) in
+                if UrlWindow.checkExternalScheme(url: url.absoluteString) {
+                    return
+                }
                 if !UrlWindow.checkUrl(url: url, clearNavigationStack: false) {
                     RecognizeWindow.instance().presentWindow(text: url.absoluteString)
                 }

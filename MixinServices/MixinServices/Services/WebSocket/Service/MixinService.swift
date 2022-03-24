@@ -199,7 +199,7 @@ public class MixinService {
                 return false
             }
 
-            switch UserSessionAPI.fetchSessions(userIds: [userId]) {
+            switch UserAPI.fetchSessions(userIds: [userId]) {
             case let .success(sessions):
                 let participantSessions = sessions.map {
                     ParticipantSession(conversationId: conversationId,

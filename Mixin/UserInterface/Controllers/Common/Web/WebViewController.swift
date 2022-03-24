@@ -45,6 +45,8 @@ class WebViewController: FullscreenPopupViewController {
         let webView = WKWebView(frame: webViewWrapperView.bounds, configuration: webViewConfiguration)
         webView.backgroundColor = .clear
         webView.isOpaque = false
+        webView.scrollView.backgroundColor = .clear
+        webView.scrollView.contentInsetAdjustmentBehavior = .never
         webViewWrapperView.addSubview(webView)
         webView.snp.makeEdgesEqualToSuperview()
         webView.scrollView.panGestureRecognizer.require(toFail: edgePanGestureRecognizer)
@@ -81,11 +83,7 @@ class WebViewController: FullscreenPopupViewController {
         
         titleLabel.textColor = isThemeColorDark ? .white : textDarkColor
         pageControlView.style = isThemeColorDark ? .dark : .light
-        if #available(iOS 13.0, *) {
-            statusBarStyle = isThemeColorDark ? .lightContent : .darkContent
-        } else {
-            statusBarStyle = isThemeColorDark ? .lightContent : .default
-        }
+        statusBarStyle = isThemeColorDark ? .lightContent : .darkContent
         setNeedsStatusBarAppearanceUpdate()
     }
     

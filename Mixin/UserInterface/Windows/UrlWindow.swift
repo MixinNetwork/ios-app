@@ -206,6 +206,35 @@ class UrlWindow {
             return false
         }
         
+        func pushConversationViewController(user: UserItem? = nil, conversation: ConversationItem? = nil) {
+            let pushController = {
+                let viewController: UIViewController?
+                if let user = user {
+                    viewController = ConversationViewController.instance(ownerUser: user)
+                } else if let conversation = conversation {
+                    viewController = ConversationViewController.instance(conversation: conversation)
+                } else {
+                    viewController = nil
+                }
+                if let viewController = viewController {
+                    UIApplication.homeNavigationController?.pushViewController(withBackRoot: viewController)
+                }
+            }
+            if let container = UIApplication.homeContainerViewController, container.galleryIsOnTopMost {
+                let currentItemViewController = container.galleryViewController.currentItemViewController
+                if let vc = currentItemViewController as? GalleryVideoItemViewController {
+                    vc.togglePipMode(completion: {
+                        DispatchQueue.main.async(execute: pushController)
+                    })
+                } else {
+                    container.galleryViewController.dismiss(transitionViewInitialOffsetY: 0)
+                    pushController()
+                }
+            } else {
+                pushController()
+            }
+        }
+        
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         DispatchQueue.global().async {
@@ -219,8 +248,7 @@ class UrlWindow {
                 }
                 DispatchQueue.main.async {
                     hud.hide()
-                    let vc = ConversationViewController.instance(ownerUser: user)
-                    UIApplication.homeNavigationController?.pushViewController(withBackRoot: vc)
+                    pushConversationViewController(user: user)
                 }
             } else {
                 var conversation = ConversationDAO.shared.getConversation(conversationId: conversationId)
@@ -259,8 +287,7 @@ class UrlWindow {
                 
                 DispatchQueue.main.async {
                     hud.hide()
-                    let vc = ConversationViewController.instance(conversation: conversation)
-                    UIApplication.homeNavigationController?.pushViewController(withBackRoot: vc)
+                    pushConversationViewController(conversation: conversation)
                 }
             }
         }
@@ -278,11 +305,6 @@ class UrlWindow {
             guard let (user, updateUserFromRemoteAfterReloaded) = syncUser(userId: userId, hud: hud) else {
                 return
             }
-            guard user.isCreatedByMessenger else {
-                hud.hideInMainThread()
-                return
-            }
-
             DispatchQueue.main.async {
                 hud.hide()
                 let vc = UserProfileViewController(user: user)
@@ -314,7 +336,7 @@ class UrlWindow {
                     return
                 }
             }
-            guard let user = userItem, user.isCreatedByMessenger else {
+            guard let user = userItem else {
                 return
             }
             DispatchQueue.main.async {
@@ -457,7 +479,7 @@ class UrlWindow {
                 DispatchQueue.main.async {
                     if canPay {
                         hud.hide()
-                        PayWindow.instance().render(asset: asset, action: action, amount: amount, memo: memo ?? "").presentPopupControllerAnimated()
+                        PayWindow.instance().render(asset: asset, action: action, amount: amount, isAmountLocalized: false, memo: memo ?? "").presentPopupControllerAnimated()
                     } else if let error = errorMsg {
                         hud.set(style: .error, text: error)
                         hud.scheduleAutoHidden()
@@ -616,7 +638,7 @@ class UrlWindow {
                         hud.hideInMainThread()
                         return
                     }
-                    message.thumbImage = image.base64Thumbnail()
+                    message.thumbImage = image.blurHash()
                     message.mediaMimeType = mimeType
                     message.mediaWidth = Int(image.size.width)
                     message.mediaHeight = Int(image.size.height)
@@ -636,6 +658,27 @@ class UrlWindow {
             }
         }
         return true
+    }
+    
+    class func checkExternalScheme(url: String) -> Bool {
+        guard let url = URL(string: url), let host = url.host else {
+            return false
+        }
+        let externalSchemeHosts = AppGroupUserDefaults.User.externalSchemes
+            .compactMap(URL.init)
+            .compactMap(\.host)
+        if externalSchemeHosts.contains(host) {
+            guard let container = UIApplication.homeContainerViewController else {
+                return false
+            }
+            var parent = container.topMostChild
+            if let visibleViewController = (parent as? UINavigationController)?.visibleViewController {
+                parent = visibleViewController
+            }
+            MixinWebViewController.presentInstance(with: .init(conversationId: "", initialUrl: url), asChildOf: parent)
+            return true
+        }
+        return false
     }
     
 }

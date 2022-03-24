@@ -34,22 +34,20 @@ class BottomSheetView: UIView {
         window.addSubview(self)
         self.alpha = 0
 
-        UIView.animate(withDuration: 0.5, animations: {
-            UIView.setAnimationCurve(.overdamped)
+        UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
             self.popAnimationBody()
-        })
+        }
     }
 
     @objc func dismissPopupControllerAnimated() {
         self.alpha = 1.0
         isShowing = false
-        UIView.animate(withDuration: 0.5, animations: {
-            UIView.setAnimationCurve(.overdamped)
+        UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
             self.alpha = 0
             self.popupView.center = self.getAnimationStartPoint()
-        }, completion: { (finished: Bool) -> Void in
+        } completion: { _ in
             self.removeFromSuperview()
-        })
+        }
     }
 
     internal func popAnimationBody() {
@@ -99,20 +97,18 @@ extension BottomSheetView {
         }
         self.alpha = 0
         self.popupView.center = getAnimationStartPoint()
-        UIView.animate(withDuration: 0.5, animations: {
-            UIView.setAnimationCurve(.overdamped)
+        UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
             self.popAnimationBody()
-        })
+        }
     }
 
     @objc func dismissView() {
         self.alpha = 1.0
         isShowing = false
-        UIView.animate(withDuration: 0.5, animations: {
-            UIView.setAnimationCurve(.overdamped)
+        UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
             self.alpha = 0
             self.popupView.center = self.getAnimationStartPoint()
-        })
+        }
     }
 
 }

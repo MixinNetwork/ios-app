@@ -30,7 +30,7 @@ extension MessageDAO {
         }
         
         do {
-            try db.pool.read { (db) -> Void in
+            try db.read { (db) -> Void in
                 let rows = try Row.fetchCursor(db, sql: sql, arguments: [conversationId, myUserId], adapter: nil)
                 while let row = try rows.next() {
                     let counter = Counter(value: -1)

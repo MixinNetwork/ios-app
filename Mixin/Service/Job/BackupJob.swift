@@ -228,13 +228,13 @@ class BackupJob: BaseJob {
     }
 
     private func getDatabaseFileSize() -> Int64 {
-        try? UserDatabase.current.pool.write({ (db) -> Void in
+        try? UserDatabase.current.writeAndReturnError { (db) -> Void in
             try db.checkpoint(.full, on: nil)
-        })
+        }
         
         if AppGroupUserDefaults.Database.isFTSInitialized && -AppGroupUserDefaults.Database.vacuumDate.timeIntervalSinceNow >= 86400 * 14 {
             AppGroupUserDefaults.Database.vacuumDate = Date()
-            try? UserDatabase.current.pool.vacuum()
+            try? UserDatabase.current.vacuum()
         }
         return FileManager.default.fileSize(AppGroupContainer.userDatabaseUrl.path)
     }

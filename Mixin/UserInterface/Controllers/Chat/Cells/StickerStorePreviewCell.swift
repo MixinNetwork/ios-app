@@ -6,6 +6,7 @@ class StickerStorePreviewCell: UICollectionViewCell {
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var addButton: UIButton!
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var layout: UICollectionViewFlowLayout!
     
     @IBOutlet weak var collectionViewLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var collectionViewTrailingConstraint: NSLayoutConstraint!
@@ -17,14 +18,13 @@ class StickerStorePreviewCell: UICollectionViewCell {
                 nameLabel.text = albumItem.album.name
                 if albumItem.isAdded {
                     addButton.setTitle(R.string.localizable.sticker_store_added(), for: .normal)
-                    addButtonBackgroundColor = R.color.sticker_button_background_disabled()
+                    addButton.backgroundColor = R.color.sticker_button_background_disabled()
                     addButton.setTitleColor(R.color.sticker_button_text_disabled(), for: .normal)
                 } else {
                     addButton.setTitle(R.string.localizable.sticker_store_add(), for: .normal)
-                    addButtonBackgroundColor = R.color.theme()
+                    addButton.backgroundColor = R.color.theme()
                     addButton.setTitleColor(.white, for: .normal)
                 }
-                addButton.backgroundColor = addButtonBackgroundColor
             } else {
                 nameLabel.text = nil
                 addButton.setTitle(nil, for: .normal)
@@ -33,9 +33,7 @@ class StickerStorePreviewCell: UICollectionViewCell {
         }
     }
     
-    private let maxStickerPreviewCount = 4
-    
-    private var addButtonBackgroundColor: UIColor?
+    private var maxStickerPreviewCount = 4
     
     @IBAction func stickerAction(_ sender: Any) {
         onToggle?()
@@ -46,17 +44,9 @@ class StickerStorePreviewCell: UICollectionViewCell {
         let margin: CGFloat = ScreenWidth.current <= .short ? 10 : 20
         collectionViewLeadingConstraint.constant = margin
         collectionViewTrailingConstraint.constant = margin
-    }
-    
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        if #available(iOS 13.0, *) {
-            
-        } else {
-            // Fix wrong background color on iOS 12
-            // https://procrastinative.ninja/2018/07/16/debugging-ios-named-colors/
-            addButton.backgroundColor = addButtonBackgroundColor
-        }
+        let totalWidth = UIScreen.main.bounds.width - 2 * margin
+        let itemWidth = layout.itemSize.width + layout.minimumLineSpacing
+        maxStickerPreviewCount = Int(totalWidth / itemWidth)
     }
     
 }

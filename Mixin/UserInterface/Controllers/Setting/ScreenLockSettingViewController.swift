@@ -18,8 +18,7 @@ final class ScreenLockSettingViewController: SettingsTableViewController {
     
     class func instance() -> UIViewController {
         let vc = ScreenLockSettingViewController()
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.setting_screen_lock_title())
-        return container
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.setting_screen_lock_title())
     }
     
     override func viewDidLoad() {

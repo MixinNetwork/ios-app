@@ -99,9 +99,7 @@ class TransactionViewController: UIViewController {
             return
         }
         becomeFirstResponder()
-        let menu = UIMenuController.shared
-        menu.setTargetRect(amountLabel.bounds, in: amountLabel)
-        menu.setMenuVisible(true, animated: true)
+        UIMenuController.shared.showMenu(from: amountLabel, rect: amountLabel.bounds)
         AppDelegate.current.mainWindow.addDismissMenuResponder()
     }
     
@@ -149,7 +147,7 @@ extension TransactionViewController: UITableViewDelegate {
             return
         }
         DispatchQueue.global().async {
-            guard let user = UserDAO.shared.getUser(userId: userId), user.isCreatedByMessenger else {
+            guard let user = UserDAO.shared.getUser(userId: userId) else {
                 return
             }
             DispatchQueue.main.async { [weak self] in

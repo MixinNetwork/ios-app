@@ -121,11 +121,7 @@ class LocationMessageCell: ImageMessageCell {
                                                 latitudinalMeters: 1000,
                                                 longitudinalMeters: 1000)
             options.size = viewModel.photoFrame.size
-            if #available(iOS 13.0, *) {
-                options.traitCollection = traitCollection
-            } else {
-                options.scale = UIScreen.main.scale
-            }
+            options.traitCollection = traitCollection
             let snapshotter = MKMapSnapshotter(options: options)
             snapshotter.start { [weak self] (snapshot, error) in
                 guard let self = self, let snapshot = snapshot else {

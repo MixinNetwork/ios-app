@@ -40,8 +40,8 @@ class DatabaseUpgradeViewController: UIViewController {
             
             AppGroupContainer.migrateIfNeeded()
             TaskDatabase.reloadCurrent()
-            
             UserDatabase.reloadCurrent()
+            
             if !AppGroupUserDefaults.Database.isSentSenderKeyCleared {
                 UserDatabase.current.clearSentSenderKey()
                 AppGroupUserDefaults.Database.isSentSenderKeyCleared = true
@@ -67,6 +67,9 @@ class DatabaseUpgradeViewController: UIViewController {
                     .appendingPathComponent("Sticker")
                     .appendingPathComponent("Lottie")
                 try? FileManager.default.removeItem(at: lottieCacheURL)
+            }
+            if localVersion < 30 {
+                ConcurrentJobQueue.shared.addJob(job: RefreshAlbumJob())
             }
             
             AppGroupUserDefaults.User.needsRebuildDatabase = false

@@ -64,6 +64,32 @@ public final class StickerDAO: UserDatabaseDAO {
         db.select(with: StickerDAO.sqlQueryStickersByAlbum, arguments: [albumId])
     }
     
+    public func getStickers(albumIds: [String]) -> [String: [StickerItem]] {
+        guard !albumIds.isEmpty else {
+            return [:]
+        }
+        let keys = albumIds.map { _ in "?" }.joined(separator: ",")
+        let sql = """
+        \(Self.sqlQueryColumns)
+        \(Self.relationShipJoinClause) AND sa.album_id in (\(keys))
+        \(Self.albumJoinClause)
+        ORDER BY sa.created_at DESC
+        """
+        let stickers: [StickerItem] = db.select(with: sql, arguments: StatementArguments(albumIds))
+        var stickerMap = [String: [StickerItem]]()
+        for sticker in stickers {
+            guard let albumId = sticker.albumId else {
+                continue
+            }
+            if let stickers = stickerMap[albumId] {
+                stickerMap[albumId] = stickers + [sticker]
+            } else {
+                stickerMap[albumId] = [sticker]
+            }
+        }
+        return stickerMap
+    }
+    
     public func getFavoriteStickers() -> [StickerItem] {
         db.select(with: StickerDAO.sqlQueryFavoriteStickers)
     }
@@ -118,20 +144,16 @@ public final class StickerDAO: UserDatabaseDAO {
     public func insertOrUpdateFavoriteSticker(sticker: StickerResponse) {
         if let albumId = AlbumDAO.shared.getPersonalAlbum()?.albumId {
             insertOrUpdateStickers(stickers: [sticker], albumId: albumId)
-        } else {
-            switch StickerAPI.albums() {
-            case let .success(albums):
-                for album in albums {
-                    guard album.category == AlbumCategory.PERSONAL.rawValue else {
-                        continue
-                    }
-                    AlbumDAO.shared.insertOrUpdateAblum(album: album)
-                    insertOrUpdateStickers(stickers: [sticker], albumId: album.albumId)
-                    break
-                }
+        } else if let albumId = sticker.albumId {
+            switch StickerAPI.album(albumId: albumId) {
+            case let .success(album):
+                AlbumDAO.shared.insertOrUpdateAblum(album: album)
+                insertOrUpdateStickers(stickers: [sticker], albumId: albumId)
             case .failure:
-                ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob(.albums))
+                ConcurrentJobQueue.shared.addJob(job: RefreshAlbumJob())
             }
+        } else {
+            ConcurrentJobQueue.shared.addJob(job: RefreshAlbumJob())
         }
     }
     

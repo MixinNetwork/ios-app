@@ -52,7 +52,7 @@ class ImageUploadJob: AttachmentUploadJob {
         }
         if message.thumbImage == nil {
             let image = UIImage(contentsOfFile: fileUrl.path)
-            message.thumbImage = image?.base64Thumbnail() ?? ""
+            message.thumbImage = image?.blurHash() ?? ""
         }
 
         guard !isCancelled else {
@@ -79,17 +79,15 @@ class ImageUploadJob: AttachmentUploadJob {
         let extensionName: String
         var image: UIImage?
         var imageData: Data?
-        var updatedWidth: Int?
-        var updatedHeight: Int?
         if UTTypeConformsTo(uti, kUTTypeGIF) {
             extensionName = ExtensionName.gif.rawValue
-            PHImageManager.default().requestImageData(for: asset, options: options) { (data, uti, orientation, info) in
+            PHImageManager.default().requestImageDataAndOrientation(for: asset, options: options) { (data, uti, orientation, info) in
                 imageData = data
             }
         } else if imageWithRatioMaybeAnArticle(CGSize(width: asset.pixelWidth, height: asset.pixelHeight)) {
             extensionName = ExtensionName.jpeg.rawValue
             if UTTypeConformsTo(uti, kUTTypeJPEG) {
-                PHImageManager.default().requestImageData(for: asset, options: options) { (data, _, _, _) in
+                PHImageManager.default().requestImageDataAndOrientation(for: asset, options: options) { (data, _, _, _) in
                     imageData = data
                 }
             } else {
@@ -99,14 +97,6 @@ class ImageUploadJob: AttachmentUploadJob {
                         return
                     }
                     (image, imageData) = ImageUploadSanitizer.sanitizedImage(from: rawImage)
-                    if let image = image {
-                        if image.size.width != rawImage.size.width {
-                            updatedWidth = Int(image.size.width)
-                        }
-                        if image.size.height != rawImage.size.height {
-                            updatedHeight = Int(image.size.height)
-                        }
-                    }
                 }
             }
         } else {
@@ -117,14 +107,6 @@ class ImageUploadJob: AttachmentUploadJob {
                     return
                 }
                 (image, imageData) = ImageUploadSanitizer.sanitizedImage(from: rawImage)
-                if let image = image {
-                    if image.size.width != rawImage.size.width {
-                        updatedWidth = Int(image.size.width)
-                    }
-                    if image.size.height != rawImage.size.height {
-                        updatedHeight = Int(image.size.height)
-                    }
-                }
             }
         }
         
@@ -138,11 +120,23 @@ class ImageUploadJob: AttachmentUploadJob {
             try data.write(to: url)
             if message.thumbImage == nil {
                 let thumbnail = image ?? UIImage(data: data)
-                message.thumbImage = thumbnail?.base64Thumbnail() ?? ""
+                message.thumbImage = thumbnail?.blurHash() ?? ""
             }
             guard !isCancelled else {
                 try FileManager.default.removeItem(at: url)
                 return
+            }
+            var updatedWidth: Int?
+            var updatedHeight: Int?
+            if let image = image {
+                let actualWidth = Int(image.size.width)
+                let actualHeight = Int(image.size.height)
+                if actualWidth != message.mediaWidth {
+                    updatedWidth = actualWidth
+                }
+                if actualHeight != message.mediaHeight {
+                    updatedHeight = actualHeight
+                }
             }
             updateMessage(filename: filename, url: url, mediaWidth: updatedWidth, mediaHeight: updatedHeight)
         } catch {

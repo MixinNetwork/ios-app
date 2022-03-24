@@ -29,6 +29,7 @@ class ConversationInputViewController: UIViewController {
     @IBOutlet weak var quotePreviewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var quotePreviewWrapperHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var textViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var textViewRightAccessoryWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var beginEditingTextViewTrailingConstraint: NSLayoutConstraint!
     @IBOutlet weak var beginEditingRightActionsStackLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var endEditingTextViewTrailingConstraint: NSLayoutConstraint!
@@ -165,8 +166,15 @@ class ConversationInputViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(saveDraft), name: UIApplication.willTerminateNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(participantDidChange(_:)), name: ParticipantDAO.participantDidChangeNotification, object: nil)
+        textView.textContainer.lineFragmentPadding = 0
         textView.inputAccessoryView = interactiveDismissResponder
         textView.textContainerInset = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
+        textView.placeholderLabel.font = .systemFont(ofSize: 13)
+        textView.placeholderLabel.adjustsFontSizeToFitWidth = true
+        textView.placeholderPadding = UIEdgeInsets(top: textView.textContainerInset.top,
+                                                   left: textView.textContainerInset.left,
+                                                   bottom: textView.textContainerInset.bottom,
+                                                   right: textViewRightAccessoryWidthConstraint.constant)
         textView.delegate = self
         let recognizer = PreviewGestureRecognizer(target: self, action: #selector(previewSilentNotificationMessage(_:)))
         sendButton.addGestureRecognizer(recognizer)
@@ -199,7 +207,7 @@ class ConversationInputViewController: UIViewController {
     
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
-        guard UIApplication.shared.statusBarOrientation.isPortrait else {
+        guard UIApplication.shared.isPortrait else {
             return
         }
         let diff = view.safeAreaInsets.bottom - lastSafeAreaInsetsBottom
@@ -346,17 +354,29 @@ class ConversationInputViewController: UIViewController {
             composer.queue.async {
                 let apps = AppDAO.shared.getConversationBots(conversationId: conversationId)
                 DispatchQueue.main.async { [weak self] in
-                    self?.extensionViewController.apps = apps.map { ($0, nil) }
-                    self?.reloadFixedExtensions()
+                    guard let self = self else {
+                        return
+                    }
+                    self.extensionViewController.apps = apps.map { ($0, nil) }
+                    self.reloadFixedExtensions()
+                    self.textView.placeholder = R.string.localizable.e2e_encrypted()
                 }
             }
         } else if let ownerUser = composer.ownerUser {
             composer.loadOpponentApp(userId: ownerUser.userId) { [weak self] app in
+                guard let self = self else {
+                    return
+                }
+                let isEncrypted: Bool
                 if let app = app {
                     AppGroupUserDefaults.User.insertRecentlyUsedAppId(id: app.appId)
+                    isEncrypted = app.capabilities?.contains("ENCRYPTED") ?? false
+                } else {
+                    isEncrypted = true
                 }
-                self?.loadFavoriteApps(ownerUser: ownerUser)
-                self?.reloadFixedExtensions()
+                self.loadFavoriteApps(ownerUser: ownerUser)
+                self.reloadFixedExtensions()
+                self.textView.placeholder = isEncrypted ? R.string.localizable.e2e_encrypted() : nil
             }
         }
         
@@ -386,10 +406,9 @@ class ConversationInputViewController: UIViewController {
         if minimize {
             setPreferredContentHeightAnimated(.minimized)
         }
-        UIView.animate(withDuration: 0.5, animations: {
-            UIView.setAnimationCurve(.overdamped)
+        UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
             self.customInputContainerView.alpha = 0
-        }) { (_) in
+        } completion: { _ in
             self.customInputViewController = nil
         }
     }
@@ -899,8 +918,7 @@ extension ConversationInputViewController {
         customInputContainerView.alpha = 0
         customInputViewController = viewController
         customInputContainerView.layoutIfNeeded()
-        UIView.animate(withDuration: 0.5) {
-            UIView.setAnimationCurve(.overdamped)
+        UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
             self.customInputContainerView.alpha = 1
         }
     }
@@ -981,32 +999,34 @@ extension ConversationInputViewController {
     }
     
     private func layoutForTextViewIsEmpty(_ isEmpty: Bool, animated: Bool) {
-        if animated {
-            UIView.beginAnimations(nil, context: nil)
-            UIView.setAnimationDuration(0.2)
+        
+        func layout() {
+            if isEmpty {
+                beginEditingTextViewTrailingConstraint.priority = .almostInexist
+                beginEditingRightActionsStackLeadingConstraint.priority = .almostInexist
+                endEditingTextViewTrailingConstraint.priority = .almostRequired
+                endEditingRightActionsStackTrailingConstraint.priority = .almostRequired
+                sendButton.alpha = 0
+                rightActionsStackView.alpha = 1
+                audioInputContainerView.alpha = 1
+                textViewRightAccessoryView.alpha = 1
+            } else {
+                beginEditingTextViewTrailingConstraint.priority = .almostRequired
+                beginEditingRightActionsStackLeadingConstraint.priority = .almostRequired
+                endEditingTextViewTrailingConstraint.priority = .almostInexist
+                endEditingRightActionsStackTrailingConstraint.priority = .almostInexist
+                sendButton.alpha = 1
+                rightActionsStackView.alpha = 0
+                audioInputContainerView.alpha = 0
+                textViewRightAccessoryView.alpha = 0
+            }
+            inputBarView.layoutIfNeeded()
         }
-        if isEmpty {
-            beginEditingTextViewTrailingConstraint.priority = .almostInexist
-            beginEditingRightActionsStackLeadingConstraint.priority = .almostInexist
-            endEditingTextViewTrailingConstraint.priority = .almostRequired
-            endEditingRightActionsStackTrailingConstraint.priority = .almostRequired
-            sendButton.alpha = 0
-            rightActionsStackView.alpha = 1
-            audioInputContainerView.alpha = 1
-            textViewRightAccessoryView.alpha = 1
+        
+        if animated {
+            UIView.animate(withDuration: 0.2, animations: layout)
         } else {
-            beginEditingTextViewTrailingConstraint.priority = .almostRequired
-            beginEditingRightActionsStackLeadingConstraint.priority = .almostRequired
-            endEditingTextViewTrailingConstraint.priority = .almostInexist
-            endEditingRightActionsStackTrailingConstraint.priority = .almostInexist
-            sendButton.alpha = 1
-            rightActionsStackView.alpha = 0
-            audioInputContainerView.alpha = 0
-            textViewRightAccessoryView.alpha = 0
-        }
-        inputBarView.layoutIfNeeded()
-        if animated {
-            UIView.commitAnimations()
+            layout()
         }
     }
     

@@ -55,6 +55,7 @@
 "action_close" = "Close";
 "action_change_settings" = "Change Settings";
 "action_open" = "Open";
+"action_settings" = "Settings";
 "menu_delete" = "Delete";
 "menu_edit" = "Edit";
 "menu_report" = "Report";
@@ -64,6 +65,7 @@
 "title_loading" = "Loading...";
 "all_photos" = "All Photos";
 "title_help" = "Help";
+"e2e_encrypted" = "End-to-end Encrypted";
 
 "connection_hint_connecting" = "Connecting";
 "connection_hint_progress" = "Syncing %@%%";
@@ -164,6 +166,8 @@
 "toast_captcha_timeout" = "Validation timed out";
 "desktop_login_confim" = "Confirm login to Mixin Messenger Desktop";
 "desktop_upgrade" = "Please upgrade Mixin Messenger Desktop to the latest version.";
+"abort_account_deletion_title" = "Continue to log in and abort account deletion";
+"abort_account_deletion_hint" = "Your account will be deleted on %@, if you continue to log in, the request to delete your account will be cancelled.";
 
 // Contacts
 "contact_title" = "Contacts";
@@ -224,9 +228,10 @@
 "home_cell_action_unpin" = "Unpin";
 "home_title" = "Chats";
 "home_bulletin_title_notification" = "Turn ON Notifications";
-"home_bulletin_description_notification" = "Don’t miss messages from your friends";
 "home_bulletin_title_emergency_contact" = "Emergency Contact";
-"home_bulletin_button_notification" = "Settings";
+"home_bulletin_title_initialize_pin" = "Get a new wallet";
+"home_bulletin_description_notification" = "Don’t miss messages from your friends";
+"home_bulletin_description_initialize_pin" = "Create your first digital wallet, all your digital assets in one wallet, easily send and receive cryptocurrenty.";
 "home_title_apps" = "Bots";
 "home_apps_candidate_empty" = "Please add your favorite bot first.";
 
@@ -401,13 +406,13 @@
 "web_export_failed" = "Export failed";
 
 // Call
-"call_encryption" = "End-to-end Encrypted";
 "call_encryption_title" = "This call is secured with end-to-end encryption";
 "call_encryption_description" = "No one outside of this call can view or listen to it. Not even Mixin.";
 "call_hint_on_another_call" = "You are already on another call. Try after it was ended.";
 "call_state_outgoing" = "Calling...";
 "call_state_incoming" = "Incoming voice call";
 "call_state_connecting" = "Connecting";
+"call_state_connected" = "Connected";
 "call_state_stalled" = "Connection unstable";
 "call_state_disconnecting" = "Disconnecting";
 "call_state_brief_waiting" = "Waiting";
@@ -772,6 +777,7 @@
 "profile_shared_app_reach_limit" = "The number has reached the limit";
 "profile_call_with_mixin" = "Call with Mixin";
 "profile_call_phone" = "Call Phone";
+"profile_groups_in_common" = "Groups In Common";
 
 // Emergency
 "emergency_view" = "View emergency contact";
@@ -803,12 +809,6 @@
 "setting_notification" = "Notification and Confirmation";
 "setting_notification_show" = "Show Notifications";
 "setting_notification_sound" = "Sound";
-"setting_notification_message" = "MESSAGE NOTIFICATIONS";
-"setting_notification_message_summary" = "You can set custom notifications for specific users on their Contact page.";
-"setting_notification_group" = "GROUP NOTIFICATIONS";
-"setting_notification_group_summary" = "You can set custom notifications for specific groups on their Group Info page.";
-"setting_privacy_and_security" = "Privacy and Security";
-"setting_privacy_and_security_title" = "PRIVACY";
 "setting_privacy_and_security_summary" = "Change who can add you to conversation and groups.";
 "setting_data_and_storage" = "Data and Storage Usage";
 "setting_blocked_user_count_suffix" = " contacts";
@@ -907,6 +907,21 @@
 "setting_screen_lock_timeout_minutes" = "%@ Minutes";
 "setting_screen_lock_timeout_hour" = "1 Hour";
 "setting_screen_lock_timeout_off" = "Off";
+"setting_delete_account" = "Delete My Account";
+"setting_change_number_instead" = "Change Number Instead";
+"setting_account" = "Account";
+"setting_account_privacy" = "Privacy";
+"setting_account_security" = "Security";
+"setting_account_change_number" = "Change Number";
+"setting_delete_account_hint_profile" = "Delete your account info and profile photo";
+"setting_delete_account_hint_message" = "Local messages and iCloud Backups will not be deleted automatically";
+"setting_delete_account_hint_transaction" = "Transactions cannot be deleted";
+"setting_delete_account_view_wallet" = "View Wallet";
+"setting_delete_account_assets_hint" = "Your Mixin wallet still has some assets that can be withdrawn to other wallets or exchanges, once the account is cancelled these assets will be abandoned along with the wallet and cannot be recovered.";
+"setting_delete_account_confirm_title" = "Enter your PIN to delete your account";
+"setting_delete_account_confirm_hint" = "If you continue, your profile and account details will be delete on %@. read our document to Learn more.";
+"setting_delete_account_verify_pin" = "Enter your PIN to continue";
+"setting_delete_account_send_code" = "We will send a 4-digit code to %@";
 
 // ScreenLock
 "screen_lock_locked" = "Mixin Locked";
@@ -944,10 +959,6 @@
 "playlist_not_playing" = "Not playing";
 "playlist_stop_confirmation" = "Stop playing this list？";
 "playlist_stop" = "Stop Playing";
-
-// Diagnose
-"diagnose_database" = "Database Diagnostics";
-"diagnose_database_description" = "Database Diagnostics";
 
 // Notifications
 "notification_reply" = "Reply";

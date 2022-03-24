@@ -2,7 +2,7 @@ import GRDB
 
 public class TaskDatabase: Database {
     
-    public private(set) static var current: TaskDatabase! = try! TaskDatabase(url: AppGroupContainer.taskDatabaseUrl)
+    public private(set) static var current: TaskDatabase! = makeDatabaseWithDefaultLocation()
     
     public override class var config: Configuration {
         var config = super.config
@@ -11,10 +11,10 @@ public class TaskDatabase: Database {
     }
     
     public override var needsMigration: Bool {
-        try! pool.read({ (db) -> Bool in
+        try! read { (db) -> Bool in
             let migrationsCompleted = try migrator.hasCompletedMigrations(db)
             return !migrationsCompleted
-        })
+        }
     }
     
     private var migrator: DatabaseMigrator {
@@ -50,8 +50,29 @@ public class TaskDatabase: Database {
     }
     
     public static func reloadCurrent() {
-        current = try! TaskDatabase(url: AppGroupContainer.taskDatabaseUrl)
+        current = makeDatabaseWithDefaultLocation()
         current.migrate()
+    }
+    
+    private static func makeDatabaseWithDefaultLocation() -> TaskDatabase {
+        let db = try! TaskDatabase(url: AppGroupContainer.taskDatabaseUrl)
+        if AppGroupUserDefaults.User.needsRebuildDatabase {
+            try? db.pool.barrierWriteWithoutTransaction { (db) -> Void in
+                try db.execute(sql: "DROP TABLE IF EXISTS grdb_migrations")
+            }
+        }
+        return db
+    }
+    
+    public override func tableDidLose(with error: Error?, fileSize: Int64?, fileCreationDate: Date?) {
+        let error: MixinServicesError = .databaseCorrupted(database: "task",
+                                                           isAppExtension: isAppExtension,
+                                                           error: error,
+                                                           fileSize: fileSize,
+                                                           fileCreationDate: fileCreationDate)
+        reporter.report(error: error)
+        Logger.database.error(category: "TaskDatabase", message: "Table lost with error: \(error)")
+        AppGroupUserDefaults.User.needsRebuildDatabase = true
     }
     
     private func migrate() {

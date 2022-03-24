@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="dark"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="DeleteAccountVerifyPinWindow" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lFD-fv-q0i" customClass="TopRoundedView" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="386.5" width="414" height="509.5"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mNO-4S-xVk">
+                            <rect key="frame" x="348" y="0.0" width="66" height="70"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="70" id="1wq-9q-c8y"/>
+                                <constraint firstAttribute="width" constant="66" id="eXW-tn-pwX"/>
+                            </constraints>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" image="ic_dialog_close"/>
+                            <connections>
+                                <action selector="closeAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="3VP-9v-h5U"/>
+                            </connections>
+                        </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter your PIN to continue" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VZQ-3W-WVM">
+                            <rect key="frame" x="63" y="70" width="288" height="21.5"/>
+                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                            <color key="textColor" name="title"/>
+                            <nil key="highlightedColor"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="setting_delete_account_verify_pin"/>
+                            </userDefinedRuntimeAttributes>
+                        </label>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CET-cq-5Ia" customClass="PinField" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="121" y="151.5" width="172" height="24"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <color key="tintColor" name="title"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="24" id="RQV-nh-jVh"/>
+                                <constraint firstAttribute="width" constant="172" id="m8Q-FQ-Jx0"/>
+                            </constraints>
+                        </view>
+                        <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fu1-lM-LBJ" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="195" y="151.5" width="24" height="24"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <color key="tintColor" red="0.73725490199999999" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="24" id="2QP-zP-Q1k"/>
+                                <constraint firstAttribute="width" constant="24" id="rD7-va-9yX"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" name="background"/>
+                    <constraints>
+                        <constraint firstItem="mNO-4S-xVk" firstAttribute="top" secondItem="lFD-fv-q0i" secondAttribute="top" id="5yV-4r-PWD"/>
+                        <constraint firstItem="CET-cq-5Ia" firstAttribute="top" secondItem="VZQ-3W-WVM" secondAttribute="bottom" constant="60" id="Dcg-NE-jko" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
+                                    <real key="value" value="20"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </constraint>
+                        <constraint firstAttribute="trailing" secondItem="mNO-4S-xVk" secondAttribute="trailing" id="RQJ-DC-tbT"/>
+                        <constraint firstItem="fu1-lM-LBJ" firstAttribute="centerY" secondItem="CET-cq-5Ia" secondAttribute="centerY" id="aeS-ZS-gP1"/>
+                        <constraint firstItem="VZQ-3W-WVM" firstAttribute="leading" secondItem="lFD-fv-q0i" secondAttribute="leading" constant="63" id="f5U-13-lWr"/>
+                        <constraint firstItem="fu1-lM-LBJ" firstAttribute="centerX" secondItem="CET-cq-5Ia" secondAttribute="centerX" id="hyl-BJ-MvP"/>
+                        <constraint firstItem="VZQ-3W-WVM" firstAttribute="top" secondItem="lFD-fv-q0i" secondAttribute="top" constant="70" id="unk-nY-Uly"/>
+                        <constraint firstItem="CET-cq-5Ia" firstAttribute="centerX" secondItem="lFD-fv-q0i" secondAttribute="centerX" id="zgE-s4-8ru"/>
+                        <constraint firstAttribute="trailing" secondItem="VZQ-3W-WVM" secondAttribute="trailing" constant="63" id="zsb-Hw-UIL"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.40000000600000002" colorSpace="custom" customColorSpace="displayP3"/>
+            <constraints>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="CET-cq-5Ia" secondAttribute="bottom" constant="300" id="42q-m0-mOj"/>
+                <constraint firstItem="lFD-fv-q0i" firstAttribute="bottom" secondItem="iN0-l3-epB" secondAttribute="bottom" id="Gje-dG-uXs"/>
+                <constraint firstItem="lFD-fv-q0i" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailing" id="Hxu-DW-WRg"/>
+                <constraint firstItem="lFD-fv-q0i" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="YlH-go-Tow"/>
+            </constraints>
+            <connections>
+                <outlet property="activityIndicatorView" destination="fu1-lM-LBJ" id="akx-Zf-0lc"/>
+                <outlet property="pinField" destination="CET-cq-5Ia" id="g5J-fc-RWO"/>
+                <outlet property="pinFieldBottomConstraint" destination="42q-m0-mOj" id="d1c-GY-NSd"/>
+                <outlet property="popupView" destination="lFD-fv-q0i" id="ZF9-CY-gVe"/>
+            </connections>
+            <point key="canvasLocation" x="-94.20289855072464" y="11.383928571428571"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="ic_dialog_close" width="26" height="26"/>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="title">
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

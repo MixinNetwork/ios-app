@@ -6,13 +6,25 @@ open class MixinAPI {
     
     public typealias Result<Response: Decodable> = Swift.Result<Response, MixinAPIError>
     
+    public struct Options: OptionSet {
+        
+        public static let authIndependent = Options(rawValue: 1 << 0)
+        public static let disableRetryOnRequestSigningTimeout = Options(rawValue: 1 << 1)
+        
+        public let rawValue: UInt
+        
+        public init(rawValue: UInt) {
+            self.rawValue = rawValue
+        }
+        
+    }
+    
     @discardableResult
     public static func request<Parameters: Encodable, Response>(
         method: HTTPMethod,
         path: String,
         parameters: Parameters,
-        requiresLogin: Bool = true,
-        retry: Bool = true,
+        options: Options = [],
         queue: DispatchQueue = .main,
         completion: @escaping (MixinAPI.Result<Response>) -> Void
     ) -> Request? {
@@ -24,7 +36,7 @@ open class MixinAPI {
         }
         return request(makeRequest: { (session) -> DataRequest in
             session.request(url, method: method, parameters: parameters, encoder: JSONParameterEncoder.default)
-        }, requiresLogin: requiresLogin, isAsync: true, retry: retry, queue: queue, completion: completion)
+        }, options: options, isAsync: true, queue: queue, completion: completion)
     }
     
     @discardableResult
@@ -32,7 +44,7 @@ open class MixinAPI {
         method: HTTPMethod,
         path: String,
         parameters: [String: Any]? = nil,
-        requiresLogin: Bool = true,
+        options: Options = [],
         queue: DispatchQueue = .main,
         completion: @escaping (MixinAPI.Result<Response>) -> Void
     ) -> Request? {
@@ -44,7 +56,7 @@ open class MixinAPI {
         }
         return request(makeRequest: { (session) -> DataRequest in
             session.request(url, method: method, parameters: parameters, encoding: JSONEncoding.default)
-        }, requiresLogin: requiresLogin, isAsync: true, queue: queue, completion: completion)
+        }, options: options, isAsync: true, queue: queue, completion: completion)
     }
     
     @discardableResult
@@ -93,7 +105,8 @@ extension MixinAPI {
         config.timeoutIntervalForRequest = 10
         config.requestCachePolicy = .reloadIgnoringLocalCacheData
         let tokenInterceptor = AccessTokenInterceptor()
-        let session = Alamofire.Session(configuration: config, interceptor: tokenInterceptor)
+        let redirector = Redirector(behavior: .doNotFollow)
+        let session = Alamofire.Session(configuration: config, interceptor: tokenInterceptor, redirectHandler: redirector)
         return session
     }()
     
@@ -109,7 +122,7 @@ extension MixinAPI {
         let semaphore = DispatchSemaphore(value: 0)
         var result: MixinAPI.Result<Response> = .failure(.foundNilResult)
         
-        let request = Self.request(makeRequest: makeRequest, isAsync: false) { (theResult: MixinAPI.Result<Response>) in
+        let request = Self.request(makeRequest: makeRequest, options: [], isAsync: false) { (theResult: MixinAPI.Result<Response>) in
             result = theResult
             semaphore.signal()
         }
@@ -127,13 +140,12 @@ extension MixinAPI {
     @discardableResult
     private static func request<Response>(
         makeRequest: @escaping (Alamofire.Session) -> DataRequest,
-        requiresLogin: Bool = true,
+        options: Options,
         isAsync: Bool,
-        retry: Bool = true,
         queue: DispatchQueue = .main,
         completion: @escaping (MixinAPI.Result<Response>) -> Void
     ) -> Request? {
-        if requiresLogin && !LoginManager.shared.isLoggedIn {
+        guard options.contains(.authIndependent) || LoginManager.shared.isLoggedIn else {
             return nil
         }
         let requestTime = Date()
@@ -145,15 +157,16 @@ extension MixinAPI {
             let serverTime = Date(timeIntervalSince1970: serverTimeIntervalSince1970)
             if abs(requestTime.timeIntervalSinceNow) > secondsPerMinute {
                 let info: Logger.UserInfo = [
-                    "retry": retry,
+                    "options": options,
+                    "interval": requestTime.timeIntervalSinceNow,
                     "isAsync": isAsync,
                     "url": (response as? HTTPURLResponse)?.url?.path ?? ""
                 ]
-                Logger.general.info(category: "MixinAPI", message: "Request network again", userInfo: info)
-                if retry {
-                    request(makeRequest: makeRequest, requiresLogin: requiresLogin, isAsync: isAsync, completion: completion)
+                Logger.general.info(category: "MixinAPI", message: "Request signing timeout", userInfo: info)
+                if !options.contains(.disableRetryOnRequestSigningTimeout) {
+                    request(makeRequest: makeRequest, options: options, isAsync: isAsync, completion: completion)
                 } else {
-                    completion(.failure(.httpTimeOut))
+                    completion(.failure(.requestSigningTimeout))
                 }
             } else if abs(serverTime.timeIntervalSinceNow) > 5 * secondsPerMinute {
                 AppGroupUserDefaults.Account.isClockSkewed = true

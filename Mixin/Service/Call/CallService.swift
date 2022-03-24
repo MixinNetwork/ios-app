@@ -483,10 +483,10 @@ extension CallService {
         let animationCompletion: (Bool) -> Void
         if minimized {
             min.call = activeCall
-            min.view.alpha = 0
+            min.setViewHidden(true)
             updateViews = {
                 max.hideContentView(completion: nil)
-                min.view.alpha = 1
+                min.setViewHidden(false)
             }
             animationCompletion = { (_) in
                 if self.isInterfaceMinimized {
@@ -497,7 +497,7 @@ extension CallService {
         } else {
             addViewControllerAsContainersChildIfNeeded(max)
             updateViews = {
-                min.view.alpha = 0
+                min.setViewHidden(true)
                 max.showContentViewIfNeeded(animated: true)
             }
             animationCompletion = { (_) in
@@ -515,6 +515,7 @@ extension CallService {
                 animationCompletion(true)
             }
         }
+        Logger.call.info(category: "CallService", message: "Interface minimized: \(minimized)")
     }
     
     func showCallingInterface(call: Call, animated: Bool) {
@@ -556,9 +557,10 @@ extension CallService {
             }
         })
         if let mini = UIApplication.homeContainerViewController?.minimizedCallViewControllerIfLoaded {
-            mini.view.alpha = 0
+            mini.setViewHidden(true)
             mini.updateViewSize()
             mini.panningController.placeViewNextToLastOverlayOrTopRight()
+            Logger.call.info(category: "CallService", message: "Minimized call view dismissed")
         }
     }
     
@@ -790,8 +792,13 @@ extension CallService {
             self.blazeProcessingQueue.async {
                 try? AudioSession.shared.activate(client: self)
                 DispatchQueue.main.async {
+                    // The completion block passed to CallKit may get called before or after the CXStartCallAction
+                    // is requested to perform by CXProvider. To guarantee the call exists when it trys to start
+                    // with a UUID, we put that call into pending list before requesting the adapter to start it.
+                    self.calls[call.uuid] = call
                     self.adapter.requestStartCall(call) { error in
                         Queue.main.autoSync {
+                            self.calls[call.uuid] = nil
                             if let error = error {
                                 self.alert(error: error)
                                 Logger.call.warn(category: "CallService", message: "Adapter reports error on start call: \(error)")
@@ -1033,7 +1040,7 @@ extension CallService {
             guard let call = self.groupCall(with: data.conversationId) else {
                 return
             }
-            call.subscribe(userId: data.userId)
+            call.subscribe(to: .user(data.userId))
         }
     }
     

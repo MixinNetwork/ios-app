@@ -335,6 +335,21 @@ public final class ConversationDAO: UserDatabaseDAO {
         }
     }
     
+    public func groupsInCommon(userId: String) -> [GroupInCommon] {
+        let sql = """
+        SELECT c.conversation_id, c.icon_url, c.name, (SELECT count(user_id) from participants where conversation_id = c.conversation_id) AS participantsCount
+        FROM participants p
+        INNER JOIN conversations c ON c.conversation_id = p.conversation_id
+        WHERE p.user_id IN (?, ?)
+        AND c.status = ?
+        AND c.category = 'GROUP'
+        GROUP BY c.conversation_id
+        HAVING count(p.user_id) = 2
+        ORDER BY c.last_message_created_at DESC
+        """
+        return db.select(with: sql, arguments: [myUserId, userId, ConversationStatus.SUCCESS.rawValue])
+    }
+    
     public func createPlaceConversation(conversationId: String, ownerId: String) {
         guard !conversationId.isEmpty else {
             return
@@ -380,7 +395,7 @@ public final class ConversationDAO: UserDatabaseDAO {
         participants.append(me)
         
         do {
-            try db.pool.write { (db) -> Void in
+            try db.writeAndReturnError { (db) -> Void in
                 try conversation.insert(db)
                 try participants.save(db)
                 db.afterNextTransactionCommit { (_) in

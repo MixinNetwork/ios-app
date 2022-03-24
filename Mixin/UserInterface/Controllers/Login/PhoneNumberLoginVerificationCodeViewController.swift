@@ -25,6 +25,22 @@ class PhoneNumberLoginVerificationCodeViewController: LoginVerificationCodeViewC
         }
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if let deactivatedAt = context.deactivatedAt {
+            verificationCodeField.resignFirstResponder()
+            let window = DeleteAccountAbortWindow.instance()
+            window.render(deactivatedAt: deactivatedAt) { abort in
+                if abort {
+                    self.navigationController?.popViewController(animated: true)
+                } else {
+                    self.verificationCodeField.becomeFirstResponder()
+                }
+            }
+            window.presentPopupControllerAnimated()
+        }
+    }
+    
     override func layout(for keyboardFrame: CGRect) {
         super.layout(for: keyboardFrame)
         helpButtonBottomConstraint.constant = -keyboardFrame.height - 28

@@ -1,5 +1,4 @@
 import UIKit
-import AlignedCollectionViewFlowLayout
 import MixinServices
 
 protocol AssetFilterViewControllerDelegate: AnyObject {
@@ -75,10 +74,6 @@ class AssetFilterViewController: UIViewController {
         collectionView.allowsMultipleSelection = true
         collectionView.dataSource = self
         collectionView.delegate = self
-        if let layout = collectionView.collectionViewLayout as? AlignedCollectionViewFlowLayout {
-            layout.estimatedItemSize = CGSize(width: 96, height: 42)
-            layout.horizontalAlignment = .left
-        }
         collectionView.reloadData()
         reloadSelection()
         view.layoutIfNeeded()
@@ -90,6 +85,17 @@ class AssetFilterViewController: UIViewController {
         sortDraft = sort
         filterDraft = filter
         reloadSelection()
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if traitCollection.preferredContentSizeCategory != previousTraitCollection?.preferredContentSizeCategory {
+            DispatchQueue.main.async {
+                self.collectionView.collectionViewLayout.invalidateLayout()
+                self.collectionView.layoutIfNeeded()
+                self.updateCollectionViewHeightAndScrollingEnabledIfNeeded()
+            }
+        }
     }
     
     @IBAction func dismissAction(_ sender: Any) {

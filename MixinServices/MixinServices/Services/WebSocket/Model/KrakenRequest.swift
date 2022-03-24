@@ -43,6 +43,7 @@ public struct KrakenRequest {
     public let conversationId: String
     public let trackId: String?
     public let action: Action
+    public let retryOnFailure: Bool
     
     var blazeMessage: BlazeMessage {
         var param = BlazeMessageParam()
@@ -79,11 +80,12 @@ public struct KrakenRequest {
         return BlazeMessage(params: param, action: BlazeMessageAction.createKraken.rawValue)
     }
     
-    public init(callUUID: UUID, conversationId: String, trackId: String?, action: Action) {
+    public init(callUUID: UUID, conversationId: String, trackId: String?, action: Action, retryOnFailure: Bool) {
         self.callUUID = callUUID
         self.conversationId = conversationId
         self.trackId = trackId
         self.action = action
+        self.retryOnFailure = retryOnFailure
     }
     
 }
@@ -91,7 +93,7 @@ public struct KrakenRequest {
 extension KrakenRequest: CustomDebugStringConvertible {
     
     public var debugDescription: String {
-        "<KrakenRequest callUUID: \(callUUID.uuidString), conversationId: \(conversationId), trackId: \(trackId), action: \(action)>"
+        "<KrakenRequest callUUID: \(callUUID.uuidString), conversationId: \(conversationId), trackId: \(trackId), action: \(action), retryOnFailure: \(retryOnFailure)>"
     }
     
 }

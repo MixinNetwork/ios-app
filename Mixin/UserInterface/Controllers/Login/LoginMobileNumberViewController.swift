@@ -73,6 +73,7 @@ final class LoginMobileNumberViewController: MobileNumberViewController {
             case let .success(verification):
                 ctx.verificationId = verification.id
                 ctx.hasEmergencyContact = verification.hasEmergencyContact
+                ctx.deactivatedAt = verification.deactivatedAt
                 let vc = PhoneNumberLoginVerificationCodeViewController()
                 vc.context = ctx
                 weakSelf.navigationController?.pushViewController(vc, animated: true)

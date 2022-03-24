@@ -24,6 +24,12 @@ class PlaceholderTextView: UITextView {
         }
     }
     
+    var placeholderPadding: UIEdgeInsets = .zero {
+        didSet {
+            placeholderLabel.frame = bounds.inset(by: placeholderPadding)
+        }
+    }
+    
     override var textAlignment: NSTextAlignment {
         didSet {
             placeholderLabel.textAlignment = textAlignment
@@ -59,7 +65,7 @@ class PlaceholderTextView: UITextView {
     
     private func prepare() {
         insertSubview(placeholderLabel, at: 0)
-        placeholderLabel.frame = bounds
+        placeholderLabel.frame = bounds.inset(by: placeholderPadding)
         placeholderLabel.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         placeholderLabel.textColor = R.color.text_placeholder()
         placeholderLabel.textAlignment = textAlignment

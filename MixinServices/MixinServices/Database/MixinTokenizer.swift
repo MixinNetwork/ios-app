@@ -20,8 +20,6 @@ class MixinTokenizer: FTS5WrapperTokenizer {
     
     let wrappedTokenizer: FTS5Tokenizer
     
-    private let isDebugging = false
-    
     required init(db: GRDB.Database, arguments: [String]) throws {
         let components = [
             "unicode61",
@@ -53,9 +51,6 @@ class MixinTokenizer: FTS5WrapperTokenizer {
                 return
             }
             let subtoken = String(groupingBuffer)
-            if isDebugging {
-                print("Reporting group: \(subtoken)")
-            }
             try tokenCallback(subtoken, [])
             groupingBuffer = []
         }
@@ -101,9 +96,6 @@ class MixinTokenizer: FTS5WrapperTokenizer {
             case .asciiDigits, .grouping:
                 groupingBuffer.append(char)
             case .nonGrouping:
-                if isDebugging {
-                    print("Reporting char: \(char)")
-                }
                 try tokenCallback(String(char), [])
             }
             index = token.index(after: index)

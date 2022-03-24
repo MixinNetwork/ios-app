@@ -112,7 +112,7 @@ public final class LoginManager {
         if !isAppExtension {
             Logger.general.error(category: "LoginManager", message: "Logout because: \(reason)")
             AppGroupUserDefaults.Account.serializedAccount = nil
-            DispatchQueue.main.async {
+            Queue.main.autoSync {
                 INInteraction.deleteAll(completion: nil)
                 Keychain.shared.clearPIN()
                 WebSocketService.shared.disconnect()
@@ -120,6 +120,7 @@ public final class LoginManager {
                 AppGroupKeychain.removeAllItems()
                 RequestSigning.removeCachedKey()
                 SignalDatabase.current.erase()
+                PropertiesDAO.shared.removeValue(forKey: .iterator)
                 AppGroupUserDefaults.Crypto.clearAll()
                 NotificationCenter.default.post(name: LoginManager.didLogoutNotification, object: self)
             }

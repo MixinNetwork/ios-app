@@ -241,7 +241,6 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
                                                  kCVPixelBufferWidthKey as String: Int(size.width),
                                                  kCVPixelBufferHeightKey as String: Int(size.height)]
             photoSettings.previewPhotoFormat = previewFormat
-            photoSettings.isAutoStillImageStabilizationEnabled = true
             photoSettings.flashMode = self.flashOn ? .on : .off
             
             let photoCaptureProcessor = PhotoCaptureProcessor(completionHandler: { [weak self] in
@@ -624,6 +623,9 @@ extension CameraViewController {
                 return
             }
             if UrlWindow.checkPayUrl(url: string) {
+                return
+            }
+            if UrlWindow.checkExternalScheme(url: string) {
                 return
             }
             if let url = URL(string: string), UrlWindow.checkUrl(url: url) {

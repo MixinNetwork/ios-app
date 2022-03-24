@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="dark"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view alpha="0.94999999999999996" contentMode="scaleToFill" id="iN0-l3-epB" customClass="DeleteAccountAbortWindow" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1Vo-0t-6vQ" customClass="TopRoundedView" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="390.5" width="414" height="505.5"/>
+                    <subviews>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Setting/ic_delete_account" translatesAutoresizingMaskIntoConstraints="NO" id="m97-62-oZ6">
+                            <rect key="frame" x="172" y="70" width="70" height="72"/>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Continue to log in and abort account deletion" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Icb-BP-gVn" customClass="LineHeightLabel" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="36" y="172" width="342" height="43"/>
+                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                            <color key="textColor" name="title"/>
+                            <nil key="highlightedColor"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="abort_account_deletion_title"/>
+                                <userDefinedRuntimeAttribute type="number" keyPath="lineHeight">
+                                    <real key="value" value="25"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fqw-51-CRz" customClass="LineHeightLabel" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="26" y="231" width="352" height="50.5"/>
+                            <string key="text">Your account will be deleted on January 18, 2022, if you continue to log in, the request to delete your account will be cancelled.</string>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <color key="textColor" name="text_accessory"/>
+                            <nil key="highlightedColor"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="abort_account_deletion_hint"/>
+                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regulart14"/>
+                                <userDefinedRuntimeAttribute type="number" keyPath="lineHeight">
+                                    <real key="value" value="24"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wvn-2g-8pH" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="148" y="345.5" width="118" height="44"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                            <inset key="contentEdgeInsets" minX="26" minY="11" maxX="26" maxY="13"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" title="Continue"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="continueAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="rvj-kU-vZx"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SsQ-Pa-U23">
+                            <rect key="frame" x="182" y="409.5" width="50" height="32"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                            <color key="tintColor" name="theme"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" title="Cancel"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="dialog_button_cancel"/>
+                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="cancelAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="aYc-du-qZP"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" name="background"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="fqw-51-CRz" secondAttribute="trailing" constant="36" id="1ZY-Fi-0xI"/>
+                        <constraint firstItem="fqw-51-CRz" firstAttribute="leading" secondItem="1Vo-0t-6vQ" secondAttribute="leading" constant="26" id="3SB-6n-wJZ"/>
+                        <constraint firstItem="Icb-BP-gVn" firstAttribute="top" secondItem="m97-62-oZ6" secondAttribute="bottom" constant="30" id="5Uc-GG-Aux"/>
+                        <constraint firstItem="fqw-51-CRz" firstAttribute="top" secondItem="Icb-BP-gVn" secondAttribute="bottom" constant="16" id="95b-h7-UL1"/>
+                        <constraint firstAttribute="trailing" secondItem="Icb-BP-gVn" secondAttribute="trailing" constant="36" id="Fqj-TG-nuV"/>
+                        <constraint firstItem="Icb-BP-gVn" firstAttribute="leading" secondItem="1Vo-0t-6vQ" secondAttribute="leading" constant="36" id="M3B-JQ-Que"/>
+                        <constraint firstItem="Wvn-2g-8pH" firstAttribute="centerX" secondItem="1Vo-0t-6vQ" secondAttribute="centerX" id="Us2-zI-Nfb"/>
+                        <constraint firstItem="m97-62-oZ6" firstAttribute="top" secondItem="1Vo-0t-6vQ" secondAttribute="top" constant="70" id="ZdD-5r-roR"/>
+                        <constraint firstItem="SsQ-Pa-U23" firstAttribute="top" secondItem="Wvn-2g-8pH" secondAttribute="bottom" constant="20" id="dO9-OC-MEd" customClass="Round"/>
+                        <constraint firstItem="m97-62-oZ6" firstAttribute="centerX" secondItem="1Vo-0t-6vQ" secondAttribute="centerX" id="jWg-ZN-xnZ"/>
+                        <constraint firstItem="SsQ-Pa-U23" firstAttribute="centerX" secondItem="1Vo-0t-6vQ" secondAttribute="centerX" id="kGL-9r-7pl"/>
+                        <constraint firstItem="Wvn-2g-8pH" firstAttribute="top" secondItem="fqw-51-CRz" secondAttribute="bottom" constant="64" id="wrM-OZ-mH8"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.40000000000000002" colorSpace="custom" customColorSpace="displayP3"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="1Vo-0t-6vQ" secondAttribute="bottom" id="4LD-GO-ODi"/>
+                <constraint firstItem="1Vo-0t-6vQ" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Wab-Jm-Dhr"/>
+                <constraint firstAttribute="trailing" secondItem="1Vo-0t-6vQ" secondAttribute="trailing" id="Yzr-iF-xp5"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="SsQ-Pa-U23" secondAttribute="bottom" constant="30" id="ijP-IL-wEF"/>
+            </constraints>
+            <connections>
+                <outlet property="cancelButton" destination="SsQ-Pa-U23" id="Tob-5v-8gm"/>
+                <outlet property="continueButton" destination="Wvn-2g-8pH" id="tiR-00-6r3"/>
+                <outlet property="label" destination="fqw-51-CRz" id="mAE-T8-tIF"/>
+                <outlet property="popupView" destination="1Vo-0t-6vQ" id="pLQ-P4-BSk"/>
+            </connections>
+            <point key="canvasLocation" x="137.68115942028987" y="152.67857142857142"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Setting/ic_delete_account" width="70" height="72"/>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_accessory">
+            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="theme">
+            <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="title">
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

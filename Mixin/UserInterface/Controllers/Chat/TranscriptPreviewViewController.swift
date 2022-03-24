@@ -17,10 +17,6 @@ final class TranscriptPreviewViewController: StaticMessagesViewController {
         fatalError("Storyboard/Xib not supported")
     }
     
-    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
-        super.canPerformAction(action, withSender: sender) || action == #selector(addToStickers)
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         factory.delegate = self
@@ -44,17 +40,6 @@ final class TranscriptPreviewViewController: StaticMessagesViewController {
         return AttachmentContainer.url(transcriptId: transcriptMessage.messageId, filename: filename)
     }
     
-    override func menuItems(for viewModel: MessageViewModel) -> [UIMenuItem]? {
-        if viewModel.message.category.hasSuffix("_STICKER"), viewModel.message.stickerId != nil {
-            var items = super.menuItems(for: viewModel) ?? []
-            items.append(UIMenuItem(title: R.string.localizable.chat_message_sticker(), action: #selector(addToStickers)))
-            return items
-        } else {
-            return super.menuItems(for: viewModel)
-        }
-    }
-    
-    @available(iOS 13.0, *)
     override func contextMenuActions(for viewModel: MessageViewModel) -> [UIAction]? {
         if viewModel.message.category.hasSuffix("_STICKER"), let stickerId = viewModel.message.stickerId {
             var actions = super.contextMenuActions(for: viewModel) ?? []
@@ -142,16 +127,6 @@ extension TranscriptPreviewViewController {
 
 // MARK: - Helper
 extension TranscriptPreviewViewController {
-    
-    @objc private func addToStickers() {
-        guard let indexPath = tableView.indexPathForSelectedRow else {
-            return
-        }
-        guard let stickerId = viewModel(at: indexPath)?.message.stickerId else {
-            return
-        }
-        addSticker(stickerId: stickerId)
-    }
     
     private func addSticker(stickerId: String) {
         StickerAPI.addSticker(stickerId: stickerId, completion: { (result) in

@@ -131,9 +131,10 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
     }
     
     private static func durationAndFileSizeRepresentation(ofMessage message: MessageItem) -> (String?, String?) {
-        var duration: String?
+        var durationRepresentation: String?
         if let mediaDuration = message.mediaDuration {
-            duration = mediaDurationFormatter.string(from: TimeInterval(Double(mediaDuration) / millisecondsPerSecond))
+            let duration = ceil(Double(mediaDuration) / millisecondsPerSecond)
+            durationRepresentation = mediaDurationFormatter.string(from: duration)
         }
         
         var fileSize: String?
@@ -141,7 +142,7 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
             fileSize = VideoMessageViewModel.byteCountFormatter.string(fromByteCount: mediaSize)
         }
         
-        return (duration, fileSize)
+        return (durationRepresentation, fileSize)
     }
     
     private func loadBetterThumbnailIfNeeded() {

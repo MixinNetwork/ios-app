@@ -5,7 +5,6 @@ import MixinServices
 enum StickerStore {
         
     private static let queue = DispatchQueue(label: "one.mixin.messenger.queue.StickerStore.operation")
-    private static let maxBannerCount = 3
 
     static func updateAlbumsOrder(albumIds: [String]) {
         queue.async {
@@ -35,27 +34,7 @@ enum StickerStore {
             shouldRefresh = true
         }
         if shouldRefresh {
-            ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob(.albums))
-        }
-    }
-    
-    static func loadStoreAlbums(completion: @escaping (_ bannerItems: [AlbumItem], _ listItems: [AlbumItem]) -> Void) {
-        DispatchQueue.global(qos: .userInitiated).async {
-            var bannerItems: [AlbumItem] = []
-            var listItems: [AlbumItem] = []
-            let albums = AlbumDAO.shared.getNonPersonalAlbums()
-            albums.forEach { album in
-                let stickers = StickerDAO.shared.getStickers(albumId: album.albumId)
-                let item = AlbumItem(album: album, stickers: stickers)
-                if !album.banner.isNilOrEmpty, bannerItems.count < maxBannerCount {
-                    bannerItems.append(item)
-                } else {
-                    listItems.append(item)
-                }
-            }
-            DispatchQueue.main.async {
-                completion(bannerItems, listItems)
-            }
+            ConcurrentJobQueue.shared.addJob(job: RefreshAlbumJob())
         }
     }
     
@@ -68,18 +47,14 @@ enum StickerStore {
         }
     }
     
-    static func loadAlbum(stickerId: String, albumId: String?, category: AlbumCategory?, completion: @escaping (AlbumItem?) -> Void) {
+    static func loadAlbum(stickerId: String, albumId: String?, completion: @escaping (AlbumItem?) -> Void) {
         DispatchQueue.global(qos: .userInitiated).async {
-            if category == AlbumCategory.SYSTEM {
-                if let album = AlbumDAO.shared.getAlbum(stickerId: stickerId, category: category) {
-                    let albumItem = AlbumItem(album: album, stickers: StickerDAO.shared.getStickers(albumId: album.albumId))
-                    DispatchQueue.main.async {
-                        completion(albumItem)
-                    }
-                } else if let albumId = albumId {
-                    fetchStickers(albumId: albumId, completion: completion)
+            if let album = AlbumDAO.shared.getAlbum(stickerId: stickerId, category: .SYSTEM) {
+                let albumItem = AlbumItem(album: album, stickers: StickerDAO.shared.getStickers(albumId: album.albumId))
+                DispatchQueue.main.async {
+                    completion(albumItem)
                 }
-            } else if let albumId = albumId {
+            } else if let albumId = albumId, !albumId.isEmpty {
                 fetchStickers(albumId: albumId, completion: completion)
             } else {
                 DispatchQueue.main.async {

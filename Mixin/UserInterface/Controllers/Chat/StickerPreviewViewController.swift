@@ -44,8 +44,8 @@ class StickerPreviewViewController: UIViewController {
         } else {
             category = nil
         }
-        if category != AlbumCategory.PERSONAL, let stickerId = message.stickerId {
-            loadAlbum(stickerId: stickerId, albumId: message.albumId, category: category)
+        if category == AlbumCategory.SYSTEM, let stickerId = message.stickerId {
+            loadAlbum(stickerId: stickerId, albumId: message.albumId)
         }
     }
     
@@ -103,11 +103,11 @@ extension StickerPreviewViewController {
         return min(maxHeight, contentHeight)
     }
     
-    private func loadAlbum(stickerId: String, albumId: String?, category: AlbumCategory?) {
+    private func loadAlbum(stickerId: String, albumId: String?) {
         activityIndicatorView.startAnimating()
-        StickerStore.loadAlbum(stickerId: stickerId, albumId: albumId, category: category) { albumItem in
+        StickerStore.loadAlbum(stickerId: stickerId, albumId: albumId) { albumItem in
             self.activityIndicatorView.stopAnimating()
-            if let albumItem = albumItem {
+            if let albumItem = albumItem, !albumItem.stickers.isEmpty {
                 self.albumItem = albumItem
                 self.titleLabel.text = albumItem.album.name
                 self.updateStickerActionButton()
@@ -206,19 +206,17 @@ extension StickerPreviewViewController {
                             height: backgroundButton.bounds.height)
         view.autoresizingMask = .flexibleTopMargin
         backgroundButton.addSubview(view)
-        UIView.animate(withDuration: 0.5) {
-            UIView.setAnimationCurve(.overdamped)
+        UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
             self.view.frame.origin.y = self.backgroundButton.bounds.height - self.preferredContentSize.height
             self.backgroundButton.backgroundColor = .black.withAlphaComponent(0.3)
         }
     }
     
     func dismissAsChild() {
-        UIView.animate(withDuration: 0.5, animations: {
-            UIView.setAnimationCurve(.overdamped)
+        UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
             self.view.frame.origin.y = self.backgroundButton.bounds.height
             self.backgroundButton.backgroundColor = .black.withAlphaComponent(0)
-        }) { _ in
+        } completion: { _ in
             self.willMove(toParent: nil)
             self.view.removeFromSuperview()
             self.removeFromParent()

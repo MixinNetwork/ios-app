@@ -53,7 +53,7 @@ class StickerAddViewController: UIViewController {
             options.deliveryMode = .opportunistic
             options.isNetworkAccessAllowed = true
             if asset.playbackStyle == .imageAnimated {
-                manager.requestImageData(for: asset, options: options) { [weak self] (data, _, _, _) in
+                manager.requestImageDataAndOrientation(for: asset, options: options) { [weak self] (data, _, _, _) in
                     guard let self = self, let data = data, let image = SDAnimatedImage(data: data) else {
                         return
                     }

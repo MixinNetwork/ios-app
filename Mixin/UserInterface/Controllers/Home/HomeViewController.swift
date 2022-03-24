@@ -5,6 +5,12 @@ import MixinServices
 
 class HomeViewController: UIViewController {
     
+    private enum BulletinDetectInterval {
+        static let notificationAuthorization: TimeInterval = 2 * .oneDay
+        static let emergencyContact: TimeInterval = 7 * .oneDay
+        static let initializePIN: TimeInterval = .oneDay
+    }
+    
     static var hasTriedToRequestReview = false
     static var showChangePhoneNumberTips = false
     
@@ -33,8 +39,6 @@ class HomeViewController: UIViewController {
     private let messageCountPerPage = 30
     private let numberOfHomeApps = 3
     private let bulletinContentTopMargin: CGFloat = 10
-    private let notificationAuthorizationAlertingInterval = 2 * secondsPerDay
-    private let emergencyContactAlertingInterval = 7 * secondsPerDay
     private let emergencyContactAlertingUSDBalance = 100
     private let insufficientBalanceForEmergencyContactBulletinReconfirmInterval = secondsPerHour
     
@@ -73,17 +77,6 @@ class HomeViewController: UIViewController {
         }
         bulletinContentViewIfLoaded = view
         return view
-    }()
-    private lazy var deleteAction = UITableViewRowAction(style: .destructive, title: Localized.MENU_DELETE, handler: tableViewCommitDeleteAction)
-    private lazy var pinAction: UITableViewRowAction = {
-        let action = UITableViewRowAction(style: .normal, title: Localized.HOME_CELL_ACTION_PIN, handler: tableViewCommitPinAction)
-        action.backgroundColor = .theme
-        return action
-    }()
-    private lazy var unpinAction: UITableViewRowAction = {
-        let action = UITableViewRowAction(style: .normal, title: Localized.HOME_CELL_ACTION_UNPIN, handler: tableViewCommitPinAction)
-        action.backgroundColor = .theme
-        return action
     }()
     
     deinit {
@@ -154,6 +147,7 @@ class HomeViewController: UIViewController {
                 ConcurrentJobQueue.shared.addJob(job: RecoverMediaJob())
             }
             initializeFTSIfNeeded()
+            refreshExternalSchemesIfNeeded()
         }
         UIApplication.homeContainerViewController?.clipSwitcher.loadClipsFromPreviousSession()
     }
@@ -242,6 +236,8 @@ class HomeViewController: UIViewController {
         case .emergencyContact:
             let vc = EmergencyContactViewController.instance()
             navigationController?.pushViewController(vc, animated: true)
+        case .initializePIN:
+            WalletViewController.presentWallet()
         case .none:
             break
         }
@@ -253,6 +249,8 @@ class HomeViewController: UIViewController {
             AppGroupUserDefaults.notificationBulletinDismissalDate = Date()
         case .emergencyContact:
             AppGroupUserDefaults.User.emergencyContactBulletinDismissalDate = Date()
+        case .initializePIN:
+            AppGroupUserDefaults.User.initializePINBulletinDismissalDate = Date()
         case .none:
             break
         }
@@ -290,6 +288,7 @@ class HomeViewController: UIViewController {
         updateBulletinView()
         fetchConversations()
         initializeFTSIfNeeded()
+        refreshExternalSchemesIfNeeded()
     }
     
     @objc func dataDidChange(_ sender: Notification) {
@@ -521,13 +520,15 @@ extension HomeViewController: UITableViewDelegate {
         fetchConversations()
     }
     
-    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let conversation = conversations[indexPath.row]
+        let actions: [UIContextualAction]
         if conversation.pinTime == nil {
-            return [deleteAction, pinAction]
+            actions = [deleteAction(forRowAt: indexPath), pinAction(forRowAt: indexPath)]
         } else {
-            return [deleteAction, unpinAction]
+            actions = [deleteAction(forRowAt: indexPath), unpinAction(forRowAt: indexPath)]
         }
+        return UISwipeActionsConfiguration(actions: actions)
     }
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -574,6 +575,12 @@ extension HomeViewController: UIScrollViewDelegate {
 }
 
 extension HomeViewController {
+    
+    private func refreshExternalSchemesIfNeeded() {
+        if -AppGroupUserDefaults.User.externalSchemesRefreshDate.timeIntervalSinceNow > .oneDay {
+            ConcurrentJobQueue.shared.addJob(job: RefreshExternalSchemeJob())
+        }
+    }
     
     private func initializeFTSIfNeeded() {
         guard !AppGroupUserDefaults.Database.isFTSInitialized else {
@@ -664,7 +671,7 @@ extension HomeViewController {
         guideView.isHidden = false
     }
     
-    private func tableViewCommitPinAction(action: UITableViewRowAction, indexPath: IndexPath) {
+    private func tableViewCommitPinAction(action: UIContextualAction, indexPath: IndexPath, completionHandler: (Bool) -> Void) {
         let dao = ConversationDAO.shared
         let conversation = conversations[indexPath.row]
         let destinationIndex: Int
@@ -690,10 +697,11 @@ extension HomeViewController {
         if let cell = tableView.cellForRow(at: destinationIndexPath) as? ConversationCell {
             cell.render(item: conversation)
         }
+        completionHandler(true)
         tableView.setEditing(false, animated: true)
     }
     
-    private func tableViewCommitDeleteAction(action: UITableViewRowAction, indexPath: IndexPath) {
+    private func tableViewCommitDeleteAction(action: UIContextualAction, indexPath: IndexPath) {
         let conversation = conversations[indexPath.row]
         let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
@@ -824,19 +832,24 @@ extension HomeViewController {
     }
     
     private func updateBulletinView() {
-        func isDateNonNil(_ date: Date?, hasLessIntervalSinceNowThan interval: TimeInterval) -> Bool {
-            guard let date = date else {
+        func isDate(_ date: Date?, fallsInto interval: TimeInterval) -> Bool {
+            if let date = date {
+                return -date.timeIntervalSinceNow < interval
+            } else {
                 return false
             }
-            return -date.timeIntervalSinceNow < interval
         }
         
-        let userJustDismissedNotificationBulletin = isDateNonNil(AppGroupUserDefaults.notificationBulletinDismissalDate, hasLessIntervalSinceNowThan: notificationAuthorizationAlertingInterval)
+        let userJustDismissedNotificationBulletin = isDate(AppGroupUserDefaults.notificationBulletinDismissalDate, fallsInto: BulletinDetectInterval.notificationAuthorization)
         let checkNotificationSettings = !userJustDismissedNotificationBulletin
         
+        let hasPIN = LoginManager.shared.account?.has_pin ?? false
+        let userJustDismissedInitializePINBulletin = isDate(AppGroupUserDefaults.User.initializePINBulletinDismissalDate, fallsInto: BulletinDetectInterval.initializePIN)
+        let checkIsPinInitialized = !hasPIN && !userJustDismissedInitializePINBulletin
+        
         let checkWalletBalanceForEmergencyContactBulletin: Bool
-        let userJustDismissedEmergencyContactBulletin = isDateNonNil(AppGroupUserDefaults.User.emergencyContactBulletinDismissalDate, hasLessIntervalSinceNowThan: emergencyContactAlertingInterval)
-        let justConfirmedUserHasInsufficientBalanceForEmergencyContactBulletin = isDateNonNil(insufficientBalanceForEmergencyContactBulletinConfirmedDate, hasLessIntervalSinceNowThan: insufficientBalanceForEmergencyContactBulletinReconfirmInterval)
+        let userJustDismissedEmergencyContactBulletin = isDate(AppGroupUserDefaults.User.emergencyContactBulletinDismissalDate, fallsInto: BulletinDetectInterval.emergencyContact)
+        let justConfirmedUserHasInsufficientBalanceForEmergencyContactBulletin = isDate(insufficientBalanceForEmergencyContactBulletinConfirmedDate, fallsInto: insufficientBalanceForEmergencyContactBulletinReconfirmInterval)
         if bulletinContent == .notification
             || userJustDismissedEmergencyContactBulletin
             || justConfirmedUserHasInsufficientBalanceForEmergencyContactBulletin
@@ -847,7 +860,7 @@ extension HomeViewController {
             checkWalletBalanceForEmergencyContactBulletin = true
         }
         
-        guard checkNotificationSettings || checkWalletBalanceForEmergencyContactBulletin else {
+        guard checkNotificationSettings || checkIsPinInitialized || checkWalletBalanceForEmergencyContactBulletin else {
             return
         }
         
@@ -877,6 +890,8 @@ extension HomeViewController {
                 DispatchQueue.main.async {
                     if settings.authorizationStatus == .denied {
                         show(content: .notification)
+                    } else if checkIsPinInitialized {
+                        show(content: .initializePIN)
                     } else if checkWalletBalanceForEmergencyContactBulletin {
                         showEmergencyContactBulletinIfNeeded()
                     } else {
@@ -884,9 +899,34 @@ extension HomeViewController {
                     }
                 }
             }
+        } else if checkIsPinInitialized {
+            show(content: .initializePIN)
         } else if checkWalletBalanceForEmergencyContactBulletin {
             showEmergencyContactBulletinIfNeeded()
         }
+    }
+    
+    private func deleteAction(forRowAt indexPath: IndexPath) -> UIContextualAction {
+        UIContextualAction(style: .destructive, title: R.string.localizable.menu_delete()) { [weak self] (action, _, completionHandler: (Bool) -> Void) in
+            self?.tableViewCommitDeleteAction(action: action, indexPath: indexPath)
+            completionHandler(true)
+        }
+    }
+    
+    private func pinAction(forRowAt indexPath: IndexPath) -> UIContextualAction {
+        let action = UIContextualAction(style: .destructive, title: R.string.localizable.home_cell_action_pin()) { [weak self] (action, _, completionHandler: (Bool) -> Void) in
+            self?.tableViewCommitPinAction(action: action, indexPath: indexPath, completionHandler: completionHandler)
+        }
+        action.backgroundColor = .theme
+        return action
+    }
+    
+    private func unpinAction(forRowAt indexPath: IndexPath) -> UIContextualAction {
+        let action = UIContextualAction(style: .normal, title: R.string.localizable.home_cell_action_unpin()) { [weak self] (action, _, completionHandler: (Bool) -> Void) in
+            self?.tableViewCommitPinAction(action: action, indexPath: indexPath, completionHandler: completionHandler)
+        }
+        action.backgroundColor = .theme
+        return action
     }
     
 }

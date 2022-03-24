@@ -67,27 +67,16 @@ class ConversationViewController: UIViewController {
         }
     }()
     
-    private let menuItems: [MessageAction: UIMenuItem] = [
-        .reply: UIMenuItem(title: R.string.localizable.chat_message_menu_reply(), action: #selector(replyMessage(_:))),
-        .forward: UIMenuItem(title: R.string.localizable.chat_message_menu_forward(), action: #selector(forwardMessage(_:))),
-        .copy: UIMenuItem(title: R.string.localizable.action_copy(), action: #selector(copyMessage(_:))),
-        .delete: UIMenuItem(title: R.string.localizable.menu_delete(), action: #selector(deleteMessage(_:))),
-        .addToStickers: UIMenuItem(title: R.string.localizable.chat_message_sticker(), action: #selector(addToStickers(_:))),
-        .report: UIMenuItem(title: R.string.localizable.menu_report(), action: #selector(reportMessage(_:))),
-        .pin: UIMenuItem(title: R.string.localizable.menu_pin(), action: #selector(pinMessage(_:))),
-        .unpin: UIMenuItem(title: R.string.localizable.menu_unpin(), action: #selector(unpinMessage(_:)))
-    ]
-    
     private let showScrollToBottomButtonThreshold: CGFloat = 150
     private let loadMoreMessageThreshold = 20
     private let animationDuration: TimeInterval = 0.3
     private let fastReplyConfirmedDistance: CGFloat = 30
     private let fastReplyMaxDistance: CGFloat = 60
     private let feedback = UIImpactFeedbackGenerator()
+    private let pinMessageBannerHeight: CGFloat = 60
     
     private var ownerUser: UserItem?
     private var quotingMessageId: String?
-    private var isShowingMenu = false
     private var isAppearanceAnimating = true
     private var adjustTableViewContentOffsetWhenInputWrapperHeightChanges = true
     private var didManuallyStoppedTableViewDecelerating = false
@@ -104,20 +93,20 @@ class ConversationViewController: UIViewController {
     private var previewDocumentMessageId: String?
     private var myInvitation: Message?
     private var isShowingKeyboard = false
-    private var groupCallIndicatorCenterYConstraint: NSLayoutConstraint!
+    private var groupCallIndicatorCenterYConstraint: NSLayoutConstraint?
     private var makeInputTextViewFirstResponderOnAppear = false
     private var canPinMessages = false
     private var pinnedMessageIds = Set<String>()
     private var lastMentionCandidate: String?
     
     private weak var pinMessageBannerViewIfLoaded: PinMessageBannerView?
+    private weak var groupCallIndicatorViewIfLoaded: GroupCallIndicatorView?
     
     private(set) lazy var imagePickerController = ImagePickerController(initialCameraPosition: .rear, cropImageAfterPicked: false, parent: self, delegate: self)
     
     private lazy var userHandleViewController = R.storyboard.chat.user_handle()!
     private lazy var multipleSelectionActionView = R.nib.multipleSelectionActionView(owner: self)!
     private lazy var announcementBadgeContentView = R.nib.announcementBadgeContentView(owner: self)!
-    private lazy var availableMessageActions = Set(menuItems.values.map({ $0.action }))
     
     private lazy var strangerHintView: StrangerHintView = {
         let view = R.nib.strangerHintView(owner: nil)!
@@ -144,13 +133,20 @@ class ConversationViewController: UIViewController {
     private lazy var groupCallIndicatorView: GroupCallIndicatorView = {
         let indicator = R.nib.groupCallIndicatorView(owner: self)!
         indicator.isHidden = true
-        view.addSubview(indicator)
+        if let banner = pinMessageBannerViewIfLoaded {
+            view.insertSubview(indicator, aboveSubview: banner)
+        } else {
+            view.addSubview(indicator)
+        }
         indicator.snp.makeConstraints { (make) in
             make.trailing.equalToSuperview()
         }
-        groupCallIndicatorCenterYConstraint = indicator.centerYAnchor.constraint(equalTo: view.topAnchor)
-        groupCallIndicatorCenterYConstraint.constant = groupCallIndicatorCenterYLimitation.min
-        groupCallIndicatorCenterYConstraint.isActive = true
+        let constraint = indicator.centerYAnchor.constraint(equalTo: view.topAnchor)
+        constraint.constant = groupCallIndicatorCenterYLimitation.min
+        constraint.isActive = true
+        
+        groupCallIndicatorViewIfLoaded = indicator
+        groupCallIndicatorCenterYConstraint = constraint
         return indicator
     }()
     
@@ -176,11 +172,15 @@ class ConversationViewController: UIViewController {
         let banner = R.nib.pinMessageBannerView(owner: nil)!
         banner.isHidden = true
         banner.delegate = self
-        view.addSubview(banner)
+        if let indicator = groupCallIndicatorViewIfLoaded {
+            view.insertSubview(banner, belowSubview: indicator)
+        } else {
+            view.addSubview(banner)
+        }
         banner.snp.makeConstraints { make in
             make.top.equalTo(navigationBarView.snp.bottom)
             make.left.right.equalTo(0)
-            make.height.equalTo(60)
+            make.height.equalTo(pinMessageBannerHeight)
         }
         pinMessageBannerViewIfLoaded = banner
         return banner
@@ -239,7 +239,12 @@ class ConversationViewController: UIViewController {
     }
     
     private var groupCallIndicatorCenterYLimitation: (min: CGFloat, max: CGFloat) {
-        let min = navigationBarView.frame.maxY + 30
+        let min: CGFloat
+        if let banner = pinMessageBannerViewIfLoaded, !banner.isHidden {
+            min = navigationBarView.frame.maxY + pinMessageBannerHeight + 33
+        } else {
+            min = AppDelegate.current.mainWindow.safeAreaInsets.top + titleViewHeightConstraint.constant + 30
+        }
         let max = inputWrapperView.frame.minY - 30
         return (min, max)
     }
@@ -275,10 +280,6 @@ class ConversationViewController: UIViewController {
         vc.dataSource = dataSource
         vc.composer = ConversationMessageComposer(dataSource: dataSource, ownerUser: ownerUser)
         return vc
-    }
-    
-    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
-        availableMessageActions.contains(action)
     }
     
     // MARK: - Life cycle
@@ -321,16 +322,7 @@ class ConversationViewController: UIViewController {
         tableView.addGestureRecognizer(textPreviewRecognizer)
         
         tableView.dataSource = self
-        if #available(iOS 13.0, *) {
-            // Use context menu managed by UITableViewDelegate
-            tableView.delegate = self
-        } else {
-            // Use UIMenuController on long press
-            tableView.delegate = self
-            let recognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction(_:)))
-            recognizer.delegate = TextMessageLabel.gestureRecognizerBypassingDelegateObject
-            tableView.addGestureRecognizer(recognizer)
-        }
+        tableView.delegate = self
         
         if dataSource.category == .group {
             let hasUnreadAnnouncement = AppGroupUserDefaults.User.hasUnreadAnnouncement[conversationId] ?? false
@@ -420,7 +412,6 @@ class ConversationViewController: UIViewController {
             makeInputTextViewFirstResponderOnAppear = true
         }
         super.viewWillDisappear(animated)
-        dismissMenu(animated: true)
         isAppearanceAnimating = true
     }
     
@@ -485,7 +476,7 @@ class ConversationViewController: UIViewController {
                                                 numberOfParticipants: numberOfParticipants,
                                                 isMember: isMember)
             present(vc, animated: true, completion: nil)
-        } else if let user = ownerUser, user.isCreatedByMessenger {
+        } else if let user = ownerUser {
             let vc = UserProfileViewController(user: user)
             present(vc, animated: true, completion: nil)
         }
@@ -584,12 +575,10 @@ class ConversationViewController: UIViewController {
         case .began:
             recognizer.setTranslation(.zero, in: nil)
         case .changed:
-            groupCallIndicatorCenterYConstraint.constant += recognizer.translation(in: nil).y
+            groupCallIndicatorCenterYConstraint?.constant += recognizer.translation(in: nil).y
             recognizer.setTranslation(.zero, in: nil)
         case .ended:
-            let (minY, maxY) = groupCallIndicatorCenterYLimitation
-            let y = max(minY, min(maxY, groupCallIndicatorView.center.y))
-            groupCallIndicatorCenterYConstraint.constant = y
+            layoutGroupCallIndicatorView()
             UIView.animate(withDuration: 0.3,
                            delay: 0,
                            options: .curveEaseOut,
@@ -752,10 +741,6 @@ class ConversationViewController: UIViewController {
         if conversationInputViewController.audioViewController.hideLongPressHint() {
             return
         }
-        if isShowingMenu {
-            dismissMenu(animated: true)
-            return
-        }
         let tappedIndexPath = tableView.indexPathForRow(at: recognizer.location(in: tableView))
         let tappedViewModel: MessageViewModel? = {
             if let indexPath = tappedIndexPath {
@@ -842,7 +827,7 @@ class ConversationViewController: UIViewController {
                     let user = UserItem.createUser(from: account)
                     let vc = UserProfileViewController(user: user)
                     present(vc, animated: true, completion: nil)
-                } else if let user = UserDAO.shared.getUser(userId: shareUserId), user.isCreatedByMessenger {
+                } else if let user = UserDAO.shared.getUser(userId: shareUserId) {
                     let vc = UserProfileViewController(user: user)
                     present(vc, animated: true, completion: nil)
                 }
@@ -984,31 +969,6 @@ class ConversationViewController: UIViewController {
         
         alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         self.present(alc, animated: true, completion: nil)
-    }
-    
-    @objc func longPressAction(_ recognizer: UIGestureRecognizer) {
-        guard recognizer.state == .began, !tableView.allowsMultipleSelection else {
-            return
-        }
-        let location = recognizer.location(in: tableView)
-        guard
-            let indexPath = tableView.indexPathForRow(at: location),
-            let cell = tableView.cellForRow(at: indexPath) as? MessageCell,
-            let message = cell.viewModel?.message
-        else {
-            return
-        }
-        let actions = availableActions(for: message)
-        guard !actions.isEmpty else {
-            return
-        }
-        tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
-        if conversationInputViewController.textView.isFirstResponder {
-            conversationInputViewController.textView.overrideNext = self
-        } else {
-            becomeFirstResponder()
-        }
-        showMenu(for: actions, targetRect: cell.contentFrame, in: cell)
     }
     
     // MARK: - Callbacks
@@ -1192,6 +1152,7 @@ class ConversationViewController: UIViewController {
                 self.pinnedMessageIds.insert(referencedMessageId)
                 self.pinMessageBannerView.isHidden = false
                 self.updatePinMessagePreview(item: message)
+                self.layoutGroupCallIndicatorView()
             }
         }
     }
@@ -1411,9 +1372,7 @@ extension ConversationViewController: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         switch gestureRecognizer {
         case tapRecognizer:
-            if isShowingMenu {
-                return true
-            } else if let view = touch.view as? TextMessageLabel {
+            if let view = touch.view as? TextMessageLabel {
                 return !view.canResponseTouch(at: touch.location(in: view))
             } else {
                 return true
@@ -1482,7 +1441,6 @@ extension ConversationViewController: UIScrollViewDelegate {
         didManuallyStoppedTableViewDecelerating = false
         UIView.animate(withDuration: animationDuration) {
             self.tableView.setFloatingHeaderViewsHidden(false, animated: false)
-            self.dismissMenu(animated: false)
         }
     }
     
@@ -1623,7 +1581,6 @@ extension ConversationViewController: UITableViewDelegate {
         nil
     }
     
-    @available(iOS 13.0, *)
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         if let label = tableView.hitTest(point, with: nil) as? TextMessageLabel, label.canResponseTouch(at: tableView.convert(point, to: label)) {
             return nil
@@ -1632,12 +1589,10 @@ extension ConversationViewController: UITableViewDelegate {
         }
     }
     
-    @available(iOS 13.0, *)
     func tableView(_ tableView: UITableView, previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
         previewForContextMenu(with: configuration)
     }
     
-    @available(iOS 13.0, *)
     func tableView(_ tableView: UITableView, previewForDismissingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
         previewForContextMenu(with: configuration)
     }
@@ -1651,8 +1606,7 @@ extension ConversationViewController: DetailInfoMessageCellDelegate {
         guard
             let indexPath = tableView.indexPath(for: cell),
             let message = dataSource?.viewModel(for: indexPath)?.message,
-            let user = UserDAO.shared.getUser(userId: message.userId),
-            user.isCreatedByMessenger
+            let user = UserDAO.shared.getUser(userId: message.userId)
         else {
             return
         }
@@ -1672,7 +1626,6 @@ extension ConversationViewController: AppButtonGroupMessageCellDelegate {
         openAction(action: appButtons[index].action, sendUserId: message.userId)
     }
     
-    @available(iOS 13.0, *)
     func contextMenuConfigurationForAppButtonGroupMessageCell(_ cell: AppButtonGroupMessageCell) -> UIContextMenuConfiguration? {
         guard let indexPath = tableView.indexPath(for: cell) else {
             return nil
@@ -1680,12 +1633,10 @@ extension ConversationViewController: AppButtonGroupMessageCellDelegate {
         return contextMenuConfigurationForRow(at: indexPath)
     }
     
-    @available(iOS 13.0, *)
     func previewForHighlightingContextMenuOfAppButtonGroupMessageCell(_ cell: AppButtonGroupMessageCell, with configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
         previewForContextMenu(with: configuration)
     }
     
-    @available(iOS 13.0, *)
     func previewForDismissingContextMenuOfAppButtonGroupMessageCell(_ cell: AppButtonGroupMessageCell, with configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
         previewForContextMenu(with: configuration)
     }
@@ -2001,88 +1952,6 @@ extension ConversationViewController {
     
 }
 
-// MARK: - UIMenu Workers
-extension ConversationViewController {
-    
-    private func showMenu(for actions: [MessageAction], targetRect: CGRect, in view: UIView) {
-        let items = actions.compactMap { menuItems[$0] }
-        guard !items.isEmpty else {
-            return
-        }
-        let center = NotificationCenter.default
-        center.addObserver(self,
-                           selector: #selector(menuControllerDidShowMenu(_:)),
-                           name: UIMenuController.didShowMenuNotification,
-                           object: nil)
-        center.addObserver(self,
-                           selector: #selector(menuControllerWillHideMenu(_:)),
-                           name: UIMenuController.willHideMenuNotification,
-                           object: nil)
-        center.addObserver(self,
-                           selector: #selector(menuControllerDidHideMenu(_:)),
-                           name: UIMenuController.didHideMenuNotification,
-                           object: nil)
-        DispatchQueue.main.async {
-            UIMenuController.shared.menuItems = items
-            UIMenuController.shared.setTargetRect(targetRect, in: view)
-            UIMenuController.shared.setMenuVisible(true, animated: true)
-        }
-    }
-    
-    @objc private func copyMessage(_ sender: Any?) {
-        performActionOnSelectedRow(.copy)
-    }
-    
-    @objc private func deleteMessage(_ sender: Any?) {
-        performActionOnSelectedRow(.delete)
-    }
-    
-    @objc private func replyMessage(_ sender: Any?) {
-        performActionOnSelectedRow(.reply)
-    }
-    
-    @objc private func forwardMessage(_ sender: Any?) {
-        performActionOnSelectedRow(.forward)
-    }
-    
-    @objc private func addToStickers(_ sender: Any?) {
-        performActionOnSelectedRow(.addToStickers)
-    }
-    
-    @objc private func reportMessage(_ sender: Any?) {
-        performActionOnSelectedRow(.report)
-    }
-    
-    @objc private func pinMessage(_ sender: Any?) {
-        performActionOnSelectedRow(.pin)
-    }
-    
-    @objc private func unpinMessage(_ sender: Any?) {
-        performActionOnSelectedRow(.unpin)
-    }
-    
-    @objc private func menuControllerDidShowMenu(_ notification: Notification) {
-        isShowingMenu = true
-    }
-    
-    @objc private func menuControllerWillHideMenu(_ notification: Notification) {
-        if let indexPath = tableView.indexPathForSelectedRow {
-            tableView.deselectRow(at: indexPath, animated: true)
-        }
-    }
-    
-    @objc private func menuControllerDidHideMenu(_ notification: Notification) {
-        UIMenuController.shared.menuItems = nil
-        let center = NotificationCenter.default
-        center.removeObserver(self, name: UIMenuController.didShowMenuNotification, object: nil)
-        center.removeObserver(self, name: UIMenuController.willHideMenuNotification, object: nil)
-        center.removeObserver(self, name: UIMenuController.didHideMenuNotification, object: nil)
-        conversationInputViewController.textView.overrideNext = nil
-        isShowingMenu = false
-    }
-    
-}
-
 // MARK: - UI Related Helpers
 extension ConversationViewController {
     
@@ -2139,7 +2008,7 @@ extension ConversationViewController {
             let navigationBarTop = min(maxTop, max(0, top))
             navigationBarTopConstraint.constant = navigationBarTop
             tableView.contentInset.top = max(view.safeAreaInsets.top, navigationBarView.frame.height - navigationBarTop)
-            tableView.scrollIndicatorInsets.top = tableView.contentInset.top
+            tableView.verticalScrollIndicatorInsets.top = tableView.contentInset.top
             if !statusBarHidden {
                 UIView.animate(withDuration: 0.2, delay: 0, options: [.beginFromCurrentState], animations: {
                     self.statusBarHidden = true
@@ -2148,7 +2017,7 @@ extension ConversationViewController {
         } else {
             navigationBarTopConstraint.constant = 0
             tableView.contentInset.top = titleViewTopConstraint.constant + titleViewHeightConstraint.constant
-            tableView.scrollIndicatorInsets.top = tableView.contentInset.top
+            tableView.verticalScrollIndicatorInsets.top = tableView.contentInset.top
             if statusBarHidden {
                 UIView.animate(withDuration: 0.2, delay: 0, options: [.beginFromCurrentState], animations: {
                     self.statusBarHidden = false
@@ -2175,35 +2044,26 @@ extension ConversationViewController {
         if scrollToBottomWrapperView.alpha < 0.1 && shouldShowScrollToBottomButton {
             scrollToBottomWrapperHeightConstraint.constant = 48
             if animated {
-                UIView.beginAnimations(nil, context: nil)
-                UIView.setAnimationDuration(animationDuration)
-            }
-            scrollToBottomWrapperView.alpha = 1
-            if animated {
-                view.layoutIfNeeded()
-                UIView.commitAnimations()
+                UIView.animate(withDuration: animationDuration) {
+                    self.scrollToBottomWrapperView.alpha = 1
+                    self.view.layoutIfNeeded()
+                }
+            } else {
+                scrollToBottomWrapperView.alpha = 1
             }
         } else if scrollToBottomWrapperView.alpha > 0.9 && !shouldShowScrollToBottomButton {
             scrollToBottomWrapperHeightConstraint.constant = 5
             if animated {
-                UIView.beginAnimations(nil, context: nil)
-                UIView.setAnimationDuration(animationDuration)
-            }
-            scrollToBottomWrapperView.alpha = 0
-            if animated {
-                view.layoutIfNeeded()
-                UIView.commitAnimations()
+                UIView.animate(withDuration: animationDuration) {
+                    self.scrollToBottomWrapperView.alpha = 0
+                    self.view.layoutIfNeeded()
+                }
+            } else {
+                scrollToBottomWrapperView.alpha = 0
             }
             unreadBadgeValue = 0
             dataSource?.firstUnreadMessageId = nil
         }
-    }
-    
-    private func dismissMenu(animated: Bool) {
-        guard UIMenuController.shared.isMenuVisible else {
-            return
-        }
-        UIMenuController.shared.setMenuVisible(false, animated: animated)
     }
     
     private func updateStrangerActionView() {
@@ -2257,7 +2117,7 @@ extension ConversationViewController {
     private func updateNavigationBarHeightAndTableViewTopInset() {
         titleViewTopConstraint.constant = max(20, AppDelegate.current.mainWindow.safeAreaInsets.top)
         tableView.contentInset.top = titleViewTopConstraint.constant + titleViewHeightConstraint.constant
-        tableView.scrollIndicatorInsets.top = tableView.contentInset.top
+        tableView.verticalScrollIndicatorInsets.top = tableView.contentInset.top
     }
     
     // Returns true if the animation succeeds to perform, or false if cell not found
@@ -2317,7 +2177,7 @@ extension ConversationViewController {
     
     private func frameOfPhotoRepresentableCell(_ cell: PhotoRepresentableMessageCell) -> CGRect {
         var rect = cell.contentImageView.convert(cell.contentImageView.bounds, to: view)
-        if UIApplication.shared.statusBarFrame.height == StatusBarHeight.inCall {
+        if UIApplication.shared.statusBarHeight == StatusBarHeight.inCall {
             rect.origin.y += (StatusBarHeight.inCall - StatusBarHeight.normal)
         }
         return rect
@@ -2441,12 +2301,12 @@ extension ConversationViewController {
             }
         }
         
-        tableView.scrollIndicatorInsets.bottom = new - view.safeAreaInsets.bottom
+        tableView.verticalScrollIndicatorInsets.bottom = new - view.safeAreaInsets.bottom
         if animated {
-            UIView.animate(withDuration: 0.5) {
-                UIView.setAnimationCurve(.overdamped)
-                layout()
-            }
+            UIView.animate(withDuration: 0.5,
+                           delay: 0,
+                           options: .overdampedCurve,
+                           animations: layout)
         } else {
             UIView.performWithoutAnimation(layout)
         }
@@ -2494,15 +2354,30 @@ extension ConversationViewController {
     @objc private func updateGroupCallIndicatorViewHidden() {
         let service = CallService.shared
         if let call = service.activeCall, call.conversationId == conversationId {
-            groupCallIndicatorView.isHidden = true
+            if let view = groupCallIndicatorViewIfLoaded {
+                view.isHidden = true
+            }
         } else {
             let ids = service.membersManager.memberIds(forConversationWith: conversationId)
-            groupCallIndicatorView.isHidden = ids.isEmpty
+            if ids.isEmpty {
+                groupCallIndicatorViewIfLoaded?.isHidden = true
+            } else {
+                groupCallIndicatorView.isHidden = false
+            }
         }
     }
     
+    private func layoutGroupCallIndicatorView() {
+        guard let indicator = groupCallIndicatorViewIfLoaded, let constraint = groupCallIndicatorCenterYConstraint else {
+            return
+        }
+        let (minY, maxY) = groupCallIndicatorCenterYLimitation
+        let y = max(minY, min(maxY, indicator.center.y))
+        constraint.constant = y
+    }
+    
     private func updatePinMessagePreview(item: MessageItem) {
-        let preview = TransferPinAction.pinMessage(item: item)
+        let preview = TransferPinAction.pinMessage(item: item).replacingOccurrences(of: "\n\n", with: "\n")
         pinMessageBannerView.update(preview: preview)
         pinMessageBannerView.snp.updateConstraints { make in
             make.left.equalTo(0)
@@ -2570,6 +2445,7 @@ extension ConversationViewController {
                         } else {
                             self.hidePinMessagePreview()
                         }
+                        self.layoutGroupCallIndicatorView()
                     }
                 }
             }
@@ -2920,7 +2796,6 @@ extension ConversationViewController {
 }
 
 // MARK: - Context menu configs
-@available(iOS 13.0, *)
 extension ConversationViewController {
     
     private func contextMenuConfigurationForRow(at indexPath: IndexPath) -> UIContextMenuConfiguration? {

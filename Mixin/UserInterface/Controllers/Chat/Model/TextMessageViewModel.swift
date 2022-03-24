@@ -15,7 +15,7 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
         return .chatText
     }
     
-    private static let appIdentityNumberRegex = try? NSRegularExpression(pattern: #"7000\d{6}"#, options: [])
+    private static let appIdentityNumberRegex = try? NSRegularExpression(pattern: #"(?<=^|\D)7000\d{6}(?=$|\D)"#, options: [])
     
     var content: CoreTextLabel.Content?
     var contentLabelFrame = CGRect.zero

@@ -55,6 +55,7 @@
 "action_close" = "关闭";
 "action_change_settings" = "更改设置";
 "action_open" = "打开";
+"action_settings" = "设置";
 "menu_delete" = "删除";
 "menu_edit" = "编辑";
 "menu_report" = "上报";
@@ -64,6 +65,7 @@
 "title_loading" = "正在加载...";
 "all_photos" = "所有照片";
 "title_help" = "帮助";
+"e2e_encrypted" = "端对端加密";
 
 "connection_hint_connecting" = "正在连接";
 "connection_hint_progress" = "正在同步 %@%%";
@@ -164,6 +166,8 @@
 "toast_captcha_timeout" = "验证超时";
 "desktop_login_confim" = "确认登录 Mixin Messenger 桌面端？";
 "desktop_upgrade" = "请升级 Mixin Messenger 桌面端至最新版！";
+"abort_account_deletion_title" = "继续登录并放弃删除账户";
+"abort_account_deletion_hint" = "您的账户将在%@被删除，如果您继续登录，删除账户的请求将被取消。";
 
 // Contacts
 "contact_title" = "联系人";
@@ -224,9 +228,10 @@
 "home_cell_action_unpin" = "取消置顶";
 "home_title" = "聊天";
 "home_bulletin_title_notification" = "打开推送消息";
-"home_bulletin_description_notification" = "及时获取朋友们的最新消息";
 "home_bulletin_title_emergency_contact" = "紧急联系人";
-"home_bulletin_button_notification" = "设置";
+"home_bulletin_title_initialize_pin" = "创建钱包";
+"home_bulletin_description_notification" = "及时获取朋友们的最新消息";
+"home_bulletin_description_initialize_pin" = "创建你的第一个数字钱包，所有资产都在一个钱包，收发加密资产简单易用。";
 "home_title_apps" = "机器人";
 "home_apps_candidate_empty" = "可以添加你喜欢的机器人";
 
@@ -401,13 +406,13 @@
 "web_export_failed" = "导出失败";
 
 // Call
-"call_encryption" = "端对端加密";
 "call_encryption_title" = "此通话使用端对端加密进行保护";
 "call_encryption_description" = "除了参与通话的人，其他人包含Mixin在内都无法听取或查看。";
 "call_hint_on_another_call" = "正在通话中，请挂断当前电话后重试";
 "call_state_outgoing" = "正在呼叫...";
 "call_state_incoming" = "语音通话来电";
 "call_state_connecting" = "正在连接";
+"call_state_connected" = "已连接";
 "call_state_stalled" = "网络状态不佳";
 "call_state_disconnecting" = "正在断开";
 "call_state_brief_waiting" = "等待接听";
@@ -773,6 +778,7 @@
 "profile_shared_app_reach_limit" = "已达到上限";
 "profile_call_with_mixin" = "语音通话";
 "profile_call_phone" = "电话呼叫";
+"profile_groups_in_common" = "共同的群聊";
 
 // Emergency
 "emergency_view" = "查看紧急联系人";
@@ -804,12 +810,6 @@
 "setting_notification" = "通知和确认";
 "setting_notification_show" = "显示通知";
 "setting_notification_sound" = "提醒音";
-"setting_notification_message" = "信息通知";
-"setting_notification_message_summary" = "你可以在用户信息页单独设置通知";
-"setting_notification_group" = "群组通知";
-"setting_notification_group_summary" = "你可以在群组信息页单独设置通知";
-"setting_privacy_and_security" = "隐私和安全";
-"setting_privacy_and_security_title" = "隐私";
 "setting_privacy_and_security_summary" = "设置谁可以给你发消息或添加到群组";
 "setting_logs" = "日志";
 "setting_logs_empty" = "没有日志";
@@ -908,6 +908,21 @@
 "setting_screen_lock_timeout_minutes" = "%@ 分钟";
 "setting_screen_lock_timeout_hour" = "1 小时";
 "setting_screen_lock_timeout_off" = "关闭";
+"setting_delete_account" = "删除我的账户";
+"setting_change_number_instead" = "更换手机号";
+"setting_account" = "账户";
+"setting_account_privacy" = "隐私";
+"setting_account_security" = "安全";
+"setting_account_change_number" = "更换手机号";
+"setting_delete_account_hint_profile" = "删除您的账户和个人照片";
+"setting_delete_account_hint_message" = "本地消息和 iCloud 备份不会被自动删除";
+"setting_delete_account_hint_transaction" = "交易不能被删除";
+"setting_delete_account_view_wallet" = "查看钱包";
+"setting_delete_account_assets_hint" = "你的 Mixin 钱包还有一些资产，可以提现至其他钱包或交易所，账户一旦注销，这些资产将和钱包一起被弃用无法找回。";
+"setting_delete_account_confirm_title" = "输入您的钱包密码以删除账户";
+"setting_delete_account_confirm_hint" = "如果继续，您的个人资料和账户信息将在%@被删除。阅读文档以了解更多。";
+"setting_delete_account_verify_pin" = "输入您的钱包密码以继续";
+"setting_delete_account_send_code" = "我们将发送一个 4 位验证码到 %@";
 
 // ScreenLock
 "screen_lock_locked" = "Mixin 已锁定";

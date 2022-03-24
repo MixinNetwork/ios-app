@@ -65,7 +65,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
                 if let filename = PHAssetResource.assetResources(for: asset).first?.originalFilename.lowercased(), let startIndex = filename.firstIndex(of: "."), startIndex < filename.endIndex {
                     let fileExtension = String(filename[startIndex..<filename.endIndex])
                     if fileExtension.hasSuffix(".webp") || fileExtension.hasSuffix(".gif") {
-                        PHImageManager.default().requestImageData(for: asset, options: nil, resultHandler: { [weak self](data, _, _, _) in
+                        PHImageManager.default().requestImageDataAndOrientation(for: asset, options: nil, resultHandler: { [weak self](data, _, _, _) in
                             let tempUrl = URL.createTempUrl(fileExtension: fileExtension)
                             do {
                                 try data?.write(to: tempUrl)
@@ -279,7 +279,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
                 do {
                     try FileManager.default.copyItem(at: assetUrl, to: targetUrl)
                     
-                    message.thumbImage = image.base64Thumbnail()
+                    message.thumbImage = image.blurHash()
                     message.mediaSize = FileManager.default.fileSize(targetUrl.path)
                     message.mediaWidth = Int(image.size.width)
                     message.mediaHeight = Int(image.size.height)
@@ -306,7 +306,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
                         Logger.general.error(category: "AssetSendViewController", message: "Unable to write the file: \(error)")
                         fallthrough
                     }
-                    message.thumbImage = image.base64Thumbnail()
+                    message.thumbImage = image.blurHash()
                     message.mediaSize = FileManager.default.fileSize(targetUrl.path)
                     message.mediaWidth = Int(image.size.width)
                     message.mediaHeight = Int(image.size.height)

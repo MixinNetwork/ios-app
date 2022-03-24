@@ -25,12 +25,11 @@ class LoginNavigationController: LoneBackButtonNavigationController {
             return
         }
         if animated {
-            UIView.beginAnimations(nil, context: nil)
-            UIView.setAnimationDuration(0.25)
-        }
-        backButton.alpha = alpha
-        if animated {
-            UIView.commitAnimations()
+            UIView.animate(withDuration: 0.25) {
+                self.backButton.alpha = alpha
+            }
+        } else {
+            backButton.alpha = alpha
         }
     }
     

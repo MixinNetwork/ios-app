@@ -4,7 +4,7 @@ import MixinServices
 class StickerStoreBannerView: UICollectionReusableView {
     
     @IBOutlet weak var collectionView: UICollectionView!
-    @IBOutlet weak var layout: StickersStoreBannerFlowLayout!
+    @IBOutlet weak var layout: SnapCenterFlowLayout!
     
     var onSelected: ((AlbumItem) -> Void)?
     var albumItems: [AlbumItem] = [] {
@@ -16,6 +16,7 @@ class StickerStoreBannerView: UICollectionReusableView {
     override func awakeFromNib() {
         super.awakeFromNib()
         collectionView.decelerationRate = .fast
+        layout.scale = .pi / 4
         layout.minimumLineSpacing = 6
     }
     

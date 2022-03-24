@@ -37,11 +37,9 @@ class ShareRecipientViewController: UIViewController {
             return
         }
         
-        if #available(iOSApplicationExtension 13.0, *) {
-            if let messageIntent = extensionContext?.intent as? INSendMessageIntent, let conversationId = messageIntent.conversationIdentifier, !conversationId.isEmpty, let conversationItem = ConversationDAO.shared.getConversation(conversationId: conversationId), let conversation = RecipientSearchItem(conversation: conversationItem) {
-                shareAction(conversation: conversation, avatarImage: nil, fromIntent: true)
-                return
-            }
+        if let messageIntent = extensionContext?.intent as? INSendMessageIntent, let conversationId = messageIntent.conversationIdentifier, !conversationId.isEmpty, let conversationItem = ConversationDAO.shared.getConversation(conversationId: conversationId), let conversation = RecipientSearchItem(conversation: conversationItem) {
+            shareAction(conversation: conversation, avatarImage: nil, fromIntent: true)
+            return
         }
 
         searchView.isHidden = false
@@ -191,10 +189,32 @@ extension ShareRecipientViewController: UITableViewDataSource, UITableViewDelega
 extension ShareRecipientViewController {
 
     private func shareAction(conversation: RecipientSearchItem, avatarImage: UIImage?, fromIntent: Bool = false) {
-        guard let extensionItems = extensionContext?.inputItems as? [NSExtensionItem], extensionItems.count > 0 else {
+        guard var extensionItems = extensionContext?.inputItems as? [NSExtensionItem] else {
             return
         }
-
+        if extensionItems.count == 2 {
+            // When user initiate a share for a PDF in Safari, there will be 2 input items: the PDF and the URL
+            // We just keep the PDF and drop the URL
+            var pdfIndex: Int?
+            var urlIndex: Int?
+            for (index, item) in extensionItems.enumerated() {
+                guard let attachments = item.attachments, attachments.count == 1 else {
+                    continue
+                }
+                if attachments[0].hasItemConformingToTypeIdentifier(kUTTypeURL as String) {
+                    urlIndex = index
+                } else if attachments[0].hasItemConformingToTypeIdentifier(kUTTypePDF as String) {
+                    pdfIndex = index
+                }
+            }
+            if pdfIndex != nil, let urlIndex = urlIndex {
+                extensionItems.remove(at: urlIndex)
+            }
+        }
+        guard extensionItems.count > 0 else {
+            return
+        }
+        
         let startTime = Date()
         view.endEditing(true)
         loadingView.isHidden = false
@@ -317,6 +337,11 @@ extension ShareRecipientViewController {
                                 return
                             }
                             weakSelf.shareTextMessage(content: url.absoluteString, conversation: conversation)
+                        } else if attachment.hasItemConformingToTypeIdentifier(kUTTypePDF as String) {
+                            guard let url = item as? URL else {
+                                return
+                            }
+                            weakSelf.shareFileMessage(url: url, conversation: conversation)
                         }
                     }
                 }
@@ -383,7 +408,7 @@ extension ShareRecipientViewController {
 
         let filename = "\(message.messageId).\(extensionName)"
         let url = AttachmentContainer.url(for: .photos, filename: filename)
-        message.thumbImage = targetImage.base64Thumbnail()
+        message.thumbImage = targetImage.blurHash()
 
         do {
             try imageData.write(to: url)
@@ -413,7 +438,7 @@ extension ShareRecipientViewController {
         let category: MessageCategory = conversation.isSignalConversation ? .SIGNAL_VIDEO : .PLAIN_VIDEO
         var message = Message.createMessage(category: category.rawValue, conversationId: conversation.conversationId, userId: myUserId)
         message.messageId = messageId
-        message.thumbImage = thumbnail.base64Thumbnail()
+        message.thumbImage = thumbnail.blurHash()
         message.mediaDuration = Int64(asset.duration.seconds * millisecondsPerSecond)
         let size = videoTrack.naturalSize.applying(videoTrack.preferredTransform)
         message.mediaWidth = Int(abs(size.width))
@@ -491,9 +516,6 @@ extension ShareRecipientViewController {
 extension ShareRecipientViewController {
     
     private func sendMessageIntent(conversation: RecipientSearchItem, avatarImage: UIImage?) {
-        guard #available(iOSApplicationExtension 12.0, *) else {
-            return
-        }
         let recipientHandle = INPersonHandle(value: conversation.conversationId, type: .unknown)
         let recipient = INPerson(personHandle: recipientHandle, nameComponents: nil, displayName: conversation.name, image: nil, contactIdentifier: nil, customIdentifier: conversation.conversationId)
         let messageIntent = INSendMessageIntent(recipients: [recipient],

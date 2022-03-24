@@ -71,6 +71,7 @@ open class AttachmentLoadingJob: AsynchronousJob {
     
     override open func cancel() {
         task?.cancel()
+        removeJob()
         super.cancel()
     }
     

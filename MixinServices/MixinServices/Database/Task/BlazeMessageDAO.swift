@@ -9,7 +9,7 @@ public final class BlazeMessageDAO {
     }
     
     public func save(messageId: String, conversationId: String, data: Data, createdAt: String) -> Bool {
-        let msg = MessageBlaze(messageId: messageId, message: data, createdAt: createdAt)
+        let msg = MessageBlaze(messageId: messageId, message: data, conversationId: conversationId, createdAt: createdAt)
         return TaskDatabase.current.save(msg)
     }
     
@@ -28,13 +28,20 @@ public final class BlazeMessageDAO {
         TaskDatabase.current.select(where: MessageBlaze.column(of: .messageId) == messageId)
     }
     
-    public func getBlazeMessageData(createdAt: String? = nil, limit: Int) -> [BlazeMessageData] {
+    public func getBlazeMessages(createdAt: String? = nil, limit: Int) -> [MessageBlaze] {
         let condition: SQLSpecificExpressible?
         if let createdAt = createdAt {
             condition = MessageBlaze.column(of: .createdAt) <= createdAt
         } else {
             condition = nil
         }
+        return TaskDatabase.current.select(where: condition,
+                                           order: [MessageBlaze.column(of: .createdAt).asc],
+                                           limit: limit)
+    }
+    
+    public func getBlazeMessageData(conversationId: String, limit: Int) -> [BlazeMessageData] {
+        let condition: SQLSpecificExpressible = MessageBlaze.column(of: .conversationId) == conversationId
         let data: [Data] = TaskDatabase.current.select(column: MessageBlaze.column(of: .message),
                                                        from: MessageBlaze.self,
                                                        where: condition,
@@ -45,9 +52,15 @@ public final class BlazeMessageDAO {
         }
     }
     
-    public func delete(data: BlazeMessageData) {
+    public func delete(messageId: String) {
         TaskDatabase.current.delete(MessageBlaze.self,
-                                    where: MessageBlaze.column(of: .messageId) == data.messageId)
+                                    where: MessageBlaze.column(of: .messageId) == messageId)
     }
+    
+    public func delete(messageIds: [String]) {
+        TaskDatabase.current.delete(MessageBlaze.self,
+                                    where: messageIds.contains(MessageBlaze.column(of: .messageId)))
+    }
+    
     
 }

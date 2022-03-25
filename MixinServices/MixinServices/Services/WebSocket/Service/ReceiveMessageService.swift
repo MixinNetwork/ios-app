@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 import SDWebImage
+import GRDB
 
 public protocol CallMessageCoordinator: AnyObject {
     func shouldSendRtcBlazeMessage(with category: MessageCategory) -> Bool
@@ -91,21 +92,53 @@ public class ReceiveMessageService: MixinService {
                     return
                 } else if let createdAt = BlazeMessageDAO.shared.getMessageBlaze(messageId: messageId)?.createdAt {
                     repeat {
-                        let blazeMessageDatas = BlazeMessageDAO.shared.getBlazeMessageData(createdAt: createdAt, limit: 50)
-                        guard blazeMessageDatas.count > 0 else {
+                        let blazeMessages = BlazeMessageDAO.shared.getBlazeMessages(createdAt: createdAt, limit: 50)
+                        guard blazeMessages.count > 0 else {
                             callback(nil)
                             return
                         }
-
-                        for data in blazeMessageDatas {
+                        
+                        var nonBotMessages = [BlazeMessageData]()
+                        var botMessages = [String: BlazeMessageData]()
+                        
+                        for blazeMessage in blazeMessages {
+                            guard let data = try? JSONDecoder.default.decode(BlazeMessageData.self, from: blazeMessage.message) else {
+                                ReceiveMessageService.shared.processBadMessage(messageId: blazeMessage.messageId)
+                                continue
+                            }
+                            
+                            if MessageCategory.allBotCategoriesString.contains(data.category) && !blazeMessage.conversationId.isEmpty {
+                                if botMessages[data.conversationId] == nil {
+                                    botMessages[data.conversationId] = data
+                                }
+                            } else {
+                                nonBotMessages.append(data)
+                            }
+                        }
+                        
+                        for blazeMessage in nonBotMessages {
                             guard !AppGroupUserDefaults.isRunningInMainApp, !extensionTimeWillExpire() else {
                                 callback(nil)
                                 return
                             }
-                            ReceiveMessageService.shared.processReceiveMessage(data: data)
-                            if data.messageId == messageId {
+                            ReceiveMessageService.shared.processReceiveMessage(data: blazeMessage)
+                            if blazeMessage.messageId == messageId {
                                 callback(MessageDAO.shared.getFullMessage(messageId: messageId))
                                 return
+                            }
+                        }
+                        
+                        for blazeMessage in botMessages.values {
+                            ReceiveMessageService.shared.processBotMessages(data: blazeMessage) { messageIds in
+                                guard !AppGroupUserDefaults.isRunningInMainApp, !extensionTimeWillExpire() else {
+                                    callback(nil)
+                                    return false
+                                }
+                                guard !messageIds.contains(messageId) else {
+                                    callback(MessageDAO.shared.getFullMessage(messageId: messageId))
+                                    return false
+                                }
+                                return true
                             }
                         }
                     } while true
@@ -159,35 +192,239 @@ public class ReceiveMessageService: MixinService {
             }
 
             var finishedJobCount = 0
-
+            
+            func updateProgress(remainJobCount: Int, finishedJobCount: Int) {
+                guard displaySyncProcess else {
+                    return
+                }
+                var progress = Int(Float(finishedJobCount) / Float(remainJobCount + finishedJobCount) * 100)
+                if progress > 100 {
+                    progress = 100
+                }
+                NotificationCenter.default.post(onMainThread: Self.progressNotification,
+                                                object: self,
+                                                userInfo: [Self.UserInfoKey.progress: progress])
+            }
+            
             repeat {
                 guard LoginManager.shared.isLoggedIn, !MixinService.isStopProcessMessages else {
                     return
                 }
-                let blazeMessageDatas = BlazeMessageDAO.shared.getBlazeMessageData(limit: 50)
-                guard blazeMessageDatas.count > 0 else {
+                let blazeMessages = BlazeMessageDAO.shared.getBlazeMessages(limit: 50)
+                guard blazeMessages.count > 0 else {
                     return
                 }
-
+                
                 let remainJobCount = BlazeMessageDAO.shared.getCount()
                 if remainJobCount + finishedJobCount > 500 {
                     displaySyncProcess = true
-                    let progress = blazeMessageDatas.count == 0 ? 100 : Int(Float(finishedJobCount) / Float(remainJobCount + finishedJobCount) * 100)
-                    NotificationCenter.default.post(onMainThread: Self.progressNotification,
-                                                    object: self,
-                                                    userInfo: [Self.UserInfoKey.progress: progress])
+                    updateProgress(remainJobCount: remainJobCount, finishedJobCount: finishedJobCount)
                 }
-
-                for data in blazeMessageDatas {
+                
+                var nonBotMessages = [BlazeMessageData]()
+                var botMessages = [String: BlazeMessageData]()
+                
+                for blazeMessage in blazeMessages {
+                    guard let data = try? JSONDecoder.default.decode(BlazeMessageData.self, from: blazeMessage.message) else {
+                        finishedJobCount += 1
+                        ReceiveMessageService.shared.processBadMessage(messageId: blazeMessage.messageId)
+                        continue
+                    }
+                    
+                    if MessageCategory.allBotCategoriesString.contains(data.category) && !blazeMessage.conversationId.isEmpty {
+                        if botMessages[data.conversationId] == nil {
+                            botMessages[data.conversationId] = data
+                        }
+                    } else {
+                        nonBotMessages.append(data)
+                    }
+                }
+                
+                for blazeMessage in nonBotMessages {
                     if MixinService.isStopProcessMessages {
                         return
                     }
-                    ReceiveMessageService.shared.processReceiveMessage(data: data)
+                    ReceiveMessageService.shared.processReceiveMessage(data: blazeMessage)
                 }
-
-                finishedJobCount += blazeMessageDatas.count
+                finishedJobCount += nonBotMessages.count
+                
+                for blazeMessage in botMessages.values {
+                    ReceiveMessageService.shared.processBotMessages(data: blazeMessage) { messageIds in
+                        finishedJobCount += messageIds.count
+                        updateProgress(remainJobCount: remainJobCount, finishedJobCount: finishedJobCount)
+                        return true
+                    }
+                }
             } while true
         }
+    }
+    
+    private func processBotMessages(data: BlazeMessageData, processBlock: ([String]) -> Bool) {
+        let conversationId = data.conversationId
+        ReceiveMessageService.shared.syncConversation(data: data)
+        guard ConversationDAO.shared.isBotConversation(conversationId: conversationId) else {
+            // plain message in group chat
+            ReceiveMessageService.shared.processReceiveMessage(data: data)
+            return
+        }
+        
+        ReceiveMessageService.shared.checkSession(data: data)
+        _ = ReceiveMessageService.shared.syncUser(userId: data.userId)
+        
+        let pageCount = 200
+        var loopEnd = false
+        repeat {
+            if MixinService.isStopProcessMessages {
+                return
+            }
+            let blazeMessages = BlazeMessageDAO.shared.getBlazeMessageData(conversationId: conversationId, limit: pageCount)
+            guard let lastMessage = blazeMessages.last else {
+                return
+            }
+            loopEnd = blazeMessages.count < pageCount
+            
+            ReceiveMessageService.shared.syncUsers(userIds: blazeMessages.map{ $0.userId })
+            
+            if MixinService.isStopProcessMessages {
+                return
+            }
+            
+            let blazeMessageDict = Dictionary<String, BlazeMessageData>(uniqueKeysWithValues: blazeMessages.map { ($0.messageId, $0) })
+            let messageIds = blazeMessages.map{ $0.messageId }
+            let existMessageIds = MessageDAO.shared.getExistMessageIds(messageIds: messageIds)
+            let existHistoryIds = MessageHistoryDAO.shared.getExistMessageIds(messageIds: messageIds)
+            
+            var jobs = [Job]()
+            var downloadJobs = [AttachmentDownloadJob]()
+            var pairMessages = [(Message, [TranscriptMessage]?)]()
+            var sharedContactIds = [String]()
+            
+            for blazeMessage in blazeMessages {
+                let messageId = blazeMessage.messageId
+                let ackBlazeMessage = BlazeMessage(ackBlazeMessage: messageId, status: MessageStatus.DELIVERED.rawValue)
+                jobs.append(Job(jobId: ackBlazeMessage.id, action: .SEND_DELIVERED_ACK_MESSAGE, blazeMessage: ackBlazeMessage))
+                
+                guard !(existMessageIds.contains(messageId) || existHistoryIds.contains(messageId)) else {
+                    pairMessages.append((makeUnknownMessage(data: blazeMessage), nil))
+                    continue
+                }
+                
+                var decryptedData: Data?
+                if blazeMessage.category.hasPrefix("PLAIN_") {
+                    decryptedData = Data(base64Encoded: blazeMessage.data)
+                } else {
+                    decryptedData = parseEncryptedMessage(data: data)
+                }
+                
+                if let decryptedData = decryptedData, let (message, children) = makeDecryptMessage(data: blazeMessage, decryptedData: decryptedData) {
+                    if message.category.hasSuffix("_CONTACT"), let sharedUserId = message.sharedUserId {
+                        sharedContactIds.append(sharedUserId)
+                    }
+                    if message.category.hasSuffix("_AUDIO") {
+                        downloadJobs.append(AttachmentDownloadJob(message: message))
+                    }
+                    pairMessages.append((message, children))
+                } else {
+                    pairMessages.append((makeUnknownMessage(data: blazeMessage), nil))
+                }
+            }
+            
+            ReceiveMessageService.shared.syncUsers(userIds: sharedContactIds)
+            
+            let transcriptMessages = pairMessages.compactMap { $0.1 }.flatMap { $0 }
+            var ftsMessages = [(Message, [TranscriptMessage]?)]()
+            if AppGroupUserDefaults.Database.isFTSInitialized {
+                ftsMessages = pairMessages.filter{ MessageCategory.ftsAvailableCategoryStrings.contains($0.0.category) }
+            }
+            let messages = pairMessages.compactMap { $0.0 }
+            
+            if MixinService.isStopProcessMessages {
+                return
+            }
+            
+            UserDatabase.current.write { db in
+                try messages.save(db)
+                try transcriptMessages.save(db)
+                try jobs.save(db)
+                
+                for message in messages {
+                    guard message.category.hasSuffix("_TEXT") || message.quoteMessageId != nil else {
+                        continue
+                    }
+                    
+                    var quotedMessage: MessageItem?
+                    if let quoteMessageId = message.quoteMessageId {
+                        quotedMessage = try MessageItem.fetchOne(db, sql: MessageDAO.sqlQueryQuoteMessageById, arguments: [quoteMessageId], adapter: nil)
+                    }
+                    if let quoted = quotedMessage, let quoteContent = try? JSONEncoder.default.encode(quoted) {
+                        let assignments: [ColumnAssignment] = [
+                            Message.column(of: .quoteContent).set(to: quoteContent)
+                        ]
+                        
+                        try Message
+                            .filter(Message.column(of: .messageId) == message.messageId)
+                            .updateAll(db, assignments)
+                    }
+                    
+                    if let mention = MessageMention(message: message, quotedMessage: quotedMessage) {
+                        try mention.save(db)
+                    }
+                }
+                
+                for (ftsMessage, childrenMessages) in ftsMessages {
+                    try MessageDAO.shared.insertFTSContent(db, message: ftsMessage, children: childrenMessages)
+                }
+                
+                try ConversationDAO.shared.updateUnseenMessageCount(database: db, conversationId: conversationId)
+                try ConversationDAO.shared.updateLastMessage(database: db, conversationId: conversationId, messageId: lastMessage.messageId, createdAt: lastMessage.createdAt)
+                
+                db.afterNextTransactionCommit { _ in
+                    DispatchQueue.global().async {
+                        for job in downloadJobs {
+                            ConcurrentJobQueue.shared.addJob(job: job)
+                        }
+                        
+                        if isAppExtension {
+                            if AppGroupUserDefaults.isRunningInMainApp {
+                                DarwinNotificationManager.shared.notifyConversationDidChangeInMainApp()
+                            }
+                            if AppGroupUserDefaults.User.currentConversationId == data.conversationId {
+                                AppGroupUserDefaults.User.reloadConversation = true
+                            }
+                        } else {
+                            guard let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId), conversation.status == ConversationStatus.SUCCESS.rawValue else {
+                                return
+                            }
+                            
+                            if conversation.isMuted && AppGroupUserDefaults.User.currentConversationId != conversationId {
+                                let change = ConversationChange(conversationId: conversationId, action: .reload)
+                                NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: change)
+                            } else {
+                                let messageIds = messages.map{ $0.messageId }
+                                let messages = MessageDAO.shared.getMessages(messageIds: messageIds)
+                                for newMessage in messages {
+                                    var userInfo: [String: Any] = [
+                                        MessageDAO.UserInfoKey.conversationId: newMessage.conversationId,
+                                        MessageDAO.UserInfoKey.message: newMessage,
+                                    ]
+                                    if let data = blazeMessageDict[newMessage.messageId] {
+                                        userInfo[MessageDAO.UserInfoKey.messsageSource] = data.source
+                                        userInfo[MessageDAO.UserInfoKey.silentNotification] = data.silentNotification
+                                    }
+                                    NotificationCenter.default.post(onMainThread: MessageDAO.didInsertMessageNotification, object: self, userInfo: userInfo)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            BlazeMessageDAO.shared.delete(messageIds: messageIds)
+            
+            if !processBlock(messageIds) {
+                return
+            }
+        } while LoginManager.shared.isLoggedIn && !loopEnd
     }
 
     private func processReceiveMessage(data: BlazeMessageData) {
@@ -196,7 +433,7 @@ public class ReceiveMessageService: MixinService {
         }
 
         if MessageDAO.shared.isExist(messageId: data.messageId) || MessageHistoryDAO.shared.isExist(messageId: data.messageId) {
-            ReceiveMessageService.shared.processBadMessage(data: data)
+            ReceiveMessageService.shared.processBadMessage(messageId: data.messageId)
             return
         }
 
@@ -223,7 +460,7 @@ public class ReceiveMessageService: MixinService {
             ReceiveMessageService.shared.processUnknownMessage(data: data)
             ReceiveMessageService.shared.updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
         }
-        BlazeMessageDAO.shared.delete(data: data)
+        BlazeMessageDAO.shared.delete(messageId: data.messageId)
     }
 
     private func checkSession(data: BlazeMessageData) {
@@ -244,8 +481,8 @@ public class ReceiveMessageService: MixinService {
             UserDatabase.current.save(session)
         }
     }
-
-    private func processUnknownMessage(data: BlazeMessageData) {
+    
+    private func makeUnknownMessage(data: BlazeMessageData) -> Message {
         var unknownMessage = Message.createMessage(messageId: data.messageId,
                                                    category: data.category,
                                                    conversationId: data.conversationId,
@@ -253,12 +490,17 @@ public class ReceiveMessageService: MixinService {
                                                    userId: data.getSenderId())
         unknownMessage.status = MessageStatus.UNKNOWN.rawValue
         unknownMessage.content = data.data
-        MessageDAO.shared.insertMessage(message: unknownMessage, messageSource: data.source, silentNotification: data.silentNotification)
+        return unknownMessage
     }
 
-    private func processBadMessage(data: BlazeMessageData) {
-        ReceiveMessageService.shared.updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
-        BlazeMessageDAO.shared.delete(data: data)
+    private func processUnknownMessage(data: BlazeMessageData) {
+        MessageDAO.shared.insertMessage(message: makeUnknownMessage(data: data), messageSource: data.source, silentNotification: data.silentNotification)
+    }
+
+    private func processBadMessage(messageId: String) {
+        MessageHistoryDAO.shared.replaceMessageHistory(messageId: messageId)
+        ReceiveMessageService.shared.updateRemoteMessageStatus(messageId: messageId, status: .DELIVERED)
+        BlazeMessageDAO.shared.delete(messageId: messageId)
     }
     
     private func processCallMessage(data: BlazeMessageData) {
@@ -520,10 +762,7 @@ public class ReceiveMessageService: MixinService {
         }
     }
     
-    private func processEncryptedMessage(data: BlazeMessageData) {
-        guard data.category.hasPrefix("ENCRYPTED_") else {
-            return
-        }
+    private func parseEncryptedMessage(data: BlazeMessageData) -> Data? {
         guard
             let cipher = Data(base64Encoded: data.data),
             let pk = RequestSigning.edDSAPrivateKey,
@@ -539,18 +778,28 @@ public class ReceiveMessageService: MixinService {
             ]
             Logger.conversation(id: data.conversationId).error(category: "EncryptedBotMessage", message: "Failed to decrypt", userInfo: info)
             reporter.report(error: MixinServicesError.decryptBotMessage(info))
+            return nil
+        }
+        do {
+            return try EncryptedProtocol.decrypt(cipher: cipher, with: pk, sessionId: mySessionId)
+        } catch {
+            reporter.report(error: error)
+            return nil
+        }
+    }
+    
+    private func processEncryptedMessage(data: BlazeMessageData) {
+        guard data.category.hasPrefix("ENCRYPTED_") else {
+            return
+        }
+        guard let decryptedData = parseEncryptedMessage(data: data) else {
             updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
             ReceiveMessageService.shared.processUnknownMessage(data: data)
             return
         }
-        do {
-            let decryptedData = try EncryptedProtocol.decrypt(cipher: cipher, with: pk, sessionId: mySessionId)
-            _ = syncUser(userId: data.getSenderId())
-            processDecryptSuccess(data: data, decryptedData: decryptedData)
-        } catch {
-            reporter.report(error: error)
-            ReceiveMessageService.shared.processUnknownMessage(data: data)
-        }
+        
+        _ = syncUser(userId: data.getSenderId())
+        processDecryptSuccess(data: data, decryptedData: decryptedData)
         updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
     }
     
@@ -578,24 +827,20 @@ public class ReceiveMessageService: MixinService {
         }
     }
     
-    private func processDecryptSuccess(data: BlazeMessageData, decryptedData: Data) {
+    private func makeDecryptMessage(data: BlazeMessageData, decryptedData: Data) -> (Message, [TranscriptMessage]?)? {
         if data.category.hasSuffix("_TEXT") || data.category.hasSuffix("_POST") {
             guard let content = String(data: decryptedData, encoding: .utf8) else {
-                ReceiveMessageService.shared.processUnknownMessage(data: data)
-                return
+                return nil
             }
-            let message = Message.createMessage(textMessage: content, data: data)
-            MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification)
+            return (Message.createMessage(textMessage: content, data: data), nil)
         } else if data.category.hasSuffix("_IMAGE") || data.category.hasSuffix("_VIDEO") {
             guard let transferMediaData = (try? JSONDecoder.default.decode(TransferAttachmentData.self, from: decryptedData)) else {
                 Logger.conversation(id: data.conversationId).error(category: "DecryptSuccess", message: "Invalid data for category: \(data.category), data: \(String(data: decryptedData, encoding: .utf8))")
-                ReceiveMessageService.shared.processUnknownMessage(data: data)
-                return
+                return nil
             }
             guard let height = transferMediaData.height, let width = transferMediaData.width, height > 0, width > 0 else {
                 Logger.conversation(id: data.conversationId).error(category: "DecryptSuccess", message: "Invalid TransferAttachmentData for category: \(data.category), data: \(String(data: decryptedData, encoding: .utf8))")
-                ReceiveMessageService.shared.processUnknownMessage(data: data)
-                return
+                return nil
             }
 
             if transferMediaData.mimeType?.isEmpty ?? true {
@@ -610,86 +855,84 @@ public class ReceiveMessageService: MixinService {
                 reporter.report(error: error)
             }
 
-            let message = Message.createMessage(mediaData: transferMediaData, data: data)
-            MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification)
+            return (Message.createMessage(mediaData: transferMediaData, data: data), nil)
         } else if data.category.hasSuffix("_LIVE") {
             guard let live = (try? JSONDecoder.default.decode(TransferLiveData.self, from: decryptedData)) else {
                 Logger.conversation(id: data.conversationId).error(category: "DecryptSuccess", message: "Invalid TransferLiveData for category: \(data.category), data: \(String(data: decryptedData, encoding: .utf8))")
-                ReceiveMessageService.shared.processUnknownMessage(data: data)
-                return
+                return nil
             }
-            let message = Message.createMessage(liveData: live,
+            return (Message.createMessage(liveData: live,
                                                 content: String(data: decryptedData, encoding: .utf8),
-                                                data: data)
-            MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification)
+                                                data: data), nil)
         } else if data.category.hasSuffix("_DATA")  {
             guard let transferMediaData = (try? JSONDecoder.default.decode(TransferAttachmentData.self, from: decryptedData)) else {
                 Logger.conversation(id: data.conversationId).error(category: "DecryptSuccess", message: "Invalid TransferAttachmentData for category: \(data.category), data: \(String(data: decryptedData, encoding: .utf8))")
-                ReceiveMessageService.shared.processUnknownMessage(data: data)
-                return
+                return nil
             }
             guard transferMediaData.size > 0 else {
-                ReceiveMessageService.shared.processUnknownMessage(data: data)
-                return
+                return nil
             }
-            let message = Message.createMessage(mediaData: transferMediaData, data: data)
-            MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification)
+            return (Message.createMessage(mediaData: transferMediaData, data: data), nil)
         } else if data.category.hasSuffix("_AUDIO") {
             guard let transferMediaData = (try? JSONDecoder.default.decode(TransferAttachmentData.self, from: decryptedData)) else {
                 Logger.conversation(id: data.conversationId).error(category: "DecryptSuccess", message: "Invalid TransferAttachmentData for category: \(data.category), data: \(String(data: decryptedData, encoding: .utf8))")
-                ReceiveMessageService.shared.processUnknownMessage(data: data)
-                return
+                return nil
             }
-            let message = Message.createMessage(mediaData: transferMediaData, data: data)
-            MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification)
-            let job = AttachmentDownloadJob(message: message)
-            ConcurrentJobQueue.shared.addJob(job: job)
+            return (Message.createMessage(mediaData: transferMediaData, data: data), nil)
         } else if data.category.hasSuffix("_STICKER") {
             guard let transferStickerData = parseSticker(data: data, decryptedData: decryptedData) else {
-                return
+                return nil
             }
-            let message = Message.createMessage(stickerData: transferStickerData, data: data)
-            MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification)
+            return (Message.createMessage(stickerData: transferStickerData, data: data), nil)
         } else if data.category.hasSuffix("_CONTACT") {
             guard let transferData = (try? JSONDecoder.default.decode(TransferContactData.self, from: decryptedData)) else {
                 Logger.conversation(id: data.conversationId).error(category: "DecryptSuccess", message: "Invalid TransferContactData for category: \(data.category), data: \(String(data: decryptedData, encoding: .utf8))")
-                ReceiveMessageService.shared.processUnknownMessage(data: data)
-                return
+                return nil
             }
             guard !transferData.userId.isEmpty, UUID(uuidString: transferData.userId) != nil else {
                 Logger.conversation(id: data.conversationId).error(category: "DecryptSuccess", message: "Invalid TransferContactData for category: \(data.category), data: \(String(data: decryptedData, encoding: .utf8))")
-                ReceiveMessageService.shared.processUnknownMessage(data: data)
-                return
+                return nil
             }
-            guard syncUser(userId: transferData.userId) else {
-                return
-            }
-            let message = Message.createMessage(contactData: transferData, data: data)
-            MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification)
+            return (Message.createMessage(contactData: transferData, data: data), nil)
         } else if data.category.hasSuffix("_LOCATION") {
             guard (try? JSONDecoder.default.decode(Location.self, from: decryptedData)) != nil else {
-                ReceiveMessageService.shared.processUnknownMessage(data: data)
-                return
+                return nil
             }
             guard let content = String(data: decryptedData, encoding: .utf8) else {
-                ReceiveMessageService.shared.processUnknownMessage(data: data)
-                return
+                return nil
             }
-            let message = Message.createLocationMessage(content: content, data: data)
-            MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification)
+            return (Message.createLocationMessage(content: content, data: data), nil)
         } else if data.category.hasSuffix("_TRANSCRIPT") {
             guard let (content, children, hasAttachment) = parseTranscript(decryptedData: decryptedData, transcriptId: data.messageId) else {
-                ReceiveMessageService.shared.processUnknownMessage(data: data)
-                return
+                return nil
             }
             guard !children.isEmpty else {
-                ReceiveMessageService.shared.processUnknownMessage(data: data)
-                return
+                return nil
             }
             let message = Message.createTranscriptMessage(content: content,
                                                           mediaStatus: hasAttachment ? .PENDING : .DONE,
                                                           data: data)
-            MessageDAO.shared.insertMessage(message: message, children: children, messageSource: data.source, silentNotification: data.silentNotification)
+            return (message, children)
+        }
+        
+        return nil
+    }
+    
+    private func processDecryptSuccess(data: BlazeMessageData, decryptedData: Data) {
+        guard let (message, children) = makeDecryptMessage(data: data, decryptedData: decryptedData) else {
+            ReceiveMessageService.shared.processUnknownMessage(data: data)
+            return
+        }
+        
+        if data.category.hasSuffix("_CONTACT"), let sharedUserId = message.sharedUserId {
+            checkUser(userId: sharedUserId, tryAgain: true)
+        }
+        
+        MessageDAO.shared.insertMessage(message: message, children: children, messageSource: data.source, silentNotification: data.silentNotification)
+        
+        if data.category.hasSuffix("_AUDIO") {
+            let job = AttachmentDownloadJob(message: message)
+            ConcurrentJobQueue.shared.addJob(job: job)
         }
     }
     
@@ -795,6 +1038,7 @@ public class ReceiveMessageService: MixinService {
             MessageDAO.shared.updateLiveMessage(liveData: liveData, content: plainText.base64Decoded(), status: Message.getStatus(data: data), messageId: messageId, category: data.category, conversationId: data.conversationId, messageSource: data.source, silentNotification: data.silentNotification)
         case MessageCategory.SIGNAL_STICKER.rawValue:
             guard let decryptedData = plainText.data(using: .utf8), let transferStickerData = parseSticker(data: data, decryptedData: decryptedData) else {
+                ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return
             }
             MessageDAO.shared.updateStickerMessage(stickerData: transferStickerData, status: Message.getStatus(data: data), messageId: messageId, category: data.category, conversationId: data.conversationId, messageSource: data.source, silentNotification: data.silentNotification)
@@ -840,14 +1084,12 @@ public class ReceiveMessageService: MixinService {
     private func parseSticker(data: BlazeMessageData, decryptedData: Data) -> TransferStickerData? {
         guard let transferStickerData = (try? JSONDecoder.default.decode(TransferStickerData.self, from: decryptedData)) else {
             Logger.conversation(id: data.conversationId).error(category: "ParseSticker", message: "Invalid TransferStickerData: \(String(data: decryptedData, encoding: .utf8))")
-            ReceiveMessageService.shared.processUnknownMessage(data: data)
             return nil
         }
 
         if let stickerId = transferStickerData.stickerId {
             guard !stickerId.isEmpty, UUID(uuidString: stickerId) != nil else {
                 Logger.conversation(id: data.conversationId).error(category: "ParseSticker", message: "Invalid TransferStickerData: \(String(data: decryptedData, encoding: .utf8))")
-                ReceiveMessageService.shared.processUnknownMessage(data: data)
                 return nil
             }
             guard !StickerDAO.shared.isExist(stickerId: stickerId) else {
@@ -1016,6 +1258,30 @@ public class ReceiveMessageService: MixinService {
         } while LoginManager.shared.isLoggedIn
 
         return false
+    }
+    
+    private func syncUsers(userIds: [String]) {
+        guard userIds.count > 0 else {
+            return
+        }
+        let ids = Array<String>(Set<String>(userIds)).filter({ $0 != User.systemUser && $0 != currentAccountId && !$0.isEmpty })
+        let existUserIds = UserDAO.shared.getExistUserIds(userIds: ids)
+        let syncUserIds = Array<String>(Set<String>(ids).subtracting(Set<String>(existUserIds)))
+        guard syncUserIds.count > 0 else {
+            return
+        }
+
+        repeat {
+            switch UserSessionAPI.showUsers(userIds: syncUserIds) {
+            case let .success(users):
+                UserDAO.shared.updateUsers(users: users)
+                return
+            case .failure(.unauthorized):
+                return
+            case .failure:
+                checkNetworkAndWebSocket()
+            }
+        } while LoginManager.shared.isLoggedIn
     }
 
     private func processPlainMessage(data: BlazeMessageData) {

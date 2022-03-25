@@ -1,19 +1,21 @@
 import Foundation
 import GRDB
 
-struct MessageBlaze {
+public struct MessageBlaze {
     
     public let messageId: String
     public let message: Data
+    public let conversationId: String
     public let createdAt: String
     
 }
 
 extension MessageBlaze: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord {
     
-    enum CodingKeys: String, CodingKey {
+    public enum CodingKeys: String, CodingKey {
         case messageId = "_id"
         case message
+        case conversationId = "conversation_id"
         case createdAt = "created_at"
     }
     

@@ -35,6 +35,15 @@ public final class UserDAO: UserDatabaseDAO {
         db.recordExists(in: User.self, where: User.column(of: .userId) == userId)
     }
     
+    public func getExistUserIds(userIds: [String]) -> [String] {
+        guard !userIds.isEmpty else {
+            return []
+        }
+        return db.select(column: User.column(of: .userId),
+                         from: User.self,
+                         where: userIds.contains(User.column(of: .userId)))
+    }
+    
     public func getBlockUsers() -> [UserItem] {
         let sql = "\(Self.sqlQueryColumns) WHERE relationship = 'BLOCKING'"
         return db.select(with: sql)
@@ -188,10 +197,13 @@ public final class UserDAO: UserDatabaseDAO {
     }
     
     public func mentionRepresentation(identityNumbers: [String]) -> [String: String] {
-        db.select(keyColumn: User.column(of: .identityNumber),
-                  valueColumn: User.column(of: .fullName),
-                  from: User.self,
-                  where: identityNumbers.contains(User.column(of: .identityNumber)))
+        guard !identityNumbers.isEmpty else {
+            return [:]
+        }
+        return db.select(keyColumn: User.column(of: .identityNumber),
+                         valueColumn: User.column(of: .fullName),
+                         from: User.self,
+                         where: identityNumbers.contains(User.column(of: .identityNumber)))
     }
     
     public func userIds(identityNumbers: [String]) -> [String] {

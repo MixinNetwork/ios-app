@@ -477,6 +477,7 @@ extension ShareRecipientViewController {
         var msg = message
         msg.userId = myUserId
         msg.status = MessageStatus.SENDING.rawValue
+        msg.expireIn = ConversationDAO.shared.getExpireIn(conversationId: msg.conversationId) ?? 0
 
         if !ConversationDAO.shared.isExist(conversationId: msg.conversationId) {
             guard conversation.category == ConversationCategory.CONTACT.rawValue else  {

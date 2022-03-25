@@ -108,6 +108,7 @@ class DetailInfoMessageViewModel: MessageViewModel {
             let index = message.userId.positiveHashCode() % UIColor.usernameColors.count
             fullnameColor = UIColor.usernameColors[index]
         }
+        layoutDisappearingIconFrame(backgroundImageFrame: backgroundImageFrame)
         layoutEncryptedIconFrame()
         layoutForwarderIcon()
         layoutPinnedIconFrame()
@@ -116,6 +117,21 @@ class DetailInfoMessageViewModel: MessageViewModel {
         fullnameFrame.size.width = max(minFullnameWidth, min(fullnameFrame.size.width, maxContentWidth))
         identityIconFrame.origin = CGPoint(x: fullnameFrame.maxX + DetailInfoMessageViewModel.identityIconLeftMargin,
                                            y: fullnameFrame.origin.y + (fullnameFrame.height - identityIconFrame.height) / 2)
+    }
+    
+    func layoutDisappearingIconFrame(backgroundImageFrame: CGRect) {
+        guard message.isDisappearingMessage else {
+            return
+        }
+        disappearingIconFrame.size = CGSize(width: 16, height: 16)
+        let x: CGFloat
+        let y: CGFloat = backgroundImageFrame.midY - disappearingIconFrame.height / 2
+        if style.contains(.received) {
+            x = backgroundImageFrame.maxX + 10
+        } else {
+            x = backgroundImageFrame.minX - disappearingIconFrame.width - 10
+        }
+        disappearingIconFrame.origin = CGPoint(x: x, y: y)
     }
     
     func layoutEncryptedIconFrame() {

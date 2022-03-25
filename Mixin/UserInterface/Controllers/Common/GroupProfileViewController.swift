@@ -229,8 +229,8 @@ extension GroupProfileViewController {
         present(alert, animated: true, completion: nil)
     }
     
-    @objc func editDisappearingMessageTime() {
-        let controller = DisappearingMessageViewController.instance(conversationId: conversationId)
+    @objc func editDisappearingMessageDuration() {
+        let controller = DisappearingMessageViewController.instance(conversationId: conversationId, expireIn: conversation.expireIn)
         dismissAndPush(controller)
     }
 }
@@ -372,9 +372,9 @@ extension GroupProfileViewController {
         if isAdmin {
             groups.append([
                 ProfileMenuItem(title: R.string.localizable.disappearing_message_title(),
-                                subtitle: R.string.localizable.setting_backup_off(),
+                                subtitle: DisappearingMessageDuration.custom(expireIn: conversation.expireIn).expireInTitle,
                                 style: [],
-                                action: #selector(editDisappearingMessageTime))
+                                action: #selector(editDisappearingMessageDuration))
             ])
             
             groups.append([

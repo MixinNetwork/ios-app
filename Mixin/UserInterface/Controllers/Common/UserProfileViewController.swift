@@ -31,7 +31,13 @@ final class UserProfileViewController: ProfileViewController {
     
     private lazy var imagePicker = ImagePickerController(initialCameraPosition: .front, cropImageAfterPicked: true, parent: self, delegate: self)
     private lazy var footerLabel = FooterLabel()
-    
+    private lazy var disappearingMessageItemView: ProfileMenuItemView  = {
+        let view = ProfileMenuItemView()
+        view.label.text = R.string.localizable.disappearing_message_title()
+        view.button.addTarget(self, action: #selector(self.editDisappearingMessageDuration), for: .touchUpInside)
+        return view
+    }()
+
     private var isMe = false
     private var relationship = Relationship.ME
     private var developer: UserItem?
@@ -42,6 +48,7 @@ final class UserProfileViewController: ProfileViewController {
     private var sharedAppUsers: [User]?
     private var dismissHomeAppsWindow = true
     private var centerStackViewHeightConstraint: NSLayoutConstraint?
+    private var expireIn: UInt32 = 0
     
     init(user: UserItem) {
         super.init(nibName: R.nib.profileView.name, bundle: R.nib.profileView.bundle)
@@ -82,6 +89,7 @@ final class UserProfileViewController: ProfileViewController {
         } else {
             resizeRecognizer.isEnabled = false
         }
+        reloadDisappearingMessage(conversationId: conversationId)
     }
 
     override func dismissAction(_ sender: Any) {
@@ -558,8 +566,8 @@ extension UserProfileViewController {
         present(alert, animated: true, completion: nil)
     }
     
-    @objc func editDisappearingMessageTime() {
-        let controller = DisappearingMessageViewController.instance(conversationId: conversationId)
+    @objc func editDisappearingMessageDuration() {
+        let controller = DisappearingMessageViewController.instance(conversationId: conversationId, expireIn: expireIn)
         dismissAndPush(controller)
     }
     
@@ -735,13 +743,6 @@ extension UserProfileViewController {
                                                 action: #selector(shareUser))
             groups.append([shareUserItem])
             
-            groups.append([
-                ProfileMenuItem(title: R.string.localizable.disappearing_message_title(),
-                                subtitle: R.string.localizable.setting_backup_off(),
-                                style: [],
-                                action: #selector(editDisappearingMessageTime))
-            ])
-            
             let sharedMediaAndSearchGroup = [
                 ProfileMenuItem(title: R.string.localizable.chat_shared_media(),
                                 subtitle: nil,
@@ -865,6 +866,7 @@ extension UserProfileViewController {
             
             reloadMenu(groups: groups)
             menuStackView.insertArrangedSubview(circleItemView, at: groups.count - 2)
+            menuStackView.insertArrangedSubview(disappearingMessageItemView, at: 1)
         } else {
             reloadMenu(groups: [])
         }
@@ -971,6 +973,20 @@ extension UserProfileViewController {
             }
             view.layoutIfNeeded()
             updatePreferredContentSizeHeight(size: size)
+        }
+    }
+    
+    func reloadDisappearingMessage(conversationId: String) {
+        DispatchQueue.global().async { [weak self] in
+            let expireIn = ConversationDAO.shared.getExpireIn(conversationId: conversationId)
+            DispatchQueue.main.sync {
+                guard let self = self, let expireIn = expireIn else {
+                    return
+                }
+                self.expireIn = expireIn
+                let subtitle = DisappearingMessageDuration.custom(expireIn: expireIn).expireInTitle
+                self.disappearingMessageItemView.subtitleLabel.text = subtitle
+            }
         }
     }
     

@@ -4,6 +4,7 @@ class MessageCell: UITableViewCell {
     
     let messageContentView = UIView()
     let backgroundImageView = UIImageView()
+    let disappearingIconView = UIImageView(image: R.image.ic_chat_clock_fill())
     
     lazy var quotedMessageView: QuotedMessageView = {
         let view = QuotedMessageView()
@@ -60,6 +61,8 @@ class MessageCell: UITableViewCell {
         selectedBackgroundView = UIView()
         selectedBackgroundView?.backgroundColor = .clear
         messageContentView.insertSubview(backgroundImageView, at: 0)
+        messageContentView.addSubview(disappearingIconView)
+        disappearingIconView.isHidden = true
     }
     
     func render(viewModel: MessageViewModel) {
@@ -72,6 +75,12 @@ class MessageCell: UITableViewCell {
             quotedMessageView.render(viewModel: quotedMessageViewModel)
         } else {
             quotedMessageViewIfLoaded?.removeFromSuperview()
+        }
+        if viewModel.message.isDisappearingMessage {
+            disappearingIconView.isHidden = false
+            disappearingIconView.frame = viewModel.disappearingIconFrame
+        } else {
+            disappearingIconView.isHidden = true
         }
     }
     

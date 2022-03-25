@@ -27,7 +27,7 @@ public final class PinMessageDAO: UserDatabaseDAO {
                 NULL, NULL, NULL, NULL, NULL,
                 st.asset_width as assetWidth, st.asset_height as assetHeight, st.asset_url as assetUrl, st.asset_type as assetType, alb.category as assetCategory,
                 m.action as actionName, m.shared_user_id as sharedUserId, su.full_name as sharedUserFullName, su.identity_number as sharedUserIdentityNumber, su.avatar_url as sharedUserAvatarUrl, su.app_id as sharedUserAppId, su.is_verified as sharedUserIsVerified, m.quote_message_id, m.quote_content,
-                mm.mentions, mm.has_read as hasMentionRead, 0 AS pinned
+                mm.mentions, mm.has_read as hasMentionRead, 0 AS pinned, m.expire_in
             FROM pin_messages p
             INNER JOIN messages m ON p.message_id = m.id
             LEFT JOIN users u ON m.user_id = u.user_id

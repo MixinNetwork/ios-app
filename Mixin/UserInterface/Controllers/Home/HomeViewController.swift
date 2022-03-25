@@ -304,6 +304,7 @@ class HomeViewController: UIViewController {
         }
         if LoginManager.shared.isLoggedIn {
             StickerStore.refreshStickersIfNeeded()
+            DisappearingMessageManager.shared.removeExpiredMessages()
         }
         DispatchQueue.main.async {
             self.myAvatarImageView.setImage(with: account)

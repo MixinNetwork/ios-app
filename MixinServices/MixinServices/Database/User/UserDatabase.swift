@@ -110,6 +110,7 @@ public final class UserDatabase: Database {
             .init(key: .muteUntil, constraints: "TEXT"),
             .init(key: .codeUrl, constraints: "TEXT"),
             .init(key: .pinTime, constraints: "TEXT"),
+            .init(key: .expireIn, constraints: "INTEGER")
         ]),
         ColumnMigratableTableDefinition<FavoriteApp>(constraints: "PRIMARY KEY(user_id, app_id)", columns: [
             .init(key: .userId, constraints: "TEXT NOT NULL"),
@@ -168,6 +169,7 @@ public final class UserDatabase: Database {
             .init(key: .quoteContent, constraints: "BLOB"),
             .init(key: .createdAt, constraints: "TEXT NOT NULL"),
             .init(key: .albumId, constraints: "TEXT"),
+            .init(key: .expireIn, constraints: "INTEGER")
         ]),
         ColumnMigratableTableDefinition<MessageHistory>(constraints: nil, columns: [
             .init(key: .messageId, constraints: "TEXT PRIMARY KEY"),
@@ -472,6 +474,28 @@ public final class UserDatabase: Database {
             if !albumInfos.map(\.name).contains("is_verified") {
                 try db.execute(sql: "ALTER TABLE albums ADD COLUMN is_verified INTEGER NOT NULL DEFAULT 0")
                 try db.execute(sql: "UPDATE albums SET update_at = ''")
+            }
+        }
+        
+        migrator.registerMigration("disappearing_messages") { db in
+            let sql =  """
+                CREATE TABLE IF NOT EXISTS disappearing_messages(
+                    message_id TEXT NOT NULL,
+                    expire_in INTEGER NOT NULL DEFAULT 0,
+                    expire_at INTEGER NOT NULL DEFAULT 0,
+                    PRIMARY KEY (message_id)
+                )
+            """
+            try db.execute(sql: sql)
+            
+            let conversations = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(conversations)")
+            if !conversations.map(\.name).contains("expire_in") {
+                try db.execute(sql: "ALTER TABLE conversations ADD COLUMN expire_in INTEGER NOT NULL DEFAULT 0")
+            }
+            
+            let messages = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(messages)")
+            if !messages.map(\.name).contains("expire_in") {
+                try db.execute(sql: "ALTER TABLE messages ADD COLUMN expire_in INTEGER NOT NULL DEFAULT 0")
             }
         }
         

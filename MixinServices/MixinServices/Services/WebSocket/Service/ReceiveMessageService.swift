@@ -1336,6 +1336,8 @@ extension ReceiveMessageService {
                 ConcurrentJobQueue.shared.addJob(job: RefreshConversationJob(conversationId: data.conversationId))
             }
             return
+        case SystemConversationAction.DISAPPEARING.rawValue:
+            ConversationDAO.shared.updateExpireIn(expireIn: sysMessage.expireIn ?? 0, conversationId: data.conversationId)
         default:
             break
         }

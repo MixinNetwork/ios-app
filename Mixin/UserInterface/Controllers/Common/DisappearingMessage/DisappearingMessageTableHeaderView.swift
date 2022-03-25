@@ -22,8 +22,7 @@ class DisappearingMessageTableHeaderView: UIView {
         textLabel.text = text
         let linkRange = (text as NSString).range(of: R.string.localizable.action_learn_more(), options: [.backwards, .caseInsensitive])
         if linkRange.location != NSNotFound && linkRange.length != 0 {
-            //TODO: ‼️ fix link
-            textLabel.additionalLinksMap = [linkRange: URL.pinTIP]
+            textLabel.additionalLinksMap = [linkRange: URL.disappearingMessage]
         }
     }
 

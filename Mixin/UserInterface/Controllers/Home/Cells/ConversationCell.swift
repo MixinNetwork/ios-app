@@ -15,6 +15,7 @@ class ConversationCell: ModernSelectedBackgroundCell {
     @IBOutlet weak var messageStatusImageView: UIImageView!
     @IBOutlet weak var verifiedImageView: UIImageView!
     @IBOutlet weak var pinImageView: UIImageView!
+    @IBOutlet weak var disappearingImageView: UIImageView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -57,6 +58,7 @@ class ConversationCell: ModernSelectedBackgroundCell {
             messageTypeImageView.isHidden = true
             contentLabel.text = R.string.localizable.chat_cell_title_unknown_category()
         } else {
+            disappearingImageView.isHidden = item.expireIn == 0
             showMessageIndicate(conversation: item)
             let senderIsMe = item.senderId == myUserId
             let senderName = senderIsMe ? R.string.localizable.chat_message_you() : item.senderFullName
@@ -157,7 +159,7 @@ class ConversationCell: ModernSelectedBackgroundCell {
                 contentLabel.text = R.string.localizable.notification_content_transcript()
             } else {
                 if item.contentType.hasPrefix("SYSTEM_") {
-                    contentLabel.text = SystemConversationAction.getSystemMessage(actionName: item.actionName, userId: item.senderId, userFullName: item.senderFullName, participantId: item.participantUserId, participantFullName: item.participantFullName, content: item.content)
+                    contentLabel.text = SystemConversationAction.getSystemMessage(actionName: item.actionName, userId: item.senderId, userFullName: item.senderFullName, participantId: item.participantUserId, participantFullName: item.participantFullName, content: item.content, expireIn: item.expireIn)
                 } else if item.messageId.isEmpty {
                     contentLabel.text = ""
                 } else {

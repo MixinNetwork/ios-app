@@ -370,6 +370,7 @@ class ConversationViewController: UIViewController {
         center.addObserver(self, selector: #selector(pinMessageDidSave(_:)), name: PinMessageDAO.didSaveNotification, object: nil)
         center.addObserver(self, selector: #selector(pinMessageDidDelete(_:)), name: PinMessageDAO.didDeleteNotification, object: nil)
         center.addObserver(self, selector: #selector(pinMessageBannerDidChange), name: AppGroupUserDefaults.User.pinMessageBannerDidChangeNotification, object: nil)
+        center.addObserver(self, selector: #selector(expiredMessageDidDelete(_:)), name: DisappearingMessageDAO.expiredMessageDidDeleteNotification, object: nil)
         
         if dataSource.category == .group {
             updateGroupCallIndicatorViewHidden()
@@ -1188,6 +1189,21 @@ class ConversationViewController: UIViewController {
         }
     }
     
+    @objc private func expiredMessageDidDelete(_ notification: Notification) {
+        guard let messageId = notification.userInfo?[DisappearingMessageDAO.messageIdKey] as? String else {
+            return
+        }
+        dataSource.queue.async { [weak self] in
+            guard let self = self, let indexPath = self.dataSource.indexPath(where: { $0.messageId == messageId }) else {
+                return
+            }
+            DispatchQueue.main.sync {
+                _ = self.dataSource?.removeViewModel(at: indexPath)
+                self.tableView.reloadData()
+            }
+        }
+    }
+
     // MARK: - Interface
     func updateInputWrapper(for preferredContentHeight: CGFloat, animated: Bool) {
         let oldHeight = inputWrapperHeightConstraint.constant

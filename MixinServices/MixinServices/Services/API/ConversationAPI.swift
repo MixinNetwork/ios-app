@@ -97,8 +97,9 @@ public class ConversationAPI : MixinAPI {
         request(method: .post, path: Path.reset(conversationId: conversationId), completion: completion)
     }
     
-    public static func openDisappearingMessage(conversationId: String, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {
-        request(method: .post, path: Path.disappear(id: conversationId), completion: completion)
+    public static func openDisappearingMessage(conversationId: String, expireIn: UInt32, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {
+        let param = ["expire_in": expireIn]
+        request(method: .post, path: Path.disappear(id: conversationId), parameters: param, completion: completion)
     }
     
     public static func closeDisappearingMessage(conversationId: String, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {

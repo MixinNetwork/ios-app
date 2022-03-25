@@ -36,7 +36,7 @@ public final class MessageDAO: UserDatabaseDAO {
                m.action as actionName, m.shared_user_id as sharedUserId, su.full_name as sharedUserFullName, su.identity_number as sharedUserIdentityNumber, su.avatar_url as sharedUserAvatarUrl, su.app_id as sharedUserAppId, su.is_verified as sharedUserIsVerified, m.quote_message_id, m.quote_content,
         mm.mentions, mm.has_read as hasMentionRead,
         CASE WHEN (SELECT 1 FROM pin_messages WHERE message_id = m.id) IS NULL THEN 0 ELSE 1 END AS pinned,
-        alb.added as isStickerAdded, m.album_id
+        alb.added as isStickerAdded, m.album_id, m.expire_in
     FROM messages m
     LEFT JOIN users u ON m.user_id = u.user_id
     LEFT JOIN users u1 ON m.participant_id = u1.user_id
@@ -300,10 +300,17 @@ public final class MessageDAO: UserDatabaseDAO {
                 }
             }
         } else {
-            db.update(Message.self,
-                      assignments: [Message.column(of: .status).set(to: status)],
-                      where: Message.column(of: .messageId) == messageId,
-                      completion: completion)
+            db.write { db in
+                try Message
+                    .filter(Message.column(of: .messageId) == messageId)
+                    .updateAll(db, [Message.column(of: .status).set(to: status)])
+                if status == MessageStatus.SENT.rawValue {
+                    try DisappearingMessageDAO.shared.updateExpireAt(for: messageId, database: db)
+                }
+                if let completion = completion {
+                    db.afterNextTransactionCommit(completion)
+                }
+            }
         }
         
         return true
@@ -588,6 +595,9 @@ public final class MessageDAO: UserDatabaseDAO {
         } else {
             try message.save(database)
         }
+        if message.expireIn != 0 {
+            try DisappearingMessageDAO.shared.insert(message: DisappearingMessage(message: message), database: database)
+        }
         let shouldInsertIntoFTSTable = AppGroupUserDefaults.Database.isFTSInitialized
             && message.status != MessageStatus.FAILED.rawValue
             && MessageCategory.ftsAvailableCategoryStrings.contains(message.category)
@@ -720,31 +730,43 @@ public final class MessageDAO: UserDatabaseDAO {
         NotificationCenter.default.post(onMainThread: Self.willDeleteMessageNotification,
                                         object: self,
                                         userInfo: [UserInfoKey.messageId: id])
-        var deleteCount = 0
+        var deleted = false
         var childMessageIds: [String] = []
         db.write { (db) in
-            let conversationId: String? = try Message
-                .select(Message.column(of: .conversationId))
-                .filter(Message.column(of: .messageId) == id)
-                .fetchOne(db)
-            deleteCount = try Message
-                .filter(Message.column(of: .messageId) == id)
-                .deleteAll(db)
-            try MessageMention
-                .filter(MessageMention.column(of: .messageId) == id)
-                .deleteAll(db)
-            try deleteFTSContent(db, messageId: id)
-            childMessageIds = try TranscriptMessage
-                .select(TranscriptMessage.column(of: .messageId))
-                .filter(TranscriptMessage.column(of: .transcriptId) == id)
-                .fetchAll(db)
-            try TranscriptMessage
-                .filter(TranscriptMessage.column(of: .transcriptId) == id)
-                .deleteAll(db)
-            if let conversationId = conversationId {
-                try PinMessageDAO.shared.delete(messageIds: [id], conversationId: conversationId, from: db)
-                try clearPinMessageContent(quoteMessageIds: [id], conversationId: conversationId, from: db)
-            }
+            (deleted, childMessageIds) = try deleteMessage(id: id, with: db)
+        }
+        return (deleted, childMessageIds)
+    }
+    
+    public func deleteMessage(id: String, database: GRDB.Database) throws -> Bool {
+        try deleteMessage(id: id, with: database).deleted
+    }
+    
+
+    private func deleteMessage(id: String, with database: GRDB.Database) throws -> (deleted: Bool, childMessageIds: [String]) {
+        var deleteCount = 0
+        var childMessageIds: [String] = []
+        let conversationId: String? = try Message
+            .select(Message.column(of: .conversationId))
+            .filter(Message.column(of: .messageId) == id)
+            .fetchOne(database)
+        deleteCount = try Message
+            .filter(Message.column(of: .messageId) == id)
+            .deleteAll(database)
+        try MessageMention
+            .filter(MessageMention.column(of: .messageId) == id)
+            .deleteAll(database)
+        try deleteFTSContent(database, messageId: id)
+        childMessageIds = try TranscriptMessage
+            .select(TranscriptMessage.column(of: .messageId))
+            .filter(TranscriptMessage.column(of: .transcriptId) == id)
+            .fetchAll(database)
+        try TranscriptMessage
+            .filter(TranscriptMessage.column(of: .transcriptId) == id)
+            .deleteAll(database)
+        if let conversationId = conversationId {
+            try PinMessageDAO.shared.delete(messageIds: [id], conversationId: conversationId, from: database)
+            try clearPinMessageContent(quoteMessageIds: [id], conversationId: conversationId, from: database)
         }
         return (deleteCount > 0, childMessageIds)
     }

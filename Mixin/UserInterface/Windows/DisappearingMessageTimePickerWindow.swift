@@ -1,6 +1,123 @@
 import UIKit
 
 class DisappearingMessageTimePickerWindow: BottomSheetView {
+        
+    @IBOutlet weak var pickerView: UIPickerView!
+    
+    var onClose: (() -> Void)?
+    var onChange: ((_ expireIn: UInt32, _ expireInTitle: String) -> Void)?
+    
+    private var shouldCallOnClose = true
+    private var selectedDuration: Int = 1
+    private var selectedUnit: Unit = .second {
+        didSet {
+            guard oldValue != selectedUnit else {
+                return
+            }
+            pickerView.reloadComponent(Component.duration.rawValue)
+        }
+    }
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        pickerView.dataSource = self
+        pickerView.delegate = self
+    }
+    
+    @IBAction func setAction(_ sender: Any) {
+        let expireIn = UInt32(selectedUnit.interval) * UInt32(selectedDuration + 1)
+        let expireInTitle = "\(selectedDuration + 1) \(selectedUnit.name)"
+        onChange?(expireIn, expireInTitle)
+        shouldCallOnClose = false
+        dismissPopupControllerAnimated()
+    }
+    
+    @IBAction func closeAction(_ sender: Any) {
+        shouldCallOnClose = true
+        dismissPopupControllerAnimated()
+    }
+    
+    override func dismissPopupControllerAnimated() {
+        if shouldCallOnClose {
+            onClose?()
+        }
+        super.dismissPopupControllerAnimated()
+    }
+    
+    class func instance() -> DisappearingMessageTimePickerWindow {
+        R.nib.disappearingMessageTimePickerWindow(owner: self)!
+    }
+    
+    func render(expireIn: UInt32) {
+        let timeInterval = TimeInterval(expireIn)
+        if timeInterval < .oneMinute {
+            selectedUnit = .second
+            selectedDuration = max(Int(timeInterval) - 1, 0)
+        } else if timeInterval < .oneHour {
+            selectedUnit = .minute
+            selectedDuration = Int(timeInterval / .oneMinute) - 1
+        } else if timeInterval < .oneDay {
+            selectedUnit = .hour
+            selectedDuration = Int(timeInterval / .oneHour) - 1
+        } else if timeInterval < .oneWeek {
+            selectedUnit = .day
+            selectedDuration = Int(timeInterval / .oneDay) - 1
+        } else {
+            selectedUnit = .week
+            selectedDuration = Int(timeInterval / .oneWeek) - 1
+        }
+        pickerView.selectRow(selectedDuration, inComponent: Component.duration.rawValue, animated: false)
+        pickerView.selectRow(selectedUnit.rawValue, inComponent: Component.unit.rawValue, animated: false)
+    }
+    
+}
+
+extension DisappearingMessageTimePickerWindow: UIPickerViewDataSource {
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        2
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        switch Component(rawValue: component) {
+        case .duration:
+            return selectedUnit.maxValue
+        case .unit:
+            return 5
+        default:
+            return 0
+        }
+    }
+    
+}
+
+extension DisappearingMessageTimePickerWindow: UIPickerViewDelegate {
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        switch Component(rawValue: component) {
+        case .duration:
+            return "\(row + 1)"
+        case .unit:
+            return (Unit(rawValue: row) ?? .second).name
+        default:
+            return nil
+        }
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        switch Component(rawValue: component) {
+        case .duration:
+            selectedDuration = row
+        case .unit:
+            selectedUnit = Unit(rawValue: row) ?? .second
+        default:
+            break
+        }
+    }
+    
+}
+
+extension DisappearingMessageTimePickerWindow {
     
     private enum Component: Int {
         case duration = 0
@@ -57,116 +174,6 @@ class DisappearingMessageTimePickerWindow: BottomSheetView {
             case .week:
                 return .oneWeek
             }
-        }
-    }
-    
-    @IBOutlet weak var pickerView: UIPickerView!
-    
-    var onClose: (() -> Void)?
-    var onChange: ((_ duration: TimeInterval, _ timeTitle: String) -> Void)?
-    
-    private var shouldCallOnClose = true
-    private var selectedTime: Int = 1
-    private var selectedUnit: Unit = .second {
-        didSet {
-            guard oldValue != selectedUnit else { return }
-            pickerView.reloadComponent(Component.duration.rawValue)
-        }
-    }
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        pickerView.dataSource = self
-        pickerView.delegate = self
-    }
-    
-    @IBAction func setAction(_ sender: Any) {
-        let selectedDuration = selectedUnit.interval * TimeInterval(selectedTime + 1)
-        let durationTitle = "\(selectedTime + 1) \(selectedUnit.name)"
-        onChange?(selectedDuration, durationTitle)
-        shouldCallOnClose = false
-        dismissPopupControllerAnimated()
-    }
-    
-    @IBAction func closeAction(_ sender: Any) {
-        shouldCallOnClose = true
-        dismissPopupControllerAnimated()
-    }
-    
-    override func dismissPopupControllerAnimated() {
-        if shouldCallOnClose {
-            onClose?()
-        }
-        super.dismissPopupControllerAnimated()
-    }
-    
-    class func instance() -> DisappearingMessageTimePickerWindow {
-        R.nib.disappearingMessageTimePickerWindow(owner: self)!
-    }
-    
-    func render(timeInterval: TimeInterval) {
-        if timeInterval < .oneMinute {
-            selectedUnit = .second
-            selectedTime = max(Int(timeInterval) - 1, 0)
-        } else if timeInterval < .oneHour {
-            selectedUnit = .minute
-            selectedTime = max(Int(timeInterval / .oneMinute) - 1, 0)
-        } else if timeInterval < .oneDay {
-            selectedUnit = .hour
-            selectedTime = max(Int(timeInterval / .oneHour) - 1, 0)
-        } else if timeInterval < .oneWeek {
-            selectedUnit = .day
-            selectedTime = max(Int(timeInterval / .oneDay) - 1, 0)
-        } else {
-            selectedUnit = .week
-            selectedTime = max(Int(timeInterval / .oneWeek) - 1, 0)
-        }
-        pickerView.selectRow(selectedTime, inComponent: Component.duration.rawValue, animated: false)
-        pickerView.selectRow(selectedUnit.rawValue, inComponent: Component.unit.rawValue, animated: false)
-    }
-    
-}
-
-extension DisappearingMessageTimePickerWindow: UIPickerViewDataSource {
-    
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        2
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        switch Component(rawValue: component) {
-        case .duration:
-            return selectedUnit.maxValue
-        case .unit:
-            return 5
-        default:
-            return 0
-        }
-    }
-    
-}
-
-extension DisappearingMessageTimePickerWindow: UIPickerViewDelegate {
-    
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        switch Component(rawValue: component) {
-        case .duration:
-            return "\(row + 1)"
-        case .unit:
-            return (Unit(rawValue: row) ?? .second).name
-        default:
-            return nil
-        }
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        switch Component(rawValue: component) {
-        case .duration:
-            selectedTime = row
-        case .unit:
-            selectedUnit = Unit(rawValue: row) ?? .second
-        default:
-            break
         }
     }
     

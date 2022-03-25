@@ -8,6 +8,7 @@ final class ConversationMessageComposer {
     let conversationId: String
     let isGroup: Bool
     let ownerUser: UserItem?
+    var expireIn: UInt32
     
     private(set) var opponentApp: App?
     
@@ -20,18 +21,24 @@ final class ConversationMessageComposer {
         return options
     }()
     
-    init(queue: DispatchQueue, conversationId: String, isGroup: Bool, ownerUser: UserItem?) {
+    init(queue: DispatchQueue, conversationId: String, isGroup: Bool, ownerUser: UserItem?, expireIn: UInt32) {
         self.queue = queue
         self.conversationId = conversationId
         self.isGroup = isGroup
         self.ownerUser = ownerUser
+        self.expireIn = expireIn
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(updateExpireIn(_:)),
+                                               name: MixinServices.conversationDidChangeNotification,
+                                               object: nil)
     }
     
     convenience init(dataSource: ConversationDataSource, ownerUser: UserItem?) {
         self.init(queue: dataSource.queue,
                   conversationId: dataSource.conversationId,
                   isGroup: dataSource.category == .group,
-                  ownerUser: ownerUser)
+                  ownerUser: ownerUser,
+                  expireIn: dataSource.conversation.expireIn)
     }
     
     func loadOpponentApp(userId: String, completion: ((App?) -> Void)?) {
@@ -64,6 +71,7 @@ final class ConversationMessageComposer {
                                             conversationId: conversationId,
                                             createdAt: createdAt.toUTCString(),
                                             userId: myUserId)
+        message.expireIn = expireIn
         message.quoteMessageId = quote?.messageId
         if let messageId = messageId {
             message.messageId = messageId
@@ -180,10 +188,12 @@ final class ConversationMessageComposer {
         let ownerUser = self.ownerUser
         let app = self.opponentApp
         let isGroupMessage = self.isGroup
+        let expireIn = self.expireIn
         queue.async {
             var message = Message.createMessage(category: MessageCategory.SIGNAL_IMAGE.rawValue,
                                                 conversationId: conversationId,
                                                 userId: myUserId)
+            message.expireIn = expireIn
             message.mediaStatus = MediaStatus.PENDING.rawValue
             message.mediaUrl = image.fullsizedUrl.absoluteString
             message.mediaWidth = image.size.width
@@ -201,6 +211,7 @@ final class ConversationMessageComposer {
         let ownerUser = self.ownerUser
         let app = self.opponentApp
         let isGroupMessage = self.isGroup
+        let expireIn = self.expireIn
         queue.async {
             var message = Message.createMessage(category: MessageCategory.SIGNAL_IMAGE.rawValue,
                                                 conversationId: conversationId,
@@ -209,6 +220,7 @@ final class ConversationMessageComposer {
             guard image.saveToFile(path: url) else {
                 return
             }
+            message.expireIn = expireIn
             message.mediaStatus = MediaStatus.PENDING.rawValue
             message.mediaUrl = url.lastPathComponent
             message.mediaWidth = Int(image.size.width)
@@ -225,6 +237,7 @@ final class ConversationMessageComposer {
         let ownerUser = self.ownerUser
         let app = self.opponentApp
         let isGroupMessage = self.isGroup
+        let expireIn = self.expireIn
         queue.async {
             var message = Message.createMessage(category: MessageCategory.SIGNAL_VIDEO.rawValue,
                                                 conversationId: conversationId,
@@ -245,6 +258,7 @@ final class ConversationMessageComposer {
                     showAutoHiddenHud(style: .error, text: R.string.localizable.error_operation_failed())
                     return
                 }
+                message.expireIn = expireIn
                 message.mediaDuration = Int64(asset.duration.seconds * millisecondsPerSecond)
                 let size = videoTrack.naturalSize.applying(videoTrack.preferredTransform)
                 message.mediaWidth = Int(abs(size.width))
@@ -266,6 +280,7 @@ final class ConversationMessageComposer {
         let ownerUser = self.ownerUser
         let app = self.opponentApp
         let isGroupMessage = self.isGroup
+        let expireIn = self.expireIn
         queue.async {
             var message = Message.createMessage(category: MessageCategory.SIGNAL_IMAGE.rawValue,
                                                 conversationId: conversationId,
@@ -274,6 +289,7 @@ final class ConversationMessageComposer {
             let url = AttachmentContainer.url(for: .photos, filename: filename)
             do {
                 try FileManager.default.moveItem(at: source, to: url)
+                message.expireIn = expireIn
                 message.mediaStatus = MediaStatus.PENDING.rawValue
                 message.mediaUrl = filename
                 message.mediaWidth = Int(image.size.width * image.scale)
@@ -293,6 +309,7 @@ final class ConversationMessageComposer {
         let app = self.opponentApp
         let isGroupMessage = self.isGroup
         let options = self.thumbnailRequestOptions
+        let expireIn = self.expireIn
         queue.async {
             assert(asset.mediaType == .image || asset.mediaType == .video)
             let assetMediaTypeIsImage = asset.mediaType == .image
@@ -300,6 +317,7 @@ final class ConversationMessageComposer {
             var message = Message.createMessage(category: category.rawValue,
                                                 conversationId: conversationId,
                                                 userId: myUserId)
+            message.expireIn = expireIn
             message.mediaStatus = MediaStatus.PENDING.rawValue
             message.mediaLocalIdentifier = asset.localIdentifier
             message.mediaWidth = asset.pixelWidth
@@ -317,6 +335,15 @@ final class ConversationMessageComposer {
                 }
             }
             SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, opponentApp: app, isGroupMessage: isGroupMessage)
+        }
+    }
+    
+    @objc private func updateExpireIn(_ notification: Notification) {
+        guard let change = notification.object as? ConversationChange, change.conversationId == conversationId else {
+            return
+        }
+        if case .updateExpireIn(let expireIn) = change.action {
+            self.expireIn = expireIn
         }
     }
     

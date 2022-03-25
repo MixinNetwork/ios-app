@@ -230,6 +230,9 @@ public class SendMessageService: MixinService {
                     try db.execute(sql: "UPDATE messages SET status = '\(MessageStatus.READ.rawValue)' WHERE conversation_id = ? AND status = ? AND user_id != ? AND ROWID <= ?",
                                    arguments: [conversationId, MessageStatus.DELIVERED.rawValue, myUserId, lastRowID])
                     try MessageDAO.shared.updateUnseenMessageCount(database: db, conversationId: conversationId)
+                    for id in messageIds {
+                        try DisappearingMessageDAO.shared.updateExpireAt(for: id, database: db)
+                    }
                     if isLastLoop {
                         db.afterNextTransactionCommit { (_) in
                             NotificationCenter.default.post(name: MixinService.messageReadStatusDidChangeNotification, object: self)

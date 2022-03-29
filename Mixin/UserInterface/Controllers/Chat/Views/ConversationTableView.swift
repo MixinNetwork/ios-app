@@ -164,6 +164,7 @@ class ConversationTableView: UITableView {
         register(LocationMessageCell.self, forCellReuseIdentifier: ReuseId.location.rawValue)
         register(TranscriptMessageCell.self, forCellReuseIdentifier: ReuseId.transcript.rawValue)
         register(PinMessageCell.self, forCellReuseIdentifier: ReuseId.pin.rawValue)
+        register(StackedPhotoMessageCell.self, forCellReuseIdentifier: ReuseId.stackedPhoto.rawValue)
     }
     
 }
@@ -205,6 +206,7 @@ extension ConversationTableView {
         case transcript = "TranscriptMessageCell"
         case pin = "PinMessageCell"
         case header = "DateHeader"
+        case stackedPhoto = "StackedPhotoMessageCell"
         
         init(category: String) {
             if category.hasSuffix("_TEXT") {
@@ -243,6 +245,8 @@ extension ConversationTableView {
                 self = .appCard
             } else if category == MessageCategory.MESSAGE_PIN.rawValue {
                 self = .pin
+            } else if category == MessageCategory.STACKED_PHOTO.rawValue {
+                self = .stackedPhoto
             } else {
                 self = .unknown
             }

@@ -78,8 +78,6 @@ public final class ConversationItem {
         ownerIdentityNumber = ownerUser.identityNumber
         category = ConversationCategory.CONTACT.rawValue
         contentType = MessageCategory.SIGNAL_TEXT.rawValue
-        //TODO: ‼️ UserItem add expireIn ?
-        //expireIn
     }
     
     public convenience init(response: ConversationResponse) {
@@ -94,8 +92,7 @@ public final class ConversationItem {
         muteUntil = response.muteUntil
         codeUrl = response.codeUrl
         createdAt = response.createdAt
-        //TODO: ‼️ ConversationResponse add expireIn ?
-        //expireIn
+        expireIn = response.expireIn
     }
     
     public init(from decoder: Decoder) throws {

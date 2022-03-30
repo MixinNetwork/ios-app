@@ -14,6 +14,7 @@ public struct ConversationResponse: Codable {
     public let creatorId: String
     public let muteUntil: String
     public let circles: [ConversationResponse.Circle]
+    public let expireIn: UInt32
     
     enum CodingKeys: String, CodingKey {
         case conversationId = "conversation_id"
@@ -28,9 +29,10 @@ public struct ConversationResponse: Codable {
         case muteUntil = "mute_until"
         case participantSessions = "participant_sessions"
         case circles = "circles"
+        case expireIn = "expire_in"
     }
     
-    public init(conversationId: String, name: String, category: String, iconUrl: String, announcement: String, createdAt: String, participants: [ConversationResponse.Participant], participantSessions: [UserSession]?, codeUrl: String, creatorId: String, muteUntil: String, circles: [ConversationResponse.Circle]) {
+    public init(conversationId: String, name: String, category: String, iconUrl: String, announcement: String, createdAt: String, participants: [ConversationResponse.Participant], participantSessions: [UserSession]?, codeUrl: String, creatorId: String, muteUntil: String, circles: [ConversationResponse.Circle], expireIn: UInt32) {
         self.conversationId = conversationId
         self.name = name
         self.category = category
@@ -43,6 +45,7 @@ public struct ConversationResponse: Codable {
         self.creatorId = creatorId
         self.muteUntil = muteUntil
         self.circles = circles
+        self.expireIn = expireIn
     }
     
     public init(conversationId: String, userId: String, avatarUrl: String) {
@@ -62,7 +65,8 @@ public struct ConversationResponse: Codable {
                   codeUrl: "",
                   creatorId: userId,
                   muteUntil: "",
-                  circles: [])
+                  circles: [],
+                  expireIn: 0)
     }
     
 }

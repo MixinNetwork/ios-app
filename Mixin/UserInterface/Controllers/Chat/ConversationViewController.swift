@@ -98,6 +98,7 @@ class ConversationViewController: UIViewController {
     private var canPinMessages = false
     private var pinnedMessageIds = Set<String>()
     private var lastMentionCandidate: String?
+    private var needsUpdateExpireIn = false
     
     private weak var pinMessageBannerViewIfLoaded: PinMessageBannerView?
     private weak var groupCallIndicatorViewIfLoaded: GroupCallIndicatorView?
@@ -274,8 +275,13 @@ class ConversationViewController: UIViewController {
         let vc = R.storyboard.chat.conversation()!
         vc.ownerUser = ownerUser
         let conversationId = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: ownerUser.userId)
-        let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId)
-            ?? ConversationItem(ownerUser: ownerUser)
+        let conversation: ConversationItem
+        if let existedConversation = ConversationDAO.shared.getConversation(conversationId: conversationId) {
+            conversation = existedConversation
+        } else {
+            vc.needsUpdateExpireIn = true
+            conversation = ConversationItem(ownerUser: ownerUser)
+        }
         let dataSource = ConversationDataSource(conversation: conversation)
         vc.dataSource = dataSource
         vc.composer = ConversationMessageComposer(dataSource: dataSource, ownerUser: ownerUser)
@@ -388,6 +394,20 @@ class ConversationViewController: UIViewController {
                                name: CallService.didDeactivateCallNotification,
                                object: nil)
         }
+        
+        if needsUpdateExpireIn {
+            DispatchQueue.global().async {
+                switch ConversationAPI.getConversation(conversationId: self.conversationId) {
+                case let .success(response):
+                    let change = ConversationChange(conversationId: self.conversationId,
+                                                    action: .updateExpireIn(expireIn: response.expireIn))
+                    NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: change)
+                case let .failure(error):
+                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                }
+            }
+        }
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {

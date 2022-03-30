@@ -466,7 +466,8 @@ public final class ConversationDAO: UserDatabaseDAO {
                     Conversation.column(of: .announcement).set(to: conversation.announcement),
                     Conversation.column(of: .status).set(to: targetStatus.rawValue),
                     Conversation.column(of: .muteUntil).set(to: conversation.muteUntil),
-                    Conversation.column(of: .codeUrl).set(to: conversation.codeUrl)
+                    Conversation.column(of: .codeUrl).set(to: conversation.codeUrl),
+                    Conversation.column(of: .expireIn).set(to: conversation.expireIn)
                 ]
                 try Conversation
                     .filter(Conversation.column(of: .conversationId) == conversationId)
@@ -552,6 +553,7 @@ public final class ConversationDAO: UserDatabaseDAO {
                 Conversation.column(of: .status).set(to: ConversationStatus.SUCCESS.rawValue),
                 Conversation.column(of: .muteUntil).set(to: conversation.muteUntil),
                 Conversation.column(of: .codeUrl).set(to: conversation.codeUrl),
+                Conversation.column(of: .expireIn).set(to: conversation.expireIn),
             ]
             try Conversation
                 .filter(Conversation.column(of: .conversationId) == conversationId)

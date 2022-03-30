@@ -34,6 +34,7 @@ final class UserProfileViewController: ProfileViewController {
     private lazy var disappearingMessageItemView: ProfileMenuItemView  = {
         let view = ProfileMenuItemView()
         view.label.text = R.string.localizable.disappearing_message_title()
+        view.subtitleLabel.text = ""
         view.button.addTarget(self, action: #selector(self.editDisappearingMessageDuration), for: .touchUpInside)
         return view
     }()
@@ -977,15 +978,26 @@ extension UserProfileViewController {
     }
     
     func reloadDisappearingMessage(conversationId: String) {
-        DispatchQueue.global().async { [weak self] in
-            let expireIn = ConversationDAO.shared.getExpireIn(conversationId: conversationId)
-            DispatchQueue.main.sync {
-                guard let self = self, let expireIn = expireIn else {
+        func update(_ expireIn: UInt32) {
+            DispatchQueue.main.sync { [weak self] in
+                guard let self = self else {
                     return
                 }
                 self.expireIn = expireIn
                 let subtitle = DisappearingMessageDuration.custom(expireIn: expireIn).expireInTitle
                 self.disappearingMessageItemView.subtitleLabel.text = subtitle
+            }
+        }
+        DispatchQueue.global().async {
+            if let expireIn = ConversationDAO.shared.getExpireIn(conversationId: conversationId) {
+                update(expireIn)
+            } else {
+                switch ConversationAPI.getConversation(conversationId: conversationId) {
+                case .success(let response):
+                    update(response.expireIn)
+                case .failure(let error):
+                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                }
             }
         }
     }

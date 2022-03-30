@@ -41,8 +41,6 @@ enum FoursquareAPI {
                 }
             case .failure(let error):
                 result = .failure(error)
-            default:
-                result = .failure(ExternalApiError.badResponse)
             }
             DispatchQueue.main.async {
                 completion(result)

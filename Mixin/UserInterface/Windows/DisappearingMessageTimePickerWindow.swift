@@ -5,7 +5,7 @@ class DisappearingMessageTimePickerWindow: BottomSheetView {
     @IBOutlet weak var pickerView: UIPickerView!
     
     var onClose: (() -> Void)?
-    var onChange: ((_ expireIn: UInt32, _ expireInTitle: String) -> Void)?
+    var onChange: ((_ expireIn: Int64, _ expireInTitle: String) -> Void)?
     
     private var shouldCallOnClose = true
     private var selectedDuration: Int = 1
@@ -25,7 +25,7 @@ class DisappearingMessageTimePickerWindow: BottomSheetView {
     }
     
     @IBAction func setAction(_ sender: Any) {
-        let expireIn = UInt32(selectedUnit.interval) * UInt32(selectedDuration + 1)
+        let expireIn = Int64(selectedUnit.interval) * Int64(selectedDuration + 1)
         let expireInTitle = "\(selectedDuration + 1) \(selectedUnit.name)"
         onChange?(expireIn, expireInTitle)
         shouldCallOnClose = false
@@ -48,7 +48,7 @@ class DisappearingMessageTimePickerWindow: BottomSheetView {
         R.nib.disappearingMessageTimePickerWindow(owner: self)!
     }
     
-    func render(expireIn: UInt32) {
+    func render(expireIn: Int64) {
         let timeInterval = TimeInterval(expireIn)
         if timeInterval < .oneMinute {
             selectedUnit = .second

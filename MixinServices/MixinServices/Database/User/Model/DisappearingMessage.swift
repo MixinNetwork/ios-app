@@ -4,8 +4,8 @@ import GRDB
 public final class DisappearingMessage {
     
     public let messageId: String
-    public let expireIn: UInt32
-    public var expireAt: UInt64
+    public let expireIn: Int64
+    public var expireAt: Int64
     
     public init(message: Message) {
         messageId = message.messageId
@@ -13,7 +13,7 @@ public final class DisappearingMessage {
         if expireIn <= 60 * 60 * 24 {
             expireAt = 0
         } else {
-            expireAt = UInt64(Date().addingTimeInterval(TimeInterval(message.expireIn)).timeIntervalSince1970)
+            expireAt = Int64(Date().addingTimeInterval(TimeInterval(message.expireIn)).timeIntervalSince1970)
         }
     }
     

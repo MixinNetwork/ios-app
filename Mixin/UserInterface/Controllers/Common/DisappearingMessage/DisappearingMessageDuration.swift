@@ -8,9 +8,9 @@ enum DisappearingMessageDuration: Equatable {
     case twoHours
     case oneDay
     case oneWeek
-    case custom(expireIn: UInt32)
+    case custom(expireIn: Int64)
     
-    init(expireIn: UInt32) {
+    init(expireIn: Int64) {
         switch TimeInterval(expireIn) {
         case 0:
             self = .off

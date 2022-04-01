@@ -2,7 +2,7 @@ import MixinServices
 
 extension SystemConversationAction {
 
-    static func getSystemMessage(actionName: String?, userId: String, userFullName: String, participantId: String?, participantFullName: String?, content: String, expireIn: UInt32) -> String {
+    static func getSystemMessage(actionName: String?, userId: String, userFullName: String, participantId: String?, participantFullName: String?, content: String, expireIn: Int64) -> String {
         let action = actionName ?? ""
         let uFullName = userId == myUserId ? R.string.localizable.chat_message_you() : userFullName
         let pFullName = participantId == myUserId ? R.string.localizable.chat_message_you() : participantFullName ?? ""
@@ -19,12 +19,12 @@ extension SystemConversationAction {
             return R.string.localizable.chat_message_left(pFullName)
         case SystemConversationAction.ROLE.rawValue:
             return R.string.localizable.chat_message_admin(pFullName)
-        case SystemConversationAction.DISAPPEARING.rawValue:
+        case SystemConversationAction.EXPIRE.rawValue:
             if expireIn == 0 {
-                return R.string.localizable.disappearing_message_turn_off(pFullName)
+                return R.string.localizable.disappearing_message_turn_off(uFullName)
             } else {
                 let title = DisappearingMessageDuration.custom(expireIn: expireIn).expireInTitle
-                return R.string.localizable.disappearing_message_turn_on(pFullName, title)
+                return R.string.localizable.disappearing_message_turn_on(uFullName, title)
             }
         default:
             return R.string.localizable.chat_cell_title_unknown_category()

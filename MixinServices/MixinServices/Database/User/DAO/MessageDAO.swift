@@ -595,7 +595,7 @@ public final class MessageDAO: UserDatabaseDAO {
         } else {
             try message.save(database)
         }
-        if message.expireIn != 0 {
+        if message.expireIn != 0 && !message.category.hasPrefix("SYSTEM_") {
             try DisappearingMessageDAO.shared.insert(message: DisappearingMessage(message: message), database: database)
         }
         let shouldInsertIntoFTSTable = AppGroupUserDefaults.Database.isFTSInitialized

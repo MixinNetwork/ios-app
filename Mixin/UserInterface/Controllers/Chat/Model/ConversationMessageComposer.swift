@@ -8,7 +8,7 @@ final class ConversationMessageComposer {
     let conversationId: String
     let isGroup: Bool
     let ownerUser: UserItem?
-    var expireIn: UInt32
+    var expireIn: Int64
     
     private(set) var opponentApp: App?
     
@@ -21,7 +21,7 @@ final class ConversationMessageComposer {
         return options
     }()
     
-    init(queue: DispatchQueue, conversationId: String, isGroup: Bool, ownerUser: UserItem?, expireIn: UInt32) {
+    init(queue: DispatchQueue, conversationId: String, isGroup: Bool, ownerUser: UserItem?, expireIn: Int64) {
         self.queue = queue
         self.conversationId = conversationId
         self.isGroup = isGroup
@@ -70,8 +70,8 @@ final class ConversationMessageComposer {
         var message = Message.createMessage(category: type.rawValue,
                                             conversationId: conversationId,
                                             createdAt: createdAt.toUTCString(),
-                                            userId: myUserId)
-        message.expireIn = expireIn
+                                            userId: myUserId,
+                                            expireIn: expireIn)
         message.quoteMessageId = quote?.messageId
         if let messageId = messageId {
             message.messageId = messageId
@@ -192,8 +192,8 @@ final class ConversationMessageComposer {
         queue.async {
             var message = Message.createMessage(category: MessageCategory.SIGNAL_IMAGE.rawValue,
                                                 conversationId: conversationId,
-                                                userId: myUserId)
-            message.expireIn = expireIn
+                                                userId: myUserId,
+                                                expireIn: expireIn)
             message.mediaStatus = MediaStatus.PENDING.rawValue
             message.mediaUrl = image.fullsizedUrl.absoluteString
             message.mediaWidth = image.size.width
@@ -215,12 +215,12 @@ final class ConversationMessageComposer {
         queue.async {
             var message = Message.createMessage(category: MessageCategory.SIGNAL_IMAGE.rawValue,
                                                 conversationId: conversationId,
-                                                userId: myUserId)
+                                                userId: myUserId,
+                                                expireIn: expireIn)
             let url = AttachmentContainer.url(for: .photos, filename: message.messageId + ExtensionName.jpeg.withDot)
             guard image.saveToFile(path: url) else {
                 return
             }
-            message.expireIn = expireIn
             message.mediaStatus = MediaStatus.PENDING.rawValue
             message.mediaUrl = url.lastPathComponent
             message.mediaWidth = Int(image.size.width)
@@ -241,7 +241,8 @@ final class ConversationMessageComposer {
         queue.async {
             var message = Message.createMessage(category: MessageCategory.SIGNAL_VIDEO.rawValue,
                                                 conversationId: conversationId,
-                                                userId: myUserId)
+                                                userId: myUserId,
+                                                expireIn: expireIn)
             let url = AttachmentContainer.url(for: .videos, filename: message.messageId + "." + source.pathExtension)
             do {
                 try FileManager.default.moveItem(at: source, to: url)
@@ -258,7 +259,6 @@ final class ConversationMessageComposer {
                     showAutoHiddenHud(style: .error, text: R.string.localizable.error_operation_failed())
                     return
                 }
-                message.expireIn = expireIn
                 message.mediaDuration = Int64(asset.duration.seconds * millisecondsPerSecond)
                 let size = videoTrack.naturalSize.applying(videoTrack.preferredTransform)
                 message.mediaWidth = Int(abs(size.width))
@@ -284,12 +284,12 @@ final class ConversationMessageComposer {
         queue.async {
             var message = Message.createMessage(category: MessageCategory.SIGNAL_IMAGE.rawValue,
                                                 conversationId: conversationId,
-                                                userId: myUserId)
+                                                userId: myUserId,
+                                                expireIn: expireIn)
             let filename = message.messageId + ".gif"
             let url = AttachmentContainer.url(for: .photos, filename: filename)
             do {
                 try FileManager.default.moveItem(at: source, to: url)
-                message.expireIn = expireIn
                 message.mediaStatus = MediaStatus.PENDING.rawValue
                 message.mediaUrl = filename
                 message.mediaWidth = Int(image.size.width * image.scale)
@@ -316,8 +316,8 @@ final class ConversationMessageComposer {
             let category: MessageCategory = assetMediaTypeIsImage ? .SIGNAL_IMAGE : .SIGNAL_VIDEO
             var message = Message.createMessage(category: category.rawValue,
                                                 conversationId: conversationId,
-                                                userId: myUserId)
-            message.expireIn = expireIn
+                                                userId: myUserId,
+                                                expireIn: expireIn)
             message.mediaStatus = MediaStatus.PENDING.rawValue
             message.mediaLocalIdentifier = asset.localIdentifier
             message.mediaWidth = asset.pixelWidth
@@ -342,7 +342,7 @@ final class ConversationMessageComposer {
         guard let change = notification.object as? ConversationChange, change.conversationId == conversationId else {
             return
         }
-        if case .updateExpireIn(let expireIn) = change.action {
+        if case .updateMessageExpireIn(let expireIn) = change.action {
             self.expireIn = expireIn
         }
     }

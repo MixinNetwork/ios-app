@@ -523,7 +523,7 @@ extension ConversationDataSource {
             updateMessage(messageId: messageId)
         case .updateConversation, .startedUpdateConversation:
             break
-        case .updateExpireIn(let expireIn):
+        case .updateMessageExpireIn(let expireIn):
             conversation.expireIn = expireIn
         }
     }

@@ -89,18 +89,18 @@ public final class ConversationDAO: UserDatabaseDAO {
                         where: Conversation.column(of: .conversationId) == conversationId)
     }
     
-    public func getExpireIn(conversationId: String) -> UInt32? {
+    public func getExpireIn(conversationId: String) -> Int64? {
         db.select(column: Conversation.column(of: .expireIn),
                   from: Conversation.self,
                   where: Conversation.column(of: .conversationId) == conversationId)
     }
     
-    public func updateExpireIn(expireIn: UInt32, conversationId: String) {
+    public func updateExpireIn(expireIn: Int64, conversationId: String) {
         db.update(Conversation.self,
                   assignments: [Conversation.column(of: .expireIn).set(to: expireIn)],
                   where: Conversation.column(of: .conversationId) == conversationId) { _ in
             let change = ConversationChange(conversationId: conversationId,
-                                            action: .updateExpireIn(expireIn: expireIn))
+                                            action: .updateMessageExpireIn(expireIn: expireIn))
             NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: change)
         }
     }

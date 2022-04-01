@@ -32,10 +32,10 @@ public final class DisappearingMessageDAO: UserDatabaseDAO {
         }
     }
     
-    public func removeExpiredMessages(completion: (_ nextExpireAt: UInt64?) -> Void) {
+    public func removeExpiredMessages(completion: (_ nextExpireAt: Int64?) -> Void) {
         db.write { db in
             let condition: SQLSpecificExpressible = DisappearingMessage.column(of: .expireAt) != 0
-                && DisappearingMessage.column(of: .expireAt) <= UInt64(Date().timeIntervalSince1970)
+                && DisappearingMessage.column(of: .expireAt) <= Int64(Date().timeIntervalSince1970)
             let expiredMessageIds = try DisappearingMessage
                 .filter(condition)
                 .fetchAll(db)

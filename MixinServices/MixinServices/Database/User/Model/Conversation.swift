@@ -29,7 +29,7 @@ public struct Conversation {
     public var muteUntil: String?
     public var codeUrl: String?
     public var pinTime: String?
-    public var expireIn: Int32
+    public var expireIn: Int64
     
     public static func createConversation(from conversation: ConversationResponse, ownerId: String, status: ConversationStatus) -> Conversation {
         return Conversation(conversationId: conversation.conversationId, ownerId: ownerId, category: conversation.category, name: conversation.name, iconUrl: conversation.iconUrl, announcement: conversation.announcement, lastMessageId: nil, lastMessageCreatedAt: Date().toUTCString(), lastReadMessageId: nil, unseenMessageCount: 0, status: status.rawValue, draft: nil, muteUntil: conversation.muteUntil, codeUrl: conversation.codeUrl, pinTime: nil, expireIn: 0)

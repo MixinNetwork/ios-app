@@ -58,7 +58,7 @@ class ConversationCell: ModernSelectedBackgroundCell {
             messageTypeImageView.isHidden = true
             contentLabel.text = R.string.localizable.chat_cell_title_unknown_category()
         } else {
-            disappearingImageView.isHidden = item.expireIn == 0
+            disappearingImageView.isHidden = item.expireIn == 0 || item.contentType.hasPrefix("SYSTEM_")
             showMessageIndicate(conversation: item)
             let senderIsMe = item.senderId == myUserId
             let senderName = senderIsMe ? R.string.localizable.chat_message_you() : item.senderFullName

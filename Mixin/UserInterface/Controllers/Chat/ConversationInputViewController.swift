@@ -469,13 +469,15 @@ class ConversationInputViewController: UIViewController {
         let ownerUser = composer.ownerUser
         let app = composer.opponentApp
         let isGroup = composer.isGroup
+        let expireIn = composer.expireIn
         var quoteMessageId = quote?.message.messageId
         quote = nil
         DispatchQueue.global().async {
             for userId in userIds {
                 var message = Message.createMessage(category: MessageCategory.SIGNAL_CONTACT.rawValue,
                                                     conversationId: conversationId,
-                                                    userId: myUserId)
+                                                    userId: myUserId,
+                                                    expireIn: expireIn)
                 message.sharedUserId = userId
                 if let id = quoteMessageId {
                     // Apply quoted message to first message only
@@ -498,7 +500,8 @@ class ConversationInputViewController: UIViewController {
         quote = nil
         var message = Message.createMessage(category: MessageCategory.SIGNAL_LOCATION.rawValue,
                                             conversationId: composer.conversationId,
-                                            userId: myUserId)
+                                            userId: myUserId,
+                                            expireIn: composer.expireIn)
         let jsonData = try JSONEncoder().encode(location)
         message.content = String(data: jsonData, encoding: .utf8)
         message.quoteMessageId = quoteMessageId

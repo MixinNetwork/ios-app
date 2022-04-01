@@ -6,7 +6,7 @@ struct SystemConversationMessagePayload: Codable {
     let participantId: String?
     let userId: String?
     let role: String?
-    let expireIn: UInt32?
+    let expireIn: Int64?
 
     enum CodingKeys: String, CodingKey {
         case action
@@ -26,6 +26,6 @@ public enum SystemConversationAction: String {
     case JOIN
     case EXIT
     case ROLE
-    case DISAPPEARING
+    case EXPIRE
     
 }

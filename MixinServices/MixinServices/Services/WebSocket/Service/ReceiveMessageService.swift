@@ -250,7 +250,8 @@ public class ReceiveMessageService: MixinService {
                                                    category: data.category,
                                                    conversationId: data.conversationId,
                                                    createdAt: data.createdAt,
-                                                   userId: data.getSenderId())
+                                                   userId: data.getSenderId(),
+                                                   expireIn: data.expireIn)
         unknownMessage.status = MessageStatus.UNKNOWN.rawValue
         unknownMessage.content = data.data
         MessageDAO.shared.insertMessage(message: unknownMessage, messageSource: data.source, silentNotification: data.silentNotification)
@@ -702,7 +703,7 @@ public class ReceiveMessageService: MixinService {
         guard availableCategories.contains(where: { data.category == $0.rawValue }) else {
             return
         }
-        var failedMessage = Message.createMessage(messageId: data.messageId, category: data.category, conversationId: data.conversationId, createdAt: data.createdAt, userId: data.userId)
+        var failedMessage = Message.createMessage(messageId: data.messageId, category: data.category, conversationId: data.conversationId, createdAt: data.createdAt, userId: data.userId, expireIn: data.expireIn)
         failedMessage.status = MessageStatus.FAILED.rawValue
         failedMessage.content = data.data
         failedMessage.quoteMessageId = data.quoteMessageId.isEmpty ? nil : data.quoteMessageId
@@ -1265,7 +1266,7 @@ extension ReceiveMessageService {
             UserDAO.shared.insertSystemUser(userId: userId)
         }
 
-        let message = Message.createMessage(systemMessage: sysMessage.action, participantId: sysMessage.participantId, userId: userId, data: data)
+        let message = Message.createMessage(systemMessage: sysMessage.action, participantId: sysMessage.participantId, userId: userId, data: data, expireIn: sysMessage.expireIn ?? 0)
 
         defer {
             let participantDidChange = operSuccess
@@ -1336,7 +1337,7 @@ extension ReceiveMessageService {
                 ConcurrentJobQueue.shared.addJob(job: RefreshConversationJob(conversationId: data.conversationId))
             }
             return
-        case SystemConversationAction.DISAPPEARING.rawValue:
+        case SystemConversationAction.EXPIRE.rawValue:
             ConversationDAO.shared.updateExpireIn(expireIn: sysMessage.expireIn ?? 0, conversationId: data.conversationId)
         default:
             break

@@ -33,10 +33,6 @@ public class ConversationAPI : MixinAPI {
             return "/conversations/\(id)/disappear"
         }
         
-        static func appear(id: String) -> String {
-            return "/conversations/\(id)/appear"
-        }
-        
     }
     
     public static func createConversation(conversation: ConversationRequest, completion: @escaping (MixinAPI.Result<ConversationResponse>) -> Void) {
@@ -97,13 +93,9 @@ public class ConversationAPI : MixinAPI {
         request(method: .post, path: Path.reset(conversationId: conversationId), completion: completion)
     }
     
-    public static func openDisappearingMessage(conversationId: String, expireIn: UInt32, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {
-        let param = ["expire_in": expireIn]
+    public static func updateExpireIn(conversationId: String, expireIn: Int64, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {
+        let param = ["duration": expireIn]
         request(method: .post, path: Path.disappear(id: conversationId), parameters: param, completion: completion)
-    }
-    
-    public static func closeDisappearingMessage(conversationId: String, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {
-        request(method: .post, path: Path.appear(id: conversationId), completion: completion)
     }
     
 }

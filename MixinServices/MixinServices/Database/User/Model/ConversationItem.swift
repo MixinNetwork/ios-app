@@ -39,7 +39,7 @@ public final class ConversationItem {
     
     public var mentionsJson: Data?
     
-    public var expireIn: UInt32 = 0
+    public var expireIn: Int64 = 0
     
     public lazy var appButtons: [AppButtonData]? = {
         guard let data = Data(base64Encoded: content) else {
@@ -134,7 +134,7 @@ public final class ConversationItem {
         
         self.mentionsJson = try container.decodeIfPresent(Data.self, forKey: .mentionsJson)
         
-        self.expireIn = (try container.decodeIfPresent(UInt32.self, forKey: .expireIn)) ?? 0
+        self.expireIn = (try container.decodeIfPresent(Int64.self, forKey: .expireIn)) ?? 0
     }
     
     internal init(conversationId: String = "", ownerId: String = "", category: String? = nil, name: String = "", iconUrl: String = "", announcement: String = "", lastReadMessageId: String? = nil, unseenMessageCount: Int = 0, unseenMentionCount: Int = 0, status: Int = ConversationStatus.START.rawValue, muteUntil: String? = nil, codeUrl: String? = nil, pinTime: String? = nil, createdAt: String = "", ownerIdentityNumber: String = "", ownerFullName: String = "", ownerAvatarUrl: String = "", ownerIsVerified: Bool = false, messageStatus: String = "", messageId: String = "", content: String = "", contentType: String = "", senderId: String = "", senderFullName: String = "", participantFullName: String? = nil, participantUserId: String? = nil, appId: String? = nil, actionName: String? = nil, mentionsJson: Data? = nil) {

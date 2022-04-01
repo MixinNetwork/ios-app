@@ -49,9 +49,9 @@ final class UserProfileViewController: ProfileViewController {
     private var sharedAppUsers: [User]?
     private var dismissHomeAppsWindow = true
     private var centerStackViewHeightConstraint: NSLayoutConstraint?
-    private var expireIn: UInt32 = 0
+    private var messageExpireIn: Int64?
     
-    init(user: UserItem) {
+    init(user: UserItem, messageExpireIn: Int64? = nil) {
         super.init(nibName: R.nib.profileView.name, bundle: R.nib.profileView.bundle)
         modalPresentationStyle = .custom
         transitioningDelegate = PopupPresentationManager.shared
@@ -59,6 +59,7 @@ final class UserProfileViewController: ProfileViewController {
             // Defer closure escapes from subclass init
             // Make sure user's didSet is called
             self.user = user
+            self.messageExpireIn = messageExpireIn
         }
     }
     
@@ -81,6 +82,7 @@ final class UserProfileViewController: ProfileViewController {
             reloadFavoriteApps(userId: user.userId, fromRemote: true)
             if !isMe {
                 reloadCircles(conversationId: conversationId, userId: user.userId)
+                updateMessageExpireIn(conversationId: conversationId)
             }
             let recognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction(_:)))
             recognizer.delegate = self
@@ -90,7 +92,6 @@ final class UserProfileViewController: ProfileViewController {
         } else {
             resizeRecognizer.isEnabled = false
         }
-        reloadDisappearingMessage(conversationId: conversationId)
     }
 
     override func dismissAction(_ sender: Any) {
@@ -568,7 +569,7 @@ extension UserProfileViewController {
     }
     
     @objc func editDisappearingMessageDuration() {
-        let controller = DisappearingMessageViewController.instance(conversationId: conversationId, expireIn: expireIn)
+        let controller = DisappearingMessageViewController.instance(conversationId: conversationId, expireIn: messageExpireIn ?? 0)
         dismissAndPush(controller)
     }
     
@@ -977,26 +978,33 @@ extension UserProfileViewController {
         }
     }
     
-    func reloadDisappearingMessage(conversationId: String) {
-        func update(_ expireIn: UInt32) {
-            DispatchQueue.main.sync { [weak self] in
-                guard let self = self else {
-                    return
-                }
-                self.expireIn = expireIn
+    private func updateMessageExpireIn(conversationId: String) {
+        func updateUI(with expireIn: Int64) {
+            Queue.main.autoSync {
+                self.messageExpireIn = expireIn
                 let subtitle = DisappearingMessageDuration.custom(expireIn: expireIn).expireInTitle
                 self.disappearingMessageItemView.subtitleLabel.text = subtitle
             }
         }
-        DispatchQueue.global().async {
-            if let expireIn = ConversationDAO.shared.getExpireIn(conversationId: conversationId) {
-                update(expireIn)
-            } else {
-                switch ConversationAPI.getConversation(conversationId: conversationId) {
-                case .success(let response):
-                    update(response.expireIn)
-                case .failure(let error):
-                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
+        if let expireIn = messageExpireIn {
+            updateUI(with: expireIn)
+        } else {
+            DispatchQueue.global().async {
+                if let expireIn = ConversationDAO.shared.getExpireIn(conversationId: conversationId) {
+                    updateUI(with: expireIn)
+                } else {
+                    let request = ConversationRequest(conversationId: conversationId,
+                                                      name: nil,
+                                                      category: ConversationCategory.CONTACT.rawValue,
+                                                      participants: [ParticipantRequest(userId: self.user.userId, role: "")],
+                                                      duration: nil,
+                                                      announcement: nil)
+                    switch ConversationAPI.createConversation(conversation: request) {
+                    case let .success(response):
+                        updateUI(with: response.expireIn)
+                    case let .failure(error):
+                        showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                    }
                 }
             }
         }

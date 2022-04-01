@@ -261,7 +261,8 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
     private func send(image: UIImage, to composer: ConversationMessageComposer) {
         var message = Message.createMessage(category: MessageCategory.SIGNAL_IMAGE.rawValue,
                                             conversationId: composer.conversationId,
-                                            userId: myUserId)
+                                            userId: myUserId,
+                                            expireIn: composer.expireIn)
         message.mediaStatus = MediaStatus.PENDING.rawValue
         
         DispatchQueue.global().async { [weak self] in

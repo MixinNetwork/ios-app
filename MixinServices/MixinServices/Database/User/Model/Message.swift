@@ -38,7 +38,7 @@ public struct Message {
     
     public var albumId: String?
     
-    public var expireIn: UInt32 = 0
+    public var expireIn: Int64 = 0
 }
 
 extension Message: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord {
@@ -92,8 +92,8 @@ extension Message {
         return userId == myUserId && (mediaUrl != nil || mediaLocalIdentifier != nil)
     }
     
-    public static func createMessage(messageId: String, conversationId: String, userId: String, category: String, content: String? = nil, mediaUrl: String? = nil, mediaMimeType: String? = nil, mediaSize: Int64? = nil, mediaDuration: Int64? = nil, mediaWidth: Int? = nil, mediaHeight: Int? = nil, mediaHash: String? = nil, mediaKey: Data? = nil, mediaDigest: Data? = nil, mediaStatus: String? = nil, mediaWaveform: Data? = nil, mediaLocalIdentifier: String? = nil, thumbImage: String? = nil, thumbUrl: String? = nil, status: String, action: String? = nil, participantId: String? = nil, snapshotId: String? = nil, name: String? = nil, stickerId: String? = nil, sharedUserId: String? = nil, quoteMessageId: String? = nil, quoteContent: Data? = nil, createdAt: String, albumId: String? = nil) -> Message {
-        return Message(messageId: messageId, conversationId: conversationId, userId: userId, category: category, content: content, mediaUrl: mediaUrl, mediaMimeType: mediaMimeType, mediaSize: mediaSize, mediaDuration: mediaDuration, mediaWidth: mediaWidth, mediaHeight: mediaHeight, mediaHash: mediaHash, mediaKey: mediaKey, mediaDigest: mediaDigest, mediaStatus: mediaStatus, mediaWaveform: mediaWaveform, mediaLocalIdentifier: mediaLocalIdentifier, thumbImage: thumbImage, thumbUrl: thumbUrl, status: status, action: action, participantId: participantId, snapshotId: snapshotId, name: name, stickerId: stickerId, sharedUserId: sharedUserId, quoteMessageId: quoteMessageId, quoteContent: quoteContent, createdAt: createdAt, albumId: albumId)
+    public static func createMessage(messageId: String, conversationId: String, userId: String, category: String, content: String? = nil, mediaUrl: String? = nil, mediaMimeType: String? = nil, mediaSize: Int64? = nil, mediaDuration: Int64? = nil, mediaWidth: Int? = nil, mediaHeight: Int? = nil, mediaHash: String? = nil, mediaKey: Data? = nil, mediaDigest: Data? = nil, mediaStatus: String? = nil, mediaWaveform: Data? = nil, mediaLocalIdentifier: String? = nil, thumbImage: String? = nil, thumbUrl: String? = nil, status: String, action: String? = nil, participantId: String? = nil, snapshotId: String? = nil, name: String? = nil, stickerId: String? = nil, sharedUserId: String? = nil, quoteMessageId: String? = nil, quoteContent: Data? = nil, createdAt: String, albumId: String? = nil, expireIn: Int64 = 0) -> Message {
+        return Message(messageId: messageId, conversationId: conversationId, userId: userId, category: category, content: content, mediaUrl: mediaUrl, mediaMimeType: mediaMimeType, mediaSize: mediaSize, mediaDuration: mediaDuration, mediaWidth: mediaWidth, mediaHeight: mediaHeight, mediaHash: mediaHash, mediaKey: mediaKey, mediaDigest: mediaDigest, mediaStatus: mediaStatus, mediaWaveform: mediaWaveform, mediaLocalIdentifier: mediaLocalIdentifier, thumbImage: thumbImage, thumbUrl: thumbUrl, status: status, action: action, participantId: participantId, snapshotId: snapshotId, name: name, stickerId: stickerId, sharedUserId: sharedUserId, quoteMessageId: quoteMessageId, quoteContent: quoteContent, createdAt: createdAt, albumId: albumId, expireIn: expireIn)
     }
     
     public static func getStatus(data: BlazeMessageData) -> String {
@@ -101,24 +101,24 @@ extension Message {
     }
     
     public static func createMessage(snapshotMesssage snapshot: Snapshot, data: BlazeMessageData) -> Message {
-        return createMessage(messageId: data.messageId, conversationId: data.conversationId, userId: data.userId, category: data.category, status: MessageStatus.DELIVERED.rawValue, action: snapshot.type, snapshotId: snapshot.snapshotId, createdAt: data.createdAt)
+        return createMessage(messageId: data.messageId, conversationId: data.conversationId, userId: data.userId, category: data.category, status: MessageStatus.DELIVERED.rawValue, action: snapshot.type, snapshotId: snapshot.snapshotId, createdAt: data.createdAt, expireIn: data.expireIn)
     }
     
     public static func createMessage(textMessage plainText: String, data: BlazeMessageData) -> Message {
         let quoteMessageId = data.quoteMessageId.isEmpty ? nil : data.quoteMessageId
-        return createMessage(messageId: data.messageId, conversationId: data.conversationId, userId: data.getSenderId(), category: data.category, content: plainText, status: getStatus(data: data), quoteMessageId: quoteMessageId, createdAt: data.createdAt)
+        return createMessage(messageId: data.messageId, conversationId: data.conversationId, userId: data.getSenderId(), category: data.category, content: plainText, status: getStatus(data: data), quoteMessageId: quoteMessageId, createdAt: data.createdAt, expireIn: data.expireIn)
     }
     
-    public static func createMessage(systemMessage action: String?, participantId: String?, userId: String, data: BlazeMessageData) -> Message {
-        return createMessage(messageId: data.messageId, conversationId: data.conversationId, userId: userId, category: data.category, status: MessageStatus.DELIVERED.rawValue, action: action, participantId: participantId, createdAt: data.createdAt)
+    public static func createMessage(systemMessage action: String?, participantId: String?, userId: String, data: BlazeMessageData, expireIn: Int64) -> Message {
+        return createMessage(messageId: data.messageId, conversationId: data.conversationId, userId: userId, category: data.category, status: MessageStatus.DELIVERED.rawValue, action: action, participantId: participantId, createdAt: data.createdAt, expireIn: expireIn)
     }
     
     public static func createMessage(appMessage data: BlazeMessageData) -> Message {
-        return createMessage(messageId: data.messageId, conversationId: data.conversationId, userId: data.getSenderId(), category: data.category, content: data.data, status: getStatus(data: data), createdAt: data.createdAt)
+        return createMessage(messageId: data.messageId, conversationId: data.conversationId, userId: data.getSenderId(), category: data.category, content: data.data, status: getStatus(data: data), createdAt: data.createdAt, expireIn: data.expireIn)
     }
     
     public static func createMessage(stickerData: TransferStickerData, data: BlazeMessageData) -> Message {
-        return createMessage(messageId: data.messageId, conversationId: data.conversationId, userId: data.getSenderId(), category: data.category, status: getStatus(data: data), stickerId: stickerData.stickerId, createdAt: data.createdAt, albumId: stickerData.albumId.isNilOrEmpty ? nil : stickerData.albumId)
+        return createMessage(messageId: data.messageId, conversationId: data.conversationId, userId: data.getSenderId(), category: data.category, status: getStatus(data: data), stickerId: stickerData.stickerId, createdAt: data.createdAt, albumId: stickerData.albumId.isNilOrEmpty ? nil : stickerData.albumId, expireIn: data.expireIn)
     }
     
     public static func createMessage(contactData: TransferContactData, data: BlazeMessageData) -> Message {
@@ -129,7 +129,8 @@ extension Message {
                              status: getStatus(data: data),
                              sharedUserId: contactData.userId,
                              quoteMessageId: data.quoteMessageId,
-                             createdAt: data.createdAt)
+                             createdAt: data.createdAt,
+                             expireIn: data.expireIn)
     }
     
     public static func createMessage(mediaData: TransferAttachmentData, data: BlazeMessageData) -> Message {
@@ -151,7 +152,8 @@ extension Message {
                              status: MessageStatus.DELIVERED.rawValue,
                              name: mediaData.name,
                              quoteMessageId: data.quoteMessageId,
-                             createdAt: data.createdAt)
+                             createdAt: data.createdAt,
+                             expireIn: data.expireIn)
     }
     
     public static func createMessage(liveData: TransferLiveData, content: String?, data: BlazeMessageData) -> Message {
@@ -165,7 +167,8 @@ extension Message {
                       mediaHeight: liveData.height,
                       thumbUrl: liveData.thumbUrl,
                       status: getStatus(data: data),
-                      createdAt: data.createdAt)
+                      createdAt: data.createdAt,
+                      expireIn: data.expireIn)
     }
     
     public static func createLocationMessage(content: String, data: BlazeMessageData) -> Message {
@@ -187,7 +190,8 @@ extension Message {
                              status: MessageStatus.DELIVERED.rawValue,
                              name: nil,
                              quoteMessageId: data.quoteMessageId,
-                             createdAt: data.createdAt)
+                             createdAt: data.createdAt,
+                             expireIn: data.expireIn)
     }
     
     public static func createTranscriptMessage(content: String, mediaStatus: MediaStatus, data: BlazeMessageData) -> Message {
@@ -209,7 +213,8 @@ extension Message {
                              status: MessageStatus.DELIVERED.rawValue,
                              name: nil,
                              quoteMessageId: data.quoteMessageId,
-                             createdAt: data.createdAt)
+                             createdAt: data.createdAt,
+                             expireIn: data.expireIn)
     }
     
     public static func createWebRTCMessage(data: BlazeMessageData, category: MessageCategory, status: MessageStatus) -> Message {
@@ -234,8 +239,8 @@ extension Message {
                       createdAt: createdAt)
     }
     
-    public static func createMessage(messageId: String = UUID().uuidString.lowercased(), category: String, conversationId: String, createdAt: String = Date().toUTCString(), userId: String) -> Message {
-        return createMessage(messageId: messageId, conversationId: conversationId, userId: userId, category: category, status: MessageStatus.SENDING.rawValue, createdAt: createdAt)
+    public static func createMessage(messageId: String = UUID().uuidString.lowercased(), category: String, conversationId: String, createdAt: String = Date().toUTCString(), userId: String, expireIn: Int64 = 0) -> Message {
+        return createMessage(messageId: messageId, conversationId: conversationId, userId: userId, category: category, status: MessageStatus.SENDING.rawValue, createdAt: createdAt, expireIn: expireIn)
     }
     
     public static func createMessage(message: MessageItem) -> Message {

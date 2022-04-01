@@ -53,7 +53,7 @@ final class DisappearingMessageManager {
         removeExpiredMessages()
     }
     
-    private func schedualTimer(expireAt: UInt64) {
+    private func schedualTimer(expireAt: Int64) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else {
                 return

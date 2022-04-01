@@ -4,7 +4,7 @@ import MixinServices
 final class DisappearingMessageViewController: SettingsTableViewController {
     
     private var previousDuration: DisappearingMessageDuration = .off
-    private var expireIn: UInt32 = 0
+    private var expireIn: Int64 = 0
     private var expireInTitle: String?
     private var conversationId = ""
     private lazy var rows = [
@@ -19,7 +19,7 @@ final class DisappearingMessageViewController: SettingsTableViewController {
     private lazy var section = SettingsRadioSection(rows: rows)
     private lazy var dataSource = SettingsDataSource(sections: [section])
     
-    class func instance(conversationId: String, expireIn: UInt32) -> UIViewController {
+    class func instance(conversationId: String, expireIn: Int64) -> UIViewController {
         let vc = DisappearingMessageViewController()
         vc.conversationId = conversationId
         vc.expireIn = expireIn
@@ -61,15 +61,11 @@ extension DisappearingMessageViewController: UITableViewDelegate {
                 guard let self = self else {
                     return
                 }
-                self.updateDisappearingMessageDuration(duration: duration, expireIn: expireIn, expireInTitle: expireInTitle)
+                self.updateExpireIn(duration: duration, expireIn: expireIn, expireInTitle: expireInTitle)
             }
             window.presentPopupControllerAnimated()
         } else if duration != previousDuration {
-            if case .off = duration {
-                closeDisappearingMessage(duration: duration)
-            } else {
-                updateDisappearingMessageDuration(duration: duration, expireIn: UInt32(duration.interval))
-            }
+            updateExpireIn(duration: duration, expireIn: Int64(duration.interval))
         }
     }
     
@@ -77,13 +73,13 @@ extension DisappearingMessageViewController: UITableViewDelegate {
 
 extension DisappearingMessageViewController {
     
-    private func updateDisappearingMessageDuration(duration: DisappearingMessageDuration, expireIn: UInt32, expireInTitle: String? = nil) {
+    private func updateExpireIn(duration: DisappearingMessageDuration, expireIn: Int64, expireInTitle: String? = nil) {
         tableView.isUserInteractionEnabled = false
         if case .custom = previousDuration {
             rows[previousDuration.index].subtitle = nil
         }
         section.setAccessory(.busy, forRowAt: duration.index)
-        ConversationAPI.openDisappearingMessage(conversationId: conversationId, expireIn: expireIn) { [weak self] result in
+        ConversationAPI.updateExpireIn(conversationId: conversationId, expireIn: expireIn) { [weak self] result in
             guard let self = self else {
                 return
             }
@@ -96,32 +92,6 @@ extension DisappearingMessageViewController {
                 }
                 self.expireIn = expireIn
                 self.expireInTitle = expireInTitle
-                self.previousDuration = duration
-            case let .failure(error):
-                self.section.setAccessory(.checkmark, forRowAt: self.previousDuration.index)
-                if case .custom = self.previousDuration {
-                    self.rows[self.previousDuration.index].subtitle = self.expireInTitle
-                }
-                showAutoHiddenHud(style: .error, text: error.localizedDescription)
-            }
-            self.tableView.isUserInteractionEnabled = true
-        }
-    }
-    
-    private func closeDisappearingMessage(duration: DisappearingMessageDuration) {
-        tableView.isUserInteractionEnabled = false
-        section.setAccessory(.busy, forRowAt: duration.index)
-        rows[duration.index].subtitle = nil
-        ConversationAPI.closeDisappearingMessage(conversationId: conversationId) { [weak self] result in
-            guard let self = self else {
-                return
-            }
-            switch result {
-            case .success:
-                ConversationDAO.shared.updateExpireIn(expireIn: 0, conversationId: self.conversationId)
-                self.section.setAccessory(.checkmark, forRowAt: duration.index)
-                self.expireIn = 0
-                self.expireInTitle = nil
                 self.previousDuration = duration
             case let .failure(error):
                 self.section.setAccessory(.checkmark, forRowAt: self.previousDuration.index)

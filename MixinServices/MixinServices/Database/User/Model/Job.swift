@@ -155,7 +155,8 @@ extension Job {
                                       status: MessageStatus.SENT.rawValue,
                                       messageId: message.messageId,
                                       representativeId: representativeId,
-                                      silentNotification: silentNotification)
+                                      silentNotification: silentNotification,
+                                      expireIn: message.expireIn)
         let action = BlazeMessageAction.createMessage.rawValue
         let blazeMessage = BlazeMessage(params: param, action: action)
         self.init(jobId: blazeMessage.id, action: .SEND_MESSAGE, blazeMessage: blazeMessage)

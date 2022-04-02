@@ -61,7 +61,13 @@ extension DisappearingMessageViewController: UITableViewDelegate {
                 guard let self = self else {
                     return
                 }
-                self.updateExpireIn(duration: duration, expireIn: expireIn, expireInTitle: expireInTitle)
+                if expireIn == self.expireIn {
+                    self.section.setAccessory(.checkmark, forRowAt: duration.index)
+                    self.rows[duration.index].subtitle = expireInTitle
+                    self.previousDuration = duration
+                } else {
+                    self.updateExpireIn(duration: duration, expireIn: expireIn, expireInTitle: expireInTitle)
+                }
             }
             window.presentPopupControllerAnimated()
         } else if duration != previousDuration {

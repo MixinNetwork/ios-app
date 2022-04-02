@@ -18,7 +18,7 @@ public struct ConversationChange {
         case updateMediaContent(messageId: String, message: Message)
         case startedUpdateConversation
         case recallMessage(messageId: String)
-        case updateMessageExpireIn(expireIn: Int64)
+        case updateExpireIn(expireIn: Int64, messageId: String?)
     }
     
     public init(conversationId: String, action: ConversationChange.Action) {

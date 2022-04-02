@@ -98,8 +98,6 @@ class ConversationViewController: UIViewController {
     private var canPinMessages = false
     private var pinnedMessageIds = Set<String>()
     private var lastMentionCandidate: String?
-    private var needsUpdateMessageExpireIn = false
-    private var messageExpireIn: Int64?
     
     private weak var pinMessageBannerViewIfLoaded: PinMessageBannerView?
     private weak var groupCallIndicatorViewIfLoaded: GroupCallIndicatorView?
@@ -276,14 +274,8 @@ class ConversationViewController: UIViewController {
         let vc = R.storyboard.chat.conversation()!
         vc.ownerUser = ownerUser
         let conversationId = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: ownerUser.userId)
-        let conversation: ConversationItem
-        if let existedConversation = ConversationDAO.shared.getConversation(conversationId: conversationId) {
-            conversation = existedConversation
-            vc.messageExpireIn = existedConversation.expireIn
-        } else {
-            vc.needsUpdateMessageExpireIn = true
-            conversation = ConversationItem(ownerUser: ownerUser)
-        }
+        let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId)
+            ?? ConversationItem(ownerUser: ownerUser)
         let dataSource = ConversationDataSource(conversation: conversation)
         vc.dataSource = dataSource
         vc.composer = ConversationMessageComposer(dataSource: dataSource, ownerUser: ownerUser)
@@ -396,30 +388,6 @@ class ConversationViewController: UIViewController {
                                name: CallService.didDeactivateCallNotification,
                                object: nil)
         }
-        
-        if needsUpdateMessageExpireIn {
-            DispatchQueue.global().async { [weak self] in
-                guard let self = self else {
-                    return
-                }
-                let request = ConversationRequest(conversationId: self.conversationId,
-                                                  name: nil,
-                                                  category: ConversationCategory.CONTACT.rawValue,
-                                                  participants: [ParticipantRequest(userId: self.dataSource.conversation.ownerId, role: "")],
-                                                  duration: nil,
-                                                  announcement: nil)
-                switch ConversationAPI.createConversation(conversation: request) {
-                case let .success(response):
-                    self.messageExpireIn = response.expireIn
-                    let change = ConversationChange(conversationId: self.conversationId,
-                                                    action: .updateMessageExpireIn(expireIn: response.expireIn))
-                    NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: change)
-                case let .failure(error):
-                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
-                }
-            }
-        }
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -510,7 +478,7 @@ class ConversationViewController: UIViewController {
                                                 isMember: isMember)
             present(vc, animated: true, completion: nil)
         } else if let user = ownerUser {
-            let vc = UserProfileViewController(user: user, messageExpireIn: messageExpireIn)
+            let vc = UserProfileViewController(user: user)
             present(vc, animated: true, completion: nil)
         }
     }

@@ -342,7 +342,7 @@ final class ConversationMessageComposer {
         guard let change = notification.object as? ConversationChange, change.conversationId == conversationId else {
             return
         }
-        if case .updateMessageExpireIn(let expireIn) = change.action {
+        if case .updateExpireIn(let expireIn, _) = change.action {
             self.expireIn = expireIn
         }
     }

@@ -50,8 +50,7 @@ public final class DisappearingMessageDAO: UserDatabaseDAO {
             }
             if !expiredMessageIds.isEmpty {
                 db.afterNextTransactionCommit { _ in
-                    NotificationCenter.default.post(onMainThread: MixinServices.conversationDidChangeNotification,
-                                                    object: nil)
+                    NotificationCenter.default.post(onMainThread: MixinServices.conversationDidChangeNotification, object: nil)
                 }
             }
             try DisappearingMessage

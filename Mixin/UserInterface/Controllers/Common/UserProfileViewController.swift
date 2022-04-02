@@ -49,9 +49,9 @@ final class UserProfileViewController: ProfileViewController {
     private var sharedAppUsers: [User]?
     private var dismissHomeAppsWindow = true
     private var centerStackViewHeightConstraint: NSLayoutConstraint?
-    private var messageExpireIn: Int64?
+    private var messageExpireIn: Int64 = 0
     
-    init(user: UserItem, messageExpireIn: Int64? = nil) {
+    init(user: UserItem) {
         super.init(nibName: R.nib.profileView.name, bundle: R.nib.profileView.bundle)
         modalPresentationStyle = .custom
         transitioningDelegate = PopupPresentationManager.shared
@@ -59,7 +59,6 @@ final class UserProfileViewController: ProfileViewController {
             // Defer closure escapes from subclass init
             // Make sure user's didSet is called
             self.user = user
-            self.messageExpireIn = messageExpireIn
         }
     }
     
@@ -569,7 +568,7 @@ extension UserProfileViewController {
     }
     
     @objc func editDisappearingMessageDuration() {
-        let controller = DisappearingMessageViewController.instance(conversationId: conversationId, expireIn: messageExpireIn ?? 0)
+        let controller = DisappearingMessageViewController.instance(conversationId: conversationId, expireIn: messageExpireIn)
         dismissAndPush(controller)
     }
     
@@ -986,25 +985,21 @@ extension UserProfileViewController {
                 self.disappearingMessageItemView.subtitleLabel.text = subtitle
             }
         }
-        if let expireIn = messageExpireIn {
-            updateUI(with: expireIn)
-        } else {
-            DispatchQueue.global().async {
-                if let expireIn = ConversationDAO.shared.getExpireIn(conversationId: conversationId) {
-                    updateUI(with: expireIn)
-                } else {
-                    let request = ConversationRequest(conversationId: conversationId,
-                                                      name: nil,
-                                                      category: ConversationCategory.CONTACT.rawValue,
-                                                      participants: [ParticipantRequest(userId: self.user.userId, role: "")],
-                                                      duration: nil,
-                                                      announcement: nil)
-                    switch ConversationAPI.createConversation(conversation: request) {
-                    case let .success(response):
-                        updateUI(with: response.expireIn)
-                    case let .failure(error):
-                        showAutoHiddenHud(style: .error, text: error.localizedDescription)
-                    }
+        DispatchQueue.global().async {
+            if let expireIn = ConversationDAO.shared.getExpireIn(conversationId: conversationId) {
+                updateUI(with: expireIn)
+            } else {
+                let request = ConversationRequest(conversationId: conversationId,
+                                                  name: nil,
+                                                  category: ConversationCategory.CONTACT.rawValue,
+                                                  participants: [ParticipantRequest(userId: self.user.userId, role: "")],
+                                                  duration: nil,
+                                                  announcement: nil)
+                switch ConversationAPI.createConversation(conversation: request) {
+                case let .success(response):
+                    updateUI(with: response.expireIn)
+                case let .failure(error):
+                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 }
             }
         }

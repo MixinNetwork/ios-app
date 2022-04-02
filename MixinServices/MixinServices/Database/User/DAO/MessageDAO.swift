@@ -851,6 +851,21 @@ extension MessageDAO {
         }
     }
     
+    public func updateMessageExpireIn(expireIn: Int64, messageId: String, conversationId: String) {
+        db.write { db in
+            try Message
+                .filter(Message.column(of: .messageId) == messageId)
+                .updateAll(db, [Message.column(of: .expireIn).set(to: expireIn)])
+            db.afterNextTransactionCommit { db in
+                let change = ConversationChange(conversationId: conversationId, action: .updateExpireIn(expireIn: expireIn, messageId: messageId))
+                NotificationCenter.default.post(onMainThread: MixinServices.conversationDidChangeNotification, object: change)
+                if let message = try? Message.filter(Message.column(of: .messageId) == messageId).fetchOne(db) {
+                   try? DisappearingMessageDAO.shared.insert(message: DisappearingMessage(message: message), database: db)
+                }
+            }
+        }
+    }
+    
     public func updateMessageContentAndStatus(content: String, status: String, mention: MessageMention?, messageId: String, category: String, conversationId: String, messageSource: String, silentNotification: Bool) {
         let assignments = [
             Message.column(of: .content).set(to: content),

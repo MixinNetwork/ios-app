@@ -26,6 +26,10 @@ final class TranscriptPreviewViewController: StaticMessagesViewController {
                                                selector: #selector(mediaStatusDidUpdate(_:)),
                                                name: TranscriptMessageDAO.mediaStatusDidUpdateNotification,
                                                object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(expiredMessageDidDelete(_:)),
+                                               name: DisappearingMessageDAO.expiredMessageDidDeleteNotification,
+                                               object: nil)
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -121,6 +125,13 @@ extension TranscriptPreviewViewController {
                 cell.render(viewModel: viewModel)
             }
         }
+    }
+    
+    @objc private func expiredMessageDidDelete(_ notification: Notification) {
+        guard let messageId = notification.userInfo?[DisappearingMessageDAO.messageIdKey] as? String, messageId == transcriptMessage.messageId else {
+            return
+        }
+        dismissAsChild(completion: nil)
     }
     
 }

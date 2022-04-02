@@ -784,8 +784,8 @@
 // Disappearing Message
 "disappearing_message_title" = "限时消息";
 "disappearing_message_hint" = "启用后，在此聊天中发送和接收的新信息在被看到后会消失，阅读文档以了解更多。";
-"disappearing_message_turn_off" = "%@关闭了限时消息";
-"disappearing_message_turn_on" = "%@将限时消息设置为 %@";
+"disappearing_message_turn_off" = "%@关闭了限时消息功能";
+"disappearing_message_turn_on" = "%@将信息消失时间设置为 %@";
 "disappearing_message_30seconds" = "30秒";
 "disappearing_message_10minutes" = "10分钟";
 "disappearing_message_2hours" = "2小时";

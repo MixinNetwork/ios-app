@@ -100,7 +100,7 @@ public final class ConversationDAO: UserDatabaseDAO {
                   assignments: [Conversation.column(of: .expireIn).set(to: expireIn)],
                   where: Conversation.column(of: .conversationId) == conversationId) { _ in
             let change = ConversationChange(conversationId: conversationId,
-                                            action: .updateMessageExpireIn(expireIn: expireIn))
+                                            action: .updateExpireIn(expireIn: expireIn, messageId: nil))
             NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: change)
         }
     }

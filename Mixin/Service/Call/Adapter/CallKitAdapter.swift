@@ -171,7 +171,7 @@ extension CallKitAdapter: CXProviderDelegate {
         DispatchQueue.main.async {
             self.service.performAnswerCall(uuid: action.callUUID) { error in
                 fulfilled = error == nil
-                if error == nil {
+                if fulfilled {
                     // Speaker button is not working in system provided interface without this
                     // See https://stackoverflow.com/a/48806266/4014369
                     RTCDispatcher.dispatchAsync(on: .typeAudioSession) {
@@ -183,6 +183,8 @@ extension CallKitAdapter: CXProviderDelegate {
                         session.unlockForConfiguration()
                         semaphore.signal()
                     }
+                } else {
+                    semaphore.signal()
                 }
             }
         }

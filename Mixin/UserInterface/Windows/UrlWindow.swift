@@ -58,6 +58,19 @@ class UrlWindow {
             switch url {
             case let .identityNumber(number):
                 return checkUser(identityNumber: number)
+            case let .phoneNumber(number):
+                let sheet = UIAlertController(title: number, message: nil, preferredStyle: .actionSheet)
+                sheet.addAction(UIAlertAction(title: R.string.localizable.action_phone_call(), style: .default, handler: { _ in
+                    let url = URL(string: "tel://\(number)")!
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                }))
+                sheet.addAction(UIAlertAction(title: R.string.localizable.action_copy(), style: .default, handler: { _ in
+                    UIPasteboard.general.string = number
+                    showAutoHiddenHud(style: .notification, text: R.string.localizable.toast_copied())
+                }))
+                sheet.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
+                UIApplication.homeContainerViewController?.present(sheet, animated: true, completion: nil)
+                return true
             }
         } else {
             return false

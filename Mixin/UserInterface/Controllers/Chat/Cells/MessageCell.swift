@@ -4,7 +4,6 @@ class MessageCell: UITableViewCell {
     
     let messageContentView = UIView()
     let backgroundImageView = UIImageView()
-    let disappearingIconView = UIImageView(image: R.image.ic_chat_clock_fill())
     
     lazy var quotedMessageView: QuotedMessageView = {
         let view = QuotedMessageView()
@@ -21,12 +20,19 @@ class MessageCell: UITableViewCell {
         return view
     }()
     
+    lazy var disappearingIconView: UIImageView = {
+        let view = UIImageView(image: R.image.ic_chat_clock_fill())
+        messageContentView.addSubview(view)
+        return view
+    }()
+    
     private let checkmarkWidth: CGFloat = 16
     
     private(set) var isMultipleSelecting = false
     
     private(set) weak var checkmarkViewIfLoaded: CheckmarkView?
     private(set) weak var quotedMessageViewIfLoaded: QuotedMessageView?
+    private(set) weak var disappearingIconViewIfLoaded: QuotedMessageView?
     
     var viewModel: MessageViewModel?
     
@@ -61,8 +67,6 @@ class MessageCell: UITableViewCell {
         selectedBackgroundView = UIView()
         selectedBackgroundView?.backgroundColor = .clear
         messageContentView.insertSubview(backgroundImageView, at: 0)
-        messageContentView.addSubview(disappearingIconView)
-        disappearingIconView.isHidden = true
     }
     
     func render(viewModel: MessageViewModel) {
@@ -77,10 +81,10 @@ class MessageCell: UITableViewCell {
             quotedMessageViewIfLoaded?.removeFromSuperview()
         }
         if viewModel.message.isDisappearingMessage {
-            disappearingIconView.isHidden = false
             disappearingIconView.frame = viewModel.disappearingIconFrame
+            disappearingIconView.isHidden = false
         } else {
-            disappearingIconView.isHidden = true
+            disappearingIconViewIfLoaded?.isHidden = true
         }
     }
     

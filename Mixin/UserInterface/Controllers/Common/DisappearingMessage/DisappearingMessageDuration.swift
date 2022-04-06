@@ -14,15 +14,15 @@ enum DisappearingMessageDuration: Equatable {
         switch TimeInterval(expireIn) {
         case 0:
             self = .off
-        case .oneMinute / 2:
+        case .minute / 2:
             self = .thirtySeconds
-        case .oneMinute * 10:
+        case .minute * 10:
             self = .tenMinutes
-        case .oneHour * 2:
+        case .hour * 2:
             self = .twoHours
-        case .oneDay:
+        case .day:
             self = .oneDay
-        case .oneWeek:
+        case .week:
             self = .oneWeek
         default:
             self = .custom(expireIn: expireIn)
@@ -93,46 +93,45 @@ enum DisappearingMessageDuration: Equatable {
         case .thirtySeconds:
             return 30
         case .tenMinutes:
-            return 10 * .oneMinute
+            return 10 * .minute
         case .twoHours:
-            return 2 * .oneHour
+            return 2 * .hour
         case .oneDay:
-            return .oneDay
+            return .day
         case .oneWeek:
-            return .oneWeek
+            return .week
         case let .custom(expireIn):
             return TimeInterval(expireIn)
         }
     }
     
     var expireInTitle: String {
-        if case let .custom(expireIn) = self {
-            if expireIn == 0 {
-                return R.string.localizable.setting_backup_off()
-            } else {
-                let unit: String
-                let duration: TimeInterval
-                let interval = TimeInterval(expireIn)
-                if interval < .oneMinute {
-                    unit = R.string.localizable.disappearing_message_seconds_unit()
-                    duration = interval
-                } else if interval < .oneHour {
-                    unit = R.string.localizable.disappearing_message_minutes_unit()
-                    duration = interval / .oneMinute
-                } else if interval < .oneDay {
-                    unit = R.string.localizable.disappearing_message_hours_unit()
-                    duration = interval / .oneHour
-                } else if interval < .oneWeek {
-                    unit = R.string.localizable.disappearing_message_days_unit()
-                    duration = interval / .oneDay
-                } else {
-                    unit = R.string.localizable.disappearing_message_weeks_unit()
-                    duration = interval / .oneWeek
-                }
-                return "\(Int(duration)) \(unit)"
-            }
-        } else {
+        guard case let .custom(expireIn) = self else {
             return ""
+        }
+        if expireIn == 0 {
+            return R.string.localizable.setting_backup_off()
+        } else {
+            let unit: String
+            let duration: TimeInterval
+            let interval = TimeInterval(expireIn)
+            if interval < .minute {
+                unit = R.string.localizable.disappearing_message_seconds_unit()
+                duration = interval
+            } else if interval < .hour {
+                unit = R.string.localizable.disappearing_message_minutes_unit()
+                duration = interval / .minute
+            } else if interval < .day {
+                unit = R.string.localizable.disappearing_message_hours_unit()
+                duration = interval / .hour
+            } else if interval < .week {
+                unit = R.string.localizable.disappearing_message_days_unit()
+                duration = interval / .day
+            } else {
+                unit = R.string.localizable.disappearing_message_weeks_unit()
+                duration = interval / .week
+            }
+            return "\(Int(duration)) \(unit)"
         }
     }
     

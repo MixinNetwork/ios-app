@@ -7,6 +7,7 @@ final class DisappearingMessageViewController: SettingsTableViewController {
     private var expireIn: Int64 = 0
     private var expireInTitle: String?
     private var conversationId = ""
+    
     private lazy var rows = [
         SettingsRow(title: DisappearingMessageDuration.off.title, accessory: .none),
         SettingsRow(title: DisappearingMessageDuration.thirtySeconds.title, accessory: .none),
@@ -40,6 +41,7 @@ final class DisappearingMessageViewController: SettingsTableViewController {
         section.setAccessory(.checkmark, forRowAt: duration.index)
         previousDuration = duration
     }
+    
 }
 
 extension DisappearingMessageViewController: UITableViewDelegate {

@@ -50,21 +50,21 @@ class DisappearingMessageTimePickerWindow: BottomSheetView {
     
     func render(expireIn: Int64) {
         let timeInterval = TimeInterval(expireIn)
-        if timeInterval < .oneMinute {
+        if timeInterval < .minute {
             selectedUnit = .second
             selectedDuration = max(Int(timeInterval) - 1, 0)
-        } else if timeInterval < .oneHour {
+        } else if timeInterval < .hour {
             selectedUnit = .minute
-            selectedDuration = Int(timeInterval / .oneMinute) - 1
-        } else if timeInterval < .oneDay {
+            selectedDuration = Int(timeInterval / .minute) - 1
+        } else if timeInterval < .day {
             selectedUnit = .hour
-            selectedDuration = Int(timeInterval / .oneHour) - 1
-        } else if timeInterval < .oneWeek {
+            selectedDuration = Int(timeInterval / .hour) - 1
+        } else if timeInterval < .week {
             selectedUnit = .day
-            selectedDuration = Int(timeInterval / .oneDay) - 1
+            selectedDuration = Int(timeInterval / .day) - 1
         } else {
             selectedUnit = .week
-            selectedDuration = Int(timeInterval / .oneWeek) - 1
+            selectedDuration = Int(timeInterval / .week) - 1
         }
         pickerView.selectRow(selectedDuration, inComponent: Component.duration.rawValue, animated: false)
         pickerView.selectRow(selectedUnit.rawValue, inComponent: Component.unit.rawValue, animated: false)
@@ -164,15 +164,15 @@ extension DisappearingMessageTimePickerWindow {
         var interval: TimeInterval {
             switch self {
             case .second:
-                return .oneSecond
+                return 1
             case .minute:
-                return .oneMinute
+                return .minute
             case .hour:
-                return .oneHour
+                return .hour
             case .day:
-                return .oneDay
+                return .day
             case .week:
-                return .oneWeek
+                return .week
             }
         }
     }

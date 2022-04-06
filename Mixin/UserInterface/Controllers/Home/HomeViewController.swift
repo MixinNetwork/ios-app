@@ -6,9 +6,9 @@ import MixinServices
 class HomeViewController: UIViewController {
     
     private enum BulletinDetectInterval {
-        static let notificationAuthorization: TimeInterval = 2 * .oneDay
-        static let emergencyContact: TimeInterval = 7 * .oneDay
-        static let initializePIN: TimeInterval = .oneDay
+        static let notificationAuthorization: TimeInterval = 2 * .day
+        static let emergencyContact: TimeInterval = 7 * .day
+        static let initializePIN: TimeInterval = .day
     }
     
     static var hasTriedToRequestReview = false
@@ -577,7 +577,7 @@ extension HomeViewController: UIScrollViewDelegate {
 extension HomeViewController {
     
     private func refreshExternalSchemesIfNeeded() {
-        if -AppGroupUserDefaults.User.externalSchemesRefreshDate.timeIntervalSinceNow > .oneDay {
+        if -AppGroupUserDefaults.User.externalSchemesRefreshDate.timeIntervalSinceNow > .day {
             ConcurrentJobQueue.shared.addJob(job: RefreshExternalSchemeJob())
         }
     }

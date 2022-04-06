@@ -123,15 +123,14 @@ class DetailInfoMessageViewModel: MessageViewModel {
         guard message.isDisappearingMessage else {
             return
         }
-        disappearingIconFrame.size = CGSize(width: 16, height: 16)
         let x: CGFloat
-        let y: CGFloat = backgroundImageFrame.midY - disappearingIconFrame.height / 2
         if style.contains(.received) {
             x = backgroundImageFrame.maxX + 10
         } else {
             x = backgroundImageFrame.minX - disappearingIconFrame.width - 10
         }
-        disappearingIconFrame.origin = CGPoint(x: x, y: y)
+        let y = backgroundImageFrame.midY - disappearingIconFrame.height / 2
+        disappearingIconFrame = CGRect(x: x, y: y, width: 16, height: 16)
     }
     
     func layoutEncryptedIconFrame() {

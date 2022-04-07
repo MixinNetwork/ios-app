@@ -17,6 +17,15 @@ class DetailInfoMessageCell: MessageCell {
     let identityIconImageView = UIImageView(image: R.image.ic_user_bot())
     let highlightAnimationDuration: TimeInterval = 0.2
     
+    lazy var disappearingIconView: UIImageView = {
+        let view = UIImageView(image: R.image.ic_chat_clock_fill())
+        messageContentView.addSubview(view)
+        disappearingIconViewIfLoaded = view
+        return view
+    }()
+    
+    private(set) weak var disappearingIconViewIfLoaded: UIImageView?
+    
     override func render(viewModel: MessageViewModel) {
         super.render(viewModel: viewModel)
         forwarderImageView.tintColor = viewModel.trailingInfoColor
@@ -47,6 +56,12 @@ class DetailInfoMessageCell: MessageCell {
             updateStatusImageView()
             if viewModel.message.userIsBot {
                 identityIconImageView.frame = viewModel.identityIconFrame
+            }
+            if viewModel.message.isDisappearingMessage {
+                disappearingIconView.frame = viewModel.disappearingIconFrame
+                disappearingIconView.isHidden = false
+            } else {
+                disappearingIconViewIfLoaded?.isHidden = true
             }
         }
     }

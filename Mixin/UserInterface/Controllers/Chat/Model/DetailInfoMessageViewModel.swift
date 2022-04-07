@@ -29,6 +29,7 @@ class DetailInfoMessageViewModel: MessageViewModel {
     var timeFrame = CGRect(x: 0, y: 0, width: 0, height: 12)
     var statusFrame = CGRect.zero
     var identityIconFrame = CGRect(origin: .zero, size: DetailInfoMessageViewModel.identityIconSize)
+    var disappearingIconFrame = CGRect(x: 0, y: 0, width: 16, height: 16)
     
     var statusNormalTintColor: UIColor {
         return .accessoryText
@@ -130,7 +131,7 @@ class DetailInfoMessageViewModel: MessageViewModel {
             x = backgroundImageFrame.minX - disappearingIconFrame.width - 10
         }
         let y = backgroundImageFrame.midY - disappearingIconFrame.height / 2
-        disappearingIconFrame = CGRect(x: x, y: y, width: 16, height: 16)
+        disappearingIconFrame.origin = CGPoint(x: x, y: y)
     }
     
     func layoutEncryptedIconFrame() {

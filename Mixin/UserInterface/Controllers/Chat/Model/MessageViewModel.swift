@@ -26,7 +26,6 @@ class MessageViewModel: CustomDebugStringConvertible {
     var backgroundImageFrame = CGRect.zero
     var quotedMessageViewFrame: CGRect = .zero
     var cellHeight: CGFloat = 44
-    var disappearingIconFrame: CGRect = .zero
     
     var contentMargin: Margin {
         return Margin(leading: 16, trailing: 10, top: 7, bottom: 7)

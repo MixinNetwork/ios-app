@@ -20,19 +20,12 @@ class MessageCell: UITableViewCell {
         return view
     }()
     
-    lazy var disappearingIconView: UIImageView = {
-        let view = UIImageView(image: R.image.ic_chat_clock_fill())
-        messageContentView.addSubview(view)
-        return view
-    }()
-    
     private let checkmarkWidth: CGFloat = 16
     
     private(set) var isMultipleSelecting = false
     
     private(set) weak var checkmarkViewIfLoaded: CheckmarkView?
     private(set) weak var quotedMessageViewIfLoaded: QuotedMessageView?
-    private(set) weak var disappearingIconViewIfLoaded: QuotedMessageView?
     
     var viewModel: MessageViewModel?
     
@@ -79,12 +72,6 @@ class MessageCell: UITableViewCell {
             quotedMessageView.render(viewModel: quotedMessageViewModel)
         } else {
             quotedMessageViewIfLoaded?.removeFromSuperview()
-        }
-        if viewModel.message.isDisappearingMessage {
-            disappearingIconView.frame = viewModel.disappearingIconFrame
-            disappearingIconView.isHidden = false
-        } else {
-            disappearingIconViewIfLoaded?.isHidden = true
         }
     }
     

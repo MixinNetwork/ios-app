@@ -36,7 +36,7 @@ extension DisappearingMessageViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let option = Option.allCases[indexPath.row]
-        if let expireIn = option.exipreIn {
+        if let expireIn = option.expireIn {
             update(expireIn: expireIn)
         } else {
             let window = DisappearingMessageTimePickerWindow.instance()
@@ -79,7 +79,7 @@ extension DisappearingMessageViewController {
             }
         }
         
-        var exipreIn: Int64? {
+        var expireIn: Int64? {
             switch self {
             case .off:
                 return 0

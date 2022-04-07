@@ -372,7 +372,7 @@ extension GroupProfileViewController {
         if isAdmin {
             groups.append([
                 ProfileMenuItem(title: R.string.localizable.disappearing_message_title(),
-                                subtitle: DisappearingMessageDuration.custom(expireIn: conversation.expireIn).expireInTitle,
+                                subtitle: DisappearingMessageDurationFormatter.string(from: conversation.expireIn),
                                 style: [],
                                 action: #selector(editDisappearingMessageDuration))
             ])

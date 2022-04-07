@@ -127,6 +127,7 @@ final class SettingCell: ModernSelectedBackgroundCell {
             accessorySwitch.isEnabled = isEnabled
             accessorySwitch.setOn(isOn, animated: animated)
         case .busy:
+            accessoryImageViewIfLoaded?.isHidden = true
             if accessoryBusyIndicator.superview == nil {
                 contentStackView.addArrangedSubview(accessoryBusyIndicator)
             }

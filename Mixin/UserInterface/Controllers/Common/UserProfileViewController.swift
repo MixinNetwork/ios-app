@@ -981,7 +981,7 @@ extension UserProfileViewController {
         func updateUI(with expireIn: Int64) {
             Queue.main.autoSync {
                 self.messageExpireIn = expireIn
-                let subtitle = DisappearingMessageDuration.custom(expireIn: expireIn).expireInTitle
+                let subtitle = DisappearingMessageDurationFormatter.string(from: expireIn)
                 self.disappearingMessageItemView.subtitleLabel.text = subtitle
             }
         }

@@ -4,10 +4,8 @@ class DisappearingMessageTimePickerWindow: BottomSheetView {
         
     @IBOutlet weak var pickerView: UIPickerView!
     
-    var onClose: (() -> Void)?
-    var onChange: ((_ expireIn: Int64, _ expireInTitle: String) -> Void)?
+    var onPick: ((Int64) -> Void)?
     
-    private var shouldCallOnClose = true
     private var selectedDuration: Int = 1
     private var selectedUnit: Unit = .second {
         didSet {
@@ -26,22 +24,12 @@ class DisappearingMessageTimePickerWindow: BottomSheetView {
     
     @IBAction func setAction(_ sender: Any) {
         let expireIn = Int64(selectedUnit.interval) * Int64(selectedDuration + 1)
-        let expireInTitle = "\(selectedDuration + 1) \(selectedUnit.name)"
-        onChange?(expireIn, expireInTitle)
-        shouldCallOnClose = false
+        onPick?(expireIn)
         dismissPopupControllerAnimated()
     }
     
     @IBAction func closeAction(_ sender: Any) {
-        shouldCallOnClose = true
         dismissPopupControllerAnimated()
-    }
-    
-    override func dismissPopupControllerAnimated() {
-        if shouldCallOnClose {
-            onClose?()
-        }
-        super.dismissPopupControllerAnimated()
     }
     
     class func instance() -> DisappearingMessageTimePickerWindow {
@@ -125,6 +113,7 @@ extension DisappearingMessageTimePickerWindow {
     }
     
     private enum Unit: Int {
+        
         case second = 0
         case minute
         case hour
@@ -175,6 +164,7 @@ extension DisappearingMessageTimePickerWindow {
                 return .week
             }
         }
+        
     }
     
 }

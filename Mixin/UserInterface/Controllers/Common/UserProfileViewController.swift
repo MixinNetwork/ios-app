@@ -49,7 +49,7 @@ final class UserProfileViewController: ProfileViewController {
     private var sharedAppUsers: [User]?
     private var dismissHomeAppsWindow = true
     private var centerStackViewHeightConstraint: NSLayoutConstraint?
-    private var messageExpireIn: Int64 = 0
+    private var conversationExpireIn: Int64 = 0
     
     init(user: UserItem) {
         super.init(nibName: R.nib.profileView.name, bundle: R.nib.profileView.bundle)
@@ -81,7 +81,7 @@ final class UserProfileViewController: ProfileViewController {
             reloadFavoriteApps(userId: user.userId, fromRemote: true)
             if !isMe {
                 reloadCircles(conversationId: conversationId, userId: user.userId)
-                updateMessageExpireIn(conversationId: conversationId)
+                reloadMessageExpiration(conversationId: conversationId)
             }
             let recognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction(_:)))
             recognizer.delegate = self
@@ -568,7 +568,7 @@ extension UserProfileViewController {
     }
     
     @objc func editDisappearingMessageDuration() {
-        let controller = DisappearingMessageViewController.instance(conversationId: conversationId, expireIn: messageExpireIn)
+        let controller = DisappearingMessageViewController.instance(conversationId: conversationId, expireIn: conversationExpireIn)
         dismissAndPush(controller)
     }
     
@@ -977,14 +977,16 @@ extension UserProfileViewController {
         }
     }
     
-    private func updateMessageExpireIn(conversationId: String) {
+    private func reloadMessageExpiration(conversationId: String) {
+        
         func updateUI(with expireIn: Int64) {
             Queue.main.autoSync {
-                self.messageExpireIn = expireIn
+                self.conversationExpireIn = expireIn
                 let subtitle = DisappearingMessageDurationFormatter.string(from: expireIn)
                 self.disappearingMessageItemView.subtitleLabel.text = subtitle
             }
         }
+        
         DispatchQueue.global().async {
             if let expireIn = ConversationDAO.shared.getExpireIn(conversationId: conversationId) {
                 updateUI(with: expireIn)

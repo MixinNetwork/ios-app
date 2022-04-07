@@ -13,12 +13,12 @@ public final class ConversationDAO: UserDatabaseDAO {
     c.last_read_message_id as lastReadMessageId, c.unseen_message_count as unseenMessageCount,
     (SELECT COUNT(*) FROM message_mentions mm WHERE mm.conversation_id = c.conversation_id AND mm.has_read = 0) as unseenMentionCount,
     CASE WHEN c.category = 'CONTACT' THEN u1.mute_until ELSE c.mute_until END as muteUntil,
-    c.code_url as codeUrl, c.pin_time as pinTime,
-    m.content as content, m.category as contentType, m.created_at as createdAt,
+    c.code_url as codeUrl, c.pin_time as pinTime, c.expire_in as expireIn,
+    m.content as content, m.category as contentType, m.expire_in as contentExpireIn, m.created_at as createdAt,
     m.user_id as senderId, u.full_name as senderFullName, u1.identity_number as ownerIdentityNumber,
     u1.full_name as ownerFullName, u1.avatar_url as ownerAvatarUrl, u1.is_verified as ownerIsVerified,
     m.action as actionName, u2.full_name as participantFullName, u2.user_id as participantUserId, m.status as messageStatus, m.id as messageId, u1.app_id as appId,
-    mm.mentions, m.expire_in as expireIn
+    mm.mentions
     """
     private static let sqlQueryConversation = """
     \(sqlQueryColumns)

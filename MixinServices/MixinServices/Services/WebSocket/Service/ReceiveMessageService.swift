@@ -1272,6 +1272,7 @@ extension ReceiveMessageService {
             let participantDidChange = operSuccess
                 && sysMessage.action != SystemConversationAction.UPDATE.rawValue
                 && sysMessage.action != SystemConversationAction.ROLE.rawValue
+                && sysMessage.action != SystemConversationAction.EXPIRE.rawValue
             if participantDidChange {
                 let userInfo = [ReceiveMessageService.UserInfoKey.conversationId: data.conversationId]
                 NotificationCenter.default.post(name: ReceiveMessageService.groupConversationParticipantDidChangeNotification, object: self, userInfo: userInfo)

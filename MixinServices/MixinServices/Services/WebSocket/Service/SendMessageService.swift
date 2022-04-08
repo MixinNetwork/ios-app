@@ -590,9 +590,9 @@ extension SendMessageService {
             return
         }
         // Forwarding multiple messages to a new conversation, need make sure they all have expireIn
-        if blazeMessage.params?.expireIn == 0, let expireIn = ConversationDAO.shared.getExpireIn(conversationId: message.conversationId), expireIn != 0 {
-            blazeMessage.params?.expireIn = expireIn
-            MessageDAO.shared.updateMessageExpireIn(expireIn: expireIn, messageId: messageId, conversationId: message.conversationId)
+        if blazeMessage.params?.expireIn == 0, conversation.expireIn != 0 {
+            blazeMessage.params?.expireIn = conversation.expireIn
+            MessageDAO.shared.updateMessageExpireIn(expireIn: conversation.expireIn, messageId: messageId, conversationId: message.conversationId)
         }
         
         if conversation.isGroup() && conversation.status != ConversationStatus.SUCCESS.rawValue {

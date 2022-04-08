@@ -23,7 +23,7 @@ class DisappearingMessageTimePickerWindow: BottomSheetView {
     }
     
     @IBAction func setAction(_ sender: Any) {
-        let expireIn = Int64(selectedUnit.interval) * Int64(selectedDuration + 1)
+        let expireIn = Int64(selectedUnit.interval) * Int64(max(selectedDuration, 1))
         onPick?(expireIn)
         dismissPopupControllerAnimated()
     }
@@ -40,21 +40,21 @@ class DisappearingMessageTimePickerWindow: BottomSheetView {
         let timeInterval = TimeInterval(expireIn)
         if timeInterval < .minute {
             selectedUnit = .second
-            selectedDuration = max(Int(timeInterval) - 1, 0)
+            selectedDuration = Int(timeInterval)
         } else if timeInterval < .hour {
             selectedUnit = .minute
-            selectedDuration = Int(timeInterval / .minute) - 1
+            selectedDuration = Int(timeInterval / .minute)
         } else if timeInterval < .day {
             selectedUnit = .hour
-            selectedDuration = Int(timeInterval / .hour) - 1
+            selectedDuration = Int(timeInterval / .hour)
         } else if timeInterval < .week {
             selectedUnit = .day
-            selectedDuration = Int(timeInterval / .day) - 1
+            selectedDuration = Int(timeInterval / .day)
         } else {
             selectedUnit = .week
-            selectedDuration = Int(timeInterval / .week) - 1
+            selectedDuration = Int(timeInterval / .week)
         }
-        pickerView.selectRow(selectedDuration, inComponent: Component.duration.rawValue, animated: false)
+        pickerView.selectRow(index(for: selectedDuration), inComponent: Component.duration.rawValue, animated: false)
         pickerView.selectRow(selectedUnit.rawValue, inComponent: Component.unit.rawValue, animated: false)
     }
     
@@ -84,7 +84,7 @@ extension DisappearingMessageTimePickerWindow: UIPickerViewDelegate {
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         switch Component(rawValue: component) {
         case .duration:
-            return "\(row + 1)"
+            return "\(duration(for: row))"
         case .unit:
             return (Unit(rawValue: row) ?? .second).name
         default:
@@ -95,7 +95,7 @@ extension DisappearingMessageTimePickerWindow: UIPickerViewDelegate {
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         switch Component(rawValue: component) {
         case .duration:
-            selectedDuration = row
+            selectedDuration = duration(for: row)
         case .unit:
             selectedUnit = Unit(rawValue: row) ?? .second
         default:
@@ -106,6 +106,14 @@ extension DisappearingMessageTimePickerWindow: UIPickerViewDelegate {
 }
 
 extension DisappearingMessageTimePickerWindow {
+    
+    private func duration(for index: Int) -> Int {
+        index + 1
+    }
+    
+    private func index(for duration: Int) -> Int {
+        max(duration - 1, 0)
+    }
     
     private enum Component: Int {
         case duration = 0

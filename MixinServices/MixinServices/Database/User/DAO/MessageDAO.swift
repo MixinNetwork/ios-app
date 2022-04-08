@@ -848,15 +848,16 @@ extension MessageDAO {
     
     public func updateMessageExpireIn(expireIn: Int64, messageId: String, conversationId: String) {
         db.write { db in
-            try Message
+            let changes = try Message
                 .filter(Message.column(of: .messageId) == messageId)
                 .updateAll(db, [Message.column(of: .expireIn).set(to: expireIn)])
+            if changes != 0 {
+                let message = DisappearingMessage(messageId: messageId, expireIn: expireIn)
+                try DisappearingMessageDAO.shared.insert(message: message, database: db)
+            }
             db.afterNextTransactionCommit { db in
                 let change = ConversationChange(conversationId: conversationId, action: .updateExpireIn(expireIn: expireIn, messageId: messageId))
                 NotificationCenter.default.post(onMainThread: MixinServices.conversationDidChangeNotification, object: change)
-                if let message = try? Message.filter(Message.column(of: .messageId) == messageId).fetchOne(db) {
-                   try? DisappearingMessageDAO.shared.insert(message: DisappearingMessage(message: message), database: db)
-                }
             }
         }
     }

@@ -364,7 +364,7 @@ class ConversationViewController: UIViewController {
         center.addObserver(self, selector: #selector(participantDidChange(_:)), name: ParticipantDAO.participantDidChangeNotification, object: nil)
         center.addObserver(self, selector: #selector(didAddMessageOutOfBounds(_:)), name: ConversationDataSource.newMessageOutOfVisibleBoundsNotification, object: dataSource)
         center.addObserver(self, selector: #selector(audioMessagePlayingManagerWillPlayNextNode(_:)), name: AudioMessagePlayingManager.willPlayNextNotification, object: AudioMessagePlayingManager.shared)
-        center.addObserver(self, selector: #selector(willRecallMessage(_:)), name: SendMessageService.willRecallMessageNotification, object: nil)
+        center.addObserver(self, selector: #selector(willRecallMessage(_:)), name: SendMessageService.willDeleteMessageNotification, object: nil)
         center.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         center.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         center.addObserver(self, selector: #selector(pinMessageDidSave(_:)), name: PinMessageDAO.didSaveNotification, object: nil)

@@ -40,9 +40,13 @@ public final class DisappearingMessageDAO: UserDatabaseDAO {
                 .select(DisappearingMessage.column(of: .messageId))
                 .filter(condition)
                 .fetchAll(db)
+            let expiredMessages = try MessageDAO.shared.getFullMessages(messageIds: expiredMessageIds)
             for id in expiredMessageIds {
-                let (deleted, _) = try MessageDAO.shared.deleteMessage(id: id, with: db)
+                let (deleted, childMessageIds) = try MessageDAO.shared.deleteMessage(id: id, with: db)
                 if deleted {
+                    if let message = expiredMessages.first(where: { $0.messageId == id }) {
+                        ReceiveMessageService.shared.stopRecallMessage(item: message, childMessageIds: childMessageIds)
+                    }
                     NotificationCenter.default.post(onMainThread: Self.expiredMessageDidDeleteNotification,
                                                     object: nil,
                                                     userInfo: [Self.messageIdKey: id])

@@ -123,7 +123,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         
         longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction(_:)))
         view.addGestureRecognizer(longPressRecognizer)
-        NotificationCenter.default.addObserver(self, selector: #selector(willRecallMessage(_:)), name: SendMessageService.willRecallMessageNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(willRecallMessage(_:)), name: SendMessageService.willDeleteMessageNotification, object: nil)
     }
     
     override func viewDidDisappear(_ animated: Bool) {

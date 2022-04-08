@@ -32,7 +32,7 @@ class AudioMessagePlayingManager: NSObject, AudioSessionClient {
         let center = NotificationCenter.default
         center.addObserver(self,
                            selector: #selector(willRecallMessage(_:)),
-                           name: SendMessageService.willRecallMessageNotification,
+                           name: SendMessageService.willDeleteMessageNotification,
                            object: nil)
         center.addObserver(self,
                            selector: #selector(appDidEnterBackgroundNotification(_:)),

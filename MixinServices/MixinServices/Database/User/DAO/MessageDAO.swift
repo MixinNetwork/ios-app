@@ -738,12 +738,7 @@ public final class MessageDAO: UserDatabaseDAO {
         return (deleted, childMessageIds)
     }
     
-    public func deleteMessage(id: String, database: GRDB.Database) throws -> Bool {
-        try deleteMessage(id: id, with: database).deleted
-    }
-    
-
-    private func deleteMessage(id: String, with database: GRDB.Database) throws -> (deleted: Bool, childMessageIds: [String]) {
+    func deleteMessage(id: String, with database: GRDB.Database) throws -> (deleted: Bool, childMessageIds: [String]) {
         var deleteCount = 0
         var childMessageIds: [String] = []
         let conversationId: String? = try Message

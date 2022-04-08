@@ -36,12 +36,12 @@ public final class DisappearingMessageDAO: UserDatabaseDAO {
         db.write { db in
             let condition: SQLSpecificExpressible = DisappearingMessage.column(of: .expireAt) != 0
                 && DisappearingMessage.column(of: .expireAt) <= Int64(Date().timeIntervalSince1970)
-            let expiredMessageIds = try DisappearingMessage
+            let expiredMessageIds: [String] = try DisappearingMessage
+                .select(DisappearingMessage.column(of: .messageId))
                 .filter(condition)
                 .fetchAll(db)
-                .map(\.messageId)
             for id in expiredMessageIds {
-                let deleted = try MessageDAO.shared.deleteMessage(id: id, database: db)
+                let (deleted, _) = try MessageDAO.shared.deleteMessage(id: id, with: db)
                 if deleted {
                     NotificationCenter.default.post(onMainThread: Self.expiredMessageDidDeleteNotification,
                                                     object: nil,
@@ -56,10 +56,11 @@ public final class DisappearingMessageDAO: UserDatabaseDAO {
             try DisappearingMessage
                 .filter(expiredMessageIds.contains(DisappearingMessage.column(of: .messageId)))
                 .deleteAll(db)
-            let nextExpireAt = try DisappearingMessage
+            let nextExpireAt: Int64? = try DisappearingMessage
+                .select(DisappearingMessage.column(of: .expireAt))
                 .filter(DisappearingMessage.column(of: .expireAt) != 0)
                 .order([DisappearingMessage.column(of: .expireAt).asc])
-                .fetchOne(db)?.expireAt
+                .fetchOne(db)
             completion(nextExpireAt)
         }
     }

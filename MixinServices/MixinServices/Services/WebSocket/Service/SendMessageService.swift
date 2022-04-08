@@ -589,8 +589,10 @@ extension SendMessageService {
         guard let conversation = ConversationDAO.shared.getConversation(conversationId: message.conversationId) else {
             return
         }
-        // Forwarding multiple messages to a new conversation, need make sure they all have expireIn
         if blazeMessage.params?.expireIn == 0, conversation.expireIn != 0 {
+            // When multiple messages get forwarded to someone with no conversation exists, those blaze messages will
+            // have a zero-valued expire_in. The first blaze message will have expire_in set with newly created
+            // conversation, but remaining ones don't. Those messages' expire_in will be set here.
             blazeMessage.params?.expireIn = conversation.expireIn
             MessageDAO.shared.updateMessageExpireIn(expireIn: conversation.expireIn, messageId: messageId, conversationId: message.conversationId)
         }

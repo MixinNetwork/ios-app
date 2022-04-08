@@ -10,10 +10,11 @@ public final class DisappearingMessage {
     public init(message: Message) {
         messageId = message.messageId
         expireIn = message.expireIn
-        if expireIn <= 60 * 60 * 24 {
-            expireAt = 0
-        } else {
+        if expireIn > 60 * 60 * 24 {
+            // If a message is set to be expired after more than 24hrs, it will be deleted on time despite reading status
             expireAt = Int64(Date().addingTimeInterval(TimeInterval(message.expireIn)).timeIntervalSince1970)
+        } else {
+            expireAt = 0
         }
     }
     

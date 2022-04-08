@@ -7,9 +7,7 @@ final class DisappearingMessageManager {
     
     private let queue = DispatchQueue(label: "one.mixin.messenger.queue.disappearingMessage")
     
-    private var disappearanceDate: Date = .distantFuture
-    
-    private weak var disappearanceTimer: Timer?
+    private weak var timer: Timer?
     
     init() {
         let notificationCenter = NotificationCenter.default
@@ -18,7 +16,7 @@ final class DisappearingMessageManager {
                                        name: UIApplication.willResignActiveNotification,
                                        object: nil)
         notificationCenter.addObserver(self,
-                                       selector: #selector(applicationDidBecomeActive),
+                                       selector: #selector(removeExpiredMessages),
                                        name: UIApplication.didBecomeActiveNotification,
                                        object: nil)
         notificationCenter.addObserver(self,
@@ -31,57 +29,37 @@ final class DisappearingMessageManager {
         queue.async { [weak self] in
             DisappearingMessageDAO.shared.removeExpiredMessages { nextExpireAt in
                 if let nextExpireAt = nextExpireAt {
-                    self?.schedualTimer(expireAt: nextExpireAt)
+                    self?.scheduleTimer(expireAt: nextExpireAt)
                 }
             }
         }
     }
     
     @objc private func applicationWillResignActive() {
-        resetDisappearanceTimer()
+        timer?.invalidate()
     }
     
-    @objc private func applicationDidBecomeActive() {
-        removeExpiredMessages()
-    }
-    
-    @objc private func disappearanceTimerDidFire() {
-        guard AppGroupUserDefaults.isRunningInMainApp else {
-            return
-        }
-        resetDisappearanceTimer()
-        removeExpiredMessages()
-    }
-    
-    private func schedualTimer(expireAt: Int64) {
+    private func scheduleTimer(expireAt: Int64) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else {
                 return
             }
-            guard AppGroupUserDefaults.isRunningInMainApp else {
+            let fireDate = Date(timeIntervalSince1970: TimeInterval(expireAt))
+            if let timer = self.timer, timer.fireDate < fireDate {
                 return
             }
-            let delaySeconds = Date(timeIntervalSince1970: TimeInterval(expireAt)).timeIntervalSinceNow
-            let newTimerScheduleDate = Date(timeIntervalSinceNow: delaySeconds)
-            if self.disappearanceDate < newTimerScheduleDate {
-                return
+            self.timer?.invalidate()
+            let timerInterval = fireDate.timeIntervalSinceNow
+            if timerInterval < 1 {
+                self.removeExpiredMessages()
+            } else {
+                self.timer = Timer.scheduledTimer(timeInterval: timerInterval,
+                                                  target: self,
+                                                  selector: #selector(self.removeExpiredMessages),
+                                                  userInfo: nil,
+                                                  repeats: false)
             }
-            self.resetDisappearanceTimer()
-            self.disappearanceDate = newTimerScheduleDate
-            self.disappearanceTimer = Timer.scheduledTimer(timeInterval: delaySeconds,
-                                                           target: self,
-                                                           selector: #selector(self.disappearanceTimerDidFire),
-                                                           userInfo: nil,
-                                                           repeats: false)
-            RunLoop.main.add(self.disappearanceTimer!, forMode: .common)
         }
     }
     
-    private func resetDisappearanceTimer() {
-        disappearanceTimer?.invalidate()
-        disappearanceTimer = nil
-        disappearanceDate = .distantFuture
-    }
-    
 }
-

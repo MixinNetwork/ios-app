@@ -497,11 +497,6 @@ public final class UserDatabase: Database {
             if !messages.map(\.name).contains("expire_in") {
                 try db.execute(sql: "ALTER TABLE messages ADD COLUMN expire_in INTEGER NOT NULL DEFAULT 0")
             }
-            
-            let transcript = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(transcript_messages)")
-            if !transcript.map(\.name).contains("expire_in") {
-                try db.execute(sql: "ALTER TABLE transcript_messages ADD COLUMN expire_in INTEGER NOT NULL DEFAULT 0")
-            }
         }
         
         return migrator

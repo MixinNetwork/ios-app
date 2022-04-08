@@ -30,7 +30,6 @@ public final class TranscriptMessage {
     public let quoteMessageId: String?
     public let quoteContent: String?
     public let caption: String?
-    public let expireIn: Int64
     
     public init(transcriptId: String, mediaUrl: String?, message m: TranscriptMessage) {
         self.transcriptId = transcriptId
@@ -60,7 +59,6 @@ public final class TranscriptMessage {
         self.quoteMessageId = m.quoteMessageId
         self.quoteContent = m.quoteContent
         self.caption = m.caption
-        self.expireIn = m.expireIn
     }
     
     public init?(transcriptId: String, mediaUrl: String?, thumbImage: String?, messageItem item: MessageItem) {
@@ -110,7 +108,6 @@ public final class TranscriptMessage {
         self.quoteContent = QuoteContentConverter.transcriptQuoteContent(from: item.quoteContent)
         self.mentions = MentionConverter.transcriptMention(from: item.mentionsJson)
         self.createdAt = item.createdAt
-        self.expireIn = item.expireIn
     }
     
 }
@@ -173,7 +170,6 @@ extension TranscriptMessage: Codable, DatabaseColumnConvertible, MixinFetchableR
         case quoteMessageId = "quote_id"
         case quoteContent = "quote_content"
         case caption
-        case expireIn = "expire_in"
     }
     
 }

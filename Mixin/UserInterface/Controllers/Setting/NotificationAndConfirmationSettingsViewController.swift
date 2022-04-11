@@ -33,14 +33,18 @@ class NotificationAndConfirmationSettingsViewController: SettingsTableViewContro
         AppGroupUserDefaults.User.duplicateTransferConfirmation
     }
     
-    private var transferNotificationThreshold: String {
+    private var localizedTransferNotificationThreshold: String {
         let threshold = LoginManager.shared.account?.transfer_notification_threshold ?? 0
         return NumberFormatter.localizedString(from: NSNumber(value: threshold), number: .decimal)
     }
     
-    private var transferConfirmationThreshold: String {
-        let threshold = LoginManager.shared.account?.transfer_confirmation_threshold ?? 0
-        return NumberFormatter.localizedString(from: NSNumber(value: threshold), number: .decimal)
+    private var transferConfirmationThreshold: Double {
+        LoginManager.shared.account?.transfer_confirmation_threshold ?? 0
+    }
+    
+    private var localizedTransferConfirmationThreshold: String {
+        let number = NSNumber(value: transferConfirmationThreshold)
+        return NumberFormatter.localizedString(from: number, number: .decimal)
     }
     
     class func instance() -> UIViewController {
@@ -83,7 +87,7 @@ extension NotificationAndConfirmationSettingsViewController: UITableViewDelegate
         switch indexPath.section {
         case 1:
             let title = R.string.localizable.setting_notification_transfer_amount(Currency.current.symbol)
-            editorController.present(title: title, actionTitle: actionTitle, currentText: transferNotificationThreshold, placeholder: placeholder) { (controller) in
+            editorController.present(title: title, actionTitle: actionTitle, currentText: localizedTransferNotificationThreshold, placeholder: placeholder) { (controller) in
                 guard let amount = controller.textFields?.first?.text else {
                     return
                 }
@@ -91,7 +95,7 @@ extension NotificationAndConfirmationSettingsViewController: UITableViewDelegate
             }
         case 2:
             let title = R.string.localizable.setting_transfer_large_title(Currency.current.symbol)
-            editorController.present(title: title, actionTitle: actionTitle, currentText: transferConfirmationThreshold, placeholder: placeholder) { (controller) in
+            editorController.present(title: title, actionTitle: actionTitle, currentText: localizedTransferConfirmationThreshold, placeholder: placeholder) { (controller) in
                 guard let amount = controller.textFields?.first?.text else {
                     return
                 }
@@ -107,7 +111,7 @@ extension NotificationAndConfirmationSettingsViewController: UITableViewDelegate
 extension NotificationAndConfirmationSettingsViewController {
     
     private func makeTransferNotificationThresholdSection() -> SettingsSection {
-        let representation = Currency.current.symbol + transferNotificationThreshold
+        let representation = Currency.current.symbol + localizedTransferNotificationThreshold
         let footer = R.string.localizable.setting_notification_transfer_summary(representation)
         let row = SettingsRow(title: R.string.localizable.setting_notification_transfer(),
                               subtitle: representation,
@@ -116,8 +120,13 @@ extension NotificationAndConfirmationSettingsViewController {
     }
     
     private func makeTransferConfirmationThresholdSection() -> SettingsSection {
-        let representation = Currency.current.symbol + transferConfirmationThreshold
-        let footer = R.string.localizable.setting_transfer_large_summary(representation)
+        let representation = Currency.current.symbol + localizedTransferConfirmationThreshold
+        let footer: String
+        if transferConfirmationThreshold == 0 {
+            footer = R.string.localizable.setting_transfer_large_summary_greater(representation)
+        } else {
+            footer = R.string.localizable.setting_transfer_large_summary_greater_equal(representation)
+        }
         let row = SettingsRow(title: R.string.localizable.setting_transfer_large(),
                               subtitle: representation,
                               accessory: .disclosure)

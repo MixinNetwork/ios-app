@@ -850,7 +850,8 @@
 "setting_notification_transfer_summary" = "Display notifications when receiving a transfer greater than or equal to %@.";
 "setting_transfer_large" = "Large Amount Confirmation";
 "setting_transfer_large_title" = "Large Amount Confirmation(%@)";
-"setting_transfer_large_summary" = "Display confirmation dialog when transfer greater than or equal to %@.";
+"setting_transfer_large_summary_greater_equal" = "Show confirmation dialog when transfer greater than or equal to %@.";
+"setting_transfer_large_summary_greater" = "Show confirmation dialog when transfer greater than %@.";
 "setting_duplicate_transfer_title" = "Duplicate Transfer Confirmation";
 "setting_duplicate_transfer_summary" = "Display confirmation dialog when you transfer the same amount to the same person within 6 hours.";
 "setting_backup_title" = "Chat Backup";

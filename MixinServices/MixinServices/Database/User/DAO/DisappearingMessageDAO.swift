@@ -19,11 +19,17 @@ public final class DisappearingMessageDAO: UserDatabaseDAO {
         }
     }
     
-    public func updateExpireAt(for messageId: String, database: GRDB.Database) throws {
+    public func updateExpireAt(for messageId: String, expireAt: Int64) {
+        db.write { db in
+            try updateExpireAt(for: messageId, database: db)
+        }
+    }
+
+    public func updateExpireAt(for messageId: String, database: GRDB.Database, expireAt: Int64? = nil) throws {
         guard let message = try DisappearingMessage.filter(DisappearingMessage.column(of: .messageId) == messageId).fetchOne(database), message.expireAt == 0 else {
             return
         }
-        let expireAt = UInt64(Date().addingTimeInterval(TimeInterval(message.expireIn)).timeIntervalSince1970)
+        let expireAt = expireAt ?? Int64(Date().addingTimeInterval(TimeInterval(message.expireIn)).timeIntervalSince1970)
         try DisappearingMessage
             .filter(DisappearingMessage.column(of: .messageId) == messageId)
             .updateAll(database, [DisappearingMessage.column(of: .expireAt).set(to: expireAt)])
@@ -66,6 +72,22 @@ public final class DisappearingMessageDAO: UserDatabaseDAO {
                 .order([DisappearingMessage.column(of: .expireAt).asc])
                 .fetchOne(db)
             completion(nextExpireAt)
+        }
+    }
+    
+    public func getExpireAts(messageIds: [String]) -> [String: Int64] {
+        guard !messageIds.isEmpty else {
+            return [:]
+        }
+        let ids = messageIds.joined(separator: "', '")
+        let sql = """
+        SELECT m.*
+        FROM disappearing_messages m
+        WHERE m.message_id in ('\(ids)')
+        """
+        let messages: [DisappearingMessage] = db.select(with: sql)
+        return messages.reduce(into: [:]) { map, message in
+            map[message.messageId] = message.expireAt
         }
     }
     

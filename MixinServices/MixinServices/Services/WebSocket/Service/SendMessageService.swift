@@ -211,9 +211,10 @@ public class SendMessageService: MixinService {
                         jobs.append(Job(sessionRead: conversationId, messageId: messageId))
                     }
                 } else {
+                    let expireAts = DisappearingMessageDAO.shared.getExpireAts(messageIds: ids)
                     for i in stride(from: 0, to: ids.count, by: 100) {
                         let by = i + 100 > ids.count ? ids.count : i + 100
-                        let messages: [TransferMessage] = ids[i..<by].map { TransferMessage(messageId: $0, status: MessageStatus.READ.rawValue) }
+                        let messages: [TransferMessage] = ids[i..<by].map { TransferMessage(messageId: $0, status: MessageStatus.READ.rawValue, expireAt: expireAts[$0]) }
                         let blazeMessage = BlazeMessage(params: BlazeMessageParam(messages: messages), action: BlazeMessageAction.acknowledgeMessageReceipts.rawValue)
                         jobs.append(Job(jobId: blazeMessage.id, action: .SEND_ACK_MESSAGES, blazeMessage: blazeMessage))
                         

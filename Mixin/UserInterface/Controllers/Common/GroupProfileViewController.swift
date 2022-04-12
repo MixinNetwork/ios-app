@@ -230,6 +230,9 @@ extension GroupProfileViewController {
     }
     
     @objc func editDisappearingMessageDuration() {
+        guard isAdmin else {
+            return
+        }
         let controller = DisappearingMessageViewController.instance(conversationId: conversationId, expireIn: conversation.expireIn)
         dismissAndPush(controller)
     }
@@ -369,14 +372,14 @@ extension GroupProfileViewController {
                             action: #selector(searchConversation))
         ])
         
+        groups.append([
+            ProfileMenuItem(title: R.string.localizable.disappearing_message_title(),
+                            subtitle: DisappearingMessageDurationFormatter.string(from: conversation.expireIn),
+                            style: [],
+                            action: #selector(editDisappearingMessageDuration))
+        ])
+        
         if isAdmin {
-            groups.append([
-                ProfileMenuItem(title: R.string.localizable.disappearing_message_title(),
-                                subtitle: DisappearingMessageDurationFormatter.string(from: conversation.expireIn),
-                                style: [],
-                                action: #selector(editDisappearingMessageDuration))
-            ])
-            
             groups.append([
                 ProfileMenuItem(title: R.string.localizable.profile_edit_name(),
                                 subtitle: nil,

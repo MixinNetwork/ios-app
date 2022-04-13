@@ -570,6 +570,11 @@ public final class MessageDAO: UserDatabaseDAO {
         silentNotification: Bool = false,
         completion: (() -> Void)? = nil
     ) {
+        if message.expireIn != 0
+           && message.userId == myUserId
+           && -Int64(message.createdAt.toUTCDate().timeIntervalSinceNow) >= message.expireIn {
+            return
+        }
         var message = message
         
         let quotedMessage: MessageItem?
@@ -608,7 +613,14 @@ public final class MessageDAO: UserDatabaseDAO {
             try message.save(database)
         }
         if message.expireIn != 0 && !message.category.hasPrefix("SYSTEM_") {
-            try DisappearingMessageDAO.shared.insert(message: DisappearingMessage(message: message), database: database)
+            let expireAt: Int64?
+            if message.status == MessageStatus.SENT.rawValue {
+                expireAt = Int64(message.createdAt.toUTCDate().timeIntervalSince1970) + message.expireIn
+            } else {
+                expireAt = nil
+            }
+            let msg = DisappearingMessage(messageId: message.messageId, expireIn: message.expireIn, expireAt: expireAt)
+            try DisappearingMessageDAO.shared.insert(message: msg, database: database)
         }
         let shouldInsertIntoFTSTable = AppGroupUserDefaults.Database.isFTSInitialized
             && message.status != MessageStatus.FAILED.rawValue

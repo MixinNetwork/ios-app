@@ -10,7 +10,7 @@ class NumberPadView: UIView, XibDesignable {
     private let contentBottomMargin: CGFloat = 2
     
     private var contentHeight: CGFloat {
-        let height: CGFloat = 226
+        let height: CGFloat = ScreenHeight.current <= .medium ? 216 : 226
         if bottomSafeAreaInset > 0 {
             return height - 10
         } else {

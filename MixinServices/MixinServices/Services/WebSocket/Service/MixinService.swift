@@ -10,7 +10,7 @@ public class MixinService {
         public static let progress = "prog"
     }
     
-    public static let willDeleteMessageNotification = Notification.Name(rawValue: "one.mixin.services.will.delete.msg")
+    public static let willRecallMessageNotification = Notification.Name(rawValue: "one.mixin.services.will.recall.msg")
     public static let messageReadStatusDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.msg.read.did.change")
     public static let clockSkewDetectedNotification = Notification.Name(rawValue: "one.mixin.services.clock.skew.detected")
     
@@ -334,7 +334,7 @@ public class MixinService {
         let userInfo = [SendMessageService.UserInfoKey.conversationId: item.conversationId,
                         SendMessageService.UserInfoKey.messageId: messageId]
         DispatchQueue.main.sync {
-            NotificationCenter.default.post(name: SendMessageService.willDeleteMessageNotification, object: self, userInfo: userInfo)
+            NotificationCenter.default.post(name: SendMessageService.willRecallMessageNotification, object: self, userInfo: userInfo)
         }
         
         let jobIds: [String]

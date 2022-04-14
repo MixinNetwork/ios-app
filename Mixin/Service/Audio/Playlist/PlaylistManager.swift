@@ -176,7 +176,7 @@ class PlaylistManager: NSObject {
                                        object: nil)
         notificationCenter.addObserver(self,
                                        selector: #selector(messageServiceWillRecallMessage(_:)),
-                                       name: SendMessageService.willDeleteMessageNotification,
+                                       name: SendMessageService.willRecallMessageNotification,
                                        object: nil)
     }
     

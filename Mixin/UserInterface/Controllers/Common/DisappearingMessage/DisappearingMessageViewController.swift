@@ -147,11 +147,7 @@ extension DisappearingMessageViewController {
         
     }
     
-    private func setAccessory(_ accessory: SettingsRow.Accessory, forRowWith expireIn: Int64?) {
-        guard let expireIn = expireIn else {
-            section.setAccessory(.none, forRowAt: 0)
-            return
-        }
+    private func setAccessory(_ accessory: SettingsRow.Accessory, forRowWith expireIn: Int64) {
         let option = Option(expireIn: expireIn)
         guard let index = Option.allCases.firstIndex(of: option) else {
             assertionFailure("No way an option not included in allCases")
@@ -179,13 +175,21 @@ extension DisappearingMessageViewController {
             switch result {
             case .success:
                 ConversationDAO.shared.updateExpireIn(expireIn: expireIn, conversationId: conversationId)
-                self?.currentExpireIn = expireIn
+                if let self = self {
+                    self.currentExpireIn = expireIn
+                    self.setAccessory(.checkmark, forRowWith: expireIn)
+                    self.tableView.isUserInteractionEnabled = true
+                }
             case let .failure(error):
-                showAutoHiddenHud(style: .error, text: error.localizedDescription)
-            }
-            if let self = self {
-                self.setAccessory(.checkmark, forRowWith: self.currentExpireIn)
-                self.tableView.isUserInteractionEnabled = true
+                if let self = self {
+                    if let expireIn = self.currentExpireIn {
+                        self.setAccessory(.checkmark, forRowWith: expireIn)
+                    } else {
+                        self.section.removeAllAccessories()
+                    }
+                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                    self.tableView.isUserInteractionEnabled = true
+                }
             }
         }
     }

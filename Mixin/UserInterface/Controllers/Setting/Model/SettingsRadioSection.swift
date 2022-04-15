@@ -8,4 +8,10 @@ class SettingsRadioSection: SettingsSection {
         }
     }
     
+    func removeAllAccessories() {
+        for row in rows {
+            row.accessory = .none
+        }
+    }
+    
 }

@@ -568,10 +568,32 @@ extension UserProfileViewController {
     }
     
     @objc func editDisappearingMessageDuration() {
-        let controller = DisappearingMessageViewController.instance(conversationId: conversationId,
-                                                                    expireIn: conversationExpireIn,
-                                                                    userId: user.userId)
-        dismissAndPush(controller)
+        func dismissAndPushController(expireIn: Int64) {
+            let controller = DisappearingMessageViewController.instance(conversationId: conversationId, expireIn: expireIn)
+            dismissAndPush(controller)
+        }
+        if let expireIn = conversationExpireIn {
+            dismissAndPushController(expireIn: expireIn)
+        } else {
+            let hud = Hud()
+            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+            let request = ConversationRequest(conversationId: conversationId,
+                                              name: nil,
+                                              category: ConversationCategory.CONTACT.rawValue,
+                                              participants: [ParticipantRequest(userId: user.userId, role: "")],
+                                              duration: nil,
+                                              announcement: nil)
+            ConversationAPI.createConversation(conversation: request) { result in
+                switch result {
+                case let .success(response):
+                    hud.hide()
+                    dismissAndPushController(expireIn: response.expireIn)
+                case let .failure(error):
+                    hud.set(style: .error, text: error.localizedDescription)
+                    hud.scheduleAutoHidden()
+                }
+            }
+        }
     }
     
 }

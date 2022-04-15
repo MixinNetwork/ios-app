@@ -7,18 +7,16 @@ final class DisappearingMessageViewController: SettingsTableViewController {
         SettingsRow(title: option.title, accessory: .none)
     }
     
-    private var currentExpireIn: Int64?
+    private var currentExpireIn: Int64 = 0
     private var conversationId = ""
-    private var userId: String?
     
     private lazy var section = SettingsRadioSection(rows: rows)
     private lazy var dataSource = SettingsDataSource(sections: [section])
     
-    class func instance(conversationId: String, expireIn: Int64?, userId: String? = nil) -> UIViewController {
+    class func instance(conversationId: String, expireIn: Int64) -> UIViewController {
         let vc = DisappearingMessageViewController()
         vc.conversationId = conversationId
         vc.currentExpireIn = expireIn
-        vc.userId = userId
         let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.disappearing_message_title())
         return container
     }
@@ -28,33 +26,7 @@ final class DisappearingMessageViewController: SettingsTableViewController {
         tableView.tableHeaderView = R.nib.disappearingMessageTableHeaderView(owner: nil)
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
-        if let currentExpireIn = currentExpireIn {
-            setAccessory(.checkmark, forRowWith: currentExpireIn)
-        } else if let userId = userId {
-            let hud = Hud()
-            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-            let request = ConversationRequest(conversationId: conversationId,
-                                              name: nil,
-                                              category: ConversationCategory.CONTACT.rawValue,
-                                              participants: [ParticipantRequest(userId: userId, role: "")],
-                                              duration: nil,
-                                              announcement: nil)
-            ConversationAPI.createConversation(conversation: request) { [weak self] result in
-                guard let self = self else {
-                    hud.hide()
-                    return
-                }
-                switch result {
-                case let .success(response):
-                    hud.hide()
-                    self.currentExpireIn = response.expireIn
-                    self.setAccessory(.checkmark, forRowWith: response.expireIn)
-                case let .failure(error):
-                    hud.set(style: .error, text: error.localizedDescription)
-                    hud.scheduleAutoHidden()
-                }
-            }
-        }
+        setAccessory(.checkmark, forRowWith: currentExpireIn)
     }
     
 }
@@ -68,7 +40,7 @@ extension DisappearingMessageViewController: UITableViewDelegate {
             update(expireIn: expireIn)
         } else {
             let window = DisappearingMessageTimePickerWindow.instance()
-            window.render(expireIn: currentExpireIn ?? 0)
+            window.render(expireIn: currentExpireIn)
             window.onPick = update(expireIn:)
             window.presentPopupControllerAnimated()
         }
@@ -175,21 +147,13 @@ extension DisappearingMessageViewController {
             switch result {
             case .success:
                 ConversationDAO.shared.updateExpireIn(expireIn: expireIn, conversationId: conversationId)
-                if let self = self {
-                    self.currentExpireIn = expireIn
-                    self.setAccessory(.checkmark, forRowWith: expireIn)
-                    self.tableView.isUserInteractionEnabled = true
-                }
+                self?.currentExpireIn = expireIn
             case let .failure(error):
-                if let self = self {
-                    if let expireIn = self.currentExpireIn {
-                        self.setAccessory(.checkmark, forRowWith: expireIn)
-                    } else {
-                        self.section.removeAllAccessories()
-                    }
-                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
-                    self.tableView.isUserInteractionEnabled = true
-                }
+                showAutoHiddenHud(style: .error, text: error.localizedDescription)
+            }
+            if let self = self {
+                self.setAccessory(.checkmark, forRowWith: self.currentExpireIn)
+                self.tableView.isUserInteractionEnabled = true
             }
         }
     }

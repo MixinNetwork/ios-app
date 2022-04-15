@@ -980,14 +980,16 @@ extension UserProfileViewController {
     }
     
     private func reloadMessageExpiration(conversationId: String) {
+        disappearingMessageItemView.button.isEnabled = false
         DispatchQueue.global().async {
-            guard let expireIn = ConversationDAO.shared.getExpireIn(conversationId: conversationId) else {
-                return
-            }
+            let expireIn = ConversationDAO.shared.getExpireIn(conversationId: conversationId)
             DispatchQueue.main.sync {
-                self.conversationExpireIn = expireIn
-                let subtitle = DisappearingMessageDurationFormatter.string(from: expireIn)
-                self.disappearingMessageItemView.subtitleLabel.text = subtitle
+                if let expireIn = expireIn {
+                    self.conversationExpireIn = expireIn
+                    let subtitle = DisappearingMessageDurationFormatter.string(from: expireIn)
+                    self.disappearingMessageItemView.subtitleLabel.text = subtitle
+                }
+                self.disappearingMessageItemView.button.isEnabled = true
             }
         }
     }

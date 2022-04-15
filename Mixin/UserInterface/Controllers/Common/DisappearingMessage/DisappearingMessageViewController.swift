@@ -41,15 +41,17 @@ final class DisappearingMessageViewController: SettingsTableViewController {
                                               announcement: nil)
             ConversationAPI.createConversation(conversation: request) { [weak self] result in
                 guard let self = self else {
+                    hud.hide()
                     return
                 }
-                hud.hide()
                 switch result {
                 case let .success(response):
+                    hud.hide()
                     self.currentExpireIn = response.expireIn
                     self.setAccessory(.checkmark, forRowWith: response.expireIn)
                 case let .failure(error):
-                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                    hud.set(style: .error, text: error.localizedDescription)
+                    hud.scheduleAutoHidden()
                 }
             }
         }
@@ -64,9 +66,9 @@ extension DisappearingMessageViewController: UITableViewDelegate {
         let option = Option.allCases[indexPath.row]
         if let expireIn = option.expireIn {
             update(expireIn: expireIn)
-        } else if let currentExpireIn = currentExpireIn {
+        } else {
             let window = DisappearingMessageTimePickerWindow.instance()
-            window.render(expireIn: currentExpireIn)
+            window.render(expireIn: currentExpireIn ?? 0)
             window.onPick = update(expireIn:)
             window.presentPopupControllerAnimated()
         }
@@ -147,6 +149,7 @@ extension DisappearingMessageViewController {
     
     private func setAccessory(_ accessory: SettingsRow.Accessory, forRowWith expireIn: Int64?) {
         guard let expireIn = expireIn else {
+            section.setAccessory(.none, forRowAt: 0)
             return
         }
         let option = Option(expireIn: expireIn)

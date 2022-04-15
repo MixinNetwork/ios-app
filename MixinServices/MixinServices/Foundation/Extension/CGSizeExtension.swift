@@ -44,4 +44,16 @@ extension CGSize {
         return size
     }
     
+    public func sizeThatFills(_ canvasSize: CGSize) -> CGSize {
+        let containerRatio = canvasSize.width / canvasSize.height
+        let myRatio = width / height
+        let size: CGSize
+        if myRatio > containerRatio {
+            size = CGSize(width: round(canvasSize.height * myRatio), height: canvasSize.height)
+        } else {
+            size = CGSize(width: canvasSize.width, height: round(canvasSize.width / myRatio))
+        }
+        return size
+    }
+    
 }

@@ -14,6 +14,11 @@ class StickerAddViewController: UIViewController {
     
     @IBOutlet weak var previewImageView: SDAnimatedImageView!
     
+    private let minStickerLength: CGFloat = 128
+    private let maxStickerLength: CGFloat = 1024
+    private let minDataCount = bytesPerKiloByte
+    private let maxDataCount = bytesPerMegaByte
+    
     private var source: Source!
     
     class func instance(source: Source) -> UIViewController {
@@ -88,18 +93,29 @@ extension StickerAddViewController: ContainerViewControllerDelegate {
         guard let rightButton = container?.rightButton, !rightButton.isBusy else {
             return
         }
+        guard let image = previewImageView.image else {
+            showFailureAlert()
+            assertionFailure("This is not expected to happen since right button should be disabled before any image is presented")
+            return
+        }
         rightButton.isBusy = true
         if let image = previewImageView.image as? SDAnimatedImage, image.animatedImageFrameCount > 1, let data = image.animatedImageData {
-            if isValid(animatedImageData: data) {
+            let isSizeValid = min(image.size.width, image.size.height) >= minStickerLength
+                && max(image.size.width, image.size.height) <= maxStickerLength
+            if isSizeValid {
                 performAddition(data: data)
             } else {
                 showMalformedAlert()
             }
-        } else if let image = previewImageView.image {
-            scaleImageAndPerformAdditionIfValid(image: image)
         } else {
-            showFailureAlert()
-            assertionFailure("This is not expected to happen since right button should be disabled before any image is presented")
+            let ratio = image.size.width / image.size.height
+            let isRatioValid = ratio >= minStickerLength / maxStickerLength
+                && ratio <= maxStickerLength / minStickerLength
+            if isRatioValid {
+                addStaticImage(image: image)
+            } else {
+                showMalformedAlert()
+            }
         }
     }
     
@@ -113,8 +129,9 @@ extension StickerAddViewController {
     
     private func showMalformedAlert() {
         container?.rightButton.isBusy = false
-        let alert = UIAlertController(title: Localized.STICKER_ADD_REQUIRED, message: nil, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_OK, style: .default, handler: nil))
+        let title = R.string.localizable.sticker_add_requirements("\(minDataCount / bytesPerKiloByte)", "\(maxDataCount / bytesPerKiloByte)", "\(Int(minStickerLength))", "\(Int(maxStickerLength))")
+        let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_ok(), style: .default, handler: nil))
         present(alert, animated: true, completion: nil)
     }
     
@@ -123,56 +140,40 @@ extension StickerAddViewController {
         showAutoHiddenHud(style: .error, text: R.string.localizable.error_operation_failed())
     }
     
-    private func scaledSize(for size: CGSize) -> CGSize {
-        let maxLength: CGFloat = 360
-        let scale = CGFloat(size.width) / CGFloat(size.height)
-        let width: CGFloat = size.width > size.height ? maxLength : maxLength * scale
-        let height: CGFloat = size.width > size.height ? maxLength / scale : maxLength
-        return CGSize(width: width, height: height)
-    }
-    
-    private func scaleImageAndPerformAdditionIfValid(image: UIImage) {
-        DispatchQueue.global().async { [weak self] in
-            guard image.size.width > 0 && image.size.height > 0 else {
-                DispatchQueue.main.async(execute: {
-                    self?.showMalformedAlert()
-                })
-                return
-            }
-            guard let scaledSize = self?.scaledSize(for: image.size) else {
-                return
-            }
-            let scaledImage = image.imageByScaling(to: scaledSize)
-            guard let data = scaledImage?.jpegData(compressionQuality: JPEGCompressionQuality.medium) else {
-                DispatchQueue.main.async(execute: {
-                    self?.showFailureAlert()
-                })
-                return
-            }
-            self?.performAddition(data: data)
-        }
-    }
-    
-    private func isValid(animatedImageData data: Data) -> Bool {
-        let sizeInKiloBytes = Double(data.count) / Double(bytesPerKiloByte)
-        guard sizeInKiloBytes > 1 && sizeInKiloBytes < 800 else {
-            return false
-        }
-        guard let imageSource = CGImageSourceCreateWithData(data as CFData, nil) else {
-            return false
-        }
-        let properties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) as? [CFString: Any]
-        let size: CGSize
-        if let width = properties?[kCGImagePropertyPixelWidth] as? NSNumber, let height = properties?[kCGImagePropertyPixelHeight] as? NSNumber {
-            size = CGSize(width: width.doubleValue, height: height.doubleValue)
+    private func addStaticImage(image: UIImage) {
+        let scalingSize: CGSize?
+        if min(image.size.width, image.size.height) < minStickerLength {
+            let canvasSize = CGSize(width: minStickerLength, height: minStickerLength)
+            scalingSize = image.size.sizeThatFills(canvasSize)
+        } else if max(image.size.width, image.size.height) > maxStickerLength {
+            let canvasSize = CGSize(width: maxStickerLength, height: maxStickerLength)
+            scalingSize = image.size.sizeThatFits(canvasSize)
         } else {
-            size = SDAnimatedImage(data: data)?.size ?? .zero
+            scalingSize = nil
         }
-        return min(size.width, size.height) >= 64
-            && max(size.width, size.height) <= 512
+        DispatchQueue.global().async { [weak self] in
+            let scaled: UIImage?
+            if let size = scalingSize {
+                scaled = image.imageByScaling(to: size)
+            } else {
+                scaled = image
+            }
+            let data = scaled?.jpegData(compressionQuality: JPEGCompressionQuality.medium)
+            DispatchQueue.main.async {
+                if let data = data {
+                    self?.performAddition(data: data)
+                } else {
+                    self?.showFailureAlert()
+                }
+            }
+        }
     }
     
     private func performAddition(data: Data) {
+        guard data.count <= maxDataCount && data.count >= minDataCount else {
+            showMalformedAlert()
+            return
+        }
         let base64 = data.base64EncodedString()
         StickerAPI.addSticker(stickerBase64: base64, completion: { [weak self] (result) in
             switch result {
@@ -187,7 +188,18 @@ extension StickerAddViewController {
                 }
             case let .failure(error):
                 self?.container?.rightButton.isBusy = false
-                showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                switch error {
+                case let .invalidRequestData(field):
+                    if field == "width" {
+                        showAutoHiddenHud(style: .error, text: R.string.localizable.error_invalid_width())
+                    } else if field == "height" {
+                        showAutoHiddenHud(style: .error, text: R.string.localizable.error_invalid_height())
+                    } else {
+                        fallthrough
+                    }
+                default:
+                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                }
             }
         })
     }

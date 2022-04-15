@@ -110,7 +110,7 @@ public final class UserDatabase: Database {
             .init(key: .muteUntil, constraints: "TEXT"),
             .init(key: .codeUrl, constraints: "TEXT"),
             .init(key: .pinTime, constraints: "TEXT"),
-            .init(key: .expireIn, constraints: "INTEGER")
+            .init(key: .expireIn, constraints: "INTEGER NOT NULL")
         ]),
         ColumnMigratableTableDefinition<FavoriteApp>(constraints: "PRIMARY KEY(user_id, app_id)", columns: [
             .init(key: .userId, constraints: "TEXT NOT NULL"),
@@ -169,7 +169,7 @@ public final class UserDatabase: Database {
             .init(key: .quoteContent, constraints: "BLOB"),
             .init(key: .createdAt, constraints: "TEXT NOT NULL"),
             .init(key: .albumId, constraints: "TEXT"),
-            .init(key: .expireIn, constraints: "INTEGER")
+            .init(key: .expireIn, constraints: "INTEGER NOT NULL")
         ]),
         ColumnMigratableTableDefinition<MessageHistory>(constraints: nil, columns: [
             .init(key: .messageId, constraints: "TEXT PRIMARY KEY"),

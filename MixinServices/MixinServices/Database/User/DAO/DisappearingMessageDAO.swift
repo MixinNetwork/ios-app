@@ -45,6 +45,7 @@ public final class DisappearingMessageDAO: UserDatabaseDAO {
             let expiredMessageIds: [String] = try DisappearingMessage
                 .select(DisappearingMessage.column(of: .messageId))
                 .filter(condition)
+                .limit(100)
                 .fetchAll(db)
             let expiredMessages = try MessageDAO.shared.getFullMessages(messageIds: expiredMessageIds)
             for id in expiredMessageIds {

@@ -304,7 +304,7 @@ public final class MessageDAO: UserDatabaseDAO {
                 try Message
                     .filter(Message.column(of: .messageId) == messageId)
                     .updateAll(db, [Message.column(of: .status).set(to: status)])
-                if status == MessageStatus.SENT.rawValue {
+                if oldMessage.expireIn != 0, status == MessageStatus.SENT.rawValue {
                     try DisappearingMessageDAO.shared.updateExpireAt(for: messageId, database: db)
                 }
                 if let completion = completion {

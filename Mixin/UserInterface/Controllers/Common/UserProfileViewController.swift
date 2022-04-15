@@ -49,7 +49,7 @@ final class UserProfileViewController: ProfileViewController {
     private var sharedAppUsers: [User]?
     private var dismissHomeAppsWindow = true
     private var centerStackViewHeightConstraint: NSLayoutConstraint?
-    private var conversationExpireIn: Int64 = 0
+    private var conversationExpireIn: Int64?
     
     init(user: UserItem) {
         super.init(nibName: R.nib.profileView.name, bundle: R.nib.profileView.bundle)
@@ -568,7 +568,9 @@ extension UserProfileViewController {
     }
     
     @objc func editDisappearingMessageDuration() {
-        let controller = DisappearingMessageViewController.instance(conversationId: conversationId, expireIn: conversationExpireIn)
+        let controller = DisappearingMessageViewController.instance(conversationId: conversationId,
+                                                                    expireIn: conversationExpireIn,
+                                                                    userId: user.userId)
         dismissAndPush(controller)
     }
     
@@ -867,7 +869,7 @@ extension UserProfileViewController {
             
             reloadMenu(groups: groups)
             menuStackView.insertArrangedSubview(circleItemView, at: groups.count - 2)
-            menuStackView.insertArrangedSubview(disappearingMessageItemView, at: 1)
+            menuStackView.insertArrangedSubview(disappearingMessageItemView, at: 2)
         } else {
             reloadMenu(groups: [])
         }
@@ -978,31 +980,14 @@ extension UserProfileViewController {
     }
     
     private func reloadMessageExpiration(conversationId: String) {
-        
-        func updateUI(with expireIn: Int64) {
-            Queue.main.autoSync {
+        DispatchQueue.global().async {
+            guard let expireIn = ConversationDAO.shared.getExpireIn(conversationId: conversationId) else {
+                return
+            }
+            DispatchQueue.main.sync {
                 self.conversationExpireIn = expireIn
                 let subtitle = DisappearingMessageDurationFormatter.string(from: expireIn)
                 self.disappearingMessageItemView.subtitleLabel.text = subtitle
-            }
-        }
-        
-        DispatchQueue.global().async {
-            if let expireIn = ConversationDAO.shared.getExpireIn(conversationId: conversationId) {
-                updateUI(with: expireIn)
-            } else {
-                let request = ConversationRequest(conversationId: conversationId,
-                                                  name: nil,
-                                                  category: ConversationCategory.CONTACT.rawValue,
-                                                  participants: [ParticipantRequest(userId: self.user.userId, role: "")],
-                                                  duration: nil,
-                                                  announcement: nil)
-                switch ConversationAPI.createConversation(conversation: request) {
-                case let .success(response):
-                    updateUI(with: response.expireIn)
-                case let .failure(error):
-                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
-                }
             }
         }
     }

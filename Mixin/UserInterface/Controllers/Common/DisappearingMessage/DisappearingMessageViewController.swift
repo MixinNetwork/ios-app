@@ -7,16 +7,18 @@ final class DisappearingMessageViewController: SettingsTableViewController {
         SettingsRow(title: option.title, accessory: .none)
     }
     
-    private var currentExpireIn: Int64 = 0
+    private var currentExpireIn: Int64?
     private var conversationId = ""
+    private var userId: String?
     
     private lazy var section = SettingsRadioSection(rows: rows)
     private lazy var dataSource = SettingsDataSource(sections: [section])
     
-    class func instance(conversationId: String, expireIn: Int64) -> UIViewController {
+    class func instance(conversationId: String, expireIn: Int64?, userId: String? = nil) -> UIViewController {
         let vc = DisappearingMessageViewController()
         vc.conversationId = conversationId
         vc.currentExpireIn = expireIn
+        vc.userId = userId
         let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.disappearing_message_title())
         return container
     }
@@ -26,7 +28,31 @@ final class DisappearingMessageViewController: SettingsTableViewController {
         tableView.tableHeaderView = R.nib.disappearingMessageTableHeaderView(owner: nil)
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
-        setAccessory(.checkmark, forRowWith: currentExpireIn)
+        if let currentExpireIn = currentExpireIn {
+            setAccessory(.checkmark, forRowWith: currentExpireIn)
+        } else if let userId = userId {
+            let hud = Hud()
+            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+            let request = ConversationRequest(conversationId: conversationId,
+                                              name: nil,
+                                              category: ConversationCategory.CONTACT.rawValue,
+                                              participants: [ParticipantRequest(userId: userId, role: "")],
+                                              duration: nil,
+                                              announcement: nil)
+            ConversationAPI.createConversation(conversation: request) { [weak self] result in
+                guard let self = self else {
+                    return
+                }
+                hud.hide()
+                switch result {
+                case let .success(response):
+                    self.currentExpireIn = response.expireIn
+                    self.setAccessory(.checkmark, forRowWith: response.expireIn)
+                case let .failure(error):
+                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                }
+            }
+        }
     }
     
 }
@@ -38,7 +64,7 @@ extension DisappearingMessageViewController: UITableViewDelegate {
         let option = Option.allCases[indexPath.row]
         if let expireIn = option.expireIn {
             update(expireIn: expireIn)
-        } else {
+        } else if let currentExpireIn = currentExpireIn {
             let window = DisappearingMessageTimePickerWindow.instance()
             window.render(expireIn: currentExpireIn)
             window.onPick = update(expireIn:)
@@ -119,7 +145,10 @@ extension DisappearingMessageViewController {
         
     }
     
-    private func setAccessory(_ accessory: SettingsRow.Accessory, forRowWith expireIn: Int64) {
+    private func setAccessory(_ accessory: SettingsRow.Accessory, forRowWith expireIn: Int64?) {
+        guard let expireIn = expireIn else {
+            return
+        }
         let option = Option(expireIn: expireIn)
         guard let index = Option.allCases.firstIndex(of: option) else {
             assertionFailure("No way an option not included in allCases")

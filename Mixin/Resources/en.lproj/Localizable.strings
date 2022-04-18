@@ -941,6 +941,7 @@
 // Diagnose
 "diagnose_warning" = "⚠️Use these functions under instructions from the Mixin team only";
 "diagnose_database_access" = "Database access";
+"diagnose_attachment" = "Clear unused cache";
 
 "report_title"="Send the conversation log to developers?";
 "report_button"="Send to Developer";

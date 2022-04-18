@@ -10,6 +10,9 @@ class DiagnoseViewController: SettingsTableViewController {
         SettingsSection(rows: [
             SettingsRow(title: "Enable WebRTC Log", accessory: .switch(isOn: CallService.shared.isWebRTCLogEnabled)),
         ]),
+        SettingsSection(rows: [
+            SettingsRow(title: R.string.localizable.diagnose_attachment(), accessory: .disclosure),
+        ]),
     ])
     
     override func viewDidLoad() {
@@ -41,6 +44,10 @@ extension DiagnoseViewController: UITableViewDelegate {
         case (0, 0):
             let container = ContainerViewController.instance(viewController: DatabaseDiagnosticViewController(),
                                                              title: R.string.localizable.diagnose_database_access())
+            navigationController?.pushViewController(container, animated: true)
+        case (2, 0):
+            let container = ContainerViewController.instance(viewController: AttachmentDiagnosticViewController(),
+                                                             title: R.string.localizable.diagnose_attachment())
             navigationController?.pushViewController(container, animated: true)
         default:
             break

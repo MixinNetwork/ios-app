@@ -672,6 +672,8 @@
 		94B8D189266E41D300F43CBB /* DatabaseDiagnosticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B8D187266E41D300F43CBB /* DatabaseDiagnosticViewController.swift */; };
 		94B8D18A266E41D300F43CBB /* DatabaseDiagnosticView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B8D188266E41D300F43CBB /* DatabaseDiagnosticView.xib */; };
 		94BE548E25D96932006575E2 /* OggOpusReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BE548D25D96932006575E2 /* OggOpusReader.swift */; };
+		94C6AA09280D35990011AB02 /* AttachmentDiagnosticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C6AA08280D35990011AB02 /* AttachmentDiagnosticViewController.swift */; };
+		94C6AA0B280D36940011AB02 /* AttachmentDiagnosticView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94C6AA0A280D36940011AB02 /* AttachmentDiagnosticView.xib */; };
 		94CEEAC3277E06A9001E7A24 /* Calendar+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CEEAC1277E06A9001E7A24 /* Calendar+Convenience.swift */; };
 		94CEEAC4277E06A9001E7A24 /* Date+Holiday.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CEEAC2277E06A9001E7A24 /* Date+Holiday.swift */; };
 		94D1E28625EA36B100B58B82 /* CacheableAssetLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D1E28525EA36B100B58B82 /* CacheableAssetLoader.swift */; };
@@ -1649,6 +1651,8 @@
 		94B8D187266E41D300F43CBB /* DatabaseDiagnosticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseDiagnosticViewController.swift; sourceTree = "<group>"; };
 		94B8D188266E41D300F43CBB /* DatabaseDiagnosticView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DatabaseDiagnosticView.xib; sourceTree = "<group>"; };
 		94BE548D25D96932006575E2 /* OggOpusReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OggOpusReader.swift; sourceTree = "<group>"; };
+		94C6AA08280D35990011AB02 /* AttachmentDiagnosticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentDiagnosticViewController.swift; sourceTree = "<group>"; };
+		94C6AA0A280D36940011AB02 /* AttachmentDiagnosticView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AttachmentDiagnosticView.xib; sourceTree = "<group>"; };
 		94CEEAC1277E06A9001E7A24 /* Calendar+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Calendar+Convenience.swift"; sourceTree = "<group>"; };
 		94CEEAC2277E06A9001E7A24 /* Date+Holiday.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Date+Holiday.swift"; sourceTree = "<group>"; };
 		94D1E28525EA36B100B58B82 /* CacheableAssetLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheableAssetLoader.swift; sourceTree = "<group>"; };
@@ -2713,6 +2717,8 @@
 				94B8D184266E37ED00F43CBB /* DiagnoseViewController.swift */,
 				94B8D188266E41D300F43CBB /* DatabaseDiagnosticView.xib */,
 				94B8D187266E41D300F43CBB /* DatabaseDiagnosticViewController.swift */,
+				94C6AA0A280D36940011AB02 /* AttachmentDiagnosticView.xib */,
+				94C6AA08280D35990011AB02 /* AttachmentDiagnosticViewController.swift */,
 			);
 			path = Diagnose;
 			sourceTree = "<group>";
@@ -3898,6 +3904,7 @@
 				7B7B5DB5230EBEBA00D0F463 /* TransferTypeCell.xib in Resources */,
 				E0BEB85D236C1C49001FE534 /* ProfileMenuItemView.xib in Resources */,
 				7BACA8D523602BF8007E3381 /* RecorderLongPressHintView.xib in Resources */,
+				94C6AA0B280D36940011AB02 /* AttachmentDiagnosticView.xib in Resources */,
 				7B710DFE243637D9008F0D73 /* CirclesTableFooterView.xib in Resources */,
 				7B082D16242C9D5F00C5E163 /* MultipleSelectionActionView.xib in Resources */,
 				DF53BB6F202362E5002BF028 /* AuthorizationScopeCell.xib in Resources */,
@@ -4940,6 +4947,7 @@
 				7BF19C24241E0EA200B192D5 /* PinAnnotationView.swift in Sources */,
 				7B91056222CF4A58002E3608 /* LiveMessageCell.swift in Sources */,
 				7BEED0D9244D752700F3A2B9 /* SettingsRow.swift in Sources */,
+				94C6AA09280D35990011AB02 /* AttachmentDiagnosticViewController.swift in Sources */,
 				7B72651C209C5F9300F234BE /* Link.swift in Sources */,
 				7BD344072334CD5F005C26E3 /* UserHandleViewController.swift in Sources */,
 				7B28FA18201196F80023B28D /* DataMessageCell.swift in Sources */,

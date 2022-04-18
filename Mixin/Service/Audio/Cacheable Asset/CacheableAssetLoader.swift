@@ -11,6 +11,7 @@ final class CacheableAssetLoader: NSObject {
         case invalidURL
         case requestNothing
         case invalidResponseCode(Int)
+        case invalidated
     }
     
     private enum Fragment {
@@ -40,6 +41,7 @@ final class CacheableAssetLoader: NSObject {
     
     private weak var urlSessionIfLoaded: URLSession?
     
+    private var isValid = true
     private var currentRequest: AVAssetResourceLoadingRequest?
     private var currentDataTask: URLSessionDataTask?
     private var fragments: [Fragment] = []
@@ -78,7 +80,10 @@ final class CacheableAssetLoader: NSObject {
     }
     
     func invalidate() {
-        urlSessionIfLoaded?.invalidateAndCancel()
+        queue.async {
+            self.isValid = false
+            self.urlSessionIfLoaded?.invalidateAndCancel()
+        }
     }
     
 }
@@ -273,6 +278,9 @@ extension CacheableAssetLoader {
     }
     
     private func loadNextFragment() {
+        guard isValid else {
+            return
+        }
         guard let request = currentRequest, let dataRequest = request.dataRequest else {
             return
         }
@@ -331,6 +339,9 @@ extension CacheableAssetLoader {
     }
     
     private func start(loadingRequest: AVAssetResourceLoadingRequest) throws {
+        guard isValid else {
+            throw Error.invalidated
+        }
         guard let cacheableURL = loadingRequest.request.url, let originalURL = CacheableAsset.URLConverter.originalURL(from: cacheableURL) else {
             throw Error.invalidURL
         }

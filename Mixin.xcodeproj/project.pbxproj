@@ -744,7 +744,6 @@
 		DF2A244C1FC7F7FF003A8C1E /* TransferMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF2A244B1FC7F7FF003A8C1E /* TransferMessageCell.swift */; };
 		DF2A24561FCBEDBC003A8C1E /* UINavigationControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF2A24551FCBEDBC003A8C1E /* UINavigationControllerExtension.swift */; };
 		DF2A245E1FCC5D15003A8C1E /* GroupAddMemberCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF2A245D1FCC5D15003A8C1E /* GroupAddMemberCell.swift */; };
-		DF2EB15C23F93870005E5A4F /* CleanUpUnusedAttachmentJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF2EB15B23F93870005E5A4F /* CleanUpUnusedAttachmentJob.swift */; };
 		DF3C47451FA071CD00A07C71 /* Home.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DF3C47441FA071CD00A07C71 /* Home.storyboard */; };
 		DF3C47471FA071F400A07C71 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3C47461FA071F400A07C71 /* HomeViewController.swift */; };
 		DF3D191A24EA1E44000BFE53 /* AssetConfirmationWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3D191924EA1E44000BFE53 /* AssetConfirmationWindow.swift */; };
@@ -1724,7 +1723,6 @@
 		DF2A244B1FC7F7FF003A8C1E /* TransferMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferMessageCell.swift; sourceTree = "<group>"; };
 		DF2A24551FCBEDBC003A8C1E /* UINavigationControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UINavigationControllerExtension.swift; sourceTree = "<group>"; };
 		DF2A245D1FCC5D15003A8C1E /* GroupAddMemberCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupAddMemberCell.swift; sourceTree = "<group>"; };
-		DF2EB15B23F93870005E5A4F /* CleanUpUnusedAttachmentJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanUpUnusedAttachmentJob.swift; sourceTree = "<group>"; };
 		DF3C47441FA071CD00A07C71 /* Home.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Home.storyboard; sourceTree = "<group>"; };
 		DF3C47461FA071F400A07C71 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		DF3D191924EA1E44000BFE53 /* AssetConfirmationWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetConfirmationWindow.swift; sourceTree = "<group>"; };
@@ -3618,7 +3616,6 @@
 				7C104A8027D83A51004D0530 /* RefreshExternalSchemeJob.swift */,
 				DF1A9A791FF206F500A95188 /* RefreshSnapshotsJob.swift */,
 				7B331B6C21B10349000370E9 /* LoadMoreSnapshotsJob.swift */,
-				DF2EB15B23F93870005E5A4F /* CleanUpUnusedAttachmentJob.swift */,
 				DFAD89972418EE0500836EDD /* RecoverMediaJob.swift */,
 				947F4AD525866D6C00B0A5F9 /* InitializeFTSJob.swift */,
 				842347ED2695BA6400009A39 /* InitializeBotJob.swift */,
@@ -4364,7 +4361,6 @@
 				7BB8E2D124529E910098B1E8 /* AppearanceSettingsViewController.swift in Sources */,
 				7B1ABB07211968D1009FAA6C /* StickersViewController.swift in Sources */,
 				7B8A6A742456E0EC00ADC9EB /* SharedMediaPostCell.swift in Sources */,
-				DF2EB15C23F93870005E5A4F /* CleanUpUnusedAttachmentJob.swift in Sources */,
 				7B8BB582234DDA0000991ACB /* SharedMediaDataSource.swift in Sources */,
 				7B9D825822F1BFEA0099381E /* NetworkOperationIconSet.swift in Sources */,
 				7B4BE561243E105000198EE9 /* EmbeddedApp.swift in Sources */,

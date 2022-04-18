@@ -270,12 +270,9 @@ extension StickerManagerViewController {
                 }
             }
         } else if itemProvider.canLoadObject(ofClass: UIImage.self) {
-            itemProvider.loadObject(ofClass: UIImage.self) { [weak self] (rawImage, error) in
+            itemProvider.loadObject(ofClass: UIImage.self) { [weak self] (image, error) in
                 hideHud()
-                guard
-                    let rawImage = rawImage as? UIImage,
-                    let image = ImageUploadSanitizer.sanitizedImage(from: rawImage).image
-                else {
+                guard let image = image as? UIImage else {
                     handleError(error)
                     return
                 }

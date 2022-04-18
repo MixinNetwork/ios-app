@@ -19,7 +19,8 @@ class StickerAddViewController: UIViewController {
     private let minDataCount = bytesPerKiloByte
     private let maxDataCount = bytesPerMegaByte
     
-    private var source: Source!
+    private var source: Source?
+    private var uploadPNGData = false
     
     class func instance(source: Source) -> UIViewController {
         let vc = R.storyboard.chat.sticker_add()!
@@ -29,8 +30,9 @@ class StickerAddViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        switch source! {
+        switch source {
         case .message(let item):
+            uploadPNGData = item.mediaMimeType == "image/png"
             let updateRightButton: SDExternalCompletionBlock = { [weak self] (image, error, _, _) in
                 self?.container?.rightButton.isEnabled = image != nil
             }
@@ -58,6 +60,7 @@ class StickerAddViewController: UIViewController {
             options.deliveryMode = .opportunistic
             options.isNetworkAccessAllowed = true
             if asset.playbackStyle == .imageAnimated {
+                uploadPNGData = false
                 manager.requestImageDataAndOrientation(for: asset, options: options) { [weak self] (data, _, _, _) in
                     guard let self = self, let data = data, let image = SDAnimatedImage(data: data) else {
                         return
@@ -66,6 +69,11 @@ class StickerAddViewController: UIViewController {
                     self.container?.rightButton.isEnabled = true
                 }
             } else {
+                if let uti = asset.uniformTypeIdentifier {
+                    uploadPNGData = UTTypeConformsTo(uti, kUTTypePNG)
+                } else {
+                    uploadPNGData = false
+                }
                 manager.requestImage(for: asset, targetSize: PHImageManagerMaximumSize, contentMode: .default, options: options) { [weak self] (image, _) in
                     guard let self = self, let image = image else {
                         return
@@ -75,8 +83,12 @@ class StickerAddViewController: UIViewController {
                 }
             }
         case .image(let image):
+            uploadPNGData = false
             previewImageView.image = image
             container?.rightButton.isEnabled = true
+        case .none:
+            assertionFailure("No image is loaded")
+            break
         }
     }
     
@@ -151,6 +163,7 @@ extension StickerAddViewController {
         } else {
             scalingSize = nil
         }
+        let uploadPNGData = self.uploadPNGData
         DispatchQueue.global().async { [weak self] in
             let scaled: UIImage?
             if let size = scalingSize {
@@ -158,7 +171,12 @@ extension StickerAddViewController {
             } else {
                 scaled = image
             }
-            let data = scaled?.jpegData(compressionQuality: JPEGCompressionQuality.medium)
+            let data: Data?
+            if uploadPNGData {
+                data = scaled?.pngData()
+            } else {
+                data = scaled?.jpegData(compressionQuality: JPEGCompressionQuality.medium)
+            }
             DispatchQueue.main.async {
                 if let data = data {
                     self?.performAddition(data: data)

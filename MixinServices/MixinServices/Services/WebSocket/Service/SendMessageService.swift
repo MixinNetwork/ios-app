@@ -590,14 +590,6 @@ extension SendMessageService {
         guard let conversation = ConversationDAO.shared.getConversation(conversationId: message.conversationId) else {
             return
         }
-        if blazeMessage.params?.expireIn == 0, conversation.expireIn != 0 {
-            // When multiple messages get forwarded to someone with no conversation exists, those blaze messages will
-            // have a zero-valued expire_in. The first blaze message will have expire_in set with newly created
-            // conversation, but remaining ones don't. Those messages' expire_in will be set here.
-            blazeMessage.params?.expireIn = conversation.expireIn
-            MessageDAO.shared.updateMessageExpireIn(expireIn: conversation.expireIn, messageId: messageId, conversationId: message.conversationId)
-        }
-        
         if conversation.isGroup() && conversation.status != ConversationStatus.SUCCESS.rawValue {
             var userInfo = [String: Any]()
             userInfo["error"] = "conversation status error"
@@ -630,14 +622,15 @@ extension SendMessageService {
         let needsEncodeCategories: [MessageCategory] = [
             .PLAIN_TEXT, .PLAIN_POST, .PLAIN_LOCATION, .PLAIN_TRANSCRIPT
         ]
-        func updateExpireInIfNeeded() throws {
-            if let expireIn = try checkConversationExist(conversation: conversation) {
+        func checkConversationAndExpireIn() throws {
+            let expireIn = try checkConversationExist(conversation: conversation)
+            if blazeMessage.params?.expireIn == 0, expireIn != 0 {
                 blazeMessage.params?.expireIn = expireIn
                 MessageDAO.shared.updateMessageExpireIn(expireIn: expireIn, messageId: messageId, conversationId: message.conversationId)
             }
         }
         if message.category.hasPrefix("PLAIN_") || message.category == MessageCategory.MESSAGE_RECALL.rawValue || message.category == MessageCategory.APP_CARD.rawValue {
-            try updateExpireInIfNeeded()
+            try checkConversationAndExpireIn()
             if blazeMessage.params?.data == nil {
                 if needsEncodeCategories.map(\.rawValue).contains(message.category) {
                     blazeMessage.params?.data = message.content?.base64Encoded()
@@ -648,7 +641,7 @@ extension SendMessageService {
         } else if message.category.hasPrefix("ENCRYPTED_") {
             // FIXME: Participant session saving may not finished after the func below returns.
             // This may cause a few PLAIN messages sent out instead of ENCRYPTED ones
-            try updateExpireInIfNeeded()
+            try checkConversationAndExpireIn()
             func getBotSessionKey() -> ParticipantSession.Key? {
                 if let id = blazeMessage.params?.recipientId {
                     return ParticipantSessionDAO.shared.getParticipantSessionKey(conversationId: message.conversationId, userId: id)
@@ -735,10 +728,10 @@ extension SendMessageService {
                 if conversation.isGroup() {
                     syncConversation(conversationId: message.conversationId)
                 } else {
-                    try updateExpireInIfNeeded()
+                    try checkConversationAndExpireIn()
                 }
             } else {
-                try updateExpireInIfNeeded()
+                try checkConversationAndExpireIn()
             }
             try checkSessionSenderKey(conversationId: message.conversationId)
             
@@ -750,14 +743,15 @@ extension SendMessageService {
         Logger.conversation(id: message.conversationId).info(category: "SendMessageService", message: "Send message: \(messageId), category:\(message.category), status:\(message.status)")
     }
         
-    private func checkConversationExist(conversation: ConversationItem) throws -> Int64? {
-        guard conversation.status == ConversationStatus.START.rawValue else {
-            return nil
+    private func checkConversationExist(conversation: ConversationItem) throws -> Int64 {
+        if conversation.status == ConversationStatus.START.rawValue {
+            return try createConversation(conversation: conversation)
+        } else {
+            return conversation.expireIn
         }
-        return try createConversation(conversation: conversation)
     }
     
-    private func createConversation(conversation: ConversationItem) throws -> Int64? {
+    private func createConversation(conversation: ConversationItem) throws -> Int64 {
         var participants: [ParticipantRequest]
         if conversation.category == ConversationCategory.CONTACT.rawValue {
             participants = [ParticipantRequest(userId: conversation.ownerId, role: "")]

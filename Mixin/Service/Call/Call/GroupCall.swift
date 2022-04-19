@@ -436,13 +436,11 @@ extension GroupCall {
                 switch error {
                 case .invalidKrakenResponse:
                     Logger.call.info(category: "GroupCall", message: "[\(self.uuidString)] Invalid subscribe response. Drop it")
-                case .peerClosed:
-                    Logger.call.warn(category: "GroupCall", message: "[\(self.uuidString)] Subscribe responded with peerClosed")
+                case .peerClosed, .invalidTransition:
+                    Logger.call.warn(category: "GroupCall", message: "[\(self.uuidString)] Subscribe responded with \(error)")
                     self.rebuild()
-                case .peerNotFound:
-                    Logger.call.warn(category: "GroupCall", message: "[\(self.uuidString)] Subscribe responded with peerNotFound")
-                case .trackNotFound:
-                    Logger.call.warn(category: "GroupCall", message: "[\(self.uuidString)] Subscribe responded with trackNotFound")
+                case .peerNotFound, .trackNotFound:
+                    Logger.call.warn(category: "GroupCall", message: "[\(self.uuidString)] Subscribe responded with \(error)")
                 default:
                     Logger.call.info(category: "GroupCall", message: "[\(self.uuidString)] subscribing result reports \(error)")
                     if subscription != .periodic {
@@ -521,7 +519,7 @@ extension GroupCall: KrakenMessageRetrieverDelegate {
             Logger.call.info(category: "GroupCall", message: "Got 401 when requesting: \(request.debugDescription)")
             self.end(reason: .failed, by: .local)
             return false
-        case MixinAPIError.peerNotFound, MixinAPIError.peerClosed, MixinAPIError.trackNotFound, MixinAPIError.roomFull:
+        case MixinAPIError.peerNotFound, MixinAPIError.peerClosed, MixinAPIError.trackNotFound, MixinAPIError.roomFull, MixinAPIError.invalidTransition:
             return false
         default:
             let shouldRetry = numberOfRetries < Self.maxNumberOfKrakenRetries
@@ -689,6 +687,8 @@ extension GroupCall {
                 return .failure(.peerClosed)
             case MixinAPIError.trackNotFound:
                 return .failure(.trackNotFound)
+            case MixinAPIError.invalidTransition:
+                return .failure(.invalidTransition)
             default:
                 return .failure(.networkFailure)
             }

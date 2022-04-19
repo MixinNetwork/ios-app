@@ -630,11 +630,14 @@ extension SendMessageService {
         let needsEncodeCategories: [MessageCategory] = [
             .PLAIN_TEXT, .PLAIN_POST, .PLAIN_LOCATION, .PLAIN_TRANSCRIPT
         ]
-        if message.category.hasPrefix("PLAIN_") || message.category == MessageCategory.MESSAGE_RECALL.rawValue || message.category == MessageCategory.APP_CARD.rawValue {
+        func updateExpireInIfNeeded() throws {
             if let expireIn = try checkConversationExist(conversation: conversation) {
                 blazeMessage.params?.expireIn = expireIn
                 MessageDAO.shared.updateMessageExpireIn(expireIn: expireIn, messageId: messageId, conversationId: message.conversationId)
             }
+        }
+        if message.category.hasPrefix("PLAIN_") || message.category == MessageCategory.MESSAGE_RECALL.rawValue || message.category == MessageCategory.APP_CARD.rawValue {
+            try updateExpireInIfNeeded()
             if blazeMessage.params?.data == nil {
                 if needsEncodeCategories.map(\.rawValue).contains(message.category) {
                     blazeMessage.params?.data = message.content?.base64Encoded()
@@ -645,11 +648,7 @@ extension SendMessageService {
         } else if message.category.hasPrefix("ENCRYPTED_") {
             // FIXME: Participant session saving may not finished after the func below returns.
             // This may cause a few PLAIN messages sent out instead of ENCRYPTED ones
-            if let expireIn = try checkConversationExist(conversation: conversation) {
-                blazeMessage.params?.expireIn = expireIn
-                MessageDAO.shared.updateMessageExpireIn(expireIn: expireIn, messageId: messageId, conversationId: message.conversationId)
-            }
-            
+            try updateExpireInIfNeeded()
             func getBotSessionKey() -> ParticipantSession.Key? {
                 if let id = blazeMessage.params?.recipientId {
                     return ParticipantSessionDAO.shared.getParticipantSessionKey(conversationId: message.conversationId, userId: id)
@@ -735,13 +734,11 @@ extension SendMessageService {
             if !SignalProtocol.shared.isExistSenderKey(groupId: message.conversationId, senderId: message.userId) {
                 if conversation.isGroup() {
                     syncConversation(conversationId: message.conversationId)
-                } else if let expireIn = try createConversation(conversation: conversation) {
-                    blazeMessage.params?.expireIn = expireIn
-                    MessageDAO.shared.updateMessageExpireIn(expireIn: expireIn, messageId: messageId, conversationId: message.conversationId)
+                } else {
+                    try updateExpireInIfNeeded()
                 }
-            } else if let expireIn = try checkConversationExist(conversation: conversation) {
-                blazeMessage.params?.expireIn = expireIn
-                MessageDAO.shared.updateMessageExpireIn(expireIn: expireIn, messageId: messageId, conversationId: message.conversationId)
+            } else {
+                try updateExpireInIfNeeded()
             }
             try checkSessionSenderKey(conversationId: message.conversationId)
             

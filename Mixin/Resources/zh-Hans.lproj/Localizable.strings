@@ -798,6 +798,11 @@
 "disappearing_message_hours_unit" = "小时";
 "disappearing_message_days_unit" = "天";
 "disappearing_message_weeks_unit" = "周";
+"disappearing_message_second_unit" = "秒";
+"disappearing_message_minute_unit" = "分钟";
+"disappearing_message_hour_unit" = "小时";
+"disappearing_message_day_unit" = "天";
+"disappearing_message_week_unit" = "周";
 
 // Emergency
 "emergency_view" = "查看紧急联系人";

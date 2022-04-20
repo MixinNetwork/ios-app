@@ -10,20 +10,30 @@ enum DisappearingMessageDurationFormatter {
             let representation: TimeInterval
             let interval = TimeInterval(value)
             if interval < .minute {
-                unit = R.string.localizable.disappearing_message_seconds_unit()
                 representation = interval
+                unit = representation == 1
+                    ? R.string.localizable.disappearing_message_second_unit()
+                    : R.string.localizable.disappearing_message_seconds_unit()
             } else if interval < .hour {
-                unit = R.string.localizable.disappearing_message_minutes_unit()
                 representation = interval / .minute
+                unit = representation == 1
+                    ? R.string.localizable.disappearing_message_minute_unit()
+                    : R.string.localizable.disappearing_message_minutes_unit()
             } else if interval < .day {
-                unit = R.string.localizable.disappearing_message_hours_unit()
                 representation = interval / .hour
+                unit = representation == 1
+                    ? R.string.localizable.disappearing_message_hour_unit()
+                    : R.string.localizable.disappearing_message_hours_unit()
             } else if interval < .week {
-                unit = R.string.localizable.disappearing_message_days_unit()
                 representation = interval / .day
+                unit = representation == 1
+                    ? R.string.localizable.disappearing_message_day_unit()
+                    : R.string.localizable.disappearing_message_days_unit()
             } else {
-                unit = R.string.localizable.disappearing_message_weeks_unit()
                 representation = interval / .week
+                unit = representation == 1
+                    ? R.string.localizable.disappearing_message_week_unit()
+                    : R.string.localizable.disappearing_message_weeks_unit()
             }
             return "\(Int(representation)) \(unit)"
         }

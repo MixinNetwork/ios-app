@@ -86,7 +86,9 @@ extension DisappearingMessageTimePickerWindow: UIPickerViewDelegate {
         case .duration:
             return "\(duration(for: row))"
         case .unit:
-            return (Unit(rawValue: row) ?? .second).name
+            let unit = Unit(rawValue: row) ?? .second
+            let selectedDurationRow = pickerView.selectedRow(inComponent: Component.duration.rawValue)
+            return selectedDurationRow == 0 ? unit.singularName : unit.pluralName
         default:
             return nil
         }
@@ -95,6 +97,7 @@ extension DisappearingMessageTimePickerWindow: UIPickerViewDelegate {
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         switch Component(rawValue: component) {
         case .duration:
+            pickerView.reloadComponent(Component.unit.rawValue)
             selectedDuration = duration(for: row)
         case .unit:
             selectedUnit = Unit(rawValue: row) ?? .second
@@ -143,7 +146,7 @@ extension DisappearingMessageTimePickerWindow {
             }
         }
         
-        var name: String {
+        var pluralName: String {
             switch self {
             case .second:
                 return R.string.localizable.disappearing_message_seconds_unit()
@@ -155,6 +158,21 @@ extension DisappearingMessageTimePickerWindow {
                 return R.string.localizable.disappearing_message_days_unit()
             case .week:
                 return R.string.localizable.disappearing_message_weeks_unit()
+            }
+        }
+        
+        var singularName: String {
+            switch self {
+            case .second:
+                return R.string.localizable.disappearing_message_second_unit()
+            case .minute:
+                return R.string.localizable.disappearing_message_minute_unit()
+            case .hour:
+                return R.string.localizable.disappearing_message_hour_unit()
+            case .day:
+                return R.string.localizable.disappearing_message_day_unit()
+            case .week:
+                return R.string.localizable.disappearing_message_week_unit()
             }
         }
         

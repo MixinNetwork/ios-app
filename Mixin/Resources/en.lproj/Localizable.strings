@@ -797,6 +797,11 @@
 "disappearing_message_hours_unit" = "hours";
 "disappearing_message_days_unit" = "days";
 "disappearing_message_weeks_unit" = "weeks";
+"disappearing_message_second_unit" = "second";
+"disappearing_message_minute_unit" = "minute";
+"disappearing_message_hour_unit" = "hour";
+"disappearing_message_day_unit" = "day";
+"disappearing_message_week_unit" = "week";
 
 // Emergency
 "emergency_view" = "View emergency contact";

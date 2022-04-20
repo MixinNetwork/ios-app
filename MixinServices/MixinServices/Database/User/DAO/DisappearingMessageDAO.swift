@@ -19,9 +19,9 @@ public final class DisappearingMessageDAO: UserDatabaseDAO {
         }
     }
     
-    public func updateExpireAt(for messageId: String, expireAt: Int64) {
+    public func updateExpireAt(for messageId: String, expireAt: Int64?) {
         db.write { db in
-            try updateExpireAt(for: messageId, database: db)
+            try updateExpireAt(for: messageId, database: db, expireAt: expireAt)
         }
     }
 
@@ -53,6 +53,9 @@ public final class DisappearingMessageDAO: UserDatabaseDAO {
                 if deleted {
                     if let message = expiredMessages.first(where: { $0.messageId == id }) {
                         ReceiveMessageService.shared.stopRecallMessage(item: message, childMessageIds: childMessageIds)
+                        if message.status != MessageStatus.READ.rawValue {
+                            try MessageDAO.shared.updateUnseenMessageCount(database: db, conversationId: message.conversationId)
+                        }
                     }
                     NotificationCenter.default.post(onMainThread: Self.expiredMessageDidDeleteNotification,
                                                     object: nil,

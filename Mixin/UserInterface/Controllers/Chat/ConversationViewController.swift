@@ -1597,6 +1597,14 @@ extension ConversationViewController: UITableViewDelegate {
         previewForContextMenu(with: configuration)
     }
     
+    func tableView(_ tableView: UITableView, willEndContextMenuInteraction configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionAnimating?) {
+        if let animator = animator {
+            animator.addCompletion(dataSource.performPendingMessagePinningUpdate)
+        } else {
+            dataSource.performPendingMessagePinningUpdate()
+        }
+    }
+    
 }
 
 // MARK: - DetailInfoMessageCellDelegate
@@ -1944,8 +1952,10 @@ extension ConversationViewController {
         case .report:
             report(conversationId: conversationId, message: message)
         case .pin:
+            dataSource.postponeMessagePinningUpdate(with: message.messageId)
             SendMessageService.shared.sendPinMessages(items: [message], conversationId: conversationId, action: .pin)
         case .unpin:
+            dataSource.postponeMessagePinningUpdate(with: message.messageId)
             SendMessageService.shared.sendPinMessages(items: [message], conversationId: conversationId, action: .unpin)
         }
     }

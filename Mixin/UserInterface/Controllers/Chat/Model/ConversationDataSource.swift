@@ -46,6 +46,7 @@ class ConversationDataSource {
     private var canInsertUnreadHint = true
     private var messageProcessingIsCancelled = false
     private var didInitializedData = false
+    private var pendingPinningUpdateMessageId: String?
     
     var layoutSize: CGSize {
         Queue.main.autoSync {
@@ -475,6 +476,18 @@ class ConversationDataSource {
         return firstIndexPath(ofDates: dates, viewModels: viewModels, where: predicate)
     }
     
+    func postponeMessagePinningUpdate(with messageId: String) {
+        pendingPinningUpdateMessageId = messageId
+    }
+    
+    func performPendingMessagePinningUpdate() {
+        guard let id = pendingPinningUpdateMessageId else {
+            return
+        }
+        updateMessage(messageId: id)
+        pendingPinningUpdateMessageId = nil
+    }
+    
 }
 
 // MARK: - Callback
@@ -620,7 +633,11 @@ extension ConversationDataSource {
             return
         }
         if let id = notification.userInfo?[PinMessageDAO.UserInfoKey.referencedMessageId] as? String {
-            updateMessage(messageId: id)
+            if id == pendingPinningUpdateMessageId {
+                // This id is request to be updated later, do nothing here and wait for the func of performPendingMessagePinningUpdate
+            } else {
+                updateMessage(messageId: id)
+            }
         } else if let ids = notification.userInfo?[PinMessageDAO.UserInfoKey.referencedMessageIds] as? [String] {
             ids.forEach(updateMessage(messageId:))
         }

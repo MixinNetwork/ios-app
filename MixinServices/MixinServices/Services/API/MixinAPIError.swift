@@ -67,6 +67,7 @@ public enum MixinAPIError: Error {
     case peerNotFound
     case peerClosed
     case trackNotFound
+    case invalidTransition
     
 }
 
@@ -162,6 +163,8 @@ extension MixinAPIError {
             self = .peerClosed
         case (202, 5002003):
             self = .trackNotFound
+        case (500, 5003002):
+            self = .invalidTransition
             
         default:
             self = .unknown(status: status, code: code, description: description)

@@ -23,6 +23,7 @@ enum CallError: Error {
     case peerNotFound
     case peerClosed
     case trackNotFound
+    case invalidTransition
     
     var alertContent: String {
         switch self {

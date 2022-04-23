@@ -30,7 +30,7 @@ public final class JobDAO: UserDatabaseDAO {
     
     internal func nextBatchJobs(category: JobCategory, limit: Int) -> [Job] {
         db.select(where: Job.column(of: .category) == category.rawValue,
-                  order: [Job.column(of: .orderId).asc],
+                  order: [Job.column(of: .priority).desc, Job.column(of: .orderId).asc],
                   limit: limit)
     }
     

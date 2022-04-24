@@ -22,7 +22,7 @@ struct Quote {
         title: "",
         tintColor: .theme,
         icon: R.image.ic_recalled_message_prefix_received(),
-        subtitle: R.string.localizable.chat_message_not_found(),
+        subtitle: R.string.localizable.message_not_found(),
         image: nil
     )
     
@@ -51,7 +51,7 @@ struct Quote {
         if message.category == MessageCategory.MESSAGE_RECALL.rawValue {
             category = .recalled
             icon = R.image.ic_recalled_message_prefix_received()
-            subtitle = R.string.localizable.chat_message_recalled()
+            subtitle = R.string.localizable.this_message_was_deleted()
             image = nil
         } else {
             category = .normal

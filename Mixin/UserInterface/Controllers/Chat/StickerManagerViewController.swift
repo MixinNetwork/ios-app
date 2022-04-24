@@ -27,7 +27,7 @@ class StickerManagerViewController: UICollectionViewController {
     
     class func instance() -> UIViewController {
         let vc = R.storyboard.chat.sticker_manager()!
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.sticker_manager_title())
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.my_Stickers())
     }
     
     override func viewDidLoad() {
@@ -65,7 +65,7 @@ extension StickerManagerViewController: ContainerViewControllerDelegate {
                 !(container?.rightButton.isBusy ?? true),
                 let selectionCells = collectionView?.indexPathsForSelectedItems, selectionCells.count > 0
             else {
-                container?.rightButton.setTitle(R.string.localizable.action_select(), for: .normal)
+                container?.rightButton.setTitle(R.string.localizable.select(), for: .normal)
                 isDeleteStickers = false
                 collectionView?.allowsMultipleSelection = false
                 collectionView?.reloadData()
@@ -96,7 +96,7 @@ extension StickerManagerViewController: ContainerViewControllerDelegate {
                             guard let weakSelf = self else {
                                 return
                             }
-                            weakSelf.container?.rightButton.setTitle(R.string.localizable.action_select(), for: .normal)
+                            weakSelf.container?.rightButton.setTitle(R.string.localizable.select(), for: .normal)
                             weakSelf.isDeleteStickers = !weakSelf.isDeleteStickers
                             weakSelf.collectionView?.allowsMultipleSelection = false
                             weakSelf.fetchStickers()
@@ -107,7 +107,7 @@ extension StickerManagerViewController: ContainerViewControllerDelegate {
                 }
             })
         } else {
-            container?.rightButton.setTitle(R.string.localizable.action_remove(), for: .normal)
+            container?.rightButton.setTitle(R.string.localizable.delete(), for: .normal)
             isDeleteStickers = true
             collectionView?.allowsMultipleSelection = true
             collectionView?.reloadData()
@@ -115,7 +115,7 @@ extension StickerManagerViewController: ContainerViewControllerDelegate {
     }
     
     func textBarRightButton() -> String? {
-        return R.string.localizable.action_select()
+        R.string.localizable.select()
     }
     
 }
@@ -218,7 +218,7 @@ extension StickerManagerViewController {
     private func showAuthorizationLimitedAlert() {
         let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         if #available(iOS 14, *) {
-            sheet.addAction(UIAlertAction(title: R.string.localizable.chat_pick_from_library(), style: .default, handler: { _ in
+            sheet.addAction(UIAlertAction(title: R.string.localizable.pick_from_Library(), style: .default, handler: { _ in
                 var config = PHPickerConfiguration(photoLibrary: .shared())
                 config.preferredAssetRepresentationMode = .current
                 config.selectionLimit = 1
@@ -228,10 +228,10 @@ extension StickerManagerViewController {
                 self.present(picker, animated: true, completion: nil)
             }))
         }
-        sheet.addAction(UIAlertAction(title: R.string.localizable.action_change_settings(), style: .default, handler: { _ in
+        sheet.addAction(UIAlertAction(title: R.string.localizable.change_Settings(), style: .default, handler: { _ in
             UIApplication.openAppSettings()
         }))
-        sheet.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
+        sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         present(sheet, animated: true, completion: nil)
     }
     
@@ -248,7 +248,7 @@ extension StickerManagerViewController {
                 reporter.report(error: error)
             }
             DispatchQueue.main.async {
-                showAutoHiddenHud(style: .error, text: R.string.localizable.error_operation_failed())
+                showAutoHiddenHud(style: .error, text: R.string.localizable.operation_failed())
             }
         }
         if itemProvider.hasItemConformingToTypeIdentifier(gifTypeIdentifier) {

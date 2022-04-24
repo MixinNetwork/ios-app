@@ -56,7 +56,7 @@ class SearchHeaderView: UITableViewHeaderFooterView {
         label.textColor = .text
         button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         button.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
-        button.setTitle(R.string.localizable.action_more(), for: .normal)
+        button.setTitle(R.string.localizable.more(), for: .normal)
         button.setTitleColor(.highlightedText, for: .normal)
         button.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
         button.contentEdgeInsets = UIEdgeInsets(top: 8, left: 20, bottom: 8, right: 20)

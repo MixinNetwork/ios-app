@@ -58,11 +58,11 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
             targetUser = user
             opponentImageView.setImage(with: user)
             container?.setSubtitle(subtitle: user.isCreatedByMessenger ? user.identityNumber : user.userId)
-            container?.titleLabel.text = Localized.ACTION_SEND_TO + " " + user.fullName
+            container?.titleLabel.text = R.string.localizable.send_To_Title() + " " + user.fullName
         case .address(let address):
             targetAddress = address
             opponentImageView.image = R.image.wallet.ic_transaction_external_large()
-            container?.titleLabel.text = Localized.ACTION_SEND_TO + " " + address.label
+            container?.titleLabel.text = R.string.localizable.send_To_Title() + " " + address.label
             container?.setSubtitle(subtitle: address.fullAddress.toSimpleKey())
             memoView.isHidden = true
             reloadTransactionFeeHint(addressId: address.addressId)
@@ -357,14 +357,14 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
             var highlightRanges = [NSRange]()
 
             let feeRepresentation = address.fee + " " + chainAsset.symbol
-            let feeHint = R.string.localizable.wallet_withdrawal_network_fee(feeRepresentation)
+            let feeHint = R.string.localizable.network_fee(feeRepresentation)
             hint = feeHint
             let range = (hint as NSString).range(of: feeRepresentation)
             highlightRanges.append(range)
             
             if address.dust.doubleValue > 0 {
                 let dustRepresentation = address.dust + " " + chainAsset.symbol
-                let dustHint = R.string.localizable.wallet_withdrawal_minimum_amount(dustRepresentation)
+                let dustHint = R.string.localizable.withdrawal_minimum_withdrawal(dustRepresentation)
                 hint += "\n" + dustHint
                 let range = (hint as NSString).range(of: dustRepresentation, options: .backwards)
                 highlightRanges.append(range)
@@ -372,7 +372,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
             
             if address.reserve.doubleValue > 0 {
                 let reserveRepresentation = address.reserve + " " + chainAsset.symbol
-                let reserveHint = R.string.localizable.wallet_withdrawal_minimum_reserve(reserveRepresentation)
+                let reserveHint = R.string.localizable.withdrawal_minimum_reserve(reserveRepresentation)
                 hint += "\n" + reserveHint
                 let range = (hint as NSString).range(of: reserveRepresentation, options: .backwards)
                 highlightRanges.append(range)

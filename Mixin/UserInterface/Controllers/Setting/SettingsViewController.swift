@@ -6,46 +6,46 @@ class SettingsViewController: SettingsTableViewController {
     private let dataSource = SettingsDataSource(sections: [
         SettingsSection(rows: [
             SettingsRow(icon: R.image.setting.ic_category_account(),
-                        title: R.string.localizable.setting_account(),
+                        title: R.string.localizable.account(),
                         accessory: .disclosure),
             SettingsRow(icon: R.image.setting.ic_category_backup(),
-                        title: R.string.localizable.setting_backup_title(),
+                        title: R.string.localizable.chat_Backup(),
                         accessory: .disclosure),
             SettingsRow(icon: R.image.setting.ic_category_notification(),
-                        title: R.string.localizable.setting_notification(),
+                        title: R.string.localizable.notification_and_Confirmation(),
                         accessory: .disclosure),
             SettingsRow(icon: R.image.setting.ic_category_storage(),
-                        title: R.string.localizable.setting_data_and_storage(),
+                        title: R.string.localizable.data_and_Storage_Usage(),
                         accessory: .disclosure)
         ]),
         SettingsSection(rows: [
             SettingsRow(icon: R.image.setting.ic_category_appearance(),
-                        title: R.string.localizable.setting_appearance(),
+                        title: R.string.localizable.appearance(),
                         accessory: .disclosure)
         ]),
         SettingsSection(rows: [
             SettingsRow(icon: R.image.setting.ic_category_desktop(),
-                        title: R.string.localizable.setting_desktop(),
+                        title: R.string.localizable.mixin_Messenger_Desktop(),
                         accessory: .disclosure)
         ]),
         SettingsSection(rows: [
             SettingsRow(icon: R.image.setting.ic_category_feedback(),
-                        title: R.string.localizable.setting_feedback(),
+                        title: R.string.localizable.feedback(),
                         accessory: .disclosure),
             SettingsRow(icon: R.image.setting.ic_category_share(),
-                        title: R.string.localizable.setting_share_this_app(),
+                        title: R.string.localizable.share_This_App(),
                         accessory: .disclosure)
         ]),
         SettingsSection(rows: [
             SettingsRow(icon: R.image.setting.ic_category_about(),
-                        title: R.string.localizable.setting_about(),
+                        title: R.string.localizable.about(),
                         accessory: .disclosure)
         ])
     ])
     
     class func instance() -> UIViewController {
         let vc = SettingsViewController()
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.setting_title())
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.settings())
     }
     
     override func viewDidLoad() {
@@ -68,7 +68,7 @@ extension SettingsViewController: UITableViewDelegate {
                 vc = AccountSettingViewController.instance()
             case 1:
                 if FileManager.default.ubiquityIdentityToken == nil {
-                    alert(Localized.SETTING_BACKUP_DISABLE_TIPS)
+                    alert(R.string.localizable.backup_disable_hint())
                     return
                 } else {
                     vc = BackupViewController.instance()
@@ -90,7 +90,7 @@ extension SettingsViewController: UITableViewDelegate {
                     return
                 }
             } else {
-                let content = R.string.localizable.setting_share_this_app_content(myIdentityNumber)
+                let content = R.string.localizable.chat_on_mixin_content(myIdentityNumber)
                 let controller = UIActivityViewController(activityItems: [content], applicationActivities: nil)
                 present(controller, animated: true, completion: nil)
                 return

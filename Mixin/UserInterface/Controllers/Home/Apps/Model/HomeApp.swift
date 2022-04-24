@@ -69,45 +69,45 @@ enum HomeApp {
         switch self {
         case .embedded(let app):
             switch app.name {
-            case R.string.localizable.scan_qr_code():
-                return R.string.localizable.app_category_tools()
-            case R.string.localizable.action_camera():
-                return R.string.localizable.app_category_camera()
-            case R.string.localizable.wallet_title():
-                return R.string.localizable.app_category_wallet()
+            case R.string.localizable.scan_QR_Code():
+                return R.string.localizable.tools()
+            case R.string.localizable.camera():
+                return R.string.localizable.camera()
+            case R.string.localizable.wallet():
+                return R.string.localizable.wallet()
             default:
-                return R.string.localizable.app_category_other()
+                return R.string.localizable.other()
             }
         case .external(let user):
             switch user.app?.category ?? AppCategory.OTHER.rawValue {
             case AppCategory.WALLET.rawValue:
-                return R.string.localizable.app_category_wallet()
+                return R.string.localizable.wallet()
             case AppCategory.TRADING.rawValue:
-                return R.string.localizable.app_category_trading()
+                return R.string.localizable.trading()
             case AppCategory.BUSINESS.rawValue:
-                return R.string.localizable.app_category_business()
+                return R.string.localizable.business()
             case AppCategory.SOCIAL.rawValue:
-                return R.string.localizable.app_category_social()
+                return R.string.localizable.social()
             case AppCategory.SHOPPING.rawValue:
-                return R.string.localizable.app_category_shopping()
+                return R.string.localizable.shopping()
             case AppCategory.EDUCATION.rawValue:
-                return R.string.localizable.app_category_education()
+                return R.string.localizable.education()
             case AppCategory.NEWS.rawValue:
-                return R.string.localizable.app_category_news()
+                return R.string.localizable.news()
             case AppCategory.TOOLS.rawValue:
-                return R.string.localizable.app_category_tools()
+                return R.string.localizable.tools()
             case AppCategory.GAMES.rawValue:
-                return R.string.localizable.app_category_games()
+                return R.string.localizable.games()
             case AppCategory.BOOKS.rawValue:
-                return R.string.localizable.app_category_books()
+                return R.string.localizable.books()
             case AppCategory.MUSIC.rawValue:
-                return R.string.localizable.app_category_music()
+                return R.string.localizable.music()
             case AppCategory.PHOTO.rawValue:
-                return R.string.localizable.app_category_photo()
+                return R.string.localizable.photo()
             case AppCategory.VIDEO.rawValue:
-                return R.string.localizable.app_category_video()
+                return R.string.localizable.video()
             default:
-                return R.string.localizable.app_category_other()
+                return R.string.localizable.other()
             }
         }
     }

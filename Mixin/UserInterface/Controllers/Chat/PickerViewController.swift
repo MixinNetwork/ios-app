@@ -118,7 +118,7 @@ extension PickerViewController: ContainerViewControllerDelegate {
     }
 
     func textBarRightButton() -> String? {
-        return Localized.DIALOG_BUTTON_CANCEL
+        return R.string.localizable.cancel()
     }
 
     func barRightButtonTappedAction() {

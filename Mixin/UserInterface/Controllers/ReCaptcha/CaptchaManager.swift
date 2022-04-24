@@ -79,7 +79,7 @@ extension CaptchaManager: WKScriptMessageHandler {
             requestingViewController.present(captchaViewController, animated: true, completion: nil)
         case .hCaptchaFailed:
             requestingViewController?.dismiss(animated: true, completion: nil)
-            showAutoHiddenHud(style: .error, text: R.string.localizable.toast_captcha_timeout())
+            showAutoHiddenHud(style: .error, text: R.string.localizable.validation_timed_out())
             completion?(.timedOut)
             clean()
         case let .reCaptchaToken(token):

@@ -3,16 +3,16 @@ import MixinServices
 
 class BackupViewController: SettingsTableViewController {
     
-    private let backupActionRow = SettingsRow(title: R.string.localizable.setting_backup_now())
-    private let backupFilesRow = SettingsRow(title: R.string.localizable.setting_backup_files(),
+    private let backupActionRow = SettingsRow(title: R.string.localizable.back_Up_Now())
+    private let backupFilesRow = SettingsRow(title: R.string.localizable.include_files(),
                                              accessory: .switch(isOn: AppGroupUserDefaults.User.backupFiles))
-    private let backupVideosRow = SettingsRow(title: R.string.localizable.setting_backup_videos(),
+    private let backupVideosRow = SettingsRow(title: R.string.localizable.include_videos(),
                                               accessory: .switch(isOn: AppGroupUserDefaults.User.backupVideos))
     
     private lazy var dataSource = SettingsDataSource(sections: [
         SettingsSection(rows: [backupActionRow]),
-        SettingsSection(footer: R.string.localizable.setting_backup_auto_tips(), rows: [
-            SettingsRow(title: R.string.localizable.setting_backup_auto(),
+        SettingsSection(footer: R.string.localizable.auto_back_up_hint(), rows: [
+            SettingsRow(title: R.string.localizable.auto_Backup(),
                         subtitle: nil,
                         accessory: .disclosure),
             backupFilesRow,
@@ -21,24 +21,24 @@ class BackupViewController: SettingsTableViewController {
     ])
     
     private lazy var autoBackupFrequencyController: UIAlertController = {
-        let controller = UIAlertController(title: Localized.SETTING_BACKUP_AUTO, message: Localized.SETTING_BACKUP_AUTO_TIPS, preferredStyle: .actionSheet)
-        controller.addAction(UIAlertAction(title: Localized.SETTING_BACKUP_DAILY, style: .default, handler: { [weak self] (_) in
+        let controller = UIAlertController(title: R.string.localizable.auto_Backup(), message: R.string.localizable.auto_back_up_hint(), preferredStyle: .actionSheet)
+        controller.addAction(UIAlertAction(title: R.string.localizable.daily(), style: .default, handler: { [weak self] (_) in
             AppGroupUserDefaults.User.autoBackup = .daily
             self?.updateAutoBackupSubtitle()
         }))
-        controller.addAction(UIAlertAction(title: Localized.SETTING_BACKUP_WEEKLY, style: .default, handler: { [weak self] (_) in
+        controller.addAction(UIAlertAction(title: R.string.localizable.weekly(), style: .default, handler: { [weak self] (_) in
             AppGroupUserDefaults.User.autoBackup = .weekly
             self?.updateAutoBackupSubtitle()
         }))
-        controller.addAction(UIAlertAction(title: Localized.SETTING_BACKUP_MONTHLY, style: .default, handler: { [weak self] (_) in
+        controller.addAction(UIAlertAction(title: R.string.localizable.monthly(), style: .default, handler: { [weak self] (_) in
             AppGroupUserDefaults.User.autoBackup = .monthly
             self?.updateAutoBackupSubtitle()
         }))
-        controller.addAction(UIAlertAction(title: Localized.SETTING_BACKUP_OFF, style: .default, handler: { [weak self] (_) in
+        controller.addAction(UIAlertAction(title: R.string.localizable.off(), style: .default, handler: { [weak self] (_) in
             AppGroupUserDefaults.User.autoBackup = .off
             self?.updateAutoBackupSubtitle()
         }))
-        controller.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        controller.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         return controller
     }()
     
@@ -52,7 +52,7 @@ class BackupViewController: SettingsTableViewController {
     
     class func instance() -> UIViewController {
         let vc = BackupViewController()
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.setting_backup_title())
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.chat_Backup())
     }
     
     override func viewDidLoad() {
@@ -95,7 +95,7 @@ class BackupViewController: SettingsTableViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             self.updateActionSectionFooter()
             self.backupActionRow.accessory = .none
-            self.backupActionRow.title = Localized.SETTING_BACKUP_NOW
+            self.backupActionRow.title = R.string.localizable.back_Up_Now()
             if case let .switch(isOn, _) = self.backupFilesRow.accessory {
                 self.backupFilesRow.accessory = .switch(isOn: isOn, isEnabled: true)
             }
@@ -146,13 +146,13 @@ extension BackupViewController {
         let row = dataSource.row(at: indexPath)
         switch AppGroupUserDefaults.User.autoBackup {
         case .daily:
-            row.subtitle = Localized.SETTING_BACKUP_DAILY
+            row.subtitle = R.string.localizable.daily()
         case .weekly:
-            row.subtitle = Localized.SETTING_BACKUP_WEEKLY
+            row.subtitle = R.string.localizable.weekly()
         case .monthly:
-            row.subtitle = Localized.SETTING_BACKUP_MONTHLY
+            row.subtitle = R.string.localizable.monthly()
         case .off:
-            row.subtitle = Localized.SETTING_BACKUP_OFF
+            row.subtitle = R.string.localizable.off()
         }
     }
     
@@ -161,26 +161,26 @@ extension BackupViewController {
         if let backupJob = BackupJobQueue.shared.backupJob {
             if backupJob.isBackingUp {
                 if backupJob.backupSize == 0 {
-                    text = R.string.localizable.setting_backup_preparing()
+                    text = R.string.localizable.preparing()
                 } else {
                     let progress = NumberFormatter.simplePercentage.stringFormat(value: Float64(backupJob.backupSize) / Float64(backupJob.backupTotalSize))
-                    text = R.string.localizable.setting_backup_preparing_progress(progress)
+                    text = R.string.localizable.preparing_progress(progress)
                 }
             } else if backupJob.uploadedSize == 0 {
-                text = R.string.localizable.setting_backup_uploading()
+                text = R.string.localizable.uploading()
             } else {
                 let uploadedSize = backupJob.uploadedSize
                 let totalFileSize = backupJob.totalFileSize
                 let uploadProgress = NumberFormatter.simplePercentage.stringFormat(value: Float64(uploadedSize) / Float64(totalFileSize))
-                text = R.string.localizable.setting_backup_uploading_progress(uploadedSize.sizeRepresentation(), totalFileSize.sizeRepresentation(), uploadProgress)
+                text = R.string.localizable.uploading_progress(uploadedSize.sizeRepresentation(), totalFileSize.sizeRepresentation(), uploadProgress)
             }
         } else if let restoreJob = BackupJobQueue.shared.restoreJob {
             let number = NSNumber(value: restoreJob.progress)
             let percentage = NumberFormatter.simplePercentage.string(from: number)
-            text = Localized.SETTING_RESTORE_PROGRESS(progress: percentage ?? "")
+            text = R.string.localizable.restoring_progress(percentage ?? "")
         } else {
             if let size = AppGroupUserDefaults.User.lastBackupSize, let date = AppGroupUserDefaults.User.lastBackupDate {
-                text = Localized.SETTING_BACKUP_LAST(time: DateFormatter.backupFormatter.string(from: date), size: size.sizeRepresentation())
+                text = R.string.localizable.last_backup_hint(DateFormatter.backupFormatter.string(from: date), size.sizeRepresentation())
             } else {
                 text = nil
             }
@@ -191,9 +191,9 @@ extension BackupViewController {
     private func updateTableForBackingUp() {
         backupActionRow.accessory = .busy
         if BackupJobQueue.shared.isBackingUp {
-            backupActionRow.title = R.string.localizable.setting_backing()
+            backupActionRow.title = R.string.localizable.backing_Up()
         } else {
-            backupActionRow.title = R.string.localizable.setting_restoring()
+            backupActionRow.title = R.string.localizable.restoring()
         }
         if case let .switch(isOn, _) = backupFilesRow.accessory {
             backupFilesRow.accessory = .switch(isOn: isOn, isEnabled: false)
@@ -212,13 +212,13 @@ extension BackupViewController {
 extension BackupViewController {
     
     @objc func showReportMenuAction() {
-        let alc = UIAlertController(title: Localized.REPORT_TITLE, message: AppGroupContainer.userDatabaseUrl.fileSize.sizeRepresentation(), preferredStyle: .actionSheet)
-        alc.addAction(UIAlertAction(title: Localized.REPORT_BUTTON, style: .default, handler: { (_) in
+        let alc = UIAlertController(title: R.string.localizable.report_title(), message: AppGroupContainer.userDatabaseUrl.fileSize.sizeRepresentation(), preferredStyle: .actionSheet)
+        alc.addAction(UIAlertAction(title: R.string.localizable.send_to_Developer(), style: .default, handler: { (_) in
             self.report()
         }))
-        alc.addAction(UIAlertAction(title: R.string.localizable.report_compress_database(), style: .default, handler: compressDatabase))
-        alc.addAction(UIAlertAction(title: R.string.localizable.report_optimize_database(), style: .default, handler: optimizeDatabase))
-        alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        alc.addAction(UIAlertAction(title: R.string.localizable.compress_Database(), style: .default, handler: compressDatabase))
+        alc.addAction(UIAlertAction(title: R.string.localizable.optimize_Database(), style: .default, handler: optimizeDatabase))
+        alc.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         self.present(alc, animated: true, completion: nil)
     }
     
@@ -234,12 +234,12 @@ extension BackupViewController {
                 try UserDatabase.current.vacuum()
                 Logger.database.info(category: "DB Compressor", message: "Database compression finished, size: \(AppGroupContainer.userDatabaseUrl.fileSize.sizeRepresentation())")
                 DispatchQueue.main.async {
-                    hud.set(style: .notification, text: R.string.localizable.report_compress_database_success())
+                    hud.set(style: .notification, text: R.string.localizable.compressed())
                     hud.scheduleAutoHidden()
                 }
             } catch {
                 DispatchQueue.main.async {
-                    hud.set(style: .error, text: R.string.localizable.error_operation_failed())
+                    hud.set(style: .error, text: R.string.localizable.operation_failed())
                     hud.scheduleAutoHidden()
                 }
                 Logger.database.error(category: "DB Compressor", message: "Compression failed: \(error)")
@@ -261,12 +261,12 @@ extension BackupViewController {
                 }
                 Logger.database.info(category: "DB Optimizer", message: "Database optimization finished")
                 DispatchQueue.main.async {
-                    hud.set(style: .notification, text: R.string.localizable.report_optimize_database_success())
+                    hud.set(style: .notification, text: R.string.localizable.optimized())
                     hud.scheduleAutoHidden()
                 }
             } catch {
                 DispatchQueue.main.async {
-                    hud.set(style: .error, text: R.string.localizable.error_operation_failed())
+                    hud.set(style: .error, text: R.string.localizable.operation_failed())
                     hud.scheduleAutoHidden()
                 }
                 Logger.database.error(category: "DB Optimizer", message: "Optimization failed: \(error)")

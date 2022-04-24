@@ -117,7 +117,7 @@ class WalletHeaderView: InfiniteTopView {
                     }
                 } else {
                     assetPortions[assetPortions.count - 1].usdBalance += usdBalance
-                    assetPortions[assetPortions.count - 1].symbol = Localized.WALLET_SYMBOL_OTHER
+                    assetPortions[assetPortions.count - 1].symbol = R.string.localizable.other()
                 }
             }
         }

@@ -596,6 +596,7 @@
 		7C952D0027E036240083F92B /* ExpiredMessageTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C952CFF27E036240083F92B /* ExpiredMessageTableHeaderView.xib */; };
 		7C9A734027392FAF00E0127A /* PinSettingTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9A733F27392FAF00E0127A /* PinSettingTableHeaderView.swift */; };
 		7C9DCDF1273901D500395F4A /* PinSettingTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C9DCDF0273901D500395F4A /* PinSettingTableHeaderView.xib */; };
+		7CA5EE58280EA06B00BF3CD0 /* ScreenLockTimeFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA5EE57280EA06B00BF3CD0 /* ScreenLockTimeFormatter.swift */; };
 		7CB0954F26CCED2E0049F4C7 /* PinMessageBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB0954E26CCED2E0049F4C7 /* PinMessageBannerView.swift */; };
 		7CB0955126CCED420049F4C7 /* PinMessageBannerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CB0955026CCED420049F4C7 /* PinMessageBannerView.xib */; };
 		7CB0955326CD18F70049F4C7 /* PinMessagesPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB0955226CD18F70049F4C7 /* PinMessagesPreviewViewController.swift */; };
@@ -772,7 +773,6 @@
 		DF56966F1FAAB11D00226D42 /* ContactHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF56966E1FAAB11D00226D42 /* ContactHeaderView.swift */; };
 		DF5BF55F1FBB281E0092AFB8 /* AssetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5BF55E1FBB281E0092AFB8 /* AssetViewController.swift */; };
 		DF5BF5611FBB2D490092AFB8 /* DepositViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5BF5601FBB2D490092AFB8 /* DepositViewController.swift */; };
-		DF5D9F231F9C79E10036D5FD /* Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5D9F1A1F9C62200036D5FD /* Localized.swift */; };
 		DF5D9F241F9C79E10036D5FD /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5D9F1B1F9C62990036D5FD /* Constant.swift */; };
 		DF5D9F251F9C79E10036D5FD /* LocalizedExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5D9F131F9C5AF40036D5FD /* LocalizedExtension.swift */; };
 		DF5D9F281F9C79E10036D5FD /* UIApplicationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5D9F151F9C5BBB0036D5FD /* UIApplicationExtension.swift */; };
@@ -1422,7 +1422,6 @@
 		7BD3860324DC56DA00A3035C /* UNNotificationConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UNNotificationConstants.swift; sourceTree = "<group>"; };
 		7BD387F424DC591D00A3035C /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = "<group>"; };
 		7BD387FD24DC66F900A3035C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		7BD387FF24DC66F900A3035C /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		7BD38B5F20BEA03200D06E5C /* WaveformView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveformView.swift; sourceTree = "<group>"; };
 		7BD38B6120BEA12800D06E5C /* AudioMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioMessageViewModel.swift; sourceTree = "<group>"; };
 		7BD5A889233228D900DD4E9A /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
@@ -1530,6 +1529,10 @@
 		7BFE47E12284394000FC4379 /* CheckmarkPeerCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CheckmarkPeerCell.xib; sourceTree = "<group>"; };
 		7BFE47E42284530200FC4379 /* PeerHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerHeaderView.swift; sourceTree = "<group>"; };
 		7BFE47E622845DE100FC4379 /* MessageReceiver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageReceiver.swift; sourceTree = "<group>"; };
+		7C02C1EF282D059A00FFED80 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		7C02C1F0282D05C900FFED80 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		7C02C1F1282D05CA00FFED80 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
+		7C02C1F2282D05CC00FFED80 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		7C0D997E26CA62CD00356655 /* StaticAudioMessagePlayingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticAudioMessagePlayingManager.swift; sourceTree = "<group>"; };
 		7C0E15DE27005376002FC718 /* UnknownURLWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnknownURLWindow.swift; sourceTree = "<group>"; };
 		7C0E15E0270053AC002FC718 /* UnknownURLWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UnknownURLWindow.xib; sourceTree = "<group>"; };
@@ -1581,6 +1584,7 @@
 		7C952CFF27E036240083F92B /* ExpiredMessageTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ExpiredMessageTableHeaderView.xib; sourceTree = "<group>"; };
 		7C9A733F27392FAF00E0127A /* PinSettingTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinSettingTableHeaderView.swift; sourceTree = "<group>"; };
 		7C9DCDF0273901D500395F4A /* PinSettingTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PinSettingTableHeaderView.xib; sourceTree = "<group>"; };
+		7CA5EE57280EA06B00BF3CD0 /* ScreenLockTimeFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenLockTimeFormatter.swift; sourceTree = "<group>"; };
 		7CB0954E26CCED2E0049F4C7 /* PinMessageBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinMessageBannerView.swift; sourceTree = "<group>"; };
 		7CB0955026CCED420049F4C7 /* PinMessageBannerView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PinMessageBannerView.xib; sourceTree = "<group>"; };
 		7CB0955226CD18F70049F4C7 /* PinMessagesPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinMessagesPreviewViewController.swift; sourceTree = "<group>"; };
@@ -1766,7 +1770,6 @@
 		DF5D9F151F9C5BBB0036D5FD /* UIApplicationExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplicationExtension.swift; sourceTree = "<group>"; };
 		DF5D9F161F9C5E6A0036D5FD /* UIColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorExtension.swift; sourceTree = "<group>"; };
 		DF5D9F181F9C61530036D5FD /* UIViewControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtension.swift; sourceTree = "<group>"; };
-		DF5D9F1A1F9C62200036D5FD /* Localized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localized.swift; sourceTree = "<group>"; };
 		DF5D9F1B1F9C62990036D5FD /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
 		DF5D9F2D1F9C941D0036D5FD /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		DF5D9F301F9C95410036D5FD /* CountryCodeLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryCodeLibrary.swift; sourceTree = "<group>"; };
@@ -2062,6 +2065,7 @@
 				5E5CA7852674AC8E00C1E113 /* ScreenLockManager.swift */,
 				5EBD8CD0267B37D20026A248 /* ScreenLockViewController.swift */,
 				5E5CA7842674AC8D00C1E113 /* ScreenLockView.xib */,
+				7CA5EE57280EA06B00BF3CD0 /* ScreenLockTimeFormatter.swift */,
 			);
 			path = ScreenLock;
 			sourceTree = "<group>";
@@ -3053,7 +3057,6 @@
 		DF5D9F191F9C62140036D5FD /* Constants */ = {
 			isa = PBXGroup;
 			children = (
-				DF5D9F1A1F9C62200036D5FD /* Localized.swift */,
 				DF5D9F1B1F9C62990036D5FD /* Constant.swift */,
 				7B3936CE20C15BA00075A97A /* MixinKeys.swift */,
 				DF6175C2222398BB00624609 /* MixinURL.swift */,
@@ -3860,6 +3863,7 @@
 				en,
 				Base,
 				"zh-Hans",
+				ja,
 			);
 			mainGroup = 277FF6F61F909A1200DBB2EB;
 			productRefGroup = 277FF7001F909A1200DBB2EB /* Products */;
@@ -4576,6 +4580,7 @@
 				DF3FF0552011E9B8000A0C0A /* FileUploadJob.swift in Sources */,
 				7BBCEC382523A2B400F270DF /* MinimizedClipSwitcherViewController.swift in Sources */,
 				E0C7674D23CC9411003F9215 /* BackgroundedTrailingInfoViewModel.swift in Sources */,
+				7CA5EE58280EA06B00BF3CD0 /* ScreenLockTimeFormatter.swift in Sources */,
 				7B6A4046228400AF0037C7E5 /* MessageReceiverViewController.swift in Sources */,
 				7BB0F94F2434D75D00BEDA97 /* CircleMember+Convenience.swift in Sources */,
 				7B0B01981FEA63FA000EEE4F /* StrangerHintView.swift in Sources */,
@@ -4586,7 +4591,6 @@
 				7B2E3E521FA07F7B00DDDDEB /* CountryCell.swift in Sources */,
 				7B5EA41220B2734C00940D1A /* GalleryVideoSlider.swift in Sources */,
 				7B7DACAA23505F06006AA2AC /* SharedMediaAudio.swift in Sources */,
-				DF5D9F231F9C79E10036D5FD /* Localized.swift in Sources */,
 				7B51DDB0223A3A6F008ACDBB /* MobileNumberViewController.swift in Sources */,
 				7B65568324C8555D0038BC14 /* GroupCallMemberConnectingView.swift in Sources */,
 				7BF5DCEA24001F760093968C /* MixinInternalUrl.swift in Sources */,
@@ -5184,7 +5188,8 @@
 			isa = PBXVariantGroup;
 			children = (
 				7BD387FD24DC66F900A3035C /* en */,
-				7BD387FF24DC66F900A3035C /* zh-Hans */,
+				7C02C1EF282D059A00FFED80 /* zh-Hans */,
+				7C02C1F1282D05CA00FFED80 /* ja */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -5194,6 +5199,7 @@
 			children = (
 				DF8CECFE1FC58DBD00E40064 /* en */,
 				DF8CED001FC58DC000E40064 /* zh-Hans */,
+				7C02C1F0282D05C900FFED80 /* ja */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -5211,6 +5217,7 @@
 			children = (
 				DFE864EC24229EFB009B1833 /* en */,
 				DFE864EE24229F06009B1833 /* zh-Hans */,
+				7C02C1F2282D05CC00FFED80 /* ja */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";

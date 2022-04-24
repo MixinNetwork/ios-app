@@ -23,7 +23,7 @@ class LoginConfirmWindow: BottomSheetView {
 
     func loginSuccessAction() {
         dismissView()
-        showAutoHiddenHud(style: .notification, text: Localized.TOAST_LOGINED)
+        showAutoHiddenHud(style: .notification, text: R.string.localizable.logined())
     }
 
 

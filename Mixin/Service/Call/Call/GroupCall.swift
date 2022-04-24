@@ -642,7 +642,7 @@ extension GroupCall {
     
     private static func localizedInvitationName(inviters: [UserItem]) -> String {
         let names = inviters.map(\.fullName).joined(separator: ", ")
-        return R.string.localizable.group_call_invite(names)
+        return R.string.localizable.chat_group_call_invite(names)
     }
     
     private func initializeFrameKey() {

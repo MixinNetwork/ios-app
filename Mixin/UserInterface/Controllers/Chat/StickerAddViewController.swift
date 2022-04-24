@@ -25,7 +25,7 @@ class StickerAddViewController: UIViewController {
     class func instance(source: Source) -> UIViewController {
         let vc = R.storyboard.chat.sticker_add()!
         vc.source = source
-        return ContainerViewController.instance(viewController: vc, title: Localized.STICKER_ADD_TITLE)
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.add_Sticker())
     }
     
     override func viewDidLoad() {
@@ -132,7 +132,7 @@ extension StickerAddViewController: ContainerViewControllerDelegate {
     }
     
     func textBarRightButton() -> String? {
-        return Localized.ACTION_SAVE
+        R.string.localizable.save()
     }
     
 }
@@ -143,13 +143,13 @@ extension StickerAddViewController {
         container?.rightButton.isBusy = false
         let title = R.string.localizable.sticker_add_requirements("\(minDataCount / bytesPerKiloByte)", "\(maxDataCount / bytesPerKiloByte)", "\(Int(minStickerLength))", "\(Int(maxStickerLength))")
         let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_ok(), style: .default, handler: nil))
+        alert.addAction(UIAlertAction(title: R.string.localizable.oK(), style: .default, handler: nil))
         present(alert, animated: true, completion: nil)
     }
     
     private func showFailureAlert() {
         container?.rightButton.isBusy = false
-        showAutoHiddenHud(style: .error, text: R.string.localizable.error_operation_failed())
+        showAutoHiddenHud(style: .error, text: R.string.localizable.operation_failed())
     }
     
     private func addStaticImage(image: UIImage) {
@@ -200,7 +200,7 @@ extension StickerAddViewController {
                 DispatchQueue.global().async { [weak self] in
                     StickerDAO.shared.insertOrUpdateFavoriteSticker(sticker: sticker)
                     DispatchQueue.main.async {
-                        showAutoHiddenHud(style: .notification, text: Localized.TOAST_ADDED)
+                        showAutoHiddenHud(style: .notification, text: R.string.localizable.added())
                         self?.navigationController?.popViewController(animated: true)
                     }
                 }
@@ -209,9 +209,9 @@ extension StickerAddViewController {
                 switch error {
                 case let .invalidRequestData(field):
                     if field == "width" {
-                        showAutoHiddenHud(style: .error, text: R.string.localizable.error_invalid_width())
+                        showAutoHiddenHud(style: .error, text: R.string.localizable.invalid_width())
                     } else if field == "height" {
-                        showAutoHiddenHud(style: .error, text: R.string.localizable.error_invalid_height())
+                        showAutoHiddenHud(style: .error, text: R.string.localizable.invalid_height())
                     } else {
                         fallthrough
                     }
@@ -223,3 +223,4 @@ extension StickerAddViewController {
     }
     
 }
+

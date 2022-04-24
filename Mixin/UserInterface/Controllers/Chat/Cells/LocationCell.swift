@@ -52,20 +52,20 @@ class LocationCell: ModernSelectedBackgroundCell {
         } else {
             renderAsUserRelatedLocation()
         }
-        titleLabel.text = location.name ?? R.string.localizable.chat_location_unnamed()
+        titleLabel.text = location.name ?? R.string.localizable.unnamed_location()
         subtitleLabel.text = location.address
     }
     
     func renderAsUserLocation(accuracy: String) {
         renderAsUserRelatedLocation()
-        titleLabel.text = R.string.localizable.chat_location_send_current()
-        subtitleLabel.text = R.string.localizable.chat_location_accuracy(accuracy)
+        titleLabel.text = R.string.localizable.send_your_Current_Location()
+        subtitleLabel.text = R.string.localizable.location_accuracy_to(accuracy)
     }
     
     func renderAsUserPickedLocation(address: String?) {
         renderAsUserRelatedLocation()
-        titleLabel.text = R.string.localizable.chat_location_send_user_picked()
-        subtitleLabel.text = address ?? R.string.localizable.chat_location_reverse_geocode_processing()
+        titleLabel.text = R.string.localizable.send_This_Location()
+        subtitleLabel.text = address ?? R.string.localizable.locating()
     }
     
     private func renderAsUserRelatedLocation() {

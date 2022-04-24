@@ -35,21 +35,21 @@ enum MessageAction {
     var title: String {
         switch self {
         case .reply:
-            return R.string.localizable.chat_message_menu_reply()
+            return R.string.localizable.reply()
         case .forward:
-            return R.string.localizable.chat_message_menu_forward()
+            return R.string.localizable.forward()
         case .copy:
-            return R.string.localizable.chat_message_menu_copy()
+            return R.string.localizable.copy()
         case .delete:
-            return R.string.localizable.menu_delete()
+            return R.string.localizable.delete()
         case .addToStickers:
-            return R.string.localizable.chat_message_sticker()
+            return R.string.localizable.add_to_Stickers()
         case .report:
-            return R.string.localizable.menu_report()
+            return R.string.localizable.report()
         case .pin:
-            return R.string.localizable.menu_pin()
+            return R.string.localizable.pin_title()
         case .unpin:
-            return R.string.localizable.menu_unpin()
+            return R.string.localizable.unpin()
             
         }
     }

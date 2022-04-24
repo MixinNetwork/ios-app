@@ -11,7 +11,7 @@ final class GroupsInCommonViewController: UIViewController {
     class func instance(userId: String) -> UIViewController {
         let vc = GroupsInCommonViewController()
         vc.userId = userId
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.profile_groups_in_common())
+        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.groups_In_Common())
         return container
     }
     

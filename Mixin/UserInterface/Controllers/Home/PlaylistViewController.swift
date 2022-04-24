@@ -141,14 +141,14 @@ class PlaylistViewController: ResizablePopupViewController {
 extension PlaylistViewController {
     
     @IBAction func stop(_ sender: Any) {
-        let alert = UIAlertController(title: R.string.localizable.playlist_stop_confirmation(), message: nil, preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: R.string.localizable.playlist_stop(), style: .default, handler: { (_) in
+        let alert = UIAlertController(title: R.string.localizable.stop_playing_this_list(), message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: R.string.localizable.stop_Playing(), style: .default, handler: { (_) in
             self.manager.stop()
             self.dismiss(animated: true) {
                 self.manager.removeAllItems()
             }
         }))
-        alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         present(alert, animated: true, completion: nil)
     }
     
@@ -471,7 +471,7 @@ extension PlaylistViewController {
             playedTimeLabel.text = zeroTime
             remainingTimeLabel.text = zeroTime
             nowPlayingInfoView.imageView.image = nil
-            nowPlayingInfoView.titleLabel.text = R.string.localizable.playlist_not_playing()
+            nowPlayingInfoView.titleLabel.text = R.string.localizable.not_playing()
             nowPlayingInfoView.subtitleLabel.text = nil
             previousTrackButton.isEnabled = false
             nextTrackButton.isEnabled = false

@@ -268,10 +268,10 @@ class ConversationInputViewController: UIViewController {
         let conversationId = composer.conversationId
 
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: { (_) in
+        alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: { (_) in
             self.deleteConversationButton.isBusy = false
         }))
-        alert.addAction(UIAlertAction(title: R.string.localizable.group_menu_delete(), style: .destructive, handler: { (_) in
+        alert.addAction(UIAlertAction(title: R.string.localizable.delete_Chat(), style: .destructive, handler: { (_) in
             DispatchQueue.global().async { [weak self] in
                 ConversationDAO.shared.deleteChat(conversationId: conversationId)
                 DispatchQueue.main.async {
@@ -359,7 +359,7 @@ class ConversationInputViewController: UIViewController {
                     }
                     self.extensionViewController.apps = apps.map { ($0, nil) }
                     self.reloadFixedExtensions()
-                    self.textView.placeholder = R.string.localizable.e2e_encrypted()
+                    self.textView.placeholder = R.string.localizable.end_to_End_Encryption()
                 }
             }
         } else if let ownerUser = composer.ownerUser {
@@ -376,7 +376,7 @@ class ConversationInputViewController: UIViewController {
                 }
                 self.loadFavoriteApps(ownerUser: ownerUser)
                 self.reloadFixedExtensions()
-                self.textView.placeholder = isEncrypted ? R.string.localizable.e2e_encrypted() : nil
+                self.textView.placeholder = isEncrypted ? R.string.localizable.end_to_End_Encryption() : nil
             }
         }
         

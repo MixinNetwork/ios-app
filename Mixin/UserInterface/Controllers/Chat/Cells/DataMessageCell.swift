@@ -66,7 +66,7 @@ class DataMessageCell: CardMessageCell<DataMessageExtensionIconView, CardMessage
             }
             titleLabel.text = viewModel.message.name ?? " "
             let mediaExpired = viewModel.mediaStatus == MediaStatus.EXPIRED.rawValue
-            subtitleLabel.text =  mediaExpired ? Localized.CHAT_FILE_EXPIRED : viewModel.sizeRepresentation
+            subtitleLabel.text =  mediaExpired ? R.string.localizable.expired() : viewModel.sizeRepresentation
             if viewModel.isListPlayable && viewModel.transcriptId == nil {
                 PlaylistManager.shared.register(cell: self, for: viewModel.message.messageId)
             }

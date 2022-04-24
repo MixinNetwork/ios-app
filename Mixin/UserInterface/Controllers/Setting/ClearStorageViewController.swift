@@ -92,12 +92,18 @@ extension ClearStorageViewController: ContainerViewControllerDelegate {
             messageCount += category.messageCount
             size += category.mediaSize
         }
-
-        let alc = UIAlertController(title: Localized.SETTING_STORAGE_USAGE_CLEAR(messageCount: messageCount, size: VideoMessageViewModel.byteCountFormatter.string(fromByteCount: size)), message: nil, preferredStyle: .actionSheet)
-        alc.addAction(UIAlertAction(title: Localized.ACTION_CLEAR, style: .destructive, handler: { [weak self](_) in
+        let formatterSize = VideoMessageViewModel.byteCountFormatter.string(fromByteCount: size)
+        let title: String
+        if messageCount == 1 {
+            title = R.string.localizable.setting_storage_clear(messageCount, formatterSize)
+        } else {
+            title = R.string.localizable.setting_storage_clear_count(messageCount, formatterSize)
+        }
+        let alc = UIAlertController(title: title, message: nil, preferredStyle: .actionSheet)
+        alc.addAction(UIAlertAction(title: R.string.localizable.clear(), style: .destructive, handler: { [weak self](_) in
             self?.clearAction()
         }))
-        alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        alc.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         self.present(alc, animated: true, completion: nil)
     }
 
@@ -140,7 +146,7 @@ extension ClearStorageViewController: ContainerViewControllerDelegate {
     }
     
     func textBarRightButton() -> String? {
-        return Localized.ACTION_CLEAR
+        return R.string.localizable.clear()
     }
 
 }

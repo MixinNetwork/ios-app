@@ -109,13 +109,13 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
     
     @IBAction func moreAction(_ sender: Any) {
         let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        sheet.addAction(UIAlertAction(title: R.string.localizable.wallet_all_transactions_title(), style: .default, handler: { (_) in
+        sheet.addAction(UIAlertAction(title: R.string.localizable.all_Transactions(), style: .default, handler: { (_) in
             self.navigationController?.pushViewController(AllTransactionsViewController.instance(), animated: true)
         }))
-        sheet.addAction(UIAlertAction(title: R.string.localizable.wallet_menu_show_hidden_assets(), style: .default, handler: { (_) in
+        sheet.addAction(UIAlertAction(title: R.string.localizable.hidden_Assets(), style: .default, handler: { (_) in
             self.navigationController?.pushViewController(HiddenAssetViewController.instance(), animated: true)
         }))
-        sheet.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
+        sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         present(sheet, animated: true, completion: nil)
     }
     
@@ -179,14 +179,14 @@ extension WalletViewController: UITableViewDelegate {
 extension WalletViewController {
     
     private func hideAssetAction(forRowAt indexPath: IndexPath) -> UIContextualAction {
-        let action = UIContextualAction(style: .destructive, title: R.string.localizable.action_hide()) { [weak self] (action, _, completionHandler: (Bool) -> Void) in
+        let action = UIContextualAction(style: .destructive, title: R.string.localizable.hide()) { [weak self] (action, _, completionHandler: (Bool) -> Void) in
             guard let self = self else {
                 return
             }
             let asset = self.assets[indexPath.row]
             let alert = UIAlertController(title: R.string.localizable.wallet_hide_asset_confirmation(asset.symbol), message: nil, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
-            alert.addAction(UIAlertAction(title: R.string.localizable.action_hide(), style: .default, handler: { (_) in
+            alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: R.string.localizable.hide(), style: .default, handler: { (_) in
                 self.hideAsset(of: asset.assetId)
             }))
             self.present(alert, animated: true, completion: nil)

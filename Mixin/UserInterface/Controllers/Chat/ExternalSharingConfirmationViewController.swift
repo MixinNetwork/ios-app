@@ -37,7 +37,7 @@ class ExternalSharingConfirmationViewController: UIViewController {
         }
         message.createdAt = Date().toUTCString()
         SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: conversation.isGroup())
-        showAutoHiddenHud(style: .notification, text: R.string.localizable.chat_message_sent())
+        showAutoHiddenHud(style: .notification, text: R.string.localizable.message_sent())
         dismiss(animated: true, completion: nil)
     }
     
@@ -67,16 +67,16 @@ class ExternalSharingConfirmationViewController: UIViewController {
             switch context.style {
             case let .app(app, _):
                 let source = "\(app.name)(\(app.appNumber))"
-                titleLabel.text = R.string.localizable.chat_external_sharing_title_from_source(source, localizedContentCategory)
+                titleLabel.text = R.string.localizable.share_message_description(localizedContentCategory, source)
             case .webPage:
                 if let source = context.initialUrl.host {
-                    titleLabel.text = R.string.localizable.chat_external_sharing_title_from_source(source, localizedContentCategory)
+                    titleLabel.text = R.string.localizable.share_message_description(localizedContentCategory, source)
                 } else {
-                    titleLabel.text = R.string.localizable.chat_external_sharing_title_no_source(localizedContentCategory)
+                    titleLabel.text = R.string.localizable.share_message_description_empty(localizedContentCategory)
                 }
             }
         } else {
-            titleLabel.text = R.string.localizable.chat_external_sharing_title_no_source(localizedContentCategory)
+            titleLabel.text = R.string.localizable.share_message_description_empty(localizedContentCategory)
         }
     }
     

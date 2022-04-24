@@ -8,7 +8,7 @@ class TransferReceiverViewController: UserItemPeerViewController<PeerCell> {
     class func instance(asset: AssetItem) -> UIViewController {
         let vc = TransferReceiverViewController()
         vc.asset = asset
-        return ContainerViewController.instance(viewController: vc, title: Localized.ACTION_SEND_TO)
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.send_To_Title())
     }
     
     override func catalog(users: [UserItem]) -> (titles: [String], models: [UserItem]) {

@@ -153,10 +153,10 @@ extension StickersAlbumPreviewViewController {
     private func updateStickerActionButton() {
         if albumItem.isAdded {
             stickerActionButton.backgroundColor = R.color.red()
-            stickerActionButton.setTitle(R.string.localizable.sticker_remove_title(), for: .normal)
+            stickerActionButton.setTitle(R.string.localizable.remove_Stickers(), for: .normal)
         } else {
             stickerActionButton.backgroundColor = R.color.theme()
-            stickerActionButton.setTitle(R.string.localizable.sticker_add_title(), for: .normal)
+            stickerActionButton.setTitle(R.string.localizable.add_Sticker(), for: .normal)
         }
     }
     

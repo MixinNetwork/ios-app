@@ -11,13 +11,11 @@ final class LoginMobileNumberViewController: MobileNumberViewController {
     private var request: Request?
     
     private let intro: NSAttributedString = {
-        let intro = String(format: Localized.TEXT_INTRO,
-                           Localized.BUTTON_TITLE_TERMS_OF_SERVICE,
-                           Localized.BUTTON_TITLE_PRIVACY_POLICY)
+        let intro = R.string.localizable.agree_hint(R.string.localizable.terms_of_Service(), R.string.localizable.privacy_Policy())
         let nsIntro = intro as NSString
         let fullRange = NSRange(location: 0, length: nsIntro.length)
-        let termsRange = nsIntro.range(of: Localized.BUTTON_TITLE_TERMS_OF_SERVICE)
-        let privacyRange = nsIntro.range(of: Localized.BUTTON_TITLE_PRIVACY_POLICY)
+        let termsRange = nsIntro.range(of: R.string.localizable.terms_of_Service())
+        let privacyRange = nsIntro.range(of: R.string.localizable.privacy_Policy())
         let attributedText = NSMutableAttributedString(string: intro)
         let paragraphSytle = NSMutableParagraphStyle()
         paragraphSytle.alignment = .center
@@ -51,10 +49,10 @@ final class LoginMobileNumberViewController: MobileNumberViewController {
     }
     
     override func continueAction(_ sender: Any) {
-        let message = String(format: Localized.TEXT_CONFIRM_SEND_CODE, fullNumber(withSpacing: true))
+        let message = R.string.localizable.text_confirm_send_code(fullNumber(withSpacing: true))
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CHANGE, style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CONFIRM, style: .default, handler: { _ in
+        alert.addAction(UIAlertAction(title: R.string.localizable.change(), style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: R.string.localizable.confirm(), style: .default, handler: { _ in
             self.requestVerificationCode(captchaToken: nil)
         }))
         present(alert, animated: true, completion: nil)
@@ -94,7 +92,7 @@ final class LoginMobileNumberViewController: MobileNumberViewController {
                         fallthrough
                     }
                     if underlying.code == NSURLErrorNotConnectedToInternet && weakSelf.isNetworkPermissionRestricted {
-                        weakSelf.alertSettings(R.string.localizable.permission_denied_network())
+                        weakSelf.alertSettings(R.string.localizable.permission_denied_network_hint())
                         weakSelf.continueButton.isBusy = false
                     } else {
                         fallthrough

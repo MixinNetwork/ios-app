@@ -11,7 +11,7 @@ class GroupInCommonCell: UITableViewCell {
         didSet {
             avatarView.setGroupImage(with: groupInCommon.iconUrl)
             nameLabel.text = groupInCommon.name
-            countLabel.text = R.string.localizable.group_title_members("\(groupInCommon.participantsCount)")
+            countLabel.text = R.string.localizable.title_participants_count(groupInCommon.participantsCount)
         }
     }
     

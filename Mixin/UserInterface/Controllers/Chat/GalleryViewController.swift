@@ -297,7 +297,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
             return
         }
         if message.category.hasSuffix("_LIVE"), let live = message.live, !(live.isShareable ?? true) {
-            alert(R.string.localizable.chat_forward_invalid_live_not_shareable())
+            alert(R.string.localizable.live_shareable_false())
             return
         }
         let content: MessageReceiverViewController.MessageContent
@@ -352,12 +352,12 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         }
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         if itemViewController.supportedActions.contains(.forward) {
-            alert.addAction(UIAlertAction(title: R.string.localizable.chat_message_menu_forward(), style: .default, handler: { (_) in
+            alert.addAction(UIAlertAction(title: R.string.localizable.forward(), style: .default, handler: { (_) in
                 self.forward()
             }))
         }
         if itemViewController.supportedActions.contains(.saveToLibrary) {
-            alert.addAction(UIAlertAction(title: Localized.CHAT_PHOTO_SAVE, style: .default, handler: { (_) in
+            alert.addAction(UIAlertAction(title: R.string.localizable.save_to_Camera_Roll(), style: .default, handler: { (_) in
                 PHPhotoLibrary.checkAuthorization { (authorized) in
                     if authorized {
                         itemViewController.saveToLibrary()
@@ -366,7 +366,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
             }))
         }
         if let url = (itemViewController as? GalleryImageItemViewController)?.detectedUrl {
-            alert.addAction(UIAlertAction(title: Localized.SCAN_QR_CODE, style: .default, handler: { (_) in
+            alert.addAction(UIAlertAction(title: R.string.localizable.scan_QR_Code(), style: .default, handler: { (_) in
                 if UrlWindow.checkExternalScheme(url: url.absoluteString) {
                     return
                 }
@@ -375,7 +375,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
                 }
             }))
         }
-        alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         present(alert, animated: true, completion: nil)
     }
     

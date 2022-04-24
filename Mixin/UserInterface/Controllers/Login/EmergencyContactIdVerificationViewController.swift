@@ -7,7 +7,7 @@ class EmergencyContactIdVerificationViewController: LoginInfoInputViewController
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        titleLabel.text = R.string.localizable.navigation_title_enter_emergency_contact_id()
+        titleLabel.text = R.string.localizable.enter_your_emergency_contact_Mixin_ID()
         textField.textAlignment = .center
         textField.keyboardType = .numberPad
         textField.delegate = self

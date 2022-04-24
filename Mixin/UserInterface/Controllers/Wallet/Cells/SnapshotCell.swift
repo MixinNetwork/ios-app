@@ -41,35 +41,34 @@ class SnapshotCell: ModernSelectedBackgroundCell {
         switch snapshot.type {
         case SnapshotType.deposit.rawValue:
             amountLabel.textColor = .walletGreen
-            titleLabel.text = Localized.TRANSACTION_TYPE_DEPOSIT
+            titleLabel.text = R.string.localizable.deposit()
         case SnapshotType.transfer.rawValue:
             if snapshot.amount.hasMinusPrefix {
                 amountLabel.textColor = .walletRed
             } else {
                 amountLabel.textColor = .walletGreen
             }
-            titleLabel.text = Localized.TRANSACTION_TYPE_TRANSFER
+            titleLabel.text = R.string.localizable.transfer()
         case SnapshotType.raw.rawValue:
             if snapshot.amount.hasMinusPrefix {
                 amountLabel.textColor = .walletRed
             } else {
                 amountLabel.textColor = .walletGreen
             }
-            titleLabel.text = R.string.localizable.transaction_type_raw()
+            titleLabel.text = R.string.localizable.raw()
         case SnapshotType.withdrawal.rawValue:
             amountLabel.textColor = .walletRed
-            titleLabel.text = Localized.TRANSACTION_TYPE_WITHDRAWAL
+            titleLabel.text = R.string.localizable.withdrawal()
         case SnapshotType.fee.rawValue:
             amountLabel.textColor = .walletRed
-            titleLabel.text = Localized.TRANSACTION_TYPE_FEE
+            titleLabel.text = R.string.localizable.fee()
         case SnapshotType.rebate.rawValue:
             amountLabel.textColor = .walletGreen
-            titleLabel.text = Localized.TRANSACTION_TYPE_REBATE
+            titleLabel.text = R.string.localizable.rebate()
         case SnapshotType.pendingDeposit.rawValue:
             amountLabel.textColor = .walletGray
             if let finished = snapshot.confirmations, let total = asset?.confirmations {
-                titleLabel.text = Localized.PENDING_DEPOSIT_CONFIRMATION(numerator: finished,
-                                                                         denominator: total)
+                titleLabel.text = R.string.localizable.pending_confirmations(finished, total)
             } else {
                 titleLabel.text = nil
             }

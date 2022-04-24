@@ -59,7 +59,7 @@ final class PinMessagesPreviewViewController: StaticMessagesViewController {
             return super.contextMenuActions(for: viewModel)
         }
         var actions = super.contextMenuActions(for: viewModel) ?? []
-        let unpinAction = UIAction(title: R.string.localizable.menu_unpin(), image: R.image.conversation.ic_action_unpin()) { (_) in
+        let unpinAction = UIAction(title: R.string.localizable.unpin(), image: R.image.conversation.ic_action_unpin()) { (_) in
             SendMessageService.shared.sendPinMessages(items: [viewModel.message],
                                                       conversationId: self.conversationId,
                                                       action: .unpin)
@@ -131,9 +131,9 @@ extension PinMessagesPreviewViewController: MessageViewModelFactoryDelegate {
 extension PinMessagesPreviewViewController {
     
     @objc private func unpinAllAction() {
-        let controller = UIAlertController(title: R.string.localizable.chat_alert_unpin_all_messages(), message: nil, preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
-        controller.addAction(UIAlertAction(title: R.string.localizable.menu_unpin(), style: .default) { _ in
+        let controller = UIAlertController(title: R.string.localizable.unpin_all_messages_confirmation(), message: nil, preferredStyle: .alert)
+        controller.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+        controller.addAction(UIAlertAction(title: R.string.localizable.unpin(), style: .default) { _ in
             self.ignoresPinMessageChangeNotification = true
             SendMessageService.shared.sendPinMessages(items: self.pinnedMessageItems, conversationId: self.conversationId, action: .unpin)
             self.dismissAsChild(completion: nil)
@@ -173,7 +173,7 @@ extension PinMessagesPreviewViewController {
             let (dates, viewModels) = self.categorizedViewModels(with: pinnedMessageItems, fits: self.layoutWidth)
             DispatchQueue.main.async {
                 self.pinnedMessageItems = pinnedMessageItems
-                self.titleLabel.text = R.string.localizable.chat_pinned_messages_count(pinnedMessageItems.count)
+                self.titleLabel.text = R.string.localizable.pinned_message_title_count(pinnedMessageItems.count)
                 self.dates = dates
                 self.viewModels = viewModels
                 self.tableView.reloadData()
@@ -204,7 +204,7 @@ extension PinMessagesPreviewViewController {
         }
         
         let button = UIButton()
-        button.setTitle(R.string.localizable.chat_unpin_all_messages(), for: .normal)
+        button.setTitle(R.string.localizable.unpin_All_Messages(), for: .normal)
         button.setTitleColor(R.color.theme(), for: .normal)
         button.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 16), adjustForContentSize: true)
         button.addTarget(self, action: #selector(unpinAllAction), for: .touchUpInside)
@@ -233,7 +233,7 @@ extension PinMessagesPreviewViewController {
             self.updateUnpinAllButtonVisibility()
             DispatchQueue.main.async {
                 self.pinnedMessageItems = pinnedMessageItems
-                self.titleLabel.text = R.string.localizable.chat_pinned_messages_count(self.pinnedMessageItems.count)
+                self.titleLabel.text = R.string.localizable.pinned_message_title_count(self.pinnedMessageItems.count)
                 self.dates = dates
                 self.viewModels = viewModels
                 self.tableView.reloadData()

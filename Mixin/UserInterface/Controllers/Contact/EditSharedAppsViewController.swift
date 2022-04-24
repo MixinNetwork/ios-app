@@ -13,7 +13,7 @@ class EditSharedAppsViewController: UIViewController {
     
     class func instance() -> UIViewController {
         let vc = R.storyboard.contact.edit_shared_apps()!
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.profile_my_shared_apps())
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.my_shared_apps())
     }
     
     override func viewDidLoad() {

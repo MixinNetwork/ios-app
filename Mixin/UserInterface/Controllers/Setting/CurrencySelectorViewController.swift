@@ -22,7 +22,7 @@ class CurrencySelectorViewController: PopupSearchableTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        searchBoxView.textField.placeholder = R.string.localizable.search_placeholder_currency()
+        searchBoxView.textField.placeholder = R.string.localizable.code()
         tableView.register(R.nib.currencyCell)
         tableView.dataSource = self
         tableView.delegate = self
@@ -69,7 +69,7 @@ extension CurrencySelectorViewController: UITableViewDelegate {
             case .success(let account):
                 LoginManager.shared.setAccount(account)
                 Currency.refreshCurrentCurrency()
-                hud.set(style: .notification, text: R.string.localizable.toast_saved())
+                hud.set(style: .notification, text: R.string.localizable.saved())
                 self?.dismiss(animated: true, completion: nil)
             case let .failure(error):
                 hud.set(style: .error, text: error.localizedDescription)

@@ -21,10 +21,10 @@ class SharedMediaViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         segmentedControl.itemTitles = [
-            R.string.localizable.chat_media_category_media(),
-            R.string.localizable.chat_media_category_audio(),
-            R.string.localizable.chat_media_category_post(),
-            R.string.localizable.chat_media_category_file()
+            R.string.localizable.media(),
+            R.string.localizable.audio(),
+            R.string.localizable.post(),
+            R.string.localizable.file()
         ]
         load(child: mediaViewController)
     }

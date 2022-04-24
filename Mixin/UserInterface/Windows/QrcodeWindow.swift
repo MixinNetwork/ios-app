@@ -20,7 +20,7 @@ class QrcodeWindow: BottomSheetView {
             return
         }
         render(title: conversation.name,
-               description: Localized.GROUP_QR_CODE_PROMPT,
+               description: R.string.localizable.group_qr_code_prompt(),
                qrcode: conversationCodeUrl,
                qrcodeForegroundColor: .black)
         avatarImageView.isHidden = false
@@ -30,8 +30,8 @@ class QrcodeWindow: BottomSheetView {
     }
     
     func render(title: String, description: String, account: Account) {
-        render(title: Localized.CONTACT_MY_QR_CODE,
-               description: Localized.MYQRCODE_PROMPT,
+        render(title: R.string.localizable.my_QR_Code(),
+               description: R.string.localizable.scan_code_add_me(),
                qrcode: account.code_url,
                qrcodeForegroundColor: .systemTint)
         avatarImageView.isHidden = false
@@ -42,7 +42,7 @@ class QrcodeWindow: BottomSheetView {
     }
     
     func renderMoneyReceivingCode(account: Account) {
-        render(title: R.string.localizable.contact_receive_money(),
+        render(title: R.string.localizable.receive_Money(),
                description: R.string.localizable.transfer_qrcode_prompt(),
                qrcode: "mixin://transfer/\(account.user_id)",
                qrcodeForegroundColor: .black)
@@ -97,9 +97,9 @@ class QrcodeWindow: BottomSheetView {
             DispatchQueue.main.async {
                 self?.dismissPopupControllerAnimated()
                 if success {
-                    showAutoHiddenHud(style: .notification, text: Localized.TOAST_SAVED)
+                    showAutoHiddenHud(style: .notification, text: R.string.localizable.saved())
                 } else {
-                    showAutoHiddenHud(style: .notification, text: R.string.localizable.error_operation_failed())
+                    showAutoHiddenHud(style: .notification, text: R.string.localizable.operation_failed())
                 }
             }
         })

@@ -23,11 +23,11 @@ class AddPeopleViewController: KeyboardBasedLayoutViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         if let id = LoginManager.shared.account?.identity_number {
-            myIdLabel.text = Localized.CONTACT_MY_IDENTITY_NUMBER(id: id)
+            myIdLabel.text = R.string.localizable.my_mixin_id(id)
         }
         searchButton.isEnabled = false
         keywordTextField.keyboardType = .phonePad
-        keywordTextField.placeholder = Localized.PLACEHOLDER_MIXIN_ID_OR_PHONE
+        keywordTextField.placeholder = R.string.localizable.mixin_id_or_phone()
         keywordTextField.addTarget(self, action: #selector(checkKeywordAction), for: .editingChanged)
         keywordTextField.becomeFirstResponder()
     }
@@ -73,7 +73,7 @@ class AddPeopleViewController: KeyboardBasedLayoutViewController {
     
     class func instance() -> UIViewController {
         let vc = R.storyboard.contact.add_people()!
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.profile_add_contact())
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.add_Contact())
     }
     
     private func isLegalKeyword(_ keyword: String) -> Bool {

@@ -5,12 +5,12 @@ final class AccountSettingViewController: SettingsTableViewController {
     
     private let dataSource = SettingsDataSource(sections: [
         SettingsSection(rows: [
-            SettingsRow(title: R.string.localizable.setting_account_privacy(), accessory: .disclosure),
-            SettingsRow(title: R.string.localizable.setting_account_security(), accessory: .disclosure),
-            SettingsRow(title: R.string.localizable.setting_account_change_number(), accessory: .disclosure)
+            SettingsRow(title: R.string.localizable.privacy(), accessory: .disclosure),
+            SettingsRow(title: R.string.localizable.security(), accessory: .disclosure),
+            SettingsRow(title: R.string.localizable.change_Number(), accessory: .disclosure)
         ]),
         SettingsSection(rows: [
-            SettingsRow(title: R.string.localizable.setting_delete_account(), accessory: .disclosure)
+            SettingsRow(title: R.string.localizable.delete_my_account(), accessory: .disclosure)
         ])
     ])
     
@@ -22,7 +22,7 @@ final class AccountSettingViewController: SettingsTableViewController {
     
     class func instance() -> UIViewController {
         let vc = AccountSettingViewController()
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.setting_account())
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.account())
     }
     
 }

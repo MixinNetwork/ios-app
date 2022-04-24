@@ -11,7 +11,7 @@ class RemoveEmergencyContactValidationViewController: PinValidationViewControlle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        descriptionLabel.text = R.string.localizable.emergency_pin_protection_hint()
+        descriptionLabel.text = R.string.localizable.setting_emergency_pin_tip()
     }
     
     override func validate(pin: String) {

@@ -5,16 +5,16 @@ final class SecuritySettingViewController: SettingsTableViewController {
 
     private let dataSource = SettingsDataSource(sections: [
         SettingsSection(rows: [
-            SettingsRow(title: R.string.localizable.setting_pin(), accessory: .disclosure),
+            SettingsRow(title: R.string.localizable.piN(), accessory: .disclosure),
         ]),
         SettingsSection(rows: [
-            SettingsRow(title: R.string.localizable.setting_emergency_contact(), accessory: .disclosure)
+            SettingsRow(title: R.string.localizable.emergency_Contact(), accessory: .disclosure)
         ]),
         SettingsSection(rows: [
-            SettingsRow(title: R.string.localizable.setting_authorizations(), accessory: .disclosure)
+            SettingsRow(title: R.string.localizable.authorizations(), accessory: .disclosure)
         ]),
         SettingsSection(rows: [
-            SettingsRow(title: R.string.localizable.setting_logs(), accessory: .disclosure)
+            SettingsRow(title: R.string.localizable.logs(), accessory: .disclosure)
         ])
     ])
     
@@ -26,7 +26,7 @@ final class SecuritySettingViewController: SettingsTableViewController {
 
     class func instance() -> UIViewController {
         let vc = SecuritySettingViewController()
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.setting_account_security())
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.security())
     }
     
 }

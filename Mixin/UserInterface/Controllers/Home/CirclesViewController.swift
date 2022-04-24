@@ -13,7 +13,7 @@ class CirclesViewController: UIViewController {
     
     private lazy var tableFooterView: CirclesTableFooterView = {
         let view = R.nib.circlesTableFooterView(owner: nil)!
-        view.label.text = R.string.localizable.circle_add_hint()
+        view.label.text = R.string.localizable.circle_info()
         view.button.snp.makeConstraints { (make) in
             make.top.equalTo(view.contentView.snp.bottom)
             make.leading.trailing.bottom.equalToSuperview()
@@ -34,7 +34,7 @@ class CirclesViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let title = AppGroupUserDefaults.User.circleName ?? R.string.localizable.app_name()
+        let title = AppGroupUserDefaults.User.circleName ?? R.string.localizable.mixin()
         toggleCirclesButton.setTitle(title, for: .normal)
         let tableHeaderView = InfiniteTopView()
         tableHeaderView.frame.size.height = 0
@@ -60,8 +60,8 @@ class CirclesViewController: UIViewController {
     }
     
     @IBAction func newCircleAction(_ sender: Any) {
-        let addCircle = R.string.localizable.circle_action_add()
-        let add = R.string.localizable.action_add()
+        let addCircle = R.string.localizable.add_circle()
+        let add = R.string.localizable.add()
         editNameController.present(title: addCircle, actionTitle: add) { (alert) in
             guard let name = alert.textFields?.first?.text else {
                 return
@@ -126,14 +126,14 @@ extension CirclesViewController: UITableViewDataSource {
         switch section {
         case .embedded:
             let circle = embeddedCircles[indexPath.row]
-            cell.titleLabel.text = R.string.localizable.app_name()
-            cell.subtitleLabel.text = R.string.localizable.circle_conversation_count_all()
+            cell.titleLabel.text = R.string.localizable.mixin()
+            cell.subtitleLabel.text = R.string.localizable.all_Conversations()
             cell.unreadCount = circle.unreadCount
             cell.setImagePatternColor(id: nil)
         case .user:
             let circle = userCircles[indexPath.row]
             cell.titleLabel.text = circle.name
-            cell.subtitleLabel.text = R.string.localizable.circle_conversation_count("\(circle.conversationCount)")
+            cell.subtitleLabel.text = R.string.localizable.circle_subtitle_count(circle.conversationCount)
             cell.unreadCount = circle.unreadCount
             cell.setImagePatternColor(id: circle.circleId)
         }
@@ -173,10 +173,10 @@ extension CirclesViewController {
     
     private func tableViewCommitEditAction(action: UIContextualAction, indexPath: IndexPath) {
         let circle = userCircles[indexPath.row]
-        let editName = R.string.localizable.circle_action_edit_name()
-        let change = R.string.localizable.dialog_button_change()
-        let editConversation = R.string.localizable.circle_action_edit_conversations()
-        let cancel = R.string.localizable.dialog_button_cancel()
+        let editName = R.string.localizable.edit_Circle_Name()
+        let change = R.string.localizable.change()
+        let editConversation = R.string.localizable.edit_Conversations()
+        let cancel = R.string.localizable.cancel()
         
         let sheet = UIAlertController(title: circle.name, message: nil, preferredStyle: .actionSheet)
         sheet.addAction(UIAlertAction(title: editName, style: .default, handler: { (_) in
@@ -200,8 +200,8 @@ extension CirclesViewController {
     
     private func tableViewCommitDeleteAction(action: UIContextualAction, indexPath: IndexPath) {
         let circle = userCircles[indexPath.row]
-        let delete = R.string.localizable.circle_action_delete()
-        let cancel = R.string.localizable.dialog_button_cancel()
+        let delete = R.string.localizable.delete_Circle()
+        let cancel = R.string.localizable.cancel()
         let sheet = UIAlertController(title: circle.name, message: nil, preferredStyle: .actionSheet)
         sheet.addAction(UIAlertAction(title: delete, style: .destructive, handler: { (_) in
             let hud = Hud()
@@ -215,7 +215,7 @@ extension CirclesViewController {
                             let indexPath = IndexPath(row: 0, section: Section.embedded.rawValue)
                             self.switchToCircle(at: indexPath, dismissAfterFinished: false)
                             self.reloadCircles()
-                            hud.set(style: .notification, text: R.string.localizable.toast_deleted())
+                            hud.set(style: .notification, text: R.string.localizable.deleted())
                             hud.scheduleAutoHidden()
                         }
                     }
@@ -238,7 +238,7 @@ extension CirclesViewController {
                 DispatchQueue.global().async {
                     CircleDAO.shared.save(circle: circle)
                     DispatchQueue.main.sync {
-                        hud.set(style: .notification, text: R.string.localizable.toast_added())
+                        hud.set(style: .notification, text: R.string.localizable.added())
                         hud.scheduleAutoHidden()
                         let vc = CircleEditorViewController.instance(name: circle.name,
                                                                      circleId: circle.circleId,
@@ -267,7 +267,7 @@ extension CirclesViewController {
                     CircleDAO.shared.save(circle: circle)
                     DispatchQueue.main.async {
                         self.reloadCircles()
-                        hud.set(style: .notification, text: R.string.localizable.toast_saved())
+                        hud.set(style: .notification, text: R.string.localizable.saved())
                         hud.scheduleAutoHidden()
                     }
                 }
@@ -330,7 +330,7 @@ extension CirclesViewController {
         case .embedded:
             AppGroupUserDefaults.User.circleId = nil
             AppGroupUserDefaults.User.circleName = nil
-            circleName = R.string.localizable.app_name()
+            circleName = R.string.localizable.mixin()
         case .user:
             let circle = userCircles[indexPath.row]
             AppGroupUserDefaults.User.circleId = circle.circleId
@@ -362,14 +362,14 @@ extension CirclesViewController {
     }
     
     private func deleteAction(forRowAt indexPath: IndexPath) -> UIContextualAction {
-        UIContextualAction(style: .destructive, title: R.string.localizable.menu_delete()) { [weak self] (action, _, completionHandler: (Bool) -> Void) in
+        UIContextualAction(style: .destructive, title: R.string.localizable.delete()) { [weak self] (action, _, completionHandler: (Bool) -> Void) in
             self?.tableViewCommitDeleteAction(action: action, indexPath: indexPath)
             completionHandler(true)
         }
     }
     
     private func editAction(forRowAt indexPath: IndexPath) -> UIContextualAction {
-        let action = UIContextualAction(style: .normal, title: R.string.localizable.menu_edit()) { [weak self] (action, _, completionHandler: (Bool) -> Void) in
+        let action = UIContextualAction(style: .normal, title: R.string.localizable.edit()) { [weak self] (action, _, completionHandler: (Bool) -> Void) in
             self?.tableViewCommitEditAction(action: action, indexPath: indexPath)
             completionHandler(true)
         }

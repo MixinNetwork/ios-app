@@ -33,7 +33,7 @@ class CompactAssetCell: UITableViewCell {
             priceLabel.isHidden = false
             noValueIndicator.isHidden = true
         } else {
-            changeLabel.text = Localized.WALLET_NO_PRICE // Just for layout guidance
+            changeLabel.text = R.string.localizable.nA() // Just for layout guidance
             priceLabel.text = nil
             changeLabel.isHidden = true
             priceLabel.isHidden = true

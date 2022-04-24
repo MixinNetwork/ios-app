@@ -345,9 +345,9 @@ extension AppDelegate {
                 }
             })
         case .denied, .restricted:
-            navigationController.alertSettings(Localized.PERMISSION_DENIED_CAMERA)
+            navigationController.alertSettings(R.string.localizable.permission_denied_camera_hint())
         @unknown default:
-            navigationController.alertSettings(Localized.PERMISSION_DENIED_CAMERA)
+            navigationController.alertSettings(R.string.localizable.permission_denied_camera_hint())
         }
     }
     
@@ -369,8 +369,8 @@ extension AppDelegate {
             return
         }
         let qrcodeWindow = QrcodeWindow.instance()
-        qrcodeWindow.render(title: Localized.CONTACT_MY_QR_CODE,
-                            description: Localized.MYQRCODE_PROMPT,
+        qrcodeWindow.render(title: R.string.localizable.my_QR_Code(),
+                            description: R.string.localizable.scan_code_add_me(),
                             account: account)
         qrcodeWindow.presentView()
     }

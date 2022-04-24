@@ -114,7 +114,7 @@ class WebViewController: FullscreenPopupViewController {
     
     private func presentAlertController(for image: UIImage) {
         let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        controller.addAction(UIAlertAction(title: Localized.CHAT_PHOTO_SAVE, style: .default, handler: { (_) in
+        controller.addAction(UIAlertAction(title: R.string.localizable.save_to_Camera_Roll(), style: .default, handler: { (_) in
             PHPhotoLibrary.checkAuthorization { (authorized) in
                 if authorized {
                     PHPhotoLibrary.saveImageToLibrary(image: image)
@@ -128,7 +128,7 @@ class WebViewController: FullscreenPopupViewController {
                 guard let string = feature.messageString else {
                     continue
                 }
-                controller.addAction(UIAlertAction(title: Localized.SCAN_QR_CODE, style: .default, handler: { (_) in
+                controller.addAction(UIAlertAction(title: R.string.localizable.scan_QR_Code(), style: .default, handler: { (_) in
                     if let url = URL(string: string), UrlWindow.checkUrl(url: url, clearNavigationStack: false) {
                         return
                     }
@@ -141,7 +141,7 @@ class WebViewController: FullscreenPopupViewController {
             }
         }
         
-        controller.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        controller.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         self.present(controller, animated: true, completion: nil)
     }
     

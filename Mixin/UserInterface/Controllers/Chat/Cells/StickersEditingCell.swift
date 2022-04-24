@@ -12,7 +12,7 @@ class StickersEditingCell: UITableViewCell {
         didSet {
             if let albumItem = albumItem {
                 nameLabel.text = albumItem.album.name
-                countLabel.text = R.string.localizable.sticker_count(albumItem.stickers.count)
+                countLabel.text = R.string.localizable.stickers_count(albumItem.stickers.count)
                 if let url = URL(string: albumItem.album.iconUrl) {
                     stickerImageView.sd_setImage(with: url, placeholderImage: nil, context: persistentStickerContext)
                 }

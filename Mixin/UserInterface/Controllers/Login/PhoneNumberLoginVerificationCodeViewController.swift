@@ -8,7 +8,7 @@ class PhoneNumberLoginVerificationCodeViewController: LoginVerificationCodeViewC
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        helpButton.setTitle(R.string.localizable.button_title_help(), for: .normal)
+        helpButton.setTitle(R.string.localizable.help(), for: .normal)
         helpButton.setTitleColor(.walletRed, for: .normal)
         helpButton.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
         helpButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
@@ -47,19 +47,19 @@ class PhoneNumberLoginVerificationCodeViewController: LoginVerificationCodeViewC
     }
     
     @objc func helpAction() {
-        let alert = UIAlertController(title: R.string.localizable.title_help(), message: nil, preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: R.string.localizable.button_title_cant_receive_code(), style: .default, handler: { (_) in
+        let alert = UIAlertController(title: R.string.localizable.help(), message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: R.string.localizable.cant_receive_the_code(), style: .default, handler: { (_) in
             let url = URL(string: "https://mixinmessenger.zendesk.com/hc/articles/360024114492")!
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
         }))
         if context.hasEmergencyContact {
-            alert.addAction(UIAlertAction(title: R.string.localizable.button_title_phone_number_lost(), style: .destructive, handler: { (_) in
+            alert.addAction(UIAlertAction(title: R.string.localizable.lost_your_mobile_number(), style: .destructive, handler: { (_) in
                 let vc = EmergencyContactIdVerificationViewController()
                 vc.context = self.context
                 self.navigationController?.pushViewController(vc, animated: true)
             }))
         }
-        alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         present(alert, animated: true, completion: nil)
     }
     

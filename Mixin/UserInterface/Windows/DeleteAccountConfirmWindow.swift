@@ -31,11 +31,11 @@ final class DeleteAccountConfirmWindow: BottomSheetView {
         
         let thirtyDaysLater = Date().addingTimeInterval(30 * .day)
         let date = DateFormatter.deleteAccountFormatter.string(from: thirtyDaysLater)
-        let hint = R.string.localizable.setting_delete_account_confirm_hint(date)
+        let hint = R.string.localizable.setting_delete_account_pin_content(date)
         textLabel.text = hint
         textLabel.delegate = self
         let linkRange = (hint as NSString)
-            .range(of: R.string.localizable.learn_more_in_document(), options: [.backwards, .caseInsensitive])
+            .range(of: R.string.localizable.learn_More(), options: [.backwards, .caseInsensitive])
         if linkRange.location != NSNotFound && linkRange.length != 0 {
             textLabel.linkColor = .theme
             textLabel.additionalLinksMap = [linkRange: URL.deleteAccount]

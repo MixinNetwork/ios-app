@@ -16,9 +16,9 @@ class RecalledMessageViewModel: IconPrefixedTextMessageViewModel {
     override var rawContent: String {
         let isRecalledByRemote = message.userId != myUserId
         if isRecalledByRemote {
-            return R.string.localizable.chat_message_recalled()
+            return R.string.localizable.this_message_was_deleted()
         } else {
-            return R.string.localizable.chat_message_recalled_by_me()
+            return R.string.localizable.you_deleted_this_message()
         }
     }
     

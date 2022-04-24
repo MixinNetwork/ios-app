@@ -18,7 +18,7 @@ class MessageReceiverViewController: PeerViewController<[MessageReceiver], Check
     class func instance(content: MessageContent) -> UIViewController {
         let vc = MessageReceiverViewController()
         vc.messageContent = content
-        return ContainerViewController.instance(viewController: vc, title: Localized.ACTION_SHARE_TO)
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.share_To())
     }
     
     override func viewDidLoad() {
@@ -41,9 +41,9 @@ class MessageReceiverViewController: PeerViewController<[MessageReceiver], Check
         let appReceivers = apps.map(MessageReceiver.init)
         let conversations = ConversationDAO.shared.conversationList()
             .compactMap(MessageReceiver.init)
-        let titles = [R.string.localizable.chat_forward_chats(),
-                      R.string.localizable.chat_forward_contacts(),
-                      R.string.localizable.chat_forward_apps()]
+        let titles = [R.string.localizable.chatS(),
+                      R.string.localizable.contactS(),
+                      R.string.localizable.botS()]
         return (titles, [conversations, contactReceivers, appReceivers])
     }
     
@@ -148,7 +148,7 @@ class MessageReceiverViewController: PeerViewController<[MessageReceiver], Check
 extension MessageReceiverViewController: ContainerViewControllerDelegate {
     
     func textBarRightButton() -> String? {
-        return R.string.localizable.action_send()
+        R.string.localizable.send()
     }
     
     func barRightButtonTappedAction() {
@@ -544,7 +544,7 @@ extension MessageReceiverViewController {
         let filename = message.messageId + ExtensionName.jpeg.withDot
         let path = AttachmentContainer.url(for: .photos, filename: filename)
         guard image.saveToFile(path: path), FileManager.default.fileSize(path.path) > 0, image.size.width > 0, image.size.height > 0 else {
-            showAutoHiddenHud(style: .error, text: R.string.localizable.error_operation_failed())
+            showAutoHiddenHud(style: .error, text: R.string.localizable.operation_failed())
             return nil
         }
         message.thumbImage = image.blurHash()

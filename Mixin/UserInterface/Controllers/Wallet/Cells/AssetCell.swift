@@ -56,7 +56,7 @@ class AssetCell: ModernSelectedBackgroundCell {
             fiatMoneyPriceLabel.alpha = 1
             noFiatMoneyPriceIndicatorLabel.alpha = 0
         } else {
-            changeLabel.text = Localized.WALLET_NO_PRICE // Just for layout guidance
+            changeLabel.text = R.string.localizable.nA() // Just for layout guidance
             fiatMoneyPriceLabel.text = nil
             changeLabel.alpha = 0
             fiatMoneyPriceLabel.alpha = 0

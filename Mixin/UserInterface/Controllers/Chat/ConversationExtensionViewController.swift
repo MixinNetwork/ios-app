@@ -166,19 +166,19 @@ extension ConversationExtensionViewController {
         var title: String {
             switch self {
             case .camera:
-                return R.string.localizable.chat_menu_camera()
+                return R.string.localizable.camera()
             case .file:
-                return R.string.localizable.chat_menu_file()
+                return R.string.localizable.file()
             case .transfer:
-                return R.string.localizable.chat_menu_transfer()
+                return R.string.localizable.transfer()
             case .contact:
-                return R.string.localizable.chat_menu_contact()
+                return R.string.localizable.contact()
             case .call:
-                return R.string.localizable.chat_menu_call()
+                return R.string.localizable.call()
             case .groupCall:
-                return R.string.localizable.chat_menu_group_call()
+                return R.string.localizable.group_Call()
             case .location:
-                return R.string.localizable.chat_menu_location()
+                return R.string.localizable.location()
             }
         }
         

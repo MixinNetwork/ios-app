@@ -23,13 +23,13 @@ class AuthorizationsViewController: UIViewController {
     
     class func instance() -> UIViewController {
         let vc = R.storyboard.setting.authorization()!
-        return ContainerViewController.instance(viewController: vc, title: Localized.SETTING_AUTHORIZATIONS)
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.authorizations())
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         searchBoxView.textField.addTarget(self, action: #selector(search(_:)), for: .editingChanged)
-        searchBoxView.textField.placeholder = R.string.localizable.search_placeholder_authorization()
+        searchBoxView.textField.placeholder = R.string.localizable.setting_auth_search_hint()
         searchBoxView.textField.rightViewMode = .always
         view.layoutIfNeeded()
     }
@@ -77,7 +77,7 @@ class AuthorizationsViewController: UIViewController {
                     self.networkIndicatorTopConstraint.constant = self.networkIndicatorHeightConstraint.constant
                     UIView.animate(withDuration: 0.25, animations: self.view.layoutIfNeeded)
                     self.contentViewController.tableView.checkEmpty(dataCount: response.count,
-                                                                    text: R.string.localizable.setting_no_authorizations(),
+                                                                    text: R.string.localizable.no_AUTHORIZATIONS(),
                                                                     photo: R.image.emptyIndicator.ic_authorization()!)
                     self.isDataLoaded = true
                     self.search(self.searchBoxView.textField)

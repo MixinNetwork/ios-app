@@ -56,7 +56,7 @@ class GroupCallMemberPickerContentViewController: UserItemPeerViewController<Che
         searchBoxView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         searchBoxView.textField.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         
-        cancelButton.setTitle(R.string.localizable.dialog_button_cancel(), for: .normal)
+        cancelButton.setTitle(R.string.localizable.cancel(), for: .normal)
         cancelButton.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 16), adjustForContentSize: true)
         cancelButton.addTarget(self, action: #selector(cancelAction), for: .touchUpInside)
         cancelButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
@@ -147,7 +147,7 @@ class GroupCallMemberPickerContentViewController: UserItemPeerViewController<Che
             fixedSelectionsCount += 1 // The user himself
         }
         guard fixedSelectionsCount + selections.count < GroupCall.maxNumberOfMembers else {
-            let message = R.string.localizable.group_call_selections_reach_limit("\(GroupCall.maxNumberOfMembers)")
+            let message = R.string.localizable.group_call_participants_limit_hint(GroupCall.maxNumberOfMembers)
             alert(message)
             return nil
         }

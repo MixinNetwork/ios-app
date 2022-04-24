@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -16,18 +16,18 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="15C-zD-brT">
-                    <rect key="frame" x="0.0" y="74.5" width="375" height="605.5"/>
+                    <rect key="frame" x="0.0" y="78.5" width="375" height="601.5"/>
                     <subviews>
                         <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HTr-3g-n2V">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Deposit" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xxq-LQ-MPB">
-                                    <rect key="frame" x="20" y="24.5" width="65.5" height="21.5"/>
+                                    <rect key="frame" x="20" y="24.5" width="65" height="21.5"/>
                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                                     <color key="textColor" name="title"/>
                                     <nil key="highlightedColor"/>
                                     <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="title_loading"/>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Loading"/>
                                         <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
                                     </userDefinedRuntimeAttributes>
                                 </label>
@@ -58,7 +58,7 @@
                             </userDefinedRuntimeAttributes>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HEa-0m-NKp">
-                            <rect key="frame" x="0.0" y="70" width="375" height="438.5"/>
+                            <rect key="frame" x="0.0" y="70" width="375" height="434.5"/>
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="BRz-EH-3Ps">
                                     <rect key="frame" x="77.5" y="60" width="220" height="220"/>
@@ -125,7 +125,7 @@
                                     </constraints>
                                 </view>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sfg-UA-Mp7">
-                                    <rect key="frame" x="93.5" y="288" width="188" height="30.5"/>
+                                    <rect key="frame" x="93.5" y="288" width="188" height="26.5"/>
                                     <string key="text">0xA5B85583c2CbDf873D802A8
 29845904696E7BD97</string>
                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
@@ -146,7 +146,7 @@
                             </constraints>
                         </view>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vr1-0I-Tfb" customClass="BouncingButton" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="153.5" y="508.5" width="68" height="68"/>
+                            <rect key="frame" x="153.5" y="504.5" width="68" height="68"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="68" id="F94-4K-3LA"/>
                                 <constraint firstAttribute="width" constant="68" id="vbv-cN-80H"/>
@@ -175,6 +175,7 @@
                     </userDefinedRuntimeAttributes>
                 </view>
             </subviews>
+            <viewLayoutGuide key="safeArea" id="CYD-Y9-3EM"/>
             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="15C-zD-brT" firstAttribute="top" relation="greaterThanOrEqual" secondItem="CYD-Y9-3EM" secondAttribute="top" id="9t5-VJ-oTt"/>
@@ -183,7 +184,6 @@
                 <constraint firstItem="Vr1-0I-Tfb" firstAttribute="bottom" secondItem="CYD-Y9-3EM" secondAttribute="bottom" constant="-16" id="iN7-wh-Y7z"/>
                 <constraint firstItem="15C-zD-brT" firstAttribute="leading" secondItem="CYD-Y9-3EM" secondAttribute="leading" id="u5U-Ey-c7a"/>
             </constraints>
-            <viewLayoutGuide key="safeArea" id="CYD-Y9-3EM"/>
             <connections>
                 <outlet property="assetIconView" destination="WBQ-eC-0nx" id="h9n-SM-JXg"/>
                 <outlet property="avatarImageView" destination="YDq-Kp-w0e" id="bIC-4z-CpK"/>

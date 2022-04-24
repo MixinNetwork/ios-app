@@ -4,18 +4,18 @@ import MixinServices
 final class PrivacySettingViewController: SettingsTableViewController {
     
     private let dataSource = SettingsDataSource(sections: [
-        SettingsSection(footer: R.string.localizable.setting_privacy_and_security_summary(), rows: [
-            SettingsRow(title: R.string.localizable.setting_blocked(), accessory: .disclosure),
-            SettingsRow(title: R.string.localizable.setting_conversation(), accessory: .disclosure)
+        SettingsSection(footer: R.string.localizable.setting_privacy_tip(), rows: [
+            SettingsRow(title: R.string.localizable.blocked_Users(), accessory: .disclosure),
+            SettingsRow(title: R.string.localizable.conversation(), accessory: .disclosure)
         ]),
         SettingsSection(rows: [
-            SettingsRow(title: R.string.localizable.setting_phone_number_title(), accessory: .disclosure),
-            SettingsRow(title: R.string.localizable.setting_contacts_title(), accessory: .disclosure)
+            SettingsRow(title: R.string.localizable.phone_Number(), accessory: .disclosure),
+            SettingsRow(title: R.string.localizable.phone_Contacts(), accessory: .disclosure)
         ])
     ])
     
     private lazy var screenLockSection = SettingsSection(rows: [
-        SettingsRow(title: R.string.localizable.setting_screen_lock_title(), subtitle: screenLockTimeoutInterval, accessory: .disclosure)
+        SettingsRow(title: R.string.localizable.screen_Lock(), subtitle: screenLockTimeoutInterval, accessory: .disclosure)
     ])
     
     deinit {
@@ -24,7 +24,7 @@ final class PrivacySettingViewController: SettingsTableViewController {
     
     class func instance() -> UIViewController {
         let vc = PrivacySettingViewController()
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.setting_account_privacy())
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.privacy())
     }
     
     override func viewDidLoad() {
@@ -58,10 +58,12 @@ extension PrivacySettingViewController {
                 }
                 let indexPath = IndexPath(row: 0, section: 0)
                 let row = self.dataSource.row(at: indexPath)
-                if blocked.count > 0 {
-                    row.subtitle = "\(blocked.count)" + R.string.localizable.setting_blocked_user_count_suffix()
+                if blocked.count == 0 {
+                    row.subtitle = R.string.localizable.none()
+                } else if blocked.count == 1 {
+                    row.subtitle = R.string.localizable.contact_count(1)
                 } else {
-                    row.subtitle = R.string.localizable.setting_blocked_user_count_none()
+                    row.subtitle = R.string.localizable.contact_count_count(blocked.count)
                 }
             }
         }
@@ -76,9 +78,9 @@ extension PrivacySettingViewController {
     private var screenLockTimeoutInterval: String {
         if AppGroupUserDefaults.User.lockScreenWithBiometricAuthentication {
             let timeInterval = AppGroupUserDefaults.User.lockScreenTimeoutInterval
-            return Localized.SCREEN_LOCK_TIMEOUT_INTERVAL(timeInterval)
+            return ScreenLockTimeFormatter.string(from: timeInterval)
         } else {
-            return R.string.localizable.setting_screen_lock_timeout_off();
+            return R.string.localizable.off();
         }
     }
     

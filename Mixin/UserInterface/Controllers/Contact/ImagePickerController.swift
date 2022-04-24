@@ -24,14 +24,14 @@ class ImagePickerController: NSObject {
     private lazy var selectSourceController: UIAlertController = {
         let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
-            controller.addAction(UIAlertAction(title: Localized.ACTION_CAMERA, style: .default, handler: { [weak self] (_) in
+            controller.addAction(UIAlertAction(title: R.string.localizable.camera(), style: .default, handler: { [weak self] (_) in
                 self?.presentCamera()
             }))
         }
-        controller.addAction(UIAlertAction(title: Localized.ACTION_CHOOSE_PHOTO, style: .default, handler: { [weak self] (_) in
+        controller.addAction(UIAlertAction(title: R.string.localizable.choose_Photo(), style: .default, handler: { [weak self] (_) in
             self?.presentPhoto()
         }))
-        controller.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        controller.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         return controller
     }()
 
@@ -66,7 +66,7 @@ class ImagePickerController: NSObject {
             }
             present(viewController: pickerCameraController)
         } else {
-            viewController.alert(Localized.PERMISSION_DENIED_CAMERA)
+            viewController.alert(R.string.localizable.permission_denied_camera_hint())
         }
     }
 

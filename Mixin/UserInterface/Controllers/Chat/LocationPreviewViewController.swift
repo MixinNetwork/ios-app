@@ -31,7 +31,7 @@ class LocationPreviewViewController: LocationViewController {
         }
         components.queryItems = [
             URLQueryItem(name: "sourceApplication", value: "Mixin Messenger"),
-            URLQueryItem(name: "poiname", value: location.name ?? R.string.localizable.chat_location_unnamed()),
+            URLQueryItem(name: "poiname", value: location.name ?? R.string.localizable.unnamed_location()),
             URLQueryItem(name: "lat", value: location.prettyLatitude),
             URLQueryItem(name: "lon", value: location.prettyLongitude),
             URLQueryItem(name: "dev", value: "0"),
@@ -85,19 +85,19 @@ class LocationPreviewViewController: LocationViewController {
     private func openLocationInExternalMapApp() {
         let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         if let url = googleMapUrl, UIApplication.shared.canOpenURL(url) {
-            sheet.addAction(UIAlertAction(title: R.string.localizable.chat_open_external_maps_google(), style: .default, handler: { (_) in
+            sheet.addAction(UIAlertAction(title: R.string.localizable.open_in_google_maps(), style: .default, handler: { (_) in
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }))
         }
         if let url = amapUrl, UIApplication.shared.canOpenURL(url) {
-            sheet.addAction(UIAlertAction(title: R.string.localizable.chat_open_external_maps_gaode(), style: .default, handler: { (_) in
+            sheet.addAction(UIAlertAction(title: R.string.localizable.open_in_gaode_maps(), style: .default, handler: { (_) in
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }))
         }
-        sheet.addAction(UIAlertAction(title: R.string.localizable.chat_open_external_maps_apple(), style: .default, handler: { (_) in
+        sheet.addAction(UIAlertAction(title: R.string.localizable.open_in_maps(), style: .default, handler: { (_) in
             self.location.mapItem.openInMaps(launchOptions: nil)
         }))
-        sheet.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
+        sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         present(sheet, animated: true, completion: nil)
     }
     
@@ -132,7 +132,7 @@ extension LocationPreviewViewController: MKMapViewDelegate {
         let distance = userLocation.coordinate.distance(from: location.coordinate)
         let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? LocationCell
         let distanceRepresentation = MKDistanceFormatter.general.string(fromDistance: distance)
-        cell?.subtitleLabel.text = R.string.localizable.chat_location_distance(distanceRepresentation)
+        cell?.subtitleLabel.text = R.string.localizable.location_distance(distanceRepresentation)
     }
     
 }

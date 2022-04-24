@@ -145,21 +145,21 @@ extension WebMoreMenuViewController {
         var title: String {
             switch self {
             case .share:
-                return R.string.localizable.action_share()
+                return R.string.localizable.share()
             case .float:
-                return R.string.localizable.action_float()
+                return R.string.localizable.floating()
             case .cancelFloat:
-                return R.string.localizable.action_cancel_float()
+                return R.string.localizable.cancel_Floating()
             case .about:
-                return R.string.localizable.setting_about()
+                return R.string.localizable.about()
             case .copyLink:
-                return R.string.localizable.group_button_title_copy_link()
+                return R.string.localizable.copy_link()
             case .refresh:
-                return R.string.localizable.action_refresh()
+                return R.string.localizable.refresh()
             case .openInBrowser:
-                return R.string.localizable.action_open_browser()
+                return R.string.localizable.open_in_browser()
             case .viewAuthorization:
-                return R.string.localizable.action_view_authorization()
+                return R.string.localizable.view_Authorization()
             }
         }
         

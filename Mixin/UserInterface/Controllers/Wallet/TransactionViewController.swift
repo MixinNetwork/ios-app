@@ -37,7 +37,7 @@ class TransactionViewController: UIViewController {
             }
         }
         amountLabel.setFont(scaledFor: .condensed(size: 34), adjustForContentSize: true)
-        fiatMoneyValueLabel.text = R.string.localizable.transaction_value_now(Currency.current.symbol + getFormatValue(priceUsd: asset.priceUsd)) + "\n "
+        fiatMoneyValueLabel.text = R.string.localizable.value_now(Currency.current.symbol + getFormatValue(priceUsd: asset.priceUsd)) + "\n "
         symbolLabel.text = snapshot.assetSymbol
         if ScreenHeight.current >= .extraLong {
             assetIconView.chainIconWidth = 28
@@ -107,7 +107,7 @@ class TransactionViewController: UIViewController {
         let vc = R.storyboard.wallet.transaction()!
         vc.asset = asset
         vc.snapshot = snapshot
-        let container = ContainerViewController.instance(viewController: vc, title: Localized.TRANSACTION_TITLE)
+        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.transaction())
         return container
     }
     
@@ -171,7 +171,7 @@ extension TransactionViewController: UITableViewDelegate {
             return
         }
         UIPasteboard.general.string = copy.body
-        showAutoHiddenHud(style: .notification, text: Localized.TOAST_COPIED)
+        showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
     }
     
 }
@@ -200,8 +200,8 @@ extension TransactionViewController {
             switch result {
             case let .success(asset):
                 let nowValue = Currency.current.symbol + self.getFormatValue(priceUsd: self.asset.priceUsd)
-                let thenValue = asset.priceUsd.doubleValue > 0 ? Currency.current.symbol + self.getFormatValue(priceUsd: asset.priceUsd) : R.string.localizable.wallet_no_price()
-                self.fiatMoneyValueLabel.text = R.string.localizable.transaction_value_now(nowValue) + "\n" + R.string.localizable.transaction_value_then(thenValue)
+                let thenValue = asset.priceUsd.doubleValue > 0 ? Currency.current.symbol + self.getFormatValue(priceUsd: asset.priceUsd) : R.string.localizable.nA()
+                self.fiatMoneyValueLabel.text = R.string.localizable.value_now(nowValue) + "\n" + R.string.localizable.value_then(thenValue)
             case .failure:
                 break
             }
@@ -258,83 +258,81 @@ extension TransactionViewController {
     
     private func makeContents() {
         contents = []
-        contents.append((title: Localized.TRANSACTION_ID, subtitle: snapshot.snapshotId))
-        contents.append((title: Localized.TRANSACTION_ASSET, subtitle: asset.name))
+        contents.append((title: R.string.localizable.transaction_Id(), subtitle: snapshot.snapshotId))
+        contents.append((title: R.string.localizable.asset_Type(), subtitle: asset.name))
         switch snapshot.type {
         case SnapshotType.deposit.rawValue, SnapshotType.pendingDeposit.rawValue:
-            contents.append((title: Localized.TRANSACTION_TYPE, subtitle: Localized.TRANSACTION_TYPE_DEPOSIT))
+            contents.append((title: R.string.localizable.transaction_Type(), subtitle: R.string.localizable.deposit()))
             if snapshot.type == SnapshotType.pendingDeposit.rawValue, let finished = snapshot.confirmations, let total = asset?.confirmations {
-                contents.append((title: R.string.localizable.transaction_status(), subtitle: Localized.PENDING_DEPOSIT_CONFIRMATION(numerator: finished,
-                denominator: total)))
+                contents.append((title: R.string.localizable.status(), subtitle: R.string.localizable.pending_confirmations(finished, total)))
             }
-            contents.append((title: R.string.localizable.transaction_hash(), subtitle: snapshot.transactionHash))
+            contents.append((title: R.string.localizable.transaction_Hash(), subtitle: snapshot.transactionHash))
             if snapshot.hasSender {
-                contents.append((title: R.string.localizable.wallet_address_destination(), subtitle: snapshot.sender))
+                contents.append((title: R.string.localizable.address(), subtitle: snapshot.sender))
             }
             if snapshot.hasMemo {
                 contents.append((title: asset.memoLabel, subtitle: snapshot.memo))
             }
         case SnapshotType.transfer.rawValue:
-            contents.append((title: Localized.TRANSACTION_TYPE, subtitle: Localized.TRANSACTION_TYPE_TRANSFER))
+            contents.append((title: R.string.localizable.transaction_Type(), subtitle: R.string.localizable.transfer()))
             if snapshot.amount.doubleValue > 0 {
-                contents.append((title: R.string.localizable.wallet_snapshot_transfer_from(), subtitle: snapshot.opponentUserFullName))
+                contents.append((title: R.string.localizable.from(), subtitle: snapshot.opponentUserFullName))
             } else {
-                contents.append((title: R.string.localizable.wallet_snapshot_transfer_to(), subtitle: snapshot.opponentUserFullName))
+                contents.append((title: R.string.localizable.to(), subtitle: snapshot.opponentUserFullName))
             }
             if snapshot.hasMemo {
-                contents.append((title: Localized.TRANSACTION_MEMO, subtitle: snapshot.memo))
+                contents.append((title: R.string.localizable.memo(), subtitle: snapshot.memo))
             }
         case SnapshotType.raw.rawValue:
-            contents.append((title: Localized.TRANSACTION_TYPE, subtitle: R.string.localizable.transaction_type_raw()))
-            contents.append((title: R.string.localizable.transaction_hash(), subtitle: snapshot.transactionHash))
+            contents.append((title: R.string.localizable.transaction_Type(), subtitle: R.string.localizable.raw()))
+            contents.append((title: R.string.localizable.transaction_Hash(), subtitle: snapshot.transactionHash))
             if snapshot.hasSender {
-                contents.append((title: R.string.localizable.wallet_snapshot_transfer_from(), subtitle: snapshot.sender))
+                contents.append((title: R.string.localizable.from(), subtitle: snapshot.sender))
             }
             if snapshot.hasReceiver {
-                contents.append((title: R.string.localizable.wallet_snapshot_transfer_to(), subtitle: snapshot.receiver))
+                contents.append((title: R.string.localizable.to(), subtitle: snapshot.receiver))
             }
             if snapshot.hasMemo {
-                contents.append((title: Localized.TRANSACTION_MEMO, subtitle: snapshot.memo))
+                contents.append((title: R.string.localizable.memo(), subtitle: snapshot.memo))
             }
         case SnapshotType.withdrawal.rawValue:
-            contents.append((title: Localized.TRANSACTION_TYPE, subtitle:
-                Localized.TRANSACTION_TYPE_WITHDRAWAL))
-            contents.append((title: R.string.localizable.transaction_hash(), subtitle: snapshot.transactionHash))
-            contents.append((title: R.string.localizable.transaction_receiver(), subtitle: snapshot.receiver))
+            contents.append((title: R.string.localizable.transaction_Type(), subtitle: R.string.localizable.withdrawal()))
+            contents.append((title: R.string.localizable.transaction_Hash(), subtitle: snapshot.transactionHash))
+            contents.append((title: R.string.localizable.receiver(), subtitle: snapshot.receiver))
             if snapshot.hasMemo {
                 contents.append((title: asset.memoLabel, subtitle: snapshot.memo))
             }
         case SnapshotType.fee.rawValue:
-            contents.append((title: Localized.TRANSACTION_TYPE, subtitle: Localized.TRANSACTION_TYPE_FEE))
-            contents.append((title: R.string.localizable.transaction_hash(), subtitle: snapshot.transactionHash))
-            contents.append((title: R.string.localizable.transaction_receiver(), subtitle: snapshot.receiver))
+            contents.append((title: R.string.localizable.transaction_Type(), subtitle: R.string.localizable.fee()))
+            contents.append((title: R.string.localizable.transaction_Hash(), subtitle: snapshot.transactionHash))
+            contents.append((title: R.string.localizable.receiver(), subtitle: snapshot.receiver))
             if snapshot.hasMemo {
                 contents.append((title: asset.memoLabel, subtitle: snapshot.memo))
             }
         case SnapshotType.rebate.rawValue:
-            contents.append((title: Localized.TRANSACTION_TYPE, subtitle: Localized.TRANSACTION_TYPE_REBATE))
-            contents.append((title: R.string.localizable.transaction_hash(), subtitle: snapshot.transactionHash))
-            contents.append((title: R.string.localizable.transaction_receiver(), subtitle: snapshot.receiver))
+            contents.append((title: R.string.localizable.transaction_Type(), subtitle: R.string.localizable.rebate()))
+            contents.append((title: R.string.localizable.transaction_Hash(), subtitle: snapshot.transactionHash))
+            contents.append((title: R.string.localizable.receiver(), subtitle: snapshot.receiver))
             if snapshot.hasMemo {
                 contents.append((title: asset.memoLabel, subtitle: snapshot.memo))
             }
         default:
             break
         }
-        contents.append((title: Localized.TRANSACTION_DATE, subtitle: DateFormatter.dateFull.string(from: snapshot.createdAt.toUTCDate())))
+        contents.append((title: R.string.localizable.date(), subtitle: DateFormatter.dateFull.string(from: snapshot.createdAt.toUTCDate())))
     }
     
     private func canCopyAction(indexPath: IndexPath) -> (Bool, String) {
         let title = contents[indexPath.row].title
         let subtitle = contents[indexPath.row].subtitle
         switch title {
-        case R.string.localizable.transaction_id(),
-             R.string.localizable.transaction_hash(),
-             R.string.localizable.transaction_memo(),
+        case R.string.localizable.transaction_Id(),
+             R.string.localizable.transaction_Hash(),
+             R.string.localizable.memo(),
              asset.memoLabel,
-             R.string.localizable.wallet_address_destination(),
-             R.string.localizable.wallet_snapshot_transfer_from(),
-             R.string.localizable.wallet_snapshot_transfer_to():
+             R.string.localizable.address(),
+             R.string.localizable.from(),
+             R.string.localizable.to():
             return (true, subtitle ?? "")
         default:
             return (false, "")

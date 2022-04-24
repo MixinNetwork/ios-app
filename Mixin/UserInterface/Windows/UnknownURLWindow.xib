@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -32,7 +32,7 @@
                             <color key="textColor" name="title"/>
                             <nil key="highlightedColor"/>
                             <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="url_unrecognized"/>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Link_recognition_failure"/>
                             </userDefinedRuntimeAttributes>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="mixin://abc failed to recognize, please upgrade Mixin to the latest version or contact the developer to check the link" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0A2-tu-Jsr" customClass="LineHeightLabel" customModule="Mixin" customModuleProvider="target">
@@ -41,7 +41,7 @@
                             <color key="textColor" name="text_desc"/>
                             <nil key="highlightedColor"/>
                             <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="url_unrecognized_tip"/>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="url_unrecognized_hint"/>
                                 <userDefinedRuntimeAttribute type="number" keyPath="lineHeight">
                                     <real key="value" value="1.1200000000000001"/>
                                 </userDefinedRuntimeAttribute>
@@ -57,7 +57,7 @@
                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                             <state key="normal" title="Ok"/>
                             <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="dialog_button_ok"/>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="OK"/>
                             </userDefinedRuntimeAttributes>
                             <connections>
                                 <action selector="okAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="btZ-kI-4Iw"/>
@@ -70,7 +70,7 @@
                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                             <state key="normal" title="Copy"/>
                             <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="action_copy"/>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Copy"/>
                             </userDefinedRuntimeAttributes>
                             <connections>
                                 <action selector="copyAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="sCh-EE-qxa"/>

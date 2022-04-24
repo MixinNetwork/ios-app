@@ -3,10 +3,10 @@ import MixinServices
 
 class PhoneNumberSettingViewController: SettingsTableViewController {
     
-    private let section = SettingsRadioSection(header: R.string.localizable.setting_header_search_source(), rows: [
-        SettingsRow(title: R.string.localizable.setting_source_everybody()),
-        SettingsRow(title: R.string.localizable.setting_source_contacts()),
-        SettingsRow(title: R.string.localizable.setting_source_nobody())
+    private let section = SettingsRadioSection(header: R.string.localizable.phone_number_privacy(), rows: [
+        SettingsRow(title: R.string.localizable.everybody()),
+        SettingsRow(title: R.string.localizable.my_Contacts()),
+        SettingsRow(title: R.string.localizable.nobody())
     ])
     
     private lazy var dataSource = SettingsDataSource(sections: [section])
@@ -29,7 +29,7 @@ class PhoneNumberSettingViewController: SettingsTableViewController {
     
     class func instance() -> UIViewController {
         let vc = PhoneNumberSettingViewController()
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.setting_phone_number_title())
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.phone_Number())
     }
     
     override func viewDidLoad() {

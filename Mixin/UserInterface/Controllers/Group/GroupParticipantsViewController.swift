@@ -28,7 +28,7 @@ class GroupParticipantsViewController: UserItemPeerViewController<GroupParticipa
     class func instance(conversation: ConversationItem) -> UIViewController {
         let vc = GroupParticipantsViewController()
         vc.conversation = conversation
-        return ContainerViewController.instance(viewController: vc, title: Localized.GROUP_MENU_PARTICIPANTS)
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.participants())
     }
     
     override func viewDidLoad() {
@@ -63,30 +63,30 @@ class GroupParticipantsViewController: UserItemPeerViewController<GroupParticipa
             return
         }
         let alc = UIAlertController(title: nil, message: user.fullName, preferredStyle: .actionSheet)
-        alc.addAction(UIAlertAction(title: Localized.GROUP_PARTICIPANT_MENU_INFO, style: .default, handler: { (action) in
+        alc.addAction(UIAlertAction(title: R.string.localizable.info(), style: .default, handler: { (action) in
             self.showInfo(user: user)
         }))
-        alc.addAction(UIAlertAction(title: Localized.GROUP_PARTICIPANT_MENU_SEND, style: .default, handler: { (action) in
+        alc.addAction(UIAlertAction(title: R.string.localizable.send_Message(), style: .default, handler: { (action) in
             self.sendMessage(to: user)
         }))
         
         if myRole == ParticipantRole.OWNER.rawValue {
             if user.role.isEmpty {
-                alc.addAction(UIAlertAction(title: R.string.localizable.group_participant_menu_admin(), style: .default, handler: { (action) in
+                alc.addAction(UIAlertAction(title: R.string.localizable.make_group_admin(), style: .default, handler: { (action) in
                     self.makeAdmin(userId: user.userId)
                 }))
             } else {
-                alc.addAction(UIAlertAction(title: R.string.localizable.group_participant_menu_dismiss_admin(), style: .default, handler: { (action) in
+                alc.addAction(UIAlertAction(title: R.string.localizable.dismiss_as_Admin(), style: .default, handler: { (action) in
                     self.dismissAdmin(userId: user.userId)
                 }))
             }
         }
         if myRole == ParticipantRole.OWNER.rawValue || (user.role.isEmpty && !myRole.isEmpty) {
-            alc.addAction(UIAlertAction(title: Localized.GROUP_PARTICIPANT_MENU_REMOVE, style: .destructive, handler: { (action) in
+            alc.addAction(UIAlertAction(title: R.string.localizable.remove_from_Group(), style: .destructive, handler: { (action) in
                 self.remove(userId: user.userId)
             }))
         }
-        alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        alc.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         present(alc, animated: true, completion: nil)
     }
     
@@ -129,16 +129,16 @@ extension GroupParticipantsViewController: ContainerViewControllerDelegate {
             return
         }
         let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        alc.addAction(UIAlertAction(title: Localized.GROUP_NAVIGATION_TITLE_ADD_MEMBER, style: .default, handler: { (_) in
+        alc.addAction(UIAlertAction(title: R.string.localizable.add_participants(), style: .default, handler: { (_) in
             let id = self.conversation.conversationId
             let vc = AddMemberViewController.instance(appendingMembersToConversationId: id)
             self.navigationController?.pushViewController(vc, animated: true)
         }))
-        alc.addAction(UIAlertAction(title: Localized.GROUP_NAVIGATION_TITLE_INVITE_LINK, style: .default, handler: { (_) in
+        alc.addAction(UIAlertAction(title: R.string.localizable.invite_to_Group_via_Link(), style: .default, handler: { (_) in
             let vc = InviteLinkViewController.instance(conversation: self.conversation)
             self.navigationController?.pushViewController(vc, animated: true)
         }))
-        alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        alc.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         present(alc, animated: true, completion: nil)
     }
     

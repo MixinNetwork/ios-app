@@ -10,7 +10,7 @@ class WithdrawalTipWindow: AssetConfirmationWindow {
     func render(asset: AssetItem, completion: @escaping CompletionHandler) -> BottomSheetView {
         self.completion = completion
         assetIconView.setIcon(asset: asset)
-        titleLabel.text = R.string.localizable.wallet_withdrawal_asset(asset.symbol)
+        titleLabel.text = R.string.localizable.symbol_withdrawal(asset.symbol)
         return self
     }
     

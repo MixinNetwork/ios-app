@@ -35,22 +35,21 @@ class AssetFilterViewController: UIViewController {
     private let headerReuseId = "header"
     private var headers: [String] {
         if showFilters {
-            return [Localized.TRANSACTIONS_FILTER_SORT_BY,
-                    Localized.TRANSACTIONS_FILTER_FILTER_BY]
+            return [R.string.localizable.sort_by(),
+                    R.string.localizable.filter_BY()]
         } else {
-            return [Localized.TRANSACTIONS_FILTER_SORT_BY]
+            return [R.string.localizable.sort_by()]
         }
     }
     private var titles: [[String]] {
-        let sortTitles = [Localized.TRANSACTIONS_FILTER_SORT_BY_TIME,
-                          Localized.TRANSACTIONS_FILTER_SORT_BY_AMOUNT]
-        let filterTitles = [Localized.TRANSACTIONS_FILTER_FILTER_BY_ALL,
-                            Localized.TRANSACTION_TYPE_TRANSFER,
-                            Localized.TRANSACTION_TYPE_DEPOSIT,
-                            Localized.TRANSACTION_TYPE_WITHDRAWAL,
-                            Localized.TRANSACTION_TYPE_FEE,
-                            Localized.TRANSACTION_TYPE_REBATE,
-                            R.string.localizable.transaction_type_raw()]
+        let sortTitles = [R.string.localizable.time(), R.string.localizable.amount()]
+        let filterTitles = [R.string.localizable.all(),
+                            R.string.localizable.transfer(),
+                            R.string.localizable.deposit(),
+                            R.string.localizable.withdrawal(),
+                            R.string.localizable.fee(),
+                            R.string.localizable.rebate(),
+                            R.string.localizable.raw()]
         if showFilters {
             return [sortTitles, filterTitles]
         } else {

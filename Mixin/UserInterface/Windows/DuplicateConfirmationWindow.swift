@@ -7,11 +7,11 @@ class DuplicateConfirmationWindow: AssetConfirmationWindow {
         let result = super.render(asset: asset, amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, completion: completion)
         switch action {
         case let .transfer(_, user, _):
-            titleLabel.text = R.string.localizable.transfer_duplicate_title()
-            tipsLabel.text = R.string.localizable.transfer_duplicate_prompt(amountLabel.text ?? "", user.fullName, traceCreatedAt.toUTCDate().simpleTimeAgo())
+            titleLabel.text = R.string.localizable.duplicate_Transfer_Confirmation()
+            tipsLabel.text = R.string.localizable.wallet_transfer_recent_tip(amountLabel.text ?? "", user.fullName, traceCreatedAt.toUTCDate().simpleTimeAgo())
         case let .withdraw(_, address, _, _):
-            titleLabel.text = R.string.localizable.withdraw_duplicate_title()
-            tipsLabel.text = R.string.localizable.withdraw_duplicate_prompt(amountLabel.text ?? "", address.fullAddress.toSimpleKey(), traceCreatedAt.toUTCDate().simpleTimeAgo())
+            titleLabel.text = R.string.localizable.duplicate_Transfer_Confirmation()
+            tipsLabel.text = R.string.localizable.wallet_withdrawal_recent_tip(amountLabel.text ?? "", address.fullAddress.toSimpleKey(), traceCreatedAt.toUTCDate().simpleTimeAgo())
         default:
             break
         }

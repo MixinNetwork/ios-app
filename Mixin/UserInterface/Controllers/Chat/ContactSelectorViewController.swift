@@ -10,7 +10,7 @@ class ContactSelectorViewController: UserItemPeerViewController<CheckmarkPeerCel
     class func instance(conversationInputViewController: ConversationInputViewController) -> UIViewController {
         let vc = ContactSelectorViewController()
         vc.conversationInputViewController = conversationInputViewController
-        return ContainerViewController.instance(viewController: vc, title: Localized.PROFILE_SHARE_CARD)
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.share_Contact())
     }
     
     override func viewDidLoad() {
@@ -63,7 +63,7 @@ extension ContactSelectorViewController: ContainerViewControllerDelegate {
     }
     
     func textBarRightButton() -> String? {
-        return R.string.localizable.action_send()
+        R.string.localizable.send()
     }
     
 }

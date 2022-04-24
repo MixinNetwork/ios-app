@@ -13,7 +13,7 @@ final class ViewEmergencyContactViewController: UIViewController {
     class func instance(user: User) -> UIViewController {
         let vc = R.storyboard.setting.view_emergency_contact()!
         vc.user = user
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.emergency_view())
+        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.view_emergency_contact())
         return container
     }
     
@@ -23,7 +23,7 @@ final class ViewEmergencyContactViewController: UIViewController {
                                  userId: user.userId,
                                  name: user.fullName ?? "")
         nameLabel.text = user.fullName
-        idLabel.text = Localized.PROFILE_MIXIN_ID(id: user.identityNumber)
+        idLabel.text = R.string.localizable.contact_mixin_id(user.identityNumber)
         updateDescription()
     }
     
@@ -36,14 +36,14 @@ final class ViewEmergencyContactViewController: UIViewController {
     }
     
     private func updateDescription() {
-        let text = R.string.localizable.emergency_tip_after()
+        let text = R.string.localizable.setting_emergency_desc()
         let attrs: [NSAttributedString.Key: Any] = [
             .font: UIFont.preferredFont(forTextStyle: .caption1),
             .foregroundColor: UIColor.accessoryText
         ]
         let str = NSMutableAttributedString(string: text, attributes: attrs)
         let linkRange = (text as NSString)
-            .range(of: R.string.localizable.emergency_tip_link(), options: .backwards)
+            .range(of: R.string.localizable.emergency_Contact(), options: .backwards)
         if linkRange.location != NSNotFound && linkRange.length != 0 {
             str.addAttribute(.link, value: URL.emergencyContact, range: linkRange)
         }

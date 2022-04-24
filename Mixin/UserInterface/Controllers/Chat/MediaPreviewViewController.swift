@@ -247,7 +247,7 @@ final class MediaPreviewViewController: UIViewController {
                         guard let self = self else {
                             return
                         }
-                        showAutoHiddenHud(style: .error, text: R.string.localizable.toast_unable_to_share())
+                        showAutoHiddenHud(style: .error, text: R.string.localizable.unable_to_share_content())
                         self.dismiss(animated: true, completion: nil)
                     }
                     return

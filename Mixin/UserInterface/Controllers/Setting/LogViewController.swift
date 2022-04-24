@@ -18,7 +18,7 @@ class LogViewController: UIViewController {
     class func instance(category: AccountAPI.LogCategory) -> UIViewController {
         let vc = R.storyboard.wallet.logs()!
         vc.category = category
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.setting_logs())
+        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.logs())
         return container
     }
     
@@ -48,7 +48,7 @@ class LogViewController: UIViewController {
                 self.logs += logs
                 self.tableView.reloadData()
                 self.tableView.checkEmpty(dataCount: self.logs.count,
-                                          text: R.string.localizable.setting_logs_empty(),
+                                          text: R.string.localizable.no_logs(),
                                           photo: R.image.emptyIndicator.ic_data()!)
                 self.view.layoutIfNeeded()
             case let .failure(error):
@@ -67,43 +67,43 @@ class LogViewController: UIViewController {
     private func getDescription(by code: String) -> (String, String) {
         switch code {
         case "VERIFICATION":
-            return (R.string.localizable.log_category_pin_incorrect(), R.string.localizable.log_pin_verification())
+            return (R.string.localizable.pin_incorrect(), R.string.localizable.verify())
         case "RAW_TRANSFER":
-            return (R.string.localizable.log_category_pin_incorrect(), R.string.localizable.log_pin_raw_transfer())
+            return (R.string.localizable.pin_incorrect(), R.string.localizable.transfer_to_Mixin_address())
         case "USER_TRANSFER":
-            return (R.string.localizable.log_category_pin_incorrect(), R.string.localizable.log_pin_user_transfer())
+            return (R.string.localizable.pin_incorrect(), R.string.localizable.transfer_to_user_or_bot())
         case "WITHDRAWAL":
-            return (R.string.localizable.log_category_pin_incorrect(), R.string.localizable.log_pin_withdrawal())
+            return (R.string.localizable.pin_incorrect(), R.string.localizable.withdrawal())
         case "ADD_ADDRESS":
-            return (R.string.localizable.log_category_pin_incorrect(), R.string.localizable.log_pin_add_address())
+            return (R.string.localizable.pin_incorrect(), R.string.localizable.add_address())
         case "DELETE_ADDRESS":
-            return (R.string.localizable.log_category_pin_incorrect(), R.string.localizable.log_pin_delete_address())
+            return (R.string.localizable.pin_incorrect(), R.string.localizable.delete_address())
         case "ADD_EMERGENCY":
-            return (R.string.localizable.log_category_pin_incorrect(), R.string.localizable.log_pin_add_emergency())
+            return (R.string.localizable.pin_incorrect(), R.string.localizable.add_emergency_contact())
         case "DELETE_EMERGENCY":
-            return (R.string.localizable.log_category_pin_incorrect(), R.string.localizable.log_pin_delete_emergency())
+            return (R.string.localizable.pin_incorrect(), R.string.localizable.delete_emergency_contact())
         case "READ_EMERGENCY":
-            return (R.string.localizable.log_category_pin_incorrect(), R.string.localizable.log_pin_read_emergency())
+            return (R.string.localizable.pin_incorrect(), R.string.localizable.view_emergency_contact())
         case "UPDATE_PHONE":
-            return (R.string.localizable.log_category_pin_incorrect(), R.string.localizable.log_pin_update_phone())
+            return (R.string.localizable.pin_incorrect(), R.string.localizable.change_Phone_Number())
         case "UPDATE_PIN":
-            return (R.string.localizable.log_category_pin_incorrect(), R.string.localizable.log_pin_update_pin())
+            return (R.string.localizable.pin_incorrect(), R.string.localizable.change_PIN())
         case "MULTISIG_SIGN":
-            return (R.string.localizable.log_category_pin_incorrect(), R.string.localizable.log_pin_multisig_sign())
+            return (R.string.localizable.pin_incorrect(), R.string.localizable.multisig_Transaction())
         case "MULTISIG_UNLOCK":
-            return (R.string.localizable.log_category_pin_incorrect(), R.string.localizable.log_pin_multisig_unlock())
+            return (R.string.localizable.pin_incorrect(), R.string.localizable.revoke_multisig_transaction())
         case "ACTIVITY_PIN_MODIFICATION":
-            return (R.string.localizable.log_category_pin_change(), R.string.localizable.log_pin_modification())
+            return (R.string.localizable.pin_change(), R.string.localizable.your_PIN_has_been_changed())
         case "ACTIVITY_EMERGENCY_CONTACT_MODIFICATION":
-            return (R.string.localizable.log_category_emergency(), R.string.localizable.log_emergency_modification())
+            return (R.string.localizable.emergency_Contact(), R.string.localizable.your_emergency_contact_has_been_changed())
         case "ACTIVITY_PHONE_MODIFICATION":
-            return (R.string.localizable.log_category_phone_change(), R.string.localizable.log_phone_modification())
+            return (R.string.localizable.phone_number_change(), R.string.localizable.your_phone_number_has_been_changed())
         case "ACTIVITY_LOGIN_BY_PHONE":
-            return (R.string.localizable.log_category_login(), R.string.localizable.log_login_phone())
+            return (R.string.localizable.sign_in(), R.string.localizable.sign_with_phone_number())
         case "ACTIVITY_LOGIN_BY_EMERGENCY_CONTACT":
-            return (R.string.localizable.log_category_login(), R.string.localizable.log_login_emergency())
+            return (R.string.localizable.sign_in(), R.string.localizable.sign_with_emergency_contact())
         case "ACTIVITY_LOGIN_FROM_DESKTOP":
-            return (R.string.localizable.log_category_login(), R.string.localizable.log_login_desktop())
+            return (R.string.localizable.sign_in(), R.string.localizable.desktop_on_hint())
         default:
             return (code, code)
         }

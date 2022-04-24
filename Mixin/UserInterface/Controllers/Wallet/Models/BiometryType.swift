@@ -10,9 +10,9 @@ enum BiometryType {
     var localizedName: String {
         switch self {
         case .faceID:
-            return R.string.localizable.wallet_face_id()
+            return R.string.localizable.face_ID()
         case .touchID:
-            return R.string.localizable.wallet_touch_id()
+            return R.string.localizable.touch_ID()
         case .none:
             return ""
         }

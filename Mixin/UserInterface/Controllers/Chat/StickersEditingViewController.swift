@@ -25,7 +25,7 @@ class StickersEditingViewController: UIViewController {
     private func reloadData() {
         tableView.reloadData()
         tableView.checkEmpty(dataCount: albumItems.count,
-                             text: R.string.localizable.sticker_edit_no_stickers(),
+                             text: R.string.localizable.no_STICKERS(),
                              photo: R.image.ic_sticker_smile()!)
     }
     

@@ -11,7 +11,7 @@ class ChangeNumberVerificationCodeViewController: VerificationCodeViewController
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        titleLabel.text = Localized.NAVIGATION_TITLE_ENTER_VERIFICATION_CODE(mobileNumber: context.newNumberRepresentation)
+        titleLabel.text = R.string.localizable.landing_validation_title(context.newNumberRepresentation)
     }
     
     override func verificationCodeFieldEditingChanged(_ sender: Any) {
@@ -40,7 +40,7 @@ class ChangeNumberVerificationCodeViewController: VerificationCodeViewController
             case .success(let account):
                 LoginManager.shared.setAccount(account)
                 weakSelf.verificationCodeField.resignFirstResponder()
-                weakSelf.alert(nil, message: Localized.PROFILE_CHANGE_NUMBER_SUCCEEDED, handler: { (_) in
+                weakSelf.alert(nil, message: R.string.localizable.successfully_changed_phone_number(), handler: { (_) in
                     weakSelf.navigationController?.dismiss(animated: true, completion: nil)
                 })
             case let .failure(error):

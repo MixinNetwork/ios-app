@@ -12,7 +12,7 @@ class AttachmentDiagnosticViewController: UIViewController {
         if isSearching || urls.isEmpty {
             return nil
         } else {
-            return R.string.localizable.menu_delete() + "(\(urls.count))"
+            return R.string.localizable.delete() + "(\(urls.count))"
         }
     }
     

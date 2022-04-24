@@ -12,7 +12,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         let displayNumber = "+\(context.callingCode) \(context.mobileNumber)"
-        titleLabel.text = Localized.NAVIGATION_TITLE_ENTER_VERIFICATION_CODE(mobileNumber: displayNumber)
+        titleLabel.text = R.string.localizable.landing_validation_title(displayNumber)
     }
     
     override func verificationCodeFieldEditingChanged(_ sender: Any) {

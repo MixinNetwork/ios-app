@@ -52,7 +52,7 @@ final class PermissionsViewController: UIViewController {
                         self.reloadData(response: response)
                         hud.hide()
                     } else {
-                        hud.set(style: .error, text: R.string.localizable.setting_no_authorizations())
+                        hud.set(style: .error, text: R.string.localizable.no_AUTHORIZATIONS())
                         hud.scheduleAutoHidden()
                     }
                 case let .failure(error):
@@ -70,7 +70,7 @@ final class PermissionsViewController: UIViewController {
     class func instance(dataSource: DataSource) -> UIViewController {
         let vc = PermissionsViewController()
         vc.dataSource = dataSource
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.setting_permissions())
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.permissions())
     }
     
     @objc func profileAction() {
@@ -108,7 +108,7 @@ final class PermissionsViewController: UIViewController {
         
         app = response.app
         scopes = Scope.getCompleteScopeInfo(authInfo: response).0
-        dateDescription = R.string.localizable.setting_permissions_date(createDate, accessedDate)
+        dateDescription = R.string.localizable.setting_auth_access(createDate, accessedDate)
         isDataLoaded = true
         tableView.reloadData()
     }
@@ -117,9 +117,9 @@ final class PermissionsViewController: UIViewController {
         guard let app = app else {
             return
         }
-        let alert = UIAlertController(title: R.string.localizable.setting_revoke_confirmation(app.name), message: nil, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CONFIRM, style: .destructive, handler: { (action) in
+        let alert = UIAlertController(title: R.string.localizable.revoke_access_with(app.name), message: nil, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: R.string.localizable.confirm(), style: .destructive, handler: { (action) in
             AuthorizeAPI.cancel(clientId: app.appId) { [weak self](result) in
                 switch result {
                 case .success:
@@ -189,7 +189,7 @@ extension PermissionsViewController: UITableViewDataSource {
             return cell
         default:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.permissions_action, for: indexPath)!
-            cell.contentLabel.text = R.string.localizable.action_revoke()
+            cell.contentLabel.text = R.string.localizable.revoke_access()
             cell.contentLabel.textColor = R.color.red()
             roundCornersIfNeeded(cell: cell)
             return cell

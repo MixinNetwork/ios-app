@@ -38,7 +38,7 @@ class InviteLinkViewController: UIViewController {
     
     @IBAction func copyLinkAction(_ sender: Any) {
         UIPasteboard.general.string = conversation.codeUrl
-        showAutoHiddenHud(style: .notification, text: Localized.TOAST_COPIED)
+        showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
     }
     
     @IBAction func qrCodeAction(_ sender: Any) {
@@ -49,7 +49,7 @@ class InviteLinkViewController: UIViewController {
     class func instance(conversation: ConversationItem) -> UIViewController {
         let vc = R.storyboard.group.invite_link()!
         vc.conversation = conversation
-        return ContainerViewController.instance(viewController: vc, title: Localized.GROUP_NAVIGATION_TITLE_INVITE_LINK)
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.invite_to_Group_via_Link())
     }
     
 }
@@ -58,10 +58,10 @@ extension InviteLinkViewController: ContainerViewControllerDelegate {
 
     func barRightButtonTappedAction() {
         let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        alc.addAction(UIAlertAction(title: Localized.GROUP_BUTTON_TITLE_RESET_LINK, style: .default, handler: { [weak self] (_) in
+        alc.addAction(UIAlertAction(title: R.string.localizable.reset_Link(), style: .default, handler: { [weak self] (_) in
             self?.revokeLink()
         }))
-        alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        alc.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         self.present(alc, animated: true, completion: nil)
     }
 

@@ -36,7 +36,7 @@ class BlockedUsersViewController: UIViewController {
                 }
                 weakSelf.tableView.reloadData()
                 weakSelf.tableView.checkEmpty(dataCount: users.count,
-                                              text: Localized.SETTING_BLOCKED_EMPTY,
+                                              text: R.string.localizable.no_blocked_users(),
                                               photo: R.image.emptyIndicator.ic_blocked_users()!)
             }
         }
@@ -44,7 +44,7 @@ class BlockedUsersViewController: UIViewController {
     
     class func instance() -> UIViewController {
         let vc = R.storyboard.setting.block()!
-        let container = ContainerViewController.instance(viewController: vc, title: Localized.SETTING_BLOCKED)
+        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.blocked_Users())
         return container
     }
     

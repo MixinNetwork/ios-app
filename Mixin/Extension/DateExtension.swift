@@ -46,7 +46,7 @@ extension Date {
         let dateComponents = Calendar.current.dateComponents([.day, .month, .year, .weekOfYear], from: self)
 
         if nowDateComponents.day == dateComponents.day && nowDateComponents.year == dateComponents.year && nowDateComponents.month == dateComponents.month {
-            return R.string.localizable.chat_time_today()
+            return R.string.localizable.today()
         } else {
             if nowDateComponents.year == dateComponents.year {
                 return DateFormatter.month.string(from: self)

@@ -97,14 +97,14 @@ class PhotoInputViewController: UIViewController, ConversationInputAccessible {
     @IBAction func managePhotoAuthorization(_ sender: Any) {
         let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         if #available(iOS 14, *) {
-            sheet.addAction(UIAlertAction(title: R.string.localizable.chat_photo_select_more(), style: .default, handler: { _ in
+            sheet.addAction(UIAlertAction(title: R.string.localizable.select_More_Phots(), style: .default, handler: { _ in
                 PHPhotoLibrary.shared().presentLimitedLibraryPicker(from: self)
             }))
         }
-        sheet.addAction(UIAlertAction(title: R.string.localizable.action_change_settings(), style: .default, handler: { _ in
+        sheet.addAction(UIAlertAction(title: R.string.localizable.change_Settings(), style: .default, handler: { _ in
             UIApplication.openAppSettings()
         }))
-        sheet.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
+        sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         present(sheet, animated: true, completion: nil)
     }
     
@@ -155,7 +155,7 @@ extension PhotoInputViewController: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.photo_album, for: indexPath)!
         switch Section(rawValue: indexPath.section)! {
         case .allPhotos:
-            cell.textLabel.text = Localized.ALL_PHOTOS
+            cell.textLabel.text = R.string.localizable.all_Photos()
         case .smartAlbums:
             cell.textLabel.text = sortedSmartAlbums?[indexPath.row].localizedTitle ?? ""
         case .userCollections:
@@ -207,7 +207,7 @@ extension PhotoInputViewController: PHPickerViewControllerDelegate {
             }
             let vc = R.storyboard.chat.media_preview()!
             guard vc.canLoad(itemProvider: provider) else {
-                showAutoHiddenHud(style: .error, text: R.string.localizable.toast_unable_to_share())
+                showAutoHiddenHud(style: .error, text: R.string.localizable.unable_to_share_content())
                 return
             }
             vc.load(itemProvider: provider)

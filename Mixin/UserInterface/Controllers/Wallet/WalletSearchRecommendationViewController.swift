@@ -120,9 +120,9 @@ extension WalletSearchRecommendationViewController: UITableViewDelegate {
         let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.header) as! SearchHeaderView
         switch Section(rawValue: section)! {
         case .history where !history.isEmpty:
-            view.label.text = R.string.localizable.wallet_header_recent_searches()
+            view.label.text = R.string.localizable.recent_searches()
         case .trending where !trending.isEmpty:
-            view.label.text = R.string.localizable.wallet_header_trending()
+            view.label.text = R.string.localizable.trending()
         default:
             return nil
         }

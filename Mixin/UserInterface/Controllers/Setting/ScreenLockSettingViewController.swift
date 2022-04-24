@@ -9,16 +9,16 @@ final class ScreenLockSettingViewController: SettingsTableViewController {
     
     private let dataSource = SettingsDataSource(sections: [])
     
-    private lazy var biometricSwitchRow = SettingsRow(title: R.string.localizable.setting_screen_lock_enable_biometric_title(biometryType.localizedName),
+    private lazy var biometricSwitchRow = SettingsRow(title: R.string.localizable.lock_with_biometric(biometryType.localizedName),
                                                       accessory: .switch(isOn: AppGroupUserDefaults.User.lockScreenWithBiometricAuthentication))
     
-    private lazy var timeoutIntervalRow = SettingsRow(title: R.string.localizable.setting_screen_lock_enable_biometric_timeout(),
-                                                      subtitle: Localized.SCREEN_LOCK_TIMEOUT_INTERVAL(AppGroupUserDefaults.User.lockScreenTimeoutInterval),
+    private lazy var timeoutIntervalRow = SettingsRow(title: R.string.localizable.auto_Lock(),
+                                                      subtitle: ScreenLockTimeFormatter.string(from: AppGroupUserDefaults.User.lockScreenTimeoutInterval),
                                                       accessory: .disclosure)
     
     class func instance() -> UIViewController {
         let vc = ScreenLockSettingViewController()
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.setting_screen_lock_title())
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.screen_Lock())
     }
     
     override func viewDidLoad() {
@@ -27,7 +27,7 @@ final class ScreenLockSettingViewController: SettingsTableViewController {
         if AppGroupUserDefaults.User.lockScreenWithBiometricAuthentication {
             rows.append(timeoutIntervalRow)
         }
-        let biometricFooter =  R.string.localizable.setting_screen_lock_enable_biometric_tip(biometryType.localizedName)
+        let biometricFooter =  R.string.localizable.screen_lock_enable_biometric_hint(biometryType.localizedName)
         let section = SettingsSection(footer: biometricFooter, rows: rows)
         dataSource.insertSection(section, at: 0, animation: .none)
         NotificationCenter.default.addObserver(self,
@@ -45,13 +45,13 @@ extension ScreenLockSettingViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.section == 0 && indexPath.row == 1 {
-            let alert = UIAlertController(title: nil, message: R.string.localizable.setting_screen_lock_enable_biometric_timeout(), preferredStyle: .actionSheet)
+            let alert = UIAlertController(title: nil, message: R.string.localizable.auto_Lock(), preferredStyle: .actionSheet)
             for interval in timeoutIntervals {
-                alert.addAction(UIAlertAction(title: Localized.SCREEN_LOCK_TIMEOUT_INTERVAL(interval), style: .default, handler: { (_) in
+                alert.addAction(UIAlertAction(title: ScreenLockTimeFormatter.string(from: interval), style: .default, handler: { (_) in
                     self.setNewTimeoutInterval(interval)
                 }))
             }
-            alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
             present(alert, animated: true, completion: nil)
         }
     }
@@ -79,7 +79,7 @@ extension ScreenLockSettingViewController {
     private func setNewTimeoutInterval(_ interval: Double) {
         AppGroupUserDefaults.User.lastLockScreenBiometricVerifiedDate = Date()
         AppGroupUserDefaults.User.lockScreenTimeoutInterval = interval
-        timeoutIntervalRow.subtitle = Localized.SCREEN_LOCK_TIMEOUT_INTERVAL(AppGroupUserDefaults.User.lockScreenTimeoutInterval)
+        timeoutIntervalRow.subtitle = ScreenLockTimeFormatter.string(from: AppGroupUserDefaults.User.lockScreenTimeoutInterval)
         NotificationCenter.default.post(name: Self.screenLockTimeoutDidUpdateNotification, object: nil)
     }
     

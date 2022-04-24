@@ -69,20 +69,20 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
         var action: String
         if noMemo {
             if asset.usesTag {
-                hint = R.string.localizable.address_memo_add(R.string.localizable.address_add_tag())
-                action = R.string.localizable.address_add_tag()
+                hint = R.string.localizable.withdrawal_addr_no_tag()
+                action = R.string.localizable.add_Tag()
             } else {
-                hint = R.string.localizable.address_memo_add(R.string.localizable.address_add_memo())
-                action = R.string.localizable.address_add_memo()
+                hint = R.string.localizable.withdrawal_addr_no_memo()
+                action = R.string.localizable.add_memo()
             }
             memoView.isHidden = true
         } else {
             if asset.usesTag {
-                hint = R.string.localizable.address_memo_no(R.string.localizable.address_no_tag())
-                action = R.string.localizable.address_no_tag()
+                hint = R.string.localizable.withdrawal_addr_tag()
+                action = R.string.localizable.no_tag()
             } else {
-                hint = R.string.localizable.address_memo_no(R.string.localizable.address_no_memo())
-                action = R.string.localizable.address_no_memo()
+                hint = R.string.localizable.withdrawal_addr_memo()
+                action = R.string.localizable.no_Memo()
             }
             memoView.isHidden = false
         }
@@ -211,7 +211,7 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
         vc.asset = asset
         vc.successCallback = successCallback
         vc.address = address
-        return ContainerViewController.instance(viewController: vc, title: address == nil ? Localized.ADDRESS_NEW_TITLE(symbol: asset.symbol) : Localized.ADDRESS_EDIT_TITLE(symbol: asset.symbol))
+        return ContainerViewController.instance(viewController: vc, title: address == nil ? R.string.localizable.withdrawal_addr_new(asset.symbol) : R.string.localizable.edit_address(asset.symbol))
     }
 
 }

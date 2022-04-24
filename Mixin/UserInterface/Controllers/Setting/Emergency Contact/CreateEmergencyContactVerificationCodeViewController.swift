@@ -19,7 +19,7 @@ class CreateEmergencyContactVerificationCodeViewController: VerificationCodeView
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        helpButton.setTitle(R.string.localizable.button_title_cant_receive_code(), for: .normal)
+        helpButton.setTitle(R.string.localizable.cant_receive_the_code(), for: .normal)
         helpButton.setTitleColor(.walletRed, for: .normal)
         helpButton.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
         helpButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
@@ -32,7 +32,7 @@ class CreateEmergencyContactVerificationCodeViewController: VerificationCodeView
         helpButtonBottomConstraint.isActive = true
         
         resendButton.isHidden = true
-        titleLabel.text = Localized.NAVIGATION_TITLE_ENTER_EMERGENCY_CONTACT_VERIFICATION_CODE(id: identityNumber)
+        titleLabel.text = R.string.localizable.setting_emergency_send_code(identityNumber)
     }
 
      @objc func helpAction() {
@@ -78,9 +78,9 @@ class CreateEmergencyContactVerificationCodeViewController: VerificationCodeView
     }
     
     private func showSuccessAlert() {
-        let title = R.string.localizable.setting_change_emergency_contact_success()
+        let title = R.string.localizable.successfully_changed_emergency_contact()
         let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_ok(), style: .default, handler: { (_) in
+        alert.addAction(UIAlertAction(title: R.string.localizable.oK(), style: .default, handler: { (_) in
             self.navigationController?.dismiss(animated: true, completion: nil)
         }))
         present(alert, animated: true, completion: nil)

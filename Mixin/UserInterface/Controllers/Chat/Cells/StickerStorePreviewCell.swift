@@ -17,11 +17,11 @@ class StickerStorePreviewCell: UICollectionViewCell {
             if let albumItem = albumItem {
                 nameLabel.text = albumItem.album.name
                 if albumItem.isAdded {
-                    addButton.setTitle(R.string.localizable.sticker_store_added(), for: .normal)
+                    addButton.setTitle(R.string.localizable.added(), for: .normal)
                     addButton.backgroundColor = R.color.sticker_button_background_disabled()
                     addButton.setTitleColor(R.color.sticker_button_text_disabled(), for: .normal)
                 } else {
-                    addButton.setTitle(R.string.localizable.sticker_store_add(), for: .normal)
+                    addButton.setTitle(R.string.localizable.add(), for: .normal)
                     addButton.backgroundColor = R.color.theme()
                     addButton.setTitleColor(.white, for: .normal)
                 }

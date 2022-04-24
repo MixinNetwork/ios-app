@@ -18,8 +18,8 @@ class ScreenLockViewController: UIViewController {
         unlockContentView.isHidden = true
         logoContentView.isHidden = false
         logoImageViewTopSpaceConstraint.constant = (UIScreen.main.bounds.height - logoImageViewHeightConstraint.constant) / 10 * 4
-        unlockTipLabel.text = R.string.localizable.screen_lock_unlock_tip(biometryType.localizedName)
-        unlockButton.setTitle(R.string.localizable.screen_lock_unlock_button_title(biometryType.localizedName), for: .normal)
+        unlockTipLabel.text = R.string.localizable.screen_lock_unlock(biometryType.localizedName)
+        unlockButton.setTitle(R.string.localizable.use_biometry(biometryType.localizedName), for: .normal)
     }
     
     func showUnlockOption(_ show: Bool) {

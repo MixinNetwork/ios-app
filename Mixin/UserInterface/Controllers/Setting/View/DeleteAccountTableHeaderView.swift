@@ -54,9 +54,9 @@ extension DeleteAccountTableHeaderView {
         ]
         let bullet = "• "
         let strings = [
-            R.string.localizable.setting_delete_account_hint_profile(),
-            R.string.localizable.setting_delete_account_hint_message(),
-            R.string.localizable.setting_delete_account_hint_transaction()
+            R.string.localizable.delete_account_hint(),
+            R.string.localizable.delete_account_detail_hint(),
+            R.string.localizable.delete_my_account()
         ]
         let bulletListString = NSMutableAttributedString()
         for string in strings {

@@ -152,9 +152,9 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
                     return
                 }
                 if success {
-                    showAutoHiddenHud(style: .notification, text: Localized.CAMERA_SAVE_PHOTO_SUCCESS)
+                    showAutoHiddenHud(style: .notification, text: R.string.localizable.photo_saved())
                 } else {
-                    showAutoHiddenHud(style: .error, text: Localized.CAMERA_SAVE_PHOTO_FAILED)
+                    showAutoHiddenHud(style: .error, text: R.string.localizable.unable_to_save_photo())
                 }
                 weakSelf.saveButton.isEnabled = true
                 weakSelf.sendButton.isEnabled = true
@@ -414,7 +414,7 @@ extension CameraViewController: AVCaptureFileOutputRecordingDelegate {
     private func askForAudioRecordPermission() {
         switch AVAudioSession.sharedInstance().recordPermission {
         case .denied:
-            alertSettings(Localized.PERMISSION_DENIED_MICROPHONE)
+            alertSettings(R.string.localizable.permission_denied_microphone_hint())
         case .undetermined:
             AVAudioSession.sharedInstance().requestRecordPermission({ (granted) in
                 if granted {
@@ -685,7 +685,7 @@ extension CameraViewController: AssetQrCodeScanningControllerDelegate {
     }
     
     func assetQrCodeScanningControllerDidRecognizeNothing(_ controller: AssetQrCodeScanningController) {
-        alert(R.string.localizable.qr_code_not_found(), message: nil) { (_) in
+        alert(R.string.localizable.qr_Code_not_found(), message: nil) { (_) in
             controller.unload()
         }
     }

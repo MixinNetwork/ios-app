@@ -243,17 +243,17 @@ extension AudioInputViewController {
     private func startRecordingIfGranted() {
         switch AVAudioSession.sharedInstance().recordPermission {
         case .denied:
-            alertSettings(Localized.PERMISSION_DENIED_MICROPHONE)
+            alertSettings(R.string.localizable.permission_denied_microphone_hint())
         case .granted:
             if CallService.shared.hasCall {
-                alert(R.string.localizable.chat_voice_record_on_call())
+                alert(R.string.localizable.call_on_another_call_hint())
             } else {
                 startRecording()
             }
         case .undetermined:
             AVAudioSession.sharedInstance().requestRecordPermission({ (_) in })
         @unknown default:
-            alertSettings(Localized.PERMISSION_DENIED_MICROPHONE)
+            alertSettings(R.string.localizable.permission_denied_microphone_hint())
         }
     }
     

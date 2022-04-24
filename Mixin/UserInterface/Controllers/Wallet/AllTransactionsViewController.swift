@@ -28,7 +28,7 @@ class AllTransactionsViewController: UITableViewController {
             }
             weakSelf.tableView.reloadData()
             weakSelf.tableView.checkEmpty(dataCount: weakSelf.dataSource.snapshots.count,
-                                          text: Localized.WALLET_NO_TRANSACTION,
+                                          text: R.string.localizable.no_transactions(),
                                           photo: R.image.emptyIndicator.ic_data()!)
         }
         dataSource.reloadFromLocal()
@@ -44,7 +44,7 @@ class AllTransactionsViewController: UITableViewController {
     class func instance() -> UIViewController {
         let vc = R.storyboard.wallet.snapshot()!
         vc.dataSource = SnapshotDataSource(category: .all)
-        let container = ContainerViewController.instance(viewController: vc, title: Localized.WALLET_ALL_TRANSACTIONS_TITLE)
+        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.all_Transactions())
         return container
     }
     

@@ -23,8 +23,8 @@ class MessagesWithinConversationSearchResult: SearchResult {
                                             textAttributes: SearchResult.titleAttributes,
                                             keyword: keyword,
                                             keywordAttributes: SearchResult.highlightedTitleAttributes)
-        let desc = "\(relatedMessageCount)" + R.string.localizable.search_related_messages_count()
-        description = NSAttributedString(string: desc, attributes: SearchResult.normalDescriptionAttributes)
+        description = NSAttributedString(string: R.string.localizable.search_related_message_count(relatedMessageCount),
+                                         attributes: SearchResult.normalDescriptionAttributes)
     }
     
 }

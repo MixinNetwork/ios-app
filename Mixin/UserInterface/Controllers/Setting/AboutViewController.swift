@@ -6,17 +6,17 @@ class AboutViewController: SettingsTableViewController {
     
     private let dataSource = SettingsDataSource(sections: [
         SettingsSection(rows: [
-            SettingsRow(title: R.string.localizable.about_twitter(), accessory: .disclosure),
-            SettingsRow(title: R.string.localizable.about_facebook(), accessory: .disclosure),
-            SettingsRow(title: R.string.localizable.about_help(), accessory: .disclosure),
-            SettingsRow(title: R.string.localizable.button_title_terms_of_service(), accessory: .disclosure),
-            SettingsRow(title: R.string.localizable.button_title_privacy_policy(), accessory: .disclosure),
-            SettingsRow(title: R.string.localizable.about_acknowledgements(), accessory: .disclosure),
-            SettingsRow(title: R.string.localizable.about_app_upgrade(), accessory: .disclosure)
+            SettingsRow(title: R.string.localizable.follow_us_on_twitter(), accessory: .disclosure),
+            SettingsRow(title: R.string.localizable.follow_us_on_facebook(), accessory: .disclosure),
+            SettingsRow(title: R.string.localizable.help_center(), accessory: .disclosure),
+            SettingsRow(title: R.string.localizable.terms_of_Service(), accessory: .disclosure),
+            SettingsRow(title: R.string.localizable.privacy_Policy(), accessory: .disclosure),
+            SettingsRow(title: R.string.localizable.acknowledgements(), accessory: .disclosure),
+            SettingsRow(title: R.string.localizable.version_Update(), accessory: .disclosure)
         ])
     ])
     
-    private lazy var diagnoseRow = SettingsRow(title: R.string.localizable.about_diagnose(), accessory: .disclosure)
+    private lazy var diagnoseRow = SettingsRow(title: R.string.localizable.diagnose(), accessory: .disclosure)
     
     private var isShowingDiagnoseRow = false
     
@@ -68,7 +68,7 @@ extension AboutViewController: UITableViewDelegate {
             UIApplication.shared.openURL(url: "itms-apps://itunes.apple.com/us/app/id1322324266")
         case 7:
             let diagnose = DiagnoseViewController()
-            let container = ContainerViewController.instance(viewController: diagnose, title: R.string.localizable.about_diagnose())
+            let container = ContainerViewController.instance(viewController: diagnose, title: R.string.localizable.diagnose())
             navigationController?.pushViewController(container, animated: true)
         default:
             break

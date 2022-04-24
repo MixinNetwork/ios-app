@@ -11,7 +11,7 @@ class UnknownURLWindow: BottomSheetView {
     }
     
     func render(url: URL) -> BottomSheetView {
-        tipLabel.text = R.string.localizable.url_unrecognized_tip(url.absoluteString)
+        tipLabel.text = R.string.localizable.url_unrecognized_hint(url.absoluteString)
         urlString = url.absoluteString
         return self
     }
@@ -23,7 +23,7 @@ class UnknownURLWindow: BottomSheetView {
     @IBAction func copyAction(_ sender: Any) {
         UIPasteboard.general.string = urlString
         dismissPopupControllerAnimated()
-        showAutoHiddenHud(style: .notification, text: Localized.TOAST_COPIED)
+        showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
     }
     
 }

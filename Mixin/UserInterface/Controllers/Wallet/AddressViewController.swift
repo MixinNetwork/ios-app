@@ -64,7 +64,7 @@ class AddressViewController: UIViewController {
     class func instance(asset: AssetItem) -> UIViewController {
         let vc = R.storyboard.wallet.address_list()!
         vc.asset = asset
-        let container = ContainerViewController.instance(viewController: vc, title: Localized.ADDRESS_LIST_TITLE)
+        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.address())
         return container
     }
     
@@ -143,7 +143,7 @@ extension AddressViewController {
     }
     
     private func deleteAction(forRowAt indexPath: IndexPath) -> UIContextualAction {
-        UIContextualAction(style: .destructive, title: R.string.localizable.menu_delete()) { [weak self] (action, _, completionHandler: (Bool) -> Void) in
+        UIContextualAction(style: .destructive, title: R.string.localizable.delete()) { [weak self] (action, _, completionHandler: (Bool) -> Void) in
             guard let self = self else {
                 return
             }

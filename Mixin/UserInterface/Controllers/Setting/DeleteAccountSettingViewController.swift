@@ -6,10 +6,10 @@ final class DeleteAccountSettingViewController: SettingsTableViewController {
     private let tableHeaderView = R.nib.deleteAccountTableHeaderView(owner: nil)!
     private let dataSource = SettingsDataSource(sections: [
         SettingsSection(rows: [
-            SettingsRow(title: R.string.localizable.setting_delete_account(), titleStyle: .destructive)
+            SettingsRow(title: R.string.localizable.delete_my_account(), titleStyle: .destructive)
         ]),
         SettingsSection(rows: [
-            SettingsRow(title: R.string.localizable.setting_change_number_instead())
+            SettingsRow(title: R.string.localizable.change_Number_Instead())
         ])
     ])
     
@@ -40,7 +40,7 @@ final class DeleteAccountSettingViewController: SettingsTableViewController {
     
     class func instance() -> UIViewController {
         let vc = DeleteAccountSettingViewController()
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.setting_delete_account())
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.delete_my_account())
     }
     
 }
@@ -97,9 +97,9 @@ extension DeleteAccountSettingViewController {
         guard let phone = LoginManager.shared.account?.phone else {
             return
         }
-        let controller = UIAlertController(title: R.string.localizable.setting_delete_account_send_code(phone), message: nil, preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .default, handler: nil))
-        controller.addAction(UIAlertAction(title: R.string.localizable.action_continue(), style: .default, handler: { _ in
+        let controller = UIAlertController(title: R.string.localizable.setting_delete_account_send(phone), message: nil, preferredStyle: .alert)
+        controller.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .default, handler: nil))
+        controller.addAction(UIAlertAction(title: R.string.localizable.continue(), style: .default, handler: { _ in
             self.requestVerificationCode(for: phone, captchaToken: nil)
         }))
         present(controller, animated: true, completion: nil)

@@ -11,17 +11,17 @@ class BulletinContentView: UIView {
         didSet {
             switch content {
             case .notification:
-                titleLabel.text = R.string.localizable.home_bulletin_title_notification()
-                descriptionLabel.text = R.string.localizable.home_bulletin_description_notification()
-                continueButton.setTitle(R.string.localizable.action_settings(), for: .normal)
+                titleLabel.text = R.string.localizable.turn_On_Notifications()
+                descriptionLabel.text = R.string.localizable.notification_content()
+                continueButton.setTitle(R.string.localizable.settings(), for: .normal)
             case .emergencyContact:
-                titleLabel.text = R.string.localizable.home_bulletin_title_emergency_contact()
-                descriptionLabel.text = R.string.localizable.emergency_tip_before()
-                continueButton.setTitle(R.string.localizable.action_settings(), for: .normal)
+                titleLabel.text = R.string.localizable.emergency_Contact()
+                descriptionLabel.text = R.string.localizable.setting_emergency_content()
+                continueButton.setTitle(R.string.localizable.settings(), for: .normal)
             case .initializePIN:
-                titleLabel.text = R.string.localizable.home_bulletin_title_initialize_pin()
-                descriptionLabel.text = R.string.localizable.home_bulletin_description_initialize_pin()
-                continueButton.setTitle(R.string.localizable.action_continue(), for: .normal)
+                titleLabel.text = R.string.localizable.get_a_new_wallet()
+                descriptionLabel.text = R.string.localizable.new_wallet_hint()
+                continueButton.setTitle(R.string.localizable.continue(), for: .normal)
             case .none:
                 titleLabel.text = nil
                 descriptionLabel.text = nil

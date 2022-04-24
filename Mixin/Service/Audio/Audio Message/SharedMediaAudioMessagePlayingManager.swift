@@ -94,7 +94,7 @@ class SharedMediaAudioMessagePlayingManager: AudioMessagePlayingManager {
             }
         }()
         var info: [String: Any] = [
-            MPMediaItemPropertyTitle: R.string.localizable.chat_media_category_audio()
+            MPMediaItemPropertyTitle: R.string.localizable.audio()
         ]
         if let username = playingMessage?.userFullName {
             info[MPMediaItemPropertyArtist] = username

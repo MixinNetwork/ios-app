@@ -321,7 +321,7 @@ extension MixinWebViewController: WebMoreMenuControllerDelegate {
                     if context.isShareable ?? true {
                         shareAppCardAction(currentUrl: url)
                     } else {
-                        presentGotItAlertController(title: R.string.localizable.chat_forward_invalid_link_not_shareable())
+                        presentGotItAlertController(title: R.string.localizable.app_card_shareable_false())
                     }
                 case .webPage:
                     shareUrlAction(currentUrl: url)
@@ -333,7 +333,7 @@ extension MixinWebViewController: WebMoreMenuControllerDelegate {
                             switcher.appendClip(with: self)
                         }
                     } else {
-                        let text = R.string.localizable.clip_hint_did_reach_max("\(ClipSwitcher.maxNumber)")
+                        let text = R.string.localizable.floats_allows_up_to_count(ClipSwitcher.maxNumber)
                         showAutoHiddenHud(style: .error, text: text)
                     }
                 }
@@ -475,7 +475,7 @@ extension MixinWebViewController {
     
     private func copyAction(currentUrl: URL) {
         UIPasteboard.general.string = currentUrl.absoluteString
-        showAutoHiddenHud(style: .notification, text: Localized.TOAST_COPIED)
+        showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
     }
 
     private func shareAppCardAction(currentUrl: URL) {

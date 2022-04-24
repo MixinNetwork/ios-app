@@ -50,10 +50,10 @@ class MessageSearchResult: SearchResult {
         if let category = specializedCategory {
             switch category {
             case .data:
-                description = NSAttributedString(string: R.string.localizable.notification_content_file(),
+                description = NSAttributedString(string: R.string.localizable.content_file(),
                                                  attributes: SearchResult.normalDescriptionAttributes)
             case .transcript:
-                description = NSAttributedString(string: R.string.localizable.notification_content_transcript(),
+                description = NSAttributedString(string: R.string.localizable.content_transcript(),
                                                  attributes: SearchResult.normalDescriptionAttributes)
             }
         } else {

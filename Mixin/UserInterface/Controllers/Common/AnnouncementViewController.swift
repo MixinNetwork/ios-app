@@ -57,7 +57,7 @@ class AnnouncementViewController: KeyboardBasedLayoutViewController {
     }
 
     func saveSuccessAction() {
-        showAutoHiddenHud(style: .notification, text: Localized.TOAST_SAVED)
+        showAutoHiddenHud(style: .notification, text: R.string.localizable.saved())
         navigationController?.popViewController(animated: true)
     }
 

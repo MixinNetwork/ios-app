@@ -28,7 +28,7 @@ public enum MixinAPIError: Error {
     case blazeServerError
     case blazeOperationTimedOut
     
-    case invalidRequestData
+    case invalidRequestData(field: String?)
     case failedToDeliverSMS
     case invalidCaptchaToken
     case requiresCaptcha
@@ -73,7 +73,7 @@ public enum MixinAPIError: Error {
 
 extension MixinAPIError {
     
-    init(status: Int, code: Int, description: String) {
+    init(status: Int, code: Int, description: String, extra: Extra?) {
         switch (status, code) {
         case (202, 400):
             self = .invalidRequestBody
@@ -94,7 +94,7 @@ extension MixinAPIError {
             self = .blazeOperationTimedOut
             
         case (202, 10002):
-            self = .invalidRequestData
+            self = .invalidRequestData(field: extra?.field)
         case (202, 10003):
             self = .failedToDeliverSMS
         case (202, 10004):
@@ -179,6 +179,12 @@ extension MixinAPIError: Decodable {
         case code
         case status
         case description
+        case extra
+    }
+    
+    struct Extra: Decodable {
+        let field: String?
+        let reason: String?
     }
     
     public func encode(to encoder: Encoder) throws {
@@ -190,7 +196,8 @@ extension MixinAPIError: Decodable {
         let status = try container.decode(Int.self, forKey: .status)
         let code = try container.decode(Int.self, forKey: .code)
         let description = try container.decode(String.self, forKey: .description)
-        self.init(status: status, code: code, description: description)
+        let extra = try container.decodeIfPresent(Extra.self, forKey: .extra)
+        self.init(status: status, code: code, description: description, extra: extra)
     }
     
 }

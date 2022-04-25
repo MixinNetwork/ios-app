@@ -444,7 +444,7 @@
 "sticker_remove_title" = "Remove Stickers";
 "sticker_add_failed" = "Failed to add sticker";
 "sticker_remove_failed" = "Failed to delete stickers";
-"sticker_add_required" = "Requires stickers file size larger than 1KB and less than 800KB, width and height between 64 and 512 pixels.";
+"sticker_add_requirements" = "Requires stickers file size larger than %@KB and less than %@KB, width and height between %@ and %@ pixels.";
 "sticker_store_title" = "Sticker Store";
 "sticker_store_add" = "Add";
 "sticker_store_added" = "Added";
@@ -1059,3 +1059,5 @@
 "error_malformed_address_eos" = "Invalid address format. Mixin does not support withdrawal to the EOS contract address!";
 
 "error_network_task_failed" = "Network connection failed. Check or switch your network and try again";
+"error_invalid_width" = "Invalid width";
+"error_invalid_height" = "Invalid height";

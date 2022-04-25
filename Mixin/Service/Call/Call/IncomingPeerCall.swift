@@ -138,7 +138,7 @@ extension IncomingPeerCall {
             } else {
                 Logger.call.info(category: "IncomingPeerCall", message: "[\(self.uuidString)] User has accepted this call, now waits for remote SDP")
                 self.isUserAccepted = true
-                completion(nil)
+                self.answerCompletion = completion
             }
         }
     }
@@ -171,7 +171,14 @@ extension IncomingPeerCall {
                                                                   ownerUser: self.remoteUser,
                                                                   isGroupMessage: false)
                             Logger.call.info(category: "IncomingPeerCall", message: "[\(self.uuidString)] Answer is sent")
-                            self.answerCompletion = completion
+                            if let answerCompletion = self.answerCompletion {
+                                self.answerCompletion = { error in
+                                    answerCompletion(error)
+                                    completion(error)
+                                }
+                            } else {
+                                self.answerCompletion = completion
+                            }
                         case .failure(let error):
                             completion(CallError.answerConstruction(error))
                             Logger.call.error(category: "IncomingPeerCall", message: "[\(self.uuidString)] Failed to construct answer: \(error)")

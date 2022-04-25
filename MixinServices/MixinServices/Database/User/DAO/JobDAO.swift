@@ -5,12 +5,13 @@ public final class JobDAO: UserDatabaseDAO {
     
     public static let shared = JobDAO()
     
+    private let orderings = [
+        Job.column(of: .priority).desc,
+        Job.column(of: .orderId).asc
+    ]
+    
     internal func nextJob(category: JobCategory) -> Job? {
-        let orderings = [
-            Job.column(of: .priority).desc,
-            Job.column(of: .orderId).asc
-        ]
-        return db.select(where: Job.column(of: .category) == category.rawValue, order: orderings)
+        db.select(where: Job.column(of: .category) == category.rawValue, order: orderings)
     }
     
     public func clearSessionJob() {
@@ -24,13 +25,13 @@ public final class JobDAO: UserDatabaseDAO {
                   valueColumn: Job.column(of: .messageId),
                   from: Job.self,
                   where: Job.column(of: .category) == category.rawValue && Job.column(of: .action) == action.rawValue,
-                  order: [Job.column(of: .orderId).asc],
+                  order: orderings,
                   limit: limit)
     }
     
     internal func nextBatchJobs(category: JobCategory, limit: Int) -> [Job] {
         db.select(where: Job.column(of: .category) == category.rawValue,
-                  order: [Job.column(of: .orderId).asc],
+                  order: orderings,
                   limit: limit)
     }
     
@@ -38,7 +39,7 @@ public final class JobDAO: UserDatabaseDAO {
         let condition = Job.column(of: .category) == category.rawValue
             && Job.column(of: .action) == action.rawValue
         return db.select(where: condition,
-                         order: [Job.column(of: .orderId).asc],
+                         order: orderings,
                          limit: limit)
     }
     

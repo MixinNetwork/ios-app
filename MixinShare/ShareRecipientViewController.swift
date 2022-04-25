@@ -300,27 +300,26 @@ extension ShareRecipientViewController {
                             }
                             weakSelf.sharePostMessage(url: url, conversation: conversation)
                         } else if attachment.hasItemConformingToTypeIdentifier(kUTTypeImage as String) {
+                            var image: UIImage?
                             var imageData: Data?
                             let inUTI = typeIdentifier as CFString
 
-                            if let url = item as? URL {
-                                guard let image = UIImage(contentsOfFile: url.path) else {
-                                    return
-                                }
-                                if UTTypeConformsTo(inUTI, kUTTypeGIF) || (UTTypeConformsTo(inUTI, kUTTypeJPEG) && imageWithRatioMaybeAnArticle(image.size)) {
+                            if let url = item as? URL, let rawImage = UIImage(contentsOfFile: url.path) {
+                                if UTTypeConformsTo(inUTI, kUTTypeGIF) || (UTTypeConformsTo(inUTI, kUTTypeJPEG) && imageWithRatioMaybeAnArticle(rawImage.size)) {
+                                    image = rawImage
                                     imageData = try? Data(contentsOf: url)
                                 } else {
-                                    imageData = ImageUploadSanitizer.sanitizedImage(from: image).data
+                                    (image, imageData) = ImageUploadSanitizer.sanitizedImage(from: rawImage)
                                 }
-                            } else if let image = item as? UIImage {
-                                imageData = ImageUploadSanitizer.sanitizedImage(from: image).data
+                            } else if let item = item as? UIImage {
+                                (image, imageData) = ImageUploadSanitizer.sanitizedImage(from: item)
                             }
 
-                            guard let data = imageData else {
+                            guard let image = image, let data = imageData else {
                                 return
                             }
-
-                            weakSelf.sharePhotoMessage(imageData: data, conversation: conversation, typeIdentifier: inUTI)
+                            let thumbnail = image.imageByScaling(to: CGSize(width: 48, height: 48)) ?? image
+                            weakSelf.sharePhotoMessage(thumbnail: thumbnail, imageData: data, size: image.size, conversation: conversation, typeIdentifier: inUTI)
                         } else if supportedTextUTIs.contains(where: attachment.hasItemConformingToTypeIdentifier) {
                             if let content = item as? String {
                                 weakSelf.shareTextMessage(content: content, conversation: conversation)
@@ -389,7 +388,7 @@ extension ShareRecipientViewController {
         sendMessage(message: message, conversation: conversation)
     }
 
-    private func sharePhotoMessage(imageData: Data, conversation: RecipientSearchItem, typeIdentifier: CFString) {
+    private func sharePhotoMessage(thumbnail: UIImage, imageData: Data, size: CGSize, conversation: RecipientSearchItem, typeIdentifier: CFString) {
         let category: MessageCategory = conversation.isSignalConversation ? .SIGNAL_IMAGE : .PLAIN_IMAGE
         var message = Message.createMessage(category: category.rawValue, conversationId: conversation.conversationId, userId: myUserId)
         let extensionName: String
@@ -401,15 +400,11 @@ extension ShareRecipientViewController {
             extensionName = ExtensionName.jpeg.rawValue
             message.mediaMimeType = "image/jpeg"
         }
-
-        guard let targetImage = UIImage(data: imageData) else {
-            return
-        }
-
+        
         let filename = "\(message.messageId).\(extensionName)"
         let url = AttachmentContainer.url(for: .photos, filename: filename)
-        message.thumbImage = targetImage.blurHash()
-
+        message.thumbImage = thumbnail.blurHash()
+        
         do {
             try imageData.write(to: url)
         } catch {
@@ -418,8 +413,8 @@ extension ShareRecipientViewController {
         }
 
         message.mediaStatus = MediaStatus.PENDING.rawValue
-        message.mediaWidth = Int(targetImage.size.width)
-        message.mediaHeight = Int(targetImage.size.height)
+        message.mediaWidth = Int(size.width)
+        message.mediaHeight = Int(size.height)
         message.mediaUrl = url.lastPathComponent
         sendMessage(message: message, conversation: conversation)
     }

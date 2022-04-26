@@ -26,7 +26,7 @@ public final class ConversationItem {
     
     public var messageStatus: String = ""
     public var messageId: String = ""
-    public var content: String = ""
+    public var content: String?
     public var contentType: String = ""
     public var contentExpireIn: Int64 = 0
     
@@ -42,14 +42,14 @@ public final class ConversationItem {
     public var mentionsJson: Data?
     
     public lazy var appButtons: [AppButtonData]? = {
-        guard let data = Data(base64Encoded: content) else {
+        guard let content = content, let data = Data(base64Encoded: content) else {
             return nil
         }
         return try? JSONDecoder().decode([AppButtonData].self, from: data)
     }()
     
     public lazy var appCard: AppCardData? = {
-        guard let data = Data(base64Encoded: content) else {
+        guard let content = content, let data = Data(base64Encoded: content) else {
             return nil
         }
         return try? JSONDecoder().decode(AppCardData.self, from: data)
@@ -121,7 +121,7 @@ public final class ConversationItem {
         
         self.messageStatus = (try? container.decodeIfPresent(String.self, forKey: .messageStatus)) ?? ""
         self.messageId = (try? container.decodeIfPresent(String.self, forKey: .messageId)) ?? ""
-        self.content = (try? container.decodeIfPresent(String.self, forKey: .content)) ?? ""
+        self.content = (try? container.decodeIfPresent(String.self, forKey: .content))
         self.contentType = (try? container.decodeIfPresent(String.self, forKey: .contentType)) ?? ""
         self.contentExpireIn = (try container.decodeIfPresent(Int64.self, forKey: .contentExpireIn)) ?? 0
         

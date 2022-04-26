@@ -1,8 +1,16 @@
 import MixinServices
 
 extension SystemConversationAction {
-
-    static func getSystemMessage(actionName: String?, userId: String, userFullName: String, participantId: String?, participantFullName: String?, content: String, expireIn: Int64) -> String {
+    
+    static func getSystemMessage(
+        actionName: String?,
+        userId: String,
+        userFullName: String,
+        participantId: String?,
+        participantFullName: String?,
+        content: String?,
+        expireIn: Int64
+    ) -> String {
         let action = actionName ?? ""
         let uFullName = userId == myUserId ? R.string.localizable.chat_message_you() : userFullName
         let pFullName = participantId == myUserId ? R.string.localizable.chat_message_you() : participantFullName ?? ""
@@ -20,7 +28,9 @@ extension SystemConversationAction {
         case SystemConversationAction.ROLE.rawValue:
             return R.string.localizable.chat_message_admin(pFullName)
         case SystemConversationAction.EXPIRE.rawValue:
-            if expireIn == 0 {
+            if content == nil {
+                return R.string.localizable.disappearing_message_change(uFullName)
+            } else if expireIn == 0 {
                 return R.string.localizable.disappearing_message_turn_off(uFullName)
             } else {
                 let title = DisappearingMessageDurationFormatter.string(from: expireIn)

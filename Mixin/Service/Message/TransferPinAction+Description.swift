@@ -4,7 +4,7 @@ extension TransferPinAction {
     
     static func pinMessage(item: ConversationItem) -> String {
         let category: String
-        if let localContent = TransferPinAction.pinMessageLocalContent(from: item.content) {
+        if let content = item.content, let localContent = TransferPinAction.pinMessageLocalContent(from: content) {
             if localContent.category.hasSuffix("_TEXT"), let content = localContent.content {
                 item.content = content
             }

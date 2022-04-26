@@ -785,6 +785,7 @@
 "disappearing_message_hint" = "When enabled, new messages sent and received in this chat will disappear after they have been seen, read the document to learn more.";
 "disappearing_message_turn_off" = "%@ disabled disappearing message";
 "disappearing_message_turn_on" = "%@ set disappearing message time to %@";
+"disappearing_message_change" = "%@ changed disappearing message settings";
 "disappearing_message_30seconds" = "30 seconds";
 "disappearing_message_10minutes" = "10 minutes";
 "disappearing_message_2hours" = "2 hours";

@@ -29,6 +29,10 @@ class SelectCountryViewController: UIViewController {
     private var sectionIndexTitles = [String]()
     private var filteredCountries = [Country]()
     
+    private var isSearching: Bool {
+        !searchBoxView.textField.text.isNilOrEmpty
+    }
+    
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return .portrait
     }
@@ -43,6 +47,7 @@ class SelectCountryViewController: UIViewController {
         tableView.dataSource = self
         tableView.selectRow(at: IndexPath(row: 0, section: 0), animated: false, scrollPosition: .none)
         searchBoxView.textField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
+        searchBoxView.textField.delegate = self
     }
 
     @IBAction func dismissAction(_ sender: Any) {
@@ -72,16 +77,12 @@ class SelectCountryViewController: UIViewController {
         return vc
     }
     
-    private var shouldShowFilteredResults: Bool {
-        !searchBoxView.textField.text.isNilOrEmpty
-    }
-    
 }
 
 extension SelectCountryViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if shouldShowFilteredResults {
+        if isSearching {
             return filteredCountries.count
         } else {
             if section < 2 {
@@ -95,7 +96,7 @@ extension SelectCountryViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ReuseId.cell)! as! CountryCell
         let country: Country
-        if shouldShowFilteredResults {
+        if isSearching {
             country = filteredCountries[indexPath.row]
         } else {
             if indexPath.section == SectionIndex.currentSelected {
@@ -112,11 +113,11 @@ extension SelectCountryViewController: UITableViewDataSource {
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return shouldShowFilteredResults ? 1 : sections.count + 2
+        return isSearching ? 1 : sections.count + 2
     }
     
     func sectionIndexTitles(for tableView: UITableView) -> [String]? {
-        return shouldShowFilteredResults ? nil : sectionIndexTitles
+        return isSearching ? nil : sectionIndexTitles
     }
     
     func tableView(_ tableView: UITableView, sectionForSectionIndexTitle title: String, at index: Int) -> Int {
@@ -128,7 +129,7 @@ extension SelectCountryViewController: UITableViewDataSource {
 extension SelectCountryViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard !shouldShowFilteredResults else {
+        guard !isSearching else {
             return nil
         }
         let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.header)! as! GeneralTableViewHeader
@@ -144,11 +145,11 @@ extension SelectCountryViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return shouldShowFilteredResults ? .leastNormalMagnitude : sectionHeaderHeight
+        return isSearching ? .leastNormalMagnitude : sectionHeaderHeight
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if shouldShowFilteredResults {
+        if isSearching {
             delegate?.selectCountryViewController(self, didSelectCountry: filteredCountries[indexPath.row])
         } else {
             if indexPath.section == 0 {
@@ -166,11 +167,8 @@ extension SelectCountryViewController: UITableViewDelegate {
 extension SelectCountryViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.text = nil
         textField.resignFirstResponder()
-        filteredCountries = []
-        tableView.reloadData()
         return true
     }
-
+    
 }

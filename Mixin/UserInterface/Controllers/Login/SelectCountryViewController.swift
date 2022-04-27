@@ -73,8 +73,7 @@ class SelectCountryViewController: UIViewController {
     }
     
     private var shouldShowFilteredResults: Bool {
-        let searchTextFieldIsEmpty = (searchBoxView.textField.text ?? "").isEmpty
-        return searchBoxView.textField.isFirstResponder && !searchTextFieldIsEmpty
+        !searchBoxView.textField.text.isNilOrEmpty
     }
     
 }

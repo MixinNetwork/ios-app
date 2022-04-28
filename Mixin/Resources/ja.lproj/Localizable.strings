@@ -1,4 +1,4 @@
-"app_name" = "Links";
+"app_name" = "Mixin";
 "strings_language" = "Japanese";
 
 // Common
@@ -76,24 +76,24 @@
 "date_format_week_date" = "yyyy年MM月d日（E）";
 
 // Search
-"search_placeholder_number" = "Links ID または電話番号を検索: ";
+"search_placeholder_number" = "Mixin ID または電話番号を検索: ";
 "search_placeholder_address" = "ラベル";
 "search_placeholder_asset" = "名前, 記号";
 "search_placeholder_currency" = "コード";
 "search_placeholder_home" = "連絡先, 資産, チャット";
-"search_placeholder_contact" = "Links ID, 名前, 電話番号";
-"search_placeholder_authorization" = "Links ID, 名前";
+"search_placeholder_contact" = "Mixin ID, 名前, 電話番号";
+"search_placeholder_authorization" = "Mixin ID, 名前";
 "search_related_messages_count" = " 関連メッセージ";
 "search_section_title_asset" = "資産";
 "search_section_title_user" = "連絡先";
 "search_section_title_conversation_by_name" = "チャット";
 "search_section_title_conversation_by_message" = "メッセージ";
-"search_result_prefix_id" = "Links ID: ";
+"search_result_prefix_id" = "Mixin ID: ";
 "search_result_prefix_phone" = "電話番号: ";
 
 // Toast
-"permission_denied_camera" = "設定からカメラの使用をLinksへ許可してください";
-"permission_denied_microphone" = "設定からマイクの使用をLinksへ許可してください";
+"permission_denied_camera" = "設定からカメラの使用をMixinへ許可してください";
+"permission_denied_microphone" = "設定からマイクの使用をMixinへ許可してください";
 "toast_copied" = "コピーしました";
 "toast_added" = "追加しました";
 "toast_saved" = "保存しました";
@@ -103,8 +103,8 @@
 "toast_changed" = "変更しました";
 "toast_blocked" = "ブロックしました";
 "toast_unable_to_share" = "この内容は共有できません";
-"permission_denied_photo_library" = "設定から画像ライブラリの使用をLinksへ許可してください";
-"permission_denied_network" = "設定からワイヤレスデータの使用をLinksへ許可してください";
+"permission_denied_photo_library" = "設定から画像ライブラリの使用をMixinへ許可してください";
+"permission_denied_network" = "設定からワイヤレスデータの使用をMixinへ許可してください";
 "biometry_suggestion" = "おすすめ %@";
 "clock_skew_title" = "システム時刻に問題があります";
 "clock_skew_tips" = "設定を変更してください。 設定 > 一般 > 日付と時刻 > 自動設定をオン";
@@ -116,7 +116,7 @@
 "log_category_pin_change" = "PINを変更";
 "log_category_phone_change" = "電話番号を変更";
 "log_pin_verification" = "認証";
-"log_pin_raw_transfer" = "Linksのアドレスへ送金する";
+"log_pin_raw_transfer" = "Mixinのアドレスへ送金する";
 "log_pin_user_transfer" = "ユーザーまたはロボに送金する";
 "log_pin_withdrawal" = "出金";
 "log_pin_add_address" = "アドレスを追加";
@@ -140,9 +140,9 @@
 "navigation_title_enter_mobile_number" = "電話番号を入力してください";
 "navigation_title_enter_verification_code" = "%@に送信された4桁のコードを入力してください";
 "navigation_title_enter_name" = "名前";
-"navigation_title_enter_emergency_contact_id" = "緊急連絡先のLinks IDを入力する";
-"navigation_title_enter_emergency_contact_verification_code" = "Links ID %@ に送信された4桁のコードを入力してください";
-"landing_welcome_title" = "Linksへようこそ !";
+"navigation_title_enter_emergency_contact_id" = "緊急連絡先のMixin IDを入力する";
+"navigation_title_enter_emergency_contact_verification_code" = "Mixin ID %@ に送信された4桁のコードを入力してください";
+"landing_welcome_title" = "Mixinへようこそ !";
 "text_intro" = "%@と%@に同意し次へ進む";
 "text_mobile_number_privacy" = "電話番号は一般に公開されません";
 "text_confirm_send_code" = "電話番号を確認してください %@";
@@ -164,8 +164,8 @@
 "init_signal" = "初期化しています...";
 "init_explain" = "ユーザー間のメッセージはエンドツーエンドの暗号化によって守られています";
 "toast_captcha_timeout" = "認証時間切れ";
-"desktop_login_confim" = "デスクトップ版Linksメッセンジャーからログインを確認してください";
-"desktop_upgrade" = "デスクトップ版Linksメッセンジャーを最新のバージョンにしてください";
+"desktop_login_confim" = "デスクトップ版Mixinメッセンジャーからログインを確認してください";
+"desktop_upgrade" = "デスクトップ版Mixinメッセンジャーを最新のバージョンにしてください";
 "abort_account_deletion_title" = "そのままログインし、アカウント削除をキャンセルします";
 "abort_account_deletion_hint" = "%@に紐付けられたアカウントを削除します。引き続きログインされる場合、アカウント削除のリクエストはキャンセルされます。";
 
@@ -176,20 +176,20 @@
 "contact_new_group_title" = "新しいグループを作成";
 "contact_new_group_summary" = "256人までのグループチャットを作成";
 "contact_add_title" = "友だちを追加";
-"contact_add_summary" = "Links IDまたは電話番号で追加する";
-"contact_qr_code_title" = "Links QRコード";
-"contact_qr_code_summary" = "友達のLinks QRコードをスキャンする";
+"contact_add_summary" = "Mixin IDまたは電話番号で追加する";
+"contact_qr_code_title" = "Mixin QRコード";
+"contact_qr_code_summary" = "友達のMixin QRコードをスキャンする";
 "contact_invite_title" = "招待する";
 "contact_invite_summary" = "招待コード： %@";
-"contact_invite" = "Links を使いませんか？ ここからダウンロード: https://getlinks.jp";
+"contact_invite" = "Mixin を使いませんか？ ここからダウンロード: https://mixin.one/messenger";
 "contact_profile_title" = "プロフィール";
 "contact_phone_contacts" = "連絡先";
 "contact_upload_mobile_contacts" = "連絡帳と同期";
 "contact_phone_contact_summary" = "スマホの連絡帳と同期して友だちを自動追加";
-"contact_my_identity_number" = "あなたのLinks ID: %@";
+"contact_my_identity_number" = "あなたのMixin ID: %@";
 "contact_error_compose_avatar" = "アバターの作成に失敗しました。別の画像を使ってください";
 "contact_phone_contact_invite" = "招待する";
-"contact_identity_number" = "Links ID: %@";
+"contact_identity_number" = "Mixin ID: %@";
 "contact_mobile" = "電話番号: %@";
 "contact_avatar_picking_fail" = "プロフィールを変更できませんでした";
 "contact_change_name_fail" = "名前を変更できませんでした";
@@ -198,7 +198,7 @@
 "contact_qr_code_save" = "画像を保存する";
 
 "button_title_search" = "検索";
-"placeholder_mixin_id_or_phone" = "Links ID, 電話番号";
+"placeholder_mixin_id_or_phone" = "Mixin ID, 電話番号";
 "placeholder_new_name" = "新しい名前";
 "navigation_title_add_people" = "追加する";
 "user_not_found" = "ユーザーが見つかりません";
@@ -223,7 +223,7 @@
 "app_pin_tips" = "よく使うロボを長押ししてドラッグすることでホーム画面から直接ロボにアクセスできます";
 
 // Home
-"home_start_messaging_guide" = "Linksをインストールした友達と会話をすることができます";
+"home_start_messaging_guide" = "Mixinをインストールした友達と会話をすることができます";
 "home_start_messaging" = "メッセージを送る";
 "home_cell_action_pin" = "固定ピンを付ける";
 "home_cell_action_unpin" = "固定ピンを外す";
@@ -243,7 +243,7 @@
 
 // Circle
 "circle_title" = "リスト";
-"circle_default_all" = "Links";
+"circle_default_all" = "Mixin";
 "circle_default_strangers" = "知り合いかも";
 "circle_default_bots" = "ロボ";
 "circle_default_contacts" = "連絡先";
@@ -338,7 +338,7 @@
 "chat_restore_title" = "iCloudからチャット履歴を復元する";
 "chat_restore_subtitle" = "後から復元できない可能性があります。 メッセージが復元された後にメディアファイルが続けて復元されます。";
 "chat_stranger_tip" = "送信者はあなたの連絡先に追加されていません";
-"chat_delete_tip" = "Linksを最新版にアップデートしている人はこのメッセージを見ることができなくなります";
+"chat_delete_tip" = "Mixinを最新版にアップデートしている人はこのメッセージを見ることができなくなります";
 "chat_badge_live" = "ライブ";
 "chat_shared_media" = "写真や動画";
 "chat_media_category_media" = "メディア";
@@ -413,7 +413,7 @@
 
 // Call
 "call_encryption_title" = "この通話はE2E暗号化で保護されています";
-"call_encryption_description" = "非参加者はこの通話を傍受できません、Linksチームも例外ではありません。";
+"call_encryption_description" = "非参加者はこの通話を傍受できません、Mixinチームも例外ではありません。";
 "call_hint_on_another_call" = "現在別の通話をしています。終了してから始めてください。";
 "call_state_outgoing" = "通話中...";
 "call_state_incoming" = "通話をかけています";
@@ -465,7 +465,7 @@
 "camera_save_video_success" = "動画が保存されました";
 "camera_save_video_failed" = "動画が保存できませんでした";
 "image_picker_title_albums" = "アルバム";
-"camera_qrcode_codes" = "Links QRコードがあるようです。 タップして確認する";
+"camera_qrcode_codes" = "Mixin QRコードがあるようです。 タップして確認する";
 
 // Group
 "group_create_placeholder" = "新規グループ名";
@@ -545,7 +545,7 @@
 "wallet_address_memo" = "メモ";
 "wallet_deposit_attention" = "最初は必ず少額で入金テストをしてください。";
 "wallet_deposit_attention_minimum" = "最初は必ず少額で入金テストをしてください。最初の入金は%@ %@ 以上に指定してください";
-"wallet_deposit_account_attention" = "注意: 最初は必ず少額で入金テストをしてください。 Links Messangerに%@が正しく入金されるためにはメモとアドレスが必要です。";
+"wallet_deposit_account_attention" = "注意: 最初は必ず少額で入金テストをしてください。 Mixin Messangerに%@が正しく入金されるためにはメモとアドレスが必要です。";
 "wallet_menu_show_hidden_assets" = "非表示の資産";
 "wallet_menu_show_asset" = "資産を表示する";
 "wallet_menu_hide_asset" = "資産を非表示にする";
@@ -679,7 +679,7 @@
 // Url
 "url_invalid_payment" = "支払いが無効です";
 "url_unrecognized" = "リンクの認識に失敗しました";
-"url_unrecognized_tip" = "%@を認識できない場合は、Linksを最新版にアップデートするか、もしくは運営リンクを確認してください。";
+"url_unrecognized_tip" = "%@を認識できない場合は、Mixinを最新版にアップデートするか、もしくは運営リンクを確認してください。";
 
 // Multisig
 "multisig_by_pin" = "PINを使ってマルチシグを行う";
@@ -698,9 +698,9 @@
 // QRCode
 "qr_code_not_found" = "QRコードが見つかりません";
 "myqrcode_title" = "マイQRコード";
-"myqrcode_prompt" = "QRコードをスキャンしてLinksに追加";
+"myqrcode_prompt" = "QRコードをスキャンしてMixinに追加";
 "transfer_qrcode_prompt" = "QRコードをスキャン";
-"not_mixin_qr_code" = "Links QRコードではありません";
+"not_mixin_qr_code" = "Mixin QRコードではありません";
 "group_qr_code" = "グループQRコード";
 "group_qr_code_prompt" = "QRコードをスキャンしてこのグループに参加";
 "auth_permission_profile" = "プロフィール";
@@ -752,7 +752,7 @@
 "profile_change_number_succeeded" = "電話番号を変更しました";
 "profile_change_number_verify_pin" = "PINを認証する";
 "profile_change_number_new_number" = "新しい電話番号を入力する";
-"profile_mixin_id" = "Links ID: %@";
+"profile_mixin_id" = "Mixin ID: %@";
 "profile_reputation_score" = "評判スコア: %@";
 "profile_edit_name" = "名前を変更";
 "profile_edit_biography" = "自己紹介文を変更";
@@ -778,7 +778,7 @@
 "profile_block_hint" = "あなたにブロックされた相手は電話をかけたりメッセージを送ることができなくなります";
 "profile_report_hint" = "報告してブロックしますか";
 "profile_report_success" = "報告しました。";
-"profile_join_in" = "%@からLinksを利用しています";
+"profile_join_in" = "%@からMixinを利用しています";
 "profile_my_shared_apps" = "おすすめロボをプロフィールでシェア";
 "profile_share_app_hint" = "ロボを共有するには連絡先に追加してください";
 "profile_shared_app_of_user" = "%@のシェアロボ";
@@ -794,13 +794,13 @@
 "emergency_remove" = "緊急連絡先を削除する";
 "emergency_tip_remove" = "本当に緊急連絡先を削除しますか?";
 "emergency_tip_before" = "緊急連絡先は、紛失等の理由でデバイスへのアクセスが出来なくなった場合、ログインする方法となります。";
-"emergency_tip_after" = "登録した電話番号が使用できなくなった場合は、緊急連絡先として登録した友だちに連絡し、Links IDと認証コードを取得してください。詳しくは緊急連絡先についてを確認してください。";
+"emergency_tip_after" = "登録した電話番号が使用できなくなった場合は、緊急連絡先として登録した友だちに連絡し、Mixin IDと認証コードを取得してください。詳しくは緊急連絡先についてを確認してください。";
 "emergency_tip_link" = "緊急連絡先";
 "emergency_tip_pin" = "注意: PINは緊急連絡先では復元できません";
 "emergency_pin_protection_hint" = "緊急連絡先はPINによって保護されています";
 "emergency_change_number_tip" = "電話番号を今すぐ変更しますか?";
 "enable_emergency_contact" = "緊急連絡先を有効化する";
-"emergency_confirm" = "Links ID%@を緊急連絡先に設定しますか? 設定するには第三者があなたを連絡先に追加していることを確かめてください";
+"emergency_confirm" = "Mixin ID%@を緊急連絡先に設定しますか? 設定するには第三者があなたを連絡先に追加していることを確かめてください";
 
 // Database
 "database_upgrade" = "データベースをアップグレードする";
@@ -809,8 +809,8 @@
 
 // App
 "app_update_button" = "アップデート";
-"app_update_title" = "Linksをアップデート";
-"app_update_short_tips" = "Linksをアップデートしてください";
+"app_update_title" = "Mixinをアップデート";
+"app_update_short_tips" = "Mixinをアップデートしてください";
 "app_update_tips" = "(%@) \"Update\" AppStoreで新しいバージョンを入手してください。";
 
 // Setting
@@ -824,12 +824,12 @@
 "setting_blocked_user_count_none" = "なし";
 "setting_logs" = "ログ";
 "setting_logs_empty" = "ログがありません";
-"setting_about" = "Linksについて";
+"setting_about" = "Mixinについて";
 "setting_blocked" = "ブロック中のユーザー";
 "setting_blocked_empty" = "ブロックしているユーザーはいません";
 "setting_blocked_summary" = "ブロックされたユーザーはあなたを追加したりチャットに招待することができません";
 "setting_conversation" = "受信制限";
-"setting_desktop" = "Linksメッセンジャーデスクトップ版";
+"setting_desktop" = "Mixinメッセンジャーデスクトップ版";
 "setting_desktop_last_active" = "最後のアクティビティー %@";
 "setting_desktop_desktop_on" = "デスクトップ版からログインしました";
 "setting_desktop_log_out" = "デスクトップ版からログアウト";
@@ -874,7 +874,7 @@
 "setting_backup_monthly" = "月";
 "setting_backup_off" = "オフ";
 "setting_backup_disable_tips" = "iCloudにサインインしてバックアップを行う 設定 > iCloud > iCloudドライブをオンにする.";
-"setting_backup_tips" = "iCloudにチャット履歴をバックアップします。 iPhoneを紛失または機種変更した場合にLinksメッセンジャーを再インストールしてチャット履歴を復元できます。バックアップしたメッセージがiCloudに存在する間はLinksメッセンジャーのエンドツーエンド暗号によって保護されていません。";
+"setting_backup_tips" = "iCloudにチャット履歴をバックアップします。 iPhoneを紛失または機種変更した場合にMixinメッセンジャーを再インストールしてチャット履歴を復元できます。バックアップしたメッセージがiCloudに存在する間はMixinメッセンジャーのエンドツーエンド暗号によって保護されていません。";
 "setting_backup_auto_tips" = "Wi-Fiの使用時に自動でiCloudにバックアップする";
 "setting_backup_last" = "最後に行ったバックアップ %@, 合計サイズ %@.";
 "setting_backup_preparing" = "準備中...";
@@ -889,8 +889,8 @@
 "setting_phone_number_title" = "電話番号からの追加";
 "setting_contacts_title" = "連絡帳設定";
 "setting_contacts_delete" = "同期済みの連絡先を削除";
-"setting_contacts_delete_confirm" = "Linksのサーバーから連絡先を削除します";
-"setting_contacts_tips" = "あなたの連絡帳をLinksと同期し、他のLinksユーザーと連携します。";
+"setting_contacts_delete_confirm" = "Mixinのサーバーから連絡先を削除します";
+"setting_contacts_tips" = "あなたの連絡帳をMixinと同期し、他のMixinユーザーと連携します。";
 "setting_contacts_upload" = "連絡先をアップロードする";
 "setting_permissions" = "承認済みリスト";
 "setting_permissions_date" = "承認済み: %@, 最後のアクセス: %@";
@@ -906,11 +906,11 @@
 "setting_pin_hint" = "PINコードを忘れた場合、ウォレットにアクセスすることができなくなるため、必ず覚えておいてください。PINコードは、分散型キー導出プロトコルであるThrottled Identity Protocolから作成されています。詳しくはドキュメントをご覧ください。";
 "setting_feedback" = "フィードバック";
 "setting_share_this_app" = "このロボを共有する";
-"setting_share_this_app_content" = "さあ、Links内でチャットをしてみましょう！Linksチャットはシンプルで安全、そして簡単に使うことができます。Linksはビットコインやイーサリアムのような複数の仮想通貨にも対応しています。https://getlinks.jp から Links をダウンロードし、%@ を検索して私を追加してください。";
+"setting_share_this_app_content" = "さあ、Mixin内でチャットをしてみましょう！Mixinチャットはシンプルで安全、そして簡単に使うことができます。Mixinはビットコインやイーサリアムのような複数の仮想通貨にも対応しています。https://mixin.one/messenger から Mixin をダウンロードし、%@ を検索して私を追加してください。";
 "setting_screen_lock_title" = "画面ロック";
 "setting_screen_lock_enable_biometric_title" = "%@生体認証";
 "setting_screen_lock_enable_biometric_timeout" = "画面ロックまでの時間";
-"setting_screen_lock_enable_biometric_tip" = "Linksをアンロックするには%@が必要になります。Linksがロックされている場合でも、通知されたメッセージへの返信や電話の応答は可能です。";
+"setting_screen_lock_enable_biometric_tip" = "Mixinをアンロックするには%@が必要になります。Mixinがロックされている場合でも、通知されたメッセージへの返信や電話の応答は可能です。";
 "setting_screen_lock_timeout_immediately" = "すぐに";
 "setting_screen_lock_timeout_one_minute" = "１分後";
 "setting_screen_lock_timeout_minutes" = "%@ 分後";
@@ -926,15 +926,15 @@
 "setting_delete_account_hint_message" = "ローカルメッセージとiCloudにバックアップされた内容は削除されません";
 "setting_delete_account_hint_transaction" = "トランザクション履歴を削除することはできません";
 "setting_delete_account_view_wallet" = "ウォレットを確認";
-"setting_delete_account_assets_hint" = "Linksウォレット内に仮想通貨が残っています。アカウントを削除すると、仮想通貨を引き出すことができませんが、よろしいでしょうか？";
+"setting_delete_account_assets_hint" = "Mixinウォレット内に仮想通貨が残っています。アカウントを削除すると、仮想通貨を引き出すことができませんが、よろしいでしょうか？";
 "setting_delete_account_confirm_title" = "PINコードを入力してください";
 "setting_delete_account_confirm_hint" = "%@と紐付けられたプロフィールとアカウント情報が削除されます。詳細はドキュメントをご覧ください。";
 "setting_delete_account_verify_pin" = "PINコードを入力してください";
 "setting_delete_account_send_code" = "%@へ4桁のコードを送信します";
 
 // ScreenLock
-"screen_lock_locked" = "Linksはロックされています";
-"screen_lock_unlock_tip" = "Linksをアンロックするために%@を使用してください";
+"screen_lock_locked" = "Mixinはロックされています";
+"screen_lock_unlock_tip" = "Mixinをアンロックするために%@を使用してください";
 "screen_lock_unlock_button_title" = "%@を使用する";
 
 // About
@@ -948,10 +948,10 @@
 "about_diagnose" = "診断";
 
 // Diagnose
-"diagnose_warning" = "⚠️Linksチームの指示のもと、これらの機能を使用してください。";
+"diagnose_warning" = "⚠️Mixinチームの指示のもと、これらの機能を使用してください。";
 "diagnose_database_access" = "データベースへの接続";
 
-"report_title"="Linksの開発者へ会話記録を送信しますか?";
+"report_title"="Mixinの開発者へ会話記録を送信しますか?";
 "report_button"="開発者に送信";
 "report_share"="記録ファイルを共有する";
 "report_copy_user_id"="ユーザーIDをコピー";
@@ -1025,7 +1025,7 @@
 "error_forbidden" = "アクセス拒否";
 "error_no_connection" = "ネットワークに接続されていません";
 "error_network_connection_lost" = "ネットワークが切断されました。確認してから再度接続してください";
-"error_server_5xx" = "Linksのサーバーにエラーが発生しています";
+"error_server_5xx" = "Mixinのサーバーにエラーが発生しています";
 "error_server_data_error" = "データ解析エラー";
 "error_not_found" = "見つかりませんでした";
 "error_too_many_requests" = "アクセス回数が上限に達しました";
@@ -1065,6 +1065,6 @@
 "error_blockchian_not_in_sync" = "ブロックチェーンが同期していないため再度試してください";
 "error_malformed_address" = "正しいアドレス形式で入力してください";
 "error_malformed_address_detailed" = "無効なアドレスです。%@の有効なアドレスでもう一度試してください。";
-"error_malformed_address_eos" = "無効なアドレスです。LinksはEOSアドレスへの引き出しに対応していません。";
+"error_malformed_address_eos" = "無効なアドレスです。MixinはEOSアドレスへの引き出しに対応していません。";
 "error_network_task_failed" = "ネットワーク接続に失敗しました。ネットワーク接続状態を確認した後にもう一度試してください。";
 

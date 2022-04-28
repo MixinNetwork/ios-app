@@ -1,5 +1,5 @@
-"CFBundleDisplayName" = "Links";
-"NSContactsUsageDescription" = "連絡先をLinksにアップロードすることで、友だちと簡単に繋がる事ができます。";
+"CFBundleDisplayName" = "Mixin";
+"NSContactsUsageDescription" = "連絡先をMixinにアップロードすることで、友だちと簡単に繋がる事ができます。";
 "NSCameraUsageDescription" = "カメラは、プロフィール画像の設定、写真の共有に使用されます。";
 "NSPhotoLibraryUsageDescription" = "アルバムは、プロフィール画像の設定、画像の共有に使用されます。";
 "NSMicrophoneUsageDescription" = "マイクは、通話やボイスメッセージに使用されます。";

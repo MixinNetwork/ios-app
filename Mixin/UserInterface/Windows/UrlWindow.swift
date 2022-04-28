@@ -436,7 +436,7 @@ class UrlWindow {
         guard ["bitcoin:", "bitcoincash:", "bitcoinsv:", "ethereum:", "litecoin:", "dash:", "ripple:", "zcash:", "horizen:", "monero:", "binancecoin:", "stellar:", "dogecoin:", "mobilecoin:"].contains(where: url.lowercased().hasPrefix) else {
             return false
         }
-        guard let components = URLComponents(string: url.lowercased()) else {
+        guard let components = URLComponents(string: url) else {
             return false
         }
         return checkPayUrl(url: url, query: components.getKeyVals())
@@ -447,7 +447,7 @@ class UrlWindow {
             UIApplication.homeNavigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil), animated: true)
             return true
         }
-        guard let recipientId = query["recipient"], let assetId = query["asset"], let amount = query["amount"] else {
+        guard let recipientId = query["recipient"]?.lowercased(), let assetId = query["asset"]?.lowercased(), let amount = query["amount"] else {
             Logger.general.error(category: "PayURL", message: "Invalid URL: \(url)")
             showAutoHiddenHud(style: .error, text: R.string.localizable.url_invalid_payment())
             return true
@@ -457,8 +457,13 @@ class UrlWindow {
             showAutoHiddenHud(style: .error, text: R.string.localizable.url_invalid_payment())
             return true
         }
-
-        let traceId = query["trace"].uuidString ?? UUID().uuidString.lowercased()
+        
+        let traceId: String
+        if let id = query["trace"], UUID(uuidString: id) != nil {
+            traceId = id.lowercased()
+        } else {
+            traceId = UUID().uuidString.lowercased()
+        }
         var memo = query["memo"]
         if let urlDecodeMemo = memo?.removingPercentEncoding {
             memo = urlDecodeMemo

@@ -33,19 +33,19 @@
 	SUBQUERY( extensionItems, $extensionItem,
 	(
 		(
-			SUBQUERY( $extensionItem.attachments, $attachment, ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.movie&quot; ).@count &gt;= 1
+			SUBQUERY( $extensionItem.attachments, $attachment, ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.movie" ).@count &gt;= 1
 			OR
-			SUBQUERY( $extensionItem.attachments, $attachment, ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.image&quot; ).@count &gt;= 1
+			SUBQUERY( $extensionItem.attachments, $attachment, ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.image" ).@count &gt;= 1
 			OR
-			SUBQUERY( $extensionItem.attachments, $attachment, ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.plain-text&quot; ).@count &gt;= 1
+			SUBQUERY( $extensionItem.attachments, $attachment, ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.plain-text" ).@count &gt;= 1
 			OR
-			SUBQUERY( $extensionItem.attachments, $attachment, ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.data&quot; ).@count &gt;= 1
+			SUBQUERY( $extensionItem.attachments, $attachment, ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.data" ).@count &gt;= 1
 		)
 		AND
 		(
-			SUBQUERY( $extensionItem.attachments, $attachment, ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.image&quot;).@count &lt;= 9
+			SUBQUERY( $extensionItem.attachments, $attachment, ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.image").@count &lt;= 9
 			AND
-			SUBQUERY( $extensionItem.attachments, $attachment, ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.movie&quot;).@count &lt;= 1
+			SUBQUERY( $extensionItem.attachments, $attachment, ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.movie").@count &lt;= 1
 		)
 	) ).@count &gt; 0
 )</string>

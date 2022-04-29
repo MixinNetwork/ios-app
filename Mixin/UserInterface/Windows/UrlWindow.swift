@@ -436,7 +436,7 @@ class UrlWindow {
         guard ["bitcoin:", "bitcoincash:", "bitcoinsv:", "ethereum:", "litecoin:", "dash:", "ripple:", "zcash:", "horizen:", "monero:", "binancecoin:", "stellar:", "dogecoin:", "mobilecoin:"].contains(where: url.lowercased().hasPrefix) else {
             return false
         }
-        guard let components = URLComponents(string: url.lowercased()) else {
+        guard let components = URLComponents(string: url) else {
             return false
         }
         return checkPayUrl(url: url, query: components.getKeyVals())
@@ -447,7 +447,7 @@ class UrlWindow {
             UIApplication.homeNavigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil), animated: true)
             return true
         }
-        guard let recipientId = query["recipient"], let assetId = query["asset"], let amount = query["amount"] else {
+        guard let recipientId = query["recipient"]?.lowercased(), let assetId = query["asset"]?.lowercased(), let amount = query["amount"] else {
             Logger.general.error(category: "PayURL", message: "Invalid URL: \(url)")
             showAutoHiddenHud(style: .error, text: R.string.localizable.url_invalid_payment())
             return true

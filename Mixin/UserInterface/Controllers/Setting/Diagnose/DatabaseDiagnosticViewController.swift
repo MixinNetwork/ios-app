@@ -62,7 +62,11 @@ class DatabaseDiagnosticViewController: UIViewController {
                 output = "\(error)"
             }
             DispatchQueue.main.sync {
-                self.outputTextView.text = output
+                if output.isEmpty {
+                    self.outputTextView.text = "(Empty)"
+                } else {
+                    self.outputTextView.text = output
+                }
             }
         }
     }

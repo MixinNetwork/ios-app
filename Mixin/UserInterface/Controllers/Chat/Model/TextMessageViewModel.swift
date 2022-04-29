@@ -206,7 +206,7 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
         // Calculate content size
         let additionalTrailingSize: CGSize = {
             let statusImageWidth = showStatusImage
-                ? ImageSet.MessageStatus.size.width
+                ? StatusImage.size.width
                 : 0
             let forwarderIconWidth = style.contains(.forwardedByBot)
                 ? Self.forwarderIconRightMargin + R.image.conversation.ic_forwarder_bot()!.size.width

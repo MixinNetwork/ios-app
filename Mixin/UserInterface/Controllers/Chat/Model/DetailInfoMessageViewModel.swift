@@ -19,7 +19,7 @@ class DetailInfoMessageViewModel: MessageViewModel {
         Margin(leading: 16, trailing: 10, top: 0, bottom: 8)
     }
     
-    var statusImage: UIImage?
+    var statusImage: StatusImage?
     var statusTintColor: UIColor = .accessoryText
     var fullnameFrame = CGRect(x: 24, y: 1, width: 24, height: 23)
     var fullnameColor = UIColor.text
@@ -88,7 +88,7 @@ class DetailInfoMessageViewModel: MessageViewModel {
                                        y: backgroundImageFrame.maxY)
         }
         if showStatusImage {
-            statusFrame.size = ImageSet.MessageStatus.size
+            statusFrame.size = StatusImage.size
         } else {
             statusFrame.size = .zero
         }
@@ -184,21 +184,21 @@ class DetailInfoMessageViewModel: MessageViewModel {
         if showStatusImage {
             switch status {
             case .SENDING, .FAILED, .UNKNOWN:
-                statusImage = ImageSet.MessageStatus.pending
+                statusImage = .pending
                 statusTintColor = statusNormalTintColor
             case .SENT:
-                statusImage = ImageSet.MessageStatus.checkmark
+                statusImage = .checkmark
                 statusTintColor = statusNormalTintColor
             case .DELIVERED:
-                statusImage = ImageSet.MessageStatus.doubleCheckmark
+                statusImage = .doubleCheckmark
                 statusTintColor = statusNormalTintColor
             case .READ:
-                statusImage = ImageSet.MessageStatus.doubleCheckmark
+                statusImage = .doubleCheckmark
                 statusTintColor = statusHighlightTintColor
             }
         } else {
             if status == .FAILED {
-                statusImage = ImageSet.MessageStatus.pending
+                statusImage = .pending
                 statusTintColor = statusNormalTintColor
             } else {
                 statusImage = nil

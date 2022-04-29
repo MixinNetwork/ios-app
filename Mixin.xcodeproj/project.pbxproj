@@ -672,6 +672,8 @@
 		94B8D189266E41D300F43CBB /* DatabaseDiagnosticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B8D187266E41D300F43CBB /* DatabaseDiagnosticViewController.swift */; };
 		94B8D18A266E41D300F43CBB /* DatabaseDiagnosticView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B8D188266E41D300F43CBB /* DatabaseDiagnosticView.xib */; };
 		94BE548E25D96932006575E2 /* OggOpusReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BE548D25D96932006575E2 /* OggOpusReader.swift */; };
+		94BE7859281BBD2A00EDC789 /* ClearHttpJobsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BE7857281BBD2A00EDC789 /* ClearHttpJobsViewController.swift */; };
+		94BE785A281BBD2A00EDC789 /* ClearHttpJobsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94BE7858281BBD2A00EDC789 /* ClearHttpJobsView.xib */; };
 		94C6AA09280D35990011AB02 /* AttachmentDiagnosticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C6AA08280D35990011AB02 /* AttachmentDiagnosticViewController.swift */; };
 		94C6AA0B280D36940011AB02 /* AttachmentDiagnosticView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94C6AA0A280D36940011AB02 /* AttachmentDiagnosticView.xib */; };
 		94CEEAC3277E06A9001E7A24 /* Calendar+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CEEAC1277E06A9001E7A24 /* Calendar+Convenience.swift */; };
@@ -1650,6 +1652,8 @@
 		94B8D187266E41D300F43CBB /* DatabaseDiagnosticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseDiagnosticViewController.swift; sourceTree = "<group>"; };
 		94B8D188266E41D300F43CBB /* DatabaseDiagnosticView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DatabaseDiagnosticView.xib; sourceTree = "<group>"; };
 		94BE548D25D96932006575E2 /* OggOpusReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OggOpusReader.swift; sourceTree = "<group>"; };
+		94BE7857281BBD2A00EDC789 /* ClearHttpJobsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClearHttpJobsViewController.swift; sourceTree = "<group>"; };
+		94BE7858281BBD2A00EDC789 /* ClearHttpJobsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClearHttpJobsView.xib; sourceTree = "<group>"; };
 		94C6AA08280D35990011AB02 /* AttachmentDiagnosticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentDiagnosticViewController.swift; sourceTree = "<group>"; };
 		94C6AA0A280D36940011AB02 /* AttachmentDiagnosticView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AttachmentDiagnosticView.xib; sourceTree = "<group>"; };
 		94CEEAC1277E06A9001E7A24 /* Calendar+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Calendar+Convenience.swift"; sourceTree = "<group>"; };
@@ -2717,6 +2721,8 @@
 				94B8D187266E41D300F43CBB /* DatabaseDiagnosticViewController.swift */,
 				94C6AA0A280D36940011AB02 /* AttachmentDiagnosticView.xib */,
 				94C6AA08280D35990011AB02 /* AttachmentDiagnosticViewController.swift */,
+				94BE7858281BBD2A00EDC789 /* ClearHttpJobsView.xib */,
+				94BE7857281BBD2A00EDC789 /* ClearHttpJobsViewController.swift */,
 			);
 			path = Diagnose;
 			sourceTree = "<group>";
@@ -3976,6 +3982,7 @@
 				7BCA2E302452CBF6005BD2E4 /* AboutTableHeaderView.xib in Resources */,
 				DF8CECE71FC317BF00E40064 /* PayWindow.xib in Resources */,
 				7C6132B827953B4F002777EE /* DeleteAccountAbortWindow.xib in Resources */,
+				94BE785A281BBD2A00EDC789 /* ClearHttpJobsView.xib in Resources */,
 				DFC2646E24E585CE00BF954D /* DuplicateConfirmationWindow.xib in Resources */,
 				DF8CECFD1FC58DBD00E40064 /* InfoPlist.strings in Resources */,
 				DF2081B22005FF3500B87DB0 /* Camera.storyboard in Resources */,
@@ -4436,6 +4443,7 @@
 				DF0BD35323A8D4B200B44CF6 /* DynamicTextSizeExtension.swift in Sources */,
 				7B04FABA22684F51004F8F04 /* SearchResult.swift in Sources */,
 				DF46B4071FA9E78A00243A8B /* PhoneContactCell.swift in Sources */,
+				94BE7859281BBD2A00EDC789 /* ClearHttpJobsViewController.swift in Sources */,
 				7BF3F67A22AE4733007B6C77 /* IdentityNumberLabel.swift in Sources */,
 				7C66F02B268A0431006D8462 /* AppCell.swift in Sources */,
 				7B97BA0E2019F1A90013D58F /* StickerPreviewCell.swift in Sources */,

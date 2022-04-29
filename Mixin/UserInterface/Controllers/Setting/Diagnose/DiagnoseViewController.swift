@@ -13,6 +13,9 @@ class DiagnoseViewController: SettingsTableViewController {
         SettingsSection(rows: [
             SettingsRow(title: R.string.localizable.diagnose_attachment(), accessory: .disclosure),
         ]),
+        SettingsSection(rows: [
+            SettingsRow(title: "Clear Http Jobs", accessory: .disclosure),
+        ]),
     ])
     
     override func viewDidLoad() {
@@ -48,6 +51,10 @@ extension DiagnoseViewController: UITableViewDelegate {
         case (2, 0):
             let container = ContainerViewController.instance(viewController: AttachmentDiagnosticViewController(),
                                                              title: R.string.localizable.diagnose_attachment())
+            navigationController?.pushViewController(container, animated: true)
+        case (3, 0):
+            let container = ContainerViewController.instance(viewController: ClearHttpJobsViewController(),
+                                                             title: "Clear Http Jobs")
             navigationController?.pushViewController(container, animated: true)
         default:
             break

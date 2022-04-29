@@ -457,13 +457,8 @@ class UrlWindow {
             showAutoHiddenHud(style: .error, text: R.string.localizable.url_invalid_payment())
             return true
         }
-        
-        let traceId: String
-        if let id = query["trace"], UUID(uuidString: id) != nil {
-            traceId = id.lowercased()
-        } else {
-            traceId = UUID().uuidString.lowercased()
-        }
+
+        let traceId = query["trace"].uuidString ?? UUID().uuidString.lowercased()
         var memo = query["memo"]
         if let urlDecodeMemo = memo?.removingPercentEncoding {
             memo = urlDecodeMemo

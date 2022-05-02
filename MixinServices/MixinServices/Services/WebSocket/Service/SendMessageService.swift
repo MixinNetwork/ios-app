@@ -271,7 +271,8 @@ public class SendMessageService: MixinService {
     public func sendAckMessage(messageId: String, status: MessageStatus) {
         let blazeMessage = BlazeMessage(ackBlazeMessage: messageId, status: status.rawValue)
         let action: JobAction = status == .DELIVERED ? .SEND_DELIVERED_ACK_MESSAGE : .SEND_ACK_MESSAGE
-        let job = Job(jobId: blazeMessage.id, action: action, blazeMessage: blazeMessage)
+        let jobId = (blazeMessage.id + status.rawValue + action.rawValue).uuidDigest()
+        let job = Job(jobId: jobId, action: action, blazeMessage: blazeMessage)
         UserDatabase.current.save(job)
         SendMessageService.shared.processMessages()
     }

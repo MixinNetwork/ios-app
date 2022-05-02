@@ -693,6 +693,7 @@ extension CallService {
             return
         }
         if let call = call as? OutgoingPeerCall {
+            adapter.reportCall(call, callerNameUpdatedWith: call.localizedName)
             call.sendOffer(completion: completion)
             showCallingInterface(call: call, animated: true)
         } else if let call = call as? GroupCall {

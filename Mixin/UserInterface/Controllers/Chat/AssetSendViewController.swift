@@ -306,7 +306,8 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
                         Logger.general.error(category: "AssetSendViewController", message: "Unable to write the file: \(error)")
                         fallthrough
                     }
-                    message.thumbImage = image.blurHash()
+                    let thumbnailSize = CGSize(width: 48, height: 48)
+                    message.thumbImage = image.imageByScaling(to: thumbnailSize)?.blurHash() ?? image.blurHash()
                     message.mediaSize = FileManager.default.fileSize(targetUrl.path)
                     message.mediaWidth = Int(image.size.width)
                     message.mediaHeight = Int(image.size.height)

@@ -56,6 +56,7 @@
 "action_change_settings" = "Change Settings";
 "action_open" = "Open";
 "action_settings" = "Settings";
+"action_phone_call" = "Phone Call";
 "menu_delete" = "Delete";
 "menu_edit" = "Edit";
 "menu_report" = "Report";

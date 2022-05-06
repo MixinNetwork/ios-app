@@ -27,7 +27,7 @@ class GalleryTransitionFromMessageCellView: GalleryTransitionView {
         accessoryContainerView.frame = bounds
         timeLabel.text = viewModel.time
         timeLabel.frame = cell.contentView.convert(viewModel.timeFrame, to: cell.contentImageWrapperView)
-        statusImageView.image = viewModel.statusImage
+        statusImageView.image = viewModel.statusImage?.image(traitCollection: traitCollection)
         statusImageView.tintColor = viewModel.statusTintColor
         statusImageView.frame = cell.contentView.convert(viewModel.statusFrame, to: cell.contentImageWrapperView)
         loadMask(viewModel: viewModel)
@@ -88,7 +88,7 @@ class GalleryTransitionFromMessageCellView: GalleryTransitionView {
         accessoryContainerView.bounds.size = cell.contentImageWrapperView.bounds.size
         timeLabel.text = viewModel.time
         timeLabel.frame = cell.contentView.convert(viewModel.timeFrame, to: cell.contentImageWrapperView)
-        statusImageView.image = viewModel.statusImage
+        statusImageView.image = viewModel.statusImage?.image(traitCollection: traitCollection)
         statusImageView.tintColor = viewModel.statusTintColor
         statusImageView.frame = cell.contentView.convert(viewModel.statusFrame, to: cell.contentImageWrapperView)
         

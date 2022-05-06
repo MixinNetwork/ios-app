@@ -1,5 +1,6 @@
 import UIKit
 import MixinServices
+import SDWebImage
 
 class MessageViewModel: CustomDebugStringConvertible {
     
@@ -151,14 +152,35 @@ extension MessageViewModel {
         }
     }
     
-    enum ImageSet {
+    enum StatusImage {
         
-        enum MessageStatus {
-            static let size = CGSize(width: doubleCheckmark.size.width,
-                                     height: pending.size.height)
-            static let pending = R.image.ic_chat_time()!.withRenderingMode(.alwaysTemplate)
-            static let checkmark = R.image.ic_chat_checkmark()!.withRenderingMode(.alwaysTemplate)
-            static let doubleCheckmark = R.image.ic_chat_double_checkmark()!.withRenderingMode(.alwaysTemplate)
+        case pending
+        case checkmark
+        case doubleCheckmark
+        
+        static let size = CGSize(width: 12, height: 9)
+        
+        private static let pending2xImage = SDAnimatedImage(named: "ic_time_animation@2x.gif")!
+        private static let pending3xImage = SDAnimatedImage(named: "ic_time_animation@3x.gif")!
+        private static let pendingDark2xImage = SDAnimatedImage(named: "ic_time_animation_dark@2x.gif")!
+        private static let pendingDark3xImage = SDAnimatedImage(named: "ic_time_animation_dark@3x.gif")!
+        private static let checkmarkImage = R.image.ic_chat_checkmark()!.withRenderingMode(.alwaysTemplate)
+        private static let doubleCheckmarkImage = R.image.ic_chat_double_checkmark()!.withRenderingMode(.alwaysTemplate)
+        
+        func image(traitCollection: UITraitCollection) -> UIImage {
+            switch self {
+            case .pending:
+                let scale = UIScreen.main.scale
+                if traitCollection.userInterfaceStyle == .light {
+                    return scale == 2 ? StatusImage.pending2xImage : StatusImage.pending3xImage
+                } else {
+                    return scale == 2 ? StatusImage.pendingDark2xImage : StatusImage.pendingDark3xImage
+                }
+            case .checkmark:
+                return StatusImage.checkmarkImage
+            case .doubleCheckmark:
+                return StatusImage.doubleCheckmarkImage
+            }
         }
         
     }

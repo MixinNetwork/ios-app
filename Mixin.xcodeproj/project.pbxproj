@@ -1660,6 +1660,9 @@
 		94BE548D25D96932006575E2 /* OggOpusReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OggOpusReader.swift; sourceTree = "<group>"; };
 		94C6AA08280D35990011AB02 /* AttachmentDiagnosticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentDiagnosticViewController.swift; sourceTree = "<group>"; };
 		94C6AA0A280D36940011AB02 /* AttachmentDiagnosticView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AttachmentDiagnosticView.xib; sourceTree = "<group>"; };
+		94C6FE2928265ED80013DD54 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
+		94C6FE2A28265ED80013DD54 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		94C6FE2B28265ED80013DD54 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		94CEEAC1277E06A9001E7A24 /* Calendar+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Calendar+Convenience.swift"; sourceTree = "<group>"; };
 		94CEEAC2277E06A9001E7A24 /* Date+Holiday.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Date+Holiday.swift"; sourceTree = "<group>"; };
 		94D1E28525EA36B100B58B82 /* CacheableAssetLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheableAssetLoader.swift; sourceTree = "<group>"; };
@@ -3831,6 +3834,7 @@
 				en,
 				Base,
 				"zh-Hans",
+				ja,
 			);
 			mainGroup = 277FF6F61F909A1200DBB2EB;
 			productRefGroup = 277FF7001F909A1200DBB2EB /* Products */;
@@ -5151,6 +5155,7 @@
 			children = (
 				7BD387FD24DC66F900A3035C /* en */,
 				7BD387FF24DC66F900A3035C /* zh-Hans */,
+				94C6FE2B28265ED80013DD54 /* ja */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -5160,6 +5165,7 @@
 			children = (
 				DF8CECFE1FC58DBD00E40064 /* en */,
 				DF8CED001FC58DC000E40064 /* zh-Hans */,
+				94C6FE2A28265ED80013DD54 /* ja */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -5177,6 +5183,7 @@
 			children = (
 				DFE864EC24229EFB009B1833 /* en */,
 				DFE864EE24229F06009B1833 /* zh-Hans */,
+				94C6FE2928265ED80013DD54 /* ja */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";

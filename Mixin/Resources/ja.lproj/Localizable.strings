@@ -67,6 +67,7 @@
 "all_photos" = "すべての画像";
 "title_help" = "ヘルプ";
 "e2e_encrypted" = "エンドツーエンド暗号化";
+"learn_more_in_document" = "詳細をご覧ください";
 
 "connection_hint_connecting" = "接続中";
 "connection_hint_progress" = "同期中 %@%%";
@@ -563,7 +564,7 @@
 "wallet_withdrawal_asset" = "%@を出金";
 "wallet_withdrawal_pay_password" = "PINを使って出金";
 "wallet_no_price" = "なし";
-"wallet_pin_create_title" = "6桁のPINを作成してウォレットを作ってください";
+"wallet_pin_create_title" = "6桁のPINを作成してウォレットを作ってください。詳細をご覧ください。";
 "wallet_pin_confirm_title" = "6桁のPINを確認して大切に保管してください";
 "wallet_pin_confirm_subtitle" = "ウォレットを失った場合、復元することはできません";
 "wallet_pin_confirm_again_title" = "もう一度6桁のPINを確認してください";
@@ -904,7 +905,7 @@
 "setting_appearance_language_alert_title" = "アプリの言語を変更する";
 "setting_appearance_language_alert_description" = "お使いのiPhoneの設定画面から言語を変更することができます";
 "setting_pin" = "PIN";
-"setting_pin_hint" = "PINコードを忘れた場合、ウォレットにアクセスすることができなくなるため、必ず覚えておいてください。PINコードは、分散型キー導出プロトコルであるThrottled Identity Protocolから作成されています。詳しくはドキュメントをご覧ください。";
+"setting_pin_hint" = "PINコードを忘れた場合、ウォレットにアクセスすることができなくなるため、必ず覚えておいてください。PINコードは、分散型キー導出プロトコルであるThrottled Identity Protocolから作成されています。詳細をご覧ください。";
 "setting_feedback" = "フィードバック";
 "setting_share_this_app" = "このロボを共有する";
 "setting_share_this_app_content" = "さあ、Mixin内でチャットをしてみましょう！Mixinチャットはシンプルで安全、そして簡単に使うことができます。Mixinはビットコインやイーサリアムのような複数の仮想通貨にも対応しています。https://mixin.one/messenger から Mixin をダウンロードし、%@ を検索して私を追加してください。";
@@ -929,7 +930,7 @@
 "setting_delete_account_view_wallet" = "ウォレットを確認";
 "setting_delete_account_assets_hint" = "Mixinウォレット内に仮想通貨が残っています。アカウントを削除すると、仮想通貨を引き出すことができませんが、よろしいでしょうか？";
 "setting_delete_account_confirm_title" = "PINコードを入力してください";
-"setting_delete_account_confirm_hint" = "%@と紐付けられたプロフィールとアカウント情報が削除されます。詳細はドキュメントをご覧ください。";
+"setting_delete_account_confirm_hint" = "%@と紐付けられたプロフィールとアカウント情報が削除されます。詳細をご覧ください。";
 "setting_delete_account_verify_pin" = "PINコードを入力してください";
 "setting_delete_account_send_code" = "%@へ4桁のコードを送信します";
 

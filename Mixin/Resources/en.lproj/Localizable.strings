@@ -67,6 +67,7 @@
 "all_photos" = "All Photos";
 "title_help" = "Help";
 "e2e_encrypted" = "End-to-end Encrypted";
+"learn_more_in_document" = "Learn More";
 
 "connection_hint_connecting" = "Connecting";
 "connection_hint_progress" = "Syncing %@%%";

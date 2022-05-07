@@ -56,6 +56,7 @@
 "action_change_settings" = "設定を変更する";
 "action_open" = "開く";
 "action_settings" = "設定";
+"action_phone_call" = "発信";
 "menu_delete" = "削除";
 "menu_edit" = "編集";
 "menu_report" = "報告";
@@ -450,7 +451,7 @@
 "sticker_remove_title" = "スタンプを削除";
 "sticker_add_failed" = "スタンプを追加できません";
 "sticker_remove_failed" = "スタンプを削除できません";
-"sticker_add_required" = "スタンプのサイズは1K以上800KB未満、 幅と高さは64から512ピクセルである必要があります";
+"sticker_add_requirements" = "スタンプのサイズは%@KB以上%@KB未満、 幅と高さは%@から%@ピクセルである必要があります";
 "sticker_store_title" = "ステッカーストア";
 "sticker_store_add" = "追加";
 "sticker_store_added" = "追加済";
@@ -950,6 +951,7 @@
 // Diagnose
 "diagnose_warning" = "⚠️Mixinチームの指示のもと、これらの機能を使用してください。";
 "diagnose_database_access" = "データベースへの接続";
+"diagnose_attachment" = "データ使用量を軽減";
 
 "report_title"="Mixinの開発者へ会話記録を送信しますか?";
 "report_button"="開発者に送信";
@@ -1068,3 +1070,5 @@
 "error_malformed_address_eos" = "無効なアドレスです。MixinはEOSアドレスへの引き出しに対応していません。";
 "error_network_task_failed" = "ネットワーク接続に失敗しました。ネットワーク接続状態を確認した後にもう一度試してください。";
 
+"error_invalid_width" = "無効な横幅";
+"error_invalid_height" = "無効な高さ";

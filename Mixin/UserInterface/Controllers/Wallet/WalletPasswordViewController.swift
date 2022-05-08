@@ -62,7 +62,7 @@ class WalletPasswordViewController: ContinueButtonViewController {
             textLabel.text = text
             textLabel.delegate = self
             let linkRange = (text as NSString)
-                .range(of: R.string.localizable.action_learn_more(), options: [.backwards, .caseInsensitive])
+                .range(of: R.string.localizable.learn_more_in_document(), options: [.backwards, .caseInsensitive])
             if linkRange.location != NSNotFound && linkRange.length != 0 {
                 textLabel.linkColor = .theme
                 textLabel.additionalLinksMap = [linkRange: URL.pinTIP]

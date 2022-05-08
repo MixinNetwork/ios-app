@@ -67,6 +67,7 @@
 "all_photos" = "所有照片";
 "title_help" = "帮助";
 "e2e_encrypted" = "端对端加密";
+"learn_more_in_document" = "了解更多";
 
 "connection_hint_connecting" = "正在连接";
 "connection_hint_progress" = "正在同步 %@%%";

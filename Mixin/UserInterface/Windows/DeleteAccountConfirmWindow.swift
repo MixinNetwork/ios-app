@@ -35,7 +35,7 @@ final class DeleteAccountConfirmWindow: BottomSheetView {
         textLabel.text = hint
         textLabel.delegate = self
         let linkRange = (hint as NSString)
-            .range(of: R.string.localizable.action_learn_more(), options: [.backwards, .caseInsensitive])
+            .range(of: R.string.localizable.learn_more_in_document(), options: [.backwards, .caseInsensitive])
         if linkRange.location != NSNotFound && linkRange.length != 0 {
             textLabel.linkColor = .theme
             textLabel.additionalLinksMap = [linkRange: URL.deleteAccount]

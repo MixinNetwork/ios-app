@@ -110,7 +110,7 @@ public final class UserDatabase: Database {
             .init(key: .muteUntil, constraints: "TEXT"),
             .init(key: .codeUrl, constraints: "TEXT"),
             .init(key: .pinTime, constraints: "TEXT"),
-            .init(key: .expireIn, constraints: "INTEGER NOT NULL")
+            .init(key: .expireIn, constraints: "INTEGER")
         ]),
         ColumnMigratableTableDefinition<FavoriteApp>(constraints: "PRIMARY KEY(user_id, app_id)", columns: [
             .init(key: .userId, constraints: "TEXT NOT NULL"),
@@ -477,12 +477,12 @@ public final class UserDatabase: Database {
             }
         }
         
-        migrator.registerMigration("disappearing_messages") { db in
+        migrator.registerMigration("expired_messages") { db in
             let sql =  """
-                CREATE TABLE IF NOT EXISTS disappearing_messages(
+                CREATE TABLE IF NOT EXISTS expired_messages(
                     message_id TEXT NOT NULL,
-                    expire_in INTEGER NOT NULL DEFAULT 0,
-                    expire_at INTEGER NOT NULL DEFAULT 0,
+                    expire_in INTEGER NOT NULL,
+                    expire_at INTEGER,
                     PRIMARY KEY (message_id)
                 )
             """
@@ -490,7 +490,7 @@ public final class UserDatabase: Database {
             
             let conversations = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(conversations)")
             if !conversations.map(\.name).contains("expire_in") {
-                try db.execute(sql: "ALTER TABLE conversations ADD COLUMN expire_in INTEGER NOT NULL DEFAULT 0")
+                try db.execute(sql: "ALTER TABLE conversations ADD COLUMN expire_in INTEGER")
             }
             
             let messages = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(messages)")

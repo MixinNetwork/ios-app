@@ -12,7 +12,7 @@ public final class DisappearingMessageDAO: UserDatabaseDAO {
     
     public func insert(message: DisappearingMessage, database: GRDB.Database) throws {
         try message.save(database)
-        if message.expireAt != 0 {
+        if message.expireAt != nil {
             database.afterNextTransactionCommit { _ in
                 NotificationCenter.default.post(onMainThread: Self.expiredAtDidUpdateNotification, object: self)
             }
@@ -26,7 +26,9 @@ public final class DisappearingMessageDAO: UserDatabaseDAO {
     }
 
     public func updateExpireAt(for messageId: String, database: GRDB.Database, expireAt: Int64? = nil) throws {
-        guard let message = try DisappearingMessage.filter(DisappearingMessage.column(of: .messageId) == messageId).fetchOne(database), message.expireAt == 0 else {
+        let condition: SQLSpecificExpressible = DisappearingMessage.column(of: .messageId) == messageId
+            && DisappearingMessage.column(of: .expireAt) == nil
+        guard let message = try DisappearingMessage.filter(condition).fetchOne(database) else {
             return
         }
         let expireAt = expireAt ?? Int64(Date().addingTimeInterval(TimeInterval(message.expireIn)).timeIntervalSince1970)
@@ -40,7 +42,7 @@ public final class DisappearingMessageDAO: UserDatabaseDAO {
     
     public func removeExpiredMessages(completion: (_ nextExpireAt: Int64?) -> Void) {
         db.write { db in
-            let condition: SQLSpecificExpressible = DisappearingMessage.column(of: .expireAt) != 0
+            let condition: SQLSpecificExpressible = DisappearingMessage.column(of: .expireAt) != nil
                 && DisappearingMessage.column(of: .expireAt) <= Int64(Date().timeIntervalSince1970)
             let expiredMessageIds: [String] = try DisappearingMessage
                 .select(DisappearingMessage.column(of: .messageId))
@@ -72,7 +74,7 @@ public final class DisappearingMessageDAO: UserDatabaseDAO {
                 .deleteAll(db)
             let nextExpireAt: Int64? = try DisappearingMessage
                 .select(DisappearingMessage.column(of: .expireAt))
-                .filter(DisappearingMessage.column(of: .expireAt) != 0)
+                .filter(DisappearingMessage.column(of: .expireAt) != nil)
                 .order([DisappearingMessage.column(of: .expireAt).asc])
                 .fetchOne(db)
             completion(nextExpireAt)
@@ -86,8 +88,8 @@ public final class DisappearingMessageDAO: UserDatabaseDAO {
         let ids = messageIds.joined(separator: "', '")
         let sql = """
         SELECT m.*
-        FROM disappearing_messages m
-        WHERE m.message_id in ('\(ids)')
+        FROM expired_messages m
+        WHERE m.expire_at IS NOT NULL AND m.message_id in ('\(ids)') 
         """
         let messages: [DisappearingMessage] = db.select(with: sql)
         return messages.reduce(into: [:]) { map, message in

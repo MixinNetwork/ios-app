@@ -173,7 +173,6 @@
 
 // Contacts
 "contact_title" = "マイページ";
-"contact_list" = "友だち";
 "contact_title_change_name" = "名前を変更する";
 "contact_new_group_title" = "新しいグループを作成";
 "contact_new_group_summary" = "256人までのグループチャットを作成";
@@ -240,7 +239,6 @@
 
 // Clip
 "clip_remove_all" = "Floatを全部クリアしますか？";
-"clip_remove_all_confirm" = "はい";
 "clip_hint_did_reach_max" = "Float数が上限です %@ ";
 
 // Circle
@@ -259,7 +257,6 @@
 "circle_member_category_contacts" = "連絡先";
 "circle_member_category_apps" = "ロボ";
 "circle_add_hint" = "チャットやロボ（高機能アカウント）を追加してリストを作成しましょう";
-"circle_add_hint2" = "最初のリストを作成して、自分の好きなユーザーやロボを追加しましょう";
 "circle_no_conversation_hint" = "最初のリストを作成して、自分の好きなユーザーやロボを追加しましょう";
 "circle_no_conversation_action" = "会話を追加する";
 "circle_conversation_editor_title" = "%@を含むリスト";
@@ -348,8 +345,6 @@
 "chat_media_category_link" = "リンク";
 "chat_media_category_post" = "投稿";
 "chat_media_category_file" = "ファイル";
-"chat_media_send_button" = "送る";
-"chat_media_cancel_button" = "キャンセル";
 "chat_shared_media_empty" = "メディアがありません";
 "chat_shared_audio_empty" = "音声がありません";
 "chat_shared_data_empty" = "ファイルがありません";
@@ -360,7 +355,6 @@
 "chat_app_reception_title" = "ロボ（高機能アカウント）を使用する";
 "chat_app_reception_button_home" = "ロボHOME";
 "chat_app_reception_button_hi" = "こんにちは";
-"chat_app_reception_send_hi" = "こんにちは✋";
 "chat_location_send_current" = "現在地を送信する";
 "chat_location_send_user_picked" = "この位置情報を送信する";
 "chat_location_reverse_geocode_processing" = "位置情報を検索中...";
@@ -470,7 +464,6 @@
 "camera_qrcode_codes" = "Mixin QRコードがあるようです。 タップして確認する";
 
 // Group
-"group_create_placeholder" = "新規グループ名";
 "group_navigation_title_add_member" = "メンバーを追加";
 "group_navigation_title_new_group" = "グループを作成";
 "group_navigation_title_group_info" = "グループ情報";
@@ -478,8 +471,6 @@
 "group_navigation_title_announcement" = "グループアナウンス";
 "group_cell_title_photo" = "グループ画像";
 "group_cell_title_name" = "グループ名";
-"group_cell_edit_name" = "グループ名を変更";
-"group_edit_name_title" = "グループ名";
 "group_section_title_members" = "メンバー";
 "group_button_title_create" = "作成";
 "group_button_title_share_link" = "リンクを共有";

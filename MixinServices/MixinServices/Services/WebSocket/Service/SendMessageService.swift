@@ -98,13 +98,13 @@ public class SendMessageService: MixinService {
         SendMessageService.shared.processMessages()
     }
     
-    public func sendMessage(message: Message, data: String?, immediatelySend: Bool = true, silentNotification: Bool = false) {
+    public func sendMessage(message: Message, data: String?, immediatelySend: Bool = true, silentNotification: Bool = false, expireIn: Int64 = 0) {
         let needsEncodeCategories: [MessageCategory] = [
             .PLAIN_TEXT, .PLAIN_POST, .PLAIN_LOCATION, .PLAIN_TRANSCRIPT
         ]
         let shouldEncodeContent = needsEncodeCategories.map(\.rawValue).contains(message.category)
         let content = shouldEncodeContent ? data?.base64Encoded() : data
-        let job = Job(message: message, data: content, silentNotification: silentNotification)
+        let job = Job(message: message, data: content, silentNotification: silentNotification, expireIn: expireIn)
         UserDatabase.current.save(job)
         if immediatelySend {
             SendMessageService.shared.processMessages()
@@ -626,7 +626,8 @@ extension SendMessageService {
             let expireIn = try checkConversationExist(conversation: conversation)
             if blazeMessage.params?.expireIn == 0, expireIn != 0 {
                 blazeMessage.params?.expireIn = expireIn
-                MessageDAO.shared.updateMessageExpireIn(expireIn: expireIn, messageId: messageId, conversationId: message.conversationId)
+                DisappearingMessageDAO.shared.insert(message: DisappearingMessage(messageId: messageId, expireIn: expireIn),
+                                                     conversationId: message.conversationId)
             }
         }
         if message.category.hasPrefix("PLAIN_") || message.category == MessageCategory.MESSAGE_RECALL.rawValue || message.category == MessageCategory.APP_CARD.rawValue {

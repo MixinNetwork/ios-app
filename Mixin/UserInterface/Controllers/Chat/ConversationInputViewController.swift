@@ -476,8 +476,7 @@ class ConversationInputViewController: UIViewController {
             for userId in userIds {
                 var message = Message.createMessage(category: MessageCategory.SIGNAL_CONTACT.rawValue,
                                                     conversationId: conversationId,
-                                                    userId: myUserId,
-                                                    expireIn: expireIn)
+                                                    userId: myUserId)
                 message.sharedUserId = userId
                 if let id = quoteMessageId {
                     // Apply quoted message to first message only
@@ -489,7 +488,8 @@ class ConversationInputViewController: UIViewController {
                 SendMessageService.shared.sendMessage(message: message,
                                                       ownerUser: ownerUser,
                                                       opponentApp: app,
-                                                      isGroupMessage: isGroup)
+                                                      isGroupMessage: isGroup,
+                                                      expireIn: expireIn)
             }
             DispatchQueue.main.async(execute: completion)
         }
@@ -500,15 +500,15 @@ class ConversationInputViewController: UIViewController {
         quote = nil
         var message = Message.createMessage(category: MessageCategory.SIGNAL_LOCATION.rawValue,
                                             conversationId: composer.conversationId,
-                                            userId: myUserId,
-                                            expireIn: composer.expireIn)
+                                            userId: myUserId)
         let jsonData = try JSONEncoder().encode(location)
         message.content = String(data: jsonData, encoding: .utf8)
         message.quoteMessageId = quoteMessageId
         SendMessageService.shared.sendMessage(message: message,
                                               ownerUser: composer.ownerUser,
                                               opponentApp: composer.opponentApp,
-                                              isGroupMessage: composer.isGroup)
+                                              isGroupMessage: composer.isGroup,
+                                              expireIn: composer.expireIn)
     }
     
 }

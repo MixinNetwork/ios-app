@@ -161,20 +161,23 @@ extension MessageReceiverViewController: ContainerViewControllerDelegate {
                 guard !messages.isEmpty else {
                     continue
                 }
+                let expireIn = ConversationDAO.shared.getExpireIn(conversationId: receiver.conversationId) ?? 0
                 switch receiver.item {
                 case .group:
                     for m in messages {
                         SendMessageService.shared.sendMessage(message: m.message,
                                                               children: m.children,
                                                               ownerUser: nil,
-                                                              isGroupMessage: true)
+                                                              isGroupMessage: true,
+                                                              expireIn: expireIn)
                     }
                 case .user(let user):
                     for m in messages {
                         SendMessageService.shared.sendMessage(message: m.message,
                                                               children: m.children,
                                                               ownerUser: user,
-                                                              isGroupMessage: false)
+                                                              isGroupMessage: false,
+                                                              expireIn: expireIn)
                     }
                 }
             }
@@ -308,13 +311,11 @@ extension MessageReceiverViewController {
     }
     
     private static func makeMessages(content: MessageContent, to receiver: MessageReceiver) -> [ComposedMessage] {
-        let expireIn = ConversationDAO.shared.getExpireIn(conversationId: receiver.conversationId) ?? 0
         switch content {
         case .message(var message):
             message.messageId = UUID().uuidString.lowercased()
             message.conversationId = receiver.conversationId
             message.createdAt = Date().toUTCString()
-            message.expireIn = expireIn
             return [ComposedMessage(message: message, children: nil)].compactMap { $0 }
         case .messages(let messages):
             let date = Date()
@@ -322,31 +323,31 @@ extension MessageReceiverViewController {
             return messages.compactMap({ (original) -> ComposedMessage? in
                 let interval = TimeInterval(counter.advancedValue) / millisecondsPerSecond
                 let createdAt = date.addingTimeInterval(interval).toUTCString()
-                return makeMessage(message: original, to: receiver, createdAt: createdAt, expireIn: expireIn)
+                return makeMessage(message: original, to: receiver, createdAt: createdAt)
             })
         case .post(let text):
-            return [makeMessage(post: text, to: receiver.conversationId, expireIn: expireIn)]
+            return [makeMessage(post: text, to: receiver.conversationId)]
                 .compactMap { ComposedMessage(message: $0, children: nil) }
         case .contact(let userId):
-            return [makeMessage(userId: userId, to: receiver.conversationId, expireIn: expireIn)]
+            return [makeMessage(userId: userId, to: receiver.conversationId)]
                 .compactMap { ComposedMessage(message: $0, children: nil) }
         case .photo(let image):
-            return [makeMessage(image: image, to: receiver.conversationId, expireIn: expireIn)]
+            return [makeMessage(image: image, to: receiver.conversationId)]
                 .compactMap { ComposedMessage(message: $0, children: nil) }
         case .text(let text):
-            return [makeMessage(text: text, to: receiver.conversationId, expireIn: expireIn)]
+            return [makeMessage(text: text, to: receiver.conversationId)]
                 .compactMap { ComposedMessage(message: $0, children: nil) }
         case .video(let url):
-            return [makeMessage(videoUrl: url, to: receiver.conversationId, expireIn: expireIn)]
+            return [makeMessage(videoUrl: url, to: receiver.conversationId)]
                 .compactMap { ComposedMessage(message: $0, children: nil) }
         case .appCard(let appCard):
-            return [makeMessage(appCard: appCard, to: receiver.conversationId, expireIn: expireIn)]
+            return [makeMessage(appCard: appCard, to: receiver.conversationId)]
                 .compactMap { ComposedMessage(message: $0, children: nil) }
         case .transcript(let messages):
-            return [makeTranscriptMessage(messages: messages, to: receiver.conversationId, expireIn: expireIn)]
+            return [makeTranscriptMessage(messages: messages, to: receiver.conversationId)]
                 .compactMap { $0 }
         case .transcriptMessage(let transcriptId, let item):
-            if let message = makeMessage(message: item, transcriptId: transcriptId, to: receiver, createdAt: Date().toUTCString(), expireIn: expireIn) {
+            if let message = makeMessage(message: item, transcriptId: transcriptId, to: receiver, createdAt: Date().toUTCString()) {
                 return [message]
             } else {
                 return []
@@ -388,12 +389,11 @@ extension MessageReceiverViewController {
         return toURL.lastPathComponent
     }
     
-    private static func makeMessage(message: MessageItem, transcriptId: String? = nil, to receiver: MessageReceiver, createdAt: String, expireIn: Int64) -> ComposedMessage? {
+    private static func makeMessage(message: MessageItem, transcriptId: String? = nil, to receiver: MessageReceiver, createdAt: String) -> ComposedMessage? {
         var newMessage = Message.createMessage(category: message.category,
                                                conversationId: receiver.conversationId,
                                                createdAt: createdAt,
-                                               userId: myUserId,
-                                               expireIn: expireIn)
+                                               userId: myUserId)
         let isSignalMessage: Bool
         switch receiver.item {
         case .group:
@@ -519,31 +519,28 @@ extension MessageReceiverViewController {
         return ComposedMessage(message: newMessage, children: nil)
     }
     
-    private static func makeMessage(userId: String, to conversationId: String, expireIn: Int64) -> Message? {
+    private static func makeMessage(userId: String, to conversationId: String) -> Message? {
         var message = Message.createMessage(category: MessageCategory.SIGNAL_CONTACT.rawValue,
                                             conversationId: conversationId,
-                                            userId: myUserId,
-                                            expireIn: expireIn)
+                                            userId: myUserId)
         message.sharedUserId = userId
         let transferData = TransferContactData(userId: userId)
         message.content = try! JSONEncoder().encode(transferData).base64EncodedString()
         return message
     }
     
-    private static func makeMessage(appCard: AppCardData, to conversationId: String, expireIn: Int64) -> Message? {
+    private static func makeMessage(appCard: AppCardData, to conversationId: String) -> Message? {
         var message = Message.createMessage(category: MessageCategory.APP_CARD.rawValue,
                                             conversationId: conversationId,
-                                            userId: myUserId,
-                                            expireIn: expireIn)
+                                            userId: myUserId)
         message.content = try! JSONEncoder().encode(appCard).base64EncodedString()
         return message
     }
     
-    private static func makeMessage(image: UIImage, to conversationId: String, expireIn: Int64) -> Message? {
+    private static func makeMessage(image: UIImage, to conversationId: String) -> Message? {
         var message = Message.createMessage(category: MessageCategory.SIGNAL_IMAGE.rawValue,
                                             conversationId: conversationId,
-                                            userId: myUserId,
-                                            expireIn: expireIn)
+                                            userId: myUserId)
         let filename = message.messageId + ExtensionName.jpeg.withDot
         let path = AttachmentContainer.url(for: .photos, filename: filename)
         guard image.saveToFile(path: path), FileManager.default.fileSize(path.path) > 0, image.size.width > 0, image.size.height > 0 else {
@@ -560,33 +557,30 @@ extension MessageReceiverViewController {
         return message
     }
     
-    private static func makeMessage(text: String, to conversationId: String, expireIn: Int64) -> Message {
+    private static func makeMessage(text: String, to conversationId: String) -> Message {
         var message = Message.createMessage(category: MessageCategory.SIGNAL_TEXT.rawValue,
                                             conversationId: conversationId,
-                                            userId: myUserId,
-                                            expireIn: expireIn)
+                                            userId: myUserId)
         message.content = text
         return message
     }
     
-    private static func makeMessage(post: String, to conversationId: String, expireIn: Int64) -> Message {
+    private static func makeMessage(post: String, to conversationId: String) -> Message {
         var message = Message.createMessage(category: MessageCategory.SIGNAL_POST.rawValue,
                                             conversationId: conversationId,
-                                            userId: myUserId,
-                                            expireIn: expireIn)
+                                            userId: myUserId)
         message.content = post
         return message
     }
     
-    private static func makeMessage(videoUrl: URL, to conversationId: String, expireIn: Int64) -> Message? {
+    private static func makeMessage(videoUrl: URL, to conversationId: String) -> Message? {
         let asset = AVAsset(url: videoUrl)
         guard asset.duration.isValid, let videoTrack = asset.tracks(withMediaType: .video).first else {
             return nil
         }
         var message = Message.createMessage(category: MessageCategory.SIGNAL_VIDEO.rawValue,
                                             conversationId: conversationId,
-                                            userId: myUserId,
-                                            expireIn: expireIn)
+                                            userId: myUserId)
         if let thumbnail = UIImage(withFirstFrameOfVideoAtURL: videoUrl) {
             let thumbnailURL = AttachmentContainer.videoThumbnailURL(videoFilename: videoUrl.lastPathComponent)
             thumbnail.saveToFile(path: thumbnailURL)
@@ -605,7 +599,7 @@ extension MessageReceiverViewController {
         return message
     }
     
-    private static func makeTranscriptMessage(messages: [MessageItem], to conversationId: String, expireIn: Int64) -> ComposedMessage? {
+    private static func makeTranscriptMessage(messages: [MessageItem], to conversationId: String) -> ComposedMessage? {
         let transcriptId = UUID().uuidString.lowercased()
         let sortedMessageItems = messages.sorted(by: { $0.createdAt < $1.createdAt })
         let children = makeTranscriptChildren(with: transcriptId,
@@ -623,8 +617,7 @@ extension MessageReceiverViewController {
                                             category: MessageCategory.SIGNAL_TRANSCRIPT.rawValue,
                                             content: content,
                                             status: MessageStatus.SENDING.rawValue,
-                                            createdAt: Date().toUTCString(),
-                                            expireIn: expireIn)
+                                            createdAt: Date().toUTCString())
         return ComposedMessage(message: message, children: children)
     }
     

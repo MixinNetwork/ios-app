@@ -10,11 +10,24 @@ public final class DisappearingMessageDAO: UserDatabaseDAO {
 
     public static let shared = DisappearingMessageDAO()
     
-    public func insert(message: DisappearingMessage, database: GRDB.Database) throws {
+    public func insert(message: DisappearingMessage, conversationId: String? = nil) {
+        db.write { db in
+            try insert(message: message, conversationId: conversationId, database: db)
+        }
+    }
+    
+    public func insert(message: DisappearingMessage, conversationId: String? = nil, database: GRDB.Database) throws {
         try message.save(database)
-        if message.expireAt != nil {
+        if message.expireAt != nil || conversationId != nil {
             database.afterNextTransactionCommit { _ in
-                NotificationCenter.default.post(onMainThread: Self.expiredAtDidUpdateNotification, object: self)
+                if message.expireAt != nil {
+                    NotificationCenter.default.post(onMainThread: Self.expiredAtDidUpdateNotification, object: self)
+                }
+                if let conversationId = conversationId {
+                    let change = ConversationChange(conversationId: conversationId,
+                                                    action: .updateExpireIn(expireIn: message.expireIn, messageId: message.messageId))
+                    NotificationCenter.default.post(onMainThread: MixinServices.conversationDidChangeNotification, object: change)
+                }
             }
         }
     }

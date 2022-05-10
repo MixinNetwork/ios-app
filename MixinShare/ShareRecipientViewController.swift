@@ -477,8 +477,7 @@ extension ShareRecipientViewController {
         var msg = message
         msg.userId = myUserId
         msg.status = MessageStatus.SENDING.rawValue
-        msg.expireIn = ConversationDAO.shared.getExpireIn(conversationId: msg.conversationId) ?? 0
-
+        
         if !ConversationDAO.shared.isExist(conversationId: msg.conversationId) {
             guard conversation.category == ConversationCategory.CONTACT.rawValue else  {
                 cancelShareAction()
@@ -497,10 +496,11 @@ extension ShareRecipientViewController {
             }
         }
         
-        MessageDAO.shared.insertMessage(message: msg, messageSource: "")
+        let expireIn = ConversationDAO.shared.getExpireIn(conversationId: msg.conversationId) ?? 0
+        MessageDAO.shared.insertMessage(message: msg, messageSource: "", expireIn: expireIn)
 
         if ["_TEXT", "_POST"].contains(where: msg.category.hasSuffix) {
-            SendMessageService.shared.sendMessage(message: msg, data: msg.content, immediatelySend: false)
+            SendMessageService.shared.sendMessage(message: msg, data: msg.content, immediatelySend: false, expireIn: expireIn)
         } else if ["_IMAGE", "_VIDEO", "_DATA"].contains(where: msg.category.hasSuffix) {
             SendMessageService.shared.saveUploadJob(message: msg)
             AppGroupUserDefaults.User.hasRestoreUploadAttachment = true

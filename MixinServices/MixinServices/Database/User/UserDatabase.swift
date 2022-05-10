@@ -169,7 +169,6 @@ public final class UserDatabase: Database {
             .init(key: .quoteContent, constraints: "BLOB"),
             .init(key: .createdAt, constraints: "TEXT NOT NULL"),
             .init(key: .albumId, constraints: "TEXT"),
-            .init(key: .expireIn, constraints: "INTEGER NOT NULL")
         ]),
         ColumnMigratableTableDefinition<MessageHistory>(constraints: nil, columns: [
             .init(key: .messageId, constraints: "TEXT PRIMARY KEY"),
@@ -491,11 +490,6 @@ public final class UserDatabase: Database {
             let conversations = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(conversations)")
             if !conversations.map(\.name).contains("expire_in") {
                 try db.execute(sql: "ALTER TABLE conversations ADD COLUMN expire_in INTEGER")
-            }
-            
-            let messages = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(messages)")
-            if !messages.map(\.name).contains("expire_in") {
-                try db.execute(sql: "ALTER TABLE messages ADD COLUMN expire_in INTEGER NOT NULL DEFAULT 0")
             }
         }
         

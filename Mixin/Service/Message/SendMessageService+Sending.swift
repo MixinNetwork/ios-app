@@ -9,7 +9,8 @@ extension SendMessageService {
         ownerUser: UserItem?,
         opponentApp: App? = nil,
         isGroupMessage: Bool,
-        silentNotification: Bool = false
+        silentNotification: Bool = false,
+        expireIn: Int64 = 0
     ) {
         guard let account = LoginManager.shared.account else {
             return
@@ -127,9 +128,9 @@ extension SendMessageService {
                 if let content = msg.content, ["_TEXT", "_POST"].contains(where: msg.category.hasSuffix), content.utf8.count > maxTextMessageContentLength {
                     msg.content = String(content.prefix(maxTextMessageContentLength))
                 }
-                MessageDAO.shared.insertMessage(message: msg, children: children, messageSource: "") {
+                MessageDAO.shared.insertMessage(message: msg, children: children, messageSource: "", expireIn: expireIn) {
                     if ["_TEXT", "_POST", "_STICKER", "_CONTACT", "_LOCATION"].contains(where: msg.category.hasSuffix) || msg.category == MessageCategory.APP_CARD.rawValue {
-                        SendMessageService.shared.sendMessage(message: msg, data: msg.content, silentNotification: silentNotification)
+                        SendMessageService.shared.sendMessage(message: msg, data: msg.content, silentNotification: silentNotification, expireIn: expireIn)
                     } else if msg.category.hasSuffix("_IMAGE") {
                         let jobId = SendMessageService.shared.saveUploadJob(message: msg)
                         UploaderQueue.shared.addJob(job: ImageUploadJob(message: msg, jobId: jobId))
@@ -144,12 +145,11 @@ extension SendMessageService {
                         UploaderQueue.shared.addJob(job: AudioUploadJob(message: msg, jobId: jobId))
                     } else if msg.category.hasSuffix("_TRANSCRIPT") {
                         let jobId = SendMessageService.shared.saveUploadJob(message: msg)
-                        let job = TranscriptAttachmentUploadJob(message: msg,
-                                                                jobIdToRemoveAfterFinished: jobId)
+                        let job = TranscriptAttachmentUploadJob(message: msg, jobIdToRemoveAfterFinished: jobId)
                         UploaderQueue.shared.addJob(job: job)
                     } else if msg.category.hasSuffix("_LIVE") {
                         let data = msg.content?.base64Encoded()
-                        SendMessageService.shared.sendMessage(message: msg, data: data)
+                        SendMessageService.shared.sendMessage(message: msg, data: data, expireIn: expireIn)
                     }
                 }
             }

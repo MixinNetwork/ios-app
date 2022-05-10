@@ -14,7 +14,7 @@ public final class ConversationDAO: UserDatabaseDAO {
     (SELECT COUNT(*) FROM message_mentions mm WHERE mm.conversation_id = c.conversation_id AND mm.has_read = 0) as unseenMentionCount,
     CASE WHEN c.category = 'CONTACT' THEN u1.mute_until ELSE c.mute_until END as muteUntil,
     c.code_url as codeUrl, c.pin_time as pinTime, c.expire_in as expireIn,
-    m.content as content, m.category as contentType, m.expire_in as contentExpireIn, m.created_at as createdAt,
+    m.content as content, m.category as contentType, em.expire_in as contentExpireIn, m.created_at as createdAt,
     m.user_id as senderId, u.full_name as senderFullName, u1.identity_number as ownerIdentityNumber,
     u1.full_name as ownerFullName, u1.avatar_url as ownerAvatarUrl, u1.is_verified as ownerIsVerified,
     m.action as actionName, u2.full_name as participantFullName, u2.user_id as participantUserId, m.status as messageStatus, m.id as messageId, u1.app_id as appId,
@@ -27,6 +27,7 @@ public final class ConversationDAO: UserDatabaseDAO {
     LEFT JOIN users u ON u.user_id = m.user_id
     LEFT JOIN users u2 ON u2.user_id = m.participant_id
     LEFT JOIN message_mentions mm ON m.id = mm.message_id
+    LEFT JOIN expired_messages em ON c.last_message_id = em.message_id
     INNER JOIN users u1 ON u1.user_id = c.owner_id
     WHERE c.category IS NOT NULL %@
     ORDER BY c.pin_time DESC, c.last_message_created_at DESC
@@ -295,7 +296,7 @@ public final class ConversationDAO: UserDatabaseDAO {
                 (SELECT COUNT(*) FROM message_mentions mm WHERE mm.conversation_id = c.conversation_id AND mm.has_read = 0) as unseenMentionCount,
                 CASE WHEN c.category = 'CONTACT' THEN u1.mute_until ELSE c.mute_until END as muteUntil,
                 c.code_url as codeUrl, cc.pin_time as pinTime, c.expire_in as expireIn,
-                m.content as content, m.category as contentType, m.expire_in as contentExpireIn, m.created_at as createdAt,
+                m.content as content, m.category as contentType, em.expire_in as contentExpireIn, m.created_at as createdAt,
                 m.user_id as senderId, u.full_name as senderFullName, u1.identity_number as ownerIdentityNumber,
                 u1.full_name as ownerFullName, u1.avatar_url as ownerAvatarUrl, u1.is_verified as ownerIsVerified,
                 m.action as actionName, u2.full_name as participantFullName, u2.user_id as participantUserId,
@@ -306,6 +307,7 @@ public final class ConversationDAO: UserDatabaseDAO {
                 LEFT JOIN users u ON u.user_id = m.user_id
                 LEFT JOIN users u2 ON u2.user_id = m.participant_id
                 LEFT JOIN message_mentions mm ON m.id = mm.message_id
+                LEFT JOIN expired_messages em ON c.last_message_id = em.message_id
                 INNER JOIN users u1 ON u1.user_id = c.owner_id
                 INNER JOIN circle_conversations cc ON cc.conversation_id = c.conversation_id
                 WHERE c.category IS NOT NULL AND cc.circle_id = ?

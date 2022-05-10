@@ -38,8 +38,7 @@ class SystemMessageViewModel: MessageViewModel {
                                                              userFullName: message.userFullName ?? "",
                                                              participantId: message.participantUserId,
                                                              participantFullName: message.participantFullName,
-                                                             content: message.content,
-                                                             expireIn: message.expireIn)
+                                                             content: message.content)
         }
         super.init(message: message)
         backgroundImage = R.image.ic_chat_bubble_system()

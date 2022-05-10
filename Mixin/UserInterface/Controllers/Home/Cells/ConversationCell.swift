@@ -164,8 +164,7 @@ class ConversationCell: ModernSelectedBackgroundCell {
                                                                                   userFullName: item.senderFullName,
                                                                                   participantId: item.participantUserId,
                                                                                   participantFullName: item.participantFullName,
-                                                                                  content: item.content,
-                                                                                  expireIn: item.contentExpireIn)
+                                                                                  content: item.content)
                 } else if item.messageId.isEmpty {
                     contentLabel.text = ""
                 } else {

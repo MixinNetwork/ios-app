@@ -261,8 +261,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
     private func send(image: UIImage, to composer: ConversationMessageComposer) {
         var message = Message.createMessage(category: MessageCategory.SIGNAL_IMAGE.rawValue,
                                             conversationId: composer.conversationId,
-                                            userId: myUserId,
-                                            expireIn: composer.expireIn)
+                                            userId: myUserId)
         message.mediaStatus = MediaStatus.PENDING.rawValue
         
         DispatchQueue.global().async { [weak self] in
@@ -322,7 +321,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
                     return
                 }
             }
-            SendMessageService.shared.sendMessage(message: message, ownerUser: composer.ownerUser, isGroupMessage: composer.isGroup)
+            SendMessageService.shared.sendMessage(message: message, ownerUser: composer.ownerUser, isGroupMessage: composer.isGroup, expireIn: composer.expireIn)
             DispatchQueue.main.async {
                 self?.navigationController?.popViewController(animated: true)
             }

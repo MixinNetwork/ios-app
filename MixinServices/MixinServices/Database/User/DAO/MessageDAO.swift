@@ -36,7 +36,7 @@ public final class MessageDAO: UserDatabaseDAO {
                m.action as actionName, m.shared_user_id as sharedUserId, su.full_name as sharedUserFullName, su.identity_number as sharedUserIdentityNumber, su.avatar_url as sharedUserAvatarUrl, su.app_id as sharedUserAppId, su.is_verified as sharedUserIsVerified, m.quote_message_id, m.quote_content,
         mm.mentions, mm.has_read as hasMentionRead,
         CASE WHEN (SELECT 1 FROM pin_messages WHERE message_id = m.id) IS NULL THEN 0 ELSE 1 END AS pinned,
-        alb.added as isStickerAdded, m.album_id, m.expire_in
+        alb.added as isStickerAdded, m.album_id, em.expire_in as expire_in
     FROM messages m
     LEFT JOIN users u ON m.user_id = u.user_id
     LEFT JOIN users u1 ON m.participant_id = u1.user_id
@@ -48,6 +48,7 @@ public final class MessageDAO: UserDatabaseDAO {
     )
     LEFT JOIN users su ON m.shared_user_id = su.user_id
     LEFT JOIN message_mentions mm ON m.id = mm.message_id
+    LEFT JOIN expired_messages em ON m.id = em.message_id
     """
     private static let sqlQueryFirstNMessages = """
     \(sqlQueryFullMessage)
@@ -304,7 +305,7 @@ public final class MessageDAO: UserDatabaseDAO {
                 try Message
                     .filter(Message.column(of: .messageId) == messageId)
                     .updateAll(db, [Message.column(of: .status).set(to: status)])
-                if oldMessage.expireIn != 0, status == MessageStatus.SENT.rawValue {
+                if status == MessageStatus.SENT.rawValue {
                     try DisappearingMessageDAO.shared.updateExpireAt(for: messageId, database: db)
                 }
                 if let completion = completion {
@@ -568,11 +569,12 @@ public final class MessageDAO: UserDatabaseDAO {
         children: [TranscriptMessage]? = nil,
         messageSource: String,
         silentNotification: Bool = false,
+        expireIn: Int64 = 0,
         completion: (() -> Void)? = nil
     ) {
-        if message.expireIn != 0
+        if expireIn != 0
            && message.userId == myUserId
-           && -Int64(message.createdAt.toUTCDate().timeIntervalSinceNow) >= message.expireIn {
+           && -Int64(message.createdAt.toUTCDate().timeIntervalSinceNow) >= expireIn {
             return
         }
         var message = message
@@ -595,6 +597,7 @@ public final class MessageDAO: UserDatabaseDAO {
                               children: children,
                               messageSource: messageSource,
                               silentNotification: silentNotification,
+                              expireIn: expireIn,
                               completion: completion)
         }
     }
@@ -605,6 +608,7 @@ public final class MessageDAO: UserDatabaseDAO {
         children: [TranscriptMessage]? = nil,
         messageSource: String,
         silentNotification: Bool,
+        expireIn: Int64 = 0,
         completion: (() -> Void)? = nil
     ) throws {
         if message.category.hasPrefix("SIGNAL_") {
@@ -612,14 +616,14 @@ public final class MessageDAO: UserDatabaseDAO {
         } else {
             try message.save(database)
         }
-        if message.expireIn != 0 && !message.category.hasPrefix("SYSTEM_") {
+        if expireIn != 0 && !message.category.hasPrefix("SYSTEM_") {
             let expireAt: Int64?
             if message.status == MessageStatus.SENT.rawValue {
-                expireAt = Int64(message.createdAt.toUTCDate().timeIntervalSince1970) + message.expireIn
+                expireAt = Int64(message.createdAt.toUTCDate().timeIntervalSince1970) + expireIn
             } else {
                 expireAt = nil
             }
-            let msg = DisappearingMessage(messageId: message.messageId, expireIn: message.expireIn, expireAt: expireAt)
+            let msg = DisappearingMessage(messageId: message.messageId, expireIn: expireIn, expireAt: expireAt)
             try DisappearingMessageDAO.shared.insert(message: msg, database: database)
         }
         let shouldInsertIntoFTSTable = AppGroupUserDefaults.Database.isFTSInitialized
@@ -869,23 +873,7 @@ extension MessageDAO {
             NotificationCenter.default.post(name: MessageDAO.didRedecryptMessageNotification, object: self, userInfo: userInfo)
         }
     }
-    
-    public func updateMessageExpireIn(expireIn: Int64, messageId: String, conversationId: String) {
-        db.write { db in
-            let changes = try Message
-                .filter(Message.column(of: .messageId) == messageId)
-                .updateAll(db, [Message.column(of: .expireIn).set(to: expireIn)])
-            if changes != 0 {
-                let message = DisappearingMessage(messageId: messageId, expireIn: expireIn)
-                try DisappearingMessageDAO.shared.insert(message: message, database: db)
-            }
-            db.afterNextTransactionCommit { db in
-                let change = ConversationChange(conversationId: conversationId, action: .updateExpireIn(expireIn: expireIn, messageId: messageId))
-                NotificationCenter.default.post(onMainThread: MixinServices.conversationDidChangeNotification, object: change)
-            }
-        }
-    }
-    
+        
     public func updateMessageContentAndStatus(content: String, status: String, mention: MessageMention?, messageId: String, category: String, conversationId: String, messageSource: String, silentNotification: Bool) {
         let assignments = [
             Message.column(of: .content).set(to: content),

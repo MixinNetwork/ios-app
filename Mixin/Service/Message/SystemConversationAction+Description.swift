@@ -8,8 +8,7 @@ extension SystemConversationAction {
         userFullName: String,
         participantId: String?,
         participantFullName: String?,
-        content: String?,
-        expireIn: Int64
+        content: String?
     ) -> String {
         let action = actionName ?? ""
         let uFullName = userId == myUserId ? R.string.localizable.chat_message_you() : userFullName
@@ -28,13 +27,15 @@ extension SystemConversationAction {
         case SystemConversationAction.ROLE.rawValue:
             return R.string.localizable.chat_message_admin(pFullName)
         case SystemConversationAction.EXPIRE.rawValue:
-            if content == nil {
-                return R.string.localizable.disappearing_message_change(uFullName)
-            } else if expireIn == 0 {
-                return R.string.localizable.disappearing_message_turn_off(uFullName)
+            if let expireIn = content?.int64Value {
+                if expireIn == 0 {
+                    return R.string.localizable.disappearing_message_turn_off(uFullName)
+                } else {
+                    let title = DisappearingMessageDurationFormatter.string(from: expireIn)
+                    return R.string.localizable.disappearing_message_turn_on(uFullName, title)
+                }
             } else {
-                let title = DisappearingMessageDurationFormatter.string(from: expireIn)
-                return R.string.localizable.disappearing_message_turn_on(uFullName, title)
+                return R.string.localizable.disappearing_message_change(uFullName)
             }
         default:
             return R.string.localizable.chat_cell_title_unknown_category()

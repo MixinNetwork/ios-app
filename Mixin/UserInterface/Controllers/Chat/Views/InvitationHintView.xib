@@ -34,7 +34,7 @@
                         <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                             <integer key="value" value="8"/>
                         </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="chat_exit_group_and_report_inviter"/>
+                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Exit_group_and_report_inviter"/>
                     </userDefinedRuntimeAttributes>
                 </button>
             </subviews>

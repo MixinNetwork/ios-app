@@ -570,7 +570,7 @@
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                 <state key="normal" title="Delete Chat"/>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="delete_Chat"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Delete_Chat"/>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
@@ -841,7 +841,7 @@
                                                     <inset key="contentEdgeInsets" minX="10" minY="0.0" maxX="10" maxY="0.0"/>
                                                     <state key="normal" title="Add"/>
                                                     <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="sticker_store_add"/>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Add"/>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                                             <integer key="value" value="13"/>
                                                         </userDefinedRuntimeAttribute>
@@ -1335,7 +1335,7 @@
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="sticker_store_add"/>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Add"/>
                                             <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                                 <integer key="value" value="13"/>
                                             </userDefinedRuntimeAttribute>
@@ -2264,7 +2264,7 @@
                                                 <inset key="contentEdgeInsets" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
                                                 <state key="normal" title="Manage"/>
                                                 <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="manage"/>
+                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Manage"/>
                                                     <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
                                                     <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
                                                 </userDefinedRuntimeAttributes>
@@ -2583,7 +2583,7 @@
                                                 </state>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="action_send"/>
+                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Send"/>
                                                 </userDefinedRuntimeAttributes>
                                                 <connections>
                                                     <action selector="sendAction:" destination="lA6-Lu-PN4" eventType="touchUpInside" id="jAu-4c-Npf"/>
@@ -2622,7 +2622,7 @@
                                                 <integer key="value" value="13"/>
                                             </userDefinedRuntimeAttribute>
                                             <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="dialog_button_cancel"/>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Cancel"/>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
                                             <action selector="dismissAction:" destination="lA6-Lu-PN4" eventType="touchUpInside" id="xxL-n8-in1"/>
@@ -2816,7 +2816,7 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_input">
-            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.96100002527236938" green="0.96899998188018799" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_secondary">
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

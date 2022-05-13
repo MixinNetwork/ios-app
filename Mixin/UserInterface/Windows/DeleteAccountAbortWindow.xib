@@ -56,6 +56,7 @@
                             <state key="normal" title="Continue"/>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Continue"/>
                             </userDefinedRuntimeAttributes>
                             <connections>
                                 <action selector="continueAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="rvj-kU-vZx"/>

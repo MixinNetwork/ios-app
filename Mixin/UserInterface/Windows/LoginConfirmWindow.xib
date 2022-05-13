@@ -73,7 +73,7 @@ Mixin Messenger Desktop</string>
                             <color key="textColor" name="title"/>
                             <nil key="highlightedColor"/>
                             <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="desktop_login_confirmation"/>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="setting_desktop_confirm"/>
                                 <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
                             </userDefinedRuntimeAttributes>
                         </label>

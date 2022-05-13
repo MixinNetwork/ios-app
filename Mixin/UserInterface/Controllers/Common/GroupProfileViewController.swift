@@ -409,7 +409,7 @@ extension GroupProfileViewController {
                 ])
             } else {
                 groups.append([
-                    ProfileMenuItem(title: R.string.localizable.muted(),
+                    ProfileMenuItem(title: R.string.localizable.mute(),
                                     subtitle: nil,
                                     style: [],
                                     action: #selector(mute))

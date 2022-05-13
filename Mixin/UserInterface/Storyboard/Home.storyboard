@@ -1617,7 +1617,7 @@
                                 <color key="textColor" name="title"/>
                                 <nil key="highlightedColor"/>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="system_time_is_unusual"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="System_time_is_unusual"/>
                                     <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
                                 </userDefinedRuntimeAttributes>
                             </label>
@@ -1779,7 +1779,7 @@
                                                 <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </state>
                                             <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Remove_All"/>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Remove_all"/>
                                             </userDefinedRuntimeAttributes>
                                             <connections>
                                                 <action selector="removeAll:" destination="zxM-vp-2hb" eventType="touchUpInside" id="Ipa-d7-ha3"/>
@@ -2241,7 +2241,7 @@ chat history from icloud</string>
             <color red="0.89803921568627454" green="0.9137254901960784" blue="0.94117647058823528" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
             <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

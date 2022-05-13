@@ -29,7 +29,7 @@ class DepositViewController: UIViewController {
             if asset.usesTag {
                 lowerDepositFieldView.titleLabel.text = R.string.localizable.tag()
             } else {
-                lowerDepositFieldView.titleLabel.text = R.string.localizable.memo()
+                lowerDepositFieldView.titleLabel.text = R.string.localizable.withdrawal_memo()
             }
             lowerDepositFieldView.contentLabel.text = asset.tag
             let memoImage = UIImage(qrcode: asset.tag, size: lowerDepositFieldView.qrCodeImageView.bounds.size)

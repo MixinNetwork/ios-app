@@ -370,7 +370,7 @@
 "Change_PIN_successfully" = "PINの変更が完了しました。";
 "Change_Profile_Photo_with_Camera" = "プロフィール画像を撮影";
 "Change_Profile_Photo_with_Library" = "プロフィール画像を選択";
-"chat_call_duration" = "通話時間: %@";
+"chat_call_duration" = "通話時間 %@";
 "chat_call_warning_voice" = "通話中にボイスメッセージを録音することはできません。";
 "chat_decryption_failed" = "メッセージの解読に失敗しました。Mixinを最新バージョンにアップデートしてください。";
 "chat_group_add" = "%@が%@を追加しました";
@@ -425,6 +425,7 @@
 "Copy_invite" = "リンクをコピーする";
 "Copy_link" = "リンクをコピー";
 "Create" = "作成";
+"created_this_group" = "%@がグループを作成しました";
 "Currency" = "通貨";
 "database_upgrade_tips" = "データベースをアップグレードしています。アプリを閉じないでください。";
 "Date" = "日付";
@@ -439,7 +440,7 @@
 "Delete_Synced_Contact" = "同期済みの連絡先を削除する";
 "Delete_withdraw_Address" = "%@アドレスを削除";
 "Deposit" = "入金";
-"deposit_reserve" = "最初の入金は%@ %@ 以上に指定してください。";
+"deposit_attention" = "注意: 最初は必ず少額で入金テストをしてください。";
 "deposit_tip_btc" = "このアドレスはビットコインのみサポートしています。";
 "deposit_tip_common" = "このアドレスは%@のみサポートしています。";
 "deposit_tip_eos" = "このアドレスはEOSトークンをすべてサポートしています(EOS, IQ, BLACK, OCT, KARMA…)";
@@ -606,7 +607,8 @@
 "phone_number_privacy" = "あなたを電話番号検索で追加できるユーザー";
 "Photo" = "写真";
 "Photos" = "画像";
-"PIN" = "ピン留め";
+"pin_title" = "ピン留め";
+"PIN" = "PIN";
 "PIN_change" = "PIN変更";
 "pin_check_tip" = "安全のため、定期的にPINコードを確認します。";
 "pin_confirm_again_hint" = "3度目となりますが、もう一度PINを確認してください";
@@ -686,7 +688,7 @@
 "setting_emergency_content" = "緊急連絡先は、紛失等の理由でデバイスへのアクセスが出来なくなった場合、ログインする方法となります。";
 "setting_emergency_desc" = "登録した電話番号が使用できなくなった場合は、緊急連絡先として登録した友だちに連絡し、Mixin IDと認証コードを取得してください。詳しくは緊急連絡先についてを確認してください。";
 "setting_emergency_pin_tip" = "あなたの緊急連絡先はPINにより保護されています。";
-"setting_emergency_send_code" = "相手のMixinに送信された4桁のコードを入力してください";
+"setting_emergency_send_code" = "相手のMixinに送信された4桁のコードを入力してください：%@";
 "setting_emergency_set_message" = "（Mixin ID %@）を緊急連絡先としてて設定しますか？緊急連絡先登録の設定は相互の友だち登録が必要です。";
 "setting_emergency_warning" = "注意：PINコードは復元できません 如何なる場合においてもご自身で管理してください";
 "setting_mobile_contact_warning" = "これにより、Mixinサーバーから連絡先が削除されます。";
@@ -698,8 +700,6 @@
 "Share" = "共有";
 "Share_Contact" = "連絡先を共有";
 "Share_Link" = "リンクをシェアする";
-"share_message_description" = "以下のような表示で届きます";
-"share_message_description_empty" = "以下のような表示で届きます";
 "Share_This_App" = "このアプリをシェアする";
 "Shared_Media" = "写真や動画";
 "Show" = "表示";

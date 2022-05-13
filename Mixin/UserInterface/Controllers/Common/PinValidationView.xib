@@ -101,7 +101,7 @@
                                             <color key="textColor" name="red"/>
                                             <nil key="highlightedColor"/>
                                             <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="wallet_password_too_many_requests"/>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="error_pin_check_too_many_request"/>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="lineHeight">
                                                     <real key="value" value="28"/>
                                                 </userDefinedRuntimeAttribute>

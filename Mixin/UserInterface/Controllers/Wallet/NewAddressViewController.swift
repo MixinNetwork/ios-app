@@ -82,7 +82,7 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
                 action = R.string.localizable.no_tag()
             } else {
                 hint = R.string.localizable.withdrawal_addr_memo()
-                action = R.string.localizable.no_Memo()
+                action = R.string.localizable.withdrawal_no_memo()
             }
             memoView.isHidden = false
         }

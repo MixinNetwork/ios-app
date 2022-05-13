@@ -41,7 +41,7 @@ class MessageReceiverViewController: PeerViewController<[MessageReceiver], Check
         let appReceivers = apps.map(MessageReceiver.init)
         let conversations = ConversationDAO.shared.conversationList()
             .compactMap(MessageReceiver.init)
-        let titles = [R.string.localizable.chatS(),
+        let titles = [R.string.localizable.recent_chats(),
                       R.string.localizable.contactS(),
                       R.string.localizable.botS()]
         return (titles, [conversations, contactReceivers, appReceivers])

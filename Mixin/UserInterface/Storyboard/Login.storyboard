@@ -37,7 +37,7 @@
                                         <color key="textColor" name="text"/>
                                         <nil key="highlightedColor"/>
                                         <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="select_a_country_or_region"/>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Select_a_country_or_region"/>
                                             <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
                                         </userDefinedRuntimeAttributes>
                                     </label>

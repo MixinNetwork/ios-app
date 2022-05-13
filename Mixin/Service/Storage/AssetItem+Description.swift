@@ -19,7 +19,7 @@ extension AssetItem {
     }
     
     var memoLabel: String {
-        return usesTag ? R.string.localizable.tag() : R.string.localizable.memo()
+        return usesTag ? R.string.localizable.tag() : R.string.localizable.withdrawal_memo()
     }
     
 }

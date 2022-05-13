@@ -364,7 +364,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
             
             if address.dust.doubleValue > 0 {
                 let dustRepresentation = address.dust + " " + chainAsset.symbol
-                let dustHint = R.string.localizable.withdrawal_minimum_withdrawal(dustRepresentation)
+                let dustHint = R.string.localizable.withdrawal_minimum_withdrawal() + dustRepresentation
                 hint += "\n" + dustHint
                 let range = (hint as NSString).range(of: dustRepresentation, options: .backwards)
                 highlightRanges.append(range)
@@ -372,7 +372,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
             
             if address.reserve.doubleValue > 0 {
                 let reserveRepresentation = address.reserve + " " + chainAsset.symbol
-                let reserveHint = R.string.localizable.withdrawal_minimum_reserve(reserveRepresentation)
+                let reserveHint = R.string.localizable.withdrawal_minimum_reserve() + reserveRepresentation
                 hint += "\n" + reserveHint
                 let range = (hint as NSString).range(of: reserveRepresentation, options: .backwards)
                 highlightRanges.append(range)

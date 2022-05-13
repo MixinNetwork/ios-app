@@ -73,6 +73,7 @@
 "Delete_Chat" = "Delete Chat";
 "Delete_Circle" = "Delete Circle";
 "delete_contact_chat_confirmation" = "Delete chat with \"%@\"?";
+"sticker_add_requirements" = "Requires stickers file size larger than %@KB and less than %@KB, width and height between %@ and %@ pixels.";
 "delete_group_chat_confirmation" = "Delete \"%@\" group chat?";
 "Deleted" = "Deleted";
 "Diagnose" = "Diagnose";
@@ -480,7 +481,7 @@
 "Edit_Biography" = "Edit Biography";
 "Edit_Circle_Name" = "Edit Circle Name";
 "Edit_Conversations" = "Edit Conversations";
-"Edit_Group_Description" = "Edit group description";
+"Edit_Group_Description" = "Edit Group Description";
 "Edit_group_name" = "Edit Group Name";
 "Edit_Name" = "Edit Name";
 "Emergency_Contact" = "Emergency Contact";
@@ -636,6 +637,7 @@
 "Open" = "Open";
 "Open_Home_page" = "Open Home page";
 "Open_in_browser" = "Open in browser";
+"Open_Link" = "Open Link: %@";
 "Owner" = "Owner";
 "Participants" = "Participants";
 "pay_paid" = "This payment link has already been paid by someone, you can not make a duplicate payment.";
@@ -774,7 +776,6 @@
 "Status" = "Status";
 "Sticker" = "Sticker";
 "sticker_add_invalid_size" = "Requires stickers file size larger than 1KB and less than 1MB, width and height between 128px and 1024px.";
-"sticker_add_requirements" = "Requires stickers file size larger than %@KB and less than %@KB, width and height between %@ and %@ pixels.";
 "Sticker_Store" = "Sticker Store";
 "stickers_count" = "%d stickers";
 "Stop_Playing" = "Stop Playing";
@@ -867,8 +868,8 @@
 "withdrawal_label" = "Label (e.g. exchanges, wallets, etc.)";
 "withdrawal_memo" = "Memo";
 "withdrawal_minimum_amount" = "Minimum withdraw amount is %@ %@";
-"withdrawal_minimum_reserve" = "Minimum reserve: %@";
-"withdrawal_minimum_withdrawal" = "Minimum withdrawal: %@";
+"withdrawal_minimum_reserve" = "Minimum reserve: ";
+"withdrawal_minimum_withdrawal" = "Minimum withdrawal: ";
 "withdrawal_network_fee" = "Network fee: ";
 "withdrawal_no_memo" = "No Memo";
 "withdrawal_to" = "Withdraw to %@";

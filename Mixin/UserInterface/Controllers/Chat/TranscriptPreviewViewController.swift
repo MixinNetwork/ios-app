@@ -28,7 +28,7 @@ final class TranscriptPreviewViewController: StaticMessagesViewController {
                                                object: nil)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(expiredMessageDidDelete(_:)),
-                                               name: DisappearingMessageDAO.expiredMessageDidDeleteNotification,
+                                               name: ExpiredMessageDAO.expiredMessageDidDeleteNotification,
                                                object: nil)
     }
     
@@ -128,7 +128,7 @@ extension TranscriptPreviewViewController {
     }
     
     @objc private func expiredMessageDidDelete(_ notification: Notification) {
-        guard let messageId = notification.userInfo?[DisappearingMessageDAO.messageIdKey] as? String, messageId == transcriptMessage.messageId else {
+        guard let messageId = notification.userInfo?[ExpiredMessageDAO.messageIdKey] as? String, messageId == transcriptMessage.messageId else {
             return
         }
         dismissAsChild(completion: nil)

@@ -15,7 +15,7 @@ class ConversationCell: ModernSelectedBackgroundCell {
     @IBOutlet weak var messageStatusImageView: UIImageView!
     @IBOutlet weak var verifiedImageView: UIImageView!
     @IBOutlet weak var pinImageView: UIImageView!
-    @IBOutlet weak var disappearingImageView: UIImageView!
+    @IBOutlet weak var expiredImageView: UIImageView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -58,7 +58,7 @@ class ConversationCell: ModernSelectedBackgroundCell {
             messageTypeImageView.isHidden = true
             contentLabel.text = R.string.localizable.chat_cell_title_unknown_category()
         } else {
-            disappearingImageView.isHidden = item.contentExpireIn == 0 || item.contentType.hasPrefix("SYSTEM_")
+            expiredImageView.isHidden = item.contentExpireIn == 0 || item.contentType.hasPrefix("SYSTEM_")
             showMessageIndicate(conversation: item)
             let senderIsMe = item.senderId == myUserId
             let senderName = senderIsMe ? R.string.localizable.chat_message_you() : item.senderFullName

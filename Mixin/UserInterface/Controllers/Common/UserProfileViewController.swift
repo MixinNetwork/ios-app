@@ -31,11 +31,11 @@ final class UserProfileViewController: ProfileViewController {
     
     private lazy var imagePicker = ImagePickerController(initialCameraPosition: .front, cropImageAfterPicked: true, parent: self, delegate: self)
     private lazy var footerLabel = FooterLabel()
-    private lazy var disappearingMessageItemView: ProfileMenuItemView  = {
+    private lazy var expiredMessageItemView: ProfileMenuItemView  = {
         let view = ProfileMenuItemView()
         view.label.text = R.string.localizable.disappearing_message_title()
         view.subtitleLabel.text = ""
-        view.button.addTarget(self, action: #selector(self.editDisappearingMessageDuration), for: .touchUpInside)
+        view.button.addTarget(self, action: #selector(self.editExpiredMessageDuration), for: .touchUpInside)
         return view
     }()
 
@@ -567,9 +567,9 @@ extension UserProfileViewController {
         present(alert, animated: true, completion: nil)
     }
     
-    @objc func editDisappearingMessageDuration() {
+    @objc func editExpiredMessageDuration() {
         func dismissAndPushController(expireIn: Int64) {
-            let controller = DisappearingMessageViewController.instance(conversationId: conversationId, expireIn: expireIn)
+            let controller = ExpiredMessageViewController.instance(conversationId: conversationId, expireIn: expireIn)
             dismissAndPush(controller)
         }
         if let expireIn = conversationExpireIn {
@@ -891,7 +891,7 @@ extension UserProfileViewController {
             
             reloadMenu(groups: groups)
             menuStackView.insertArrangedSubview(circleItemView, at: groups.count - 2)
-            menuStackView.insertArrangedSubview(disappearingMessageItemView, at: 2)
+            menuStackView.insertArrangedSubview(expiredMessageItemView, at: 2)
         } else {
             reloadMenu(groups: [])
         }
@@ -1002,16 +1002,16 @@ extension UserProfileViewController {
     }
     
     private func reloadMessageExpiration(conversationId: String) {
-        disappearingMessageItemView.button.isEnabled = false
+        expiredMessageItemView.button.isEnabled = false
         DispatchQueue.global().async {
             let expireIn = ConversationDAO.shared.getExpireIn(conversationId: conversationId)
             DispatchQueue.main.sync {
                 if let expireIn = expireIn {
                     self.conversationExpireIn = expireIn
-                    let subtitle = DisappearingMessageDurationFormatter.string(from: expireIn)
-                    self.disappearingMessageItemView.subtitleLabel.text = subtitle
+                    let subtitle = ExpiredMessageDurationFormatter.string(from: expireIn)
+                    self.expiredMessageItemView.subtitleLabel.text = subtitle
                 }
-                self.disappearingMessageItemView.button.isEnabled = true
+                self.expiredMessageItemView.button.isEnabled = true
             }
         }
     }

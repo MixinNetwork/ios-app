@@ -114,7 +114,7 @@ public final class MessageItem {
         return try? JSONDecoder.default.decode(TransferLiveData.self, from: data)
     }()
     
-    public var isDisappearingMessage: Bool {
+    public var isExpiredMessage: Bool {
         expireIn != nil
     }
     

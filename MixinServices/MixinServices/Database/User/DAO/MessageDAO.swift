@@ -306,7 +306,7 @@ public final class MessageDAO: UserDatabaseDAO {
                     .filter(Message.column(of: .messageId) == messageId)
                     .updateAll(db, [Message.column(of: .status).set(to: status)])
                 if status == MessageStatus.SENT.rawValue {
-                    try DisappearingMessageDAO.shared.updateExpireAt(for: messageId, database: db)
+                    try ExpiredMessageDAO.shared.updateExpireAt(for: messageId, database: db)
                 }
                 if let completion = completion {
                     db.afterNextTransactionCommit(completion)
@@ -623,8 +623,8 @@ public final class MessageDAO: UserDatabaseDAO {
             } else {
                 expireAt = nil
             }
-            let msg = DisappearingMessage(messageId: message.messageId, expireIn: expireIn, expireAt: expireAt)
-            try DisappearingMessageDAO.shared.insert(message: msg, database: database)
+            let msg = ExpiredMessage(messageId: message.messageId, expireIn: expireIn, expireAt: expireAt)
+            try ExpiredMessageDAO.shared.insert(message: msg, database: database)
         }
         let shouldInsertIntoFTSTable = AppGroupUserDefaults.Database.isFTSInitialized
             && message.status != MessageStatus.FAILED.rawValue

@@ -1,6 +1,6 @@
 import UIKit
 
-class DisappearingMessageTimePickerWindow: BottomSheetView {
+class ExpiredMessageTimePickerWindow: BottomSheetView {
         
     @IBOutlet weak var pickerView: UIPickerView!
     
@@ -32,8 +32,8 @@ class DisappearingMessageTimePickerWindow: BottomSheetView {
         dismissPopupControllerAnimated()
     }
     
-    class func instance() -> DisappearingMessageTimePickerWindow {
-        R.nib.disappearingMessageTimePickerWindow(owner: self)!
+    class func instance() -> ExpiredMessageTimePickerWindow {
+        R.nib.expiredMessageTimePickerWindow(owner: self)!
     }
     
     func render(expireIn: Int64) {
@@ -60,7 +60,7 @@ class DisappearingMessageTimePickerWindow: BottomSheetView {
     
 }
 
-extension DisappearingMessageTimePickerWindow: UIPickerViewDataSource {
+extension ExpiredMessageTimePickerWindow: UIPickerViewDataSource {
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         2
@@ -79,7 +79,7 @@ extension DisappearingMessageTimePickerWindow: UIPickerViewDataSource {
     
 }
 
-extension DisappearingMessageTimePickerWindow: UIPickerViewDelegate {
+extension ExpiredMessageTimePickerWindow: UIPickerViewDelegate {
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         switch Component(rawValue: component) {
@@ -108,7 +108,7 @@ extension DisappearingMessageTimePickerWindow: UIPickerViewDelegate {
     
 }
 
-extension DisappearingMessageTimePickerWindow {
+extension ExpiredMessageTimePickerWindow {
     
     private func duration(for index: Int) -> Int {
         index + 1

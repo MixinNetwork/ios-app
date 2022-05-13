@@ -1,6 +1,6 @@
 import Foundation
 
-enum DisappearingMessageDurationFormatter {
+enum ExpiredMessageDurationFormatter {
     
     static func string(from value: Int64) -> String {
         if value == 0 {

@@ -31,7 +31,7 @@ extension SystemConversationAction {
                 if expireIn == 0 {
                     return R.string.localizable.disappearing_message_turn_off(uFullName)
                 } else {
-                    let title = DisappearingMessageDurationFormatter.string(from: expireIn)
+                    let title = ExpiredMessageDurationFormatter.string(from: expireIn)
                     return R.string.localizable.disappearing_message_turn_on(uFullName, title)
                 }
             } else {

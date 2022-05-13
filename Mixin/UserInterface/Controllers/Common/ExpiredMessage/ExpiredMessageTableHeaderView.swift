@@ -1,6 +1,6 @@
 import UIKit
 
-class DisappearingMessageTableHeaderView: UIView {
+class ExpiredMessageTableHeaderView: UIView {
     
     @IBOutlet weak var textLabel: TextLabel!
     @IBOutlet weak var imageView: UIImageView!
@@ -22,7 +22,7 @@ class DisappearingMessageTableHeaderView: UIView {
         textLabel.text = text
         let linkRange = (text as NSString).range(of: R.string.localizable.action_learn_more(), options: [.backwards, .caseInsensitive])
         if linkRange.location != NSNotFound && linkRange.length != 0 {
-            textLabel.additionalLinksMap = [linkRange: URL.disappearingMessage]
+            textLabel.additionalLinksMap = [linkRange: URL.expiredMessage]
         }
     }
 
@@ -42,7 +42,7 @@ class DisappearingMessageTableHeaderView: UIView {
     
 }
 
-extension DisappearingMessageTableHeaderView: CoreTextLabelDelegate {
+extension ExpiredMessageTableHeaderView: CoreTextLabelDelegate {
     
     func coreTextLabel(_ label: CoreTextLabel, didSelectURL url: URL) {
         UIApplication.shared.open(url, options: [:], completionHandler: nil)

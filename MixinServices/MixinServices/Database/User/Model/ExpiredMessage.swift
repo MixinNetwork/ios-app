@@ -1,7 +1,7 @@
 import Foundation
 import GRDB
 
-public final class DisappearingMessage {
+public final class ExpiredMessage {
     
     public let messageId: String
     public let expireIn: Int64
@@ -20,7 +20,7 @@ public final class DisappearingMessage {
     
 }
 
-extension DisappearingMessage: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord {
+extension ExpiredMessage: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord {
     
     public enum CodingKeys: String, CodingKey {
         case messageId = "message_id"
@@ -30,7 +30,7 @@ extension DisappearingMessage: Codable, DatabaseColumnConvertible, MixinFetchabl
     
 }
 
-extension DisappearingMessage: TableRecord, PersistableRecord {
+extension ExpiredMessage: TableRecord, PersistableRecord {
     
     public static let databaseTableName = "expired_messages"
     

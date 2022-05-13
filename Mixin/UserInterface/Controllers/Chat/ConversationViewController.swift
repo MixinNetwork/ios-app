@@ -370,7 +370,7 @@ class ConversationViewController: UIViewController {
         center.addObserver(self, selector: #selector(pinMessageDidSave(_:)), name: PinMessageDAO.didSaveNotification, object: nil)
         center.addObserver(self, selector: #selector(pinMessageDidDelete(_:)), name: PinMessageDAO.didDeleteNotification, object: nil)
         center.addObserver(self, selector: #selector(pinMessageBannerDidChange), name: AppGroupUserDefaults.User.pinMessageBannerDidChangeNotification, object: nil)
-        center.addObserver(self, selector: #selector(expiredMessageDidDelete(_:)), name: DisappearingMessageDAO.expiredMessageDidDeleteNotification, object: nil)
+        center.addObserver(self, selector: #selector(expiredMessageDidDelete(_:)), name: ExpiredMessageDAO.expiredMessageDidDeleteNotification, object: nil)
         
         if dataSource.category == .group {
             updateGroupCallIndicatorViewHidden()
@@ -1190,7 +1190,7 @@ class ConversationViewController: UIViewController {
     }
     
     @objc private func expiredMessageDidDelete(_ notification: Notification) {
-        guard let messageId = notification.userInfo?[DisappearingMessageDAO.messageIdKey] as? String else {
+        guard let messageId = notification.userInfo?[ExpiredMessageDAO.messageIdKey] as? String else {
             return
         }
         guard let indexPath = dataSource.indexPath(where: { $0.messageId == messageId }) else {

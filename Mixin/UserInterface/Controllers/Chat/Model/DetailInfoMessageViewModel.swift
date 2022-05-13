@@ -29,7 +29,7 @@ class DetailInfoMessageViewModel: MessageViewModel {
     var timeFrame = CGRect(x: 0, y: 0, width: 0, height: 12)
     var statusFrame = CGRect.zero
     var identityIconFrame = CGRect(origin: .zero, size: DetailInfoMessageViewModel.identityIconSize)
-    var disappearingIconFrame = CGRect(x: 0, y: 0, width: 16, height: 16)
+    var expiredIconFrame = CGRect(x: 0, y: 0, width: 16, height: 16)
     
     var statusNormalTintColor: UIColor {
         return .accessoryText
@@ -109,7 +109,7 @@ class DetailInfoMessageViewModel: MessageViewModel {
             let index = message.userId.positiveHashCode() % UIColor.usernameColors.count
             fullnameColor = UIColor.usernameColors[index]
         }
-        layoutDisappearingIconFrame(backgroundImageFrame: backgroundImageFrame)
+        layoutExpiredIconFrame(backgroundImageFrame: backgroundImageFrame)
         layoutEncryptedIconFrame()
         layoutForwarderIcon()
         layoutPinnedIconFrame()
@@ -120,18 +120,18 @@ class DetailInfoMessageViewModel: MessageViewModel {
                                            y: fullnameFrame.origin.y + (fullnameFrame.height - identityIconFrame.height) / 2)
     }
     
-    func layoutDisappearingIconFrame(backgroundImageFrame: CGRect) {
-        guard message.isDisappearingMessage else {
+    func layoutExpiredIconFrame(backgroundImageFrame: CGRect) {
+        guard message.isExpiredMessage else {
             return
         }
         let x: CGFloat
         if style.contains(.received) {
             x = backgroundImageFrame.maxX + 10
         } else {
-            x = backgroundImageFrame.minX - disappearingIconFrame.width - 10
+            x = backgroundImageFrame.minX - expiredIconFrame.width - 10
         }
-        let y = backgroundImageFrame.midY - disappearingIconFrame.height / 2
-        disappearingIconFrame.origin = CGPoint(x: x, y: y)
+        let y = backgroundImageFrame.midY - expiredIconFrame.height / 2
+        expiredIconFrame.origin = CGPoint(x: x, y: y)
     }
     
     func layoutEncryptedIconFrame() {

@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class DisappearingMessageViewController: SettingsTableViewController {
+final class ExpiredMessageViewController: SettingsTableViewController {
     
     private let rows = Option.allCases.map { option in
         SettingsRow(title: option.title, accessory: .none)
@@ -14,7 +14,7 @@ final class DisappearingMessageViewController: SettingsTableViewController {
     private lazy var dataSource = SettingsDataSource(sections: [section])
     
     class func instance(conversationId: String, expireIn: Int64) -> UIViewController {
-        let vc = DisappearingMessageViewController()
+        let vc = ExpiredMessageViewController()
         vc.conversationId = conversationId
         vc.currentExpireIn = expireIn
         let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.disappearing_message_title())
@@ -23,7 +23,7 @@ final class DisappearingMessageViewController: SettingsTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.tableHeaderView = R.nib.disappearingMessageTableHeaderView(owner: nil)
+        tableView.tableHeaderView = R.nib.expiredMessageTableHeaderView(owner: nil)
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
         setAccessory(.checkmark, forRowWith: currentExpireIn)
@@ -31,7 +31,7 @@ final class DisappearingMessageViewController: SettingsTableViewController {
     
 }
 
-extension DisappearingMessageViewController: UITableViewDelegate {
+extension ExpiredMessageViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
@@ -39,7 +39,7 @@ extension DisappearingMessageViewController: UITableViewDelegate {
         if let expireIn = option.expireIn {
             update(expireIn: expireIn)
         } else {
-            let window = DisappearingMessageTimePickerWindow.instance()
+            let window = ExpiredMessageTimePickerWindow.instance()
             window.render(expireIn: currentExpireIn)
             window.onPick = update(expireIn:)
             window.presentPopupControllerAnimated()
@@ -48,7 +48,7 @@ extension DisappearingMessageViewController: UITableViewDelegate {
     
 }
 
-extension DisappearingMessageViewController {
+extension ExpiredMessageViewController {
     
     private enum Option: CaseIterable {
         
@@ -127,7 +127,7 @@ extension DisappearingMessageViewController {
         }
         switch option {
         case .custom:
-            rows[index].subtitle = DisappearingMessageDurationFormatter.string(from: expireIn)
+            rows[index].subtitle = ExpiredMessageDurationFormatter.string(from: expireIn)
         default:
             if let index = Option.allCases.firstIndex(of: .custom) {
                 rows[index].subtitle = nil

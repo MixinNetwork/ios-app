@@ -211,7 +211,7 @@ public class SendMessageService: MixinService {
                         jobs.append(Job(sessionRead: conversationId, messageId: messageId))
                     }
                 } else {
-                    let expireAts = DisappearingMessageDAO.shared.getExpireAts(messageIds: ids)
+                    let expireAts = ExpiredMessageDAO.shared.getExpireAts(messageIds: ids)
                     for i in stride(from: 0, to: ids.count, by: 100) {
                         let by = i + 100 > ids.count ? ids.count : i + 100
                         let messages: [TransferMessage] = ids[i..<by].map { TransferMessage(messageId: $0, status: MessageStatus.READ.rawValue, expireAt: expireAts[$0]) }
@@ -232,7 +232,7 @@ public class SendMessageService: MixinService {
                                    arguments: [conversationId, MessageStatus.DELIVERED.rawValue, myUserId, lastRowID])
                     try MessageDAO.shared.updateUnseenMessageCount(database: db, conversationId: conversationId)
                     for id in messageIds {
-                        try DisappearingMessageDAO.shared.updateExpireAt(for: id, database: db)
+                        try ExpiredMessageDAO.shared.updateExpireAt(for: id, database: db)
                     }
                     if isLastLoop {
                         db.afterNextTransactionCommit { (_) in
@@ -626,7 +626,7 @@ extension SendMessageService {
             let expireIn = try checkConversationExist(conversation: conversation)
             if blazeMessage.params?.expireIn == 0, expireIn != 0 {
                 blazeMessage.params?.expireIn = expireIn
-                DisappearingMessageDAO.shared.insert(message: DisappearingMessage(messageId: messageId, expireIn: expireIn),
+                ExpiredMessageDAO.shared.insert(message: ExpiredMessage(messageId: messageId, expireIn: expireIn),
                                                      conversationId: message.conversationId)
             }
         }

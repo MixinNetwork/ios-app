@@ -1,11 +1,11 @@
 import Foundation
 import MixinServices
 
-final class DisappearingMessageManager {
+final class ExpiredMessageManager {
     
-    static let shared = DisappearingMessageManager()
+    static let shared = ExpiredMessageManager()
     
-    private let queue = DispatchQueue(label: "one.mixin.messenger.queue.disappearingMessage")
+    private let queue = DispatchQueue(label: "one.mixin.messenger.queue.ExpiredMessageManager")
     
     private weak var timer: Timer?
     
@@ -21,13 +21,13 @@ final class DisappearingMessageManager {
                                        object: nil)
         notificationCenter.addObserver(self,
                                        selector: #selector(removeExpiredMessages),
-                                       name: DisappearingMessageDAO.expiredAtDidUpdateNotification,
+                                       name: ExpiredMessageDAO.expiredAtDidUpdateNotification,
                                        object: nil)
     }
     
     @objc func removeExpiredMessages() {
         queue.async { [weak self] in
-            DisappearingMessageDAO.shared.removeExpiredMessages { nextExpireAt in
+            ExpiredMessageDAO.shared.removeExpiredMessages { nextExpireAt in
                 if let nextExpireAt = nextExpireAt {
                     self?.scheduleTimer(expireAt: nextExpireAt)
                 }

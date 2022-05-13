@@ -1070,7 +1070,7 @@ public class ReceiveMessageService: MixinService {
                         mentionMessageIds.append(message.messageId)
                     }
                     if let expireAt = message.expireAt {
-                        DisappearingMessageDAO.shared.updateExpireAt(for: message.messageId, expireAt: expireAt)
+                        ExpiredMessageDAO.shared.updateExpireAt(for: message.messageId, expireAt: expireAt)
                     }
                 }
 

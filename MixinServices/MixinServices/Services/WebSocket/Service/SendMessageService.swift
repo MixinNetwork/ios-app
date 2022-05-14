@@ -183,57 +183,54 @@ public class SendMessageService: MixinService {
     
     public func sendReadMessages(conversationId: String) {
         DispatchQueue.global().async {
-            let condition: SQLSpecificExpressible = Message.column(of: .conversationId) == conversationId
-                && Message.column(of: .status) == MessageStatus.DELIVERED.rawValue
-                && Message.column(of: .userId) != myUserId
-            let messageIds: [String] = UserDatabase.current.select(column: Message.column(of: .messageId),
-                                                                   from: Message.self,
-                                                                   where: condition,
-                                                                   order: [Message.column(of: .createdAt).asc])
+            let unreadMessages = MessageDAO.shared.getUnreadMessages(conversationId: conversationId)
             var position = 0
             let pageCount = AppGroupUserDefaults.Account.isDesktopLoggedIn ? 1000 : 2000
-            while messageIds.count > 0 && position < messageIds.count {
-                let nextPosition = position + pageCount > messageIds.count ? messageIds.count : position + pageCount
-                let ids = Array(messageIds[position..<nextPosition])
+            while unreadMessages.count > 0 && position < unreadMessages.count {
+                let nextPosition = position + pageCount > unreadMessages.count ? unreadMessages.count : position + pageCount
+                let messages = Array(unreadMessages[position..<nextPosition])
                 var jobs = [Job]()
                 
-                guard let lastMessageId = ids.last,
+                guard let lastMessageId = messages.last?.id,
                       let lastRowID: Int = UserDatabase.current.select(column: .rowID, from: Message.self, where: Message.column(of: .messageId) == lastMessageId)
                 else {
                     return
                 }
-                if ids.count == 1 {
-                    let messageId = ids[0]
-                    let blazeMessage = BlazeMessage(ackBlazeMessage: messageId, status: MessageStatus.READ.rawValue)
-                    jobs.append(Job(jobId: blazeMessage.id, action: .SEND_ACK_MESSAGE, blazeMessage: blazeMessage))
+                if messages.count == 1 {
+                    let message = messages[0]
+                    let transferMessage = TransferMessage(messageId: message.id, status: MessageStatus.READ.rawValue, expireAt: message.expireAt)
+                    let blazeMessage = BlazeMessage(params: BlazeMessageParam(messages: [transferMessage]), action: BlazeMessageAction.acknowledgeMessageReceipts.rawValue)
+                    jobs.append(Job(jobId: blazeMessage.id, action: .SEND_ACK_MESSAGES, blazeMessage: blazeMessage))
                     
                     if AppGroupUserDefaults.Account.isDesktopLoggedIn {
-                        jobs.append(Job(sessionRead: conversationId, messageId: messageId))
+                        jobs.append(Job(sessionRead: conversationId, messageId: message.id))
                     }
                 } else {
-                    let expireAts = ExpiredMessageDAO.shared.getExpireAts(messageIds: ids)
-                    for i in stride(from: 0, to: ids.count, by: 100) {
-                        let by = i + 100 > ids.count ? ids.count : i + 100
-                        let messages: [TransferMessage] = ids[i..<by].map { TransferMessage(messageId: $0, status: MessageStatus.READ.rawValue, expireAt: expireAts[$0]) }
-                        let blazeMessage = BlazeMessage(params: BlazeMessageParam(messages: messages), action: BlazeMessageAction.acknowledgeMessageReceipts.rawValue)
+                    for i in stride(from: 0, to: messages.count, by: 100) {
+                        let by = i + 100 > messages.count ? messages.count : i + 100
+                        let transferMessages: [TransferMessage] = messages[i..<by].map { TransferMessage(messageId: $0.id, status: MessageStatus.READ.rawValue, expireAt: $0.expireAt) }
+                        let blazeMessage = BlazeMessage(params: BlazeMessageParam(messages: transferMessages), action: BlazeMessageAction.acknowledgeMessageReceipts.rawValue)
                         jobs.append(Job(jobId: blazeMessage.id, action: .SEND_ACK_MESSAGES, blazeMessage: blazeMessage))
                         
                         if let sessionId = AppGroupUserDefaults.Account.extensionSession {
-                            let blazeMessage = BlazeMessage(params: BlazeMessageParam(sessionId: sessionId, conversationId: conversationId, ackMessages: messages), action: BlazeMessageAction.createMessage.rawValue)
+                            let blazeMessage = BlazeMessage(params: BlazeMessageParam(sessionId: sessionId, conversationId: conversationId, ackMessages: transferMessages), action: BlazeMessageAction.createMessage.rawValue)
                             jobs.append(Job(jobId: blazeMessage.id, action: .SEND_SESSION_MESSAGES, blazeMessage: blazeMessage))
                         }
                     }
                 }
                 
-                let isLastLoop = nextPosition >= messageIds.count
+                let isLastLoop = nextPosition >= messages.count
                 UserDatabase.current.write { (db) in
                     try jobs.insert(db)
                     try db.execute(sql: "UPDATE messages SET status = '\(MessageStatus.READ.rawValue)' WHERE conversation_id = ? AND status = ? AND user_id != ? AND ROWID <= ?",
                                    arguments: [conversationId, MessageStatus.DELIVERED.rawValue, myUserId, lastRowID])
                     try MessageDAO.shared.updateUnseenMessageCount(database: db, conversationId: conversationId)
-                    for id in messageIds {
-                        try ExpiredMessageDAO.shared.updateExpireAt(for: id, database: db)
+                    let expireIns: [String: Int64] = messages.reduce(into: [:]) { result, message in
+                        if message.expireAt == nil, let expireIn = message.expireIn {
+                            result[message.id] = expireIn
+                        }
                     }
+                    try ExpiredMessageDAO.shared.updateExpireAts(expireIns: expireIns, database: db)
                     if isLastLoop {
                         db.afterNextTransactionCommit { (_) in
                             NotificationCenter.default.post(name: MixinService.messageReadStatusDidChangeNotification, object: self)

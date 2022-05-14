@@ -53,6 +53,25 @@ public final class ExpiredMessageDAO: UserDatabaseDAO {
         }
     }
     
+    public func updateExpireAts(expireIns: [String: Int64], database: GRDB.Database) throws {
+        guard !expireIns.isEmpty else {
+            return
+        }
+        var hasUpdated = false
+        for (messageId, expireIn) in expireIns {
+            let expireAt = Int64(Date().addingTimeInterval(TimeInterval(expireIn)).timeIntervalSince1970)
+            let updateCount = try ExpiredMessage
+                .filter(ExpiredMessage.column(of: .messageId) == messageId)
+                .updateAll(database, [ExpiredMessage.column(of: .expireAt).set(to: expireAt)])
+            hasUpdated = hasUpdated || updateCount > 0
+        }
+        if hasUpdated {
+            database.afterNextTransactionCommit { _ in
+                NotificationCenter.default.post(onMainThread: Self.expiredAtDidUpdateNotification, object: self)
+            }
+        }
+    }
+    
     public func removeExpiredMessages(completion: (_ nextExpireAt: Int64?) -> Void) {
         db.write { db in
             let condition: SQLSpecificExpressible = ExpiredMessage.column(of: .expireAt) != nil
@@ -91,22 +110,6 @@ public final class ExpiredMessageDAO: UserDatabaseDAO {
                 .order([ExpiredMessage.column(of: .expireAt).asc])
                 .fetchOne(db)
             completion(nextExpireAt)
-        }
-    }
-    
-    public func getExpireAts(messageIds: [String]) -> [String: Int64] {
-        guard !messageIds.isEmpty else {
-            return [:]
-        }
-        let ids = messageIds.joined(separator: "', '")
-        let sql = """
-        SELECT m.*
-        FROM expired_messages m
-        WHERE m.expire_at IS NOT NULL AND m.message_id in ('\(ids)') 
-        """
-        let messages: [ExpiredMessage] = db.select(with: sql)
-        return messages.reduce(into: [:]) { map, message in
-            map[message.messageId] = message.expireAt
         }
     }
     

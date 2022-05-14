@@ -134,6 +134,17 @@ public final class MessageDAO: UserDatabaseDAO {
                          limit: limit)
     }
     
+    public func getUnreadMessages(conversationId: String) -> [UnreadMessage] {
+        let sql = """
+            SELECT m.id, em.expire_in, em.expire_at
+            FROM messages m
+            LEFT JOIN expired_messages em ON m.id = em.message_id
+            WHERE m.conversation_id = ? AND status = ? AND user_id != ?
+            ORDER BY m.created_at ASC
+        """
+        return db.select(with: sql, arguments: [conversationId, MessageStatus.DELIVERED.rawValue, myUserId])
+    }
+    
     public func deleteMediaMessages(conversationId: String, categories: [MessageCategory]) {
         let condition: SQLSpecificExpressible = Message.column(of: .conversationId) == conversationId
             && categories.map(\.rawValue).contains(Message.column(of: .category))

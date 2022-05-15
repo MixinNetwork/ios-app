@@ -20,7 +20,11 @@ extension SystemConversationAction {
         case SystemConversationAction.ROLE.rawValue:
             return R.string.localizable.chat_message_admin(pFullName)
         default:
-            return R.string.localizable.chat_cell_title_unknown_category()
+            if content.isEmpty {
+                return R.string.localizable.chat_cell_title_unknown_category()
+            } else {
+                return content
+            }
         }
     }
 }

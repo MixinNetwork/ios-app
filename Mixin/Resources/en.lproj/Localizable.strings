@@ -92,6 +92,7 @@
 "search_section_title_conversation_by_message" = "Messages";
 "search_result_prefix_id" = "Mixin ID: ";
 "search_result_prefix_phone" = "Phone Number: ";
+"search_result_prefix_link" = "Open Link: ";
 
 // Toast
 "permission_denied_camera" = "Mixin doesn't have permission to use your camera. Please tap Setting to open system settings.";

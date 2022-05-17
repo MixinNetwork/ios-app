@@ -10,7 +10,7 @@ class PlaceholderTextView: UITextView {
             guard let key = local_placeholder, !key.isEmpty else {
                 return
             }
-            let localText = LocalizedString(key, comment: key)
+            let localText = NSLocalizedString(key, comment: key)
             if localText != placeholder {
                 self.placeholder = localText
             }

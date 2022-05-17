@@ -1,10 +1,5 @@
 import UIKit
 
-public func LocalizedString(_ key: String, comment: String) -> String {
-    let localText = NSLocalizedString(key, comment: "")
-    return localText == key ? comment : localText
-}
-
 extension UIButton {
 
     @IBInspectable
@@ -16,7 +11,7 @@ extension UIButton {
             guard let text = newValue, !text.isEmpty else {
                 return
             }
-            let localText = LocalizedString(text, comment: text)
+            let localText = NSLocalizedString(text, comment: text)
             if localText != text {
                 self.setTitle(localText, for: .normal)
             }
@@ -35,7 +30,7 @@ extension UILabel {
             guard let text = newValue, !text.isEmpty else {
                 return
             }
-            let localText = LocalizedString(text, comment: text)
+            let localText = NSLocalizedString(text, comment: text)
             if localText != text {
                 self.text = localText
             }
@@ -54,7 +49,7 @@ extension UITextField {
             guard let text = newValue, !text.isEmpty else {
                 return
             }
-            let localText = LocalizedString(text, comment: text)
+            let localText = NSLocalizedString(text, comment: text)
             if localText != text {
                 self.placeholder = localText
             }
@@ -74,7 +69,7 @@ extension UINavigationItem {
             guard let text = newValue, !text.isEmpty else {
                 return
             }
-            let localText = LocalizedString(text, comment: text)
+            let localText = NSLocalizedString(text, comment: text)
             if localText != text {
                 self.title = localText
             }
@@ -94,7 +89,7 @@ extension SearchBoxView {
             guard let text = newValue, !text.isEmpty else {
                 return
             }
-            let localText = LocalizedString(text, comment: text)
+            let localText = NSLocalizedString(text, comment: text)
             if localText != text {
                 self.textField.placeholder = localText
             }

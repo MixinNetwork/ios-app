@@ -32,7 +32,7 @@ class VerificationCodeViewController: ContinueButtonViewController {
             label.adjustsFontForContentSizeCategory = true
         }
         resendButton.normalTitle = R.string.localizable.resend_code()
-        resendButton.pendingTitleTemplate = LocalizedString("resend_code_pending", comment: "")
+        resendButton.pendingTitleTemplate = NSLocalizedString(R.string.localizable.resend_code_pending.key, comment: "")
         resendButton.beginCountDown(resendInterval)
         verificationCodeField.becomeFirstResponder()
     }

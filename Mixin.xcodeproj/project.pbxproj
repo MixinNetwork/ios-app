@@ -1530,9 +1530,6 @@
 		7BFE47E42284530200FC4379 /* PeerHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerHeaderView.swift; sourceTree = "<group>"; };
 		7BFE47E622845DE100FC4379 /* MessageReceiver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageReceiver.swift; sourceTree = "<group>"; };
 		7C02C1EF282D059A00FFED80 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		7C02C1F0282D05C900FFED80 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		7C02C1F1282D05CA00FFED80 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
-		7C02C1F2282D05CC00FFED80 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		7C0D997E26CA62CD00356655 /* StaticAudioMessagePlayingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticAudioMessagePlayingManager.swift; sourceTree = "<group>"; };
 		7C0E15DE27005376002FC718 /* UnknownURLWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnknownURLWindow.swift; sourceTree = "<group>"; };
 		7C0E15E0270053AC002FC718 /* UnknownURLWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UnknownURLWindow.xib; sourceTree = "<group>"; };
@@ -3863,7 +3860,6 @@
 				en,
 				Base,
 				"zh-Hans",
-				ja,
 			);
 			mainGroup = 277FF6F61F909A1200DBB2EB;
 			productRefGroup = 277FF7001F909A1200DBB2EB /* Products */;
@@ -5189,7 +5185,6 @@
 			children = (
 				7BD387FD24DC66F900A3035C /* en */,
 				7C02C1EF282D059A00FFED80 /* zh-Hans */,
-				7C02C1F1282D05CA00FFED80 /* ja */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -5199,7 +5194,6 @@
 			children = (
 				DF8CECFE1FC58DBD00E40064 /* en */,
 				DF8CED001FC58DC000E40064 /* zh-Hans */,
-				7C02C1F0282D05C900FFED80 /* ja */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -5217,7 +5211,6 @@
 			children = (
 				DFE864EC24229EFB009B1833 /* en */,
 				DFE864EE24229F06009B1833 /* zh-Hans */,
-				7C02C1F2282D05CC00FFED80 /* ja */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";

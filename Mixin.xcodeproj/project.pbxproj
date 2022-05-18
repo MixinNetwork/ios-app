@@ -4141,7 +4141,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				$SRCROOT/MixinNotificationService/R.generated.swift,
+				"$SRCROOT/MixinNotificationService/R.generated.swift",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -4260,7 +4260,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				$SRCROOT/MixinShare/R.generated.swift,
+				"$SRCROOT/MixinShare/R.generated.swift",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -4280,7 +4280,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				$SRCROOT/R.generated.swift,
+				"$SRCROOT/R.generated.swift",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -4300,6 +4300,7 @@
 				"${BUILT_PRODUCTS_DIR}/FirebaseABTesting/FirebaseABTesting.framework",
 				"${BUILT_PRODUCTS_DIR}/FirebaseCore/FirebaseCore.framework",
 				"${BUILT_PRODUCTS_DIR}/FirebaseCoreDiagnostics/FirebaseCoreDiagnostics.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseCoreInternal/FirebaseCoreInternal.framework",
 				"${BUILT_PRODUCTS_DIR}/FirebaseCrashlytics/FirebaseCrashlytics.framework",
 				"${BUILT_PRODUCTS_DIR}/FirebaseInstallations/FirebaseInstallations.framework",
 				"${BUILT_PRODUCTS_DIR}/FirebasePerformance/FirebasePerformance.framework",
@@ -4333,6 +4334,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseABTesting.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCore.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCoreDiagnostics.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCoreInternal.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCrashlytics.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseInstallations.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebasePerformance.framework",

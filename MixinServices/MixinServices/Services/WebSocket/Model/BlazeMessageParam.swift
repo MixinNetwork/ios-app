@@ -30,6 +30,8 @@ struct BlazeMessageParam: Codable {
     
     var silentNotification: Bool?
     
+    var expireIn: Int64?
+    
     var krakenDebugDescription: String {
         "<KrakenParam category: \(category ?? "(null)"), trackId: \(trackId ?? "(null)"), jsep: \(jsep ?? "(null)"), recipientIds: \(recipientIds.debugDescription ?? "(null)"), candidate: \(candidate ?? "(null)")>"
     }
@@ -59,6 +61,8 @@ struct BlazeMessageParam: Codable {
         case candidate
         
         case silentNotification = "silent"
+        
+        case expireIn = "expire_in"
     }
     
 }

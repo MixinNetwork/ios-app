@@ -29,7 +29,7 @@ enum StickerStore {
     static func refreshStickersIfNeeded() {
         let shouldRefresh: Bool
         if let date = AppGroupUserDefaults.User.stickerRefreshDate {
-            shouldRefresh = -date.timeIntervalSinceNow >= .oneDay
+            shouldRefresh = -date.timeIntervalSinceNow >= .day
         } else {
             shouldRefresh = true
         }

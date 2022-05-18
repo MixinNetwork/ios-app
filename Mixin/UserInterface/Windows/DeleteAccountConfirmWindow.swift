@@ -29,7 +29,7 @@ final class DeleteAccountConfirmWindow: BottomSheetView {
         textLabel.textColor = .title
         textLabel.detectLinks = false
         
-        let thirtyDaysLater = Date().addingTimeInterval(30 * .oneDay)
+        let thirtyDaysLater = Date().addingTimeInterval(30 * .day)
         let date = DateFormatter.deleteAccountFormatter.string(from: thirtyDaysLater)
         let hint = R.string.localizable.setting_delete_account_confirm_hint(date)
         textLabel.text = hint

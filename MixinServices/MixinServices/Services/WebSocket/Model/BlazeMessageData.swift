@@ -14,6 +14,7 @@ public struct BlazeMessageData: Codable {
     public let quoteMessageId: String
     public let representativeId: String
     public let sessionId: String
+    public let expireIn: Int64
     
     public var silentNotification: Bool {
         isSilent ?? false
@@ -35,6 +36,7 @@ public struct BlazeMessageData: Codable {
         case representativeId = "representative_id"
         case sessionId = "session_id"
         case isSilent = "silent"
+        case expireIn = "expire_in"
     }
     
 }

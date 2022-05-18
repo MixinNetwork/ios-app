@@ -253,7 +253,7 @@ public class ReceiveMessageService: MixinService {
                                                    userId: data.getSenderId())
         unknownMessage.status = MessageStatus.UNKNOWN.rawValue
         unknownMessage.content = data.data
-        MessageDAO.shared.insertMessage(message: unknownMessage, messageSource: data.source, silentNotification: data.silentNotification)
+        MessageDAO.shared.insertMessage(message: unknownMessage, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
     }
 
     private func processBadMessage(data: BlazeMessageData) {
@@ -284,7 +284,7 @@ public class ReceiveMessageService: MixinService {
         _ = syncUser(userId: data.getSenderId())
 
         let message = Message.createMessage(appMessage: data)
-        MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification)
+        MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
         updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
     }
 
@@ -308,7 +308,7 @@ public class ReceiveMessageService: MixinService {
         _ = syncUser(userId: data.getSenderId())
 
         let message = Message.createMessage(appMessage: data)
-        MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification)
+        MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
         updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
     }
 
@@ -585,7 +585,7 @@ public class ReceiveMessageService: MixinService {
                 return
             }
             let message = Message.createMessage(textMessage: content, data: data)
-            MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification)
+            MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
         } else if data.category.hasSuffix("_IMAGE") || data.category.hasSuffix("_VIDEO") {
             guard let transferMediaData = (try? JSONDecoder.default.decode(TransferAttachmentData.self, from: decryptedData)) else {
                 Logger.conversation(id: data.conversationId).error(category: "DecryptSuccess", message: "Invalid data for category: \(data.category), data: \(String(data: decryptedData, encoding: .utf8))")
@@ -611,7 +611,7 @@ public class ReceiveMessageService: MixinService {
             }
 
             let message = Message.createMessage(mediaData: transferMediaData, data: data)
-            MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification)
+            MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
         } else if data.category.hasSuffix("_LIVE") {
             guard let live = (try? JSONDecoder.default.decode(TransferLiveData.self, from: decryptedData)) else {
                 Logger.conversation(id: data.conversationId).error(category: "DecryptSuccess", message: "Invalid TransferLiveData for category: \(data.category), data: \(String(data: decryptedData, encoding: .utf8))")
@@ -621,7 +621,7 @@ public class ReceiveMessageService: MixinService {
             let message = Message.createMessage(liveData: live,
                                                 content: String(data: decryptedData, encoding: .utf8),
                                                 data: data)
-            MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification)
+            MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
         } else if data.category.hasSuffix("_DATA")  {
             guard let transferMediaData = (try? JSONDecoder.default.decode(TransferAttachmentData.self, from: decryptedData)) else {
                 Logger.conversation(id: data.conversationId).error(category: "DecryptSuccess", message: "Invalid TransferAttachmentData for category: \(data.category), data: \(String(data: decryptedData, encoding: .utf8))")
@@ -633,7 +633,7 @@ public class ReceiveMessageService: MixinService {
                 return
             }
             let message = Message.createMessage(mediaData: transferMediaData, data: data)
-            MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification)
+            MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
         } else if data.category.hasSuffix("_AUDIO") {
             guard let transferMediaData = (try? JSONDecoder.default.decode(TransferAttachmentData.self, from: decryptedData)) else {
                 Logger.conversation(id: data.conversationId).error(category: "DecryptSuccess", message: "Invalid TransferAttachmentData for category: \(data.category), data: \(String(data: decryptedData, encoding: .utf8))")
@@ -641,7 +641,7 @@ public class ReceiveMessageService: MixinService {
                 return
             }
             let message = Message.createMessage(mediaData: transferMediaData, data: data)
-            MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification)
+            MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
             let job = AttachmentDownloadJob(message: message)
             ConcurrentJobQueue.shared.addJob(job: job)
         } else if data.category.hasSuffix("_STICKER") {
@@ -649,7 +649,7 @@ public class ReceiveMessageService: MixinService {
                 return
             }
             let message = Message.createMessage(stickerData: transferStickerData, data: data)
-            MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification)
+            MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
         } else if data.category.hasSuffix("_CONTACT") {
             guard let transferData = (try? JSONDecoder.default.decode(TransferContactData.self, from: decryptedData)) else {
                 Logger.conversation(id: data.conversationId).error(category: "DecryptSuccess", message: "Invalid TransferContactData for category: \(data.category), data: \(String(data: decryptedData, encoding: .utf8))")
@@ -665,7 +665,7 @@ public class ReceiveMessageService: MixinService {
                 return
             }
             let message = Message.createMessage(contactData: transferData, data: data)
-            MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification)
+            MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
         } else if data.category.hasSuffix("_LOCATION") {
             guard (try? JSONDecoder.default.decode(Location.self, from: decryptedData)) != nil else {
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
@@ -676,7 +676,7 @@ public class ReceiveMessageService: MixinService {
                 return
             }
             let message = Message.createLocationMessage(content: content, data: data)
-            MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification)
+            MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
         } else if data.category.hasSuffix("_TRANSCRIPT") {
             guard let (content, children, hasAttachment) = parseTranscript(decryptedData: decryptedData, transcriptId: data.messageId) else {
                 ReceiveMessageService.shared.processUnknownMessage(data: data)
@@ -689,7 +689,7 @@ public class ReceiveMessageService: MixinService {
             let message = Message.createTranscriptMessage(content: content,
                                                           mediaStatus: hasAttachment ? .PENDING : .DONE,
                                                           data: data)
-            MessageDAO.shared.insertMessage(message: message, children: children, messageSource: data.source, silentNotification: data.silentNotification)
+            MessageDAO.shared.insertMessage(message: message, children: children, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
         }
     }
     
@@ -706,7 +706,7 @@ public class ReceiveMessageService: MixinService {
         failedMessage.status = MessageStatus.FAILED.rawValue
         failedMessage.content = data.data
         failedMessage.quoteMessageId = data.quoteMessageId.isEmpty ? nil : data.quoteMessageId
-        MessageDAO.shared.insertMessage(message: failedMessage, messageSource: data.source, silentNotification: data.silentNotification)
+        MessageDAO.shared.insertMessage(message: failedMessage, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
     }
 
     private func processRedecryptMessage(data: BlazeMessageData, messageId: String, plainText: String) {
@@ -1069,6 +1069,9 @@ public class ReceiveMessageService: MixinService {
                     } else if message.status == MessageMentionStatus.MENTION_READ.rawValue {
                         mentionMessageIds.append(message.messageId)
                     }
+                    if let expireAt = message.expireAt {
+                        ExpiredMessageDAO.shared.updateExpireAt(for: message.messageId, expireAt: expireAt)
+                    }
                 }
 
                 MessageDAO.shared.batchUpdateMessageStatus(readMessageIds: readMessageIds, mentionMessageIds: mentionMessageIds)
@@ -1209,7 +1212,7 @@ extension ReceiveMessageService {
 
         SnapshotDAO.shared.saveSnapshots(snapshots: [snapshot])
         let message = Message.createMessage(snapshotMesssage: snapshot, data: data)
-        MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification)
+        MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
     }
 
     private func processSystemSessionMessage(data: BlazeMessageData) {
@@ -1265,12 +1268,13 @@ extension ReceiveMessageService {
             UserDAO.shared.insertSystemUser(userId: userId)
         }
 
-        let message = Message.createMessage(systemMessage: sysMessage.action, participantId: sysMessage.participantId, userId: userId, data: data)
+        var message = Message.createMessage(systemMessage: sysMessage.action, participantId: sysMessage.participantId, userId: userId, data: data)
 
         defer {
             let participantDidChange = operSuccess
                 && sysMessage.action != SystemConversationAction.UPDATE.rawValue
                 && sysMessage.action != SystemConversationAction.ROLE.rawValue
+                && sysMessage.action != SystemConversationAction.EXPIRE.rawValue
             if participantDidChange {
                 let userInfo = [ReceiveMessageService.UserInfoKey.conversationId: data.conversationId]
                 NotificationCenter.default.post(name: ReceiveMessageService.groupConversationParticipantDidChangeNotification, object: self, userInfo: userInfo)
@@ -1336,11 +1340,14 @@ extension ReceiveMessageService {
                 ConcurrentJobQueue.shared.addJob(job: RefreshConversationJob(conversationId: data.conversationId))
             }
             return
+        case SystemConversationAction.EXPIRE.rawValue:
+            message.content = "\(sysMessage.expireIn ?? 0)"
+            ConversationDAO.shared.updateExpireIn(expireIn: sysMessage.expireIn ?? 0, conversationId: data.conversationId)
         default:
             break
         }
 
-        MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification)
+        MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: sysMessage.expireIn ?? 0)
     }
 }
 

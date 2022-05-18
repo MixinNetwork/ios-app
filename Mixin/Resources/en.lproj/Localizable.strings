@@ -781,6 +781,30 @@
 "profile_call_phone" = "Call Phone";
 "profile_groups_in_common" = "Groups In Common";
 
+// Disappearing Message
+"disappearing_message_title" = "Disappearing Messages";
+"disappearing_message_hint" = "When enabled, new messages sent and received in this chat will disappear after they have been seen, read the document to learn more.";
+"disappearing_message_turn_off" = "%@ disabled disappearing message";
+"disappearing_message_turn_on" = "%@ set disappearing message time to %@";
+"disappearing_message_change" = "%@ changed disappearing message settings";
+"disappearing_message_30seconds" = "30 seconds";
+"disappearing_message_10minutes" = "10 minutes";
+"disappearing_message_2hours" = "2 hours";
+"disappearing_message_1day" = "1 day";
+"disappearing_message_1week" = "1 week";
+"disappearing_message_custom_time" = "Custom Time";
+"disappearing_message_set" = "Set";
+"disappearing_message_seconds_unit" = "seconds";
+"disappearing_message_minutes_unit" = "minutes";
+"disappearing_message_hours_unit" = "hours";
+"disappearing_message_days_unit" = "days";
+"disappearing_message_weeks_unit" = "weeks";
+"disappearing_message_second_unit" = "second";
+"disappearing_message_minute_unit" = "minute";
+"disappearing_message_hour_unit" = "hour";
+"disappearing_message_day_unit" = "day";
+"disappearing_message_week_unit" = "week";
+
 // Emergency
 "emergency_view" = "View emergency contact";
 "emergency_change" = "Change emergency contact";

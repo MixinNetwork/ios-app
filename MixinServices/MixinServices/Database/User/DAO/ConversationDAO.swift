@@ -13,8 +13,8 @@ public final class ConversationDAO: UserDatabaseDAO {
     c.last_read_message_id as lastReadMessageId, c.unseen_message_count as unseenMessageCount,
     (SELECT COUNT(*) FROM message_mentions mm WHERE mm.conversation_id = c.conversation_id AND mm.has_read = 0) as unseenMentionCount,
     CASE WHEN c.category = 'CONTACT' THEN u1.mute_until ELSE c.mute_until END as muteUntil,
-    c.code_url as codeUrl, c.pin_time as pinTime,
-    m.content as content, m.category as contentType, m.created_at as createdAt,
+    c.code_url as codeUrl, c.pin_time as pinTime, c.expire_in as expireIn,
+    m.content as content, m.category as contentType, em.expire_in as contentExpireIn, m.created_at as createdAt,
     m.user_id as senderId, u.full_name as senderFullName, u1.identity_number as ownerIdentityNumber,
     u1.full_name as ownerFullName, u1.avatar_url as ownerAvatarUrl, u1.is_verified as ownerIsVerified,
     m.action as actionName, u2.full_name as participantFullName, u2.user_id as participantUserId, m.status as messageStatus, m.id as messageId, u1.app_id as appId,
@@ -27,6 +27,7 @@ public final class ConversationDAO: UserDatabaseDAO {
     LEFT JOIN users u ON u.user_id = m.user_id
     LEFT JOIN users u2 ON u2.user_id = m.participant_id
     LEFT JOIN message_mentions mm ON m.id = mm.message_id
+    LEFT JOIN expired_messages em ON c.last_message_id = em.message_id
     INNER JOIN users u1 ON u1.user_id = c.owner_id
     WHERE c.category IS NOT NULL %@
     ORDER BY c.pin_time DESC, c.last_message_created_at DESC
@@ -87,6 +88,22 @@ public final class ConversationDAO: UserDatabaseDAO {
     public func isExist(conversationId: String) -> Bool {
         db.recordExists(in: Conversation.self,
                         where: Conversation.column(of: .conversationId) == conversationId)
+    }
+    
+    public func getExpireIn(conversationId: String) -> Int64? {
+        db.select(column: Conversation.column(of: .expireIn),
+                  from: Conversation.self,
+                  where: Conversation.column(of: .conversationId) == conversationId)
+    }
+    
+    public func updateExpireIn(expireIn: Int64, conversationId: String) {
+        db.update(Conversation.self,
+                  assignments: [Conversation.column(of: .expireIn).set(to: expireIn)],
+                  where: Conversation.column(of: .conversationId) == conversationId) { _ in
+            let change = ConversationChange(conversationId: conversationId,
+                                            action: .updateExpireIn(expireIn: expireIn, messageId: nil))
+            NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: change)
+        }
     }
     
     public func updateCodeUrl(conversation: ConversationResponse) {
@@ -278,8 +295,8 @@ public final class ConversationDAO: UserDatabaseDAO {
                 c.last_read_message_id as lastReadMessageId, c.unseen_message_count as unseenMessageCount,
                 (SELECT COUNT(*) FROM message_mentions mm WHERE mm.conversation_id = c.conversation_id AND mm.has_read = 0) as unseenMentionCount,
                 CASE WHEN c.category = 'CONTACT' THEN u1.mute_until ELSE c.mute_until END as muteUntil,
-                c.code_url as codeUrl, cc.pin_time as pinTime,
-                m.content as content, m.category as contentType, m.created_at as createdAt,
+                c.code_url as codeUrl, cc.pin_time as pinTime, c.expire_in as expireIn,
+                m.content as content, m.category as contentType, em.expire_in as contentExpireIn, m.created_at as createdAt,
                 m.user_id as senderId, u.full_name as senderFullName, u1.identity_number as ownerIdentityNumber,
                 u1.full_name as ownerFullName, u1.avatar_url as ownerAvatarUrl, u1.is_verified as ownerIsVerified,
                 m.action as actionName, u2.full_name as participantFullName, u2.user_id as participantUserId,
@@ -290,6 +307,7 @@ public final class ConversationDAO: UserDatabaseDAO {
                 LEFT JOIN users u ON u.user_id = m.user_id
                 LEFT JOIN users u2 ON u2.user_id = m.participant_id
                 LEFT JOIN message_mentions mm ON m.id = mm.message_id
+                LEFT JOIN expired_messages em ON c.last_message_id = em.message_id
                 INNER JOIN users u1 ON u1.user_id = c.owner_id
                 INNER JOIN circle_conversations cc ON cc.conversation_id = c.conversation_id
                 WHERE c.category IS NOT NULL AND cc.circle_id = ?
@@ -350,7 +368,8 @@ public final class ConversationDAO: UserDatabaseDAO {
                                         draft: nil,
                                         muteUntil: nil,
                                         codeUrl: nil,
-                                        pinTime: nil)
+                                        pinTime: nil,
+                                        expireIn: 0)
         var participants = members.map {
             Participant(conversationId: conversationId,
                         userId: $0.userId,
@@ -449,7 +468,8 @@ public final class ConversationDAO: UserDatabaseDAO {
                     Conversation.column(of: .announcement).set(to: conversation.announcement),
                     Conversation.column(of: .status).set(to: targetStatus.rawValue),
                     Conversation.column(of: .muteUntil).set(to: conversation.muteUntil),
-                    Conversation.column(of: .codeUrl).set(to: conversation.codeUrl)
+                    Conversation.column(of: .codeUrl).set(to: conversation.codeUrl),
+                    Conversation.column(of: .expireIn).set(to: conversation.expireIn)
                 ]
                 try Conversation
                     .filter(Conversation.column(of: .conversationId) == conversationId)
@@ -535,6 +555,7 @@ public final class ConversationDAO: UserDatabaseDAO {
                 Conversation.column(of: .status).set(to: ConversationStatus.SUCCESS.rawValue),
                 Conversation.column(of: .muteUntil).set(to: conversation.muteUntil),
                 Conversation.column(of: .codeUrl).set(to: conversation.codeUrl),
+                Conversation.column(of: .expireIn).set(to: conversation.expireIn),
             ]
             try Conversation
                 .filter(Conversation.column(of: .conversationId) == conversationId)

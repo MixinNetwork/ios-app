@@ -161,20 +161,23 @@ extension MessageReceiverViewController: ContainerViewControllerDelegate {
                 guard !messages.isEmpty else {
                     continue
                 }
+                let expireIn = ConversationDAO.shared.getExpireIn(conversationId: receiver.conversationId) ?? 0
                 switch receiver.item {
                 case .group:
                     for m in messages {
                         SendMessageService.shared.sendMessage(message: m.message,
                                                               children: m.children,
                                                               ownerUser: nil,
-                                                              isGroupMessage: true)
+                                                              isGroupMessage: true,
+                                                              expireIn: expireIn)
                     }
                 case .user(let user):
                     for m in messages {
                         SendMessageService.shared.sendMessage(message: m.message,
                                                               children: m.children,
                                                               ownerUser: user,
-                                                              isGroupMessage: false)
+                                                              isGroupMessage: false,
+                                                              expireIn: expireIn)
                     }
                 }
             }

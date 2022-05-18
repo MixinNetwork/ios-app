@@ -520,6 +520,11 @@ extension ConversationDataSource {
             updateMediaContent(messageId: messageId, message: message)
         case .recallMessage(let messageId):
             updateMessage(messageId: messageId)
+        case .updateExpireIn(let expireIn, let messageId):
+            conversation.expireIn = expireIn
+            if let messageId = messageId {
+                updateMessage(messageId: messageId)
+            }
         case .updateConversation, .startedUpdateConversation:
             break
         }

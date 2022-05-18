@@ -548,6 +548,9 @@
 		7C0D997F26CA62CD00356655 /* StaticAudioMessagePlayingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0D997E26CA62CD00356655 /* StaticAudioMessagePlayingManager.swift */; };
 		7C0E15DF27005376002FC718 /* UnknownURLWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0E15DE27005376002FC718 /* UnknownURLWindow.swift */; };
 		7C0E15E1270053AC002FC718 /* UnknownURLWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C0E15E0270053AC002FC718 /* UnknownURLWindow.xib */; };
+		7C0FAAC527E03FBD008D4021 /* ExpiredMessageTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0FAAC427E03FBD008D4021 /* ExpiredMessageTableHeaderView.swift */; };
+		7C0FAAC727E079F1008D4021 /* ExpiredMessageTimePickerWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0FAAC627E079F1008D4021 /* ExpiredMessageTimePickerWindow.swift */; };
+		7C0FAAC927E07A0A008D4021 /* ExpiredMessageTimePickerWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C0FAAC827E07A0A008D4021 /* ExpiredMessageTimePickerWindow.xib */; };
 		7C104A8127D83A51004D0530 /* RefreshExternalSchemeJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C104A8027D83A51004D0530 /* RefreshExternalSchemeJob.swift */; };
 		7C11E349281BF4BC00D3362B /* ic_time_animation@2x.gif in Resources */ = {isa = PBXBuildFile; fileRef = 7C11E347281BF4BC00D3362B /* ic_time_animation@2x.gif */; };
 		7C11E34A281BF4BC00D3362B /* ic_time_animation_dark@2x.gif in Resources */ = {isa = PBXBuildFile; fileRef = 7C11E348281BF4BC00D3362B /* ic_time_animation_dark@2x.gif */; };
@@ -567,6 +570,7 @@
 		7C4E2B0426A9BDAD008190F5 /* StickersEditingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4E2B0326A9BDAC008190F5 /* StickersEditingViewController.swift */; };
 		7C4E2B0626A9BE50008190F5 /* StickersEditingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4E2B0526A9BE50008190F5 /* StickersEditingCell.swift */; };
 		7C4FF5AA26AE614C003E39AC /* StickerPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4FF5A926AE614C003E39AC /* StickerPreviewViewController.swift */; };
+		7C51F3A927E459AD0095B4D6 /* ExpiredMessageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C51F3A827E459AD0095B4D6 /* ExpiredMessageManager.swift */; };
 		7C5823D5268966A1003AA142 /* HomeAppsFolderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5823D4268966A1003AA142 /* HomeAppsFolderViewController.swift */; };
 		7C5B65CE27701A49004EDD53 /* DeleteAccountHintWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5B65CD27701A49004EDD53 /* DeleteAccountHintWindow.swift */; };
 		7C5B65D027701A62004EDD53 /* DeleteAccountHintWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C5B65CF27701A62004EDD53 /* DeleteAccountHintWindow.xib */; };
@@ -588,6 +592,8 @@
 		7C8FA78F2768822800855AFD /* DeleteAccountTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C8FA78E2768822800855AFD /* DeleteAccountTableHeaderView.xib */; };
 		7C8FA8F42768909300855AFD /* AccountSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8FA8F32768909300855AFD /* AccountSettingViewController.swift */; };
 		7C8FA8F62768926D00855AFD /* SecuritySettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8FA8F52768926D00855AFD /* SecuritySettingViewController.swift */; };
+		7C952CFE27E035080083F92B /* ExpiredMessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C952CFD27E035080083F92B /* ExpiredMessageViewController.swift */; };
+		7C952D0027E036240083F92B /* ExpiredMessageTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C952CFF27E036240083F92B /* ExpiredMessageTableHeaderView.xib */; };
 		7C9A734027392FAF00E0127A /* PinSettingTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9A733F27392FAF00E0127A /* PinSettingTableHeaderView.swift */; };
 		7C9DCDF1273901D500395F4A /* PinSettingTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C9DCDF0273901D500395F4A /* PinSettingTableHeaderView.xib */; };
 		7CB0954F26CCED2E0049F4C7 /* PinMessageBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB0954E26CCED2E0049F4C7 /* PinMessageBannerView.swift */; };
@@ -609,6 +615,7 @@
 		7CF5929627979CBB00015495 /* DeleteAccountVerifyPinWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF5929527979CBB00015495 /* DeleteAccountVerifyPinWindow.swift */; };
 		7CF5929827979CCF00015495 /* DeleteAccountVerifyPinWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CF5929727979CCF00015495 /* DeleteAccountVerifyPinWindow.xib */; };
 		7CF7416E27DAD93000DA0004 /* SnapCenterFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF7416D27DAD93000DA0004 /* SnapCenterFlowLayout.swift */; };
+		7CF836F127E334B0002E2A98 /* ExpiredMessageDurationFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF836F027E334B0002E2A98 /* ExpiredMessageDurationFormatter.swift */; };
 		811C8154F03C8CBB72DBA1F4 /* Pods_MixinShare.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67A8E0E9B65F16ADB27E6F25 /* Pods_MixinShare.framework */; };
 		842347EE2695BA6400009A39 /* InitializeBotJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842347ED2695BA6400009A39 /* InitializeBotJob.swift */; };
 		94046B91272DC265007C1D4A /* GroupCallMembersDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94046B90272DC265007C1D4A /* GroupCallMembersDataSource.swift */; };
@@ -1526,6 +1533,9 @@
 		7C0D997E26CA62CD00356655 /* StaticAudioMessagePlayingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticAudioMessagePlayingManager.swift; sourceTree = "<group>"; };
 		7C0E15DE27005376002FC718 /* UnknownURLWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnknownURLWindow.swift; sourceTree = "<group>"; };
 		7C0E15E0270053AC002FC718 /* UnknownURLWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UnknownURLWindow.xib; sourceTree = "<group>"; };
+		7C0FAAC427E03FBD008D4021 /* ExpiredMessageTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpiredMessageTableHeaderView.swift; sourceTree = "<group>"; };
+		7C0FAAC627E079F1008D4021 /* ExpiredMessageTimePickerWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpiredMessageTimePickerWindow.swift; sourceTree = "<group>"; };
+		7C0FAAC827E07A0A008D4021 /* ExpiredMessageTimePickerWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ExpiredMessageTimePickerWindow.xib; sourceTree = "<group>"; };
 		7C104A8027D83A51004D0530 /* RefreshExternalSchemeJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshExternalSchemeJob.swift; sourceTree = "<group>"; };
 		7C11E347281BF4BC00D3362B /* ic_time_animation@2x.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "ic_time_animation@2x.gif"; sourceTree = "<group>"; };
 		7C11E348281BF4BC00D3362B /* ic_time_animation_dark@2x.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "ic_time_animation_dark@2x.gif"; sourceTree = "<group>"; };
@@ -1545,6 +1555,7 @@
 		7C4E2B0326A9BDAC008190F5 /* StickersEditingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersEditingViewController.swift; sourceTree = "<group>"; };
 		7C4E2B0526A9BE50008190F5 /* StickersEditingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersEditingCell.swift; sourceTree = "<group>"; };
 		7C4FF5A926AE614C003E39AC /* StickerPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerPreviewViewController.swift; sourceTree = "<group>"; };
+		7C51F3A827E459AD0095B4D6 /* ExpiredMessageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpiredMessageManager.swift; sourceTree = "<group>"; };
 		7C5823D4268966A1003AA142 /* HomeAppsFolderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsFolderViewController.swift; sourceTree = "<group>"; };
 		7C5B65CD27701A49004EDD53 /* DeleteAccountHintWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountHintWindow.swift; sourceTree = "<group>"; };
 		7C5B65CF27701A62004EDD53 /* DeleteAccountHintWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeleteAccountHintWindow.xib; sourceTree = "<group>"; };
@@ -1566,6 +1577,8 @@
 		7C8FA78E2768822800855AFD /* DeleteAccountTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeleteAccountTableHeaderView.xib; sourceTree = "<group>"; };
 		7C8FA8F32768909300855AFD /* AccountSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSettingViewController.swift; sourceTree = "<group>"; };
 		7C8FA8F52768926D00855AFD /* SecuritySettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecuritySettingViewController.swift; sourceTree = "<group>"; };
+		7C952CFD27E035080083F92B /* ExpiredMessageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpiredMessageViewController.swift; sourceTree = "<group>"; };
+		7C952CFF27E036240083F92B /* ExpiredMessageTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ExpiredMessageTableHeaderView.xib; sourceTree = "<group>"; };
 		7C9A733F27392FAF00E0127A /* PinSettingTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinSettingTableHeaderView.swift; sourceTree = "<group>"; };
 		7C9DCDF0273901D500395F4A /* PinSettingTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PinSettingTableHeaderView.xib; sourceTree = "<group>"; };
 		7CB0954E26CCED2E0049F4C7 /* PinMessageBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinMessageBannerView.swift; sourceTree = "<group>"; };
@@ -1587,6 +1600,7 @@
 		7CF5929527979CBB00015495 /* DeleteAccountVerifyPinWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountVerifyPinWindow.swift; sourceTree = "<group>"; };
 		7CF5929727979CCF00015495 /* DeleteAccountVerifyPinWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeleteAccountVerifyPinWindow.xib; sourceTree = "<group>"; };
 		7CF7416D27DAD93000DA0004 /* SnapCenterFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapCenterFlowLayout.swift; sourceTree = "<group>"; };
+		7CF836F027E334B0002E2A98 /* ExpiredMessageDurationFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpiredMessageDurationFormatter.swift; sourceTree = "<group>"; };
 		842347ED2695BA6400009A39 /* InitializeBotJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitializeBotJob.swift; sourceTree = "<group>"; };
 		8C43D9D96FCB101481DFD90F /* Pods-Mixin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mixin.release.xcconfig"; path = "Pods/Target Support Files/Pods-Mixin/Pods-Mixin.release.xcconfig"; sourceTree = "<group>"; };
 		94046B90272DC265007C1D4A /* GroupCallMembersDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupCallMembersDataSource.swift; sourceTree = "<group>"; };
@@ -2365,6 +2379,7 @@
 		7BA4E091219D999500A2176D /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				7C4791D327E809D700B27A84 /* ExpiredMessage */,
 				5E5CA7832674AC4100C1E113 /* ScreenLock */,
 				7B9F810A222EA30A0012BFDD /* Popup Presentation */,
 				94FCB5FD26466E8500CCC8FD /* Fullscreen Popup */,
@@ -2544,6 +2559,18 @@
 				7C66F1AA268ABABE006D8462 /* AppFolderCell.swift */,
 			);
 			path = Cells;
+			sourceTree = "<group>";
+		};
+		7C4791D327E809D700B27A84 /* ExpiredMessage */ = {
+			isa = PBXGroup;
+			children = (
+				7C952CFF27E036240083F92B /* ExpiredMessageTableHeaderView.xib */,
+				7C0FAAC427E03FBD008D4021 /* ExpiredMessageTableHeaderView.swift */,
+				7C952CFD27E035080083F92B /* ExpiredMessageViewController.swift */,
+				7CF836F027E334B0002E2A98 /* ExpiredMessageDurationFormatter.swift */,
+				7C51F3A827E459AD0095B4D6 /* ExpiredMessageManager.swift */,
+			);
+			path = ExpiredMessage;
 			sourceTree = "<group>";
 		};
 		7C5823D326896601003AA142 /* Apps */ = {
@@ -2929,6 +2956,8 @@
 				7CB17B652771608400CF4C94 /* DeleteAccountConfirmWindow.xib */,
 				7C6132B527953B15002777EE /* DeleteAccountAbortWindow.swift */,
 				7C6132B727953B4F002777EE /* DeleteAccountAbortWindow.xib */,
+				7C0FAAC627E079F1008D4021 /* ExpiredMessageTimePickerWindow.swift */,
+				7C0FAAC827E07A0A008D4021 /* ExpiredMessageTimePickerWindow.xib */,
 			);
 			path = Windows;
 			sourceTree = "<group>";
@@ -3791,7 +3820,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1320;
-				LastUpgradeCheck = 1020;
+				LastUpgradeCheck = 1330;
 				ORGANIZATIONNAME = Mixin;
 				TargetAttributes = {
 					277FF6FE1F909A1200DBB2EB = {
@@ -3863,6 +3892,7 @@
 				7BFE47E32284394000FC4379 /* CheckmarkPeerCell.xib in Resources */,
 				DF846CDF2369551D00AA1197 /* MultisigUserCell.xib in Resources */,
 				5E5CA7872674AC8E00C1E113 /* ScreenLockView.xib in Resources */,
+				7C0FAAC927E07A0A008D4021 /* ExpiredMessageTimePickerWindow.xib in Resources */,
 				7BB0F9162434B03300BEDA97 /* SelectedPeerCell.xib in Resources */,
 				E041064E23C6076F00A6F08E /* FullscreenPopupView.xib in Resources */,
 				DF8A7523236301DB00765A82 /* AuthorizationWindow.xib in Resources */,
@@ -3978,6 +4008,7 @@
 				DF6ABB142295019C00A012B2 /* AddressWindow.xib in Resources */,
 				E0BEB85B236C1BBC001FE534 /* ProfileView.xib in Resources */,
 				7B2E3E541FA07FA300DDDDEB /* CountryCode.plist in Resources */,
+				7C952D0027E036240083F92B /* ExpiredMessageTableHeaderView.xib in Resources */,
 				DFE356B51FB4990100E0E3A8 /* Setting.storyboard in Resources */,
 				7BB788B4216C5AA900EDE7B4 /* NoResultFooterView.xib in Resources */,
 				7BB06F45228EA7720048C2D6 /* NotificationView.xib in Resources */,
@@ -4484,6 +4515,7 @@
 				7BBAE9DA244ADB3800CC8670 /* AssetQrCodeScanningController.swift in Sources */,
 				DFA063D222B0D0E80031E151 /* PrivacySettingViewController.swift in Sources */,
 				7BEFDC191FB05B3E00F66885 /* NewGroupViewController.swift in Sources */,
+				7C51F3A927E459AD0095B4D6 /* ExpiredMessageManager.swift in Sources */,
 				DF06D91F222FAE1400FE7FBC /* TransferOutViewController.swift in Sources */,
 				7B595353226736BD00D59DB4 /* SearchHeaderView.swift in Sources */,
 				DFBADC121FD1211E00722929 /* AboutViewController.swift in Sources */,
@@ -4774,6 +4806,7 @@
 				7B2E3E4D1FA07F5D00DDDDEB /* HairlineLayoutConstraint.swift in Sources */,
 				7B4ADAA7243C7C8400F04CA6 /* HomeAppsViewController.swift in Sources */,
 				94659DAA25C13793003403E5 /* DevicePerformance.swift in Sources */,
+				7C0FAAC727E079F1008D4021 /* ExpiredMessageTimePickerWindow.swift in Sources */,
 				DF43304522648B32006D971D /* AssetInfoWindow.swift in Sources */,
 				7B492F982252159B00C05A45 /* ActivityIndicatorView.swift in Sources */,
 				7BC022E7214A150400B7A398 /* AuthorizationTableViewCell.swift in Sources */,
@@ -4824,6 +4857,7 @@
 				7BD0532820A41F6A00C36F69 /* RangeExtension.swift in Sources */,
 				7BC022E5214A13DC00B7A398 /* AuthorizationsViewController.swift in Sources */,
 				7C1EDAB42772FF8B00193917 /* VerifyNumberContext.swift in Sources */,
+				7CF836F127E334B0002E2A98 /* ExpiredMessageDurationFormatter.swift in Sources */,
 				DF46B40B1FA9E7CF00243A8B /* CornerView.swift in Sources */,
 				7B59534B2267206D00D59DB4 /* OneSideShadowView.swift in Sources */,
 				7BC681AA1FA1DD5600BAB85F /* UsernameViewController.swift in Sources */,
@@ -4867,6 +4901,7 @@
 				7B28FA12201195A10023B28D /* StickerMessageCell.swift in Sources */,
 				7B4ADA97243C633B00F04CA6 /* ResizablePopupViewController.swift in Sources */,
 				7B869C70202D7DA8009930BA /* NumberPadView.swift in Sources */,
+				7C0FAAC527E03FBD008D4021 /* ExpiredMessageTableHeaderView.swift in Sources */,
 				7BF19C22241E0DB600B192D5 /* UserPickedLocation.swift in Sources */,
 				7B015F4F241F91A60004A563 /* SearchResultAnnotation.swift in Sources */,
 				7B4E30762295659200A03F6E /* SearchBoxTextField.swift in Sources */,
@@ -5063,6 +5098,7 @@
 				7B7E7146217D89790052C7DD /* CallViewController.swift in Sources */,
 				7C2ACDAE27D73F7C00E9DDB3 /* LeftAlignedCollectionViewFlowLayout.swift in Sources */,
 				7BD89DBE1FB2D59000665635 /* PlaceholderTextView.swift in Sources */,
+				7C952CFE27E035080083F92B /* ExpiredMessageViewController.swift in Sources */,
 				944ED8D4264666AC00C97215 /* FullscreenPopupViewController.swift in Sources */,
 				9419374D25DFF3EE00F81A9C /* GroupIconSaver.swift in Sources */,
 				7B4E307A22966FF900A03F6E /* MediaPreviewMaskView.swift in Sources */,
@@ -5210,6 +5246,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -5270,6 +5307,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;

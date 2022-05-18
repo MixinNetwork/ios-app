@@ -469,6 +469,7 @@ class ConversationInputViewController: UIViewController {
         let ownerUser = composer.ownerUser
         let app = composer.opponentApp
         let isGroup = composer.isGroup
+        let expireIn = composer.expireIn
         var quoteMessageId = quote?.message.messageId
         quote = nil
         DispatchQueue.global().async {
@@ -487,7 +488,8 @@ class ConversationInputViewController: UIViewController {
                 SendMessageService.shared.sendMessage(message: message,
                                                       ownerUser: ownerUser,
                                                       opponentApp: app,
-                                                      isGroupMessage: isGroup)
+                                                      isGroupMessage: isGroup,
+                                                      expireIn: expireIn)
             }
             DispatchQueue.main.async(execute: completion)
         }
@@ -505,7 +507,8 @@ class ConversationInputViewController: UIViewController {
         SendMessageService.shared.sendMessage(message: message,
                                               ownerUser: composer.ownerUser,
                                               opponentApp: composer.opponentApp,
-                                              isGroupMessage: composer.isGroup)
+                                              isGroupMessage: composer.isGroup,
+                                              expireIn: composer.expireIn)
     }
     
 }

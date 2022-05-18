@@ -370,6 +370,7 @@ class ConversationViewController: UIViewController {
         center.addObserver(self, selector: #selector(pinMessageDidSave(_:)), name: PinMessageDAO.didSaveNotification, object: nil)
         center.addObserver(self, selector: #selector(pinMessageDidDelete(_:)), name: PinMessageDAO.didDeleteNotification, object: nil)
         center.addObserver(self, selector: #selector(pinMessageBannerDidChange), name: AppGroupUserDefaults.User.pinMessageBannerDidChangeNotification, object: nil)
+        center.addObserver(self, selector: #selector(expiredMessageDidDelete(_:)), name: ExpiredMessageDAO.expiredMessageDidDeleteNotification, object: nil)
         
         if dataSource.category == .group {
             updateGroupCallIndicatorViewHidden()
@@ -1188,6 +1189,17 @@ class ConversationViewController: UIViewController {
         }
     }
     
+    @objc private func expiredMessageDidDelete(_ notification: Notification) {
+        guard let messageId = notification.userInfo?[ExpiredMessageDAO.messageIdKey] as? String else {
+            return
+        }
+        guard let indexPath = dataSource.indexPath(where: { $0.messageId == messageId }) else {
+            return
+        }
+        _ = dataSource?.removeViewModel(at: indexPath)
+        tableView.reloadData()
+    }
+    
     // MARK: - Interface
     func updateInputWrapper(for preferredContentHeight: CGFloat, animated: Bool) {
         let oldHeight = inputWrapperHeightConstraint.constant
@@ -1210,7 +1222,7 @@ class ConversationViewController: UIViewController {
             DispatchQueue.global().async { [weak self] in
                 let users: [UserItem]
                 if let keyword = keyword, !keyword.isEmpty {
-                    let oneWeekAgo = Date().addingTimeInterval(-7 * TimeInterval.oneDay).toUTCString()
+                    let oneWeekAgo = Date().addingTimeInterval(-7 * TimeInterval.day).toUTCString()
                     users = UserDAO.shared.botGroupUsers(conversationId: conversationId, keyword: keyword, createAt: oneWeekAgo)
                 } else {
                     users = UserDAO.shared.contacts(count: 20)
@@ -2349,7 +2361,7 @@ extension ConversationViewController {
         }
         let shouldShowAnnouncement: Bool
         if let date = AppGroupUserDefaults.User.closeScamAnnouncementDate[user.userId] {
-            shouldShowAnnouncement = abs(date.timeIntervalSinceNow) > .oneDay
+            shouldShowAnnouncement = abs(date.timeIntervalSinceNow) > .day
         } else {
             shouldShowAnnouncement = true
         }

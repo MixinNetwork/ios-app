@@ -17,6 +17,7 @@ public final class ConversationItem {
     public var codeUrl: String?
     public var pinTime: String?
     public var createdAt: String = ""
+    public var expireIn: Int64 = 0
     
     public var ownerIdentityNumber: String = ""
     public var ownerFullName: String = ""
@@ -25,8 +26,9 @@ public final class ConversationItem {
     
     public var messageStatus: String = ""
     public var messageId: String = ""
-    public var content: String = ""
+    public var content: String?
     public var contentType: String = ""
+    public var contentExpireIn: Int64 = 0
     
     public var senderId: String = ""
     public var senderFullName: String = ""
@@ -40,14 +42,14 @@ public final class ConversationItem {
     public var mentionsJson: Data?
     
     public lazy var appButtons: [AppButtonData]? = {
-        guard let data = Data(base64Encoded: content) else {
+        guard let content = content, let data = Data(base64Encoded: content) else {
             return nil
         }
         return try? JSONDecoder().decode([AppButtonData].self, from: data)
     }()
     
     public lazy var appCard: AppCardData? = {
-        guard let data = Data(base64Encoded: content) else {
+        guard let content = content, let data = Data(base64Encoded: content) else {
             return nil
         }
         return try? JSONDecoder().decode(AppCardData.self, from: data)
@@ -90,6 +92,7 @@ public final class ConversationItem {
         muteUntil = response.muteUntil
         codeUrl = response.codeUrl
         createdAt = response.createdAt
+        expireIn = response.expireIn
     }
     
     public init(from decoder: Decoder) throws {
@@ -108,6 +111,7 @@ public final class ConversationItem {
         self.muteUntil = try container.decodeIfPresent(String.self, forKey: .muteUntil)
         self.codeUrl = try container.decodeIfPresent(String.self, forKey: .codeUrl)
         self.pinTime = try container.decodeIfPresent(String.self, forKey: .pinTime)
+        self.expireIn = (try container.decodeIfPresent(Int64.self, forKey: .expireIn)) ?? 0
         self.createdAt = (try? container.decodeIfPresent(String.self, forKey: .createdAt)) ?? ""
         
         self.ownerIdentityNumber = (try? container.decodeIfPresent(String.self, forKey: .ownerIdentityNumber)) ?? ""
@@ -117,8 +121,9 @@ public final class ConversationItem {
         
         self.messageStatus = (try? container.decodeIfPresent(String.self, forKey: .messageStatus)) ?? ""
         self.messageId = (try? container.decodeIfPresent(String.self, forKey: .messageId)) ?? ""
-        self.content = (try? container.decodeIfPresent(String.self, forKey: .content)) ?? ""
+        self.content = (try? container.decodeIfPresent(String.self, forKey: .content))
         self.contentType = (try? container.decodeIfPresent(String.self, forKey: .contentType)) ?? ""
+        self.contentExpireIn = (try container.decodeIfPresent(Int64.self, forKey: .contentExpireIn)) ?? 0
         
         self.senderId = (try? container.decodeIfPresent(String.self, forKey: .senderId)) ?? ""
         self.senderFullName = (try? container.decodeIfPresent(String.self, forKey: .senderFullName)) ?? ""
@@ -197,8 +202,10 @@ extension ConversationItem: Decodable, MixinFetchableRecord {
         case muteUntil
         case codeUrl
         case pinTime
+        case expireIn
         case content
         case contentType
+        case contentExpireIn
         case createdAt
         case senderId
         case senderFullName

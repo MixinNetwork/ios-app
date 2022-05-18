@@ -31,7 +31,14 @@ final class UserProfileViewController: ProfileViewController {
     
     private lazy var imagePicker = ImagePickerController(initialCameraPosition: .front, cropImageAfterPicked: true, parent: self, delegate: self)
     private lazy var footerLabel = FooterLabel()
-    
+    private lazy var expiredMessageItemView: ProfileMenuItemView  = {
+        let view = ProfileMenuItemView()
+        view.label.text = R.string.localizable.disappearing_message_title()
+        view.subtitleLabel.text = ""
+        view.button.addTarget(self, action: #selector(self.editExpiredMessageDuration), for: .touchUpInside)
+        return view
+    }()
+
     private var isMe = false
     private var relationship = Relationship.ME
     private var developer: UserItem?
@@ -42,6 +49,7 @@ final class UserProfileViewController: ProfileViewController {
     private var sharedAppUsers: [User]?
     private var dismissHomeAppsWindow = true
     private var centerStackViewHeightConstraint: NSLayoutConstraint?
+    private var conversationExpireIn: Int64?
     
     init(user: UserItem) {
         super.init(nibName: R.nib.profileView.name, bundle: R.nib.profileView.bundle)
@@ -73,6 +81,7 @@ final class UserProfileViewController: ProfileViewController {
             reloadFavoriteApps(userId: user.userId, fromRemote: true)
             if !isMe {
                 reloadCircles(conversationId: conversationId, userId: user.userId)
+                reloadMessageExpiration(conversationId: conversationId)
             }
             let recognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction(_:)))
             recognizer.delegate = self
@@ -558,6 +567,35 @@ extension UserProfileViewController {
         present(alert, animated: true, completion: nil)
     }
     
+    @objc func editExpiredMessageDuration() {
+        func dismissAndPushController(expireIn: Int64) {
+            let controller = ExpiredMessageViewController.instance(conversationId: conversationId, expireIn: expireIn)
+            dismissAndPush(controller)
+        }
+        if let expireIn = conversationExpireIn {
+            dismissAndPushController(expireIn: expireIn)
+        } else {
+            let hud = Hud()
+            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+            let request = ConversationRequest(conversationId: conversationId,
+                                              name: nil,
+                                              category: ConversationCategory.CONTACT.rawValue,
+                                              participants: [ParticipantRequest(userId: user.userId, role: "")],
+                                              duration: nil,
+                                              announcement: nil)
+            ConversationAPI.createConversation(conversation: request) { result in
+                switch result {
+                case let .success(response):
+                    hud.hide()
+                    dismissAndPushController(expireIn: response.expireIn)
+                case let .failure(error):
+                    hud.set(style: .error, text: error.localizedDescription)
+                    hud.scheduleAutoHidden()
+                }
+            }
+        }
+    }
+    
 }
 
 // MARK: - Private works
@@ -853,6 +891,7 @@ extension UserProfileViewController {
             
             reloadMenu(groups: groups)
             menuStackView.insertArrangedSubview(circleItemView, at: groups.count - 2)
+            menuStackView.insertArrangedSubview(expiredMessageItemView, at: 2)
         } else {
             reloadMenu(groups: [])
         }
@@ -959,6 +998,21 @@ extension UserProfileViewController {
             }
             view.layoutIfNeeded()
             updatePreferredContentSizeHeight(size: size)
+        }
+    }
+    
+    private func reloadMessageExpiration(conversationId: String) {
+        expiredMessageItemView.button.isEnabled = false
+        DispatchQueue.global().async {
+            let expireIn = ConversationDAO.shared.getExpireIn(conversationId: conversationId)
+            DispatchQueue.main.sync {
+                if let expireIn = expireIn {
+                    self.conversationExpireIn = expireIn
+                    let subtitle = ExpiredMessageDurationFormatter.string(from: expireIn)
+                    self.expiredMessageItemView.subtitleLabel.text = subtitle
+                }
+                self.expiredMessageItemView.button.isEnabled = true
+            }
         }
     }
     

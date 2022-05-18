@@ -228,6 +228,14 @@ extension GroupProfileViewController {
         }))
         present(alert, animated: true, completion: nil)
     }
+    
+    @objc func editExpiredMessageDuration() {
+        guard isAdmin else {
+            return
+        }
+        let controller = ExpiredMessageViewController.instance(conversationId: conversationId, expireIn: conversation.expireIn)
+        dismissAndPush(controller)
+    }
 }
 
 // MARK: - Private works
@@ -362,6 +370,13 @@ extension GroupProfileViewController {
                             subtitle: nil,
                             style: [],
                             action: #selector(searchConversation))
+        ])
+        
+        groups.append([
+            ProfileMenuItem(title: R.string.localizable.disappearing_message_title(),
+                            subtitle: ExpiredMessageDurationFormatter.string(from: conversation.expireIn),
+                            style: [],
+                            action: #selector(editExpiredMessageDuration))
         ])
         
         if isAdmin {

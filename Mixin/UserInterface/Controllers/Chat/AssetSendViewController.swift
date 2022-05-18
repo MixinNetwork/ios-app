@@ -321,7 +321,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
                     return
                 }
             }
-            SendMessageService.shared.sendMessage(message: message, ownerUser: composer.ownerUser, isGroupMessage: composer.isGroup)
+            SendMessageService.shared.sendMessage(message: message, ownerUser: composer.ownerUser, isGroupMessage: composer.isGroup, expireIn: composer.expireIn)
             DispatchQueue.main.async {
                 self?.navigationController?.popViewController(animated: true)
             }

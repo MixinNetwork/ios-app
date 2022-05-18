@@ -13,7 +13,7 @@ final class StorageUsageViewController: UIViewController {
     
     class func instance() -> UIViewController {
         let vc = R.storyboard.setting.storage_usage()!
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.storage_Usage())
+        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.storage_usage())
         return container
     }
     

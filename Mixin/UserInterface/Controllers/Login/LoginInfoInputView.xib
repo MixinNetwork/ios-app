@@ -31,7 +31,7 @@
                             <color key="textColor" name="title"/>
                             <nil key="highlightedColor"/>
                             <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Whats_your_name"/>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="whats_your_name"/>
                                 <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
                             </userDefinedRuntimeAttributes>
                         </label>

@@ -58,7 +58,7 @@ class AddressView: UIStackView {
         case .update:
             titleLabel.text = R.string.localizable.edit_address(asset.symbol)
         case .delete:
-            titleLabel.text = R.string.localizable.delete_withdraw_Address(asset.symbol)
+            titleLabel.text = R.string.localizable.delete_withdraw_address(asset.symbol)
         }
         if let address = addressRequest {
             nameLabel.text = address.label

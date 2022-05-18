@@ -271,7 +271,7 @@ class ConversationInputViewController: UIViewController {
         alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: { (_) in
             self.deleteConversationButton.isBusy = false
         }))
-        alert.addAction(UIAlertAction(title: R.string.localizable.delete_Chat(), style: .destructive, handler: { (_) in
+        alert.addAction(UIAlertAction(title: R.string.localizable.delete_chat(), style: .destructive, handler: { (_) in
             DispatchQueue.global().async { [weak self] in
                 ConversationDAO.shared.deleteChat(conversationId: conversationId)
                 DispatchQueue.main.async {
@@ -359,7 +359,7 @@ class ConversationInputViewController: UIViewController {
                     }
                     self.extensionViewController.apps = apps.map { ($0, nil) }
                     self.reloadFixedExtensions()
-                    self.textView.placeholder = R.string.localizable.end_to_End_Encryption()
+                    self.textView.placeholder = R.string.localizable.end_to_end_encryption()
                 }
             }
         } else if let ownerUser = composer.ownerUser {
@@ -376,7 +376,7 @@ class ConversationInputViewController: UIViewController {
                 }
                 self.loadFavoriteApps(ownerUser: ownerUser)
                 self.reloadFixedExtensions()
-                self.textView.placeholder = isEncrypted ? R.string.localizable.end_to_End_Encryption() : nil
+                self.textView.placeholder = isEncrypted ? R.string.localizable.end_to_end_encryption() : nil
             }
         }
         

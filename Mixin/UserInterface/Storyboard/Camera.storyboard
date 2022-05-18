@@ -214,7 +214,7 @@
                                         <nil key="highlightedColor"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular18"/>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Scan_QR_Code"/>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="scan_qr_code"/>
                                         </userDefinedRuntimeAttributes>
                                     </label>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_qr_code_border" translatesAutoresizingMaskIntoConstraints="NO" id="khA-xf-LgL">

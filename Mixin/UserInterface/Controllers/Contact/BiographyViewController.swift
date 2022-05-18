@@ -28,7 +28,7 @@ class BiographyViewController: AnnouncementViewController {
     class func instance(user: UserItem) -> UIViewController {
         let vc = BiographyViewController()
         vc.user = user
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.edit_Biography())
+        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.edit_biography())
         return container
     }
 

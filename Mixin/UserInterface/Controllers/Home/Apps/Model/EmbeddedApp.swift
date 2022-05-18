@@ -13,7 +13,7 @@ final class EmbeddedApp {
     static let scan = EmbeddedApp(id: App.scanAppId,
                                   icon: R.image.ic_home_app_scan()!,
                                   categoryIcon: R.image.ic_app_category_scan()!,
-                                  name: R.string.localizable.scan_QR_Code()) {
+                                  name: R.string.localizable.scan_qr_code()) {
                                     UIApplication.homeViewController?.showCamera(asQrCodeScanner: true)
     }
     

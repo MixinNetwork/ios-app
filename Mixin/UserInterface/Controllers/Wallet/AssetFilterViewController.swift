@@ -36,7 +36,7 @@ class AssetFilterViewController: UIViewController {
     private var headers: [String] {
         if showFilters {
             return [R.string.localizable.sort_by(),
-                    R.string.localizable.filter_BY()]
+                    R.string.localizable.filter_by()]
         } else {
             return [R.string.localizable.sort_by()]
         }

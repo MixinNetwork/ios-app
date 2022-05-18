@@ -7,7 +7,7 @@ final class AccountSettingViewController: SettingsTableViewController {
         SettingsSection(rows: [
             SettingsRow(title: R.string.localizable.privacy(), accessory: .disclosure),
             SettingsRow(title: R.string.localizable.security(), accessory: .disclosure),
-            SettingsRow(title: R.string.localizable.change_Number(), accessory: .disclosure)
+            SettingsRow(title: R.string.localizable.change_number(), accessory: .disclosure)
         ]),
         SettingsSection(rows: [
             SettingsRow(title: R.string.localizable.delete_my_account(), accessory: .disclosure)

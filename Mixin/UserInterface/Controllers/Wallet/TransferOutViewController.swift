@@ -58,11 +58,11 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
             targetUser = user
             opponentImageView.setImage(with: user)
             container?.setSubtitle(subtitle: user.isCreatedByMessenger ? user.identityNumber : user.userId)
-            container?.titleLabel.text = R.string.localizable.send_To_Title() + " " + user.fullName
+            container?.titleLabel.text = R.string.localizable.send_to_title() + " " + user.fullName
         case .address(let address):
             targetAddress = address
             opponentImageView.image = R.image.wallet.ic_transaction_external_large()
-            container?.titleLabel.text = R.string.localizable.send_To_Title() + " " + address.label
+            container?.titleLabel.text = R.string.localizable.send_to_title() + " " + address.label
             container?.setSubtitle(subtitle: address.fullAddress.toSimpleKey())
             memoView.isHidden = true
             reloadTransactionFeeHint(addressId: address.addressId)

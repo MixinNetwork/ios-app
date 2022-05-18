@@ -43,7 +43,7 @@
                             <inset key="contentEdgeInsets" minX="26" minY="12" maxX="26" maxY="12"/>
                             <state key="normal" title="Copy"/>
                             <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Copy"/>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="copy"/>
                                 <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
                             </userDefinedRuntimeAttributes>
                             <connections>
@@ -57,7 +57,7 @@
                             <state key="normal" title="Copy"/>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
-                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Copy"/>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="copy"/>
                             </userDefinedRuntimeAttributes>
                             <connections>
                                 <action selector="copyAction:" destination="UYR-5Z-1kS" eventType="touchUpInside" id="ac9-rX-Nk1"/>

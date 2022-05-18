@@ -6,7 +6,7 @@ extension MixinAPIError {
     var localizedDescription: String {
         switch self {
         case .invalidJSON:
-            return R.string.localizable.data_Parsing_Error()
+            return R.string.localizable.data_parsing_error()
         case let .httpTransport(error):
             if let underlying = (error.underlyingError as NSError?), underlying.domain == NSURLErrorDomain {
                 switch underlying.code {
@@ -63,7 +63,7 @@ extension MixinAPIError {
         case .expiredPhoneVerificationCode(let code):
             return R.string.localizable.error_phone_verification_code_expired(code)
         case .invalidQrCode:
-            return R.string.localizable.invalid_QR_Code()
+            return R.string.localizable.invalid_qr_code()
         case .groupChatIsFull(let code):
             return R.string.localizable.error_full_group(code)
         case .insufficientBalance(let code):

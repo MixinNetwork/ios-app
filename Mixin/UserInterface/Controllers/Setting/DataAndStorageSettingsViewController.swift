@@ -16,14 +16,14 @@ class DataAndStorageSettingsViewController: SettingsTableViewController {
                         accessory: .disclosure)
         ]),
         SettingsSection(rows: [
-            SettingsRow(title: R.string.localizable.storage_Usage(),
+            SettingsRow(title: R.string.localizable.storage_usage(),
                         accessory: .disclosure)
         ])
     ])
     
     class func instance() -> UIViewController {
         let vc = DataAndStorageSettingsViewController()
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.data_and_Storage_Usage())
+        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.data_and_storage_usage())
         return container
     }
     
@@ -58,10 +58,10 @@ extension DataAndStorageSettingsViewController: UITableViewDelegate {
             alert.addAction(UIAlertAction(title: R.string.localizable.never(), style: .default, handler: { (_) in
                 setAutoDownload(.never)
             }))
-            alert.addAction(UIAlertAction(title: R.string.localizable.wiFi(), style: .default, handler: { (_) in
+            alert.addAction(UIAlertAction(title: R.string.localizable.wifi(), style: .default, handler: { (_) in
                 setAutoDownload(.wifi)
             }))
-            alert.addAction(UIAlertAction(title: R.string.localizable.wiFi_and_cellular(), style: .default, handler: { (_) in
+            alert.addAction(UIAlertAction(title: R.string.localizable.wifi_and_cellular(), style: .default, handler: { (_) in
                 setAutoDownload(.wifiAndCellular)
             }))
             alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
@@ -81,9 +81,9 @@ fileprivate extension AutoDownload {
         case .never:
             return R.string.localizable.never()
         case .wifi:
-            return R.string.localizable.wiFi()
+            return R.string.localizable.wifi()
         case .wifiAndCellular:
-            return R.string.localizable.wiFi_and_cellular()
+            return R.string.localizable.wifi_and_cellular()
         }
     }
     

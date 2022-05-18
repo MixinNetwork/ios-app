@@ -134,7 +134,7 @@ extension StickerPreviewViewController {
             stickerActionButton.backgroundColor = R.color.sticker_button_background_disabled()
             stickerActionButton.setTitleColor(R.color.sticker_button_text_disabled(), for: .normal)
         } else {
-            stickerActionButton.setTitle(R.string.localizable.add_Sticker(), for: .normal)
+            stickerActionButton.setTitle(R.string.localizable.add_sticker(), for: .normal)
             stickerActionButton.backgroundColor = R.color.theme()
             stickerActionButton.setTitleColor(.white, for: .normal)
         }

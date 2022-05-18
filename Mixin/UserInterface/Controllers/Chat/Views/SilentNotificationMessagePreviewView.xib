@@ -91,7 +91,7 @@
                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                         <integer key="value" value="12"/>
                                     </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Send_Without_Sound"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="send_without_sound"/>
                                     <userDefinedRuntimeAttribute type="color" keyPath="highlightedColor">
                                         <color key="value" name="menu_background_highlighted"/>
                                     </userDefinedRuntimeAttribute>

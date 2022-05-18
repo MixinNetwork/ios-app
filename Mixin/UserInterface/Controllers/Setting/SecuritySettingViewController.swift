@@ -5,10 +5,10 @@ final class SecuritySettingViewController: SettingsTableViewController {
 
     private let dataSource = SettingsDataSource(sections: [
         SettingsSection(rows: [
-            SettingsRow(title: R.string.localizable.piN(), accessory: .disclosure),
+            SettingsRow(title: R.string.localizable.pin(), accessory: .disclosure),
         ]),
         SettingsSection(rows: [
-            SettingsRow(title: R.string.localizable.emergency_Contact(), accessory: .disclosure)
+            SettingsRow(title: R.string.localizable.emergency_contact(), accessory: .disclosure)
         ]),
         SettingsSection(rows: [
             SettingsRow(title: R.string.localizable.authorizations(), accessory: .disclosure)

@@ -69,7 +69,7 @@ class LogViewController: UIViewController {
         case "VERIFICATION":
             return (R.string.localizable.pin_incorrect(), R.string.localizable.verify())
         case "RAW_TRANSFER":
-            return (R.string.localizable.pin_incorrect(), R.string.localizable.transfer_to_Mixin_address())
+            return (R.string.localizable.pin_incorrect(), R.string.localizable.transfer_to_mixin_address())
         case "USER_TRANSFER":
             return (R.string.localizable.pin_incorrect(), R.string.localizable.transfer_to_user_or_bot())
         case "WITHDRAWAL":
@@ -85,17 +85,17 @@ class LogViewController: UIViewController {
         case "READ_EMERGENCY":
             return (R.string.localizable.pin_incorrect(), R.string.localizable.view_emergency_contact())
         case "UPDATE_PHONE":
-            return (R.string.localizable.pin_incorrect(), R.string.localizable.change_Phone_Number())
+            return (R.string.localizable.pin_incorrect(), R.string.localizable.change_phone_number())
         case "UPDATE_PIN":
-            return (R.string.localizable.pin_incorrect(), R.string.localizable.change_PIN())
+            return (R.string.localizable.pin_incorrect(), R.string.localizable.change_pin())
         case "MULTISIG_SIGN":
-            return (R.string.localizable.pin_incorrect(), R.string.localizable.multisig_Transaction())
+            return (R.string.localizable.pin_incorrect(), R.string.localizable.multisig_transaction())
         case "MULTISIG_UNLOCK":
             return (R.string.localizable.pin_incorrect(), R.string.localizable.revoke_multisig_transaction())
         case "ACTIVITY_PIN_MODIFICATION":
-            return (R.string.localizable.pin_change(), R.string.localizable.your_PIN_has_been_changed())
+            return (R.string.localizable.pin_change(), R.string.localizable.your_pin_has_been_changed())
         case "ACTIVITY_EMERGENCY_CONTACT_MODIFICATION":
-            return (R.string.localizable.emergency_Contact(), R.string.localizable.your_emergency_contact_has_been_changed())
+            return (R.string.localizable.emergency_contact(), R.string.localizable.your_emergency_contact_has_been_changed())
         case "ACTIVITY_PHONE_MODIFICATION":
             return (R.string.localizable.phone_number_change(), R.string.localizable.your_phone_number_has_been_changed())
         case "ACTIVITY_LOGIN_BY_PHONE":

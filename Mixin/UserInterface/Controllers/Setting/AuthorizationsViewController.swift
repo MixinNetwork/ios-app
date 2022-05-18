@@ -77,7 +77,7 @@ class AuthorizationsViewController: UIViewController {
                     self.networkIndicatorTopConstraint.constant = self.networkIndicatorHeightConstraint.constant
                     UIView.animate(withDuration: 0.25, animations: self.view.layoutIfNeeded)
                     self.contentViewController.tableView.checkEmpty(dataCount: response.count,
-                                                                    text: R.string.localizable.no_AUTHORIZATIONS(),
+                                                                    text: R.string.localizable.no_authorizations(),
                                                                     photo: R.image.emptyIndicator.ic_authorization()!)
                     self.isDataLoaded = true
                     self.search(self.searchBoxView.textField)

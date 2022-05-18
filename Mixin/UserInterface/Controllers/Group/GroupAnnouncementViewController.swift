@@ -29,7 +29,7 @@ class GroupAnnouncementViewController: AnnouncementViewController {
     class func instance(conversation: ConversationItem) -> UIViewController {
         let vc = GroupAnnouncementViewController()
         vc.conversation = conversation
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.group_Description())
+        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.group_description())
         return container
     }
     

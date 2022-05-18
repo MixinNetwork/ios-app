@@ -58,13 +58,13 @@ class LocationCell: ModernSelectedBackgroundCell {
     
     func renderAsUserLocation(accuracy: String) {
         renderAsUserRelatedLocation()
-        titleLabel.text = R.string.localizable.send_your_Current_Location()
+        titleLabel.text = R.string.localizable.send_your_current_location()
         subtitleLabel.text = R.string.localizable.location_accuracy_to(accuracy)
     }
     
     func renderAsUserPickedLocation(address: String?) {
         renderAsUserRelatedLocation()
-        titleLabel.text = R.string.localizable.send_This_Location()
+        titleLabel.text = R.string.localizable.send_this_location()
         subtitleLabel.text = address ?? R.string.localizable.locating()
     }
     

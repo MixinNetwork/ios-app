@@ -73,7 +73,7 @@ class AddPeopleViewController: KeyboardBasedLayoutViewController {
     
     class func instance() -> UIViewController {
         let vc = R.storyboard.contact.add_people()!
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.add_Contact())
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.add_contact())
     }
     
     private func isLegalKeyword(_ keyword: String) -> Bool {

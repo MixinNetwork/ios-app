@@ -10,10 +10,10 @@ extension Keychain {
         var error: NSError?
         if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
             if context.biometryType == .touchID {
-                let prompt = R.string.localizable.enable_pay(R.string.localizable.touch_ID())
+                let prompt = R.string.localizable.enable_pay(R.string.localizable.touch_id())
                 return storePIN(pin: pin, prompt: prompt)
             } else if context.biometryType == .faceID {
-                let prompt = R.string.localizable.enable_pay(R.string.localizable.face_ID())
+                let prompt = R.string.localizable.enable_pay(R.string.localizable.face_id())
                 return storePIN(pin: pin, prompt: prompt)
             }
         }

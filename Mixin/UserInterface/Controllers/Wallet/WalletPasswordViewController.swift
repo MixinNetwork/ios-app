@@ -62,7 +62,7 @@ class WalletPasswordViewController: ContinueButtonViewController {
             textLabel.text = text
             textLabel.delegate = self
             let linkRange = (text as NSString)
-                .range(of: R.string.localizable.learn_More(), options: [.backwards, .caseInsensitive])
+                .range(of: R.string.localizable.learn_more(), options: [.backwards, .caseInsensitive])
             if linkRange.location != NSNotFound && linkRange.length != 0 {
                 textLabel.linkColor = .theme
                 textLabel.additionalLinksMap = [linkRange: URL.pinTIP]
@@ -82,11 +82,11 @@ class WalletPasswordViewController: ContinueButtonViewController {
             subtitleLabel.text = R.string.localizable.fourth_pin_confirm_hint()
             backButton.setImage(R.image.ic_title_back(), for: .normal)
         case .changePinStep1:
-            textLabel.text = R.string.localizable.enter_your_PIN()
+            textLabel.text = R.string.localizable.enter_your_pin()
             subtitleLabel.text = ""
             backButton.setImage(R.image.ic_title_close(), for: .normal)
         case .changePinStep2:
-            textLabel.text = R.string.localizable.set_new_PIN()
+            textLabel.text = R.string.localizable.set_new_pin()
             subtitleLabel.text = ""
             backButton.setImage(R.image.ic_title_back(), for: .normal)
         }
@@ -264,7 +264,7 @@ extension WalletPasswordViewController: PinFieldDelegate {
                     case .success(let account):
                         AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
                         LoginManager.shared.setAccount(account)
-                        self?.updatePasswordSuccessfully(alertTitle: R.string.localizable.set_PIN_successfully())
+                        self?.updatePasswordSuccessfully(alertTitle: R.string.localizable.set_pin_successfully())
                     case let .failure(error):
                         PINVerificationFailureHandler.handle(error: error) { (description) in
                             self?.alert(description)
@@ -329,7 +329,7 @@ extension WalletPasswordViewController: PinFieldDelegate {
                         AppGroupUserDefaults.Wallet.periodicPinVerificationInterval = PeriodicPinVerificationInterval.min
                         AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
                         LoginManager.shared.setAccount(account)
-                        self?.updatePasswordSuccessfully(alertTitle: R.string.localizable.change_PIN_successfully())
+                        self?.updatePasswordSuccessfully(alertTitle: R.string.localizable.change_pin_successfully())
                     case let .failure(error):
                         PINVerificationFailureHandler.handle(error: error) { (description) in
                             self?.alert(description)

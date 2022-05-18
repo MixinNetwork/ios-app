@@ -58,7 +58,7 @@
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                                 <textInputTraits key="textInputTraits" autocorrectionType="no" returnKeyType="search"/>
                                                 <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_placeholder" value="Group_Name"/>
+                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_placeholder" value="group_name"/>
                                                 </userDefinedRuntimeAttributes>
                                             </textField>
                                         </subviews>
@@ -95,7 +95,7 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Create"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="create"/>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
@@ -230,7 +230,7 @@
                                                         <color key="textColor" name="text"/>
                                                         <nil key="highlightedColor"/>
                                                         <userDefinedRuntimeAttributes>
-                                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Share_Link"/>
+                                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="share_link"/>
                                                             <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
                                                         </userDefinedRuntimeAttributes>
                                                     </label>
@@ -252,7 +252,7 @@
                                                         <color key="textColor" name="text"/>
                                                         <nil key="highlightedColor"/>
                                                         <userDefinedRuntimeAttributes>
-                                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Copy_link"/>
+                                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="copy_link"/>
                                                             <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
                                                         </userDefinedRuntimeAttributes>
                                                     </label>
@@ -274,7 +274,7 @@
                                                         <color key="textColor" name="text"/>
                                                         <nil key="highlightedColor"/>
                                                         <userDefinedRuntimeAttributes>
-                                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="QR_Code"/>
+                                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="qr_code"/>
                                                             <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
                                                         </userDefinedRuntimeAttributes>
                                                     </label>

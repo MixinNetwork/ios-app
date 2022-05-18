@@ -33,7 +33,7 @@
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
-                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Cancel"/>
+                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="cancel"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
                         <action selector="cancelSearchAction:" destination="-1" eventType="touchUpInside" id="OUf-Pm-uN4"/>

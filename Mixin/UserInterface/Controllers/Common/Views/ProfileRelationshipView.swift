@@ -53,7 +53,7 @@ final class ProfileRelationshipView: UIView {
                 button.setTitle(nil, for: .normal)
             case .addContact:
                 button.setImage(R.image.ic_profile_add(), for: .normal)
-                button.setTitle(R.string.localizable.add_Contact(), for: .normal)
+                button.setTitle(R.string.localizable.add_contact(), for: .normal)
             case .addBot:
                 button.setImage(R.image.ic_profile_add(), for: .normal)
                 button.setTitle(R.string.localizable.add_bot(), for: .normal)

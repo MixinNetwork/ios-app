@@ -69,7 +69,7 @@ enum HomeApp {
         switch self {
         case .embedded(let app):
             switch app.name {
-            case R.string.localizable.scan_QR_Code():
+            case R.string.localizable.scan_qr_code():
                 return R.string.localizable.tools()
             case R.string.localizable.camera():
                 return R.string.localizable.camera()

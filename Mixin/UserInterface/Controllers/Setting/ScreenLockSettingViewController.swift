@@ -12,13 +12,13 @@ final class ScreenLockSettingViewController: SettingsTableViewController {
     private lazy var biometricSwitchRow = SettingsRow(title: R.string.localizable.lock_with_biometric(biometryType.localizedName),
                                                       accessory: .switch(isOn: AppGroupUserDefaults.User.lockScreenWithBiometricAuthentication))
     
-    private lazy var timeoutIntervalRow = SettingsRow(title: R.string.localizable.auto_Lock(),
+    private lazy var timeoutIntervalRow = SettingsRow(title: R.string.localizable.auto_lock(),
                                                       subtitle: ScreenLockTimeFormatter.string(from: AppGroupUserDefaults.User.lockScreenTimeoutInterval),
                                                       accessory: .disclosure)
     
     class func instance() -> UIViewController {
         let vc = ScreenLockSettingViewController()
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.screen_Lock())
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.screen_lock())
     }
     
     override func viewDidLoad() {
@@ -45,7 +45,7 @@ extension ScreenLockSettingViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.section == 0 && indexPath.row == 1 {
-            let alert = UIAlertController(title: nil, message: R.string.localizable.auto_Lock(), preferredStyle: .actionSheet)
+            let alert = UIAlertController(title: nil, message: R.string.localizable.auto_lock(), preferredStyle: .actionSheet)
             for interval in timeoutIntervals {
                 alert.addAction(UIAlertAction(title: ScreenLockTimeFormatter.string(from: interval), style: .default, handler: { (_) in
                     self.setNewTimeoutInterval(interval)

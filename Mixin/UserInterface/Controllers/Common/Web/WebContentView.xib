@@ -47,7 +47,7 @@
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
                                     <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Loading"/>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="loading"/>
                                     </userDefinedRuntimeAttributes>
                                 </label>
                             </subviews>

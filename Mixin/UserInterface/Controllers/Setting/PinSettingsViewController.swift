@@ -7,20 +7,20 @@ final class PinSettingsViewController: SettingsTableViewController {
     private let tableHeaderView = R.nib.pinSettingTableHeaderView(owner: nil)!
     private let dataSource = SettingsDataSource(sections: [
         SettingsSection(rows: [
-            SettingsRow(title: R.string.localizable.change_PIN(), accessory: .disclosure)
+            SettingsRow(title: R.string.localizable.change_pin(), accessory: .disclosure)
         ]),
     ])
     
     private lazy var biometricSwitchRow = SettingsRow(title: R.string.localizable.pay_with(biometryType.localizedName),
                                                       accessory: .switch(isOn: AppGroupUserDefaults.Wallet.payWithBiometricAuthentication))
-    private lazy var pinIntervalRow = SettingsRow(title: R.string.localizable.pay_with_PIN_interval(),
+    private lazy var pinIntervalRow = SettingsRow(title: R.string.localizable.pay_with_pin_interval(),
                                                   accessory: .disclosure)
     
     private var isBiometricPaymentChangingInProgress = false
     
     class func instance() -> UIViewController {
         let vc = PinSettingsViewController()
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.piN())
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.pin())
     }
     
     override func viewDidLoad() {
@@ -80,7 +80,7 @@ final class PinSettingsViewController: SettingsTableViewController {
             return
         }
         if AppGroupUserDefaults.Wallet.payWithBiometricAuthentication {
-            let type = biometryType == .touchID ? R.string.localizable.touch_ID() : R.string.localizable.face_ID()
+            let type = biometryType == .touchID ? R.string.localizable.touch_id() : R.string.localizable.face_id()
             let title = R.string.localizable.disable_biometric_pay_confirmation(type)
             let alc = UIAlertController(title: title, message: nil, preferredStyle: .alert)
             alc.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: { (_) in
@@ -98,10 +98,10 @@ final class PinSettingsViewController: SettingsTableViewController {
             let tips: String, prompt: String
             if biometryType == .touchID {
                 tips = R.string.localizable.enable_touch_pay_hint()
-                prompt = R.string.localizable.enable_pay_confirmation(R.string.localizable.touch_ID())
+                prompt = R.string.localizable.enable_pay_confirmation(R.string.localizable.touch_id())
             } else {
                 tips = R.string.localizable.enable_face_pay_hint()
-                prompt = R.string.localizable.enable_pay_confirmation(R.string.localizable.face_ID())
+                prompt = R.string.localizable.enable_pay_confirmation(R.string.localizable.face_id())
             }
             let validator = PinValidationViewController(tips: tips, onSuccess: { (pin) in
                 guard Keychain.shared.storePIN(pin: pin, prompt: prompt) else {

@@ -44,7 +44,7 @@ class BlockedUsersViewController: UIViewController {
     
     class func instance() -> UIViewController {
         let vc = R.storyboard.setting.block()!
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.blocked_Users())
+        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.blocked_users())
         return container
     }
     

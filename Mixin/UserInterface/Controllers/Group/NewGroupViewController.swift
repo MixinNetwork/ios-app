@@ -142,7 +142,7 @@ class NewGroupViewController: KeyboardBasedLayoutViewController {
     class func instance(members: [GroupUser]) -> UIViewController {
         let vc = R.storyboard.group.new_group()!
         vc.members = members
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.new_Group())
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.new_group())
     }
     
 }

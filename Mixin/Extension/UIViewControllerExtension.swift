@@ -6,7 +6,7 @@ extension UIViewController {
         return UIDevice.current.userInterfaceIdiom == .pad
     }
 
-    func alert(_ message: String, actionTitle: String = R.string.localizable.oK(), cancelHandler: ((UIAlertAction) -> Void)? = nil) {
+    func alert(_ message: String, actionTitle: String = R.string.localizable.ok(), cancelHandler: ((UIAlertAction) -> Void)? = nil) {
         let alc = UIAlertController(title: message, message: nil, preferredStyle: .alert)
         alc.addAction(UIAlertAction(title: actionTitle, style: .default, handler: cancelHandler))
 
@@ -19,7 +19,7 @@ extension UIViewController {
 
     func alert(_ title: String?, message: String?, handler: ((UIAlertAction) -> Void)? = nil) {
         let alc = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alc.addAction(UIAlertAction(title: R.string.localizable.oK(), style: .cancel, handler: handler))
+        alc.addAction(UIAlertAction(title: R.string.localizable.ok(), style: .cancel, handler: handler))
         self.present(alc, animated: true, completion: nil)
     }
 

@@ -75,7 +75,7 @@ class AssetViewController: UIViewController {
         guard let asset = self.asset else {
             return
         }
-        let alc = UIAlertController(title: R.string.localizable.send_To_Title(), message: nil, preferredStyle: .actionSheet)
+        let alc = UIAlertController(title: R.string.localizable.send_to_title(), message: nil, preferredStyle: .actionSheet)
         alc.addAction(UIAlertAction(title: R.string.localizable.contact(), style: .default, handler: { [weak self] (_) in
             let vc = TransferReceiverViewController.instance(asset: asset)
             self?.navigationController?.pushViewController(vc, animated: true)

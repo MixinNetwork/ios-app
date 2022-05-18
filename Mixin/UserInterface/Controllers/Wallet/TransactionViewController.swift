@@ -200,7 +200,7 @@ extension TransactionViewController {
             switch result {
             case let .success(asset):
                 let nowValue = Currency.current.symbol + self.getFormatValue(priceUsd: self.asset.priceUsd)
-                let thenValue = asset.priceUsd.doubleValue > 0 ? Currency.current.symbol + self.getFormatValue(priceUsd: asset.priceUsd) : R.string.localizable.nA()
+                let thenValue = asset.priceUsd.doubleValue > 0 ? Currency.current.symbol + self.getFormatValue(priceUsd: asset.priceUsd) : R.string.localizable.na()
                 self.fiatMoneyValueLabel.text = R.string.localizable.value_now(nowValue) + "\n" + R.string.localizable.value_then(thenValue)
             case .failure:
                 break
@@ -258,15 +258,15 @@ extension TransactionViewController {
     
     private func makeContents() {
         contents = []
-        contents.append((title: R.string.localizable.transaction_Id(), subtitle: snapshot.snapshotId))
-        contents.append((title: R.string.localizable.asset_Type(), subtitle: asset.name))
+        contents.append((title: R.string.localizable.transaction_id(), subtitle: snapshot.snapshotId))
+        contents.append((title: R.string.localizable.asset_type(), subtitle: asset.name))
         switch snapshot.type {
         case SnapshotType.deposit.rawValue, SnapshotType.pendingDeposit.rawValue:
-            contents.append((title: R.string.localizable.transaction_Type(), subtitle: R.string.localizable.deposit()))
+            contents.append((title: R.string.localizable.transaction_type(), subtitle: R.string.localizable.deposit()))
             if snapshot.type == SnapshotType.pendingDeposit.rawValue, let finished = snapshot.confirmations, let total = asset?.confirmations {
                 contents.append((title: R.string.localizable.status(), subtitle: R.string.localizable.pending_confirmations(finished, total)))
             }
-            contents.append((title: R.string.localizable.transaction_Hash(), subtitle: snapshot.transactionHash))
+            contents.append((title: R.string.localizable.transaction_hash(), subtitle: snapshot.transactionHash))
             if snapshot.hasSender {
                 contents.append((title: R.string.localizable.address(), subtitle: snapshot.sender))
             }
@@ -274,7 +274,7 @@ extension TransactionViewController {
                 contents.append((title: asset.memoLabel, subtitle: snapshot.memo))
             }
         case SnapshotType.transfer.rawValue:
-            contents.append((title: R.string.localizable.transaction_Type(), subtitle: R.string.localizable.transfer()))
+            contents.append((title: R.string.localizable.transaction_type(), subtitle: R.string.localizable.transfer()))
             if snapshot.amount.doubleValue > 0 {
                 contents.append((title: R.string.localizable.from(), subtitle: snapshot.opponentUserFullName))
             } else {
@@ -284,8 +284,8 @@ extension TransactionViewController {
                 contents.append((title: R.string.localizable.memo(), subtitle: snapshot.memo))
             }
         case SnapshotType.raw.rawValue:
-            contents.append((title: R.string.localizable.transaction_Type(), subtitle: R.string.localizable.raw()))
-            contents.append((title: R.string.localizable.transaction_Hash(), subtitle: snapshot.transactionHash))
+            contents.append((title: R.string.localizable.transaction_type(), subtitle: R.string.localizable.raw()))
+            contents.append((title: R.string.localizable.transaction_hash(), subtitle: snapshot.transactionHash))
             if snapshot.hasSender {
                 contents.append((title: R.string.localizable.from(), subtitle: snapshot.sender))
             }
@@ -296,22 +296,22 @@ extension TransactionViewController {
                 contents.append((title: R.string.localizable.memo(), subtitle: snapshot.memo))
             }
         case SnapshotType.withdrawal.rawValue:
-            contents.append((title: R.string.localizable.transaction_Type(), subtitle: R.string.localizable.withdrawal()))
-            contents.append((title: R.string.localizable.transaction_Hash(), subtitle: snapshot.transactionHash))
+            contents.append((title: R.string.localizable.transaction_type(), subtitle: R.string.localizable.withdrawal()))
+            contents.append((title: R.string.localizable.transaction_hash(), subtitle: snapshot.transactionHash))
             contents.append((title: R.string.localizable.receiver(), subtitle: snapshot.receiver))
             if snapshot.hasMemo {
                 contents.append((title: asset.memoLabel, subtitle: snapshot.memo))
             }
         case SnapshotType.fee.rawValue:
-            contents.append((title: R.string.localizable.transaction_Type(), subtitle: R.string.localizable.fee()))
-            contents.append((title: R.string.localizable.transaction_Hash(), subtitle: snapshot.transactionHash))
+            contents.append((title: R.string.localizable.transaction_type(), subtitle: R.string.localizable.fee()))
+            contents.append((title: R.string.localizable.transaction_hash(), subtitle: snapshot.transactionHash))
             contents.append((title: R.string.localizable.receiver(), subtitle: snapshot.receiver))
             if snapshot.hasMemo {
                 contents.append((title: asset.memoLabel, subtitle: snapshot.memo))
             }
         case SnapshotType.rebate.rawValue:
-            contents.append((title: R.string.localizable.transaction_Type(), subtitle: R.string.localizable.rebate()))
-            contents.append((title: R.string.localizable.transaction_Hash(), subtitle: snapshot.transactionHash))
+            contents.append((title: R.string.localizable.transaction_type(), subtitle: R.string.localizable.rebate()))
+            contents.append((title: R.string.localizable.transaction_hash(), subtitle: snapshot.transactionHash))
             contents.append((title: R.string.localizable.receiver(), subtitle: snapshot.receiver))
             if snapshot.hasMemo {
                 contents.append((title: asset.memoLabel, subtitle: snapshot.memo))
@@ -326,8 +326,8 @@ extension TransactionViewController {
         let title = contents[indexPath.row].title
         let subtitle = contents[indexPath.row].subtitle
         switch title {
-        case R.string.localizable.transaction_Id(),
-             R.string.localizable.transaction_Hash(),
+        case R.string.localizable.transaction_id(),
+             R.string.localizable.transaction_hash(),
              R.string.localizable.memo(),
              asset.memoLabel,
              R.string.localizable.address(),

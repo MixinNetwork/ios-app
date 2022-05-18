@@ -50,7 +50,7 @@
                     <inset key="contentEdgeInsets" minX="26" minY="12" maxX="26" maxY="12"/>
                     <state key="normal" title="Reload"/>
                     <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Reload"/>
+                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="reload"/>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
@@ -65,7 +65,7 @@
                         <color key="titleColor" name="theme"/>
                     </state>
                     <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Contact_Developer"/>
+                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="contact_developer"/>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
                     </userDefinedRuntimeAttributes>
                     <connections>

@@ -97,11 +97,11 @@ class PhotoInputViewController: UIViewController, ConversationInputAccessible {
     @IBAction func managePhotoAuthorization(_ sender: Any) {
         let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         if #available(iOS 14, *) {
-            sheet.addAction(UIAlertAction(title: R.string.localizable.select_More_Phots(), style: .default, handler: { _ in
+            sheet.addAction(UIAlertAction(title: R.string.localizable.select_more_phots(), style: .default, handler: { _ in
                 PHPhotoLibrary.shared().presentLimitedLibraryPicker(from: self)
             }))
         }
-        sheet.addAction(UIAlertAction(title: R.string.localizable.change_Settings(), style: .default, handler: { _ in
+        sheet.addAction(UIAlertAction(title: R.string.localizable.change_settings(), style: .default, handler: { _ in
             UIApplication.openAppSettings()
         }))
         sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
@@ -155,7 +155,7 @@ extension PhotoInputViewController: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.photo_album, for: indexPath)!
         switch Section(rawValue: indexPath.section)! {
         case .allPhotos:
-            cell.textLabel.text = R.string.localizable.all_Photos()
+            cell.textLabel.text = R.string.localizable.all_photos()
         case .smartAlbums:
             cell.textLabel.text = sortedSmartAlbums?[indexPath.row].localizedTitle ?? ""
         case .userCollections:

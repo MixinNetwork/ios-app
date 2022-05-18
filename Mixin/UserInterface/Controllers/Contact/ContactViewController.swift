@@ -208,13 +208,13 @@ extension ContactViewController {
                 return nil
             } else {
                 let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.header) as! ContactHeaderView
-                view.label.text = R.string.localizable.contactS()
+                view.label.text = R.string.localizable.contacts()
                 return view
             }
         } else if isPhoneContactAuthorized {
             let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.header) as! ContactHeaderView
             if section == 1 {
-                view.label.text = R.string.localizable.mobile_Contacts()
+                view.label.text = R.string.localizable.mobile_contacts()
             } else {
                 view.label.text = phoneContactSectionTitles[section - 1]
             }

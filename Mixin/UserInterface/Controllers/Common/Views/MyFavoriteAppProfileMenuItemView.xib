@@ -43,7 +43,7 @@
                             <color key="textColor" name="text"/>
                             <nil key="highlightedColor"/>
                             <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="My_shared_apps"/>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="my_shared_apps"/>
                             </userDefinedRuntimeAttributes>
                         </label>
                         <view opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" placeholderIntrinsicWidth="60" placeholderIntrinsicHeight="infinite" translatesAutoresizingMaskIntoConstraints="NO" id="eqF-Ko-hV5" customClass="UserAvatarStackView" customModule="Mixin" customModuleProvider="target">

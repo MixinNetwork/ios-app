@@ -43,7 +43,7 @@ enum MessageAction {
         case .delete:
             return R.string.localizable.delete()
         case .addToStickers:
-            return R.string.localizable.add_to_Stickers()
+            return R.string.localizable.add_to_stickers()
         case .report:
             return R.string.localizable.report()
         case .pin:

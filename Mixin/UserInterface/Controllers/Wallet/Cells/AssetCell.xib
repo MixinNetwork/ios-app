@@ -96,7 +96,7 @@
                         <color key="textColor" name="text_accessory"/>
                         <nil key="highlightedColor"/>
                         <userDefinedRuntimeAttributes>
-                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="NA"/>
+                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="na"/>
                         </userDefinedRuntimeAttributes>
                     </label>
                 </subviews>

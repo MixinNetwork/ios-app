@@ -331,7 +331,7 @@ class CallViewController: ResizablePopupViewController {
                                       message: R.string.localizable.call_encryption_description(),
                                       preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: R.string.localizable.learn_More(), style: .default, handler: { (_) in
+        alert.addAction(UIAlertAction(title: R.string.localizable.learn_more(), style: .default, handler: { (_) in
             self.learnMoreAboutEncryption()
         }))
         present(alert, animated: true, completion: nil)

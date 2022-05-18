@@ -142,7 +142,7 @@ extension PlaylistViewController {
     
     @IBAction func stop(_ sender: Any) {
         let alert = UIAlertController(title: R.string.localizable.stop_playing_this_list(), message: nil, preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: R.string.localizable.stop_Playing(), style: .default, handler: { (_) in
+        alert.addAction(UIAlertAction(title: R.string.localizable.stop_playing(), style: .default, handler: { (_) in
             self.manager.stop()
             self.dismiss(animated: true) {
                 self.manager.removeAllItems()

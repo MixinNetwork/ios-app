@@ -9,13 +9,13 @@ class SettingsViewController: SettingsTableViewController {
                         title: R.string.localizable.account(),
                         accessory: .disclosure),
             SettingsRow(icon: R.image.setting.ic_category_backup(),
-                        title: R.string.localizable.chat_Backup(),
+                        title: R.string.localizable.chat_backup(),
                         accessory: .disclosure),
             SettingsRow(icon: R.image.setting.ic_category_notification(),
-                        title: R.string.localizable.notification_and_Confirmation(),
+                        title: R.string.localizable.notification_and_confirmation(),
                         accessory: .disclosure),
             SettingsRow(icon: R.image.setting.ic_category_storage(),
-                        title: R.string.localizable.data_and_Storage_Usage(),
+                        title: R.string.localizable.data_and_storage_usage(),
                         accessory: .disclosure)
         ]),
         SettingsSection(rows: [
@@ -25,7 +25,7 @@ class SettingsViewController: SettingsTableViewController {
         ]),
         SettingsSection(rows: [
             SettingsRow(icon: R.image.setting.ic_category_desktop(),
-                        title: R.string.localizable.mixin_Messenger_Desktop(),
+                        title: R.string.localizable.mixin_messenger_desktop(),
                         accessory: .disclosure)
         ]),
         SettingsSection(rows: [
@@ -33,7 +33,7 @@ class SettingsViewController: SettingsTableViewController {
                         title: R.string.localizable.feedback(),
                         accessory: .disclosure),
             SettingsRow(icon: R.image.setting.ic_category_share(),
-                        title: R.string.localizable.share_This_App(),
+                        title: R.string.localizable.share_this_app(),
                         accessory: .disclosure)
         ]),
         SettingsSection(rows: [

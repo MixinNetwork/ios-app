@@ -122,7 +122,7 @@
                                                             <color key="textColor" name="text"/>
                                                             <nil key="highlightedColor"/>
                                                             <userDefinedRuntimeAttributes>
-                                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="New_Group_Chat"/>
+                                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="new_group_chat"/>
                                                             </userDefinedRuntimeAttributes>
                                                         </label>
                                                     </subviews>
@@ -161,7 +161,7 @@
                                                             <color key="textColor" name="text"/>
                                                             <nil key="highlightedColor"/>
                                                             <userDefinedRuntimeAttributes>
-                                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Add_Contact"/>
+                                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="add_contact"/>
                                                             </userDefinedRuntimeAttributes>
                                                         </label>
                                                     </subviews>
@@ -366,7 +366,7 @@
                                                 <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </state>
                                             <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Invite"/>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="invite"/>
                                                 <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
                                                 <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
                                             </userDefinedRuntimeAttributes>
@@ -403,7 +403,7 @@
                                             <color key="textColor" name="theme"/>
                                             <nil key="highlightedColor"/>
                                             <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Upload_Mobile_Contacts"/>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="upload_mobile_contacts"/>
                                             </userDefinedRuntimeAttributes>
                                         </label>
                                     </subviews>
@@ -461,7 +461,7 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Search"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="search"/>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
@@ -570,7 +570,7 @@
                                                 <color key="textColor" name="text_accessory"/>
                                                 <nil key="highlightedColor"/>
                                                 <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="NO_APPS"/>
+                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="no_apps"/>
                                                     <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
                                                 </userDefinedRuntimeAttributes>
                                             </label>
@@ -721,7 +721,7 @@
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
             <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

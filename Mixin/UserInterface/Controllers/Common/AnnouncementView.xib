@@ -39,7 +39,7 @@
                     </state>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
-                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Save"/>
+                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="save"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
                         <action selector="saveAction:" destination="-1" eventType="touchUpInside" id="sI4-bI-M3m"/>

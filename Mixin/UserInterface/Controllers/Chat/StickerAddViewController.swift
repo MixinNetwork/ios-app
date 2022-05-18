@@ -25,7 +25,7 @@ class StickerAddViewController: UIViewController {
     class func instance(source: Source) -> UIViewController {
         let vc = R.storyboard.chat.sticker_add()!
         vc.source = source
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.add_Sticker())
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.add_sticker())
     }
     
     override func viewDidLoad() {
@@ -143,7 +143,7 @@ extension StickerAddViewController {
         container?.rightButton.isBusy = false
         let title = R.string.localizable.sticker_add_requirements("\(minDataCount / bytesPerKiloByte)", "\(maxDataCount / bytesPerKiloByte)", "\(Int(minStickerLength))", "\(Int(maxStickerLength))")
         let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: R.string.localizable.oK(), style: .default, handler: nil))
+        alert.addAction(UIAlertAction(title: R.string.localizable.ok(), style: .default, handler: nil))
         present(alert, animated: true, completion: nil)
     }
     

@@ -11,11 +11,11 @@ final class LoginMobileNumberViewController: MobileNumberViewController {
     private var request: Request?
     
     private let intro: NSAttributedString = {
-        let intro = R.string.localizable.agree_hint(R.string.localizable.terms_of_Service(), R.string.localizable.privacy_Policy())
+        let intro = R.string.localizable.agree_hint(R.string.localizable.terms_of_service(), R.string.localizable.privacy_policy())
         let nsIntro = intro as NSString
         let fullRange = NSRange(location: 0, length: nsIntro.length)
-        let termsRange = nsIntro.range(of: R.string.localizable.terms_of_Service())
-        let privacyRange = nsIntro.range(of: R.string.localizable.privacy_Policy())
+        let termsRange = nsIntro.range(of: R.string.localizable.terms_of_service())
+        let privacyRange = nsIntro.range(of: R.string.localizable.privacy_policy())
         let attributedText = NSMutableAttributedString(string: intro)
         let paragraphSytle = NSMutableParagraphStyle()
         paragraphSytle.alignment = .center

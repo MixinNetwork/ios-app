@@ -11,11 +11,11 @@ class BulletinContentView: UIView {
         didSet {
             switch content {
             case .notification:
-                titleLabel.text = R.string.localizable.turn_On_Notifications()
+                titleLabel.text = R.string.localizable.turn_on_notifications()
                 descriptionLabel.text = R.string.localizable.notification_content()
                 continueButton.setTitle(R.string.localizable.settings(), for: .normal)
             case .emergencyContact:
-                titleLabel.text = R.string.localizable.emergency_Contact()
+                titleLabel.text = R.string.localizable.emergency_contact()
                 descriptionLabel.text = R.string.localizable.setting_emergency_content()
                 continueButton.setTitle(R.string.localizable.settings(), for: .normal)
             case .initializePIN:

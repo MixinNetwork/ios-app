@@ -6,7 +6,7 @@ class DesktopViewController: SettingsTableViewController {
     private let dataSource = SettingsDataSource(sections: [])
     
     private lazy var loginSection = SettingsSection(rows: [
-        SettingsRow(title: R.string.localizable.scan_QR_Code(),
+        SettingsRow(title: R.string.localizable.scan_qr_code(),
                     accessory: .disclosure)
     ])
     private lazy var logoutSection = SettingsSection(footer: R.string.localizable.desktop_on_hint(), rows: [
@@ -21,7 +21,7 @@ class DesktopViewController: SettingsTableViewController {
     
     class func instance() -> UIViewController {
         let vc = DesktopViewController()
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.mixin_Messenger_Desktop())
+        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.mixin_messenger_desktop())
         return container
     }
     

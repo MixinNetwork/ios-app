@@ -140,7 +140,7 @@ confirmations. </string>
                             <inset key="contentEdgeInsets" minX="30" minY="0.0" maxX="30" maxY="0.0"/>
                             <state key="normal" title="Got it"/>
                             <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Got_it"/>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="got_it"/>
                                 <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
                             </userDefinedRuntimeAttributes>
                             <connections>

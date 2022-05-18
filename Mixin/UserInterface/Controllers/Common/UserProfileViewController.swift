@@ -313,7 +313,7 @@ extension UserProfileViewController {
             return
         }
         let window = QrcodeWindow.instance()
-        window.render(title: R.string.localizable.my_QR_Code(),
+        window.render(title: R.string.localizable.my_qr_code(),
                       description: R.string.localizable.scan_code_add_me(),
                       account: account)
         window.presentPopupControllerAnimated()
@@ -337,7 +337,7 @@ extension UserProfileViewController {
     }
     
     @objc func editMyName() {
-        presentEditNameController(title: R.string.localizable.edit_Name(), text: user.fullName, placeholder: R.string.localizable.name()) { (name) in
+        presentEditNameController(title: R.string.localizable.edit_name(), text: user.fullName, placeholder: R.string.localizable.name()) { (name) in
             let hud = Hud()
             hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
             AccountAPI.update(fullName: name) { (result) in
@@ -405,7 +405,7 @@ extension UserProfileViewController {
     
     @objc func editAlias() {
         let userId = user.userId
-        presentEditNameController(title: R.string.localizable.edit_Name(), text: user.fullName, placeholder: R.string.localizable.name()) { [weak self] (name) in
+        presentEditNameController(title: R.string.localizable.edit_name(), text: user.fullName, placeholder: R.string.localizable.name()) { [weak self] (name) in
             let hud = Hud()
             hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
             UserAPI.remarkFriend(userId: userId, full_name: name) { [weak self] (result) in
@@ -449,7 +449,7 @@ extension UserProfileViewController {
     @objc func showSharedMedia() {
         let vc = R.storyboard.chat.shared_media()!
         vc.conversationId = conversationId
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.shared_Media())
+        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.shared_media())
         dismissAndPush(container)
     }
     
@@ -480,7 +480,7 @@ extension UserProfileViewController {
     @objc func removeFriend() {
         let userId = user.userId
         let hint = user.isBot ? R.string.localizable.remove_app_hint() : R.string.localizable.remove_contact_hint()
-        let removeTitle = user.isBot ? R.string.localizable.remove_Bot() : R.string.localizable.remove_Contact()
+        let removeTitle = user.isBot ? R.string.localizable.remove_bot() : R.string.localizable.remove_contact()
         let alert = UIAlertController(title: hint, message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: removeTitle, style: .destructive, handler: { (_) in
@@ -714,31 +714,31 @@ extension UserProfileViewController {
         
         if isMe {
             let groups = [
-                [ProfileMenuItem(title: R.string.localizable.my_QR_Code(),
+                [ProfileMenuItem(title: R.string.localizable.my_qr_code(),
                                  subtitle: nil,
                                  style: [],
                                  action: #selector(showMyQrCode)),
-                 ProfileMenuItem(title: R.string.localizable.receive_Money(),
+                 ProfileMenuItem(title: R.string.localizable.receive_money(),
                                  subtitle: nil,
                                  style: [],
                                  action: #selector(showMyMoneyReceivingCode))],
-                [ProfileMenuItem(title: R.string.localizable.edit_Name(),
+                [ProfileMenuItem(title: R.string.localizable.edit_name(),
                                  subtitle: nil,
                                  style: [],
                                  action: #selector(editMyName)),
-                 ProfileMenuItem(title: R.string.localizable.edit_Biography(),
+                 ProfileMenuItem(title: R.string.localizable.edit_biography(),
                                  subtitle: nil,
                                  style: [],
                                  action: #selector(editMyBiography))],
-                [ProfileMenuItem(title: R.string.localizable.change_Profile_Photo_with_Camera(),
+                [ProfileMenuItem(title: R.string.localizable.change_profile_photo_with_camera(),
                                  subtitle: nil,
                                  style: [],
                                  action: #selector(changeAvatarWithCamera)),
-                 ProfileMenuItem(title: R.string.localizable.change_Profile_Photo_with_Library(),
+                 ProfileMenuItem(title: R.string.localizable.change_profile_photo_with_library(),
                                  subtitle: nil,
                                  style: [],
                                  action: #selector(changeAvatarWithLibrary))],
-                [ProfileMenuItem(title: R.string.localizable.change_Phone_Number(),
+                [ProfileMenuItem(title: R.string.localizable.change_phone_number(),
                                  subtitle: user.phone,
                                  style: [],
                                  action: #selector(changeNumber))]
@@ -762,18 +762,18 @@ extension UserProfileViewController {
         } else if isMessengerUser {
             var groups = [[ProfileMenuItem]]()
             
-            let shareUserItem = ProfileMenuItem(title: R.string.localizable.share_Contact(),
+            let shareUserItem = ProfileMenuItem(title: R.string.localizable.share_contact(),
                                                 subtitle: nil,
                                                 style: [],
                                                 action: #selector(shareUser))
             groups.append([shareUserItem])
             
             let sharedMediaAndSearchGroup = [
-                ProfileMenuItem(title: R.string.localizable.shared_Media(),
+                ProfileMenuItem(title: R.string.localizable.shared_media(),
                                 subtitle: nil,
                                 style: [],
                                 action: #selector(showSharedMedia)),
-                ProfileMenuItem(title: R.string.localizable.search_Conversation(),
+                ProfileMenuItem(title: R.string.localizable.search_conversation(),
                                 subtitle: nil,
                                 style: [],
                                 action: #selector(searchConversation))
@@ -801,7 +801,7 @@ extension UserProfileViewController {
                                              action: #selector(mute))]
                 }
                 if relationship == .FRIEND {
-                    group.append(ProfileMenuItem(title: R.string.localizable.edit_Name(),
+                    group.append(ProfileMenuItem(title: R.string.localizable.edit_name(),
                                                  subtitle: nil,
                                                  style: [],
                                                  action: #selector(editAlias)))
@@ -812,7 +812,7 @@ extension UserProfileViewController {
 
             if !user.isBot {
                 let callGroup: [ProfileMenuItem] = {
-                    var group = [ProfileMenuItem(title: R.string.localizable.call_with_Mixin(),
+                    var group = [ProfileMenuItem(title: R.string.localizable.call_with_mixin(),
                                                  subtitle: nil,
                                                  style: [],
                                                  action: #selector(callWithMixin))]
@@ -846,7 +846,7 @@ extension UserProfileViewController {
             }
             
             if !user.isBot {
-                let groupsInCommonGroup = [ProfileMenuItem(title: R.string.localizable.groups_In_Common(),
+                let groupsInCommonGroup = [ProfileMenuItem(title: R.string.localizable.groups_in_common(),
                                                            subtitle: nil,
                                                            style: [],
                                                            action: #selector(groupsInCommon))]
@@ -859,7 +859,7 @@ extension UserProfileViewController {
                 case .ME:
                     group = []
                 case .FRIEND:
-                    let removeTitle = user.isBot ? R.string.localizable.remove_Bot() : R.string.localizable.remove_Contact()
+                    let removeTitle = user.isBot ? R.string.localizable.remove_bot() : R.string.localizable.remove_contact()
                     group = [ProfileMenuItem(title: removeTitle,
                                              subtitle: nil,
                                              style: [.destructive],

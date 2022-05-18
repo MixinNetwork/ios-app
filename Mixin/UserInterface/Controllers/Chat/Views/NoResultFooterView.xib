@@ -20,7 +20,7 @@
                     <color key="textColor" name="text_accessory"/>
                     <nil key="highlightedColor"/>
                     <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="No_result"/>
+                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="no_result"/>
                     </userDefinedRuntimeAttributes>
                 </label>
             </subviews>

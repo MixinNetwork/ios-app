@@ -134,9 +134,9 @@ extension SelectCountryViewController: UITableViewDelegate {
         }
         let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.header)! as! GeneralTableViewHeader
         if section == SectionIndex.currentSelected {
-            header.label.text = R.string.localizable.current_Selected()
+            header.label.text = R.string.localizable.current_selected()
         } else if section == SectionIndex.currentLocation {
-            header.label.text = R.string.localizable.current_Location()
+            header.label.text = R.string.localizable.current_location()
         } else {
             header.label.text = sectionIndexTitles[section - 2]
         }

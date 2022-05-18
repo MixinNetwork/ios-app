@@ -27,7 +27,7 @@ class StickerManagerViewController: UICollectionViewController {
     
     class func instance() -> UIViewController {
         let vc = R.storyboard.chat.sticker_manager()!
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.my_Stickers())
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.my_stickers())
     }
     
     override func viewDidLoad() {
@@ -218,7 +218,7 @@ extension StickerManagerViewController {
     private func showAuthorizationLimitedAlert() {
         let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         if #available(iOS 14, *) {
-            sheet.addAction(UIAlertAction(title: R.string.localizable.pick_from_Library(), style: .default, handler: { _ in
+            sheet.addAction(UIAlertAction(title: R.string.localizable.pick_from_library(), style: .default, handler: { _ in
                 var config = PHPickerConfiguration(photoLibrary: .shared())
                 config.preferredAssetRepresentationMode = .current
                 config.selectionLimit = 1
@@ -228,7 +228,7 @@ extension StickerManagerViewController {
                 self.present(picker, animated: true, completion: nil)
             }))
         }
-        sheet.addAction(UIAlertAction(title: R.string.localizable.change_Settings(), style: .default, handler: { _ in
+        sheet.addAction(UIAlertAction(title: R.string.localizable.change_settings(), style: .default, handler: { _ in
             UIApplication.openAppSettings()
         }))
         sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))

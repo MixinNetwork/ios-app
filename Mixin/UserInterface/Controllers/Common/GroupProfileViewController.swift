@@ -132,7 +132,7 @@ extension GroupProfileViewController {
     @objc func showSharedMedia() {
         let vc = R.storyboard.chat.shared_media()!
         vc.conversationId = conversation.conversationId
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.shared_Media())
+        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.shared_media())
         dismissAndPush(container)
     }
     
@@ -172,7 +172,7 @@ extension GroupProfileViewController {
         let conversationId = conversation.conversationId
         let alert = UIAlertController(title: R.string.localizable.exit_confirmation(conversation.name), message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: R.string.localizable.exit_Group(), style: .destructive, handler: { (_) in
+        alert.addAction(UIAlertAction(title: R.string.localizable.exit_group(), style: .destructive, handler: { (_) in
             let hud = Hud()
             hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
             ConversationAPI.exitConversation(conversationId: conversationId) { [weak self](result) in
@@ -207,7 +207,7 @@ extension GroupProfileViewController {
         let conversationId = conversation.conversationId
         let alert = UIAlertController(title: R.string.localizable.delete_group_chat_confirmation(conversation.name), message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: R.string.localizable.delete_Chat(), style: .destructive, handler: { [weak self](_) in
+        alert.addAction(UIAlertAction(title: R.string.localizable.delete_chat(), style: .destructive, handler: { [weak self](_) in
             let hud = Hud()
             hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
             DispatchQueue.global().async {
@@ -362,11 +362,11 @@ extension GroupProfileViewController {
         }
         
         groups.append([
-            ProfileMenuItem(title: R.string.localizable.shared_Media(),
+            ProfileMenuItem(title: R.string.localizable.shared_media(),
                             subtitle: nil,
                             style: [],
                             action: #selector(showSharedMedia)),
-            ProfileMenuItem(title: R.string.localizable.search_Conversation(),
+            ProfileMenuItem(title: R.string.localizable.search_conversation(),
                             subtitle: nil,
                             style: [],
                             action: #selector(searchConversation))
@@ -385,7 +385,7 @@ extension GroupProfileViewController {
                                 subtitle: nil,
                                 style: [],
                                 action: #selector(editGroupName)),
-                ProfileMenuItem(title: R.string.localizable.edit_Group_Description(),
+                ProfileMenuItem(title: R.string.localizable.edit_group_description(),
                                 subtitle: nil,
                                 style: [],
                                 action: #selector(editAnnouncement))
@@ -423,7 +423,7 @@ extension GroupProfileViewController {
                                 subtitle: nil,
                                 style: [.destructive],
                                 action: #selector(clearChat)),
-                ProfileMenuItem(title: R.string.localizable.delete_Chat(),
+                ProfileMenuItem(title: R.string.localizable.delete_chat(),
                                 subtitle: nil,
                                 style: [.destructive],
                                 action: #selector(deleteChatAction))
@@ -434,7 +434,7 @@ extension GroupProfileViewController {
                                 subtitle: nil,
                                 style: [.destructive],
                                 action: #selector(clearChat)),
-                ProfileMenuItem(title: R.string.localizable.exit_Group(),
+                ProfileMenuItem(title: R.string.localizable.exit_group(),
                                 subtitle: nil,
                                 style: [.destructive],
                                 action: #selector(exitGroupAction))

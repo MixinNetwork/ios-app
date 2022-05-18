@@ -109,10 +109,10 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
     
     @IBAction func moreAction(_ sender: Any) {
         let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        sheet.addAction(UIAlertAction(title: R.string.localizable.all_Transactions(), style: .default, handler: { (_) in
+        sheet.addAction(UIAlertAction(title: R.string.localizable.all_transactions(), style: .default, handler: { (_) in
             self.navigationController?.pushViewController(AllTransactionsViewController.instance(), animated: true)
         }))
-        sheet.addAction(UIAlertAction(title: R.string.localizable.hidden_Assets(), style: .default, handler: { (_) in
+        sheet.addAction(UIAlertAction(title: R.string.localizable.hidden_assets(), style: .default, handler: { (_) in
             self.navigationController?.pushViewController(HiddenAssetViewController.instance(), animated: true)
         }))
         sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))

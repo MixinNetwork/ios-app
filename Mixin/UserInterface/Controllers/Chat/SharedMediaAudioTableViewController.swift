@@ -90,7 +90,7 @@ extension SharedMediaAudioTableViewController: SharedMediaDataSourceDelegate {
     func sharedMediaDataSourceDidReload(_ dataSource: AnyObject) {
         tableView.reloadData()
         tableView.checkEmpty(dataCount: self.dataSource.numberOfSections,
-                             text: R.string.localizable.no_AUDIO(),
+                             text: R.string.localizable.no_audio(),
                              photo: R.image.emptyIndicator.ic_shared_audio()!)
     }
     

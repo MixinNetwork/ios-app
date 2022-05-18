@@ -9,10 +9,10 @@ class AboutViewController: SettingsTableViewController {
             SettingsRow(title: R.string.localizable.follow_us_on_twitter(), accessory: .disclosure),
             SettingsRow(title: R.string.localizable.follow_us_on_facebook(), accessory: .disclosure),
             SettingsRow(title: R.string.localizable.help_center(), accessory: .disclosure),
-            SettingsRow(title: R.string.localizable.terms_of_Service(), accessory: .disclosure),
-            SettingsRow(title: R.string.localizable.privacy_Policy(), accessory: .disclosure),
+            SettingsRow(title: R.string.localizable.terms_of_service(), accessory: .disclosure),
+            SettingsRow(title: R.string.localizable.privacy_policy(), accessory: .disclosure),
             SettingsRow(title: R.string.localizable.acknowledgements(), accessory: .disclosure),
-            SettingsRow(title: R.string.localizable.version_Update(), accessory: .disclosure)
+            SettingsRow(title: R.string.localizable.version_update(), accessory: .disclosure)
         ])
     ])
     

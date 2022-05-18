@@ -369,7 +369,7 @@ extension AppDelegate {
             return
         }
         let qrcodeWindow = QrcodeWindow.instance()
-        qrcodeWindow.render(title: R.string.localizable.my_QR_Code(),
+        qrcodeWindow.render(title: R.string.localizable.my_qr_code(),
                             description: R.string.localizable.scan_code_add_me(),
                             account: account)
         qrcodeWindow.presentView()

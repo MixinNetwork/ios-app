@@ -98,7 +98,7 @@
                             </state>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
-                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Change_Amount"/>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="change_amount"/>
                             </userDefinedRuntimeAttributes>
                             <connections>
                                 <action selector="dismissAction:" destination="vpk-7x-aS6" eventType="touchUpInside" id="PXb-Us-YXq"/>
@@ -115,7 +115,7 @@
                                 <color key="titleColor" red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </state>
                             <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Continue"/>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="continue"/>
                                 <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
                             </userDefinedRuntimeAttributes>
                             <connections>

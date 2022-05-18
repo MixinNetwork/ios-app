@@ -9,7 +9,7 @@ final class DeleteAccountSettingViewController: SettingsTableViewController {
             SettingsRow(title: R.string.localizable.delete_my_account(), titleStyle: .destructive)
         ]),
         SettingsSection(rows: [
-            SettingsRow(title: R.string.localizable.change_Number_Instead())
+            SettingsRow(title: R.string.localizable.change_number_instead())
         ])
     ])
     

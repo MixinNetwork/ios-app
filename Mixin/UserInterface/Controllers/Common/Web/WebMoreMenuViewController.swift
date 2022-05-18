@@ -149,7 +149,7 @@ extension WebMoreMenuViewController {
             case .float:
                 return R.string.localizable.floating()
             case .cancelFloat:
-                return R.string.localizable.cancel_Floating()
+                return R.string.localizable.cancel_floating()
             case .about:
                 return R.string.localizable.about()
             case .copyLink:
@@ -159,7 +159,7 @@ extension WebMoreMenuViewController {
             case .openInBrowser:
                 return R.string.localizable.open_in_browser()
             case .viewAuthorization:
-                return R.string.localizable.view_Authorization()
+                return R.string.localizable.view_authorization()
             }
         }
         

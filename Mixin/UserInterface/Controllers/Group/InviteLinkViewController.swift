@@ -49,7 +49,7 @@ class InviteLinkViewController: UIViewController {
     class func instance(conversation: ConversationItem) -> UIViewController {
         let vc = R.storyboard.group.invite_link()!
         vc.conversation = conversation
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.invite_to_Group_via_Link())
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.invite_to_group_via_link())
     }
     
 }
@@ -58,7 +58,7 @@ extension InviteLinkViewController: ContainerViewControllerDelegate {
 
     func barRightButtonTappedAction() {
         let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        alc.addAction(UIAlertAction(title: R.string.localizable.reset_Link(), style: .default, handler: { [weak self] (_) in
+        alc.addAction(UIAlertAction(title: R.string.localizable.reset_link(), style: .default, handler: { [weak self] (_) in
             self?.revokeLink()
         }))
         alc.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))

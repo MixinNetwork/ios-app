@@ -18,7 +18,7 @@ class MessageReceiverViewController: PeerViewController<[MessageReceiver], Check
     class func instance(content: MessageContent) -> UIViewController {
         let vc = MessageReceiverViewController()
         vc.messageContent = content
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.share_To())
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.share_to())
     }
     
     override func viewDidLoad() {
@@ -42,8 +42,8 @@ class MessageReceiverViewController: PeerViewController<[MessageReceiver], Check
         let conversations = ConversationDAO.shared.conversationList()
             .compactMap(MessageReceiver.init)
         let titles = [R.string.localizable.recent_chats(),
-                      R.string.localizable.contactS(),
-                      R.string.localizable.botS()]
+                      R.string.localizable.contacts(),
+                      R.string.localizable.bots()]
         return (titles, [conversations, contactReceivers, appReceivers])
     }
     

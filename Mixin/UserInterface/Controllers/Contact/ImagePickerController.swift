@@ -28,7 +28,7 @@ class ImagePickerController: NSObject {
                 self?.presentCamera()
             }))
         }
-        controller.addAction(UIAlertAction(title: R.string.localizable.choose_Photo(), style: .default, handler: { [weak self] (_) in
+        controller.addAction(UIAlertAction(title: R.string.localizable.choose_photo(), style: .default, handler: { [weak self] (_) in
             self?.presentPhoto()
         }))
         controller.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))

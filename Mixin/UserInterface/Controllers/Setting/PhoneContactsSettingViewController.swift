@@ -7,11 +7,11 @@ final class PhoneContactsSettingViewController: SettingsTableViewController {
     
     private lazy var hud = Hud()
     private lazy var uploadSection = SettingsSection(rows: [
-        SettingsRow(title: R.string.localizable.upload_Mobile_Contacts(),
+        SettingsRow(title: R.string.localizable.upload_mobile_contacts(),
                     titleStyle: .highlighted)
     ])
     private lazy var deleteSection = SettingsSection(rows: [
-        SettingsRow(title: R.string.localizable.delete_Synced_Contact(),
+        SettingsRow(title: R.string.localizable.delete_synced_contact(),
                     titleStyle: .destructive)
     ])
     
@@ -25,7 +25,7 @@ final class PhoneContactsSettingViewController: SettingsTableViewController {
     
     class func instance() -> UIViewController {
         let vc = PhoneContactsSettingViewController()
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.phone_Contacts())
+        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.phone_contacts())
         return container
     }
     

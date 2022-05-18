@@ -5,17 +5,17 @@ final class PrivacySettingViewController: SettingsTableViewController {
     
     private let dataSource = SettingsDataSource(sections: [
         SettingsSection(footer: R.string.localizable.setting_privacy_tip(), rows: [
-            SettingsRow(title: R.string.localizable.blocked_Users(), accessory: .disclosure),
+            SettingsRow(title: R.string.localizable.blocked_users(), accessory: .disclosure),
             SettingsRow(title: R.string.localizable.conversation(), accessory: .disclosure)
         ]),
         SettingsSection(rows: [
-            SettingsRow(title: R.string.localizable.phone_Number(), accessory: .disclosure),
-            SettingsRow(title: R.string.localizable.phone_Contacts(), accessory: .disclosure)
+            SettingsRow(title: R.string.localizable.phone_number(), accessory: .disclosure),
+            SettingsRow(title: R.string.localizable.phone_contacts(), accessory: .disclosure)
         ])
     ])
     
     private lazy var screenLockSection = SettingsSection(rows: [
-        SettingsRow(title: R.string.localizable.screen_Lock(), subtitle: screenLockTimeoutInterval, accessory: .disclosure)
+        SettingsRow(title: R.string.localizable.screen_lock(), subtitle: screenLockTimeoutInterval, accessory: .disclosure)
     ])
     
     deinit {

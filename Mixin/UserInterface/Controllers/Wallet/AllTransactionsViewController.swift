@@ -44,7 +44,7 @@ class AllTransactionsViewController: UITableViewController {
     class func instance() -> UIViewController {
         let vc = R.storyboard.wallet.snapshot()!
         vc.dataSource = SnapshotDataSource(category: .all)
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.all_Transactions())
+        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.all_transactions())
         return container
     }
     

@@ -3,7 +3,7 @@ import MixinServices
 
 class BackupViewController: SettingsTableViewController {
     
-    private let backupActionRow = SettingsRow(title: R.string.localizable.back_Up_Now())
+    private let backupActionRow = SettingsRow(title: R.string.localizable.back_up_now())
     private let backupFilesRow = SettingsRow(title: R.string.localizable.include_files(),
                                              accessory: .switch(isOn: AppGroupUserDefaults.User.backupFiles))
     private let backupVideosRow = SettingsRow(title: R.string.localizable.include_videos(),
@@ -12,7 +12,7 @@ class BackupViewController: SettingsTableViewController {
     private lazy var dataSource = SettingsDataSource(sections: [
         SettingsSection(rows: [backupActionRow]),
         SettingsSection(footer: R.string.localizable.auto_back_up_hint(), rows: [
-            SettingsRow(title: R.string.localizable.auto_Backup(),
+            SettingsRow(title: R.string.localizable.auto_backup(),
                         subtitle: nil,
                         accessory: .disclosure),
             backupFilesRow,
@@ -21,7 +21,7 @@ class BackupViewController: SettingsTableViewController {
     ])
     
     private lazy var autoBackupFrequencyController: UIAlertController = {
-        let controller = UIAlertController(title: R.string.localizable.auto_Backup(), message: R.string.localizable.auto_back_up_hint(), preferredStyle: .actionSheet)
+        let controller = UIAlertController(title: R.string.localizable.auto_backup(), message: R.string.localizable.auto_back_up_hint(), preferredStyle: .actionSheet)
         controller.addAction(UIAlertAction(title: R.string.localizable.daily(), style: .default, handler: { [weak self] (_) in
             AppGroupUserDefaults.User.autoBackup = .daily
             self?.updateAutoBackupSubtitle()
@@ -52,7 +52,7 @@ class BackupViewController: SettingsTableViewController {
     
     class func instance() -> UIViewController {
         let vc = BackupViewController()
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.chat_Backup())
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.chat_backup())
     }
     
     override func viewDidLoad() {
@@ -95,7 +95,7 @@ class BackupViewController: SettingsTableViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             self.updateActionSectionFooter()
             self.backupActionRow.accessory = .none
-            self.backupActionRow.title = R.string.localizable.back_Up_Now()
+            self.backupActionRow.title = R.string.localizable.back_up_now()
             if case let .switch(isOn, _) = self.backupFilesRow.accessory {
                 self.backupFilesRow.accessory = .switch(isOn: isOn, isEnabled: true)
             }
@@ -191,7 +191,7 @@ extension BackupViewController {
     private func updateTableForBackingUp() {
         backupActionRow.accessory = .busy
         if BackupJobQueue.shared.isBackingUp {
-            backupActionRow.title = R.string.localizable.backing_Up()
+            backupActionRow.title = R.string.localizable.backing_up()
         } else {
             backupActionRow.title = R.string.localizable.restoring()
         }
@@ -213,11 +213,11 @@ extension BackupViewController {
     
     @objc func showReportMenuAction() {
         let alc = UIAlertController(title: R.string.localizable.report_title(), message: AppGroupContainer.userDatabaseUrl.fileSize.sizeRepresentation(), preferredStyle: .actionSheet)
-        alc.addAction(UIAlertAction(title: R.string.localizable.send_to_Developer(), style: .default, handler: { (_) in
+        alc.addAction(UIAlertAction(title: R.string.localizable.send_to_developer(), style: .default, handler: { (_) in
             self.report()
         }))
-        alc.addAction(UIAlertAction(title: R.string.localizable.compress_Database(), style: .default, handler: compressDatabase))
-        alc.addAction(UIAlertAction(title: R.string.localizable.optimize_Database(), style: .default, handler: optimizeDatabase))
+        alc.addAction(UIAlertAction(title: R.string.localizable.compress_database(), style: .default, handler: compressDatabase))
+        alc.addAction(UIAlertAction(title: R.string.localizable.optimize_database(), style: .default, handler: optimizeDatabase))
         alc.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         self.present(alc, animated: true, completion: nil)
     }

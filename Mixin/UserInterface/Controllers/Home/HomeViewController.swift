@@ -663,7 +663,7 @@ extension HomeViewController {
         }
         if AppGroupUserDefaults.User.circleId == nil {
             guideLabel.text = R.string.localizable.empty_info()
-            guideButton.setTitle(R.string.localizable.start_Messaging(), for: .normal)
+            guideButton.setTitle(R.string.localizable.start_messaging(), for: .normal)
         } else {
             guideLabel.text = R.string.localizable.circle_no_conversation_hint()
             guideButton.setTitle(R.string.localizable.add_conversations(), for: .normal)
@@ -710,11 +710,11 @@ extension HomeViewController {
         }))
 
         if conversation.category == ConversationCategory.GROUP.rawValue && conversation.status != ConversationStatus.QUIT.rawValue {
-            alc.addAction(UIAlertAction(title: R.string.localizable.exit_Group(), style: .destructive, handler: { [weak self](action) in
+            alc.addAction(UIAlertAction(title: R.string.localizable.exit_group(), style: .destructive, handler: { [weak self](action) in
                 self?.exitGroupAction(indexPath: indexPath)
             }))
         } else {
-            alc.addAction(UIAlertAction(title: R.string.localizable.delete_Chat(), style: .destructive, handler: { [weak self](action) in
+            alc.addAction(UIAlertAction(title: R.string.localizable.delete_chat(), style: .destructive, handler: { [weak self](action) in
                 self?.deleteChatAction(indexPath: indexPath)
             }))
         }
@@ -734,7 +734,7 @@ extension HomeViewController {
             alert = UIAlertController(title: R.string.localizable.delete_contact_chat_confirmation(conversation.ownerFullName), message: nil, preferredStyle: .actionSheet)
         }
         alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: R.string.localizable.delete_Chat(), style: .destructive, handler: { (_) in
+        alert.addAction(UIAlertAction(title: R.string.localizable.delete_chat(), style: .destructive, handler: { (_) in
             self.tableView.beginUpdates()
             self.conversations.remove(at: indexPath.row)
             self.tableView.deleteRows(at: [indexPath], with: .fade)
@@ -775,7 +775,7 @@ extension HomeViewController {
         let conversationId = conversation.conversationId
         let alert = UIAlertController(title: R.string.localizable.exit_confirmation(conversation.name), message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: R.string.localizable.exit_Group(), style: .destructive, handler: { (_) in
+        alert.addAction(UIAlertAction(title: R.string.localizable.exit_group(), style: .destructive, handler: { (_) in
             let hud = Hud()
             hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
             ConversationAPI.exitConversation(conversationId: conversationId) { [weak self](result) in

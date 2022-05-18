@@ -192,7 +192,7 @@
                                                     <color key="titleColor" name="theme"/>
                                                 </state>
                                                 <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Start_Messaging"/>
+                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="start_messaging"/>
                                                     <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
                                                     <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
                                                 </userDefinedRuntimeAttributes>
@@ -252,7 +252,7 @@
                                                 </state>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Mixin"/>
+                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="mixin"/>
                                                     <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
                                                 </userDefinedRuntimeAttributes>
                                                 <connections>
@@ -790,7 +790,7 @@
                                         <color key="textColor" name="text_accessory"/>
                                         <nil key="highlightedColor"/>
                                         <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Initializing"/>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="initializing"/>
                                         </userDefinedRuntimeAttributes>
                                     </label>
                                 </subviews>
@@ -1531,7 +1531,7 @@
                                 <color key="textColor" name="title"/>
                                 <nil key="highlightedColor"/>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Upgrade_Database"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="upgrade_database"/>
                                     <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
                                 </userDefinedRuntimeAttributes>
                             </label>
@@ -1561,7 +1561,7 @@
                                         <color key="textColor" name="text_accessory"/>
                                         <nil key="highlightedColor"/>
                                         <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Upgrading"/>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="upgrading"/>
                                         </userDefinedRuntimeAttributes>
                                     </label>
                                 </subviews>
@@ -1617,7 +1617,7 @@
                                 <color key="textColor" name="title"/>
                                 <nil key="highlightedColor"/>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="System_time_is_unusual"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="system_time_is_unusual"/>
                                     <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
                                 </userDefinedRuntimeAttributes>
                             </label>
@@ -1629,7 +1629,7 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Continue"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="continue"/>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
@@ -1693,7 +1693,7 @@
                                 <color key="textColor" name="title"/>
                                 <nil key="highlightedColor"/>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Update_Mixin"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="update_mixin"/>
                                     <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
                                 </userDefinedRuntimeAttributes>
                             </label>
@@ -1705,7 +1705,7 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Update"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="update"/>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
@@ -1779,7 +1779,7 @@
                                                 <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </state>
                                             <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Remove_all"/>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="remove_all"/>
                                             </userDefinedRuntimeAttributes>
                                             <connections>
                                                 <action selector="removeAll:" destination="zxM-vp-2hb" eventType="touchUpInside" id="Ipa-d7-ha3"/>
@@ -1793,7 +1793,7 @@
                                                 <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </state>
                                             <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Close"/>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="close"/>
                                             </userDefinedRuntimeAttributes>
                                             <connections>
                                                 <action selector="hide" destination="zxM-vp-2hb" eventType="touchUpInside" id="jCJ-1U-oza"/>
@@ -1975,7 +1975,7 @@
                                             <color key="titleColor" name="theme"/>
                                         </state>
                                         <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Skip"/>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="skip"/>
                                             <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
@@ -2035,7 +2035,7 @@ chat history from icloud</string>
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Restore"/>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="restore"/>
                                             <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
@@ -2137,7 +2137,7 @@ chat history from icloud</string>
                                                 </state>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Mixin"/>
+                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="mixin"/>
                                                     <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
                                                 </userDefinedRuntimeAttributes>
                                                 <connections>
@@ -2226,7 +2226,7 @@ chat history from icloud</string>
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_input">
-            <color red="0.96100002527236938" green="0.96899998188018799" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_secondary">
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

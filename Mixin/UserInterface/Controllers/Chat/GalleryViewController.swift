@@ -357,7 +357,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
             }))
         }
         if itemViewController.supportedActions.contains(.saveToLibrary) {
-            alert.addAction(UIAlertAction(title: R.string.localizable.save_to_Camera_Roll(), style: .default, handler: { (_) in
+            alert.addAction(UIAlertAction(title: R.string.localizable.save_to_camera_roll(), style: .default, handler: { (_) in
                 PHPhotoLibrary.checkAuthorization { (authorized) in
                     if authorized {
                         itemViewController.saveToLibrary()
@@ -366,7 +366,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
             }))
         }
         if let url = (itemViewController as? GalleryImageItemViewController)?.detectedUrl {
-            alert.addAction(UIAlertAction(title: R.string.localizable.scan_QR_Code(), style: .default, handler: { (_) in
+            alert.addAction(UIAlertAction(title: R.string.localizable.scan_qr_code(), style: .default, handler: { (_) in
                 if UrlWindow.checkExternalScheme(url: url.absoluteString) {
                     return
                 }

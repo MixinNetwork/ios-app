@@ -38,7 +38,7 @@
                             <color key="textColor" name="title"/>
                             <nil key="highlightedColor"/>
                             <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Enter_your_PIN"/>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="enter_your_pin"/>
                                 <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
                             </userDefinedRuntimeAttributes>
                         </label>
@@ -113,7 +113,7 @@
                                             <inset key="contentEdgeInsets" minX="20" minY="13" maxX="20" maxY="13"/>
                                             <state key="normal" title="Got It"/>
                                             <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Got_it"/>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="got_it"/>
                                                 <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
                                             </userDefinedRuntimeAttributes>
                                             <connections>

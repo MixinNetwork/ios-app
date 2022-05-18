@@ -204,7 +204,7 @@ extension PinMessagesPreviewViewController {
         }
         
         let button = UIButton()
-        button.setTitle(R.string.localizable.unpin_All_Messages(), for: .normal)
+        button.setTitle(R.string.localizable.unpin_all_messages(), for: .normal)
         button.setTitleColor(R.color.theme(), for: .normal)
         button.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 16), adjustForContentSize: true)
         button.addTarget(self, action: #selector(unpinAllAction), for: .touchUpInside)

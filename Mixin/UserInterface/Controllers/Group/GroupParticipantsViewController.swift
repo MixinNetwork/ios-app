@@ -66,7 +66,7 @@ class GroupParticipantsViewController: UserItemPeerViewController<GroupParticipa
         alc.addAction(UIAlertAction(title: R.string.localizable.info(), style: .default, handler: { (action) in
             self.showInfo(user: user)
         }))
-        alc.addAction(UIAlertAction(title: R.string.localizable.send_Message(), style: .default, handler: { (action) in
+        alc.addAction(UIAlertAction(title: R.string.localizable.send_message(), style: .default, handler: { (action) in
             self.sendMessage(to: user)
         }))
         
@@ -76,13 +76,13 @@ class GroupParticipantsViewController: UserItemPeerViewController<GroupParticipa
                     self.makeAdmin(userId: user.userId)
                 }))
             } else {
-                alc.addAction(UIAlertAction(title: R.string.localizable.dismiss_as_Admin(), style: .default, handler: { (action) in
+                alc.addAction(UIAlertAction(title: R.string.localizable.dismiss_as_admin(), style: .default, handler: { (action) in
                     self.dismissAdmin(userId: user.userId)
                 }))
             }
         }
         if myRole == ParticipantRole.OWNER.rawValue || (user.role.isEmpty && !myRole.isEmpty) {
-            alc.addAction(UIAlertAction(title: R.string.localizable.remove_from_Group(), style: .destructive, handler: { (action) in
+            alc.addAction(UIAlertAction(title: R.string.localizable.remove_from_group(), style: .destructive, handler: { (action) in
                 self.remove(userId: user.userId)
             }))
         }
@@ -134,7 +134,7 @@ extension GroupParticipantsViewController: ContainerViewControllerDelegate {
             let vc = AddMemberViewController.instance(appendingMembersToConversationId: id)
             self.navigationController?.pushViewController(vc, animated: true)
         }))
-        alc.addAction(UIAlertAction(title: R.string.localizable.invite_to_Group_via_Link(), style: .default, handler: { (_) in
+        alc.addAction(UIAlertAction(title: R.string.localizable.invite_to_group_via_link(), style: .default, handler: { (_) in
             let vc = InviteLinkViewController.instance(conversation: self.conversation)
             self.navigationController?.pushViewController(vc, animated: true)
         }))

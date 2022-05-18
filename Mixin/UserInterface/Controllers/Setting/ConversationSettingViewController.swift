@@ -5,11 +5,11 @@ class ConversationSettingViewController: SettingsTableViewController {
     
     private let messageSourceSection = SettingsRadioSection(header: R.string.localizable.setting_conversation_tip(), rows: [
         SettingsRow(title: R.string.localizable.everybody(), accessory: .none),
-        SettingsRow(title: R.string.localizable.my_Contacts(), accessory: .none)
+        SettingsRow(title: R.string.localizable.my_contacts(), accessory: .none)
     ])
     private let conversationSourceSection = SettingsRadioSection(header: R.string.localizable.setting_conversation_group_tip(), rows: [
         SettingsRow(title: R.string.localizable.everybody(), accessory: .none),
-        SettingsRow(title: R.string.localizable.my_Contacts(), accessory: .none)
+        SettingsRow(title: R.string.localizable.my_contacts(), accessory: .none)
     ])
     
     private lazy var dataSource = SettingsDataSource(sections: [messageSourceSection, conversationSourceSection])

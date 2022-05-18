@@ -30,7 +30,7 @@ class QrcodeWindow: BottomSheetView {
     }
     
     func render(title: String, description: String, account: Account) {
-        render(title: R.string.localizable.my_QR_Code(),
+        render(title: R.string.localizable.my_qr_code(),
                description: R.string.localizable.scan_code_add_me(),
                qrcode: account.code_url,
                qrcodeForegroundColor: .systemTint)
@@ -42,7 +42,7 @@ class QrcodeWindow: BottomSheetView {
     }
     
     func renderMoneyReceivingCode(account: Account) {
-        render(title: R.string.localizable.receive_Money(),
+        render(title: R.string.localizable.receive_money(),
                description: R.string.localizable.transfer_qrcode_prompt(),
                qrcode: "mixin://transfer/\(account.user_id)",
                qrcodeForegroundColor: .black)

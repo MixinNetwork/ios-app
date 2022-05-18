@@ -38,7 +38,7 @@ account</string>
                             <color key="textColor" name="red"/>
                             <nil key="highlightedColor"/>
                             <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Enter_PIN_to_delete_account"/>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="enter_pin_to_delete_account"/>
                                 <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
                             </userDefinedRuntimeAttributes>
                         </label>

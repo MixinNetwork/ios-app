@@ -685,7 +685,7 @@ extension CameraViewController: AssetQrCodeScanningControllerDelegate {
     }
     
     func assetQrCodeScanningControllerDidRecognizeNothing(_ controller: AssetQrCodeScanningController) {
-        alert(R.string.localizable.qr_Code_not_found(), message: nil) { (_) in
+        alert(R.string.localizable.qr_code_not_found(), message: nil) { (_) in
             controller.unload()
         }
     }

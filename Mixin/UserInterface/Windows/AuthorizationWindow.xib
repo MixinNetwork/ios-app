@@ -76,7 +76,7 @@
                             <inset key="contentEdgeInsets" minX="26" minY="12" maxX="26" maxY="12"/>
                             <state key="normal" title="Authorize"/>
                             <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Authorize"/>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="authorize"/>
                             </userDefinedRuntimeAttributes>
                             <connections>
                                 <action selector="authorizeAction:" destination="WPn-rX-5IO" eventType="touchUpInside" id="OUZ-1t-4kf"/>

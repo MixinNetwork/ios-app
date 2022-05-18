@@ -23,7 +23,7 @@
                     <color key="textColor" name="title"/>
                     <nil key="highlightedColor"/>
                     <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Suspicious_Link"/>
+                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="suspicious_link"/>
                         <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
                     </userDefinedRuntimeAttributes>
                 </label>
@@ -45,7 +45,7 @@
                     <inset key="contentEdgeInsets" minX="26" minY="12" maxX="26" maxY="12"/>
                     <state key="normal" title="Back To Chat"/>
                     <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Back_To_Chat"/>
+                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="back_to_chat"/>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
@@ -60,7 +60,7 @@
                         <color key="titleColor" name="theme"/>
                     </state>
                     <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Continue_Open_URL"/>
+                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="continue_open_url"/>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
@@ -91,7 +91,7 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="theme">
             <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

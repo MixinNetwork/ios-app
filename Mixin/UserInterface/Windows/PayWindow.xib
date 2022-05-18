@@ -401,7 +401,7 @@
                                             <color key="textColor" name="text_accessory"/>
                                             <nil key="highlightedColor"/>
                                             <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Pay_with_PIN"/>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="pay_with_pin"/>
                                             </userDefinedRuntimeAttributes>
                                         </label>
                                     </subviews>
@@ -453,7 +453,7 @@
                                         <color key="titleColor" red="0.29411764709999999" green="0.48627450979999998" blue="0.86666666670000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                     </state>
                                     <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Use_face_pay"/>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="use_face_pay"/>
                                     </userDefinedRuntimeAttributes>
                                     <connections>
                                         <action selector="biometricAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="4Cp-KF-bkG"/>
@@ -498,7 +498,7 @@
                                                 <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </state>
                                             <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="OK"/>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="ok"/>
                                             </userDefinedRuntimeAttributes>
                                             <connections>
                                                 <action selector="errorNextAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="tlI-af-Bhc"/>
@@ -532,7 +532,7 @@
                                             <color key="textColor" name="text_accessory"/>
                                             <nil key="highlightedColor"/>
                                             <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Done"/>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="done"/>
                                             </userDefinedRuntimeAttributes>
                                         </label>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BSf-bK-UvH">

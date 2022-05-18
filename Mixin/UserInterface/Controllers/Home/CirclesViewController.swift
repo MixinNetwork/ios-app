@@ -127,7 +127,7 @@ extension CirclesViewController: UITableViewDataSource {
         case .embedded:
             let circle = embeddedCircles[indexPath.row]
             cell.titleLabel.text = R.string.localizable.mixin()
-            cell.subtitleLabel.text = R.string.localizable.all_Conversations()
+            cell.subtitleLabel.text = R.string.localizable.all_conversations()
             cell.unreadCount = circle.unreadCount
             cell.setImagePatternColor(id: nil)
         case .user:
@@ -173,9 +173,9 @@ extension CirclesViewController {
     
     private func tableViewCommitEditAction(action: UIContextualAction, indexPath: IndexPath) {
         let circle = userCircles[indexPath.row]
-        let editName = R.string.localizable.edit_Circle_Name()
+        let editName = R.string.localizable.edit_circle_name()
         let change = R.string.localizable.change()
-        let editConversation = R.string.localizable.edit_Conversations()
+        let editConversation = R.string.localizable.edit_conversations()
         let cancel = R.string.localizable.cancel()
         
         let sheet = UIAlertController(title: circle.name, message: nil, preferredStyle: .actionSheet)
@@ -200,7 +200,7 @@ extension CirclesViewController {
     
     private func tableViewCommitDeleteAction(action: UIContextualAction, indexPath: IndexPath) {
         let circle = userCircles[indexPath.row]
-        let delete = R.string.localizable.delete_Circle()
+        let delete = R.string.localizable.delete_circle()
         let cancel = R.string.localizable.cancel()
         let sheet = UIAlertController(title: circle.name, message: nil, preferredStyle: .actionSheet)
         sheet.addAction(UIAlertAction(title: delete, style: .destructive, handler: { (_) in

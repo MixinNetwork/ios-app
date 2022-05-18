@@ -531,7 +531,7 @@ class ConversationViewController: UIViewController {
                 navigationController?.pushViewController(vc, animated: true)
             } else {
                 let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-                alert.addAction(UIAlertAction(title: R.string.localizable.one_by_One_Forward(), style: .default, handler: { (_) in
+                alert.addAction(UIAlertAction(title: R.string.localizable.one_by_one_forward(), style: .default, handler: { (_) in
                     let vc = MessageReceiverViewController.instance(content: .messages(messages))
                     self.navigationController?.pushViewController(vc, animated: true)
                 }))
@@ -945,25 +945,25 @@ class ConversationViewController: UIViewController {
         
         let conversationId = self.conversationId
         let alc = UIAlertController(title: R.string.localizable.report_title(), message: MixinHost.http, preferredStyle: .actionSheet)
-        alc.addAction(UIAlertAction(title: R.string.localizable.send_to_Developer(), style: .default, handler: { (_) in
+        alc.addAction(UIAlertAction(title: R.string.localizable.send_to_developer(), style: .default, handler: { (_) in
             self.report(conversationId: conversationId)
         }))
-        alc.addAction(UIAlertAction(title: R.string.localizable.share_Log_File(), style: .default, handler: { (_) in
+        alc.addAction(UIAlertAction(title: R.string.localizable.share_log_file(), style: .default, handler: { (_) in
             self.reportAirDop(conversationId: conversationId)
         }))
         if !Self.allowReportSingleMessage {
-            alc.addAction(UIAlertAction(title: R.string.localizable.allow_Manual_Report_Message(), style: .default, handler: { (_) in
+            alc.addAction(UIAlertAction(title: R.string.localizable.allow_manual_report_message(), style: .default, handler: { (_) in
                 Self.allowReportSingleMessage = true
             }))
         }
         
         if myIdentityNumber == "762532" || myIdentityNumber == "26596" {
             if let userId = ownerUser?.userId, dataSource.category == .contact {
-                alc.addAction(UIAlertAction(title: R.string.localizable.copy_User_Id(), style: .default, handler: {(_) in
+                alc.addAction(UIAlertAction(title: R.string.localizable.copy_user_id(), style: .default, handler: {(_) in
                     UIPasteboard.general.string = userId
                 }))
             }
-            alc.addAction(UIAlertAction(title: R.string.localizable.copy_Conversation_Id(), style: .default, handler: { (_) in
+            alc.addAction(UIAlertAction(title: R.string.localizable.copy_conversation_id(), style: .default, handler: { (_) in
                 UIPasteboard.general.string = self.conversationId
             }))
         }
@@ -2714,11 +2714,11 @@ extension ConversationViewController {
     
     private func showRecallTips(viewModels: [MessageViewModel]) {
         let alc = UIAlertController(title: R.string.localizable.chat_recall_delete_alert(), message: "", preferredStyle: .alert)
-        alc.addAction(UIAlertAction(title: R.string.localizable.learn_More(), style: .default, handler: { (_) in
+        alc.addAction(UIAlertAction(title: R.string.localizable.learn_more(), style: .default, handler: { (_) in
             AppGroupUserDefaults.User.hasShownRecallTips = true
             UIApplication.shared.openURL(url: "https://mixinmessenger.zendesk.com/hc/articles/360028209571")
         }))
-        alc.addAction(UIAlertAction(title: R.string.localizable.oK(), style: .default, handler: { (_) in
+        alc.addAction(UIAlertAction(title: R.string.localizable.ok(), style: .default, handler: { (_) in
             AppGroupUserDefaults.User.hasShownRecallTips = true
             self.deleteForEveryone(viewModels: viewModels)
         }))

@@ -19,7 +19,7 @@ final class EmergencyContactViewController: SettingsTableViewController {
     
     private lazy var noEmergencyContactSections = [
         SettingsSection(rows: [
-            SettingsRow(title: R.string.localizable.enable_Emergency_Contact(), titleStyle: .highlighted, accessory: .disclosure)
+            SettingsRow(title: R.string.localizable.enable_emergency_contact(), titleStyle: .highlighted, accessory: .disclosure)
         ])
     ]
     
@@ -33,7 +33,7 @@ final class EmergencyContactViewController: SettingsTableViewController {
     
     class func instance() -> UIViewController {
         let vc = EmergencyContactViewController()
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.emergency_Contact())
+        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.emergency_contact())
         return container
     }
     

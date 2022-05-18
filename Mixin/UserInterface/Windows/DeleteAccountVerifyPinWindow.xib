@@ -37,7 +37,7 @@
                             <nil key="highlightedColor"/>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
-                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Enter_your_PIN_to_continue"/>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="enter_your_pin_to_continue"/>
                             </userDefinedRuntimeAttributes>
                         </label>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CET-cq-5Ia" customClass="PinField" customModule="Mixin" customModuleProvider="target">

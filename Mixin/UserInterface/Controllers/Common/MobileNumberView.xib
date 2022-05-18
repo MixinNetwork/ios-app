@@ -35,7 +35,7 @@
                                     <color key="textColor" name="title"/>
                                     <nil key="highlightedColor"/>
                                     <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="Enter_your_phone_number"/>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="enter_your_phone_number"/>
                                         <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
                                     </userDefinedRuntimeAttributes>
                                 </label>
@@ -65,7 +65,7 @@
                                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                             <textInputTraits key="textInputTraits" keyboardType="phonePad" returnKeyType="send" textContentType="tel"/>
                                             <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="string" keyPath="local_placeholder" value="Phone_Number"/>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="local_placeholder" value="phone_number"/>
                                             </userDefinedRuntimeAttributes>
                                             <connections>
                                                 <action selector="textFieldEditingChangedAction:" destination="-1" eventType="editingChanged" id="OQb-dM-DF0"/>
@@ -117,7 +117,7 @@
             <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="title">
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

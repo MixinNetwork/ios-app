@@ -47,7 +47,7 @@ final class TranscriptPreviewViewController: StaticMessagesViewController {
     override func contextMenuActions(for viewModel: MessageViewModel) -> [UIAction]? {
         if viewModel.message.category.hasSuffix("_STICKER"), let stickerId = viewModel.message.stickerId {
             var actions = super.contextMenuActions(for: viewModel) ?? []
-            let addStickerAction = UIAction(title: R.string.localizable.add_to_Stickers(), image: R.image.conversation.ic_action_add_to_sticker()) { _ in
+            let addStickerAction = UIAction(title: R.string.localizable.add_to_stickers(), image: R.image.conversation.ic_action_add_to_sticker()) { _ in
                 self.addSticker(stickerId: stickerId)
             }
             actions.append(addStickerAction)

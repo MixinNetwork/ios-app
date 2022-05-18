@@ -176,7 +176,7 @@ extension ConversationExtensionViewController {
             case .call:
                 return R.string.localizable.call()
             case .groupCall:
-                return R.string.localizable.group_Call()
+                return R.string.localizable.group_call()
             case .location:
                 return R.string.localizable.location()
             }

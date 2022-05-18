@@ -156,7 +156,7 @@ class PayWindow: BottomSheetView {
                 mixinIDLabel.textColor = .accessoryText
                 pinView.isHidden = false
                 if !showError {
-                    payLabel.text = R.string.localizable.pay_with_PIN()
+                    payLabel.text = R.string.localizable.pay_with_pin()
                     if showBiometric {
                         if biometryType == .faceID {
                             biometricButton.setTitle(R.string.localizable.use_face_pay(), for: .normal)
@@ -179,7 +179,7 @@ class PayWindow: BottomSheetView {
                 self.withdrawlFee = feeToken
                 
                 if !showError {
-                    payLabel.text = R.string.localizable.withdraw_by_PIN()
+                    payLabel.text = R.string.localizable.withdraw_by_pin()
                     if showBiometric {
                         if biometryType == .faceID {
                             biometricButton.setTitle(R.string.localizable.use_face_withdraw(), for: .normal)
@@ -194,7 +194,7 @@ class PayWindow: BottomSheetView {
                 }
                 multisigView.isHidden = false
                 multisigActionView.image = R.image.multisig_sign()
-                nameLabel.text = R.string.localizable.multisig_Transaction()
+                nameLabel.text = R.string.localizable.multisig_transaction()
                 mixinIDLabel.text = payment.memo
                 renderMultisigInfo(showError: showError, showBiometric: showBiometric, senders: [UserItem.createUser(from: account)], receivers: receivers)
             case let .multisig(multisig, senders, receivers):
@@ -202,7 +202,7 @@ class PayWindow: BottomSheetView {
                 switch multisig.action {
                 case MultisigAction.sign.rawValue:
                     multisigActionView.image = R.image.multisig_sign()
-                    nameLabel.text = R.string.localizable.multisig_Transaction()
+                    nameLabel.text = R.string.localizable.multisig_transaction()
                 case MultisigAction.unlock.rawValue:
                     multisigActionView.image = R.image.multisig_revoke()
                     nameLabel.text = R.string.localizable.revoke_multisig_transaction()
@@ -244,7 +244,7 @@ class PayWindow: BottomSheetView {
             tokenNameLabel.text = token.meta.tokenName
             collectibleImageView.sd_setImage(with: URL(string: token.meta.iconUrl))
             renderMultisigInfo(showError: showError, showBiometric: showBiometric, senders: senders, receivers: receivers)
-            payLabel.text = R.string.localizable.pay_with_PIN()
+            payLabel.text = R.string.localizable.pay_with_pin()
         }
 
         dismissButton.isEnabled = true
@@ -263,7 +263,7 @@ class PayWindow: BottomSheetView {
 
     private func renderMultisigInfo(showError: Bool, showBiometric: Bool, senders: [UserItem], receivers: [UserItem]) {
         if !showError {
-            payLabel.text = R.string.localizable.multisig_by_PIN()
+            payLabel.text = R.string.localizable.multisig_by_pin()
             if showBiometric {
                 if biometryType == .faceID {
                     biometricButton.setTitle(R.string.localizable.use_face_multisig(), for: .normal)
@@ -586,9 +586,9 @@ extension PayWindow: PinFieldDelegate {
         }
         switch continueAction {
         case .retryPin:
-            errorContinueButton.setTitle(R.string.localizable.try_Again(), for: .normal)
+            errorContinueButton.setTitle(R.string.localizable.try_again(), for: .normal)
         case .close:
-            errorContinueButton.setTitle(R.string.localizable.oK(), for: .normal)
+            errorContinueButton.setTitle(R.string.localizable.ok(), for: .normal)
         }
         processing = false
         loadingView.stopAnimating()
@@ -615,14 +615,14 @@ extension PayWindow: PinFieldDelegate {
             delay = 3
             switch biometryType {
             case .touchID:
-                let title = R.string.localizable.enable_pay_confirmation(R.string.localizable.touch_ID())
+                let title = R.string.localizable.enable_pay_confirmation(R.string.localizable.touch_id())
                 UIView.performWithoutAnimation {
                     enableBiometricAuthButton.setImage(R.image.ic_pay_touch(), for: .normal)
                     enableBiometricAuthButton.setTitle(title, for: .normal)
                     enableBiometricAuthButton.layoutIfNeeded()
                 }
             case .faceID:
-                let title = R.string.localizable.enable_pay_confirmation(R.string.localizable.face_ID())
+                let title = R.string.localizable.enable_pay_confirmation(R.string.localizable.face_id())
                 UIView.performWithoutAnimation {
                     enableBiometricAuthButton.setImage(R.image.ic_pay_face(), for: .normal)
                     enableBiometricAuthButton.setTitle(title, for: .normal)

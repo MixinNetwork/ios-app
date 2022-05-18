@@ -70,7 +70,7 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
         if noMemo {
             if asset.usesTag {
                 hint = R.string.localizable.withdrawal_addr_no_tag()
-                action = R.string.localizable.add_Tag()
+                action = R.string.localizable.add_tag()
             } else {
                 hint = R.string.localizable.withdrawal_addr_no_memo()
                 action = R.string.localizable.add_memo()

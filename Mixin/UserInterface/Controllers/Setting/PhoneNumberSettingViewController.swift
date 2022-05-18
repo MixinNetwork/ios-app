@@ -5,7 +5,7 @@ class PhoneNumberSettingViewController: SettingsTableViewController {
     
     private let section = SettingsRadioSection(header: R.string.localizable.phone_number_privacy(), rows: [
         SettingsRow(title: R.string.localizable.everybody()),
-        SettingsRow(title: R.string.localizable.my_Contacts()),
+        SettingsRow(title: R.string.localizable.my_contacts()),
         SettingsRow(title: R.string.localizable.nobody())
     ])
     
@@ -29,7 +29,7 @@ class PhoneNumberSettingViewController: SettingsTableViewController {
     
     class func instance() -> UIViewController {
         let vc = PhoneNumberSettingViewController()
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.phone_Number())
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.phone_number())
     }
     
     override func viewDidLoad() {

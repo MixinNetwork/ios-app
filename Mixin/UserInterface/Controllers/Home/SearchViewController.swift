@@ -23,7 +23,7 @@ class SearchViewController: UIViewController, HomeSearchViewController {
     private let phoneNumberValidator = PhoneNumberValidator()
     
     private var queue = OperationQueue()
-    private var showSearchNumber = false
+    private var topResult: TopResult?
     private var assets = [AssetSearchResult]()
     private var users = [SearchResult]()
     private var conversationsByName = [SearchResult]()
@@ -34,9 +34,9 @@ class SearchViewController: UIViewController, HomeSearchViewController {
     private var lastSearchFieldText: String?
     private var snapshot: DatabaseSnapshot?
     
-    private var searchNumberCell: SearchNumberCell? {
-        let indexPath = IndexPath(row: 0, section: Section.searchNumber.rawValue)
-        return tableView.cellForRow(at: indexPath) as? SearchNumberCell
+    private var topResultCell: TopResultCell? {
+        let indexPath = IndexPath(row: 0, section: Section.top.rawValue)
+        return tableView.cellForRow(at: indexPath) as? TopResultCell
     }
     
     deinit {
@@ -117,6 +117,7 @@ class SearchViewController: UIViewController, HomeSearchViewController {
                 return
             }
             
+            let topResult = self.topResult(keyword: keyword)
             let assets = AssetDAO.shared.getAssets(keyword: keyword, sortResult: true, limit: limit)
                 .map { AssetSearchResult(asset: $0, keyword: keyword) }
             guard !op.isCancelled else {
@@ -135,7 +136,7 @@ class SearchViewController: UIViewController, HomeSearchViewController {
                 return
             }
             DispatchQueue.main.sync {
-                self.showSearchNumber = users.isEmpty && self.keywordMaybeIdOrPhone(keyword)
+                self.topResult = topResult
                 self.assets = assets
                 self.users = users
                 self.conversationsByName = conversationsByName
@@ -200,8 +201,8 @@ extension SearchViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch Section(rawValue: section)! {
-        case .searchNumber:
-            return showSearchNumber ? 1 : 0
+        case .top:
+            return topResult == nil ? 0 : 1
         case .asset:
             return min(resultLimit, assets.count)
         case .user:
@@ -215,9 +216,16 @@ extension SearchViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch Section(rawValue: indexPath.section)! {
-        case .searchNumber:
+        case .top:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.search_number, for: indexPath)!
-            cell.number = searchTextField.text
+            switch topResult {
+            case let .number(number):
+                cell.setText(number: number)
+            case let .link(_, verbatim):
+                cell.setText(link: verbatim)
+            case .none:
+                assertionFailure()
+            }
             cell.isBusy = searchNumberRequest != nil
             return cell
         case .asset:
@@ -251,7 +259,7 @@ extension SearchViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let section = Section(rawValue: indexPath.section)!
         switch section {
-        case .searchNumber:
+        case .top:
             return UITableView.automaticDimension
         case .asset, .user, .group, .conversation:
             return PeerCell.height
@@ -261,7 +269,7 @@ extension SearchViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         let section = Section(rawValue: section)!
         switch section {
-        case .searchNumber:
+        case .top:
             return .leastNormalMagnitude
         case .asset, .user, .group, .conversation:
             if isEmptySection(section) {
@@ -275,7 +283,7 @@ extension SearchViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         let section = Section(rawValue: section)!
         switch section {
-        case .searchNumber:
+        case .top:
             return .leastNormalMagnitude
         case .asset, .user, .group, .conversation:
             return isEmptySection(section) ? .leastNormalMagnitude : SearchFooterView.height
@@ -285,7 +293,7 @@ extension SearchViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let section = Section(rawValue: section)!
         switch section {
-        case .searchNumber:
+        case .top:
             return nil
         case .asset, .user, .group, .conversation:
             if isEmptySection(section) {
@@ -305,7 +313,7 @@ extension SearchViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let section = Section(rawValue: section)!
         switch section {
-        case .searchNumber:
+        case .top:
             return nil
         case .asset, .user, .group, .conversation:
             if isEmptySection(section) {
@@ -320,8 +328,17 @@ extension SearchViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         searchTextField.resignFirstResponder()
         switch Section(rawValue: indexPath.section)! {
-        case .searchNumber:
-            searchNumber()
+        case .top:
+            switch topResult {
+            case let .number(number):
+                search(number: number)
+            case let .link(url, _):
+                if let parent = homeViewController {
+                    MixinWebViewController.presentInstance(with: .init(conversationId: "", initialUrl: url), asChildOf: parent)
+                }
+            case .none:
+                break
+            }
         case .asset:
             pushAssetViewController(asset: assets[indexPath.row].asset)
         case .user:
@@ -343,7 +360,7 @@ extension SearchViewController: SearchHeaderViewDelegate {
         }
         let vc = R.storyboard.home.search_category()!
         switch section {
-        case .searchNumber:
+        case .top:
             return
         case .asset:
             vc.category = .asset
@@ -367,8 +384,13 @@ extension SearchViewController {
         static let footer = "footer"
     }
     
+    enum TopResult {
+        case number(String)
+        case link(url: URL, verbatim: String)
+    }
+    
     enum Section: Int, CaseIterable {
-        case searchNumber = 0
+        case top = 0
         case asset
         case user
         case group
@@ -376,7 +398,7 @@ extension SearchViewController {
         
         var title: String? {
             switch self {
-            case .searchNumber:
+            case .top:
                 return nil
             case .asset:
                 return R.string.localizable.search_section_title_asset()
@@ -395,17 +417,45 @@ extension SearchViewController {
         
     }
     
-    private func keywordMaybeIdOrPhone(_ keyword: String) -> Bool {
-        guard keyword.count >= 4 else {
-            return false
-        }
-        guard idOrPhoneCharacterSet.isSuperset(of: keyword) else {
-            return false
-        }
-        if keyword.contains("+") {
-            return phoneNumberValidator.isValid(keyword)
+    private func topResult(keyword: String) -> TopResult? {
+        let number: String? = {
+            guard keyword.count >= 4 else {
+                return nil
+            }
+            guard idOrPhoneCharacterSet.isSuperset(of: keyword) else {
+                return nil
+            }
+            if keyword.contains("+") {
+                if phoneNumberValidator.isValid(keyword) {
+                    return keyword
+                } else {
+                    return nil
+                }
+            } else {
+                return keyword
+            }
+        }()
+        let link: (URL, String)? = {
+            var link: (URL, String)?
+            Link.detector.enumerateMatches(in: keyword, options: []) { match, _, stop in
+                guard let match = match, let url = match.url else {
+                    return
+                }
+                let verbatim = (keyword as NSString).substring(with: match.range)
+                link = (url, verbatim)
+                stop.pointee = ObjCBool(true)
+            }
+            return link
+        }()
+        
+        if keyword.isEmpty {
+            return nil
+        } else if let number = number {
+            return .number(number)
+        } else if let link = link {
+            return .link(url: link.0, verbatim: link.1)
         } else {
-            return true
+            return nil
         }
     }
     
@@ -428,7 +478,7 @@ extension SearchViewController {
     
     private func models(forSection section: Section) -> [Any] {
         switch section {
-        case .searchNumber:
+        case .top:
             return []
         case .asset:
             return assets
@@ -443,39 +493,37 @@ extension SearchViewController {
     
     private func isEmptySection(_ section: Section) -> Bool {
         switch section {
-        case .searchNumber:
-            return !showSearchNumber
+        case .top:
+            return topResult == nil
         case .asset, .user, .group, .conversation:
             return models(forSection: section).isEmpty
         }
     }
     
     private func isFirstSection(_ section: Section) -> Bool {
+        let showTopResult = topResult != nil
         switch section {
-        case .searchNumber:
-            return showSearchNumber
+        case .top:
+            return showTopResult
         case .asset:
-            return !showSearchNumber
+            return !showTopResult
         case .user:
-            return !showSearchNumber && assets.isEmpty
+            return !showTopResult && assets.isEmpty
         case .group:
-            return !showSearchNumber && assets.isEmpty && users.isEmpty
+            return !showTopResult && assets.isEmpty && users.isEmpty
         case .conversation:
-            return !showSearchNumber && assets.isEmpty && users.isEmpty && conversationsByName.isEmpty
+            return !showTopResult && assets.isEmpty && users.isEmpty && conversationsByName.isEmpty
         }
     }
     
-    private func searchNumber() {
-        guard let keyword = trimmedLowercaseKeyword else {
-            return
-        }
+    private func search(number: String) {
         searchNumberRequest?.cancel()
-        searchNumberCell?.isBusy = true
-        searchNumberRequest = UserAPI.search(keyword: keyword) { [weak self] (result) in
+        topResultCell?.isBusy = true
+        searchNumberRequest = UserAPI.search(keyword: number) { [weak self] (result) in
             guard let weakSelf = self, weakSelf.searchNumberRequest != nil else {
                 return
             }
-            weakSelf.searchNumberCell?.isBusy = false
+            weakSelf.topResultCell?.isBusy = false
             weakSelf.searchNumberRequest = nil
             switch result {
             case let .success(user):

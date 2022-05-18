@@ -221,8 +221,8 @@ extension SearchViewController: UITableViewDataSource {
             switch topResult {
             case let .number(number):
                 cell.setText(number: number)
-            case let .url(url):
-                cell.setText(url: url)
+            case let .link(_, verbatim):
+                cell.setText(link: verbatim)
             case .none:
                 assertionFailure()
             }
@@ -332,7 +332,7 @@ extension SearchViewController: UITableViewDelegate {
             switch topResult {
             case let .number(number):
                 search(number: number)
-            case let .url(url):
+            case let .link(url, _):
                 if let parent = homeViewController {
                     MixinWebViewController.presentInstance(with: .init(conversationId: "", initialUrl: url), asChildOf: parent)
                 }
@@ -386,7 +386,7 @@ extension SearchViewController {
     
     enum TopResult {
         case number(String)
-        case url(URL)
+        case link(url: URL, verbatim: String)
     }
     
     enum Section: Int, CaseIterable {
@@ -435,25 +435,25 @@ extension SearchViewController {
                 return keyword
             }
         }()
-        let url: URL? = {
-            var url: URL?
+        let link: (URL, String)? = {
+            var link: (URL, String)?
             Link.detector.enumerateMatches(in: keyword, options: []) { match, _, stop in
-                guard let match = match else {
+                guard let match = match, let url = match.url else {
                     return
                 }
-                let string = (keyword as NSString).substring(with: match.range)
-                url = URL(string: string)
-                stop.pointee = ObjCBool(url != nil)
+                let verbatim = (keyword as NSString).substring(with: match.range)
+                link = (url, verbatim)
+                stop.pointee = ObjCBool(true)
             }
-            return url
+            return link
         }()
         
         if keyword.isEmpty {
             return nil
         } else if let number = number {
             return .number(number)
-        } else if let url = url {
-            return .url(url)
+        } else if let link = link {
+            return .link(url: link.0, verbatim: link.1)
         } else {
             return nil
         }

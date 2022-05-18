@@ -38,10 +38,10 @@ extension SystemConversationAction {
                 return R.string.localizable.disappearing_message_change(uFullName)
             }
         default:
-            if content.isEmpty {
-                return R.string.localizable.chat_cell_title_unknown_category()
-            } else {
+            if let content = content, !content.isEmpty {
                 return content
+            } else {
+                return R.string.localizable.chat_cell_title_unknown_category()
             }
         }
     }

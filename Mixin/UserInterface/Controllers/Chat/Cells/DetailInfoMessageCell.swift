@@ -142,8 +142,8 @@ class DetailInfoMessageCell: MessageCell {
             return
         }
         statusImageView.frame = viewModel.statusFrame
-        statusImageView.image = viewModel.statusImage?.image(traitCollection: traitCollection)
         statusImageView.tintColor = viewModel.statusTintColor
+        statusImageView.image = viewModel.statusImage?.image(traitCollection: traitCollection)
     }
     
 }

@@ -72,7 +72,7 @@ public final class ExpiredMessageDAO: UserDatabaseDAO {
         }
     }
     
-    public func removeExpiredMessages(completion: (_ nextExpireAt: Int64?) -> Void) {
+    public func removeExpiredMessages(reportNextExpireAt: (Int64?) -> Void) {
         db.write { db in
             let condition: SQLSpecificExpressible = ExpiredMessage.column(of: .expireAt) != nil
                 && ExpiredMessage.column(of: .expireAt) <= Int64(Date().timeIntervalSince1970)
@@ -109,7 +109,7 @@ public final class ExpiredMessageDAO: UserDatabaseDAO {
                 .filter(ExpiredMessage.column(of: .expireAt) != nil)
                 .order([ExpiredMessage.column(of: .expireAt).asc])
                 .fetchOne(db)
-            completion(nextExpireAt)
+            reportNextExpireAt(nextExpireAt)
         }
     }
     

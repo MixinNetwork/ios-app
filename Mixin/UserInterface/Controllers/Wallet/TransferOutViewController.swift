@@ -31,6 +31,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
     
     private let placeHolderFont = UIFont.preferredFont(forTextStyle: .callout)
     private let amountFont = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 17, weight: .semibold))
+    private let maxMemoDataCount = 200
     
     private var availableAssets = [AssetItem]()
     private var opponent: Opponent!
@@ -82,6 +83,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         amountTextField.adjustsFontForContentSizeCategory = true
         amountTextField.becomeFirstResponder()
         amountTextField.delegate = self
+        memoTextField.delegate = self
         
         NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main) { [weak self] _ in
             guard let self = self, self.payWindowIfLoaded == nil else {
@@ -452,29 +454,36 @@ extension TransferOutViewController: ContainerViewControllerDelegate {
 extension TransferOutViewController: UITextFieldDelegate {
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        guard textField == amountTextField else {
-            return true
-        }
         let newText = ((textField.text ?? "") as NSString).replacingCharacters(in: range, with: string)
-        if newText.isEmpty {
-            return true
-        } else if newText.isNumeric {
-            let components = newText.components(separatedBy: currentDecimalSeparator)
-            if isInputAssetAmount {
-                return components.count == 1 || components[1].count <= 8
+        switch textField {
+        case amountTextField:
+            if newText.isEmpty {
+                return true
+            } else if newText.isNumeric {
+                let components = newText.components(separatedBy: currentDecimalSeparator)
+                if isInputAssetAmount {
+                    return components.count == 1 || components[1].count <= 8
+                } else {
+                    return components.count == 1 || components[1].count <= 2
+                }
             } else {
-                return components.count == 1 || components[1].count <= 2
+                return false
             }
-        } else {
-            return false
+        case memoTextField:
+            return newText.utf8.count <= maxMemoDataCount
+        default:
+            return true
         }
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if textField == amountTextField {
+        switch textField {
+        case amountTextField:
             memoTextField.becomeFirstResponder()
-        } else if textField == memoTextField {
+        case memoTextField:
             continueAction(textField)
+        default:
+            break
         }
         return false
     }

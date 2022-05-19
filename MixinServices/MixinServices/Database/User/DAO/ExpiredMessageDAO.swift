@@ -32,13 +32,19 @@ public final class ExpiredMessageDAO: UserDatabaseDAO {
         }
     }
     
-    public func updateExpireAt(for messageId: String, expireAt: Int64?) {
+    // In argument messages, key is message id, value is expire_at
+    public func updateExpireAt(for messages: [String: Int64]) {
         db.write { db in
-            try updateExpireAt(for: messageId, database: db, expireAt: expireAt)
+            for message in messages {
+                try updateExpireAt(for: message.key, database: db, expireAt: message.value, postNotification: false)
+            }
+            db.afterNextTransactionCommit { _ in
+                NotificationCenter.default.post(onMainThread: Self.expiredAtDidUpdateNotification, object: self)
+            }
         }
     }
-
-    public func updateExpireAt(for messageId: String, database: GRDB.Database, expireAt: Int64? = nil) throws {
+    
+    public func updateExpireAt(for messageId: String, database: GRDB.Database, expireAt: Int64? = nil, postNotification: Bool) throws {
         let condition: SQLSpecificExpressible = ExpiredMessage.column(of: .messageId) == messageId
             && ExpiredMessage.column(of: .expireAt) == nil
         guard let message = try ExpiredMessage.filter(condition).fetchOne(database) else {
@@ -48,8 +54,10 @@ public final class ExpiredMessageDAO: UserDatabaseDAO {
         try ExpiredMessage
             .filter(ExpiredMessage.column(of: .messageId) == messageId)
             .updateAll(database, [ExpiredMessage.column(of: .expireAt).set(to: expireAt)])
-        database.afterNextTransactionCommit { _ in
-            NotificationCenter.default.post(onMainThread: Self.expiredAtDidUpdateNotification, object: self)
+        if postNotification {
+            database.afterNextTransactionCommit { _ in
+                NotificationCenter.default.post(onMainThread: Self.expiredAtDidUpdateNotification, object: self)
+            }
         }
     }
     
@@ -72,7 +80,7 @@ public final class ExpiredMessageDAO: UserDatabaseDAO {
         }
     }
     
-    public func removeExpiredMessages(completion: (_ nextExpireAt: Int64?) -> Void) {
+    public func removeExpiredMessages(reportNextExpireAt: (Int64?) -> Void) {
         db.write { db in
             let condition: SQLSpecificExpressible = ExpiredMessage.column(of: .expireAt) != nil
                 && ExpiredMessage.column(of: .expireAt) <= Int64(Date().timeIntervalSince1970)
@@ -109,7 +117,7 @@ public final class ExpiredMessageDAO: UserDatabaseDAO {
                 .filter(ExpiredMessage.column(of: .expireAt) != nil)
                 .order([ExpiredMessage.column(of: .expireAt).asc])
                 .fetchOne(db)
-            completion(nextExpireAt)
+            reportNextExpireAt(nextExpireAt)
         }
     }
     

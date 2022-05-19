@@ -1063,6 +1063,7 @@ public class ReceiveMessageService: MixinService {
 
                 var readMessageIds = [String]()
                 var mentionMessageIds = [String]()
+                var expireMessages: [String: Int64] = [:]
                 ackMessages.forEach { (message) in
                     if message.status == MessageStatus.READ.rawValue {
                         readMessageIds.append(message.messageId)
@@ -1070,10 +1071,11 @@ public class ReceiveMessageService: MixinService {
                         mentionMessageIds.append(message.messageId)
                     }
                     if let expireAt = message.expireAt {
-                        ExpiredMessageDAO.shared.updateExpireAt(for: message.messageId, expireAt: expireAt)
+                        expireMessages[message.messageId] = expireAt
                     }
                 }
-
+                
+                ExpiredMessageDAO.shared.updateExpireAt(for: expireMessages)
                 MessageDAO.shared.batchUpdateMessageStatus(readMessageIds: readMessageIds, mentionMessageIds: mentionMessageIds)
             default:
                 break

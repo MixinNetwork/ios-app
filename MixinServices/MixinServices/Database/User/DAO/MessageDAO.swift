@@ -629,7 +629,7 @@ public final class MessageDAO: UserDatabaseDAO {
         }
         if expireIn != 0 && !message.category.hasPrefix("SYSTEM_") {
             let expireAt: Int64?
-            if message.status == MessageStatus.SENT.rawValue {
+            if message.status == MessageStatus.SENT.rawValue || message.status == MessageStatus.READ.rawValue {
                 expireAt = Int64(message.createdAt.toUTCDate().timeIntervalSince1970) + expireIn
             } else {
                 expireAt = nil

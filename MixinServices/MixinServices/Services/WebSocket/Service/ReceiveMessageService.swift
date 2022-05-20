@@ -1070,9 +1070,7 @@ public class ReceiveMessageService: MixinService {
                     } else if message.status == MessageMentionStatus.MENTION_READ.rawValue {
                         mentionMessageIds.append(message.messageId)
                     }
-                    if let expireAt = message.expireAt {
-                        expireMessages[message.messageId] = expireAt
-                    }
+                    expireMessages[message.messageId] = message.expireAt ?? Int64(Date().timeIntervalSince1970)
                 }
                 
                 ExpiredMessageDAO.shared.updateExpireAt(for: expireMessages)

@@ -80,6 +80,12 @@ public final class ExpiredMessageDAO: UserDatabaseDAO {
         }
     }
     
+    public func expireIn(for messageId: String) -> Int64? {
+        db.select(column: ExpiredMessage.column(of: .expireIn),
+                  from: ExpiredMessage.self,
+                  where: ExpiredMessage.column(of: .messageId) == messageId)
+    }
+    
     public func removeExpiredMessages(reportNextExpireAt: (Int64?) -> Void) {
         db.write { db in
             let condition: SQLSpecificExpressible = ExpiredMessage.column(of: .expireAt) != nil

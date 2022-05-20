@@ -373,7 +373,7 @@ extension GroupProfileViewController {
         ])
         
         groups.append([
-            ProfileMenuItem(title: R.string.localizable.disappearing_message_title(),
+            ProfileMenuItem(title: R.string.localizable.disappearing_message(),
                             subtitle: ExpiredMessageDurationFormatter.string(from: conversation.expireIn),
                             style: [],
                             action: #selector(editExpiredMessageDuration))

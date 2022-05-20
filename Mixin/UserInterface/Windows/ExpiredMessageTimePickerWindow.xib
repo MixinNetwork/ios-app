@@ -36,7 +36,7 @@
                                     <color key="textColor" name="title"/>
                                     <nil key="highlightedColor"/>
                                     <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="disappearing_message_custom_time"/>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="custom_time"/>
                                         <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
                                     </userDefinedRuntimeAttributes>
                                 </label>
@@ -50,7 +50,7 @@
                                     </state>
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
-                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="disappearing_message_set"/>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="set"/>
                                     </userDefinedRuntimeAttributes>
                                     <connections>
                                         <action selector="setAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="HMy-TA-71a"/>

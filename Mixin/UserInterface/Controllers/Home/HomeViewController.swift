@@ -662,7 +662,7 @@ extension HomeViewController {
             return
         }
         if AppGroupUserDefaults.User.circleId == nil {
-            guideLabel.text = R.string.localizable.empty_info()
+            guideLabel.text = R.string.localizable.chat_list_empty_info()
             guideButton.setTitle(R.string.localizable.start_messaging(), for: .normal)
         } else {
             guideLabel.text = R.string.localizable.circle_no_conversation_hint()

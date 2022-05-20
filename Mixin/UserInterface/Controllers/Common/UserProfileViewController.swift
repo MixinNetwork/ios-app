@@ -33,7 +33,7 @@ final class UserProfileViewController: ProfileViewController {
     private lazy var footerLabel = FooterLabel()
     private lazy var expiredMessageItemView: ProfileMenuItemView  = {
         let view = ProfileMenuItemView()
-        view.label.text = R.string.localizable.disappearing_message_title()
+        view.label.text = R.string.localizable.disappearing_message()
         view.subtitleLabel.text = ""
         view.button.addTarget(self, action: #selector(self.editExpiredMessageDuration), for: .touchUpInside)
         return view

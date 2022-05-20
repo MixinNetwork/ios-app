@@ -55,7 +55,7 @@ extension DataAndStorageSettingsViewController: UITableViewDelegate {
             
             let message = dataSource.row(at: indexPath).title
             let alert = UIAlertController(title: nil, message: message, preferredStyle: .actionSheet)
-            alert.addAction(UIAlertAction(title: R.string.localizable.never(), style: .default, handler: { (_) in
+            alert.addAction(UIAlertAction(title: R.string.localizable.never_auto_download(), style: .default, handler: { (_) in
                 setAutoDownload(.never)
             }))
             alert.addAction(UIAlertAction(title: R.string.localizable.wifi(), style: .default, handler: { (_) in
@@ -79,7 +79,7 @@ fileprivate extension AutoDownload {
     var description: String {
         switch self {
         case .never:
-            return R.string.localizable.never()
+            return R.string.localizable.never_auto_download()
         case .wifi:
             return R.string.localizable.wifi()
         case .wifiAndCellular:

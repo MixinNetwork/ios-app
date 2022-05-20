@@ -93,7 +93,7 @@ extension MixinAPIError {
         case .malformedWithdrawalMemo(let code):
             return R.string.localizable.error_withdrawal_memo_format_incorrect(code)
         case .sharedAppReachLimit:
-            return R.string.localizable.circle_limit()
+            return R.string.localizable.number_reached_limit()
         case .circleConversationReachLimit:
             return R.string.localizable.conversation_has_too_many_circles()
 

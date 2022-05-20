@@ -40,7 +40,7 @@ class ChangeNumberVerificationCodeViewController: VerificationCodeViewController
             case .success(let account):
                 LoginManager.shared.setAccount(account)
                 weakSelf.verificationCodeField.resignFirstResponder()
-                weakSelf.alert(nil, message: R.string.localizable.successfully_changed_phone_number(), handler: { (_) in
+                weakSelf.alert(nil, message: R.string.localizable.changed(), handler: { (_) in
                     weakSelf.navigationController?.dismiss(animated: true, completion: nil)
                 })
             case let .failure(error):

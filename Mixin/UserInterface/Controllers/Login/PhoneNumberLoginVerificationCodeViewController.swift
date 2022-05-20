@@ -8,7 +8,7 @@ class PhoneNumberLoginVerificationCodeViewController: LoginVerificationCodeViewC
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        helpButton.setTitle(R.string.localizable.help(), for: .normal)
+        helpButton.setTitle(R.string.localizable.need_help(), for: .normal)
         helpButton.setTitleColor(.walletRed, for: .normal)
         helpButton.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
         helpButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)

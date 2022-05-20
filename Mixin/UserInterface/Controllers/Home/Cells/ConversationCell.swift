@@ -56,7 +56,7 @@ class ConversationCell: ModernSelectedBackgroundCell {
         } else if item.messageStatus == MessageStatus.UNKNOWN.rawValue {
             messageStatusImageView.isHidden = true
             messageTypeImageView.isHidden = true
-            contentLabel.text = R.string.localizable.conversation_not_support()
+            contentLabel.text = R.string.localizable.message_not_support()
         } else {
             expiredImageView.isHidden = item.contentExpireIn == 0 || item.contentType.hasPrefix("SYSTEM_")
             showMessageIndicate(conversation: item)
@@ -168,7 +168,7 @@ class ConversationCell: ModernSelectedBackgroundCell {
                 } else if item.messageId.isEmpty {
                     contentLabel.text = ""
                 } else {
-                    contentLabel.text = R.string.localizable.conversation_not_support()
+                    contentLabel.text = R.string.localizable.message_not_support()
                 }
             }
         }

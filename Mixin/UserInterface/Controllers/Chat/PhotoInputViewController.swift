@@ -97,7 +97,7 @@ class PhotoInputViewController: UIViewController, ConversationInputAccessible {
     @IBAction func managePhotoAuthorization(_ sender: Any) {
         let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         if #available(iOS 14, *) {
-            sheet.addAction(UIAlertAction(title: R.string.localizable.select_more_phots(), style: .default, handler: { _ in
+            sheet.addAction(UIAlertAction(title: R.string.localizable.select_more_photos(), style: .default, handler: { _ in
                 PHPhotoLibrary.shared().presentLimitedLibraryPicker(from: self)
             }))
         }

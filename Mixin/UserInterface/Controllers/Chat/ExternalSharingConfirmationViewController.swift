@@ -67,10 +67,10 @@ class ExternalSharingConfirmationViewController: UIViewController {
             switch context.style {
             case let .app(app, _):
                 let source = "\(app.name)(\(app.appNumber))"
-                titleLabel.text = R.string.localizable.share_message_description(localizedContentCategory, source)
+                titleLabel.text = R.string.localizable.share_message_description(source, localizedContentCategory)
             case .webPage:
                 if let source = context.initialUrl.host {
-                    titleLabel.text = R.string.localizable.share_message_description(localizedContentCategory, source)
+                    titleLabel.text = R.string.localizable.share_message_description(source, localizedContentCategory)
                 } else {
                     titleLabel.text = R.string.localizable.share_message_description_empty(localizedContentCategory)
                 }

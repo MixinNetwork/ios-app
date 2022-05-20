@@ -78,7 +78,7 @@ class CreateEmergencyContactVerificationCodeViewController: VerificationCodeView
     }
     
     private func showSuccessAlert() {
-        let title = R.string.localizable.successfully_changed_emergency_contact()
+        let title = R.string.localizable.changed()
         let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: R.string.localizable.ok(), style: .default, handler: { (_) in
             self.navigationController?.dismiss(animated: true, completion: nil)

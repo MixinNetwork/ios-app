@@ -24,6 +24,7 @@ open class AttachmentLoadingJob: AsynchronousJob {
             return
         }
         if weakSelf.isCancelled || !LoginManager.shared.isLoggedIn {
+            Logger.general.debug(category: "AttachmentLoadingJob", message: "\(weakSelf.jobId) is cancelled")
             weakSelf.finishJob()
             return
         } else if let error = error {

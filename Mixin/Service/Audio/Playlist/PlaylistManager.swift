@@ -167,8 +167,8 @@ class PlaylistManager: NSObject {
                                        name: MessageDAO.didInsertMessageNotification,
                                        object: nil)
         notificationCenter.addObserver(self,
-                                       selector: #selector(messageDAOWillDeleteMessage(_:)),
-                                       name: MessageDAO.willDeleteMessageNotification,
+                                       selector: #selector(messageWillDelete(_:)),
+                                       name: DeleteMessageWork.willDeleteNotification,
                                        object: nil)
         notificationCenter.addObserver(self,
                                        selector: #selector(conversationDAOWillClearConversation(_:)),
@@ -773,8 +773,8 @@ extension PlaylistManager {
         loadLaterItemsIfNeeded()
     }
     
-    @objc private func messageDAOWillDeleteMessage(_ notification: Notification) {
-        guard let messageId = notification.userInfo?[MessageDAO.UserInfoKey.messageId] as? String else {
+    @objc private func messageWillDelete(_ notification: Notification) {
+        guard let messageId = notification.userInfo?[DeleteMessageWork.messageIdUserInfoKey] as? String else {
             return
         }
         guard case .conversation = source else {

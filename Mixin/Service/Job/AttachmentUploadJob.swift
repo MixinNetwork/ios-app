@@ -78,7 +78,8 @@ class AttachmentUploadJob: AttachmentLoadingJob {
             return false
         }
         guard let fileUrl = fileUrl else {
-            MessageDAO.shared.deleteMessage(id: messageId)
+            let work = DeleteMessageWork(message: message)
+            WorkManager.general.addWork(work)
             return false
         }
         

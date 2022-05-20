@@ -101,7 +101,7 @@ public final class ExpiredMessageDAO: UserDatabaseDAO {
                 var unseenCountChangedConversationIds: Set<String> = []
                 let expiredMessages = try MessageDAO.shared.getFullMessages(messageIds: expiredMessageIds, with: db)
                 for message in expiredMessages {
-                    let (deleted, childMessageIds) = try MessageDAO.shared.deleteMessage(id: message.messageId, with: db)
+                    let (deleted, childMessageIds) = try MessageDAO.shared.deleteMessage(message, with: db)
                     if deleted {
                         deletedMessages.append((message, childMessageIds))
                         if message.status != MessageStatus.READ.rawValue {

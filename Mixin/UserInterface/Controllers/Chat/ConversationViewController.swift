@@ -2706,10 +2706,8 @@ extension ConversationViewController {
                 guard let weakSelf = self, let indexPath = weakSelf.dataSource.indexPath(where: { $0.messageId == message.messageId }) else {
                     return
                 }
-                let (deleted, childMessageIds) = MessageDAO.shared.deleteMessage(id: message.messageId)
-                if deleted {
-                    ReceiveMessageService.shared.stopRecallMessage(item: message, childMessageIds: childMessageIds)
-                }
+                let work = DeleteMessageWork(message: message)
+                WorkManager.general.addWork(work)
                 DispatchQueue.main.sync {
                     _ = weakSelf.dataSource?.removeViewModel(at: indexPath)
                     weakSelf.tableView.reloadData()

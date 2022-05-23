@@ -10,9 +10,9 @@ enum DevicePerformance {
 extension DevicePerformance {
     
     static let current: DevicePerformance = {
-        let guru = DeviceGuru()
-        let platform = guru.platform()
-        let version = guru.deviceVersion()
+        let guru = DeviceGuruImplementation()
+        let platform = guru.platform
+        let version = try? guru.deviceVersion()
         switch platform {
         case .iPhone:
             if let version = version {

@@ -15,11 +15,11 @@ PODS:
   - BoringSSL/Implementation (10.0.6):
     - BoringSSL/Interface (= 10.0.6)
   - BoringSSL/Interface (10.0.6)
-  - DeviceGuru (8.0.1):
-    - DeviceGuru/DeviceGuru (= 8.0.1)
-  - DeviceGuru/DeviceGuru (8.0.1):
+  - DeviceGuru (10.0.0):
+    - DeviceGuru/DeviceGuru (= 10.0.0)
+  - DeviceGuru/DeviceGuru (10.0.0):
     - DeviceGuru/Resources
-  - DeviceGuru/Resources (8.0.1)
+  - DeviceGuru/Resources (10.0.0)
   - Firebase/Analytics (9.0.0):
     - Firebase/Core
   - Firebase/Core (9.0.0):
@@ -286,7 +286,7 @@ SPEC CHECKSUMS:
   Alamofire: 87bd8c952f9a4454320fce00d9cc3de57bcadaf5
   AppCenter: b0eca112a27b71e97488ffa1949ee38c7abd4b79
   BoringSSL: e10f92a27043805c01071fe815a5cd98ae8212e7
-  DeviceGuru: ddab10b45ebab6aca3cdb98c569d1406e19b7991
+  DeviceGuru: 9131953eb8ba943ff7bdd3bc97428c084cd479be
   Firebase: a876fadc5ea653a377693376fd4f885c62704512
   FirebaseABTesting: 3ca58e0ff49cda880e5c46e1b19a4f34fab45d10
   FirebaseAnalytics: ea4f6f4b604a20b4de4d3c7f7a2cb51d9a989040

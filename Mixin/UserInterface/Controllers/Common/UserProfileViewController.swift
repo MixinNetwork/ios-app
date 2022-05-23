@@ -568,6 +568,9 @@ extension UserProfileViewController {
     }
     
     @objc func editExpiredMessageDuration() {
+        guard !user.isBot || user.isSelfBot else {
+            return
+        }
         func dismissAndPushController(expireIn: Int64) {
             let controller = ExpiredMessageViewController.instance(conversationId: conversationId, expireIn: expireIn)
             dismissAndPush(controller)

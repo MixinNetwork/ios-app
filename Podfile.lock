@@ -15,11 +15,6 @@ PODS:
   - BoringSSL/Implementation (10.0.6):
     - BoringSSL/Interface (= 10.0.6)
   - BoringSSL/Interface (10.0.6)
-  - DeviceGuru (10.0.0):
-    - DeviceGuru/DeviceGuru (= 10.0.0)
-  - DeviceGuru/DeviceGuru (10.0.0):
-    - DeviceGuru/Resources
-  - DeviceGuru/Resources (10.0.0)
   - Firebase/Analytics (9.0.0):
     - Firebase/Core
   - Firebase/Core (9.0.0):
@@ -159,7 +154,6 @@ PODS:
     - Alamofire
     - AppCenter
     - BoringSSL
-    - DeviceGuru
     - GRDB.swift/SQLCipher
     - GzipSwift
     - libsignal-protocol-c
@@ -172,7 +166,6 @@ PODS:
     - Alamofire
     - AppCenter
     - BoringSSL
-    - DeviceGuru
     - GRDB.swift/SQLCipher
     - GzipSwift
     - libsignal-protocol-c
@@ -237,7 +230,6 @@ SPEC REPOS:
     - Alamofire
     - AppCenter
     - BoringSSL
-    - DeviceGuru
     - Firebase
     - FirebaseABTesting
     - FirebaseAnalytics
@@ -286,7 +278,6 @@ SPEC CHECKSUMS:
   Alamofire: 87bd8c952f9a4454320fce00d9cc3de57bcadaf5
   AppCenter: b0eca112a27b71e97488ffa1949ee38c7abd4b79
   BoringSSL: e10f92a27043805c01071fe815a5cd98ae8212e7
-  DeviceGuru: 9131953eb8ba943ff7bdd3bc97428c084cd479be
   Firebase: a876fadc5ea653a377693376fd4f885c62704512
   FirebaseABTesting: 3ca58e0ff49cda880e5c46e1b19a4f34fab45d10
   FirebaseAnalytics: ea4f6f4b604a20b4de4d3c7f7a2cb51d9a989040
@@ -306,7 +297,7 @@ SPEC CHECKSUMS:
   librlottie: 31aadd1f842008260fa7387f7fcb837b2fabeeea
   libsignal-protocol-c: 2fecccb06cc14bdbd28e76a656c0c8c648a482a0
   libwebp: 98a37e597e40bfdb4c911fc98f2c53d0b12d05fc
-  MixinServices: 480e58851f289e3e57422af66ce0898c20e21f23
+  MixinServices: 7d1598eb15667febd619697bcb3aa469a691880b
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   PhoneNumberKit: 441e8b26ec88d598e3591de9061eff18f5dd12e8
   PromisesObjC: 99b6f43f9e1044bd87a95a60beff28c2c44ddb72

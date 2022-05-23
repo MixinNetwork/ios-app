@@ -14,13 +14,30 @@ public struct BlazeMessageData: Codable {
     public let quoteMessageId: String
     public let representativeId: String
     public let sessionId: String
+    
+    public let silentNotification: Bool
     public let expireIn: Int64
     
-    public var silentNotification: Bool {
-        isSilent ?? false
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        conversationId = try container.decode(String.self, forKey: .conversationId)
+        userId = try container.decode(String.self, forKey: .userId)
+        messageId = try container.decode(String.self, forKey: .messageId)
+        category = try container.decode(String.self, forKey: .category)
+        data = try container.decode(String.self, forKey: .data)
+        status = try container.decode(String.self, forKey: .status)
+        createdAt = try container.decode(String.self, forKey: .createdAt)
+        updatedAt = try container.decode(String.self, forKey: .updatedAt)
+        source = try container.decode(String.self, forKey: .source)
+        quoteMessageId = try container.decode(String.self, forKey: .quoteMessageId)
+        representativeId = try container.decode(String.self, forKey: .representativeId)
+        sessionId = try container.decode(String.self, forKey: .sessionId)
+        
+        // When adding new properties, use `decodeIfPresent` to prevent `DecodingError.keyNotFound` when decoding jobs saved by elder version
+        silentNotification = try container.decodeIfPresent(Bool.self, forKey: .silentNotification) ?? false
+        expireIn = try container.decodeIfPresent(Int64.self, forKey: .expireIn) ?? 0
     }
-    
-    private let isSilent: Bool?
     
     enum CodingKeys: String, CodingKey {
         case conversationId = "conversation_id"
@@ -35,7 +52,7 @@ public struct BlazeMessageData: Codable {
         case quoteMessageId = "quote_message_id"
         case representativeId = "representative_id"
         case sessionId = "session_id"
-        case isSilent = "silent"
+        case silentNotification = "silent"
         case expireIn = "expire_in"
     }
     

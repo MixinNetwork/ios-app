@@ -213,7 +213,9 @@ class WebRTCClient: NSObject {
         if permanently {
             session = nil
         } else {
-            session = oldSession + 1
+            let newSession = oldSession + 1
+            session = newSession
+            Logger.call.info(category: "WebRTCClient", message: "Closed with new session: \(newSession)")
         }
         peerConnection?.close()
         peerConnection = nil
@@ -337,7 +339,9 @@ extension WebRTCClient: RTCPeerConnectionDelegate {
 
 extension WebRTCClient {
     
-    private func loadIceServers(session: Session, completion: @escaping ([RTCIceServer]) -> Void) {
+    // Complete with nil when session is invalidated
+    private func loadIceServers(session: Session, completion: @escaping ([RTCIceServer]?) -> Void) {
+        Logger.call.info(category: "WebRTCClient", message: "Fetch ICE Server, session: \(session)")
         CallAPI.turn(queue: queue) { [weak self] result in
             switch result {
             case let .success(servers):
@@ -346,9 +350,11 @@ extension WebRTCClient {
                 }
                 completion(iceServers)
             case let .failure(error):
-                Logger.call.error(category: "WebRTCClient", message: "ICE Server fetching fails: \(error)")
+                Logger.call.error(category: "WebRTCClient", message: "ICE Server fetching fails: \(error), session: \(session)")
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                     guard let self = self, self.session == session else {
+                        Logger.call.warn(category: "WebRTCClient", message: "Abort ICE Server fetching, session: \(session)")
+                        completion(nil)
                         return
                     }
                     self.loadIceServers(session: session, completion: completion)
@@ -357,7 +363,7 @@ extension WebRTCClient {
         }
     }
     
-    // Returns nil only when self is closed or released
+    // Returns nil only when self is closed or released, or session is invalidated during ICE server request
     private func loadPeerConnection(key: Data?) -> RTCPeerConnection? {
         var (result, session) = DispatchQueue.main.sync {
             (self.peerConnection, self.session)
@@ -370,6 +376,10 @@ extension WebRTCClient {
         }
         let semaphore = DispatchSemaphore(value: 0)
         loadIceServers(session: session) { [weak self] iceServers in
+            guard let iceServers = iceServers else {
+                semaphore.signal()
+                return
+            }
             let config = RTCConfiguration()
             config.tcpCandidatePolicy = .enabled
             config.iceTransportPolicy = .relay

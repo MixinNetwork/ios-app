@@ -13,6 +13,9 @@ class MediaTypeOverlayView: UIView, XibDesignable {
     @IBOutlet weak var gifFileTypeView: UILabel!
     @IBOutlet weak var videoTypeView: UIStackView!
     @IBOutlet weak var videoDurationLabel: UILabel!
+    @IBOutlet weak var videoImageView: UIImageView!
+    
+    @IBOutlet weak var typeViewBottomConstraint: NSLayoutConstraint!
     
     class var backgroundImage: UIImage? {
         return R.image.conversation.bg_photo_bottom_shadow()

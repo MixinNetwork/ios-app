@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="SelectedPhotoInputItemsPreviewWindow" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Xzw-u0-0vh" customClass="TopRoundedView" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="315" width="414" height="581"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9g6-Ff-jf5">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="70"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Selected 7 Photos" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ubz-rz-ql8">
+                                    <rect key="frame" x="20" y="24.5" width="152" height="21"/>
+                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
+                                    </userDefinedRuntimeAttributes>
+                                </label>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yRw-qa-Nvx">
+                                    <rect key="frame" x="348" y="0.0" width="66" height="70"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="66" id="pUh-gi-JJ6"/>
+                                    </constraints>
+                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                    <state key="normal" image="ic_dialog_close"/>
+                                    <connections>
+                                        <action selector="closeAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="KNA-G7-3mE"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="70" id="5bF-Fq-P4F"/>
+                                <constraint firstItem="ubz-rz-ql8" firstAttribute="centerY" secondItem="9g6-Ff-jf5" secondAttribute="centerY" id="73p-00-TdV"/>
+                                <constraint firstAttribute="trailing" secondItem="yRw-qa-Nvx" secondAttribute="trailing" id="TIY-cG-806"/>
+                                <constraint firstAttribute="bottom" secondItem="yRw-qa-Nvx" secondAttribute="bottom" id="kPf-fn-81H"/>
+                                <constraint firstItem="yRw-qa-Nvx" firstAttribute="top" secondItem="9g6-Ff-jf5" secondAttribute="top" id="o9Z-mu-Qlc"/>
+                                <constraint firstItem="ubz-rz-ql8" firstAttribute="leading" secondItem="9g6-Ff-jf5" secondAttribute="leading" constant="20" id="xFc-a4-Uvo"/>
+                            </constraints>
+                        </view>
+                        <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="J5N-KZ-1OU">
+                            <rect key="frame" x="0.0" y="80" width="414" height="312"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="312" id="FSK-UU-cFN"/>
+                            </constraints>
+                            <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="pWH-ae-61P" customClass="SnapCenterFlowLayout" customModule="Mixin" customModuleProvider="target">
+                                <size key="itemSize" width="312" height="312"/>
+                                <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                            </collectionViewFlowLayout>
+                        </collectionView>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1fw-h3-rNQ" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="139" y="426" width="136" height="43"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                            <color key="tintColor" name="title"/>
+                            <inset key="contentEdgeInsets" minX="16" minY="11" maxX="16" maxY="12"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" title="Send 1 Photos">
+                                <color key="titleColor" name="title"/>
+                            </state>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
+                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="sendPhotosAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="QNx-5c-dow"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WFm-cB-wSQ">
+                            <rect key="frame" x="159" y="487" width="96" height="32"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                            <color key="tintColor" name="theme"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" title="Send as Files">
+                                <color key="titleColor" name="theme"/>
+                            </state>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="chat_media_preview_send_files"/>
+                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
+                                <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="sendAsFilesAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="rfV-AY-PMJ"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" name="background"/>
+                    <constraints>
+                        <constraint firstItem="9g6-Ff-jf5" firstAttribute="top" secondItem="Xzw-u0-0vh" secondAttribute="top" id="A68-46-qFC"/>
+                        <constraint firstItem="WFm-cB-wSQ" firstAttribute="centerX" secondItem="Xzw-u0-0vh" secondAttribute="centerX" id="F3n-85-ttX"/>
+                        <constraint firstItem="J5N-KZ-1OU" firstAttribute="top" secondItem="9g6-Ff-jf5" secondAttribute="bottom" constant="10" id="Iq4-25-JOc"/>
+                        <constraint firstItem="1fw-h3-rNQ" firstAttribute="top" secondItem="J5N-KZ-1OU" secondAttribute="bottom" constant="34" id="KFW-eF-4JN"/>
+                        <constraint firstItem="WFm-cB-wSQ" firstAttribute="top" secondItem="1fw-h3-rNQ" secondAttribute="bottom" constant="18" id="M63-96-nLR"/>
+                        <constraint firstAttribute="trailing" secondItem="J5N-KZ-1OU" secondAttribute="trailing" id="Vor-xs-jaj"/>
+                        <constraint firstItem="J5N-KZ-1OU" firstAttribute="leading" secondItem="Xzw-u0-0vh" secondAttribute="leading" id="cOr-Nc-1Vr"/>
+                        <constraint firstItem="9g6-Ff-jf5" firstAttribute="leading" secondItem="Xzw-u0-0vh" secondAttribute="leading" id="dFg-gx-jLT"/>
+                        <constraint firstAttribute="trailing" secondItem="9g6-Ff-jf5" secondAttribute="trailing" id="jnX-ma-1tT"/>
+                        <constraint firstItem="1fw-h3-rNQ" firstAttribute="centerX" secondItem="Xzw-u0-0vh" secondAttribute="centerX" id="qfi-aJ-hsb"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" white="0.0" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="WFm-cB-wSQ" secondAttribute="bottom" constant="28" id="LKn-Na-Wxz"/>
+                <constraint firstItem="Xzw-u0-0vh" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="aax-Oc-I5m"/>
+                <constraint firstAttribute="bottom" secondItem="Xzw-u0-0vh" secondAttribute="bottom" id="sCT-zJ-bLU"/>
+                <constraint firstAttribute="trailing" secondItem="Xzw-u0-0vh" secondAttribute="trailing" id="sow-hi-yWr"/>
+            </constraints>
+            <connections>
+                <outlet property="collectionView" destination="J5N-KZ-1OU" id="iWy-Zt-q2k"/>
+                <outlet property="collectionViewHeightConstraint" destination="FSK-UU-cFN" id="CqW-Vg-EGq"/>
+                <outlet property="flowLayout" destination="pWH-ae-61P" id="3YM-OT-yhD"/>
+                <outlet property="label" destination="ubz-rz-ql8" id="lZ7-ed-6ej"/>
+                <outlet property="popupView" destination="Xzw-u0-0vh" id="zls-oL-sbf"/>
+                <outlet property="sendFileButton" destination="WFm-cB-wSQ" id="5pm-m8-BQx"/>
+                <outlet property="sendPhotoButton" destination="1fw-h3-rNQ" id="YH1-9Y-SEv"/>
+            </connections>
+            <point key="canvasLocation" x="137.68115942028987" y="152.67857142857142"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="ic_dialog_close" width="26" height="26"/>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="theme">
+            <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="title">
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

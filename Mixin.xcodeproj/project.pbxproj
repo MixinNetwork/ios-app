@@ -639,6 +639,12 @@
 		7CE2DC9A28587DE100AF00AE /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7B8BB58F234F36C000991ACB /* Colors.xcassets */; };
 		7CE2DE102858B52000AF00AE /* WallpaperImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE2DE0F2858B52000AF00AE /* WallpaperImageView.swift */; };
 		7CE3A25C2771A8AB006BE765 /* DeleteAccountVerifyCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE3A25B2771A8AB006BE765 /* DeleteAccountVerifyCodeViewController.swift */; };
+		7CE4BA1F283CD249001C87D5 /* SelectedPhotoInputItemsPreviewWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CE4BA1D283CD249001C87D5 /* SelectedPhotoInputItemsPreviewWindow.xib */; };
+		7CE4BA20283CD249001C87D5 /* SelectedPhotoInputItemsPreviewWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE4BA1E283CD249001C87D5 /* SelectedPhotoInputItemsPreviewWindow.swift */; };
+		7CE4BA23283CD297001C87D5 /* MediaPreviewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CE4BA21283CD297001C87D5 /* MediaPreviewCell.xib */; };
+		7CE4BA24283CD297001C87D5 /* MediaPreviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE4BA22283CD297001C87D5 /* MediaPreviewCell.swift */; };
+		7CE4BA26283CD2B4001C87D5 /* SelectedPhotoInputItemsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE4BA25283CD2B3001C87D5 /* SelectedPhotoInputItemsViewController.swift */; };
+		7CE4BA28283CD2C9001C87D5 /* SelectedMediaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE4BA27283CD2C9001C87D5 /* SelectedMediaCell.swift */; };
 		7CE5E7A8269BDA29000B7904 /* HomeAppsPinTipsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE5E7A6269BDA29000B7904 /* HomeAppsPinTipsViewController.swift */; };
 		7CE5E7A9269BDA29000B7904 /* HomeAppsPinTipsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CE5E7A7269BDA29000B7904 /* HomeAppsPinTipsView.xib */; };
 		7CF2FEA626AA89BA00D3A5B3 /* StickersAlbumPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF2FEA526AA89BA00D3A5B3 /* StickersAlbumPreviewViewController.swift */; };
@@ -1658,6 +1664,12 @@
 		7CDBA58D28F7B6CB00AC3777 /* TransferSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferSearchViewController.swift; sourceTree = "<group>"; };
 		7CE2DE0F2858B52000AF00AE /* WallpaperImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WallpaperImageView.swift; sourceTree = "<group>"; };
 		7CE3A25B2771A8AB006BE765 /* DeleteAccountVerifyCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountVerifyCodeViewController.swift; sourceTree = "<group>"; };
+		7CE4BA1D283CD249001C87D5 /* SelectedPhotoInputItemsPreviewWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SelectedPhotoInputItemsPreviewWindow.xib; sourceTree = "<group>"; };
+		7CE4BA1E283CD249001C87D5 /* SelectedPhotoInputItemsPreviewWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectedPhotoInputItemsPreviewWindow.swift; sourceTree = "<group>"; };
+		7CE4BA21283CD297001C87D5 /* MediaPreviewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MediaPreviewCell.xib; sourceTree = "<group>"; };
+		7CE4BA22283CD297001C87D5 /* MediaPreviewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaPreviewCell.swift; sourceTree = "<group>"; };
+		7CE4BA25283CD2B3001C87D5 /* SelectedPhotoInputItemsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectedPhotoInputItemsViewController.swift; sourceTree = "<group>"; };
+		7CE4BA27283CD2C9001C87D5 /* SelectedMediaCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectedMediaCell.swift; sourceTree = "<group>"; };
 		7CE5E7A6269BDA29000B7904 /* HomeAppsPinTipsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsPinTipsViewController.swift; sourceTree = "<group>"; };
 		7CE5E7A7269BDA29000B7904 /* HomeAppsPinTipsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomeAppsPinTipsView.xib; sourceTree = "<group>"; };
 		7CF2FEA526AA89BA00D3A5B3 /* StickersAlbumPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersAlbumPreviewViewController.swift; sourceTree = "<group>"; };
@@ -2861,6 +2873,7 @@
 				7B915F73215FB0C100A562C6 /* GiphySearchViewController.swift */,
 				7B05CFDC22293B72006DA9E3 /* PhotoInputViewController.swift */,
 				7B93CAA4222963120053AE90 /* PhotoInputGridViewController.swift */,
+				7CE4BA25283CD2B3001C87D5 /* SelectedPhotoInputItemsViewController.swift */,
 				7B6A4045228400AF0037C7E5 /* MessageReceiverViewController.swift */,
 				7BFD3457228589ED00524EA0 /* ContactSelectorViewController.swift */,
 				7BEBCE2C228185130037BF18 /* MediaPreviewViewController.swift */,
@@ -2976,6 +2989,8 @@
 				7C0FAAC827E07A0A008D4021 /* ExpiredMessageTimePickerWindow.xib */,
 				7C47352828571CC900ECD293 /* AccessPhoneContactHintWindow.swift */,
 				7C47352A28571D0300ECD293 /* AccessPhoneContactHintWindow.xib */,
+				7CE4BA1E283CD249001C87D5 /* SelectedPhotoInputItemsPreviewWindow.swift */,
+				7CE4BA1D283CD249001C87D5 /* SelectedPhotoInputItemsPreviewWindow.xib */,
 			);
 			path = Windows;
 			sourceTree = "<group>";
@@ -3039,6 +3054,8 @@
 				DF53BB6E202362E5002BF028 /* AuthorizationScopeCell.xib */,
 				7C53049828FE753400567CF6 /* AuthorizationScopeGroupCell.swift */,
 				7C53049928FE753400567CF6 /* AuthorizationScopeGroupCell.xib */,
+				7CE4BA22283CD297001C87D5 /* MediaPreviewCell.swift */,
+				7CE4BA21283CD297001C87D5 /* MediaPreviewCell.xib */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -3610,6 +3627,7 @@
 				7B04142A240FA09F00BE8D73 /* LocationCell.swift */,
 				7BA1768D244ACE2E007D50FD /* PickerCell.swift */,
 				7B3CDA6324FFDD1D003A3E80 /* FavoriteStickerCell.swift */,
+				7CE4BA27283CD2C9001C87D5 /* SelectedMediaCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -3997,6 +4015,7 @@
 				7B600D282453186B001D8146 /* DesktopTableHeaderView.xib in Resources */,
 				7BB7872B24514ACC0057B4ED /* PhoneContactsSettingTableHeaderView.xib in Resources */,
 				7B7B5DB5230EBEBA00D0F463 /* TransferTypeCell.xib in Resources */,
+				7CE4BA23283CD297001C87D5 /* MediaPreviewCell.xib in Resources */,
 				E0BEB85D236C1C49001FE534 /* ProfileMenuItemView.xib in Resources */,
 				7BACA8D523602BF8007E3381 /* RecorderLongPressHintView.xib in Resources */,
 				94C6AA0B280D36940011AB02 /* AttachmentDiagnosticView.xib in Resources */,
@@ -4039,6 +4058,7 @@
 				7B81BF2922893F8B00266A77 /* GroupParticipantCell.xib in Resources */,
 				7B36920A233B3650007321A7 /* MediaTypeOverlayView.xib in Resources */,
 				944ED8D0264640E200C97215 /* WebLoadingFailureView.xib in Resources */,
+				7CE4BA1F283CD249001C87D5 /* SelectedPhotoInputItemsPreviewWindow.xib in Resources */,
 				7BB788B2216C5A4A00EDE7B4 /* LoadingIndicatorFooterView.xib in Resources */,
 				DFDD89E922C4B8E600128991 /* DepositChooseNetworkWindow.xib in Resources */,
 				DFA5B5911FB04C9C00549728 /* Wallet.storyboard in Resources */,
@@ -4426,6 +4446,7 @@
 			files = (
 				7BF49DD320C3DBAC00A8510E /* CaptchaManager.swift in Sources */,
 				DF8CECE11FC3054700E40064 /* TransferTypeCell.swift in Sources */,
+				7CE4BA26283CD2B4001C87D5 /* SelectedPhotoInputItemsViewController.swift in Sources */,
 				7BCB8C8422BB56B8002A13CC /* DataAndStorageSettingsViewController.swift in Sources */,
 				9BB351671FB19ECB00EDDD2C /* ConversationDateHeaderView.swift in Sources */,
 				DF2819752014669E001EE5FA /* RefreshAccountJob.swift in Sources */,
@@ -4819,6 +4840,7 @@
 				7B51DDB2223A408A008ACDBB /* LoginMobileNumberViewController.swift in Sources */,
 				7B21782122C4E70B00C08106 /* OggOpusPlayer.swift in Sources */,
 				7B3CDA6424FFDD1D003A3E80 /* FavoriteStickerCell.swift in Sources */,
+				7CE4BA20283CD249001C87D5 /* SelectedPhotoInputItemsPreviewWindow.swift in Sources */,
 				7BC3559F2265B7C30073C7BF /* DragDownIndicator.swift in Sources */,
 				7BA398CD242B539900DB5154 /* UIColor+Assets.swift in Sources */,
 				7B8BB588234F160C00991ACB /* SharedMediaCategorizer.swift in Sources */,
@@ -4890,6 +4912,7 @@
 				7B9D825A22F1BFEA0099381E /* NormalNetworkOperationIconSet.swift in Sources */,
 				7B6E5503223F69D90060E6FC /* KeyboardBasedLayoutViewController.swift in Sources */,
 				9B748DCD1FA71CEF00BC009B /* CameraViewController.swift in Sources */,
+				7CE4BA24283CD297001C87D5 /* MediaPreviewCell.swift in Sources */,
 				7B54F95B22B24A5600908A9D /* CreateEmergencyContactVerificationCodeViewController.swift in Sources */,
 				7BB0F9512434DDD400BEDA97 /* CircleMemberSearchResult.swift in Sources */,
 				7B81D91423E93ECA0031E945 /* QuotedMessageView.swift in Sources */,
@@ -4968,6 +4991,7 @@
 				7BD7534C2182CD7A00BAC172 /* CallMessageViewModel.swift in Sources */,
 				7B2D174F22B11A8600AE3DD8 /* LoginInfoInputViewController.swift in Sources */,
 				DF1ED8D920BBECFF003E10E8 /* AlbumViewController.swift in Sources */,
+				7CE4BA28283CD2C9001C87D5 /* SelectedMediaCell.swift in Sources */,
 				7BEE5351222D0E5C008D3911 /* ConversationExtensionCell.swift in Sources */,
 				DF8CECF21FC4256D00E40064 /* BlockUserCell.swift in Sources */,
 				7CC730502745F95D002780F5 /* StickerStore.swift in Sources */,

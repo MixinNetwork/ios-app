@@ -42,7 +42,7 @@ extension DevicePerformance {
         let minor: Int
         
         init?(machineName name: String) {
-            guard let regex = try? NSRegularExpression(pattern: "[\\d]*,[\\d]*") else {
+            guard let regex = try? NSRegularExpression(pattern: #"(\d+),(\d+)"#) else {
                 return nil
             }
             let nsName = name as NSString
@@ -50,12 +50,12 @@ extension DevicePerformance {
             guard let match = regex.firstMatch(in: name, range: full) else {
                 return nil
             }
-            let value = nsName.substring(with: match.range)
-            let components = value.components(separatedBy: ",")
-            guard components.count == 2 else {
+            guard match.numberOfRanges == 3 else {
                 return nil
             }
-            guard let major = Int(components[0]), let minor = Int(components[1]) else {
+            let majorString = nsName.substring(with: match.range(at: 1))
+            let minorString = nsName.substring(with: match.range(at: 2))
+            guard let major = Int(majorString), let minor = Int(minorString) else {
                 return nil
             }
             self.major = major

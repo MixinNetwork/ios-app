@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -11,7 +11,9 @@
             <connections>
                 <outlet property="backgroundImageView" destination="6rQ-iO-4X7" id="QsG-eT-JVL"/>
                 <outlet property="gifFileTypeView" destination="gij-Qy-OLD" id="yua-D2-pUz"/>
+                <outlet property="typeViewBottomConstraint" destination="jcR-n7-AOZ" id="43y-tt-nQl"/>
                 <outlet property="videoDurationLabel" destination="zbB-m9-QhJ" id="CA5-7P-dgw"/>
+                <outlet property="videoImageView" destination="7Zo-Od-YF4" id="M7Y-6i-r1I"/>
                 <outlet property="videoTypeView" destination="57M-0I-RuD" id="qLu-48-dBC"/>
             </connections>
         </placeholder>
@@ -24,7 +26,7 @@
                     <rect key="frame" x="0.0" y="-9" width="98" height="107"/>
                 </imageView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ufi-jV-5Cw">
-                    <rect key="frame" x="10" y="75.5" width="78" height="14.5"/>
+                    <rect key="frame" x="10" y="78.5" width="78" height="14.5"/>
                     <subviews>
                         <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="GIF" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gij-Qy-OLD">
                             <rect key="frame" x="0.0" y="0.0" width="78" height="14.5"/>
@@ -33,15 +35,15 @@
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="57M-0I-RuD">
+                        <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="57M-0I-RuD">
                             <rect key="frame" x="0.0" y="0.0" width="78" height="14.5"/>
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" image="Conversation/ic_video" translatesAutoresizingMaskIntoConstraints="NO" id="7Zo-Od-YF4">
                                     <rect key="frame" x="0.0" y="2.5" width="14" height="10"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </imageView>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="1010:01" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zbB-m9-QhJ">
-                                    <rect key="frame" x="14" y="0.0" width="64" height="14.5"/>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="1010:01" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zbB-m9-QhJ">
+                                    <rect key="frame" x="18" y="0.0" width="60" height="14.5"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -68,7 +70,7 @@
                 <constraint firstAttribute="bottom" secondItem="6rQ-iO-4X7" secondAttribute="bottom" id="BTG-gx-Uzb"/>
                 <constraint firstAttribute="trailing" secondItem="6rQ-iO-4X7" secondAttribute="trailing" id="LuN-pv-VUJ"/>
                 <constraint firstItem="Ufi-jV-5Cw" firstAttribute="leading" secondItem="HLT-LJ-4Vj" secondAttribute="leading" constant="10" id="QeU-CF-xPE"/>
-                <constraint firstAttribute="bottom" secondItem="Ufi-jV-5Cw" secondAttribute="bottom" constant="8" id="jcR-n7-AOZ"/>
+                <constraint firstAttribute="bottom" secondItem="Ufi-jV-5Cw" secondAttribute="bottom" constant="5" id="jcR-n7-AOZ"/>
                 <constraint firstAttribute="trailing" secondItem="Ufi-jV-5Cw" secondAttribute="trailing" constant="10" id="ls5-6v-rJi"/>
                 <constraint firstItem="6rQ-iO-4X7" firstAttribute="leading" secondItem="HLT-LJ-4Vj" secondAttribute="leading" id="v2g-tA-1yU"/>
             </constraints>

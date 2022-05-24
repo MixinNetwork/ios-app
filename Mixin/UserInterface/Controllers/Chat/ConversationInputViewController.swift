@@ -395,9 +395,11 @@ class ConversationInputViewController: UIViewController {
             self?.quote = nil
         }
         
-        let recognizer = InteractiveResizeGestureRecognizer(target: self, action: #selector(interactiveResizeAction(_:)))
-        recognizer.delegate = self
-        view.addGestureRecognizer(recognizer)
+        if ScreenHeight.current > .short {
+            let recognizer = InteractiveResizeGestureRecognizer(target: self, action: #selector(interactiveResizeAction(_:)))
+            recognizer.delegate = self
+            view.addGestureRecognizer(recognizer)
+        }
     }
     
     func update(opponentUser user: UserItem) {
@@ -417,6 +419,7 @@ class ConversationInputViewController: UIViewController {
         if minimize {
             setPreferredContentHeightAnimated(.minimized)
         }
+        photoViewController.dismissSelectedPhotoInputItemsViewControllerIfNeeded()
         UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
             self.customInputContainerView.alpha = 0
         } completion: { _ in

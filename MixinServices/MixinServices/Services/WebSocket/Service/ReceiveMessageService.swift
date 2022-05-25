@@ -1067,11 +1067,15 @@ public class ReceiveMessageService: MixinService {
                 ackMessages.forEach { (message) in
                     if message.status == MessageStatus.READ.rawValue {
                         readMessageIds.append(message.messageId)
+                        
+                        if let expireAt = message.expireAt {
+                            expireMessages[message.messageId] = expireAt
+                        } else if let expireIn = ExpiredMessageDAO.shared.expireIn(for: message.messageId) {
+                            // Older version of desktop client sends read acknowledgement without expire_at. Remove this when those versions are ended of life.
+                            expireMessages[message.messageId] = Int64(Date().addingTimeInterval(TimeInterval(expireIn)).timeIntervalSince1970)
+                        }
                     } else if message.status == MessageMentionStatus.MENTION_READ.rawValue {
                         mentionMessageIds.append(message.messageId)
-                    }
-                    if let expireAt = message.expireAt {
-                        expireMessages[message.messageId] = expireAt
                     }
                 }
                 

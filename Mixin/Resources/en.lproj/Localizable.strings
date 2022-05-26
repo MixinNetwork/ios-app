@@ -644,7 +644,7 @@
 "restoring" = "Restoring...";
 "restoring_progress" = "Restoring %@";
 "revoke_access" = "Revoke access";
-"revoke_access_with" = "Revoke access %@?";
+"setting_revoke_confirmation" = "Revoke access %@?";
 "revoke_multisig_transaction" = "Revoke Multisig Transaction";
 "room_is_full" = "Room is full";
 "save" = "Save";

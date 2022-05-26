@@ -117,7 +117,7 @@ final class PermissionsViewController: UIViewController {
         guard let app = app else {
             return
         }
-        let alert = UIAlertController(title: R.string.localizable.revoke_access_with(app.name), message: nil, preferredStyle: .alert)
+        let alert = UIAlertController(title: R.string.localizable.setting_revoke_confirmation(app.name), message: nil, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: R.string.localizable.confirm(), style: .destructive, handler: { (action) in
             AuthorizeAPI.cancel(clientId: app.appId) { [weak self](result) in

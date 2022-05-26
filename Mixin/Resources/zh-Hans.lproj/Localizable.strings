@@ -305,10 +305,10 @@
 "emergency_contact" = "紧急联系人";
 "chat_list_empty_info" = "你可以与你的 Mixin 好友一起聊天。";
 "enable_emergency_contact" = "启用紧急联系人";
-"enable_face_pay_hint" = "确认钱包密码启用面容支付";
+"enable_face_pay_hint" = "输入 PIN 启用面容支付";
 "enable_pay" = "启用%@支付";
 "enable_pay_confirmation" = "启用%@支付？";
-"enable_touch_pay_hint" = "确认钱包密码启用指纹支付";
+"enable_touch_pay_hint" = "输入 PIN 启用指纹支付";
 "end_to_end_encryption" = "端到端加密";
 "english" = "中文";
 "enter_pin_to_delete_account" = "输入你的 PIN 以注销你的账户";
@@ -368,7 +368,7 @@
 "follow_us_on_facebook" = "关注我们的 Facebook";
 "follow_us_on_twitter" = "关注我们的 Twitter";
 "forward" = "转发";
-"fourth_pin_confirm_hint" = "这是最后一次确认 PIN，记住：密码丢失将永远无法找回！";
+"fourth_pin_confirm_hint" = "这是最后一次确认 PIN，记住：PIN 丢失将永远无法找回！";
 "from" = "来自";
 "games" = "游戏";
 "get_a_new_wallet" = "创建钱包";
@@ -547,7 +547,7 @@
 "pay_paid" = "此付款链接已由某人支付，您无法进行重复付款。";
 "pay_with" = "%@支付";
 "pay_with_pin" = "用 PIN 支付";
-"pay_with_pin_interval" = "支付 PIN 使用间隔";
+"pay_with_pin_interval" = "PIN 使用间隔";
 "pay_withdrawal_memo" = "数量 %@ %@\n手续费 %@ %@";
 "peer_closed" = "Peer 已关闭";
 "peer_not_found" = "Peer 无效";
@@ -600,7 +600,7 @@
 "privacy_policy" = "隐私政策";
 "profile_photo" = "个人头像";
 "profile_share_bot_hint" = "如果您希望分享机器人，请先添加联系人。";
-"protect_setting_security_hint" = "确认钱包密码保护设置安全";
+"protect_setting_security_hint" = "确认 PIN 保护设置安全";
 "public_profile" = "个人资料（必须）";
 "qr_code" = "二维码";
 "qr_code_not_found" = "未发现二维码";
@@ -644,11 +644,11 @@
 "restoring" = "正在恢复...";
 "restoring_progress" = "正在恢复 %@";
 "revoke_access" = "取消授权";
-"revoke_access_with" = "取消 %@ 授权？";
+"setting_revoke_confirmation" = "取消 %@ 的授权？";
 "revoke_multisig_transaction" = "撤销多重签名交易";
 "room_is_full" = "房间已满";
 "save" = "保存";
-"save_by_pin" = "通过密码保存";
+"save_by_pin" = "通过 PIN 保存";
 "save_image" = "保存图片";
 "save_to_camera_roll" = "保存到相册";
 "saved" = "已保存";
@@ -696,13 +696,13 @@
 "setting_conversation_group_tip" = "谁能加我进入群组";
 "setting_conversation_tip" = "谁可以给我发消息";
 "setting_delete_account_pin_content" = "如果您继续，您的个人资料和账户信息将在%@被删除。阅读我们的文档以了解更多。";
-"setting_delete_account_send" = "我们将发送4位验证码到手机 %@";
+"setting_delete_account_send" = "我们将发送 4 位验证码到手机 %@";
 "setting_delete_account_tip" = "你的 Mixin 钱包还有一些资产，可以提现至其他钱包或交易所，账户一旦注销，这些资产将和钱包一起被弃用无法找回。";
 "setting_desktop_confirm" = "确认登录 Mixin Messenger 桌面端";
 "setting_duplicate_transfer_desc" = "当你在 6 个小时内给相同的人转相同的金额时显示确认弹窗。";
 "setting_emergency_content" = "紧急联系人旨在帮助你在丢失且无法找回手机号的情况下登录你的账号。";
-"setting_emergency_desc" = "请放心，即使您的手机号丢失无法找回钱包资产也很安全，请牢记您的支付密码，阅读文档了解更多。";
-"setting_emergency_pin_tip" = "紧急联系人经支付 PIN 加密保护";
+"setting_emergency_desc" = "请放心，即使您的手机号丢失无法找回钱包资产也很安全，请牢记您的 PIN，阅读文档了解更多。";
+"setting_emergency_pin_tip" = "紧急联系人受 PIN 加密保护";
 "setting_emergency_send_code" = "请输入发送至以下 Mixin ID 的 4 位验证码：%@";
 "setting_emergency_set_message" = "确认设置 Mixin ID %@ 为你的紧急联系人？注意双方必须互为联系人才能设置成功！";
 "setting_emergency_warning" = "注意：紧急联系人无法帮助找回支付 PIN";
@@ -758,7 +758,7 @@
 "text_confirm_send_code" = "确认你的手机号码 %@";
 "text_qr_code" = "文本二维码";
 "the_code_is_incorrect" = "验证码不正确";
-"third_pin_confirm_hint" = "很少看到第三次确认吧！所以请牢记，密码丢失是无法找回的。";
+"third_pin_confirm_hint" = "很少看到第三次确认吧！所以请牢记，PIN 丢失是无法找回的。";
 "this_message_was_deleted" = "此消息已撤回";
 "time" = "时间";
 "title_participants" = "%d 成员";
@@ -778,7 +778,7 @@
 "transcript" = "聊天记录";
 "transfer" = "转账";
 "transfer_amount_count_down" = "转账金额（%@）";
-"transfer_error_pin_incorrect_with_times" = "错误 20119： 密码不正确。你还有 %@ 次机会尝试，使用完需等待 24 小时后再尝试。";
+"transfer_error_pin_incorrect_with_times" = "错误 20119： PIN 不正确。你还有 %@ 次机会尝试，使用完需等待 24 小时后再尝试。";
 "transfer_memo" = "备注（可选）";
 "transfer_notifications" = "转账通知";
 "transfer_qrcode_prompt" = "用 Mixin 扫描二维码给我转账";
@@ -892,4 +892,4 @@
 "you_have_left_the_group" = "你不在此群组";
 "your_emergency_contact_has_been_changed" = "修改紧急联系人";
 "your_phone_number_has_been_changed" = "更换手机号";
-"your_pin_has_been_changed" = "修改密码";
+"your_pin_has_been_changed" = "修改 PIN";

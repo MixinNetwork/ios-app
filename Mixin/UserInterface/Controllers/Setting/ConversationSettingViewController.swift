@@ -3,13 +3,13 @@ import MixinServices
 
 class ConversationSettingViewController: SettingsTableViewController {
     
-    private let messageSourceSection = SettingsRadioSection(header: R.string.localizable.setting_header_message_source(), rows: [
-        SettingsRow(title: R.string.localizable.setting_source_everybody(), accessory: .none),
-        SettingsRow(title: R.string.localizable.setting_source_contacts(), accessory: .none)
+    private let messageSourceSection = SettingsRadioSection(header: R.string.localizable.setting_conversation_tip(), rows: [
+        SettingsRow(title: R.string.localizable.everybody(), accessory: .none),
+        SettingsRow(title: R.string.localizable.my_contacts(), accessory: .none)
     ])
-    private let conversationSourceSection = SettingsRadioSection(header: R.string.localizable.setting_header_conversation_source(), rows: [
-        SettingsRow(title: R.string.localizable.setting_source_everybody(), accessory: .none),
-        SettingsRow(title: R.string.localizable.setting_source_contacts(), accessory: .none)
+    private let conversationSourceSection = SettingsRadioSection(header: R.string.localizable.setting_conversation_group_tip(), rows: [
+        SettingsRow(title: R.string.localizable.everybody(), accessory: .none),
+        SettingsRow(title: R.string.localizable.my_contacts(), accessory: .none)
     ])
     
     private lazy var dataSource = SettingsDataSource(sections: [messageSourceSection, conversationSourceSection])
@@ -40,7 +40,7 @@ class ConversationSettingViewController: SettingsTableViewController {
     
     class func instance() -> UIViewController {
         let vc = ConversationSettingViewController()
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.setting_conversation())
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.conversation())
     }
     
 }

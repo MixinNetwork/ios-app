@@ -6,7 +6,7 @@ class GroupCallConfirmationViewController: CallViewController {
     private let conversation: ConversationItem
     
     override var membersCountText: String? {
-        R.string.localizable.group_call_participants_count(members.count)
+        R.string.localizable.title_participants_count(members.count)
     }
     
     init(conversation: ConversationItem, service: CallService) {
@@ -27,7 +27,7 @@ class GroupCallConfirmationViewController: CallViewController {
         titleLabel.text = conversation.name
         statusLabel.text = nil
         membersCollectionView.isHidden = false
-        membersCountLabel.text = R.string.localizable.group_call_participants_count(members.count)
+        membersCountLabel.text = R.string.localizable.title_participants_count(members.count)
         hangUpStackView.alpha = 0
         acceptStackView.alpha = 1
         acceptButtonTrailingConstraint.priority = .defaultLow
@@ -61,7 +61,7 @@ class GroupCallConfirmationViewController: CallViewController {
                 self.members = members
                 if self.isViewLoaded {
                     self.membersCollectionView.reloadData()
-                    self.membersCountLabel.text = R.string.localizable.group_call_participants_count(members.count)
+                    self.membersCountLabel.text = R.string.localizable.title_participants_count(members.count)
                     self.view.setNeedsLayout()
                     self.view.layoutIfNeeded()
                     self.updateMembersCountLabel()

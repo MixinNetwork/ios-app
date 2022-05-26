@@ -14,7 +14,7 @@ class RestoreViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        let subtitle = NSMutableAttributedString(string: Localized.CHAT_RESTORE_SUBTITLE)
+        let subtitle = NSMutableAttributedString(string: R.string.localizable.chat_restore_subtitle())
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = 8
         paragraphStyle.alignment = .center

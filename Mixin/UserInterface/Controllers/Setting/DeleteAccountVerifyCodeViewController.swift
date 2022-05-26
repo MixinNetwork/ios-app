@@ -11,7 +11,7 @@ final class DeleteAccountVerifyCodeViewController: VerificationCodeViewControlle
      
     override func viewDidLoad() {
         super.viewDidLoad()
-        titleLabel.text = R.string.localizable.navigation_title_enter_verification_code(context.numberRepresentation)
+        titleLabel.text = R.string.localizable.landing_validation_title(context.numberRepresentation)
     }
     
     override func verificationCodeFieldEditingChanged(_ sender: Any) {

@@ -38,7 +38,7 @@ class TopResultCell: UITableViewCell {
     }
     
     func setText(link: String) {
-        setText(prefix: R.string.localizable.search_result_prefix_link(), content: link)
+        setText(prefix: R.string.localizable.search_open_link(), content: link)
     }
     
     private func setText(prefix: String, content: String) {

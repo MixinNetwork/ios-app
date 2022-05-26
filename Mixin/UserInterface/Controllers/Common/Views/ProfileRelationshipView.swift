@@ -53,16 +53,16 @@ final class ProfileRelationshipView: UIView {
                 button.setTitle(nil, for: .normal)
             case .addContact:
                 button.setImage(R.image.ic_profile_add(), for: .normal)
-                button.setTitle(R.string.localizable.profile_add_contact(), for: .normal)
+                button.setTitle(R.string.localizable.add_contact(), for: .normal)
             case .addBot:
                 button.setImage(R.image.ic_profile_add(), for: .normal)
-                button.setTitle(R.string.localizable.profile_add_bot(), for: .normal)
+                button.setTitle(R.string.localizable.add_bot(), for: .normal)
             case .unblock:
                 button.setImage(R.image.ic_profile_unblock(), for: .normal)
-                button.setTitle(R.string.localizable.profile_unblock(), for: .normal)
+                button.setTitle(R.string.localizable.unblock(), for: .normal)
             case .joinGroup:
                 button.setImage(R.image.ic_profile_add(), for: .normal)
-                button.setTitle(R.string.localizable.group_button_title_join(), for: .normal)
+                button.setTitle(R.string.localizable.join_group(), for: .normal)
             }
             button.layoutIfNeeded()
         }

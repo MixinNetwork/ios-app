@@ -995,7 +995,7 @@ extension MessageItem {
                                   conversationId: conversationId,
                                   userId: "",
                                   category: MessageCategory.EXT_ENCRYPTION.rawValue,
-                                  content: Localized.CHAT_CELL_TITLE_ENCRYPTION,
+                                  content: R.string.localizable.message_e2ee(),
                                   status: MessageStatus.READ.rawValue,
                                   createdAt: "")
         return message

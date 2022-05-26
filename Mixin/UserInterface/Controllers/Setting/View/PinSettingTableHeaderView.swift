@@ -18,9 +18,9 @@ class PinSettingTableHeaderView: UIView {
         textLabel.lineSpacing = 10
         textLabel.linkColor = .theme
         textLabel.detectLinks = false
-        let text = R.string.localizable.setting_pin_hint()
+        let text = R.string.localizable.wallet_pin_tops_desc()
         textLabel.text = text
-        let linkRange = (text as NSString).range(of: R.string.localizable.learn_more_in_document(), options: [.backwards, .caseInsensitive])
+        let linkRange = (text as NSString).range(of: R.string.localizable.learn_more(), options: [.backwards, .caseInsensitive])
         if linkRange.location != NSNotFound && linkRange.length != 0 {
             textLabel.additionalLinksMap = [linkRange: URL.pinTIP]
         }

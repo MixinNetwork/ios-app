@@ -7,11 +7,11 @@ final class PhoneContactsSettingViewController: SettingsTableViewController {
     
     private lazy var hud = Hud()
     private lazy var uploadSection = SettingsSection(rows: [
-        SettingsRow(title: R.string.localizable.setting_contacts_upload(),
+        SettingsRow(title: R.string.localizable.upload_mobile_contacts(),
                     titleStyle: .highlighted)
     ])
     private lazy var deleteSection = SettingsSection(rows: [
-        SettingsRow(title: R.string.localizable.setting_contacts_delete(),
+        SettingsRow(title: R.string.localizable.delete_synced_contact(),
                     titleStyle: .destructive)
     ])
     
@@ -25,7 +25,7 @@ final class PhoneContactsSettingViewController: SettingsTableViewController {
     
     class func instance() -> UIViewController {
         let vc = PhoneContactsSettingViewController()
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.setting_contacts_title())
+        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.phone_contacts())
         return container
     }
     
@@ -74,9 +74,9 @@ extension PhoneContactsSettingViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if hasUploadMobileContacts {
-            let alert = UIAlertController(title: R.string.localizable.setting_contacts_delete_confirm(), message: nil, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
-            alert.addAction(UIAlertAction(title: R.string.localizable.menu_delete(), style: .default, handler: { (_) in
+            let alert = UIAlertController(title: R.string.localizable.setting_mobile_contact_warning(), message: nil, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: R.string.localizable.delete(), style: .default, handler: { (_) in
                 self.uploadContact(isUpload: false, contacts: [])
             }))
             present(alert, animated: true, completion: nil)

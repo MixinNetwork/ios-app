@@ -24,14 +24,14 @@ extension CoreTextLabelDelegate {
     
     func coreTextLabel(_ label: CoreTextLabel, didLongPressOnURL url: URL) {
         let alert = UIAlertController(title: url.absoluteString, message: nil, preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: Localized.CHAT_MESSAGE_OPEN_URL, style: .default, handler: { [weak self] (_) in
+        alert.addAction(UIAlertAction(title: R.string.localizable.open_url(), style: .default, handler: { [weak self] (_) in
             self?.coreTextLabel(label, didSelectURL: url)
         }))
-        alert.addAction(UIAlertAction(title: Localized.CHAT_MESSAGE_MENU_COPY, style: .default, handler: { (_) in
+        alert.addAction(UIAlertAction(title: R.string.localizable.copy(), style: .default, handler: { (_) in
             UIPasteboard.general.string = url.absoluteString
-            showAutoHiddenHud(style: .notification, text: Localized.TOAST_COPIED)
+            showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
         }))
-        alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         UIApplication.currentActivity()?.present(alert, animated: true, completion: nil)
     }
     

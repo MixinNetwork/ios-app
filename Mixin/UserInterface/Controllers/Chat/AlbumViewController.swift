@@ -40,7 +40,7 @@ class AlbumViewController: UITableViewController {
         let vc = R.storyboard.photo.album()!
         vc.loadAlbums()
         vc.showImageOnly = showImageOnly
-        return ContainerViewController.instance(viewController: vc, title: Localized.IMAGE_PICKER_TITLE_ALBUMS)
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.albums())
     }
 
 }

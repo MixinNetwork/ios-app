@@ -61,7 +61,7 @@ class HomeViewController: UIViewController {
     }
     
     private var topLeftTitle: String {
-        AppGroupUserDefaults.User.circleName ?? R.string.localizable.app_name()
+        AppGroupUserDefaults.User.circleName ?? R.string.localizable.mixin()
     }
     
     private weak var bulletinContentViewIfLoaded: BulletinContentView?
@@ -166,9 +166,9 @@ class HomeViewController: UIViewController {
         #endif
         if HomeViewController.showChangePhoneNumberTips {
             HomeViewController.showChangePhoneNumberTips = false
-            let alert = UIAlertController(title: R.string.localizable.emergency_change_number_tip(), message: nil, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: R.string.localizable.action_later(), style: .cancel, handler: nil))
-            alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_change(), style: .default, handler: { (_) in
+            let alert = UIAlertController(title: R.string.localizable.change_emergency_contact(), message: nil, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: R.string.localizable.later(), style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: R.string.localizable.change(), style: .default, handler: { (_) in
                 let vc = VerifyPinNavigationController(rootViewController: ChangeNumberVerifyPinViewController())
                 self.present(vc, animated: true, completion: nil)
             }))
@@ -341,7 +341,7 @@ class HomeViewController: UIViewController {
     
     @objc func webSocketDidDisconnect(_ notification: Notification) {
         connectingView.startAnimating()
-        titleButton.setTitle(R.string.localizable.dialog_progress_connect(), for: .normal)
+        titleButton.setTitle(R.string.localizable.in_connecting(), for: .normal)
     }
     
     @objc func syncStatusChange(_ notification: Notification) {
@@ -353,12 +353,12 @@ class HomeViewController: UIViewController {
                 titleButton.setTitle(topLeftTitle, for: .normal)
                 connectingView.stopAnimating()
             } else {
-                titleButton.setTitle(R.string.localizable.dialog_progress_connect(), for: .normal)
+                titleButton.setTitle(R.string.localizable.in_connecting(), for: .normal)
                 connectingView.startAnimating()
                 WebSocketService.shared.connectIfNeeded()
             }
         } else if WebSocketService.shared.isRealConnected {
-            let title = Localized.CONNECTION_HINT_PROGRESS(progress)
+            let title = R.string.localizable.syncing_progress(progress)
             titleButton.setTitle(title, for: .normal)
             connectingView.startAnimating()
         }
@@ -470,9 +470,9 @@ class HomeViewController: UIViewController {
                 }
             })
         case .denied, .restricted:
-            alertSettings(Localized.PERMISSION_DENIED_CAMERA)
+            alertSettings(R.string.localizable.permission_denied_camera_hint())
         @unknown default:
-            alertSettings(Localized.PERMISSION_DENIED_CAMERA)
+            alertSettings(R.string.localizable.permission_denied_camera_hint())
         }
     }
     
@@ -662,11 +662,11 @@ extension HomeViewController {
             return
         }
         if AppGroupUserDefaults.User.circleId == nil {
-            guideLabel.text = R.string.localizable.home_start_messaging_guide()
-            guideButton.setTitle(R.string.localizable.home_start_messaging(), for: .normal)
+            guideLabel.text = R.string.localizable.chat_list_empty_info()
+            guideButton.setTitle(R.string.localizable.start_messaging(), for: .normal)
         } else {
             guideLabel.text = R.string.localizable.circle_no_conversation_hint()
-            guideButton.setTitle(R.string.localizable.circle_no_conversation_action(), for: .normal)
+            guideButton.setTitle(R.string.localizable.add_conversations(), for: .normal)
         }
         guideView.isHidden = false
     }
@@ -705,21 +705,21 @@ extension HomeViewController {
         let conversation = conversations[indexPath.row]
         let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
-        alc.addAction(UIAlertAction(title: R.string.localizable.group_menu_clear(), style: .destructive, handler: { [weak self](action) in
+        alc.addAction(UIAlertAction(title: R.string.localizable.clear_chat(), style: .destructive, handler: { [weak self](action) in
             self?.clearChatAction(indexPath: indexPath)
         }))
 
         if conversation.category == ConversationCategory.GROUP.rawValue && conversation.status != ConversationStatus.QUIT.rawValue {
-            alc.addAction(UIAlertAction(title: R.string.localizable.group_menu_exit(), style: .destructive, handler: { [weak self](action) in
+            alc.addAction(UIAlertAction(title: R.string.localizable.exit_group(), style: .destructive, handler: { [weak self](action) in
                 self?.exitGroupAction(indexPath: indexPath)
             }))
         } else {
-            alc.addAction(UIAlertAction(title: R.string.localizable.group_menu_delete(), style: .destructive, handler: { [weak self](action) in
+            alc.addAction(UIAlertAction(title: R.string.localizable.delete_chat(), style: .destructive, handler: { [weak self](action) in
                 self?.deleteChatAction(indexPath: indexPath)
             }))
         }
 
-        alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        alc.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         self.present(alc, animated: true, completion: nil)
         tableView.setEditing(false, animated: true)
     }
@@ -729,12 +729,12 @@ extension HomeViewController {
         let conversationId = conversation.conversationId
         let alert: UIAlertController
         if conversation.category == ConversationCategory.GROUP.rawValue {
-            alert = UIAlertController(title: R.string.localizable.profile_delete_group_chat_hint(conversation.name), message: nil, preferredStyle: .actionSheet)
+            alert = UIAlertController(title: R.string.localizable.delete_group_chat_confirmation(conversation.name), message: nil, preferredStyle: .actionSheet)
         } else {
-            alert = UIAlertController(title: R.string.localizable.profile_delete_contact_chat_hint(conversation.ownerFullName), message: nil, preferredStyle: .actionSheet)
+            alert = UIAlertController(title: R.string.localizable.delete_contact_chat_confirmation(conversation.ownerFullName), message: nil, preferredStyle: .actionSheet)
         }
-        alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: R.string.localizable.group_menu_delete(), style: .destructive, handler: { (_) in
+        alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: R.string.localizable.delete_chat(), style: .destructive, handler: { (_) in
             self.tableView.beginUpdates()
             self.conversations.remove(at: indexPath.row)
             self.tableView.deleteRows(at: [indexPath], with: .fade)
@@ -751,12 +751,12 @@ extension HomeViewController {
         let conversationId = conversation.conversationId
         let alert: UIAlertController
         if conversation.category == ConversationCategory.GROUP.rawValue {
-            alert = UIAlertController(title: R.string.localizable.profile_clear_group_chat_hint(conversation.name), message: nil, preferredStyle: .actionSheet)
+            alert = UIAlertController(title: R.string.localizable.clear_group_chat_confirmation(conversation.name), message: nil, preferredStyle: .actionSheet)
         } else {
-            alert = UIAlertController(title: R.string.localizable.profile_clear_contact_chat_hint(conversation.ownerFullName), message: nil, preferredStyle: .actionSheet)
+            alert = UIAlertController(title: R.string.localizable.clear_contact_chat_confirmation(conversation.ownerFullName), message: nil, preferredStyle: .actionSheet)
         }
-        alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: R.string.localizable.group_menu_clear(), style: .destructive, handler: { (_) in
+        alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: R.string.localizable.clear_chat(), style: .destructive, handler: { (_) in
             self.tableView.beginUpdates()
             self.conversations[indexPath.row].contentType = MessageCategory.UNKNOWN.rawValue
             self.conversations[indexPath.row].messageId = ""
@@ -773,9 +773,9 @@ extension HomeViewController {
     private func exitGroupAction(indexPath: IndexPath) {
         let conversation = conversations[indexPath.row]
         let conversationId = conversation.conversationId
-        let alert = UIAlertController(title: R.string.localizable.profile_exit_group_hint(conversation.name), message: nil, preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: R.string.localizable.group_menu_exit(), style: .destructive, handler: { (_) in
+        let alert = UIAlertController(title: R.string.localizable.exit_confirmation(conversation.name), message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: R.string.localizable.exit_group(), style: .destructive, handler: { (_) in
             let hud = Hud()
             hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
             ConversationAPI.exitConversation(conversationId: conversationId) { [weak self](result) in
@@ -907,14 +907,14 @@ extension HomeViewController {
     }
     
     private func deleteAction(forRowAt indexPath: IndexPath) -> UIContextualAction {
-        UIContextualAction(style: .destructive, title: R.string.localizable.menu_delete()) { [weak self] (action, _, completionHandler: (Bool) -> Void) in
+        UIContextualAction(style: .destructive, title: R.string.localizable.delete()) { [weak self] (action, _, completionHandler: (Bool) -> Void) in
             self?.tableViewCommitDeleteAction(action: action, indexPath: indexPath)
             completionHandler(true)
         }
     }
     
     private func pinAction(forRowAt indexPath: IndexPath) -> UIContextualAction {
-        let action = UIContextualAction(style: .destructive, title: R.string.localizable.home_cell_action_pin()) { [weak self] (action, _, completionHandler: (Bool) -> Void) in
+        let action = UIContextualAction(style: .destructive, title: R.string.localizable.pin_title()) { [weak self] (action, _, completionHandler: (Bool) -> Void) in
             self?.tableViewCommitPinAction(action: action, indexPath: indexPath, completionHandler: completionHandler)
         }
         action.backgroundColor = .theme
@@ -922,7 +922,7 @@ extension HomeViewController {
     }
     
     private func unpinAction(forRowAt indexPath: IndexPath) -> UIContextualAction {
-        let action = UIContextualAction(style: .normal, title: R.string.localizable.home_cell_action_unpin()) { [weak self] (action, _, completionHandler: (Bool) -> Void) in
+        let action = UIContextualAction(style: .normal, title: R.string.localizable.unpin()) { [weak self] (action, _, completionHandler: (Bool) -> Void) in
             self?.tableViewCommitPinAction(action: action, indexPath: indexPath, completionHandler: completionHandler)
         }
         action.backgroundColor = .theme

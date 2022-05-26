@@ -7,13 +7,13 @@ final class EmergencyContactViewController: SettingsTableViewController {
     
     private lazy var hasEmergencyContactSections = [
         SettingsSection(rows: [
-            SettingsRow(title: R.string.localizable.emergency_view(), titleStyle: .normal, accessory: .disclosure)
+            SettingsRow(title: R.string.localizable.view_emergency_contact(), titleStyle: .normal, accessory: .disclosure)
         ]),
         SettingsSection(rows: [
-            SettingsRow(title: R.string.localizable.emergency_change(), titleStyle: .normal, accessory: .disclosure)
+            SettingsRow(title: R.string.localizable.change_emergency_contact(), titleStyle: .normal, accessory: .disclosure)
         ]),
         SettingsSection(rows: [
-            SettingsRow(title: R.string.localizable.emergency_remove(), titleStyle: .destructive)
+            SettingsRow(title: R.string.localizable.remove_emergency_contact(), titleStyle: .destructive)
         ])
     ]
     
@@ -33,7 +33,7 @@ final class EmergencyContactViewController: SettingsTableViewController {
     
     class func instance() -> UIViewController {
         let vc = EmergencyContactViewController()
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.setting_emergency_contact())
+        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.emergency_contact())
         return container
     }
     
@@ -110,9 +110,9 @@ extension EmergencyContactViewController {
     }
     
     private func removeEmergencyContact() {
-        let alert = UIAlertController(title: R.string.localizable.emergency_tip_remove(), message: nil, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: R.string.localizable.action_remove(), style: .destructive, handler: { (_) in
+        let alert = UIAlertController(title: R.string.localizable.remove_emergency_contact_for_sure(), message: nil, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: R.string.localizable.delete(), style: .destructive, handler: { (_) in
             let validator = RemoveEmergencyContactValidationViewController()
             self.present(validator, animated: true, completion: nil)
         }))

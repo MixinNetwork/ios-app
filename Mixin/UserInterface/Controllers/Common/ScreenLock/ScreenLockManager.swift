@@ -75,7 +75,7 @@ extension ScreenLockManager {
             self.state = .authenticationFailed
             return
         }
-        let reason = R.string.localizable.screen_lock_unlock_tip(biometryType.localizedName)
+        let reason = R.string.localizable.screen_lock_unlock(biometryType.localizedName)
         context.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: reason) { success, error in
             DispatchQueue.main.async {
                 self.state = success ? .authenticationSucceed : .authenticationFailed

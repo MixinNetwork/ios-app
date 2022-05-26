@@ -43,7 +43,7 @@ class NotificationManager: NSObject {
     func requestDeclinedCallNotification(username: String?, messageId: String) {
         let content = UNMutableNotificationContent()
         content.title = username ?? ""
-        content.body = R.string.localizable.call_declined_lack_microphone_permission()
+        content.body = R.string.localizable.voice_call_has_been_declined()
         content.sound = .mixin
         content.categoryIdentifier = NotificationCategoryIdentifier.call
         let request = UNNotificationRequest(identifier: messageId,
@@ -55,7 +55,7 @@ class NotificationManager: NSObject {
     func requestDeclinedGroupCallNotification(localizedName: String, messageId: String) {
         let content = UNMutableNotificationContent()
         content.title = localizedName
-        content.body = R.string.localizable.group_call_declined_lack_microphone_permission()
+        content.body = R.string.localizable.group_call_has_been_declined()
         content.sound = .mixin
         content.categoryIdentifier = NotificationCategoryIdentifier.call
         let request = UNNotificationRequest(identifier: messageId,

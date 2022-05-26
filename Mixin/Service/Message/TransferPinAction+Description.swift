@@ -36,33 +36,33 @@ extension TransferPinAction {
     }
     
     private static func pinMessage(userId: String, userName: String?, category: String, content: String) -> String {
-        let userFullName = userId == myUserId ? R.string.localizable.chat_message_you() : (userName ?? "")
+        let userFullName = userId == myUserId ? R.string.localizable.you() : (userName ?? "")
         if category.hasSuffix("_TEXT") {
-            return R.string.localizable.chat_pinned_text_message(userFullName, content)
+            return R.string.localizable.chat_pin_message(userFullName, content)
         } else if category.hasSuffix("_IMAGE") {
-            return R.string.localizable.chat_pinned_image_message(userFullName)
+            return R.string.localizable.pinned_a_image(userFullName)
         } else if category.hasSuffix("_STICKER") {
-            return R.string.localizable.chat_pinned_sticker_message(userFullName)
+            return R.string.localizable.pinned_a_sticker(userFullName)
         } else if category.hasSuffix("_CONTACT") {
-            return R.string.localizable.chat_pinned_contact_message(userFullName)
+            return R.string.localizable.pinned_a_contact(userFullName)
         } else if category.hasSuffix("_DATA") {
-            return R.string.localizable.chat_pinned_data_message(userFullName)
+            return R.string.localizable.pinned_a_file(userFullName)
         } else if category.hasSuffix("_VIDEO") {
-            return R.string.localizable.chat_pinned_video_message(userFullName)
+            return R.string.localizable.pinned_a_video(userFullName)
         } else if category.hasSuffix("_LIVE") {
-            return R.string.localizable.chat_pinned_live_message(userFullName)
+            return R.string.localizable.pinned_a_live(userFullName)
         } else if category.hasSuffix("_AUDIO") {
-            return R.string.localizable.chat_pinned_audio_message(userFullName)
+            return R.string.localizable.pinned_a_audio(userFullName)
         } else if category.hasSuffix("_POST") {
-            return R.string.localizable.chat_pinned_post_message(userFullName)
+            return R.string.localizable.pinned_a_post(userFullName)
         } else if category.hasSuffix("_LOCATION") {
-            return R.string.localizable.chat_pinned_location_message(userFullName)
+            return R.string.localizable.pinned_a_location(userFullName)
         } else if category.hasSuffix("_TRANSCRIPT") {
-            return R.string.localizable.chat_pinned_transcript_message(userFullName)
+            return R.string.localizable.pinned_a_transcript(userFullName)
         } else if category == MessageCategory.APP_CARD.rawValue {
-            return R.string.localizable.chat_pinned_app_card_message(userFullName)
+            return R.string.localizable.pinned_a_card(userFullName)
         } else {
-            return R.string.localizable.chat_pinned_general_message(userFullName)
+            return R.string.localizable.pinned_a_general(userFullName)
         }
     }
     

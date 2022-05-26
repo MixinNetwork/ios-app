@@ -13,8 +13,7 @@ class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPe
     private var oldMembers = Set<CircleMember>()
     private var selections: [CircleMember] = [] {
         didSet {
-            let count = "\(selections.count)"
-            let subtitle = R.string.localizable.circle_conversation_count(count)
+            let subtitle = R.string.localizable.circle_subtitle_count(selections.count)
             container?.setSubtitle(subtitle: subtitle)
         }
     }
@@ -72,9 +71,9 @@ class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPe
             }
         }
         let titles = [
-            R.string.localizable.circle_member_category_chats(),
-            R.string.localizable.circle_member_category_contacts(),
-            R.string.localizable.circle_member_category_apps()
+            R.string.localizable.recent_chats(),
+            R.string.localizable.contact_title(),
+            R.string.localizable.bots_title()
         ]
         let models = [
             conversations,
@@ -192,7 +191,7 @@ extension CircleEditorViewController: ContainerViewControllerDelegate {
                     CircleConversationDAO.shared.save(circleId: circleId, objects: circles, sendNotificationAfterFinished: false)
                     CircleConversationDAO.shared.delete(circleId: circleId, conversationIds: removeMembers.map { $0.conversationId })
                     DispatchQueue.main.sync {
-                        hud.set(style: .notification, text: R.string.localizable.toast_saved())
+                        hud.set(style: .notification, text: R.string.localizable.saved())
                         hud.scheduleAutoHidden()
                         self.dismiss(animated: true, completion: nil)
                     }
@@ -205,7 +204,7 @@ extension CircleEditorViewController: ContainerViewControllerDelegate {
     }
     
     func textBarRightButton() -> String? {
-        R.string.localizable.action_save()
+        R.string.localizable.save()
     }
     
 }

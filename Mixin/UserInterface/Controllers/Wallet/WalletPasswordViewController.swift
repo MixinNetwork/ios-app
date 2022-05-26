@@ -58,11 +58,11 @@ class WalletPasswordViewController: ContinueButtonViewController {
         
         switch walletPasswordType {
         case .initPinStep1:
-            let text = R.string.localizable.wallet_pin_create_title()
+            let text = R.string.localizable.wallet_password_set_pin_desc()
             textLabel.text = text
             textLabel.delegate = self
             let linkRange = (text as NSString)
-                .range(of: R.string.localizable.learn_more_in_document(), options: [.backwards, .caseInsensitive])
+                .range(of: R.string.localizable.learn_more(), options: [.backwards, .caseInsensitive])
             if linkRange.location != NSNotFound && linkRange.length != 0 {
                 textLabel.linkColor = .theme
                 textLabel.additionalLinksMap = [linkRange: URL.pinTIP]
@@ -70,23 +70,23 @@ class WalletPasswordViewController: ContinueButtonViewController {
             subtitleLabel.text = ""
             backButton.setImage(R.image.ic_title_close(), for: .normal)
         case .initPinStep2, .changePinStep3:
-            textLabel.text = Localized.WALLET_PIN_CONFIRM_TITLE
-            subtitleLabel.text = Localized.WALLET_PIN_CONFIRM_SUBTITLE
+            textLabel.text = R.string.localizable.pin_confirm_hint()
+            subtitleLabel.text = R.string.localizable.pin_lost_hint()
             backButton.setImage(R.image.ic_title_back(), for: .normal)
         case .initPinStep3, .changePinStep4:
-            textLabel.text = Localized.WALLET_PIN_CONFIRM_AGAIN_TITLE
-            subtitleLabel.text = Localized.WALLET_PIN_CONFIRM_AGAIN_SUBTITLE
+            textLabel.text = R.string.localizable.pin_confirm_again_hint()
+            subtitleLabel.text = R.string.localizable.third_pin_confirm_hint()
             backButton.setImage(R.image.ic_title_back(), for: .normal)
         case .initPinStep4, .changePinStep5:
-            textLabel.text = Localized.WALLET_PIN_CONFIRM_AGAIN_TITLE
-            subtitleLabel.text = R.string.localizable.wallet_pin_more_confirm()
+            textLabel.text = R.string.localizable.pin_confirm_again_hint()
+            subtitleLabel.text = R.string.localizable.fourth_pin_confirm_hint()
             backButton.setImage(R.image.ic_title_back(), for: .normal)
         case .changePinStep1:
-            textLabel.text = Localized.WALLET_PIN_VERIFY_TITLE
+            textLabel.text = R.string.localizable.enter_your_pin()
             subtitleLabel.text = ""
             backButton.setImage(R.image.ic_title_close(), for: .normal)
         case .changePinStep2:
-            textLabel.text = Localized.WALLET_PIN_NEW_TITLE
+            textLabel.text = R.string.localizable.set_new_pin()
             subtitleLabel.text = ""
             backButton.setImage(R.image.ic_title_back(), for: .normal)
         }
@@ -226,7 +226,7 @@ extension WalletPasswordViewController: PinFieldDelegate {
         case .initPinStep1, .changePinStep2:
             if pin == "123456" || Set(pin).count < 3 {
                 pinField.clear()
-                alert(Localized.WALLET_PIN_TOO_SIMPLE)
+                alert(R.string.localizable.wallet_password_unsafe())
                 return
             }
         default:
@@ -242,7 +242,7 @@ extension WalletPasswordViewController: PinFieldDelegate {
                 let vc = WalletPasswordViewController.instance(walletPasswordType: .initPinStep3(previous: pin), dismissTarget: dismissTarget)
                 navigationController?.pushViewController(vc, animated: true)
             } else {
-                alert(Localized.WALLET_PIN_INCONSISTENCY, cancelHandler: { [weak self](_) in
+                alert(R.string.localizable.wallet_password_not_equal(), cancelHandler: { [weak self](_) in
                     self?.popToFirstInitController()
                 })
             }
@@ -251,7 +251,7 @@ extension WalletPasswordViewController: PinFieldDelegate {
                 let vc = WalletPasswordViewController.instance(walletPasswordType: .initPinStep4(previous: pin), dismissTarget: dismissTarget)
                 navigationController?.pushViewController(vc, animated: true)
             } else {
-                alert(Localized.WALLET_PIN_INCONSISTENCY, cancelHandler: { [weak self](_) in
+                alert(R.string.localizable.wallet_password_not_equal(), cancelHandler: { [weak self](_) in
                     self?.popToFirstInitController()
                 })
             }
@@ -264,7 +264,7 @@ extension WalletPasswordViewController: PinFieldDelegate {
                     case .success(let account):
                         AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
                         LoginManager.shared.setAccount(account)
-                        self?.updatePasswordSuccessfully(alertTitle: Localized.WALLET_SET_PASSWORD_SUCCESS)
+                        self?.updatePasswordSuccessfully(alertTitle: R.string.localizable.set_pin_successfully())
                     case let .failure(error):
                         PINVerificationFailureHandler.handle(error: error) { (description) in
                             self?.alert(description)
@@ -272,7 +272,7 @@ extension WalletPasswordViewController: PinFieldDelegate {
                     }
                 })
             } else {
-                alert(Localized.WALLET_PIN_INCONSISTENCY, cancelHandler: { [weak self](_) in
+                alert(R.string.localizable.wallet_password_not_equal(), cancelHandler: { [weak self](_) in
                     self?.popToFirstInitController()
                 })
             }
@@ -303,7 +303,7 @@ extension WalletPasswordViewController: PinFieldDelegate {
                 let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep4(old: old, previous: pin), dismissTarget: dismissTarget)
                 navigationController?.pushViewController(vc, animated: true)
             } else {
-                alert(Localized.WALLET_PIN_INCONSISTENCY, cancelHandler: { [weak self](_) in
+                alert(R.string.localizable.wallet_password_not_equal(), cancelHandler: { [weak self](_) in
                     self?.popToFirstInitController()
                 })
             }
@@ -312,7 +312,7 @@ extension WalletPasswordViewController: PinFieldDelegate {
                 let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep5(old: old, previous: pin), dismissTarget: dismissTarget)
                 navigationController?.pushViewController(vc, animated: true)
             } else {
-                alert(Localized.WALLET_PIN_INCONSISTENCY, cancelHandler: { [weak self](_) in
+                alert(R.string.localizable.wallet_password_not_equal(), cancelHandler: { [weak self](_) in
                     self?.popToFirstInitController()
                 })
             }
@@ -329,7 +329,7 @@ extension WalletPasswordViewController: PinFieldDelegate {
                         AppGroupUserDefaults.Wallet.periodicPinVerificationInterval = PeriodicPinVerificationInterval.min
                         AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
                         LoginManager.shared.setAccount(account)
-                        self?.updatePasswordSuccessfully(alertTitle: Localized.WALLET_CHANGE_PASSWORD_SUCCESS)
+                        self?.updatePasswordSuccessfully(alertTitle: R.string.localizable.change_pin_successfully())
                     case let .failure(error):
                         PINVerificationFailureHandler.handle(error: error) { (description) in
                             self?.alert(description)
@@ -337,7 +337,7 @@ extension WalletPasswordViewController: PinFieldDelegate {
                     }
                 })
             } else {
-                alert(Localized.WALLET_PIN_INCONSISTENCY, cancelHandler: { [weak self](_) in
+                alert(R.string.localizable.wallet_password_not_equal(), cancelHandler: { [weak self](_) in
                     self?.navigationController?.popViewController(animated: true)
                 })
             }

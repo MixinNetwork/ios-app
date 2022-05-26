@@ -8,14 +8,14 @@ class ConversationCircleEditorViewController: UITableViewController {
     private lazy var editNameController = AlertEditorController(presentingViewController: self)
     private lazy var hintFooterView: UIView = {
         let view = R.nib.circlesTableFooterView(owner: nil)!
-        view.label.text = R.string.localizable.circle_add_hint()
+        view.label.text = R.string.localizable.circle_info()
         view.buttonTopConstraint.constant = -80
         view.showsHintLabel = true
         view.button.snp.makeConstraints { (make) in
             make.centerX.equalToSuperview()
             make.top.equalTo(view.contentView.snp.bottom)
         }
-        view.button.setTitle(R.string.localizable.circle_action_add(), for: .normal)
+        view.button.setTitle(R.string.localizable.add_circle(), for: .normal)
         view.button.addTarget(self, action: #selector(addCircle(_:)), for: .touchUpInside)
         return view
     }()
@@ -30,7 +30,7 @@ class ConversationCircleEditorViewController: UITableViewController {
         vc.conversationId = conversationId
         vc.ownerId = ownerId
         vc.subordinateCircles = subordinateCircles
-        let title = R.string.localizable.circle_conversation_editor_title(name)
+        let title = R.string.localizable.circle_title(name)
         return ContainerViewController.instance(viewController: vc, title: title)
     }
     
@@ -76,8 +76,8 @@ class ConversationCircleEditorViewController: UITableViewController {
     }
     
     @objc func addCircle(_ sender: Any) {
-        let addCircle = R.string.localizable.circle_action_add()
-        let add = R.string.localizable.action_add()
+        let addCircle = R.string.localizable.add_circle()
+        let add = R.string.localizable.add()
         editNameController.present(title: addCircle, actionTitle: add) { (alert) in
             guard let name = alert.textFields?.first?.text else {
                 return
@@ -111,7 +111,7 @@ class ConversationCircleEditorViewController: UITableViewController {
                     CircleConversationDAO.shared.save(circleId: circleId, objects: objects)
                     DispatchQueue.main.sync {
                         self?.reloadData()
-                        hud.set(style: .notification, text: R.string.localizable.toast_saved())
+                        hud.set(style: .notification, text: R.string.localizable.saved())
                         hud.scheduleAutoHidden()
                     }
                 }
@@ -152,7 +152,7 @@ extension ConversationCircleEditorViewController {
         }
         cell.setImagePatternColor(id: circle.circleId)
         cell.titleLabel.text = circle.name
-        cell.subtitleLabel.text = R.string.localizable.circle_conversation_count("\(circle.conversationCount)")
+        cell.subtitleLabel.text = R.string.localizable.circle_subtitle_count(circle.conversationCount)
         cell.delegate = self
         cell.rightView.isHidden = true
         return cell
@@ -227,7 +227,7 @@ extension ConversationCircleEditorViewController: CircleCellDelegate {
                         CircleConversationDAO.shared.delete(circleId: circle.circleId,
                                                             conversationId: conversationId)
                         DispatchQueue.main.sync {
-                            hud.set(style: .notification, text: R.string.localizable.toast_saved())
+                            hud.set(style: .notification, text: R.string.localizable.saved())
                             hud.scheduleAutoHidden()
                             if let index = self.subordinateCircles.firstIndex(where: { $0.circleId == circle.circleId }) {
                                 let circle = self.subordinateCircles.remove(at: index)
@@ -251,7 +251,7 @@ extension ConversationCircleEditorViewController: CircleCellDelegate {
                     DispatchQueue.global().async {
                         CircleConversationDAO.shared.save(circleId: circle.circleId, objects: objects)
                         DispatchQueue.main.sync {
-                            hud.set(style: .notification, text: R.string.localizable.toast_saved())
+                            hud.set(style: .notification, text: R.string.localizable.saved())
                             hud.scheduleAutoHidden()
                             if let index = self.otherCircles.firstIndex(where: { $0.circleId == circle.circleId }) {
                                 let circle = self.otherCircles.remove(at: index)

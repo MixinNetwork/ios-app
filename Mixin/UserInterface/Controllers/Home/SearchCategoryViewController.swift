@@ -13,13 +13,13 @@ class SearchCategoryViewController: UIViewController, HomeSearchViewController {
         var title: String {
             switch self {
             case .asset:
-                return R.string.localizable.search_section_title_asset()
+                return R.string.localizable.assets_title()
             case .user:
-                return R.string.localizable.search_section_title_user()
+                return R.string.localizable.contact_title()
             case .conversationsByName:
-                return R.string.localizable.search_section_title_conversation_by_name()
+                return R.string.localizable.conversations()
             case .conversationsByMessage:
-                return R.string.localizable.search_section_title_conversation_by_message()
+                return R.string.localizable.messages()
             }
         }
     }

@@ -21,7 +21,7 @@ class NewGroupViewController: KeyboardBasedLayoutViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         nameTextField.addTarget(self, action: #selector(nameChangedAction(_:)), for: .editingChanged)
-        participentLabel.text = Localized.GROUP_TITLE_MEMBERS(count: "\(members.count + 1)")
+        participentLabel.text = R.string.localizable.title_participants_count(members.count + 1)
         loadGroupIcon()
         nameTextField.becomeFirstResponder()
     }
@@ -142,7 +142,7 @@ class NewGroupViewController: KeyboardBasedLayoutViewController {
     class func instance(members: [GroupUser]) -> UIViewController {
         let vc = R.storyboard.group.new_group()!
         vc.members = members
-        return ContainerViewController.instance(viewController: vc, title: Localized.GROUP_NAVIGATION_TITLE_NEW_GROUP)
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.new_group())
     }
     
 }

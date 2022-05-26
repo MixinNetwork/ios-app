@@ -4,8 +4,7 @@ import MixinServices
 class UnknownMessageViewModel: TextMessageViewModel {
     
     override var rawContent: String {
-        Localized.CHAT_CELL_TITLE_UNKNOWN_CATEGORY
-            + R.string.localizable.chat_sentence_learn_more()
+        R.string.localizable.message_not_support() + R.string.localizable.learn_more()
     }
     
     override init(message: MessageItem) {
@@ -14,8 +13,8 @@ class UnknownMessageViewModel: TextMessageViewModel {
     }
     
     override func linkRanges(from string: String) -> [Link.Range] {
-        let location = (Localized.CHAT_CELL_TITLE_UNKNOWN_CATEGORY as NSString).length
-        let length = (R.string.localizable.chat_sentence_learn_more() as NSString).length
+        let location = (R.string.localizable.message_not_support() as NSString).length
+        let length = (R.string.localizable.learn_more() as NSString).length
         let range = NSRange(location: location, length: length)
         return [Link.Range(range: range, url: .unknownCategory)]
     }

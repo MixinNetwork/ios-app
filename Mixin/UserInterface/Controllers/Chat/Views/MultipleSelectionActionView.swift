@@ -25,7 +25,7 @@ class MultipleSelectionActionView: UIView {
     
     var numberOfSelection = 0 {
         didSet {
-            label.text = R.string.localizable.chat_number_of_selection("\(numberOfSelection)")
+            label.text = R.string.localizable.selected_count("\(numberOfSelection)")
             updateButtonAvailability()
         }
     }

@@ -19,7 +19,7 @@ final class CircleProfileMenuItemView: ProfileMenuItemView {
     
     override func prepare() {
         super.prepare()
-        label.text = R.string.localizable.circle_title()
+        label.text = R.string.localizable.circles()
         label.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         subtitleLabel.removeFromSuperview()
         separator.setContentHuggingPriority(.defaultLow, for: .horizontal)

@@ -18,7 +18,7 @@ class TranscriptMessageViewModel: TextMessageViewModel {
     private var digestsHeight: CGFloat = 0
     
     override var rawContent: String {
-        R.string.localizable.chat_transcript()
+        R.string.localizable.transcript()
     }
     
     override var backgroundWidth: CGFloat {
@@ -73,29 +73,29 @@ extension TranscriptMessageViewModel  {
         case .SIGNAL_TEXT, .PLAIN_TEXT, .ENCRYPTED_TEXT:
             digest += content.content ?? " "
         case .SIGNAL_IMAGE, .PLAIN_IMAGE, .ENCRYPTED_IMAGE:
-            digest += R.string.localizable.notification_content_photo()
+            digest += R.string.localizable.content_photo()
         case .SIGNAL_VIDEO, .PLAIN_VIDEO, .ENCRYPTED_VIDEO:
-            digest += R.string.localizable.notification_content_video()
+            digest += R.string.localizable.content_video()
         case .SIGNAL_DATA, .PLAIN_DATA, .ENCRYPTED_DATA:
-            digest += R.string.localizable.notification_content_file()
+            digest += R.string.localizable.content_file()
         case .SIGNAL_STICKER, .PLAIN_STICKER, .ENCRYPTED_STICKER:
-            digest += R.string.localizable.notification_content_sticker()
+            digest += R.string.localizable.content_sticker()
         case .SIGNAL_CONTACT, .PLAIN_CONTACT, .ENCRYPTED_CONTACT:
-            digest += R.string.localizable.notification_content_contact()
+            digest += R.string.localizable.content_contact()
         case .SIGNAL_AUDIO, .PLAIN_AUDIO, .ENCRYPTED_AUDIO:
-            digest += R.string.localizable.notification_content_audio()
+            digest += R.string.localizable.content_audio()
         case .SIGNAL_LIVE, .PLAIN_LIVE, .ENCRYPTED_LIVE:
-            digest += R.string.localizable.notification_content_live()
+            digest += R.string.localizable.content_live()
         case .SIGNAL_POST, .PLAIN_POST, .ENCRYPTED_POST:
             digest += content.content ?? " "
         case .SIGNAL_LOCATION, .PLAIN_LOCATION, .ENCRYPTED_LOCATION:
-            digest += R.string.localizable.notification_content_location()
+            digest += R.string.localizable.content_location()
         case .APP_CARD:
             if let json = content.content?.data(using: .utf8), let card = try? JSONDecoder.default.decode(AppCardData.self, from: json) {
                 digest += "[\(card.title)]"
             }
         default:
-            digest += R.string.localizable.notification_content_unknown()
+            digest += R.string.localizable.content_unknown()
         }
         return digest
     }

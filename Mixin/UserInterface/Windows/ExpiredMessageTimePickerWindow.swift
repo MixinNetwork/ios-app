@@ -149,30 +149,30 @@ extension ExpiredMessageTimePickerWindow {
         var pluralName: String {
             switch self {
             case .second:
-                return R.string.localizable.disappearing_message_seconds_unit()
+                return R.string.localizable.unit_second_count()
             case .minute:
-                return R.string.localizable.disappearing_message_minutes_unit()
+                return R.string.localizable.unit_minute_count()
             case .hour:
-                return R.string.localizable.disappearing_message_hours_unit()
+                return R.string.localizable.unit_hour_count()
             case .day:
-                return R.string.localizable.disappearing_message_days_unit()
+                return R.string.localizable.unit_day_count()
             case .week:
-                return R.string.localizable.disappearing_message_weeks_unit()
+                return R.string.localizable.unit_week_count()
             }
         }
         
         var singularName: String {
             switch self {
             case .second:
-                return R.string.localizable.disappearing_message_second_unit()
+                return R.string.localizable.unit_second()
             case .minute:
-                return R.string.localizable.disappearing_message_minute_unit()
+                return R.string.localizable.unit_minute()
             case .hour:
-                return R.string.localizable.disappearing_message_hour_unit()
+                return R.string.localizable.unit_hour()
             case .day:
-                return R.string.localizable.disappearing_message_day_unit()
+                return R.string.localizable.unit_day()
             case .week:
-                return R.string.localizable.disappearing_message_week_unit()
+                return R.string.localizable.unit_week()
             }
         }
         

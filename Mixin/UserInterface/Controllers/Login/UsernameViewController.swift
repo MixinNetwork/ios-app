@@ -5,7 +5,7 @@ class UsernameViewController: LoginInfoInputViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        titleLabel.text = R.string.localizable.navigation_title_enter_name()
+        titleLabel.text = R.string.localizable.whats_your_name()
         textField.text = makeDefaultUsername()
         editingChangedAction(self)
     }

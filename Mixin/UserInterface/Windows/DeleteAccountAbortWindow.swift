@@ -44,8 +44,8 @@ class DeleteAccountAbortWindow: BottomSheetView {
     func render(deactivatedAt: String, completion: @escaping CompletionHandler) {
         self.completion = completion
         let formatted = DateFormatter.deleteAccountFormatter.string(from: deactivatedAt.toUTCDate())
-        label.text = R.string.localizable.abort_account_deletion_hint(formatted)
-        continueButton.setTitle("\(R.string.localizable.action_continue())(\(self.countDown))", for: .normal)
+        label.text = R.string.localizable.landing_delete_content(formatted)
+        continueButton.setTitle("\(R.string.localizable.continue())(\(self.countDown))", for: .normal)
         continueButton.isEnabled = false
         cancelButton.isEnabled = false
         cancelButton.setTitleColor(R.color.button_text_disabled()!, for: .normal)
@@ -59,14 +59,14 @@ class DeleteAccountAbortWindow: BottomSheetView {
             timer = nil
             UIView.performWithoutAnimation {
                 self.continueButton.isEnabled = true
-                self.continueButton.setTitle(R.string.localizable.action_continue(), for: .normal)
+                self.continueButton.setTitle(R.string.localizable.continue(), for: .normal)
                 self.continueButton.layoutIfNeeded()
                 self.cancelButton.isEnabled = true
                 self.cancelButton.setTitleColor(.theme, for: .normal)
             }
         } else {
             UIView.performWithoutAnimation {
-                self.continueButton.setTitle("\(R.string.localizable.action_continue())(\(self.countDown))", for: .normal)
+                self.continueButton.setTitle("\(R.string.localizable.continue())(\(self.countDown))", for: .normal)
                 self.continueButton.layoutIfNeeded()
             }
         }

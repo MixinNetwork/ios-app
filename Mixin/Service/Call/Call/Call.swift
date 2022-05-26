@@ -82,9 +82,9 @@ class Call: NSObject {
         case .connected:
             return formattedConnectionDuration
         case .disconnecting:
-            return R.string.localizable.call_state_brief_done()
+            return R.string.localizable.done()
         default:
-            return R.string.localizable.call_state_brief_waiting()
+            return R.string.localizable.waiting()
         }
     }
     
@@ -160,17 +160,17 @@ extension Call {
         var localizedDescription: String {
             switch self {
             case .incoming:
-                return R.string.localizable.call_state_incoming()
+                return R.string.localizable.incoming_voice_call()
             case .outgoing:
-                return R.string.localizable.call_state_outgoing()
+                return R.string.localizable.calling()
             case .connecting:
-                return R.string.localizable.call_state_connecting()
+                return R.string.localizable.connecting()
             case .connected:
-                return R.string.localizable.call_state_connected()
+                return R.string.localizable.connected()
             case .restarting:
-                return R.string.localizable.call_state_stalled()
+                return R.string.localizable.connection_unstable()
             case .disconnecting:
-                return R.string.localizable.call_state_disconnecting()
+                return R.string.localizable.disconnecting()
             }
         }
         

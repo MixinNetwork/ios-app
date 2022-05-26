@@ -72,10 +72,10 @@ final class GroupProfileViewController: ProfileViewController {
                 ConversationDAO.shared.updateConversationMuteUntil(conversationId: conversationId, muteUntil: response.muteUntil)
                 let toastMessage: String
                 if interval == MuteInterval.none {
-                    toastMessage = Localized.PROFILE_TOAST_UNMUTED
+                    toastMessage = R.string.localizable.unmuted()
                 } else {
                     let dateRepresentation = DateFormatter.dateSimple.string(from: response.muteUntil.toUTCDate())
-                    toastMessage = Localized.PROFILE_TOAST_MUTED(muteUntil: dateRepresentation)
+                    toastMessage = R.string.localizable.mute_until(dateRepresentation)
                 }
                 hud.set(style: .notification, text: toastMessage)
             case let .failure(error):
@@ -132,7 +132,7 @@ extension GroupProfileViewController {
     @objc func showSharedMedia() {
         let vc = R.storyboard.chat.shared_media()!
         vc.conversationId = conversation.conversationId
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.chat_shared_media())
+        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.shared_media())
         dismissAndPush(container)
     }
     
@@ -150,7 +150,7 @@ extension GroupProfileViewController {
     
     @objc func editGroupName() {
         let conversation = self.conversation
-        presentEditNameController(title: Localized.CONTACT_TITLE_CHANGE_NAME, text: conversation.name, placeholder: Localized.PLACEHOLDER_NEW_NAME) { [weak self] (name) in
+        presentEditNameController(title: R.string.localizable.change_name(), text: conversation.name, placeholder: R.string.localizable.new_name()) { [weak self] (name) in
             NotificationCenter.default.post(onMainThread: MixinServices.conversationDidChangeNotification, object: ConversationChange(conversationId: conversation.conversationId, action: .startedUpdateConversation))
             let hud = Hud()
             hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
@@ -159,7 +159,7 @@ extension GroupProfileViewController {
                 case .success:
                     self?.conversation.name = name
                     self?.titleLabel.text = name
-                    hud.set(style: .notification, text: Localized.TOAST_CHANGED)
+                    hud.set(style: .notification, text: R.string.localizable.changed())
                 case let .failure(error):
                     hud.set(style: .error, text: error.localizedDescription)
                 }
@@ -170,15 +170,15 @@ extension GroupProfileViewController {
     
     @objc func exitGroupAction() {
         let conversationId = conversation.conversationId
-        let alert = UIAlertController(title: R.string.localizable.profile_exit_group_hint(conversation.name), message: nil, preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: R.string.localizable.group_menu_exit(), style: .destructive, handler: { (_) in
+        let alert = UIAlertController(title: R.string.localizable.exit_confirmation(conversation.name), message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: R.string.localizable.exit_group(), style: .destructive, handler: { (_) in
             let hud = Hud()
             hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
             ConversationAPI.exitConversation(conversationId: conversationId) { [weak self](result) in
                 let exitSuccessBlock = {
                     self?.conversation.status = ConversationStatus.QUIT.rawValue
-                    hud.set(style: .notification, text: R.string.localizable.action_done())
+                    hud.set(style: .notification, text: R.string.localizable.done())
                     DispatchQueue.global().async {
                         ConversationDAO.shared.exitGroup(conversationId: conversationId)
                         DispatchQueue.main.async {
@@ -205,9 +205,9 @@ extension GroupProfileViewController {
 
     @objc func deleteChatAction() {
         let conversationId = conversation.conversationId
-        let alert = UIAlertController(title: R.string.localizable.profile_delete_group_chat_hint(conversation.name), message: nil, preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: R.string.localizable.group_menu_delete(), style: .destructive, handler: { [weak self](_) in
+        let alert = UIAlertController(title: R.string.localizable.delete_group_chat_confirmation(conversation.name), message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: R.string.localizable.delete_chat(), style: .destructive, handler: { [weak self](_) in
             let hud = Hud()
             hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
             DispatchQueue.global().async {
@@ -217,7 +217,7 @@ extension GroupProfileViewController {
                         return
                     }
                     self.dismiss(animated: true) {
-                        hud.set(style: .notification, text: R.string.localizable.action_done())
+                        hud.set(style: .notification, text: R.string.localizable.done())
                         hud.scheduleAutoHidden()
                         if UIApplication.currentConversationId() == conversationId {
                             UIApplication.homeNavigationController?.backToHome()
@@ -347,7 +347,7 @@ extension GroupProfileViewController {
     
     private func updateSubtitle() {
         if let count = participantsCount {
-            subtitleLabel.text = Localized.GROUP_TITLE_MEMBERS(count: "\(count)")
+            subtitleLabel.text = R.string.localizable.title_participants_count(count)
         } else {
             subtitleLabel.text = nil
         }
@@ -362,18 +362,18 @@ extension GroupProfileViewController {
         }
         
         groups.append([
-            ProfileMenuItem(title: R.string.localizable.chat_shared_media(),
+            ProfileMenuItem(title: R.string.localizable.shared_media(),
                             subtitle: nil,
                             style: [],
                             action: #selector(showSharedMedia)),
-            ProfileMenuItem(title: R.string.localizable.profile_search_conversation(),
+            ProfileMenuItem(title: R.string.localizable.search_conversation(),
                             subtitle: nil,
                             style: [],
                             action: #selector(searchConversation))
         ])
         
         groups.append([
-            ProfileMenuItem(title: R.string.localizable.disappearing_message_title(),
+            ProfileMenuItem(title: R.string.localizable.disappearing_message(),
                             subtitle: ExpiredMessageDurationFormatter.string(from: conversation.expireIn),
                             style: [],
                             action: #selector(editExpiredMessageDuration))
@@ -381,11 +381,11 @@ extension GroupProfileViewController {
         
         if isAdmin {
             groups.append([
-                ProfileMenuItem(title: R.string.localizable.profile_edit_name(),
+                ProfileMenuItem(title: R.string.localizable.edit_group_name(),
                                 subtitle: nil,
                                 style: [],
                                 action: #selector(editGroupName)),
-                ProfileMenuItem(title: R.string.localizable.group_menu_announcement(),
+                ProfileMenuItem(title: R.string.localizable.edit_group_description(),
                                 subtitle: nil,
                                 style: [],
                                 action: #selector(editAnnouncement))
@@ -397,19 +397,19 @@ extension GroupProfileViewController {
                 let subtitle: String?
                 if let date = conversation.muteUntil?.toUTCDate() {
                     let rep = DateFormatter.log.string(from: date)
-                    subtitle = R.string.localizable.profile_mute_ends_at(rep)
+                    subtitle = R.string.localizable.mute_until(rep)
                 } else {
                     subtitle = nil
                 }
                 groups.append([
-                    ProfileMenuItem(title: R.string.localizable.profile_muted(),
+                    ProfileMenuItem(title: R.string.localizable.muted(),
                                     subtitle: subtitle,
                                     style: [],
                                     action: #selector(mute))
                 ])
             } else {
                 groups.append([
-                    ProfileMenuItem(title: R.string.localizable.profile_mute(),
+                    ProfileMenuItem(title: R.string.localizable.mute(),
                                     subtitle: nil,
                                     style: [],
                                     action: #selector(mute))
@@ -419,22 +419,22 @@ extension GroupProfileViewController {
 
         if conversation.status == ConversationStatus.QUIT.rawValue {
             groups.append([
-                ProfileMenuItem(title: R.string.localizable.group_menu_clear(),
+                ProfileMenuItem(title: R.string.localizable.clear_chat(),
                                 subtitle: nil,
                                 style: [.destructive],
                                 action: #selector(clearChat)),
-                ProfileMenuItem(title: R.string.localizable.group_menu_delete(),
+                ProfileMenuItem(title: R.string.localizable.delete_chat(),
                                 subtitle: nil,
                                 style: [.destructive],
                                 action: #selector(deleteChatAction))
             ])
         } else {
             groups.append([
-                ProfileMenuItem(title: R.string.localizable.group_menu_clear(),
+                ProfileMenuItem(title: R.string.localizable.clear_chat(),
                                 subtitle: nil,
                                 style: [.destructive],
                                 action: #selector(clearChat)),
-                ProfileMenuItem(title: R.string.localizable.group_menu_exit(),
+                ProfileMenuItem(title: R.string.localizable.exit_group(),
                                 subtitle: nil,
                                 style: [.destructive],
                                 action: #selector(exitGroupAction))

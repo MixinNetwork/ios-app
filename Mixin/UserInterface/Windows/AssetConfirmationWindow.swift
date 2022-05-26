@@ -54,7 +54,7 @@ class AssetConfirmationWindow: BottomSheetView {
     }
 
     func initTimer() {
-        confirmButton.setTitle("\(R.string.localizable.action_continue())(\(self.countDown))", for: .normal)
+        confirmButton.setTitle("\(R.string.localizable.continue())(\(self.countDown))", for: .normal)
         confirmButton.isEnabled = false
         timer?.invalidate()
         timer = nil
@@ -82,12 +82,12 @@ class AssetConfirmationWindow: BottomSheetView {
 
             UIView.performWithoutAnimation {
                 self.confirmButton.isEnabled = true
-                self.confirmButton.setTitle(R.string.localizable.action_continue(), for: .normal)
+                self.confirmButton.setTitle(R.string.localizable.continue(), for: .normal)
                 self.confirmButton.layoutIfNeeded()
             }
         } else {
             UIView.performWithoutAnimation {
-                self.confirmButton.setTitle("\(R.string.localizable.action_continue())(\(self.countDown))", for: .normal)
+                self.confirmButton.setTitle("\(R.string.localizable.continue())(\(self.countDown))", for: .normal)
                 self.confirmButton.layoutIfNeeded()
             }
         }

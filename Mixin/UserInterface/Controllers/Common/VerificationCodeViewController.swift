@@ -31,8 +31,8 @@ class VerificationCodeViewController: ContinueButtonViewController {
                           adjustForContentSize: true)
             label.adjustsFontForContentSizeCategory = true
         }
-        resendButton.normalTitle = Localized.BUTTON_TITLE_RESEND_CODE
-        resendButton.pendingTitleTemplate = Localized.BUTTON_TITLE_RESEND_CODE_PENDING
+        resendButton.normalTitle = R.string.localizable.resend_code()
+        resendButton.pendingTitleTemplate = NSLocalizedString(R.string.localizable.resend_code_pending.key, comment: "")
         resendButton.beginCountDown(resendInterval)
         verificationCodeField.becomeFirstResponder()
     }
@@ -74,7 +74,7 @@ class VerificationCodeViewController: ContinueButtonViewController {
         case .invalidPhoneVerificationCode:
             verificationCodeField.clear()
             verificationCodeField.showError()
-            alert(Localized.TEXT_INVALID_VERIFICATION_CODE)
+            alert(R.string.localizable.the_code_is_incorrect())
         default:
             reporter.report(error: error)
             alert(error.localizedDescription)

@@ -21,14 +21,14 @@ class AddMemberViewController: PeerViewController<[UserItem], CheckmarkPeerCell,
     class func instance(appendingMembersToConversationId conversationId: String? = nil) -> UIViewController {
         let vc = AddMemberViewController()
         vc.conversationId = conversationId
-        return ContainerViewController.instance(viewController: vc, title: Localized.ACTION_SEND_TO)
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.send_to_title())
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.allowsMultipleSelection = true
         container?.subtitleLabel.isHidden = false
-        container?.titleLabel.text = R.string.localizable.group_navigation_title_add_member()
+        container?.titleLabel.text = R.string.localizable.add_participants()
     }
     
     override func initData() {
@@ -194,9 +194,9 @@ extension AddMemberViewController: ContainerViewControllerDelegate {
     
     func textBarRightButton() -> String? {
         if isAppendingMembersToAnExistedGroup {
-            return R.string.localizable.action_done()
+            return R.string.localizable.done()
         } else {
-            return R.string.localizable.action_next()
+            return R.string.localizable.next()
         }
     }
     

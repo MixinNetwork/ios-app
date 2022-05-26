@@ -75,16 +75,16 @@ class AssetViewController: UIViewController {
         guard let asset = self.asset else {
             return
         }
-        let alc = UIAlertController(title: Localized.ACTION_SEND_TO, message: nil, preferredStyle: .actionSheet)
-        alc.addAction(UIAlertAction(title: Localized.CHAT_MENU_CONTACT, style: .default, handler: { [weak self] (_) in
+        let alc = UIAlertController(title: R.string.localizable.send_to_title(), message: nil, preferredStyle: .actionSheet)
+        alc.addAction(UIAlertAction(title: R.string.localizable.contact(), style: .default, handler: { [weak self] (_) in
             let vc = TransferReceiverViewController.instance(asset: asset)
             self?.navigationController?.pushViewController(vc, animated: true)
         }))
-        alc.addAction(UIAlertAction(title: Localized.WALLET_ADDRESS, style: .default, handler: { [weak self](_) in
+        alc.addAction(UIAlertAction(title: R.string.localizable.address(), style: .default, handler: { [weak self](_) in
             let vc = AddressViewController.instance(asset: asset)
             self?.navigationController?.pushViewController(vc, animated: true)
         }))
-        alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        alc.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         self.present(alc, animated: true, completion: nil)
     }
     
@@ -115,7 +115,7 @@ extension AssetViewController: ContainerViewControllerDelegate {
     func barRightButtonTappedAction() {
         let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let asset = self.asset!
-        let toggleAssetHiddenTitle = AppGroupUserDefaults.Wallet.hiddenAssetIds[asset.assetId] == nil ? Localized.WALLET_MENU_HIDE_ASSET : Localized.WALLET_MENU_SHOW_ASSET
+        let toggleAssetHiddenTitle = AppGroupUserDefaults.Wallet.hiddenAssetIds[asset.assetId] == nil ? R.string.localizable.hide_asset() : R.string.localizable.show_asset()
         alc.addAction(UIAlertAction(title: toggleAssetHiddenTitle, style: .default, handler: { [weak self](_) in
             guard let weakSelf = self else {
                 return
@@ -127,7 +127,7 @@ extension AssetViewController: ContainerViewControllerDelegate {
             }
             weakSelf.navigationController?.popViewController(animated: true)
         }))
-        alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        alc.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         self.present(alc, animated: true, completion: nil)
     }
     

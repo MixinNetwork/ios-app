@@ -20,7 +20,7 @@ final class HomeAppsViewController: UIViewController {
     
     private lazy var candidateEmptyHintLabel: UILabel = {
         let label = UILabel()
-        label.text = R.string.localizable.home_apps_candidate_empty()
+        label.text = R.string.localizable.bot_empty_tip()
         label.backgroundColor = .background
         label.textColor = .accessoryText
         label.numberOfLines = 0
@@ -206,10 +206,10 @@ extension HomeAppsViewController {
     private func updateHomeTitleLabel(isEditing: Bool) {
         if isEditing {
             homeTitleLabel.textColor = .theme
-            homeTitleLabel.text = R.string.localizable.action_done()
+            homeTitleLabel.text = R.string.localizable.done()
         } else {
             homeTitleLabel.textColor = .title
-            homeTitleLabel.text = R.string.localizable.home_title_apps()
+            homeTitleLabel.text = R.string.localizable.bots_title()
         }
     }
     

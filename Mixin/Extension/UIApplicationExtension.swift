@@ -137,12 +137,12 @@ extension UIApplicationShortcutItem {
                                                       icon: .init(templateImageName: "ic_shortcut_scan_qr_code"),
                                                       userInfo: nil)
     static let wallet = UIApplicationShortcutItem(type: ItemType.wallet.rawValue,
-                                                  localizedTitle: R.string.localizable.wallet_title(),
+                                                  localizedTitle: R.string.localizable.wallet(),
                                                   localizedSubtitle: nil,
                                                   icon: .init(templateImageName: "ic_shortcut_wallet"),
                                                   userInfo: nil)
     static let myQrCode = UIApplicationShortcutItem(type: ItemType.myQrCode.rawValue,
-                                                    localizedTitle: R.string.localizable.myqrcode_title(),
+                                                    localizedTitle: R.string.localizable.my_qr_code(),
                                                     localizedSubtitle: nil,
                                                     icon: .init(templateImageName: "ic_shortcut_my_qr_code"),
                                                     userInfo: nil)

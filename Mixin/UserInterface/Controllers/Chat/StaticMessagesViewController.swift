@@ -95,7 +95,7 @@ class StaticMessagesViewController: UIViewController {
     
     func contextMenuActions(for viewModel: MessageViewModel) -> [UIAction]? {
         if viewModel.message.category.hasSuffix("_TEXT") {
-            let copyAction = UIAction(title: R.string.localizable.action_copy(), image: R.image.conversation.ic_action_copy()) { _ in
+            let copyAction = UIAction(title: R.string.localizable.copy(), image: R.image.conversation.ic_action_copy()) { _ in
                 UIPasteboard.general.string = viewModel.message.content
             }
             return [copyAction]
@@ -108,7 +108,7 @@ class StaticMessagesViewController: UIViewController {
         for item in items where item.category.hasSuffix("_STICKER") {
             if item.stickerId == nil {
                 item.category = MessageCategory.SIGNAL_TEXT.rawValue
-                item.content = R.string.localizable.notification_content_sticker()
+                item.content = R.string.localizable.content_sticker()
             }
         }
         return factory.viewModels(with: items, fits: layoutWidth)
@@ -217,7 +217,7 @@ extension StaticMessagesViewController {
                 if audioManager.playingMessage?.messageId == message.messageId, audioManager.player?.status == .playing {
                     audioManager.pause()
                 } else if CallService.shared.hasCall {
-                    alert(R.string.localizable.chat_voice_record_on_call())
+                    alert(R.string.localizable.call_on_another_call_hint())
                 } else {
                     (cell as? AudioMessageCell)?.updateUnreadStyle()
                     audioManager.play(message: message)
@@ -278,7 +278,7 @@ extension StaticMessagesViewController {
                 PostWebViewController.presentInstance(message: message, asChildOf: parent)
             } else if message.category.hasSuffix("_LOCATION"), let location = message.location {
                 let vc = LocationPreviewViewController(location: location)
-                let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.chat_menu_location())
+                let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.location())
                 navigationController?.pushViewController(container, animated: true)
             } else if message.category == MessageCategory.APP_CARD.rawValue, let appCard = message.appCard {
                 if let appId = appCard.appId, !appId.isEmpty {
@@ -491,14 +491,14 @@ extension StaticMessagesViewController: CoreTextLabelDelegate {
             return
         }
         let alert = UIAlertController(title: url.absoluteString, message: nil, preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: Localized.CHAT_MESSAGE_OPEN_URL, style: .default, handler: { [weak self](_) in
+        alert.addAction(UIAlertAction(title: R.string.localizable.open_url(), style: .default, handler: { [weak self](_) in
             self?.open(url: url)
         }))
-        alert.addAction(UIAlertAction(title: Localized.CHAT_MESSAGE_MENU_COPY, style: .default, handler: { (_) in
+        alert.addAction(UIAlertAction(title: R.string.localizable.copy(), style: .default, handler: { (_) in
             UIPasteboard.general.string = url.absoluteString
-            showAutoHiddenHud(style: .notification, text: Localized.TOAST_COPIED)
+            showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
         }))
-        alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         present(alert, animated: true, completion: nil)
     }
     

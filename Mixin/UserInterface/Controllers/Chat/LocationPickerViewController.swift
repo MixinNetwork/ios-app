@@ -219,7 +219,7 @@ class LocationPickerViewController: LocationViewController {
                 } else if let location = mapView.userLocation.location {
                     send(coordinate: location.coordinate)
                 } else {
-                    alert(R.string.localizable.chat_user_location_undetermined())
+                    alert(R.string.localizable.location_undetermined())
                 }
             } else {
                 send(location: nearbyLocations[indexPath.row])
@@ -392,7 +392,7 @@ class LocationPickerViewController: LocationViewController {
             self.tableView.contentOffset = .zero
             self.tableView.reloadData()
             if locations.isEmpty {
-                self.noSearchResultsView.label.text = R.string.localizable.chat_location_search_no_result(keyword)
+                self.noSearchResultsView.label.text = R.string.localizable.location_empty(keyword)
                 self.noSearchResultsView.frame.size = CGSize(width: self.view.bounds.width, height: self.tableWrapperMaskHeight)
                 self.tableView.tableFooterView = self.noSearchResultsView
                 self.updateNoSearchResultsViewLayout(isKeyboardVisible: self.keyboardHeightIfShow != nil)
@@ -686,7 +686,7 @@ extension LocationPickerViewController {
             navigationController?.popViewController(animated: true)
         } catch {
             reporter.report(error: error)
-            showAutoHiddenHud(style: .error, text: R.string.localizable.chat_send_location_failed())
+            showAutoHiddenHud(style: .error, text: R.string.localizable.failed_to_send_location())
         }
     }
     

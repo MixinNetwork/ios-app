@@ -20,7 +20,7 @@ final class TranscriptPreviewViewController: StaticMessagesViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         factory.delegate = self
-        titleLabel.text = R.string.localizable.chat_transcript()
+        titleLabel.text = R.string.localizable.transcript()
         reloadData()
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(mediaStatusDidUpdate(_:)),
@@ -47,7 +47,7 @@ final class TranscriptPreviewViewController: StaticMessagesViewController {
     override func contextMenuActions(for viewModel: MessageViewModel) -> [UIAction]? {
         if viewModel.message.category.hasSuffix("_STICKER"), let stickerId = viewModel.message.stickerId {
             var actions = super.contextMenuActions(for: viewModel) ?? []
-            let addStickerAction = UIAction(title: R.string.localizable.chat_message_sticker(), image: R.image.conversation.ic_action_add_to_sticker()) { _ in
+            let addStickerAction = UIAction(title: R.string.localizable.add_to_stickers(), image: R.image.conversation.ic_action_add_to_sticker()) { _ in
                 self.addSticker(stickerId: stickerId)
             }
             actions.append(addStickerAction)
@@ -145,7 +145,7 @@ extension TranscriptPreviewViewController {
             case let .success(sticker):
                 DispatchQueue.global().async {
                     StickerDAO.shared.insertOrUpdateFavoriteSticker(sticker: sticker)
-                    showAutoHiddenHud(style: .notification, text: Localized.TOAST_ADDED)
+                    showAutoHiddenHud(style: .notification, text: R.string.localizable.added())
                 }
             case let .failure(error):
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)

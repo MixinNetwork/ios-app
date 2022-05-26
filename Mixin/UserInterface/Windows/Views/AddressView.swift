@@ -54,11 +54,11 @@ class AddressView: UIStackView {
 
         switch addressAction {
         case .add:
-            titleLabel.text = Localized.ADDRESS_NEW_TITLE(symbol: asset.symbol)
+            titleLabel.text = R.string.localizable.withdrawal_addr_new(asset.symbol)
         case .update:
-            titleLabel.text = Localized.ADDRESS_EDIT_TITLE(symbol: asset.symbol)
+            titleLabel.text = R.string.localizable.edit_address(asset.symbol)
         case .delete:
-            titleLabel.text = Localized.ADDRESS_DELETE_TITLE(symbol: asset.symbol)
+            titleLabel.text = R.string.localizable.delete_withdraw_address(asset.symbol)
         }
         if let address = addressRequest {
             nameLabel.text = address.label
@@ -105,7 +105,7 @@ extension AddressView: PinFieldDelegate {
                     self?.pinField.resignFirstResponder()
                     AddressDAO.shared.deleteAddress(assetId: assetId, addressId: addressId)
                     AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
-                    showAutoHiddenHud(style: .notification, text: R.string.localizable.toast_deleted())
+                    showAutoHiddenHud(style: .notification, text: R.string.localizable.deleted())
                 case let .failure(error):
                     PINVerificationFailureHandler.handle(error: error) { (description) in
                         self?.superView?.alert(description)
@@ -125,18 +125,18 @@ extension AddressView: PinFieldDelegate {
                     self?.pinField.resignFirstResponder()
                     AddressDAO.shared.insertOrUpdateAddress(addresses: [address])
                     AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
-                    showAutoHiddenHud(style: .notification, text: Localized.TOAST_SAVED)
+                    showAutoHiddenHud(style: .notification, text: R.string.localizable.saved())
                 case .failure(.malformedAddress):
                     guard let self = self else {
                         return
                     }
                     let message: String
                     if self.asset.isEOSChain {
-                        message = R.string.localizable.error_malformed_address_eos()
+                        message = R.string.localizable.invalid_malformed_address_eos_hint()
                     } else if self.asset.isERC20 {
-                        message = R.string.localizable.error_malformed_address_detailed("Ethereum(ERC20) \(self.asset.symbol)")
+                        message = R.string.localizable.invalid_malformed_address_hint("Ethereum(ERC20) \(self.asset.symbol)")
                     } else {
-                        message = R.string.localizable.error_malformed_address_detailed(self.asset.symbol)
+                        message = R.string.localizable.invalid_malformed_address_hint(self.asset.symbol)
                     }
                     self.superView?.alert(message)
                     self.superView?.dismissPopupControllerAnimated()

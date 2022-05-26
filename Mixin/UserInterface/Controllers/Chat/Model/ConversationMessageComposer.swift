@@ -89,7 +89,7 @@ final class ConversationMessageComposer {
         } else if type == .SIGNAL_DATA, let url = value as? URL {
             queue.async {
                 guard FileManager.default.fileSize(url.path) > 0 else {
-                    showAutoHiddenHud(style: .error, text: R.string.localizable.error_operation_failed())
+                    showAutoHiddenHud(style: .error, text: R.string.localizable.operation_failed())
                     return
                 }
                 let fileExtension = url.pathExtension.lowercased()
@@ -97,7 +97,7 @@ final class ConversationMessageComposer {
                 do {
                     try FileManager.default.copyItem(at: url, to: targetUrl)
                 } catch {
-                    showAutoHiddenHud(style: .error, text: R.string.localizable.error_operation_failed())
+                    showAutoHiddenHud(style: .error, text: R.string.localizable.operation_failed())
                     return
                 }
                 message.name = url.lastPathComponent
@@ -115,7 +115,7 @@ final class ConversationMessageComposer {
             queue.async {
                 let asset = AVAsset(url: url)
                 guard asset.duration.isValid, let videoTrack = asset.tracks(withMediaType: .video).first else {
-                    showAutoHiddenHud(style: .error, text: R.string.localizable.error_operation_failed())
+                    showAutoHiddenHud(style: .error, text: R.string.localizable.operation_failed())
                     return
                 }
                 if let thumbnail = UIImage(withFirstFrameOfVideoAtURL: url) {
@@ -123,7 +123,7 @@ final class ConversationMessageComposer {
                     thumbnail.saveToFile(path: thumbnailURL)
                     message.thumbImage = thumbnail.blurHash()
                 } else {
-                    showAutoHiddenHud(style: .error, text: R.string.localizable.error_operation_failed())
+                    showAutoHiddenHud(style: .error, text: R.string.localizable.operation_failed())
                     return
                 }
                 message.mediaDuration = Int64(asset.duration.seconds * millisecondsPerSecond)
@@ -143,7 +143,7 @@ final class ConversationMessageComposer {
         } else if type == .SIGNAL_AUDIO, let value = value as? (tempUrl: URL, metadata: AudioMetadata) {
             queue.async {
                 guard FileManager.default.fileSize(value.tempUrl.path) > 0 else {
-                    showAutoHiddenHud(style: .error, text: R.string.localizable.error_operation_failed())
+                    showAutoHiddenHud(style: .error, text: R.string.localizable.operation_failed())
                     return
                 }
                 let url = AttachmentContainer.url(for: .audios, filename: message.messageId + ExtensionName.ogg.withDot)
@@ -161,7 +161,7 @@ final class ConversationMessageComposer {
                                                           isGroupMessage: isGroupMessage,
                                                           expireIn: expireIn)
                 } catch {
-                    showAutoHiddenHud(style: .error, text: R.string.localizable.error_operation_failed())
+                    showAutoHiddenHud(style: .error, text: R.string.localizable.operation_failed())
                 }
             }
         } else if type == .SIGNAL_STICKER, let sticker = value as? StickerItem {
@@ -250,7 +250,7 @@ final class ConversationMessageComposer {
                 try FileManager.default.moveItem(at: source, to: url)
                 let asset = AVAsset(url: url)
                 guard asset.duration.isValid, let videoTrack = asset.tracks(withMediaType: .video).first else {
-                    showAutoHiddenHud(style: .error, text: R.string.localizable.error_operation_failed())
+                    showAutoHiddenHud(style: .error, text: R.string.localizable.operation_failed())
                     return
                 }
                 if let thumbnail = UIImage(withFirstFrameOfVideoAtURL: url) {
@@ -258,7 +258,7 @@ final class ConversationMessageComposer {
                     thumbnail.saveToFile(path: thumbnailURL)
                     message.thumbImage = thumbnail.blurHash()
                 } else {
-                    showAutoHiddenHud(style: .error, text: R.string.localizable.error_operation_failed())
+                    showAutoHiddenHud(style: .error, text: R.string.localizable.operation_failed())
                     return
                 }
                 message.mediaDuration = Int64(asset.duration.seconds * millisecondsPerSecond)
@@ -272,7 +272,7 @@ final class ConversationMessageComposer {
                 message.quoteMessageId = quoteMessageId
                 SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, opponentApp: app, isGroupMessage: isGroupMessage, expireIn: expireIn)
             } catch {
-                showAutoHiddenHud(style: .error, text: R.string.localizable.error_operation_failed())
+                showAutoHiddenHud(style: .error, text: R.string.localizable.operation_failed())
             }
         }
     }
@@ -299,7 +299,7 @@ final class ConversationMessageComposer {
                 message.mediaMimeType = "image/gif"
                 SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, opponentApp: app, isGroupMessage: isGroupMessage, expireIn: expireIn)
             } catch {
-                showAutoHiddenHud(style: .error, text: R.string.localizable.error_operation_failed())
+                showAutoHiddenHud(style: .error, text: R.string.localizable.operation_failed())
             }
         }
     }

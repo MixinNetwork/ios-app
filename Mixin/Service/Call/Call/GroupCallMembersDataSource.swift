@@ -303,7 +303,7 @@ extension GroupCallMembersDataSource: UICollectionViewDataSource {
             cell.avatarImageView.imageView.contentMode = .center
             cell.avatarImageView.image = R.image.ic_title_add()
             cell.connectingView.isHidden = true
-            cell.label.text = R.string.localizable.action_add()
+            cell.label.text = R.string.localizable.add()
         } else {
             cell.avatarWrapperView.backgroundColor = .background
             cell.avatarImageView.imageView.contentMode = .scaleAspectFill

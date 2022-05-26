@@ -7,13 +7,13 @@ extension MessageItem {
         if category.hasSuffix("_TEXT") {
             return mentionedFullnameReplacedContent
         } else if category.hasSuffix("_STICKER") {
-            return Localized.CHAT_QUOTE_TYPE_STICKER
+            return R.string.localizable.sticker()
         } else if category.hasSuffix("_IMAGE") {
-            return Localized.CHAT_QUOTE_TYPE_PHOTO
+            return R.string.localizable.photo()
         } else if category.hasSuffix("_VIDEO") {
-            return Localized.CHAT_QUOTE_TYPE_VIDEO
+            return R.string.localizable.video()
         } else if category.hasSuffix("_LIVE") {
-            return R.string.localizable.chat_quote_type_live()
+            return R.string.localizable.live()
         } else if category.hasSuffix("_POST") {
             return markdownControlCodeRemovedContent
         } else if category.hasSuffix("_AUDIO") {
@@ -25,13 +25,13 @@ extension MessageItem {
         } else if category.hasSuffix("_DATA") {
             return name ?? ""
         } else if category.hasSuffix("_LOCATION") {
-            return R.string.localizable.chat_quote_type_location()
+            return R.string.localizable.location()
         } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
             return (snapshotAmount ?? "0") + " " + (assetSymbol ?? "")
         } else if category.hasSuffix("_CONTACT") {
             return sharedUserIdentityNumber ?? ""
         } else if category.hasSuffix("_TRANSCRIPT") {
-            return R.string.localizable.chat_transcript()
+            return R.string.localizable.transcript()
         } else if category == MessageCategory.APP_CARD.rawValue {
             return appCard?.description ?? ""
         } else if category == MessageCategory.APP_BUTTON_GROUP.rawValue {

@@ -56,16 +56,16 @@ class PostWebViewController: WebViewController {
     
     override func moreAction(_ sender: Any) {
         let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        controller.addAction(UIAlertAction(title: R.string.localizable.chat_message_menu_forward(), style: .default, handler: { (_) in
+        controller.addAction(UIAlertAction(title: R.string.localizable.forward(), style: .default, handler: { (_) in
             let vc = MessageReceiverViewController.instance(content: .message(self.message))
             self.navigationController?.pushViewController(vc, animated: true)
         }))
         if let url = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first {
-            controller.addAction(UIAlertAction(title: R.string.localizable.web_export_as_pdf(), style: .default, handler: { _ in
+            controller.addAction(UIAlertAction(title: R.string.localizable.export(), style: .default, handler: { _ in
                 self.exportAsPDF(to: url)
             }))
         }
-        controller.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        controller.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         present(controller, animated: true, completion: nil)
     }
     
@@ -134,7 +134,7 @@ extension PostWebViewController {
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         
-        let filename = (pageTitle ?? R.string.localizable.chat_media_category_post()) + ExtensionName.pdf.withDot
+        let filename = (pageTitle ?? R.string.localizable.post()) + ExtensionName.pdf.withDot
         let url = cacheURL.appendingPathComponent(filename)
         let pageBounds = CGRect(x: 0, y: 0, width: 612, height: 792) // 8.5 by 11 inches according to UIGraphicsBeginPDFContextToFile(_:_:_:)
         let renderer = WebViewRenderer(webView: webView, pageBounds: pageBounds)
@@ -163,7 +163,7 @@ extension PostWebViewController {
                     self.present(activity, animated: true, completion: nil)
                 } else {
                     try? FileManager.default.removeItem(at: url)
-                    hud.set(style: .error, text: R.string.localizable.web_export_failed())
+                    hud.set(style: .error, text: R.string.localizable.export_failed())
                     hud.scheduleAutoHidden()
                 }
             }

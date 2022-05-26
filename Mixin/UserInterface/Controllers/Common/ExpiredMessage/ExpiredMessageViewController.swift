@@ -17,7 +17,7 @@ final class ExpiredMessageViewController: SettingsTableViewController {
         let vc = ExpiredMessageViewController()
         vc.conversationId = conversationId
         vc.currentExpireIn = expireIn
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.disappearing_message_title())
+        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.disappearing_message())
         return container
     }
     
@@ -101,19 +101,19 @@ extension ExpiredMessageViewController {
         var title: String {
             switch self {
             case .off:
-                return R.string.localizable.setting_backup_off()
+                return R.string.localizable.off()
             case .thirtySeconds:
-                return R.string.localizable.disappearing_message_30seconds()
+                return R.string.localizable.disappearing_option_1()
             case .tenMinutes:
-                return R.string.localizable.disappearing_message_10minutes()
+                return R.string.localizable.disappearing_option_2()
             case .twoHours:
-                return R.string.localizable.disappearing_message_2hours()
+                return R.string.localizable.disappearing_option_3()
             case .oneDay:
-                return R.string.localizable.disappearing_message_1day()
+                return R.string.localizable.disappearing_option_4()
             case .oneWeek:
-                return R.string.localizable.disappearing_message_1week()
+                return R.string.localizable.disappearing_option_5()
             case .custom:
-                return R.string.localizable.disappearing_message_custom_time()
+                return R.string.localizable.custom_time()
             }
         }
         

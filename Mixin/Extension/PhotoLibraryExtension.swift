@@ -7,7 +7,7 @@ extension PHPhotoLibrary {
             DispatchQueue.main.async {
                 callback(authorized)
                 if !authorized {
-                    UIApplication.currentActivity()?.alertSettings(Localized.PERMISSION_DENIED_PHOTO_LIBRARY)
+                    UIApplication.currentActivity()?.alertSettings(R.string.localizable.permission_denied_photo_library())
                 }
             }
         }
@@ -39,9 +39,9 @@ extension PHPhotoLibrary {
         }, completionHandler: { (success, error) in
             DispatchQueue.main.async {
                 if success {
-                    showAutoHiddenHud(style: .notification, text: Localized.CAMERA_SAVE_PHOTO_SUCCESS)
+                    showAutoHiddenHud(style: .notification, text: R.string.localizable.photo_saved())
                 } else {
-                    showAutoHiddenHud(style: .error, text: Localized.CAMERA_SAVE_PHOTO_FAILED)
+                    showAutoHiddenHud(style: .error, text: R.string.localizable.unable_to_save_photo())
                 }
             }
         })

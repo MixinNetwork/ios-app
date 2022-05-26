@@ -75,7 +75,7 @@ class ContactViewController: UITableViewController {
         DispatchQueue.main.async {
             self.accountAvatarView.setImage(with: account.avatar_url, userId: account.user_id, name: account.full_name)
             self.accountNameLabel.text = account.full_name
-            self.accountIdLabel.text = Localized.CONTACT_IDENTITY_NUMBER(identityNumber: account.identity_number)
+            self.accountIdLabel.text = R.string.localizable.contact_mixin_id(account.identity_number)
         }
     }
     
@@ -95,7 +95,7 @@ class ContactViewController: UITableViewController {
     
     class func instance() -> UIViewController {
         let vc = R.storyboard.contact.instantiateInitialViewController()!
-        let container = ContainerViewController.instance(viewController: vc, title: Localized.CONTACT_TITLE)
+        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.contact_title())
         return container
     }
     
@@ -208,13 +208,13 @@ extension ContactViewController {
                 return nil
             } else {
                 let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.header) as! ContactHeaderView
-                view.label.text = Localized.CONTACT_TITLE.uppercased()
+                view.label.text = R.string.localizable.contacts()
                 return view
             }
         } else if isPhoneContactAuthorized {
             let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.header) as! ContactHeaderView
             if section == 1 {
-                view.label.text = Localized.CONTACT_PHONE_CONTACTS
+                view.label.text = R.string.localizable.mobile_contacts()
             } else {
                 view.label.text = phoneContactSectionTitles[section - 1]
             }
@@ -243,7 +243,7 @@ extension ContactViewController {
                     return nil
                 }
             } else {
-                view.text = Localized.CONTACT_PHONE_CONTACT_SUMMARY
+                view.text = R.string.localizable.contact_phone_contact_hint()
                 return view
             }
         }
@@ -279,12 +279,12 @@ extension ContactViewController: PhoneContactCellDelegate {
         let phoneContact = phoneContacts[indexPath.section - 1][indexPath.row]
         if MFMessageComposeViewController.canSendText() {
             let vc = MFMessageComposeViewController()
-            vc.body = Localized.CONTACT_INVITE
+            vc.body = R.string.localizable.contact_invite_content()
             vc.recipients = [phoneContact.phoneNumber]
             vc.messageComposeDelegate = self
             present(vc, animated: true, completion: nil)
         } else {
-            let inviteController = UIActivityViewController(activityItems: [Localized.CONTACT_INVITE],
+            let inviteController = UIActivityViewController(activityItems: [R.string.localizable.contact_invite_content()],
                                                             applicationActivities: nil)
             present(inviteController, animated: true, completion: nil)
         }

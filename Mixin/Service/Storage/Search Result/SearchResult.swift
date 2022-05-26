@@ -84,7 +84,7 @@ extension SearchResult {
     
     static func description(identityNumber: String?, phoneNumber: String?, keyword: String) -> NSAttributedString? {
         if let identityNumber = identityNumber, identityNumber.contains(keyword) {
-            let text = R.string.localizable.search_result_prefix_id() + identityNumber
+            let text = R.string.localizable.contact_mixin_id(identityNumber)
             return SearchResult.attributedText(text: text,
                                                textAttributes: SearchResult.normalDescriptionAttributes,
                                                keyword: keyword,

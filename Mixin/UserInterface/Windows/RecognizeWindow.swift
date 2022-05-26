@@ -18,7 +18,7 @@ class RecognizeWindow: BottomSheetView {
         contentTextView.text = text
         if textIsValidURL, let url = URL(string: text) {
             validURL = url
-            actionButton.setTitle(R.string.localizable.action_open(), for: .normal)
+            actionButton.setTitle(R.string.localizable.open(), for: .normal)
             actionButtonBottomConstraint.constant = -12
             actionButton.contentEdgeInsets = UIEdgeInsets(top: 12, left: 38, bottom: 12, right: 38)
             copyButton.isHidden = false
@@ -60,7 +60,7 @@ class RecognizeWindow: BottomSheetView {
     private func copyContent() {
         UIPasteboard.general.string = contentTextView.text
         dismissPopupControllerAnimated()
-        showAutoHiddenHud(style: .notification, text: Localized.TOAST_COPIED)
+        showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
     }
     
     @discardableResult private func open(_ url: URL) -> Bool {

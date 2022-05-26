@@ -13,9 +13,9 @@ class MultisigUsersWindow: BottomSheetView {
     func render(users: [UserItem], isSender: Bool) {
         self.users = users
         if isSender {
-            titleLabel.text = R.string.localizable.multisig_senders()
+            titleLabel.text = R.string.localizable.senders()
         } else {
-            titleLabel.text = R.string.localizable.multisig_receivers()
+            titleLabel.text = R.string.localizable.receivers()
         }
         prepareTableView()
         tableView.reloadData()

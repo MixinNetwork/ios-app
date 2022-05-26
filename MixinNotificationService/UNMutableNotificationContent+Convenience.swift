@@ -23,7 +23,7 @@ public extension UNMutableNotificationContent {
                                   isRepresentativeMessage: isRepresentativeMessage,
                                   message: message)
         } else {
-            body = R.string.localizable.notification_content_general()
+            body = R.string.localizable.you_have_a_new_message()
         }
         
         userInfo[UserInfoKey.conversationId] = conversation.conversationId
@@ -105,22 +105,22 @@ public extension UNMutableNotificationContent {
         } else if message.category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
             switch message.snapshotType {
             case SnapshotType.deposit.rawValue:
-                return R.string.localizable.notification_content_deposit()
+                return R.string.localizable.content_deposit()
             case SnapshotType.transfer.rawValue:
                 return R.string.localizable.alert_key_contact_transfer_message()
             case SnapshotType.withdrawal.rawValue:
-                return R.string.localizable.notification_content_withdrawal()
+                return R.string.localizable.content_withdrawal()
             case SnapshotType.fee.rawValue:
-                return R.string.localizable.notification_content_fee()
+                return R.string.localizable.content_fee()
             case SnapshotType.rebate.rawValue:
-                return R.string.localizable.notification_content_rebate()
+                return R.string.localizable.content_rebate()
             default:
-                return R.string.localizable.notification_content_general()
+                return R.string.localizable.you_have_a_new_message()
             }
         } else if message.category == MessageCategory.WEBRTC_AUDIO_OFFER.rawValue {
             return R.string.localizable.alert_key_contact_audio_call_message()
         } else if message.category == MessageCategory.WEBRTC_AUDIO_CANCEL.rawValue {
-            return R.string.localizable.alert_key_contact_audio_call_cancelled_message()
+            return R.string.localizable.voice_call_cancelled()
         } else if message.category.hasSuffix("_TRANSCRIPT") {
             if conversationIsGroup || isRepresentativeMessage {
                 return R.string.localizable.alert_key_group_transcript_message(userFullName)
@@ -128,9 +128,9 @@ public extension UNMutableNotificationContent {
                 return R.string.localizable.alert_key_contact_transcript_message()
             }
         } else if message.category == MessageCategory.MESSAGE_PIN.rawValue {
-            return R.string.localizable.chat_pinned_general_message(userFullName)
+            return R.string.localizable.pinned_a_general(userFullName)
         } else {
-            return R.string.localizable.notification_content_general()
+            return R.string.localizable.you_have_a_new_message()
         }
     }
     

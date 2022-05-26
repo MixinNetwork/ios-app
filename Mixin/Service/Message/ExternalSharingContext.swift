@@ -15,17 +15,17 @@ struct ExternalSharingContext {
         var localizedCategory: String {
             switch self {
             case .text:
-                return R.string.localizable.chat_external_sharing_category_text()
+                return R.string.localizable.text()
             case .image:
-                return R.string.localizable.chat_external_sharing_category_image()
+                return R.string.localizable.image()
             case .live:
-                return R.string.localizable.chat_external_sharing_category_live()
+                return R.string.localizable.live_stream()
             case .contact:
-                return R.string.localizable.chat_external_sharing_category_contact()
+                return R.string.localizable.contact_category()
             case .post:
-                return R.string.localizable.chat_external_sharing_category_post()
+                return R.string.localizable.post_sharing()
             case .appCard:
-                return R.string.localizable.chat_external_sharing_category_app_card()
+                return R.string.localizable.card()
             }
         }
         

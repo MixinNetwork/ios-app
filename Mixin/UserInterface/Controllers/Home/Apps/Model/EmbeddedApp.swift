@@ -6,7 +6,7 @@ final class EmbeddedApp {
     static let wallet = EmbeddedApp(id: App.walletAppId,
                                     icon: R.image.ic_home_app_wallet()!,
                                     categoryIcon: R.image.ic_app_category_wallet()!,
-                                    name: R.string.localizable.wallet_title()) {
+                                    name: R.string.localizable.wallet()) {
                                         WalletViewController.presentWallet()
     }
     
@@ -20,7 +20,7 @@ final class EmbeddedApp {
     static let camera = EmbeddedApp(id: App.cameraAppId,
                                     icon: R.image.ic_home_app_camera()!,
                                     categoryIcon: R.image.ic_app_category_camera()!,
-                                    name: R.string.localizable.action_camera()) {
+                                    name: R.string.localizable.camera()) {
                                         UIApplication.homeViewController?.showCamera(asQrCodeScanner: false)
     }
     

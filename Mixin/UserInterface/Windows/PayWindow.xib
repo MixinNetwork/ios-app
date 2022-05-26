@@ -401,7 +401,7 @@
                                             <color key="textColor" name="text_accessory"/>
                                             <nil key="highlightedColor"/>
                                             <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="transfer_by_pin"/>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="pay_with_pin"/>
                                             </userDefinedRuntimeAttributes>
                                         </label>
                                     </subviews>
@@ -453,7 +453,7 @@
                                         <color key="titleColor" red="0.29411764709999999" green="0.48627450979999998" blue="0.86666666670000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                     </state>
                                     <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="transfer_use_face"/>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="use_face_pay"/>
                                     </userDefinedRuntimeAttributes>
                                     <connections>
                                         <action selector="biometricAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="4Cp-KF-bkG"/>
@@ -489,16 +489,16 @@
                                             </userDefinedRuntimeAttributes>
                                         </view>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bfm-a2-pNd" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
-                                            <rect key="frame" x="265" y="76" width="106" height="42"/>
+                                            <rect key="frame" x="277.5" y="76" width="81" height="42"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="42" id="Q6K-g9-1I0"/>
                                             </constraints>
                                             <inset key="contentEdgeInsets" minX="30" minY="15" maxX="30" maxY="15"/>
-                                            <state key="normal" title="Create">
+                                            <state key="normal" title="OK">
                                                 <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </state>
                                             <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="dialog_button_ok"/>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="ok"/>
                                             </userDefinedRuntimeAttributes>
                                             <connections>
                                                 <action selector="errorNextAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="tlI-af-Bhc"/>
@@ -532,7 +532,7 @@
                                             <color key="textColor" name="text_accessory"/>
                                             <nil key="highlightedColor"/>
                                             <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="action_done"/>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="done"/>
                                             </userDefinedRuntimeAttributes>
                                         </label>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BSf-bK-UvH">
@@ -670,7 +670,7 @@
             <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="theme">
             <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

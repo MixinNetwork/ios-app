@@ -59,7 +59,7 @@ class CallViewController: ResizablePopupViewController {
     var membersCountText: String? {
         if let call = call as? GroupCall {
             let count = call.membersDataSource.members.count
-            return R.string.localizable.group_call_participants_count(count)
+            return R.string.localizable.title_participants_count(count)
         } else {
             return nil
         }
@@ -261,7 +261,7 @@ class CallViewController: ResizablePopupViewController {
                                        name: Call.stateDidChangeNotification,
                                        object: call)
         if let call = call as? PeerCall {
-            titleLabel.text = R.string.localizable.chat_menu_call()
+            titleLabel.text = R.string.localizable.call()
             if let user = call.remoteUser {
                 members = [user]
             } else {
@@ -330,8 +330,8 @@ class CallViewController: ResizablePopupViewController {
         let alert = UIAlertController(title: R.string.localizable.call_encryption_title(),
                                       message: R.string.localizable.call_encryption_description(),
                                       preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: R.string.localizable.action_learn_more(), style: .default, handler: { (_) in
+        alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: R.string.localizable.learn_more(), style: .default, handler: { (_) in
             self.learnMoreAboutEncryption()
         }))
         present(alert, animated: true, completion: nil)
@@ -434,7 +434,7 @@ extension CallViewController: UICollectionViewDelegate {
                     }
                     present(picker, animated: true, completion: nil)
                 } else {
-                    let message = R.string.localizable.group_call_selections_reach_limit("\(GroupCall.maxNumberOfMembers)")
+                    let message = R.string.localizable.group_call_participants_limit_hint(GroupCall.maxNumberOfMembers)
                     alert(message)
                 }
             } else if let member = call.membersDataSource.member(at: indexPath) {

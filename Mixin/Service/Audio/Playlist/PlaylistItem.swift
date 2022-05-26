@@ -208,7 +208,7 @@ extension PlaylistItem {
             
             self.init(image: image,
                       title: title ?? filename,
-                      subtitle: subtitle ?? R.string.localizable.playlist_unknown_artist(),
+                      subtitle: subtitle ?? R.string.localizable.unknown_artist(),
                       duration: asset.duration)
         }
         

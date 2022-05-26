@@ -4,14 +4,14 @@ import MixinServices
 class DiagnoseViewController: SettingsTableViewController {
     
     private let dataSource = SettingsDataSource(sections: [
-        SettingsSection(header: R.string.localizable.diagnose_warning(), rows: [
-            SettingsRow(title: R.string.localizable.diagnose_database_access(), accessory: .disclosure),
+        SettingsSection(header: R.string.localizable.diagnose_warning_hint(), rows: [
+            SettingsRow(title: R.string.localizable.database_access(), accessory: .disclosure),
         ]),
         SettingsSection(rows: [
             SettingsRow(title: "Enable WebRTC Log", accessory: .switch(isOn: CallService.shared.isWebRTCLogEnabled)),
         ]),
         SettingsSection(rows: [
-            SettingsRow(title: R.string.localizable.diagnose_attachment(), accessory: .disclosure),
+            SettingsRow(title: R.string.localizable.clear_unused_cache(), accessory: .disclosure),
         ]),
     ])
     
@@ -43,11 +43,11 @@ extension DiagnoseViewController: UITableViewDelegate {
         switch (indexPath.section, indexPath.row) {
         case (0, 0):
             let container = ContainerViewController.instance(viewController: DatabaseDiagnosticViewController(),
-                                                             title: R.string.localizable.diagnose_database_access())
+                                                             title: R.string.localizable.database_access())
             navigationController?.pushViewController(container, animated: true)
         case (2, 0):
             let container = ContainerViewController.instance(viewController: AttachmentDiagnosticViewController(),
-                                                             title: R.string.localizable.diagnose_attachment())
+                                                             title: R.string.localizable.clear_unused_cache())
             navigationController?.pushViewController(container, animated: true)
         default:
             break

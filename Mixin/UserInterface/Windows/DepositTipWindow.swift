@@ -28,21 +28,21 @@ class DepositTipWindow: BottomSheetView {
 
     func render(asset: AssetItem) -> DepositTipWindow {
         self.asset = asset
-        titleLabel.text = "\(asset.symbol) \(Localized.WALLET_DEPOSIT)"
+        titleLabel.text = "\(asset.symbol) \(R.string.localizable.deposit())"
         tipsLabel.text = asset.depositTips
         if !asset.tag.isEmpty {
-            continueButton.setTitle("\(R.string.localizable.dialog_button_got_it())(\(self.countDown))", for: .normal)
+            continueButton.setTitle("\(R.string.localizable.got_it())(\(self.countDown))", for: .normal)
             continueButton.isEnabled = false
-            warningLabel.text = R.string.localizable.wallet_deposit_account_attention(asset.symbol)
+            warningLabel.text = R.string.localizable.deposit_account_attention(asset.symbol)
             timer?.invalidate()
             timer = nil
             timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(countDownAction), userInfo: nil, repeats: true)
         } else {
             continueButton.isEnabled = true
             if asset.reserve.doubleValue > 0 {
-                warningLabel.text = R.string.localizable.wallet_deposit_attention_minimum(asset.reserve, asset.chain?.symbol ?? "")
+                warningLabel.text = R.string.localizable.deposit_attention() +  R.string.localizable.deposit_at_least(asset.reserve, asset.chain?.symbol ?? "")
             } else {
-                warningLabel.text = R.string.localizable.wallet_deposit_attention()
+                warningLabel.text = R.string.localizable.deposit_attention()
             }
         }
         assetView.setIcon(asset: asset)
@@ -58,12 +58,12 @@ class DepositTipWindow: BottomSheetView {
 
             UIView.performWithoutAnimation {
                 self.continueButton.isEnabled = true
-                self.continueButton.setTitle(R.string.localizable.dialog_button_got_it(), for: .normal)
+                self.continueButton.setTitle(R.string.localizable.got_it(), for: .normal)
                 self.continueButton.layoutIfNeeded()
             }
         } else {
             UIView.performWithoutAnimation {
-                self.continueButton.setTitle("\(R.string.localizable.dialog_button_got_it())(\(self.countDown))", for: .normal)
+                self.continueButton.setTitle("\(R.string.localizable.got_it())(\(self.countDown))", for: .normal)
                 self.continueButton.layoutIfNeeded()
             }
         }

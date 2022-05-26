@@ -443,7 +443,7 @@ extension CallService {
         if let error = error as? CallError {
             content = error.alertContent
         } else {
-            content = R.string.localizable.chat_message_call_failed()
+            content = R.string.localizable.call_failed()
         }
         Queue.main.autoAsync {
             guard let controller = AppDelegate.current.mainWindow.rootViewController else {

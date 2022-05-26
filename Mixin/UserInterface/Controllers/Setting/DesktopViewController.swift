@@ -9,9 +9,8 @@ class DesktopViewController: SettingsTableViewController {
         SettingsRow(title: R.string.localizable.scan_qr_code(),
                     accessory: .disclosure)
     ])
-    private lazy var logoutSection = SettingsSection(footer: R.string.localizable.setting_desktop_desktop_on(), rows: [
-        SettingsRow(title: R.string.localizable.setting_desktop_log_out(),
-                    titleStyle: .highlighted)
+    private lazy var logoutSection = SettingsSection(footer: R.string.localizable.desktop_on_hint(), rows: [
+        SettingsRow(title: R.string.localizable.log_out_from_desktop(), titleStyle: .highlighted)
     ])
     
     private var isLogoutInProgress = false {
@@ -22,7 +21,7 @@ class DesktopViewController: SettingsTableViewController {
     
     class func instance() -> UIViewController {
         let vc = DesktopViewController()
-        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.setting_desktop())
+        let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.mixin_messenger_desktop())
         return container
     }
     
@@ -44,7 +43,7 @@ class DesktopViewController: SettingsTableViewController {
         } else {
             if let lastLoginDate = AppGroupUserDefaults.Account.lastDesktopLoginDate {
                 let time = formattedString(from: lastLoginDate)
-                loginSection.footer = Localized.SETTING_DESKTOP_LAST_ACTIVE(time: time)
+                loginSection.footer = R.string.localizable.last_active_time(time)
             } else {
                 loginSection.footer = nil
             }

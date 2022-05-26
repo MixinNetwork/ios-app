@@ -10,7 +10,7 @@ class AcknowledgementsViewController: AcknowListViewController {
             let acknows = parser.parseAcknowledgements()
             controller.acknowledgements.append(contentsOf: acknows)
         }
-        let title = R.string.localizable.about_acknowledgements()
+        let title = R.string.localizable.acknowledgements()
         return ContainerViewController.instance(viewController: controller, title: title)
     }
     

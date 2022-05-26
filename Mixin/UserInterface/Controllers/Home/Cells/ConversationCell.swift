@@ -52,16 +52,16 @@ class ConversationCell: ModernSelectedBackgroundCell {
             messageStatusImageView.isHidden = false
             messageStatusImageView.image = #imageLiteral(resourceName: "ic_status_sending")
             messageTypeImageView.isHidden = true
-            contentLabel.text = Localized.CHAT_DECRYPTION_FAILED_HINT(username: item.senderFullName)
+            contentLabel.text = R.string.localizable.chat_decryption_failed_hint(item.senderFullName)
         } else if item.messageStatus == MessageStatus.UNKNOWN.rawValue {
             messageStatusImageView.isHidden = true
             messageTypeImageView.isHidden = true
-            contentLabel.text = R.string.localizable.chat_cell_title_unknown_category()
+            contentLabel.text = R.string.localizable.message_not_support()
         } else {
             expiredImageView.isHidden = item.contentExpireIn == 0 || item.contentType.hasPrefix("SYSTEM_")
             showMessageIndicate(conversation: item)
             let senderIsMe = item.senderId == myUserId
-            let senderName = senderIsMe ? R.string.localizable.chat_message_you() : item.senderFullName
+            let senderName = senderIsMe ? R.string.localizable.you() : item.senderFullName
             
             let category = item.contentType
             messageTypeImageView.image = MessageCategory.iconImage(forMessageCategoryString: category)
@@ -74,45 +74,45 @@ class ConversationCell: ModernSelectedBackgroundCell {
                 }
             } else if category.hasSuffix("_IMAGE") {
                 if item.isGroup() {
-                    contentLabel.text = "\(senderName): \(R.string.localizable.notification_content_photo())"
+                    contentLabel.text = "\(senderName): \(R.string.localizable.content_photo())"
                 } else {
-                    contentLabel.text = R.string.localizable.notification_content_photo()
+                    contentLabel.text = R.string.localizable.content_photo()
                 }
             } else if category.hasSuffix("_STICKER") {
                 if item.isGroup() {
-                    contentLabel.text = "\(senderName): \(R.string.localizable.notification_content_sticker())"
+                    contentLabel.text = "\(senderName): \(R.string.localizable.content_sticker())"
                 } else {
-                    contentLabel.text = R.string.localizable.notification_content_sticker()
+                    contentLabel.text = R.string.localizable.content_sticker()
                 }
             } else if category.hasSuffix("_CONTACT") {
                 if item.isGroup() {
-                    contentLabel.text = "\(senderName): \(R.string.localizable.notification_content_contact())"
+                    contentLabel.text = "\(senderName): \(R.string.localizable.content_contact())"
                 } else {
-                    contentLabel.text = R.string.localizable.notification_content_contact()
+                    contentLabel.text = R.string.localizable.content_contact()
                 }
             } else if category.hasSuffix("_DATA") {
                 if item.isGroup() {
-                    contentLabel.text = "\(senderName): \(R.string.localizable.notification_content_file())"
+                    contentLabel.text = "\(senderName): \(R.string.localizable.content_file())"
                 } else {
-                    contentLabel.text = R.string.localizable.notification_content_file()
+                    contentLabel.text = R.string.localizable.content_file()
                 }
             } else if category.hasSuffix("_VIDEO") {
                 if item.isGroup() {
-                    contentLabel.text = "\(senderName): \(R.string.localizable.notification_content_video())"
+                    contentLabel.text = "\(senderName): \(R.string.localizable.content_video())"
                 } else {
-                    contentLabel.text = R.string.localizable.notification_content_video()
+                    contentLabel.text = R.string.localizable.content_video()
                 }
             } else if category.hasSuffix("_LIVE") {
                 if item.isGroup() {
-                    contentLabel.text = "\(senderName): \(R.string.localizable.notification_content_live())"
+                    contentLabel.text = "\(senderName): \(R.string.localizable.content_live())"
                 } else {
-                    contentLabel.text = R.string.localizable.notification_content_live()
+                    contentLabel.text = R.string.localizable.content_live()
                 }
             } else if category.hasSuffix("_AUDIO") {
                 if item.isGroup() {
-                    contentLabel.text = "\(senderName): \(R.string.localizable.notification_content_audio())"
+                    contentLabel.text = "\(senderName): \(R.string.localizable.content_audio())"
                 } else {
-                    contentLabel.text = R.string.localizable.notification_content_audio()
+                    contentLabel.text = R.string.localizable.content_audio()
                 }
             } else if category.hasSuffix("_POST") {
                 if item.isGroup() {
@@ -122,14 +122,14 @@ class ConversationCell: ModernSelectedBackgroundCell {
                 }
             } else if category.hasSuffix("_LOCATION") {
                 if item.isGroup() {
-                    contentLabel.text = "\(senderName): \(R.string.localizable.notification_content_location())"
+                    contentLabel.text = "\(senderName): \(R.string.localizable.content_location())"
                 } else {
-                    contentLabel.text = R.string.localizable.notification_content_location()
+                    contentLabel.text = R.string.localizable.content_location()
                 }
             } else if category.hasPrefix("WEBRTC_") {
-                contentLabel.text = R.string.localizable.notification_content_voice_call()
+                contentLabel.text = R.string.localizable.content_voice()
             } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
-                contentLabel.text = R.string.localizable.notification_content_transfer()
+                contentLabel.text = R.string.localizable.content_transfer()
             } else if category == MessageCategory.APP_BUTTON_GROUP.rawValue {
                 contentLabel.text = (item.appButtons?.map({ (appButton) -> String in
                     return "[\(appButton.label)]"
@@ -139,24 +139,24 @@ class ConversationCell: ModernSelectedBackgroundCell {
             } else if category == MessageCategory.MESSAGE_RECALL.rawValue {
                 setContentLabelFontItalic(true)
                 if senderIsMe {
-                    contentLabel.text = R.string.localizable.chat_message_recalled_by_me()
+                    contentLabel.text = R.string.localizable.you_deleted_this_message()
                 } else {
-                    contentLabel.text = R.string.localizable.chat_message_recalled()
+                    contentLabel.text = R.string.localizable.this_message_was_deleted()
                 }
             } else if category == MessageCategory.MESSAGE_PIN.rawValue {
                 contentLabel.text = TransferPinAction.pinMessage(item: item)
             } else if category == MessageCategory.KRAKEN_PUBLISH.rawValue {
-                contentLabel.text = R.string.localizable.group_call_publish(senderName)
+                contentLabel.text = R.string.localizable.started_group_call(senderName)
             } else if category == MessageCategory.KRAKEN_CANCEL.rawValue {
-                contentLabel.text = R.string.localizable.group_call_cancel(senderName)
+                contentLabel.text = R.string.localizable.chat_group_call_cancel(senderName)
             } else if category == MessageCategory.KRAKEN_DECLINE.rawValue {
-                contentLabel.text = R.string.localizable.group_call_decline(senderName)
+                contentLabel.text = R.string.localizable.chat_group_call_decline(senderName)
             } else if category == MessageCategory.KRAKEN_INVITE.rawValue {
-                contentLabel.text = R.string.localizable.group_call_invite(senderName)
+                contentLabel.text = R.string.localizable.chat_group_call_invite(senderName)
             } else if category == MessageCategory.KRAKEN_END.rawValue {
-                contentLabel.text = R.string.localizable.group_call_end()
+                contentLabel.text = R.string.localizable.content_group_call_ended()
             } else if category.hasSuffix("_TRANSCRIPT") {
-                contentLabel.text = R.string.localizable.notification_content_transcript()
+                contentLabel.text = R.string.localizable.content_transcript()
             } else {
                 if item.contentType.hasPrefix("SYSTEM_") {
                     contentLabel.text = SystemConversationAction.getSystemMessage(actionName: item.actionName,
@@ -168,7 +168,7 @@ class ConversationCell: ModernSelectedBackgroundCell {
                 } else if item.messageId.isEmpty {
                     contentLabel.text = ""
                 } else {
-                    contentLabel.text = R.string.localizable.chat_cell_title_unknown_category()
+                    contentLabel.text = R.string.localizable.message_not_support()
                 }
             }
         }

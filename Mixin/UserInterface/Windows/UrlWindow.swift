@@ -60,15 +60,15 @@ class UrlWindow {
                 return checkUser(identityNumber: number)
             case let .phoneNumber(number):
                 let sheet = UIAlertController(title: number, message: nil, preferredStyle: .actionSheet)
-                sheet.addAction(UIAlertAction(title: R.string.localizable.action_phone_call(), style: .default, handler: { _ in
+                sheet.addAction(UIAlertAction(title: R.string.localizable.phone_call(), style: .default, handler: { _ in
                     let url = URL(string: "tel://\(number)")!
                     UIApplication.shared.open(url, options: [:], completionHandler: nil)
                 }))
-                sheet.addAction(UIAlertAction(title: R.string.localizable.action_copy(), style: .default, handler: { _ in
+                sheet.addAction(UIAlertAction(title: R.string.localizable.copy(), style: .default, handler: { _ in
                     UIPasteboard.general.string = number
-                    showAutoHiddenHud(style: .notification, text: R.string.localizable.toast_copied())
+                    showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
                 }))
-                sheet.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
+                sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
                 UIApplication.homeContainerViewController?.present(sheet, animated: true, completion: nil)
                 return true
             }
@@ -97,7 +97,7 @@ class UrlWindow {
                     appItem = response.app
                     UserDAO.shared.updateUsers(users: [response])
                 case let .failure(error):
-                    let text = error.localizedDescription(overridingNotFoundDescriptionWith: R.string.localizable.app_not_found())
+                    let text = error.localizedDescription(overridingNotFoundDescriptionWith: R.string.localizable.bot_not_found())
                     DispatchQueue.main.async {
                         showAutoHiddenHud(style: .error, text: text)
                     }
@@ -111,7 +111,7 @@ class UrlWindow {
 
             guard let app = appItem else {
                 DispatchQueue.main.async {
-                    showAutoHiddenHud(style: .error, text: R.string.localizable.app_not_found())
+                    showAutoHiddenHud(style: .error, text: R.string.localizable.bot_not_found())
                 }
                 return
             }
@@ -462,12 +462,12 @@ class UrlWindow {
         }
         guard let recipientId = query["recipient"]?.lowercased(), let assetId = query["asset"]?.lowercased(), let amount = query["amount"] else {
             Logger.general.error(category: "PayURL", message: "Invalid URL: \(url)")
-            showAutoHiddenHud(style: .error, text: R.string.localizable.url_invalid_payment())
+            showAutoHiddenHud(style: .error, text: R.string.localizable.invalid_payment_link())
             return true
         }
         guard !recipientId.isEmpty && UUID(uuidString: recipientId) != nil && !assetId.isEmpty && UUID(uuidString: assetId) != nil && !amount.isEmpty && amount.isGenericNumber else {
             Logger.general.error(category: "PayURL", message: "Invalid URL: \(url)")
-            showAutoHiddenHud(style: .error, text: R.string.localizable.url_invalid_payment())
+            showAutoHiddenHud(style: .error, text: R.string.localizable.invalid_payment_link())
             return true
         }
 
@@ -725,7 +725,7 @@ extension UrlWindow {
                     hud.hide()
                 }
             case let .failure(error):
-                let text = error.localizedDescription(overridingNotFoundDescriptionWith: R.string.localizable.code_recognition_fail_title())
+                let text = error.localizedDescription(overridingNotFoundDescriptionWith: R.string.localizable.unrecognized_codes())
                 hud.set(style: .error, text: text)
                 hud.scheduleAutoHidden()
             }
@@ -902,7 +902,7 @@ extension UrlWindow {
             }
 
             let receiverUsers = users.filter { payment.receivers.contains($0.userId) }
-            let error = payment.status == PaymentStatus.paid.rawValue ? R.string.localizable.transfer_paid() : ""
+            let error = payment.status == PaymentStatus.paid.rawValue ? R.string.localizable.pay_paid() : ""
 
             DispatchQueue.main.async {
                 hud.hide()

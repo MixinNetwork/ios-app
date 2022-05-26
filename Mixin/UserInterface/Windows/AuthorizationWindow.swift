@@ -72,7 +72,7 @@ class AuthorizationWindow: BottomSheetView {
             switch result {
             case let .success(response):
                 weakSelf.loginSuccess = true
-                showAutoHiddenHud(style: .notification, text: Localized.TOAST_AUTHORIZED)
+                showAutoHiddenHud(style: .notification, text: R.string.localizable.authorized())
                 weakSelf.dismissPopupControllerAnimated()
                 if UIApplication.homeNavigationController?.viewControllers.last is CameraViewController {
                     UIApplication.homeNavigationController?.popViewController(animated: true)
@@ -94,7 +94,7 @@ class AuthorizationWindow: BottomSheetView {
             result += ", \(assets[1].localizedBalance) \(assets[1].symbol)"
         }
         if assets.count > 2 {
-            result += Localized.AUTH_ASSETS_MORE
+            result = R.string.localizable.auth_assets_more(result)
         }
         return result
     }

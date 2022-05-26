@@ -28,7 +28,7 @@ class SharedMediaDataCell: ModernSelectedBackgroundCell, AttachmentLoadingMessag
         }
         titleLabel.text = viewModel.message.name
         let mediaExpired = viewModel.message.mediaStatus == MediaStatus.EXPIRED.rawValue
-        subtitleLabel.text = mediaExpired ? Localized.CHAT_FILE_EXPIRED : viewModel.sizeRepresentation
+        subtitleLabel.text = mediaExpired ? R.string.localizable.expired() : viewModel.sizeRepresentation
         updateOperationButtonStyle()
         NotificationCenter.default.addObserver(self, selector: #selector(updateDownloadProgress(_:)), name: AttachmentLoadingJob.progressNotification, object: nil)
     }

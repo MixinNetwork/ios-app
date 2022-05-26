@@ -48,8 +48,8 @@ class ClipSwitcherViewController: UIViewController {
     }
     
     @IBAction func removeAll(_ sender: Any) {
-        let controller = UIAlertController(title: R.string.localizable.clip_remove_all(), message: nil, preferredStyle: .actionSheet)
-        controller.addAction(UIAlertAction(title: R.string.localizable.action_remove_all(), style: .destructive, handler: { (_) in
+        let controller = UIAlertController(title: R.string.localizable.remove_all_floats(), message: nil, preferredStyle: .actionSheet)
+        controller.addAction(UIAlertAction(title: R.string.localizable.remove_all(), style: .destructive, handler: { (_) in
             self.collectionView.performBatchUpdates {
                 let indexPaths = (0..<self.clips.count).map {
                     IndexPath(item: $0, section: 0)
@@ -61,7 +61,7 @@ class ClipSwitcherViewController: UIViewController {
             }
             UIApplication.homeContainerViewController?.clipSwitcher.replaceClips(with: [])
         }))
-        controller.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
+        controller.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         present(controller, animated: true, completion: nil)
     }
     

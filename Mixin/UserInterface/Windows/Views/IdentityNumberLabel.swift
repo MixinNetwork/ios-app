@@ -5,7 +5,7 @@ final class IdentityNumberLabel: UILabel {
     var identityNumber: String? {
         didSet {
             if let id = identityNumber {
-                text = Localized.PROFILE_MIXIN_ID(id: id)
+                text = R.string.localizable.contact_mixin_id(id)
             } else {
                 text = nil
             }

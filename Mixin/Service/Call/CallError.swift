@@ -28,13 +28,13 @@ enum CallError: Error {
     var alertContent: String {
         switch self {
         case .busy:
-            return R.string.localizable.call_hint_on_another_call()
+            return R.string.localizable.call_on_another_call_hint()
         case .networkFailure:
-            return R.string.localizable.call_no_network()
+            return R.string.localizable.call_no_network_hint()
         case .microphonePermissionDenied:
-            return R.string.localizable.call_no_microphone_permission()
+            return R.string.localizable.call_no_microphone_permission_hint()
         case .roomFull:
-            return R.string.localizable.error_room_full()
+            return R.string.localizable.room_is_full()
         case .peerNotFound:
             return R.string.localizable.call_remote_error("5002001")
         case .peerClosed:
@@ -42,7 +42,7 @@ enum CallError: Error {
         case .trackNotFound:
             return R.string.localizable.call_remote_error("5002003")
         default:
-            return R.string.localizable.chat_message_call_failed()
+            return R.string.localizable.call_failed()
         }
     }
     

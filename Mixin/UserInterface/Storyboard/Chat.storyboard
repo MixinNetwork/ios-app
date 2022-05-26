@@ -51,7 +51,7 @@
                                                             <color key="textColor" name="text_accessory"/>
                                                             <nil key="highlightedColor"/>
                                                             <userDefinedRuntimeAttributes>
-                                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="chat_cell_title_unread_messages"/>
+                                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="unread_messages"/>
                                                                 <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
                                                             </userDefinedRuntimeAttributes>
                                                         </label>
@@ -557,7 +557,7 @@
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                 <state key="normal" title="Unblock"/>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="profile_unblock"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="unblock"/>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
@@ -570,7 +570,7 @@
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                 <state key="normal" title="Delete Chat"/>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="group_menu_delete"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="delete_chat"/>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
@@ -662,7 +662,7 @@
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                 <textInputTraits key="textInputTraits" returnKeyType="search"/>
                                                 <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_placeholder" value="chat_search_giphy"/>
+                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_placeholder" value="search_giphy"/>
                                                 </userDefinedRuntimeAttributes>
                                             </textField>
                                         </subviews>
@@ -687,7 +687,7 @@
                                             <color key="titleColor" name="text"/>
                                         </state>
                                         <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="dialog_button_cancel"/>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="cancel"/>
                                             <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
@@ -781,7 +781,7 @@
                                         <color key="textColor" name="text"/>
                                         <nil key="highlightedColor"/>
                                         <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="sticker_store_title"/>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="sticker_store"/>
                                         </userDefinedRuntimeAttributes>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3I4-7a-kYZ">
@@ -841,7 +841,7 @@
                                                     <inset key="contentEdgeInsets" minX="10" minY="0.0" maxX="10" maxY="0.0"/>
                                                     <state key="normal" title="Add"/>
                                                     <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="sticker_store_add"/>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="add"/>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                                             <integer key="value" value="13"/>
                                                         </userDefinedRuntimeAttribute>
@@ -999,7 +999,7 @@
                                         <color key="textColor" name="text"/>
                                         <nil key="highlightedColor"/>
                                         <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="sticker_store_my_stickers"/>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="my_stickers"/>
                                         </userDefinedRuntimeAttributes>
                                     </label>
                                 </subviews>
@@ -1335,7 +1335,7 @@
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="sticker_store_add"/>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="add"/>
                                             <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                                 <integer key="value" value="13"/>
                                             </userDefinedRuntimeAttribute>
@@ -1970,7 +1970,7 @@
                                                         <color key="textColor" name="text_accessory"/>
                                                         <nil key="highlightedColor"/>
                                                         <userDefinedRuntimeAttributes>
-                                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="chat_voice_record_cancel"/>
+                                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="slide_to_cancel"/>
                                                         </userDefinedRuntimeAttributes>
                                                     </label>
                                                 </subviews>
@@ -2003,7 +2003,7 @@
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                         <state key="normal" title="Cancel"/>
                                         <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="dialog_button_cancel"/>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="cancel"/>
                                             <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
@@ -2250,7 +2250,7 @@
                                                 <inset key="contentEdgeInsets" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
                                                 <state key="normal" title="Pick from Library"/>
                                                 <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="chat_pick_from_library"/>
+                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="pick_from_library"/>
                                                     <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
                                                     <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
                                                 </userDefinedRuntimeAttributes>
@@ -2264,7 +2264,7 @@
                                                 <inset key="contentEdgeInsets" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
                                                 <state key="normal" title="Manage"/>
                                                 <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="chat_manage_photo_auth"/>
+                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="manage"/>
                                                     <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
                                                     <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
                                                 </userDefinedRuntimeAttributes>
@@ -2583,7 +2583,7 @@
                                                 </state>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="action_send"/>
+                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="send"/>
                                                 </userDefinedRuntimeAttributes>
                                                 <connections>
                                                     <action selector="sendAction:" destination="lA6-Lu-PN4" eventType="touchUpInside" id="jAu-4c-Npf"/>
@@ -2622,7 +2622,7 @@
                                                 <integer key="value" value="13"/>
                                             </userDefinedRuntimeAttribute>
                                             <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="dialog_button_cancel"/>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="cancel"/>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
                                             <action selector="dismissAction:" destination="lA6-Lu-PN4" eventType="touchUpInside" id="xxL-n8-in1"/>
@@ -2725,7 +2725,7 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="action_send"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="send"/>
                                     <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
                                 </userDefinedRuntimeAttributes>
@@ -2831,7 +2831,7 @@
             <color red="0.89803921568627454" green="0.90588235294117647" blue="0.92156862745098034" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
             <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

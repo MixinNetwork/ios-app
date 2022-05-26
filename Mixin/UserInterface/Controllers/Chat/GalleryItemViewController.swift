@@ -53,7 +53,7 @@ class GalleryItemViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         operationButton.addTarget(self, action: #selector(attachmentAction(_:)), for: .touchUpInside)
-        expiredHintLabel.text = R.string.localizable.chat_file_expired()
+        expiredHintLabel.text = R.string.localizable.expired()
         expiredHintLabel.font = .preferredFont(forTextStyle: .footnote)
         expiredHintLabel.adjustsFontForContentSizeCategory = true
         expiredHintLabel.textColor = .white

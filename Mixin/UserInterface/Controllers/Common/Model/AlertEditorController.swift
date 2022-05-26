@@ -15,7 +15,7 @@ class AlertEditorController {
         guard let viewController = viewController else {
             return
         }
-        let cancel = R.string.localizable.dialog_button_cancel()
+        let cancel = R.string.localizable.cancel()
         
         let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
         alert.addTextField { (textField) in

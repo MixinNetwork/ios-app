@@ -33,7 +33,7 @@ class SettingsViewController: SettingsTableViewController {
                         title: R.string.localizable.feedback(),
                         accessory: .disclosure),
             SettingsRow(icon: R.image.setting.ic_category_share(),
-                        title: R.string.localizable.share_this_app(),
+                        title: R.string.localizable.share_this_bot(),
                         accessory: .disclosure)
         ]),
         SettingsSection(rows: [

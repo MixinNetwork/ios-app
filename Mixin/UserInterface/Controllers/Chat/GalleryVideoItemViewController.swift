@@ -264,7 +264,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         }, completionHandler: { (success, error) in
             DispatchQueue.main.async {
                 if success {
-                    showAutoHiddenHud(style: .notification, text: R.string.localizable.video_saved())
+                    showAutoHiddenHud(style: .notification, text: R.string.localizable.saved())
                 } else {
                     showAutoHiddenHud(style: .error, text: R.string.localizable.unable_to_save_video())
                 }

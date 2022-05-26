@@ -43,11 +43,11 @@ enum Scope: String {
             scopes.append(Scope.SNAPSHOTS_READ.rawValue)
         }
         if authInfo.scopes.contains(Scope.APPS_READ.rawValue) {
-            result.append((.APPS_READ, R.string.localizable.read_apps(), R.string.localizable.access_your_apps_list()))
+            result.append((.APPS_READ, R.string.localizable.read_bots(), R.string.localizable.access_your_bots_list()))
             scopes.append(Scope.APPS_READ.rawValue)
         }
         if authInfo.scopes.contains(Scope.APPS_WRITE.rawValue) {
-            result.append((.APPS_WRITE, R.string.localizable.manage_apps(), R.string.localizable.manage_all_your_apps()))
+            result.append((.APPS_WRITE, R.string.localizable.manage_bots(), R.string.localizable.manage_all_your_bots()))
             scopes.append(Scope.APPS_WRITE.rawValue)
         }
         if authInfo.scopes.contains(Scope.CIRCLES_READ.rawValue) {

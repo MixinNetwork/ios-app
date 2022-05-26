@@ -22,7 +22,7 @@ class CurrencySelectorViewController: PopupSearchableTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        searchBoxView.textField.placeholder = R.string.localizable.code()
+        searchBoxView.textField.placeholder = R.string.localizable.currency_code()
         tableView.register(R.nib.currencyCell)
         tableView.dataSource = self
         tableView.delegate = self

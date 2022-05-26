@@ -52,7 +52,7 @@ final class PermissionsViewController: UIViewController {
                         self.reloadData(response: response)
                         hud.hide()
                     } else {
-                        hud.set(style: .error, text: R.string.localizable.no_authorizations())
+                        hud.set(style: .error, text: R.string.localizable.no_authorization())
                         hud.scheduleAutoHidden()
                     }
                 case let .failure(error):

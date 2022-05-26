@@ -271,7 +271,7 @@ extension UserProfileViewController {
         vc.transitioningDelegate = PopupPresentationManager.shared
         vc.modalPresentationStyle = .custom
         vc.loadViewIfNeeded()
-        vc.titleLabel.text = R.string.localizable.contact_share_apps_title(user.fullName)
+        vc.titleLabel.text = R.string.localizable.contact_share_bots_title(user.fullName)
         vc.users = users
         dismissAndPresent(vc)
     }
@@ -479,7 +479,7 @@ extension UserProfileViewController {
     
     @objc func removeFriend() {
         let userId = user.userId
-        let hint = user.isBot ? R.string.localizable.remove_app_hint() : R.string.localizable.remove_contact_hint()
+        let hint = user.isBot ? R.string.localizable.remove_bot_hint() : R.string.localizable.remove_contact_hint()
         let removeTitle = user.isBot ? R.string.localizable.remove_bot() : R.string.localizable.remove_contact()
         let alert = UIAlertController(title: hint, message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))

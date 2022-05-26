@@ -156,7 +156,7 @@ extension StickersAlbumPreviewViewController {
             stickerActionButton.setTitle(R.string.localizable.remove_stickers(), for: .normal)
         } else {
             stickerActionButton.backgroundColor = R.color.theme()
-            stickerActionButton.setTitle(R.string.localizable.add_sticker(), for: .normal)
+            stickerActionButton.setTitle(R.string.localizable.add_stickers(), for: .normal)
         }
     }
     

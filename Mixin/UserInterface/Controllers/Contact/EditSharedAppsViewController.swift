@@ -13,7 +13,7 @@ class EditSharedAppsViewController: UIViewController {
     
     class func instance() -> UIViewController {
         let vc = R.storyboard.contact.edit_shared_apps()!
-        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.my_shared_apps())
+        return ContainerViewController.instance(viewController: vc, title: R.string.localizable.my_shared_bots())
     }
     
     override func viewDidLoad() {
@@ -113,7 +113,7 @@ extension EditSharedAppsViewController: UITableViewDelegate {
                 return nil
             } else {
                 if candidates.isEmpty {
-                    view.text = R.string.localizable.profile_share_app_hint()
+                    view.text = R.string.localizable.profile_share_bot_hint()
                     view.style = .candidate
                 } else {
                     view.text = nil
@@ -122,7 +122,7 @@ extension EditSharedAppsViewController: UITableViewDelegate {
                 return view
             }
         } else {
-            view.text = R.string.localizable.profile_share_app_hint()
+            view.text = R.string.localizable.profile_share_bot_hint()
             view.style = .candidate
             if candidates.isEmpty {
                 return nil

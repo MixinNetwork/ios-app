@@ -43,7 +43,7 @@ final class ViewEmergencyContactViewController: UIViewController {
         ]
         let str = NSMutableAttributedString(string: text, attributes: attrs)
         let linkRange = (text as NSString)
-            .range(of: R.string.localizable.emergency_contact(), options: .backwards)
+            .range(of: R.string.localizable.learn_more(), options: .backwards)
         if linkRange.location != NSNotFound && linkRange.length != 0 {
             str.addAttribute(.link, value: URL.emergencyContact, range: linkRange)
         }

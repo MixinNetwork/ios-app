@@ -97,7 +97,7 @@ class UrlWindow {
                     appItem = response.app
                     UserDAO.shared.updateUsers(users: [response])
                 case let .failure(error):
-                    let text = error.localizedDescription(overridingNotFoundDescriptionWith: R.string.localizable.app_not_found())
+                    let text = error.localizedDescription(overridingNotFoundDescriptionWith: R.string.localizable.bot_not_found())
                     DispatchQueue.main.async {
                         showAutoHiddenHud(style: .error, text: text)
                     }
@@ -111,7 +111,7 @@ class UrlWindow {
 
             guard let app = appItem else {
                 DispatchQueue.main.async {
-                    showAutoHiddenHud(style: .error, text: R.string.localizable.app_not_found())
+                    showAutoHiddenHud(style: .error, text: R.string.localizable.bot_not_found())
                 }
                 return
             }

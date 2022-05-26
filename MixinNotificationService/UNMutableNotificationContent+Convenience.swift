@@ -101,7 +101,7 @@ public extension UNMutableNotificationContent {
                 return R.string.localizable.alert_key_contact_location_message()
             }
         } else if message.category.hasPrefix("KRAKEN_") {
-            return R.string.localizable.alert_key_group_audio_call_message(userFullName)
+            return R.string.localizable.alert_key_group_audio_invite_message(userFullName)
         } else if message.category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
             switch message.snapshotType {
             case SnapshotType.deposit.rawValue:

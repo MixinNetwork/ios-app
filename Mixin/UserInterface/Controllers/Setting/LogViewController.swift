@@ -48,7 +48,7 @@ class LogViewController: UIViewController {
                 self.logs += logs
                 self.tableView.reloadData()
                 self.tableView.checkEmpty(dataCount: self.logs.count,
-                                          text: R.string.localizable.no_logs(),
+                                          text: R.string.localizable.no_log(),
                                           photo: R.image.emptyIndicator.ic_data()!)
                 self.view.layoutIfNeeded()
             case let .failure(error):
@@ -104,6 +104,8 @@ class LogViewController: UIViewController {
             return (R.string.localizable.sign_in(), R.string.localizable.sign_with_emergency_contact())
         case "ACTIVITY_LOGIN_FROM_DESKTOP":
             return (R.string.localizable.sign_in(), R.string.localizable.desktop_on_hint())
+        case "ACTIVITY_PIN_CREATION":
+            return (R.string.localizable.pin_creation(), R.string.localizable.your_pin_has_been_created())
         default:
             return (code, code)
         }

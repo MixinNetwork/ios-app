@@ -321,7 +321,7 @@ extension MixinWebViewController: WebMoreMenuControllerDelegate {
                     if context.isShareable ?? true {
                         shareAppCardAction(currentUrl: url)
                     } else {
-                        presentGotItAlertController(title: R.string.localizable.app_card_shareable_false())
+                        presentGotItAlertController(title: R.string.localizable.link_shareable_false())
                     }
                 case .webPage:
                     shareUrlAction(currentUrl: url)

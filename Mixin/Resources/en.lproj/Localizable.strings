@@ -568,7 +568,7 @@
 "phone_number_privacy" = "Who can find me by my number";
 "photo" = "Photo";
 "photo_saved" = "Photo saved.";
-"photo_count" = "%d  Photos";
+"photo_count" = "%d Photos";
 "photos" = "Photos";
 "pick_from_library" = "Pick from Library";
 "pin" = "PIN";

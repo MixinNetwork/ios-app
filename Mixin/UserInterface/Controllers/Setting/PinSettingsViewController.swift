@@ -153,7 +153,7 @@ extension PinSettingsViewController {
     }
     
     private func setNewPinInterval(interval: Double) {
-        let validator = PinValidationViewController(tips: R.string.localizable.protect_setting_security_hint(), onSuccess: { (_) in
+        let validator = PinValidationViewController(tips: R.string.localizable.change_pin_interval_hint(), onSuccess: { (_) in
             AppGroupUserDefaults.Wallet.biometricPaymentExpirationInterval = interval
             self.updatePinIntervalRow()
         })

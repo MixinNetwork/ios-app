@@ -26,6 +26,7 @@
 "admin" = "Admin";
 "agree_hint" = "By proceeding, you agree to the %@ and %@.";
 "albums" = "Albums";
+"alert_key_contact_audio_call_cancelled_message" = "voice call cancelled";
 "alert_key_contact_audio_call_message" = "invites you to a voice call";
 "alert_key_contact_audio_message" = "sent you an audio";
 "alert_key_contact_contact_message" = "sent you a contact";
@@ -33,6 +34,7 @@
 "alert_key_contact_image_message" = "sent you a photo";
 "alert_key_contact_live_message" = "sent you a live stream";
 "alert_key_contact_location_message" = "sent you a location";
+"alert_key_contact_message" = "sent you a message";
 "alert_key_contact_post_message" = "sent you a post";
 "alert_key_contact_sticker_message" = "sent you a sticker";
 "alert_key_contact_text_message" = "sent you a message";
@@ -46,14 +48,12 @@
 "alert_key_group_image_message" = "%@ sent a photo";
 "alert_key_group_live_message" = "%@ sent a live stream";
 "alert_key_group_location_message" = "%@ sent a location";
+"alert_key_group_message" = "%@ sent a message";
 "alert_key_group_post_message" = "%@ sent a post";
 "alert_key_group_sticker_message" = "%@ sent a sticker";
 "alert_key_group_text_message" = "%@ sent a message";
 "alert_key_group_transcript_message" = "%@ sent a transcript";
 "alert_key_group_video_message" = "%@ sent a video";
-"alert_key_contact_message" = "sent you a message";
-"alert_key_contact_audio_call_cancelled_message" = "voice call cancelled";
-"alert_key_group_message" = "%@ sent a message";
 "all" = "All";
 "all_conversations" = "All Conversations";
 "all_photos" = "All Photos";
@@ -61,8 +61,6 @@
 "allow_manual_report_message" = "Allow Manual Report Message";
 "amount" = "Amount";
 "app_card_shareable_false" = "The card has been set to not allow sharing";
-"bot_not_found" = "Bot not found";
-"bot_pin_hint" = "You can long press and drag the frequently used bots here to display them on the home";
 "app_update_short_hint" = "Please update Mixin from App Store to continue use the service.";
 "app_update_tips" = "The current version (%@) is no longer available! Please click \"Update\" below to update to the latest version from the App Store.";
 "appearance" = "Appearance";
@@ -99,6 +97,8 @@
 "blocked_users" = "Blocked Users";
 "books" = "Books";
 "bot_empty_tip" = "Please add your favorite bot first.";
+"bot_not_found" = "Bot not found";
+"bot_pin_hint" = "You can long press and drag the frequently used bots here to display them on the home";
 "bots" = "BOTS";
 "bots_title" = "Bots";
 "business" = "Business";
@@ -139,8 +139,8 @@
 "change_your_app_language" = "Change your app language";
 "changed" = "Changed";
 "changed_disappearing_message_settings" = "%@ changed disappearing message settings.";
-"chat_bot_reception_title" = "Tap the button to interact with the bot";
 "chat_backup" = "Chat Backup";
+"chat_bot_reception_title" = "Tap the button to interact with the bot";
 "chat_call_duration" = "Duration %@";
 "chat_call_warning_voice" = "Can't record voice messages during a Mixin call.";
 "chat_decryption_failed" = "This message decryption failed, please upgrade Mixin to the latest version.";
@@ -152,6 +152,7 @@
 "chat_group_exit" = "%@ left";
 "chat_group_join" = "%@ joined the group via invite link";
 "chat_group_remove" = "%1$@ removed %2$@";
+"chat_list_empty_info" = "You can chat with contacts who have Mixin installed on their phone.";
 "chat_not_support" = "This type of message is not supported, please upgrade Mixin to the latest version. %@.";
 "chat_on_mixin_content" = "Let's chat on Mixin Messenger! Simple, safe, and easy to use. It also supports Bitcoin, Ethereum, and other cryptocurrencies, download https://mixin.one/messenger and search %@ to add me as a friend.";
 "chat_pin_message" = "%1$@ pinned %2$@";
@@ -161,7 +162,6 @@
 "chats" = "CHATS";
 "choose_photo" = "Choose Photo";
 "circle_info" = "Create circles for different groups of chats and quickly switch between them";
-"number_reached_limit" = "The number has reached the limit";
 "circle_no_conversation_hint" = "You can add contacts or groups to the current circle";
 "circle_subtitle" = "%d Conversation";
 "circle_subtitle_count" = "%d Conversations";
@@ -175,7 +175,6 @@
 "cleared" = "Cleared";
 "clock_skew_hint" = "Please continue to use again after correction. Settings > General > Date & Time > Turn on Set Automatically";
 "close" = "Close";
-"currency_code" = "Code";
 "collectible_token_id" = "#%@";
 "combine_and_forward" = "Combine and forward";
 "compress_database" = "Compress Database";
@@ -219,7 +218,6 @@
 "conversation" = "Conversation";
 "conversation_has_too_many_circles" = "The conversation has too many circles";
 "conversation_not_found" = "Conversation not found.";
-"message_not_support" = "This type of message is not supported, please upgrade Mixin to the latest version.";
 "conversations" = "Conversations";
 "copied" = "Copied";
 "copy" = "Copy";
@@ -230,6 +228,7 @@
 "create" = "Create";
 "created_this_group" = "%@ created this group";
 "currency" = "Currency";
+"currency_code" = "Code";
 "current_location" = "Current Location";
 "current_selected" = "Current Selected";
 "custom_time" = "Custom Time";
@@ -303,7 +302,6 @@
 "edit_name" = "Edit Name";
 "education" = "Education";
 "emergency_contact" = "Emergency Contact";
-"chat_list_empty_info" = "You can chat with contacts who have Mixin installed on their phone.";
 "enable_emergency_contact" = "Enable Emergency Contact";
 "enable_face_pay_hint" = "Confirm PIN to enable Face Pay";
 "enable_pay" = "Enable %@ Pay";
@@ -433,9 +431,9 @@
 "line_busy" = "Line busy";
 "line_busy_remote" = "Line busy";
 "link_recognition_failure" = "Link recognition failure";
+"link_shareable_false" = "The link has been set to not allow sharing";
 "live" = "Live";
 "live_shareable_false" = "The live has been set to not allow sharing";
-"link_shareable_false" = "The link has been set to not allow sharing";
 "live_stream" = "live stream";
 "loading" = "Loading...";
 "locating" = "Locating...";
@@ -461,6 +459,7 @@
 "message_e2ee" = "Messages to this conversation are encrypted end-to-end, tap for more info.";
 "message_encryption_hint" = "Messages between users are protected with an end-to-end encryption";
 "message_not_found" = "Message not found";
+"message_not_support" = "This type of message is not supported, please upgrade Mixin to the latest version.";
 "message_preview" = "Message Preview";
 "message_sent" = "Message sent";
 "messages" = "Messages";
@@ -500,12 +499,13 @@
 "new_wallet_hint" = "Create your first digital wallet, all your digital assets in one wallet, easy send and receive cryptocurrency.";
 "news" = "News";
 "next" = "Next";
-"no_bot" = "NO BOT";
 "no_audio" = "NO AUDIO";
 "no_authorization" = "NO AUTHORIZATION";
 "no_blocked_user" = "No blocked user";
+"no_bot" = "NO BOT";
 "no_file" = "NO FILE";
 "no_hidden_asset" = "No hidden asset";
+"no_items_selected" = "No Items Selected";
 "no_log" = "No log";
 "no_media" = "NO MEDIA";
 "no_memo" = "No Memo";
@@ -523,6 +523,7 @@
 "notification_content" = "Don't miss messages from your friends.";
 "notification_message_preview_description" = "Preview message text inside new message notifications.";
 "now_an_addmin" = "%@ now an admin";
+"number_reached_limit" = "The number has reached the limit";
 "off" = "Off";
 "ok" = "OK";
 "one_by_one_forward" = "One-by-One Forward";
@@ -567,6 +568,7 @@
 "phone_number_privacy" = "Who can find me by my number";
 "photo" = "Photo";
 "photo_saved" = "Photo saved.";
+"photo_count" = "%d Photos";
 "photos" = "Photos";
 "pick_from_library" = "Pick from Library";
 "pin" = "PIN";
@@ -574,6 +576,7 @@
 "pin_check_tip" = "You'll be asked for it periodically to help you remember it.";
 "pin_confirm_again_hint" = "Please confirm your 6 digit PIN again";
 "pin_confirm_hint" = "Please confirm the 6 digit PIN and remember it";
+"pin_creation" = "PIN creation";
 "pin_incorrect" = "PIN incorrect";
 "pin_lost_hint" = "If lost, there is no way to recover your wallet.";
 "pin_title" = "Pin";
@@ -600,13 +603,13 @@
 "privacy_policy" = "Privacy Policy";
 "profile_photo" = "Profile Photo";
 "profile_share_bot_hint" = "If you want to share a bot, add it to your contacts first";
-"protect_setting_security_hint" = "Confirm PIN to protect your settings security.";
+"change_pin_interval_hint" = "Confirm PIN to change interval";
 "public_profile" = "Public profile (required)";
 "qr_code" = "QR Code";
 "qr_code_not_found" = "QR Code not found";
 "raw" = "Raw";
-"read_bots" = "Read Bots";
 "read_assets" = "Read Assets";
+"read_bots" = "Read Bots";
 "read_circles" = "Read Circles";
 "read_collectibles" = "Read Collectibles";
 "read_contacts" = "Read Contacts";
@@ -622,8 +625,8 @@
 "reload" = "Reload";
 "remove_all" = "Remove All";
 "remove_all_floats" = "Remove all floats?";
-"remove_bot_hint" = "Remove bot? Chat history will remain on your device";
 "remove_bot" = "Remove Bot";
+"remove_bot_hint" = "Remove bot? Chat history will remain on your device";
 "remove_contact" = "Remove Contact";
 "remove_contact_hint" = "Remove friend? Chat history will remain on your device";
 "remove_emergency_contact" = "Remove emergency contact";
@@ -644,7 +647,6 @@
 "restoring" = "Restoring...";
 "restoring_progress" = "Restoring %@";
 "revoke_access" = "Revoke access";
-"setting_revoke_confirmation" = "Revoke access %@?";
 "revoke_multisig_transaction" = "Revoke Multisig Transaction";
 "room_is_full" = "Room is full";
 "save" = "Save";
@@ -675,15 +677,30 @@
 "select_emergency_contact" = "Select Emergency Contact";
 "select_more_photos" = "Select More Photos";
 "selected_count" = "%@ Selected";
+"selected_item" = "Selected 1 Item";
+"selected_item_count" = "Selected %d Items";
+"selected_photo" = "Selected 1 Photo";
+"selected_photo_count" = "Selected %d Photos";
+"selected_video" = "Selected 1 Video";
+"selected_video_count" = "Selected %d Videos";
 "send" = "Send";
+"send_as_file" = "Send as File";
+"send_as_files" = "Send as Files";
+"send_item" = "Send 1 Item";
+"send_item_count" = "Send %d Items";
 "send_message" = "Send Message";
+"send_photo" = "Send 1 Photo";
+"send_photo_count" = "Send %d Photos";
 "send_this_location" = "Send This Location";
 "send_to" = "Send to %@";
 "send_to_developer" = "Send to Developer";
 "send_to_title" = "Send To";
 "send_verification_code_frequent" = "Send verification code too frequent, please try again later.";
+"send_video" = "Send 1 Video";
+"send_video_count" = "Send %d Videos";
 "send_without_sound" = "Send Without Sound";
 "send_your_current_location" = "Send your Current Location";
+"send_count" = "Send(%d)";
 "senders" = "Senders";
 "set" = "Set";
 "set_disappearing_message_time_to" = "%1$@ set disappearing message time to %2$@";
@@ -709,6 +726,7 @@
 "setting_mobile_contact_warning" = "This will remove your contacts from the Mixin servers.";
 "setting_notification_transfer_summary" = "Display notifications when receiving a transfer greater than or equal to %@.";
 "setting_privacy_tip" = "Change who can add you to conversation and groups.";
+"setting_revoke_confirmation" = "Revoke access %@?";
 "setting_storage_clear" = "Clear %1$d message (%2$@)?";
 "setting_storage_clear_count" = "Clear %1$d messages (%2$@)?";
 "setting_transfer_large_summary" = "Show confirmation dialog when transfer greater than or equal to %@.";
@@ -828,8 +846,6 @@
 "use_touch_pay" = "Use Touch Pay";
 "use_touch_withdraw" = "Use Touch Withdraw";
 "user_is_reported" = "User has been reported";
-"pin_creation" = "PIN creation";
-"your_pin_has_been_created" = "Your PIN has been created";
 "user_not_found" = "User not found";
 "validation_timed_out" = "Validation timed out";
 "value_now" = "value now %@";
@@ -893,3 +909,4 @@
 "your_emergency_contact_has_been_changed" = "Your emergency contact has been changed";
 "your_phone_number_has_been_changed" = "Your phone number has been changed";
 "your_pin_has_been_changed" = "Your PIN has been changed";
+"your_pin_has_been_created" = "Your PIN has been created";

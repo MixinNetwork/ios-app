@@ -26,6 +26,7 @@
 "admin" = "管理员";
 "agree_hint" = "继续使用即表示你同意 %@ 和 %@";
 "albums" = "相册";
+"alert_key_contact_audio_call_cancelled_message" = "对方已取消语音通话";
 "alert_key_contact_audio_call_message" = "发起了语音通话";
 "alert_key_contact_audio_message" = "发送一条语音";
 "alert_key_contact_contact_message" = "分享了一个联系人";
@@ -33,6 +34,7 @@
 "alert_key_contact_image_message" = "发送一张照片";
 "alert_key_contact_live_message" = "发送一个直播";
 "alert_key_contact_location_message" = "发送了一个位置";
+"alert_key_contact_message" = "发送一条消息";
 "alert_key_contact_post_message" = "发送了一篇文章";
 "alert_key_contact_sticker_message" = "发送一张贴纸";
 "alert_key_contact_text_message" = "发送一条消息";
@@ -46,14 +48,12 @@
 "alert_key_group_image_message" = "%@发送一张照片";
 "alert_key_group_live_message" = "%@发送一个直播";
 "alert_key_group_location_message" = "%@发送一个位置";
+"alert_key_group_message" = "%@发来一条信息";
 "alert_key_group_post_message" = "%@发送一篇文章";
 "alert_key_group_sticker_message" = "%@发送一张贴纸";
 "alert_key_group_text_message" = "%@发送一条消息";
 "alert_key_group_transcript_message" = "%@分享一个聊天记录";
 "alert_key_group_video_message" = "%@发送一个视频";
-"alert_key_contact_message" = "发送一条消息";
-"alert_key_contact_audio_call_cancelled_message" = "对方已取消语音通话";
-"alert_key_group_message" = "%@发来一条信息";
 "all" = "全部";
 "all_conversations" = "所有会话";
 "all_photos" = "所有照片";
@@ -61,8 +61,6 @@
 "allow_manual_report_message" = "允许手动上报消息";
 "amount" = "金额";
 "app_card_shareable_false" = "该卡片已被设置为不允许转发";
-"bot_not_found" = "找不到这个机器人";
-"bot_pin_hint" = "可将常用机器人长按拖至此处，可显示于首页";
 "app_update_short_hint" = "请从 App Store 更新 Mixin 至最新版";
 "app_update_tips" = "当前版本（%@）已失效！请点击下方\"更新\"从 App Store 更新至最新版。";
 "appearance" = "外观";
@@ -99,6 +97,8 @@
 "blocked_users" = "屏蔽名单";
 "books" = "图书";
 "bot_empty_tip" = "可以添加你喜欢的机器人";
+"bot_not_found" = "找不到这个机器人";
+"bot_pin_hint" = "可将常用机器人长按拖至此处，可显示于首页";
 "bots" = "机器人";
 "bots_title" = "机器人";
 "business" = "商业";
@@ -139,8 +139,8 @@
 "change_your_app_language" = "设置语言";
 "changed" = "已修改";
 "changed_disappearing_message_settings" = "%@修改了限时消息设置";
-"chat_bot_reception_title" = "点击按钮使用机器人";
 "chat_backup" = "聊天记录备份";
+"chat_bot_reception_title" = "点击按钮使用机器人";
 "chat_call_duration" = "通话时长 %@";
 "chat_call_warning_voice" = "无法在 Mixin 通话时录制语音消息";
 "chat_decryption_failed" = "此信息解密失败，请将 Mixin 升级到最新版本。";
@@ -152,6 +152,7 @@
 "chat_group_exit" = "%@离开了群组";
 "chat_group_join" = "%@通过邀请链接加入群组";
 "chat_group_remove" = "%1$@移除了%2$@";
+"chat_list_empty_info" = "你可以与你的 Mixin 好友一起聊天。";
 "chat_not_support" = "不支持此类型消息。请升级 Mixin 查看。 %@。";
 "chat_on_mixin_content" = "快来 Mixin 与我聊天！简单、安全好用还支持比特币、以太坊等加密货币，下载 https://mixin.one/messenger 后搜索 %@ 加我好友。";
 "chat_pin_message" = "%1$@置顶了%2$@";
@@ -161,7 +162,6 @@
 "chats" = "会话";
 "choose_photo" = "选择照片";
 "circle_info" = "新建一个圈子可以过滤会话";
-"number_reached_limit" = "已达到上限";
 "circle_no_conversation_hint" = "您可以添加联系人或者群组到当前圈子";
 "circle_subtitle" = "%d 会话";
 "circle_subtitle_count" = "%d 会话";
@@ -175,7 +175,6 @@
 "cleared" = "已清空";
 "clock_skew_hint" = "请校正后再继续使用，设置 > 通用 > 日期与时间 > 自动设置。";
 "close" = "关闭";
-"currency_code" = "货币代码";
 "collectible_token_id" = "#%@";
 "combine_and_forward" = "合并转发";
 "compress_database" = "压缩数据库";
@@ -219,7 +218,6 @@
 "conversation" = "会话";
 "conversation_has_too_many_circles" = "已达圈子数上限";
 "conversation_not_found" = "找不到该会话";
-"message_not_support" = "不支持此类型消息。请升级 Mixin 查看。";
 "conversations" = "对话";
 "copied" = "已复制";
 "copy" = "复制";
@@ -230,6 +228,7 @@
 "create" = "创建";
 "created_this_group" = "%@创建了这个群组";
 "currency" = "货币";
+"currency_code" = "货币代码";
 "current_location" = "当前位置";
 "current_selected" = "当前选择";
 "custom_time" = "自定义时间";
@@ -303,7 +302,6 @@
 "edit_name" = "修改昵称";
 "education" = "教育";
 "emergency_contact" = "紧急联系人";
-"chat_list_empty_info" = "你可以与你的 Mixin 好友一起聊天。";
 "enable_emergency_contact" = "启用紧急联系人";
 "enable_face_pay_hint" = "输入 PIN 启用面容支付";
 "enable_pay" = "启用%@支付";
@@ -433,9 +431,9 @@
 "line_busy" = "忙线未接听";
 "line_busy_remote" = "对方忙";
 "link_recognition_failure" = "链接识别失败";
+"link_shareable_false" = "该链接已被设置为不允许分享";
 "live" = "直播";
 "live_shareable_false" = "该直播已被设置为不允许转发";
-"link_shareable_false" = "该链接已被设置为不允许分享";
 "live_stream" = "直播卡片";
 "loading" = "正在加载...";
 "locating" = "定位...";
@@ -461,6 +459,7 @@
 "message_e2ee" = "此对话中的消息使用端对端加密。点击了解更多。";
 "message_encryption_hint" = "用户之间的消息将受到端对端加密保护";
 "message_not_found" = "找不到该消息";
+"message_not_support" = "不支持此类型消息。请升级 Mixin 查看。";
 "message_preview" = "显示消息内容";
 "message_sent" = "消息已发送";
 "messages" = "消息";
@@ -500,12 +499,13 @@
 "new_wallet_hint" = "创建你的第一个数字钱包，所有资产都在一个钱包，收发加密资产简单易用。";
 "news" = "新闻";
 "next" = "下一步";
-"no_bot" = "没有应用";
 "no_audio" = "没有音频";
 "no_authorization" = "没有授权任何机器人";
 "no_blocked_user" = "没有屏蔽任何人";
+"no_bot" = "没有应用";
 "no_file" = "没有文件";
 "no_hidden_asset" = "没有隐藏的资产";
+"no_items_selected" = "未选定项目";
 "no_log" = "没有日志";
 "no_media" = "没有媒体";
 "no_memo" = "没有 Memo（备注）";
@@ -523,6 +523,7 @@
 "notification_content" = "不再遗漏好友的消息。";
 "notification_message_preview_description" = "在推送通知中显示消息内容。";
 "now_an_addmin" = "%@现在是管理员";
+"number_reached_limit" = "已达到上限";
 "off" = "关闭";
 "ok" = "好的";
 "one_by_one_forward" = "逐条转发";
@@ -567,6 +568,7 @@
 "phone_number_privacy" = "谁可以通过手机号找到你";
 "photo" = "照片";
 "photo_saved" = "图片已成功保存在相册";
+"photo_count" = "%d 张图片";
 "photos" = "照片";
 "pick_from_library" = "打开相册";
 "pin" = "PIN";
@@ -574,6 +576,7 @@
 "pin_check_tip" = "定期输入 PIN 有助于记住该 PIN";
 "pin_confirm_again_hint" = "请再次确认您的 6 位 PIN";
 "pin_confirm_hint" = "确认 6 位数字 PIN 并牢记它";
+"pin_creation" = "创建 PIN";
 "pin_incorrect" = "PIN 错误";
 "pin_lost_hint" = "如果忘记，你的钱包将无法找回。";
 "pin_title" = "置顶";
@@ -600,13 +603,13 @@
 "privacy_policy" = "隐私政策";
 "profile_photo" = "个人头像";
 "profile_share_bot_hint" = "如果您希望分享机器人，请先添加联系人。";
-"protect_setting_security_hint" = "确认 PIN 保护设置安全";
+"change_pin_interval_hint" = "输入 PIN 修改使用间隔";
 "public_profile" = "个人资料（必须）";
 "qr_code" = "二维码";
 "qr_code_not_found" = "未发现二维码";
 "raw" = "其他";
-"read_bots" = "查看应用";
 "read_assets" = "查看资产";
+"read_bots" = "查看应用";
 "read_circles" = "查看圈子";
 "read_collectibles" = "查看 NFT";
 "read_contacts" = "查看联系人";
@@ -622,8 +625,8 @@
 "reload" = "重新载入";
 "remove_all" = "全部删除";
 "remove_all_floats" = "确定删除全部浮窗？";
-"remove_bot_hint" = "删除机器人？聊天记录将会保留";
 "remove_bot" = "删除机器人";
+"remove_bot_hint" = "删除机器人？聊天记录将会保留";
 "remove_contact" = "删除联系人";
 "remove_contact_hint" = "删除联系人？聊天记录将会保留";
 "remove_emergency_contact" = "移除紧急联系人";
@@ -644,7 +647,6 @@
 "restoring" = "正在恢复...";
 "restoring_progress" = "正在恢复 %@";
 "revoke_access" = "取消授权";
-"setting_revoke_confirmation" = "取消 %@ 的授权？";
 "revoke_multisig_transaction" = "撤销多重签名交易";
 "room_is_full" = "房间已满";
 "save" = "保存";
@@ -675,15 +677,30 @@
 "select_emergency_contact" = "选择紧急联系人";
 "select_more_photos" = "选择更多照片";
 "selected_count" = "选择了 %@ 个消息";
+"selected_item" = "已选择 1 项";
+"selected_item_count" = "已选择 %d 项";
+"selected_photo" = "已选择 1 张图片";
+"selected_photo_count" = "已选择 %d 张图片";
+"selected_video" = "已选择 1 个视频";
+"selected_video_count" = "已选择 %d 个视频";
 "send" = "发送";
+"send_as_file" = "发送为文件";
+"send_as_files" = "发送为文件";
+"send_item" = "发送 1 项";
+"send_item_count" = "发送 %d 项";
 "send_message" = "发消息";
+"send_photo" = "发送 1 张图片";
+"send_photo_count" = "发送 %d 张图片";
 "send_this_location" = "发送这个位置";
 "send_to" = "发送给 %@";
 "send_to_developer" = "把日志发给开发者";
 "send_to_title" = "转给";
 "send_verification_code_frequent" = "发送验证码太频繁，请稍后再试";
+"send_video" = "发送 1 个视频";
+"send_video_count" = "发送 %d 个视频";
 "send_without_sound" = "静音发送";
 "send_your_current_location" = "发送您当前的位置";
+"send_count" = "发送（%d）";
 "senders" = "交易发起人";
 "set" = "设置";
 "set_disappearing_message_time_to" = "%1$@将限时消息设置为 %2$@";
@@ -709,6 +726,7 @@
 "setting_mobile_contact_warning" = "确定删除已同步到 Mixin 服务器的通讯录？";
 "setting_notification_transfer_summary" = "收到不少于 %@ 转账时显示通知。";
 "setting_privacy_tip" = "谁可以给你发消息或邀请你加入群聊。";
+"setting_revoke_confirmation" = "取消 %@ 的授权？";
 "setting_storage_clear" = "清除 %1$d 条消息（%2$@）？";
 "setting_storage_clear_count" = "清除 %1$d 条消息（%2$@）？";
 "setting_transfer_large_summary" = "当转账金额大于或等于 %@ 时显示确认弹窗。";
@@ -828,8 +846,6 @@
 "use_touch_pay" = "使用指纹支付";
 "use_touch_withdraw" = "使用指纹提现";
 "user_is_reported" = "已举报";
-"pin_creation" = "创建 PIN";
-"your_pin_has_been_created" = "PIN 已创建";
 "user_not_found" = "找不到这个用户";
 "validation_timed_out" = "验证超时";
 "value_now" = "价值 %@";
@@ -893,3 +909,4 @@
 "your_emergency_contact_has_been_changed" = "修改紧急联系人";
 "your_phone_number_has_been_changed" = "更换手机号";
 "your_pin_has_been_changed" = "修改 PIN";
+"your_pin_has_been_created" = "PIN 已创建";

@@ -117,7 +117,12 @@ extension NotificationAndConfirmationSettingsViewController {
     
     private func makeTransferConfirmationThresholdSection() -> SettingsSection {
         let representation = Currency.current.symbol + transferConfirmationThreshold
-        let footer = R.string.localizable.setting_transfer_large_summary(representation)
+        let footer: String
+        if transferConfirmationThreshold == "0" {
+            footer = R.string.localizable.setting_transfer_large_summary_greater(representation)
+        } else {
+            footer = R.string.localizable.setting_transfer_large_summary(representation)
+        }
         let row = SettingsRow(title: R.string.localizable.large_amount_confirmation(),
                               subtitle: representation,
                               accessory: .disclosure)

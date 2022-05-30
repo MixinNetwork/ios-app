@@ -76,7 +76,7 @@ extension GroupsInCommonViewController {
                 self.groupsInCommon = groupsInCommon
                 self.tableView.reloadData()
                 self.tableView.checkEmpty(dataCount: groupsInCommon.count,
-                                          text: R.string.localizable.no_result(),
+                                          text: R.string.localizable.no_results(),
                                           photo: R.image.emptyIndicator.ic_search_result()!)
             }
         }

@@ -120,7 +120,7 @@
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                             <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="app_pin_hint"/>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="bot_pin_hint"/>
                                 <userDefinedRuntimeAttribute type="number" keyPath="lineHeight">
                                     <real key="value" value="24"/>
                                 </userDefinedRuntimeAttribute>
@@ -195,7 +195,7 @@
         <image name="ic_line_arrow" width="51" height="55.5"/>
         <image name="ic_team_mixin" width="54" height="54"/>
         <namedColor name="background_input">
-            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.96100002527236938" green="0.96899998188018799" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="icon_tint">
             <color red="0.18431372549019609" green="0.18823529411764706" blue="0.19607843137254902" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

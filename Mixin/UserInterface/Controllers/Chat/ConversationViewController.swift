@@ -705,7 +705,7 @@ class ConversationViewController: UIViewController {
         guard let inviterId = myInvitation?.userId else {
             return
         }
-        let conversationId = conversationId
+        let conversationId = self.conversationId
         let alert = UIAlertController(title: R.string.localizable.exit_group_and_report_inviter(), message: nil, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: R.string.localizable.confirm(), style: .destructive, handler: { _ in
             let hud = Hud()
@@ -719,19 +719,19 @@ class ConversationViewController: UIViewController {
                         UserDAO.shared.updateUsers(users: [user], sendNotificationAfterFinished: false)
                     }
                     ConversationAPI.exitConversation(conversationId: conversationId) { result in
-                        let exitSuccessBlock = {
-                            hud.set(style: .notification, text: R.string.localizable.done())
+                        let exitGroup = {
                             DispatchQueue.global().async {
                                 ConversationDAO.shared.exitGroup(conversationId: conversationId)
                             }
+                            hud.set(style: .notification, text: R.string.localizable.done())
                         }
                         switch result {
                         case .success:
-                            exitSuccessBlock()
+                            exitGroup()
                         case let .failure(error):
                             switch error {
                             case .forbidden, .notFound:
-                                exitSuccessBlock()
+                                exitGroup()
                             default:
                                 hud.set(style: .error, text: error.localizedDescription)
                             }

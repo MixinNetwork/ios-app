@@ -705,6 +705,7 @@ class ConversationViewController: UIViewController {
         guard let inviterId = myInvitation?.userId else {
             return
         }
+        let conversationId = conversationId
         let alert = UIAlertController(title: R.string.localizable.exit_group_and_report_inviter(), message: nil, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: R.string.localizable.confirm(), style: .destructive, handler: { _ in
             let hud = Hud()
@@ -716,12 +717,26 @@ class ConversationViewController: UIViewController {
                 case let .success(user):
                     DispatchQueue.global().async {
                         UserDAO.shared.updateUsers(users: [user], sendNotificationAfterFinished: false)
-                        ConversationDAO.shared.deleteChat(conversationId: self.conversationId)
-                        DispatchQueue.main.async {
-                            hud.set(style: .notification, text: R.string.localizable.user_is_reported())
-                            hud.scheduleAutoHidden()
-                            UIApplication.homeNavigationController?.backToHome()
+                    }
+                    ConversationAPI.exitConversation(conversationId: conversationId) { result in
+                        let exitSuccessBlock = {
+                            hud.set(style: .notification, text: R.string.localizable.done())
+                            DispatchQueue.global().async {
+                                ConversationDAO.shared.exitGroup(conversationId: conversationId)
+                            }
                         }
+                        switch result {
+                        case .success:
+                            exitSuccessBlock()
+                        case let .failure(error):
+                            switch error {
+                            case .forbidden, .notFound:
+                                exitSuccessBlock()
+                            default:
+                                hud.set(style: .error, text: error.localizedDescription)
+                            }
+                        }
+                        hud.scheduleAutoHidden()
                     }
                 case let .failure(error):
                     hud.set(style: .error, text: error.localizedDescription)
@@ -1004,6 +1019,8 @@ class ConversationViewController: UIViewController {
             if newStatus == .MENTION_READ {
                 mentionScrollingDestinations.removeAll(where: { $0 == messageId })
             }
+        case let .updateConversationStatus(status) where status == .QUIT:
+            updateInvitationHintView()
         default:
             break
         }
@@ -2119,6 +2136,13 @@ extension ConversationViewController {
         }
         let conversationId = self.conversationId
         DispatchQueue.global().async { [weak self] in
+            let isParticipant = ParticipantDAO.shared.userId(myUserId, isParticipantOfConversationId: conversationId)
+            guard isParticipant else {
+                DispatchQueue.main.async {
+                    self?.tableView.tableFooterView = nil
+                }
+                return
+            }
             let isInvitedByStranger: Bool
             let myInvitation = MessageDAO.shared.getInvitationMessage(conversationId: conversationId, inviteeUserId: myUserId)
             if let inviterId = myInvitation?.userId, !MessageDAO.shared.hasSentMessage(inConversationOf: conversationId), let inviter = UserDAO.shared.getUser(userId: inviterId), inviter.relationship != Relationship.FRIEND.rawValue {

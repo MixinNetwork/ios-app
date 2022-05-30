@@ -132,7 +132,7 @@ class WalletSearchResultsViewController: WalletSearchTableViewController {
                     self.tableView.reloadData()
                 }
                 self.tableView.checkEmpty(dataCount: self.searchResults.count,
-                                          text: R.string.localizable.no_result(),
+                                          text: R.string.localizable.no_results(),
                                           photo: R.image.emptyIndicator.ic_search_result()!)
                 self.activityIndicator.stopAnimating()
             }

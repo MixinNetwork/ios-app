@@ -63,7 +63,7 @@ extension SharedMediaDataTableViewController: SharedMediaDataSourceDelegate {
     func sharedMediaDataSourceDidReload(_ dataSource: AnyObject) {
         tableView.reloadData()
         tableView.checkEmpty(dataCount: self.dataSource.numberOfSections,
-                             text: R.string.localizable.no_file(),
+                             text: R.string.localizable.no_files(),
                              photo: R.image.emptyIndicator.ic_data()!)
     }
     

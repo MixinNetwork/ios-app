@@ -23,6 +23,7 @@ final class SelectedPhotoInputItemsPreviewWindow: BottomSheetView {
     private var selectedAssets = [PHAsset]()
     private var lastWidth: CGFloat = 0
     private var isSending = false
+    private var cellSizeCache = [String: CGSize]()
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -96,7 +97,7 @@ extension SelectedPhotoInputItemsPreviewWindow: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.media_preview, for: indexPath)!
         if indexPath.item < assets.count {
             let asset = assets[indexPath.item]
-            cell.load(asset: asset)
+            cell.load(asset: asset, size: cellSizeForItemAt(indexPath.item))
             cell.updateSelectedStatus(isSelected: selectedAssets.contains(asset))
         }
         return cell
@@ -107,7 +108,7 @@ extension SelectedPhotoInputItemsPreviewWindow: UICollectionViewDataSource {
 extension SelectedPhotoInputItemsPreviewWindow: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        MediaPreviewCell.cellSize
+        cellSizeForItemAt(indexPath.item)
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -176,6 +177,22 @@ extension SelectedPhotoInputItemsPreviewWindow {
         sendFileButton.setTitle(sendFileButtonTitle, for: .normal)
         sendPhotoButton.isEnabled = isEnabled
         sendFileButton.isEnabled = isEnabled
+    }
+    
+    private func cellSizeForItemAt(_ index: Int) -> CGSize {
+        guard index < assets.count else {
+            return .zero
+        }
+        let asset = assets[index]
+        if let size = cellSizeCache[asset.localIdentifier] {
+            return size
+        } else {
+            let height: CGFloat = 312
+            let width: CGFloat = ceil(height / CGFloat(asset.pixelHeight) * CGFloat(asset.pixelWidth))
+            let size = CGSize(width: min(312, max(width, 120)), height: height)
+            cellSizeCache[asset.localIdentifier] = size
+            return size
+        }
     }
     
 }

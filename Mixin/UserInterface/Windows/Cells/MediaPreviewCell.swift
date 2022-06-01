@@ -6,8 +6,6 @@ import MixinServices
 
 class MediaPreviewCell: UICollectionViewCell {
     
-    static let cellSize = CGSize(width: 312, height: 312)
-    
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var selectedStatusImageView: UIImageView!
     @IBOutlet weak var mediaTypeView: MediaTypeOverlayView!
@@ -39,7 +37,7 @@ class MediaPreviewCell: UICollectionViewCell {
         }
     }
     
-    func load(asset: PHAsset) {
+    func load(asset: PHAsset, size: CGSize) {
         if asset.mediaType == .video {
             mediaTypeView.style = .video(duration: asset.duration)
         } else {
@@ -49,8 +47,7 @@ class MediaPreviewCell: UICollectionViewCell {
                 mediaTypeView.style = .hidden
             }
         }
-        let targetSize = Self.cellSize * UIScreen.main.scale
-        requestId = PHImageManager.default().requestImage(for: asset, targetSize: targetSize, contentMode: .aspectFill, options: imageRequestOptions) { [weak self] (image, info) in
+        requestId = PHImageManager.default().requestImage(for: asset, targetSize: size * UIScreen.main.scale, contentMode: .aspectFill, options: imageRequestOptions) { [weak self] (image, info) in
             self?.imageView.image = image
         }
     }

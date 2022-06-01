@@ -48,7 +48,7 @@ class LogViewController: UIViewController {
                 self.logs += logs
                 self.tableView.reloadData()
                 self.tableView.checkEmpty(dataCount: self.logs.count,
-                                          text: R.string.localizable.no_log(),
+                                          text: R.string.localizable.no_logs(),
                                           photo: R.image.emptyIndicator.ic_data()!)
                 self.view.layoutIfNeeded()
             case let .failure(error):

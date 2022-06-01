@@ -28,7 +28,7 @@ class AllTransactionsViewController: UITableViewController {
             }
             weakSelf.tableView.reloadData()
             weakSelf.tableView.checkEmpty(dataCount: weakSelf.dataSource.snapshots.count,
-                                          text: R.string.localizable.no_transaction(),
+                                          text: R.string.localizable.no_transactions(),
                                           photo: R.image.emptyIndicator.ic_data()!)
         }
         dataSource.reloadFromLocal()

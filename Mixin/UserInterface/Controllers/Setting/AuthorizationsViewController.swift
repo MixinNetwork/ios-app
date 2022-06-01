@@ -60,7 +60,7 @@ class AuthorizationsViewController: UIViewController {
             searchContentViewController.authorizations = results
             if isDataLoaded {
                 searchContentViewController.tableView.checkEmpty(dataCount: results.count,
-                                                                 text: R.string.localizable.no_result(),
+                                                                 text: R.string.localizable.no_results(),
                                                                  photo: R.image.emptyIndicator.ic_search_result()!)
             }
             contentContainerView.bringSubviewToFront(searchContentViewController.view)
@@ -77,7 +77,7 @@ class AuthorizationsViewController: UIViewController {
                     self.networkIndicatorTopConstraint.constant = self.networkIndicatorHeightConstraint.constant
                     UIView.animate(withDuration: 0.25, animations: self.view.layoutIfNeeded)
                     self.contentViewController.tableView.checkEmpty(dataCount: response.count,
-                                                                    text: R.string.localizable.no_authorization(),
+                                                                    text: R.string.localizable.no_authorizations(),
                                                                     photo: R.image.emptyIndicator.ic_authorization()!)
                     self.isDataLoaded = true
                     self.search(self.searchBoxView.textField)

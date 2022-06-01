@@ -116,16 +116,8 @@ extension SelectedPhotoInputItemsViewController {
             return size
         } else {
             let height: CGFloat = 160
-            let width: CGFloat
-            let ratio = CGFloat(asset.pixelWidth) / CGFloat(asset.pixelHeight)
-            if ratio > 1 {
-                width = ceil(height / 3 * 4)
-            } else if ratio < 1 {
-                width = ceil(height / 4 * 3)
-            } else {
-                width = height
-            }
-            let size = CGSize(width: width, height: height)
+            let width: CGFloat = ceil(height / CGFloat(asset.pixelHeight) * CGFloat(asset.pixelWidth))
+            let size = CGSize(width: min(160, max(width, 62)), height: height)
             cellSizeCache[asset.localIdentifier] = size
             return size
         }

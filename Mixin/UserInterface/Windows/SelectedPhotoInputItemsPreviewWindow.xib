@@ -91,7 +91,6 @@
                                 <color key="titleColor" name="theme"/>
                             </state>
                             <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="chat_media_preview_send_files"/>
                                 <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
                                 <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
                             </userDefinedRuntimeAttributes>

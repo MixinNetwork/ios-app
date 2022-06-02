@@ -102,6 +102,11 @@ final class ProfileRelationshipView: UIView {
         button.setTitleColor(.theme, for: .normal)
         button.titleLabel?.font = .preferredFont(forTextStyle: .caption1)
         button.titleLabel?.adjustsFontForContentSizeCategory = true
+        
+        // UIButton with image and title failed to calculate intrinsicContentSize if bold text is turned on in iOS Display Settings
+        // Set lineBreakMode to byClipping as a workaround. Tested on iOS 15.1
+        button.titleLabel?.lineBreakMode = .byClipping
+        
         button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 19, bottom: 0, right: 15)
         button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -4, bottom: 0, right: 0)
         addSubview(button)

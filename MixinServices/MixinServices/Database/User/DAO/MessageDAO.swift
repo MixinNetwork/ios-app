@@ -404,7 +404,7 @@ public final class MessageDAO: UserDatabaseDAO {
         db.select(with: MessageDAO.sqlQueryFullMessageById, arguments: [messageId])
     }
     
-    public func getFullMessages(messageIds: [String]) -> [MessageItem] {
+    public func getFullMessages(messageIds: [String], with database: GRDB.Database) throws -> [MessageItem] {
         guard !messageIds.isEmpty else {
             return []
         }
@@ -413,7 +413,7 @@ public final class MessageDAO: UserDatabaseDAO {
         \(Self.sqlQueryFullMessage)
         WHERE m.id in ('\(ids)')
         """
-        return db.select(with: sql)
+        return try MessageItem.fetchAll(database, sql: sql)
     }
     
     public func getMessage(messageId: String) -> Message? {

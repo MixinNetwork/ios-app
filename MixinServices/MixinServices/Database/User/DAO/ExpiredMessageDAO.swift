@@ -95,7 +95,7 @@ public final class ExpiredMessageDAO: UserDatabaseDAO {
                 .filter(condition)
                 .limit(100)
                 .fetchAll(db)
-            let expiredMessages = try MessageDAO.shared.getFullMessages(messageIds: expiredMessageIds)
+            let expiredMessages = try MessageDAO.shared.getFullMessages(messageIds: expiredMessageIds, with: db)
             for id in expiredMessageIds {
                 let (deleted, childMessageIds) = try MessageDAO.shared.deleteMessage(id: id, with: db)
                 if deleted {

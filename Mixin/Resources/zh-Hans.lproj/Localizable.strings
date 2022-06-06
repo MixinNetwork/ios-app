@@ -132,6 +132,7 @@
 "change_number_instead" = "仅修改手机号码";
 "change_phone_number" = "修改手机号";
 "change_pin" = "修改 PIN";
+"change_pin_interval_hint" = "输入 PIN 修改使用间隔";
 "change_pin_successfully" = "PIN 修改成功";
 "change_profile_photo_with_camera" = "更换头像（相机）";
 "change_profile_photo_with_library" = "更换头像（相册）";
@@ -479,7 +480,7 @@
 "multisig_state_unlocked" = "这笔交易已经被其他人撤销了，您无法再次撤销。";
 "multisig_transaction" = "多重签名交易";
 "music" = "音乐";
-"mute" = "静音通知";
+"mute" = "静音";
 "mute_until" = "直到 %@";
 "muted" = "已静音";
 "muted_until" = "已静音至 %@";
@@ -604,7 +605,6 @@
 "privacy_policy" = "隐私政策";
 "profile_photo" = "个人头像";
 "profile_share_bot_hint" = "如果您希望分享机器人，请先添加联系人。";
-"change_pin_interval_hint" = "输入 PIN 修改使用间隔";
 "public_profile" = "个人资料（必须）";
 "qr_code" = "二维码";
 "qr_code_not_found" = "未发现二维码";

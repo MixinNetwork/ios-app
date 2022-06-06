@@ -132,6 +132,7 @@
 "change_number_instead" = "Change Number Instead";
 "change_phone_number" = "Change Phone Number";
 "change_pin" = "Change PIN";
+"change_pin_interval_hint" = "Confirm PIN to change interval";
 "change_pin_successfully" = "Change PIN successfully";
 "change_profile_photo_with_camera" = "Change Profile Photo with Camera";
 "change_profile_photo_with_library" = "Change Profile Photo with Library";
@@ -604,7 +605,6 @@
 "privacy_policy" = "Privacy Policy";
 "profile_photo" = "Profile Photo";
 "profile_share_bot_hint" = "If you want to share a bot, add it to your contacts first";
-"change_pin_interval_hint" = "Confirm PIN to change interval";
 "public_profile" = "Public profile (required)";
 "qr_code" = "QR Code";
 "qr_code_not_found" = "QR Code not found";

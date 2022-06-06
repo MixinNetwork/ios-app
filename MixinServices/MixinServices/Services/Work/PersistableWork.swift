@@ -1,5 +1,9 @@
 import Foundation
 
+public enum PersistableWorkError: Error {
+    case invalidContext
+}
+
 public protocol PersistableWork: Work {
     
     static var typeIdentifier: String { get }

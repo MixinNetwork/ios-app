@@ -763,8 +763,7 @@ public final class MessageDAO: UserDatabaseDAO {
         }
     }
     
-    func deleteMessage(_ message: MessageItem, with database: GRDB.Database) throws -> (deleted: Bool, childMessageIds: [String]) {
-        let id = message.messageId
+    func delete(id: String, conversationId: String, deleteTranscriptChildren: Bool, database: GRDB.Database) throws -> (deleted: Bool, childMessageIds: [String]) {
         let deleteCount = try Message
             .filter(Message.column(of: .messageId) == id)
             .deleteAll(database)
@@ -776,28 +775,26 @@ public final class MessageDAO: UserDatabaseDAO {
             .select(TranscriptMessage.column(of: .messageId))
             .filter(TranscriptMessage.column(of: .transcriptId) == id)
             .fetchAll(database)
-        try TranscriptMessage
-            .filter(TranscriptMessage.column(of: .transcriptId) == id)
-            .deleteAll(database)
-        try PinMessageDAO.shared.delete(messageIds: [id], conversationId: message.conversationId, from: database)
-        try clearPinMessageContent(quoteMessageIds: [id], conversationId: message.conversationId, from: database)
+        try PinMessageDAO.shared.delete(messageIds: [id], conversationId: conversationId, from: database)
+        try clearPinMessageContent(quoteMessageIds: [id], conversationId: conversationId, from: database)
+        if deleteTranscriptChildren {
+            try TranscriptMessage
+                .filter(TranscriptMessage.column(of: .transcriptId) == id)
+                .deleteAll(database)
+        }
         return (deleteCount > 0, childMessageIds)
     }
     
-    public func delete(id: String, conversationId: String, completion: @escaping () -> Void) {
-        db.write { db in
-            try Message
-                .filter(Message.column(of: .messageId) == id)
-                .deleteAll(db)
-            try MessageMention
-                .filter(MessageMention.column(of: .messageId) == id)
-                .deleteAll(db)
-            try deleteFTSContent(db, messageId: id)
-            try PinMessageDAO.shared.delete(messageIds: [id], conversationId: conversationId, from: db)
-            try clearPinMessageContent(quoteMessageIds: [id], conversationId: conversationId, from: db)
-            db.afterNextTransactionCommit { _ in
-                completion()
+    @discardableResult
+    public func delete(id: String, conversationId: String, deleteTranscriptChildren: Bool, completion: (() -> Void)? = nil) -> (deleted: Bool, childMessageIds: [String]) {
+        try! db.writeAndReturnError { db in
+            let (deleted, ids) = try delete(id: id, conversationId: conversationId, deleteTranscriptChildren: deleteTranscriptChildren, database: db)
+            if let completion = completion {
+                db.afterNextTransactionCommit { _ in
+                    completion()
+                }
             }
+            return (deleted, ids)
         }
     }
     

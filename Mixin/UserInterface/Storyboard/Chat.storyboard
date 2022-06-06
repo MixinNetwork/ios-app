@@ -19,7 +19,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Conversation/bg_chat" translatesAutoresizingMaskIntoConstraints="NO" id="MYg-f9-MjM">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Conversation/bg_chat_symbol" translatesAutoresizingMaskIntoConstraints="NO" id="MYg-f9-MjM">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </imageView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" contentInsetAdjustmentBehavior="never" keyboardDismissMode="interactive" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="39" sectionHeaderHeight="44" sectionFooterHeight="28" contentViewInsetsToSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v0e-5f-Xnl" customClass="ConversationTableView" customModule="Mixin" customModuleProvider="target">
@@ -2788,7 +2788,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Conversation/bg_chat" width="428" height="926"/>
+        <image name="Conversation/bg_chat_symbol" width="428" height="926"/>
         <image name="Conversation/ic_app" width="22" height="20"/>
         <image name="Conversation/ic_chat_bottom" width="38" height="38"/>
         <image name="Conversation/ic_jump_to_mention" width="38" height="38"/>

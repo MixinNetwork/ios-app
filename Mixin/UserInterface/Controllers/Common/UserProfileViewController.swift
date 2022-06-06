@@ -779,6 +779,13 @@ extension UserProfileViewController {
                                 action: #selector(searchConversation))
             ]
             groups.append(sharedMediaAndSearchGroup)
+            let chatBackgroundGroup = [
+                ProfileMenuItem(title: R.string.localizable.chat_background(),
+                                subtitle: nil,
+                                style: [],
+                                action: #selector(changeChatBackground))
+            ]
+            groups.append(chatBackgroundGroup)
             
             let muteAndTransactionGroup: [ProfileMenuItem] = {
                 var group: [ProfileMenuItem]

@@ -71,13 +71,19 @@ class StaticMessagesViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        guard let image = backgroundImageView.image else {
-            return
-        }
-        let isBackgroundImageUndersized = backgroundImageView.frame.width > image.size.width
-            || backgroundImageView.frame.height > image.size.height
-        if isBackgroundImageUndersized {
-            backgroundImageView.contentMode = .scaleAspectFill
+        DispatchQueue.global().async { [weak self] in
+            guard let self = self else {
+                return
+            }
+            let image = Wallpaper.image(for: self.conversationId)
+            DispatchQueue.main.async {
+                let isBackgroundImageUndersized = self.backgroundImageView.frame.width > image.size.width
+                    || self.backgroundImageView.frame.height > image.size.height
+                if isBackgroundImageUndersized {
+                    self.backgroundImageView.contentMode = .scaleAspectFill
+                }
+                self.backgroundImageView.image = image
+            }
         }
     }
     

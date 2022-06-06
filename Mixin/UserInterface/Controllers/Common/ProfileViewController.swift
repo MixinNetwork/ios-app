@@ -212,6 +212,11 @@ extension ProfileViewController: CoreTextLabelDelegate {
 // MARK: - Actions
 extension ProfileViewController {
     
+    @objc func changeChatBackground() {
+        let controller = PreviewWallpaperViewController.instance(conversationId: conversationId)
+        dismissAndPush(controller)
+    }
+    
     @objc func toggleSize(_ sender: UIButton) {
         size = size.opposite
         let animator = makeSizeAnimator(destination: size)

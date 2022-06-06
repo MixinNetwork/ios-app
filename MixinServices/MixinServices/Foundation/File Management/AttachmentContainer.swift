@@ -51,6 +51,12 @@ public enum AttachmentContainer {
         return url(transcriptId: transcriptId, filename: filename + ExtensionName.jpeg.withDot)
     }
     
+    public static func wallpaperURL(for key: String) -> URL {
+        let url = Self.url.appendingPathComponent("Wallpaper")
+        try? FileManager.default.createDirectoryIfNotExists(at: url)
+        return url.appendingPathComponent(key)
+    }
+    
     public static func removeMediaFiles(mediaUrl: String, category: String) {
         guard let category = AttachmentContainer.Category(messageCategory: category) else {
             return

@@ -371,6 +371,7 @@ class ConversationViewController: UIViewController {
         center.addObserver(self, selector: #selector(pinMessageDidDelete(_:)), name: PinMessageDAO.didDeleteNotification, object: nil)
         center.addObserver(self, selector: #selector(pinMessageBannerDidChange), name: AppGroupUserDefaults.User.pinMessageBannerDidChangeNotification, object: nil)
         center.addObserver(self, selector: #selector(expiredMessageDidDelete(_:)), name: ExpiredMessageDAO.expiredMessageDidDeleteNotification, object: nil)
+        center.addObserver(self, selector: #selector(wallpaperDidChange), name: Wallpaper.wallpaperDidChangeNotification, object: nil)
         
         if dataSource.category == .group {
             updateGroupCallIndicatorViewHidden()
@@ -448,12 +449,7 @@ class ConversationViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        let backgroundImageSize = R.image.conversation.bg_chat()!.size
-        let isBackgroundImageUndersized = backgroundImageView.frame.width > backgroundImageSize.width
-            || backgroundImageView.frame.height > backgroundImageSize.height
-        if isBackgroundImageUndersized {
-            backgroundImageView.contentMode = .scaleAspectFill
-        }
+        updateBackgroundImage()
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -1215,6 +1211,30 @@ class ConversationViewController: UIViewController {
         }
         _ = dataSource?.removeViewModel(at: indexPath)
         tableView.reloadData()
+    }
+    
+    @objc private func wallpaperDidChange(_ notification: Notification) {
+        guard let conversationId = notification.userInfo?[Wallpaper.UserInfoKey.conversationId] as? String, conversationId == self.conversationId else {
+            return
+        }
+        updateBackgroundImage()
+    }
+    
+    private func updateBackgroundImage() {
+        DispatchQueue.global().async { [weak self] in
+            guard let self = self else {
+                return
+            }
+            let image = Wallpaper.image(for: self.conversationId)
+            DispatchQueue.main.async {
+                let isBackgroundImageUndersized = self.backgroundImageView.frame.width > image.size.width
+                    || self.backgroundImageView.frame.height > image.size.height
+                if isBackgroundImageUndersized {
+                    self.backgroundImageView.contentMode = .scaleAspectFill
+                }
+                self.backgroundImageView.image = image
+            }
+        }
     }
     
     // MARK: - Interface

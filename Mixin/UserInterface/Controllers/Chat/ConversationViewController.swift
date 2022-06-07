@@ -4,7 +4,7 @@ import AVKit
 import Photos
 import MixinServices
 
-class ConversationViewController: UIViewController {
+class ConversationViewController: UIViewController, WallpaperApplicable {
     
     static var positions = [String: Position]()
     static var allowReportSingleMessage = false
@@ -1218,23 +1218,6 @@ class ConversationViewController: UIViewController {
             return
         }
         updateBackgroundImage()
-    }
-    
-    private func updateBackgroundImage() {
-        DispatchQueue.global().async { [weak self] in
-            guard let self = self else {
-                return
-            }
-            let image = Wallpaper.image(for: self.conversationId)
-            DispatchQueue.main.async {
-                let isBackgroundImageUndersized = self.backgroundImageView.frame.width > image.size.width
-                    || self.backgroundImageView.frame.height > image.size.height
-                if isBackgroundImageUndersized {
-                    self.backgroundImageView.contentMode = .scaleAspectFill
-                }
-                self.backgroundImageView.image = image
-            }
-        }
     }
     
     // MARK: - Interface

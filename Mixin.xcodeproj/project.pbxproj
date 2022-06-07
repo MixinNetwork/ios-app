@@ -654,6 +654,7 @@
 		945278982626BCD600023A6C /* HighlightableButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945278972626BCD600023A6C /* HighlightableButton.swift */; };
 		94571E0925CC48AE001980DA /* AudioSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94571E0825CC48AE001980DA /* AudioSession.swift */; };
 		945AA6582567B18200B39415 /* Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945AA6572567B18200B39415 /* Country.swift */; };
+		945EB46C284F013300472530 /* WallpaperApplicable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945EB46B284F013300472530 /* WallpaperApplicable.swift */; };
 		9463783625CD961D0071BCDD /* AudioSessionClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9463783525CD961D0071BCDD /* AudioSessionClient.swift */; };
 		9463AFC627972AC70093BB08 /* LocalNetworkAuthorization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9463AFC527972AC70093BB08 /* LocalNetworkAuthorization.swift */; };
 		94656C1A2795395D006C3F1D /* MixinDebugApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94656C192795395D006C3F1D /* MixinDebugApp.swift */; };
@@ -1643,6 +1644,7 @@
 		945278972626BCD600023A6C /* HighlightableButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightableButton.swift; sourceTree = "<group>"; };
 		94571E0825CC48AE001980DA /* AudioSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSession.swift; sourceTree = "<group>"; };
 		945AA6572567B18200B39415 /* Country.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Country.swift; sourceTree = "<group>"; };
+		945EB46B284F013300472530 /* WallpaperApplicable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WallpaperApplicable.swift; sourceTree = "<group>"; };
 		9463783525CD961D0071BCDD /* AudioSessionClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSessionClient.swift; sourceTree = "<group>"; };
 		9463AFC527972AC70093BB08 /* LocalNetworkAuthorization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNetworkAuthorization.swift; sourceTree = "<group>"; };
 		94656C172795395D006C3F1D /* MixinDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MixinDebug.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2165,6 +2167,7 @@
 				94D63DD52646C29100FD7EE8 /* MessageViewModelFactory.swift */,
 				7CC7304F2745F95D002780F5 /* StickerStore.swift */,
 				7CF7416D27DAD93000DA0004 /* SnapCenterFlowLayout.swift */,
+				945EB46B284F013300472530 /* WallpaperApplicable.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -4648,6 +4651,7 @@
 				7BFE47E22284394000FC4379 /* CheckmarkPeerCell.swift in Sources */,
 				7B369208233A43C1007321A7 /* SegmentedControl.swift in Sources */,
 				9427D51A25E0D42E00B1EF0E /* MusicInfoView.swift in Sources */,
+				945EB46C284F013300472530 /* WallpaperApplicable.swift in Sources */,
 				7B082D1A242CACA000C5E163 /* MultipleSelectionActionView.swift in Sources */,
 				7BFE47DB228421D100FC4379 /* UserItemPeerViewController.swift in Sources */,
 				7B17F06F22267FE100D617A2 /* ConversationExtensionViewController.swift in Sources */,

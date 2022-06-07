@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class StaticMessagesViewController: UIViewController {
+class StaticMessagesViewController: UIViewController, WallpaperApplicable {
     
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var titleLabel: UILabel!
@@ -12,13 +12,13 @@ class StaticMessagesViewController: UIViewController {
     @IBOutlet weak var showContentConstraint: NSLayoutConstraint!
     @IBOutlet weak var hideContentConstraint: NSLayoutConstraint!
     
+    let conversationId: String
     let queue = DispatchQueue(label: "one.mixin.messenger.StaticMessagesViewController")
     let factory = ViewModelFactory()
     
     var dates: [String] = []
     var viewModels: [String: [MessageViewModel]] = [:]
     
-    private let conversationId: String
     private let audioManager: StaticAudioMessagePlayingManager
     
     private var didPlayAudioMessage = false
@@ -71,20 +71,7 @@ class StaticMessagesViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        DispatchQueue.global().async { [weak self] in
-            guard let self = self else {
-                return
-            }
-            let image = Wallpaper.image(for: self.conversationId)
-            DispatchQueue.main.async {
-                let isBackgroundImageUndersized = self.backgroundImageView.frame.width > image.size.width
-                    || self.backgroundImageView.frame.height > image.size.height
-                if isBackgroundImageUndersized {
-                    self.backgroundImageView.contentMode = .scaleAspectFill
-                }
-                self.backgroundImageView.image = image
-            }
-        }
+        updateBackgroundImage()
     }
     
     @IBAction func dismissAction(_ sender: Any) {

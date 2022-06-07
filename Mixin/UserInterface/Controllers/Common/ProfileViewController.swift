@@ -213,7 +213,7 @@ extension ProfileViewController: CoreTextLabelDelegate {
 extension ProfileViewController {
     
     @objc func changeChatBackground() {
-        let controller = PreviewWallpaperViewController.instance(conversationId: conversationId)
+        let controller = PreviewWallpaperViewController.instance(scope: .conversation(conversationId))
         dismissAndPush(controller)
     }
     

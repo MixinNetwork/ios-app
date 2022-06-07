@@ -1,29 +1,38 @@
 import Foundation
 import MixinServices
 
-enum Wallpaper: String, CaseIterable {
+enum Wallpaper {
     
-    static let wallpaperDidChangeNotification = Notification.Name("one.mixin.messenger.wallpaperDidChange")
-    enum UserInfoKey {
-        static let conversationId = "cid"
+    enum Scope {
+        
+        case global
+        case conversation(String)
+        
+        var key: String {
+            switch self {
+            case .global:
+                return "global"
+            case .conversation(let id):
+                return id
+            }
+        }
+        
     }
     
-    case custom
+    static let wallpaperDidChangeNotification = Notification.Name("one.mixin.messenger.wallpaperDidChange")
+    static let conversationIdUserInfoKey = "cid"
+    
     case symbol
     case star
     case animal
     case plant
+    case custom(UIImage)
     
-    static var defaultWallpapers: [Wallpaper] { allCases.filter { $0 != .custom } }
-    static let defaultWallpaper = Wallpaper.symbol
-    static let defaultImage = Wallpaper.symbol.image!
+    static let `default`: Wallpaper = .symbol
+    static let official: [Wallpaper] = [.symbol, .star, .animal, .plant]
     
-    static private let globalKey = "global_wallpaper"
-    
-    var image: UIImage? {
+    var image: UIImage {
         switch self {
-        case .custom:
-            return nil
         case .symbol:
             return R.image.conversation.bg_chat_symbol()!
         case .star:
@@ -32,77 +41,109 @@ enum Wallpaper: String, CaseIterable {
             return R.image.conversation.bg_chat_animal()!
         case .plant:
             return R.image.conversation.bg_chat_plant()!
+        case .custom(let image):
+            return image
         }
     }
     
-}
-
-extension Wallpaper {
-    
-    static func setBuildIn(_ wallpaper: Wallpaper, key: String? = nil) {
-        set(wallpaper, for: key)
-    }
-    
-    static func setCustom(_ image: UIImage, key: String? = nil) {
-        set(.custom, image: image, for: key)
-    }
-    
-    static func image(for key: String? = nil) -> UIImage {
-        let rawValue: String
-        let keyValue: String
-        if let key = key, let chatRawValue = AppGroupUserDefaults.User.wallpapers[key] {
-            rawValue = chatRawValue
-            keyValue = key
-        } else if let globalRawValue = AppGroupUserDefaults.User.wallpapers[globalKey] {
-            rawValue = globalRawValue
-            keyValue = globalKey
-        } else {
-            return defaultImage
+    static func save(_ wallpaper: Wallpaper, for scope: Scope) {
+        let url = AttachmentContainer.wallpaperURL(for: scope.key)
+        switch wallpaper {
+        case .custom(let image):
+            image.saveToFile(path: url)
+        default:
+            try? FileManager.default.removeItem(at: url)
         }
-        if let wallpaper = Wallpaper(rawValue: rawValue) {
-            if wallpaper == .custom {
-                guard let data = try? Data(contentsOf: AttachmentContainer.wallpaperURL(for: keyValue)), let image = UIImage(data: data) else {
-                    return defaultImage
-                }
-                return image
-            } else {
-                return wallpaper.image ?? defaultImage
-            }
-        } else {
-            return defaultImage
-        }
-    }
-    
-    static func get(for key: String? = nil) -> Wallpaper {
-        let rawValue: String
-        if let key = key, let chatRawValue = AppGroupUserDefaults.User.wallpapers[key] {
-            rawValue = chatRawValue
-        } else if let globalRawValue = AppGroupUserDefaults.User.wallpapers[globalKey] {
-            rawValue = globalRawValue
-        } else {
-            return defaultWallpaper
-        }
-        return Wallpaper(rawValue: rawValue) ?? defaultWallpaper
-    }
-    
-}
-
-extension Wallpaper {
-    
-    private static func set(_ wallpaper: Wallpaper, image: UIImage? = nil, for key: String? = nil) {
-        assert(image == nil || wallpaper == .custom)
-        let key = key ?? globalKey
-        let path = AttachmentContainer.wallpaperURL(for: key)
-        if let image = image {
-            image.saveToFile(path: path)
-        } else {
-            try? FileManager.default.removeItem(at: path)
-        }
-        AppGroupUserDefaults.User.wallpapers[key] = wallpaper.rawValue
-        if key != globalKey {
+        AppGroupUserDefaults.User.wallpapers[scope.key] = Storage(wallpaper: wallpaper).rawValue
+        if case let .conversation(id) = scope {
             NotificationCenter.default.post(onMainThread: Self.wallpaperDidChangeNotification,
                                             object: self,
-                                            userInfo: [Self.UserInfoKey.conversationId: key])
+                                            userInfo: [Self.conversationIdUserInfoKey: id])
+        }
+    }
+    
+    static func wallpaper(for scope: Scope) -> Wallpaper {
+        let key: String
+        let rawValue: String?
+        switch scope {
+        case .conversation:
+            if let string = AppGroupUserDefaults.User.wallpapers[scope.key] {
+                key = scope.key
+                rawValue = string
+            } else {
+                fallthrough
+            }
+        case .global:
+            key = Scope.global.key
+            rawValue = AppGroupUserDefaults.User.wallpapers[key]
+        }
+        guard let rawValue = rawValue, let storage = Storage(rawValue: rawValue) else {
+            return .default
+        }
+        switch storage {
+        case .symbol:
+            return .symbol
+        case .star:
+            return .star
+        case .animal:
+            return .animal
+        case .plant:
+            return .plant
+        case .custom:
+            let url = AttachmentContainer.wallpaperURL(for: key)
+            if let data = try? Data(contentsOf: url), let image = UIImage(data: data) {
+                return .custom(image)
+            } else {
+                return .default
+            }
+        }
+    }
+    
+    func matches(_ another: Wallpaper) -> Bool {
+        Storage(wallpaper: self) == Storage(wallpaper: another)
+    }
+    
+}
+    
+extension Wallpaper {
+    
+    private enum Storage: String {
+        
+        case symbol
+        case star
+        case animal
+        case plant
+        case custom
+        
+        init(wallpaper: Wallpaper) {
+            switch wallpaper {
+            case .symbol:
+                self = .symbol
+            case .star:
+                self = .star
+            case .animal:
+                self = .animal
+            case .plant:
+                self = .plant
+            case .custom:
+                self = .custom
+            }
+        }
+        
+    }
+    
+    private var storage: Storage {
+        switch self {
+        case .symbol:
+            return .symbol
+        case .star:
+            return .star
+        case .animal:
+            return .animal
+        case .plant:
+            return .plant
+        case .custom:
+            return .custom
         }
     }
     

@@ -1214,7 +1214,7 @@ class ConversationViewController: UIViewController, WallpaperApplicable {
     }
     
     @objc private func wallpaperDidChange(_ notification: Notification) {
-        guard let conversationId = notification.userInfo?[Wallpaper.UserInfoKey.conversationId] as? String, conversationId == self.conversationId else {
+        guard let conversationId = notification.userInfo?[Wallpaper.conversationIdUserInfoKey] as? String, conversationId == self.conversationId else {
             return
         }
         updateBackgroundImage()

@@ -128,7 +128,7 @@ extension AppearanceSettingsViewController {
     }
     
     private func changeChatBackground() {
-        let vc = PreviewWallpaperViewController.instance()
+        let vc = PreviewWallpaperViewController.instance(scope: .global)
         navigationController?.pushViewController(vc, animated: true)
     }
     

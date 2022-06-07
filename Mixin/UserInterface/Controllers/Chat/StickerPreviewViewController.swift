@@ -44,7 +44,7 @@ class StickerPreviewViewController: UIViewController {
         } else {
             category = nil
         }
-        if category == AlbumCategory.SYSTEM, let stickerId = message.stickerId {
+        if category != AlbumCategory.PERSONAL, let stickerId = message.stickerId {
             loadAlbum(stickerId: stickerId, albumId: message.albumId)
         }
     }

@@ -189,12 +189,11 @@ extension PreviewWallpaperViewController {
     private func loadImage(for indexPath: IndexPath) {
         collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         let index = wallpaperIndex(from: indexPath)
-        let image = wallpapers[index].image
-        let isImageUndersized = imageView.frame.width > image.size.width || imageView.frame.height > image.size.height
-        let imageViewContentMode: UIView.ContentMode = isImageUndersized ? .scaleAspectFill : .center
+        let wallpaper = wallpapers[index]
+        let contentMode = wallpaper.contentMode(imageViewSize: imageView.frame.size)
         UIView.transition(with: imageView, duration: 0.3, options: .transitionCrossDissolve, animations: {
-            self.imageView.contentMode = imageViewContentMode
-            self.imageView.image = image
+            self.imageView.contentMode = contentMode
+            self.imageView.image = wallpaper.image
         }, completion: nil)
     }
     

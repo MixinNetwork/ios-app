@@ -12,11 +12,9 @@ protocol WallpaperApplicable {
 extension WallpaperApplicable {
     
     func updateBackgroundImage() {
-        let image = Wallpaper.wallpaper(for: .conversation(conversationId)).image
-        let isBackgroundImageUndersized = backgroundImageView.frame.width > image.size.width
-            || backgroundImageView.frame.height > image.size.height
-        backgroundImageView.contentMode = isBackgroundImageUndersized ? .scaleAspectFill : .center
-        backgroundImageView.image = image
+        let wallpaper = Wallpaper.wallpaper(for: .conversation(conversationId))
+        backgroundImageView.contentMode = wallpaper.contentMode(imageViewSize: backgroundImageView.frame.size)
+        backgroundImageView.image = wallpaper.image
     }
     
 }

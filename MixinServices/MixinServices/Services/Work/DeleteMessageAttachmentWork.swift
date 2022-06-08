@@ -17,31 +17,15 @@ extension MessageItem: DeletableMessage {
     
 }
 
-/*
- Straight execute
- ┌───────────────┐  ┌───────────┐Completed┌────────────────┐
- │Init(preparing)├─►│Persistence├────────►│Delete DB Record│
- └───────────────┘  └───────────┘         └────┬───────────┘
-                                               │
-                 ┌───────────┐Execute┌─────┐   │Completed
-                 │Delete file│◄──────┤Ready│◄──┘
-                 └───────────┘       └─────┘
- 
- Awake from persistence
- ┌────────────┐  ┌────────────────┐Completed┌───────────┐
- │Awake(ready)├─►│Delete DB Record├────────►│Delete file│
- └────────────┘  └────────────────┘         └───────────┘
- */
-
-public final class DeleteAttachmentMessageWork: Work {
+public final class DeleteMessageAttachmentWork: Work {
     
     private enum Attachment: Codable {
         case media(category: String, filename: String)
         case transcript
     }
     
-    public static let willDeleteNotification = Notification.Name("one.mixin.services.DeleteAttachmentMessageWork.willDelete")
-    public static let messageIdUserInfoKey = "msg"
+    public static let willDeleteNotification = Notification.Name("one.mixin.services.DeleteMessageAttachmentWork.willDelete")
+    public static let messageIdUserInfoKey = "mid"
     public static let capableMessageCategories: Set<String> = [
         MessageCategory.SIGNAL_IMAGE.rawValue, MessageCategory.PLAIN_IMAGE.rawValue, MessageCategory.ENCRYPTED_IMAGE.rawValue,
         MessageCategory.SIGNAL_VIDEO.rawValue, MessageCategory.PLAIN_VIDEO.rawValue, MessageCategory.ENCRYPTED_VIDEO.rawValue,
@@ -54,9 +38,6 @@ public final class DeleteAttachmentMessageWork: Work {
     private let conversationId: String
     private let attachment: Attachment?
     
-    @Synchronized(value: false)
-    private var hasDatabaseRecordDeleted: Bool
-    
     public convenience init(message: DeletableMessage) {
         let attachment: Attachment?
         if MessageCategory.allMediaCategoriesString.contains(message.category), let filename = message.mediaUrl {
@@ -66,31 +47,20 @@ public final class DeleteAttachmentMessageWork: Work {
         } else {
             attachment = nil
         }
-        self.init(messageId: message.messageId, conversationId: message.conversationId, attachment: attachment, state: .preparing)
+        self.init(messageId: message.messageId, conversationId: message.conversationId, attachment: attachment)
     }
     
-    private init(messageId: String, conversationId: String, attachment: Attachment?, state: State) {
+    private init(messageId: String, conversationId: String, attachment: Attachment?) {
         self.messageId = messageId
         self.conversationId = conversationId
         self.attachment = attachment
-        super.init(id: "delete-message-\(messageId)", state: state)
+        super.init(id: "delete-message-\(messageId)", state: .ready)
     }
     
-    public override func start() {
-        state = .executing
-        if hasDatabaseRecordDeleted {
-            deleteFile()
-            state = .finished(.success)
-        } else {
-            MessageDAO.shared.delete(id: messageId, conversationId: conversationId, deleteTranscriptChildren: false) {
-                Logger.general.debug(category: "DeleteAttachmentMessageWork", message: "\(self.messageId) Message deleted from database")
-                self.deleteFile()
-                self.state = .finished(.success)
-            }
-        }
-    }
-    
-    private func deleteFile() {
+    public override func main() throws {
+        NotificationCenter.default.post(onMainThread: Self.willDeleteNotification,
+                                        object: self,
+                                        userInfo: [Self.messageIdUserInfoKey: messageId])
         switch attachment {
         case let .media(category, filename):
             AttachmentContainer.removeMediaFiles(mediaUrl: filename, category: category)
@@ -112,7 +82,7 @@ public final class DeleteAttachmentMessageWork: Work {
     
 }
 
-extension DeleteAttachmentMessageWork: PersistableWork {
+extension DeleteMessageAttachmentWork: PersistableWork {
     
     private struct Context: Codable {
         let messageId: String
@@ -120,7 +90,7 @@ extension DeleteAttachmentMessageWork: PersistableWork {
         let attachment: Attachment?
     }
     
-    public static let typeIdentifier: String = "delete_message"
+    public static let typeIdentifier: String = "delete_message_attachment"
     
     public var context: Data? {
         let context = Context(messageId: messageId,
@@ -142,19 +112,7 @@ extension DeleteAttachmentMessageWork: PersistableWork {
         }
         self.init(messageId: context.messageId,
                   conversationId: context.conversationId,
-                  attachment: context.attachment,
-                  state: .ready)
-    }
-    
-    public func persistenceDidComplete() {
-        NotificationCenter.default.post(onMainThread: Self.willDeleteNotification,
-                                        object: self,
-                                        userInfo: [Self.messageIdUserInfoKey: messageId])
-        MessageDAO.shared.delete(id: messageId, conversationId: conversationId, deleteTranscriptChildren: false) {
-            self.state = .ready
-        }
-        hasDatabaseRecordDeleted = true
-        Logger.general.debug(category: "DeleteAttachmentMessageWork", message: "\(messageId) Message deleted from database")
+                  attachment: context.attachment)
     }
     
 }

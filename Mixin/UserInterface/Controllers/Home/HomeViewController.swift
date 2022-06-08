@@ -145,7 +145,10 @@ class HomeViewController: UIViewController {
             if AppGroupUserDefaults.User.hasRecoverMedia {
                 ConcurrentJobQueue.shared.addJob(job: RecoverMediaJob())
             }
-            WorkManager.general.wakeUpPersistedWorks(with: [DeleteAttachmentMessageWork.self])
+            WorkManager.general.wakeUpPersistedWorks(with: [
+                DeleteMessageAttachmentWork.self,
+                DeleteConversationAttachmentWork.self
+            ])
             initializeFTSIfNeeded()
             refreshExternalSchemesIfNeeded()
         }
@@ -740,9 +743,7 @@ extension HomeViewController {
             self.conversations.remove(at: indexPath.row)
             self.tableView.deleteRows(at: [indexPath], with: .fade)
             self.tableView.endUpdates()
-            DispatchQueue.global().async {
-                ConversationDAO.shared.deleteChat(conversationId: conversationId)
-            }
+            ConversationCleaner.clean(conversationId: conversationId, intent: .delete)
         }))
         present(alert, animated: true, completion: nil)
     }
@@ -764,9 +765,7 @@ extension HomeViewController {
             self.conversations[indexPath.row].unseenMessageCount = 0
             self.tableView.reloadRows(at: [indexPath], with: .automatic)
             self.tableView.endUpdates()
-            DispatchQueue.global().async {
-                ConversationDAO.shared.clearChat(conversationId: conversationId)
-            }
+            ConversationCleaner.clean(conversationId: conversationId, intent: .clear)
         }))
         present(alert, animated: true, completion: nil)
     }

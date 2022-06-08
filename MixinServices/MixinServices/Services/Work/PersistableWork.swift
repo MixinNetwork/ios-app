@@ -14,7 +14,6 @@ public protocol PersistableWork: Work {
     init(id: String, context: Data?) throws
     
     func updatePersistedContext()
-    func persistenceDidComplete()
     
 }
 
@@ -22,10 +21,6 @@ extension PersistableWork {
     
     public func updatePersistedContext() {
         WorkDAO.shared.update(context: context, forWorkWith: id)
-    }
-    
-    public func persistenceDidComplete() {
-        
     }
     
 }

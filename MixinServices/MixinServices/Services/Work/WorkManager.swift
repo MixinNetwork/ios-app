@@ -1,6 +1,12 @@
 import Foundation
+import GRDB
 
 public class WorkManager {
+    
+    private enum Persistence {
+        case standalone
+        case alongsideTransaction(GRDB.Database)
+    }
     
     public static let general = WorkManager(label: "General", maxConcurrentWorkCount: 6)
     
@@ -41,7 +47,7 @@ public class WorkManager {
                 }
                 do {
                     let work = try Work.init(id: persisted.id, context: persisted.context)
-                    self.addWork(work, persistIfAvailable: false)
+                    self.addWork(work, persistence: .none)
                 } catch {
                     Logger.general.error(category: "WorkManager", message: "[\(self.label)] Failed to init \(persisted)")
                 }
@@ -51,7 +57,11 @@ public class WorkManager {
     }
     
     public func addWork(_ work: Work) {
-        addWork(work, persistIfAvailable: true)
+        addWork(work, persistence: .standalone)
+    }
+    
+    public func addPersistableWork(_ work: PersistableWork, alongsideTransactionWith database: GRDB.Database) {
+        addWork(work, persistence: .alongsideTransaction(database))
     }
     
     public func cancelAllWorks() {
@@ -68,7 +78,7 @@ public class WorkManager {
         work.cancel()
     }
     
-    private func addWork(_ work: Work, persistIfAvailable: Bool) {
+    private func addWork(_ work: Work, persistence: Persistence?) {
         guard work.setStateMonitor(self) else {
             assertionFailure("Adding work to multiple manager is not supported")
             return
@@ -82,13 +92,21 @@ public class WorkManager {
             Logger.general.warn(category: "WorkManager", message: "[\(label)] Add a duplicated work: \(work)")
             return
         }
-        if persistIfAvailable, let work = work as? PersistableWork {
+        if let work = work as? PersistableWork, let persistence = persistence {
             let persisted = PersistedWork(id: work.id,
                                           type: type(of: work).typeIdentifier,
                                           context: work.context,
                                           priority: work.priority)
-            WorkDAO.shared.save(work: persisted,
-                                completion: work.persistenceDidComplete)
+            switch persistence {
+            case .standalone:
+                WorkDAO.shared.save(work: persisted)
+            case .alongsideTransaction(let database):
+                do {
+                    try persisted.save(database)
+                } catch {
+                    Logger.general.error(category: "WorkManager", message: "[\(label)] Failed to save: \(work), error: \(error)")
+                }
+            }
         }
         if work.isReady, executingWorks.count < maxConcurrentWorkCount {
             Logger.general.debug(category: "WorkManager", message: "[\(label)] Start \(work) because of adding to queue")

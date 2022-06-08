@@ -786,15 +786,10 @@ public final class MessageDAO: UserDatabaseDAO {
     }
     
     @discardableResult
-    public func delete(id: String, conversationId: String, deleteTranscriptChildren: Bool, completion: (() -> Void)? = nil) -> (deleted: Bool, childMessageIds: [String]) {
-        try! db.writeAndReturnError { db in
-            let (deleted, ids) = try delete(id: id, conversationId: conversationId, deleteTranscriptChildren: deleteTranscriptChildren, database: db)
-            if let completion = completion {
-                db.afterNextTransactionCommit { _ in
-                    completion()
-                }
-            }
-            return (deleted, ids)
+    public func delete(id: String, conversationId: String, deleteTranscriptChildren: Bool, alongsideTransaction work: ((GRDB.Database) -> Void)) {
+        db.write { db in
+            try delete(id: id, conversationId: conversationId, deleteTranscriptChildren: deleteTranscriptChildren, database: db)
+            work(db)
         }
     }
     

@@ -168,11 +168,11 @@ class PlaylistManager: NSObject {
                                        object: nil)
         notificationCenter.addObserver(self,
                                        selector: #selector(messageWillDelete(_:)),
-                                       name: DeleteAttachmentMessageWork.willDeleteNotification,
+                                       name: DeleteMessageAttachmentWork.willDeleteNotification,
                                        object: nil)
         notificationCenter.addObserver(self,
-                                       selector: #selector(conversationDAOWillClearConversation(_:)),
-                                       name: ConversationDAO.willClearConversationNotification,
+                                       selector: #selector(conversationWillClean(_:)),
+                                       name: ConversationCleaner.willCleanNotification,
                                        object: nil)
         notificationCenter.addObserver(self,
                                        selector: #selector(messageServiceWillRecallMessage(_:)),
@@ -774,7 +774,7 @@ extension PlaylistManager {
     }
     
     @objc private func messageWillDelete(_ notification: Notification) {
-        guard let messageId = notification.userInfo?[DeleteAttachmentMessageWork.messageIdUserInfoKey] as? String else {
+        guard let messageId = notification.userInfo?[DeleteMessageAttachmentWork.messageIdUserInfoKey] as? String else {
             return
         }
         guard case .conversation = source else {
@@ -783,8 +783,8 @@ extension PlaylistManager {
         removeItem(with: messageId)
     }
     
-    @objc private func conversationDAOWillClearConversation(_ notification: Notification) {
-        guard let id = notification.userInfo?[ConversationDAO.conversationIdUserInfoKey] as? String else {
+    @objc private func conversationWillClean(_ notification: Notification) {
+        guard let id = notification.userInfo?[ConversationCleaner.conversationIdUserInfoKey] as? String else {
             return
         }
         guard case let .conversation(conversationId) = source, conversationId == id else {

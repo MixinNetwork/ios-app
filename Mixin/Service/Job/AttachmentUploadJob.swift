@@ -78,7 +78,7 @@ class AttachmentUploadJob: AttachmentLoadingJob {
             return false
         }
         guard let fileUrl = fileUrl else {
-            let work = DeleteAttachmentMessageWork(message: message)
+            let work = DeleteMessageAttachmentWork(message: message)
             WorkManager.general.addWork(work)
             return false
         }

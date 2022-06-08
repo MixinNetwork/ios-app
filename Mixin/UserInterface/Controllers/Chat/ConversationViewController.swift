@@ -2706,13 +2706,11 @@ extension ConversationViewController {
                 guard let weakSelf = self, let indexPath = weakSelf.dataSource.indexPath(where: { $0.messageId == message.messageId }) else {
                     return
                 }
-                if DeleteAttachmentMessageWork.capableMessageCategories.contains(message.category) {
-                    let work = DeleteAttachmentMessageWork(message: message)
-                    WorkManager.general.addWork(work)
-                } else {
-                    MessageDAO.shared.delete(id: message.messageId,
-                                             conversationId: message.conversationId,
-                                             deleteTranscriptChildren: true)
+                MessageDAO.shared.delete(id: message.messageId, conversationId: message.conversationId, deleteTranscriptChildren: false) { db in
+                    if DeleteMessageAttachmentWork.capableMessageCategories.contains(message.category) {
+                        let work = DeleteMessageAttachmentWork(message: message)
+                        WorkManager.general.addPersistableWork(work, alongsideTransactionWith: db)
+                    }
                 }
                 DispatchQueue.main.sync {
                     _ = weakSelf.dataSource?.removeViewModel(at: indexPath)

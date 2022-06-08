@@ -272,11 +272,8 @@ class ConversationInputViewController: UIViewController {
             self.deleteConversationButton.isBusy = false
         }))
         alert.addAction(UIAlertAction(title: R.string.localizable.delete_chat(), style: .destructive, handler: { (_) in
-            DispatchQueue.global().async { [weak self] in
-                ConversationDAO.shared.deleteChat(conversationId: conversationId)
-                DispatchQueue.main.async {
-                    self?.navigationController?.backToHome()
-                }
+            ConversationCleaner.clean(conversationId: conversationId, intent: .delete) {
+                self.navigationController?.backToHome()
             }
         }))
         present(alert, animated: true, completion: nil)

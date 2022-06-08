@@ -6,20 +6,18 @@ public class WorkDAO {
     public static let shared = WorkDAO()
     
     public var db: Database {
-        WorkDatabase.current
+        UserDatabase.current
     }
     
-    public func save(work: PersistedWork, completion: @escaping () -> Void) {
+    public func save(work: PersistedWork) {
         db.write { db in
             try work.save(db)
-            db.afterNextTransactionCommit { _ in
-                completion()
-            }
         }
     }
     
     public func works(with types: [String]) -> [PersistedWork] {
-        db.select(where: types.contains(PersistedWork.column(of: .type)))
+        db.select(where: types.contains(PersistedWork.column(of: .type)),
+                  order: [PersistedWork.column(of: .priority).desc])
     }
     
     public func delete(id: String) {

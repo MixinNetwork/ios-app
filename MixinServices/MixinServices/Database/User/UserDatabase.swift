@@ -493,6 +493,15 @@ public final class UserDatabase: Database {
             }
         }
         
+        migrator.registerMigration("work") { db in
+            try db.create(table: "works") { td in
+                td.column("id", .text).primaryKey().notNull()
+                td.column("type", .text).notNull()
+                td.column("context", .blob)
+                td.column("priority", .integer).notNull()
+            }
+        }
+        
         return migrator
     }
     

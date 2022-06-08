@@ -140,13 +140,17 @@ extension PreviewWallpaperViewController: UICollectionViewDelegate, UICollection
         return cell
     }
     
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         if indexPath.item == 0 {
-            collectionView.deselectItem(at: indexPath, animated: false)
             imagePicker.presentPhoto()
+            return false
         } else {
-            loadImage(for: indexPath)
+            return true
         }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        loadImage(for: indexPath)
     }
     
 }

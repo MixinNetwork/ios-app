@@ -134,7 +134,8 @@ extension PreviewWallpaperViewController: UICollectionViewDelegate, UICollection
             cell.imageView.image = nil
             cell.iconView.isHidden = false
         } else {
-            cell.imageView.image = wallpapers[indexPath.item - 1].image
+            let index = wallpaperIndex(from: indexPath)
+            cell.imageView.image = wallpapers[index].image
             cell.iconView.isHidden = true
         }
         return cell

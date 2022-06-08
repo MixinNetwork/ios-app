@@ -615,12 +615,15 @@ extension ConversationDAO {
             WHERE (c.conversation_id = ?) AND ((c.category = ? AND c.status = ?) OR (c.category = ? AND u.relationship != ?))
             LIMIT 1
         """
-        let value: Int64 = db.select(with: sql, arguments: [conversationId,
-                                                            ConversationCategory.GROUP.rawValue,
-                                                            ConversationStatus.QUIT.rawValue,
-                                                            ConversationCategory.CONTACT.rawValue,
-                                                            Relationship.FRIEND.rawValue]) ?? 0
-        return value > 0
+        let arguments: StatementArguments = [
+            conversationId,
+            ConversationCategory.GROUP.rawValue,
+            ConversationStatus.QUIT.rawValue,
+            ConversationCategory.CONTACT.rawValue,
+            Relationship.FRIEND.rawValue
+        ]
+        let value: Int64 = db.select(with: sql, arguments: arguments) ?? 0
+        return value != 0
     }
     
 }

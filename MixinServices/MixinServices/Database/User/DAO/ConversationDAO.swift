@@ -223,7 +223,9 @@ public final class ConversationDAO: UserDatabaseDAO {
                                                transcriptIds: deletedTranscriptIds)
                 ConcurrentJobQueue.shared.addJob(job: job)
                 if shouldCleanUpWallpaper {
-                    ConcurrentJobQueue.shared.addJob(job: WallpaperCleanUpJob(conversationId: conversationId))
+                    AppGroupUserDefaults.User.wallpapers[conversationId] = nil
+                    let url = AttachmentContainer.wallpaperURL(for: conversationId)
+                    try? FileManager.default.removeItem(at: url)
                 }
                 NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: nil)
             }

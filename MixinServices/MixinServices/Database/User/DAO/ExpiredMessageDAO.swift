@@ -86,7 +86,7 @@ public final class ExpiredMessageDAO: UserDatabaseDAO {
                   where: ExpiredMessage.column(of: .messageId) == messageId)
     }
     
-    public func removeExpiredMessages(reportNextExpireAt: (Int64?) -> Void) {
+    public func removeExpiredMessages(reportNextExpireAt: @escaping (Int64?) -> Void) {
         db.write { db in
             let condition: SQLSpecificExpressible = ExpiredMessage.column(of: .expireAt) != nil
                 && ExpiredMessage.column(of: .expireAt) <= Int64(Date().timeIntervalSince1970)
@@ -95,26 +95,23 @@ public final class ExpiredMessageDAO: UserDatabaseDAO {
                 .filter(condition)
                 .limit(100)
                 .fetchAll(db)
+            
             let expiredMessages = try MessageDAO.shared.getFullMessages(messageIds: expiredMessageIds, with: db)
-            for id in expiredMessageIds {
-                let (deleted, childMessageIds) = try MessageDAO.shared.deleteMessage(id: id, with: db)
+            var deletedMessages: [(message: MessageItem, transcriptChildrenIds: [String])] = []
+            var unseenCountChangedConversationIds: Set<String> = []
+            for message in expiredMessages {
+                let (deleted, childMessageIds) = try MessageDAO.shared.deleteMessage(id: message.messageId, with: db)
                 if deleted {
-                    if let message = expiredMessages.first(where: { $0.messageId == id }) {
-                        ReceiveMessageService.shared.stopRecallMessage(item: message, childMessageIds: childMessageIds)
-                        if message.status != MessageStatus.READ.rawValue {
-                            try MessageDAO.shared.updateUnseenMessageCount(database: db, conversationId: message.conversationId)
-                        }
+                    deletedMessages.append((message, childMessageIds))
+                    if message.status != MessageStatus.READ.rawValue {
+                        unseenCountChangedConversationIds.insert(message.conversationId)
                     }
-                    NotificationCenter.default.post(onMainThread: Self.expiredMessageDidDeleteNotification,
-                                                    object: nil,
-                                                    userInfo: [Self.messageIdKey: id])
                 }
             }
-            if !expiredMessageIds.isEmpty {
-                db.afterNextTransactionCommit { _ in
-                    NotificationCenter.default.post(onMainThread: MixinServices.conversationDidChangeNotification, object: nil)
-                }
+            for id in unseenCountChangedConversationIds {
+                try MessageDAO.shared.updateUnseenMessageCount(database: db, conversationId: id)
             }
+            
             try ExpiredMessage
                 .filter(expiredMessageIds.contains(ExpiredMessage.column(of: .messageId)))
                 .deleteAll(db)
@@ -123,7 +120,24 @@ public final class ExpiredMessageDAO: UserDatabaseDAO {
                 .filter(ExpiredMessage.column(of: .expireAt) != nil)
                 .order([ExpiredMessage.column(of: .expireAt).asc])
                 .fetchOne(db)
-            reportNextExpireAt(nextExpireAt)
+            db.afterNextTransactionCommit { _ in
+                DispatchQueue.main.async {
+                    DispatchQueue.global().async {
+                        for (message, childrenIds) in deletedMessages {
+                            ReceiveMessageService.shared.stopRecallMessage(item: message, childMessageIds: childrenIds)
+                        }
+                    }
+                    for (message, _) in deletedMessages {
+                        NotificationCenter.default.post(name: Self.expiredMessageDidDeleteNotification,
+                                                        object: nil,
+                                                        userInfo: [Self.messageIdKey: message.messageId])
+                    }
+                    if !expiredMessages.isEmpty {
+                        NotificationCenter.default.post(name: MixinServices.conversationDidChangeNotification, object: nil)
+                    }
+                    reportNextExpireAt(nextExpireAt)
+                }
+            }
         }
     }
     

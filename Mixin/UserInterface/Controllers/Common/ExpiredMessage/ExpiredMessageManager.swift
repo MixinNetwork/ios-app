@@ -26,10 +26,10 @@ final class ExpiredMessageManager {
     }
     
     @objc func removeExpiredMessages() {
-        queue.async { [weak self] in
+        queue.async {
             ExpiredMessageDAO.shared.removeExpiredMessages { nextExpireAt in
                 if let nextExpireAt = nextExpireAt {
-                    self?.scheduleTimer(expireAt: nextExpireAt)
+                    self.scheduleTimer(expireAt: nextExpireAt)
                 }
             }
         }
@@ -40,25 +40,20 @@ final class ExpiredMessageManager {
     }
     
     private func scheduleTimer(expireAt: Int64) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else {
-                return
-            }
-            let fireDate = Date(timeIntervalSince1970: TimeInterval(expireAt))
-            if let timer = self.timer, timer.fireDate < fireDate {
-                return
-            }
-            self.timer?.invalidate()
-            let timerInterval = fireDate.timeIntervalSinceNow
-            if timerInterval < 1 {
-                self.removeExpiredMessages()
-            } else {
-                self.timer = Timer.scheduledTimer(timeInterval: timerInterval,
-                                                  target: self,
-                                                  selector: #selector(self.removeExpiredMessages),
-                                                  userInfo: nil,
-                                                  repeats: false)
-            }
+        let fireDate = Date(timeIntervalSince1970: TimeInterval(expireAt))
+        if let timer = self.timer, timer.fireDate < fireDate {
+            return
+        }
+        self.timer?.invalidate()
+        let timerInterval = fireDate.timeIntervalSinceNow
+        if timerInterval < 1 {
+            self.removeExpiredMessages()
+        } else {
+            self.timer = Timer.scheduledTimer(timeInterval: timerInterval,
+                                              target: self,
+                                              selector: #selector(self.removeExpiredMessages),
+                                              userInfo: nil,
+                                              repeats: false)
         }
     }
     

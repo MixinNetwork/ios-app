@@ -39,14 +39,28 @@ final class ExpiredMessageManager {
         timer?.invalidate()
     }
     
+    func isQueueAvailable(completion: @escaping (Bool) -> Void) {
+        DispatchQueue.global().async {
+            let semaphore = DispatchSemaphore(value: 0)
+            self.queue.async {
+                semaphore.signal()
+            }
+            let result = semaphore.wait(timeout: .now() + 10)
+            DispatchQueue.main.async {
+                completion(result == .success)
+            }
+        }
+    }
+    
     private func scheduleTimer(expireAt: Int64) {
         let fireDate = Date(timeIntervalSince1970: TimeInterval(expireAt))
         if let timer = self.timer, timer.fireDate < fireDate {
-            Logger.general.info(category: "ExpiredMessageManager", message: "No need to reschedule timer")
+            Logger.general.info(category: "ExpiredMessageManager", message: "Already scheduled timer on: \(timer.fireDate), abort to set to: \(fireDate)")
             return
         }
         timer?.invalidate()
         let timerInterval = fireDate.timeIntervalSinceNow
+        Logger.general.info(category: "ExpiredMessageManager", message: "Scheduled timer after: \(timerInterval)s")
         timer = Timer.scheduledTimer(timeInterval: timerInterval,
                                      target: self,
                                      selector: #selector(self.removeExpiredMessages),

@@ -109,7 +109,6 @@ public final class ExpiredMessageDAO: UserDatabaseDAO {
                         }
                     }
                 }
-                Logger.general.info(category: "ExpiredMessageDAO", message: "Deleted \(deletedMessages.count) messages")
                 for id in unseenCountChangedConversationIds {
                     try MessageDAO.shared.updateUnseenMessageCount(database: db, conversationId: id)
                 }
@@ -124,6 +123,7 @@ public final class ExpiredMessageDAO: UserDatabaseDAO {
                 .order([ExpiredMessage.column(of: .expireAt).asc])
                 .fetchOne(db)
             db.afterNextTransactionCommit { _ in
+                Logger.general.info(category: "ExpiredMessageDAO", message: "Deleted \(deletedMessages.count) messages")
                 DispatchQueue.main.async {
                     DispatchQueue.global().async {
                         for (message, childrenIds) in deletedMessages {

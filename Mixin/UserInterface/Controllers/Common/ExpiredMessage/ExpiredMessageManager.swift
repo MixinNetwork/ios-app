@@ -42,19 +42,16 @@ final class ExpiredMessageManager {
     private func scheduleTimer(expireAt: Int64) {
         let fireDate = Date(timeIntervalSince1970: TimeInterval(expireAt))
         if let timer = self.timer, timer.fireDate < fireDate {
+            Logger.general.info(category: "ExpiredMessageManager", message: "No need to reschedule timer")
             return
         }
-        self.timer?.invalidate()
+        timer?.invalidate()
         let timerInterval = fireDate.timeIntervalSinceNow
-        if timerInterval < 1 {
-            self.removeExpiredMessages()
-        } else {
-            self.timer = Timer.scheduledTimer(timeInterval: timerInterval,
-                                              target: self,
-                                              selector: #selector(self.removeExpiredMessages),
-                                              userInfo: nil,
-                                              repeats: false)
-        }
+        timer = Timer.scheduledTimer(timeInterval: timerInterval,
+                                     target: self,
+                                     selector: #selector(self.removeExpiredMessages),
+                                     userInfo: nil,
+                                     repeats: false)
     }
     
 }

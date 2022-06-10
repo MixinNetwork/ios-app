@@ -124,12 +124,12 @@ public final class ExpiredMessageDAO: UserDatabaseDAO {
                 .fetchOne(db)
             db.afterNextTransactionCommit { _ in
                 Logger.general.info(category: "ExpiredMessageDAO", message: "Deleted \(deletedMessages.count) messages")
-                DispatchQueue.main.async {
-                    DispatchQueue.global().async {
-                        for (message, childrenIds) in deletedMessages {
-                            ReceiveMessageService.shared.stopRecallMessage(item: message, childMessageIds: childrenIds)
-                        }
+                DispatchQueue.global().async {
+                    for (message, childrenIds) in deletedMessages {
+                        ReceiveMessageService.shared.stopRecallMessage(item: message, childMessageIds: childrenIds)
                     }
+                }
+                DispatchQueue.main.async {
                     for (message, _) in deletedMessages {
                         NotificationCenter.default.post(name: Self.expiredMessageDidDeleteNotification,
                                                         object: nil,

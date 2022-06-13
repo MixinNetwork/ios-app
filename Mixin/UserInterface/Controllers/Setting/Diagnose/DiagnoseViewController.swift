@@ -13,6 +13,9 @@ class DiagnoseViewController: SettingsTableViewController {
         SettingsSection(rows: [
             SettingsRow(title: R.string.localizable.clear_unused_cache(), accessory: .disclosure),
         ]),
+        SettingsSection(rows: [
+            SettingsRow(title: "Expiration Availability", accessory: .none),
+        ]),
     ])
     
     override func viewDidLoad() {
@@ -49,6 +52,13 @@ extension DiagnoseViewController: UITableViewDelegate {
             let container = ContainerViewController.instance(viewController: AttachmentDiagnosticViewController(),
                                                              title: R.string.localizable.clear_unused_cache())
             navigationController?.pushViewController(container, animated: true)
+        case (3, 0):
+            let hud = Hud()
+            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+            ExpiredMessageManager.shared.isQueueAvailable { isAvailable in
+                hud.set(style: isAvailable ? .notification : .error, text: "")
+                hud.scheduleAutoHidden()
+            }
         default:
             break
         }

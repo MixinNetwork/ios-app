@@ -56,18 +56,12 @@ public final class UserDAO: UserDatabaseDAO {
         WHERE u.relationship = 'FRIEND'
             AND u.identity_number > '0'
             AND ((u.full_name LIKE :escaped ESCAPE '/') OR (u.identity_number LIKE :escaped ESCAPE '/') OR (u.phone LIKE :escaped ESCAPE '/'))
-        ORDER BY
-            CASE
-                WHEN u.identity_number = :lowercased THEN 2
-                WHEN LOWER(u.full_name) = :lowercased THEN 1
-                ELSE 0
-            END
-        DESC
+        ORDER BY u.identity_number = :raw COLLATE NOCASE OR u.full_name = :raw COLLATE NOCASE DESC
         """
         if let limit = limit {
             sql += " LIMIT \(limit)"
         }
-        return db.select(with: sql, arguments: ["escaped": "%\(keyword.sqlEscaped)%", "lowercased": keyword.lowercased()])
+        return db.select(with: sql, arguments: ["escaped": "%\(keyword.sqlEscaped)%", "raw": keyword])
     }
     
     public func getFriendUser(withAppId id: String) -> User? {

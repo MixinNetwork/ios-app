@@ -264,12 +264,12 @@ public final class ConversationDAO: UserDatabaseDAO {
     
     public func getGroupOrStrangerConversation(withNameLike keyword: String, limit: Int?) -> [ConversationItem] {
         let condition = "AND ((c.category = 'GROUP' AND c.name LIKE :escaped ESCAPE '/') OR (c.category = 'CONTACT' AND u1.relationship = 'STRANGER' AND u1.full_name LIKE :escaped ESCAPE '/'))"
-        let order = "CASE WHEN ((c.category = 'GROUP' AND LOWER(c.name) = :lowercased) OR (c.category = 'CONTACT' AND LOWER(u1.full_name) = :lowercased)) THEN 1 ELSE 0 END DESC, "
+        let order = "(c.category = 'GROUP' AND c.name = :raw COLLATE NOCASE) OR (c.category = 'CONTACT' AND u1.full_name = :raw COLLATE NOCASE) DESC, "
         var sql = String(format: Self.sqlQueryConversation, condition, order)
         if let limit = limit {
             sql += " LIMIT \(limit)"
         }
-        let arguments = ["escaped": "%\(keyword.sqlEscaped)%", "lowercased": keyword.lowercased()]
+        let arguments = ["escaped": "%\(keyword.sqlEscaped)%", "raw": keyword]
         return db.select(with: sql, arguments: StatementArguments(arguments))
     }
     

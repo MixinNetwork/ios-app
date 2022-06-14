@@ -8,10 +8,15 @@ class RestoreViewController: UIViewController {
     @IBOutlet weak var subtitleLabel: UILabel!
     @IBOutlet weak var restoreButton: RoundedButton!
     @IBOutlet weak var progressLabel: UILabel!
-
-    class func instance() -> UIViewController {
-        return R.storyboard.home.restore()!    }
-
+    
+    private var isUsernameJustInitialized = false
+    
+    class func instance(isUsernameJustInitialized: Bool) -> UIViewController {
+        let controller = R.storyboard.home.restore()!
+        controller.isUsernameJustInitialized = isUsernameJustInitialized
+        return controller
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         let subtitle = NSMutableAttributedString(string: R.string.localizable.chat_restore_subtitle())
@@ -81,7 +86,7 @@ class RestoreViewController: UIViewController {
                 
                 UserDatabase.reloadCurrent()
                 DispatchQueue.main.async {
-                    AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
+                    AppDelegate.current.mainWindow.rootViewController = makeInitialViewController(isUsernameJustInitialized: self.isUsernameJustInitialized)
                 }
             } catch {
                 Logger.general.error(category: "RestoreViewController", message: "Restoration at: \(cloudURL.suffix(base: backupDir)), failed for: \(error)")
@@ -94,8 +99,7 @@ class RestoreViewController: UIViewController {
         Logger.general.info(category: "Restore", message: "Restoration skipped")
         AppGroupUserDefaults.Account.canRestoreChat = false
         AppGroupUserDefaults.Account.canRestoreMedia = false
-        AppDelegate.current.mainWindow.rootViewController =
-            makeInitialViewController()
+        AppDelegate.current.mainWindow.rootViewController = makeInitialViewController(isUsernameJustInitialized: isUsernameJustInitialized)
     }
     
     private func restoreFailed(error: Swift.Error) {

@@ -252,7 +252,7 @@ extension AppDelegate {
         if let viewController = mainWindow.rootViewController as? ClockSkewViewController {
             viewController.checkFailed()
         } else {
-            mainWindow.rootViewController = makeInitialViewController()
+            mainWindow.rootViewController = makeInitialViewController(isUsernameJustInitialized: false)
         }
     }
     
@@ -263,7 +263,7 @@ extension AppDelegate {
     private func checkLogin() {
         mainWindow.backgroundColor = .black
         if LoginManager.shared.isLoggedIn {
-            mainWindow.rootViewController = makeInitialViewController()
+            mainWindow.rootViewController = makeInitialViewController(isUsernameJustInitialized: false)
             if ContactsManager.shared.authorization == .authorized && AppGroupUserDefaults.User.autoUploadsContacts {
                 DispatchQueue.global().asyncAfter(deadline: .now() + 2, execute: {
                     PhoneContactAPI.upload(contacts: ContactsManager.shared.contacts)

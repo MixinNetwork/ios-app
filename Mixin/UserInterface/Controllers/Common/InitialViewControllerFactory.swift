@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-func makeInitialViewController() -> UIViewController {
+func makeInitialViewController(isUsernameJustInitialized: Bool) -> UIViewController {
     if AppGroupUserDefaults.Account.isClockSkewed {
         if let viewController = AppDelegate.current.mainWindow.rootViewController as? ClockSkewViewController {
             viewController.checkFailed()
@@ -15,11 +15,11 @@ func makeInitialViewController() -> UIViewController {
     } else if LoginManager.shared.account?.full_name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true {
         return UsernameViewController()
     } else if AppGroupUserDefaults.Account.canRestoreChat {
-        return RestoreViewController.instance()
+        return RestoreViewController.instance(isUsernameJustInitialized: isUsernameJustInitialized)
     } else if DatabaseUpgradeViewController.needsUpgrade {
-        return DatabaseUpgradeViewController.instance()
+        return DatabaseUpgradeViewController.instance(isUsernameJustInitialized: isUsernameJustInitialized)
     } else if !AppGroupUserDefaults.Crypto.isPrekeyLoaded || !AppGroupUserDefaults.Crypto.isSessionSynchronized || !AppGroupUserDefaults.User.isCircleSynchronized {
-        return SignalLoadingViewController.instance()
+        return SignalLoadingViewController.instance(isUsernameJustInitialized: isUsernameJustInitialized)
     } else {
         return HomeContainerViewController()
     }

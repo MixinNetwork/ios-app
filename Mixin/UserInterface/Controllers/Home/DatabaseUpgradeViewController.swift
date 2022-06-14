@@ -8,11 +8,14 @@ class DatabaseUpgradeViewController: UIViewController {
             || AppGroupUserDefaults.User.needsUpgradeInMainApp
     }
     
-    class func instance() -> DatabaseUpgradeViewController {
-        return R.storyboard.home.database()!
+    class func instance(isUsernameJustInitialized: Bool) -> DatabaseUpgradeViewController {
+        let controller = R.storyboard.home.database()!
+        controller.isUsernameJustInitialized = isUsernameJustInitialized
+        return controller
     }
     
     private var isUpgrading = false
+    private var isUsernameJustInitialized = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -89,7 +92,7 @@ class DatabaseUpgradeViewController: UIViewController {
     }
     
     private func dismiss() {
-        AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
+        AppDelegate.current.mainWindow.rootViewController = makeInitialViewController(isUsernameJustInitialized: isUsernameJustInitialized)
     }
     
     @objc private func applicationDidBecomeActive(_ notification: Notification) {

@@ -1,11 +1,11 @@
 import UIKit
 import MixinServices
 
-class StaticMessagesViewController: UIViewController, WallpaperApplicable {
+class StaticMessagesViewController: UIViewController {
     
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var backgroundImageView: UIImageView!
+    @IBOutlet weak var wallpaperImageView: WallpaperImageView!
     @IBOutlet weak var tableView: ConversationTableView!
     
     @IBOutlet weak var contentViewHeightConstraint: NSLayoutConstraint!
@@ -71,7 +71,8 @@ class StaticMessagesViewController: UIViewController, WallpaperApplicable {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        updateBackgroundImage()
+        let wallpaper = Wallpaper.wallpaper(for: .conversation(conversationId))
+        wallpaperImageView.wallpaper = wallpaper
     }
     
     @IBAction func dismissAction(_ sender: Any) {

@@ -3,7 +3,7 @@ import MixinServices
 
 class PreviewWallpaperViewController: UIViewController {
     
-    @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var wallpaperImageView: WallpaperImageView!
     @IBOutlet weak var tableView: ConversationTableView!
     @IBOutlet weak var collectionView: UICollectionView!
     
@@ -131,12 +131,10 @@ extension PreviewWallpaperViewController: UICollectionViewDelegate, UICollection
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.preview_wallpaper, for: indexPath)!
         if indexPath.item == 0 {
-            cell.imageView.image = nil
-            cell.iconView.isHidden = false
+            cell.wallpaper = nil
         } else {
             let index = wallpaperIndex(from: indexPath)
-            cell.imageView.image = wallpapers[index].image
-            cell.iconView.isHidden = true
+            cell.wallpaper = wallpapers[index]
         }
         return cell
     }
@@ -195,10 +193,8 @@ extension PreviewWallpaperViewController {
         collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         let index = wallpaperIndex(from: indexPath)
         let wallpaper = wallpapers[index]
-        let contentMode = wallpaper.contentMode(imageViewSize: imageView.frame.size)
-        UIView.transition(with: imageView, duration: 0.3, options: .transitionCrossDissolve, animations: {
-            self.imageView.contentMode = contentMode
-            self.imageView.image = wallpaper.image
+        UIView.transition(with: wallpaperImageView, duration: 0.3, options: .transitionCrossDissolve, animations: {
+            self.wallpaperImageView.wallpaper = wallpaper
         }, completion: nil)
     }
     

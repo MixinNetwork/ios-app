@@ -4,13 +4,13 @@ import AVKit
 import Photos
 import MixinServices
 
-class ConversationViewController: UIViewController, WallpaperApplicable {
+class ConversationViewController: UIViewController {
     
     static var positions = [String: Position]()
     static var allowReportSingleMessage = false
     
     @IBOutlet weak var navigationBarView: UIView!
-    @IBOutlet weak var backgroundImageView: UIImageView!
+    @IBOutlet weak var wallpaperImageView: WallpaperImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var tableView: ConversationTableView!
     @IBOutlet weak var accessoryButtonsWrapperView: HittestBypassWrapperView!
@@ -285,7 +285,7 @@ class ConversationViewController: UIViewController, WallpaperApplicable {
     // MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        backgroundImageView.snp.makeConstraints { (make) in
+        wallpaperImageView.snp.makeConstraints { (make) in
             make.height.equalTo(UIScreen.main.bounds.height)
         }
         tableView.snp.makeConstraints { (make) in
@@ -449,7 +449,7 @@ class ConversationViewController: UIViewController, WallpaperApplicable {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        updateBackgroundImage()
+        updateWallpaperImage()
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -1217,7 +1217,7 @@ class ConversationViewController: UIViewController, WallpaperApplicable {
         guard let conversationId = notification.userInfo?[Wallpaper.conversationIdUserInfoKey] as? String, conversationId == self.conversationId else {
             return
         }
-        updateBackgroundImage()
+        updateWallpaperImage()
     }
     
     // MARK: - Interface
@@ -2438,6 +2438,11 @@ extension ConversationViewController {
         pinMessageBannerView.snp.updateConstraints { make in
             make.left.equalTo(AppDelegate.current.mainWindow.bounds.width - 60)
         }
+    }
+    
+    private func updateWallpaperImage() {
+        let wallpaper = Wallpaper.wallpaper(for: .conversation(conversationId))
+        wallpaperImageView.wallpaper = wallpaper
     }
     
 }

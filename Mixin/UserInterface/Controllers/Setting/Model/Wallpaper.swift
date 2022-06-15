@@ -46,6 +46,15 @@ enum Wallpaper {
         }
     }
     
+    var showMaskView: Bool {
+        switch self {
+        case .custom:
+            return true
+        default:
+            return false
+        }
+    }
+    
     static func save(_ wallpaper: Wallpaper, for scope: Scope) {
         let url = AttachmentContainer.wallpaperURL(for: scope.key)
         switch wallpaper {

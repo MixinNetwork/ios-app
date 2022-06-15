@@ -2,8 +2,13 @@ import UIKit
 
 class PreviewWallpaperCell: UICollectionViewCell {
     
-    @IBOutlet weak var imageView: UIImageView!
-    @IBOutlet weak var iconView: UIImageView!
+    @IBOutlet weak var wallpaperImageView: WallpaperImageView!
+    
+    var wallpaper: Wallpaper? {
+        didSet {
+            wallpaperImageView.wallpaper = wallpaper
+        }
+    }
     
     override var isSelected: Bool {
         didSet {
@@ -24,8 +29,7 @@ class PreviewWallpaperCell: UICollectionViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        imageView.image = nil
-        iconView.isHidden = true
+        wallpaper = nil
     }
     
 }

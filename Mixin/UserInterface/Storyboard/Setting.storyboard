@@ -513,9 +513,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Conversation/bg_chat_symbol" translatesAutoresizingMaskIntoConstraints="NO" id="kMl-Ji-6ki">
+                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fjf-qL-VA9" customClass="WallpaperImageView" customModule="Mixin" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                            </imageView>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="yoU-If-vgq" customClass="ConversationTableView" customModule="Mixin" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -547,28 +548,23 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="100" height="130"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
-                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Conversation/bg_chat_symbol" adjustsImageSizeForAccessibilityContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bbz-bC-vgS">
+                                                        <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tpt-Xb-c6j" customClass="WallpaperImageView" customModule="Mixin" customModuleProvider="target">
                                                             <rect key="frame" x="5" y="5" width="90" height="120"/>
                                                             <color key="backgroundColor" name="background_wallpaper"/>
+                                                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <userDefinedRuntimeAttributes>
                                                                 <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                                                     <integer key="value" value="6"/>
                                                                 </userDefinedRuntimeAttribute>
                                                             </userDefinedRuntimeAttributes>
-                                                        </imageView>
-                                                        <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Conversation/ic_photo" translatesAutoresizingMaskIntoConstraints="NO" id="wsW-nn-Nbd">
-                                                            <rect key="frame" x="40" y="55" width="20" height="20"/>
-                                                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        </imageView>
+                                                        </view>
                                                     </subviews>
                                                     <color key="backgroundColor" name="background"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="bottom" secondItem="bbz-bC-vgS" secondAttribute="bottom" constant="5" id="789-GY-Y2Y"/>
-                                                        <constraint firstItem="bbz-bC-vgS" firstAttribute="leading" secondItem="onZ-in-MyF" secondAttribute="leading" constant="5" id="DZQ-ha-ROD"/>
-                                                        <constraint firstItem="bbz-bC-vgS" firstAttribute="top" secondItem="onZ-in-MyF" secondAttribute="top" constant="5" id="EGb-Jh-AGi"/>
-                                                        <constraint firstItem="wsW-nn-Nbd" firstAttribute="centerY" secondItem="onZ-in-MyF" secondAttribute="centerY" id="KPk-XN-qxM"/>
-                                                        <constraint firstAttribute="trailing" secondItem="bbz-bC-vgS" secondAttribute="trailing" constant="5" id="eow-eS-Vg2"/>
-                                                        <constraint firstItem="wsW-nn-Nbd" firstAttribute="centerX" secondItem="onZ-in-MyF" secondAttribute="centerX" id="uMI-sY-ef2"/>
+                                                        <constraint firstAttribute="bottom" secondItem="tpt-Xb-c6j" secondAttribute="bottom" constant="5" id="KYQ-Wh-1zx"/>
+                                                        <constraint firstItem="tpt-Xb-c6j" firstAttribute="leading" secondItem="onZ-in-MyF" secondAttribute="leading" constant="5" id="LxQ-EL-qfv"/>
+                                                        <constraint firstAttribute="trailing" secondItem="tpt-Xb-c6j" secondAttribute="trailing" constant="5" id="aU6-jn-SRh"/>
+                                                        <constraint firstItem="tpt-Xb-c6j" firstAttribute="top" secondItem="onZ-in-MyF" secondAttribute="top" constant="5" id="pvz-MJ-qrB"/>
                                                     </constraints>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -582,8 +578,7 @@
                                                 <color key="backgroundColor" name="background"/>
                                                 <size key="customSize" width="100" height="130"/>
                                                 <connections>
-                                                    <outlet property="iconView" destination="wsW-nn-Nbd" id="o86-ut-xqS"/>
-                                                    <outlet property="imageView" destination="bbz-bC-vgS" id="CMg-mn-wIr"/>
+                                                    <outlet property="wallpaperImageView" destination="tpt-Xb-c6j" id="QP5-CU-MYe"/>
                                                 </connections>
                                             </collectionViewCell>
                                         </cells>
@@ -605,13 +600,13 @@
                         <color key="backgroundColor" name="background"/>
                         <constraints>
                             <constraint firstItem="yoU-If-vgq" firstAttribute="top" secondItem="VHS-JN-JL6" secondAttribute="top" id="AiM-yc-jLe"/>
-                            <constraint firstItem="kMl-Ji-6ki" firstAttribute="top" secondItem="VHS-JN-JL6" secondAttribute="top" id="DFQ-T5-LmC"/>
-                            <constraint firstAttribute="trailing" secondItem="kMl-Ji-6ki" secondAttribute="trailing" id="Geh-YG-6kK"/>
                             <constraint firstAttribute="bottom" secondItem="Emk-88-fmq" secondAttribute="bottom" id="L2c-px-jsv"/>
-                            <constraint firstAttribute="bottom" secondItem="kMl-Ji-6ki" secondAttribute="bottom" id="VFg-oT-Uis"/>
+                            <constraint firstItem="fjf-qL-VA9" firstAttribute="leading" secondItem="VHS-JN-JL6" secondAttribute="leading" id="Qmy-Is-p3g"/>
+                            <constraint firstAttribute="trailing" secondItem="fjf-qL-VA9" secondAttribute="trailing" id="Xwd-Uk-aZD"/>
                             <constraint firstItem="yoU-If-vgq" firstAttribute="leading" secondItem="VHS-JN-JL6" secondAttribute="leading" id="YjC-Zu-ERD"/>
                             <constraint firstAttribute="trailing" secondItem="Emk-88-fmq" secondAttribute="trailing" id="asA-59-zeZ"/>
-                            <constraint firstItem="kMl-Ji-6ki" firstAttribute="leading" secondItem="VHS-JN-JL6" secondAttribute="leading" id="bmj-8I-0RY"/>
+                            <constraint firstItem="fjf-qL-VA9" firstAttribute="top" secondItem="VHS-JN-JL6" secondAttribute="top" id="dAz-Nu-c1N"/>
+                            <constraint firstAttribute="bottom" secondItem="fjf-qL-VA9" secondAttribute="bottom" id="h7e-J5-K9f"/>
                             <constraint firstItem="Emk-88-fmq" firstAttribute="leading" secondItem="VHS-JN-JL6" secondAttribute="leading" id="qdX-cg-8z3"/>
                             <constraint firstAttribute="bottom" secondItem="yoU-If-vgq" secondAttribute="bottom" id="raH-jQ-s77"/>
                             <constraint firstAttribute="trailing" secondItem="yoU-If-vgq" secondAttribute="trailing" id="vUM-ad-pih"/>
@@ -620,8 +615,8 @@
                     </view>
                     <connections>
                         <outlet property="collectionView" destination="dfr-hH-agV" id="Xy4-m3-mXf"/>
-                        <outlet property="imageView" destination="kMl-Ji-6ki" id="8hq-OG-tzu"/>
                         <outlet property="tableView" destination="yoU-If-vgq" id="TQs-73-1fD"/>
+                        <outlet property="wallpaperImageView" destination="fjf-qL-VA9" id="a04-Jd-LG1"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DwU-cq-BLH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -939,8 +934,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Conversation/bg_chat_symbol" width="428" height="926"/>
-        <image name="Conversation/ic_photo" width="20" height="20"/>
         <image name="ic_accessory_disclosure" width="6" height="10"/>
         <image name="ic_emergency_contact" width="68" height="68"/>
         <namedColor name="background">
@@ -959,7 +952,7 @@
             <color red="0.90980392156862744" green="0.41960784313725491" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
             <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

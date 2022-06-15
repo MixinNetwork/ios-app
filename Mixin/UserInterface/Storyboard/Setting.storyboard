@@ -550,6 +550,15 @@
                                                     <subviews>
                                                         <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tpt-Xb-c6j" customClass="WallpaperImageView" customModule="Mixin" customModuleProvider="target">
                                                             <rect key="frame" x="5" y="5" width="90" height="120"/>
+                                                            <color key="backgroundColor" name="background"/>
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                    <integer key="value" value="6"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                            </userDefinedRuntimeAttributes>
+                                                        </view>
+                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Conversation/ic_photo" translatesAutoresizingMaskIntoConstraints="NO" id="YRQ-Rc-IJs">
+                                                            <rect key="frame" x="5" y="5" width="90" height="120"/>
                                                             <color key="backgroundColor" name="background_wallpaper"/>
                                                             <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <userDefinedRuntimeAttributes>
@@ -557,14 +566,18 @@
                                                                     <integer key="value" value="6"/>
                                                                 </userDefinedRuntimeAttribute>
                                                             </userDefinedRuntimeAttributes>
-                                                        </view>
+                                                        </imageView>
                                                     </subviews>
                                                     <color key="backgroundColor" name="background"/>
                                                     <constraints>
                                                         <constraint firstAttribute="bottom" secondItem="tpt-Xb-c6j" secondAttribute="bottom" constant="5" id="KYQ-Wh-1zx"/>
                                                         <constraint firstItem="tpt-Xb-c6j" firstAttribute="leading" secondItem="onZ-in-MyF" secondAttribute="leading" constant="5" id="LxQ-EL-qfv"/>
+                                                        <constraint firstItem="YRQ-Rc-IJs" firstAttribute="leading" secondItem="onZ-in-MyF" secondAttribute="leading" constant="5" id="RYJ-Ry-YR5"/>
+                                                        <constraint firstAttribute="trailing" secondItem="YRQ-Rc-IJs" secondAttribute="trailing" constant="5" id="Umy-vU-1lE"/>
                                                         <constraint firstAttribute="trailing" secondItem="tpt-Xb-c6j" secondAttribute="trailing" constant="5" id="aU6-jn-SRh"/>
+                                                        <constraint firstItem="YRQ-Rc-IJs" firstAttribute="top" secondItem="onZ-in-MyF" secondAttribute="top" constant="5" id="pOY-ll-HcR"/>
                                                         <constraint firstItem="tpt-Xb-c6j" firstAttribute="top" secondItem="onZ-in-MyF" secondAttribute="top" constant="5" id="pvz-MJ-qrB"/>
+                                                        <constraint firstAttribute="bottom" secondItem="YRQ-Rc-IJs" secondAttribute="bottom" constant="5" id="ytr-RD-DvK"/>
                                                     </constraints>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -578,6 +591,7 @@
                                                 <color key="backgroundColor" name="background"/>
                                                 <size key="customSize" width="100" height="130"/>
                                                 <connections>
+                                                    <outlet property="pickFromPhotosImageView" destination="YRQ-Rc-IJs" id="2rd-HG-LVm"/>
                                                     <outlet property="wallpaperImageView" destination="tpt-Xb-c6j" id="QP5-CU-MYe"/>
                                                 </connections>
                                             </collectionViewCell>
@@ -934,6 +948,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="Conversation/ic_photo" width="20" height="20"/>
         <image name="ic_accessory_disclosure" width="6" height="10"/>
         <image name="ic_emergency_contact" width="68" height="68"/>
         <namedColor name="background">
@@ -952,7 +967,7 @@
             <color red="0.90980392156862744" green="0.41960784313725491" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
             <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

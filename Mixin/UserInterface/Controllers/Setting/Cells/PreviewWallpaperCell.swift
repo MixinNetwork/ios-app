@@ -3,12 +3,7 @@ import UIKit
 class PreviewWallpaperCell: UICollectionViewCell {
     
     @IBOutlet weak var wallpaperImageView: WallpaperImageView!
-    
-    var wallpaper: Wallpaper? {
-        didSet {
-            wallpaperImageView.wallpaper = wallpaper
-        }
-    }
+    @IBOutlet weak var pickFromPhotosImageView: UIImageView!
     
     override var isSelected: Bool {
         didSet {
@@ -25,11 +20,6 @@ class PreviewWallpaperCell: UICollectionViewCell {
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         contentView.layer.borderColor = UIColor.clear.cgColor
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        wallpaper = nil
     }
     
 }

@@ -43,6 +43,7 @@ class StaticMessagesViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .black.withAlphaComponent(0)
         contentView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        wallpaperImageView.wallpaper = Wallpaper.wallpaper(for: .conversation(conversationId))
         audioManager.delegate = self
         
         tableView.backgroundColor = .clear
@@ -67,12 +68,6 @@ class StaticMessagesViewController: UIViewController {
                            selector: #selector(conversationDidChange(_:)),
                            name: MixinServices.conversationDidChangeNotification,
                            object: nil)
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        let wallpaper = Wallpaper.wallpaper(for: .conversation(conversationId))
-        wallpaperImageView.wallpaper = wallpaper
     }
     
     @IBAction func dismissAction(_ sender: Any) {

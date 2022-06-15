@@ -46,7 +46,7 @@ enum Wallpaper {
         }
     }
     
-    var showMaskView: Bool {
+    var isCustom: Bool {
         switch self {
         case .custom:
             return true
@@ -110,17 +110,6 @@ enum Wallpaper {
     
     func matches(_ another: Wallpaper) -> Bool {
         Storage(wallpaper: self) == Storage(wallpaper: another)
-    }
-    
-    func contentMode(imageViewSize: CGSize) -> UIView.ContentMode {
-        switch self {
-        case .custom:
-            return .scaleAspectFill
-        default:
-            let imageSize = image.size
-            let isBackgroundImageUndersized = imageViewSize.width > imageSize.width || imageViewSize.height > imageSize.height
-            return isBackgroundImageUndersized ? .scaleAspectFill : .center
-        }
     }
     
 }

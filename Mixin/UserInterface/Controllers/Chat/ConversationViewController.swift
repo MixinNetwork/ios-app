@@ -288,6 +288,7 @@ class ConversationViewController: UIViewController {
         wallpaperImageView.snp.makeConstraints { (make) in
             make.height.equalTo(UIScreen.main.bounds.height)
         }
+        wallpaperImageView.wallpaper = Wallpaper.wallpaper(for: .conversation(conversationId))
         tableView.snp.makeConstraints { (make) in
             make.height.equalTo(UIScreen.main.bounds.height)
         }
@@ -445,11 +446,6 @@ class ConversationViewController: UIViewController {
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         updateNavigationBarHeightAndTableViewTopInset()
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        updateWallpaperImage()
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -1217,7 +1213,7 @@ class ConversationViewController: UIViewController {
         guard let conversationId = notification.userInfo?[Wallpaper.conversationIdUserInfoKey] as? String, conversationId == self.conversationId else {
             return
         }
-        updateWallpaperImage()
+        wallpaperImageView.wallpaper = Wallpaper.wallpaper(for: .conversation(conversationId))
     }
     
     // MARK: - Interface
@@ -2438,11 +2434,6 @@ extension ConversationViewController {
         pinMessageBannerView.snp.updateConstraints { make in
             make.left.equalTo(AppDelegate.current.mainWindow.bounds.width - 60)
         }
-    }
-    
-    private func updateWallpaperImage() {
-        let wallpaper = Wallpaper.wallpaper(for: .conversation(conversationId))
-        wallpaperImageView.wallpaper = wallpaper
     }
     
 }

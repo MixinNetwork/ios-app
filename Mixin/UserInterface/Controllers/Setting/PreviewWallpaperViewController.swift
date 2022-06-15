@@ -131,10 +131,13 @@ extension PreviewWallpaperViewController: UICollectionViewDelegate, UICollection
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.preview_wallpaper, for: indexPath)!
         if indexPath.item == 0 {
-            cell.wallpaper = nil
+            cell.wallpaperImageView.isHidden = true
+            cell.pickFromPhotosImageView.isHidden = false
         } else {
             let index = wallpaperIndex(from: indexPath)
-            cell.wallpaper = wallpapers[index]
+            cell.wallpaperImageView.wallpaper = wallpapers[index]
+            cell.wallpaperImageView.isHidden = false
+            cell.pickFromPhotosImageView.isHidden = true
         }
         return cell
     }

@@ -8,12 +8,8 @@ final class WallpaperImageView: UIImageView {
         didSet {
             if let wallpaper = wallpaper {
                 image = wallpaper.image
-                contentMode = wallpaper.contentMode(imageViewSize: frame.size)
-                imageMaskView.isHidden = !wallpaper.showMaskView
-            } else {
-                image = R.image.conversation.ic_photo()
-                contentMode = .center
-                imageMaskView.isHidden = true
+                imageMaskView.isHidden = !wallpaper.isCustom
+                updateContentMode()
             }
         }
     }
@@ -28,13 +24,29 @@ final class WallpaperImageView: UIImageView {
         prepare()
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        updateContentMode()
+    }
+    
     private func prepare() {
         clipsToBounds = true
-        contentMode = .scaleAspectFill
         addSubview(imageMaskView)
         imageMaskView.snp.makeEdgesEqualToSuperview()
         imageMaskView.backgroundColor = .black.withAlphaComponent(0.1)
         imageMaskView.isHidden = true
+    }
+    
+    private func updateContentMode() {
+        switch wallpaper {
+        case .custom:
+            contentMode = .scaleAspectFill
+        default:
+            if let imageSize = image?.size {
+                let isBackgroundImageUndersized = bounds.size.width > imageSize.width || bounds.size.height > imageSize.height
+                contentMode = isBackgroundImageUndersized ? .scaleAspectFill : .center
+            }
+        }
     }
     
 }

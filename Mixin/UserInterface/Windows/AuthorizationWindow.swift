@@ -37,8 +37,8 @@ class AuthorizationWindow: BottomSheetView {
         return self
     }
 
-    override func dismissPopupControllerAnimated() {
-        super.dismissPopupControllerAnimated()
+    override func dismissPopupController(animated: Bool) {
+        super.dismissPopupController(animated: animated)
 
         guard !loginSuccess else {
             return
@@ -56,7 +56,7 @@ class AuthorizationWindow: BottomSheetView {
     }
 
     @IBAction func backAction(_ sender: Any) {
-        dismissPopupControllerAnimated()
+        dismissPopupController(animated: true)
     }
 
     @IBAction func authorizeAction(_ sender: Any) {
@@ -73,7 +73,7 @@ class AuthorizationWindow: BottomSheetView {
             case let .success(response):
                 weakSelf.loginSuccess = true
                 showAutoHiddenHud(style: .notification, text: R.string.localizable.authorized())
-                weakSelf.dismissPopupControllerAnimated()
+                weakSelf.dismissPopupController(animated: true)
                 if UIApplication.homeNavigationController?.viewControllers.last is CameraViewController {
                     UIApplication.homeNavigationController?.popViewController(animated: true)
                 }

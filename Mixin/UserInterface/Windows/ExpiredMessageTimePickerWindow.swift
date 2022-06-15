@@ -25,11 +25,11 @@ class ExpiredMessageTimePickerWindow: BottomSheetView {
     @IBAction func setAction(_ sender: Any) {
         let expireIn = Int64(selectedUnit.interval) * Int64(max(selectedDuration, 1))
         onPick?(expireIn)
-        dismissPopupControllerAnimated()
+        dismissPopupController(animated: true)
     }
     
     @IBAction func closeAction(_ sender: Any) {
-        dismissPopupControllerAnimated()
+        dismissPopupController(animated: true)
     }
     
     class func instance() -> ExpiredMessageTimePickerWindow {

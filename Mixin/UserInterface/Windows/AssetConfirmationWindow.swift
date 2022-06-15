@@ -24,11 +24,11 @@ class AssetConfirmationWindow: BottomSheetView {
         timer = nil
     }
 
-    override func dismissPopupControllerAnimated() {
+    override func dismissPopupController(animated: Bool) {
         guard canDismiss else {
             return
         }
-        super.dismissPopupControllerAnimated()
+        super.dismissPopupController(animated: animated)
     }
 
     func render(asset: AssetItem, amount: String, memo: String, fiatMoneyAmount: String? = nil, completion: @escaping CompletionHandler) -> BottomSheetView {
@@ -64,13 +64,13 @@ class AssetConfirmationWindow: BottomSheetView {
     @IBAction func continueAction(_ sender: Any) {
         canDismiss = true
         completion?(true, nil)
-        dismissPopupControllerAnimated()
+        dismissPopupController(animated: true)
     }
 
     @IBAction func dismissAction(_ sender: Any) {
         canDismiss = true
         completion?(false, nil)
-        dismissPopupControllerAnimated()
+        dismissPopupController(animated: true)
     }
 
     @objc func countDownAction() {

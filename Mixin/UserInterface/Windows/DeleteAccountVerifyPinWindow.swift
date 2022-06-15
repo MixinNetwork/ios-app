@@ -22,7 +22,7 @@ class DeleteAccountVerifyPinWindow: BottomSheetView {
     }
     
     @IBAction func closeAction(_ sender: Any) {
-        dismissPopupControllerAnimated()
+        dismissPopupController(animated: true)
     }
     
     class func instance() -> DeleteAccountVerifyPinWindow {
@@ -61,7 +61,7 @@ extension DeleteAccountVerifyPinWindow: PinFieldDelegate {
             case .success:
                 weakSelf.pinField.resignFirstResponder()
                 weakSelf.onSuccess?()
-                weakSelf.dismissPopupControllerAnimated()
+                weakSelf.dismissPopupController(animated: true)
             case let .failure(error):
                 weakSelf.pinField.clear()
                 PINVerificationFailureHandler.handle(error: error) { [weak self] (description) in

@@ -75,6 +75,8 @@ final class UserProfileViewController: ProfileViewController {
     
     override func viewDidLoad() {
         size = isMe ? .unavailable : .compressed
+        closeButton.isHidden = isMe
+        titleViewHeightConstraint.constant = isMe ? 48 : 70
         super.viewDidLoad()
         reloadData()
         if user.isCreatedByMessenger {
@@ -88,6 +90,7 @@ final class UserProfileViewController: ProfileViewController {
             view.addGestureRecognizer(recognizer)
             NotificationCenter.default.addObserver(self, selector: #selector(willHideMenu(_:)), name: UIMenuController.willHideMenuNotification, object: nil)
             NotificationCenter.default.addObserver(self, selector: #selector(accountDidChange(_:)), name: LoginManager.accountDidChangeNotification, object: nil)
+            NotificationCenter.default.addObserver(self, selector: #selector(favoriteBotsDidChange), name: FavoriteAppsDAO.favoriteBotsDidChangeNotification, object: nil)
         } else {
             resizeRecognizer.isEnabled = false
         }
@@ -130,7 +133,6 @@ final class UserProfileViewController: ProfileViewController {
     
         let backgroundView = UIVisualEffectView(effect: nil)
         backgroundView.frame = window.bounds
-        backgroundView.isUserInteractionEnabled = false
         window.addSubview(backgroundView)
         avatarPreviewBackgroundView = backgroundView
              
@@ -155,8 +157,14 @@ final class UserProfileViewController: ProfileViewController {
         imageView.alpha = 0
         backgroundView.contentView.addSubview(imageView)
         avatarPreviewImageView = imageView
-        view.isUserInteractionEnabled = false
-        hideContentConstraint.priority = .defaultHigh
+        if isMe {
+            let tap = UITapGestureRecognizer(target: self, action: #selector(dismissAvatarAction))
+            backgroundView.addGestureRecognizer(tap)
+        } else {
+            backgroundView.isUserInteractionEnabled = false
+            view.isUserInteractionEnabled = false
+            hideContentConstraint.priority = .defaultHigh
+        }
         UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
             self.view.layoutIfNeeded()
             let width = window.bounds.width - 28 * 2
@@ -308,26 +316,6 @@ extension UserProfileViewController {
         }
     }
     
-    @objc func showMyQrCode() {
-        guard let account = LoginManager.shared.account else {
-            return
-        }
-        let window = QrcodeWindow.instance()
-        window.render(title: R.string.localizable.my_qr_code(),
-                      description: R.string.localizable.scan_code_add_me(),
-                      account: account)
-        window.presentPopupControllerAnimated()
-    }
-    
-    @objc func showMyMoneyReceivingCode() {
-        guard let account = LoginManager.shared.account else {
-            return
-        }
-        let window = QrcodeWindow.instance()
-        window.renderMoneyReceivingCode(account: account)
-        window.presentPopupControllerAnimated()
-    }
-    
     @objc func changeAvatarWithCamera() {
         imagePicker.presentCamera()
     }
@@ -361,10 +349,10 @@ extension UserProfileViewController {
     @objc func changeNumber() {
         if LoginManager.shared.account?.has_pin ?? false {
             let vc = VerifyPinNavigationController(rootViewController: ChangeNumberVerifyPinViewController())
-            dismissAndPresent(vc)
+            present(vc, animated: true)
         } else {
             let vc = WalletPasswordViewController.instance(dismissTarget: .changePhone)
-            dismissAndPush(vc)
+            navigationController?.pushViewController(vc, animated: true)
         }
     }
     
@@ -596,6 +584,25 @@ extension UserProfileViewController {
         }
     }
     
+    @objc private func dismissAvatarAction() {
+        guard let imageView = avatarPreviewImageView, let backgroundView = avatarPreviewBackgroundView else {
+            return
+        }
+        UIView.animate(withDuration: 0.3) {
+            imageView.frame.origin.y = AppDelegate.current.mainWindow.bounds.height
+            backgroundView.effect = nil
+            for view in backgroundView.contentView.subviews {
+                view.alpha = 0
+            }
+        } completion: { _ in
+            backgroundView.removeFromSuperview()
+        }
+    }
+    
+    @objc private func favoriteBotsDidChange() {
+        reloadFavoriteApps(userId: user.userId, fromRemote: false)
+    }
+    
 }
 
 // MARK: - Private works
@@ -714,14 +721,6 @@ extension UserProfileViewController {
         
         if isMe {
             let groups = [
-                [ProfileMenuItem(title: R.string.localizable.my_qr_code(),
-                                 subtitle: nil,
-                                 style: [],
-                                 action: #selector(showMyQrCode)),
-                 ProfileMenuItem(title: R.string.localizable.receive_money(),
-                                 subtitle: nil,
-                                 style: [],
-                                 action: #selector(showMyMoneyReceivingCode))],
                 [ProfileMenuItem(title: R.string.localizable.edit_name(),
                                  subtitle: nil,
                                  style: [],

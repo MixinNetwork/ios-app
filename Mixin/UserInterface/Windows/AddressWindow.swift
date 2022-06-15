@@ -15,13 +15,13 @@ class AddressWindow: BottomSheetView {
         })
     }
 
-    override func dismissPopupControllerAnimated() {
+    override func dismissPopupController(animated: Bool) {
         if addressView.processing {
             return
         }
         addressView.dismissCallback?(false)
         addressView.dismissCallback = nil
-        super.dismissPopupControllerAnimated()
+        super.dismissPopupController(animated: animated)
     }
 
     func presentPopupControllerAnimated(action: AddressView.action, asset: AssetItem, addressRequest: AddressRequest?, address: Address?, dismissCallback: ((Bool) -> Void)?) {

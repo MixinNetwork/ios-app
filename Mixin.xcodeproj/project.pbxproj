@@ -568,6 +568,14 @@
 		7C359DD026A6C173001D3AE4 /* StickerStoreBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C359DCF26A6C173001D3AE4 /* StickerStoreBannerView.swift */; };
 		7C36BE88274F248C00089B6D /* StickerStoreBannerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C36BE87274F248C00089B6D /* StickerStoreBannerCell.swift */; };
 		7C427BC428373F8000FFDE12 /* Wallpaper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C427BC328373F8000FFDE12 /* Wallpaper.swift */; };
+		7C4733A128533EB800ECD293 /* PhoneContactSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4733A028533EB800ECD293 /* PhoneContactSearchResult.swift */; };
+		7C47352928571CC900ECD293 /* AccessPhoneContactHintWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C47352828571CC900ECD293 /* AccessPhoneContactHintWindow.swift */; };
+		7C47352B28571D0300ECD293 /* AccessPhoneContactHintWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C47352A28571D0300ECD293 /* AccessPhoneContactHintWindow.xib */; };
+		7C4C039F28530C9E003DE0C0 /* ContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4C039E28530C9E003DE0C0 /* ContactViewController.swift */; };
+		7C4C03A128532575003DE0C0 /* AddContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4C03A028532575003DE0C0 /* AddContactViewController.swift */; };
+		7C4C03A328532AC2003DE0C0 /* PhoneContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4C03A228532AC2003DE0C0 /* PhoneContactViewController.swift */; };
+		7C4C03A828532D2F003DE0C0 /* PhoneContactCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4C03A628532D2F003DE0C0 /* PhoneContactCell.swift */; };
+		7C4C03A928532D2F003DE0C0 /* PhoneContactCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C4C03A728532D2F003DE0C0 /* PhoneContactCell.xib */; };
 		7C4E2B0426A9BDAD008190F5 /* StickersEditingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4E2B0326A9BDAC008190F5 /* StickersEditingViewController.swift */; };
 		7C4E2B0626A9BE50008190F5 /* StickersEditingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4E2B0526A9BE50008190F5 /* StickersEditingCell.swift */; };
 		7C4FF5AA26AE614C003E39AC /* StickerPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4FF5A926AE614C003E39AC /* StickerPreviewViewController.swift */; };
@@ -575,6 +583,9 @@
 		7C5823D5268966A1003AA142 /* HomeAppsFolderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5823D4268966A1003AA142 /* HomeAppsFolderViewController.swift */; };
 		7C5B65CE27701A49004EDD53 /* DeleteAccountHintWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5B65CD27701A49004EDD53 /* DeleteAccountHintWindow.swift */; };
 		7C5B65D027701A62004EDD53 /* DeleteAccountHintWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C5B65CF27701A62004EDD53 /* DeleteAccountHintWindow.xib */; };
+		7C5DFE30284F23F6008733FC /* UserCenterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5DFE2F284F23F6008733FC /* UserCenterViewController.swift */; };
+		7C5DFE32284F3071008733FC /* UserCenterTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C5DFE31284F3071008733FC /* UserCenterTableHeaderView.xib */; };
+		7C5DFE34284F3EA3008733FC /* UserCenterTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5DFE33284F3EA3008733FC /* UserCenterTableHeaderView.swift */; };
 		7C6132B627953B15002777EE /* DeleteAccountAbortWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6132B527953B15002777EE /* DeleteAccountAbortWindow.swift */; };
 		7C6132B827953B4F002777EE /* DeleteAccountAbortWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C6132B727953B4F002777EE /* DeleteAccountAbortWindow.xib */; };
 		7C66E7B82743988500FF24C1 /* ProfileDescriptionLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66E7B72743988500FF24C1 /* ProfileDescriptionLabel.swift */; };
@@ -613,6 +624,7 @@
 		7CC3B1A026C21F7E0018B0D1 /* ScriptMessageProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC3B19F26C21F7E0018B0D1 /* ScriptMessageProxy.swift */; };
 		7CC730502745F95D002780F5 /* StickerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC7304F2745F95D002780F5 /* StickerStore.swift */; };
 		7CE2DE102858B52000AF00AE /* WallpaperImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE2DE0F2858B52000AF00AE /* WallpaperImageView.swift */; };
+		7CE2DC9A28587DE100AF00AE /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7B8BB58F234F36C000991ACB /* Colors.xcassets */; };
 		7CE3A25C2771A8AB006BE765 /* DeleteAccountVerifyCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE3A25B2771A8AB006BE765 /* DeleteAccountVerifyCodeViewController.swift */; };
 		7CE5E7A8269BDA29000B7904 /* HomeAppsPinTipsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE5E7A6269BDA29000B7904 /* HomeAppsPinTipsViewController.swift */; };
 		7CE5E7A9269BDA29000B7904 /* HomeAppsPinTipsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CE5E7A7269BDA29000B7904 /* HomeAppsPinTipsView.xib */; };
@@ -738,7 +750,6 @@
 		DF0A713922D5E93300E69C50 /* WithdrawalTipWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF0A713822D5E93300E69C50 /* WithdrawalTipWindow.xib */; };
 		DF0A713B22D5E94D00E69C50 /* WithdrawalTipWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0A713A22D5E94D00E69C50 /* WithdrawalTipWindow.swift */; };
 		DF0BD35323A8D4B200B44CF6 /* DynamicTextSizeExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0BD35223A8D4B200B44CF6 /* DynamicTextSizeExtension.swift */; };
-		DF0BD35523AA0A9B00B44CF6 /* ContactHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF0BD35423AA0A9B00B44CF6 /* ContactHeaderView.xib */; };
 		DF121F311FA1C767000F701D /* ConversationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF121F301FA1C767000F701D /* ConversationCell.swift */; };
 		DF121F351FA1C809000F701D /* CornerImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF121F341FA1C809000F701D /* CornerImageView.swift */; };
 		DF16681E20A6F84200C45E31 /* AllTransactionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF16681D20A6F84200C45E31 /* AllTransactionsViewController.swift */; };
@@ -770,11 +781,9 @@
 		DF44B0CC20C6897000A099B6 /* EmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF44B0CB20C6897000A099B6 /* EmptyView.swift */; };
 		DF44B0CE20C6897D00A099B6 /* EmptyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF44B0CD20C6897D00A099B6 /* EmptyView.xib */; };
 		DF46B4051FA9B48500243A8B /* ContactsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF46B4041FA9B48500243A8B /* ContactsManager.swift */; };
-		DF46B4071FA9E78A00243A8B /* PhoneContactCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF46B4061FA9E78A00243A8B /* PhoneContactCell.swift */; };
 		DF46B40B1FA9E7CF00243A8B /* CornerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF46B40A1FA9E7CF00243A8B /* CornerView.swift */; };
 		DF53BB6F202362E5002BF028 /* AuthorizationScopeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF53BB6E202362E5002BF028 /* AuthorizationScopeCell.xib */; };
 		DF53BB71202362F1002BF028 /* AuthorizationScopeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF53BB70202362F1002BF028 /* AuthorizationScopeCell.swift */; };
-		DF56966F1FAAB11D00226D42 /* ContactHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF56966E1FAAB11D00226D42 /* ContactHeaderView.swift */; };
 		DF5BF55F1FBB281E0092AFB8 /* AssetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5BF55E1FBB281E0092AFB8 /* AssetViewController.swift */; };
 		DF5BF5611FBB2D490092AFB8 /* DepositViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5BF5601FBB2D490092AFB8 /* DepositViewController.swift */; };
 		DF5D9F241F9C79E10036D5FD /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5D9F1B1F9C62990036D5FD /* Constant.swift */; };
@@ -854,7 +863,6 @@
 		DFD15C701FB5ACE7004B45CE /* UICollationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD15C6F1FB5ACE7004B45CE /* UICollationExtension.swift */; };
 		DFD1FBC522FD809700C570D4 /* PhoneContactsSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD1FBC422FD809700C570D4 /* PhoneContactsSettingViewController.swift */; };
 		DFD1FBC72302CB7A00C570D4 /* DatabaseUpgradeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD1FBC62302CB7A00C570D4 /* DatabaseUpgradeViewController.swift */; };
-		DFD294351FA6EC0D00FADAAD /* ContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD294341FA6EC0D00FADAAD /* ContactViewController.swift */; };
 		DFD294491FA7145F00FADAAD /* Contact.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DFD294481FA7145F00FADAAD /* Contact.storyboard */; };
 		DFD93F1E2111C0030013401A /* UIDeviceExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD93F1D2111C0030013401A /* UIDeviceExtension.swift */; };
 		DFDD89E922C4B8E600128991 /* DepositTipWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFDD89E822C4B8E600128991 /* DepositTipWindow.xib */; };
@@ -870,7 +878,6 @@
 		DFE861BF2422673B009B1833 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DFE861BD2422673B009B1833 /* MainInterface.storyboard */; };
 		DFE861C32422673B009B1833 /* MixinShare.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = DFE861B92422673B009B1833 /* MixinShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		DFE8629124227F91009B1833 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DFE8629024227F91009B1833 /* Assets.xcassets */; };
-		DFE8629324227FA1009B1833 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DFE8629224227FA1009B1833 /* Colors.xcassets */; };
 		DFE8635A242282D3009B1833 /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE86359242282D3009B1833 /* R.generated.swift */; };
 		DFE864E624228753009B1833 /* RecipientCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE864E524228753009B1833 /* RecipientCell.swift */; };
 		DFE864E8242299CB009B1833 /* RecipientSearchItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE864E7242299CB009B1833 /* RecipientSearchItem.swift */; };
@@ -1557,6 +1564,14 @@
 		7C359DCF26A6C173001D3AE4 /* StickerStoreBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerStoreBannerView.swift; sourceTree = "<group>"; };
 		7C36BE87274F248C00089B6D /* StickerStoreBannerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerStoreBannerCell.swift; sourceTree = "<group>"; };
 		7C427BC328373F8000FFDE12 /* Wallpaper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wallpaper.swift; sourceTree = "<group>"; };
+		7C4733A028533EB800ECD293 /* PhoneContactSearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneContactSearchResult.swift; sourceTree = "<group>"; };
+		7C47352828571CC900ECD293 /* AccessPhoneContactHintWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessPhoneContactHintWindow.swift; sourceTree = "<group>"; };
+		7C47352A28571D0300ECD293 /* AccessPhoneContactHintWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AccessPhoneContactHintWindow.xib; sourceTree = "<group>"; };
+		7C4C039E28530C9E003DE0C0 /* ContactViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactViewController.swift; sourceTree = "<group>"; };
+		7C4C03A028532575003DE0C0 /* AddContactViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddContactViewController.swift; sourceTree = "<group>"; };
+		7C4C03A228532AC2003DE0C0 /* PhoneContactViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneContactViewController.swift; sourceTree = "<group>"; };
+		7C4C03A628532D2F003DE0C0 /* PhoneContactCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneContactCell.swift; sourceTree = "<group>"; };
+		7C4C03A728532D2F003DE0C0 /* PhoneContactCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PhoneContactCell.xib; sourceTree = "<group>"; };
 		7C4E2B0326A9BDAC008190F5 /* StickersEditingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersEditingViewController.swift; sourceTree = "<group>"; };
 		7C4E2B0526A9BE50008190F5 /* StickersEditingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersEditingCell.swift; sourceTree = "<group>"; };
 		7C4FF5A926AE614C003E39AC /* StickerPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerPreviewViewController.swift; sourceTree = "<group>"; };
@@ -1564,6 +1579,9 @@
 		7C5823D4268966A1003AA142 /* HomeAppsFolderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsFolderViewController.swift; sourceTree = "<group>"; };
 		7C5B65CD27701A49004EDD53 /* DeleteAccountHintWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountHintWindow.swift; sourceTree = "<group>"; };
 		7C5B65CF27701A62004EDD53 /* DeleteAccountHintWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeleteAccountHintWindow.xib; sourceTree = "<group>"; };
+		7C5DFE2F284F23F6008733FC /* UserCenterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCenterViewController.swift; sourceTree = "<group>"; };
+		7C5DFE31284F3071008733FC /* UserCenterTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserCenterTableHeaderView.xib; sourceTree = "<group>"; };
+		7C5DFE33284F3EA3008733FC /* UserCenterTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCenterTableHeaderView.swift; sourceTree = "<group>"; };
 		7C6132B527953B15002777EE /* DeleteAccountAbortWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountAbortWindow.swift; sourceTree = "<group>"; };
 		7C6132B727953B4F002777EE /* DeleteAccountAbortWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeleteAccountAbortWindow.xib; sourceTree = "<group>"; };
 		7C66E7B72743988500FF24C1 /* ProfileDescriptionLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDescriptionLabel.swift; sourceTree = "<group>"; };
@@ -1732,7 +1750,6 @@
 		DF0A713822D5E93300E69C50 /* WithdrawalTipWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WithdrawalTipWindow.xib; sourceTree = "<group>"; };
 		DF0A713A22D5E94D00E69C50 /* WithdrawalTipWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawalTipWindow.swift; sourceTree = "<group>"; };
 		DF0BD35223A8D4B200B44CF6 /* DynamicTextSizeExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicTextSizeExtension.swift; sourceTree = "<group>"; };
-		DF0BD35423AA0A9B00B44CF6 /* ContactHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ContactHeaderView.xib; sourceTree = "<group>"; };
 		DF121F301FA1C767000F701D /* ConversationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationCell.swift; sourceTree = "<group>"; };
 		DF121F341FA1C809000F701D /* CornerImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CornerImageView.swift; sourceTree = "<group>"; };
 		DF16681D20A6F84200C45E31 /* AllTransactionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllTransactionsViewController.swift; sourceTree = "<group>"; };
@@ -1764,11 +1781,9 @@
 		DF44B0CB20C6897000A099B6 /* EmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyView.swift; sourceTree = "<group>"; };
 		DF44B0CD20C6897D00A099B6 /* EmptyView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EmptyView.xib; sourceTree = "<group>"; };
 		DF46B4041FA9B48500243A8B /* ContactsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsManager.swift; sourceTree = "<group>"; };
-		DF46B4061FA9E78A00243A8B /* PhoneContactCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneContactCell.swift; sourceTree = "<group>"; };
 		DF46B40A1FA9E7CF00243A8B /* CornerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CornerView.swift; sourceTree = "<group>"; };
 		DF53BB6E202362E5002BF028 /* AuthorizationScopeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AuthorizationScopeCell.xib; sourceTree = "<group>"; };
 		DF53BB70202362F1002BF028 /* AuthorizationScopeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationScopeCell.swift; sourceTree = "<group>"; };
-		DF56966E1FAAB11D00226D42 /* ContactHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactHeaderView.swift; sourceTree = "<group>"; };
 		DF5BF55E1FBB281E0092AFB8 /* AssetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetViewController.swift; sourceTree = "<group>"; };
 		DF5BF5601FBB2D490092AFB8 /* DepositViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositViewController.swift; sourceTree = "<group>"; };
 		DF5D9F131F9C5AF40036D5FD /* LocalizedExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedExtension.swift; sourceTree = "<group>"; };
@@ -1853,7 +1868,6 @@
 		DFD15C6F1FB5ACE7004B45CE /* UICollationExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UICollationExtension.swift; sourceTree = "<group>"; };
 		DFD1FBC422FD809700C570D4 /* PhoneContactsSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneContactsSettingViewController.swift; sourceTree = "<group>"; };
 		DFD1FBC62302CB7A00C570D4 /* DatabaseUpgradeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseUpgradeViewController.swift; sourceTree = "<group>"; };
-		DFD294341FA6EC0D00FADAAD /* ContactViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactViewController.swift; sourceTree = "<group>"; };
 		DFD294481FA7145F00FADAAD /* Contact.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Contact.storyboard; sourceTree = "<group>"; };
 		DFD93F1D2111C0030013401A /* UIDeviceExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDeviceExtension.swift; sourceTree = "<group>"; };
 		DFDD89E822C4B8E600128991 /* DepositTipWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DepositTipWindow.xib; sourceTree = "<group>"; };
@@ -2081,6 +2095,7 @@
 				7B04FAB722684242004F8F04 /* AssetSearchResult.swift */,
 				7B04FAB922684F51004F8F04 /* SearchResult.swift */,
 				7B35AF73228A948A00E8101D /* UserSearchResult.swift */,
+				7C4733A028533EB800ECD293 /* PhoneContactSearchResult.swift */,
 				7B35AF75228A98EF00E8101D /* ConversationSearchResult.swift */,
 				7B35AF7B228AA6CD00E8101D /* MessagesWithinConversationSearchResult.swift */,
 				7B35AF77228AA3BD00E8101D /* MessagesWithUserSearchResult.swift */,
@@ -2269,9 +2284,9 @@
 		7B3F78512264689B00029D48 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				DF0BD35423AA0A9B00B44CF6 /* ContactHeaderView.xib */,
-				DF56966E1FAAB11D00226D42 /* ContactHeaderView.swift */,
 				E0E3301E23962B2100276746 /* EditSharedAppsFooterView.swift */,
+				7C5DFE31284F3071008733FC /* UserCenterTableHeaderView.xib */,
+				7C5DFE33284F3EA3008733FC /* UserCenterTableHeaderView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -2969,6 +2984,8 @@
 				7C6132B727953B4F002777EE /* DeleteAccountAbortWindow.xib */,
 				7C0FAAC627E079F1008D4021 /* ExpiredMessageTimePickerWindow.swift */,
 				7C0FAAC827E07A0A008D4021 /* ExpiredMessageTimePickerWindow.xib */,
+				7C47352828571CC900ECD293 /* AccessPhoneContactHintWindow.swift */,
+				7C47352A28571D0300ECD293 /* AccessPhoneContactHintWindow.xib */,
 			);
 			path = Windows;
 			sourceTree = "<group>";
@@ -3497,10 +3514,13 @@
 				7B3F78512264689B00029D48 /* View */,
 				7BAE1B42223B51E9004F2D16 /* Model */,
 				DFD294391FA7066500FADAAD /* Cells */,
-				DFD294341FA6EC0D00FADAAD /* ContactViewController.swift */,
+				7C5DFE2F284F23F6008733FC /* UserCenterViewController.swift */,
+				7C4C039E28530C9E003DE0C0 /* ContactViewController.swift */,
+				7C4C03A028532575003DE0C0 /* AddContactViewController.swift */,
+				7C4C03A228532AC2003DE0C0 /* PhoneContactViewController.swift */,
+				7BBC6EA71FA98D1A00DC130A /* AddPeopleViewController.swift */,
 				7B5BABE21FB57B0300341FE6 /* ImagePickerController.swift */,
 				DF46B4041FA9B48500243A8B /* ContactsManager.swift */,
-				7BBC6EA71FA98D1A00DC130A /* AddPeopleViewController.swift */,
 				7B54F95122B22EA600908A9D /* ChangeNumberVerifyPinViewController.swift */,
 				7BADC83D204BD01D0016B0FC /* ChangeNumberViewController.swift */,
 				7BADC83F204BFD040016B0FC /* ChangeNumberNewNumberViewController.swift */,
@@ -3516,10 +3536,11 @@
 			isa = PBXGroup;
 			children = (
 				DFF44179223BC63100DDD5F8 /* ContactCell.swift */,
-				DF46B4061FA9E78A00243A8B /* PhoneContactCell.swift */,
 				7BF071BF2244E6A1007240AD /* UploadContactCell.swift */,
 				E05D991A2390C632009F9E8D /* FavoriteAppCell.swift */,
 				E08F4DDB2395345500C0D021 /* SharedAppCell.swift */,
+				7C4C03A628532D2F003DE0C0 /* PhoneContactCell.swift */,
+				7C4C03A728532D2F003DE0C0 /* PhoneContactCell.xib */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -3901,6 +3922,7 @@
 				277FF70F1F909A1200DBB2EB /* LaunchScreen.storyboard in Resources */,
 				7B2E3E481FA07F2E00DDDDEB /* Login.storyboard in Resources */,
 				DFE1F9831FAB51DA00537D43 /* Common.storyboard in Resources */,
+				7C47352B28571D0300ECD293 /* AccessPhoneContactHintWindow.xib in Resources */,
 				7BFE47E32284394000FC4379 /* CheckmarkPeerCell.xib in Resources */,
 				DF846CDF2369551D00AA1197 /* MultisigUserCell.xib in Resources */,
 				5E5CA7872674AC8E00C1E113 /* ScreenLockView.xib in Resources */,
@@ -3933,6 +3955,7 @@
 				94E8913925C019F000F1E5D4 /* Pods-Mixin-acknowledgements.plist in Resources */,
 				7BD3880024DC66F900A3035C /* Localizable.strings in Resources */,
 				94B7B6DC26B43562000B0AC5 /* SilentNotificationMessagePreviewView.xib in Resources */,
+				7C5DFE32284F3071008733FC /* UserCenterTableHeaderView.xib in Resources */,
 				7C8FA78F2768822800855AFD /* DeleteAccountTableHeaderView.xib in Resources */,
 				7BE73BFD230A8D0300B97FC6 /* group_separator_4.png in Resources */,
 				E05D992923911D55009F9E8D /* ProfileFavoriteAppsView.xib in Resources */,
@@ -4010,6 +4033,7 @@
 				7BF52B232199AC2E007A5A74 /* NoTransactionFooterView.xib in Resources */,
 				7CE5E7A9269BDA29000B7904 /* HomeAppsPinTipsView.xib in Resources */,
 				7BD639CB2282B17B00B7B3A6 /* PeerView.xib in Resources */,
+				7C4C03A928532D2F003DE0C0 /* PhoneContactCell.xib in Resources */,
 				7BE73BFE230A8D0300B97FC6 /* group_separator_2.png in Resources */,
 				7C225E8927C4C5FE00154143 /* GroupInCommonCell.xib in Resources */,
 				7BFD3754249366E7006D758F /* GroupCallIndicatorView.xib in Resources */,
@@ -4039,7 +4063,6 @@
 				DF8CECFD1FC58DBD00E40064 /* InfoPlist.strings in Resources */,
 				DF2081B22005FF3500B87DB0 /* Camera.storyboard in Resources */,
 				947B36B325DEB79100146111 /* PlaylistView.xib in Resources */,
-				DF0BD35523AA0A9B00B44CF6 /* ContactHeaderView.xib in Resources */,
 				7B7B5DB3230EBA5E00D0F463 /* PopupSearchableTableView.xib in Resources */,
 				DF8EF6BC2034737F00E99CE8 /* payment_success.caf in Resources */,
 				9BB351691FB1A94100EDDD2C /* ConversationDateHeaderView.xib in Resources */,
@@ -4062,9 +4085,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DFE8629324227FA1009B1833 /* Colors.xcassets in Resources */,
 				DFE864EB24229EFB009B1833 /* Localizable.strings in Resources */,
 				DFE864F02422A49A009B1833 /* RecipientHeaderView.xib in Resources */,
+				7CE2DC9A28587DE100AF00AE /* Colors.xcassets in Resources */,
 				DFE8629124227F91009B1833 /* Assets.xcassets in Resources */,
 				DFE861BF2422673B009B1833 /* MainInterface.storyboard in Resources */,
 			);
@@ -4494,7 +4517,6 @@
 				DF06D925222FAEC900FE7FBC /* CALayerExtension.swift in Sources */,
 				DF0BD35323A8D4B200B44CF6 /* DynamicTextSizeExtension.swift in Sources */,
 				7B04FABA22684F51004F8F04 /* SearchResult.swift in Sources */,
-				DF46B4071FA9E78A00243A8B /* PhoneContactCell.swift in Sources */,
 				7BF3F67A22AE4733007B6C77 /* IdentityNumberLabel.swift in Sources */,
 				7C66F02B268A0431006D8462 /* AppCell.swift in Sources */,
 				7B97BA0E2019F1A90013D58F /* StickerPreviewCell.swift in Sources */,
@@ -4522,7 +4544,6 @@
 				7B7B2BC51FB15B6A0002BED5 /* AvatarImageView.swift in Sources */,
 				7BF8AD83244050EE0038D293 /* PopupResizeGestureCoordinator.swift in Sources */,
 				DF17B51520525B47006447C2 /* ArrayExtension.swift in Sources */,
-				DFD294351FA6EC0D00FADAAD /* ContactViewController.swift in Sources */,
 				7BA9F32024A22EC200D7C091 /* CallMemberCell.swift in Sources */,
 				7BBAE9DA244ADB3800CC8670 /* AssetQrCodeScanningController.swift in Sources */,
 				DFA063D222B0D0E80031E151 /* PrivacySettingViewController.swift in Sources */,
@@ -4653,6 +4674,7 @@
 				9427D51A25E0D42E00B1EF0E /* MusicInfoView.swift in Sources */,
 				7B082D1A242CACA000C5E163 /* MultipleSelectionActionView.swift in Sources */,
 				7BFE47DB228421D100FC4379 /* UserItemPeerViewController.swift in Sources */,
+				7C4C03A128532575003DE0C0 /* AddContactViewController.swift in Sources */,
 				7B17F06F22267FE100D617A2 /* ConversationExtensionViewController.swift in Sources */,
 				7B51DDB8223A50D5008ACDBB /* VerificationCodeViewController.swift in Sources */,
 				DF048CCE223FCA02005F1EF5 /* ModernSelectedBackgroundCell.swift in Sources */,
@@ -4664,10 +4686,12 @@
 				7B1D7BA51FBE944E00FDA52C /* ConversationViewController.swift in Sources */,
 				7BFE47E722845DE100FC4379 /* MessageReceiver.swift in Sources */,
 				E01BCE2823ACFA66005D3FF3 /* LoginManager+Provision.swift in Sources */,
+				7C4C039F28530C9E003DE0C0 /* ContactViewController.swift in Sources */,
 				7B63C49121A4334C0044C4BF /* DepositFieldView.swift in Sources */,
 				7BB6FD252011AD3400E84C5C /* CardMessageViewModel.swift in Sources */,
 				7B17F0712226890C00D617A2 /* ConversationExtensionSwitch.swift in Sources */,
 				7BE6C7EC242DF07B00A0F2AE /* MessageAction.swift in Sources */,
+				7C4C03A328532AC2003DE0C0 /* PhoneContactViewController.swift in Sources */,
 				7C36BE88274F248C00089B6D /* StickerStoreBannerCell.swift in Sources */,
 				7BBCABAE2524644C00601762 /* HomeOverlayViewController.swift in Sources */,
 				7B9D825922F1BFEA0099381E /* LargeNetworkOperationIconSet.swift in Sources */,
@@ -4684,6 +4708,7 @@
 				7BB3855821E770BE0070FF8F /* ProvisionMessage.swift in Sources */,
 				7CE3A25C2771A8AB006BE765 /* DeleteAccountVerifyCodeViewController.swift in Sources */,
 				7B9863931FA3141F00D4B16C /* XibDesignable.swift in Sources */,
+				7C4733A128533EB800ECD293 /* PhoneContactSearchResult.swift in Sources */,
 				DF46B4051FA9B48500243A8B /* ContactsManager.swift in Sources */,
 				7B1456921FCC186E001B6DED /* TextMessageViewModel.swift in Sources */,
 				7C5B65CE27701A49004EDD53 /* DeleteAccountHintWindow.swift in Sources */,
@@ -4716,6 +4741,7 @@
 				DFD1FBC72302CB7A00C570D4 /* DatabaseUpgradeViewController.swift in Sources */,
 				944C656125D9BA0A008BDDD3 /* OggOpusWriter.swift in Sources */,
 				7BB8417C2230C63000FB88B9 /* ConversationAccessible.swift in Sources */,
+				7C4C03A828532D2F003DE0C0 /* PhoneContactCell.swift in Sources */,
 				7B28FA14201195E40023B28D /* StickerMessageViewModel.swift in Sources */,
 				7CB0954F26CCED2E0049F4C7 /* PinMessageBannerView.swift in Sources */,
 				7CE5E7A8269BDA29000B7904 /* HomeAppsPinTipsViewController.swift in Sources */,
@@ -4728,6 +4754,7 @@
 				7B36920E233B47F4007321A7 /* SharedMediaTypeOverlayView.swift in Sources */,
 				E0B8AAC523BDA1C700E911CE /* AppButton.swift in Sources */,
 				7B84358D20D8F89200237242 /* QuotePreviewView.swift in Sources */,
+				7C5DFE34284F3EA3008733FC /* UserCenterTableHeaderView.swift in Sources */,
 				DF44B0CC20C6897000A099B6 /* EmptyView.swift in Sources */,
 				7BB78724245132570057B4ED /* SettingsHeaderView.swift in Sources */,
 				7BEA4F872223D8C400AF3650 /* ConversationInputViewController.swift in Sources */,
@@ -4990,12 +5017,12 @@
 				E0FAE8D223CDC4F4008B056A /* CrashlyticalReporter.swift in Sources */,
 				7BAD3A8E21A6D10400BAEE0B /* BusyButton.swift in Sources */,
 				7BFCB8A8241CF1B800E7BC43 /* LocationExtensions.swift in Sources */,
-				DF56966F1FAAB11D00226D42 /* ContactHeaderView.swift in Sources */,
 				7C6AD1F526A6794F00E6C41D /* StickersStoreViewController.swift in Sources */,
 				7C225E8827C4C5FE00154143 /* GroupInCommonCell.swift in Sources */,
 				7CE2DE102858B52000AF00AE /* WallpaperImageView.swift in Sources */,
 				7B4F5ACD224CBA4A00A8392D /* AssetFilterViewController.swift in Sources */,
 				7B8BB586234EE9A200991ACB /* SharedMediaAudioTableViewController.swift in Sources */,
+				7C47352928571CC900ECD293 /* AccessPhoneContactHintWindow.swift in Sources */,
 				7BFD345A2285A7F000524EA0 /* TransferReceiverViewController.swift in Sources */,
 				94FA8FC92644236F006BC715 /* ConversationMessageComposer.swift in Sources */,
 				7B4375C32170CA6900846DC5 /* AssetFilterConditionCell.swift in Sources */,
@@ -5039,6 +5066,7 @@
 				7BF9969520CA6F3800FD948F /* Waveform.swift in Sources */,
 				7BA1F8CD221FDABF00DBFCE2 /* RoundedButton.swift in Sources */,
 				7B8ECAE8250F6BE8006F0479 /* ExternalSharingContext.swift in Sources */,
+				7C5DFE30284F23F6008733FC /* UserCenterViewController.swift in Sources */,
 				9416548325CD2D9A007E76D0 /* OggOpusRecorder.swift in Sources */,
 				7BDC2DE222F315480098AB81 /* GalleryActivityIndicatorView.swift in Sources */,
 				7B082D18242CA19F00C5E163 /* MultipleSelectionIntent.swift in Sources */,

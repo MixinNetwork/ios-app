@@ -355,11 +355,11 @@ class PayWindow: BottomSheetView {
         }
     }
 
-    override func dismissPopupControllerAnimated() {
+    override func dismissPopupController(animated: Bool) {
         guard !processing else {
             return
         }
-        super.dismissPopupControllerAnimated()
+        super.dismissPopupController(animated: animated)
         textfield?.becomeFirstResponder()
         onDismiss?()
     }
@@ -372,7 +372,7 @@ class PayWindow: BottomSheetView {
         case .retryPin:
             resetPinInput()
         default:
-            dismissPopupControllerAnimated()
+            dismissPopupController(animated: true)
         }
         errorContinueAction = nil
     }
@@ -466,19 +466,19 @@ class PayWindow: BottomSheetView {
         if isKeyboardAppear && textfield == nil {
             pinField.resignFirstResponder()
         } else {
-            dismissPopupControllerAnimated()
+            dismissPopupController(animated: true)
         }
     }
 
     @IBAction func dismissTipsAction(_ sender: Any) {
-        dismissPopupControllerAnimated()
+        dismissPopupController(animated: true)
     }
     
     @IBAction func enableBiometricAuth(_ sender: Any) {
         pinField.resignFirstResponder()
         isDelayDismissCancelled = true
         processing = false
-        dismissPopupControllerAnimated()
+        dismissPopupController(animated: true)
         guard let navigationController = UIApplication.homeNavigationController else {
             return
         }
@@ -759,7 +759,7 @@ extension PayWindow: PinFieldDelegate {
                 return
             }
             weakSelf.processing = false
-            weakSelf.dismissPopupControllerAnimated()
+            weakSelf.dismissPopupController(animated: true)
 
             guard let navigation = UIApplication.homeNavigationController else {
                 return

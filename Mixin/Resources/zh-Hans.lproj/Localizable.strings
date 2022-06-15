@@ -1,5 +1,7 @@
 "about" = "关于";
+"access_contacts_hint" = "Mixin 将你的通讯录同步到 Mixin 服务器，以帮助你与其他 Mixin 用户联系";
 "access_denied" = "禁止访问";
+"access_to_contacts" = "访问通讯录";
 "access_your_bots_list" = "访问你的机器人列表";
 "access_your_circle_list" = "访问你的圈子列表";
 "access_your_collectibles" = "访问你的 NFT 列表";
@@ -10,6 +12,9 @@
 "add" = "添加";
 "add_address" = "添加地址";
 "add_bot" = "添加机器人";
+"add_by_id_or_phone_number" = "通过 Mixin ID 或手机号码添加";
+"add_by_phone_contacts" = "通过手机通讯录添加";
+"add_by_qr_code" = "通过二维码添加";
 "add_circle" = "添加圈子";
 "add_contact" = "添加联系人";
 "add_conversations" = "添加会话";
@@ -58,6 +63,7 @@
 "all_conversations" = "所有会话";
 "all_photos" = "所有照片";
 "all_transactions" = "所有交易记录";
+"allow" = "允许";
 "allow_manual_report_message" = "允许手动上报消息";
 "amount" = "金额";
 "app_card_shareable_false" = "该卡片已被设置为不允许转发";
@@ -495,10 +501,12 @@
 "my_stickers" = "我的表情";
 "na" = "暂无价格";
 "name" = "名称";
+"name_or_phone_number" = "姓名或手机号";
 "need_help" = "需要帮助？";
 "network_connection_lost" = "网络连接超时，请检查网络稍后重试";
 "network_fee" = "网络手续费：%@";
 "never_auto_download" = "关闭";
+"new_chat" = "新聊天";
 "new_group" = "新建群组";
 "new_group_chat" = "新群聊";
 "new_name" = "名称";
@@ -509,6 +517,7 @@
 "no_authorizations" = "没有授权任何机器人";
 "no_blocked_users" = "没有屏蔽任何人";
 "no_bots" = "没有机器人";
+"no_contacts" = "没有联系人";
 "no_files" = "没有文件";
 "no_hidden_assets" = "没有隐藏的资产";
 "no_items_selected" = "未选定项目";
@@ -607,6 +616,7 @@
 "preparing_progress" = "备份中...（%@）";
 "privacy" = "隐私";
 "privacy_policy" = "隐私政策";
+"profile" = "个人资料";
 "profile_photo" = "个人头像";
 "profile_share_bot_hint" = "如果您希望分享机器人，请先添加联系人。";
 "public_profile" = "个人资料（必须）";
@@ -667,6 +677,7 @@
 "screen_lock_enable_biometric_hint" = "您需要使用%@来解锁 Mixin。当 Mixin 锁定时，您仍可以接听通话或在通知中回复消息。";
 "screen_lock_unlock" = "通过%@解锁 Mixin";
 "search" = "搜索";
+"search_contacts" = "搜索联系人";
 "search_conversation" = "搜索聊天记录";
 "search_giphy" = "搜索 GIPHY";
 "search_open_link" = "打开链接：";

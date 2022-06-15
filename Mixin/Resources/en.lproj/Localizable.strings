@@ -1,5 +1,7 @@
 "about" = "About";
+"access_contacts_hint" = "Mixin syncs your address book to Mixin servers to help you connect with other Mixin users";
 "access_denied" = "Access denied";
+"access_to_contacts" = "Access to Contacts";
 "access_your_bots_list" = "access your bots list";
 "access_your_circle_list" = "access your circle list";
 "access_your_collectibles" = "access your collectibles";
@@ -10,6 +12,9 @@
 "add" = "Add";
 "add_address" = "Add address";
 "add_bot" = "Add Bot";
+"add_by_id_or_phone_number" = "Add by Mixin ID or Phone number";
+"add_by_phone_contacts" = "Add by Phone Contacts";
+"add_by_qr_code" = "Add by QR Code";
 "add_circle" = "Add Circle";
 "add_contact" = "Add Contact";
 "add_conversations" = "Add Conversations";
@@ -58,6 +63,7 @@
 "all_conversations" = "All Conversations";
 "all_photos" = "All Photos";
 "all_transactions" = "All Transactions";
+"allow" = "Allow";
 "allow_manual_report_message" = "Allow Manual Report Message";
 "amount" = "Amount";
 "app_card_shareable_false" = "The card has been set to not allow sharing";
@@ -495,10 +501,12 @@
 "my_stickers" = "My Stickers";
 "na" = "N/A";
 "name" = "Name";
+"name_or_phone_number" = "Name or Phone number";
 "need_help" = "Need help?";
 "network_connection_lost" = "The network connection was lost, please check your network and try again later";
 "network_fee" = "Network fee: %@";
 "never_auto_download" = "Never";
+"new_chat" = "New Chat";
 "new_group" = "New Group";
 "new_group_chat" = "New Group Chat";
 "new_name" = "new name";
@@ -509,6 +517,7 @@
 "no_authorizations" = "NO AUTHORIZATIONS";
 "no_blocked_users" = "No blocked users";
 "no_bots" = "NO BOTS";
+"no_contacts" = "No CONTACTS";
 "no_files" = "NO FILES";
 "no_hidden_assets" = "No hidden assets";
 "no_items_selected" = "No Items Selected";
@@ -607,6 +616,7 @@
 "preparing_progress" = "Preparing...(%@)";
 "privacy" = "Privacy";
 "privacy_policy" = "Privacy Policy";
+"profile" = "Profile";
 "profile_photo" = "Profile Photo";
 "profile_share_bot_hint" = "If you want to share a bot, add it to your contacts first";
 "public_profile" = "Public profile (required)";
@@ -667,6 +677,7 @@
 "screen_lock_enable_biometric_hint" = "You’ll need to use %@ to unlock Mixin. You can still reply to messages from notifications and anwser calls if Mixin is locked.";
 "screen_lock_unlock" = "Use %@ to unlock Mixin";
 "search" = "Search";
+"search_contacts" = "Search contacts";
 "search_conversation" = "Search Conversation";
 "search_giphy" = "Search GIPHY";
 "search_open_link" = "Open Link: ";

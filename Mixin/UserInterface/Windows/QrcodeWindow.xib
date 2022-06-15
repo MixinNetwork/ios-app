@@ -125,7 +125,7 @@
                                     </constraints>
                                 </view>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sfg-UA-Mp7">
-                                    <rect key="frame" x="93.5" y="288" width="188" height="26.5"/>
+                                    <rect key="frame" x="20" y="288" width="335" height="26.5"/>
                                     <string key="text">0xA5B85583c2CbDf873D802A8
 29845904696E7BD97</string>
                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
@@ -137,33 +137,48 @@
                             <constraints>
                                 <constraint firstAttribute="bottom" secondItem="Sfg-UA-Mp7" secondAttribute="bottom" constant="120" id="G92-Bg-sTH"/>
                                 <constraint firstItem="GjO-Pw-OiO" firstAttribute="centerX" secondItem="BRz-EH-3Ps" secondAttribute="centerX" id="J31-MM-gZA"/>
-                                <constraint firstItem="Sfg-UA-Mp7" firstAttribute="leading" secondItem="BRz-EH-3Ps" secondAttribute="leading" constant="16" id="XnJ-bo-vS8"/>
                                 <constraint firstItem="GjO-Pw-OiO" firstAttribute="centerY" secondItem="BRz-EH-3Ps" secondAttribute="centerY" id="bAA-m0-HVe"/>
                                 <constraint firstItem="Sfg-UA-Mp7" firstAttribute="top" secondItem="BRz-EH-3Ps" secondAttribute="bottom" constant="8" id="eVN-Xc-S4u"/>
+                                <constraint firstAttribute="trailing" secondItem="Sfg-UA-Mp7" secondAttribute="trailing" constant="20" id="mWc-gG-j14"/>
+                                <constraint firstItem="Sfg-UA-Mp7" firstAttribute="leading" secondItem="HEa-0m-NKp" secondAttribute="leading" constant="20" id="oNC-11-D3s"/>
                                 <constraint firstItem="BRz-EH-3Ps" firstAttribute="centerX" secondItem="HEa-0m-NKp" secondAttribute="centerX" id="pyM-BJ-E4T"/>
-                                <constraint firstItem="Sfg-UA-Mp7" firstAttribute="trailing" secondItem="BRz-EH-3Ps" secondAttribute="trailing" constant="-16" id="wP1-MH-oem"/>
                                 <constraint firstItem="BRz-EH-3Ps" firstAttribute="top" secondItem="HEa-0m-NKp" secondAttribute="top" constant="60" id="xdb-JH-tfs"/>
                             </constraints>
                         </view>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vr1-0I-Tfb" customClass="BouncingButton" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="153.5" y="504.5" width="68" height="68"/>
+                            <rect key="frame" x="93.5" y="504.5" width="68" height="68"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="68" id="F94-4K-3LA"/>
                                 <constraint firstAttribute="width" constant="68" id="vbv-cN-80H"/>
                             </constraints>
-                            <state key="normal" image="ic_save_qrcode"/>
+                            <color key="tintColor" name="title"/>
+                            <state key="normal" image="ic_app_category_scan"/>
                             <connections>
-                                <action selector="saveAction:" destination="Ao8-vg-1Wq" eventType="touchUpInside" id="I19-rT-VWR"/>
+                                <action selector="scanAction:" destination="Ao8-vg-1Wq" eventType="touchUpInside" id="nXN-26-cbd"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ru2-Up-eKk" customClass="BouncingButton" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="213.5" y="504.5" width="68" height="68"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="68" id="7pD-3F-iTE"/>
+                                <constraint firstAttribute="width" constant="68" id="LEu-Ge-wWo"/>
+                            </constraints>
+                            <color key="tintColor" name="title"/>
+                            <state key="normal" image="Web/ic_action_share"/>
+                            <connections>
+                                <action selector="shareAction:" destination="Ao8-vg-1Wq" eventType="touchUpInside" id="2cC-CU-Gie"/>
                             </connections>
                         </button>
                     </subviews>
                     <color key="backgroundColor" name="background"/>
                     <constraints>
+                        <constraint firstItem="Ru2-Up-eKk" firstAttribute="centerY" secondItem="Vr1-0I-Tfb" secondAttribute="centerY" id="8GI-ex-QgK"/>
+                        <constraint firstItem="Ru2-Up-eKk" firstAttribute="centerX" secondItem="15C-zD-brT" secondAttribute="centerX" constant="60" id="9Nt-Pq-d3b"/>
                         <constraint firstAttribute="trailing" secondItem="HTr-3g-n2V" secondAttribute="trailing" id="I4g-0T-TAK"/>
                         <constraint firstAttribute="trailing" secondItem="HEa-0m-NKp" secondAttribute="trailing" id="cgZ-Gz-oju"/>
                         <constraint firstItem="Vr1-0I-Tfb" firstAttribute="top" secondItem="HEa-0m-NKp" secondAttribute="bottom" id="oio-kN-rtm"/>
                         <constraint firstItem="HEa-0m-NKp" firstAttribute="top" secondItem="HTr-3g-n2V" secondAttribute="bottom" id="pY9-zW-GWI"/>
-                        <constraint firstItem="Vr1-0I-Tfb" firstAttribute="centerX" secondItem="15C-zD-brT" secondAttribute="centerX" id="pov-lE-jEg"/>
+                        <constraint firstItem="Vr1-0I-Tfb" firstAttribute="centerX" secondItem="15C-zD-brT" secondAttribute="centerX" constant="-60" id="pov-lE-jEg"/>
                         <constraint firstItem="HTr-3g-n2V" firstAttribute="top" secondItem="15C-zD-brT" secondAttribute="top" id="qOG-j0-MxI"/>
                         <constraint firstItem="HEa-0m-NKp" firstAttribute="leading" secondItem="15C-zD-brT" secondAttribute="leading" id="rnC-uG-ywo"/>
                         <constraint firstItem="HTr-3g-n2V" firstAttribute="leading" secondItem="15C-zD-brT" secondAttribute="leading" id="uEu-Ne-kdx"/>
@@ -198,9 +213,10 @@
         </view>
     </objects>
     <resources>
+        <image name="Web/ic_action_share" width="24" height="24"/>
+        <image name="ic_app_category_scan" width="24" height="24"/>
         <image name="ic_dialog_close" width="26" height="26"/>
         <image name="ic_receive_money" width="13.5" height="15.5"/>
-        <image name="ic_save_qrcode" width="22" height="23"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

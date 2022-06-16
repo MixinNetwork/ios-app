@@ -19,9 +19,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Conversation/bg_chat" translatesAutoresizingMaskIntoConstraints="NO" id="MYg-f9-MjM">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="m8l-zH-oov" customClass="WallpaperImageView" customModule="Mixin" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                            </imageView>
+                            </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" contentInsetAdjustmentBehavior="never" keyboardDismissMode="interactive" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="39" sectionHeaderHeight="44" sectionFooterHeight="28" contentViewInsetsToSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v0e-5f-Xnl" customClass="ConversationTableView" customModule="Mixin" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -331,15 +331,14 @@
                             <constraint firstAttribute="bottom" secondItem="v0e-5f-Xnl" secondAttribute="bottom" id="7AD-Ab-ka0"/>
                             <constraint firstItem="Zve-bN-jsA" firstAttribute="leading" secondItem="a5z-Op-8GF" secondAttribute="leading" id="8Ra-zT-gjT"/>
                             <constraint firstItem="6MP-pq-xci" firstAttribute="top" secondItem="a5z-Op-8GF" secondAttribute="bottom" priority="250" id="BA9-8a-X0Z"/>
-                            <constraint firstItem="MYg-f9-MjM" firstAttribute="top" secondItem="a5z-Op-8GF" secondAttribute="top" placeholder="YES" id="CQr-Zn-bzE"/>
                             <constraint firstItem="tke-V3-5nw" firstAttribute="leading" secondItem="N4V-uq-LHc" secondAttribute="leading" id="Cwi-uX-EZ6"/>
-                            <constraint firstItem="MYg-f9-MjM" firstAttribute="leading" secondItem="a5z-Op-8GF" secondAttribute="leading" id="HAb-RN-Wep"/>
+                            <constraint firstAttribute="trailing" secondItem="m8l-zH-oov" secondAttribute="trailing" id="E5C-R8-RRB"/>
                             <constraint firstItem="v0e-5f-Xnl" firstAttribute="top" secondItem="a5z-Op-8GF" secondAttribute="top" placeholder="YES" id="HEy-le-Uwi"/>
-                            <constraint firstAttribute="trailing" secondItem="MYg-f9-MjM" secondAttribute="trailing" id="Kun-1N-huo"/>
+                            <constraint firstItem="m8l-zH-oov" firstAttribute="leading" secondItem="a5z-Op-8GF" secondAttribute="leading" id="J0l-vL-Qwy"/>
                             <constraint firstItem="AxI-2v-IFd" firstAttribute="top" secondItem="syC-xp-0cA" secondAttribute="bottom" constant="8" id="Lb1-1l-uNl"/>
                             <constraint firstAttribute="bottom" secondItem="6MP-pq-xci" secondAttribute="bottom" priority="750" id="Ln1-Gg-Xdj"/>
                             <constraint firstItem="AxI-2v-IFd" firstAttribute="leading" secondItem="a5z-Op-8GF" secondAttribute="leading" id="NlP-Oj-Rmw"/>
-                            <constraint firstAttribute="bottom" secondItem="MYg-f9-MjM" secondAttribute="bottom" id="VUj-bX-OgA"/>
+                            <constraint firstAttribute="bottom" secondItem="m8l-zH-oov" secondAttribute="bottom" id="RPn-ab-FVR"/>
                             <constraint firstItem="6MP-pq-xci" firstAttribute="leading" secondItem="a5z-Op-8GF" secondAttribute="leading" id="WWW-EV-err"/>
                             <constraint firstAttribute="trailing" secondItem="Zve-bN-jsA" secondAttribute="trailing" id="asU-m8-Qxc"/>
                             <constraint firstItem="v0e-5f-Xnl" firstAttribute="leading" secondItem="a5z-Op-8GF" secondAttribute="leading" id="f5T-FE-UXQ"/>
@@ -348,6 +347,7 @@
                             <constraint firstItem="6MP-pq-xci" firstAttribute="top" secondItem="AxI-2v-IFd" secondAttribute="bottom" priority="500" id="lL1-Ex-KBa"/>
                             <constraint firstItem="N4V-uq-LHc" firstAttribute="trailing" secondItem="syC-xp-0cA" secondAttribute="trailing" constant="11" id="ryY-bD-bte"/>
                             <constraint firstAttribute="trailing" secondItem="v0e-5f-Xnl" secondAttribute="trailing" id="ufK-2L-8Df"/>
+                            <constraint firstItem="m8l-zH-oov" firstAttribute="top" secondItem="a5z-Op-8GF" secondAttribute="top" id="v0m-9a-HAA"/>
                             <constraint firstAttribute="trailing" secondItem="AxI-2v-IFd" secondAttribute="trailing" id="x5F-jR-qIL"/>
                             <constraint firstAttribute="top" secondItem="Zve-bN-jsA" secondAttribute="top" id="xX2-tz-12Y"/>
                         </constraints>
@@ -359,7 +359,6 @@
                         <outlet property="announcementBadgeHeightConstraint" destination="fNa-UK-4dk" id="3T6-Do-mP6"/>
                         <outlet property="announcementBadgeView" destination="AxI-2v-IFd" id="eDf-wQ-CGR"/>
                         <outlet property="avatarImageView" destination="tCB-t3-VXy" id="tSV-HN-6ST"/>
-                        <outlet property="backgroundImageView" destination="MYg-f9-MjM" id="1WJ-qd-DbP"/>
                         <outlet property="hideInputWrapperConstraint" destination="BA9-8a-X0Z" id="eKZ-aR-O6O"/>
                         <outlet property="inputWrapperHeightConstraint" destination="MMR-mR-ES3" id="DTB-oj-FYz"/>
                         <outlet property="inputWrapperTopShadowView" destination="EPj-zh-jw3" id="yWC-Dn-CTu"/>
@@ -381,6 +380,7 @@
                         <outlet property="titleViewHeightConstraint" destination="8aU-zB-Vfr" id="5X3-s9-MuE"/>
                         <outlet property="titleViewTopConstraint" destination="HAZ-9r-SfD" id="KzX-cR-Bpf"/>
                         <outlet property="unreadBadgeLabel" destination="x2d-vg-jlV" id="M0W-3d-aPa"/>
+                        <outlet property="wallpaperImageView" destination="m8l-zH-oov" id="o4b-5m-sDO"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="w6G-5t-tGm" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2788,7 +2788,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Conversation/bg_chat" width="428" height="926"/>
         <image name="Conversation/ic_app" width="22" height="20"/>
         <image name="Conversation/ic_chat_bottom" width="38" height="38"/>
         <image name="Conversation/ic_jump_to_mention" width="38" height="38"/>
@@ -2816,7 +2815,7 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_input">
-            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.96100002527236938" green="0.96899998188018799" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_secondary">
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

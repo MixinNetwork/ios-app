@@ -87,6 +87,7 @@
 "automatic" = "Automatic";
 "back_to_chat" = "Back To Chat";
 "back_up_now" = "Back Up Now";
+"background_preview" = "Background Preview";
 "backing_up" = "Backing Up...";
 "backup_disable_hint" = "Sign in to iCloud to back up your history. Settings > iCloud > Turn on iCloud Drive.";
 "balance" = "Balance";
@@ -140,6 +141,7 @@
 "change_your_app_language" = "Change your app language";
 "changed" = "Changed";
 "changed_disappearing_message_settings" = "%@ changed disappearing message settings.";
+"chat_background" = "Chat Background";
 "chat_backup" = "Chat Backup";
 "chat_bot_reception_title" = "Tap the button to interact with the bot";
 "chat_call_duration" = "Duration %@";
@@ -390,6 +392,8 @@
 "hold_to_record_audio" = "Hold to record, release to send";
 "hour" = "%d Hour";
 "hour_count" = "%d Hours";
+"how_are_you" = "Hi, how are you?";
+"i_am_good" = "I’m good.";
 "image" = "image";
 "immediately" = "Immediately";
 "in_connecting" = "Connecting...";

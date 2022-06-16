@@ -15,7 +15,7 @@
       "scale" : "1x"
     },
     {
-      "filename" : "bg_chat_any@2x.png",
+      "filename" : "bg_chat_animal@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -26,12 +26,12 @@
           "value" : "dark"
         }
       ],
-      "filename" : "bg_chat_dark@2x.png",
+      "filename" : "bg_chat_animal_dark@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "bg_chat_any@3x.png",
+      "filename" : "bg_chat_animal@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     },
@@ -42,7 +42,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "bg_chat_dark@3x.png",
+      "filename" : "bg_chat_animal_dark@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

@@ -391,6 +391,13 @@ extension GroupProfileViewController {
                                 action: #selector(editAnnouncement))
             ])
         }
+        let chatBackgroundGroup = [
+            ProfileMenuItem(title: R.string.localizable.chat_background(),
+                            subtitle: nil,
+                            style: [],
+                            action: #selector(changeChatBackground))
+        ]
+        groups.append(chatBackgroundGroup)
         
         if isMember {
             if conversation.isMuted {

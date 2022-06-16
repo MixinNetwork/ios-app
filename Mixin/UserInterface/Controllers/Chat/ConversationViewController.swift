@@ -10,7 +10,7 @@ class ConversationViewController: UIViewController {
     static var allowReportSingleMessage = false
     
     @IBOutlet weak var navigationBarView: UIView!
-    @IBOutlet weak var backgroundImageView: UIImageView!
+    @IBOutlet weak var wallpaperImageView: WallpaperImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var tableView: ConversationTableView!
     @IBOutlet weak var accessoryButtonsWrapperView: HittestBypassWrapperView!
@@ -285,9 +285,10 @@ class ConversationViewController: UIViewController {
     // MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        backgroundImageView.snp.makeConstraints { (make) in
+        wallpaperImageView.snp.makeConstraints { (make) in
             make.height.equalTo(UIScreen.main.bounds.height)
         }
+        wallpaperImageView.wallpaper = Wallpaper.wallpaper(for: .conversation(conversationId))
         tableView.snp.makeConstraints { (make) in
             make.height.equalTo(UIScreen.main.bounds.height)
         }
@@ -371,6 +372,7 @@ class ConversationViewController: UIViewController {
         center.addObserver(self, selector: #selector(pinMessageDidDelete(_:)), name: PinMessageDAO.didDeleteNotification, object: nil)
         center.addObserver(self, selector: #selector(pinMessageBannerDidChange), name: AppGroupUserDefaults.User.pinMessageBannerDidChangeNotification, object: nil)
         center.addObserver(self, selector: #selector(expiredMessageDidDelete(_:)), name: ExpiredMessageDAO.expiredMessageDidDeleteNotification, object: nil)
+        center.addObserver(self, selector: #selector(wallpaperDidChange), name: Wallpaper.wallpaperDidChangeNotification, object: nil)
         
         if dataSource.category == .group {
             updateGroupCallIndicatorViewHidden()
@@ -444,16 +446,6 @@ class ConversationViewController: UIViewController {
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         updateNavigationBarHeightAndTableViewTopInset()
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        let backgroundImageSize = R.image.conversation.bg_chat()!.size
-        let isBackgroundImageUndersized = backgroundImageView.frame.width > backgroundImageSize.width
-            || backgroundImageView.frame.height > backgroundImageSize.height
-        if isBackgroundImageUndersized {
-            backgroundImageView.contentMode = .scaleAspectFill
-        }
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -1215,6 +1207,13 @@ class ConversationViewController: UIViewController {
         }
         _ = dataSource?.removeViewModel(at: indexPath)
         tableView.reloadData()
+    }
+    
+    @objc private func wallpaperDidChange(_ notification: Notification) {
+        guard let conversationId = notification.userInfo?[Wallpaper.conversationIdUserInfoKey] as? String, conversationId == self.conversationId else {
+            return
+        }
+        wallpaperImageView.wallpaper = Wallpaper.wallpaper(for: .conversation(conversationId))
     }
     
     // MARK: - Interface

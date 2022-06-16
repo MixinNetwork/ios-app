@@ -64,6 +64,8 @@ extension AppGroupUserDefaults {
             
             case externalSchemes = "external_schemes"
             case externalSchemesRefreshDate = "external_schemes_refresh_date"
+            
+            case wallpapers = "wallpapers"
         }
         
         public static let version = 30
@@ -242,6 +244,9 @@ extension AppGroupUserDefaults {
         
         @Default(namespace: .crypto, key: Key.externalSchemesRefreshDate, defaultValue: .distantPast)
         public static var externalSchemesRefreshDate: Date
+        
+        @Default(namespace: .user, key: Key.wallpapers, defaultValue: [:])
+        public static var wallpapers: [String: String]
         
         public static func insertRecentlyUsedAppId(id: String) {
             let maxNumberOfIds = 12

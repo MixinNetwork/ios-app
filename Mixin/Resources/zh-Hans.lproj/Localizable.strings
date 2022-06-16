@@ -87,6 +87,7 @@
 "automatic" = "自动";
 "back_to_chat" = "返回聊天";
 "back_up_now" = "立即备份";
+"background_preview" = "背景预览";
 "backing_up" = "正在备份...";
 "backup_disable_hint" = "需要登录 iCloud 来备份你的聊天记录。 设置 > iCloud > 打开 iCloud 云盘。";
 "balance" = "余额";
@@ -140,6 +141,7 @@
 "change_your_app_language" = "设置语言";
 "changed" = "已修改";
 "changed_disappearing_message_settings" = "%@修改了限时消息设置";
+"chat_background" = "聊天背景";
 "chat_backup" = "聊天记录备份";
 "chat_bot_reception_title" = "点击按钮使用机器人";
 "chat_call_duration" = "通话时长 %@";
@@ -390,6 +392,8 @@
 "hold_to_record_audio" = "长按说话，松手发送";
 "hour" = "%d 小时";
 "hour_count" = "%d 小时";
+"how_are_you" = "嗨，你好吗？";
+"i_am_good" = "我很好。";
 "image" = "图片";
 "immediately" = "立刻";
 "in_connecting" = "正在连接...";

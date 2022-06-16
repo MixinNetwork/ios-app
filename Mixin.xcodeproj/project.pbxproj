@@ -567,6 +567,7 @@
 		7C359DCE26A6C15A001D3AE4 /* StickerStorePreviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C359DCD26A6C15A001D3AE4 /* StickerStorePreviewCell.swift */; };
 		7C359DD026A6C173001D3AE4 /* StickerStoreBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C359DCF26A6C173001D3AE4 /* StickerStoreBannerView.swift */; };
 		7C36BE88274F248C00089B6D /* StickerStoreBannerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C36BE87274F248C00089B6D /* StickerStoreBannerCell.swift */; };
+		7C427BC428373F8000FFDE12 /* Wallpaper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C427BC328373F8000FFDE12 /* Wallpaper.swift */; };
 		7C4E2B0426A9BDAD008190F5 /* StickersEditingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4E2B0326A9BDAC008190F5 /* StickersEditingViewController.swift */; };
 		7C4E2B0626A9BE50008190F5 /* StickersEditingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4E2B0526A9BE50008190F5 /* StickersEditingCell.swift */; };
 		7C4FF5AA26AE614C003E39AC /* StickerPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4FF5A926AE614C003E39AC /* StickerPreviewViewController.swift */; };
@@ -588,6 +589,8 @@
 		7C66F1C1268C0250006D8462 /* HomeAppsFolderInteraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1C0268C0250006D8462 /* HomeAppsFolderInteraction.swift */; };
 		7C6AD1F526A6794F00E6C41D /* StickersStoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6AD1F426A6794F00E6C41D /* StickersStoreViewController.swift */; };
 		7C7635B826A13461006101DB /* HomeAppsConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7635B726A13461006101DB /* HomeAppsConstants.swift */; };
+		7C8CC5A4280D347A00F7CBDF /* PreviewWallpaperViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8CC5A2280D347A00F7CBDF /* PreviewWallpaperViewController.swift */; };
+		7C8CC5A7280D40E900F7CBDF /* PreviewWallpaperCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8CC5A6280D40E900F7CBDF /* PreviewWallpaperCell.swift */; };
 		7C8FA78D27687D1500855AFD /* DeleteAccountSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8FA78C27687D1500855AFD /* DeleteAccountSettingViewController.swift */; };
 		7C8FA78F2768822800855AFD /* DeleteAccountTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C8FA78E2768822800855AFD /* DeleteAccountTableHeaderView.xib */; };
 		7C8FA8F42768909300855AFD /* AccountSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8FA8F32768909300855AFD /* AccountSettingViewController.swift */; };
@@ -609,6 +612,7 @@
 		7CBD2EFA268FF6BB00AA0847 /* HomeAppsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBD2EF9268FF6BB00AA0847 /* HomeAppsStorage.swift */; };
 		7CC3B1A026C21F7E0018B0D1 /* ScriptMessageProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC3B19F26C21F7E0018B0D1 /* ScriptMessageProxy.swift */; };
 		7CC730502745F95D002780F5 /* StickerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC7304F2745F95D002780F5 /* StickerStore.swift */; };
+		7CE2DE102858B52000AF00AE /* WallpaperImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE2DE0F2858B52000AF00AE /* WallpaperImageView.swift */; };
 		7CE3A25C2771A8AB006BE765 /* DeleteAccountVerifyCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE3A25B2771A8AB006BE765 /* DeleteAccountVerifyCodeViewController.swift */; };
 		7CE5E7A8269BDA29000B7904 /* HomeAppsPinTipsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE5E7A6269BDA29000B7904 /* HomeAppsPinTipsViewController.swift */; };
 		7CE5E7A9269BDA29000B7904 /* HomeAppsPinTipsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CE5E7A7269BDA29000B7904 /* HomeAppsPinTipsView.xib */; };
@@ -1552,6 +1556,7 @@
 		7C359DCD26A6C15A001D3AE4 /* StickerStorePreviewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerStorePreviewCell.swift; sourceTree = "<group>"; };
 		7C359DCF26A6C173001D3AE4 /* StickerStoreBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerStoreBannerView.swift; sourceTree = "<group>"; };
 		7C36BE87274F248C00089B6D /* StickerStoreBannerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerStoreBannerCell.swift; sourceTree = "<group>"; };
+		7C427BC328373F8000FFDE12 /* Wallpaper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wallpaper.swift; sourceTree = "<group>"; };
 		7C4E2B0326A9BDAC008190F5 /* StickersEditingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersEditingViewController.swift; sourceTree = "<group>"; };
 		7C4E2B0526A9BE50008190F5 /* StickersEditingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersEditingCell.swift; sourceTree = "<group>"; };
 		7C4FF5A926AE614C003E39AC /* StickerPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerPreviewViewController.swift; sourceTree = "<group>"; };
@@ -1573,6 +1578,8 @@
 		7C66F1C0268C0250006D8462 /* HomeAppsFolderInteraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsFolderInteraction.swift; sourceTree = "<group>"; };
 		7C6AD1F426A6794F00E6C41D /* StickersStoreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersStoreViewController.swift; sourceTree = "<group>"; };
 		7C7635B726A13461006101DB /* HomeAppsConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsConstants.swift; sourceTree = "<group>"; };
+		7C8CC5A2280D347A00F7CBDF /* PreviewWallpaperViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewWallpaperViewController.swift; sourceTree = "<group>"; };
+		7C8CC5A6280D40E900F7CBDF /* PreviewWallpaperCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewWallpaperCell.swift; sourceTree = "<group>"; };
 		7C8FA78C27687D1500855AFD /* DeleteAccountSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountSettingViewController.swift; sourceTree = "<group>"; };
 		7C8FA78E2768822800855AFD /* DeleteAccountTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeleteAccountTableHeaderView.xib; sourceTree = "<group>"; };
 		7C8FA8F32768909300855AFD /* AccountSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSettingViewController.swift; sourceTree = "<group>"; };
@@ -1594,6 +1601,7 @@
 		7CBD2EF9268FF6BB00AA0847 /* HomeAppsStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsStorage.swift; sourceTree = "<group>"; };
 		7CC3B19F26C21F7E0018B0D1 /* ScriptMessageProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptMessageProxy.swift; sourceTree = "<group>"; };
 		7CC7304F2745F95D002780F5 /* StickerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerStore.swift; sourceTree = "<group>"; };
+		7CE2DE0F2858B52000AF00AE /* WallpaperImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WallpaperImageView.swift; sourceTree = "<group>"; };
 		7CE3A25B2771A8AB006BE765 /* DeleteAccountVerifyCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountVerifyCodeViewController.swift; sourceTree = "<group>"; };
 		7CE5E7A6269BDA29000B7904 /* HomeAppsPinTipsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsPinTipsViewController.swift; sourceTree = "<group>"; };
 		7CE5E7A7269BDA29000B7904 /* HomeAppsPinTipsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomeAppsPinTipsView.xib; sourceTree = "<group>"; };
@@ -2246,6 +2254,7 @@
 				7BB78723245132570057B4ED /* SettingsHeaderView.swift */,
 				7C9A733F27392FAF00E0127A /* PinSettingTableHeaderView.swift */,
 				7C2475C627795BC100112A30 /* DeleteAccountTableHeaderView.swift */,
+				7CE2DE0F2858B52000AF00AE /* WallpaperImageView.swift */,
 				7C9DCDF0273901D500395F4A /* PinSettingTableHeaderView.xib */,
 				7B2E5881244F10FB0073102C /* EmergencyContactTableHeaderView.xib */,
 				7BB7872A24514ACC0057B4ED /* PhoneContactsSettingTableHeaderView.xib */,
@@ -2894,6 +2903,7 @@
 				7BB78727245136850057B4ED /* SettingsRadioSection.swift */,
 				7BEED0D8244D752700F3A2B9 /* SettingsRow.swift */,
 				7C1EDAB32772FF8B00193917 /* VerifyNumberContext.swift */,
+				7C427BC328373F8000FFDE12 /* Wallpaper.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -3300,6 +3310,7 @@
 				7BDBDE6D22363E82006220DF /* SettingCell.swift */,
 				7BDBDE6F22365017006220DF /* SettingCell.xib */,
 				7BC03AB12424EA9B00931D21 /* StorageUsageCell.swift */,
+				7C8CC5A6280D40E900F7CBDF /* PreviewWallpaperCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -3590,6 +3601,7 @@
 				7C8FA8F32768909300855AFD /* AccountSettingViewController.swift */,
 				9489E39F25C5B150000319F8 /* AcknowledgementsViewController.swift */,
 				7BB8E2D024529E910098B1E8 /* AppearanceSettingsViewController.swift */,
+				7C8CC5A2280D347A00F7CBDF /* PreviewWallpaperViewController.swift */,
 				940BAE212629741C00FFF753 /* AuthorizationsContentViewController.swift */,
 				7BC022E4214A13DC00B7A398 /* AuthorizationsViewController.swift */,
 				DF1F277B21A53585009A74C6 /* BackupViewController.swift */,
@@ -4439,6 +4451,7 @@
 				DFD089E21FE4041400A7D815 /* AttachmentUploadJob.swift in Sources */,
 				7B56DBD11FEFC5B900B50D82 /* PinField.swift in Sources */,
 				7B2E3E581FA0815B00DDDDEB /* LoginNavigationController.swift in Sources */,
+				7C8CC5A7280D40E900F7CBDF /* PreviewWallpaperCell.swift in Sources */,
 				941655C425CD7DA7007E76D0 /* AudioSessionClientPriority.swift in Sources */,
 				7BBCEC242523332200F270DF /* PopupTitleView.swift in Sources */,
 				7BA9D9C8226DE71E00255943 /* NavigationAvatarIconView.swift in Sources */,
@@ -4458,6 +4471,7 @@
 				7B95860F2369599800F1F6E1 /* ProfileViewController.swift in Sources */,
 				7BD38B6020BEA03200D06E5C /* WaveformView.swift in Sources */,
 				DFB19006233220290021CAF3 /* PINLogCell.swift in Sources */,
+				7C427BC428373F8000FFDE12 /* Wallpaper.swift in Sources */,
 				E090B90F23B0B27F0012C7E9 /* ConversationDAO+Search.swift in Sources */,
 				7BF42E3122DC85E9005066E6 /* GalleryImageItemViewController.swift in Sources */,
 				7B8ED48021198EC20039946B /* StickerInputModelController.swift in Sources */,
@@ -4693,6 +4707,7 @@
 				7B894AF3205BF8660065A1B8 /* AddressViewController.swift in Sources */,
 				7B95533A224380B200CE95E6 /* PinValidationViewController.swift in Sources */,
 				7B09E5581FD1264C002E45D3 /* TextMessageLabel.swift in Sources */,
+				7C8CC5A4280D347A00F7CBDF /* PreviewWallpaperViewController.swift in Sources */,
 				7BAE1B44223B51F3004F2D16 /* ChangeNumberContext.swift in Sources */,
 				7B63A8632431C9EE00D0F7C7 /* CirclesViewController.swift in Sources */,
 				DFB19002233219650021CAF3 /* LogViewController.swift in Sources */,
@@ -4978,6 +4993,7 @@
 				DF56966F1FAAB11D00226D42 /* ContactHeaderView.swift in Sources */,
 				7C6AD1F526A6794F00E6C41D /* StickersStoreViewController.swift in Sources */,
 				7C225E8827C4C5FE00154143 /* GroupInCommonCell.swift in Sources */,
+				7CE2DE102858B52000AF00AE /* WallpaperImageView.swift in Sources */,
 				7B4F5ACD224CBA4A00A8392D /* AssetFilterViewController.swift in Sources */,
 				7B8BB586234EE9A200991ACB /* SharedMediaAudioTableViewController.swift in Sources */,
 				7BFD345A2285A7F000524EA0 /* TransferReceiverViewController.swift in Sources */,

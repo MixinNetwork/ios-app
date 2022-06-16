@@ -16,9 +16,11 @@ class AppearanceSettingsViewController: SettingsTableViewController {
     private lazy var languageRow = SettingsRow(title: R.string.localizable.language(),
                                                subtitle: R.string.localizable.english(),
                                                accessory: .disclosure)
+    private let chatBackgroundRow = SettingsRow(title: R.string.localizable.chat_background(), accessory: .disclosure)
     
     private lazy var dataSource = SettingsDataSource(sections: [
-        SettingsSection(rows: [currencyRow])
+        SettingsSection(rows: [currencyRow]),
+        SettingsSection(rows: [chatBackgroundRow])
     ])
     
     class func instance() -> UIViewController {
@@ -57,7 +59,13 @@ extension AppearanceSettingsViewController: UITableViewDelegate {
                 pickCurrency()
             }
         case 2:
-            pickCurrency()
+            if isLanguageAvailable {
+                pickCurrency()
+            } else {
+                changeChatBackground()
+            }
+        case 3:
+            changeChatBackground()
         default:
             break
         }
@@ -117,6 +125,11 @@ extension AppearanceSettingsViewController {
     private func pickCurrency() {
         let vc = CurrencySelectorViewController()
         present(vc, animated: true, completion: nil)
+    }
+    
+    private func changeChatBackground() {
+        let vc = PreviewWallpaperViewController.instance(scope: .global)
+        navigationController?.pushViewController(vc, animated: true)
     }
     
 }

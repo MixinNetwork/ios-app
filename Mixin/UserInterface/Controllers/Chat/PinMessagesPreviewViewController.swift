@@ -10,7 +10,6 @@ final class PinMessagesPreviewViewController: StaticMessagesViewController {
     weak var delegate: PinMessagesPreviewViewControllerDelegate?
     
     private let isGroup: Bool
-    private let conversationId: String
     private let unpinAllButtonHeight: CGFloat = 50
     private let additionalBottomInsetWhenUnpinAllIsAvailable: CGFloat = 20
     
@@ -28,7 +27,6 @@ final class PinMessagesPreviewViewController: StaticMessagesViewController {
     private weak var bottomBarViewIfAdded: UIView?
     
     init(conversationId: String, isGroup: Bool) {
-        self.conversationId = conversationId
         self.isGroup = isGroup
         super.init(conversationId: conversationId, audioManager: StaticAudioMessagePlayingManager())
     }

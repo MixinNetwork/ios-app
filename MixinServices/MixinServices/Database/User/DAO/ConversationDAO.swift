@@ -196,6 +196,7 @@ public final class ConversationDAO: UserDatabaseDAO {
     
     public func deleteChat(conversationId: String) {
         let mediaUrls = MessageDAO.shared.getMediaUrls(conversationId: conversationId, categories: MessageCategory.allMediaCategories)
+        let shouldCleanUpWallpaper = shouldCleanUpWallpaper(conversationId: conversationId)
         db.write { db in
             let deletedTranscriptIds = try deleteTranscriptChildrenReferenced(by: conversationId, from: db)
             try Message
@@ -220,6 +221,11 @@ public final class ConversationDAO: UserDatabaseDAO {
                                                mediaUrls: mediaUrls,
                                                transcriptIds: deletedTranscriptIds)
                 ConcurrentJobQueue.shared.addJob(job: job)
+                if shouldCleanUpWallpaper {
+                    AppGroupUserDefaults.User.wallpapers[conversationId] = nil
+                    let url = AttachmentContainer.wallpaperURL(for: conversationId)
+                    try? FileManager.default.removeItem(at: url)
+                }
                 NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: nil)
             }
         }
@@ -602,6 +608,25 @@ extension ConversationDAO {
                 .deleteAll(db)
         }
         return transcriptMessageIds
+    }
+    
+    private func shouldCleanUpWallpaper(conversationId: String) -> Bool {
+        let sql = """
+            SELECT 1
+            FROM conversations c
+            INNER JOIN users u ON u.user_id = c.owner_id
+            WHERE (c.conversation_id = ?) AND ((c.category = ? AND c.status = ?) OR (c.category = ? AND u.relationship != ?))
+            LIMIT 1
+        """
+        let arguments: StatementArguments = [
+            conversationId,
+            ConversationCategory.GROUP.rawValue,
+            ConversationStatus.QUIT.rawValue,
+            ConversationCategory.CONTACT.rawValue,
+            Relationship.FRIEND.rawValue
+        ]
+        let value: Int64 = db.select(with: sql, arguments: arguments) ?? 0
+        return value != 0
     }
     
 }

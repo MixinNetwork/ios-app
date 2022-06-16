@@ -90,7 +90,7 @@ final class UserProfileViewController: ProfileViewController {
             view.addGestureRecognizer(recognizer)
             NotificationCenter.default.addObserver(self, selector: #selector(willHideMenu(_:)), name: UIMenuController.willHideMenuNotification, object: nil)
             NotificationCenter.default.addObserver(self, selector: #selector(accountDidChange(_:)), name: LoginManager.accountDidChangeNotification, object: nil)
-            NotificationCenter.default.addObserver(self, selector: #selector(favoriteBotsDidChange), name: FavoriteAppsDAO.favoriteBotsDidChangeNotification, object: nil)
+            NotificationCenter.default.addObserver(self, selector: #selector(favoriteAppsDidChange), name: FavoriteAppsDAO.favoriteAppsDidChangeNotification, object: nil)
         } else {
             resizeRecognizer.isEnabled = false
         }
@@ -158,8 +158,8 @@ final class UserProfileViewController: ProfileViewController {
         backgroundView.contentView.addSubview(imageView)
         avatarPreviewImageView = imageView
         if isMe {
-            let tap = UITapGestureRecognizer(target: self, action: #selector(dismissAvatarAction))
-            backgroundView.addGestureRecognizer(tap)
+            let recognizer = UITapGestureRecognizer(target: self, action: #selector(dismissAvatarAction))
+            backgroundView.addGestureRecognizer(recognizer)
         } else {
             backgroundView.isUserInteractionEnabled = false
             view.isUserInteractionEnabled = false
@@ -599,7 +599,7 @@ extension UserProfileViewController {
         }
     }
     
-    @objc private func favoriteBotsDidChange() {
+    @objc private func favoriteAppsDidChange() {
         reloadFavoriteApps(userId: user.userId, fromRemote: false)
     }
     

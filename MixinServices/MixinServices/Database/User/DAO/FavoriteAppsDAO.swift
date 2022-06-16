@@ -4,7 +4,7 @@ public final class FavoriteAppsDAO: UserDatabaseDAO {
     
     public static let shared = FavoriteAppsDAO()
     
-    public static let favoriteBotsDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.FavoriteAppsDAO.FavoriteBotsDidChange")
+    public static let favoriteAppsDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.FavoriteAppsDAO.FavoriteAppsDidChange")
 
     public func favoriteAppsOfUser(withId id: String) -> [App] {
         let sql = """
@@ -31,7 +31,7 @@ public final class FavoriteAppsDAO: UserDatabaseDAO {
 
     public func setFavoriteApp(_ app: FavoriteApp) {
         db.save(app) { _ in
-            NotificationCenter.default.post(onMainThread: Self.favoriteBotsDidChangeNotification, object: nil)
+            NotificationCenter.default.post(onMainThread: Self.favoriteAppsDidChangeNotification, object: nil)
         }
     }
 
@@ -39,7 +39,7 @@ public final class FavoriteAppsDAO: UserDatabaseDAO {
         let condition = FavoriteApp.column(of: .userId) == myUserId
             && FavoriteApp.column(of: .appId) == id
         db.delete(FavoriteApp.self, where: condition) { _ in
-            NotificationCenter.default.post(onMainThread: Self.favoriteBotsDidChangeNotification, object: nil)
+            NotificationCenter.default.post(onMainThread: Self.favoriteAppsDidChangeNotification, object: nil)
         }
     }
     

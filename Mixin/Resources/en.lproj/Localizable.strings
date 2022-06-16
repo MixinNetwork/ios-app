@@ -517,7 +517,7 @@
 "no_authorizations" = "NO AUTHORIZATIONS";
 "no_blocked_users" = "No blocked users";
 "no_bots" = "NO BOTS";
-"no_contacts" = "No CONTACTS";
+"no_contacts" = "NO CONTACTS";
 "no_files" = "NO FILES";
 "no_hidden_assets" = "No hidden assets";
 "no_items_selected" = "No Items Selected";
@@ -677,7 +677,7 @@
 "screen_lock_enable_biometric_hint" = "You’ll need to use %@ to unlock Mixin. You can still reply to messages from notifications and anwser calls if Mixin is locked.";
 "screen_lock_unlock" = "Use %@ to unlock Mixin";
 "search" = "Search";
-"search_contacts" = "Search contacts";
+"search_contacts" = "Search Contacts";
 "search_conversation" = "Search Conversation";
 "search_giphy" = "Search GIPHY";
 "search_open_link" = "Open Link: ";

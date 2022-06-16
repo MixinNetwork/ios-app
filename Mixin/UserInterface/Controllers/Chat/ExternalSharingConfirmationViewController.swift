@@ -5,6 +5,11 @@ import MixinServices
 
 class ExternalSharingConfirmationViewController: UIViewController {
     
+    enum Action {
+        case send
+        case forward
+    }
+    
     @IBOutlet weak var backgroundView: UIView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var previewWrapperView: UIView!
@@ -17,6 +22,7 @@ class ExternalSharingConfirmationViewController: UIViewController {
     private var message: Message!
     private var conversation: ConversationItem!
     private var ownerUser: UserItem?
+    private var action: Action!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,21 +37,35 @@ class ExternalSharingConfirmationViewController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
     
-    @IBAction func send(_ sender: Any) {
-        guard var message = message, conversation != nil else {
+    @IBAction func buttonAction(_ sender: Any) {
+        guard var message = message else {
             return
         }
-        message.createdAt = Date().toUTCString()
-        SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: conversation.isGroup())
-        showAutoHiddenHud(style: .notification, text: R.string.localizable.message_sent())
-        dismiss(animated: true, completion: nil)
+        switch action {
+        case .send:
+            guard conversation != nil else {
+                return
+            }
+            message.createdAt = Date().toUTCString()
+            SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: conversation.isGroup())
+            showAutoHiddenHud(style: .notification, text: R.string.localizable.message_sent())
+            dismiss(animated: true, completion: nil)
+        case .forward:
+            dismiss(animated: true) {
+                let vc = MessageReceiverViewController.instance(content: .message(message))
+                UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
+            }
+        case .none:
+            break
+        }
     }
     
-    func load(sharingContext: ExternalSharingContext, message: Message, conversation: ConversationItem, ownerUser: UserItem?, webContext: MixinWebViewController.Context?) {
+    func load(sharingContext: ExternalSharingContext, message: Message, conversation: ConversationItem?, ownerUser: UserItem?, webContext: MixinWebViewController.Context?, action: Action) {
         self.sharingContext = sharingContext
         self.message = message
         self.conversation = conversation
         self.ownerUser = ownerUser
+        self.action = action
         
         switch sharingContext.content {
         case .text(let text):
@@ -77,6 +97,10 @@ class ExternalSharingConfirmationViewController: UIViewController {
             }
         } else {
             titleLabel.text = R.string.localizable.share_message_description_empty(localizedContentCategory)
+        }
+        
+        if action == .forward {
+            sendButton.setTitle(R.string.localizable.forward(), for: .normal)
         }
     }
     

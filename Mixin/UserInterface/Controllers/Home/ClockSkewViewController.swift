@@ -28,7 +28,7 @@ class ClockSkewViewController: UIViewController {
             switch result {
             case .success:
                 AppGroupUserDefaults.Account.isClockSkewed = false
-                AppDelegate.current.mainWindow.rootViewController = makeInitialViewController(isUsernameJustInitialized: false)
+                AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
             case .failure(.clockSkewDetected):
                 self?.continueButton.isBusy = false
             case let .failure(error):

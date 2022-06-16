@@ -133,13 +133,13 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
                         self.navigationController?.pushViewController(vc, animated: true)
                     } else {
                         ContactAPI.syncContacts()
-                        AppDelegate.current.mainWindow.rootViewController = makeInitialViewController(isUsernameJustInitialized: false)
+                        AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
                     }
                 }
             } else {
                 DispatchQueue.main.sync {
                     AppGroupUserDefaults.Account.canRestoreChat = true
-                    AppDelegate.current.mainWindow.rootViewController = makeInitialViewController(isUsernameJustInitialized: false)
+                    AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
                 }
             }
             UIApplication.shared.setShortcutItemsEnabled(true)

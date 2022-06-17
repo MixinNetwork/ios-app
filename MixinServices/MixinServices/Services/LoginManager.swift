@@ -103,6 +103,7 @@ public final class LoginManager {
         if !isAppExtension {
             AppGroupUserDefaults.User.isLogoutByServer = true
         }
+        AppGroupUserDefaults.User.hasIndexedSearchableItems = false
 
         pthread_rwlock_wrlock(&lock)
         _account = nil

@@ -66,6 +66,8 @@ extension AppGroupUserDefaults {
             case externalSchemesRefreshDate = "external_schemes_refresh_date"
             
             case wallpapers = "wallpapers"
+
+            case hasIndexedSearchableItems = "has_indexed_searchable_items"
         }
         
         public static let version = 30
@@ -247,6 +249,9 @@ extension AppGroupUserDefaults {
         
         @Default(namespace: .user, key: Key.wallpapers, defaultValue: [:])
         public static var wallpapers: [String: String]
+        
+        @Default(namespace: .user, key: Key.hasIndexedSearchableItems, defaultValue: false)
+        public static var hasIndexedSearchableItems: Bool
         
         public static func insertRecentlyUsedAppId(id: String) {
             let maxNumberOfIds = 12

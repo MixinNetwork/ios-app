@@ -6,6 +6,7 @@ import FirebaseCore
 import SDWebImage
 import SDWebImageLottieCoder
 import MixinServices
+import CoreSpotlight
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
@@ -39,6 +40,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         configAnalytics()
         pendingShortcutItem = launchOptions?[UIApplication.LaunchOptionsKey.shortcutItem] as? UIApplicationShortcutItem
         addObservers()
+        SpotlightManager.shared.indexSearchableItemsIfNeeded()
         Logger.general.info(category: "AppDelegate", message: "App \(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion)) did finish launching with state: \(UIApplication.shared.applicationStateString)")
         if UIApplication.shared.applicationState == .background {
             MixinService.isStopProcessMessages = false
@@ -184,6 +186,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         BackgroundMessagingService.shared.begin(caller: "didReceiveRemoteNotification",
                                                 stopsRegardlessApplicationState: false,
                                                 completionHandler: completionHandler)
+    }
+    
+    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+        if userActivity.activityType == CSSearchableItemActionType {
+            SpotlightManager.shared.contiune(userActivity)
+            return true
+        }
+        return false
     }
     
 }

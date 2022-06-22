@@ -597,12 +597,12 @@ class UrlWindow {
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         
         func presentSendingConfirmation() {
-            func present(action: ExternalSharingConfirmationViewController.Action, conversation: ConversationItem?, ownerUser: UserItem?) {
+            func present(action: ExternalSharingConfirmationViewController.Action) {
                 let vc = R.storyboard.chat.external_sharing_confirmation()!
                 vc.modalPresentationStyle = .custom
                 vc.transitioningDelegate = PopupPresentationManager.shared
                 UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
-                vc.load(sharingContext: sharingContext, message: message, conversation: conversation, ownerUser: ownerUser, webContext: webContext, action: action)
+                vc.load(sharingContext: sharingContext, message: message, webContext: webContext, action: action)
             }
             if !sharingContext.conversationId.isNilOrEmpty && sharingContext.conversationId == UIApplication.currentConversationId() {
                 DispatchQueue.global().async {
@@ -616,12 +616,12 @@ class UrlWindow {
                     }
                     DispatchQueue.main.async {
                         hud.hide()
-                        present(action: .send, conversation: conversation, ownerUser: ownerUser)
+                        present(action: .send(conversation: conversation, ownerUser: ownerUser))
                     }
                 }
             } else {
                 hud.hide()
-                present(action: .forward, conversation: nil, ownerUser: nil)
+                present(action: .forward)
             }
         }
         

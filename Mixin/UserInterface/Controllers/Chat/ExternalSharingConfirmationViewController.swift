@@ -6,7 +6,7 @@ import MixinServices
 class ExternalSharingConfirmationViewController: UIViewController {
     
     enum Action {
-        case send
+        case send(conversation: ConversationItem, ownerUser: UserItem)
         case forward
     }
     
@@ -20,8 +20,6 @@ class ExternalSharingConfirmationViewController: UIViewController {
     
     private var sharingContext: ExternalSharingContext!
     private var message: Message!
-    private var conversation: ConversationItem!
-    private var ownerUser: UserItem?
     private var action: Action!
     
     override func viewDidLoad() {
@@ -37,15 +35,12 @@ class ExternalSharingConfirmationViewController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
     
-    @IBAction func buttonAction(_ sender: Any) {
+    @IBAction func performAction(_ sender: Any) {
         guard var message = message else {
             return
         }
         switch action {
-        case .send:
-            guard conversation != nil else {
-                return
-            }
+        case let .send(conversation, ownerUser):
             message.createdAt = Date().toUTCString()
             SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: conversation.isGroup())
             showAutoHiddenHud(style: .notification, text: R.string.localizable.message_sent())
@@ -60,11 +55,9 @@ class ExternalSharingConfirmationViewController: UIViewController {
         }
     }
     
-    func load(sharingContext: ExternalSharingContext, message: Message, conversation: ConversationItem?, ownerUser: UserItem?, webContext: MixinWebViewController.Context?, action: Action) {
+    func load(sharingContext: ExternalSharingContext, message: Message, webContext: MixinWebViewController.Context?, action: Action) {
         self.sharingContext = sharingContext
         self.message = message
-        self.conversation = conversation
-        self.ownerUser = ownerUser
         self.action = action
         
         switch sharingContext.content {
@@ -99,8 +92,11 @@ class ExternalSharingConfirmationViewController: UIViewController {
             titleLabel.text = R.string.localizable.share_message_description_empty(localizedContentCategory)
         }
         
-        if action == .forward {
+        switch action {
+        case .forward:
             sendButton.setTitle(R.string.localizable.forward(), for: .normal)
+        case .send:
+            sendButton.setTitle(R.string.localizable.send(), for: .normal)
         }
     }
     

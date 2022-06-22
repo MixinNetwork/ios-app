@@ -3,7 +3,6 @@ import MixinServices
 
 class ContactViewController: PeerViewController<[UserItem], PeerCell, UserSearchResult> {
     
-    private let reloadContactsOperation = BlockOperation()
     private var showAddContactButton = true
     
     class func instance(showAddContactButton: Bool = true) -> UIViewController {
@@ -29,7 +28,7 @@ class ContactViewController: PeerViewController<[UserItem], PeerCell, UserSearch
     
     override func search(keyword: String) {
         queue.operations
-            .filter({ $0 != initDataOperation && $0 != reloadContactsOperation })
+            .filter({ $0 != initDataOperation })
             .forEach({ $0.cancel() })
         let op = BlockOperation()
         let users = models
@@ -55,7 +54,6 @@ class ContactViewController: PeerViewController<[UserItem], PeerCell, UserSearch
     
     override func configure(cell: PeerCell, at indexPath: IndexPath) {
         super.configure(cell: cell, at: indexPath)
-        cell.peerInfoViewLeadingConstraint.constant = 36
         if isSearching {
             cell.render(result: searchResults[indexPath.row])
         } else {
@@ -85,7 +83,12 @@ class ContactViewController: PeerViewController<[UserItem], PeerCell, UserSearch
     }
     
     @objc private func contactsDidChange() {
-        reloadContacts(operation: reloadContactsOperation)
+        if isSearching {
+            queue.cancelAllOperations()
+            searchResults = []
+            tableView.reloadData()
+        }
+        reloadContacts(operation: BlockOperation())
     }
     
     private func reloadContacts(operation: BlockOperation) {
@@ -114,6 +117,9 @@ class ContactViewController: PeerViewController<[UserItem], PeerCell, UserSearch
                 self.tableView.checkEmpty(dataCount: users.count,
                                           text: R.string.localizable.no_contacts(),
                                           photo: R.image.emptyIndicator.ic_data()!)
+                if let searchingKeyword = self.searchingKeyword {
+                    self.search(keyword: searchingKeyword)
+                }
             }
         }
         queue.addOperation(operation)

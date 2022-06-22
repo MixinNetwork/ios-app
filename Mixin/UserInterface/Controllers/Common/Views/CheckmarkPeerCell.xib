@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -18,7 +18,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="m2h-kv-dYW" customClass="CheckmarkView" customModule="Mixin" customModuleProvider="target">
-                        <rect key="frame" x="36" y="27" width="16" height="16"/>
+                        <rect key="frame" x="20" y="27" width="16" height="16"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="16" id="FJJ-Gm-daP"/>
@@ -26,7 +26,7 @@
                         </constraints>
                     </view>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xAF-8J-LVO" customClass="PeerInfoView" customModule="Mixin" customModuleProvider="target">
-                        <rect key="frame" x="72" y="10" width="228" height="50"/>
+                        <rect key="frame" x="56" y="10" width="244" height="50"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="50" id="4iq-TB-CUX"/>
@@ -34,7 +34,7 @@
                     </view>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="m2h-kv-dYW" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="36" id="OiN-Jz-zmf"/>
+                    <constraint firstItem="m2h-kv-dYW" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="20" id="OiN-Jz-zmf"/>
                     <constraint firstItem="xAF-8J-LVO" firstAttribute="leading" secondItem="m2h-kv-dYW" secondAttribute="trailing" constant="20" id="dDy-iQ-nin"/>
                     <constraint firstItem="m2h-kv-dYW" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="igM-m4-zA1"/>
                     <constraint firstItem="xAF-8J-LVO" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="rSt-AG-n0g"/>

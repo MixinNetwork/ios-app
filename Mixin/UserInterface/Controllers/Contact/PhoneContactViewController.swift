@@ -78,6 +78,10 @@ class PhoneContactViewController: PeerViewController<[PhoneContact], PhoneContac
         isSearching ? 1 : sectionTitles.count
     }
     
+    override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+        isSearching ? nil : sectionTitles
+    }
+    
     class func instance() -> UIViewController {
         let controller = PhoneContactViewController()
         return ContainerViewController.instance(viewController: controller, title: R.string.localizable.add_by_phone_contacts())

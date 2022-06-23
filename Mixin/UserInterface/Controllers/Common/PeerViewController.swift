@@ -199,7 +199,7 @@ class PeerViewController<ModelType, CellType: PeerCell, SearchResultType: Search
     }
     
     func sectionIndexTitles(for tableView: UITableView) -> [String]? {
-        isSearching ? nil : sectionTitles
+        nil
     }
     
 }

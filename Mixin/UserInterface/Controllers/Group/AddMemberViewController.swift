@@ -118,6 +118,7 @@ class AddMemberViewController: PeerViewController<[UserItem], CheckmarkPeerCell,
     
     override func configure(cell: CheckmarkPeerCell, at indexPath: IndexPath) {
         let user: UserItem
+        cell.checkmarkLeadingConstraint.constant = 20
         if isSearching {
             let searchResult = searchResults[indexPath.row]
             cell.render(result: searchResult)
@@ -169,6 +170,10 @@ class AddMemberViewController: PeerViewController<[UserItem], CheckmarkPeerCell,
         }
         selectedUsers.remove(at: idx)
         selectedUserIds.remove(user.userId)
+    }
+    
+    override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+        isSearching ? nil : sectionTitles
     }
     
     private func selectionsDidChange() {

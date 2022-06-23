@@ -82,6 +82,10 @@ class ContactViewController: PeerViewController<[UserItem], PeerCell, UserSearch
         navigationController?.pushViewController(vc, animated: true)
     }
     
+    override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+        isSearching ? nil : sectionTitles
+    }
+    
     @objc private func contactsDidChange() {
         if isSearching {
             queue.cancelAllOperations()

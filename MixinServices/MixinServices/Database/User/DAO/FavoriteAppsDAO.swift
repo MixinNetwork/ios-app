@@ -4,6 +4,8 @@ public final class FavoriteAppsDAO: UserDatabaseDAO {
     
     public static let shared = FavoriteAppsDAO()
     
+    public static let favoriteAppsDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.FavoriteAppsDAO.FavoriteAppsDidChange")
+
     public func favoriteAppsOfUser(withId id: String) -> [App] {
         let sql = """
         SELECT \(AppDAO.sqlQueryColumns)
@@ -28,13 +30,17 @@ public final class FavoriteAppsDAO: UserDatabaseDAO {
     }
 
     public func setFavoriteApp(_ app: FavoriteApp) {
-        db.save(app)
+        db.save(app) { _ in
+            NotificationCenter.default.post(onMainThread: Self.favoriteAppsDidChangeNotification, object: nil)
+        }
     }
 
     public func unfavoriteApp(of id: String) {
         let condition = FavoriteApp.column(of: .userId) == myUserId
             && FavoriteApp.column(of: .appId) == id
-        db.delete(FavoriteApp.self, where: condition)
+        db.delete(FavoriteApp.self, where: condition) { _ in
+            NotificationCenter.default.post(onMainThread: Self.favoriteAppsDidChangeNotification, object: nil)
+        }
     }
     
     public func updateFavoriteApps(_ apps: [FavoriteApp], forUserWith userId: String) {

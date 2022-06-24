@@ -18,23 +18,23 @@ class DeleteAccountAbortWindow: BottomSheetView {
         timer = nil
     }
     
-    override func dismissPopupControllerAnimated() {
+    override func dismissPopupController(animated: Bool) {
         guard canDismiss else {
             return
         }
-        super.dismissPopupControllerAnimated()
+        super.dismissPopupController(animated: animated)
     }
     
     @IBAction func continueAction(_ sender: Any) {
         canDismiss = true
         completion?(false)
-        dismissPopupControllerAnimated()
+        dismissPopupController(animated: true)
     }
     
     @IBAction func cancelAction(_ sender: Any) {
         canDismiss = true
         completion?(true)
-        dismissPopupControllerAnimated()
+        dismissPopupController(animated: true)
     }
     
     class func instance() -> DeleteAccountAbortWindow {

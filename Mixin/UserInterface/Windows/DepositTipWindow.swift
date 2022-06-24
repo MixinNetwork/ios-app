@@ -19,11 +19,11 @@ class DepositTipWindow: BottomSheetView {
         timer = nil
     }
     
-    override func dismissPopupControllerAnimated() {
+    override func dismissPopupController(animated: Bool) {
         guard canDismiss else {
             return
         }
-        super.dismissPopupControllerAnimated()
+        super.dismissPopupController(animated: animated)
     }
 
     func render(asset: AssetItem) -> DepositTipWindow {
@@ -71,7 +71,7 @@ class DepositTipWindow: BottomSheetView {
 
     @IBAction func okAction(_ sender: Any) {
         canDismiss = true
-        dismissPopupControllerAnimated()
+        dismissPopupController(animated: true)
     }
 
     class func instance() -> DepositTipWindow {

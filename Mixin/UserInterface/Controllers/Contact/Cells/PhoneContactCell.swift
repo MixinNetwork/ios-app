@@ -1,24 +1,19 @@
 import UIKit
-import MixinServices
 
 protocol PhoneContactCellDelegate: AnyObject {
     func phoneContactCellDidSelectInvite(_ cell: PhoneContactCell)
 }
 
-class PhoneContactCell: UITableViewCell {
-    
-    static let height: CGFloat = 80
-    
-    @IBOutlet weak var nameLabel: UILabel!
-    @IBOutlet weak var indexTitleLabel: UILabel!
-    @IBOutlet weak var phoneLabel: UILabel!
+class PhoneContactCell: PeerCell {
     
     weak var delegate: PhoneContactCellDelegate?
+
+    override class var nib: UINib {
+        UINib(nibName: "PhoneContactCell", bundle: .main)
+    }
     
-    func render(contact: PhoneContact) {
-        nameLabel.text = contact.fullName
-        indexTitleLabel.text = contact.fullName[0]
-        phoneLabel.text = contact.phoneNumber
+    override class var reuseIdentifier: String {
+        "phone_contact"
     }
     
     @IBAction func inviteAction(_ sender: Any) {

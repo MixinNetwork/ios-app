@@ -10,4 +10,8 @@ public class PhoneContact: NSObject, Codable {
         self.phoneNumber = phoneNumber
     }
     
+    public func matches(lowercasedKeyword keyword: String) -> Bool {
+        fullName.lowercased().contains(keyword) || (phoneNumber.contains(keyword) ?? false)
+    }
+    
 }

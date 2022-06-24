@@ -71,6 +71,8 @@ class PeerInfoView: UIView, XibDesignable {
             } else {
                 avatarImageView.setImage(with: member.iconUrl, userId: member.userId ?? "", name: member.name)
             }
+        case let result as PhoneContactSearchResult:
+            avatarImageView.setImage(name: result.contact.fullName)
         default:
             break
         }
@@ -151,6 +153,14 @@ class PeerInfoView: UIView, XibDesignable {
         superscriptLabel.text = nil
         prefixIconImageView.isHidden = true
         descriptionLabel.isHidden = true
+    }
+    
+    func render(phoneContact: PhoneContact) {
+        avatarImageView.setImage(name: phoneContact.fullName)
+        titleLabel.text = phoneContact.fullName
+        descriptionLabel.text = phoneContact.phoneNumber
+        badgeImageView.isHidden = true
+        superscriptLabel.text = nil
     }
     
     private func loadXibAndDefaultProperties() {

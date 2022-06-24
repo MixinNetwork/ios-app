@@ -31,17 +31,17 @@ final class DeleteAccountHintWindow: BottomSheetView {
     }
     
     @IBAction func closeAction(_ sender: Any) {
-        dismissPopupControllerAnimated()
+        dismissPopupController(animated: true)
     }
     
     @IBAction func viewWalletAction(_ sender: Any) {
         onViewWallet?()
-        dismissPopupControllerAnimated()
+        dismissPopupController(animated: true)
     }
     
     @IBAction func continueAction(_ sender: Any) {
         onContinue?()
-        dismissPopupControllerAnimated()
+        dismissPopupController(animated: true)
     }
     
 }

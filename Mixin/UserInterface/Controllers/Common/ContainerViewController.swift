@@ -19,6 +19,9 @@ protocol ContainerViewControllerDelegate: AnyObject {
     func textBarRightButton() -> String?
 
     func imageBarRightButton() -> UIImage?
+    
+    func imageBarLeftButton() -> UIImage?
+    
 }
 
 extension ContainerViewControllerDelegate where Self: UIViewController {
@@ -42,6 +45,10 @@ extension ContainerViewControllerDelegate where Self: UIViewController {
     func barRightButtonTappedAction() {
         
     }
+    
+    func imageBarLeftButton() -> UIImage? {
+        return nil
+    }
 
 }
 
@@ -63,7 +70,7 @@ class ContainerViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        prepareBarRightButton()
+        prepareBarButtons()
         navigationBar.layoutIfNeeded()
         titleLabel.text = controllerTitle
         addChild(viewController)
@@ -78,12 +85,14 @@ class ContainerViewController: UIViewController {
         delegate?.barRightButtonTappedAction()
     }
 
-    private func prepareBarRightButton() {
+    private func prepareBarButtons() {
         guard let delegate = self.delegate else {
             rightButtonWidthConstraint.priority = .defaultLow
             return
         }
-
+        if let image = delegate.imageBarLeftButton() {
+            leftButton.setImage(image, for: .normal)
+        }
         if let text = delegate.textBarRightButton() {
             rightButton.setTitle(text, for: .normal)
             rightButton.enabledColor = .clear

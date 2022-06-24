@@ -42,6 +42,7 @@ class PeerViewController<ModelType, CellType: PeerCell, SearchResultType: Search
         tableView.register(PeerHeaderView.self, forHeaderFooterViewReuseIdentifier: headerReuseId)
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.sectionIndexColor = R.color.text_accessory()
         if Self.showSelectionsOnTop {
             collectionViewLayout.itemSize = CGSize(width: 66, height: 80)
             collectionViewLayout.minimumInteritemSpacing = 0
@@ -195,6 +196,10 @@ class PeerViewController<ModelType, CellType: PeerCell, SearchResultType: Search
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         
+    }
+    
+    func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+        nil
     }
     
 }

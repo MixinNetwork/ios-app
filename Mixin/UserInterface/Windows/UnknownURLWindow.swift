@@ -17,12 +17,12 @@ class UnknownURLWindow: BottomSheetView {
     }
 
     @IBAction func okAction(_ sender: Any) {
-        dismissPopupControllerAnimated()
+        dismissPopupController(animated: true)
     }
     
     @IBAction func copyAction(_ sender: Any) {
         UIPasteboard.general.string = urlString
-        dismissPopupControllerAnimated()
+        dismissPopupController(animated: true)
         showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
     }
     

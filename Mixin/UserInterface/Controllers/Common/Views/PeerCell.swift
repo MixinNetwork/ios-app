@@ -42,6 +42,10 @@ class PeerCell: UITableViewCell {
         peerInfoView.render(member: member)
     }
     
+    func render(phoneContact: PhoneContact) {
+        peerInfoView.render(phoneContact: phoneContact)
+    }
+    
     func makeSelectedBackgroundView() -> UIView? {
         return SelectedCellBackgroundView()
     }

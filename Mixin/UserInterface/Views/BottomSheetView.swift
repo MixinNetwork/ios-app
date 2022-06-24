@@ -38,15 +38,19 @@ class BottomSheetView: UIView {
             self.popAnimationBody()
         }
     }
-
-    @objc func dismissPopupControllerAnimated() {
-        self.alpha = 1.0
+    
+    func dismissPopupController(animated: Bool) {
         isShowing = false
-        UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
-            self.alpha = 0
-            self.popupView.center = self.getAnimationStartPoint()
-        } completion: { _ in
-            self.removeFromSuperview()
+        if animated {
+            alpha = 1.0
+            UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
+                self.alpha = 0
+                self.popupView.center = self.getAnimationStartPoint()
+            } completion: { _ in
+                self.removeFromSuperview()
+            }
+        } else {
+            removeFromSuperview()
         }
     }
 
@@ -62,6 +66,11 @@ class BottomSheetView: UIView {
     func getAnimationEndPoint() -> CGPoint {
         return animationEndPoint
     }
+    
+    @objc private func dismissPopupControllerAnimated() {
+        dismissPopupController(animated: true)
+    }
+    
 }
 
 extension BottomSheetView: UIGestureRecognizerDelegate {

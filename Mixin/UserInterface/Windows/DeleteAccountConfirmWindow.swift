@@ -56,7 +56,7 @@ final class DeleteAccountConfirmWindow: BottomSheetView {
     }
     
     @IBAction func closeAction(_ sender: Any) {
-        dismissPopupControllerAnimated()
+        dismissPopupController(animated: true)
     }
     
     class func instance(context: VerifyNumberContext) -> DeleteAccountConfirmWindow {

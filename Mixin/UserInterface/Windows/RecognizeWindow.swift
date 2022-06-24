@@ -41,7 +41,7 @@ class RecognizeWindow: BottomSheetView {
     }
     
     @IBAction func dismissAction(_ sender: Any) {
-        dismissPopupControllerAnimated()
+        dismissPopupController(animated: true)
     }
     
     class func instance() -> RecognizeWindow {
@@ -59,7 +59,7 @@ class RecognizeWindow: BottomSheetView {
     
     private func copyContent() {
         UIPasteboard.general.string = contentTextView.text
-        dismissPopupControllerAnimated()
+        dismissPopupController(animated: true)
         showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
     }
     
@@ -67,7 +67,7 @@ class RecognizeWindow: BottomSheetView {
         guard let container = UIApplication.homeContainerViewController else {
             return true
         }
-        dismissPopupControllerAnimated()
+        dismissPopupController(animated: true)
         var parent = container.topMostChild
         if let visibleViewController = (parent as? UINavigationController)?.visibleViewController {
             parent = visibleViewController

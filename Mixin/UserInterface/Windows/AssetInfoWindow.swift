@@ -28,7 +28,7 @@ class AssetInfoWindow: BottomSheetView {
     }
 
     @IBAction func dismissAction(_ sender: Any) {
-        dismissPopupControllerAnimated()
+        dismissPopupController(animated: true)
     }
 
     class func instance() -> AssetInfoWindow {

@@ -215,7 +215,7 @@ class HomeViewController: UIViewController {
     }
     
     @IBAction func contactsAction(_ sender: Any) {
-        navigationController?.pushViewController(ContactViewController.instance(), animated: true)
+        navigationController?.pushViewController(UserCenterViewController.instance(), animated: true)
     }
     
     @IBAction func guideAction(_ sender: Any) {
@@ -223,7 +223,7 @@ class HomeViewController: UIViewController {
             let editor = CircleEditorViewController.instance(name: name, circleId: circleId, isNewCreatedCircle: false)
             present(editor, animated: true, completion: nil)
         } else {
-            let vc = ContactViewController.instance()
+            let vc = ContactViewController.instance(showAddContactButton: false)
             navigationController?.pushViewController(vc, animated: true)
         }
     }

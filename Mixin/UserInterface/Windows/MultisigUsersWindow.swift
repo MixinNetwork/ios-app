@@ -21,13 +21,13 @@ class MultisigUsersWindow: BottomSheetView {
         tableView.reloadData()
     }
 
-    override func dismissPopupControllerAnimated() {
+    override func dismissPopupController(animated: Bool) {
         onDismiss?()
-        super.dismissPopupControllerAnimated()
+        super.dismissPopupController(animated: animated)
     }
 
     @IBAction func dismissAction(_ sender: Any) {
-        dismissPopupControllerAnimated()
+        dismissPopupController(animated: true)
     }
 
     class func instance() -> MultisigUsersWindow {

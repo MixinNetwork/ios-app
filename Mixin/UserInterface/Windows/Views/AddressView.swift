@@ -41,7 +41,7 @@ class AddressView: UIStackView {
     }
 
     @IBAction func dismissAction(_ sender: Any) {
-        superView?.dismissPopupControllerAnimated()
+        superView?.dismissPopupController(animated: true)
     }
 
     func render(action: action, asset: AssetItem, addressRequest: AddressRequest?, address: Address?, dismissCallback: ((Bool) -> Void)?, superView: BottomSheetView) {
@@ -109,7 +109,7 @@ extension AddressView: PinFieldDelegate {
                 case let .failure(error):
                     PINVerificationFailureHandler.handle(error: error) { (description) in
                         self?.superView?.alert(description)
-                        self?.superView?.dismissPopupControllerAnimated()
+                        self?.superView?.dismissPopupController(animated: true)
                     }
                 }
             }
@@ -139,14 +139,14 @@ extension AddressView: PinFieldDelegate {
                         message = R.string.localizable.invalid_malformed_address_hint(self.asset.symbol)
                     }
                     self.superView?.alert(message)
-                    self.superView?.dismissPopupControllerAnimated()
+                    self.superView?.dismissPopupController(animated: true)
                 case let .failure(error):
                     guard let self = self else {
                         return
                     }
                     PINVerificationFailureHandler.handle(error: error) { (description) in
                         self.superView?.alert(description)
-                        self.superView?.dismissPopupControllerAnimated()
+                        self.superView?.dismissPopupController(animated: true)
                     }
                 }
             }

@@ -118,6 +118,17 @@ class AvatarImageView: UIView {
         }
     }
     
+    func setImage(name: String) {
+        imageView.image = nil
+        imageView.backgroundColorIgnoringSystemSettings = R.color.background_secondary()!
+        titleLabel.textColor = R.color.text_desc()
+        if let firstLetter = name.first {
+            titleLabel.text = String([firstLetter]).uppercased()
+        } else {
+            titleLabel.text = nil
+        }
+    }
+    
     private func updateShadowPath() {
         if hasShadow {
             var shadowFrame = imageView.frame

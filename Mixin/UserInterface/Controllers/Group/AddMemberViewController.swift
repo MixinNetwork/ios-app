@@ -26,8 +26,10 @@ class AddMemberViewController: PeerViewController<[UserItem], CheckmarkPeerCell,
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        searchBoxView.textField.placeholder = R.string.localizable.setting_auth_search_hint()
         tableView.allowsMultipleSelection = true
         container?.subtitleLabel.isHidden = false
+        updateSubtitle()
         container?.titleLabel.text = R.string.localizable.add_participants()
     }
     
@@ -117,6 +119,7 @@ class AddMemberViewController: PeerViewController<[UserItem], CheckmarkPeerCell,
     
     override func configure(cell: CheckmarkPeerCell, at indexPath: IndexPath) {
         let user: UserItem
+        cell.checkmarkLeadingConstraint.constant = 20
         if isSearching {
             let searchResult = searchResults[indexPath.row]
             cell.render(result: searchResult)
@@ -168,6 +171,10 @@ class AddMemberViewController: PeerViewController<[UserItem], CheckmarkPeerCell,
         }
         selectedUsers.remove(at: idx)
         selectedUserIds.remove(user.userId)
+    }
+    
+    override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+        isSearching ? nil : sectionTitles
     }
     
     private func selectionsDidChange() {

@@ -1,25 +1,28 @@
 import Foundation
 import MixinServices
 
-class InitializeBotJob: BaseJob {
+final class InitializeBotJob: BaseJob {
     
-    let botUserId: String
-    let botFullname: String
+    struct Bot {
+        let userId: String
+        let fullname: String
+    }
     
-    init(botUserId: String, botFullname: String) {
-        self.botUserId = botUserId
-        self.botFullname = botFullname
+    private let bot: Bot
+    
+    init(bot: Bot) {
+        self.bot = bot
     }
     
     override func getJobId() -> String {
-        return "initialize-bot"
+        "initialize-bot-\(bot.userId)"
     }
     
     override func run() throws {
-        guard !botUserId.isEmpty, UUID(uuidString: botUserId) != nil else {
+        guard !bot.userId.isEmpty, UUID(uuidString: bot.userId) != nil else {
             return
         }
-        switch UserAPI.addFriend(userId: botUserId, fullName: botFullname) {
+        switch UserAPI.addFriend(userId: bot.userId, fullName: bot.fullname) {
         case let .success(botUser):
             UserDAO.shared.updateUsers(users: [botUser])
         case let .failure(error):

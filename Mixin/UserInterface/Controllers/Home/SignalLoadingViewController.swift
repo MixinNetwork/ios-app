@@ -4,11 +4,29 @@ import MixinServices
 
 class SignalLoadingViewController: UIViewController {
     
-    private let userIdToGreetAfterLoaded: String? = nil
-    private let userFullnameToGreetAfterLoaded: String? = nil
+    private var isUsernameJustInitialized = false
     
-    class func instance() -> SignalLoadingViewController {
-        return R.storyboard.home.signal()!
+    private var newUserInitialBots: [InitializeBotJob.Bot] {
+        guard let account = LoginManager.shared.account else {
+            return []
+        }
+        guard ["+971", "+91"].contains(where: account.phone.hasPrefix) else {
+            return []
+        }
+        return [
+            InitializeBotJob.Bot(userId: "68ef7899-3e81-4b3d-8124-83ae652def89", fullname: "Mixin Bots"),
+            InitializeBotJob.Bot(userId: "96c1460b-c7c4-480a-a342-acaa73995a37", fullname: "Mixin Data"),
+        ]
+    }
+    
+    private var allUsersInitialBots: [InitializeBotJob.Bot] {
+        [InitializeBotJob.Bot(userId: "773e5e77-4107-45c2-b648-8fc722ed77f5", fullname: "Team Mixin")]
+    }
+    
+    class func instance(isUsernameJustInitialized: Bool) -> SignalLoadingViewController {
+        let controller = R.storyboard.home.signal()!
+        controller.isUsernameJustInitialized = isUsernameJustInitialized
+        return controller
     }
     
     override func viewDidLoad() {
@@ -217,10 +235,20 @@ class SignalLoadingViewController: UIViewController {
     }
     
     private func dismiss() {
-        let vc = makeInitialViewController()
+        let vc = makeInitialViewController(isUsernameJustInitialized: isUsernameJustInitialized)
         AppDelegate.current.mainWindow.rootViewController = vc
-        if vc is HomeContainerViewController, let userId = userIdToGreetAfterLoaded, let fullname = userFullnameToGreetAfterLoaded {
-            ConcurrentJobQueue.shared.addJob(job: InitializeBotJob(botUserId: userId, botFullname: fullname))
+        if vc is HomeContainerViewController {
+            initialize(bots: allUsersInitialBots)
+            if isUsernameJustInitialized {
+                initialize(bots: newUserInitialBots)
+            }
+        }
+    }
+    
+    private func initialize(bots: [InitializeBotJob.Bot]) {
+        for bot in bots {
+            let job = InitializeBotJob(bot: bot)
+            ConcurrentJobQueue.shared.addJob(job: job)
         }
     }
     

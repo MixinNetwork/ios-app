@@ -20,7 +20,7 @@ class UsernameViewController: LoginInfoInputViewController {
             switch account {
             case let .success(account):
                 LoginManager.shared.setAccount(account)
-                AppDelegate.current.mainWindow.rootViewController = makeInitialViewController()
+                AppDelegate.current.mainWindow.rootViewController = makeInitialViewController(isUsernameJustInitialized: true)
             case let .failure(error):
                 reporter.report(error: error)
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)

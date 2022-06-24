@@ -597,30 +597,31 @@ class UrlWindow {
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         
         func presentSendingConfirmation() {
-            guard let conversationId = sharingContext.conversationId, !conversationId.isEmpty, sharingContext.conversationId == UIApplication.currentConversationId() else {
-                hud.hideInMainThread()
-                let vc = MessageReceiverViewController.instance(content: .message(message))
-                UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
-                return
+            func present(action: ExternalSharingConfirmationViewController.Action) {
+                let vc = R.storyboard.chat.external_sharing_confirmation()!
+                vc.modalPresentationStyle = .custom
+                vc.transitioningDelegate = PopupPresentationManager.shared
+                UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
+                vc.load(sharingContext: sharingContext, message: message, webContext: webContext, action: action)
             }
-            
-            DispatchQueue.global().async {
-                guard let conversation = ConversationDAO.shared.getConversation(conversationId: message.conversationId) else {
-                    hud.hideInMainThread()
-                    return
+            if !sharingContext.conversationId.isNilOrEmpty && sharingContext.conversationId == UIApplication.currentConversationId() {
+                DispatchQueue.global().async {
+                    guard let conversation = ConversationDAO.shared.getConversation(conversationId: message.conversationId) else {
+                        hud.hideInMainThread()
+                        return
+                    }
+                    guard let (ownerUser, _) = syncUser(userId: conversation.ownerId, hud: hud) else {
+                        hud.hideInMainThread()
+                        return
+                    }
+                    DispatchQueue.main.async {
+                        hud.hide()
+                        present(action: .send(conversation: conversation, ownerUser: ownerUser))
+                    }
                 }
-                guard let (ownerUser, _) = syncUser(userId: conversation.ownerId, hud: hud) else {
-                    return
-                }
-                
-                DispatchQueue.main.async {
-                    hud.hide()
-                    let vc = R.storyboard.chat.external_sharing_confirmation()!
-                    vc.modalPresentationStyle = .custom
-                    vc.transitioningDelegate = PopupPresentationManager.shared
-                    UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
-                    vc.load(sharingContext: sharingContext, message: message, conversation: conversation, ownerUser: ownerUser, webContext: webContext)
-                }
+            } else {
+                hud.hide()
+                present(action: .forward)
             }
         }
         

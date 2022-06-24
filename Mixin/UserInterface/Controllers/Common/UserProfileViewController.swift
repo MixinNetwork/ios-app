@@ -75,7 +75,7 @@ final class UserProfileViewController: ProfileViewController {
     
     override func viewDidLoad() {
         size = isMe ? .unavailable : .compressed
-        closeButton.isHidden = isMe
+        closeButton.isHidden = parent != nil
         titleViewHeightConstraint.constant = isMe ? 48 : 70
         super.viewDidLoad()
         reloadData()
@@ -157,7 +157,7 @@ final class UserProfileViewController: ProfileViewController {
         imageView.alpha = 0
         backgroundView.contentView.addSubview(imageView)
         avatarPreviewImageView = imageView
-        if isMe {
+        if parent != nil {
             let recognizer = UITapGestureRecognizer(target: self, action: #selector(dismissAvatarAction))
             backgroundView.addGestureRecognizer(recognizer)
         } else {
@@ -286,7 +286,11 @@ extension UserProfileViewController {
     
     @objc func editFavoriteApps() {
         let vc = EditSharedAppsViewController.instance()
-        dismissAndPush(vc)
+        if parent != nil {
+            navigationController?.pushViewController(vc, animated: true)
+        } else {
+            dismissAndPush(vc)
+        }
     }
     
     @objc func addContact() {
@@ -343,16 +347,28 @@ extension UserProfileViewController {
     
     @objc func editMyBiography() {
         let vc = BiographyViewController.instance(user: user)
-        dismissAndPush(vc)
+        if parent != nil {
+            navigationController?.pushViewController(vc, animated: true)
+        } else {
+            dismissAndPush(vc)
+        }
     }
     
     @objc func changeNumber() {
         if LoginManager.shared.account?.has_pin ?? false {
             let vc = VerifyPinNavigationController(rootViewController: ChangeNumberVerifyPinViewController())
-            present(vc, animated: true)
+            if parent != nil {
+                present(vc, animated: true)
+            } else {
+                dismissAndPresent(vc)
+            }
         } else {
             let vc = WalletPasswordViewController.instance(dismissTarget: .changePhone)
-            navigationController?.pushViewController(vc, animated: true)
+            if parent != nil {
+                navigationController?.pushViewController(vc, animated: true)
+            } else {
+                dismissAndPush(vc)
+            }
         }
     }
     

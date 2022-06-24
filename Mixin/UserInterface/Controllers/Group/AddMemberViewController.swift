@@ -29,6 +29,7 @@ class AddMemberViewController: PeerViewController<[UserItem], CheckmarkPeerCell,
         searchBoxView.textField.placeholder = R.string.localizable.setting_auth_search_hint()
         tableView.allowsMultipleSelection = true
         container?.subtitleLabel.isHidden = false
+        updateSubtitle()
         container?.titleLabel.text = R.string.localizable.add_participants()
     }
     

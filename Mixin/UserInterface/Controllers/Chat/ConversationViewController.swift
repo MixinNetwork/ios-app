@@ -361,7 +361,7 @@ class ConversationViewController: UIViewController {
         
         let center = NotificationCenter.default
         center.addObserver(self, selector: #selector(conversationDidChange(_:)), name: MixinServices.conversationDidChangeNotification, object: nil)
-        center.addObserver(self, selector: #selector(userDidChange(_:)), name: UserDAO.userDidChangeNotification, object: nil)
+        center.addObserver(self, selector: #selector(usersDidChange(_:)), name: UserDAO.usersDidChangeNotification, object: nil)
         center.addObserver(self, selector: #selector(participantDidChange(_:)), name: ParticipantDAO.participantDidChangeNotification, object: nil)
         center.addObserver(self, selector: #selector(didAddMessageOutOfBounds(_:)), name: ConversationDataSource.newMessageOutOfVisibleBoundsNotification, object: dataSource)
         center.addObserver(self, selector: #selector(audioMessagePlayingManagerWillPlayNextNode(_:)), name: AudioMessagePlayingManager.willPlayNextNotification, object: AudioMessagePlayingManager.shared)
@@ -667,7 +667,7 @@ class ConversationViewController: UIViewController {
             weakSelf.strangerHintView.blockButton.isBusy = false
             switch result {
             case .success(let userResponse):
-                weakSelf.updateOwnerUser(withUserResponse: userResponse, updateDatabase: true)
+                UserDAO.shared.updateUsers(users: [userResponse])
             case let .failure(error):
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
             }
@@ -686,7 +686,7 @@ class ConversationViewController: UIViewController {
             weakSelf.strangerHintView.addContactButton.isBusy = false
             switch result {
             case .success(let userResponse):
-                weakSelf.updateOwnerUser(withUserResponse: userResponse, updateDatabase: true)
+                UserDAO.shared.updateUsers(users: [userResponse])
             case let .failure(error):
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
             }
@@ -708,7 +708,7 @@ class ConversationViewController: UIViewController {
                 switch result {
                 case let .success(user):
                     DispatchQueue.global().async {
-                        UserDAO.shared.updateUsers(users: [user], sendNotificationAfterFinished: false)
+                        UserDAO.shared.updateUsers(users: [user])
                     }
                     ConversationAPI.exitConversation(conversationId: conversationId) { result in
                         let exitGroup = {
@@ -1018,15 +1018,21 @@ class ConversationViewController: UIViewController {
         }
     }
     
-    @objc func userDidChange(_ notification: Notification) {
-        if let user = notification.userInfo?[UserDAO.UserInfoKey.user] as? UserItem, user.userId == self.ownerUser?.userId {
-            self.ownerUser = user
-            updateNavigationBar()
-            conversationInputViewController.update(opponentUser: user)
-            updateStrangerActionView()
+    @objc func usersDidChange(_ notification: Notification) {
+        guard
+            let userResponses = notification.userInfo?[UserDAO.UserInfoKey.users] as? [UserResponse],
+            userResponses.count == 1,
+            userResponses[0].userId == ownerUser?.userId
+        else {
+            return
         }
+        let user = UserItem.createUser(from: userResponses[0])
+        ownerUser = user
+        updateNavigationBar()
+        conversationInputViewController.update(opponentUser: user)
+        updateStrangerActionView()
         hideLoading()
-        dataSource?.ownerUser = ownerUser
+        dataSource?.ownerUser = user
         updateInvitationHintView()
         showScamAnnouncementIfNeeded()
     }
@@ -2062,17 +2068,6 @@ extension ConversationViewController {
                 }, completion: nil)
             }
         }
-    }
-    
-    private func updateOwnerUser(withUserResponse userResponse: UserResponse, updateDatabase: Bool) {
-        if updateDatabase {
-            UserDAO.shared.updateUsers(users: [userResponse], sendNotificationAfterFinished: false)
-        }
-        let user = UserItem.createUser(from: userResponse)
-        conversationInputViewController.update(opponentUser: user)
-        self.ownerUser = user
-        updateNavigationBar()
-        updateStrangerActionView()
     }
     
     private func updateAccessoryButtons(animated: Bool) {

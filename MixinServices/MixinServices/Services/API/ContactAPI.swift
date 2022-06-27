@@ -10,7 +10,7 @@ public final class ContactAPI: MixinAPI {
         request(method: .get, path: Path.contacts) { (result: MixinAPI.Result<[UserResponse]>) in
             switch result {
             case let .success(contacts):
-                UserDAO.shared.updateUsers(users: contacts, notifyContact: true)
+                UserDAO.shared.updateUsers(users: contacts)
             case .failure:
                 break
             }

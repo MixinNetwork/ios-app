@@ -36,7 +36,7 @@ final class PrivacySettingViewController: SettingsTableViewController {
         dataSource.tableView = tableView
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(updateBlockedUserCell),
-                                               name: UserDAO.userDidChangeNotification,
+                                               name: UserDAO.usersDidChangeNotification,
                                                object: nil)
         updateBlockedUserCell()
         NotificationCenter.default.addObserver(self,

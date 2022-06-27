@@ -298,7 +298,7 @@ extension UserProfileViewController {
         UserAPI.addFriend(userId: user.userId, fullName: user.fullName) { [weak self] (result) in
             switch result {
             case let .success(response):
-                self?.handle(userResponse: response, postContactDidChangeNotificationOnSuccess: true)
+                self?.handle(userResponse: response)
             case let .failure(error):
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
             }
@@ -415,7 +415,7 @@ extension UserProfileViewController {
             UserAPI.remarkFriend(userId: userId, full_name: name) { [weak self] (result) in
                 switch result {
                 case let .success(response):
-                    self?.handle(userResponse: response, postContactDidChangeNotificationOnSuccess: true)
+                    self?.handle(userResponse: response)
                     hud.set(style: .notification, text: R.string.localizable.changed())
                 case let .failure(error):
                     hud.set(style: .error, text: error.localizedDescription)
@@ -493,7 +493,7 @@ extension UserProfileViewController {
             UserAPI.removeFriend(userId: userId, completion: { [weak self] (result) in
                 switch result {
                 case let .success(response):
-                    self?.handle(userResponse: response, postContactDidChangeNotificationOnSuccess: true)
+                    self?.handle(userResponse: response)
                     hud.set(style: .notification, text: R.string.localizable.deleted())
                 case let .failure(error):
                     hud.set(style: .error, text: error.localizedDescription)
@@ -515,7 +515,7 @@ extension UserProfileViewController {
             UserAPI.blockUser(userId: userId) { [weak self] (result) in
                 switch result {
                 case let .success(response):
-                    self?.handle(userResponse: response, postContactDidChangeNotificationOnSuccess: false)
+                    self?.handle(userResponse: response)
                     hud.set(style: .notification, text: R.string.localizable.blocked())
                 case let .failure(error):
                     hud.set(style: .error, text: error.localizedDescription)
@@ -534,7 +534,7 @@ extension UserProfileViewController {
         UserAPI.unblockUser(userId: user.userId) { [weak self] (result) in
             switch result {
             case let .success(response):
-                self?.handle(userResponse: response, postContactDidChangeNotificationOnSuccess: false)
+                self?.handle(userResponse: response)
                 hud.set(style: .notification, text: R.string.localizable.changed())
             case let .failure(error):
                 hud.set(style: .error, text: error.localizedDescription)
@@ -554,7 +554,7 @@ extension UserProfileViewController {
             DispatchQueue.global().async {
                 switch UserAPI.reportUser(userId: userId) {
                 case let .success(user):
-                    UserDAO.shared.updateUsers(users: [user], sendNotificationAfterFinished: false)
+                    UserDAO.shared.updateUsers(users: [user])
                     DispatchQueue.main.async {
                         hud.set(style: .notification, text: R.string.localizable.user_is_reported())
                         hud.scheduleAutoHidden()
@@ -927,7 +927,7 @@ extension UserProfileViewController {
                 guard case let .success(response) = result else {
                     return
                 }
-                self?.handle(userResponse: response, postContactDidChangeNotificationOnSuccess: false)
+                self?.handle(userResponse: response)
             }
         }
     }
@@ -966,7 +966,7 @@ extension UserProfileViewController {
         }
     }
     
-    private func handle(userResponse: UserResponse, postContactDidChangeNotificationOnSuccess: Bool) {
+    private func handle(userResponse: UserResponse) {
         user = UserItem.createUser(from: userResponse)
         if let animator = sizeAnimator {
             animator.addCompletion { _ in
@@ -975,7 +975,7 @@ extension UserProfileViewController {
         } else {
             reloadData()
         }
-        UserDAO.shared.updateUsers(users: [userResponse], notifyContact: postContactDidChangeNotificationOnSuccess)
+        UserDAO.shared.updateUsers(users: [userResponse])
     }
     
     private func updateDeveloper() {
@@ -988,7 +988,7 @@ extension UserProfileViewController {
             if developer == nil {
                 switch UserAPI.showUser(userId: creatorId) {
                 case let .success(user):
-                    UserDAO.shared.updateUsers(users: [user], sendNotificationAfterFinished: false)
+                    UserDAO.shared.updateUsers(users: [user])
                     developer = UserItem.createUser(from: user)
                 case let .failure(error):
                     showAutoHiddenHud(style: .error, text: error.localizedDescription)

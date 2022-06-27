@@ -115,7 +115,7 @@ class HomeAppsManager: NSObject {
         tapRecognizer.addTarget(self, action: #selector(handleTapGesture(gestureRecognizer:)))
         viewController.view.addGestureRecognizer(tapRecognizer)
         NotificationCenter.default.addObserver(self, selector: #selector(leaveEditingMode), name: UIApplication.willResignActiveNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(contactsDidChange(_:)), name: UserDAO.contactsDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(usersDidChange(_:)), name: UserDAO.usersDidChangeNotification, object: nil)
     }
     
     func reloadData(pinnedItems: [HomeApp], candidateItems: [[HomeAppItem]]) {
@@ -129,8 +129,12 @@ class HomeAppsManager: NSObject {
 
 extension HomeAppsManager {
     
-    @objc func contactsDidChange(_ notification: Notification) {
-        guard let appId = (notification.userInfo?[UserDAO.UserInfoKey.user] as? UserItem)?.appId else {
+    @objc func usersDidChange(_ notification: Notification) {
+        guard
+            let users = notification.userInfo?[UserDAO.UserInfoKey.users] as? [UserResponse],
+            users.count == 1,
+            let appId = users[0].app?.appId
+        else {
             return
         }
         var isDeleted = false

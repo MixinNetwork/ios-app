@@ -3,14 +3,13 @@ import GRDB
 public final class UserDAO: UserDatabaseDAO {
     
     public enum UserInfoKey {
-        public static let user = "user"
+        public static let users = "users"
         public static let app = "app"
     }
     
     public static let shared = UserDAO()
     
-    public static let contactsDidChangeNotification = NSNotification.Name("one.mixin.services.UserDAO.contactsDidChange")
-    public static let userDidChangeNotification = NSNotification.Name("one.mixin.services.UserDAO.userDidChange")
+    public static let usersDidChangeNotification = NSNotification.Name("one.mixin.services.UserDAO.usersDidChange")
     public static let correspondingAppDidChange = NSNotification.Name("one.mixin.services.UserDAO.correspondingAppDidChange")
     
     private static let sqlQueryColumns = """
@@ -205,18 +204,20 @@ public final class UserDAO: UserDatabaseDAO {
         db.save(user)
     }
     
-    public func updateUsers(users: [UserResponse], sendNotificationAfterFinished: Bool = true, updateParticipantStatus: Bool = false, notifyContact: Bool = false) {
+    public func updateUsers(users: [UserResponse], updateParticipantStatus: Bool = false) {
         guard users.count > 0 else {
             return
         }
         if Thread.isMainThread {
             DispatchQueue.global().async {
-                UserDAO.shared.updateUsers(users: users, sendNotificationAfterFinished: sendNotificationAfterFinished, updateParticipantStatus: updateParticipantStatus, notifyContact: notifyContact)
+                UserDAO.shared.updateUsers(users: users, updateParticipantStatus: updateParticipantStatus)
             }
         } else {
-            var isAppUpdated = false
-            if sendNotificationAfterFinished, users.count == 1, let newApp = users[0].app {
+            let isAppUpdated: Bool
+            if users.count == 1, let newApp = users[0].app {
                 isAppUpdated = AppDAO.shared.getApp(appId: newApp.appId)?.updatedAt != newApp.updatedAt
+            } else {
+                isAppUpdated = false
             }
             db.write { (db) in
                 for response in users {
@@ -232,49 +233,23 @@ public final class UserDAO: UserDatabaseDAO {
                     }
                 }
                 db.afterNextTransactionCommit { (_) in
-                    if sendNotificationAfterFinished {
-                        if users.count == 1 {
-                            let user = UserItem.createUser(from: users[0])
-                            NotificationCenter.default.post(onMainThread: Self.userDidChangeNotification,
-                                                            object: self,
-                                                            userInfo: [Self.UserInfoKey.user: user])
-                        }
-                    }
+                    NotificationCenter.default.post(onMainThread: Self.usersDidChangeNotification,
+                                                    object: self,
+                                                    userInfo: [Self.UserInfoKey.users: users])
                     if isAppUpdated {
                         NotificationCenter.default.post(onMainThread: Self.correspondingAppDidChange,
                                                         object: self,
                                                         userInfo: [Self.UserInfoKey.app: users[0].app])
                     }
-                    if notifyContact {
-                        if users.count == 1 {
-                            let user = UserItem.createUser(from: users[0])
-                            NotificationCenter.default.post(onMainThread: Self.contactsDidChangeNotification,
-                                                            object: self,
-                                                            userInfo: [Self.UserInfoKey.user: user])
-                        } else {
-                            NotificationCenter.default.post(onMainThread: Self.contactsDidChangeNotification,
-                                                            object: self)
-                        }
-                    }
                 }
             }
         }
-        
     }
     
     public func updateUser(with userId: String, muteUntil: String) {
         db.update(User.self,
                   assignments: [User.column(of: .muteUntil).set(to: muteUntil)],
-                  where: User.column(of: .userId) == userId) { _ in
-            DispatchQueue.global().async {
-                guard let user = self.getUser(userId: userId) else {
-                    return
-                }
-                NotificationCenter.default.post(onMainThread: Self.userDidChangeNotification,
-                                                object: self,
-                                                userInfo: [Self.UserInfoKey.user: user])
-            }
-        }
+                  where: User.column(of: .userId) == userId)
     }
     
     public func saveUser(user response: UserResponse) -> UserItem? {

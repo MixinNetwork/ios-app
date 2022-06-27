@@ -321,7 +321,7 @@ public class ReceiveMessageService: MixinService {
             return
         }
         if case let .success(response) = UserAPI.showUser(userId: appId) {
-            UserDAO.shared.updateUsers(users: [response], sendNotificationAfterFinished: false)
+            UserDAO.shared.updateUsers(users: [response])
         } else {
             ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: [appId]))
         }

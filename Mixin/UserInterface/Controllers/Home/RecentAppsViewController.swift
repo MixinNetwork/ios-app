@@ -33,8 +33,8 @@ class RecentAppsViewController: UIViewController {
                                                name: AppGroupUserDefaults.User.didChangeRecentlyUsedAppIdsNotification,
                                                object: nil)
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(userDidChange(_:)),
-                                               name: UserDAO.userDidChangeNotification,
+                                               selector: #selector(usersDidChange(_:)),
+                                               name: UserDAO.usersDidChangeNotification,
                                                object: nil)
         reloadIfNeeded()
     }
@@ -57,13 +57,12 @@ class RecentAppsViewController: UIViewController {
         needsReload = true
     }
     
-    @objc func userDidChange(_ notification: Notification) {
-        guard let userId = (notification.userInfo?[UserDAO.UserInfoKey.user] as? UserItem)?.userId else {
+    @objc func usersDidChange(_ notification: Notification) {
+        guard let responses = notification.userInfo?[UserDAO.UserInfoKey.users] as? [UserResponse], responses.count == 1 else {
             return
         }
-        if users.contains(where: { $0.userId == userId }) {
-            needsReload = true
-        }
+        let userId = responses[0].userId
+        needsReload = users.map(\.userId).contains(userId)
     }
     
     func reloadIfNeeded() {

@@ -62,7 +62,9 @@ class RecentAppsViewController: UIViewController {
             return
         }
         let userId = responses[0].userId
-        needsReload = users.map(\.userId).contains(userId)
+        if users.map(\.userId).contains(userId) {
+            needsReload = true
+        }
     }
     
     func reloadIfNeeded() {

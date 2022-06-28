@@ -82,19 +82,21 @@ public class RefreshAssetsJob: AsynchronousJob {
     }
 
     private func updatePendingDeposits(asset: Asset) {
-        AssetAPI.pendingDeposits(assetId: asset.assetId, destination: asset.destination, tag: asset.tag) { (result) in
-            switch result {
-            case let .success(deposits):
-                DispatchQueue.global().async {
-                    guard !MixinService.isStopProcessMessages else {
-                        return
+        for entry in asset.depositEntries {
+            AssetAPI.pendingDeposits(assetId: asset.assetId, destination: entry.destination, tag: entry.tag) { (result) in
+                switch result {
+                case let .success(deposits):
+                    DispatchQueue.global().async {
+                        guard !MixinService.isStopProcessMessages else {
+                            return
+                        }
+                        SnapshotDAO.shared.replacePendingDeposits(assetId: asset.assetId, pendingDeposits: deposits)
                     }
-                    SnapshotDAO.shared.replacePendingDeposits(assetId: asset.assetId, pendingDeposits: deposits)
+                    self.updateSnapshots(assetId: asset.assetId)
+                case let .failure(error):
+                    reporter.report(error: error)
+                    self.finishJob()
                 }
-                self.updateSnapshots(assetId: asset.assetId)
-            case let .failure(error):
-                reporter.report(error: error)
-                self.finishJob()
             }
         }
     }

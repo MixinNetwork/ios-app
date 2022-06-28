@@ -12,8 +12,8 @@ public final class AssetDAO: UserDatabaseDAO {
     public static let assetsDidChangeNotification = NSNotification.Name("one.mixin.services.AssetDAO.assetsDidChange")
     
     private static let sqlQueryTable = """
-    SELECT a.asset_id, a.type, a.symbol, a.name, a.icon_url, a.balance, a.destination, a.tag,
-        a.price_btc, a.price_usd, a.change_usd, a.chain_id, a.confirmations, a.asset_key, a.reserve,
+    SELECT a.asset_id, a.type, a.symbol, a.name, a.icon_url, a.balance, a.price_btc, a.price_usd,
+        a.change_usd, a.chain_id, a.confirmations, a.asset_key, a.reserve, a.deposit_entries,
         chain.icon_url as chain_icon_url, chain.name as chain_name, chain.symbol as chain_symbol
     FROM assets a
     LEFT JOIN assets chain ON a.chain_id = chain.asset_id

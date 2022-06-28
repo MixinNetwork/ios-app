@@ -231,21 +231,23 @@ extension TransactionViewController {
         } else if snapshot.type == SnapshotType.pendingDeposit.rawValue {
             let assetId = asset.assetId
             let snapshotId = snapshot.snapshotId
-            AssetAPI.pendingDeposits(assetId: assetId, destination: asset.destination, tag: asset.tag) { [weak self](result) in
-                switch result {
-                case let .success(deposits):
-                    DispatchQueue.global().async {
-                        guard let snapshotItem = SnapshotDAO.shared.replacePendingDeposits(assetId: assetId, pendingDeposits: deposits, snapshotId: snapshotId) else {
-                            return
+            for entry in asset.depositEntries {
+                AssetAPI.pendingDeposits(assetId: assetId, destination: entry.destination, tag: entry.tag) { [weak self](result) in
+                    switch result {
+                    case let .success(deposits):
+                        DispatchQueue.global().async {
+                            guard let snapshotItem = SnapshotDAO.shared.replacePendingDeposits(assetId: assetId, pendingDeposits: deposits, snapshotId: snapshotId) else {
+                                return
+                            }
+                            DispatchQueue.main.async {
+                                self?.snapshot = snapshotItem
+                                self?.makeContents()
+                                self?.tableView.reloadData()
+                            }
                         }
-                        DispatchQueue.main.async {
-                            self?.snapshot = snapshotItem
-                            self?.makeContents()
-                            self?.tableView.reloadData()
-                        }
+                    case .failure:
+                        break
                     }
-                case .failure:
-                    break
                 }
             }
         }

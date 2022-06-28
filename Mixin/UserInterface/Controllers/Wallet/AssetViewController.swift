@@ -89,10 +89,11 @@ class AssetViewController: UIViewController {
     }
     
     @IBAction func deposit(_ sender: Any) {
-        guard !tableHeaderView.depositButton.isBusy else {
+        guard !tableHeaderView.depositButton.isBusy, !asset.depositEntries.isEmpty else {
             return
         }
-        let vc = DepositViewController.instance(asset: asset)
+        let index = asset.depositEntries.firstIndex(where: \.isSegWit) ?? 0
+        let vc = DepositViewController.instance(asset: asset, depositEntryIndex: index)
         navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -237,15 +238,15 @@ extension AssetViewController {
             guard let asset = AssetDAO.shared.getAsset(assetId: assetId) else {
                 return
             }
-            self?.asset = asset
             DispatchQueue.main.sync {
-                guard let weakSelf = self else {
+                guard let self = self else {
                     return
                 }
+                self.asset = asset
                 UIView.performWithoutAnimation {
-                    weakSelf.tableHeaderView.render(asset: asset)
-                    weakSelf.tableHeaderView.sizeToFit()
-                    weakSelf.updateTableHeaderFooterView()
+                    self.tableHeaderView.render(asset: asset)
+                    self.tableHeaderView.sizeToFit()
+                    self.updateTableHeaderFooterView()
                 }
             }
         }

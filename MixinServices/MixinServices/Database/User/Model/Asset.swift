@@ -3,6 +3,18 @@ import GRDB
 
 public class Asset: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord, TableRecord, PersistableRecord {
     
+    public struct DepositEntry: Codable {
+        
+        public let destination: String
+        public let tag: String
+        public let properties: [String]?
+        
+        public var isSegWit: Bool {
+            properties?.contains("SegWit") ?? false
+        }
+        
+    }
+    
     public class var databaseTableName: String {
         "assets"
     }
@@ -13,8 +25,6 @@ public class Asset: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
     public let name: String
     public let iconUrl: String
     public let balance: String
-    public let destination: String
-    public let tag: String
     public let priceBtc: String
     public let priceUsd: String
     public let changeUsd: String
@@ -22,6 +32,7 @@ public class Asset: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
     public let confirmations: Int
     public let assetKey: String
     public let reserve: String
+    public let depositEntries: [DepositEntry]
     
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -31,8 +42,6 @@ public class Asset: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
         name = try container.decodeIfPresent(String.self, forKey: .name) ?? ""
         iconUrl = try container.decodeIfPresent(String.self, forKey: .iconUrl) ?? ""
         balance = try container.decodeIfPresent(String.self, forKey: .balance) ?? ""
-        destination = try container.decodeIfPresent(String.self, forKey: .destination) ?? ""
-        tag = try container.decodeIfPresent(String.self, forKey: .tag) ?? ""
         priceBtc = try container.decodeIfPresent(String.self, forKey: .priceBtc) ?? ""
         priceUsd = try container.decodeIfPresent(String.self, forKey: .priceUsd) ?? ""
         changeUsd = try container.decodeIfPresent(String.self, forKey: .changeUsd) ?? ""
@@ -40,17 +49,16 @@ public class Asset: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
         confirmations = try container.decodeIfPresent(Int.self, forKey: .confirmations) ?? 0
         assetKey = try container.decodeIfPresent(String.self, forKey: .assetKey) ?? ""
         reserve = try container.decodeIfPresent(String.self, forKey: .reserve) ?? ""
+        depositEntries = try container.decodeIfPresent([DepositEntry].self, forKey: .depositEntries) ?? []
     }
     
-    public init(assetId: String, type: String, symbol: String, name: String, iconUrl: String, balance: String, destination: String, tag: String, priceBtc: String, priceUsd: String, changeUsd: String, chainId: String, confirmations: Int, assetKey: String, reserve: String) {
+    public init(assetId: String, type: String, symbol: String, name: String, iconUrl: String, balance: String, priceBtc: String, priceUsd: String, changeUsd: String, chainId: String, confirmations: Int, assetKey: String, reserve: String, depositEntries: [DepositEntry]) {
         self.assetId = assetId
         self.type = type
         self.symbol = symbol
         self.name = name
         self.iconUrl = iconUrl
         self.balance = balance
-        self.destination = destination
-        self.tag = tag
         self.priceBtc = priceBtc
         self.priceUsd = priceUsd
         self.changeUsd = changeUsd
@@ -58,6 +66,7 @@ public class Asset: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
         self.confirmations = confirmations
         self.assetKey = assetKey
         self.reserve = reserve
+        self.depositEntries = depositEntries
     }
     
     public enum CodingKeys: String, CodingKey {
@@ -67,8 +76,6 @@ public class Asset: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
         case name
         case iconUrl = "icon_url"
         case balance
-        case destination
-        case tag
         case priceBtc = "price_btc"
         case priceUsd = "price_usd"
         case changeUsd = "change_usd"
@@ -76,6 +83,7 @@ public class Asset: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
         case confirmations
         case assetKey = "asset_key"
         case reserve
+        case depositEntries = "deposit_entries"
     }
     
 }

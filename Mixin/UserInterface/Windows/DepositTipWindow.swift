@@ -26,11 +26,11 @@ class DepositTipWindow: BottomSheetView {
         super.dismissPopupController(animated: animated)
     }
 
-    func render(asset: AssetItem) -> DepositTipWindow {
+    func render(asset: AssetItem, depositEntryIndex: Int) -> DepositTipWindow {
         self.asset = asset
         titleLabel.text = "\(asset.symbol) \(R.string.localizable.deposit())"
         tipsLabel.text = asset.depositTips
-        if !asset.tag.isEmpty {
+        if !asset.depositEntries[depositEntryIndex].tag.isEmpty {
             continueButton.setTitle("\(R.string.localizable.got_it())(\(self.countDown))", for: .normal)
             continueButton.isEnabled = false
             warningLabel.text = R.string.localizable.deposit_account_attention(asset.symbol)

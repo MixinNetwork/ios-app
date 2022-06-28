@@ -10,29 +10,32 @@ class DepositViewController: UIViewController {
     @IBOutlet weak var warningLabel: UILabel!
     
     private var asset: AssetItem!
+    private var depositEntryIndex = 0
+    
     private lazy var depositWindow = QrcodeWindow.instance()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         container?.setSubtitle(subtitle: asset.symbol)
         view.layoutIfNeeded()
-
+        let entry = asset.depositEntries[depositEntryIndex]
+        
         upperDepositFieldView.titleLabel.text = R.string.localizable.address()
-        upperDepositFieldView.contentLabel.text = asset.destination
-        let nameImage = UIImage(qrcode: asset.destination, size: upperDepositFieldView.qrCodeImageView.bounds.size)
+        upperDepositFieldView.contentLabel.text = entry.destination
+        let nameImage = UIImage(qrcode: entry.destination, size: upperDepositFieldView.qrCodeImageView.bounds.size)
         upperDepositFieldView.qrCodeImageView.image = nameImage
         upperDepositFieldView.assetIconView.setIcon(asset: asset)
         upperDepositFieldView.shadowView.hasLowerShadow = true
         upperDepositFieldView.delegate = self
 
-        if !asset.tag.isEmpty {
+        if !entry.tag.isEmpty {
             if asset.usesTag {
                 lowerDepositFieldView.titleLabel.text = R.string.localizable.tag()
             } else {
                 lowerDepositFieldView.titleLabel.text = R.string.localizable.withdrawal_memo()
             }
-            lowerDepositFieldView.contentLabel.text = asset.tag
-            let memoImage = UIImage(qrcode: asset.tag, size: lowerDepositFieldView.qrCodeImageView.bounds.size)
+            lowerDepositFieldView.contentLabel.text = entry.tag
+            let memoImage = UIImage(qrcode: entry.tag, size: lowerDepositFieldView.qrCodeImageView.bounds.size)
             lowerDepositFieldView.qrCodeImageView.image = memoImage
             lowerDepositFieldView.assetIconView.setIcon(asset: asset)
             lowerDepositFieldView.shadowView.hasLowerShadow = false
@@ -49,12 +52,13 @@ class DepositViewController: UIViewController {
 
         hintLabel.text = asset.depositTips
 
-        DepositTipWindow.instance().render(asset: asset).presentPopupControllerAnimated()
+        DepositTipWindow.instance().render(asset: asset, depositEntryIndex: depositEntryIndex).presentPopupControllerAnimated()
     }
     
-    class func instance(asset: AssetItem) -> UIViewController {
+    class func instance(asset: AssetItem, depositEntryIndex: Int) -> UIViewController {
         let vc = R.storyboard.wallet.deposit()!
         vc.asset = asset
+        vc.depositEntryIndex = depositEntryIndex
         return ContainerViewController.instance(viewController: vc, title: R.string.localizable.deposit())
     }
     

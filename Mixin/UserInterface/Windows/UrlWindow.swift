@@ -522,10 +522,10 @@ class UrlWindow {
                 return
             }
 
-            while asset.destination.isEmpty {
+            while asset.depositEntries.isEmpty {
                 switch AssetAPI.asset(assetId: asset.assetId) {
                 case let .success(remoteAsset):
-                    guard !remoteAsset.destination.isEmpty else {
+                    guard !remoteAsset.depositEntries.isEmpty else {
                         Thread.sleep(forTimeInterval: 2)
                         continue
                     }

@@ -92,7 +92,7 @@ class AssetViewController: UIViewController {
         guard !tableHeaderView.depositButton.isBusy, !asset.depositEntries.isEmpty else {
             return
         }
-        let index = asset.depositEntries.firstIndex(where: \.isSegWit) ?? 0
+        let index = asset.depositEntries.firstIndex(where: \.payToWitness) ?? 0
         let vc = DepositViewController.instance(asset: asset, depositEntryIndex: index)
         navigationController?.pushViewController(vc, animated: true)
     }

@@ -9,8 +9,8 @@ public class Asset: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
         public let tag: String
         public let properties: [String]?
         
-        public var isSegWit: Bool {
-            properties?.contains("SegWit") ?? false
+        public var payToWitness: Bool {
+            properties?.contains("P2WPKH_V0") ?? false
         }
         
     }

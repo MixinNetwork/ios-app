@@ -280,6 +280,9 @@ extension GroupCallMemberPickerContentViewController {
                     viewController.search(keyword: keyword)
                 } else {
                     viewController.tableView.reloadData()
+                    viewController.tableView.checkEmpty(dataCount: participants.count,
+                                                        text: R.string.localizable.no_results(),
+                                                        photo: R.image.emptyIndicator.ic_search_result()!)
                 }
             }
         }

@@ -18,7 +18,7 @@ class BlockedUsersViewController: UIViewController {
         fetchBlockedUsers()
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(fetchBlockedUsers),
-                                               name: UserDAO.userDidChangeNotification,
+                                               name: UserDAO.usersDidChangeNotification,
                                                object: nil)
     }
     

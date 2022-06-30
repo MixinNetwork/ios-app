@@ -16,8 +16,8 @@ class ContactViewController: PeerViewController<[UserItem], PeerCell, UserSearch
         super.viewDidLoad()
         searchBoxView.textField.placeholder = R.string.localizable.setting_auth_search_hint()
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(contactsDidChange),
-                                               name: UserDAO.contactsDidChangeNotification,
+                                               selector: #selector(usersDidChange),
+                                               name: UserDAO.usersDidChangeNotification,
                                                object: nil)
         ContactAPI.syncContacts()
     }
@@ -86,7 +86,7 @@ class ContactViewController: PeerViewController<[UserItem], PeerCell, UserSearch
         isSearching ? nil : sectionTitles
     }
     
-    @objc private func contactsDidChange() {
+    @objc private func usersDidChange() {
         if isSearching {
             queue.cancelAllOperations()
             searchResults = []

@@ -253,7 +253,7 @@ class ConversationInputViewController: UIViewController {
         UserAPI.unblockUser(userId: user.userId) { (result) in
             switch result {
             case .success(let userResponse):
-                UserDAO.shared.updateUsers(users: [userResponse], sendNotificationAfterFinished: true)
+                UserDAO.shared.updateUsers(users: [userResponse])
             case let .failure(error):
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
             }

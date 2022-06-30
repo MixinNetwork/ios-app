@@ -120,10 +120,10 @@ class HomeViewController: UIViewController {
             appActions.append(nil)
         }
         updateHomeApps()
-        NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: MixinServices.conversationDidChangeNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: MessageDAO.didInsertMessageNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: MessageDAO.didRedecryptMessageNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: UserDAO.userDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange), name: MixinServices.conversationDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange), name: MessageDAO.didInsertMessageNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange), name: MessageDAO.didRedecryptMessageNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(usersDidChange(_:)), name: UserDAO.usersDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reloadAccount), name: LoginManager.accountDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(appDidChange(_:)), name: UserDAO.correspondingAppDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(circleConversationDidChange(_:)), name: CircleConversationDAO.circleConversationsDidChangeNotification, object: nil)
@@ -283,14 +283,14 @@ class HomeViewController: UIViewController {
         vc.presentAsChild(of: self)
     }
     
-    @objc func applicationDidBecomeActive(_ sender: Notification) {
+    @objc private func applicationDidBecomeActive(_ sender: Notification) {
         updateBulletinView()
         fetchConversations()
         initializeFTSIfNeeded()
         refreshExternalSchemesIfNeeded()
     }
     
-    @objc func dataDidChange(_ sender: Notification) {
+    @objc private func dataDidChange() {
         guard view?.isVisibleInScreen ?? false else {
             needRefresh = true
             return
@@ -298,7 +298,14 @@ class HomeViewController: UIViewController {
         fetchConversations()
     }
     
-    @objc func reloadAccount() {
+    @objc private func usersDidChange(_ sender: Notification) {
+        guard let users = sender.userInfo?[UserDAO.UserInfoKey.users] as? [UserResponse], users.count == 1 else {
+            return
+        }
+        dataDidChange()
+    }
+    
+    @objc private func reloadAccount() {
         guard let account = LoginManager.shared.account else {
             return
         }
@@ -314,7 +321,7 @@ class HomeViewController: UIViewController {
         }
     }
 
-    @objc func appDidChange(_ notification: Notification) {
+    @objc private func appDidChange(_ notification: Notification) {
         guard let app = notification.userInfo?[UserDAO.UserInfoKey.app] as? App else {
             return
         }
@@ -324,7 +331,7 @@ class HomeViewController: UIViewController {
         updateHomeApps()
     }
     
-    @objc func circleConversationDidChange(_ notification: Notification) {
+    @objc private func circleConversationDidChange(_ notification: Notification) {
         guard let circleId = notification.userInfo?[CircleConversationDAO.circleIdUserInfoKey] as? String else {
             return
         }
@@ -334,17 +341,17 @@ class HomeViewController: UIViewController {
         setNeedsRefresh()
     }
     
-    @objc func webSocketDidConnect(_ notification: Notification) {
+    @objc private func webSocketDidConnect(_ notification: Notification) {
         connectingView.stopAnimating()
         titleButton.setTitle(topLeftTitle, for: .normal)
     }
     
-    @objc func webSocketDidDisconnect(_ notification: Notification) {
+    @objc private func webSocketDidDisconnect(_ notification: Notification) {
         connectingView.startAnimating()
         titleButton.setTitle(R.string.localizable.in_connecting(), for: .normal)
     }
     
-    @objc func syncStatusChange(_ notification: Notification) {
+    @objc private func syncStatusChange(_ notification: Notification) {
         guard let progress = notification.userInfo?[ReceiveMessageService.UserInfoKey.progress] as? Int else {
             return
         }
@@ -364,7 +371,7 @@ class HomeViewController: UIViewController {
         }
     }
     
-    @objc func groupConversationParticipantDidChange(_ notification: Notification) {
+    @objc private func groupConversationParticipantDidChange(_ notification: Notification) {
         guard let conversationId = notification.userInfo?[ReceiveMessageService.UserInfoKey.conversationId] as? String else {
             return
         }
@@ -383,15 +390,15 @@ class HomeViewController: UIViewController {
         view.endEditing(true)
     }
     
-    @objc func circleNameDidChange() {
+    @objc private func circleNameDidChange() {
         titleButton.setTitle(topLeftTitle, for: .normal)
     }
     
-    @objc func homeAppAction(_ button: UIButton) {
+    @objc private func homeAppAction(_ button: UIButton) {
         appActions[button.tag]?()
     }
     
-    @objc func updateHomeApps() {
+    @objc private func updateHomeApps() {
         func action(for app: HomeApp) -> (() -> Void) {
             switch app {
             case .embedded(let app):

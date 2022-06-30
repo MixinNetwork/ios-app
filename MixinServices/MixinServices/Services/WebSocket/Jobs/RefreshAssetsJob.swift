@@ -72,16 +72,18 @@ public class RefreshAssetsJob: AsynchronousJob {
                 }
                 if let asset = self.asset {
                     self.updatePendingDeposits(asset: asset)
-                    return
+                } else {
+                    self.finishJob()
                 }
             case let .failure(error):
                 reporter.report(error: error)
+                self.finishJob()
             }
-            self.finishJob()
         }
     }
 
     private func updatePendingDeposits(asset: Asset) {
+        var finishedEntryCount = 0
         for entry in asset.depositEntries {
             AssetAPI.pendingDeposits(assetId: asset.assetId, destination: entry.destination, tag: entry.tag) { (result) in
                 switch result {
@@ -92,10 +94,16 @@ public class RefreshAssetsJob: AsynchronousJob {
                         }
                         SnapshotDAO.shared.replacePendingDeposits(assetId: asset.assetId, pendingDeposits: deposits)
                     }
-                    self.updateSnapshots(assetId: asset.assetId)
+                    finishedEntryCount += 1
+                    if finishedEntryCount == asset.depositEntries.count {
+                        self.updateSnapshots(assetId: asset.assetId)
+                    }
                 case let .failure(error):
                     reporter.report(error: error)
-                    self.finishJob()
+                    finishedEntryCount += 1
+                    if finishedEntryCount == asset.depositEntries.count {
+                        self.updateSnapshots(assetId: asset.assetId)
+                    }
                 }
             }
         }

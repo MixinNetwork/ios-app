@@ -35,7 +35,7 @@ public class Asset: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
     public let depositEntries: [DepositEntry]
     
     public var preferredDepositEntry: DepositEntry? {
-        if assetId == "c6d0c728-2624-429b-8e0d-d9d19b6592fa" {
+        if depositEntries.count > 1 {
             return depositEntries.first(where: \.payToWitness) ?? depositEntries.first
         } else {
             return depositEntries.first

@@ -5,30 +5,31 @@ import MixinServices
 
 class SpotlightManager: NSObject {
     
-    private enum State: String {
-        case indexed
-        case deleted
-        
-        var data: Data { rawValue.data(using: .utf8)! }
+    private enum State {
+        static let none = Data([0x00])
+        static let finished = Data([0x01])
     }
     
     static let shared = SpotlightManager()
     
-    private let queue = DispatchQueue(label: "one.mixin.messenger.queue.spotlight")
+    private let queue = DispatchQueue(label: "one.mixin.messenger.spotlight")
     private let index = CSSearchableIndex(name: "one.mixin.messenger")
     
     override init() {
         super.init()
         index.indexDelegate = self
         let center = NotificationCenter.default
-        center.addObserver(self, selector: #selector(cleanupSearchableItems), name: LoginManager.didLogoutNotification, object: nil)
-        center.addObserver(self, selector: #selector(refreshSearchableItems), name: UserDAO.usersDidChangeNotification, object: nil)
+        center.addObserver(self, selector: #selector(deleteAllIndexedItems), name: LoginManager.didLogoutNotification, object: nil)
+        center.addObserver(self, selector: #selector(updateSearchableItems), name: UserDAO.usersDidChangeNotification, object: nil)
     }
     
-    func contiune(_ activity: NSUserActivity) {
+    func canContinue(activity: NSUserActivity) -> Bool {
+        activity.activityType == CSSearchableItemActionType
+    }
+    
+    func contiune(activity: NSUserActivity) {
         guard
-            let identifier = activity.userInfo?[CSSearchableItemActivityIdentifier] as? String,
-            let userId = userId(from: identifier),
+            let userId = activity.userInfo?[CSSearchableItemActivityIdentifier] as? String,
             let user = UserDAO.shared.getUser(userId: userId)
         else {
             return
@@ -50,105 +51,126 @@ class SpotlightManager: NSObject {
     }
     
     func indexIfNeeded() {
-        index.fetchLastClientState { data, error in
-            if let error = error {
-                Logger.general.error(category: "SpotlightManager", message: "Failed to fetch last client state: \(error)")
-            } else if data != State.indexed.data {
-                self.indexSearchableItems()
+        guard CSSearchableIndex.isIndexingAvailable() else {
+            return
+        }
+        guard LoginManager.shared.isLoggedIn else {
+            return
+        }
+        queue.async {
+            self.index.fetchLastClientState { data, error in
+                if let error = error {
+                    Logger.general.error(category: "SpotlightManager", message: "Failed to fetch client state: \(error)")
+                } else if data != State.finished {
+                    self.reindexSearchableItems()
+                }
             }
         }
     }
     
-    @objc private func refreshSearchableItems(_ notification: Notification) {
+    @objc func deleteAllIndexedItems() {
+        queue.async {
+            self.index.beginBatch()
+            self.index.deleteAllSearchableItems()
+            self.index.endBatch(withClientState: State.none) { error in
+                if let error = error {
+                    Logger.general.error(category: "SpotlightManager", message: "Failed to delete all items, error: \(error)")
+                } else {
+                    Logger.general.info(category: "SpotlightManager", message: "Deleted all items")
+                }
+            }
+        }
+    }
+    
+    @objc private func updateSearchableItems(_ notification: Notification) {
         guard let userResponses = notification.userInfo?[UserDAO.UserInfoKey.users] as? [UserResponse] else {
             return
         }
         queue.async {
-            var needsDeletedItems = [String]()
-            var needsIndexedItems = [CSSearchableItem]()
-            for response in userResponses {
-                let user = UserItem.createUser(from: response)
-                guard user.isBot else {
-                    continue
-                }
-                if user.relationship == Relationship.FRIEND.rawValue {
-                    if let item = self.searchableItem(userId: user.userId, name: user.fullName, biography: user.biography, avatarUrl: user.avatarUrl) {
-                        needsIndexedItems.append(item)
+            var expiredUserIds: [String] = []
+            var newItems: [CSSearchableItem] = []
+            for response in userResponses where response.app != nil {
+                if response.relationship == .FRIEND {
+                    let user = User.createUser(from: response)
+                    if let item = self.searchableItem(user: user) {
+                        newItems.append(item)
                     }
                 } else {
-                    let identifiers = self.uniqueIdentifier(for: user.userId)
-                    needsDeletedItems.append(identifiers)
+                    expiredUserIds.append(response.userId)
                 }
             }
-            self.index.indexSearchableItems(needsIndexedItems)
-            self.index.deleteSearchableItems(withIdentifiers: needsDeletedItems)
-        }
-    }
-    
-    @objc private func cleanupSearchableItems() {
-        queue.async {
             self.index.beginBatch()
-            self.index.deleteAllSearchableItems()
-            self.index.endBatch(withClientState: State.deleted.data)
-        }
-    }
-    
-    private func indexSearchableItems(_ userIds: [String] = []) {
-        queue.async {
-            let users: [User]
-            if userIds.isEmpty {
-                users = UserDAO.shared.getAppUsers()
-            } else {
-                users = UserDAO.shared.getUsers(withAppIds: userIds)
+            self.index.indexSearchableItems(newItems)
+            self.index.deleteSearchableItems(withIdentifiers: expiredUserIds)
+            self.index.endBatch(withClientState: State.finished) { error in
+                if let error = error {
+                    Logger.general.error(category: "SpotlightManager", message: "Failed to index \(newItems.count) items, delete \(expiredUserIds.count) items, error: \(error)")
+                } else {
+                    Logger.general.info(category: "SpotlightManager", message: "Indexed \(newItems.count) items, deleted \(expiredUserIds.count) items")
+                }
             }
-            let searchableItems = users.compactMap {
-                self.searchableItem(userId: $0.userId, name: $0.fullName, biography: $0.biography, avatarUrl: $0.avatarUrl)
-            }
-            self.index.beginBatch()
-            self.index.indexSearchableItems(searchableItems)
-            self.index.endBatch(withClientState: State.indexed.data)
         }
-    }
-    
-    private func searchableItem(userId: String, name: String?, biography: String?, avatarUrl: String?) -> CSSearchableItem? {
-        guard let name = name else {
-            return nil
-        }
-        let attributeSet = CSSearchableItemAttributeSet(itemContentType: kUTTypeText as String)
-        attributeSet.title = name
-        attributeSet.keywords = [name]
-        if let biography = biography {
-            attributeSet.contentDescription = biography
-        }
-        if let avatarUrl = avatarUrl {
-            attributeSet.thumbnailURL = URL(string: avatarUrl)
-        }
-        let uniqueIdentifier = uniqueIdentifier(for: userId)
-        let domainIdentifier = "one.mixin.messenger.spotlight.users"
-        return CSSearchableItem(uniqueIdentifier: uniqueIdentifier, domainIdentifier: domainIdentifier, attributeSet: attributeSet)
-    }
-    
-    private func uniqueIdentifier(for userId: String) -> String {
-        "one.mixin.messenger.spotlight.user.\(userId)"
-    }
-    
-    private func userId(from identifier: String) -> String? {
-        identifier.components(separatedBy: ".").last
     }
     
 }
 
 extension SpotlightManager: CSSearchableIndexDelegate {
     
-    func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexSearchableItemsWithIdentifiers identifiers: [String], acknowledgementHandler: @escaping () -> Void) {
-        let userIds = identifiers.compactMap(userId(from:))
-        indexSearchableItems(userIds)
+    func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler acknowledgementHandler: @escaping () -> Void) {
+        reindexSearchableItems()
         acknowledgementHandler()
     }
     
-    func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler acknowledgementHandler: @escaping () -> Void) {
-        indexSearchableItems()
+    func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexSearchableItemsWithIdentifiers identifiers: [String], acknowledgementHandler: @escaping () -> Void) {
+        reindexSearchableItems(userIds: identifiers)
         acknowledgementHandler()
+    }
+    
+}
+
+extension SpotlightManager {
+    
+    private func reindexSearchableItems(userIds: [String]? = nil) {
+        queue.async {
+            let users: [User]
+            if let ids = userIds {
+                users = UserDAO.shared.getSearchableAppUsers(with: ids)
+            } else {
+                users = UserDAO.shared.getSearchableAppUsers(priorAppIds: AppGroupUserDefaults.User.recentlyUsedAppIds)
+            }
+            let items = users.compactMap(self.searchableItem(user:))
+            self.index.beginBatch()
+            self.index.deleteAllSearchableItems()
+            self.index.indexSearchableItems(items)
+            self.index.endBatch(withClientState: State.finished) { error in
+                if let error = error {
+                    Logger.general.error(category: "SpotlightManager", message: "Failed to index: \(error)")
+                } else {
+                    Logger.general.info(category: "SpotlightManager", message: "Indexed \(items.count) items")
+                }
+            }
+        }
+    }
+    
+    private func searchableItem(user: User) -> CSSearchableItem? {
+        guard let name = user.fullName else {
+            return nil
+        }
+        let attributes: CSSearchableItemAttributeSet
+        if #available(iOS 14.0, *) {
+            attributes = CSSearchableItemAttributeSet(contentType: .text)
+        } else {
+            attributes = CSSearchableItemAttributeSet(itemContentType: kUTTypeText as String)
+        }
+        attributes.title = name
+        attributes.keywords = [name]
+        if let biography = user.biography {
+            attributes.contentDescription = biography
+        }
+        if let avatarUrl = user.avatarUrl {
+            attributes.thumbnailURL = URL(string: avatarUrl)
+        }
+        return CSSearchableItem(uniqueIdentifier: user.userId, domainIdentifier: "app", attributeSet: attributes)
     }
     
 }

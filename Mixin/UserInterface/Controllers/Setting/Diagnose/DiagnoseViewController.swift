@@ -16,6 +16,9 @@ class DiagnoseViewController: SettingsTableViewController {
         SettingsSection(rows: [
             SettingsRow(title: "Expiration Availability", accessory: .none),
         ]),
+        SettingsSection(rows: [
+            SettingsRow(title: "Delete Spotlight Index", accessory: .none),
+        ]),
     ])
     
     override func viewDidLoad() {
@@ -59,6 +62,9 @@ extension DiagnoseViewController: UITableViewDelegate {
                 hud.set(style: isAvailable ? .notification : .error, text: "")
                 hud.scheduleAutoHidden()
             }
+        case (4, 0):
+            SpotlightManager.shared.deleteAllIndexedItems()
+            showAutoHiddenHud(style: .notification, text: R.string.localizable.done())
         default:
             break
         }

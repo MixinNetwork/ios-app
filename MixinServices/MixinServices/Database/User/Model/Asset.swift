@@ -34,6 +34,14 @@ public class Asset: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
     public let reserve: String
     public let depositEntries: [DepositEntry]
     
+    public var preferredDepositEntry: DepositEntry? {
+        if assetId == "c6d0c728-2624-429b-8e0d-d9d19b6592fa" {
+            return depositEntries.first(where: \.payToWitness) ?? depositEntries.first
+        } else {
+            return depositEntries.first
+        }
+    }
+    
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         assetId = try container.decode(String.self, forKey: .assetId)

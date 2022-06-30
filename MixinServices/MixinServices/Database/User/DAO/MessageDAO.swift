@@ -273,18 +273,17 @@ public final class MessageDAO: UserDatabaseDAO {
         UNUserNotificationCenter.current().removeNotifications(withIdentifiers: mentionMessageIds)
     }
     
-    @discardableResult
-    public func updateMessageStatus(messageId: String, status: String, from: String, updateUnseen: Bool = false) -> Bool {
+    public func updateMessageStatus(messageId: String, status: String, from: String) {
         guard let oldMessage: Message = db.select(where: Message.column(of: .messageId) == messageId) else {
-            return false
+            return
         }
         guard oldMessage.status != MessageStatus.FAILED.rawValue else {
             let error = MixinServicesError.badMessageData(id: messageId, status: status, from: from)
             reporter.report(error: error)
-            return false
+            return
         }
         guard MessageStatus.getOrder(messageStatus: status) > MessageStatus.getOrder(messageStatus: oldMessage.status) else {
-            return false
+            return
         }
         
         let conversationId = oldMessage.conversationId
@@ -301,31 +300,17 @@ public final class MessageDAO: UserDatabaseDAO {
             }
         }
         
-        if updateUnseen {
-            db.write { (db) in
-                try Message
-                    .filter(Message.column(of: .messageId) == messageId)
-                    .updateAll(db, [Message.column(of: .status).set(to: status)])
-                try updateUnseenMessageCount(database: db, conversationId: conversationId)
-                if let completion = completion {
-                    db.afterNextTransactionCommit(completion)
-                }
+        db.write { db in
+            try Message
+                .filter(Message.column(of: .messageId) == messageId)
+                .updateAll(db, [Message.column(of: .status).set(to: status)])
+            if status == MessageStatus.SENT.rawValue {
+                try ExpiredMessageDAO.shared.updateExpireAt(for: messageId, database: db, postNotification: true)
             }
-        } else {
-            db.write { db in
-                try Message
-                    .filter(Message.column(of: .messageId) == messageId)
-                    .updateAll(db, [Message.column(of: .status).set(to: status)])
-                if status == MessageStatus.SENT.rawValue {
-                    try ExpiredMessageDAO.shared.updateExpireAt(for: messageId, database: db, postNotification: true)
-                }
-                if let completion = completion {
-                    db.afterNextTransactionCommit(completion)
-                }
+            if let completion = completion {
+                db.afterNextTransactionCommit(completion)
             }
         }
-        
-        return true
     }
     
     public func updateUnseenMessageCount(database: GRDB.Database, conversationId: String) throws {

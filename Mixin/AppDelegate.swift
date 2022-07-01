@@ -190,7 +190,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
-        if SpotlightManager.shared.canContinue(activity: userActivity) {
+        if SpotlightManager.isAvailable && SpotlightManager.shared.canContinue(activity: userActivity) {
             SpotlightManager.shared.contiune(activity: userActivity)
             return true
         } else {

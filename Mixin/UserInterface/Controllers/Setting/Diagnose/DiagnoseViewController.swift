@@ -63,8 +63,12 @@ extension DiagnoseViewController: UITableViewDelegate {
                 hud.scheduleAutoHidden()
             }
         case (4, 0):
-            SpotlightManager.shared.deleteAllIndexedItems()
-            showAutoHiddenHud(style: .notification, text: R.string.localizable.done())
+            if SpotlightManager.isAvailable {
+                SpotlightManager.shared.deleteAllIndexedItems()
+                showAutoHiddenHud(style: .notification, text: R.string.localizable.done())
+            } else {
+                showAutoHiddenHud(style: .error, text: "Not Available")
+            }
         default:
             break
         }

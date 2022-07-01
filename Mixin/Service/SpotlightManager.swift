@@ -12,6 +12,10 @@ class SpotlightManager: NSObject {
     
     static let shared = SpotlightManager()
     
+    static var isAvailable: Bool {
+        CSSearchableIndex.isIndexingAvailable()
+    }
+    
     private let queue = DispatchQueue(label: "one.mixin.messenger.spotlight")
     private let index = CSSearchableIndex(name: "one.mixin.messenger")
     
@@ -51,9 +55,6 @@ class SpotlightManager: NSObject {
     }
     
     func indexIfNeeded() {
-        guard CSSearchableIndex.isIndexingAvailable() else {
-            return
-        }
         guard LoginManager.shared.isLoggedIn else {
             return
         }
@@ -62,7 +63,7 @@ class SpotlightManager: NSObject {
                 if let error = error {
                     Logger.general.error(category: "SpotlightManager", message: "Failed to fetch client state: \(error)")
                 } else if data != State.finished {
-                    self.reindexSearchableItems()
+                    self.reindexAllSearchableItems()
                 }
             }
         }
@@ -87,7 +88,7 @@ class SpotlightManager: NSObject {
             return
         }
         queue.async {
-            var expiredUserIds: [String] = []
+            var unwantedUserIds: [String] = []
             var newItems: [CSSearchableItem] = []
             for response in userResponses where response.app != nil {
                 if response.relationship == .FRIEND {
@@ -96,17 +97,19 @@ class SpotlightManager: NSObject {
                         newItems.append(item)
                     }
                 } else {
-                    expiredUserIds.append(response.userId)
+                    unwantedUserIds.append(response.userId)
                 }
             }
-            self.index.beginBatch()
-            self.index.indexSearchableItems(newItems)
-            self.index.deleteSearchableItems(withIdentifiers: expiredUserIds)
-            self.index.endBatch(withClientState: State.finished) { error in
-                if let error = error {
-                    Logger.general.error(category: "SpotlightManager", message: "Failed to index \(newItems.count) items, delete \(expiredUserIds.count) items, error: \(error)")
-                } else {
-                    Logger.general.info(category: "SpotlightManager", message: "Indexed \(newItems.count) items, deleted \(expiredUserIds.count) items")
+            if !unwantedUserIds.isEmpty || !newItems.isEmpty {
+                self.index.beginBatch()
+                self.index.indexSearchableItems(newItems)
+                self.index.deleteSearchableItems(withIdentifiers: unwantedUserIds)
+                self.index.endBatch(withClientState: State.finished) { error in
+                    if let error = error {
+                        Logger.general.error(category: "SpotlightManager", message: "Failed to index \(newItems.count) items, delete \(unwantedUserIds.count) items, error: \(error)")
+                    } else {
+                        Logger.general.info(category: "SpotlightManager", message: "Indexed \(newItems.count) items, deleted \(unwantedUserIds.count) items")
+                    }
                 }
             }
         }
@@ -117,12 +120,24 @@ class SpotlightManager: NSObject {
 extension SpotlightManager: CSSearchableIndexDelegate {
     
     func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler acknowledgementHandler: @escaping () -> Void) {
-        reindexSearchableItems()
+        reindexAllSearchableItems()
         acknowledgementHandler()
     }
     
     func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexSearchableItemsWithIdentifiers identifiers: [String], acknowledgementHandler: @escaping () -> Void) {
-        reindexSearchableItems(userIds: identifiers)
+        queue.async {
+            let users = UserDAO.shared.getSearchableAppUsers(with: identifiers)
+            let items = users.compactMap(self.searchableItem(user:))
+            self.index.beginBatch()
+            self.index.indexSearchableItems(items)
+            self.index.endBatch(withClientState: State.finished) { error in
+                if let error = error {
+                    Logger.general.error(category: "SpotlightManager", message: "Failed to reindex with identifiers: \(error)")
+                } else {
+                    Logger.general.info(category: "SpotlightManager", message: "Indexed \(items.count) items")
+                }
+            }
+        }
         acknowledgementHandler()
     }
     
@@ -130,21 +145,16 @@ extension SpotlightManager: CSSearchableIndexDelegate {
 
 extension SpotlightManager {
     
-    private func reindexSearchableItems(userIds: [String]? = nil) {
+    private func reindexAllSearchableItems() {
         queue.async {
-            let users: [User]
-            if let ids = userIds {
-                users = UserDAO.shared.getSearchableAppUsers(with: ids)
-            } else {
-                users = UserDAO.shared.getSearchableAppUsers(priorAppIds: AppGroupUserDefaults.User.recentlyUsedAppIds)
-            }
+            let users = UserDAO.shared.getSearchableAppUsers(priorAppIds: AppGroupUserDefaults.User.recentlyUsedAppIds)
             let items = users.compactMap(self.searchableItem(user:))
             self.index.beginBatch()
             self.index.deleteAllSearchableItems()
             self.index.indexSearchableItems(items)
             self.index.endBatch(withClientState: State.finished) { error in
                 if let error = error {
-                    Logger.general.error(category: "SpotlightManager", message: "Failed to index: \(error)")
+                    Logger.general.error(category: "SpotlightManager", message: "Failed to reindex: \(error)")
                 } else {
                     Logger.general.info(category: "SpotlightManager", message: "Indexed \(items.count) items")
                 }

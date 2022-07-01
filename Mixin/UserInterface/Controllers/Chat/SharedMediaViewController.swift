@@ -15,6 +15,7 @@ class SharedMediaViewController: UIViewController {
     private lazy var audioViewController = SharedMediaAudioTableViewController()
     private lazy var dataViewController = SharedMediaDataTableViewController()
     private lazy var postViewController = SharedMediaPostTableViewController()
+    private lazy var linkViewController = SharedMediaLinkTableViewController()
     
     private var contentViewController: UIViewController?
     
@@ -24,6 +25,7 @@ class SharedMediaViewController: UIViewController {
             R.string.localizable.media(),
             R.string.localizable.audio(),
             R.string.localizable.post(),
+            R.string.localizable.links(),
             R.string.localizable.file()
         ]
         load(child: mediaViewController)
@@ -37,6 +39,8 @@ class SharedMediaViewController: UIViewController {
             load(child: audioViewController)
         case 2:
             load(child: postViewController)
+        case 3:
+            load(child: linkViewController)
         default:
             load(child: dataViewController)
         }

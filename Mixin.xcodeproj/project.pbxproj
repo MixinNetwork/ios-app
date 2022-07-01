@@ -604,6 +604,9 @@
 		7C66F1BF268B3514006D8462 /* HomeAppsManager+FolderInteraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1BE268B3514006D8462 /* HomeAppsManager+FolderInteraction.swift */; };
 		7C66F1C1268C0250006D8462 /* HomeAppsFolderInteraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66F1C0268C0250006D8462 /* HomeAppsFolderInteraction.swift */; };
 		7C695D56285B25AB0042177C /* SpotlightManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C695D55285B25AB0042177C /* SpotlightManager.swift */; };
+		7C6967F82864488E0042177C /* SharedMediaLinkTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6967F72864488E0042177C /* SharedMediaLinkTableViewController.swift */; };
+		7C6967FB286450DB0042177C /* SharedMediaLinkCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6967F9286450DB0042177C /* SharedMediaLinkCell.swift */; };
+		7C6967FC286450DB0042177C /* SharedMediaLinkCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C6967FA286450DB0042177C /* SharedMediaLinkCell.xib */; };
 		7C6AD1F526A6794F00E6C41D /* StickersStoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6AD1F426A6794F00E6C41D /* StickersStoreViewController.swift */; };
 		7C7635B826A13461006101DB /* HomeAppsConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7635B726A13461006101DB /* HomeAppsConstants.swift */; };
 		7C8CC5A4280D347A00F7CBDF /* PreviewWallpaperViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8CC5A2280D347A00F7CBDF /* PreviewWallpaperViewController.swift */; };
@@ -1624,6 +1627,9 @@
 		7C66F1BE268B3514006D8462 /* HomeAppsManager+FolderInteraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeAppsManager+FolderInteraction.swift"; sourceTree = "<group>"; };
 		7C66F1C0268C0250006D8462 /* HomeAppsFolderInteraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsFolderInteraction.swift; sourceTree = "<group>"; };
 		7C695D55285B25AB0042177C /* SpotlightManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotlightManager.swift; sourceTree = "<group>"; };
+		7C6967F72864488E0042177C /* SharedMediaLinkTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedMediaLinkTableViewController.swift; sourceTree = "<group>"; };
+		7C6967F9286450DB0042177C /* SharedMediaLinkCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedMediaLinkCell.swift; sourceTree = "<group>"; };
+		7C6967FA286450DB0042177C /* SharedMediaLinkCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SharedMediaLinkCell.xib; sourceTree = "<group>"; };
 		7C6AD1F426A6794F00E6C41D /* StickersStoreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersStoreViewController.swift; sourceTree = "<group>"; };
 		7C7635B726A13461006101DB /* HomeAppsConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsConstants.swift; sourceTree = "<group>"; };
 		7C8CC5A2280D347A00F7CBDF /* PreviewWallpaperViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewWallpaperViewController.swift; sourceTree = "<group>"; };
@@ -2883,6 +2889,7 @@
 				7B8BB585234EE9A200991ACB /* SharedMediaAudioTableViewController.swift */,
 				7B8A6A6C2456C39F00ADC9EB /* SharedMediaPostTableViewController.swift */,
 				7BCEAA752350A20600F07635 /* SharedMediaDataTableViewController.swift */,
+				7C6967F72864488E0042177C /* SharedMediaLinkTableViewController.swift */,
 				7B3FD4EB241965AA00B58006 /* LocationViewController.swift */,
 				7B36919E233A1962007321A7 /* LocationPickerViewController.swift */,
 				7BB5250224160F3D0060DAE1 /* LocationPreviewViewController.swift */,
@@ -3604,6 +3611,8 @@
 				7B8BB591234F37D100991ACB /* SharedMediaAudioCell.swift */,
 				7BCEAA772350A29000F07635 /* SharedMediaDataCell.xib */,
 				7BCEAA792350A3A200F07635 /* SharedMediaDataCell.swift */,
+				7C6967FA286450DB0042177C /* SharedMediaLinkCell.xib */,
+				7C6967F9286450DB0042177C /* SharedMediaLinkCell.swift */,
 				7B8A6A732456E0EC00ADC9EB /* SharedMediaPostCell.xib */,
 				7B8A6A722456E0EC00ADC9EB /* SharedMediaPostCell.swift */,
 				7BFCB7752419FC5B00E7BC43 /* LocationCell.xib */,
@@ -4078,6 +4087,7 @@
 				7BFE47DD228432A600FC4379 /* PeerInfoView.xib in Resources */,
 				7B8A6A752456E0EC00ADC9EB /* SharedMediaPostCell.xib in Resources */,
 				7B8BB58E234F34FE00991ACB /* SharedMediaAudioCell.xib in Resources */,
+				7C6967FC286450DB0042177C /* SharedMediaLinkCell.xib in Resources */,
 				7BCA2E302452CBF6005BD2E4 /* AboutTableHeaderView.xib in Resources */,
 				DF8CECE71FC317BF00E40064 /* PayWindow.xib in Resources */,
 				7C6132B827953B4F002777EE /* DeleteAccountAbortWindow.xib in Resources */,
@@ -4427,6 +4437,7 @@
 				7BF49DD320C3DBAC00A8510E /* CaptchaManager.swift in Sources */,
 				DF8CECE11FC3054700E40064 /* TransferTypeCell.swift in Sources */,
 				7BCB8C8422BB56B8002A13CC /* DataAndStorageSettingsViewController.swift in Sources */,
+				7C6967F82864488E0042177C /* SharedMediaLinkTableViewController.swift in Sources */,
 				9BB351671FB19ECB00EDDD2C /* ConversationDateHeaderView.swift in Sources */,
 				DF2819752014669E001EE5FA /* RefreshAccountJob.swift in Sources */,
 				DF768563200647CC0055F3FF /* BouncingButton.swift in Sources */,
@@ -4601,6 +4612,8 @@
 				7C2475C727795BC100112A30 /* DeleteAccountTableHeaderView.swift in Sources */,
 				7BACFED32459C47C0033A3CD /* BubblePath.swift in Sources */,
 				ABE865BE23F2455800C0167D /* AuthorizationScope.swift in Sources */,
+				7C6967FB286450DB0042177C /* SharedMediaLinkCell.swift in Sources */,
+				ABE865BE23F2455800C0167D /* Scope.swift in Sources */,
 				DF121F351FA1C809000F701D /* CornerImageView.swift in Sources */,
 				9438252725EE697300709B7D /* CacheableAssetFileManager.swift in Sources */,
 				7BFD345C2285AB4200524EA0 /* AddMemberViewController.swift in Sources */,

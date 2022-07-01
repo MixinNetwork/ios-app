@@ -604,7 +604,16 @@ public final class MessageDAO: UserDatabaseDAO {
             quotedMessage = nil
         }
         
+        if message.category.hasSuffix("_TEXT"),
+           let content = message.content,
+           let linkDetector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue),
+           let lastLink = linkDetector.matches(in: content, options: [], range: NSMakeRange(0, content.count)).last?.url?.absoluteString {
+            message.hyperlink = lastLink
+        }
         db.write { (db) in
+            if let link = message.hyperlink {
+                try HyperlinkDAO.shared.insert(Hyperlink(link: link), database: db)
+            }
             if let mention = MessageMention(message: message, quotedMessage: quotedMessage) {
                 try mention.save(db)
             }

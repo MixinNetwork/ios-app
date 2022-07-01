@@ -37,6 +37,7 @@ public struct Message {
     public var createdAt: String
     
     public var albumId: String?
+    public var hyperlink: String?
 }
 
 extension Message: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord {
@@ -72,6 +73,7 @@ extension Message: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mix
         case quoteContent = "quote_content"
         case createdAt = "created_at"
         case albumId = "album_id"
+        case hyperlink
     }
     
 }

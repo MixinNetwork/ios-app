@@ -682,7 +682,10 @@ extension PlaylistManager: AudioSessionClient {
         .playback
     }
     
-    func audioSessionDidBeganInterruption(_ audioSession: AudioSession) {
+    func audioSessionDidBeganInterruption(_ audioSession: AudioSession, reason: AVAudioSession.InterruptionReason) {
+        guard reason != .appWasSuspended else {
+            return
+        }
         pause()
         removePlayingInfoAndRemoteCommandTarget()
     }

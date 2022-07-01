@@ -42,10 +42,10 @@ class AudioSession {
                 throw Error.insufficientPriority(currentClient.priority)
             } else {
                 if Thread.isMainThread {
-                    currentClient.audioSessionDidBeganInterruption(self)
+                    currentClient.audioSessionDidBeganInterruption(self, reason: .default)
                 } else {
                     DispatchQueue.main.sync {
-                        currentClient.audioSessionDidBeganInterruption(self)
+                        currentClient.audioSessionDidBeganInterruption(self, reason: .default)
                     }
                 }
             }
@@ -88,7 +88,22 @@ class AudioSession {
         }
         switch type {
         case .began:
-            currentClient?.audioSessionDidBeganInterruption(self)
+            let reason: AVAudioSession.InterruptionReason
+            if #available(iOS 14.5, *) {
+                if let rawValue = notification.userInfo?[AVAudioSessionInterruptionReasonKey] as? AVAudioSession.InterruptionReason.RawValue {
+                    reason = AVAudioSession.InterruptionReason(rawValue: rawValue) ?? .default
+                } else {
+                    reason = .default
+                }
+            } else {
+                let wasSuspended = notification.userInfo?[AVAudioSessionInterruptionWasSuspendedKey] as? Bool ?? false
+                if wasSuspended {
+                    reason = .appWasSuspended
+                } else {
+                    reason = .default
+                }
+            }
+            currentClient?.audioSessionDidBeganInterruption(self, reason: reason)
         case .ended:
             currentClient?.audioSessionDidEndInterruption(self)
         @unknown default:

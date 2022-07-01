@@ -283,7 +283,7 @@ extension MediaPreviewViewController: AudioSessionClient {
         .playback
     }
     
-    func audioSessionDidBeganInterruption(_ audioSession: AudioSession) {
+    func audioSessionDidBeganInterruption(_ audioSession: AudioSession, reason: AVAudioSession.InterruptionReason) {
         pauseAction(audioSession)
     }
     

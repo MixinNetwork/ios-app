@@ -68,8 +68,8 @@ class SharedMediaAudioMessagePlayingManager: AudioMessagePlayingManager {
         }
     }
     
-    override func audioSessionDidBeganInterruption(_ audioSession: AudioSession) {
-        super.audioSessionDidBeganInterruption(audioSession)
+    override func audioSessionDidBeganInterruption(_ audioSession: AudioSession, reason: AVAudioSession.InterruptionReason) {
+        super.audioSessionDidBeganInterruption(audioSession, reason: reason)
         removePlayingInfoAndRemoteCommandTarget()
     }
     

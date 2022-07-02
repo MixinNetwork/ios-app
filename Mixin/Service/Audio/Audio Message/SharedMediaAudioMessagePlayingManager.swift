@@ -46,15 +46,6 @@ class SharedMediaAudioMessagePlayingManager: AudioMessagePlayingManager {
     
     override func handleStatusChange(player: OggOpusPlayer) {
         super.handleStatusChange(player: player)
-        let center = MPNowPlayingInfoCenter.default()
-        switch player.status {
-        case .playing:
-            center.playbackState = .playing
-        case .paused:
-            center.playbackState = .paused
-        case .stopped:
-            center.playbackState = .stopped
-        }
         switch player.status {
         case .playing:
             if needsUpdatePlayingInfo {
@@ -69,8 +60,13 @@ class SharedMediaAudioMessagePlayingManager: AudioMessagePlayingManager {
     }
     
     override func audioSessionDidBeganInterruption(_ audioSession: AudioSession, reason: AVAudioSession.InterruptionReason) {
-        super.audioSessionDidBeganInterruption(audioSession, reason: reason)
-        removePlayingInfoAndRemoteCommandTarget()
+        switch reason {
+        case .appWasSuspended:
+            updateNowPlayingInfoElapsedPlaybackTime()
+        default:
+            pause()
+            removePlayingInfoAndRemoteCommandTarget()
+        }
     }
     
     private func resetPlayingInfoAndRemoteCommandTarget(player: OggOpusPlayer) {

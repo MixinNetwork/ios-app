@@ -145,10 +145,11 @@ public final class UserDAO: UserDatabaseDAO {
             SELECT u.*
             FROM apps a, users u
             WHERE a.app_id = u.app_id AND u.relationship = 'FRIEND'
+            ORDER BY u.is_verified DESC
         """
         if !priorAppIds.isEmpty {
             let ids = priorAppIds.joined(separator: "','")
-            sql += "\nORDER BY a.app_id IN ('\(ids)') DESC"
+            sql += ", a.app_id IN ('\(ids)') DESC"
         }
         sql += "\nLIMIT 1000"
         return db.select(with: sql)

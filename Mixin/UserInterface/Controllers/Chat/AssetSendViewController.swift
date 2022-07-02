@@ -362,7 +362,7 @@ extension AssetSendViewController: AudioSessionClient {
         .playback
     }
     
-    func audioSessionDidBeganInterruption(_ audioSession: AudioSession) {
+    func audioSessionDidBeganInterruption(_ audioSession: AudioSession, reason: AVAudioSession.InterruptionReason) {
         videoView.pause()
     }
     

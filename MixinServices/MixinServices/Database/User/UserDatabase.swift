@@ -491,7 +491,10 @@ public final class UserDatabase: Database {
         }
         
         migrator.registerMigration("deposit_entries") { db in
-            try db.execute(sql: "ALTER TABLE `assets` ADD COLUMN `deposit_entries` TEXT")
+            let assets = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(assets)")
+            if !assets.map(\.name).contains("deposit_entries") {
+                try db.execute(sql: "ALTER TABLE assets ADD COLUMN deposit_entries TEXT")
+            }
         }
         
         return migrator

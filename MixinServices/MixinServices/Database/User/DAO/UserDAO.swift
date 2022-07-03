@@ -140,6 +140,34 @@ public final class UserDAO: UserDatabaseDAO {
         return db.select(with: sql)
     }
     
+    public func getSearchableAppUsers(priorAppIds: [String]) -> [User] {
+        var sql = """
+            SELECT u.*
+            FROM apps a, users u
+            WHERE a.app_id = u.app_id AND u.relationship = 'FRIEND'
+            ORDER BY u.is_verified DESC
+        """
+        if !priorAppIds.isEmpty {
+            let ids = priorAppIds.joined(separator: "','")
+            sql += ", a.app_id IN ('\(ids)') DESC"
+        }
+        sql += "\nLIMIT 1000"
+        return db.select(with: sql)
+    }
+    
+    public func getSearchableAppUsers(with appIds: [String]) -> [User] {
+        guard !appIds.isEmpty else {
+            return []
+        }
+        let ids = appIds.joined(separator: "','")
+        let sql = """
+            SELECT u.*
+            FROM apps a, users u
+            WHERE a.app_id IN ('\(ids)') AND a.app_id = u.app_id AND u.relationship = 'FRIEND'
+        """
+        return db.select(with: sql)
+    }
+    
     public func getFullname(userId: String) -> String? {
         db.select(column: User.column(of: .fullName),
                   from: User.self,

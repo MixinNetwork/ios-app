@@ -39,6 +39,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         configAnalytics()
         pendingShortcutItem = launchOptions?[UIApplication.LaunchOptionsKey.shortcutItem] as? UIApplicationShortcutItem
         addObservers()
+        if SpotlightManager.isAvailable {
+            SpotlightManager.shared.indexIfNeeded()
+        }
         Logger.general.info(category: "AppDelegate", message: "App \(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion)) did finish launching with state: \(UIApplication.shared.applicationStateString)")
         if UIApplication.shared.applicationState == .background {
             MixinService.isStopProcessMessages = false
@@ -184,6 +187,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         BackgroundMessagingService.shared.begin(caller: "didReceiveRemoteNotification",
                                                 stopsRegardlessApplicationState: false,
                                                 completionHandler: completionHandler)
+    }
+    
+    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+        if SpotlightManager.isAvailable && SpotlightManager.shared.canContinue(activity: userActivity) {
+            SpotlightManager.shared.contiune(activity: userActivity)
+            return true
+        } else {
+            return false
+        }
     }
     
 }

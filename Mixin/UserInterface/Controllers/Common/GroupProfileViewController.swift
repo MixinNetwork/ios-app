@@ -207,21 +207,11 @@ extension GroupProfileViewController {
         let conversationId = conversation.conversationId
         let alert = UIAlertController(title: R.string.localizable.delete_group_chat_confirmation(conversation.name), message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: R.string.localizable.delete_chat(), style: .destructive, handler: { [weak self](_) in
-            let hud = Hud()
-            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-            DispatchQueue.global().async {
-                ConversationDAO.shared.deleteChat(conversationId: conversationId)
-                DispatchQueue.main.async {
-                    guard let self = self else {
-                        return
-                    }
-                    self.dismiss(animated: true) {
-                        hud.set(style: .notification, text: R.string.localizable.done())
-                        hud.scheduleAutoHidden()
-                        if UIApplication.currentConversationId() == conversationId {
-                            UIApplication.homeNavigationController?.backToHome()
-                        }
+        alert.addAction(UIAlertAction(title: R.string.localizable.delete_chat(), style: .destructive, handler: { _ in
+            ConversationCleaner.clean(conversationId: conversationId, intent: .delete) {
+                self.dismiss(animated: true) {
+                    if UIApplication.currentConversationId() == conversationId {
+                        UIApplication.homeNavigationController?.backToHome()
                     }
                 }
             }

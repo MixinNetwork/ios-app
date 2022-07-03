@@ -66,22 +66,25 @@ public enum AttachmentContainer {
         }
         let url = AttachmentContainer.url(for: category, filename: mediaUrl)
         try? FileManager.default.removeItem(at: url)
+        Logger.general.debug(category: "AttachmentContainer", message: "\(url) deleted")
         if category == .videos {
             let thumbUrl = AttachmentContainer.videoThumbnailURL(videoFilename: mediaUrl)
             try? FileManager.default.removeItem(at: thumbUrl)
+            Logger.general.debug(category: "AttachmentContainer", message: "\(thumbUrl) deleted")
         }
     }
     
     public static func removeAll(transcriptId: String) {
         let url = Self.url(transcriptId: transcriptId, filename: nil)
         try? FileManager.default.removeItem(at: url)
+        Logger.general.debug(category: "AttachmentContainer", message: "\(url) deleted")
     }
     
 }
 
 public extension AttachmentContainer {
     
-    enum Category: CaseIterable {
+    enum Category: String, CaseIterable, Codable {
         
         case audios
         case files

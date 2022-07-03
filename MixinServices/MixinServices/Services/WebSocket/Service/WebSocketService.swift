@@ -141,7 +141,7 @@ public class WebSocketService {
                 case let .failure(error):
                     if case .invalidRequestData = error {
                         if let param = message.params, let messageId = param.messageId, messageId != messageId.lowercased() {
-                            MessageDAO.shared.deleteMessage(id: messageId)
+                            MessageDAO.shared.deleteLegacyMessage(with: messageId)
                             JobDAO.shared.removeJob(jobId: message.id)
                         }
                     }

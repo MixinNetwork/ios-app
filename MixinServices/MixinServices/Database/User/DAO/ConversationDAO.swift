@@ -4,9 +4,6 @@ public final class ConversationDAO: UserDatabaseDAO {
     
     public static let shared = ConversationDAO()
     
-    public static let willClearConversationNotification = Notification.Name("one.mixin.service.ConversationDAO.willClearConversation")
-    public static let conversationIdUserInfoKey = "cid"
-    
     private static let sqlQueryColumns = """
     SELECT c.conversation_id as conversationId, c.owner_id as ownerId, c.icon_url as iconUrl,
     c.announcement as announcement, c.category as category, c.name as name, c.status as status,
@@ -227,35 +224,6 @@ public final class ConversationDAO: UserDatabaseDAO {
                     try? FileManager.default.removeItem(at: url)
                 }
                 NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: nil)
-            }
-        }
-    }
-    
-    public func clearChat(conversationId: String) {
-        let mediaUrls = MessageDAO.shared.getMediaUrls(conversationId: conversationId, categories: MessageCategory.allMediaCategories)
-        db.write { db in
-            let deletedTranscriptIds = try deleteTranscriptChildrenReferenced(by: conversationId, from: db)
-            NotificationCenter.default.post(onMainThread: Self.willClearConversationNotification,
-                                            object: self,
-                                            userInfo: [Self.conversationIdUserInfoKey: conversationId])
-            try Message
-                .filter(Message.column(of: .conversationId) == conversationId)
-                .deleteAll(db)
-            try MessageMention
-                .filter(MessageMention.column(of: .conversationId) == conversationId)
-                .deleteAll(db)
-            try Conversation
-                .filter(Conversation.column(of: .conversationId) == conversationId)
-                .updateAll(db, [Conversation.column(of: .unseenMessageCount).set(to: 0)])
-            try deleteFTSContent(with: conversationId, from: db)
-            try PinMessageDAO.shared.deleteAll(conversationId: conversationId, from: db)
-            db.afterNextTransactionCommit { (_) in
-                let job = AttachmentCleanUpJob(conversationId: conversationId,
-                                               mediaUrls: mediaUrls,
-                                               transcriptIds: deletedTranscriptIds)
-                ConcurrentJobQueue.shared.addJob(job: job)
-                let change = ConversationChange(conversationId: conversationId, action: .reload)
-                NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: change)
             }
         }
     }
@@ -595,7 +563,7 @@ public final class ConversationDAO: UserDatabaseDAO {
 
 extension ConversationDAO {
     
-    private func deleteFTSContent(with conversationId: String, from db: GRDB.Database) throws {
+    public func deleteFTSContent(with conversationId: String, from db: GRDB.Database) throws {
         let sql = "DELETE FROM \(Message.ftsTableName) WHERE conversation_id MATCH ?"
         try db.execute(sql: sql, arguments: [uuidTokenString(uuidString: conversationId)])
     }

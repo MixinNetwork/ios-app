@@ -190,4 +190,9 @@ public final class TranscriptMessageDAO: UserDatabaseDAO {
         }
     }
     
+    public func deleteTranscriptMessages(with transcriptId: String) {
+        db.delete(TranscriptMessage.self,
+                  where: TranscriptMessage.column(of: .transcriptId) == transcriptId)
+    }
+    
 }

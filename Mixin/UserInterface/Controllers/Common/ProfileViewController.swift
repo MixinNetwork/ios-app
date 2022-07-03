@@ -256,12 +256,7 @@ extension ProfileViewController {
         alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: R.string.localizable.clear_chat(), style: .destructive, handler: { (_) in
             self.dismiss(animated: true, completion: nil)
-            DispatchQueue.global().async {
-                ConversationDAO.shared.clearChat(conversationId: conversationId)
-                DispatchQueue.main.async {
-                    showAutoHiddenHud(style: .notification, text: R.string.localizable.cleared())
-                }
-            }
+            ConversationCleaner.clean(conversationId: conversationId, intent: .clear)
         }))
         present(alert, animated: true, completion: nil)
     }

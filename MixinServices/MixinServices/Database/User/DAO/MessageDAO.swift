@@ -14,7 +14,6 @@ public final class MessageDAO: UserDatabaseDAO {
     
     public static let shared = MessageDAO()
     
-    public static let willDeleteMessageNotification = Notification.Name("one.mixin.services.MessageDAO.willDeleteMessage")
     public static let didInsertMessageNotification = Notification.Name("one.mixin.services.did.insert.msg")
     public static let didRedecryptMessageNotification = Notification.Name("one.mixin.services.did.redecrypt.msg")
     public static let messageMediaStatusDidUpdateNotification = Notification.Name("one.mixin.services.MessageDAO.MessageMediaStatusDidUpdate")
@@ -749,45 +748,43 @@ public final class MessageDAO: UserDatabaseDAO {
         }
     }
     
-    @discardableResult
-    public func deleteMessage(id: String) -> (deleted: Bool, childMessageIds: [String]) {
-        NotificationCenter.default.post(onMainThread: Self.willDeleteMessageNotification,
-                                        object: self,
-                                        userInfo: [UserInfoKey.messageId: id])
-        var deleted = false
-        var childMessageIds: [String] = []
-        db.write { (db) in
-            (deleted, childMessageIds) = try deleteMessage(id: id, with: db)
-        }
-        return (deleted, childMessageIds)
-    }
-    
-    func deleteMessage(id: String, with database: GRDB.Database) throws -> (deleted: Bool, childMessageIds: [String]) {
-        var deleteCount = 0
-        var childMessageIds: [String] = []
-        let conversationId: String? = try Message
-            .select(Message.column(of: .conversationId))
-            .filter(Message.column(of: .messageId) == id)
-            .fetchOne(database)
-        deleteCount = try Message
+    func delete(id: String, conversationId: String, deleteTranscriptChildren: Bool, database: GRDB.Database) throws -> (deleted: Bool, childMessageIds: [String]) {
+        let deleteCount = try Message
             .filter(Message.column(of: .messageId) == id)
             .deleteAll(database)
         try MessageMention
             .filter(MessageMention.column(of: .messageId) == id)
             .deleteAll(database)
         try deleteFTSContent(database, messageId: id)
-        childMessageIds = try TranscriptMessage
+        let childMessageIds: [String] = try TranscriptMessage
             .select(TranscriptMessage.column(of: .messageId))
             .filter(TranscriptMessage.column(of: .transcriptId) == id)
             .fetchAll(database)
-        try TranscriptMessage
-            .filter(TranscriptMessage.column(of: .transcriptId) == id)
-            .deleteAll(database)
-        if let conversationId = conversationId {
-            try PinMessageDAO.shared.delete(messageIds: [id], conversationId: conversationId, from: database)
-            try clearPinMessageContent(quoteMessageIds: [id], conversationId: conversationId, from: database)
+        try PinMessageDAO.shared.delete(messageIds: [id], conversationId: conversationId, from: database)
+        try clearPinMessageContent(quoteMessageIds: [id], conversationId: conversationId, from: database)
+        if deleteTranscriptChildren {
+            try TranscriptMessage
+                .filter(TranscriptMessage.column(of: .transcriptId) == id)
+                .deleteAll(database)
         }
         return (deleteCount > 0, childMessageIds)
+    }
+    
+    @discardableResult
+    public func delete(id: String, conversationId: String, deleteTranscriptChildren: Bool, alongsideTransaction work: ((GRDB.Database) -> Void)) {
+        db.write { db in
+            try delete(id: id, conversationId: conversationId, deleteTranscriptChildren: deleteTranscriptChildren, database: db)
+            work(db)
+        }
+    }
+    
+    public func deleteLegacyMessage(with id: String) {
+        db.write { db in
+            try Message
+                .filter(Message.column(of: .messageId) == id)
+                .deleteAll(db)
+            try deleteFTSContent(db, messageId: id)
+        }
     }
     
     public func hasSentMessage(inConversationOf conversationId: String) -> Bool {

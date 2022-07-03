@@ -72,8 +72,6 @@ public final class UserDatabase: Database {
             .init(key: .name, constraints: "TEXT NOT NULL"),
             .init(key: .iconUrl, constraints: "TEXT NOT NULL"),
             .init(key: .balance, constraints: "TEXT NOT NULL"),
-            .init(key: .destination, constraints: "TEXT"),
-            .init(key: .tag, constraints: "TEXT"),
             .init(key: .priceBtc, constraints: "TEXT NOT NULL"),
             .init(key: .priceUsd, constraints: "TEXT NOT NULL"),
             .init(key: .changeUsd, constraints: "TEXT NOT NULL"),
@@ -81,6 +79,7 @@ public final class UserDatabase: Database {
             .init(key: .confirmations, constraints: "INTEGER NOT NULL"),
             .init(key: .assetKey, constraints: "TEXT"),
             .init(key: .reserve, constraints: "TEXT"),
+            .init(key: .depositEntries, constraints: "TEXT"),
         ]),
         ColumnMigratableTableDefinition<CircleConversation>(constraints: "PRIMARY KEY(conversation_id, circle_id)", columns: [
             .init(key: .circleId, constraints: "TEXT NOT NULL"),
@@ -230,8 +229,6 @@ public final class UserDatabase: Database {
             .init(key: .name, constraints: "TEXT NOT NULL"),
             .init(key: .iconUrl, constraints: "TEXT NOT NULL"),
             .init(key: .balance, constraints: "TEXT NOT NULL"),
-            .init(key: .destination, constraints: "TEXT NOT NULL"),
-            .init(key: .tag, constraints: "TEXT"),
             .init(key: .priceBtc, constraints: "TEXT NOT NULL"),
             .init(key: .priceUsd, constraints: "TEXT NOT NULL"),
             .init(key: .changeUsd, constraints: "TEXT NOT NULL"),
@@ -491,6 +488,10 @@ public final class UserDatabase: Database {
             if !conversations.map(\.name).contains("expire_in") {
                 try db.execute(sql: "ALTER TABLE conversations ADD COLUMN expire_in INTEGER")
             }
+        }
+        
+        migrator.registerMigration("deposit_entries") { db in
+            try db.execute(sql: "ALTER TABLE `assets` ADD COLUMN `deposit_entries` TEXT")
         }
         
         return migrator

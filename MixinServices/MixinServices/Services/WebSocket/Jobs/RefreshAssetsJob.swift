@@ -72,29 +72,39 @@ public class RefreshAssetsJob: AsynchronousJob {
                 }
                 if let asset = self.asset {
                     self.updatePendingDeposits(asset: asset)
-                    return
+                } else {
+                    self.finishJob()
                 }
             case let .failure(error):
                 reporter.report(error: error)
+                self.finishJob()
             }
-            self.finishJob()
         }
     }
 
     private func updatePendingDeposits(asset: Asset) {
-        AssetAPI.pendingDeposits(assetId: asset.assetId, destination: asset.destination, tag: asset.tag) { (result) in
-            switch result {
-            case let .success(deposits):
-                DispatchQueue.global().async {
-                    guard !MixinService.isStopProcessMessages else {
-                        return
+        var finishedEntryCount = 0
+        for entry in asset.depositEntries {
+            AssetAPI.pendingDeposits(assetId: asset.assetId, destination: entry.destination, tag: entry.tag) { (result) in
+                switch result {
+                case let .success(deposits):
+                    DispatchQueue.global().async {
+                        guard !MixinService.isStopProcessMessages else {
+                            return
+                        }
+                        SnapshotDAO.shared.replacePendingDeposits(assetId: asset.assetId, pendingDeposits: deposits)
                     }
-                    SnapshotDAO.shared.replacePendingDeposits(assetId: asset.assetId, pendingDeposits: deposits)
+                    finishedEntryCount += 1
+                    if finishedEntryCount == asset.depositEntries.count {
+                        self.updateSnapshots(assetId: asset.assetId)
+                    }
+                case let .failure(error):
+                    reporter.report(error: error)
+                    finishedEntryCount += 1
+                    if finishedEntryCount == asset.depositEntries.count {
+                        self.updateSnapshots(assetId: asset.assetId)
+                    }
                 }
-                self.updateSnapshots(assetId: asset.assetId)
-            case let .failure(error):
-                reporter.report(error: error)
-                self.finishJob()
             }
         }
     }

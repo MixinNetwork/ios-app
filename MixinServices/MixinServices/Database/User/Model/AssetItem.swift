@@ -34,15 +34,14 @@ public final class AssetItem: Asset, NumberStringLocalizable {
                    name: asset.name,
                    iconUrl: asset.iconUrl,
                    balance: asset.balance,
-                   destination: asset.destination,
-                   tag: asset.tag,
                    priceBtc: asset.priceBtc,
                    priceUsd: asset.priceUsd,
                    changeUsd: asset.changeUsd,
                    chainId: asset.chainId,
                    confirmations: asset.confirmations,
                    assetKey: asset.assetKey,
-                   reserve: asset.reserve)
+                   reserve: asset.reserve,
+                   depositEntries: asset.depositEntries)
     }
     
     required init(from decoder: Decoder) throws {
@@ -94,15 +93,14 @@ extension AssetItem {
                           name: "Mixin",
                           iconUrl: "https://images.mixin.one/UasWtBZO0TZyLTLCFQjvE_UYekjC7eHCuT_9_52ZpzmCC-X-NPioVegng7Hfx0XmIUavZgz5UL-HIgPCBECc-Ws=s128",
                           balance: "0",
-                          destination: "",
-                          tag: "",
                           priceBtc: "0",
                           priceUsd: "0",
                           changeUsd: "0",
                           chainId: "43d61dcd-e413-450d-80b8-101d5e903357",
                           confirmations: 100,
                           assetKey: "0xa974c709cfb4566686553a20790685a47aceaa33",
-                          reserve: "0")
+                          reserve: "0",
+                          depositEntries: [])
         let info = ChainInfo(iconUrl: "https://images.mixin.one/zVDjOxNTQvVsA8h2B4ZVxuHoCF3DJszufYKWpd9duXUSbSapoZadC7_13cnWBqg0EmwmRcKGbJaUpA8wFfpgZA=s128", name: "Ether", symbol: "ETH")
         return AssetItem(asset: asset, chain: info)
     }()

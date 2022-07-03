@@ -30,7 +30,7 @@ class DepositTipWindow: BottomSheetView {
         self.asset = asset
         titleLabel.text = "\(asset.symbol) \(R.string.localizable.deposit())"
         tipsLabel.text = asset.depositTips
-        if !asset.tag.isEmpty {
+        if let entry = asset.preferredDepositEntry, !entry.tag.isEmpty {
             continueButton.setTitle("\(R.string.localizable.got_it())(\(self.countDown))", for: .normal)
             continueButton.isEnabled = false
             warningLabel.text = R.string.localizable.deposit_account_attention(asset.symbol)

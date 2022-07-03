@@ -10,45 +10,47 @@ class DepositViewController: UIViewController {
     @IBOutlet weak var warningLabel: UILabel!
     
     private var asset: AssetItem!
+    
     private lazy var depositWindow = QrcodeWindow.instance()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         container?.setSubtitle(subtitle: asset.symbol)
         view.layoutIfNeeded()
-
-        upperDepositFieldView.titleLabel.text = R.string.localizable.address()
-        upperDepositFieldView.contentLabel.text = asset.destination
-        let nameImage = UIImage(qrcode: asset.destination, size: upperDepositFieldView.qrCodeImageView.bounds.size)
-        upperDepositFieldView.qrCodeImageView.image = nameImage
-        upperDepositFieldView.assetIconView.setIcon(asset: asset)
-        upperDepositFieldView.shadowView.hasLowerShadow = true
-        upperDepositFieldView.delegate = self
-
-        if !asset.tag.isEmpty {
-            if asset.usesTag {
-                lowerDepositFieldView.titleLabel.text = R.string.localizable.tag()
+        
+        if let entry = asset.preferredDepositEntry {
+            upperDepositFieldView.titleLabel.text = R.string.localizable.address()
+            upperDepositFieldView.contentLabel.text = entry.destination
+            let nameImage = UIImage(qrcode: entry.destination, size: upperDepositFieldView.qrCodeImageView.bounds.size)
+            upperDepositFieldView.qrCodeImageView.image = nameImage
+            upperDepositFieldView.assetIconView.setIcon(asset: asset)
+            upperDepositFieldView.shadowView.hasLowerShadow = true
+            upperDepositFieldView.delegate = self
+            
+            if !entry.tag.isEmpty {
+                if asset.usesTag {
+                    lowerDepositFieldView.titleLabel.text = R.string.localizable.tag()
+                } else {
+                    lowerDepositFieldView.titleLabel.text = R.string.localizable.withdrawal_memo()
+                }
+                lowerDepositFieldView.contentLabel.text = entry.tag
+                let memoImage = UIImage(qrcode: entry.tag, size: lowerDepositFieldView.qrCodeImageView.bounds.size)
+                lowerDepositFieldView.qrCodeImageView.image = memoImage
+                lowerDepositFieldView.assetIconView.setIcon(asset: asset)
+                lowerDepositFieldView.shadowView.hasLowerShadow = false
+                lowerDepositFieldView.delegate = self
+                warningLabel.text = R.string.localizable.deposit_account_attention(asset.symbol)
             } else {
-                lowerDepositFieldView.titleLabel.text = R.string.localizable.withdrawal_memo()
-            }
-            lowerDepositFieldView.contentLabel.text = asset.tag
-            let memoImage = UIImage(qrcode: asset.tag, size: lowerDepositFieldView.qrCodeImageView.bounds.size)
-            lowerDepositFieldView.qrCodeImageView.image = memoImage
-            lowerDepositFieldView.assetIconView.setIcon(asset: asset)
-            lowerDepositFieldView.shadowView.hasLowerShadow = false
-            lowerDepositFieldView.delegate = self
-            warningLabel.text = R.string.localizable.deposit_account_attention(asset.symbol)
-        } else {
-            lowerDepositFieldView.isHidden = true
-            if asset.reserve.doubleValue > 0 {
-                warningLabel.text = R.string.localizable.deposit_attention() +  R.string.localizable.deposit_at_least(asset.reserve, asset.chain?.symbol ?? "")
-            } else {
-                warningLabel.text = R.string.localizable.deposit_attention()
+                lowerDepositFieldView.isHidden = true
+                if asset.reserve.doubleValue > 0 {
+                    warningLabel.text = R.string.localizable.deposit_attention() +  R.string.localizable.deposit_at_least(asset.reserve, asset.chain?.symbol ?? "")
+                } else {
+                    warningLabel.text = R.string.localizable.deposit_attention()
+                }
             }
         }
-
+        
         hintLabel.text = asset.depositTips
-
         DepositTipWindow.instance().render(asset: asset).presentPopupControllerAnimated()
     }
     

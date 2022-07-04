@@ -620,8 +620,8 @@
 		7CBD2EFA268FF6BB00AA0847 /* HomeAppsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBD2EF9268FF6BB00AA0847 /* HomeAppsStorage.swift */; };
 		7CC3B1A026C21F7E0018B0D1 /* ScriptMessageProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC3B19F26C21F7E0018B0D1 /* ScriptMessageProxy.swift */; };
 		7CC730502745F95D002780F5 /* StickerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC7304F2745F95D002780F5 /* StickerStore.swift */; };
-		7CE2DE102858B52000AF00AE /* WallpaperImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE2DE0F2858B52000AF00AE /* WallpaperImageView.swift */; };
 		7CE2DC9A28587DE100AF00AE /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7B8BB58F234F36C000991ACB /* Colors.xcassets */; };
+		7CE2DE102858B52000AF00AE /* WallpaperImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE2DE0F2858B52000AF00AE /* WallpaperImageView.swift */; };
 		7CE3A25C2771A8AB006BE765 /* DeleteAccountVerifyCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE3A25B2771A8AB006BE765 /* DeleteAccountVerifyCodeViewController.swift */; };
 		7CE5E7A8269BDA29000B7904 /* HomeAppsPinTipsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE5E7A6269BDA29000B7904 /* HomeAppsPinTipsViewController.swift */; };
 		7CE5E7A9269BDA29000B7904 /* HomeAppsPinTipsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CE5E7A7269BDA29000B7904 /* HomeAppsPinTipsView.xib */; };

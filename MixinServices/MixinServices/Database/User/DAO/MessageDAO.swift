@@ -273,9 +273,13 @@ public final class MessageDAO: UserDatabaseDAO {
         UNUserNotificationCenter.current().removeNotifications(withIdentifiers: mentionMessageIds)
     }
     
-    public func updateMessageStatus(messageId: String, status: String, from: String) {
+    // Return true if message exists, false if not exists
+    @discardableResult
+    public func updateMessageStatus(messageId: String, status: String, from: String) -> Bool {
+        var messageExists = true
         db.write { db in
             guard let current = try Message.filter(Message.column(of: .messageId) == messageId).fetchOne(db) else {
+                messageExists = false
                 return
             }
             guard current.status != MessageStatus.FAILED.rawValue else {
@@ -310,6 +314,7 @@ public final class MessageDAO: UserDatabaseDAO {
                 db.afterNextTransactionCommit(completion)
             }
         }
+        return messageExists
     }
     
     public func updateUnseenMessageCount(database: GRDB.Database, conversationId: String) throws {

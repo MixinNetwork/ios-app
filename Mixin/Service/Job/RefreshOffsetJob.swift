@@ -25,7 +25,7 @@ class RefreshOffsetJob: BaseJob {
                         AppGroupUserDefaults.Crypto.Offset.status = data.updatedAt.toUTCDate().nanosecond()
                         if !messageExists {
                             statuses[data.messageId] = data.status
-                            Logger.general.debug(category: "RefreshOffsetJob", message: "Saved status for inexisted message: \(data.messageId)")
+                            Logger.general.debug(category: "RefreshOffsetJob", message: "Saved status for inexisted message: \(data.messageId), status: \(data.status)")
                         }
                     }
                     return statuses

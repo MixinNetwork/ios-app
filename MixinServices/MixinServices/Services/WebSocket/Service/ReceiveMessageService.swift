@@ -265,7 +265,7 @@ public class ReceiveMessageService: MixinService {
         unknownMessage.content = data.data
         if let status = pendingMessageStatuses.removeValue(forKey: data.messageId) {
             unknownMessage.status = status
-            Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId)")
+            Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId), before: \(unknownMessage.status), after: \(status)")
         }
         MessageDAO.shared.insertMessage(message: unknownMessage, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
     }
@@ -300,7 +300,7 @@ public class ReceiveMessageService: MixinService {
         var message = Message.createMessage(appMessage: data)
         if let status = pendingMessageStatuses.removeValue(forKey: data.messageId) {
             message.status = status
-            Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId)")
+            Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId), before: \(message.status), after: \(status)")
         }
         MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
         updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
@@ -328,7 +328,7 @@ public class ReceiveMessageService: MixinService {
         var message = Message.createMessage(appMessage: data)
         if let status = pendingMessageStatuses.removeValue(forKey: data.messageId) {
             message.status = status
-            Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId)")
+            Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId), before: \(message.status), after: \(status)")
         }
         MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
         updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
@@ -378,7 +378,7 @@ public class ReceiveMessageService: MixinService {
                                                         createdAt: data.createdAt)
                     if let status = pendingMessageStatuses.removeValue(forKey: data.messageId) {
                         message.status = status
-                        Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId)")
+                        Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId), before: \(message.status), after: \(status)")
                     }
                     MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification)
                     continue
@@ -613,7 +613,7 @@ public class ReceiveMessageService: MixinService {
             var message = Message.createMessage(textMessage: content, data: data)
             if let status = pendingMessageStatuses.removeValue(forKey: data.messageId) {
                 message.status = status
-                Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId)")
+                Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId), before: \(message.status), after: \(status)")
             }
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
         } else if data.category.hasSuffix("_IMAGE") || data.category.hasSuffix("_VIDEO") {
@@ -643,7 +643,7 @@ public class ReceiveMessageService: MixinService {
             var message = Message.createMessage(mediaData: transferMediaData, data: data)
             if let status = pendingMessageStatuses.removeValue(forKey: data.messageId) {
                 message.status = status
-                Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId)")
+                Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId), before: \(message.status), after: \(status)")
             }
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
         } else if data.category.hasSuffix("_LIVE") {
@@ -657,7 +657,7 @@ public class ReceiveMessageService: MixinService {
                                                 data: data)
             if let status = pendingMessageStatuses.removeValue(forKey: data.messageId) {
                 message.status = status
-                Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId)")
+                Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId), before: \(message.status), after: \(status)")
             }
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
         } else if data.category.hasSuffix("_DATA")  {
@@ -673,7 +673,7 @@ public class ReceiveMessageService: MixinService {
             var message = Message.createMessage(mediaData: transferMediaData, data: data)
             if let status = pendingMessageStatuses.removeValue(forKey: data.messageId) {
                 message.status = status
-                Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId)")
+                Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId), before: \(message.status), after: \(status)")
             }
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
         } else if data.category.hasSuffix("_AUDIO") {
@@ -685,7 +685,7 @@ public class ReceiveMessageService: MixinService {
             var message = Message.createMessage(mediaData: transferMediaData, data: data)
             if let status = pendingMessageStatuses.removeValue(forKey: data.messageId) {
                 message.status = status
-                Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId)")
+                Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId), before: \(message.status), after: \(status)")
             }
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
             let job = AttachmentDownloadJob(message: message)
@@ -697,7 +697,7 @@ public class ReceiveMessageService: MixinService {
             var message = Message.createMessage(stickerData: transferStickerData, data: data)
             if let status = pendingMessageStatuses.removeValue(forKey: data.messageId) {
                 message.status = status
-                Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId)")
+                Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId), before: \(message.status), after: \(status)")
             }
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
         } else if data.category.hasSuffix("_CONTACT") {
@@ -717,7 +717,7 @@ public class ReceiveMessageService: MixinService {
             var message = Message.createMessage(contactData: transferData, data: data)
             if let status = pendingMessageStatuses.removeValue(forKey: data.messageId) {
                 message.status = status
-                Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId)")
+                Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId), before: \(message.status), after: \(status)")
             }
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
         } else if data.category.hasSuffix("_LOCATION") {
@@ -732,7 +732,7 @@ public class ReceiveMessageService: MixinService {
             var message = Message.createLocationMessage(content: content, data: data)
             if let status = pendingMessageStatuses.removeValue(forKey: data.messageId) {
                 message.status = status
-                Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId)")
+                Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId), before: \(message.status), after: \(status)")
             }
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
         } else if data.category.hasSuffix("_TRANSCRIPT") {
@@ -749,7 +749,7 @@ public class ReceiveMessageService: MixinService {
                                                           data: data)
             if let status = pendingMessageStatuses.removeValue(forKey: data.messageId) {
                 message.status = status
-                Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId)")
+                Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId), before: \(message.status), after: \(status)")
             }
             MessageDAO.shared.insertMessage(message: message, children: children, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
         }
@@ -768,10 +768,7 @@ public class ReceiveMessageService: MixinService {
         failedMessage.status = MessageStatus.FAILED.rawValue
         failedMessage.content = data.data
         failedMessage.quoteMessageId = data.quoteMessageId.isEmpty ? nil : data.quoteMessageId
-        if let status = pendingMessageStatuses.removeValue(forKey: data.messageId) {
-            failedMessage.status = status
-            Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId)")
-        }
+        pendingMessageStatuses.removeValue(forKey: data.messageId)
         MessageDAO.shared.insertMessage(message: failedMessage, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
     }
 
@@ -1286,7 +1283,7 @@ extension ReceiveMessageService {
         var message = Message.createMessage(snapshotMesssage: snapshot, data: data)
         if let status = pendingMessageStatuses.removeValue(forKey: data.messageId) {
             message.status = status
-            Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId)")
+            Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId), before: \(message.status), after: \(status)")
         }
         MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
     }
@@ -1425,7 +1422,7 @@ extension ReceiveMessageService {
         
         if let status = pendingMessageStatuses.removeValue(forKey: data.messageId) {
             message.status = status
-            Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId)")
+            Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId), before: \(message.status), after: \(status)")
         }
         MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: sysMessage.expireIn ?? 0)
     }

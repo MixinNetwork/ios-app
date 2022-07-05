@@ -604,11 +604,8 @@ public final class MessageDAO: UserDatabaseDAO {
             quotedMessage = nil
         }
         
-        if message.category.hasSuffix("_TEXT"),
-           let content = message.content,
-           let linkDetector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue),
-           let lastLink = linkDetector.matches(in: content, options: [], range: NSMakeRange(0, content.count)).last?.url?.absoluteString {
-            message.hyperlink = lastLink
+        if message.category.hasSuffix("_TEXT"), let content = message.content, let link = Link.detector.lastMatche(in: content)?.url?.absoluteString {
+            message.hyperlink = link
         }
         db.write { (db) in
             if let link = message.hyperlink {

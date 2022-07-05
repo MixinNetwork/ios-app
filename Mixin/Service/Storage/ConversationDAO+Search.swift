@@ -19,7 +19,7 @@ extension ConversationDAO {
                 if let limit = limit {
                     sql += " LIMIT \(limit)"
                 }
-                return try String.fetchAll(db, sql: sql, arguments: ["\"\(keyword)\""], adapter: nil)
+                return try String.fetchAll(db, sql: sql, arguments: ["\"\(keyword)\"*"], adapter: nil)
             } catch {
                 Logger.database.error(category: "ConversationDAO+Search", message: "Failed to fetch cids: \(error)")
                 return []
@@ -34,7 +34,7 @@ extension ConversationDAO {
                 CASE c.category WHEN 'CONTACT' THEN u.avatar_url ELSE c.icon_url END,
                 CASE c.category WHEN 'CONTACT' THEN u.user_id ELSE NULL END,
                 u.is_verified, u.app_id, count
-            FROM (SELECT ttou(conversation_id) AS cid, COUNT(1) AS count FROM \(Message.ftsTableName) WHERE \(Message.ftsTableName) MATCH :keyword)
+            FROM (SELECT ttou(conversation_id) AS cid, COUNT(1) AS count FROM \(Message.ftsTableName) WHERE \(Message.ftsTableName) MATCH ?)
                 LEFT JOIN conversations c ON cid = c.conversation_id
                 LEFT JOIN users u ON c.owner_id = u.user_id
             ORDER BY c.last_message_created_at DESC
@@ -45,7 +45,7 @@ extension ConversationDAO {
                 if cid.isEmpty {
                     Logger.database.error(category: "FTS", message: "Got empty cid")
                 }
-                let arguments = ["keyword": "(content : \"\(keyword)\") AND (conversation_id : \"\(uuidTokenString(uuidString: cid))\")"]
+                let arguments: StatementArguments = ["(content : \"\(keyword)\"*) AND (conversation_id : \"\(uuidTokenString(uuidString: cid))\")"]
                 let resultsInConversation = searchResults(db, with: sql, arguments: arguments, keyword: keyword)
                 results.append(contentsOf: resultsInConversation)
             }
@@ -72,16 +72,16 @@ extension ConversationDAO {
         if let limit = limit {
             sql += "\nLIMIT \(limit)"
         }
-        let arguments = ["keyword": "%\(keyword.sqlEscaped)%"]
+        let arguments: StatementArguments = ["keyword": "%\(keyword.sqlEscaped)%"]
         return snapshot.read { (db) -> [MessagesWithinConversationSearchResult] in
             searchResults(db, with: sql, arguments: arguments, keyword: keyword)
         }
     }
     
-    private func searchResults(_ db: GRDB.Database, with sql: String, arguments: [String: String], keyword: String) -> [MessagesWithinConversationSearchResult] {
+    private func searchResults(_ db: GRDB.Database, with sql: String, arguments: StatementArguments, keyword: String) -> [MessagesWithinConversationSearchResult] {
         do {
             var items = [MessagesWithinConversationSearchResult]()
-            let rows = try Row.fetchCursor(db, sql: sql, arguments: StatementArguments(arguments), adapter: nil)
+            let rows = try Row.fetchCursor(db, sql: sql, arguments: arguments, adapter: nil)
             while let row = try rows.next() {
                 let counter = Counter(value: -1)
                 let conversationId: String = row[counter.advancedValue] ?? ""

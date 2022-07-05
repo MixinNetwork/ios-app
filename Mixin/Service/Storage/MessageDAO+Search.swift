@@ -11,10 +11,10 @@ extension MessageDAO {
         SELECT m.id, m.category, m.content, m.created_at, u.user_id, u.full_name, u.avatar_url, u.is_verified, u.app_id
         FROM messages m LEFT JOIN users u ON m.user_id = u.user_id
         """
-        let arguments: [String: String]
+        let arguments: StatementArguments
         
         if AppGroupUserDefaults.Database.isFTSInitialized {
-            var midSQL = "SELECT ttou(id) FROM \(Message.ftsTableName) WHERE \(Message.ftsTableName) MATCH :keyword"
+            var midSQL = "SELECT ttou(id) FROM \(Message.ftsTableName) WHERE \(Message.ftsTableName) MATCH ?"
             
             let locationFTSRowIDSQL = "SELECT rowid FROM \(Message.ftsTableName) WHERE id MATCH ?"
             if let location = location, let rowId: Int = UserDatabase.current.select(with: locationFTSRowIDSQL, arguments: [uuidTokenString(uuidString: location)]) {
@@ -27,10 +27,7 @@ extension MessageDAO {
             }
             
             sql += "\nWHERE m.id in (\(midSQL))\nORDER BY m.created_at DESC"
-            arguments = [
-                "cid": conversationId,
-                "keyword": "(content : \"\(keyword)\") AND (conversation_id : \(uuidTokenString(uuidString: conversationId)))"
-            ]
+            arguments = ["(content : \"\(keyword)\"*) AND (conversation_id : \(uuidTokenString(uuidString: conversationId)))"]
         } else {
             sql += """
                 WHERE conversation_id = :cid
@@ -51,7 +48,7 @@ extension MessageDAO {
         
         do {
             try UserDatabase.current.read { (db) -> Void in
-                let rows = try Row.fetchCursor(db, sql: sql, arguments: StatementArguments(arguments), adapter: nil)
+                let rows = try Row.fetchCursor(db, sql: sql, arguments: arguments, adapter: nil)
                 while let row = try rows.next() {
                     let counter = Counter(value: -1)
                     let result = MessageSearchResult(conversationId: conversationId,

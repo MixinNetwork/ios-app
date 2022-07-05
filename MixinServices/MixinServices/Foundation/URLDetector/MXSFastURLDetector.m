@@ -2,6 +2,8 @@
 
 @implementation MXSFastURLDetector
 
+NS_INLINE BOOL MaybeContainsURL(NSString *string);
+
 + (NSDataDetector *)detector {
     static NSDataDetector *detector;
     static dispatch_once_t onceToken;
@@ -12,14 +14,14 @@
 }
 
 - (void)enumerateMatchesInString:(NSString *)string options:(NSMatchingOptions)options usingBlock:(void (NS_NOESCAPE ^)(NSTextCheckingResult * _Nullable result, NSMatchingFlags flags, BOOL *stop))block {
-    if ([self maybeContainsURL:string]) {
+    if (MaybeContainsURL(string)) {
         NSRange range = NSMakeRange(0, string.length);
         [[MXSFastURLDetector detector] enumerateMatchesInString:string options:options range:range usingBlock:block];
     }
 }
 
-- (nullable NSTextCheckingResult *)lastMatcheInString:(NSString *)string options:(NSMatchingOptions)options {
-    if ([self maybeContainsURL:string]) {
+- (nullable NSTextCheckingResult *)lastMatchInString:(NSString *)string options:(NSMatchingOptions)options {
+    if (MaybeContainsURL(string)) {
         NSRange range = NSMakeRange(0, string.length);
         return [[MXSFastURLDetector detector] matchesInString:string options:options range:range].lastObject;
     } else {
@@ -27,7 +29,7 @@
     }
 }
 
-- (BOOL)maybeContainsURL:(NSString *)string {
+NS_INLINE BOOL MaybeContainsURL(NSString *string) {
     if (string.length < 3) {
         return NO;
     }

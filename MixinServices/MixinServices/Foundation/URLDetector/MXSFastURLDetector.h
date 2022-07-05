@@ -6,8 +6,7 @@ NS_SWIFT_NAME(FastURLDetector)
 @interface MXSFastURLDetector : NSObject
 
 - (void)enumerateMatchesInString:(NSString *)string options:(NSMatchingOptions)options usingBlock:(void (NS_NOESCAPE ^)(NSTextCheckingResult * _Nullable result, NSMatchingFlags flags, BOOL *stop))block;
-
-- (nullable NSTextCheckingResult *)lastMatcheInString:(NSString *)string options:(NSMatchingOptions)options;
+- (nullable NSTextCheckingResult *)lastMatchInString:(NSString *)string options:(NSMatchingOptions)options;
 
 @end
 

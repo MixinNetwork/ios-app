@@ -604,7 +604,7 @@ public final class MessageDAO: UserDatabaseDAO {
             quotedMessage = nil
         }
         
-        if message.category.hasSuffix("_TEXT"), let content = message.content, let link = Link.detector.lastMatche(in: content)?.url?.absoluteString {
+        if message.category.hasSuffix("_TEXT"), let content = message.content, let link = Link.detector.lastMatch(in: content)?.url?.absoluteString {
             message.hyperlink = link
         }
         db.write { (db) in

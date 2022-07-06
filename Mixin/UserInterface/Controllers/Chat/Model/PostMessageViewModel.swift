@@ -58,7 +58,8 @@ class PostMessageViewModel: DetailInfoMessageViewModel, BackgroundedTrailingInfo
         let textSize = contentAttributedString.boundingRect(with: sizeToFit,
                                                             options: [.usesLineFragmentOrigin, .usesFontLeading],
                                                             context: nil)
-        let height = ceil(max(minTextHeight, textSize.height))
+        let maxTextHeight = round(widthToFit / 4 * 3)
+        let height = ceil(min(maxTextHeight, max(minTextHeight, textSize.height)))
         let bubbleMargin = DetailInfoMessageViewModel.bubbleMargin
         let contentLabelTopMargin: CGFloat = {
             if style.contains(.fullname) {

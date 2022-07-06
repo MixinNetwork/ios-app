@@ -99,7 +99,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SwR-ht-bhW">
-                                                    <rect key="frame" x="22" y="18" width="44" height="44"/>
+                                                    <rect key="frame" x="8" y="18" width="44" height="44"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="44" id="Z6d-0f-k3D"/>
                                                         <constraint firstAttribute="height" constant="44" id="jRq-Vd-sAc"/>
@@ -109,7 +109,7 @@
                                                     </connections>
                                                 </button>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="G5h-fM-NoV" customClass="PeerInfoView" customModule="Mixin" customModuleProvider="target">
-                                                    <rect key="frame" x="72" y="15" width="283" height="50"/>
+                                                    <rect key="frame" x="60" y="15" width="295" height="50"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="50" id="eEE-b7-9rx"/>
@@ -119,8 +119,8 @@
                                             <constraints>
                                                 <constraint firstAttribute="trailing" secondItem="G5h-fM-NoV" secondAttribute="trailing" constant="20" id="1ch-c0-b7L"/>
                                                 <constraint firstItem="G5h-fM-NoV" firstAttribute="centerY" secondItem="2b8-dc-Pnn" secondAttribute="centerY" id="EgM-eW-Zo1"/>
-                                                <constraint firstItem="SwR-ht-bhW" firstAttribute="leading" secondItem="2b8-dc-Pnn" secondAttribute="leading" constant="22" id="QeA-is-7du"/>
-                                                <constraint firstItem="G5h-fM-NoV" firstAttribute="leading" secondItem="SwR-ht-bhW" secondAttribute="trailing" constant="6" id="SMC-Hv-u9N"/>
+                                                <constraint firstItem="SwR-ht-bhW" firstAttribute="leading" secondItem="2b8-dc-Pnn" secondAttribute="leading" constant="8" id="QeA-is-7du"/>
+                                                <constraint firstItem="G5h-fM-NoV" firstAttribute="leading" secondItem="SwR-ht-bhW" secondAttribute="trailing" constant="8" id="SMC-Hv-u9N"/>
                                                 <constraint firstItem="SwR-ht-bhW" firstAttribute="centerY" secondItem="2b8-dc-Pnn" secondAttribute="centerY" id="V3x-t0-zH6"/>
                                             </constraints>
                                         </tableViewCellContentView>
@@ -293,7 +293,7 @@
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="title">
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

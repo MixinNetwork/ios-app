@@ -11,7 +11,6 @@ class CheckmarkPeerCell: PeerCell {
     }
     
     @IBOutlet weak var checkmarkView: CheckmarkView!
-    @IBOutlet weak var checkmarkLeadingConstraint: NSLayoutConstraint!
     
     var isForceSelected = false
     

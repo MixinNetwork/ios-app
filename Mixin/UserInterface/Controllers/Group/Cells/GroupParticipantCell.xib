@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -18,7 +18,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="cPb-sP-2YF" customClass="PeerInfoView" customModule="Mixin" customModuleProvider="target">
-                        <rect key="frame" x="36" y="10" width="283.5" height="50"/>
+                        <rect key="frame" x="20" y="10" width="299.5" height="50"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="50" id="fm9-w2-pkg"/>
@@ -63,7 +63,7 @@
                     <constraint firstItem="cPb-sP-2YF" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="gvE-f0-8tV"/>
                     <constraint firstAttribute="trailing" secondItem="FfY-FX-rgJ" secondAttribute="trailing" constant="20" id="q7U-bI-IRl"/>
                     <constraint firstAttribute="bottom" secondItem="FfY-FX-rgJ" secondAttribute="bottom" id="uan-sw-aKr"/>
-                    <constraint firstItem="cPb-sP-2YF" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="36" id="xmI-y5-H8w"/>
+                    <constraint firstItem="cPb-sP-2YF" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="20" id="xmI-y5-H8w"/>
                 </constraints>
             </tableViewCellContentView>
             <color key="backgroundColor" name="background"/>
@@ -80,7 +80,7 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

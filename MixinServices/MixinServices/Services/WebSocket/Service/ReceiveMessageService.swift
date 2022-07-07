@@ -488,6 +488,10 @@ public class ReceiveMessageService: MixinService {
                         ]
                         NotificationCenter.default.post(name: Self.senderKeyDidChangeNotification, object: self, userInfo: userInfo)
                     }
+                    self.updatePendingMessageStatuses { [id = data.messageId] statuses in
+                        statuses[id] = nil
+                        Logger.general.debug(category: "ReceiveMessageService", message: "Dropped status for signalkey message: \(id)")
+                    }
                 }
             })
             let status = RatchetSenderKeyDAO.shared.getRatchetSenderKeyStatus(groupId: data.conversationId, senderId: data.userId, sessionId: data.sessionId)

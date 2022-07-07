@@ -16,19 +16,23 @@ class RefreshOffsetJob: BaseJob {
             switch MessageAPI.messageStatus(offset: statusOffset) {
             case let .success(blazeMessages):
                 guard let lastStatusOffset = blazeMessages.last?.updatedAt.toUTCDate().nanosecond() else {
+                    Logger.general.debug(category: "RefreshOffsetJob", message: "Early returned for empty data")
                     return
                 }
-                ReceiveMessageService.shared.withManagedMessageProcessing {
-                    var statuses: [String: String] = [:]
+                ReceiveMessageService.shared.updatePendingMessageStatuses { statuses in
                     for data in blazeMessages {
                         let messageExists = MessageDAO.shared.updateMessageStatus(messageId: data.messageId, status: data.status, from: "RefreshOffset")
                         AppGroupUserDefaults.Crypto.Offset.status = data.updatedAt.toUTCDate().nanosecond()
                         if !messageExists {
-                            statuses[data.messageId] = data.status
-                            Logger.general.debug(category: "RefreshOffsetJob", message: "Saved status for inexisted message: \(data.messageId), status: \(data.status)")
+                            if let status = statuses[data.messageId], MessageStatus.getOrder(messageStatus: status) >= MessageStatus.getOrder(messageStatus: data.status) {
+                                // Don't replace it with a new incoming but low ordered status
+                                continue
+                            } else {
+                                statuses[data.messageId] = data.status
+                                Logger.general.debug(category: "RefreshOffsetJob", message: "Saved status for inexisted message: \(data.messageId), status: \(data.status)")
+                            }
                         }
                     }
-                    return statuses
                 }
                 if lastStatusOffset == statusOffset {
                     return

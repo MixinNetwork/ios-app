@@ -122,6 +122,9 @@ public final class LoginManager {
                 SignalDatabase.current.erase()
                 PropertiesDAO.shared.removeValue(forKey: .iterator)
                 AppGroupUserDefaults.Crypto.clearAll()
+                ReceiveMessageService.shared.updatePendingMessageStatuses { statuses in
+                    statuses.removeAll()
+                }
                 NotificationCenter.default.post(name: LoginManager.didLogoutNotification, object: self)
             }
         }

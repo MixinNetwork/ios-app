@@ -75,12 +75,9 @@ public class ReceiveMessageService: MixinService {
         }
     }
     
-    public func withManagedMessageProcessing(work: @escaping () -> [String: String]) {
+    public func updatePendingMessageStatuses(update: @escaping (inout [String: String]) -> Void) {
         processDispatchQueue.async {
-            let statuses = work()
-            for (id, status) in statuses {
-                self.pendingMessageStatuses[id] = status
-            }
+            update(&self.pendingMessageStatuses)
         }
     }
     
@@ -264,8 +261,12 @@ public class ReceiveMessageService: MixinService {
         unknownMessage.status = MessageStatus.UNKNOWN.rawValue
         unknownMessage.content = data.data
         if let status = pendingMessageStatuses.removeValue(forKey: data.messageId) {
-            unknownMessage.status = status
-            Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId), before: \(unknownMessage.status), after: \(status)")
+            if MessageStatus.getOrder(messageStatus: status) > MessageStatus.getOrder(messageStatus: unknownMessage.status) {
+                Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId), before: \(unknownMessage.status), after: \(status)")
+                unknownMessage.status = status
+            } else {
+                Logger.general.debug(category: "ReceiveMessageService", message: "Dropped low ordered status for message: \(data.messageId)")
+            }
         }
         MessageDAO.shared.insertMessage(message: unknownMessage, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
     }
@@ -273,12 +274,16 @@ public class ReceiveMessageService: MixinService {
     private func processBadMessage(data: BlazeMessageData) {
         ReceiveMessageService.shared.updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
         BlazeMessageDAO.shared.delete(data: data)
+        pendingMessageStatuses.removeValue(forKey: data.messageId)
+        Logger.general.debug(category: "ReceiveMessageService", message: "Dropped status for bad message: \(data.messageId)")
     }
     
     private func processCallMessage(data: BlazeMessageData) {
         guard data.category.hasPrefix("WEBRTC_") || data.category.hasPrefix("KRAKEN_") else {
             return
         }
+        pendingMessageStatuses.removeValue(forKey: data.messageId)
+        Logger.general.debug(category: "ReceiveMessageService", message: "Dropped status for call message: \(data.messageId)")
         _ = syncUser(userId: data.getSenderId())
         updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
         MessageHistoryDAO.shared.replaceMessageHistory(messageId: data.messageId)
@@ -299,8 +304,12 @@ public class ReceiveMessageService: MixinService {
 
         var message = Message.createMessage(appMessage: data)
         if let status = pendingMessageStatuses.removeValue(forKey: data.messageId) {
-            message.status = status
-            Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId), before: \(message.status), after: \(status)")
+            if MessageStatus.getOrder(messageStatus: status) > MessageStatus.getOrder(messageStatus: message.status) {
+                Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId), before: \(message.status), after: \(status)")
+                message.status = status
+            } else {
+                Logger.general.debug(category: "ReceiveMessageService", message: "Dropped low ordered status for message: \(data.messageId)")
+            }
         }
         MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
         updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
@@ -327,8 +336,12 @@ public class ReceiveMessageService: MixinService {
 
         var message = Message.createMessage(appMessage: data)
         if let status = pendingMessageStatuses.removeValue(forKey: data.messageId) {
-            message.status = status
-            Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId), before: \(message.status), after: \(status)")
+            if MessageStatus.getOrder(messageStatus: status) > MessageStatus.getOrder(messageStatus: message.status) {
+                Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId), before: \(message.status), after: \(status)")
+                message.status = status
+            } else {
+                Logger.general.debug(category: "ReceiveMessageService", message: "Dropped low ordered status for message: \(data.messageId)")
+            }
         }
         MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
         updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
@@ -354,6 +367,8 @@ public class ReceiveMessageService: MixinService {
             return
         }
         defer {
+            pendingMessageStatuses.removeValue(forKey: data.messageId)
+            Logger.general.debug(category: "ReceiveMessageService", message: "Dropped status for pin message: \(data.messageId)")
             updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
         }
         guard ConversationDAO.shared.isExist(conversationId: data.conversationId),
@@ -369,17 +384,13 @@ public class ReceiveMessageService: MixinService {
         case .pin:
             for messageId in pinData.messageIds {
                 guard let fullMessage = MessageDAO.shared.getFullMessage(messageId: messageId) else {
-                    var message = Message.createMessage(messageId: data.messageId,
+                    let message = Message.createMessage(messageId: data.messageId,
                                                         conversationId: data.conversationId,
                                                         userId: data.userId,
                                                         category: data.category,
                                                         status: MessageStatus.DELIVERED.rawValue,
                                                         action: pinData.action,
                                                         createdAt: data.createdAt)
-                    if let status = pendingMessageStatuses.removeValue(forKey: data.messageId) {
-                        message.status = status
-                        Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId), before: \(message.status), after: \(status)")
-                    }
                     MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification)
                     continue
                 }
@@ -424,7 +435,10 @@ public class ReceiveMessageService: MixinService {
         guard data.category == MessageCategory.MESSAGE_RECALL.rawValue else {
             return
         }
-
+        
+        pendingMessageStatuses.removeValue(forKey: data.messageId)
+        Logger.general.debug(category: "ReceiveMessageService", message: "Dropped status for recall message: \(data.messageId)")
+        
         updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
         MessageHistoryDAO.shared.replaceMessageHistory(messageId: data.messageId)
 
@@ -612,8 +626,12 @@ public class ReceiveMessageService: MixinService {
             }
             var message = Message.createMessage(textMessage: content, data: data)
             if let status = pendingMessageStatuses.removeValue(forKey: data.messageId) {
-                message.status = status
-                Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId), before: \(message.status), after: \(status)")
+                if MessageStatus.getOrder(messageStatus: status) > MessageStatus.getOrder(messageStatus: message.status) {
+                    Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId), before: \(message.status), after: \(status)")
+                    message.status = status
+                } else {
+                    Logger.general.debug(category: "ReceiveMessageService", message: "Dropped low ordered status for message: \(data.messageId)")
+                }
             }
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
         } else if data.category.hasSuffix("_IMAGE") || data.category.hasSuffix("_VIDEO") {
@@ -642,8 +660,12 @@ public class ReceiveMessageService: MixinService {
 
             var message = Message.createMessage(mediaData: transferMediaData, data: data)
             if let status = pendingMessageStatuses.removeValue(forKey: data.messageId) {
-                message.status = status
-                Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId), before: \(message.status), after: \(status)")
+                if MessageStatus.getOrder(messageStatus: status) > MessageStatus.getOrder(messageStatus: message.status) {
+                    Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId), before: \(message.status), after: \(status)")
+                    message.status = status
+                } else {
+                    Logger.general.debug(category: "ReceiveMessageService", message: "Dropped low ordered status for message: \(data.messageId)")
+                }
             }
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
         } else if data.category.hasSuffix("_LIVE") {
@@ -656,8 +678,12 @@ public class ReceiveMessageService: MixinService {
                                                 content: String(data: decryptedData, encoding: .utf8),
                                                 data: data)
             if let status = pendingMessageStatuses.removeValue(forKey: data.messageId) {
-                message.status = status
-                Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId), before: \(message.status), after: \(status)")
+                if MessageStatus.getOrder(messageStatus: status) > MessageStatus.getOrder(messageStatus: message.status) {
+                    Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId), before: \(message.status), after: \(status)")
+                    message.status = status
+                } else {
+                    Logger.general.debug(category: "ReceiveMessageService", message: "Dropped low ordered status for message: \(data.messageId)")
+                }
             }
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
         } else if data.category.hasSuffix("_DATA")  {
@@ -672,8 +698,12 @@ public class ReceiveMessageService: MixinService {
             }
             var message = Message.createMessage(mediaData: transferMediaData, data: data)
             if let status = pendingMessageStatuses.removeValue(forKey: data.messageId) {
-                message.status = status
-                Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId), before: \(message.status), after: \(status)")
+                if MessageStatus.getOrder(messageStatus: status) > MessageStatus.getOrder(messageStatus: message.status) {
+                    Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId), before: \(message.status), after: \(status)")
+                    message.status = status
+                } else {
+                    Logger.general.debug(category: "ReceiveMessageService", message: "Dropped low ordered status for message: \(data.messageId)")
+                }
             }
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
         } else if data.category.hasSuffix("_AUDIO") {
@@ -684,8 +714,12 @@ public class ReceiveMessageService: MixinService {
             }
             var message = Message.createMessage(mediaData: transferMediaData, data: data)
             if let status = pendingMessageStatuses.removeValue(forKey: data.messageId) {
-                message.status = status
-                Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId), before: \(message.status), after: \(status)")
+                if MessageStatus.getOrder(messageStatus: status) > MessageStatus.getOrder(messageStatus: message.status) {
+                    Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId), before: \(message.status), after: \(status)")
+                    message.status = status
+                } else {
+                    Logger.general.debug(category: "ReceiveMessageService", message: "Dropped low ordered status for message: \(data.messageId)")
+                }
             }
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
             let job = AttachmentDownloadJob(message: message)
@@ -696,8 +730,12 @@ public class ReceiveMessageService: MixinService {
             }
             var message = Message.createMessage(stickerData: transferStickerData, data: data)
             if let status = pendingMessageStatuses.removeValue(forKey: data.messageId) {
-                message.status = status
-                Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId), before: \(message.status), after: \(status)")
+                if MessageStatus.getOrder(messageStatus: status) > MessageStatus.getOrder(messageStatus: message.status) {
+                    Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId), before: \(message.status), after: \(status)")
+                    message.status = status
+                } else {
+                    Logger.general.debug(category: "ReceiveMessageService", message: "Dropped low ordered status for message: \(data.messageId)")
+                }
             }
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
         } else if data.category.hasSuffix("_CONTACT") {
@@ -716,8 +754,12 @@ public class ReceiveMessageService: MixinService {
             }
             var message = Message.createMessage(contactData: transferData, data: data)
             if let status = pendingMessageStatuses.removeValue(forKey: data.messageId) {
-                message.status = status
-                Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId), before: \(message.status), after: \(status)")
+                if MessageStatus.getOrder(messageStatus: status) > MessageStatus.getOrder(messageStatus: message.status) {
+                    Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId), before: \(message.status), after: \(status)")
+                    message.status = status
+                } else {
+                    Logger.general.debug(category: "ReceiveMessageService", message: "Dropped low ordered status for message: \(data.messageId)")
+                }
             }
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
         } else if data.category.hasSuffix("_LOCATION") {
@@ -731,8 +773,12 @@ public class ReceiveMessageService: MixinService {
             }
             var message = Message.createLocationMessage(content: content, data: data)
             if let status = pendingMessageStatuses.removeValue(forKey: data.messageId) {
-                message.status = status
-                Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId), before: \(message.status), after: \(status)")
+                if MessageStatus.getOrder(messageStatus: status) > MessageStatus.getOrder(messageStatus: message.status) {
+                    Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId), before: \(message.status), after: \(status)")
+                    message.status = status
+                } else {
+                    Logger.general.debug(category: "ReceiveMessageService", message: "Dropped low ordered status for message: \(data.messageId)")
+                }
             }
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
         } else if data.category.hasSuffix("_TRANSCRIPT") {
@@ -748,8 +794,12 @@ public class ReceiveMessageService: MixinService {
                                                           mediaStatus: hasAttachment ? .PENDING : .DONE,
                                                           data: data)
             if let status = pendingMessageStatuses.removeValue(forKey: data.messageId) {
-                message.status = status
-                Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId), before: \(message.status), after: \(status)")
+                if MessageStatus.getOrder(messageStatus: status) > MessageStatus.getOrder(messageStatus: message.status) {
+                    Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId), before: \(message.status), after: \(status)")
+                    message.status = status
+                } else {
+                    Logger.general.debug(category: "ReceiveMessageService", message: "Dropped low ordered status for message: \(data.messageId)")
+                }
             }
             MessageDAO.shared.insertMessage(message: message, children: children, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
         }
@@ -769,6 +819,7 @@ public class ReceiveMessageService: MixinService {
         failedMessage.content = data.data
         failedMessage.quoteMessageId = data.quoteMessageId.isEmpty ? nil : data.quoteMessageId
         pendingMessageStatuses.removeValue(forKey: data.messageId)
+        Logger.general.debug(category: "ReceiveMessageService", message: "Dropped status for failed message: \(data.messageId)")
         MessageDAO.shared.insertMessage(message: failedMessage, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
     }
 
@@ -1214,6 +1265,9 @@ extension ReceiveMessageService {
         default:
             break
         }
+        
+        pendingMessageStatuses.removeValue(forKey: data.messageId)
+        Logger.general.debug(category: "ReceiveMessageService", message: "Dropped status for system message: \(data.messageId)")
         updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
     }
 
@@ -1280,11 +1334,7 @@ extension ReceiveMessageService {
         }
 
         SnapshotDAO.shared.saveSnapshots(snapshots: [snapshot])
-        var message = Message.createMessage(snapshotMesssage: snapshot, data: data)
-        if let status = pendingMessageStatuses.removeValue(forKey: data.messageId) {
-            message.status = status
-            Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId), before: \(message.status), after: \(status)")
-        }
+        let message = Message.createMessage(snapshotMesssage: snapshot, data: data)
         MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: data.expireIn)
     }
 
@@ -1420,10 +1470,6 @@ extension ReceiveMessageService {
             break
         }
         
-        if let status = pendingMessageStatuses.removeValue(forKey: data.messageId) {
-            message.status = status
-            Logger.general.debug(category: "ReceiveMessageService", message: "Using saved status for message: \(data.messageId), before: \(message.status), after: \(status)")
-        }
         MessageDAO.shared.insertMessage(message: message, messageSource: data.source, silentNotification: data.silentNotification, expireIn: sysMessage.expireIn ?? 0)
     }
 }

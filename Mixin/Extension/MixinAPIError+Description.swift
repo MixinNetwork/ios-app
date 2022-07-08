@@ -51,7 +51,7 @@ extension MixinAPIError {
         case .failedToDeliverSMS:
             return R.string.localizable.error_phone_sms_delivery()
         case .invalidCaptchaToken:
-            return R.string.localizable.error_recaptcha_is_invalid()
+            return R.string.localizable.error_captcha_is_invalid()
         case .requiresCaptcha:
             return R.string.localizable.error_requires_captcha()
         case .requiresUpdate:

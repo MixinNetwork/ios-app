@@ -324,6 +324,7 @@
 "enter_your_pin" = "Enter your PIN";
 "enter_your_pin_to_continue" = "Enter your PIN to continue";
 "error_blockchain" = "ERROR 30100: Blockchain not in sync, please try again later.";
+"error_captcha_is_invalid" = "ERROR 10004: CAPTCHA is invalid";
 "error_connection_timeout" = "Network connection timeout, please try again";
 "error_full_group" = "ERROR 20116: The group chat is full.";
 "error_insufficient_balance" = "ERROR 20117: Insufficient balance";
@@ -341,8 +342,7 @@
 "error_pin_incorrect" = "ERROR 20119: PIN incorrect";
 "error_pin_incorrect_with_times" = "ERROR 20119: PIN incorrect. You still have %d chance. Please wait for 24 hours to retry later.";
 "error_pin_incorrect_with_times_count" = "ERROR 20119: PIN incorrect. You still have %d chances. Please wait for 24 hours to retry later.";
-"error_recaptcha_is_invalid" = "ERROR 10004: Recaptcha is invalid";
-"error_requires_captcha" = "Captcha is required.";
+"error_requires_captcha" = "CAPTCHA is required.";
 "error_too_many_friends" = "ERROR 20128: Too many friends";
 "error_too_many_request" = "ERROR 429: Rate limit exceeded";
 "error_too_many_stickers" = "ERROR 20126: Too many stickers";

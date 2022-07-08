@@ -40,67 +40,67 @@ extension MixinAPIError {
             return R.string.localizable.access_denied()
         case .notFound:
             return R.string.localizable.not_found()
-        case .tooManyRequests(let code):
-            return R.string.localizable.error_too_many_request(code)
+        case .tooManyRequests:
+            return R.string.localizable.error_too_many_request()
             
         case .internalServerError, .blazeServerError, .blazeOperationTimedOut, .insufficientPool:
             return R.string.localizable.mixin_server_encounters_errors()
             
         case .invalidRequestData:
             return R.string.localizable.invalid_request_data()
-        case .failedToDeliverSMS(let code):
-            return R.string.localizable.error_phone_sms_delivery(code)
-        case .invalidCaptchaToken(let code):
-            return R.string.localizable.error_recaptcha_is_invalid(code)
+        case .failedToDeliverSMS:
+            return R.string.localizable.error_phone_sms_delivery()
+        case .invalidCaptchaToken:
+            return R.string.localizable.error_recaptcha_is_invalid()
         case .requiresCaptcha:
             return R.string.localizable.error_requires_captcha()
         case .requiresUpdate:
             return R.string.localizable.app_update_short_hint()
-        case .invalidPhoneNumber(let code):
-            return R.string.localizable.error_phone_invalid_format(code)
-        case .invalidPhoneVerificationCode(let code):
-            return R.string.localizable.error_phone_verification_code_invalid(code)
-        case .expiredPhoneVerificationCode(let code):
-            return R.string.localizable.error_phone_verification_code_expired(code)
+        case .invalidPhoneNumber:
+            return R.string.localizable.error_phone_invalid_format()
+        case .invalidPhoneVerificationCode:
+            return R.string.localizable.error_phone_verification_code_invalid()
+        case .expiredPhoneVerificationCode:
+            return R.string.localizable.error_phone_verification_code_expired()
         case .invalidQrCode:
             return R.string.localizable.invalid_qr_code()
-        case .groupChatIsFull(let code):
-            return R.string.localizable.error_full_group(code)
-        case .insufficientBalance(let code):
-            return R.string.localizable.error_insufficient_balance(code)
+        case .groupChatIsFull:
+            return R.string.localizable.error_full_group()
+        case .insufficientBalance:
+            return R.string.localizable.error_insufficient_balance()
         case .malformedPin, .incorrectPin:
             return R.string.localizable.pin_incorrect()
-        case .transferAmountTooSmall(let code):
-            return R.string.localizable.error_too_small_transfer_amount(code)
-        case .expiredAuthorizationCode(let code):
-            return R.string.localizable.error_phone_verification_code_expired(code)
-        case .phoneNumberInUse(let code):
-            return R.string.localizable.error_used_phone(code)
+        case .transferAmountTooSmall:
+            return R.string.localizable.error_too_small_transfer_amount()
+        case .expiredAuthorizationCode:
+            return R.string.localizable.error_phone_verification_code_expired()
+        case .phoneNumberInUse:
+            return R.string.localizable.error_used_phone()
         case .insufficientFee:
             return R.string.localizable.insufficient_transaction_fee()
-        case .transferIsAlreadyPaid(let code):
-            return R.string.localizable.error_transfer_is_already_paid(code)
-        case .tooManyStickers(let code):
-            return R.string.localizable.error_too_many_stickers(code)
-        case .withdrawAmountTooSmall(let code):
-            return R.string.localizable.error_too_small_withdraw_amount(code)
-        case .tooManyFriends(let code):
-            return R.string.localizable.error_too_many_friends(code)
+        case .transferIsAlreadyPaid:
+            return R.string.localizable.error_transfer_is_already_paid()
+        case .tooManyStickers:
+            return R.string.localizable.error_too_many_stickers()
+        case .withdrawAmountTooSmall:
+            return R.string.localizable.error_too_small_withdraw_amount()
+        case .tooManyFriends:
+            return R.string.localizable.error_too_many_friends()
         case .sendingVerificationCodeTooFrequently:
             return R.string.localizable.send_verification_code_frequent()
-        case .invalidEmergencyContact(let code):
-            return R.string.localizable.error_invalid_emergency_contact(code)
-        case .malformedWithdrawalMemo(let code):
-            return R.string.localizable.error_withdrawal_memo_format_incorrect(code)
+        case .invalidEmergencyContact:
+            return R.string.localizable.error_invalid_emergency_contact()
+        case .malformedWithdrawalMemo:
+            return R.string.localizable.error_withdrawal_memo_format_incorrect()
         case .sharedAppReachLimit:
             return R.string.localizable.number_reached_limit()
         case .circleConversationReachLimit:
             return R.string.localizable.conversation_has_too_many_circles()
 
-        case .chainNotInSync(let code):
-            return R.string.localizable.error_blockchain(code)
-        case .malformedAddress(let code):
-            return R.string.localizable.error_invalid_address_plain(code)
+        case .chainNotInSync:
+            return R.string.localizable.error_blockchain()
+        case .malformedAddress:
+            return R.string.localizable.error_invalid_address_plain()
             
         case .invalidParameters:
             return R.string.localizable.invalid_parameters()

@@ -147,6 +147,9 @@ class HomeViewController: UIViewController {
             }
             initializeFTSIfNeeded()
             refreshExternalSchemesIfNeeded()
+            if SpotlightManager.isAvailable {
+                SpotlightManager.shared.indexIfNeeded()
+            }
         }
         UIApplication.homeContainerViewController?.clipSwitcher.loadClipsFromPreviousSession()
     }

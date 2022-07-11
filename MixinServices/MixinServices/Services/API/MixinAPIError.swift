@@ -22,42 +22,42 @@ public enum MixinAPIError: Error {
     case unauthorized
     case forbidden
     case notFound
-    case tooManyRequests(code: Int)
+    case tooManyRequests
     
     case internalServerError
     case blazeServerError
     case blazeOperationTimedOut
     
     case invalidRequestData(field: String?)
-    case failedToDeliverSMS(code: Int)
-    case invalidCaptchaToken(code: Int)
+    case failedToDeliverSMS
+    case invalidCaptchaToken
     case requiresCaptcha
     case requiresUpdate
-    case invalidPhoneNumber(code: Int)
-    case invalidPhoneVerificationCode(code: Int)
-    case expiredPhoneVerificationCode(code: Int)
+    case invalidPhoneNumber
+    case invalidPhoneVerificationCode
+    case expiredPhoneVerificationCode
     case invalidQrCode
-    case groupChatIsFull(code: Int)
-    case insufficientBalance(code: Int)
+    case groupChatIsFull
+    case insufficientBalance
     case malformedPin
     case incorrectPin
-    case transferAmountTooSmall(code: Int)
-    case expiredAuthorizationCode(code: Int)
-    case phoneNumberInUse(code: Int)
-    case insufficientFee(code: Int)
-    case transferIsAlreadyPaid(code: Int)
-    case tooManyStickers(code: Int)
-    case withdrawAmountTooSmall(code: Int)
-    case tooManyFriends(code: Int)
+    case transferAmountTooSmall
+    case expiredAuthorizationCode
+    case phoneNumberInUse
+    case insufficientFee
+    case transferIsAlreadyPaid
+    case tooManyStickers
+    case withdrawAmountTooSmall
+    case tooManyFriends
     case sendingVerificationCodeTooFrequently
-    case invalidEmergencyContact(code: Int)
-    case malformedWithdrawalMemo(code: Int)
+    case invalidEmergencyContact
+    case malformedWithdrawalMemo
     case sharedAppReachLimit
     case circleConversationReachLimit
     case invalidConversationChecksum
     
-    case chainNotInSync(code: Int)
-    case malformedAddress(code: Int)
+    case chainNotInSync
+    case malformedAddress
     case insufficientPool
     
     case invalidParameters
@@ -84,7 +84,7 @@ extension MixinAPIError {
         case (202, 404):
             self = .notFound
         case (202, 429):
-            self = .tooManyRequests(code: code)
+            self = .tooManyRequests
             
         case (500, 500):
             self = .internalServerError
@@ -96,51 +96,51 @@ extension MixinAPIError {
         case (202, 10002):
             self = .invalidRequestData(field: extra?.field)
         case (202, 10003):
-            self = .failedToDeliverSMS(code: code)
+            self = .failedToDeliverSMS
         case (202, 10004):
-            self = .invalidCaptchaToken(code: code)
+            self = .invalidCaptchaToken
         case (202, 10005):
             self = .requiresCaptcha
         case (202, 10006):
             self = .requiresUpdate
         case (202, 20110):
-            self = .invalidPhoneNumber(code: code)
+            self = .invalidPhoneNumber
         case (202, 20113):
-            self = .invalidPhoneVerificationCode(code: code)
+            self = .invalidPhoneVerificationCode
         case (202, 20114):
-            self = .expiredPhoneVerificationCode(code: code)
+            self = .expiredPhoneVerificationCode
         case (202, 20115):
             self = .invalidQrCode
         case (202, 20116):
-            self = .groupChatIsFull(code: code)
+            self = .groupChatIsFull
         case (202, 20117):
-            self = .insufficientBalance(code: code)
+            self = .insufficientBalance
         case (202, 20118):
             self = .malformedPin
         case (202, 20119):
             self = .incorrectPin
         case (202, 20120):
-            self = .transferAmountTooSmall(code: code)
+            self = .transferAmountTooSmall
         case (202, 20121):
-            self = .expiredAuthorizationCode(code: code)
+            self = .expiredAuthorizationCode
         case (202, 20122):
-            self = .phoneNumberInUse(code: code)
+            self = .phoneNumberInUse
         case (202, 20124):
-            self = .insufficientFee(code: code)
+            self = .insufficientFee
         case (202, 20125):
-            self = .transferIsAlreadyPaid(code: code)
+            self = .transferIsAlreadyPaid
         case (202, 20126):
-            self = .tooManyStickers(code: code)
+            self = .tooManyStickers
         case (202, 20127):
-            self = .withdrawAmountTooSmall(code: code)
+            self = .withdrawAmountTooSmall
         case (202, 20128):
-            self = .tooManyFriends(code: code)
+            self = .tooManyFriends
         case (202, 20129):
             self = .sendingVerificationCodeTooFrequently
         case (202, 20130):
-            self = .invalidEmergencyContact(code: code)
+            self = .invalidEmergencyContact
         case (202, 20131):
-            self = .malformedWithdrawalMemo(code: code)
+            self = .malformedWithdrawalMemo
         case (202, 20132):
             self = .sharedAppReachLimit
         case (202, 20133):
@@ -149,9 +149,9 @@ extension MixinAPIError {
             self = .invalidConversationChecksum
             
         case (202, 30100):
-            self = .chainNotInSync(code: code)
+            self = .chainNotInSync
         case (202, 30102):
-            self = .malformedAddress(code: code)
+            self = .malformedAddress
         case (202, 30103):
             self = .insufficientPool
             

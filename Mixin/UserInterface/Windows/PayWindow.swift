@@ -568,9 +568,9 @@ extension PayWindow: PinFieldDelegate {
             switch error {
             case .malformedPin, .incorrectPin, .insufficientPool, .internalServerError:
                 self.errorContinueAction = .retryPin
-            case .insufficientFee(let code):
+            case .insufficientFee:
                 if let fee = self.withdrawlFee {
-                    message = R.string.localizable.error_insufficient_transaction_fee_with_amount(code, fee)
+                    message = R.string.localizable.error_insufficient_transaction_fee_with_amount(fee)
                 }
                 fallthrough
             default:

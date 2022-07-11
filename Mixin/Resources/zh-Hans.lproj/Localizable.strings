@@ -326,6 +326,7 @@
 "error_blockchain" = "错误 30100：区块链同步异常，请稍后重试";
 "error_captcha_is_invalid" = "错误 10004：验证失败";
 "error_connection_timeout" = "网络连接超时";
+"error_expired_authorization_code" = "错误 20121：授权码已过期";
 "error_full_group" = "错误 20116：群组已满";
 "error_insufficient_balance" = "错误 20117：余额不足";
 "error_insufficient_transaction_fee_with_amount" = "错误 20124：手续费不足。请确保钱包至少有 %@ 当作手续费。";

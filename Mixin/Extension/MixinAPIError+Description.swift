@@ -73,7 +73,7 @@ extension MixinAPIError {
         case .transferAmountTooSmall:
             return R.string.localizable.error_too_small_transfer_amount()
         case .expiredAuthorizationCode:
-            return R.string.localizable.error_phone_verification_code_expired()
+            return R.string.localizable.error_expired_authorization_code()
         case .phoneNumberInUse:
             return R.string.localizable.error_used_phone()
         case .insufficientFee:

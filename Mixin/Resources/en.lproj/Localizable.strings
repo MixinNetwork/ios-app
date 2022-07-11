@@ -326,6 +326,7 @@
 "error_blockchain" = "ERROR 30100: Blockchain not in sync, please try again later.";
 "error_captcha_is_invalid" = "ERROR 10004: CAPTCHA is invalid";
 "error_connection_timeout" = "Network connection timeout, please try again";
+"error_expired_authorization_code" = "ERROR 20121: Expired authorization code";
 "error_full_group" = "ERROR 20116: The group chat is full.";
 "error_insufficient_balance" = "ERROR 20117: Insufficient balance";
 "error_insufficient_transaction_fee_with_amount" = "ERROR 20124: Insufficient transaction fee. Please make sure your wallet has %@ as fee";

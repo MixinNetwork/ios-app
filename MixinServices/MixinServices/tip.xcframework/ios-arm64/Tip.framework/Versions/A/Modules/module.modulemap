@@ -1,0 +1,8 @@
+framework module "Tip" {
+	header "ref.h"
+    header "Crypto.objc.h"
+    header "Universe.objc.h"
+    header "Tip.h"
+
+    export *
+}

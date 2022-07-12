@@ -46,11 +46,13 @@ class MixinWebViewController: WebViewController {
         loadingFailureViewIfLoaded = view
         return view
     }()
-    
+    private lazy var clipSwitcher = UIApplication.homeContainerViewController?.clipSwitcher
+
     private weak var loadingFailureViewIfLoaded: UIView?
     
     private var isMessageHandlerAdded = true
     private var webViewTitleObserver: NSKeyValueObservation?
+    private var minimizedCompletion: (() -> Void)?
     
     deinit {
         #if DEBUG
@@ -188,6 +190,48 @@ class MixinWebViewController: WebViewController {
         isMessageHandlerAdded = false
     }
     
+    func minimizeWithAnimation(completion: (() -> Void)? = nil) {
+        guard
+            let switcher = clipSwitcher, !switcher.isMaximumLimitReached,
+            let controller = UIApplication.homeContainerViewController?.minimizedClipSwitcherViewController
+        else {
+            completion?()
+            return
+        }
+        isBeingDismissedAsChild = true
+        minimizedCompletion = completion
+        let fromPath = UIBezierPath(roundedRect: view.bounds, cornerRadius: contentViewCornerRadius)
+        let dx = controller.horizontalContentMargin / 2
+        let dy = controller.verticalContentMargin / 2
+        let toRect = controller.view.frame.insetBy(dx: dx, dy: dy)
+        let toPath = UIBezierPath(roundedRect: toRect, cornerRadius: toRect.size.height / 2)
+        let basicAniamtion = CABasicAnimation(keyPath: "path")
+        basicAniamtion.delegate = self
+        basicAniamtion.duration = 0.3
+        basicAniamtion.fromValue = fromPath.cgPath
+        basicAniamtion.toValue = toPath.cgPath
+        basicAniamtion.timingFunction = CAMediaTimingFunction(name: .easeIn)
+        let maskLayer = CAShapeLayer()
+        maskLayer.path = toPath.cgPath
+        view.layer.mask = maskLayer
+        maskLayer.add(basicAniamtion, forKey: "pathAnimation")
+    }
+    
+}
+
+extension MixinWebViewController: CAAnimationDelegate {
+
+    func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
+        willMove(toParent: nil)
+        view.layer.mask = nil
+        view.removeFromSuperview()
+        removeFromParent()
+        clipSwitcher?.appendClip(with: self)
+        minimizedCompletion?()
+        isBeingDismissedAsChild = false
+        popupDidDismissAsChild()
+    }
+
 }
 
 extension MixinWebViewController: WKNavigationDelegate {
@@ -327,19 +371,17 @@ extension MixinWebViewController: WebMoreMenuControllerDelegate {
                     shareUrlAction(currentUrl: url)
                 }
             case .float:
-                if let switcher = UIApplication.homeContainerViewController?.clipSwitcher {
-                    if switcher.clips.count < ClipSwitcher.maxNumber {
-                        dismissAsChild(animated: true) {
-                            switcher.appendClip(with: self)
-                        }
-                    } else {
+                if let switcher = clipSwitcher {
+                    if switcher.isMaximumLimitReached {
                         let text = R.string.localizable.floats_allows_up_to_count(ClipSwitcher.maxNumber)
                         showAutoHiddenHud(style: .error, text: text)
+                    } else {
+                        minimizeWithAnimation()
                     }
                 }
             case .cancelFloat:
                 if let clip = associatedClip,
-                   let switcher = UIApplication.homeContainerViewController?.clipSwitcher,
+                   let switcher = clipSwitcher,
                    let index = switcher.clips.firstIndex(of: clip) {
                     switcher.removeClip(at: index)
                 }

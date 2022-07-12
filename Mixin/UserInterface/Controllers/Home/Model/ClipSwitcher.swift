@@ -6,6 +6,10 @@ class ClipSwitcher {
     
     static let maxNumber = 6
     
+    var isMaximumLimitReached: Bool {
+        clips.count >= Self.maxNumber
+    }
+    
     private let encoder = JSONEncoder.default
     
     private(set) var clips: [Clip] = []

@@ -52,7 +52,6 @@ class MixinWebViewController: WebViewController {
     
     private var isMessageHandlerAdded = true
     private var webViewTitleObserver: NSKeyValueObservation?
-    private var minimizedCompletion: (() -> Void)?
     
     deinit {
         #if DEBUG
@@ -199,14 +198,13 @@ class MixinWebViewController: WebViewController {
             return
         }
         isBeingDismissedAsChild = true
-        minimizedCompletion = completion
+        CATransaction.begin()
         let fromPath = UIBezierPath(roundedRect: view.bounds, cornerRadius: contentViewCornerRadius)
         let dx = controller.horizontalContentMargin / 2
         let dy = controller.verticalContentMargin / 2
         let toRect = controller.view.frame.insetBy(dx: dx, dy: dy)
         let toPath = UIBezierPath(roundedRect: toRect, cornerRadius: toRect.size.height / 2)
         let basicAniamtion = CABasicAnimation(keyPath: "path")
-        basicAniamtion.delegate = self
         basicAniamtion.duration = 0.3
         basicAniamtion.fromValue = fromPath.cgPath
         basicAniamtion.toValue = toPath.cgPath
@@ -214,24 +212,20 @@ class MixinWebViewController: WebViewController {
         let maskLayer = CAShapeLayer()
         maskLayer.path = toPath.cgPath
         view.layer.mask = maskLayer
+        CATransaction.setCompletionBlock {
+            self.willMove(toParent: nil)
+            self.view.layer.mask = nil
+            self.view.removeFromSuperview()
+            self.removeFromParent()
+            self.clipSwitcher?.appendClip(with: self)
+            completion?()
+            self.isBeingDismissedAsChild = false
+            self.popupDidDismissAsChild()
+        }
         maskLayer.add(basicAniamtion, forKey: "pathAnimation")
+        CATransaction.commit()
     }
     
-}
-
-extension MixinWebViewController: CAAnimationDelegate {
-
-    func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
-        willMove(toParent: nil)
-        view.layer.mask = nil
-        view.removeFromSuperview()
-        removeFromParent()
-        clipSwitcher?.appendClip(with: self)
-        minimizedCompletion?()
-        isBeingDismissedAsChild = false
-        popupDidDismissAsChild()
-    }
-
 }
 
 extension MixinWebViewController: WKNavigationDelegate {

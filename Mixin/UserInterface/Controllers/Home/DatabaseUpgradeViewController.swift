@@ -74,6 +74,11 @@ class DatabaseUpgradeViewController: UIViewController {
             if localVersion < 30 {
                 ConcurrentJobQueue.shared.addJob(job: RefreshAlbumJob())
             }
+            if localVersion < 31 {
+                if let id = Keychain.shared.removeDeviceID() {
+                    AppGroupKeychain.deviceID = id
+                }
+            }
             
             AppGroupUserDefaults.User.needsRebuildDatabase = false
             AppGroupUserDefaults.User.localVersion = AppGroupUserDefaults.User.version

@@ -9,7 +9,6 @@ public class Keychain {
     private let secKeyType = kSecAttrKeyTypeECSECPrimeRandom
     private let secLabel = "one.mixin.ios.keychain.secureenclave"
 
-    private let keyDeviceId = "device_id"
     private let keyEncryptedPIN = "encrypted_pin"
     private let authenticationService = "one.mixin.ios.authentication"
     
@@ -70,19 +69,17 @@ public class Keychain {
             return false
         }
     }
-}
-
-public extension Keychain {
-
-    func getDeviceId() -> String {
-        var deviceId = getString(keyDeviceId) ?? ""
-        if deviceId.isEmpty {
-            deviceId = UUID().uuidString.lowercased()
-            set(deviceId, key: keyDeviceId)
+    
+    public func removeDeviceID() -> Data? {
+        let key = "device_id"
+        if let id = getData(key) {
+            remove(key)
+            return id
+        } else {
+            return nil
         }
-        return deviceId
     }
-
+    
 }
 
 public extension Keychain {

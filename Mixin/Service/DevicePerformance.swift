@@ -65,8 +65,8 @@ extension DevicePerformance {
     }
     
     static let current: DevicePerformance = {
-        let platform = Platform(machineName: Machine.current.name)
-        let version = Version(machineName: Machine.current.name)
+        let platform = Platform(machineName: Device.current.machineName)
+        let version = Version(machineName: Device.current.machineName)
         switch platform {
         case .iPhone:
             if let version = version {

@@ -52,7 +52,15 @@ final class GalleryImageItemViewController: GalleryItemViewController {
     }
     
     override var supportedActions: Action {
-        [.forward, .saveToLibrary]
+        if let item = item {
+            if item.url == nil {
+                return [.forward]
+            } else {
+                return [.forward, .saveToLibrary, .share]
+            }
+        } else {
+            return []
+        }
     }
     
     override var canPerformInteractiveDismissal: Bool {
@@ -182,6 +190,14 @@ final class GalleryImageItemViewController: GalleryItemViewController {
                 }
             }
         })
+    }
+    
+    override func share() {
+        guard let url = item?.url else {
+            return
+        }
+        let controller = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+        present(controller, animated: true, completion: nil)
     }
     
     override func layout(mediaStatus: MediaStatus) {

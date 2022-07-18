@@ -351,6 +351,11 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
             return
         }
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        if itemViewController.supportedActions.contains(.share) {
+            alert.addAction(UIAlertAction(title: R.string.localizable.share(), style: .default, handler: { (_) in
+                itemViewController.share()
+            }))
+        }
         if itemViewController.supportedActions.contains(.forward) {
             alert.addAction(UIAlertAction(title: R.string.localizable.forward(), style: .default, handler: { (_) in
                 self.forward()

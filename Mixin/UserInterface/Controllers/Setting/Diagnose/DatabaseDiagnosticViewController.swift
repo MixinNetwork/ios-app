@@ -51,22 +51,20 @@ class DatabaseDiagnosticViewController: UIViewController {
             let output: String
             do {
                 output = try database.read { db in
+                    let startTime = CACurrentMediaTime()
                     var rows: [String] = []
                     let cursor = try Row.fetchCursor(db, sql: sql)
                     while let row = try cursor.next() {
                         rows.append(row.description)
                     }
-                    return rows.joined(separator: "\n")
+                    let endTime = CACurrentMediaTime()
+                    return "\(rows.count) rows in \(endTime - startTime)s\n\n" + rows.joined(separator: "\n")
                 }
             } catch {
                 output = "\(error)"
             }
             DispatchQueue.main.sync {
-                if output.isEmpty {
-                    self.outputTextView.text = "(Empty)"
-                } else {
-                    self.outputTextView.text = output
-                }
+                self.outputTextView.text = output
             }
         }
     }

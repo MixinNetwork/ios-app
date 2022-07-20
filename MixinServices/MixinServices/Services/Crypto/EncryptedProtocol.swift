@@ -148,7 +148,7 @@ extension EncryptedProtocol {
     }
     
     private static func numberOfSessions(_ count: SessionCount) -> Data {
-        withUnsafeBytes(of: count.littleEndian) { Data($0) }
+        count.data(endianness: .little)
     }
     
     // Returns IV + Cipher

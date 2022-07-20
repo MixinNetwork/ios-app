@@ -43,7 +43,7 @@ public extension Data {
         return isEqual
     }
     
-    func base64URLEncodedString() -> String {
+    func base64RawURLEncodedString() -> String {
         base64EncodedString()
             .replacingOccurrences(of: "+", with: "-")
             .replacingOccurrences(of: "/", with: "_")

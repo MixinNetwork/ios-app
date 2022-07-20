@@ -70,13 +70,3 @@ public extension Int64 {
     }
 
 }
-
-extension UInt8 {
-    
-    private static let hexDigits = Array("0123456789abcdef".utf16)
-    
-    func hexEncodedUnichars() -> (unichar, unichar) {
-        (Self.hexDigits[Int(self / 16)], Self.hexDigits[Int(self % 16)])
-    }
-    
-}

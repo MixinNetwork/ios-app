@@ -131,7 +131,7 @@ class CallService: NSObject {
         let registry = PKPushRegistry(queue: .main)
         registry.desiredPushTypes = [.voIP]
         registry.delegate = self
-        if let token = registry.pushToken(for: .voIP)?.toHexString() {
+        if let token = registry.pushToken(for: .voIP)?.hexEncodedString() {
             AccountAPI.updateSession(voipToken: .token(token))
             Logger.call.info(category: "CallService", message: "PushKit registered")
         }
@@ -211,7 +211,7 @@ extension CallService: PKPushRegistryDelegate {
         guard LoginManager.shared.isLoggedIn else {
             return
         }
-        let token = pushCredentials.token.toHexString()
+        let token = pushCredentials.token.hexEncodedString()
         AccountAPI.updateSession(voipToken: .token(token))
         Logger.call.info(category: "CallService", message: "PushKit registered")
     }

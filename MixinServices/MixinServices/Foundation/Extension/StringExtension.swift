@@ -56,31 +56,30 @@ public extension String {
                 CC_SHA1(data.baseAddress, CC_LONG(data.count), digest)
             }
         }
-        return digest.map { String(format: "%02hhx", $0) }.joined()
+        return digest.hexEncodedString()
     }
     
     func uuidDigest() -> String {
+        let dash = "-".utf16.first!
+        
         var digest = utf8.md5.data
         digest[6] &= 0x0f       // clear version
         digest[6] |= 0x30       // set to version 3
         digest[8] &= 0x3f       // clear variant
         digest[8] |= 0x80       // set to IETF variant
         
-        var characters: [String] = []
-        characters.reserveCapacity(20)
+        var characters: [unichar] = []
+        characters.reserveCapacity(2 * digest.count + 4)
         for (index, value) in digest.enumerated() {
-            let character: String
-            if value < 16 {
-                character = "0" + String(value, radix: 16, uppercase: false)
-            } else {
-                character = String(value, radix: 16, uppercase: false)
-            }
-            characters.append(character)
+            let (high, low) = value.hexEncodedUnichars()
+            characters.append(high)
+            characters.append(low)
             if index == 3 || index == 5 || index == 7 || index == 9 {
-                characters.append("-")
+                characters.append(dash)
             }
         }
-        return characters.joined()
+        
+        return String(utf16CodeUnits: characters, count: characters.count)
     }
     
     func md5() -> String {
@@ -95,21 +94,9 @@ public extension String {
             })
         }
 
-        return digestData.map { String(format: "%02hhx", $0) }.joined()
+        return digestData.hexEncodedString()
     }
-
-    func sha256() -> String {
-        guard let data = data(using: .utf8) else {
-            return self
-        }
-        var hash = [UInt8](repeating: 0,  count: Int(CC_SHA256_DIGEST_LENGTH))
-
-        _ = data.withUnsafeBytes {
-            _ = CC_SHA256($0.baseAddress, CC_LONG(data.count), &hash)
-        }
-        return hash.map { String(format: "%02x", $0) }.joined()
-    }
-
+    
     func substring(endChar: Character) -> String {
         guard let endIndex = self.firstIndex(of: endChar) else {
             return self

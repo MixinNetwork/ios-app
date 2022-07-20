@@ -1,4 +1,5 @@
 import Foundation
+import CryptoKit
 
 enum RequestSigning {
     
@@ -54,7 +55,7 @@ extension RequestSigning {
                                 iat: date,
                                 exp: date.addingTimeInterval(30 * secondsPerMinute),
                                 jti: requestId,
-                                sig: sig.sha256(),
+                                sig: sig,
                                 scp: "FULL")
         
         let token: String
@@ -96,19 +97,23 @@ extension RequestSigning {
             uri.removeSubrange(start...end)
         }
         
-        var sig = ""
+        var string = ""
         if let method = request.httpMethod {
-            sig += method
+            string += method
         }
         if !uri.hasPrefix("/") {
-            sig += "/"
+            string += "/"
         }
-        sig += uri
+        string += uri
         if let body = request.httpBody, let content = String(data: body, encoding: .utf8), content.count > 0 {
-            sig += content
+            string += content
         }
         
-        return sig
+        guard let data = string.data(using: .utf8) else {
+            return nil
+        }
+        let hash = SHA256.hash(data: data).hexEncodedString()
+        return hash
     }
     
 }

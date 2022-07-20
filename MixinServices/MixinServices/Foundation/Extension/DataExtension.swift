@@ -27,10 +27,6 @@ public extension Data {
         self.init(base64Encoded: str)
     }
     
-    func toHexString() -> String {
-        return map { String(format: "%02.2hhx", $0) }.joined()
-    }
-
     func toString() -> String {
         return String(data: self, encoding: .utf8)!
     }

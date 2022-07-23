@@ -16,18 +16,22 @@ public class RefreshAssetsJob: AsynchronousJob {
     
     public override func execute() -> Bool {
         if let assetId = self.assetId {
+            Logger.general.info(category: "RefreshAssetsJob", message: "Reloading asset: \(assetId) from remote")
             AssetAPI.asset(assetId: assetId) { (result) in
                 switch result {
                 case let .success(asset):
                     DispatchQueue.global().async {
                         guard !MixinService.isStopProcessMessages else {
+                            Logger.general.info(category: "RefreshAssetsJob", message: "Not updating asset: \(assetId) because message processing is stopped")
                             return
                         }
+                        Logger.general.info(category: "RefreshAssetsJob", message: "Will insert asset: \(assetId) to db. deposit_entries: \(asset.depositEntries.count)")
                         AssetDAO.shared.insertOrUpdateAssets(assets: [asset])
                     }
                     self.asset = asset
                     self.updateFiats()
                 case let .failure(error):
+                    Logger.general.error(category: "RefreshAssetsJob", message: "Failed to load asset: \(assetId) from remote: \(error)")
                     reporter.report(error: error)
                     self.finishJob()
                 }

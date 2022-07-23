@@ -53,11 +53,18 @@ class AssetViewController: UIViewController {
     
     @objc func assetsDidChange(_ notification: Notification) {
         guard let id = notification.userInfo?[AssetDAO.UserInfoKey.assetId] as? String else {
+            Logger.general.info(category: "AssetViewController", message: "No asset id in notification")
             return
         }
         guard id == asset.assetId else {
+            if id.count != asset.assetId.count {
+                Logger.general.error(category: "AssetViewController", message: "Invalid asset id in notification: \(id)")
+            } else {
+                Logger.general.error(category: "AssetViewController", message: "Mismatched asset id in notification: \(id)")
+            }
             return
         }
+        Logger.general.info(category: "AssetViewController", message: "Reloading asset by notification")
         reloadAsset()
     }
     
@@ -235,10 +242,12 @@ extension AssetViewController {
         let assetId = asset.assetId
         DispatchQueue.global().async { [weak self] in
             guard let asset = AssetDAO.shared.getAsset(assetId: assetId) else {
+                Logger.general.error(category: "AssetViewController", message: "Asset: \(assetId) not found")
                 return
             }
             DispatchQueue.main.sync {
                 guard let self = self else {
+                    Logger.general.error(category: "AssetViewController", message: "ViewController: \(assetId) is nil out")
                     return
                 }
                 self.asset = asset
@@ -247,6 +256,7 @@ extension AssetViewController {
                     self.tableHeaderView.sizeToFit()
                     self.updateTableHeaderFooterView()
                 }
+                Logger.general.info(category: "AssetViewController", message: "Loaded asset: \(assetId) from local. deposit_entries: \(asset.depositEntries.count)")
             }
         }
     }

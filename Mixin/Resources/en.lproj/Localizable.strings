@@ -238,6 +238,7 @@
 "created_this_group" = "%@ created this group";
 "currency" = "Currency";
 "currency_code" = "Code";
+"current_language" = "English";
 "current_location" = "Current Location";
 "current_selected" = "Current Selected";
 "custom_time" = "Custom Time";
@@ -317,7 +318,6 @@
 "enable_pay_confirmation" = "Enable %@ Pay?";
 "enable_touch_pay_hint" = "Confirm PIN to enable Touch Pay";
 "end_to_end_encryption" = "End-to-end Encrypted";
-"english" = "English";
 "enter_pin_to_delete_account" = "Enter your PIN to delete your account";
 "enter_your_emergency_contact_mixin_id" = "Enter your emergency contact Mixin ID";
 "enter_your_phone_number" = "Enter your phone number";
@@ -729,7 +729,7 @@
 "setting_backup_tips" = "Back up your chat history to iCloud. if you lose your iPhone or switch to a new one, you can restore your chat history when you reinstall Mixin Messenger. Messages you back up are not protected by Mixin Messenger end-to-end encryption while in iCloud.";
 "setting_conversation_group_tip" = "Who can add me to groups";
 "setting_conversation_tip" = "Who can send message to me";
-"setting_delete_account_pin_content" = "If you continue, your profile and account details will be delete on %@. read our document to Learn more.";
+"setting_delete_account_pin_content" = "If you continue, your profile and account details will be delete on %@. read our document to learn more.";
 "setting_delete_account_send" = "We will send a 4-digit code to %@";
 "setting_delete_account_tip" = "Your Mixin wallet still has some assets that can be withdrawn to other wallets or exchanges. Once the account is cancelled, these assets will be abandoned along with the wallet and cannot be recovered.";
 "setting_desktop_confirm" = "Confirm login to Mixin Messenger Desktop";

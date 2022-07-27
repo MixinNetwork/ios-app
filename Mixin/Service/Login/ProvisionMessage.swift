@@ -36,7 +36,6 @@ extension ProvisionMessage {
     private enum Length {
         static let messageEncryptKey = 32
         static let hmacKey = 32
-        static let iv = 16
         static let version = MemoryLayout<Version>.size
     }
     
@@ -109,13 +108,10 @@ extension ProvisionMessage {
         let messageEncryptKey = Data(bytesNoCopy: derivedSecret, count: Length.messageEncryptKey, deallocator: .none)
         let hmacKey = derivedSecret.advanced(by: Length.messageEncryptKey)
         
-        let iv = Data(withNumberOfSecuredRandomBytes: Length.iv)!
-        let encryptedMessage = try AESCryptor.encrypt(messageJSONData, with: messageEncryptKey, iv: iv, padding: .pkcs7)
-        
-        let bodyLength = Length.version + Length.iv + encryptedMessage.count + Int(CC_SHA256_DIGEST_LENGTH)
+        let encryptedMessage = try AESCryptor.encrypt(messageJSONData, with: messageEncryptKey)
+        let bodyLength = Length.version + encryptedMessage.count + Int(CC_SHA256_DIGEST_LENGTH)
         var body = Data(capacity: bodyLength)
         body.append(Self.version)
-        body.append(iv)
         body.append(encryptedMessage)
         
         let hmacCount = Int(CC_SHA256_DIGEST_LENGTH)

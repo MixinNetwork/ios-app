@@ -125,7 +125,7 @@ extension EncryptedProtocol {
         static let sessionId = 16
         static let key = kCCKeySizeAES128 // 16
         static let messageIV = 12
-        static let keyIV = 16
+        static let keyIV = AESCryptor.ivSize
         static let encryptedKey = 32
         static let sessionInfo = sessionId + keyIV + encryptedKey
     }
@@ -156,11 +156,7 @@ extension EncryptedProtocol {
         guard let sharedSecret = AgreementCalculator.agreement(publicKey: remotePublicKey, privateKey: privateKey.x25519Representation) else {
             throw Error.agreementCalculation
         }
-        guard let iv = Data(withNumberOfSecuredRandomBytes: Length.keyIV) else {
-            throw Error.ivGeneration
-        }
-        let cipher = try AESCryptor.encrypt(messageKey, with: sharedSecret, iv: iv, padding: .pkcs7)
-        return iv + cipher
+        return try AESCryptor.encrypt(messageKey, with: sharedSecret)
     }
     
     private static func decrypt(messageKey cipher: Data, iv: Data, privateKey: Ed25519PrivateKey, remotePublicKey: Data) throws -> Data {

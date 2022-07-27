@@ -18,14 +18,12 @@ extension LoginManager {
                 guard let account = LoginManager.shared.account else {
                     return
                 }
-                let cryptor = ProvisionCryptor(signalContext: globalSignalContext,
-                                               base64EncodedPublicKey: base64EncodedPublicKey)
                 let message = ProvisionMessage(identityKeyPublic: identityKeyPair.publicKey,
                                                identityKeyPrivate: identityKeyPair.privateKey,
                                                userId: account.user_id,
                                                sessionId: account.session_id,
                                                provisioningCode: response.code)
-                guard let secretData = cryptor.encryptedData(from: message) else {
+                guard let secretData = try? message.encrypt(with: base64EncodedPublicKey) else {
                     completion(false)
                     return
                 }

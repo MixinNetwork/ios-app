@@ -796,7 +796,6 @@
 		DF5D9F311F9C95410036D5FD /* CountryCodeLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5D9F301F9C95410036D5FD /* CountryCodeLibrary.swift */; };
 		DF5D9F331F9C95570036D5FD /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF5D9F321F9C95570036D5FD /* CoreTelephony.framework */; };
 		DF6068C720BECD3100C38C64 /* AssetSendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6068C620BECD3000C38C64 /* AssetSendViewController.swift */; };
-		DF6175BF2223985C00624609 /* MXMProvisionCryptor.m in Sources */ = {isa = PBXBuildFile; fileRef = DF6175BC2223985B00624609 /* MXMProvisionCryptor.m */; };
 		DF6175C3222398BB00624609 /* MixinURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6175C2222398BB00624609 /* MixinURL.swift */; };
 		DF68CD72244EC1970059A678 /* Mixin-Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = DF68CD71244EC1970059A678 /* Mixin-Keys.plist */; };
 		DF6ABB142295019C00A012B2 /* AddressWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF6ABB132295019C00A012B2 /* AddressWindow.xib */; };
@@ -1801,8 +1800,6 @@
 		DF5D9F401F9CD1620036D5FD /* CountryCode.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = CountryCode.xcassets; sourceTree = "<group>"; };
 		DF5D9F411F9CD1630036D5FD /* CountryCode.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = CountryCode.plist; sourceTree = "<group>"; };
 		DF6068C620BECD3000C38C64 /* AssetSendViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetSendViewController.swift; sourceTree = "<group>"; };
-		DF6175BB2223985B00624609 /* MXMProvisionCryptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXMProvisionCryptor.h; sourceTree = "<group>"; };
-		DF6175BC2223985B00624609 /* MXMProvisionCryptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MXMProvisionCryptor.m; sourceTree = "<group>"; };
 		DF6175C2222398BB00624609 /* MixinURL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MixinURL.swift; sourceTree = "<group>"; };
 		DF68CD71244EC1970059A678 /* Mixin-Keys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = "Mixin-Keys.plist"; path = "Mixin/Supporting Files/Mixin-Keys.plist"; sourceTree = SOURCE_ROOT; };
 		DF6ABB132295019C00A012B2 /* AddressWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddressWindow.xib; sourceTree = "<group>"; };
@@ -2345,15 +2342,6 @@
 				941CADFF276A3F17008F42D6 /* WebPImageDecoderInternal.swift */,
 			);
 			path = Models;
-			sourceTree = "<group>";
-		};
-		7B88719C25060C76001FB418 /* Crypto */ = {
-			isa = PBXGroup;
-			children = (
-				DF6175BB2223985B00624609 /* MXMProvisionCryptor.h */,
-				DF6175BC2223985B00624609 /* MXMProvisionCryptor.m */,
-			);
-			path = Crypto;
 			sourceTree = "<group>";
 		};
 		7B9553322243757400CE95E6 /* Views */ = {
@@ -3648,7 +3636,6 @@
 				E090B90D23B0B2330012C7E9 /* Storage */,
 				DFB6CE1F23C4859300FB6615 /* Message */,
 				DFC0EB5723BB3CD60091E7AC /* API */,
-				7B88719C25060C76001FB418 /* Crypto */,
 				94659DA925C13793003403E5 /* DevicePerformance.swift */,
 				E0D4F5F423A9D803008F0189 /* NotificationManager.swift */,
 				E0FAE8D123CDC4F4008B056A /* CrashlyticalReporter.swift */,
@@ -4501,7 +4488,6 @@
 				7BEED890246D0C3D00387EAE /* CallAdapter.swift in Sources */,
 				7B09E55C1FD15B9B002E45D3 /* PhotoMessageViewModel.swift in Sources */,
 				E0FE4CCE237421F0009A14F6 /* ProfileMenuItem.swift in Sources */,
-				DF6175BF2223985C00624609 /* MXMProvisionCryptor.m in Sources */,
 				DF75FF4424FE61E1008A7CF3 /* UpdateViewController.swift in Sources */,
 				7C66F1BB268B2CE5006D8462 /* HomeAppsManager.swift in Sources */,
 				7C14CFC126CA35CF0094AF4A /* StaticMessagesViewController.swift in Sources */,

@@ -1,4 +1,4 @@
-import Foundation
+import UIKit
 
 protocol HomeAppsFolderInteraction {
     var dragInteraction: HomeAppsDragInteraction { get }

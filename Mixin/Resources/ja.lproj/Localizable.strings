@@ -434,9 +434,9 @@
 "landing_delete_content" = "あなたのアカウントは(%@) 後に消去されます。ログインを継続する場合、あなたのアカウント消去はキャンセルされます。";
 "landing_validation_title" = "%@に送信された4桁のコードを入力してください";
 "language" = "言語";
-"large_amount_confirmation" = "大きな金額の送金です、よろしいですか？";
-"large_amount_confirmation_with_symbol" = "大きな金額の送金です、よろしいですか？(%@)";
-"last_active_time" = "最後のアクティビティー %@";
+"large_amount_confirmation" = "送金時に通知を行う金額の設定";
+"large_amount_confirmation_with_symbol" = "送金時に通知を行う金額の設定（%@）";
+"last_active_time" = "直近のアクティビティ%@";
 "last_backup_hint" = "最後に行ったバックアップ %@, 合計サイズ %@.";
 "later" = "後で";
 "learn_more" = "こちら";
@@ -455,7 +455,7 @@
 "location_distance" = "距離：%@";
 "location_empty" = "\"%@\"の検索結果はありませんでした。\nもう一度検索してください。";
 "location_undetermined" = "位置情報が特定できません。しばらくしてからやり直してください";
-"lock_with_biometric" = "%@生体認証";
+"lock_with_biometric" = "%@を有効にする";
 "log_in" = "ログイン";
 "log_out_from_desktop" = "デスクトップ版からログアウト";
 "login_and_abort_account_deletion" = "そのままログインし、アカウント削除をキャンセルします";

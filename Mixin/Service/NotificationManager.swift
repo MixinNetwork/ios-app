@@ -141,9 +141,16 @@ extension NotificationManager: UNUserNotificationCenterDelegate {
                 DispatchQueue.main.async {
                     WebSocketService.shared.connectIfNeeded()
                     func pushConversationController() {
+                        let push = {
+                            let vc = ConversationViewController.instance(conversation: conversation)
+                            UIApplication.homeNavigationController?.pushViewController(withBackRoot: vc)
+                        }
                         UIApplication.homeContainerViewController?.clipSwitcher.hideFullscreenSwitcher()
-                        let vc = ConversationViewController.instance(conversation: conversation)
-                        UIApplication.homeNavigationController?.pushViewController(withBackRoot: vc)
+                        if let webController = UIApplication.currentActivity()?.children.first(where: { $0 is MixinWebViewController}) as? MixinWebViewController {
+                            webController.minimizeWithAnimation(completion: push)
+                        } else {
+                            push()
+                        }
                     }
                     if let container = UIApplication.homeContainerViewController, container.galleryIsOnTopMost {
                         let currentItemViewController = container.galleryViewController.currentItemViewController

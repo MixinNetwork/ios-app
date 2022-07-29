@@ -7,7 +7,15 @@ class FullscreenPopupViewController: UIViewController {
     
     @IBOutlet weak var edgePanGestureRecognizer: FullScreenPopupEdgePanGestureRecognizer!
     
-    private(set) var isBeingDismissedAsChild = false
+    var contentViewCornerRadius: CGFloat {
+        if view.safeAreaInsets.top > 20 {
+            return 39
+        } else {
+            return 20
+        }
+    }
+    
+    var isBeingDismissedAsChild = false
     
     private var statusBarStyle = UIStatusBarStyle.default
     
@@ -39,11 +47,7 @@ class FullscreenPopupViewController: UIViewController {
     @IBAction func screenEdgePanAction(_ recognizer: FullScreenPopupEdgePanGestureRecognizer) {
         switch recognizer.state {
         case .began:
-            if view.safeAreaInsets.top > 20 {
-                contentView.layer.cornerRadius = 39
-            } else {
-                contentView.layer.cornerRadius = 20
-            }
+            contentView.layer.cornerRadius = contentViewCornerRadius
         case .changed:
             let scale = 1 - 0.2 * recognizer.fractionComplete
             contentView.transform = CGAffineTransform(scaleX: scale, y: scale)

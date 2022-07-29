@@ -238,6 +238,7 @@
 "created_this_group" = "%@创建了这个群组";
 "currency" = "货币";
 "currency_code" = "货币代码";
+"current_language" = "中文";
 "current_location" = "当前位置";
 "current_selected" = "当前选择";
 "custom_time" = "自定义时间";
@@ -317,7 +318,6 @@
 "enable_pay_confirmation" = "启用%@支付？";
 "enable_touch_pay_hint" = "输入 PIN 启用指纹支付";
 "end_to_end_encryption" = "端到端加密";
-"english" = "中文";
 "enter_pin_to_delete_account" = "输入你的 PIN 以注销你的账户";
 "enter_your_emergency_contact_mixin_id" = "请输入紧急联系人的 Mixin ID";
 "enter_your_phone_number" = "输入你的手机号码";

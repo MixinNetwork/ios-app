@@ -14,7 +14,7 @@ class AppearanceSettingsViewController: SettingsTableViewController {
     
     private lazy var userInterfaceStyleRow = SettingsRow(title: R.string.localizable.interface_style(), accessory: .disclosure)
     private lazy var languageRow = SettingsRow(title: R.string.localizable.language(),
-                                               subtitle: R.string.localizable.english(),
+                                               subtitle: R.string.localizable.current_language(),
                                                accessory: .disclosure)
     private let chatBackgroundRow = SettingsRow(title: R.string.localizable.chat_background(), accessory: .disclosure)
     

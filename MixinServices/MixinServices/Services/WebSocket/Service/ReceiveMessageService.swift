@@ -1209,7 +1209,8 @@ extension ReceiveMessageService {
         case let .success(asset):
             AssetDAO.shared.insertOrUpdateAssets(assets: [asset])
         case .failure:
-            ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(assetId: snapshot.assetId))
+            let job = RefreshAssetsJob(request: .asset(id: snapshot.assetId, untilDepositEntriesNotEmpty: false))
+            ConcurrentJobQueue.shared.addJob(job: job)
         }
 
         if snapshot.type == SnapshotType.deposit.rawValue, let transactionHash = snapshot.transactionHash {

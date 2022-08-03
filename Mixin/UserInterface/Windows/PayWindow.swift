@@ -671,7 +671,8 @@ extension PayWindow: PinFieldDelegate {
                     AppGroupUserDefaults.Wallet.defaultTransferAssetId = assetId
                 case let .withdraw(_,address,_,_):
                     AppGroupUserDefaults.Wallet.withdrawnAddressIds[address.addressId] = true
-                    ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(assetId: snapshot.assetId))
+                    let job = RefreshAssetsJob(request: .asset(id: snapshot.assetId, untilDepositEntriesNotEmpty: false))
+                    ConcurrentJobQueue.shared.addJob(job: job)
                 default:
                     break
                 }

@@ -175,7 +175,7 @@ extension SnapshotDAO {
         
         let snapshots: [SnapshotItem] = db.select(with: sql, arguments: StatementArguments(arguments))
         for snapshot in snapshots where snapshot.assetSymbol == nil {
-            let job = RefreshAssetsJob(assetId: snapshot.assetId)
+            let job = RefreshAssetsJob(request: .asset(id: snapshot.assetId, untilDepositEntriesNotEmpty: false))
             ConcurrentJobQueue.shared.addJob(job: job)
         }
         return snapshots

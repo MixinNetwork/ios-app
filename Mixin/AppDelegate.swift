@@ -222,7 +222,7 @@ extension AppDelegate {
         }
 
         if let date = AppGroupUserDefaults.Crypto.oneTimePrekeyRefreshDate, -date.timeIntervalSinceNow > 3600 * 2 {
-            ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob())
+            ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(request: .allAssets))
             ConcurrentJobQueue.shared.addJob(job: RefreshOneTimePreKeysJob())
         }
         AppGroupUserDefaults.Crypto.oneTimePrekeyRefreshDate = Date()

@@ -51,7 +51,7 @@ class DatabaseUpgradeViewController: UIViewController {
             }
             
             if localVersion < 4 {
-                ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob())
+                ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(request: .allAssets))
             }
             if localVersion < 18 {
                 AppGroupUserDefaults.User.hasRecoverMedia = true

@@ -3,36 +3,40 @@ import UIKit
 
 public class RefreshAssetsJob: AsynchronousJob {
     
-    private let assetId: String?
+    public enum Request {
+        
+        case allAssets
+        case asset(id: String, untilDepositEntriesNotEmpty: Bool)
+        
+        var id: String {
+            switch self {
+            case .allAssets:
+                return "all"
+            case .asset(let id, let untilDepositEntriesNotEmpty):
+                if untilDepositEntriesNotEmpty {
+                    return id + "-uden"
+                } else {
+                    return id
+                }
+            }
+        }
+    }
+    
+    private let request: Request
+    
     private var asset: Asset?
     
-    public init(assetId: String? = nil) {
-        self.assetId = assetId
+    public init(request: Request) {
+        self.request = request
     }
     
     override public func getJobId() -> String {
-        return "refresh-assets-\(assetId ?? "all")"
+        return "refresh-assets-" + request.id
     }
     
     public override func execute() -> Bool {
-        if let assetId = self.assetId {
-            AssetAPI.asset(assetId: assetId) { (result) in
-                switch result {
-                case let .success(asset):
-                    DispatchQueue.global().async {
-                        guard !MixinService.isStopProcessMessages else {
-                            return
-                        }
-                        AssetDAO.shared.insertOrUpdateAssets(assets: [asset])
-                    }
-                    self.asset = asset
-                    self.updateFiats()
-                case let .failure(error):
-                    reporter.report(error: error)
-                    self.finishJob()
-                }
-            }
-        } else {
+        switch request {
+        case .allAssets:
             AssetAPI.assets { (result) in
                 switch result {
                 case let .success(assets):
@@ -50,10 +54,35 @@ public class RefreshAssetsJob: AsynchronousJob {
                                                             where: notExistAssetIds.contains(Asset.column(of: .assetId)))
                             }
                         }
-
                         AssetDAO.shared.insertOrUpdateAssets(assets: assets)
                     }
                     self.updateFiats()
+                case let .failure(error):
+                    reporter.report(error: error)
+                    self.finishJob()
+                }
+            }
+        case .asset(let id, let untilDepositEntriesNotEmpty):
+            AssetAPI.asset(assetId: id) { (result) in
+                switch result {
+                case let .success(asset):
+                    if untilDepositEntriesNotEmpty && asset.depositEntries.isEmpty {
+                        Logger.general.warn(category: "RefreshAssetsJob", message: "Asset: \(id) is returned with an empty deposit_entries")
+                        DispatchQueue.global().asyncAfter(deadline: .now() + 2) {
+                            if !self.isCancelled {
+                                self.execute()
+                            }
+                        }
+                    } else {
+                        DispatchQueue.global().async {
+                            guard !MixinService.isStopProcessMessages else {
+                                return
+                            }
+                            AssetDAO.shared.insertOrUpdateAssets(assets: [asset])
+                        }
+                        self.asset = asset
+                        self.updateFiats()
+                    }
                 case let .failure(error):
                     reporter.report(error: error)
                     self.finishJob()

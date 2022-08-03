@@ -1623,6 +1623,9 @@
 		7CF5929727979CCF00015495 /* DeleteAccountVerifyPinWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeleteAccountVerifyPinWindow.xib; sourceTree = "<group>"; };
 		7CF7416D27DAD93000DA0004 /* SnapCenterFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapCenterFlowLayout.swift; sourceTree = "<group>"; };
 		7CF836F027E334B0002E2A98 /* ExpiredMessageDurationFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpiredMessageDurationFormatter.swift; sourceTree = "<group>"; };
+		7CFD7471288FC88900D7A0EE /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		7CFD7472288FC88A00D7A0EE /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		7CFD7473288FC88A00D7A0EE /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		842347ED2695BA6400009A39 /* InitializeBotJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitializeBotJob.swift; sourceTree = "<group>"; };
 		8C43D9D96FCB101481DFD90F /* Pods-Mixin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mixin.release.xcconfig"; path = "Pods/Target Support Files/Pods-Mixin/Pods-Mixin.release.xcconfig"; sourceTree = "<group>"; };
 		94046B90272DC265007C1D4A /* GroupCallMembersDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupCallMembersDataSource.swift; sourceTree = "<group>"; };
@@ -3829,6 +3832,7 @@
 				"zh-Hans",
 				ja,
 				ru,
+				"zh-Hant",
 			);
 			mainGroup = 277FF6F61F909A1200DBB2EB;
 			productRefGroup = 277FF7001F909A1200DBB2EB /* Products */;
@@ -5151,6 +5155,7 @@
 				7C02C1EF282D059A00FFED80 /* zh-Hans */,
 				7C07ED382880F31E00685322 /* ja */,
 				7C11361F2893AE4D00862893 /* ru */,
+				7CFD7472288FC88A00D7A0EE /* zh-Hant */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -5162,6 +5167,7 @@
 				DF8CED001FC58DC000E40064 /* zh-Hans */,
 				7C07ED372880F31E00685322 /* ja */,
 				7C11361E2893AE4C00862893 /* ru */,
+				7CFD7471288FC88900D7A0EE /* zh-Hant */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -5181,6 +5187,7 @@
 				DFE864EE24229F06009B1833 /* zh-Hans */,
 				7C07ED392880F31E00685322 /* ja */,
 				7C1136202893AE4D00862893 /* ru */,
+				7CFD7473288FC88A00D7A0EE /* zh-Hant */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";

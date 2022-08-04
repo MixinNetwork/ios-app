@@ -28,7 +28,13 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
     @IBOutlet weak var qrCodeBorderView: UIImageView!
     @IBOutlet weak var qrCodeToolbarView: UIStackView!
     
+    @IBOutlet weak var qrCodeScanGridView: UIImageView!
+    @IBOutlet weak var qrCodeScanLineView: UIImageView!
+    @IBOutlet weak var qrCodeScanGridMaskView: UIView!
+    
     @IBOutlet weak var navigationOverridesStatusBarConstraint: NSLayoutConstraint!
+    @IBOutlet weak var qrCodeScanLineViewShowConstraint: NSLayoutConstraint!
+    @IBOutlet weak var qrCodeScanLineViewHideConstraint: NSLayoutConstraint!
     
     weak var delegate: CameraViewControllerDelegate?
     
@@ -89,6 +95,10 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
         let focusRecognizer = UITapGestureRecognizer(target: self, action: #selector(setFocus(_:)))
         previewView.addGestureRecognizer(focusRecognizer)
         NotificationCenter.default.addObserver(self, selector: #selector(hideFocusIndicator), name: .AVCaptureDeviceSubjectAreaDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(startScanAnimation), name: UIApplication.didBecomeActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(stopScanAnimation), name: UIApplication.didEnterBackgroundNotification, object: nil)
+        qrCodeScanGridView.mask = qrCodeScanGridMaskView
+        startScanAnimation()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -633,6 +643,22 @@ extension CameraViewController {
             }
             RecognizeWindow.instance().presentWindow(text: string)
         }
+    }
+    
+    @objc private func startScanAnimation() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            UIView.animate(withDuration: 2, delay: 0, options: [.repeat]) {
+                self.qrCodeScanLineViewShowConstraint.priority = .defaultHigh
+                self.qrCodeScanLineViewHideConstraint.priority = .defaultLow
+                self.view.layoutIfNeeded()
+            }
+        }
+    }
+    
+    @objc private func stopScanAnimation() {
+        qrCodeScanLineView.layer.removeAllAnimations()
+        qrCodeScanLineViewShowConstraint.priority = .defaultLow
+        qrCodeScanLineViewHideConstraint.priority = .defaultHigh
     }
     
 }

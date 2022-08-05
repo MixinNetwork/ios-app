@@ -416,9 +416,11 @@ class UrlWindow {
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         DispatchQueue.global().async {
             guard let asset = syncAsset(assetId: assetId, hud: hud) else {
+                Logger.general.error(category: "UrlWindow", message: "Failed to sync asset for url: \(url.absoluteString)")
                 return
             }
             guard let chainAsset = syncAsset(assetId: asset.chainId, hud: hud) else {
+                Logger.general.error(category: "UrlWindow", message: "Failed to sync chain asset for url: \(url.absoluteString)")
                 return
             }
             guard let address = syncAddress(addressId: addressId, hud: hud) else {
@@ -433,6 +435,7 @@ class UrlWindow {
                         hud.hide()
                         PayWindow.instance().render(asset: asset, action: action, amount: amount, memo: memo ?? "").presentPopupControllerAnimated()
                     } else if let error = errorMsg {
+                        Logger.general.error(category: "UrlWindow", message: "Unable to pay for url: \(url.absoluteString)")
                         hud.set(style: .error, text: error)
                         hud.scheduleAutoHidden()
                     } else {
@@ -766,8 +769,15 @@ extension UrlWindow {
         if asset == nil {
             switch AssetAPI.asset(assetId: assetId) {
             case let .success(assetItem):
+                Logger.general.info(category: "UrlWindow", message: "Got asset: \(assetId) from remote with \(assetItem.depositEntries.count) deposit_entries")
                 asset = AssetDAO.shared.saveAsset(asset: assetItem)
+                if let asset = asset {
+                    Logger.general.info(category: "UrlWindow", message: "Got asset: \(assetId) from local with \(asset.depositEntries.count) deposit_entries")
+                } else {
+                    Logger.general.error(category: "UrlWindow", message: "No asset: \(assetId) from local")
+                }
             case let .failure(error):
+                Logger.general.error(category: "UrlWindow", message: "No asset: \(assetId) from remote, error: \(error)")
                 let text = error.localizedDescription(overridingNotFoundDescriptionWith: R.string.localizable.asset_not_found())
                 DispatchQueue.main.async {
                     hud.set(style: .error, text: text)

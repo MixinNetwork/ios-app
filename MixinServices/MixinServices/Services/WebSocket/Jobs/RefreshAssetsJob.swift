@@ -63,11 +63,12 @@ public class RefreshAssetsJob: AsynchronousJob {
                 }
             }
         case .asset(let id, let untilDepositEntriesNotEmpty):
+            Logger.general.info(category: "RefreshAssetsJob", message: "Loading asset: \(id)")
             AssetAPI.asset(assetId: id) { (result) in
                 switch result {
                 case let .success(asset):
+                    Logger.general.info(category: "RefreshAssetsJob", message: "Asset: \(id) is returned with \(asset.depositEntries.count) deposit_entries")
                     if untilDepositEntriesNotEmpty && asset.depositEntries.isEmpty {
-                        Logger.general.warn(category: "RefreshAssetsJob", message: "Asset: \(id) is returned with an empty deposit_entries")
                         DispatchQueue.global().asyncAfter(deadline: .now() + 2) {
                             if !self.isCancelled {
                                 self.execute()
@@ -76,14 +77,17 @@ public class RefreshAssetsJob: AsynchronousJob {
                     } else {
                         DispatchQueue.global().async {
                             guard !MixinService.isStopProcessMessages else {
+                                Logger.general.info(category: "RefreshAssetsJob", message: "Give up saving asset: \(id)")
                                 return
                             }
+                            Logger.general.info(category: "RefreshAssetsJob", message: "Saving asset: \(id) with \(asset.depositEntries.count) deposit_entries")
                             AssetDAO.shared.insertOrUpdateAssets(assets: [asset])
                         }
                         self.asset = asset
                         self.updateFiats()
                     }
                 case let .failure(error):
+                    Logger.general.info(category: "RefreshAssetsJob", message: "Failed to load asset: \(id), error: \(error)")
                     reporter.report(error: error)
                     self.finishJob()
                 }

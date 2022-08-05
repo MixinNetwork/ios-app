@@ -25,6 +25,7 @@ class AssetViewController: UIViewController {
         view.layoutIfNeeded()
         updateTableViewContentInset()
         updateTableHeaderFooterView()
+        Logger.general.info(category: "AssetViewController", message: "View loaded with asset: \(asset.assetId), deposit_entries: \(asset.depositEntries.count)")
         tableHeaderView.render(asset: asset)
         tableHeaderView.sizeToFit()
         tableView.register(R.nib.snapshotCell)
@@ -58,9 +59,11 @@ class AssetViewController: UIViewController {
     
     @objc func assetsDidChange(_ notification: Notification) {
         guard let id = notification.userInfo?[AssetDAO.UserInfoKey.assetId] as? String else {
+            Logger.general.info(category: "AssetViewController", message: "Multiple assets are changed")
             return
         }
         guard id == asset.assetId else {
+            Logger.general.info(category: "AssetViewController", message: "Asset: \(id) is changed")
             return
         }
         reloadAsset()
@@ -238,12 +241,17 @@ extension AssetViewController {
     
     private func reloadAsset() {
         let assetId = asset.assetId
+        let token = UUID().uuidString
+        Logger.general.info(category: "AssetViewController", message: "Reload asset: \(assetId), token: \(token)")
         DispatchQueue.global().async { [weak self] in
             guard let asset = AssetDAO.shared.getAsset(assetId: assetId) else {
+                Logger.general.info(category: "AssetViewController", message: "Asset: \(assetId) not exist in db, token: \(token)")
                 return
             }
+            Logger.general.info(category: "AssetViewController", message: "Displaying asset: \(assetId), token: \(token), deposit_entries: \(asset.depositEntries.count)")
             DispatchQueue.main.sync {
                 guard let self = self else {
+                    Logger.general.info(category: "AssetViewController", message: "Self is nil out, token: \(token)")
                     return
                 }
                 self.asset = asset

@@ -45,7 +45,7 @@ public final class TraceDAO: UserDatabaseDAO {
         DispatchQueue.global().async {
             self.db.write { (db) in
                 try Trace
-                    .filter(Trace.column(of: .createdAt) < Date().within6Hours().toUTCString())
+                    .filter(Trace.column(of: .createdAt) < Date().addingTimeInterval(-6 * .hour).toUTCString())
                     .deleteAll(db)
                 try trace.save(db)
             }

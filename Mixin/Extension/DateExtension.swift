@@ -1,20 +1,5 @@
 import Foundation
 
-extension DateFormatter {
-
-    static let dateFull = DateFormatter(dateFormat: "yyyy-MM-dd HH:mm:ss")
-    static let yyyymmdd = DateFormatter(dateFormat: "yyyyMMdd")
-    static let date = DateFormatter(dateFormat: "MMM d, yyyy")
-    static let week = DateFormatter(dateFormat: "EEEE")
-
-    static let month = DateFormatter(dateFormat: R.string.localizable.date_format_month())
-    static let dayDate = DateFormatter(dateFormat: R.string.localizable.date_format_day())
-    static let weekDate = DateFormatter(dateFormat: R.string.localizable.date_format_week_date())
-    static let dateSimple = DateFormatter(dateFormat: R.string.localizable.date_format_date())
-    static let nameOfTheDayAndTime = DateFormatter(dateFormat: "EEEE, " + R.string.localizable.date_format_day())
-    static let dateAndTime = DateFormatter(dateFormat: R.string.localizable.date_format_date() + " " + R.string.localizable.date_format_day())
-}
-
 extension Date {
 
     func timeAgo() -> String {
@@ -59,13 +44,4 @@ extension Date {
     func timeHoursAndMinutes() -> String {
         return DateFormatter.dayDate.string(from: self)
     }
-}
-
-extension TimeInterval {
-    
-    static let minute: TimeInterval = 60
-    static let hour: TimeInterval = 60 * .minute
-    static let day: TimeInterval = 24 * .hour
-    static let week: TimeInterval = 7 * .day
-    
 }

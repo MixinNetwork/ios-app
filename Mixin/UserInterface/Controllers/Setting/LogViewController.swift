@@ -128,7 +128,8 @@ extension LogViewController: UITableViewDataSource {
         let log = logs[indexPath.row]
         (cell.titleLabel.text, cell.descLabel.text) = getDescription(by: log.code)
         cell.ipLabel.text = log.ipAddress
-        cell.timeLabel.text = log.createdAt.toUTCDate().logDatetime()
+        let date = log.createdAt.toUTCDate()
+        cell.timeLabel.text = DateFormatter.log.string(from: date)
         return cell
     }
     

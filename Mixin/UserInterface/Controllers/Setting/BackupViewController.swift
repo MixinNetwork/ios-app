@@ -166,20 +166,21 @@ extension BackupViewController {
     private func updateActionSectionFooter() {
         let text: String?
         if let backupJob = BackupJobQueue.shared.backupJob {
-            if backupJob.isBackingUp {
-                if backupJob.backupSize == 0 {
+            let preparedProgress = backupJob.preparedProgress
+            let totalUploadedSize = backupJob.totalProcessedSize
+            if backupJob.isPreparing {
+                if preparedProgress == 0 {
                     text = R.string.localizable.preparing()
                 } else {
-                    let progress = NumberFormatter.simplePercentage.stringFormat(value: Float64(backupJob.backupSize) / Float64(backupJob.backupTotalSize))
+                    let progress = NumberFormatter.simplePercentage.stringFormat(value: preparedProgress)
                     text = R.string.localizable.preparing_progress(progress)
                 }
-            } else if backupJob.uploadedSize == 0 {
+            } else if totalUploadedSize == 0 {
                 text = R.string.localizable.uploading()
             } else {
-                let uploadedSize = backupJob.uploadedSize
                 let totalFileSize = backupJob.totalFileSize
-                let uploadProgress = NumberFormatter.simplePercentage.stringFormat(value: Float64(uploadedSize) / Float64(totalFileSize))
-                text = R.string.localizable.uploading_progress(uploadedSize.sizeRepresentation(), totalFileSize.sizeRepresentation(), uploadProgress)
+                let uploadProgress = NumberFormatter.simplePercentage.stringFormat(value: Float64(totalUploadedSize) / Float64(totalFileSize))
+                text = R.string.localizable.uploading_progress(totalUploadedSize.sizeRepresentation(), totalFileSize.sizeRepresentation(), uploadProgress)
             }
         } else if let restoreJob = BackupJobQueue.shared.restoreJob {
             let number = NSNumber(value: restoreJob.progress)

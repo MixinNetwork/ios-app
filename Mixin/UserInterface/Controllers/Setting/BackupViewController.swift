@@ -42,6 +42,13 @@ class BackupViewController: SettingsTableViewController {
         return controller
     }()
     
+    private lazy var lastBackupDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+        return formatter
+    }()
+    
     private weak var timer: Timer?
     private var reportRecognizer: UILongPressGestureRecognizer!
     
@@ -180,7 +187,7 @@ extension BackupViewController {
             text = R.string.localizable.restoring_progress(percentage ?? "")
         } else {
             if let size = AppGroupUserDefaults.User.lastBackupSize, let date = AppGroupUserDefaults.User.lastBackupDate {
-                text = R.string.localizable.last_backup_hint(DateFormatter.backupFormatter.string(from: date), size.sizeRepresentation())
+                text = R.string.localizable.last_backup_hint(lastBackupDateFormatter.string(from: date), size.sizeRepresentation())
             } else {
                 text = nil
             }

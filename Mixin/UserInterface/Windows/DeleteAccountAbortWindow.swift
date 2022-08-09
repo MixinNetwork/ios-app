@@ -43,7 +43,7 @@ class DeleteAccountAbortWindow: BottomSheetView {
     
     func render(deactivatedAt: String, completion: @escaping CompletionHandler) {
         self.completion = completion
-        let formatted = DateFormatter.deleteAccountFormatter.string(from: deactivatedAt.toUTCDate())
+        let formatted = DateFormatter.deleteAccount.string(from: deactivatedAt.toUTCDate())
         label.text = R.string.localizable.landing_delete_content(formatted)
         continueButton.setTitle("\(R.string.localizable.continue())(\(self.countDown))", for: .normal)
         continueButton.isEnabled = false

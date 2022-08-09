@@ -676,6 +676,7 @@
 		94656C212795395E006C3F1D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 94656C202795395E006C3F1D /* Preview Assets.xcassets */; };
 		94659DAA25C13793003403E5 /* DevicePerformance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94659DA925C13793003403E5 /* DevicePerformance.swift */; };
 		946B6F2425E974B500A95C40 /* CacheableAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946B6F2325E974B500A95C40 /* CacheableAsset.swift */; };
+		9470E6C028A0FFBE0054DCCC /* DateFormatter+General.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9470E6BF28A0FFBE0054DCCC /* DateFormatter+General.swift */; };
 		94739A5426258F8300E8914D /* Custom-acknowledgements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 94739A5326258F8200E8914D /* Custom-acknowledgements.plist */; };
 		947744DB26A9D2ED00B6BBDD /* ShakableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947744DA26A9D2ED00B6BBDD /* ShakableCell.swift */; };
 		947744DF26A9EBC800B6BBDD /* HomeAppCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947744DE26A9EBC800B6BBDD /* HomeAppCell.swift */; };
@@ -1674,6 +1675,7 @@
 		94656C202795395E006C3F1D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		94659DA925C13793003403E5 /* DevicePerformance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DevicePerformance.swift; sourceTree = "<group>"; };
 		946B6F2325E974B500A95C40 /* CacheableAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheableAsset.swift; sourceTree = "<group>"; };
+		9470E6BF28A0FFBE0054DCCC /* DateFormatter+General.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+General.swift"; sourceTree = "<group>"; };
 		94739A5326258F8200E8914D /* Custom-acknowledgements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Custom-acknowledgements.plist"; sourceTree = "<group>"; };
 		947744DA26A9D2ED00B6BBDD /* ShakableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakableCell.swift; sourceTree = "<group>"; };
 		947744DE26A9EBC800B6BBDD /* HomeAppCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppCell.swift; sourceTree = "<group>"; };
@@ -3007,6 +3009,7 @@
 				E061E52A23B208E600598FC3 /* NSAttributedString+CoreText.swift */,
 				DFB6CE1D23C4805B00FB6615 /* KeychainExtension.swift */,
 				DFB6CE2423C48A8E00FB6615 /* DateExtension.swift */,
+				9470E6BF28A0FFBE0054DCCC /* DateFormatter+General.swift */,
 				7BFCB8A7241CF1B800E7BC43 /* LocationExtensions.swift */,
 				7BB0B29F25022FA7006D2C20 /* EdDSAMigration+Migrate.swift */,
 				94CEEAC1277E06A9001E7A24 /* Calendar+Convenience.swift */,
@@ -4368,6 +4371,7 @@
 				7B9D825822F1BFEA0099381E /* NetworkOperationIconSet.swift in Sources */,
 				7B4BE561243E105000198EE9 /* EmbeddedApp.swift in Sources */,
 				DF1F278621A59A60009A74C6 /* BackupJobQueue.swift in Sources */,
+				9470E6C028A0FFBE0054DCCC /* DateFormatter+General.swift in Sources */,
 				9427D52725E0EB5B00B1EF0E /* PlaylistItem.swift in Sources */,
 				7C1A6C4326C6580600A1D6CE /* StickerPreviewItemCell.swift in Sources */,
 				DFFDCF8420AD8A7A00B4956E /* FileSendViewController.swift in Sources */,

@@ -25,6 +25,8 @@ public class Asset: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
     public let name: String
     public let iconUrl: String
     public let balance: String
+    public let destination: String
+    public let tag: String
     public let priceBtc: String
     public let priceUsd: String
     public let changeUsd: String
@@ -51,6 +53,8 @@ public class Asset: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
             name = try container.decodeIfPresent(String.self, forKey: .name) ?? ""
             iconUrl = try container.decodeIfPresent(String.self, forKey: .iconUrl) ?? ""
             balance = try container.decodeIfPresent(String.self, forKey: .balance) ?? ""
+            destination = try container.decodeIfPresent(String.self, forKey: .destination) ?? ""
+            tag = try container.decodeIfPresent(String.self, forKey: .tag) ?? ""
             priceBtc = try container.decodeIfPresent(String.self, forKey: .priceBtc) ?? ""
             priceUsd = try container.decodeIfPresent(String.self, forKey: .priceUsd) ?? ""
             changeUsd = try container.decodeIfPresent(String.self, forKey: .changeUsd) ?? ""
@@ -65,13 +69,15 @@ public class Asset: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
         }
     }
     
-    public init(assetId: String, type: String, symbol: String, name: String, iconUrl: String, balance: String, priceBtc: String, priceUsd: String, changeUsd: String, chainId: String, confirmations: Int, assetKey: String, reserve: String, depositEntries: [DepositEntry]) {
+    public init(assetId: String, type: String, symbol: String, name: String, iconUrl: String, balance: String, destination: String, tag: String, priceBtc: String, priceUsd: String, changeUsd: String, chainId: String, confirmations: Int, assetKey: String, reserve: String, depositEntries: [DepositEntry]) {
         self.assetId = assetId
         self.type = type
         self.symbol = symbol
         self.name = name
         self.iconUrl = iconUrl
         self.balance = balance
+        self.destination = destination
+        self.tag = tag
         self.priceBtc = priceBtc
         self.priceUsd = priceUsd
         self.changeUsd = changeUsd
@@ -89,6 +95,8 @@ public class Asset: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
         case name
         case iconUrl = "icon_url"
         case balance
+        case destination
+        case tag
         case priceBtc = "price_btc"
         case priceUsd = "price_usd"
         case changeUsd = "change_usd"
@@ -108,6 +116,8 @@ public class Asset: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
             try container.encode(name, forKey: .name)
             try container.encode(iconUrl, forKey: .iconUrl)
             try container.encode(balance, forKey: .balance)
+            try container.encode(destination, forKey: .destination)
+            try container.encode(tag, forKey: .tag)
             try container.encode(priceBtc, forKey: .priceBtc)
             try container.encode(priceUsd, forKey: .priceUsd)
             try container.encode(changeUsd, forKey: .changeUsd)

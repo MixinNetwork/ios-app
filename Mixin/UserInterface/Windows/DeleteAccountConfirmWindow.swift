@@ -30,7 +30,7 @@ final class DeleteAccountConfirmWindow: BottomSheetView {
         textLabel.detectLinks = false
         
         let thirtyDaysLater = Date().addingTimeInterval(30 * .day)
-        let date = DateFormatter.deleteAccountFormatter.string(from: thirtyDaysLater)
+        let date = DateFormatter.deleteAccount.string(from: thirtyDaysLater)
         let hint = R.string.localizable.setting_delete_account_pin_content(date)
         textLabel.text = hint
         textLabel.delegate = self

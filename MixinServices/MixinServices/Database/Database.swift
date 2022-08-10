@@ -79,6 +79,8 @@ open class Database {
         do {
             return try pool.read(reader)
         } catch {
+            reporter.report(error: error)
+            Logger.database.error(category: "Database", message: "Failed to read: \(error)")
             markDatabaseNeedsRebuildIfNeeded(error: error)
             throw error
         }
@@ -90,6 +92,8 @@ open class Database {
             try pool.write(updates)
             return true
         } catch {
+            reporter.report(error: error)
+            Logger.database.error(category: "Database", message: "Failed to write: \(error)")
             markDatabaseNeedsRebuildIfNeeded(error: error)
             return false
         }
@@ -99,6 +103,8 @@ open class Database {
         do {
             return try pool.write(updates)
         } catch {
+            reporter.report(error: error)
+            Logger.database.error(category: "Database", message: "Failed to write: \(error)")
             markDatabaseNeedsRebuildIfNeeded(error: error)
             throw error
         }

@@ -812,7 +812,7 @@
 "transcript" = "聊天記錄";
 "transfer" = "轉賬";
 "transfer_amount_count_down" = "轉賬金額（%@）";
-"transfer_error_pin_incorrect_with_times" = "錯誤 20119： PIN 不正確。你還有 %@ 次機會嘗試，使用完需等待 24 小時後再嘗試。";
+"transfer_error_pin_incorrect_with_times" = "錯誤 20119：PIN 不正確。你還有 %@ 次機會嘗試。";
 "transfer_memo" = "備註（可選）";
 "transfer_notifications" = "轉賬通知";
 "transfer_qrcode_prompt" = "用 Mixin 掃描二維碼給我轉賬";

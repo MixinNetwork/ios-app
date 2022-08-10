@@ -880,7 +880,7 @@ extension PayWindow {
             completion(true, nil)
         }
 
-        if AppGroupUserDefaults.User.duplicateTransferConfirmation, let trace = TraceDAO.shared.getTrace(assetId: asset.assetId, amount: amount, opponentId: opponentId, destination: destination, tag: tag, createdAt: Date().within6Hours().toUTCString()) {
+        if AppGroupUserDefaults.User.duplicateTransferConfirmation, let trace = TraceDAO.shared.getTrace(assetId: asset.assetId, amount: amount, opponentId: opponentId, destination: destination, tag: tag, createdAt: Date().addingTimeInterval(-6 * .hour).toUTCString()) {
             let localizedAmount: String
             if fromWeb, let separator = Locale.current.decimalSeparator {
                 localizedAmount = amount.replacingOccurrences(of: ".", with: separator)

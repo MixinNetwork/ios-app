@@ -29,8 +29,8 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
     @IBOutlet weak var qrCodeToolbarView: UIStackView!
     
     @IBOutlet weak var qrCodeScanGridView: UIImageView!
-    @IBOutlet weak var qrCodeScanLineView: UIImageView!
     @IBOutlet weak var qrCodeScanGridMaskView: UIView!
+    @IBOutlet weak var qrCodeScanLineView: UIView!
     
     @IBOutlet weak var navigationOverridesStatusBarConstraint: NSLayoutConstraint!
     @IBOutlet weak var qrCodeScanLineViewShowConstraint: NSLayoutConstraint!
@@ -44,6 +44,7 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
     private let metadataOutput = AVCaptureMetadataOutput()
     private let session = AVCaptureSession()
     private let captureVideoOutput = AVCaptureMovieFileOutput()
+    private let qrCodeScanlineGradientLayer = CAGradientLayer()
     
     private var capturePhotoOutput = AVCapturePhotoOutput()
     private var videoDeviceInput: AVCaptureDeviceInput!
@@ -97,7 +98,15 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
         NotificationCenter.default.addObserver(self, selector: #selector(hideFocusIndicator), name: .AVCaptureDeviceSubjectAreaDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(startScanAnimation), name: UIApplication.didBecomeActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(stopScanAnimation), name: UIApplication.didEnterBackgroundNotification, object: nil)
+        
         qrCodeScanGridView.mask = qrCodeScanGridMaskView
+        qrCodeScanlineGradientLayer.colors = [
+            R.color.background_scan_line()!.withAlphaComponent(0).cgColor,
+            R.color.background_scan_line()!.withAlphaComponent(0.6).cgColor,
+        ]
+        qrCodeScanlineGradientLayer.startPoint = CGPoint(x: 0.5, y: 0)
+        qrCodeScanlineGradientLayer.endPoint = CGPoint(x: 0.5, y: 1)
+        qrCodeScanLineView.layer.addSublayer(qrCodeScanlineGradientLayer)
         startScanAnimation()
     }
     
@@ -113,6 +122,13 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
         super.viewDidDisappear(animated)
         session.stopRunning()
         loadingView.stopAnimating()
+    }
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        if qrCodeScanlineGradientLayer.bounds.size != qrCodeScanLineView.bounds.size {
+            qrCodeScanlineGradientLayer.frame = CGRect(origin: .zero, size: qrCodeScanLineView.bounds.size)
+        }
     }
     
     override func viewSafeAreaInsetsDidChange() {
@@ -647,7 +663,7 @@ extension CameraViewController {
     
     @objc private func startScanAnimation() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            UIView.animate(withDuration: 2, delay: 0, options: [.repeat]) {
+            UIView.animate(withDuration: 2, delay: 0, options: [.repeat, .curveLinear]) {
                 self.qrCodeScanLineViewShowConstraint.priority = .defaultHigh
                 self.qrCodeScanLineViewHideConstraint.priority = .defaultLow
                 self.view.layoutIfNeeded()

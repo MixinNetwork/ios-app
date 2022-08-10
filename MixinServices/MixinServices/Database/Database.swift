@@ -33,9 +33,6 @@ open class Database {
             let message: String
         }
         GRDB.Database.logError = { (code, message) in
-            guard code.primaryResultCode != .SQLITE_NOTICE else {
-                return
-            }
             if code.primaryResultCode == .SQLITE_ERROR {
                 if message.hasPrefix("no such table: grdb_migrations") {
                     return
@@ -71,6 +68,8 @@ open class Database {
         do {
             return try pool.read(reader)
         } catch {
+            reporter.report(error: error)
+            Logger.database.error(category: "Database", message: "Failed to read: \(error)")
             markDatabaseNeedsRebuildIfNeeded(error: error)
             throw error
         }
@@ -82,6 +81,8 @@ open class Database {
             try pool.write(updates)
             return true
         } catch {
+            reporter.report(error: error)
+            Logger.database.error(category: "Database", message: "Failed to write: \(error)")
             markDatabaseNeedsRebuildIfNeeded(error: error)
             return false
         }
@@ -91,6 +92,8 @@ open class Database {
         do {
             return try pool.write(updates)
         } catch {
+            reporter.report(error: error)
+            Logger.database.error(category: "Database", message: "Failed to write: \(error)")
             markDatabaseNeedsRebuildIfNeeded(error: error)
             throw error
         }

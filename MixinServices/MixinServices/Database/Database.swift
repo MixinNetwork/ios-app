@@ -9,18 +9,29 @@ open class Database {
     open class var config: Configuration {
         var config = Configuration()
         config.prepareDatabase { (db) in
-            db.trace(options: .profile) { (event) in
-                guard case let .profile(statement, duration) = event else {
-                    return
-                }
-                if duration > 1 {
-                    // Add a trailing linebreak to clear the border of SQL string
-                    let message = """
+            db.trace(options: [.profile, .statement]) { event in
+                switch event {
+                case let .profile(statement, duration):
+                    if duration > 1 {
+                        // Add a trailing linebreak to clear the border of SQL string
+                        let message = """
                         Duration: \(duration)s, SQL:
                         \(statement.sql)
                         
                     """
-                    Logger.database.info(category: "Trace", message: message)
+                        Logger.database.info(category: "Trace", message: message)
+                    }
+                case let .statement(statement):
+                    let sql = statement.expandedSQL
+                    let assetRelated = [
+                        #"INSERT INTO assets"#,
+                        #"INSERT INTO "assets""#,
+                        #"UPDATE "assets""#,
+                        #"UPDATE assets"#,
+                    ]
+                    if assetRelated.contains(where: sql.contains) {
+                        Logger.database.info(category: "Trace", message: sql)
+                    }
                 }
             }
         }

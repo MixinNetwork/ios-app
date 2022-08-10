@@ -39,12 +39,22 @@ public final class AssetDAO: UserDatabaseDAO {
     
     public func insertOrUpdateAssets(assets: [Asset]) {
         guard !assets.isEmpty else {
+            Logger.general.error(category: "AssetDAO", message: "Trying to save nothing\n\(Thread.callStackSymbols)")
             return
         }
         db.write { (db) -> Void in
             do {
+                if assets.count == 1 {
+                    Logger.general.info(category: "AssetDAO", message: "Will save asset: \(assets[0].assetId)")
+                } else {
+                    Logger.general.info(category: "AssetDAO", message: "Will save \(assets.count) assets")
+                }
                 try assets.save(db)
-                Logger.general.info(category: "AssetDAO", message: "Saved \(assets.count) assets")
+                if assets.count == 1 {
+                    Logger.general.info(category: "AssetDAO", message: "Saved asset: \(assets[0].assetId)")
+                } else {
+                    Logger.general.info(category: "AssetDAO", message: "Saved \(assets.count) assets")
+                }
                 db.afterNextTransactionCommit { _ in
                     let center = NotificationCenter.default
                     if assets.count == 1 {

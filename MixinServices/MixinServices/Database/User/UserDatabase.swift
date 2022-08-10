@@ -231,7 +231,7 @@ public final class UserDatabase: Database {
             .init(key: .name, constraints: "TEXT NOT NULL"),
             .init(key: .iconUrl, constraints: "TEXT NOT NULL"),
             .init(key: .balance, constraints: "TEXT NOT NULL"),
-            .init(key: .destination, constraints: "TEXT NOT NULL"),
+            .init(key: .destination, constraints: "TEXT"),
             .init(key: .tag, constraints: "TEXT"),
             .init(key: .priceBtc, constraints: "TEXT NOT NULL"),
             .init(key: .priceUsd, constraints: "TEXT NOT NULL"),
@@ -512,7 +512,7 @@ public final class UserDatabase: Database {
             
             let topAssetsColumns = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(top_assets)").map(\.name)
             if !topAssetsColumns.contains("destination") {
-                try db.execute(sql: "ALTER TABLE top_assets ADD COLUMN destination TEXT NOT NULL")
+                try db.execute(sql: "ALTER TABLE top_assets ADD COLUMN destination TEXT")
             }
             if !topAssetsColumns.contains("tag") {
                 try db.execute(sql: "ALTER TABLE top_assets ADD COLUMN tag TEXT")

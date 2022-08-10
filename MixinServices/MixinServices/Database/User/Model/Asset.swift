@@ -64,6 +64,7 @@ public class Asset: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
             reserve = try container.decodeIfPresent(String.self, forKey: .reserve) ?? ""
             depositEntries = try container.decodeIfPresent([DepositEntry].self, forKey: .depositEntries) ?? []
         } catch {
+            reporter.report(error: error)
             Logger.general.error(category: "Asset", message: "Failed to decode asset: \(error)")
             throw error
         }
@@ -127,6 +128,7 @@ public class Asset: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
             try container.encode(reserve, forKey: .reserve)
             try container.encode(depositEntries, forKey: .depositEntries)
         } catch {
+            reporter.report(error: error)
             Logger.general.error(category: "Asset", message: "Failed to encode asset: \(error)")
             throw error
         }

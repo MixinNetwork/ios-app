@@ -812,7 +812,7 @@
 "transcript" = "メッセージ履歴";
 "transfer" = "送金";
 "transfer_amount_count_down" = "送金金額(%@)";
-"transfer_error_pin_incorrect_with_times" = "エラー20119: PINコードが間違っています。あと%@回入力可能です。24時間後に再試行してください。";
+"transfer_error_pin_incorrect_with_times" = "エラー20119: PINコードが間違っています。あと%@回入力可能です。";
 "transfer_memo" = "メモ（オプション）";
 "transfer_notifications" = "送金の受取通知";
 "transfer_qrcode_prompt" = "私に送金するためにQRコードをスキャンして下さい。";

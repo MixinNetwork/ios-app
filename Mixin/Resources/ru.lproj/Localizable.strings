@@ -812,7 +812,7 @@
 "transcript" = "Стенограмма";
 "transfer" = "Передача";
 "transfer_amount_count_down" = "Сумма перевода(%@)";
-"transfer_error_pin_incorrect_with_times" = "ОШИБКА 20119: неверный PIN-код. У вас еще есть %@ шансов. Пожалуйста, подождите 24 часа, чтобы повторить попытку позже.";
+"transfer_error_pin_incorrect_with_times" = "ОШИБКА 20119: неверный PIN-код. У вас еще есть %@ шансов.";
 "transfer_memo" = "Памятка (необязательно)";
 "transfer_notifications" = "Уведомления о переносе";
 "transfer_qrcode_prompt" = "Отсканируйте QR-код, чтобы перевести меня на Mixin";

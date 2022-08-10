@@ -63,14 +63,15 @@ public class RefreshAssetsJob: AsynchronousJob {
                 }
             }
         case .asset(let id, let untilDepositEntriesNotEmpty):
-            Logger.general.info(category: "RefreshAssetsJob", message: "Loading asset: \(id)")
+            Logger.general.info(category: "RefreshAssetsJob", message: "Loading asset: \(id)\n\(Thread.callStackSymbols)")
             AssetAPI.asset(assetId: id) { (result) in
                 switch result {
                 case let .success(asset):
-                    Logger.general.info(category: "RefreshAssetsJob", message: "Asset: \(id) is returned with \(asset.depositEntries.count) deposit_entries")
+                    Logger.general.info(category: "RefreshAssetsJob", message: "Asset: \(id) is returned with deposit_entries: \(asset.depositEntries)")
                     if untilDepositEntriesNotEmpty && asset.depositEntries.isEmpty {
                         DispatchQueue.global().asyncAfter(deadline: .now() + 2) {
                             if !self.isCancelled {
+                                Logger.general.info(category: "RefreshAssetsJob", message: "Asset: \(id) refresh again for deposit_entries")
                                 self.execute()
                             }
                         }

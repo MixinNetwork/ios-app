@@ -43,21 +43,26 @@ public class Asset: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
     }
     
     public required init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        assetId = try container.decode(String.self, forKey: .assetId)
-        type = try container.decodeIfPresent(String.self, forKey: .type) ?? ""
-        symbol = try container.decodeIfPresent(String.self, forKey: .symbol) ?? ""
-        name = try container.decodeIfPresent(String.self, forKey: .name) ?? ""
-        iconUrl = try container.decodeIfPresent(String.self, forKey: .iconUrl) ?? ""
-        balance = try container.decodeIfPresent(String.self, forKey: .balance) ?? ""
-        priceBtc = try container.decodeIfPresent(String.self, forKey: .priceBtc) ?? ""
-        priceUsd = try container.decodeIfPresent(String.self, forKey: .priceUsd) ?? ""
-        changeUsd = try container.decodeIfPresent(String.self, forKey: .changeUsd) ?? ""
-        chainId = try container.decodeIfPresent(String.self, forKey: .chainId) ?? ""
-        confirmations = try container.decodeIfPresent(Int.self, forKey: .confirmations) ?? 0
-        assetKey = try container.decodeIfPresent(String.self, forKey: .assetKey) ?? ""
-        reserve = try container.decodeIfPresent(String.self, forKey: .reserve) ?? ""
-        depositEntries = try container.decodeIfPresent([DepositEntry].self, forKey: .depositEntries) ?? []
+        do {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            assetId = try container.decode(String.self, forKey: .assetId)
+            type = try container.decodeIfPresent(String.self, forKey: .type) ?? ""
+            symbol = try container.decodeIfPresent(String.self, forKey: .symbol) ?? ""
+            name = try container.decodeIfPresent(String.self, forKey: .name) ?? ""
+            iconUrl = try container.decodeIfPresent(String.self, forKey: .iconUrl) ?? ""
+            balance = try container.decodeIfPresent(String.self, forKey: .balance) ?? ""
+            priceBtc = try container.decodeIfPresent(String.self, forKey: .priceBtc) ?? ""
+            priceUsd = try container.decodeIfPresent(String.self, forKey: .priceUsd) ?? ""
+            changeUsd = try container.decodeIfPresent(String.self, forKey: .changeUsd) ?? ""
+            chainId = try container.decodeIfPresent(String.self, forKey: .chainId) ?? ""
+            confirmations = try container.decodeIfPresent(Int.self, forKey: .confirmations) ?? 0
+            assetKey = try container.decodeIfPresent(String.self, forKey: .assetKey) ?? ""
+            reserve = try container.decodeIfPresent(String.self, forKey: .reserve) ?? ""
+            depositEntries = try container.decodeIfPresent([DepositEntry].self, forKey: .depositEntries) ?? []
+        } catch {
+            Logger.general.error(category: "Asset", message: "Failed to decode asset: \(error)")
+            throw error
+        }
     }
     
     public init(assetId: String, type: String, symbol: String, name: String, iconUrl: String, balance: String, priceBtc: String, priceUsd: String, changeUsd: String, chainId: String, confirmations: Int, assetKey: String, reserve: String, depositEntries: [DepositEntry]) {
@@ -92,6 +97,29 @@ public class Asset: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
         case assetKey = "asset_key"
         case reserve
         case depositEntries = "deposit_entries"
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        do {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(assetId, forKey: .assetId)
+            try container.encode(type, forKey: .type)
+            try container.encode(symbol, forKey: .symbol)
+            try container.encode(name, forKey: .name)
+            try container.encode(iconUrl, forKey: .iconUrl)
+            try container.encode(balance, forKey: .balance)
+            try container.encode(priceBtc, forKey: .priceBtc)
+            try container.encode(priceUsd, forKey: .priceUsd)
+            try container.encode(changeUsd, forKey: .changeUsd)
+            try container.encode(chainId, forKey: .chainId)
+            try container.encode(confirmations, forKey: .confirmations)
+            try container.encode(assetKey, forKey: .assetKey)
+            try container.encode(reserve, forKey: .reserve)
+            try container.encode(depositEntries, forKey: .depositEntries)
+        } catch {
+            Logger.general.error(category: "Asset", message: "Failed to encode asset: \(error)")
+            throw error
+        }
     }
     
 }

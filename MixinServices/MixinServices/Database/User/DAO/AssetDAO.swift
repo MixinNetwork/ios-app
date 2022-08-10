@@ -41,15 +41,24 @@ public final class AssetDAO: UserDatabaseDAO {
         guard !assets.isEmpty else {
             return
         }
-        db.save(assets) { _ in
-            let center = NotificationCenter.default
-            if assets.count == 1 {
-                center.post(onMainThread: Self.assetsDidChangeNotification,
-                            object: self,
-                            userInfo: [Self.UserInfoKey.assetId: assets[0].assetId])
-            } else {
-                center.post(onMainThread: Self.assetsDidChangeNotification,
-                            object: nil)
+        db.write { (db) -> Void in
+            do {
+                try assets.save(db)
+                Logger.general.info(category: "AssetDAO", message: "Saved \(assets.count) assets")
+                db.afterNextTransactionCommit { _ in
+                    let center = NotificationCenter.default
+                    if assets.count == 1 {
+                        center.post(onMainThread: Self.assetsDidChangeNotification,
+                                    object: self,
+                                    userInfo: [Self.UserInfoKey.assetId: assets[0].assetId])
+                    } else {
+                        center.post(onMainThread: Self.assetsDidChangeNotification,
+                                    object: nil)
+                    }
+                }
+            } catch {
+                Logger.general.error(category: "AssetDAO", message: "Failed to save asset: \(error)")
+                throw error
             }
         }
     }

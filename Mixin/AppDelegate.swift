@@ -39,7 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         configAnalytics()
         pendingShortcutItem = launchOptions?[UIApplication.LaunchOptionsKey.shortcutItem] as? UIApplicationShortcutItem
         addObservers()
-        Logger.general.info(category: "AppDelegate", message: "App \(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion)) did finish launching with state: \(UIApplication.shared.applicationStateString)")
+        Logger.general.info(category: "AppDelegate", message: "App \(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion)) did finish launching with state: \(UIApplication.shared.applicationStateString), device: \(Machine.current.name) \(ProcessInfo.processInfo.operatingSystemVersionString)")
         if UIApplication.shared.applicationState == .background {
             MixinService.isStopProcessMessages = false
             WebSocketService.shared.connectIfNeeded()

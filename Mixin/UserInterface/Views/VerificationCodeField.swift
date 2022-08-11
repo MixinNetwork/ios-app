@@ -193,6 +193,9 @@ extension VerificationCodeField: UITextInput {
         }
         let start = max(range.start.value, text.startIndex)
         let end = min(range.end.value, text.endIndex)
+        guard end >= start else {
+            return nil
+        }
         return String(text[start..<end])
     }
     
@@ -237,7 +240,15 @@ extension VerificationCodeField: UITextInput {
         guard let position = position as? TextPosition else {
             return nil
         }
-        let advancedPosition = text.index(position.value, offsetBy: offset)
+        let advancedPosition: String.Index?
+        if offset > 0 {
+            advancedPosition = text.index(position.value, offsetBy: offset, limitedBy: text.endIndex)
+        } else {
+            advancedPosition = text.index(position.value, offsetBy: offset, limitedBy: text.startIndex)
+        }
+        guard let advancedPosition = advancedPosition else {
+            return nil
+        }
         return TextPosition(value: advancedPosition)
     }
     

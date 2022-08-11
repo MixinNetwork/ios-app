@@ -7,7 +7,7 @@ public final class TopAssetsDAO: UserDatabaseDAO {
     
     public func getAssets() -> [AssetItem] {
         let sql = """
-        SELECT a1.asset_id, a1.type, a1.symbol, a1.name, a1.icon_url, a1.balance, a1.price_btc,
+        SELECT a1.asset_id, a1.type, a1.symbol, a1.name, a1.icon_url, a1.balance, a1.destination, a1.tag, a1.price_btc,
             a1.price_usd, a1.change_usd, a1.chain_id, a2.icon_url as chain_icon_url, a1.confirmations,
             a1.asset_key, a2.name as chain_name, a2.symbol as chain_symbol, a1.reserve, NULL AS deposit_entries
         FROM top_assets a1

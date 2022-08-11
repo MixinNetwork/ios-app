@@ -769,11 +769,8 @@ extension UrlWindow {
         if asset == nil {
             switch AssetAPI.asset(assetId: assetId) {
             case let .success(assetItem):
-                Logger.general.info(category: "UrlWindow", message: "Got asset: \(assetId) from remote with \(assetItem.depositEntries.count) deposit_entries")
                 asset = AssetDAO.shared.saveAsset(asset: assetItem)
-                if let asset = asset {
-                    Logger.general.info(category: "UrlWindow", message: "Got asset: \(assetId) from local with \(asset.depositEntries.count) deposit_entries")
-                } else {
+                if asset == nil {
                     Logger.general.error(category: "UrlWindow", message: "No asset: \(assetId) from local")
                 }
             case let .failure(error):

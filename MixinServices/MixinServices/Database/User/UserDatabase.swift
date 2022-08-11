@@ -72,6 +72,8 @@ public final class UserDatabase: Database {
             .init(key: .name, constraints: "TEXT NOT NULL"),
             .init(key: .iconUrl, constraints: "TEXT NOT NULL"),
             .init(key: .balance, constraints: "TEXT NOT NULL"),
+            .init(key: .destination, constraints: "TEXT"),
+            .init(key: .tag, constraints: "TEXT"),
             .init(key: .priceBtc, constraints: "TEXT NOT NULL"),
             .init(key: .priceUsd, constraints: "TEXT NOT NULL"),
             .init(key: .changeUsd, constraints: "TEXT NOT NULL"),
@@ -229,6 +231,8 @@ public final class UserDatabase: Database {
             .init(key: .name, constraints: "TEXT NOT NULL"),
             .init(key: .iconUrl, constraints: "TEXT NOT NULL"),
             .init(key: .balance, constraints: "TEXT NOT NULL"),
+            .init(key: .destination, constraints: "TEXT"),
+            .init(key: .tag, constraints: "TEXT"),
             .init(key: .priceBtc, constraints: "TEXT NOT NULL"),
             .init(key: .priceUsd, constraints: "TEXT NOT NULL"),
             .init(key: .changeUsd, constraints: "TEXT NOT NULL"),
@@ -494,6 +498,24 @@ public final class UserDatabase: Database {
             let assets = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(assets)")
             if !assets.map(\.name).contains("deposit_entries") {
                 try db.execute(sql: "ALTER TABLE assets ADD COLUMN deposit_entries TEXT")
+            }
+        }
+        
+        migrator.registerMigration("deposit_entries_2") { db in
+            let assetsColumns = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(assets)").map(\.name)
+            if !assetsColumns.contains("destination") {
+                try db.execute(sql: "ALTER TABLE assets ADD COLUMN destination TEXT")
+            }
+            if !assetsColumns.contains("tag") {
+                try db.execute(sql: "ALTER TABLE assets ADD COLUMN tag TEXT")
+            }
+            
+            let topAssetsColumns = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(top_assets)").map(\.name)
+            if !topAssetsColumns.contains("destination") {
+                try db.execute(sql: "ALTER TABLE top_assets ADD COLUMN destination TEXT")
+            }
+            if !topAssetsColumns.contains("tag") {
+                try db.execute(sql: "ALTER TABLE top_assets ADD COLUMN tag TEXT")
             }
         }
         

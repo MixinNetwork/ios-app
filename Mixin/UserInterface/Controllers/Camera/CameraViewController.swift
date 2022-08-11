@@ -44,7 +44,6 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
     private let metadataOutput = AVCaptureMetadataOutput()
     private let session = AVCaptureSession()
     private let captureVideoOutput = AVCaptureMovieFileOutput()
-    private let qrCodeScanlineGradientLayer = CAGradientLayer()
     
     private var capturePhotoOutput = AVCapturePhotoOutput()
     private var videoDeviceInput: AVCaptureDeviceInput!
@@ -59,6 +58,7 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
         return AVAudioSession.sharedInstance().recordPermission == .granted
     }
 
+    private lazy var qrCodeScanlineGradientLayer = CAGradientLayer()
     private lazy var shutterAnimationView = ShutterAnimationView()
     private lazy var videoDeviceDiscoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera, .builtInDualCamera],
                                                                                     mediaType: AVMediaType.video,
@@ -92,22 +92,23 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
             cameraFlashButton.isHidden = true
             qrCodeScanningView.isHidden = false
             qrCodeToolbarView.isHidden = false
+                        
+            qrCodeScanGridView.mask = qrCodeScanGridMaskView
+            qrCodeScanlineGradientLayer.colors = [
+                R.color.background_scan_line()!.withAlphaComponent(0).cgColor,
+                R.color.background_scan_line()!.withAlphaComponent(0.6).cgColor,
+            ]
+            qrCodeScanlineGradientLayer.startPoint = CGPoint(x: 0.5, y: 0)
+            qrCodeScanlineGradientLayer.endPoint = CGPoint(x: 0.5, y: 1)
+            qrCodeScanLineView.layer.addSublayer(qrCodeScanlineGradientLayer)
+            startScanAnimation()
+            
+            NotificationCenter.default.addObserver(self, selector: #selector(startScanAnimation), name: UIApplication.didBecomeActiveNotification, object: nil)
+            NotificationCenter.default.addObserver(self, selector: #selector(stopScanAnimation), name: UIApplication.didEnterBackgroundNotification, object: nil)
         }
         let focusRecognizer = UITapGestureRecognizer(target: self, action: #selector(setFocus(_:)))
         previewView.addGestureRecognizer(focusRecognizer)
         NotificationCenter.default.addObserver(self, selector: #selector(hideFocusIndicator), name: .AVCaptureDeviceSubjectAreaDidChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(startScanAnimation), name: UIApplication.didBecomeActiveNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(stopScanAnimation), name: UIApplication.didEnterBackgroundNotification, object: nil)
-        
-        qrCodeScanGridView.mask = qrCodeScanGridMaskView
-        qrCodeScanlineGradientLayer.colors = [
-            R.color.background_scan_line()!.withAlphaComponent(0).cgColor,
-            R.color.background_scan_line()!.withAlphaComponent(0.6).cgColor,
-        ]
-        qrCodeScanlineGradientLayer.startPoint = CGPoint(x: 0.5, y: 0)
-        qrCodeScanlineGradientLayer.endPoint = CGPoint(x: 0.5, y: 1)
-        qrCodeScanLineView.layer.addSublayer(qrCodeScanlineGradientLayer)
-        startScanAnimation()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -126,7 +127,7 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        if qrCodeScanlineGradientLayer.bounds.size != qrCodeScanLineView.bounds.size {
+        if asQrCodeScanner && qrCodeScanlineGradientLayer.bounds.size != qrCodeScanLineView.bounds.size {
             qrCodeScanlineGradientLayer.frame = CGRect(origin: .zero, size: qrCodeScanLineView.bounds.size)
         }
     }

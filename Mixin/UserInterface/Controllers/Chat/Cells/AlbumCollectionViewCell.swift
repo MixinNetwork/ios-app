@@ -1,8 +1,9 @@
 import UIKit
+import SDWebImage
 
 class AlbumCollectionViewCell: UICollectionViewCell {
     
-    @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var imageView: SDAnimatedImageView!
     @IBOutlet weak var dotImageView: UIImageView!
     
     override func awakeFromNib() {

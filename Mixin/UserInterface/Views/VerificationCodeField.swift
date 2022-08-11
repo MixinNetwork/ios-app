@@ -191,7 +191,9 @@ extension VerificationCodeField: UITextInput {
         guard let range = range as? TextRange else {
             return nil
         }
-        return String(text[range.start.value...range.end.value])
+        let start = max(range.start.value, text.startIndex)
+        let end = min(range.end.value, text.endIndex)
+        return String(text[start..<end])
     }
     
     func replace(_ range: UITextRange, withText text: String) {

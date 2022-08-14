@@ -20,6 +20,9 @@ extension ConversationDAO {
                     sql += " LIMIT \(limit)"
                 }
                 return try String.fetchAll(db, sql: sql, arguments: ["\"\(keyword)\"*"], adapter: nil)
+            } catch DatabaseError.SQLITE_INTERRUPT {
+                // Ignore it
+                return []
             } catch {
                 Logger.database.error(category: "ConversationDAO+Search", message: "Failed to fetch cids: \(error)")
                 return []

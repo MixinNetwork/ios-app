@@ -68,9 +68,7 @@ open class Database {
         do {
             return try pool.read(reader)
         } catch {
-            reporter.report(error: error)
-            Logger.database.error(category: "Database", message: "Failed to read: \(error)")
-            markDatabaseNeedsRebuildIfNeeded(error: error)
+            handleDatabaseError(error)
             throw error
         }
     }
@@ -81,9 +79,7 @@ open class Database {
             try pool.write(updates)
             return true
         } catch {
-            reporter.report(error: error)
-            Logger.database.error(category: "Database", message: "Failed to write: \(error)")
-            markDatabaseNeedsRebuildIfNeeded(error: error)
+            handleDatabaseError(error)
             return false
         }
     }
@@ -92,9 +88,7 @@ open class Database {
         do {
             return try pool.write(updates)
         } catch {
-            reporter.report(error: error)
-            Logger.database.error(category: "Database", message: "Failed to write: \(error)")
-            markDatabaseNeedsRebuildIfNeeded(error: error)
+            handleDatabaseError(error)
             throw error
         }
     }
@@ -133,8 +127,13 @@ open class Database {
         }
     }
     
-    private func markDatabaseNeedsRebuildIfNeeded(error: Error) {
+    private func handleDatabaseError(_ error: Error) {
+        reporter.report(error: error)
+        Logger.database.error(category: "Database", message: "\(error)")
         guard let error = error as? GRDB.DatabaseError else {
+            return
+        }
+        guard error.resultCode != .SQLITE_INTERRUPT else {
             return
         }
         guard let message = error.message, message.hasPrefix("no such table:"), !message.hasPrefix("no such table: grdb_migrations") else {
@@ -402,7 +401,7 @@ extension Database {
             }
             return numberOfChanges
         } catch {
-            markDatabaseNeedsRebuildIfNeeded(error: error)
+            handleDatabaseError(error)
             return 0
         }
     }

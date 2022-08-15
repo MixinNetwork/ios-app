@@ -54,7 +54,7 @@ public final class LoginManager {
         
         if !isAppExtension && _account != nil && !_isLoggedIn {
             DispatchQueue.global().async {
-                LoginManager.shared.logout(from: "LoginManager")
+                LoginManager.shared.logout(reason: "No valid account")
             }
         }
     }
@@ -95,11 +95,12 @@ public final class LoginManager {
         }
     }
     
-    public func logout(from reason: String) {
+    public func logout(reason: String) {
         guard account != nil else {
             return
         }
 
+        Logger.general.error(category: "LoginManager", message: "Logout because: \(reason), isAppExtension: \(isAppExtension)")
         if !isAppExtension {
             AppGroupUserDefaults.User.isLogoutByServer = true
         }
@@ -110,7 +111,6 @@ public final class LoginManager {
         pthread_rwlock_unlock(&lock)
 
         if !isAppExtension {
-            Logger.general.error(category: "LoginManager", message: "Logout because: \(reason)")
             AppGroupUserDefaults.Account.serializedAccount = nil
             Queue.main.autoSync {
                 INInteraction.deleteAll(completion: nil)

@@ -530,7 +530,7 @@ public class SendMessageService: MixinService {
                             userInfo["identityCount"] = "\(IdentityDAO.shared.getCount())"
                             Logger.general.error(category: "SendMessageService", message: "Job execution failed: \(err)", userInfo: userInfo)
                             reporter.report(error: MixinServicesError.sendMessage(userInfo))
-                            LoginManager.shared.logout(from: "SendMessengerError")
+                            LoginManager.shared.logout(reason: "SendMessage: \(err), userinfo: \(userInfo)")
                             return false
                         }
                     }

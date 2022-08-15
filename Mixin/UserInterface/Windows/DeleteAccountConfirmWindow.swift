@@ -92,7 +92,7 @@ extension DeleteAccountConfirmWindow: PinFieldDelegate {
             }
             switch result {
             case .success:
-                LoginManager.shared.logout(from: "DeleteAccount")
+                LoginManager.shared.logout(reason: "DeleteAccount")
             case let .failure(error):
                 weakSelf.pinField.clear()
                 PINVerificationFailureHandler.handle(error: error) { [weak self] (description) in

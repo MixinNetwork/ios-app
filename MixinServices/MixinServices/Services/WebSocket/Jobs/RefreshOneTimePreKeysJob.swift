@@ -24,7 +24,7 @@ public class RefreshOneTimePreKeysJob: BaseJob {
         } catch let error as SignalError where IdentityDAO.shared.getLocalIdentity() == nil {
             let error = MixinServicesError.refreshOneTimePreKeys(error: error, identityCount: IdentityDAO.shared.getCount())
             reporter.report(error: error)
-            LoginManager.shared.logout(from: "RefreshOneTimePreKeysJob")
+            LoginManager.shared.logout(reason: "RefreshOneTimePreKeysJob: \(error)")
         } catch {
             reporter.report(error: error)
         }

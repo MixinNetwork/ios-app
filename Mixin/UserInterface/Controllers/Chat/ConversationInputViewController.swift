@@ -1,6 +1,7 @@
 import UIKit
 import Photos
 import MixinServices
+import QuickLook
 
 protocol ConversationInputInteractiveResizableViewController {
     var interactiveResizableScrollView: UIScrollView { get }
@@ -528,7 +529,11 @@ extension ConversationInputViewController {
             return
         }
         let keyboardWillBeInvisible = (screenHeight - endFrame.origin.y) <= 1
-        guard textView.isFirstResponder || (keyboardWillBeInvisible && customInputViewController == nil) || (presentedViewController?.isBeingDismissed ?? false) else {
+        guard
+            textView.isFirstResponder ||
+            (keyboardWillBeInvisible && customInputViewController == nil) ||
+            ((presentedViewController?.isBeingDismissed ?? false) && !(presentedViewController is QLPreviewController))
+        else {
             return
         }
         if !keyboardWillBeInvisible {

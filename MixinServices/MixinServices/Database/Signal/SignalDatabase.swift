@@ -84,7 +84,7 @@ public final class SignalDatabase: Database {
                                                            fileCreationDate: fileCreationDate)
         reporter.report(error: error)
         Logger.database.error(category: "SignalDatabase", message: "Table lost with error: \(error)")
-        LoginManager.shared.logout(from: "DatabaseCorruption")
+        LoginManager.shared.logout(reason: "Signal database lost: \(error)")
     }
     
     public func erase() {

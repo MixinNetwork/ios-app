@@ -54,7 +54,7 @@ public final class LoginManager {
         
         if !isAppExtension && _account != nil && !_isLoggedIn {
             DispatchQueue.global().async {
-                LoginManager.shared.logout(from: "LoginManager")
+                LoginManager.shared.logout(reason: "No valid account")
             }
         }
     }
@@ -95,7 +95,7 @@ public final class LoginManager {
         }
     }
     
-    public func logout(from reason: String) {
+    public func logout(reason: String) {
         guard account != nil else {
             return
         }

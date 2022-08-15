@@ -178,8 +178,7 @@ extension MixinAPI {
             } else {
                 completion(.failure(.unauthorized))
                 reporter.report(error: MixinServicesError.logout(isAsyncRequest: true))
-                let reason = isAsync ? "AsyncRequest" : "SyncRequest"
-                LoginManager.shared.logout(from: reason)
+                LoginManager.shared.logout(reason: "API access unauthorized, request: \(response?.url?.absoluteString ?? "(null)")")
             }
         }
         

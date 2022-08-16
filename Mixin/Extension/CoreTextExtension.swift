@@ -1,4 +1,5 @@
 import CoreText
+import Foundation
 
 extension CTLine {
     

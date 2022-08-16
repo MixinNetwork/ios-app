@@ -57,9 +57,7 @@ enum StickerStore {
             } else if let albumId = albumId, !albumId.isEmpty {
                 fetchStickers(albumId: albumId, completion: completion)
             } else {
-                DispatchQueue.main.async {
-                    completion(nil)
-                }
+                fetchStickers(stickerId: stickerId, completion: completion)
             }
         }
     }
@@ -127,13 +125,41 @@ extension StickerStore {
                 let stickers = StickerDAO.shared.insertOrUpdateStickers(stickers: stickers, albumId: albumId)
                 albumItem = AlbumItem(album: album, stickers: stickers)
             case let .failure(error):
-                reporter.report(error: error)
+                handleError(error)
             }
         case let .failure(error):
-            reporter.report(error: error)
+            handleError(error)
         }
         DispatchQueue.main.async {
             completion(albumItem)
+        }
+    }
+    
+    private static func fetchStickers(stickerId: String, completion: @escaping (AlbumItem?) -> Void) {
+        let albumId: String?
+        switch StickerAPI.sticker(stickerId: stickerId) {
+        case let .success(sticker):
+            albumId = sticker.albumId
+            _ = StickerDAO.shared.insertOrUpdateSticker(sticker: sticker)
+        case let .failure(error):
+            albumId = nil
+            handleError(error)
+        }
+        if let albumId = albumId {
+            fetchStickers(albumId: albumId, completion: completion)
+        } else {
+            DispatchQueue.main.async {
+                completion(nil)
+            }
+        }
+    }
+    
+    private static func handleError(_ error: MixinAPIError) {
+        switch error {
+        case .notFound:
+            break
+        default:
+            reporter.report(error: error)
         }
     }
     

@@ -45,7 +45,7 @@ class StickerPreviewViewController: UIViewController {
             category = nil
         }
         if category != AlbumCategory.PERSONAL, let stickerId = message.stickerId {
-            loadAlbum(stickerId: stickerId, albumId: message.albumId)
+            loadAlbum(stickerId: stickerId)
         }
     }
     
@@ -103,9 +103,9 @@ extension StickerPreviewViewController {
         return min(maxHeight, contentHeight)
     }
     
-    private func loadAlbum(stickerId: String, albumId: String?) {
+    private func loadAlbum(stickerId: String) {
         activityIndicatorView.startAnimating()
-        StickerStore.loadAlbum(stickerId: stickerId, albumId: albumId) { albumItem in
+        StickerStore.loadAlbum(stickerId: stickerId) { albumItem in
             self.activityIndicatorView.stopAnimating()
             if let albumItem = albumItem, !albumItem.stickers.isEmpty {
                 self.albumItem = albumItem

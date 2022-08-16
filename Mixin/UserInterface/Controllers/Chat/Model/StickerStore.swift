@@ -47,15 +47,13 @@ enum StickerStore {
         }
     }
     
-    static func loadAlbum(stickerId: String, albumId: String?, completion: @escaping (AlbumItem?) -> Void) {
+    static func loadAlbum(stickerId: String, completion: @escaping (AlbumItem?) -> Void) {
         DispatchQueue.global(qos: .userInitiated).async {
             if let album = AlbumDAO.shared.getAlbum(stickerId: stickerId, category: .SYSTEM) {
                 let albumItem = AlbumItem(album: album, stickers: StickerDAO.shared.getStickers(albumId: album.albumId))
                 DispatchQueue.main.async {
                     completion(albumItem)
                 }
-            } else if let albumId = albumId, !albumId.isEmpty {
-                fetchStickers(albumId: albumId, completion: completion)
             } else {
                 fetchStickers(stickerId: stickerId, completion: completion)
             }
@@ -115,51 +113,40 @@ extension StickerStore {
         }
     }
     
-    private static func fetchStickers(albumId: String, completion: @escaping (AlbumItem?) -> Void) {
+    private static func fetchStickers(stickerId: String, completion: @escaping (AlbumItem?) -> Void) {
+        func handleError(_ error: MixinAPIError) {
+            switch error {
+            case .notFound:
+                break
+            default:
+                reporter.report(error: error)
+            }
+        }
+        
         var albumItem: AlbumItem?
-        switch StickerAPI.album(albumId: albumId) {
-        case let .success(album):
-            AlbumDAO.shared.insertOrUpdateAblum(album: album)
-            switch StickerAPI.stickers(albumId: albumId) {
-            case let .success(stickers):
-                let stickers = StickerDAO.shared.insertOrUpdateStickers(stickers: stickers, albumId: albumId)
-                albumItem = AlbumItem(album: album, stickers: stickers)
-            case let .failure(error):
-                handleError(error)
+        switch StickerAPI.sticker(stickerId: stickerId) {
+        case let .success(sticker):
+            _ = StickerDAO.shared.insertOrUpdateSticker(sticker: sticker)
+            if let albumId = sticker.albumId {
+                switch StickerAPI.album(albumId: albumId) {
+                case let .success(album):
+                    AlbumDAO.shared.insertOrUpdateAblum(album: album)
+                    switch StickerAPI.stickers(albumId: albumId) {
+                    case let .success(stickers):
+                        let stickers = StickerDAO.shared.insertOrUpdateStickers(stickers: stickers, albumId: albumId)
+                        albumItem = AlbumItem(album: album, stickers: stickers)
+                    case let .failure(error):
+                        handleError(error)
+                    }
+                case let .failure(error):
+                    handleError(error)
+                }
             }
         case let .failure(error):
             handleError(error)
         }
         DispatchQueue.main.async {
             completion(albumItem)
-        }
-    }
-    
-    private static func fetchStickers(stickerId: String, completion: @escaping (AlbumItem?) -> Void) {
-        let albumId: String?
-        switch StickerAPI.sticker(stickerId: stickerId) {
-        case let .success(sticker):
-            albumId = sticker.albumId
-            _ = StickerDAO.shared.insertOrUpdateSticker(sticker: sticker)
-        case let .failure(error):
-            albumId = nil
-            handleError(error)
-        }
-        if let albumId = albumId {
-            fetchStickers(albumId: albumId, completion: completion)
-        } else {
-            DispatchQueue.main.async {
-                completion(nil)
-            }
-        }
-    }
-    
-    private static func handleError(_ error: MixinAPIError) {
-        switch error {
-        case .notFound:
-            break
-        default:
-            reporter.report(error: error)
         }
     }
     

@@ -47,28 +47,28 @@ final class SelectedPhotoInputItemsPreviewWindow: BottomSheetView {
         }
     }
     
-    override func dismissPopupControllerAnimated() {
+    override func dismissPopupController(animated: Bool) {
         if !isSending {
             delegate?.selectedPhotoInputItemsPreviewWindow(self, willDismissWindow: selectedAssets)
         }
-        super.dismissPopupControllerAnimated()
+        super.dismissPopupController(animated: animated)
     }
     
     @IBAction func closeAction(_ sender: Any) {
         isSending = false
-        dismissPopupControllerAnimated()
+        dismissPopupController(animated: true)
     }
     
     @IBAction func sendPhotosAction(_ sender: Any) {
         isSending = true
         delegate?.selectedPhotoInputItemsPreviewWindow(self, didTapSendItems: selectedAssets)
-        dismissPopupControllerAnimated()
+        dismissPopupController(animated: true)
     }
     
     @IBAction func sendAsFilesAction(_ sender: Any) {
         isSending = true
         delegate?.selectedPhotoInputItemsPreviewWindow(self, didTapSendFiles: selectedAssets)
-        dismissPopupControllerAnimated()
+        dismissPopupController(animated: true)
     }
     
     func load(assets: [PHAsset], initIndex: Int) {

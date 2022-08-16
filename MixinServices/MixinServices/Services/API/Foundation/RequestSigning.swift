@@ -50,8 +50,8 @@ extension RequestSigning {
         }
         
         let date = Date()
-        let claims = Jwt.Claims(uid: account.user_id,
-                                sid: account.session_id,
+        let claims = Jwt.Claims(uid: account.userID,
+                                sid: account.sessionID,
                                 iat: date,
                                 exp: date.addingTimeInterval(30 * secondsPerMinute),
                                 jti: requestId,

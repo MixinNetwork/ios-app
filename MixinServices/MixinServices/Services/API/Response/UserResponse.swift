@@ -60,7 +60,7 @@ public enum Relationship: String, Codable {
 public extension UserResponse {
     
     static func createUser(account: Account) -> UserResponse {
-        return UserResponse(userId: account.user_id, fullName: account.full_name, biography: account.biography, relationship: Relationship.ME, identityNumber: account.identity_number, avatarUrl: account.avatar_url, phone: account.phone, isVerified: false, muteUntil: nil, createdAt: account.created_at, app: nil, isScam: false)
+        return UserResponse(userId: account.userID, fullName: account.fullName, biography: account.biography, relationship: Relationship.ME, identityNumber: account.identityNumber, avatarUrl: account.avatarURL, phone: account.phone, isVerified: false, muteUntil: nil, createdAt: account.createdAt, app: nil, isScam: false)
     }
     
 }

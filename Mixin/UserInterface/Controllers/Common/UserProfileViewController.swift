@@ -212,7 +212,7 @@ final class UserProfileViewController: ProfileViewController {
     }
     
     @objc func accountDidChange(_ notification: Notification) {
-        guard let account = LoginManager.shared.account, account.user_id == user.userId else {
+        guard let account = LoginManager.shared.account, account.userID == user.userId else {
             return
         }
         self.user = UserItem.createUser(from: account)
@@ -355,7 +355,7 @@ extension UserProfileViewController {
     }
     
     @objc func changeNumber() {
-        if LoginManager.shared.account?.has_pin ?? false {
+        if LoginManager.shared.account?.hasPIN ?? false {
             let vc = VerifyPinNavigationController(rootViewController: ChangeNumberVerifyPinViewController())
             if parent != nil {
                 present(vc, animated: true)
@@ -399,7 +399,7 @@ extension UserProfileViewController {
     
     @objc func transfer() {
         let viewController: UIViewController
-        if LoginManager.shared.account?.has_pin ?? false {
+        if LoginManager.shared.account?.hasPIN ?? false {
             viewController = TransferOutViewController.instance(asset: nil, type: .contact(user))
         } else {
             viewController = WalletPasswordViewController.instance(dismissTarget: .transfer(user: user))

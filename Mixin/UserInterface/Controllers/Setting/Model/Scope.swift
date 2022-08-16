@@ -20,7 +20,7 @@ enum Scope: String {
         }
         var result = [(scope: Scope, name: String, desc: String)]()
         var scopes = [Scope.PROFILE.rawValue]
-        result.append((.PROFILE, R.string.localizable.public_profile(), R.string.localizable.auth_profile_content(account.full_name, account.identity_number)))
+        result.append((.PROFILE, R.string.localizable.public_profile(), R.string.localizable.auth_profile_content(account.fullName, account.identityNumber)))
 
         if authInfo.scopes.contains(Scope.PHONE.rawValue) {
             result.append((.PHONE, R.string.localizable.phone_number(), account.phone))

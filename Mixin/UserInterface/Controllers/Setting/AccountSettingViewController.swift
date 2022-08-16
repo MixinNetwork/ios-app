@@ -39,7 +39,7 @@ extension AccountSettingViewController: UITableViewDelegate {
             case 1:
                 viewController = SecuritySettingViewController.instance()
             default:
-                if LoginManager.shared.account?.has_pin ?? false {
+                if LoginManager.shared.account?.hasPIN ?? false {
                     viewController = nil
                     let vc = VerifyPinNavigationController(rootViewController: ChangeNumberVerifyPinViewController())
                     present(vc, animated: true, completion: nil)

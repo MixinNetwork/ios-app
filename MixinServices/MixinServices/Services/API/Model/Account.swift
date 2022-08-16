@@ -16,59 +16,84 @@ public enum AcceptSearchSource: String {
     case nobody = "NOBODY"
 }
 
-public struct Account: Encodable {
+public struct Account {
     
-    public let user_id: String
-    public let session_id: String
+    public let userID: String
+    public let sessionID: String
     public let type: String
-    public let identity_number: String
-    public let full_name: String
+    public let identityNumber: String
+    public let fullName: String
     public let biography: String
-    public let avatar_url: String
+    public let avatarURL: String
     public let phone: String
-    public let authentication_token: String
-    public let code_id: String
-    public let code_url: String
+    public let authenticationToken: String
+    public let codeID: String
+    public let codeURL: String
     public let reputation: Int
-    public let created_at: String
-    public let receive_message_source: String
-    public let accept_conversation_source: String
-    public let accept_search_source: String
-    public let has_pin: Bool
-    public var has_emergency_contact: Bool
-    public let pin_token: String
-    public let fiat_currency: String
-    public let transfer_notification_threshold: Double
-    public let transfer_confirmation_threshold: Double
+    public let createdAt: String
+    public let receiveMessageSource: String
+    public let acceptConversationSource: String
+    public let acceptSearchSource: String
+    public let hasPIN: Bool
+    public var hasEmergencyContact: Bool
+    public let pinToken: String
+    public let fiatCurrency: String
+    public let transferNotificationThreshold: Double
+    public let transferConfirmationThreshold: Double
     
 }
 
-extension Account: Decodable {
+extension Account: Codable {
+    
+    public enum CodingKeys: String, CodingKey {
+        case userID = "user_id"
+        case sessionID = "session_id"
+        case type
+        case identityNumber = "identity_number"
+        case fullName = "full_name"
+        case biography
+        case avatarURL = "avatar_url"
+        case phone
+        case authenticationToken = "authentication_token"
+        case codeID = "code_id"
+        case codeURL = "code_url"
+        case reputation
+        case createdAt = "created_at"
+        case receiveMessageSource = "receive_message_source"
+        case acceptConversationSource = "accept_conversation_source"
+        case acceptSearchSource = "accept_search_source"
+        case hasPIN = "has_pin"
+        case hasEmergencyContact = "has_emergency_contact"
+        case pinToken = "pin_token"
+        case fiatCurrency = "fiat_currency"
+        case transferNotificationThreshold = "transfer_notification_threshold"
+        case transferConfirmationThreshold = "transfer_confirmation_threshold"
+    }
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        user_id = try container.decode(String.self, forKey: .user_id)
-        session_id = try container.decode(String.self, forKey: .session_id)
-        identity_number = try container.decode(String.self, forKey: .identity_number)
+        userID = try container.decode(String.self, forKey: .userID)
+        sessionID = try container.decode(String.self, forKey: .sessionID)
+        identityNumber = try container.decode(String.self, forKey: .identityNumber)
         type = try container.decodeIfPresent(String.self, forKey: .type) ?? ""
-        full_name = try container.decodeIfPresent(String.self, forKey: .full_name) ?? ""
+        fullName = try container.decodeIfPresent(String.self, forKey: .fullName) ?? ""
         biography = try container.decodeIfPresent(String.self, forKey: .biography) ?? ""
-        avatar_url = try container.decodeIfPresent(String.self, forKey: .avatar_url) ?? ""
+        avatarURL = try container.decodeIfPresent(String.self, forKey: .avatarURL) ?? ""
         phone = try container.decodeIfPresent(String.self, forKey: .phone) ?? ""
-        authentication_token = try container.decodeIfPresent(String.self, forKey: .authentication_token) ?? ""
-        code_id = try container.decodeIfPresent(String.self, forKey: .code_id) ?? ""
+        authenticationToken = try container.decodeIfPresent(String.self, forKey: .authenticationToken) ?? ""
+        codeID = try container.decodeIfPresent(String.self, forKey: .codeID) ?? ""
+        codeURL = try container.decodeIfPresent(String.self, forKey: .codeURL) ?? ""
         reputation = try container.decodeIfPresent(Int.self, forKey: .reputation) ?? 0
-        created_at = try container.decodeIfPresent(String.self, forKey: .created_at) ?? ""
-        receive_message_source = try container.decodeIfPresent(String.self, forKey: .receive_message_source) ?? ""
-        accept_conversation_source = try container.decodeIfPresent(String.self, forKey: .accept_conversation_source) ?? ""
-        accept_search_source = try container.decodeIfPresent(String.self, forKey: .accept_search_source) ?? ""
-        has_pin = try container.decodeIfPresent(Bool.self, forKey: .has_pin) ?? false
-        has_emergency_contact = try container.decodeIfPresent(Bool.self, forKey: .has_emergency_contact) ?? false
-        code_url = try container.decodeIfPresent(String.self, forKey: .code_url) ?? ""
-        pin_token = try container.decodeIfPresent(String.self, forKey: .pin_token) ?? ""
-        fiat_currency = try container.decodeIfPresent(String.self, forKey: .fiat_currency) ?? ""
-        transfer_notification_threshold = try container.decodeIfPresent(Double.self, forKey: .transfer_notification_threshold) ?? 0
-        transfer_confirmation_threshold = try container.decodeIfPresent(Double.self, forKey: .transfer_confirmation_threshold) ?? 0
+        createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt) ?? ""
+        receiveMessageSource = try container.decodeIfPresent(String.self, forKey: .receiveMessageSource) ?? ""
+        acceptConversationSource = try container.decodeIfPresent(String.self, forKey: .acceptConversationSource) ?? ""
+        acceptSearchSource = try container.decodeIfPresent(String.self, forKey: .acceptSearchSource) ?? ""
+        hasPIN = try container.decodeIfPresent(Bool.self, forKey: .hasPIN) ?? false
+        hasEmergencyContact = try container.decodeIfPresent(Bool.self, forKey: .hasEmergencyContact) ?? false
+        pinToken = try container.decodeIfPresent(String.self, forKey: .pinToken) ?? ""
+        fiatCurrency = try container.decodeIfPresent(String.self, forKey: .fiatCurrency) ?? ""
+        transferNotificationThreshold = try container.decodeIfPresent(Double.self, forKey: .transferNotificationThreshold) ?? 0
+        transferConfirmationThreshold = try container.decodeIfPresent(Double.self, forKey: .transferConfirmationThreshold) ?? 0
     }
     
 }

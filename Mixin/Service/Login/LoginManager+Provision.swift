@@ -20,8 +20,8 @@ extension LoginManager {
                 }
                 let message = ProvisionMessage(identityKeyPublic: identityKeyPair.publicKey,
                                                identityKeyPrivate: identityKeyPair.privateKey,
-                                               userId: account.user_id,
-                                               sessionId: account.session_id,
+                                               userId: account.userID,
+                                               sessionId: account.sessionID,
                                                provisioningCode: response.code)
                 guard let secretData = try? message.encrypt(with: base64EncodedPublicKey) else {
                     completion(false)

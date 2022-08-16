@@ -54,7 +54,7 @@ open class Reporter {
         guard let account = LoginManager.shared.account else {
             return
         }
-        AppCenter.userId = account.user_id
+        AppCenter.userId = account.userID
     }
     
     open func report(event: Event, userInfo: UserInfo? = nil) {

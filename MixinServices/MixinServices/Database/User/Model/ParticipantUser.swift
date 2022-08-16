@@ -40,10 +40,10 @@ public struct ParticipantUser {
     public init(conversationId: String, account: Account) {
         self.init(conversationId: conversationId,
                   role: "",
-                  userId: account.user_id,
-                  userFullName: account.full_name,
-                  userAvatarUrl: account.avatar_url,
-                  userIdentityNumber: account.identity_number)
+                  userId: account.userID,
+                  userFullName: account.fullName,
+                  userAvatarUrl: account.avatarURL,
+                  userIdentityNumber: account.identityNumber)
     }
     
 }

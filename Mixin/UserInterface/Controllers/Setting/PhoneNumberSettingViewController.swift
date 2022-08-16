@@ -15,7 +15,7 @@ class PhoneNumberSettingViewController: SettingsTableViewController {
         guard let account = LoginManager.shared.account else {
             return 0
         }
-        switch account.accept_search_source {
+        switch account.acceptSearchSource {
         case AcceptSearchSource.everybody.rawValue:
             return 0
         case AcceptSearchSource.contacts.rawValue:
@@ -56,7 +56,7 @@ extension PhoneNumberSettingViewController: UITableViewDelegate {
             newSource = .nobody
         }
         
-        guard newSource.rawValue != LoginManager.shared.account?.accept_search_source else {
+        guard newSource.rawValue != LoginManager.shared.account?.acceptSearchSource else {
             return
         }
         let indexBefore = self.currentSelectedRowIndex

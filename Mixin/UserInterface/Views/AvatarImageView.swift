@@ -78,7 +78,7 @@ class AvatarImageView: UIView {
     }
     
     func setImage(with user: Account) {
-        setImage(with: user.avatar_url, userId: user.user_id, name: user.full_name)
+        setImage(with: user.avatarURL, userId: user.userID, name: user.fullName)
     }
     
     func setImage(with user: User) {

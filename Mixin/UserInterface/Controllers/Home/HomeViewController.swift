@@ -318,7 +318,7 @@ class HomeViewController: UIViewController {
         }
         DispatchQueue.main.async {
             self.myAvatarImageView.setImage(with: account)
-            if self.bulletinContent == .emergencyContact && account.has_emergency_contact {
+            if self.bulletinContent == .emergencyContact && account.hasEmergencyContact {
                 self.bulletinContent = nil
             }
         }
@@ -853,7 +853,7 @@ extension HomeViewController {
         let userJustDismissedNotificationBulletin = isDate(AppGroupUserDefaults.notificationBulletinDismissalDate, fallsInto: BulletinDetectInterval.notificationAuthorization)
         let checkNotificationSettings = !userJustDismissedNotificationBulletin
         
-        let hasPIN = LoginManager.shared.account?.has_pin ?? false
+        let hasPIN = LoginManager.shared.account?.hasPIN ?? false
         let userJustDismissedInitializePINBulletin = isDate(AppGroupUserDefaults.User.initializePINBulletinDismissalDate, fallsInto: BulletinDetectInterval.initializePIN)
         let checkIsPinInitialized = !hasPIN && !userJustDismissedInitializePINBulletin
         
@@ -863,7 +863,7 @@ extension HomeViewController {
         if bulletinContent == .notification
             || userJustDismissedEmergencyContactBulletin
             || justConfirmedUserHasInsufficientBalanceForEmergencyContactBulletin
-            || (LoginManager.shared.account?.has_emergency_contact ?? false)
+            || (LoginManager.shared.account?.hasEmergencyContact ?? false)
         {
             checkWalletBalanceForEmergencyContactBulletin = false
         } else {

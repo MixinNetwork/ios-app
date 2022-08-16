@@ -9,9 +9,9 @@ class CrashlyticalReporter: Reporter {
     override func registerUserInformation() {
         super.registerUserInformation()
         if let account = LoginManager.shared.account {
-            Crashlytics.crashlytics().setUserID(account.user_id)
-            Crashlytics.crashlytics().setCustomValue(account.full_name, forKey: "FullName")
-            Crashlytics.crashlytics().setCustomValue(account.identity_number, forKey: "IdentityNumber")
+            Crashlytics.crashlytics().setUserID(account.userID)
+            Crashlytics.crashlytics().setCustomValue(account.fullName, forKey: "FullName")
+            Crashlytics.crashlytics().setCustomValue(account.identityNumber, forKey: "IdentityNumber")
         }
     }
     

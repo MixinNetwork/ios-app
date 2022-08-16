@@ -108,9 +108,9 @@ extension UserCenterViewController {
             return
         }
         DispatchQueue.main.async {
-            headerView.avatarImageView.setImage(with: account.avatar_url, userId: account.user_id, name: account.full_name)
-            headerView.nameLabel.text = account.full_name
-            headerView.identityNumberLabel.text = R.string.localizable.contact_mixin_id(account.identity_number)
+            headerView.avatarImageView.setImage(with: account.avatarURL, userId: account.userID, name: account.fullName)
+            headerView.nameLabel.text = account.fullName
+            headerView.identityNumberLabel.text = R.string.localizable.contact_mixin_id(account.identityNumber)
         }
     }
     

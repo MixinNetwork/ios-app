@@ -1285,7 +1285,7 @@ class ConversationViewController: UIViewController {
             return
         }
         let viewController: UIViewController
-        if LoginManager.shared.account?.has_pin ?? false {
+        if LoginManager.shared.account?.hasPIN ?? false {
             viewController = TransferOutViewController.instance(asset: nil, type: .contact(user))
         } else {
             viewController = WalletPasswordViewController.instance(dismissTarget: .transfer(user: user))

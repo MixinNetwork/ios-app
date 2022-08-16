@@ -24,7 +24,7 @@ final class EmergencyContactViewController: SettingsTableViewController {
     ]
     
     private var hasEmergencyContact: Bool {
-        LoginManager.shared.account?.has_emergency_contact ?? false
+        LoginManager.shared.account?.hasEmergencyContact ?? false
     }
     
     deinit {
@@ -99,7 +99,7 @@ extension EmergencyContactViewController {
         guard let account = LoginManager.shared.account else {
             return
         }
-        if account.has_pin {
+        if account.hasPIN {
             let vc = EmergencyContactVerifyPinViewController()
             let navigationController = VerifyPinNavigationController(rootViewController: vc)
             present(navigationController, animated: true, completion: nil)
@@ -125,7 +125,7 @@ extension EmergencyContactViewController {
             guard let account = LoginManager.shared.account else {
                 return
             }
-            if account.has_pin {
+            if account.hasPIN {
                 let vc = EmergencyContactVerifyPinViewController()
                 let nav = VerifyPinNavigationController(rootViewController: vc)
                 self?.navigationController?.present(nav, animated: true, completion: nil)

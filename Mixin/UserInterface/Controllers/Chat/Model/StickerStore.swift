@@ -47,19 +47,6 @@ enum StickerStore {
         }
     }
     
-    static func loadAlbum(stickerId: String, completion: @escaping (AlbumItem?) -> Void) {
-        DispatchQueue.global(qos: .userInitiated).async {
-            if let album = AlbumDAO.shared.getAlbum(stickerId: stickerId, category: .SYSTEM) {
-                let albumItem = AlbumItem(album: album, stickers: StickerDAO.shared.getStickers(albumId: album.albumId))
-                DispatchQueue.main.async {
-                    completion(albumItem)
-                }
-            } else {
-                fetchStickers(stickerId: stickerId, completion: completion)
-            }
-        }
-    }
-    
 }
 
 extension StickerStore {
@@ -110,43 +97,6 @@ extension StickerStore {
                 purgable.storeImageData(toDisk: data, forKey: banner)
             }
             persistent.removeImageFromDisk(forKey: banner)
-        }
-    }
-    
-    private static func fetchStickers(stickerId: String, completion: @escaping (AlbumItem?) -> Void) {
-        func handleError(_ error: MixinAPIError) {
-            switch error {
-            case .notFound:
-                break
-            default:
-                reporter.report(error: error)
-            }
-        }
-        
-        var albumItem: AlbumItem?
-        switch StickerAPI.sticker(stickerId: stickerId) {
-        case let .success(sticker):
-            _ = StickerDAO.shared.insertOrUpdateSticker(sticker: sticker)
-            if let albumId = sticker.albumId {
-                switch StickerAPI.album(albumId: albumId) {
-                case let .success(album):
-                    AlbumDAO.shared.insertOrUpdateAblum(album: album)
-                    switch StickerAPI.stickers(albumId: albumId) {
-                    case let .success(stickers):
-                        let stickers = StickerDAO.shared.insertOrUpdateStickers(stickers: stickers, albumId: albumId)
-                        albumItem = AlbumItem(album: album, stickers: stickers)
-                    case let .failure(error):
-                        handleError(error)
-                    }
-                case let .failure(error):
-                    handleError(error)
-                }
-            }
-        case let .failure(error):
-            handleError(error)
-        }
-        DispatchQueue.main.async {
-            completion(albumItem)
         }
     }
     

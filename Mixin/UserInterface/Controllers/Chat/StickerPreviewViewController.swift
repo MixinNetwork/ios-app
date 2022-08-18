@@ -104,23 +104,52 @@ extension StickerPreviewViewController {
     }
     
     private func loadAlbum(stickerId: String) {
-        activityIndicatorView.startAnimating()
-        StickerStore.loadAlbum(stickerId: stickerId) { albumItem in
-            self.activityIndicatorView.stopAnimating()
-            if let albumItem = albumItem, !albumItem.stickers.isEmpty {
-                self.albumItem = albumItem
-                self.titleLabel.text = albumItem.album.name
-                self.updateStickerActionButton()
-                self.stickersContentView.isHidden = false
-                self.collectionView.isHidden = false
-                self.collectionView.reloadData()
-                self.updatePreferredContentSizeHeight()
-                if let index = albumItem.stickers.firstIndex(where: { $0.stickerId == stickerId }) {
-                    self.collectionView.selectItem(at: IndexPath(item: index, section: 0), animated: false, scrollPosition: .centeredHorizontally)
-                }
+        DispatchQueue.global().async { [weak self] in
+            var albumItem: AlbumItem?
+            if let album = AlbumDAO.shared.getAlbum(stickerId: stickerId, category: .SYSTEM) {
+                albumItem = AlbumItem(album: album, stickers: StickerDAO.shared.getStickers(albumId: album.albumId))
             } else {
-                self.stickersContentView.isHidden = true
-                self.collectionView.isHidden = true
+                let albumId: String?
+                if let id = StickerDAO.shared.getSticker(stickerId: stickerId)?.albumId, !id.isEmpty {
+                    albumId = id
+                } else if case let .success(sticker) = StickerAPI.sticker(stickerId: stickerId) {
+                    albumId = sticker.albumId
+                } else {
+                    albumId = nil
+                }
+                if let albumId = albumId, !albumId.isEmpty {
+                    DispatchQueue.main.async {
+                        self?.activityIndicatorView.startAnimating()
+                    }
+                    if case let .success(album) = StickerAPI.album(albumId: albumId) {
+                        AlbumDAO.shared.insertOrUpdateAblum(album: album)
+                        if album.category != AlbumCategory.PERSONAL.rawValue, case let .success(stickers) = StickerAPI.stickers(albumId: albumId) {
+                            let stickers = StickerDAO.shared.insertOrUpdateStickers(stickers: stickers, albumId: albumId)
+                            albumItem = AlbumItem(album: album, stickers: stickers)
+                        }
+                    }
+                }
+            }
+            DispatchQueue.main.async {
+                self?.activityIndicatorView.stopAnimating()
+                guard let self = self else {
+                    return
+                }
+                if let albumItem = albumItem, !albumItem.stickers.isEmpty {
+                    self.albumItem = albumItem
+                    self.titleLabel.text = albumItem.album.name
+                    self.updateStickerActionButton()
+                    self.stickersContentView.isHidden = false
+                    self.collectionView.isHidden = false
+                    self.collectionView.reloadData()
+                    self.updatePreferredContentSizeHeight()
+                    if let index = albumItem.stickers.firstIndex(where: { $0.stickerId == stickerId }) {
+                        self.collectionView.selectItem(at: IndexPath(item: index, section: 0), animated: false, scrollPosition: .centeredHorizontally)
+                    }
+                } else {
+                    self.stickersContentView.isHidden = true
+                    self.collectionView.isHidden = true
+                }
             }
         }
     }

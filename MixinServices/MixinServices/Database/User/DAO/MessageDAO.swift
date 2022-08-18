@@ -154,6 +154,7 @@ public final class MessageDAO: UserDatabaseDAO {
                 .filter(condition)
                 .fetchAll(db)
             try Message.filter(condition).deleteAll(db)
+            try ConversationDAO.shared.updateLastMessageIdOnDeleteMessage(conversationId: conversationId, database: db)
             try PinMessageDAO.shared.delete(messageIds: messageIds, conversationId: conversationId, from: db)
             try clearPinMessageContent(quoteMessageIds: messageIds, conversationId: conversationId, from: db)
         }
@@ -612,6 +613,10 @@ public final class MessageDAO: UserDatabaseDAO {
         } else {
             try message.save(database)
         }
+        try ConversationDAO.shared.updateLastMessageIdOnInsertMessage(conversationId: message.conversationId,
+                                                                      messageId: message.messageId,
+                                                                      createdAt: message.createdAt,
+                                                                      database: database)
         if expireIn != 0 && !message.category.hasPrefix("SYSTEM_") {
             let expireAt: Int64?
             if message.status == MessageStatus.SENT.rawValue || message.status == MessageStatus.READ.rawValue {
@@ -772,6 +777,9 @@ public final class MessageDAO: UserDatabaseDAO {
         deleteCount = try Message
             .filter(Message.column(of: .messageId) == id)
             .deleteAll(database)
+        if deleteCount > 0, let conversationId = conversationId {
+            try ConversationDAO.shared.updateLastMessageIdOnDeleteMessage(conversationId: conversationId, messageId: id, database: database)
+        }
         try MessageMention
             .filter(MessageMention.column(of: .messageId) == id)
             .deleteAll(database)

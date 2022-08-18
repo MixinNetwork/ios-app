@@ -591,6 +591,30 @@ public final class ConversationDAO: UserDatabaseDAO {
         return merged.uuidDigest()
     }
     
+    public func updateLastMessageIdOnInsertMessage(conversationId: String, messageId: String, createdAt: String, database: GRDB.Database) throws {
+        let sql = """
+        UPDATE conversations SET last_message_id = ?, last_message_created_at = ?
+        WHERE conversation_id = ? AND (last_message_created_at ISNULL OR ? >= last_message_created_at)
+        """
+        try database.execute(sql: sql, arguments: [messageId, createdAt, conversationId, createdAt])
+    }
+    
+    public func updateLastMessageIdOnDeleteMessage(conversationId: String, messageId: String? = nil, database: GRDB.Database) throws {
+        var sql = "UPDATE conversations SET last_message_id = (SELECT id FROM messages WHERE conversation_id = ? ORDER BY created_at DESC LIMIT 1)"
+        let arguments: StatementArguments
+        if let messageId = messageId {
+            sql += " WHERE last_message_id = ? AND conversation_id = ?"
+            arguments = [conversationId, messageId, conversationId]
+        } else {
+            sql += " WHERE conversation_id = ?"
+            arguments = [conversationId, conversationId]
+        }
+        try database.execute(sql: sql, arguments: arguments)
+        database.afterNextTransactionCommit { db in
+            NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: nil)
+        }
+    }
+    
 }
 
 extension ConversationDAO {

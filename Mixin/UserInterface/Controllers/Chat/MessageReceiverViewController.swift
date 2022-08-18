@@ -441,7 +441,7 @@ extension MessageReceiverViewController {
             newMessage.mediaUrl = message.mediaUrl
             newMessage.stickerId = message.stickerId
             newMessage.mediaStatus = MediaStatus.PENDING.rawValue
-            let transferData = TransferStickerData(stickerId: message.stickerId, name: nil, albumId: nil)
+            let transferData = TransferStickerData(stickerId: message.stickerId ?? "")
             newMessage.content = try! JSONEncoder().encode(transferData).base64EncodedString()
         } else if message.category.hasSuffix("_CONTACT") {
             guard let sharedUserId = message.sharedUserId else {

@@ -843,35 +843,29 @@ public class ReceiveMessageService: MixinService {
             ReceiveMessageService.shared.processUnknownMessage(data: data)
             return nil
         }
-
-        if let stickerId = transferStickerData.stickerId {
-            guard !stickerId.isEmpty, UUID(uuidString: stickerId) != nil else {
-                Logger.conversation(id: data.conversationId).error(category: "ParseSticker", message: "Invalid TransferStickerData: \(String(data: decryptedData, encoding: .utf8))")
-                ReceiveMessageService.shared.processUnknownMessage(data: data)
-                return nil
-            }
-            guard !StickerDAO.shared.isExist(stickerId: stickerId) else {
-                return transferStickerData
-            }
-
-            repeat {
-                switch StickerAPI.sticker(stickerId: stickerId) {
-                case let .success(sticker):
-                    StickerDAO.shared.insertOrUpdateSticker(sticker: sticker)
-                    if let sticker = StickerDAO.shared.getSticker(stickerId: sticker.stickerId) {
-                        StickerPrefetcher.prefetch(stickers: [sticker])
-                    }
-                    return transferStickerData
-                case .failure(.notFound):
-                    return nil
-                case let .failure(error):
-                    checkNetworkAndWebSocket()
-                }
-            } while LoginManager.shared.isLoggedIn
+        let stickerId = transferStickerData.stickerId
+        guard !stickerId.isEmpty, UUID(uuidString: stickerId) != nil else {
+            Logger.conversation(id: data.conversationId).error(category: "ParseSticker", message: "Invalid TransferStickerData: \(String(data: decryptedData, encoding: .utf8))")
+            ReceiveMessageService.shared.processUnknownMessage(data: data)
             return nil
-        } else if let stickerName = transferStickerData.name, let albumId = transferStickerData.albumId, let sticker = StickerDAO.shared.getSticker(albumId: albumId, name: stickerName) {
-            return TransferStickerData(stickerId: sticker.stickerId, name: nil, albumId: nil)
         }
+        guard !StickerDAO.shared.isExist(stickerId: stickerId) else {
+            return transferStickerData
+        }
+        repeat {
+            switch StickerAPI.sticker(stickerId: stickerId) {
+            case let .success(sticker):
+                StickerDAO.shared.insertOrUpdateSticker(sticker: sticker)
+                if let sticker = StickerDAO.shared.getSticker(stickerId: sticker.stickerId) {
+                    StickerPrefetcher.prefetch(stickers: [sticker])
+                }
+                return transferStickerData
+            case .failure(.notFound):
+                return nil
+            case let .failure(error):
+                checkNetworkAndWebSocket()
+            }
+        } while LoginManager.shared.isLoggedIn
         return nil
     }
     

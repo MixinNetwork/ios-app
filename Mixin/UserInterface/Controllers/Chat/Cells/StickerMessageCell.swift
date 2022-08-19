@@ -53,7 +53,7 @@ class StickerMessageCell: DetailInfoMessageCell {
         
         stickerView.frame = imageWrapperView.bounds
         stickerView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        stickerView.contentMode = .scaleAspectFill
+        stickerView.contentMode = .scaleAspectFit
         stickerView.autoPlayAnimatedImage = true
         imageWrapperView.addSubview(stickerView)
         

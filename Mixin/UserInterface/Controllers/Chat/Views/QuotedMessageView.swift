@@ -37,7 +37,6 @@ class QuotedMessageView: UIView {
         
         imageView.layer.cornerRadius = 6
         imageView.clipsToBounds = true
-        imageView.contentMode = .scaleAspectFill
         addSubview(imageView)
         addSubview(avatarImageView)
     }
@@ -73,9 +72,15 @@ class QuotedMessageView: UIView {
                 avatarImageView.isHidden = true
             }
             switch image {
+            case .persistentSticker, .purgableSticker:
+                imageView.contentMode = .scaleAspectFit
+            default:
+                imageView.contentMode = .scaleAspectFill
+            }
+            switch image {
             case let .local(url):
                 imageView.sd_setImage(with: url, placeholderImage: nil, context: localImageContext)
-            case let .purgableRemote(url):
+            case let .liveCover(url), let .purgableSticker(url):
                 imageView.sd_setImage(with: url, placeholderImage: nil, options: .decodeFirstFrameOnly)
             case let .persistentSticker(url):
                 imageView.sd_setImage(with: url, placeholderImage: nil, options: .decodeFirstFrameOnly, context: persistentStickerContext)

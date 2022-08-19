@@ -122,6 +122,9 @@ class MinimizedClipSwitcherViewController: HomeOverlayViewController {
                 self.view.alpha = 0
             }
             let completion = {
+                guard index < self.visibleIconViews.count else {
+                    return
+                }
                 self.visibleIconViews[index].removeFromSuperview()
                 self.visibleIconViews.remove(at: index)
             }

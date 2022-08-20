@@ -131,7 +131,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        AccountAPI.updateSession(deviceToken: deviceToken.toHexString())
+        AccountAPI.updateSession(deviceToken: deviceToken.hexEncodedString())
     }
     
     func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {

@@ -27,10 +27,6 @@ public extension Data {
         self.init(base64Encoded: str)
     }
     
-    func toHexString() -> String {
-        return map { String(format: "%02.2hhx", $0) }.joined()
-    }
-
     func toString() -> String {
         return String(data: self, encoding: .utf8)!
     }
@@ -47,7 +43,7 @@ public extension Data {
         return isEqual
     }
     
-    func base64URLEncodedString() -> String {
+    func base64RawURLEncodedString() -> String {
         base64EncodedString()
             .replacingOccurrences(of: "+", with: "-")
             .replacingOccurrences(of: "/", with: "_")

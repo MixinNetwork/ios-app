@@ -1,4 +1,4 @@
-import Foundation
+import UIKit
 
 protocol HomeAppCell: ShakableCell {
     var imageContainerView: UIView! { get }

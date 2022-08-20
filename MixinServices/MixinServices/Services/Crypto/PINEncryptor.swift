@@ -43,7 +43,7 @@ enum PINEncryptor {
         }
         
         let time = UInt64(Date().timeIntervalSince1970)
-        let timeData = withUnsafeBytes(of: time.littleEndian, { Data($0) })
+        let timeData = time.data(endianness: .little)
         
         var iterator: UInt64 = 0
         PropertiesDAO.shared.updateValue(forKey: .iterator, type: UInt64.self) { databaseValue in
@@ -61,13 +61,13 @@ enum PINEncryptor {
             AppGroupUserDefaults.Crypto.iterator = nextIterator
             return nextIterator
         }
-        let iteratorData = withUnsafeBytes(of: iterator.littleEndian, { Data($0) })
+        let iteratorData = iterator.data(endianness: .little)
         Logger.general.info(category: "PIN", message: "Encrypt with it: \(iterator)")
         
         let plain = pinData + timeData + iteratorData
         do {
-            let encrypted = try AESCryptor.encrypt(plain, with: pinToken, iv: iv, padding: .pkcs7)
-            let base64Encoded = (iv + encrypted).base64URLEncodedString()
+            let encrypted = try AESCryptor.encrypt(plain, with: pinToken)
+            let base64Encoded = encrypted.base64RawURLEncodedString()
             return .success(base64Encoded)
         } catch {
             return .failure(.encryption(error))

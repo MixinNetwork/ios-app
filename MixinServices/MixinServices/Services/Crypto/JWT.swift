@@ -28,14 +28,14 @@ enum Jwt {
         return encoder
     }()
     
-    private static let rs512Header = #"{"alg":"RS512","typ":"JWT"}"#.data(using: .utf8)!.base64URLEncodedString()
-    private static let edDSAHeader = #"{"alg":"EdDSA","typ":"JWT"}"#.data(using: .utf8)!.base64URLEncodedString()
+    private static let rs512Header = #"{"alg":"RS512","typ":"JWT"}"#.data(using: .utf8)!.base64RawURLEncodedString()
+    private static let edDSAHeader = #"{"alg":"EdDSA","typ":"JWT"}"#.data(using: .utf8)!.base64RawURLEncodedString()
     
     static func signedToken(claims: Claims, privateKey: SecKey) throws -> String {
         guard SecKeyIsAlgorithmSupported(privateKey, .sign, .rsaSignatureMessagePKCS1v15SHA512) else {
             throw Error.signAlgorithmNotSupported
         }
-        let base64EncodedClaims = try jsonEncoder.encode(claims).base64URLEncodedString()
+        let base64EncodedClaims = try jsonEncoder.encode(claims).base64RawURLEncodedString()
         let headerAndPayload = rs512Header + "." + base64EncodedClaims
         guard let dataToSign = headerAndPayload.data(using: .utf8) else {
             throw Error.building
@@ -45,12 +45,12 @@ enum Jwt {
             let retained = error?.takeRetainedValue()
             throw Error.sign(underlying: retained)
         }
-        let base64EncodedSignature = (signature as Data).base64URLEncodedString()
+        let base64EncodedSignature = (signature as Data).base64RawURLEncodedString()
         return headerAndPayload + "." + base64EncodedSignature
     }
     
     static func signedToken(claims: Claims, key: Ed25519PrivateKey) throws -> String {
-        let base64EncodedClaims = try jsonEncoder.encode(claims).base64URLEncodedString()
+        let base64EncodedClaims = try jsonEncoder.encode(claims).base64RawURLEncodedString()
         let headerAndPayload = edDSAHeader + "." + base64EncodedClaims
         guard let dataToSign = headerAndPayload.data(using: .utf8) else {
             throw Error.building
@@ -58,7 +58,7 @@ enum Jwt {
         guard let signature = key.signature(for: dataToSign) else {
             throw Error.sign(underlying: nil)
         }
-        let base64EncodedSignature = signature.base64URLEncodedString()
+        let base64EncodedSignature = signature.base64RawURLEncodedString()
         return headerAndPayload + "." + base64EncodedSignature
     }
     

@@ -1,4 +1,5 @@
-import Foundation
+import UIKit
+import CoreText
 
 extension NSAttributedString.Key {
     static let ctFont = kCTFontAttributeName as NSAttributedString.Key

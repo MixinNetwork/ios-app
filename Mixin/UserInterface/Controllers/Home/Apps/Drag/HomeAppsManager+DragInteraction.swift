@@ -1,4 +1,4 @@
-import Foundation
+import UIKit
 
 // MARK: - Long Press Gesture handler
 extension HomeAppsManager {

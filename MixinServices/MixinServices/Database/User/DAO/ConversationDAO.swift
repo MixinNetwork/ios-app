@@ -604,8 +604,9 @@ public final class ConversationDAO: UserDatabaseDAO {
         var sql = "UPDATE conversations SET last_message_id = (SELECT id FROM messages WHERE conversation_id = ? ORDER BY created_at DESC LIMIT 1)"
         let arguments: StatementArguments
         if let messageId = messageId {
-            sql += " WHERE last_message_id = ? AND conversation_id = ?"
-            arguments = [conversationId, messageId, conversationId]
+            // Reduce redundant updating to conversation table by checking whether `last_message_id` matches or not.
+            sql += " WHERE conversation_id = ? AND last_message_id = ?"
+            arguments = [conversationId, conversationId, messageId]
         } else {
             sql += " WHERE conversation_id = ?"
             arguments = [conversationId, conversationId]

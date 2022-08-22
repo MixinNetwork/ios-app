@@ -241,6 +241,7 @@ public final class ConversationDAO: UserDatabaseDAO {
             try Message
                 .filter(Message.column(of: .conversationId) == conversationId)
                 .deleteAll(db)
+            try updateLastMessageIdOnDeleteMessage(conversationId: conversationId, database: db)
             try MessageMention
                 .filter(MessageMention.column(of: .conversationId) == conversationId)
                 .deleteAll(db)

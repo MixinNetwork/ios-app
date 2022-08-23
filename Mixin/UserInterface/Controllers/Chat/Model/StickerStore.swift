@@ -47,23 +47,6 @@ enum StickerStore {
         }
     }
     
-    static func loadAlbum(stickerId: String, albumId: String?, completion: @escaping (AlbumItem?) -> Void) {
-        DispatchQueue.global(qos: .userInitiated).async {
-            if let album = AlbumDAO.shared.getAlbum(stickerId: stickerId, category: .SYSTEM) {
-                let albumItem = AlbumItem(album: album, stickers: StickerDAO.shared.getStickers(albumId: album.albumId))
-                DispatchQueue.main.async {
-                    completion(albumItem)
-                }
-            } else if let albumId = albumId, !albumId.isEmpty {
-                fetchStickers(albumId: albumId, completion: completion)
-            } else {
-                DispatchQueue.main.async {
-                    completion(nil)
-                }
-            }
-        }
-    }
-    
 }
 
 extension StickerStore {
@@ -114,26 +97,6 @@ extension StickerStore {
                 purgable.storeImageData(toDisk: data, forKey: banner)
             }
             persistent.removeImageFromDisk(forKey: banner)
-        }
-    }
-    
-    private static func fetchStickers(albumId: String, completion: @escaping (AlbumItem?) -> Void) {
-        var albumItem: AlbumItem?
-        switch StickerAPI.album(albumId: albumId) {
-        case let .success(album):
-            AlbumDAO.shared.insertOrUpdateAblum(album: album)
-            switch StickerAPI.stickers(albumId: albumId) {
-            case let .success(stickers):
-                let stickers = StickerDAO.shared.insertOrUpdateStickers(stickers: stickers, albumId: albumId)
-                albumItem = AlbumItem(album: album, stickers: stickers)
-            case let .failure(error):
-                reporter.report(error: error)
-            }
-        case let .failure(error):
-            reporter.report(error: error)
-        }
-        DispatchQueue.main.async {
-            completion(albumItem)
         }
     }
     

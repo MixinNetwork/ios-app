@@ -929,7 +929,6 @@ extension MessageDAO {
         let assignments = [
             Message.column(of: .stickerId).set(to: stickerData.stickerId),
             Message.column(of: .status).set(to: status),
-            Message.column(of: .albumId).set(to: stickerData.albumId)
         ]
         updateRedecryptMessage(assignments: assignments,
                                messageId: messageId,

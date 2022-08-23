@@ -121,20 +121,20 @@ extension StickerPreviewViewController {
                     DispatchQueue.main.async {
                         self?.activityIndicatorView.startAnimating()
                     }
-                    if case let .success(album) = StickerAPI.album(albumId: albumId) {
+                    if case let .success(album) = StickerAPI.album(albumId: albumId),
+                       album.category != AlbumCategory.PERSONAL.rawValue,
+                       case let .success(stickers) = StickerAPI.stickers(albumId: albumId) {
                         AlbumDAO.shared.insertOrUpdateAblum(album: album)
-                        if album.category != AlbumCategory.PERSONAL.rawValue, case let .success(stickers) = StickerAPI.stickers(albumId: albumId) {
-                            let stickers = StickerDAO.shared.insertOrUpdateStickers(stickers: stickers, albumId: albumId)
-                            albumItem = AlbumItem(album: album, stickers: stickers)
-                        }
+                        let stickers = StickerDAO.shared.insertOrUpdateStickers(stickers: stickers, albumId: albumId)
+                        albumItem = AlbumItem(album: album, stickers: stickers)
                     }
                 }
             }
             DispatchQueue.main.async {
-                self?.activityIndicatorView.stopAnimating()
                 guard let self = self else {
                     return
                 }
+                self.activityIndicatorView.stopAnimating()
                 if let albumItem = albumItem, !albumItem.stickers.isEmpty {
                     self.albumItem = albumItem
                     self.titleLabel.text = albumItem.album.name

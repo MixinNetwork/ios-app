@@ -57,7 +57,6 @@
 		7B1ABB07211968D1009FAA6C /* StickersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1ABB05211968D1009FAA6C /* StickersViewController.swift */; };
 		7B1ABB0E21196B24009FAA6C /* TilingCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1ABB0D21196B24009FAA6C /* TilingCollectionViewFlowLayout.swift */; };
 		7B1AEB5C221D25F000256A18 /* SeparatorShadowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1AEB5B221D25F000256A18 /* SeparatorShadowView.swift */; };
-		7B1C8B992513265200F7A817 /* ExternalSharingPreviewWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1C8B982513265200F7A817 /* ExternalSharingPreviewWrapperView.swift */; };
 		7B1D61132512773F00BD6B15 /* ExternalSharingConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1D61122512773F00BD6B15 /* ExternalSharingConfirmationViewController.swift */; };
 		7B1D7BA51FBE944E00FDA52C /* ConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1D7BA41FBE944E00FDA52C /* ConversationViewController.swift */; };
 		7B1F5371219D3B90006D6983 /* RoundCornerSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1F5370219D3B90006D6983 /* RoundCornerSelectionView.swift */; };
@@ -1051,7 +1050,6 @@
 		7B1ABB05211968D1009FAA6C /* StickersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersViewController.swift; sourceTree = "<group>"; };
 		7B1ABB0D21196B24009FAA6C /* TilingCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TilingCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
 		7B1AEB5B221D25F000256A18 /* SeparatorShadowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeparatorShadowView.swift; sourceTree = "<group>"; };
-		7B1C8B982513265200F7A817 /* ExternalSharingPreviewWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalSharingPreviewWrapperView.swift; sourceTree = "<group>"; };
 		7B1D61122512773F00BD6B15 /* ExternalSharingConfirmationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalSharingConfirmationViewController.swift; sourceTree = "<group>"; };
 		7B1D7BA41FBE944E00FDA52C /* ConversationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationViewController.swift; sourceTree = "<group>"; };
 		7B1F5370219D3B90006D6983 /* RoundCornerSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundCornerSelectionView.swift; sourceTree = "<group>"; };
@@ -3339,7 +3337,6 @@
 				7BFD3753249366E7006D758F /* GroupCallIndicatorView.xib */,
 				7BFD375524936763006D758F /* GroupCallIndicatorView.swift */,
 				7B3CDA6724FFF2D8003A3E80 /* AnimatedStickerView.swift */,
-				7B1C8B982513265200F7A817 /* ExternalSharingPreviewWrapperView.swift */,
 				94095BB625BE8BC100F44832 /* TextPreviewView.xib */,
 				94095BBB25BE8DCF00F44832 /* TextPreviewView.swift */,
 				94B7B6DB26B43562000B0AC5 /* SilentNotificationMessagePreviewView.xib */,
@@ -4383,7 +4380,6 @@
 				7C104A8127D83A51004D0530 /* RefreshExternalSchemeJob.swift in Sources */,
 				7B3FD4EC241965AB00B58006 /* LocationViewController.swift in Sources */,
 				7BB0F9152434B03300BEDA97 /* SelectedPeerCell.swift in Sources */,
-				7B1C8B992513265200F7A817 /* ExternalSharingPreviewWrapperView.swift in Sources */,
 				E081796A23C32ACA005FEEAC /* PostMessageCell.swift in Sources */,
 				DFD089E21FE4041400A7D815 /* AttachmentUploadJob.swift in Sources */,
 				7B56DBD11FEFC5B900B50D82 /* PinField.swift in Sources */,

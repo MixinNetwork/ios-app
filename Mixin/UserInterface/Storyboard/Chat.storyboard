@@ -2705,7 +2705,7 @@
                                     <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
                                 </userDefinedRuntimeAttributes>
                             </label>
-                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nFc-yC-XXW" customClass="ExternalSharingPreviewWrapperView" customModule="Mixin" customModuleProvider="target">
+                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nFc-yC-XXW">
                                 <rect key="frame" x="28" y="204" width="319" height="319"/>
                                 <color key="backgroundColor" name="background_secondary"/>
                                 <constraints>
@@ -2830,7 +2830,7 @@
             <color red="0.89803921568627454" green="0.90588235294117647" blue="0.92156862745098034" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
             <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

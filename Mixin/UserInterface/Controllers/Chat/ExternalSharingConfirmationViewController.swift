@@ -73,6 +73,8 @@ class ExternalSharingConfirmationViewController: UIViewController {
             loadPreview(forPostMessageWith: text)
         case .appCard(let data):
             loadPreview(for: data)
+        case .sticker:
+            loadStickerPreview()
         }
         
         let localizedContentCategory = sharingContext.content.localizedCategory
@@ -316,6 +318,20 @@ extension ExternalSharingConfirmationViewController {
         contentView.titleLabel.text = appCardData.title
         contentView.subtitleLabel.text = appCardData.description
         
+        sendButton.isEnabled = true
+    }
+    
+    private func loadStickerPreview() {
+        guard let mediaUrl = message.mediaUrl, let url = URL(string: mediaUrl) else {
+            return
+        }
+        imageView.contentMode = .scaleAspectFit
+        imageView.sd_setImage(with: url)
+        previewWrapperView.addSubview(imageView)
+        imageView.snp.makeConstraints { (make) in
+            let inset = UIEdgeInsets(top: 70, left: 70, bottom: 70, right: 70)
+            make.edges.equalToSuperview().inset(inset)
+        }
         sendButton.isEnabled = true
     }
     

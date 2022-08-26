@@ -35,6 +35,9 @@ extension Message {
         case .appCard(let data):
             message.category = MessageCategory.APP_CARD.rawValue
             message.content = try! JSONEncoder.default.encode(data).base64EncodedString()
+        case .sticker(let stickerId):
+            message.category = MessageCategory.SIGNAL_STICKER.rawValue
+            message.stickerId = stickerId
         }
         return message
     }

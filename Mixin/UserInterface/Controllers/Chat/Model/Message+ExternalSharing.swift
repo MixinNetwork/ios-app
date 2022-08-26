@@ -38,6 +38,8 @@ extension Message {
         case .sticker(let stickerId, _):
             message.category = MessageCategory.SIGNAL_STICKER.rawValue
             message.stickerId = stickerId
+            let data = TransferStickerData(stickerId: stickerId)
+            message.content = try! JSONEncoder.default.encode(data).base64EncodedString()
         }
         return message
     }

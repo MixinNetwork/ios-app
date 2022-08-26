@@ -669,18 +669,21 @@ class UrlWindow {
                     }
                 }
             }
-        case .sticker(let stickerId):
+        case let .sticker(stickerId, _):
             DispatchQueue.global().async {
-                if let sticker = StickerDAO.shared.getSticker(stickerId: stickerId) {
+                let isAdded: Bool
+                if let sticker = StickerDAO.shared.getSticker(stickerId: stickerId), !sticker.assetUrl.isEmpty {
                     message.mediaUrl = sticker.assetUrl
-                } else if case let .success(sticker) = StickerAPI.sticker(stickerId: stickerId) {
+                    isAdded = sticker.isAdded
+                } else if case let .success(sticker) = StickerAPI.sticker(stickerId: stickerId), !sticker.assetUrl.isEmpty {
                     message.mediaUrl = sticker.assetUrl
-                }
-                guard !message.mediaUrl.isNilOrEmpty else {
+                    isAdded = false
+                } else {
                     hud.hideInMainThread()
                     return
                 }
                 DispatchQueue.main.async {
+                    sharingContext.content = .sticker(stickerId, isAdded)
                     presentSendingConfirmation()
                 }
             }

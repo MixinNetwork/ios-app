@@ -11,7 +11,7 @@ struct ExternalSharingContext {
         case contact(TransferContactData)
         case post(String)
         case appCard(AppCardData)
-        case sticker(String)
+        case sticker(_ id: String, _ isAdded: Bool?)
         
         var localizedCategory: String {
             switch self {
@@ -100,7 +100,7 @@ struct ExternalSharingContext {
             }
         case "sticker":
             if let stickerId = data.removingPercentEncoding?.base64Decoded().uuidString {
-                self.content = .sticker(stickerId)
+                self.content = .sticker(stickerId, nil)
             } else {
                 return nil
             }

@@ -372,11 +372,13 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         }
         if let url = (itemViewController as? GalleryImageItemViewController)?.detectedUrl {
             alert.addAction(UIAlertAction(title: R.string.localizable.scan_qr_code(), style: .default, handler: { (_) in
-                if UrlWindow.checkExternalScheme(url: url.absoluteString) {
-                    return
-                }
-                if !UrlWindow.checkUrl(url: url, clearNavigationStack: false) {
-                    RecognizeWindow.instance().presentWindow(text: url.absoluteString)
+                self.dismiss(transitionViewInitialOffsetY: 0) {
+                    if UrlWindow.checkExternalScheme(url: url.absoluteString) {
+                        return
+                    }
+                    if !UrlWindow.checkUrl(url: url, clearNavigationStack: false) {
+                        RecognizeWindow.instance().presentWindow(text: url.absoluteString)
+                    }
                 }
             }))
         }

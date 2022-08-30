@@ -41,7 +41,7 @@ extension StickerStoreBannerView: UICollectionViewDataSource, UICollectionViewDe
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.sticker_store_banner, for: indexPath)!
         if indexPath.item < albumItems.count {
             let item = albumItems[indexPath.item]
-            cell.load(item: item)
+            cell.imageView.load(url: item.album.banner, persistent: item.album.isAdded)
         }
         return cell
     }
@@ -54,17 +54,11 @@ extension StickerStoreBannerView: UICollectionViewDataSource, UICollectionViewDe
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        guard let cell = cell as? StickerStoreBannerCell else {
-            return
-        }
-        cell.startAnimating()
+        (cell as? StickerStoreBannerCell)?.imageView.startAnimating()
     }
     
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        guard let cell = cell as? StickerStoreBannerCell else {
-            return
-        }
-        cell.stopAnimating()
+        (cell as? StickerStoreBannerCell)?.imageView.stopAnimating()
     }
     
 }

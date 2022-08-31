@@ -15,10 +15,14 @@ class RoundedButton: UIButton {
                 addActivityIndicatorIfNeeded()
                 activityIndicator.startAnimating()
                 layer.insertSublayer(backgroundLayer, below: activityIndicator.layer)
+                setTitleColor(.clear, for: .normal)
+                isUserInteractionEnabled = false
             } else {
                 backgroundLayer.removeFromSuperlayer()
                 activityIndicator.stopAnimating()
                 layer.insertSublayer(backgroundLayer, above: shadowLayer)
+                setTitleColor(.white, for: .normal)
+                isUserInteractionEnabled = true
             }
         }
     }

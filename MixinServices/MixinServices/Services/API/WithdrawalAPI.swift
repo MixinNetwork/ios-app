@@ -32,7 +32,9 @@ public final class WithdrawalAPI: MixinAPI {
     }
     
     public static func save(address: AddressRequest, completion: @escaping (MixinAPI.Result<Address>) -> Void) {
-        PINEncryptor.encrypt(pin: address.pin, onFailure: completion) { (encryptedPin) in
+        PINEncryptor.encrypt(pin: address.pin, tipBody: {
+            try TIPBody.addAddres(assetID: address.assetId, publicKey: address.destination, keyTag: address.tag, name: address.label)
+        }, onFailure: completion) { (encryptedPin) in
             var address = address
             address.pin = encryptedPin
             self.request(method: .post,
@@ -44,7 +46,10 @@ public final class WithdrawalAPI: MixinAPI {
     }
     
     public static func withdrawal(withdrawal: WithdrawalRequest, completion: @escaping (MixinAPI.Result<Snapshot>) -> Void) {
-        PINEncryptor.encrypt(pin: withdrawal.pin, onFailure: completion) { (encryptedPin) in
+        PINEncryptor.encrypt(pin: withdrawal.pin, tipBody: {
+            // FIXME: Is it OK with a nil fee?
+            try TIPBody.createWithdrawal(addressID: withdrawal.addressId, amount: withdrawal.amount, fee: nil, traceID: withdrawal.traceId, memo: withdrawal.memo)
+        }, onFailure: completion) { (encryptedPin) in
             var withdrawal = withdrawal
             withdrawal.pin = encryptedPin
             self.request(method: .post,
@@ -56,7 +61,9 @@ public final class WithdrawalAPI: MixinAPI {
     }
     
     public static func delete(addressId: String, pin: String, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {
-        PINEncryptor.encrypt(pin: pin, onFailure: completion) { (encryptedPin) in
+        PINEncryptor.encrypt(pin: pin, tipBody: {
+            try TIPBody.removeAddress(addressID: addressId)
+        }, onFailure: completion) { (encryptedPin) in
             self.request(method: .post,
                          path: Path.delete(addressId: addressId),
                          parameters: ["pin_base64": encryptedPin],

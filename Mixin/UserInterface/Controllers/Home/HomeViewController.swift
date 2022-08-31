@@ -135,6 +135,7 @@ class HomeViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(circleNameDidChange), name: AppGroupUserDefaults.User.circleNameDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateHomeApps), name: AppGroupUserDefaults.User.homeAppIdsDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateDesktopButtonHidden), name: AppGroupUserDefaults.Account.extensionSessionDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateBulletinView), name: TIP.didUpdateNotification, object: nil)
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             NotificationManager.shared.registerForRemoteNotificationsIfAuthorized()
             CallService.shared.registerForPushKitNotificationsIfAvailable()
@@ -240,6 +241,9 @@ class HomeViewController: UIViewController {
             navigationController?.pushViewController(vc, animated: true)
         case .initializePIN:
             WalletViewController.presentWallet()
+        case .migrateToTIP:
+            let tip = TIPNavigationViewController(intent: .migrate, destination: nil)
+            present(tip, animated: true)
         case .none:
             break
         }
@@ -253,6 +257,8 @@ class HomeViewController: UIViewController {
             AppGroupUserDefaults.User.emergencyContactBulletinDismissalDate = Date()
         case .initializePIN:
             AppGroupUserDefaults.User.initializePINBulletinDismissalDate = Date()
+        case .migrateToTIP:
+            return
         case .none:
             break
         }
@@ -841,7 +847,7 @@ extension HomeViewController {
         }
     }
     
-    private func updateBulletinView() {
+    @objc private func updateBulletinView() {
         func isDate(_ date: Date?, fallsInto interval: TimeInterval) -> Bool {
             if let date = date {
                 return -date.timeIntervalSinceNow < interval
@@ -853,9 +859,15 @@ extension HomeViewController {
         let userJustDismissedNotificationBulletin = isDate(AppGroupUserDefaults.notificationBulletinDismissalDate, fallsInto: BulletinDetectInterval.notificationAuthorization)
         let checkNotificationSettings = !userJustDismissedNotificationBulletin
         
-        let hasPIN = LoginManager.shared.account?.hasPIN ?? false
+        let checkPINStatus: Bool
+        let tipStatus = TIP.status
         let userJustDismissedInitializePINBulletin = isDate(AppGroupUserDefaults.User.initializePINBulletinDismissalDate, fallsInto: BulletinDetectInterval.initializePIN)
-        let checkIsPinInitialized = !hasPIN && !userJustDismissedInitializePINBulletin
+        switch tipStatus {
+        case .needsInitialize:
+            checkPINStatus = !userJustDismissedInitializePINBulletin
+        case .needsMigrate, .ready, .unknown:
+            checkPINStatus = true
+        }
         
         let checkWalletBalanceForEmergencyContactBulletin: Bool
         let userJustDismissedEmergencyContactBulletin = isDate(AppGroupUserDefaults.User.emergencyContactBulletinDismissalDate, fallsInto: BulletinDetectInterval.emergencyContact)
@@ -870,7 +882,7 @@ extension HomeViewController {
             checkWalletBalanceForEmergencyContactBulletin = true
         }
         
-        guard checkNotificationSettings || checkIsPinInitialized || checkWalletBalanceForEmergencyContactBulletin else {
+        guard checkNotificationSettings || checkPINStatus || checkWalletBalanceForEmergencyContactBulletin else {
             return
         }
         
@@ -900,8 +912,15 @@ extension HomeViewController {
                 DispatchQueue.main.async {
                     if settings.authorizationStatus == .denied {
                         show(content: .notification)
-                    } else if checkIsPinInitialized {
-                        show(content: .initializePIN)
+                    } else if checkPINStatus {
+                        switch tipStatus {
+                        case .needsInitialize:
+                            show(content: .initializePIN)
+                        case .needsMigrate:
+                            show(content: .migrateToTIP)
+                        case .ready, .unknown:
+                            show(content: nil)
+                        }
                     } else if checkWalletBalanceForEmergencyContactBulletin {
                         showEmergencyContactBulletinIfNeeded()
                     } else {
@@ -909,8 +928,15 @@ extension HomeViewController {
                     }
                 }
             }
-        } else if checkIsPinInitialized {
-            show(content: .initializePIN)
+        } else if checkPINStatus {
+            switch tipStatus {
+            case .needsInitialize:
+                show(content: .initializePIN)
+            case .needsMigrate:
+                show(content: .migrateToTIP)
+            case .ready, .unknown:
+                show(content: nil)
+            }
         } else if checkWalletBalanceForEmergencyContactBulletin {
             showEmergencyContactBulletinIfNeeded()
         }

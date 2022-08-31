@@ -20,14 +20,11 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
     }
     
     class func presentWallet() {
-        guard let account = LoginManager.shared.account else {
-            return
-        }
         guard let navigationController = UIApplication.homeNavigationController else {
             return
         }
-
-        if account.hasPIN {
+        switch TIP.status {
+        case .ready, .needsMigrate:
             let shouldValidatePin: Bool
             if let date = AppGroupUserDefaults.Wallet.lastPinVerifiedDate {
                 shouldValidatePin = -date.timeIntervalSinceNow > AppGroupUserDefaults.Wallet.periodicPinVerificationInterval
@@ -45,8 +42,11 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
             } else {
                 navigationController.pushViewController(withBackRoot: wallet)
             }
-        } else {
-            navigationController.pushViewController(withBackRoot: WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: .wallet))
+        case .needsInitialize:
+            let tip = TIPNavigationViewController(intent: .create, destination: .wallet)
+            navigationController.present(tip, animated: true)
+        case .unknown:
+            break
         }
     }
     

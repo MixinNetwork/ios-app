@@ -96,16 +96,16 @@ extension EmergencyContactViewController {
     }
     
     private func changeEmergencyContact() {
-        guard let account = LoginManager.shared.account else {
-            return
-        }
-        if account.hasPIN {
+        switch TIP.status {
+        case .ready, .needsMigrate:
             let vc = EmergencyContactVerifyPinViewController()
             let navigationController = VerifyPinNavigationController(rootViewController: vc)
             present(navigationController, animated: true, completion: nil)
-        } else {
-            let vc = WalletPasswordViewController.instance(dismissTarget: .setEmergencyContact)
-            navigationController?.pushViewController(vc, animated: true)
+        case .needsInitialize:
+            let tip = TIPNavigationViewController(intent: .create, destination: .setEmergencyContact)
+            present(tip, animated: true)
+        case .unknown:
+            break
         }
     }
     
@@ -122,16 +122,16 @@ extension EmergencyContactViewController {
     private func enableEmergencyContact() {
         let vc = EmergencyTipsViewController.instance()
         vc.onNext = { [weak self] in
-            guard let account = LoginManager.shared.account else {
-                return
-            }
-            if account.hasPIN {
+            switch TIP.status {
+            case .ready, .needsMigrate:
                 let vc = EmergencyContactVerifyPinViewController()
                 let nav = VerifyPinNavigationController(rootViewController: vc)
                 self?.navigationController?.present(nav, animated: true, completion: nil)
-            } else {
-                let vc = WalletPasswordViewController.instance(dismissTarget: .setEmergencyContact)
-                self?.navigationController?.pushViewController(vc, animated: true)
+            case .needsInitialize:
+                let tip = TIPNavigationViewController(intent: .create, destination: .setEmergencyContact)
+                self?.navigationController?.present(tip, animated: true)
+            case .unknown:
+                break
             }
         }
         present(vc, animated: true, completion: nil)

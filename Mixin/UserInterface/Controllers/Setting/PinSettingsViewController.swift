@@ -136,8 +136,16 @@ extension PinSettingsViewController: UITableViewDelegate {
             alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
             present(alert, animated: true, completion: nil)
         } else if (indexPath.section == 1 && biometryType != .none) || (indexPath.section == 0 && biometryType == .none) {
-            let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep1, dismissTarget: nil)
-            navigationController?.pushViewController(vc, animated: true)
+            switch TIP.status {
+            case .ready:
+                let change = TIPNavigationViewController(intent: .change, destination: nil)
+                present(change, animated: true)
+            case .needsMigrate:
+                let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep1, dismissTarget: nil)
+                navigationController?.pushViewController(vc, animated: true)
+            case .unknown, .needsInitialize:
+                assertionFailure("Invalid TIP status")
+            }
         }
     }
     

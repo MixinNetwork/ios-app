@@ -23,7 +23,9 @@ public final class CollectibleAPI: MixinAPI {
     }
     
     public static func sign(requestId: String, pin: String, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {
-        PINEncryptor.encrypt(pin: pin, onFailure: completion) { (encryptedPin) in
+        PINEncryptor.encrypt(pin: pin, tipBody: {
+            try TIPBody.signCollectibleRequest(id: requestId)
+        }, onFailure: completion) { (encryptedPin) in
             self.request(method: .post,
                          path: Path.sign(id: requestId),
                          parameters: ["pin_base64": encryptedPin],
@@ -33,7 +35,9 @@ public final class CollectibleAPI: MixinAPI {
     }
     
     public static func unlock(requestId: String, pin: String, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {
-        PINEncryptor.encrypt(pin: pin, onFailure: completion) { (encryptedPin) in
+        PINEncryptor.encrypt(pin: pin, tipBody: {
+            try TIPBody.unlockCollectibleRequest(id: requestId)
+        }, onFailure: completion) { (encryptedPin) in
             self.request(method: .post,
                          path: Path.unlock(id: requestId),
                          parameters: ["pin_base64": encryptedPin],

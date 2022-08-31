@@ -92,14 +92,14 @@ public final class AccountAPI: MixinAPI {
         request(method: .post, path: Path.verifications(id: verificationId), parameters: accountRequest, options: .authIndependent, completion: completion)
     }
     
-    public static func changePhoneNumber(verificationId: String, accountRequest: AccountRequest, completion: @escaping (MixinAPI.Result<Account>) -> Void) {
-        let pin = accountRequest.pin!
-        PINEncryptor.encrypt(pin: pin, onFailure: completion) { (encryptedPin) in
-            var parameters = accountRequest
-            parameters.pin = encryptedPin
+    public static func changePhoneNumber(verificationID: String, code: String, pin: String, completion: @escaping (MixinAPI.Result<Account>) -> Void) {
+        PINEncryptor.encrypt(pin: pin, tipBody: {
+            try TIPBody.updatePhoneNumber(verificationID: verificationID, code: code)
+        }, onFailure: completion) { pin in
+            let accountRequest = AccountRequest(code: code, registrationId: nil, pin: pin, sessionSecret: nil)
             self.request(method: .post,
-                         path: Path.verifications(id: verificationId),
-                         parameters: parameters,
+                         path: Path.verifications(id: verificationID),
+                         parameters: accountRequest,
                          options: .disableRetryOnRequestSigningTimeout,
                          completion: completion)
         }
@@ -142,30 +142,45 @@ public final class AccountAPI: MixinAPI {
     }
     
     public static func verify(pin: String, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {
-        PINEncryptor.encrypt(pin: pin, onFailure: completion) { (encryptedPin) in
+        let timestamp = UInt64(Date().timeIntervalSince1970) * UInt64(NSEC_PER_SEC)
+        PINEncryptor.encrypt(pin: pin, tipBody: {
+            try TIPBody.verify(timestamp: timestamp)
+        }, onFailure: completion) { (encryptedPin) in
             self.request(method: .post,
                          path: Path.verifyPin,
-                         parameters: ["pin_base64": encryptedPin],
+                         parameters: ["pin_base64": encryptedPin, "timestamp": timestamp],
                          options: .disableRetryOnRequestSigningTimeout,
                          completion: completion)
         }
     }
     
-    public static func updatePin(old: String?, new: String, completion: @escaping (MixinAPI.Result<Account>) -> Void) {
+    public static func updatePINWithoutTIP(old: String?, new: String, completion: @escaping (MixinAPI.Result<Account>) -> Void) {
         func encryptNewPinThenStartRequest() {
-            PINEncryptor.encrypt(pin: new, onFailure: completion) { encryptedPin in
+            PINEncryptor.encrypt(pin: new, tipBody: {
+                throw PINEncryptor.Error.legacyPINAfterTIPSet
+            }, onFailure: completion) { encryptedPin in
                 param["pin_base64"] = encryptedPin
                 request(method: .post, path: Path.updatePin, parameters: param, options: .disableRetryOnRequestSigningTimeout, completion: completion)
             }
         }
         var param: [String: String] = [:]
         if let old = old {
-            PINEncryptor.encrypt(pin: old, onFailure: completion) { encryptedPin in
+            PINEncryptor.encrypt(pin: old, tipBody: {
+                throw PINEncryptor.Error.legacyPINAfterTIPSet
+            }, onFailure: completion) { encryptedPin in
                 param["old_pin_base64"] = encryptedPin
                 encryptNewPinThenStartRequest()
             }
         } else {
             encryptNewPinThenStartRequest()
+        }
+    }
+    
+    static func updatePIN(request pinRequest: PINRequest) async throws -> Account {
+        try await withCheckedThrowingContinuation { continuation in
+            request(method: .post, path: Path.updatePin, parameters: pinRequest, options: .disableRetryOnRequestSigningTimeout) { result in
+                continuation.resume(with: result)
+            }
         }
     }
     
@@ -187,7 +202,9 @@ public final class AccountAPI: MixinAPI {
     }
     
     public static func deactiveAccount(pin: String, verificationID: String, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {
-        PINEncryptor.encrypt(pin: pin, onFailure: completion) { (encryptedPin) in
+        PINEncryptor.encrypt(pin: pin, tipBody: {
+            try TIPBody.deactivateUser(phoneVerificationID: verificationID)
+        }, onFailure: completion) { (encryptedPin) in
             let parameters = ["pin_base64": encryptedPin, "verification_id": verificationID]
             request(method: .post,
                     path: Path.deactivate,

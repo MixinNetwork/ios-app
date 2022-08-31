@@ -363,12 +363,8 @@ extension UserProfileViewController {
                 dismissAndPresent(vc)
             }
         } else {
-            let vc = WalletPasswordViewController.instance(dismissTarget: .changePhone)
-            if parent != nil {
-                navigationController?.pushViewController(vc, animated: true)
-            } else {
-                dismissAndPush(vc)
-            }
+            let tip = TIPNavigationViewController(intent: .create, destination: .changePhone)
+            present(tip, animated: true)
         }
     }
     
@@ -398,13 +394,16 @@ extension UserProfileViewController {
     }
     
     @objc func transfer() {
-        let viewController: UIViewController
-        if LoginManager.shared.account?.hasPIN ?? false {
-            viewController = TransferOutViewController.instance(asset: nil, type: .contact(user))
-        } else {
-            viewController = WalletPasswordViewController.instance(dismissTarget: .transfer(user: user))
+        switch TIP.status {
+        case .ready, .needsMigrate:
+            let viewController = TransferOutViewController.instance(asset: nil, type: .contact(user))
+            dismissAndPush(viewController)
+        case .needsInitialize:
+            let tip = TIPNavigationViewController(intent: .create, destination: .transfer(user: user))
+            present(tip, animated: true)
+        case .unknown:
+            break
         }
-        dismissAndPush(viewController)
     }
     
     @objc func editAlias() {

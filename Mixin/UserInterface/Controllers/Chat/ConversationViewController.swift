@@ -1284,13 +1284,16 @@ class ConversationViewController: UIViewController {
         guard let user = ownerUser else {
             return
         }
-        let viewController: UIViewController
-        if LoginManager.shared.account?.hasPIN ?? false {
-            viewController = TransferOutViewController.instance(asset: nil, type: .contact(user))
-        } else {
-            viewController = WalletPasswordViewController.instance(dismissTarget: .transfer(user: user))
+        switch TIP.status {
+        case .ready, .needsMigrate:
+            let transfer = TransferOutViewController.instance(asset: nil, type: .contact(user))
+            navigationController?.pushViewController(transfer, animated: true)
+        case .needsInitialize:
+            let tip = TIPNavigationViewController(intent: .create, destination: nil)
+            present(tip, animated: true)
+        case .unknown:
+            break
         }
-        navigationController?.pushViewController(viewController, animated: true)
     }
     
     func showLocationPicker() {

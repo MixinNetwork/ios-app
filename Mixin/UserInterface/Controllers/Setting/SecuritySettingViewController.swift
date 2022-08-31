@@ -37,16 +37,26 @@ extension SecuritySettingViewController: UITableViewDelegate {
         let vc: UIViewController
         switch indexPath.section {
         case 0:
-            if LoginManager.shared.account?.hasPIN ?? false {
+            switch TIP.status {
+            case .ready, .needsMigrate:
                 vc = PinSettingsViewController.instance()
-            } else {
-                vc = WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil)
+            case .needsInitialize:
+                let tip = TIPNavigationViewController(intent: .create, destination: nil)
+                present(tip, animated: true)
+                return
+            case .unknown:
+                return
             }
         case 1:
-            if LoginManager.shared.account?.hasPIN ?? false {
+            switch TIP.status {
+            case .ready, .needsMigrate:
                 vc = EmergencyContactViewController.instance()
-            } else {
-                vc = WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil)
+            case .needsInitialize:
+                let tip = TIPNavigationViewController(intent: .create, destination: nil)
+                present(tip, animated: true)
+                return
+            case .unknown:
+                return
             }
         case 2:
             vc = AuthorizationsViewController.instance()

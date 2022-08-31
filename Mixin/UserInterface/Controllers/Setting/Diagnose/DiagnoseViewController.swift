@@ -23,6 +23,12 @@ class DiagnoseViewController: SettingsTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+#if DEBUG
+        let tipSection = SettingsSection(rows: [
+            SettingsRow(title: "TIP", accessory: .disclosure),
+        ])
+        dataSource.insertSection(tipSection, at: dataSource.sections.count, animation: .none)
+#endif
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
         NotificationCenter.default.addObserver(self,
@@ -69,6 +75,11 @@ extension DiagnoseViewController: UITableViewDelegate {
             } else {
                 showAutoHiddenHud(style: .error, text: "Not Available")
             }
+#if DEBUG
+        case (5, 0):
+            let container = ContainerViewController.instance(viewController: TIPDiagnosticViewController(), title: "TIP")
+            navigationController?.pushViewController(container, animated: true)
+#endif
         default:
             break
         }

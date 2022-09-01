@@ -10,13 +10,16 @@ class SignalLoadingViewController: UIViewController {
         guard let account = LoginManager.shared.account else {
             return []
         }
-        guard ["+971", "+91"].contains(where: account.phone.hasPrefix) else {
+        if ["+971", "+91"].contains(where: account.phone.hasPrefix) {
+            return [
+                InitializeBotJob.Bot(userId: "68ef7899-3e81-4b3d-8124-83ae652def89", fullname: "Mixin Bots"),
+                InitializeBotJob.Bot(userId: "96c1460b-c7c4-480a-a342-acaa73995a37", fullname: "Mixin Data"),
+            ]
+        } else if ["+81"].contains(where: account.phone.hasPrefix) {
+            return [InitializeBotJob.Bot(userId: "482d17d1-9eb3-4177-ac37-08b24277732b", fullname: "Mixinコミュニティ")]
+        } else {
             return []
         }
-        return [
-            InitializeBotJob.Bot(userId: "68ef7899-3e81-4b3d-8124-83ae652def89", fullname: "Mixin Bots"),
-            InitializeBotJob.Bot(userId: "96c1460b-c7c4-480a-a342-acaa73995a37", fullname: "Mixin Data"),
-        ]
     }
     
     private var allUsersInitialBots: [InitializeBotJob.Bot] {

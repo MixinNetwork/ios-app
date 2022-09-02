@@ -1,6 +1,5 @@
 import Foundation
 import Tip
-import CryptoKit
 
 public enum TIP {
     
@@ -42,6 +41,7 @@ public enum TIP {
         case invalidSTSeed
         case unableToSignTimestamp
         case generatePrivTIPKey
+        case hashAggSigToPrivSeed
         case invalidAggSig
         case noAccount
         case invalidTIPPriv
@@ -49,6 +49,7 @@ public enum TIP {
         case unableToHashTIPPrivKey
         case tipCounterExceedsNodeCounter
         case invalidCounterGroups
+        case hashTIPPrivToPrivSeed
     }
     
     public static var status: Status {
@@ -78,7 +79,9 @@ public enum TIP {
         guard let pinToken = AppGroupKeychain.pinToken else {
             throw Error.missingPINToken
         }
-        let privSeed = Data(SHA256.hash(data: tipPriv))
+        guard let privSeed = SHA3_256.hash(data: tipPriv) else {
+            throw Error.hashTIPPrivToPrivSeed
+        }
         guard let privateKey = Ed25519PrivateKey(rfc8032Representation: privSeed) else {
             throw Error.invalidTIPPriv
         }
@@ -185,7 +188,9 @@ public enum TIP {
                                             failedSigners: [],
                                             forRecover: false,
                                             progressHandler: progressHandler)
-        let privSeed = Data(SHA256.hash(data: aggSig))
+        guard let privSeed = SHA3_256.hash(data: aggSig) else {
+            throw Error.hashAggSigToPrivSeed
+        }
         guard let priv = Ed25519PrivateKey(rfc8032Representation: privSeed) else {
             throw Error.invalidSignature
         }
@@ -265,7 +270,9 @@ public enum TIP {
         
         try await encryptAndSave(pinData: newPINData, pinToken: pinToken, aggSig: aggSig)
         
-        let privSeed = Data(SHA256.hash(data: aggSig))
+        guard let privSeed = SHA3_256.hash(data: aggSig) else {
+            throw Error.hashAggSigToPrivSeed
+        }
         guard let privateKey = Ed25519PrivateKey(rfc8032Representation: privSeed) else {
             throw Error.invalidAggSig
         }

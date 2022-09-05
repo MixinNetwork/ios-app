@@ -111,23 +111,17 @@ extension StickerInputViewController: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.sticker_album, for: indexPath)!
         switch indexPath.row {
         case 0:
-            cell.imageView.image = R.image.ic_sticker_store()
-            cell.imageView.contentMode = .center
+            cell.imageView.load(image: R.image.ic_sticker_store(), contentMode: .center)
             cell.dotImageView.isHidden = !AppGroupUserDefaults.User.hasNewStickers
         case 1:
-            cell.imageView.image = R.image.ic_recent_stickers()
-            cell.imageView.contentMode = .center
+            cell.imageView.load(image: R.image.ic_recent_stickers(), contentMode: .center)
         case 2:
-            cell.imageView.image = R.image.ic_sticker_favorite()
-            cell.imageView.contentMode = .center
+            cell.imageView.load(image: R.image.ic_sticker_favorite(), contentMode: .center)
         case 3:
-            cell.imageView.image = R.image.ic_gif()
-            cell.imageView.contentMode = .center
+            cell.imageView.load(image: R.image.ic_gif(), contentMode: .center)
         default:
             let album = addedAlbums[indexPath.row - modelController.numberOfFixedControllers]
-            if let url = URL(string: album.iconUrl) {
-                cell.imageView.sd_setImage(with: url, placeholderImage: nil, context: persistentStickerContext)
-            }
+            cell.imageView.load(url: album.iconUrl, persistent: true)
             cell.imageView.contentMode = .scaleAspectFit
         }
         return cell
@@ -170,10 +164,15 @@ extension StickerInputViewController: UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        (cell as? AlbumCollectionViewCell)?.imageView.startAnimating()
         guard let selectedIndexPaths = albumsCollectionView.indexPathsForSelectedItems, selectedIndexPaths.contains(indexPath) else {
             return
         }
         cell.isSelected = true
+    }
+
+    func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        (cell as? AlbumCollectionViewCell)?.imageView.stopAnimating()
     }
     
 }

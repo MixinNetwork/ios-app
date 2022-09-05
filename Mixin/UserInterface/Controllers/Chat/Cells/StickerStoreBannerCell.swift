@@ -4,7 +4,7 @@ import MixinServices
 
 class StickerStoreBannerCell: UICollectionViewCell {
     
-    private let imageView = SDAnimatedImageView()
+    let imageView = AnimatedStickerView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -18,26 +18,7 @@ class StickerStoreBannerCell: UICollectionViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        imageView.sd_cancelCurrentImageLoad()
-        imageView.image = nil
-    }
-    
-    func load(item: AlbumItem) {
-        guard let banner = item.album.banner, let url = URL(string: banner) else {
-            return
-        }
-        let context = stickerLoadContext(persistent: item.isAdded)
-        imageView.sd_setImage(with: url, placeholderImage: nil, context: context)
-    }
-    
-    func startAnimating() {
-        imageView.autoPlayAnimatedImage = true
-        imageView.startAnimating()
-    }
-    
-    func stopAnimating() {
-        imageView.autoPlayAnimatedImage = false
-        imageView.stopAnimating()
+        imageView.prepareForReuse()
     }
     
     private func loadSubview() {

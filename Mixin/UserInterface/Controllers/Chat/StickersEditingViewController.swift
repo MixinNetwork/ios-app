@@ -81,4 +81,12 @@ extension StickersEditingViewController: UITableViewDelegate {
         tableView.reloadData()
     }
     
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        (cell as? StickersEditingCell)?.stickerView.startAnimating()
+    }
+    
+    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        (cell as? StickersEditingCell)?.stickerView.stopAnimating()
+    }
+    
 }

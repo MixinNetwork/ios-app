@@ -329,7 +329,7 @@ extension ExternalSharingConfirmationViewController {
             let inset = UIEdgeInsets(top: 70, left: 70, bottom: 70, right: 70)
             make.edges.equalToSuperview().inset(inset)
         }
-        stickerView.load(message: message, isStickerAdded: isAdded)
+        stickerView.load(url: message.mediaUrl, persistent: isAdded)
         sendButton.isEnabled = true
     }
     

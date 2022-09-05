@@ -241,13 +241,17 @@ public final class ConversationDAO: UserDatabaseDAO {
             try Message
                 .filter(Message.column(of: .conversationId) == conversationId)
                 .deleteAll(db)
-            try updateLastMessageIdOnDeleteMessage(conversationId: conversationId, database: db)
             try MessageMention
                 .filter(MessageMention.column(of: .conversationId) == conversationId)
                 .deleteAll(db)
+            let assignments = [
+                Conversation.column(of: .unseenMessageCount).set(to: 0),
+                Conversation.column(of: .lastMessageId).set(to: nil),
+                Conversation.column(of: .lastMessageCreatedAt).set(to: nil)
+            ]
             try Conversation
                 .filter(Conversation.column(of: .conversationId) == conversationId)
-                .updateAll(db, [Conversation.column(of: .unseenMessageCount).set(to: 0)])
+                .updateAll(db, assignments)
             try deleteFTSContent(with: conversationId, from: db)
             try PinMessageDAO.shared.deleteAll(conversationId: conversationId, from: db)
             db.afterNextTransactionCommit { (_) in

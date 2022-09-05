@@ -8,6 +8,7 @@ extension MessageDAO {
     SELECT conversation_id, id, category, media_url, media_mime_type, media_width,
            media_height, media_status, media_duration, thumb_image, thumb_url, created_at
     FROM messages
+    INDEXED BY index_messages_category
     WHERE %@ conversation_id = ?
         AND category in ('SIGNAL_IMAGE','PLAIN_IMAGE', 'ENCRYPTED_IMAGE', 'SIGNAL_VIDEO', 'PLAIN_VIDEO', 'ENCRYPTED_VIDEO', 'SIGNAL_LIVE', 'PLAIN_LIVE', 'ENCRYPTED_LIVE')
         AND status != 'FAILED'

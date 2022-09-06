@@ -12,7 +12,7 @@ public enum TIPNode {
         let signer: TIPSigner
     }
     
-    enum Error: Swift.Error {
+    public enum Error: Swift.Error {
         case bn256SuiteNotAvailable
         case userSkNotAvailable
         case assigneeSkNotAvailable
@@ -28,6 +28,7 @@ public enum TIPNode {
         case invalidSignResponse(Int)
         case differentIdentity
         case invalidAssignorData
+        case retryLimitExceeded
     }
     
     private struct TIPSignResponseData {
@@ -206,49 +207,65 @@ public enum TIPNode {
     ) async throws -> [TIPSignResponseData] {
         let nonce = UInt64(Date().timeIntervalSince1970)
         let grace = ephemeralGrace
-        return try await withThrowingTaskGroup(of: TIPSignResponseData.self) { group in
+        return await withTaskGroup(of: Result<TIPSignResponseData, Swift.Error>.self) { group in
             let retries = Accumulator(maxValue: maximumRetries)
             
             for signer in signers {
                 group.addTask {
 #if DEBUG
-                    try await MainActor.run {
-                        if TIPDiagnostic.failLastSignerOnce, signer.index == signers.last?.index {
-                            TIPDiagnostic.failLastSignerOnce = false
-                            throw AFError.sessionTaskFailed(error: URLError(.badServerResponse))
+                    do {
+                        try await MainActor.run {
+                            if TIPDiagnostic.failLastSignerOnce, signer.index == signers.last?.index {
+                                TIPDiagnostic.failLastSignerOnce = false
+                                throw AFError.sessionTaskFailed(error: URLError(.badServerResponse))
+                            }
                         }
+                    } catch {
+                        return .failure(error)
                     }
 #endif
-                    func sign() async throws -> TIPSignResponseData {
-                        try await signTIPNode(userSk: userSk,
-                                              signer: signer,
-                                              ephemeral: ephemeral,
-                                              watcher: watcher,
-                                              nonce: nonce,
-                                              grace: grace,
-                                              assignee: assignee)
-                    }
-                    
-                    do {
-                        return try await sign()
-                    } catch {
-                        if await retries.countAndValidate() {
-                            return try await sign()
-                        } else {
-                            throw error
+                    repeat {
+                        do {
+                            let sig = try await signTIPNode(userSk: userSk,
+                                                            signer: signer,
+                                                            ephemeral: ephemeral,
+                                                            watcher: watcher,
+                                                            nonce: nonce,
+                                                            grace: grace,
+                                                            assignee: assignee)
+                            return .success(sig)
+                        } catch {
+                            switch error {
+                            case let AFError.responseValidationFailed(reason: .unacceptableStatusCode(code)):
+                                if code == 429 || code == 500 {
+                                    return .failure(error)
+                                } else {
+                                    Logger.general.error(category: "TIPNode", message: "Node sign responded with status code: \(code)")
+                                    continue
+                                }
+                            default:
+                                Logger.general.error(category: "TIPNode", message: "Node sign responded with: \(error)")
+                                continue
+                            }
                         }
-                    }
+                    } while await retries.countAndValidate()
+                    return .failure(Error.retryLimitExceeded)
                 }
             }
             
-            var results: [TIPSignResponseData] = []
-            results.reserveCapacity(signers.count)
-            for try await data in group {
-                results.append(data)
-                let fractionCompleted = Float(results.count) / Float(signers.count)
-                await progressHandler?(.synchronizing(fractionCompleted))
+            var sigs: [TIPSignResponseData] = []
+            sigs.reserveCapacity(signers.count)
+            for await result in group {
+                switch result {
+                case .success(let sig):
+                    sigs.append(sig)
+                    let fractionCompleted = Float(sigs.count) / Float(signers.count)
+                    await progressHandler?(.synchronizing(fractionCompleted))
+                case .failure(let error):
+                    Logger.general.error(category: "TIPNode", message: "Failed to sign: \(error)")
+                }
             }
-            return results
+            return sigs
         }
     }
     

@@ -81,6 +81,7 @@ class TIPActionViewController: UIViewController {
                     AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
                     await MainActor.run(body: finish)
                 } catch {
+                    // FIXME: Catch `TIPNode.Error.differentIdentity` and tell user PIN is different from previous input
                     Logger.general.warn(category: "TIPActionViewController", message: "Failed to change: \(error)")
                     await handleError()
                 }

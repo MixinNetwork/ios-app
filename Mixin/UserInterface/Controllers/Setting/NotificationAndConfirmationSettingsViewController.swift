@@ -34,12 +34,12 @@ class NotificationAndConfirmationSettingsViewController: SettingsTableViewContro
     }
     
     private var transferNotificationThreshold: String {
-        let threshold = LoginManager.shared.account?.transfer_notification_threshold ?? 0
+        let threshold = LoginManager.shared.account?.transferNotificationThreshold ?? 0
         return NumberFormatter.localizedString(from: NSNumber(value: threshold), number: .decimal)
     }
     
     private var transferConfirmationThreshold: String {
-        let threshold = LoginManager.shared.account?.transfer_confirmation_threshold ?? 0
+        let threshold = LoginManager.shared.account?.transferConfirmationThreshold ?? 0
         return NumberFormatter.localizedString(from: NSNumber(value: threshold), number: .decimal)
     }
     

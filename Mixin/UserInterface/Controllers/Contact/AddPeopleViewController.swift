@@ -22,7 +22,7 @@ class AddPeopleViewController: KeyboardBasedLayoutViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if let id = LoginManager.shared.account?.identity_number {
+        if let id = LoginManager.shared.account?.identityNumber {
             myIdLabel.text = R.string.localizable.my_mixin_id(id)
         }
         searchButton.isEnabled = false

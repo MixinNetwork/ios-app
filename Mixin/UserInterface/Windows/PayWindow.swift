@@ -848,7 +848,7 @@ extension PayWindow {
             switch action {
             case let .transfer(_, user, _):
                 let fiatMoneyValue = amount.doubleValue * asset.priceUsd.doubleValue * Currency.current.rate
-                let threshold = LoginManager.shared.account?.transfer_confirmation_threshold ?? 0
+                let threshold = LoginManager.shared.account?.transferConfirmationThreshold ?? 0
                 if threshold != 0 && fiatMoneyValue >= threshold {
                     DispatchQueue.main.async {
                         BigAmountConfirmationWindow.instance().render(asset: asset, user: user, amount: amount, memo: memo, completion: completion).presentPopupControllerAnimated()

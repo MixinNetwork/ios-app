@@ -527,15 +527,15 @@ public class ReceiveMessageService: MixinService {
         guard
             let cipher = Data(base64Encoded: data.data),
             let pk = RequestSigning.edDSAPrivateKey,
-            let sidString = LoginManager.shared.account?.session_id,
+            let sidString = LoginManager.shared.account?.sessionID,
             let mySessionId = UUID(uuidString: sidString)
         else {
-            let hasSessionId = LoginManager.shared.account?.session_id != nil
+            let hasSessionId = LoginManager.shared.account?.sessionID != nil
             let info = [
                 "is_cipher_valid": Data(base64Encoded: data.data) != nil,
                 "has_pk": RequestSigning.edDSAPrivateKey != nil,
                 "has_sid": hasSessionId,
-                "is_sid_valid": hasSessionId && UUID(uuidString: LoginManager.shared.account?.session_id ?? "") != nil
+                "is_sid_valid": hasSessionId && UUID(uuidString: LoginManager.shared.account?.sessionID ?? "") != nil
             ]
             Logger.conversation(id: data.conversationId).error(category: "EncryptedBotMessage", message: "Failed to decrypt", userInfo: info)
             reporter.report(error: MixinServicesError.decryptBotMessage(info))

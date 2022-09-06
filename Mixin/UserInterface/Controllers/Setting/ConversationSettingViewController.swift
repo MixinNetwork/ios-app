@@ -17,7 +17,7 @@ class ConversationSettingViewController: SettingsTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         if let account = LoginManager.shared.account {
-            switch account.receive_message_source {
+            switch account.receiveMessageSource {
             case ReceiveMessageSource.everybody.rawValue:
                 messageSourceSection.setAccessory(.checkmark, forRowAt: 0)
             case ReceiveMessageSource.contacts.rawValue:
@@ -25,7 +25,7 @@ class ConversationSettingViewController: SettingsTableViewController {
             default:
                 break
             }
-            switch account.accept_conversation_source {
+            switch account.acceptConversationSource {
             case AcceptConversationSource.everybody.rawValue:
                 conversationSourceSection.setAccessory(.checkmark, forRowAt: 0)
             case AcceptConversationSource.contacts.rawValue:
@@ -51,7 +51,7 @@ extension ConversationSettingViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.section == 0 {
             let newSource: ReceiveMessageSource = indexPath.row == 0 ? .everybody : .contacts
-            if newSource.rawValue != LoginManager.shared.account?.receive_message_source {
+            if newSource.rawValue != LoginManager.shared.account?.receiveMessageSource {
                 tableView.isUserInteractionEnabled = false
                 if newSource == .everybody {
                     setMessageSourceEverybody()
@@ -61,7 +61,7 @@ extension ConversationSettingViewController: UITableViewDelegate {
             }
         } else if indexPath.section == 1 {
             let newSource: AcceptConversationSource = indexPath.row == 0 ? .everybody : .contacts
-            if newSource.rawValue != LoginManager.shared.account?.accept_conversation_source {
+            if newSource.rawValue != LoginManager.shared.account?.acceptConversationSource {
                 tableView.isUserInteractionEnabled = false
                 if newSource == .everybody {
                     setConversationSourceEverybody()

@@ -45,7 +45,7 @@ class RequestInAppNotificationJob: BaseJob {
             guard let user = UserDAO.shared.getUser(userId: message.userId) else {
                 return
             }
-            if LoginManager.shared.account?.receive_message_source == ReceiveMessageSource.contacts.rawValue && user.relationship != Relationship.FRIEND.rawValue {
+            if LoginManager.shared.account?.receiveMessageSource == ReceiveMessageSource.contacts.rawValue && user.relationship != Relationship.FRIEND.rawValue {
                 return
             }
             ownerUser = user

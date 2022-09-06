@@ -105,7 +105,7 @@ extension PrivacySettingViewController: UITableViewDelegate {
                 vc = PhoneContactsSettingViewController.instance()
             }
         default:
-            if LoginManager.shared.account?.has_pin ?? false {
+            if LoginManager.shared.account?.hasPIN ?? false {
                 vc = ScreenLockSettingViewController.instance()
             } else {
                 vc = WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil)

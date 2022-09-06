@@ -134,7 +134,7 @@ extension UserItem {
     }
     
     public static func createUser(from account: Account) -> UserItem {
-        return UserItem(userId: account.user_id, fullName: account.full_name, biography: account.biography, identityNumber: account.identity_number, avatarUrl: account.avatar_url, phone: account.phone, isVerified: false, muteUntil: nil, appId: nil, createdAt: account.created_at, isScam: false, relationship: "", role: "", appCreatorId: nil)
+        return UserItem(userId: account.userID, fullName: account.fullName, biography: account.biography, identityNumber: account.identityNumber, avatarUrl: account.avatarURL, phone: account.phone, isVerified: false, muteUntil: nil, appId: nil, createdAt: account.createdAt, isScam: false, relationship: "", role: "", appCreatorId: nil)
     }
     
     public static func makeUserItem(notificationUserInfo userInfo: [AnyHashable: Any]) -> UserItem? {

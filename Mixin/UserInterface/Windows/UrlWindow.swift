@@ -396,7 +396,7 @@ class UrlWindow {
     }
 
     class func checkWithdrawal(url: URL) -> Bool {
-        guard LoginManager.shared.account?.has_pin ?? false else {
+        guard LoginManager.shared.account?.hasPIN ?? false else {
             UIApplication.homeNavigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil), animated: true)
             return true
         }
@@ -459,7 +459,7 @@ class UrlWindow {
     }
 
     class func checkPayUrl(url: String, query: [String: String]) -> Bool {
-        guard LoginManager.shared.account?.has_pin ?? false else {
+        guard LoginManager.shared.account?.hasPIN ?? false else {
             UIApplication.homeNavigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil), animated: true)
             return true
         }
@@ -509,7 +509,7 @@ class UrlWindow {
     }
 
     class func checkAddress(url: URL) -> Bool {
-        guard LoginManager.shared.account?.has_pin ?? false else {
+        guard LoginManager.shared.account?.hasPIN ?? false else {
             UIApplication.homeNavigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil), animated: true)
             return true
         }
@@ -879,7 +879,7 @@ extension UrlWindow {
     }
     
     private static func presentMultisig(multisig: MultisigResponse, hud: Hud) {
-        guard LoginManager.shared.account?.has_pin ?? false else {
+        guard LoginManager.shared.account?.hasPIN ?? false else {
             UIApplication.homeNavigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil), animated: true)
             DispatchQueue.main.async {
                 hud.hide()
@@ -912,7 +912,7 @@ extension UrlWindow {
     }
 
     private static func presentPayment(payment: PaymentCodeResponse, hud: Hud) {
-        guard LoginManager.shared.account?.has_pin ?? false else {
+        guard LoginManager.shared.account?.hasPIN ?? false else {
             UIApplication.homeNavigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil), animated: true)
             DispatchQueue.main.async {
                 hud.hide()
@@ -951,7 +951,7 @@ extension UrlWindow {
     }
 
     private static func presentCollectible(collectible: CollectibleResponse, hud: Hud) {
-        guard LoginManager.shared.account?.has_pin ?? false else {
+        guard LoginManager.shared.account?.hasPIN ?? false else {
             UIApplication.homeNavigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil), animated: true)
             DispatchQueue.main.async {
                 hud.hide()

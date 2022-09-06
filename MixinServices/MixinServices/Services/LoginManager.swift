@@ -2,15 +2,15 @@ import Foundation
 import Intents
 
 public var myUserId: String {
-    LoginManager.shared.account?.user_id ?? ""
+    LoginManager.shared.account?.userID ?? ""
 }
 
 public var myIdentityNumber: String {
-    LoginManager.shared.account?.identity_number ?? "00000"
+    LoginManager.shared.account?.identityNumber ?? "00000"
 }
 
 public var myFullname: String {
-    LoginManager.shared.account?.full_name ?? ""
+    LoginManager.shared.account?.fullName ?? ""
 }
 
 public final class LoginManager {

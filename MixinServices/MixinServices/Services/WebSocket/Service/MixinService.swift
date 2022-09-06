@@ -26,7 +26,7 @@ public class MixinService {
     }
 
     public func checkSessionSenderKey(conversationId: String) throws {
-        var participants = ParticipantSessionDAO.shared.getNotSendSessionParticipants(conversationId: conversationId, sessionId: LoginManager.shared.account?.session_id ?? "")
+        var participants = ParticipantSessionDAO.shared.getNotSendSessionParticipants(conversationId: conversationId, sessionId: LoginManager.shared.account?.sessionID ?? "")
         guard participants.count > 0 else {
             return
         }

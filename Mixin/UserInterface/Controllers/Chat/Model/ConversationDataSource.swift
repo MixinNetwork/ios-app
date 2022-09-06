@@ -543,7 +543,7 @@ extension ConversationDataSource {
         guard !loadedMessageIds.contains(message.messageId) else {
             return
         }
-        let messageIsSentByMe = message.userId == me.user_id
+        let messageIsSentByMe = message.userId == me.userID
         if !messageIsSentByMe && message.status == MessageStatus.DELIVERED.rawValue {
             Queue.main.autoSync {
                 guard UIApplication.shared.applicationState == .active else {
@@ -805,7 +805,7 @@ extension ConversationDataSource {
     private func isMessageForwardedByBot(_ message: MessageItem) -> Bool {
         if let ownerUser = ownerUser {
             return ownerUser.isBot
-                && message.userId != me.user_id
+                && message.userId != me.userID
                 && message.userId != ownerUser.userId
         } else {
             return false
@@ -813,7 +813,7 @@ extension ConversationDataSource {
     }
     
     private func addMessageAndDisplay(message: MessageItem) {
-        let messageIsSentByMe = message.userId == me.user_id
+        let messageIsSentByMe = message.userId == me.userID
         let date = DateFormatter.yyyymmdd.string(from: message.createdAt.toUTCDate())
         let lastIndexPathBeforeInsertion = lastIndexPath
         var style: MessageViewModel.Style = []

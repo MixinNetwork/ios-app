@@ -17,7 +17,7 @@ extension SendMessageService {
         }
 
         var msg = message
-        msg.userId = account.user_id
+        msg.userId = account.userID
         msg.status = MessageStatus.SENDING.rawValue
         
         let app: App?
@@ -113,7 +113,7 @@ extension SendMessageService {
                 guard let user = ownerUser else {
                     return
                 }
-                let conversationId = ConversationDAO.shared.makeConversationId(userId: account.user_id, ownerUserId: user.userId)
+                let conversationId = ConversationDAO.shared.makeConversationId(userId: account.userID, ownerUserId: user.userId)
                 msg.conversationId = conversationId
                 ConversationDAO.shared.createConversation(conversation: ConversationResponse(conversationId: conversationId, userId: user.userId, avatarUrl: user.avatarUrl), targetStatus: .START)
             }

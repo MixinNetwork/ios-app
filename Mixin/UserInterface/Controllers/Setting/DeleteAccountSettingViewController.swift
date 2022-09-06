@@ -49,7 +49,7 @@ extension DeleteAccountSettingViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if LoginManager.shared.account?.has_pin ?? false {
+        if LoginManager.shared.account?.hasPIN ?? false {
             indexPath.section == 0 ? verifyPIN() : changeNumber()
         } else {
             let vc = WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil)

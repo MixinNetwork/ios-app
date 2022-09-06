@@ -27,7 +27,7 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
             return
         }
 
-        if account.has_pin {
+        if account.hasPIN {
             let shouldValidatePin: Bool
             if let date = AppGroupUserDefaults.Wallet.lastPinVerifiedDate {
                 shouldValidatePin = -date.timeIntervalSinceNow > AppGroupUserDefaults.Wallet.periodicPinVerificationInterval

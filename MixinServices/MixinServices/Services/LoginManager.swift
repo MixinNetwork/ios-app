@@ -117,7 +117,7 @@ public final class LoginManager {
                 Keychain.shared.clearPIN()
                 WebSocketService.shared.disconnect()
                 AppGroupUserDefaults.Account.clearAll()
-                AppGroupKeychain.removeAllItems()
+                AppGroupKeychain.removeItemsForCurrentSession()
                 RequestSigning.removeCachedKey()
                 SignalDatabase.current.erase()
                 PropertiesDAO.shared.removeValue(forKey: .iterator)

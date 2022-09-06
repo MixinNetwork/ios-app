@@ -35,8 +35,8 @@ extension RequestSigning {
     private static let baseHeaders: [String: String] = [
         "Content-Type": "application/json",
         "Accept-Language": Locale.current.languageCode ?? "en",
-        "Mixin-Device-Id": Keychain.shared.getDeviceId(),
-        "User-Agent": "Mixin/\(Bundle.main.shortVersion) (iOS \(UIDevice.current.systemVersion); \(Machine.current.name); \(Locale.current.languageCode ?? "")-\(Locale.current.regionCode ?? ""))"
+        "Mixin-Device-Id": Device.current.id,
+        "User-Agent": "Mixin/\(Bundle.main.shortVersion) (iOS \(UIDevice.current.systemVersion); \(Device.current.machineName); \(Locale.current.languageCode ?? "")-\(Locale.current.regionCode ?? ""))"
     ]
     
     private static var cachedEdDSAPrivateKey: Ed25519PrivateKey?

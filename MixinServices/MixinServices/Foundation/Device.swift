@@ -1,12 +1,22 @@
 import Foundation
 
-public struct Machine {
+public struct Device {
     
-    public static let current = Machine()
+    public static let current = Device()
     
-    public let name: String
+    public let id: String = {
+        if let data = AppGroupKeychain.deviceID, let id = String(data: data, encoding: .utf8) {
+            return id
+        } else {
+            let id = UUID().uuidString.lowercased()
+            if let data = id.data(using: .utf8) {
+                AppGroupKeychain.deviceID = data
+            }
+            return id
+        }
+    }()
     
-    init() {
+    public let machineName: String = {
         var name = [CTL_HW, HW_MACHINE]
         var size: Int = 2
         sysctl(&name, 2, nil, &size, nil, 0)
@@ -18,7 +28,7 @@ public struct Machine {
         if ["x86_64", "i386", "arm64"].contains(result), let model = ProcessInfo.processInfo.environment["SIMULATOR_MODEL_IDENTIFIER"] {
             result = model
         }
-        self.name = result
-    }
+        return result
+    }()
     
 }

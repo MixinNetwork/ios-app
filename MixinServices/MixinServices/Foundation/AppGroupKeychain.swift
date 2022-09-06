@@ -3,9 +3,13 @@ import Foundation
 public enum AppGroupKeychain {
     
     private enum Tag {
+        static let deviceID = Data([0x00]) as NSData
         static let sessionSecret = Data([0x01]) as NSData
         static let pinToken = Data([0x02]) as NSData
     }
+    
+    @Item(query: [kSecClass: kSecClassKey, kSecAttrApplicationTag: Tag.deviceID])
+    public static var deviceID: Data?
     
     @Item(query: [kSecClass: kSecClassKey, kSecAttrApplicationTag: Tag.sessionSecret])
     public static var sessionSecret: Data?
@@ -13,7 +17,7 @@ public enum AppGroupKeychain {
     @Item(query: [kSecClass: kSecClassKey, kSecAttrApplicationTag: Tag.pinToken])
     public static var pinToken: Data?
     
-    public static func removeAllItems() {
+    public static func removeItemsForCurrentSession() {
         sessionSecret = nil
         pinToken = nil
     }

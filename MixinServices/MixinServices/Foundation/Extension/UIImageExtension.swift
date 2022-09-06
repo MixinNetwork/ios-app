@@ -52,6 +52,26 @@ public extension UIImage {
     }
     
     public func imageByScaling(to size: CGSize) -> UIImage? {
+        if isAppExtension {
+            guard let data = jpegData(compressionQuality: JPEGCompressionQuality.high) else {
+                return nil
+            }
+            guard let source = CGImageSourceCreateWithData(data as CFData, nil) else {
+                return nil
+            }
+            let options: [CFString: Any] = [
+                kCGImageSourceShouldCache: false,
+                kCGImageSourceShouldCacheImmediately: true,
+                kCGImageSourceCreateThumbnailFromImageAlways: true,
+                kCGImageSourceThumbnailMaxPixelSize: max(size.width, size.height),
+                kCGImageSourceCreateThumbnailWithTransform: true,
+            ]
+            guard let scaled = CGImageSourceCreateThumbnailAtIndex(source, 0, options as CFDictionary) else {
+                return nil
+            }
+            return UIImage(cgImage: scaled)
+        }
+        
         // Do not use UIGraphicsImageRenderer / UIGraphicsBeginImageContextWithOptions here
         // They crash the app on iPhone XS Max with iOS 14.1, when perfoming on a background thread
         let cgImage: CGImage

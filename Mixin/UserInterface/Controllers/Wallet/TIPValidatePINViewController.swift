@@ -4,8 +4,9 @@ import MixinServices
 class TIPValidatePINViewController: PinValidationViewController {
     
     enum Action {
-        case create((_ pin: String) -> Void)
-        case change((_ old: String, _ new: String) -> Void)
+        case input((_ pin: String) -> Void)
+        case inputNew((_ pin: String) -> Void)
+        case verifyOldInputNew((_ old: String, _ new: String) -> Void)
     }
     
     private let action: Action
@@ -27,9 +28,11 @@ class TIPValidatePINViewController: PinValidationViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         switch action {
-        case .create:
+        case .input:
             titleLabel.text = R.string.localizable.enter_your_pin()
-        case .change:
+        case .inputNew:
+            titleLabel.text = "Enter your new PIN"
+        case .verifyOldInputNew:
             if oldPIN == nil {
                 titleLabel.text = "Enter your old PIN"
             } else {
@@ -40,11 +43,11 @@ class TIPValidatePINViewController: PinValidationViewController {
     
     override func validate(pin: String) {
         switch action {
-        case .create(let completion):
+        case .input(let completion), .inputNew(let completion):
             presentingViewController?.dismiss(animated: true) {
                 completion(pin)
             }
-        case .change(let completion):
+        case .verifyOldInputNew(let completion):
             if let oldPIN = oldPIN {
                 presentingViewController?.dismiss(animated: true) {
                     completion(oldPIN, pin)
@@ -57,6 +60,7 @@ class TIPValidatePINViewController: PinValidationViewController {
                         self.pinField.clear()
                         self.pinField.isHidden = false
                         self.pinField.receivesInput = true
+                        self.descriptionLabel.text = nil
                         self.loadingIndicator.stopAnimating()
                         self.oldPIN = pin
                     case .failure(let error):

@@ -3,15 +3,9 @@ import MixinServices
 
 class TIPActionViewController: UIViewController {
     
-#if DEBUG
-    public static var testCreate = false
-    public static var testChange = false
-    public static var testMigrate = false
-#endif
-    
     enum Action {
         case create(pin: String)
-        case change(old: String, new: String)
+        case change(old: String?, new: String)
         case migrate(pin: String)
     }
     
@@ -45,19 +39,20 @@ class TIPActionViewController: UIViewController {
         let failedSigners = context?.failedSigners ?? []
         switch action {
         case let .create(pin):
+            titleLabel.text = "创建钱包"
 #if DEBUG
-            if Self.testCreate {
+            if TIPDiagnostic.uiTestOnly {
                 emulateProgress()
                 return
             }
 #endif
             Task {
                 do {
-                    _ = try await TIP.createTIPPriv(pin: pin,
-                                                    failedSigners: failedSigners,
-                                                    legacyPIN: nil,
-                                                    forRecover: false,
-                                                    progressHandler: showProgress(step:))
+                    try await TIP.createTIPPriv(pin: pin,
+                                                failedSigners: failedSigners,
+                                                legacyPIN: nil,
+                                                forRecover: false,
+                                                progressHandler: showProgress(step:))
                     AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
                     await MainActor.run(body: finish)
                 } catch {
@@ -66,24 +61,19 @@ class TIPActionViewController: UIViewController {
                 }
             }
         case let .change(old, new):
+            titleLabel.text = "修改 PIN"
 #if DEBUG
-            if Self.testChange {
+            if TIPDiagnostic.uiTestOnly {
                 emulateProgress()
                 return
             }
 #endif
             Task {
                 do {
-                    guard let tipCounter = LoginManager.shared.account?.tipCounter else {
-                        return
-                    }
-                    let nodeCounter = context?.nodeCounter ?? tipCounter
-                    let nodeSuccess = nodeCounter > tipCounter && failedSigners.isEmpty
-                    _ = try await TIP.updateTIPPriv(pin: old,
-                                                    newPIN: new,
-                                                    nodeSuccess: nodeSuccess,
-                                                    failedSigners: failedSigners,
-                                                    progressHandler: showProgress(step:))
+                    try await TIP.updateTIPPriv(oldPIN: old,
+                                                newPIN: new,
+                                                failedSigners: failedSigners,
+                                                progressHandler: showProgress(step:))
                     if AppGroupUserDefaults.Wallet.payWithBiometricAuthentication {
                         Keychain.shared.storePIN(pin: new)
                     }
@@ -96,19 +86,20 @@ class TIPActionViewController: UIViewController {
                 }
             }
         case let .migrate(pin):
+            titleLabel.text = "升级 TIP"
 #if DEBUG
-            if Self.testMigrate {
+            if TIPDiagnostic.uiTestOnly {
                 emulateProgress()
                 return
             }
 #endif
             Task {
                 do {
-                    _ = try await TIP.createTIPPriv(pin: pin,
-                                                    failedSigners: failedSigners,
-                                                    legacyPIN: pin,
-                                                    forRecover: false,
-                                                    progressHandler: showProgress(step:))
+                    try await TIP.createTIPPriv(pin: pin,
+                                                failedSigners: failedSigners,
+                                                legacyPIN: pin,
+                                                forRecover: false,
+                                                progressHandler: showProgress(step:))
                     AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
                     await MainActor.run(body: finish)
                 } catch {
@@ -204,11 +195,33 @@ class TIPActionViewController: UIViewController {
         for i in 0...6 {
             DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(i + 4)) {
                 let fractionComplete = Float(i + 1) / 7
-                self.showProgress(step: .synchronizing(fractionComplete))
+                if !TIPDiagnostic.failLastSignerOnce || i < 6 {
+                    self.showProgress(step: .synchronizing(fractionComplete))
+                }
             }
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 13) {
-            self.finish()
+            if TIPDiagnostic.failLastSignerOnce || TIPDiagnostic.failPINUpdateOnce {
+                if TIPDiagnostic.failLastSignerOnce {
+                    TIPDiagnostic.failLastSignerOnce = false
+                }
+                if TIPDiagnostic.failPINUpdateOnce {
+                    TIPDiagnostic.failPINUpdateOnce = false
+                }
+                
+                let intro: TIPIntroViewController
+                switch self.action {
+                case .create:
+                    intro = TIPIntroViewController(intent: .create, interruption: .confirmed(.testCreate))
+                case .change:
+                    intro = TIPIntroViewController(intent: .change, interruption: .confirmed(.testChange))
+                case .migrate:
+                    intro = TIPIntroViewController(intent: .migrate, interruption: .confirmed(.testMigrate))
+                }
+                self.navigationController?.setViewControllers([intro], animated: true)
+            } else {
+                self.finish()
+            }
         }
     }
 #endif

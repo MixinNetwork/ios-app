@@ -55,7 +55,11 @@ enum PINEncryptor {
                     }
                 } catch {
                     await MainActor.run {
-                        onFailure(.failure(.pinEncryption(error)))
+                        if let error = error as? MixinAPIError {
+                            onFailure(.failure(error))
+                        } else {
+                            onFailure(.failure(.pinEncryption(error)))
+                        }
                     }
                 }
             }

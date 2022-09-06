@@ -1,7 +1,21 @@
 import Foundation
+import Alamofire
 import Tip
 
 public enum TIP {
+    
+    public struct InterruptionContext {
+        
+#if DEBUG
+        public static let testCreate = InterruptionContext(nodeCounter: 0, failedSigners: [])
+        public static let testChange = InterruptionContext(nodeCounter: 1, failedSigners: [])
+        public static let testMigrate = InterruptionContext(nodeCounter: 1, failedSigners: [])
+#endif
+        
+        public let nodeCounter: UInt64
+        public let failedSigners: [TIPSigner]
+        
+    }
     
     public enum Status {
         case ready
@@ -22,13 +36,6 @@ public enum TIP {
         case synchronizing(Float)
     }
     
-    public struct InterruptionContext {
-        public let nodeCounter: UInt64
-        public let failedSigners: [TIPSigner]
-    }
-    
-    public static let didUpdateNotification = Notification.Name("one.mixin.service.tip.update")
-    
     enum Error: Swift.Error {
         case missingPINToken
         case unableToGenerateSecuredRandom
@@ -40,7 +47,7 @@ public enum TIP {
         case generateSTSeed
         case invalidSTSeed
         case unableToSignTimestamp
-        case generatePrivTIPKey
+        case generateTIPPrivKey
         case hashAggSigToPrivSeed
         case invalidAggSig
         case noAccount
@@ -51,6 +58,8 @@ public enum TIP {
         case invalidCounterGroups
         case hashTIPPrivToPrivSeed
     }
+    
+    public static let didUpdateNotification = Notification.Name("one.mixin.service.tip.update")
     
     public static var status: Status {
         guard let account = LoginManager.shared.account else {
@@ -162,6 +171,7 @@ public enum TIP {
         }
     }
     
+    @discardableResult
     public static func createTIPPriv(
         pin: String,
         failedSigners: [TIPSigner],
@@ -185,7 +195,7 @@ public enum TIP {
                                             ephemeral: ephemeralSeed,
                                             watcher: watcher,
                                             assigneePriv: nil,
-                                            failedSigners: [],
+                                            failedSigners: failedSigners,
                                             forRecover: false,
                                             progressHandler: progressHandler)
         guard let privSeed = SHA3_256.hash(data: aggSig) else {
@@ -199,9 +209,9 @@ public enum TIP {
             throw Error.incorrectPIN
         }
         
-        try await encryptAndSave(pinData: pinData, pinToken: pinToken, aggSig: aggSig)
-        
+        let aesKey = try await generateAESKey(pinData: pinData, pinToken: pinToken)
         if forRecover {
+            try await encryptAndSaveTIPPriv(pinData: pinData, aggSig: aggSig, aesKey: aesKey)
             return aggSig
         }
         
@@ -217,25 +227,32 @@ public enum TIP {
         }
         let new = try encryptPIN(key: pinToken, code: pub + UInt64(1).data(endianness: .big))
         let request = PINRequest(pin: new, oldPIN: oldEncryptedPIN, timestamp: nil)
+#if DEBUG
+        try await MainActor.run {
+            if TIPDiagnostic.failPINUpdateOnce {
+                TIPDiagnostic.failPINUpdateOnce = false
+                throw MixinAPIError.httpTransport(.sessionTaskFailed(error: URLError(.badServerResponse)))
+            }
+        }
+#endif
         let account = try await AccountAPI.updatePIN(request: request)
         LoginManager.shared.setAccount(account)
+        
+        try encryptAndSaveTIPPriv(pinData: pinData, aggSig: aggSig, aesKey: aesKey)
         await MainActor.run {
             NotificationCenter.default.post(name: Self.didUpdateNotification, object: self)
         }
         return aggSig
     }
     
+    @discardableResult
     public static func updateTIPPriv(
-        pin: String,
+        oldPIN: String?,
         newPIN: String,
-        nodeSuccess: Bool,
         failedSigners: [TIPSigner],
         progressHandler: (@MainActor (Step) -> Void)?
     ) async throws -> Data {
-        Logger.general.debug(category: "TIP", message: "Update priv with nodeSuccess: \(nodeSuccess), failedSigners: \(failedSigners)")
-        guard let pinData = pin.data(using: .utf8) else {
-            throw Error.invalidPIN
-        }
+        Logger.general.debug(category: "TIP", message: "Update priv with failedSigners: \(failedSigners)")
         guard let newPINData = newPIN.data(using: .utf8) else {
             throw Error.invalidPIN
         }
@@ -245,31 +262,29 @@ public enum TIP {
         
         await progressHandler?(.creating)
         let ephemeralSeed = try await ephemeralSeed(pinToken: pinToken)
-        let (identityPriv, watcher) = try await TIPIdentityManager.identityPair(pinData: pinData, pinToken: pinToken)
-        let (assigneePriv, _) = try await TIPIdentityManager.identityPair(pinData: newPINData, pinToken: pinToken)
+        let identityPriv: Data
+        let watcher: Data
+        let assigneePriv: Data?
+        if let oldPIN = oldPIN {
+            guard let oldPINData = oldPIN.data(using: .utf8) else {
+                throw Error.invalidPIN
+            }
+            (identityPriv, watcher) = try await TIPIdentityManager.identityPair(pinData: oldPINData, pinToken: pinToken)
+            assigneePriv = try await TIPIdentityManager.identityPair(pinData: newPINData, pinToken: pinToken).priv
+        } else {
+            (identityPriv, watcher) = try await TIPIdentityManager.identityPair(pinData: newPINData, pinToken: pinToken)
+            assigneePriv = nil
+        }
         
         await progressHandler?(.connecting)
-        let aggSig: Data
-        if nodeSuccess {
-            aggSig = try await TIPNode.sign(identityPriv: assigneePriv,
-                                            ephemeral: ephemeralSeed,
-                                            watcher: watcher,
-                                            assigneePriv: nil,
-                                            failedSigners: [],
-                                            forRecover: false,
-                                            progressHandler: progressHandler)
-        } else {
-            aggSig = try await TIPNode.sign(identityPriv: identityPriv,
+        let aggSig = try await TIPNode.sign(identityPriv: identityPriv,
                                             ephemeral: ephemeralSeed,
                                             watcher: watcher,
                                             assigneePriv: assigneePriv,
                                             failedSigners: failedSigners,
                                             forRecover: false,
                                             progressHandler: progressHandler)
-        }
-        
-        try await encryptAndSave(pinData: newPINData, pinToken: pinToken, aggSig: aggSig)
-        
+        let aesKey = try await generateAESKey(pinData: newPINData, pinToken: pinToken)
         guard let privSeed = SHA3_256.hash(data: aggSig) else {
             throw Error.hashAggSigToPrivSeed
         }
@@ -284,20 +299,38 @@ public enum TIP {
         let oldPIN = try encryptTIPPIN(tipPriv: aggSig, target: timestamp)
         let newEncryptPIN = try encryptPIN(key: pinToken, code: pub + (counter + 1).data(endianness: .big))
         let request = PINRequest(pin: newEncryptPIN, oldPIN: oldPIN, timestamp: nil)
+#if DEBUG
+        try await MainActor.run {
+            if TIPDiagnostic.failPINUpdateOnce {
+                TIPDiagnostic.failPINUpdateOnce = false
+                throw MixinAPIError.httpTransport(.sessionTaskFailed(error: URLError(.badServerResponse)))
+            }
+        }
+#endif
         let account = try await AccountAPI.updatePIN(request: request)
         LoginManager.shared.setAccount(account)
+        
+        try encryptAndSaveTIPPriv(pinData: newPINData, aggSig: aggSig, aesKey: aesKey)
         await MainActor.run {
             NotificationCenter.default.post(name: Self.didUpdateNotification, object: self)
         }
         return aggSig
     }
     
-    public static func checkCounter(_ tipCounter: UInt64) async throws -> NodeCounterStatus {
+    public static func checkCounter(_ tipCounter: UInt64, timeoutInterval: TimeInterval = 15) async throws -> NodeCounterStatus {
         guard let pinToken = AppGroupKeychain.pinToken else {
             throw Error.missingPINToken
         }
         let watcher = try await TIPIdentityManager.watcher(pinToken: pinToken)
-        let counters = try await TIPNode.watch(watcher: watcher)
+#if DEBUG
+        try await MainActor.run {
+            if TIPDiagnostic.failCounterWatchOnce {
+                TIPDiagnostic.failCounterWatchOnce = false
+                throw AFError.sessionTaskFailed(error: URLError(.badServerResponse))
+            }
+        }
+#endif
+        let counters = try await TIPNode.watch(watcher: watcher, timeoutInterval: timeoutInterval)
         if counters.isEmpty {
             return .balanced
         }
@@ -329,14 +362,12 @@ public enum TIP {
         }
     }
     
-    private static func encryptAndSave(pinData: Data, pinToken: Data, aggSig: Data) async throws -> Data {
-        let aesKey = try await generateAESKey(pinData: pinData, pinToken: pinToken)
-        guard let tipPrivKey = SHA3_256.hash(data: aesKey + pinData) else {
-            throw Error.generatePrivTIPKey
+    private static func encryptAndSaveTIPPriv(pinData: Data, aggSig: Data, aesKey: Data) throws {
+        guard let key = SHA3_256.hash(data: aesKey + pinData) else {
+            throw Error.generateTIPPrivKey
         }
-        let tipPriv = try AESCryptor.encrypt(aggSig, with: tipPrivKey)
+        let tipPriv = try AESCryptor.encrypt(aggSig, with: key)
         AppGroupKeychain.tipPriv = tipPriv
-        return aggSig
     }
     
     private static func generateAESKey(pinData: Data, pinToken: Data) async throws -> Data {

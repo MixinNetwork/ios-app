@@ -1,46 +1,58 @@
+#if DEBUG
 import UIKit
 import MixinServices
 
 class TIPDiagnosticViewController: SettingsTableViewController {
     
-    private let dataSource = SettingsDataSource(sections: [])
+    private let dataSource = SettingsDataSource(sections: [
+        SettingsSection(header: "Failure Tests", rows: [
+            SettingsRow(title: "Fail Last Sign Once", accessory: .switch(isOn: TIPDiagnostic.failLastSignerOnce, isEnabled: true)),
+            SettingsRow(title: "Fail PIN Update Once", accessory: .switch(isOn: TIPDiagnostic.failPINUpdateOnce, isEnabled: true)),
+            SettingsRow(title: "Fail Watch Once", accessory: .switch(isOn: TIPDiagnostic.failCounterWatchOnce, isEnabled: true)),
+        ]),
+        SettingsSection(header: "UI Test", rows: [
+            SettingsRow(title: "UI Test On", accessory: .switch(isOn: TIPDiagnostic.uiTestOnly, isEnabled: true)),
+        ]),
+        SettingsSection(rows: [
+            SettingsRow(title: "Back to Home", titleStyle: .destructive)
+        ]),
+    ])
     
     override func viewDidLoad() {
         super.viewDidLoad()
-#if DEBUG
-        let nodeSection = SettingsSection(rows: [
-            SettingsRow(title: "Fail Last Sign", accessory: .switch(isOn: TIPNode.failLastSigner, isEnabled: true))
-        ])
-        let actionSection = SettingsSection(rows: [
-            SettingsRow(title: "Fake Creation", accessory: .switch(isOn: TIPActionViewController.testCreate, isEnabled: true)),
-            SettingsRow(title: "Fake Change", accessory: .switch(isOn: TIPActionViewController.testChange, isEnabled: true)),
-            SettingsRow(title: "Fake Migrate", accessory: .switch(isOn: TIPActionViewController.testMigrate, isEnabled: true))
-        ])
-        dataSource.insertSection(nodeSection, at: 0, animation: .none)
-        dataSource.insertSection(actionSection, at: 1, animation: .none)
-#endif
+        dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(nodeFailureDidToggle(_:)),
+                                               selector: #selector(switchDidToggle(_:)),
                                                name: SettingsRow.accessoryDidChangeNotification,
                                                object: nil)
     }
     
-    @objc private func nodeFailureDidToggle(_ notification: Notification) {
-#if DEBUG
+    @objc private func switchDidToggle(_ notification: Notification) {
         switch (notification.object as? SettingsRow) {
         case dataSource.sections[0].rows[0]:
-            TIPNode.failLastSigner.toggle()
+            TIPDiagnostic.failLastSignerOnce.toggle()
+        case dataSource.sections[0].rows[1]:
+            TIPDiagnostic.failPINUpdateOnce.toggle()
+        case dataSource.sections[0].rows[2]:
+            TIPDiagnostic.failCounterWatchOnce.toggle()
         case dataSource.sections[1].rows[0]:
-            TIPActionViewController.testCreate.toggle()
-        case dataSource.sections[1].rows[1]:
-            TIPActionViewController.testChange.toggle()
-        case dataSource.sections[1].rows[2]:
-            TIPActionViewController.testMigrate.toggle()
+            TIPDiagnostic.uiTestOnly.toggle()
         default:
             break
         }
-#endif
     }
     
 }
+
+extension TIPDiagnosticViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.section == 2, indexPath.row == 0 {
+            navigationController?.popToRootViewController(animated: true)
+        }
+    }
+    
+}
+
+#endif

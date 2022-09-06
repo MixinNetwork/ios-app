@@ -53,10 +53,6 @@ public enum TIPNode {
         
     }
     
-#if DEBUG
-    public static var failLastSigner = false
-#endif
-    
     static func sign(
         identityPriv: Data,
         ephemeral: Data,
@@ -116,7 +112,7 @@ public enum TIPNode {
                 case .creating, .connecting:
                     progressHandler?(step)
                 case .synchronizing(let fractionCompleted):
-                    let overallFractionCompleted = fractionCompleted * Float(failedSigners.count) / Float(allSigners.count)
+                    let overallFractionCompleted = (fractionCompleted * Float(failedSigners.count) + Float(successfulSigners.count)) / Float(allSigners.count)
                     progressHandler?(.synchronizing(overallFractionCompleted))
                 }
             }
@@ -168,7 +164,7 @@ public enum TIPNode {
         return signature
     }
     
-    public static func watch(watcher: Data) async throws -> [TIPNode.Counter] {
+    public static func watch(watcher: Data, timeoutInterval: TimeInterval) async throws -> [TIPNode.Counter] {
         try await withThrowingTaskGroup(of: TIPNode.Counter.self) { group in
             let signers = TIPConfig.current.signers
             for signer in signers {
@@ -176,9 +172,12 @@ public enum TIPNode {
                     let retries = Accumulator(maxValue: maximumRetries)
                     repeat {
                         do {
-                            let counter = try await watchTIPNode(signer: signer, watcher: watcher)
-                            if counter >= 0 {
-                                return Counter(value: counter, signer: signer)
+                            let request = TIPWatchRequest(watcher: watcher)
+                            let response = try await TIPAPI.watch(url: signer.api,
+                                                                  request: request,
+                                                                  timeoutInterval: timeoutInterval)
+                            if response.counter >= 0 {
+                                return Counter(value: response.counter, signer: signer)
                             }
                         } catch {
                             throw error
@@ -197,12 +196,6 @@ public enum TIPNode {
         }
     }
     
-    private static func watchTIPNode(signer: TIPSigner, watcher: Data) async throws -> UInt64 {
-        let request = TIPWatchRequest(watcher: watcher)
-        let response = try await TIPAPI.watch(url: signer.api, request: request)
-        return response.counter
-    }
-    
     private static func nodeSigs(
         userSk: CryptoScalar,
         signers: [TIPSigner],
@@ -219,8 +212,11 @@ public enum TIPNode {
             for signer in signers {
                 group.addTask {
 #if DEBUG
-                    if Self.failLastSigner, signer.index == signers.last?.index {
-                        throw AFError.sessionTaskFailed(error: URLError(.badServerResponse))
+                    try await MainActor.run {
+                        if TIPDiagnostic.failLastSignerOnce, signer.index == signers.last?.index {
+                            TIPDiagnostic.failLastSignerOnce = false
+                            throw AFError.sessionTaskFailed(error: URLError(.badServerResponse))
+                        }
                     }
 #endif
                     func sign() async throws -> TIPSignResponseData {

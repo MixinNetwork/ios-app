@@ -54,8 +54,8 @@ final class TIPAPI: MixinAPI {
             .value
     }
     
-    static func watch(url: URL, request: TIPWatchRequest) async throws -> TIPWatchResponse {
-        try await AF.request(url, method: .post, parameters: request, encoder: .json)
+    static func watch(url: URL, request: TIPWatchRequest, timeoutInterval: TimeInterval) async throws -> TIPWatchResponse {
+        try await AF.request(url, method: .post, parameters: request, encoder: .json, requestModifier: { $0.timeoutInterval = timeoutInterval })
             .validate(statusCode: 200...299)
             .serializingDecodable(TIPWatchResponse.self)
             .value

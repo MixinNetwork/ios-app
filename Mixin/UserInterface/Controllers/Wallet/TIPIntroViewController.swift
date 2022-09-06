@@ -31,8 +31,10 @@ class TIPIntroViewController: UIViewController {
     @IBOutlet weak var actionDescriptionLabel: UILabel!
     
     private let intent: Intent
+    private let checkCounterTimeoutInterval: TimeInterval = 5
     
     private var interruption: Interruption
+    private var areNodesAvailable = false
     
     init(intent: Intent, interruption: Interruption) {
         self.intent = intent
@@ -77,15 +79,14 @@ class TIPIntroViewController: UIViewController {
             }
             setNoticeHidden(false)
         }
-        switch interruption {
-        case .unknown:
-            checkCounter()
-        case .confirmed, .none:
-            updateNextButtonAndStatusLabel(with: .waitingForUser)
-        }
+        checkCounter()
     }
     
     @IBAction func continueToNext(_ sender: Any) {
+        guard areNodesAvailable else {
+            checkCounter()
+            return
+        }
         switch interruption {
         case .unknown:
             checkCounter()
@@ -98,7 +99,7 @@ class TIPIntroViewController: UIViewController {
                 let input = TIPInputPINViewController(action: .change(.verify))
                 navigationController?.pushViewController(input, animated: true)
             case .migrate:
-                let validator = TIPValidatePINViewController(action: .create({ pin in
+                let validator = TIPValidatePINViewController(action: .input({ pin in
                     let action = TIPActionViewController(action: .migrate(pin: pin), context: nil)
                     self.navigationController?.pushViewController(action, animated: true)
                 }))
@@ -107,19 +108,31 @@ class TIPIntroViewController: UIViewController {
         case .confirmed(let context):
             switch intent {
             case .create:
-                let validator = TIPValidatePINViewController(action: .create({ pin in
+                let validator = TIPValidatePINViewController(action: .input({ pin in
                     let action = TIPActionViewController(action: .create(pin: pin), context: context)
                     self.navigationController?.pushViewController(action, animated: true)
                 }))
                 present(validator, animated: true)
             case .change:
-                let validator = TIPValidatePINViewController(action: .change({ (old, new) in
-                    let action = TIPActionViewController(action: .change(old: old, new: new), context: context)
-                    self.navigationController?.pushViewController(action, animated: true)
-                }))
+                guard let tipCounter = LoginManager.shared.account?.tipCounter else {
+                    return
+                }
+                let validator: UIViewController
+                let nodeSuccess = context.nodeCounter > tipCounter && context.failedSigners.isEmpty
+                if nodeSuccess {
+                    validator = TIPValidatePINViewController(action: .inputNew({ (pin) in
+                        let action = TIPActionViewController(action: .change(old: nil, new: pin), context: context)
+                        self.navigationController?.pushViewController(action, animated: true)
+                    }))
+                } else {
+                    validator = TIPValidatePINViewController(action: .verifyOldInputNew({ (old, new) in
+                        let action = TIPActionViewController(action: .change(old: old, new: new), context: context)
+                        self.navigationController?.pushViewController(action, animated: true)
+                    }))
+                }
                 present(validator, animated: true)
             case .migrate:
-                let validator = TIPValidatePINViewController(action: .create({ pin in
+                let validator = TIPValidatePINViewController(action: .input({ pin in
                     let action = TIPActionViewController(action: .migrate(pin: pin), context: context)
                     self.navigationController?.pushViewController(action, animated: true)
                 }))
@@ -144,21 +157,21 @@ class TIPIntroViewController: UIViewController {
         updateNextButtonAndStatusLabel(with: .checkingCounter)
         Task {
             do {
-                let status = try await TIP.checkCounter(account.tipCounter)
+                let status = try await TIP.checkCounter(account.tipCounter, timeoutInterval: checkCounterTimeoutInterval)
                 await MainActor.run {
                     switch status {
                     case .balanced:
                         interruption = .none
-                        updateNextButtonAndStatusLabel(with: .waitingForUser)
                     case .greaterThanServer(let context), .inconsistency(let context):
                         interruption = .confirmed(context)
-                        let intro = TIPIntroViewController(intent: self.intent, interruption: .confirmed(context))
-                        navigationController?.setViewControllers([intro], animated: true)
                     }
+                    areNodesAvailable = true
+                    updateNextButtonAndStatusLabel(with: .waitingForUser)
                 }
             } catch {
                 await MainActor.run {
                     interruption = .unknown
+                    areNodesAvailable = false
                     updateNextButtonAndStatusLabel(with: .counterCheckingFails)
                 }
             }

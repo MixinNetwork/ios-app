@@ -323,21 +323,6 @@ public final class UserDatabase: Database {
             try db.execute(sql: "CREATE INDEX IF NOT EXISTS index_messages_pick ON messages(conversation_id, status, user_id, created_at)")
             
             try db.execute(sql: "CREATE INDEX IF NOT EXISTS message_mentions_conversation_indexs ON message_mentions(conversation_id, has_read)")
-            
-            let lastMessageDelete = """
-            CREATE TRIGGER IF NOT EXISTS conversation_last_message_delete AFTER DELETE ON messages
-            BEGIN
-                UPDATE conversations SET last_message_id = (select id from messages where conversation_id = old.conversation_id order by created_at DESC limit 1) WHERE conversation_id = old.conversation_id;
-            END
-            """
-            let lastMessageUpdate = """
-            CREATE TRIGGER IF NOT EXISTS conversation_last_message_update AFTER INSERT ON messages
-            BEGIN
-                UPDATE conversations SET last_message_id = new.id, last_message_created_at = new.created_at WHERE conversation_id = new.conversation_id;
-            END
-            """
-            try db.execute(sql: lastMessageDelete)
-            try db.execute(sql: lastMessageUpdate)
         }
         
         migrator.registerMigration("fts5_v3_2") { (db) in
@@ -517,6 +502,11 @@ public final class UserDatabase: Database {
             if !topAssetsColumns.contains("tag") {
                 try db.execute(sql: "ALTER TABLE top_assets ADD COLUMN tag TEXT")
             }
+        }
+        
+        migrator.registerMigration("drop_drigger") { db in
+            try db.execute(sql: "DROP TRIGGER IF EXISTS conversation_last_message_update")
+            try db.execute(sql: "DROP TRIGGER IF EXISTS conversation_last_message_delete")
         }
         
         return migrator

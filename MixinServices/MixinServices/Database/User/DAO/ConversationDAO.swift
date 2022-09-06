@@ -242,9 +242,14 @@ public final class ConversationDAO: UserDatabaseDAO {
             try MessageMention
                 .filter(MessageMention.column(of: .conversationId) == conversationId)
                 .deleteAll(db)
+            let assignments = [
+                Conversation.column(of: .unseenMessageCount).set(to: 0),
+                Conversation.column(of: .lastMessageId).set(to: nil),
+                Conversation.column(of: .lastMessageCreatedAt).set(to: nil)
+            ]
             try Conversation
                 .filter(Conversation.column(of: .conversationId) == conversationId)
-                .updateAll(db, [Conversation.column(of: .unseenMessageCount).set(to: 0)])
+                .updateAll(db, assignments)
             try deleteFTSContent(with: conversationId, from: db)
             try PinMessageDAO.shared.deleteAll(conversationId: conversationId, from: db)
             db.afterNextTransactionCommit { (_) in
@@ -587,6 +592,31 @@ public final class ConversationDAO: UserDatabaseDAO {
     public func makeConversationId(userId: String, ownerUserId: String) -> String {
         let merged = min(userId, ownerUserId) + max(userId, ownerUserId)
         return merged.uuidDigest()
+    }
+    
+    public func updateLastMessageIdOnInsertMessage(conversationId: String, messageId: String, createdAt: String, database: GRDB.Database) throws {
+        let sql = """
+        UPDATE conversations SET last_message_id = ?, last_message_created_at = ?
+        WHERE conversation_id = ? AND (last_message_created_at ISNULL OR ? >= last_message_created_at)
+        """
+        try database.execute(sql: sql, arguments: [messageId, createdAt, conversationId, createdAt])
+    }
+    
+    public func updateLastMessageIdOnDeleteMessage(conversationId: String, messageId: String? = nil, database: GRDB.Database) throws {
+        var sql = "UPDATE conversations SET last_message_id = (SELECT id FROM messages WHERE conversation_id = ? ORDER BY created_at DESC LIMIT 1)"
+        let arguments: StatementArguments
+        if let messageId = messageId {
+            // Reduce redundant updating to conversation table by checking whether `last_message_id` matches or not.
+            sql += " WHERE conversation_id = ? AND last_message_id = ?"
+            arguments = [conversationId, conversationId, messageId]
+        } else {
+            sql += " WHERE conversation_id = ?"
+            arguments = [conversationId, conversationId]
+        }
+        try database.execute(sql: sql, arguments: arguments)
+        database.afterNextTransactionCommit { db in
+            NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: nil)
+        }
     }
     
 }

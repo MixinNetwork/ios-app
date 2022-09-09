@@ -4,16 +4,44 @@ import Tip
 
 public enum TIP {
     
+    public enum Action {
+        case create
+        case change
+        case migrate
+    }
+    
     public struct InterruptionContext {
         
+        public enum Situation {
+            case pendingUpdate
+            case pendingSign(_ failedSigners: [TIPSigner])
+        }
+        
+        public let action: Action
+        public let situation: Situation
+        public let maxNodeCounter: UInt64
+        
 #if DEBUG
-        public static let testCreate = InterruptionContext(nodeCounter: 0, failedSigners: [])
-        public static let testChange = InterruptionContext(nodeCounter: 1, failedSigners: [])
-        public static let testMigrate = InterruptionContext(nodeCounter: 1, failedSigners: [])
+        public init(action: Action, situation: Situation, maxNodeCounter: UInt64) {
+            self.action = action
+            self.situation = situation
+            self.maxNodeCounter = maxNodeCounter
+        }
 #endif
         
-        public let nodeCounter: UInt64
-        public let failedSigners: [TIPSigner]
+        init(account: Account, situation: Situation, maxNodeCounter: UInt64) {
+            if maxNodeCounter == 1 {
+                if account.hasPIN {
+                    self.action = .migrate
+                } else {
+                    self.action = .create
+                }
+            } else {
+                self.action = .change
+            }
+            self.situation = situation
+            self.maxNodeCounter = maxNodeCounter
+        }
         
     }
     
@@ -317,7 +345,7 @@ public enum TIP {
         return aggSig
     }
     
-    public static func checkCounter(_ tipCounter: UInt64, timeoutInterval: TimeInterval = 15) async throws -> NodeCounterStatus {
+    public static func checkCounter(with account: Account, timeoutInterval: TimeInterval = 15) async throws -> InterruptionContext? {
         guard let pinToken = AppGroupKeychain.pinToken else {
             throw Error.missingPINToken
         }
@@ -332,7 +360,7 @@ public enum TIP {
 #endif
         let counters = try await TIPNode.watch(watcher: watcher, timeoutInterval: timeoutInterval)
         if counters.isEmpty {
-            return .balanced
+            return nil
         }
         if counters.count != TIPConfig.current.signers.count {
             Logger.general.warn(category: "TIP", message: "Watch count: \(counters.count), node count: \(TIPConfig.current.signers.count)")
@@ -344,19 +372,21 @@ public enum TIP {
         }
         if groups.count <= 1 {
             let nodeCounter = counters[0].value
-            if nodeCounter == tipCounter {
-                return .balanced
-            } else if nodeCounter < tipCounter {
+            if nodeCounter == account.tipCounter {
+                return nil
+            } else if nodeCounter < account.tipCounter {
                 throw Error.tipCounterExceedsNodeCounter
             } else {
-                let context = InterruptionContext(nodeCounter: nodeCounter, failedSigners: [])
-                return .greaterThanServer(context)
+                return InterruptionContext(account: account,
+                                           situation: .pendingUpdate,
+                                           maxNodeCounter: nodeCounter)
             }
         } else if groups.count == 2 {
             let maxCounter = groups.keys.max()!
             let failedNodes = groups[groups.keys.min()!]!
-            let context = InterruptionContext(nodeCounter: maxCounter, failedSigners: failedNodes.map(\.signer))
-            return .inconsistency(context)
+            return InterruptionContext(account: account,
+                                       situation: .pendingSign(failedNodes.map(\.signer)),
+                                       maxNodeCounter: maxCounter)
         } else {
             throw Error.invalidCounterGroups
         }

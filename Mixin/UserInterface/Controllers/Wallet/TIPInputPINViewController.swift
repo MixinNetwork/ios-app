@@ -122,7 +122,7 @@ class TIPInputPINViewController: ContinueButtonViewController {
             }
             let next: UIViewController
             if step == confirmationSteps - 1 {
-                next = TIPActionViewController(action: .create(pin: pin), context: nil)
+                next = TIPActionViewController(action: .create(pin: pin))
             } else {
                 next = TIPInputPINViewController(action: .create(.confirmation(step: step + 1, previous: pin)))
             }
@@ -155,7 +155,7 @@ class TIPInputPINViewController: ContinueButtonViewController {
             }
             let next: UIViewController
             if step == confirmationSteps - 1 {
-                next = TIPActionViewController(action: .change(old: old, new: new), context: nil)
+                next = TIPActionViewController(action: .change(old: old, new: new))
             } else {
                 next = TIPInputPINViewController(action: .change(.confirmation(step: step + 1, old: old, new: new)))
             }

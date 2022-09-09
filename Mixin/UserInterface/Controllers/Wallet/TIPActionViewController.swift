@@ -17,15 +17,13 @@ class TIPActionViewController: UIViewController {
     @IBOutlet weak var progressLabel: UILabel!
     
     private let action: Action
-    private let context: TIP.InterruptionContext?
     
     private var tipNavigationController: TIPNavigationViewController? {
         navigationController as? TIPNavigationViewController
     }
     
-    init(action: Action, context: TIP.InterruptionContext?) {
+    init(action: Action) {
         self.action = action
-        self.context = context
         let nib = R.nib.tipActionView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
@@ -36,7 +34,6 @@ class TIPActionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let failedSigners = context?.failedSigners ?? []
         switch action {
         case let .create(pin):
             titleLabel.text = "创建钱包"
@@ -49,7 +46,7 @@ class TIPActionViewController: UIViewController {
             Task {
                 do {
                     try await TIP.createTIPPriv(pin: pin,
-                                                failedSigners: failedSigners,
+                                                failedSigners: [],
                                                 legacyPIN: nil,
                                                 forRecover: false,
                                                 progressHandler: showProgress(step:))
@@ -57,7 +54,7 @@ class TIPActionViewController: UIViewController {
                     await MainActor.run(body: finish)
                 } catch {
                     Logger.general.warn(category: "TIPActionViewController", message: "Failed to create: \(error)")
-                    await handleError()
+                    await handle(error: error)
                 }
             }
         case let .change(old, new):
@@ -72,7 +69,7 @@ class TIPActionViewController: UIViewController {
                 do {
                     try await TIP.updateTIPPriv(oldPIN: old,
                                                 newPIN: new,
-                                                failedSigners: failedSigners,
+                                                failedSigners: [],
                                                 progressHandler: showProgress(step:))
                     if AppGroupUserDefaults.Wallet.payWithBiometricAuthentication {
                         Keychain.shared.storePIN(pin: new)
@@ -81,9 +78,8 @@ class TIPActionViewController: UIViewController {
                     AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
                     await MainActor.run(body: finish)
                 } catch {
-                    // FIXME: Catch `TIPNode.Error.differentIdentity` and tell user PIN is different from previous input
                     Logger.general.warn(category: "TIPActionViewController", message: "Failed to change: \(error)")
-                    await handleError()
+                    await handle(error: error)
                 }
             }
         case let .migrate(pin):
@@ -97,7 +93,7 @@ class TIPActionViewController: UIViewController {
             Task {
                 do {
                     try await TIP.createTIPPriv(pin: pin,
-                                                failedSigners: failedSigners,
+                                                failedSigners: [],
                                                 legacyPIN: pin,
                                                 forRecover: false,
                                                 progressHandler: showProgress(step:))
@@ -105,7 +101,7 @@ class TIPActionViewController: UIViewController {
                     await MainActor.run(body: finish)
                 } catch {
                     Logger.general.warn(category: "TIPActionViewController", message: "Failed to migrate: \(error)")
-                    await handleError()
+                    await handle(error: error)
                 }
             }
         }
@@ -127,39 +123,29 @@ class TIPActionViewController: UIViewController {
         }
     }
     
-    private func handleError() async {
+    private func handle(error: Error) async {
         do {
-            guard let tipCounter = LoginManager.shared.account?.tipCounter else {
+            guard let account = LoginManager.shared.account else {
                 return
             }
-            let status = try await TIP.checkCounter(tipCounter)
-            switch status {
-            case .balanced:
-                assertionFailure("")
-            case .greaterThanServer(let context), .inconsistency(let context):
-                await MainActor.run {
-                    let intro: TIPIntroViewController
-                    switch action {
-                    case .create:
-                        intro = TIPIntroViewController(intent: .create, interruption: .confirmed(context))
-                    case .change:
-                        intro = TIPIntroViewController(intent: .change, interruption: .confirmed(context))
-                    case .migrate:
-                        intro = TIPIntroViewController(intent: .migrate, interruption: .confirmed(context))
-                    }
-                    navigationController?.setViewControllers([intro], animated: true)
-                }
+            guard let context = try await TIP.checkCounter(with: account) else {
+                await MainActor.run(body: finish)
+                return
+            }
+            await MainActor.run {
+                let intro = TIPIntroViewController(context: context)
+                navigationController?.setViewControllers([intro], animated: true)
             }
         } catch {
             await MainActor.run {
                 let intro: TIPIntroViewController
                 switch action {
                 case .create:
-                    intro = TIPIntroViewController(intent: .create, interruption: .unknown)
+                    intro = TIPIntroViewController(intent: .create)
                 case .change:
-                    intro = TIPIntroViewController(intent: .change, interruption: .unknown)
+                    intro = TIPIntroViewController(intent: .change)
                 case .migrate:
-                    intro = TIPIntroViewController(intent: .migrate, interruption: .unknown)
+                    intro = TIPIntroViewController(intent: .migrate)
                 }
                 navigationController?.setViewControllers([intro], animated: true)
             }
@@ -203,22 +189,29 @@ class TIPActionViewController: UIViewController {
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 13) {
             if TIPDiagnostic.failLastSignerOnce || TIPDiagnostic.failPINUpdateOnce {
-                if TIPDiagnostic.failLastSignerOnce {
-                    TIPDiagnostic.failLastSignerOnce = false
-                }
-                if TIPDiagnostic.failPINUpdateOnce {
-                    TIPDiagnostic.failPINUpdateOnce = false
-                }
-                
-                let intro: TIPIntroViewController
+                let action: TIP.Action
                 switch self.action {
                 case .create:
-                    intro = TIPIntroViewController(intent: .create, interruption: .confirmed(.testCreate))
+                    action = .create
                 case .change:
-                    intro = TIPIntroViewController(intent: .change, interruption: .confirmed(.testChange))
+                    action = .change
                 case .migrate:
-                    intro = TIPIntroViewController(intent: .migrate, interruption: .confirmed(.testMigrate))
+                    action = .migrate
                 }
+                
+                let situation: TIP.InterruptionContext.Situation
+                if TIPDiagnostic.failLastSignerOnce {
+                    TIPDiagnostic.failLastSignerOnce = false
+                    situation = .pendingSign([])
+                } else if TIPDiagnostic.failPINUpdateOnce {
+                    TIPDiagnostic.failPINUpdateOnce = false
+                    situation = .pendingUpdate
+                } else {
+                    fatalError()
+                }
+                
+                let context = TIP.InterruptionContext(action: action, situation: situation, maxNodeCounter: 2)
+                let intro = TIPIntroViewController(context: context)
                 self.navigationController?.setViewControllers([intro], animated: true)
             } else {
                 self.finish()

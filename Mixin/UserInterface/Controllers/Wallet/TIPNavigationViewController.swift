@@ -13,8 +13,8 @@ class TIPNavigationViewController: LoneBackButtonNavigationController {
     private let destination: Destination?
     private let dismissButton = UIButton()
     
-    convenience init(intent: TIPIntroViewController.Intent, destination: Destination?) {
-        let intro = TIPIntroViewController(intent: intent, interruption: .unknown)
+    convenience init(intent: TIP.Action, destination: Destination?) {
+        let intro = TIPIntroViewController(intent: intent)
         self.init(intro: intro, destination: destination)
     }
     

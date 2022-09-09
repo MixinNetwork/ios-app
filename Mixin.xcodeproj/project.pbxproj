@@ -659,7 +659,7 @@
 		94341BFB2862F302009C9147 /* libopusenc.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94341BF72862F302009C9147 /* libopusenc.xcframework */; };
 		94341C002863530B009C9147 /* libogg.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94341BFF2862F454009C9147 /* libogg.xcframework */; };
 		9438252725EE697300709B7D /* CacheableAssetFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9438252625EE697300709B7D /* CacheableAssetFileManager.swift */; };
-		943A63E328BDEC27008E0F78 /* TIPValidatePINViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943A63E228BDEC27008E0F78 /* TIPValidatePINViewController.swift */; };
+		943A63E328BDEC27008E0F78 /* TIPPopupInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943A63E228BDEC27008E0F78 /* TIPPopupInputViewController.swift */; };
 		94438D57252DAD73005760AF /* Clip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94438D56252DAD73005760AF /* Clip.swift */; };
 		944C656125D9BA0A008BDDD3 /* OggOpusWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944C656025D9BA0A008BDDD3 /* OggOpusWriter.swift */; };
 		944ED8D0264640E200C97215 /* WebLoadingFailureView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944ED8CF264640E200C97215 /* WebLoadingFailureView.xib */; };
@@ -707,8 +707,8 @@
 		94B8D189266E41D300F43CBB /* DatabaseDiagnosticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B8D187266E41D300F43CBB /* DatabaseDiagnosticViewController.swift */; };
 		94B8D18A266E41D300F43CBB /* DatabaseDiagnosticView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B8D188266E41D300F43CBB /* DatabaseDiagnosticView.xib */; };
 		94BE548E25D96932006575E2 /* OggOpusReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BE548D25D96932006575E2 /* OggOpusReader.swift */; };
-		94C359F628B506D40010F53C /* TIPInputPINViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C359F428B506D40010F53C /* TIPInputPINViewController.swift */; };
-		94C359F728B506D40010F53C /* TIPInputPINView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94C359F528B506D40010F53C /* TIPInputPINView.xib */; };
+		94C359F628B506D40010F53C /* TIPFullscreenInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C359F428B506D40010F53C /* TIPFullscreenInputViewController.swift */; };
+		94C359F728B506D40010F53C /* TIPFullscreenInputView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94C359F528B506D40010F53C /* TIPFullscreenInputView.xib */; };
 		94C688B728978BCD00C69537 /* TIPDiagnosticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C688B628978BCD00C69537 /* TIPDiagnosticViewController.swift */; };
 		94C6AA09280D35990011AB02 /* AttachmentDiagnosticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C6AA08280D35990011AB02 /* AttachmentDiagnosticViewController.swift */; };
 		94C6AA0B280D36940011AB02 /* AttachmentDiagnosticView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94C6AA0A280D36940011AB02 /* AttachmentDiagnosticView.xib */; };
@@ -1666,7 +1666,7 @@
 		94341BF72862F302009C9147 /* libopusenc.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = libopusenc.xcframework; sourceTree = "<group>"; };
 		94341BFF2862F454009C9147 /* libogg.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = libogg.xcframework; sourceTree = "<group>"; };
 		9438252625EE697300709B7D /* CacheableAssetFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheableAssetFileManager.swift; sourceTree = "<group>"; };
-		943A63E228BDEC27008E0F78 /* TIPValidatePINViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TIPValidatePINViewController.swift; sourceTree = "<group>"; };
+		943A63E228BDEC27008E0F78 /* TIPPopupInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TIPPopupInputViewController.swift; sourceTree = "<group>"; };
 		94438D56252DAD73005760AF /* Clip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clip.swift; sourceTree = "<group>"; };
 		944C656025D9BA0A008BDDD3 /* OggOpusWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OggOpusWriter.swift; sourceTree = "<group>"; };
 		944ED8CF264640E200C97215 /* WebLoadingFailureView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WebLoadingFailureView.xib; sourceTree = "<group>"; };
@@ -1717,8 +1717,8 @@
 		94B8D187266E41D300F43CBB /* DatabaseDiagnosticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseDiagnosticViewController.swift; sourceTree = "<group>"; };
 		94B8D188266E41D300F43CBB /* DatabaseDiagnosticView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DatabaseDiagnosticView.xib; sourceTree = "<group>"; };
 		94BE548D25D96932006575E2 /* OggOpusReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OggOpusReader.swift; sourceTree = "<group>"; };
-		94C359F428B506D40010F53C /* TIPInputPINViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TIPInputPINViewController.swift; sourceTree = "<group>"; };
-		94C359F528B506D40010F53C /* TIPInputPINView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TIPInputPINView.xib; sourceTree = "<group>"; };
+		94C359F428B506D40010F53C /* TIPFullscreenInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TIPFullscreenInputViewController.swift; sourceTree = "<group>"; };
+		94C359F528B506D40010F53C /* TIPFullscreenInputView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TIPFullscreenInputView.xib; sourceTree = "<group>"; };
 		94C688B628978BCD00C69537 /* TIPDiagnosticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TIPDiagnosticViewController.swift; sourceTree = "<group>"; };
 		94C6AA08280D35990011AB02 /* AttachmentDiagnosticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentDiagnosticViewController.swift; sourceTree = "<group>"; };
 		94C6AA0A280D36940011AB02 /* AttachmentDiagnosticView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AttachmentDiagnosticView.xib; sourceTree = "<group>"; };
@@ -2952,7 +2952,7 @@
 				7B11788D2293D55C000F934E /* BalanceInputAccessoryView.xib */,
 				7B11788B2293D53B000F934E /* BalanceInputAccessoryView.swift */,
 				948E6CB428AF95CC00DFF5DF /* TIPIntroView.xib */,
-				94C359F528B506D40010F53C /* TIPInputPINView.xib */,
+				94C359F528B506D40010F53C /* TIPFullscreenInputView.xib */,
 				9459693828B28FF8006F5421 /* TIPActionView.xib */,
 			);
 			path = Views;
@@ -3426,9 +3426,9 @@
 				7B4F5ACC224CBA4A00A8392D /* AssetFilterViewController.swift */,
 				9459693528B28F18006F5421 /* TIPNavigationViewController.swift */,
 				948E6CB328AF95CC00DFF5DF /* TIPIntroViewController.swift */,
-				94C359F428B506D40010F53C /* TIPInputPINViewController.swift */,
+				94C359F428B506D40010F53C /* TIPFullscreenInputViewController.swift */,
 				9459693728B28FF8006F5421 /* TIPActionViewController.swift */,
-				943A63E228BDEC27008E0F78 /* TIPValidatePINViewController.swift */,
+				943A63E228BDEC27008E0F78 /* TIPPopupInputViewController.swift */,
 			);
 			path = Wallet;
 			sourceTree = "<group>";
@@ -3889,7 +3889,7 @@
 				7C0FAAC927E07A0A008D4021 /* ExpiredMessageTimePickerWindow.xib in Resources */,
 				7BB0F9162434B03300BEDA97 /* SelectedPeerCell.xib in Resources */,
 				E041064E23C6076F00A6F08E /* FullscreenPopupView.xib in Resources */,
-				94C359F728B506D40010F53C /* TIPInputPINView.xib in Resources */,
+				94C359F728B506D40010F53C /* TIPFullscreenInputView.xib in Resources */,
 				DF8A7523236301DB00765A82 /* AuthorizationWindow.xib in Resources */,
 				944ED8D22646535B00C97215 /* WebContentView.xib in Resources */,
 				7C5B65D027701A62004EDD53 /* DeleteAccountHintWindow.xib in Resources */,
@@ -4473,7 +4473,7 @@
 				7C66F02B268A0431006D8462 /* AppCell.swift in Sources */,
 				7B97BA0E2019F1A90013D58F /* StickerPreviewCell.swift in Sources */,
 				7B9650AE248794FD00DE86B9 /* MinimizedCallViewController.swift in Sources */,
-				943A63E328BDEC27008E0F78 /* TIPValidatePINViewController.swift in Sources */,
+				943A63E328BDEC27008E0F78 /* TIPPopupInputViewController.swift in Sources */,
 				7BDBDE6C223636B8006220DF /* ShadowImageView.swift in Sources */,
 				7BBC6EA81FA98D1A00DC130A /* AddPeopleViewController.swift in Sources */,
 				7CB0955926CE69250049F4C7 /* PinMessageViewModel.swift in Sources */,
@@ -4725,7 +4725,7 @@
 				7B0BE46021A5630500B91A1E /* CompactAssetCell.swift in Sources */,
 				7B09E55E1FD15BAA002E45D3 /* TransferMessageViewModel.swift in Sources */,
 				7BEDF9F820510CD300371266 /* ConversationDataSource.swift in Sources */,
-				94C359F628B506D40010F53C /* TIPInputPINViewController.swift in Sources */,
+				94C359F628B506D40010F53C /* TIPFullscreenInputViewController.swift in Sources */,
 				E0B53A6923B0C2C9008DA9F1 /* AssetItem+Description.swift in Sources */,
 				946B6F2425E974B500A95C40 /* CacheableAsset.swift in Sources */,
 				7B369212233B5153007321A7 /* SharedMediaCell.swift in Sources */,

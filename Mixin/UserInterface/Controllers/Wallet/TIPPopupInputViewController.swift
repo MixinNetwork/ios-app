@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class TIPValidatePINViewController: PinValidationViewController {
+class TIPPopupInputViewController: PinValidationViewController {
     
     enum Action {
         case migrate((_ pin: String) -> Void)
@@ -115,7 +115,7 @@ class TIPValidatePINViewController: PinValidationViewController {
                 AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
                 await MainActor.run(body: onSuccess)
             } catch {
-                Logger.general.warn(category: "TIPValidatePINViewController", message: "Failed to create: \(error)")
+                Logger.general.warn(category: "TIPPopupInputViewController", message: "Failed to create: \(error)")
                 await MainActor.run {
                     if let error = error as? MixinAPIError {
                         handle(error: error)

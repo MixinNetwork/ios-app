@@ -98,13 +98,13 @@ class TIPIntroViewController: UIViewController {
         case .none:
             switch intent {
             case .create:
-                let input = TIPInputPINViewController(action: .create(.input))
+                let input = TIPFullscreenInputViewController(action: .create(.input))
                 navigationController?.pushViewController(input, animated: true)
             case .change:
-                let input = TIPInputPINViewController(action: .change(.verify))
+                let input = TIPFullscreenInputViewController(action: .change(.verify))
                 navigationController?.pushViewController(input, animated: true)
             case .migrate:
-                let validator = TIPValidatePINViewController(action: .migrate({ pin in
+                let validator = TIPPopupInputViewController(action: .migrate({ pin in
                     let action = TIPActionViewController(action: .migrate(pin: pin))
                     self.navigationController?.pushViewController(action, animated: true)
                 }))
@@ -113,13 +113,13 @@ class TIPIntroViewController: UIViewController {
         case .confirmed(let context):
             switch context.action {
             case .migrate:
-                let validator = TIPValidatePINViewController(action: .migrate({ pin in
+                let validator = TIPPopupInputViewController(action: .migrate({ pin in
                     let action = TIPActionViewController(action: .migrate(pin: pin))
                     self.navigationController?.pushViewController(action, animated: true)
                 }))
                 present(validator, animated: true)
             case .create, .change:
-                let validator = TIPValidatePINViewController(action: .continue(context, {
+                let validator = TIPPopupInputViewController(action: .continue(context, {
                     let tipNavigationController = self.tipNavigationController
                     self.dismiss(animated: true) {
                         tipNavigationController?.dismissToDestination(animated: true)

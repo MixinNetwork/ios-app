@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class TIPInputPINViewController: ContinueButtonViewController {
+class TIPFullscreenInputViewController: ContinueButtonViewController {
     
     enum Action {
         case create(InitializeStep)
@@ -40,7 +40,7 @@ class TIPInputPINViewController: ContinueButtonViewController {
     
     init(action: Action) {
         self.action = action
-        let nib = R.nib.tipInputPINView
+        let nib = R.nib.tipFullscreenInputView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
     
@@ -111,7 +111,7 @@ class TIPInputPINViewController: ContinueButtonViewController {
         
         switch action {
         case .create(.input):
-            let next = TIPInputPINViewController(action: .create(.confirmation(step: 0, previous: pin)))
+            let next = TIPFullscreenInputViewController(action: .create(.confirmation(step: 0, previous: pin)))
             navigationController?.pushViewController(next, animated: true)
         case let .create(.confirmation(step, previous)):
             guard pin == previous else {
@@ -124,7 +124,7 @@ class TIPInputPINViewController: ContinueButtonViewController {
             if step == confirmationSteps - 1 {
                 next = TIPActionViewController(action: .create(pin: pin))
             } else {
-                next = TIPInputPINViewController(action: .create(.confirmation(step: step + 1, previous: pin)))
+                next = TIPFullscreenInputViewController(action: .create(.confirmation(step: step + 1, previous: pin)))
             }
             navigationController?.pushViewController(next, animated: true)
         case .change(.verify):
@@ -134,7 +134,7 @@ class TIPInputPINViewController: ContinueButtonViewController {
                 switch result {
                 case .success:
                     AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
-                    let next = TIPInputPINViewController(action: .change(.input(old: pin)))
+                    let next = TIPFullscreenInputViewController(action: .change(.input(old: pin)))
                     self.navigationController?.pushViewController(next, animated: true)
                 case let .failure(error):
                     self.pinField.clear()
@@ -144,7 +144,7 @@ class TIPInputPINViewController: ContinueButtonViewController {
                 }
             }
         case let .change(.input(old)):
-            let next = TIPInputPINViewController(action: .change(.confirmation(step: 0, old: old, new: pin)))
+            let next = TIPFullscreenInputViewController(action: .change(.confirmation(step: 0, old: old, new: pin)))
             navigationController?.pushViewController(next, animated: true)
         case let .change(.confirmation(step, old, new)):
             guard pin == new else {
@@ -157,7 +157,7 @@ class TIPInputPINViewController: ContinueButtonViewController {
             if step == confirmationSteps - 1 {
                 next = TIPActionViewController(action: .change(old: old, new: new))
             } else {
-                next = TIPInputPINViewController(action: .change(.confirmation(step: step + 1, old: old, new: new)))
+                next = TIPFullscreenInputViewController(action: .change(.confirmation(step: step + 1, old: old, new: new)))
             }
             navigationController?.pushViewController(next, animated: true)
         }

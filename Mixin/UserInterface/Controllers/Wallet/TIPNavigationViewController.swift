@@ -70,7 +70,7 @@ class TIPNavigationViewController: LoneBackButtonNavigationController {
     }
     
     func popToFirstInputPINViewController() {
-        guard let controller = viewControllers.first(where: { $0 is TIPInputPINViewController }) else {
+        guard let controller = viewControllers.first(where: { $0 is TIPFullscreenInputViewController }) else {
             return
         }
         popToViewController(controller, animated: true)

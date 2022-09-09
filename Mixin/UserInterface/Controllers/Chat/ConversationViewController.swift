@@ -2014,32 +2014,17 @@ extension ConversationViewController {
     private func updateSubtitleAndInputBar() {
         let conversationId = dataSource.conversationId
         dataSource.queue.async { [weak self] in
+            let count = ParticipantDAO.shared.getParticipantCount(conversationId: conversationId)
             let isParticipant = ParticipantDAO.shared.userId(myUserId, isParticipantOfConversationId: conversationId)
-            if isParticipant {
-                let count = ParticipantDAO.shared.getParticipantCount(conversationId: conversationId)
-                DispatchQueue.main.sync {
-                    guard let weakSelf = self else {
-                        return
-                    }
-                    weakSelf.numberOfParticipants = count
-                    weakSelf.isMember = isParticipant
-                    weakSelf.conversationInputViewController.deleteConversationButton.isHidden = true
-                    weakSelf.conversationInputViewController.inputBarView.isHidden = false
-                    weakSelf.subtitleLabel.text = R.string.localizable.participants_count(count > 0 ? "\(count) " : "")
+            DispatchQueue.main.sync {
+                guard let weakSelf = self else {
+                    return
                 }
-            } else {
-                DispatchQueue.main.sync {
-                    guard let weakSelf = self else {
-                        return
-                    }
-                    if let number = weakSelf.numberOfParticipants {
-                        weakSelf.numberOfParticipants = number - 1
-                    }
-                    weakSelf.isMember = isParticipant
-                    weakSelf.conversationInputViewController.deleteConversationButton.isHidden = false
-                    weakSelf.conversationInputViewController.inputBarView.isHidden = false
-                    weakSelf.subtitleLabel.text = R.string.localizable.you_have_left_the_group()
-                }
+                weakSelf.numberOfParticipants = count
+                weakSelf.isMember = isParticipant
+                weakSelf.conversationInputViewController.deleteConversationButton.isHidden = isParticipant
+                weakSelf.conversationInputViewController.inputBarView.isHidden = false
+                weakSelf.subtitleLabel.text = R.string.localizable.participants_count("\(count)")
             }
         }
     }

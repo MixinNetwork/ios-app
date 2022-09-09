@@ -179,7 +179,7 @@ public final class ConversationDAO: UserDatabaseDAO {
                 .filter(ParticipantSession.column(of: .conversationId) == conversationId)
                 .deleteAll(db)
             try Participant
-                .filter(Participant.column(of: .conversationId) == conversationId)
+                .filter(Participant.column(of: .conversationId) == conversationId && Participant.column(of: .userId) == myUserId)
                 .deleteAll(db)
             db.afterNextTransactionCommit { (_) in
                 NotificationCenter.default.post(onMainThread: ParticipantDAO.participantDidChangeNotification,
@@ -546,6 +546,12 @@ public final class ConversationDAO: UserDatabaseDAO {
         if oldConversation.announcement != conversation.announcement, !conversation.announcement.isEmpty {
             AppGroupUserDefaults.User.hasUnreadAnnouncement[conversationId] = true
         }
+        let status: ConversationStatus
+        if conversation.category == ConversationCategory.GROUP.rawValue && !conversation.participants.contains { $0.userId == myUserId } {
+            status = .QUIT
+        } else {
+            status = .SUCCESS
+        }
         db.write { (db) in
             try Participant
                 .filter(Participant.column(of: .conversationId) == conversationId)
@@ -556,13 +562,12 @@ public final class ConversationDAO: UserDatabaseDAO {
             try participants.save(db)
             try ParticipantSessionDAO.shared.syncConversationParticipantSession(conversation: conversation, db: db)
             try db.execute(sql: ParticipantDAO.sqlUpdateStatus, arguments: [conversationId])
-            
             let assignments = [
                 Conversation.column(of: .ownerId).set(to: ownerId),
                 Conversation.column(of: .category).set(to: conversation.category),
                 Conversation.column(of: .name).set(to: conversation.name),
                 Conversation.column(of: .announcement).set(to: conversation.announcement),
-                Conversation.column(of: .status).set(to: ConversationStatus.SUCCESS.rawValue),
+                Conversation.column(of: .status).set(to: status.rawValue),
                 Conversation.column(of: .muteUntil).set(to: conversation.muteUntil),
                 Conversation.column(of: .codeUrl).set(to: conversation.codeUrl),
                 Conversation.column(of: .expireIn).set(to: conversation.expireIn),
@@ -577,9 +582,9 @@ public final class ConversationDAO: UserDatabaseDAO {
             }
             
             db.afterNextTransactionCommit { (_) in
-                if oldConversation.status != ConversationStatus.SUCCESS.rawValue {
+                if oldConversation.status != status.rawValue {
                     let change = ConversationChange(conversationId: conversationId,
-                                                    action: .updateConversationStatus(status: .SUCCESS))
+                                                    action: .updateConversationStatus(status: status))
                     NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: change)
                 }
                 let change = ConversationChange(conversationId: conversationId,

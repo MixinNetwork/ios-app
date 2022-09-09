@@ -126,6 +126,7 @@ class ConversationViewController: UIViewController {
     
     private lazy var invitationHintView: InvitationHintView = {
         let view = R.nib.invitationHintView(owner: nil)!
+        view.frame.size.width = AppDelegate.current.mainWindow.bounds.width
         view.exitButton.addTarget(self, action: #selector(exitGroupAndReportInviterAction(_:)), for: .touchUpInside)
         return view
     }()

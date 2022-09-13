@@ -382,7 +382,7 @@ extension GalleryVideoItemViewController: AudioSessionClient {
         .playback
     }
     
-    func audioSessionDidBeganInterruption(_ audioSession: AudioSession, reason: AVAudioSession.InterruptionReason) {
+    func audioSessionDidBeganInterruption(_ audioSession: AudioSession, reason: AudioSession.InterruptionReason) {
         pauseAction(audioSession)
         controlView.set(playControlsHidden: false, otherControlsHidden: false, animated: true)
     }

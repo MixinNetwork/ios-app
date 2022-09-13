@@ -59,7 +59,7 @@ class SharedMediaAudioMessagePlayingManager: AudioMessagePlayingManager {
         }
     }
     
-    override func audioSessionDidBeganInterruption(_ audioSession: AudioSession, reason: AVAudioSession.InterruptionReason) {
+    override func audioSessionDidBeganInterruption(_ audioSession: AudioSession, reason: AudioSession.InterruptionReason) {
         switch reason {
         case .appWasSuspended:
             updateNowPlayingInfoElapsedPlaybackTime()

@@ -40,12 +40,12 @@ class TIPPopupInputViewController: PinValidationViewController {
             case .change:
                 switch context.situation {
                 case .pendingUpdate:
-                    titleLabel.text = "Enter your new PIN"
+                    titleLabel.text = R.string.localizable.enter_your_new_pin()
                 case .pendingSign:
                     if oldPIN == nil {
-                        titleLabel.text = "Enter your old PIN"
+                        titleLabel.text = R.string.localizable.enter_your_old_pin()
                     } else {
-                        titleLabel.text = "Enter your new PIN"
+                        titleLabel.text = R.string.localizable.enter_your_new_pin()
                     }
                 }
             case .create, .migrate:
@@ -131,7 +131,7 @@ class TIPPopupInputViewController: PinValidationViewController {
         AccountAPI.verify(pin: oldPIN) { result in
             switch result {
             case .success:
-                self.titleLabel.text = "Enter your new PIN"
+                self.titleLabel.text = R.string.localizable.enter_your_new_pin()
                 self.pinField.clear()
                 self.pinField.isHidden = false
                 self.pinField.receivesInput = true
@@ -168,13 +168,14 @@ class TIPPopupInputViewController: PinValidationViewController {
                 AppGroupUserDefaults.Wallet.periodicPinVerificationInterval = PeriodicPinVerificationInterval.min
                 AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
                 await MainActor.run(body: onSuccess)
-            } catch TIPNode.Error.differentIdentity, TIPNode.Error.notAllSignersSucceed {
+            } catch let error as TIPNode.Error {
+                Logger.general.warn(category: "TIPActionViewController", message: "Failed to change: \(error)")
                 await MainActor.run {
                     loadingIndicator.stopAnimating()
                     pinField.isHidden = false
                     pinField.clear()
                     descriptionLabel.textColor = .mixinRed
-                    descriptionLabel.text = "Wrong New PIN?"
+                    descriptionLabel.text = error.description
                     pinField.receivesInput = true
                 }
             } catch {

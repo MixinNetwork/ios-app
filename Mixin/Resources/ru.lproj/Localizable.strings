@@ -62,6 +62,7 @@
 "all" = "Все";
 "all_conversations" = "Все разговоры";
 "all_photos" = "Все фотографии";
+"all_signer_failure" = "All node failure, perhaps PIN does not match what was set when it was last terminated unexpectedly";
 "all_transactions" = "Все транзакции";
 "allow" = "Разрешить";
 "allow_manual_report_message" = "Разрешить сообщение ручного отчета";
@@ -147,6 +148,7 @@
 "change_your_app_language" = "Измените язык вашего приложения";
 "changed" = "Измененный";
 "changed_disappearing_message_settings" = "%@ изменил настройки исчезающих сообщений.";
+"changing_pin_terminated_unexpectedly" = "Changing PIN terminated unexpectedly, click \"Continue\" to complete the change";
 "chat_background" = "Фон чата";
 "chat_backup" = "Резервное копирование чата";
 "chat_bot_reception_title" = "Нажмите кнопку, чтобы взаимодействовать с ботом";
@@ -189,6 +191,7 @@
 "compress_database" = "Сжать базу данных";
 "compressed" = "Сжатый";
 "confirm" = "Подтвердить";
+"connect_to_tip_network_failed" = "Unable to connect to TIP network. Check your connection and try again.";
 "connected" = "Соединено";
 "connecting" = "Подключение";
 "connection_unstable" = "Нестабильное соединение";
@@ -223,6 +226,7 @@
 "content_voice" = "[Голосовой вызов]";
 "content_withdrawal" = "[Вывод]";
 "continue" = "Продолжить";
+"continue_need_verify_your_pin" = "Continue need to verify your old PIN and new PIN";
 "continue_open_url" = "Продолжить Открыть URL";
 "conversation" = "Беседа";
 "conversation_has_too_many_circles" = "В беседе слишком много кругов";
@@ -235,7 +239,9 @@
 "copy_link" = "Копировать ссылку";
 "copy_user_id" = "Копировать идентификатор пользователя";
 "create" = "Создавать";
+"create_pin" = "Create PIN";
 "created_this_group" = "%@ создал эту группу";
+"creating_wallet_terminated_unexpectedly" = "Creating wallet terminated unexpectedly, click \"Continue\" to complete the creation";
 "currency" = "Валюта";
 "currency_code" = "Код";
 "current_language" = "Русский";
@@ -320,6 +326,8 @@
 "end_to_end_encryption" = "Сквозное шифрование";
 "enter_pin_to_delete_account" = "Введите свой PIN-код, чтобы удалить свою учетную запись";
 "enter_your_emergency_contact_mixin_id" = "Введите свой контакт для экстренной связи Mixin ID";
+"enter_your_new_pin" = "Enter your new PIN";
+"enter_your_old_pin" = "Enter your old PIN";
 "enter_your_phone_number" = "Введите свой номер телефона";
 "enter_your_pin" = "Введите свой PIN-код";
 "enter_your_pin_to_continue" = "Введите PIN-код, чтобы продолжить";
@@ -354,6 +362,7 @@
 "error_used_phone" = "ОШИБКА 20122: этот номер телефона уже связан с другой учетной записью.";
 "error_withdrawal_memo_format_incorrect" = "ОШИБКА 20131: Неверный формат уведомления о снятии средств.";
 "everybody" = "Все";
+"exchanging_data" = "Synchronization key shards in progress %@%%...";
 "exit_confirmation" = "Выйти из %@?";
 "exit_group" = "Выйти из группы";
 "exit_group_and_report_inviter" = "Выйти из группы и сообщить о приглашении";
@@ -379,6 +388,7 @@
 "fourth_pin_confirm_hint" = "Да, есть четвертое подтверждение PIN-кода, и я обещаю, что оно будет последним, чтобы убедиться, что вы запомнили свой PIN-код. PIN-код невозможно восстановить, если он утерян.";
 "from" = "От";
 "games" = "Игры";
+"generating_keys" = "Generating keys...";
 "get_a_new_wallet" = "Получить новый кошелек";
 "got_it" = "Понятно";
 "group_call" = "Групповой вызов";
@@ -533,6 +543,8 @@
 "no_transactions" = "Нет транзакций";
 "nobody" = "Никто";
 "none" = "Никто";
+"not_all_signer_success" = "Not all node success";
+"not_enough_partials" = "Not enough nodes return key shard";
 "not_found" = "Не найден";
 "not_playing" = "Не играет";
 "notification_and_confirmation" = "Уведомление и подтверждение";
@@ -595,6 +607,7 @@
 "pin_creation" = "создание PIN-кода";
 "pin_incorrect" = "PIN-код неверный";
 "pin_lost_hint" = "В случае утери кошелек невозможно восстановить.";
+"pin_not_same_as_last_time" = "PIN does not match what was set when it was last terminated unexpectedly";
 "pin_title" = "Закрепить";
 "pinned_a_audio" = "%@ закрепил аудио";
 "pinned_a_card" = "%@ закрепил карту";
@@ -611,12 +624,15 @@
 "pinned_message_title" = "%d закрепленное сообщение";
 "pinned_message_title_count" = "%d закрепленных сообщений";
 "playlist" = "Плейлист";
+"please_keep_app_in_foreground" = "Please keep the app in the foreground and do not force quit it during the setup process.";
+"please_use_when_network_is_connected" = "Please complete the operation under a stable network environment.";
 "post" = "Публикация";
 "post_sharing" = "публикация";
 "preparing" = "Подготовка...";
 "preparing_progress" = "Подготовка...(%@)";
 "privacy" = "Конфиденциальность";
 "privacy_policy" = "Политика конфиденциальности";
+"process_can_not_be_stop" = "The process cannot be canceled when it begins. Please remember the 6-digit PIN and reenter it if the process is aborted unexpectedly.";
 "profile" = "Профиль";
 "profile_photo" = "Аватар";
 "profile_share_bot_hint" = "Если вы хотите поделиться ботом, сначала добавьте его в контакты";
@@ -662,6 +678,7 @@
 "restore_chat_hint" = "Восстановите историю чатов из iCloud";
 "restoring" = "Восстановление...";
 "restoring_progress" = "Восстановление %@";
+"retry" = "Повторить";
 "revoke_access" = "Отменить доступ";
 "revoke_multisig_transaction" = "Отозвать транзакцию с мультиподписью";
 "room_is_full" = "Комната заполнена";
@@ -723,6 +740,7 @@
 "set_disappearing_message_time_to" = "%1$@ установил время исчезновения сообщения на %2$@.";
 "set_emergency_create_successfully" = "Set emergency contact successfully";
 "set_new_pin" = "Установить новый PIN-код";
+"set_or_update_pin_failed" = "Set or update PIN failed";
 "set_pin_successfully" = "ПИН-код успешно установлен";
 "setting_appearance_language_alert_description" = "Вы можете выбрать предпочитаемый язык в настройках";
 "setting_auth_access" = "Одобрено: %1$@, последнее обращение: %2$@";
@@ -769,6 +787,7 @@
 "snapshot_not_found" = "Снимок не найден.";
 "social" = "Социальное";
 "sort_by" = "Сортировать по";
+"start" = "Start";
 "start_messaging" = "Начать обмен сообщениями";
 "started_group_call" = "%@ начал групповой вызов";
 "status" = "Статус";
@@ -783,6 +802,7 @@
 "suspicious_link" = "Подозрительная ссылка";
 "symbol" = "Символ";
 "symbol_withdrawal" = "%@ Снятие средств";
+"syncing_and_verifying_tip" = "Please keep the app in the foreground while verifying and synchronizing shard keys to the TIP network; do not force quit the app during the setup process.";
 "syncing_progress" = "Синхронизация %d%%";
 "syncs_contact_hint" = "Mixin синхронизирует вашу адресную книгу с серверами Mixin, чтобы помочь вам связаться с другими пользователями Mixin.";
 "system_time_is_unusual" = "Системное время необычно";
@@ -796,6 +816,9 @@
 "third_pin_confirm_hint" = "Редко можно увидеть третье подтверждение в другом месте, поэтому помните, что PIN-код невозможно восстановить, если он утерян.";
 "this_message_was_deleted" = "Это сообщение было удалено";
 "time" = "Время";
+"tip_create_pin_title" = "Set a 6 digit PIN to create your first digital wallet";
+"tip_creation_introduction" = "Set a 6 digit Wallet PIN to create your first digital wallet, the PIN is based on the Throttled Identity Protocol, which is the decentralized key derivation protocol, read the document to learn more.";
+"tip_introduction" = "The 6-digit PIN is based on the Throttled Identity Protocol, which is the decentralized key derivation protocol, read the document to learn more.";
 "title_participants" = "%d участник";
 "title_participants_count" = "%d участников";
 "to" = "В";
@@ -822,6 +845,8 @@
 "transfer_to_user_or_bot" = "Перевод пользователю или боту";
 "trending" = "В тренде";
 "try_again" = "Попробуйте еще раз";
+"trying_connect_tip_network" = "Connecting the TIP network";
+"trying_connect_tip_node" = "Trying connect TIP node";
 "turn_on_notifications" = "Включить уведомления";
 "unable_to_save_photo" = "Не удалось сохранить фото.";
 "unable_to_save_video" = "Не удалось сохранить видео.";
@@ -849,8 +874,13 @@
 "unrecognized_codes" = "Нераспознанные коды";
 "update" = "Обновить";
 "update_mixin" = "Обновить Mixin";
+"upgrade" = "Upgrade";
 "upgrade_database" = "Обновление базы данных";
+"upgrade_need_verify_your_pin" = "The upgrade requires verifying your PIN.";
+"upgrade_tip" = "Upgrade TIP";
+"upgrade_tip_successfully" = "Upgrade TIP successfully";
 "upgrading" = "Обновление";
+"upgrading_tip_terminated_unexpectedly" = "Upgrading TIP terminated unexpectedly, click \"Continue\" to complete the upgrade";
 "upload_mobile_contacts" = "Загрузить мобильные контакты";
 "uploading" = "Загрузка...";
 "uploading_progress" = "Загрузка: %@ из %@ (%@)";
@@ -882,7 +912,6 @@
 "wallet_enable_biometric_pay" = "После включения, %@ можно использовать для быстрой передачи.";
 "wallet_hide_asset_confirmation" = "Вы уверены, что хотите скрыть %@?";
 "wallet_password_not_equal" = "PIN-код не повторяется дважды, попробуйте еще раз.";
-"wallet_password_set_pin_desc" = "Установите 6-значный PIN-код, чтобы создать свой первый цифровой кошелек. Прочтите документ, чтобы узнать больше.";
 "wallet_password_unsafe" = "PIN-код слишком прост и ненадежен.";
 "wallet_pin_pay_interval_tips" = "В целях безопасности ваших активов вам необходимо подтверждать свой PIN-код в течение указанного интервала времени.";
 "wallet_pin_tops_desc" = "Пожалуйста, помните, что PIN-код невозможно восстановить, если он утерян. PIN-код основан на протоколе Throttled Identity Protocol, который представляет собой децентрализованный протокол получения ключей. Прочтите документ, чтобы узнать больше.";

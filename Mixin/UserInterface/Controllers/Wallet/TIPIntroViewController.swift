@@ -24,6 +24,8 @@ class TIPIntroViewController: UIViewController {
     @IBOutlet weak var nextButton: RoundedButton!
     @IBOutlet weak var actionDescriptionLabel: UILabel!
     
+    @IBOutlet weak var noticeTextViewHeightConstraint: NSLayoutConstraint!
+    
     private let intent: TIP.Action
     private let checkCounterTimeoutInterval: TimeInterval = 5
     
@@ -54,40 +56,63 @@ class TIPIntroViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         contentStackView.setCustomSpacing(24, after: iconImageView)
+        descriptionTextLabel.delegate = self
+        noticeTextView.textContainerInset = UIEdgeInsets(top: 12, left: 8, bottom: 12, right: 14)
+        let description: String
         switch intent {
         case .create:
-            titleLabel.text = "Create PIN"
+            titleLabel.text = R.string.localizable.create_pin()
             switch interruption {
             case .unknown, .none:
-                descriptionTextLabel.text = "设置 6 位数字 PIN 创建你的第一个加密货币钱包，PIN 基于去中心化密钥派生协议 Throttled Identity Protocol，阅读文档以了解更多。"
+                description = R.string.localizable.tip_creation_introduction()
             case .confirmed:
-                descriptionTextLabel.text = "创建 PIN 于 2022-21-22 00:00:00 意外中止"
+                description = R.string.localizable.creating_wallet_terminated_unexpectedly()
             }
             setNoticeHidden(false)
         case .change:
-            titleLabel.text = "Change PIN"
+            titleLabel.text = R.string.localizable.change_pin()
             switch interruption {
             case .unknown, .none:
-                descriptionTextLabel.text = "PIN 基于去中心化密钥派生协议 Throttled Identity Protocol，阅读文档以了解更多。"
+                description = R.string.localizable.tip_introduction()
             case .confirmed:
-                descriptionTextLabel.text = "更新 PIN 于 2022-21-22 00:00:00 意外中止"
+                description = R.string.localizable.changing_pin_terminated_unexpectedly()
             }
             setNoticeHidden(false)
         case .migrate:
-            titleLabel.text = "Upgrade to TIP"
+            titleLabel.text = R.string.localizable.upgrade_tip()
             switch interruption {
             case .unknown, .none:
-                descriptionTextLabel.text = "PIN 基于去中心化密钥派生协议 Throttled Identity Protocol，阅读文档以了解更多。"
+                description = R.string.localizable.tip_introduction()
             case .confirmed:
-                descriptionTextLabel.text = "升级 PIN 于 2022-21-22 00:00:00 意外中止"
+                description = R.string.localizable.upgrading_tip_terminated_unexpectedly()
             }
             setNoticeHidden(false)
         }
+        descriptionTextLabel.text = description
+        lazy var linksMap: [NSRange: URL] = {
+            let range = (description as NSString).range(of: R.string.localizable.learn_more(), options: [.backwards, .caseInsensitive])
+            if range.location != NSNotFound && range.length != 0 {
+                return [range: URL.pinTIP]
+            } else {
+                return [:]
+            }
+        }()
         switch interruption {
         case .unknown:
             checkCounter()
-        case .confirmed, .none:
+            descriptionTextLabel.additionalLinksMap = linksMap
+        case .confirmed:
             updateNextButtonAndStatusLabel(with: .waitingForUser)
+        case .none:
+            descriptionTextLabel.additionalLinksMap = linksMap
+            updateNextButtonAndStatusLabel(with: .waitingForUser)
+        }
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        if noticeTextViewHeightConstraint.constant != noticeTextView.contentSize.height {
+            noticeTextViewHeightConstraint.constant = noticeTextView.contentSize.height
         }
     }
     
@@ -130,11 +155,50 @@ class TIPIntroViewController: UIViewController {
         }
     }
     
+}
+
+extension TIPIntroViewController: CoreTextLabelDelegate {
+    
+    func coreTextLabel(_ label: CoreTextLabel, didSelectURL url: URL) {
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    }
+    
+    func coreTextLabel(_ label: CoreTextLabel, didLongPressOnURL url: URL) {
+        
+    }
+    
+}
+
+extension TIPIntroViewController {
+    
     private func setNoticeHidden(_ hidden: Bool) {
         if hidden {
             noticeTextView.isHidden = true
         } else {
-            noticeTextView.text = "· 请在网络流畅的环境下进行此操作\n· 请保持 App 在前台，设置过程中不要 强退 App 或关机\n· 流程一旦开始无法取消，请牢记新设置的 PIN，意外中止流程可能需要再次输入"
+            let style = NSMutableParagraphStyle()
+            style.paragraphSpacing = 8
+            style.tabStops = [NSTextTab(textAlignment: .left, location: 15, options: [:])]
+            style.defaultTabInterval = 15
+            style.firstLineHeadIndent = 0
+            style.headIndent = 13
+            
+            let noticeAttributes: [NSAttributedString.Key: Any] = [
+                .foregroundColor: R.color.text_accessory()!,
+                .font: UIFont.preferredFont(forTextStyle: .footnote),
+                .paragraphStyle: style,
+            ]
+            let warningAttributes: [NSAttributedString.Key: Any] = [
+                .foregroundColor: R.color.red()!,
+                .font: UIFont.preferredFont(forTextStyle: .footnote),
+                .paragraphStyle: style,
+            ]
+            
+            let notice = "•  " + R.string.localizable.please_use_when_network_is_connected() + "\n•  " + R.string.localizable.please_keep_app_in_foreground() + "\n•  "
+            let attributedText = NSMutableAttributedString(string: notice, attributes: noticeAttributes)
+            let warning = NSAttributedString(string: R.string.localizable.process_can_not_be_stop(), attributes: warningAttributes)
+            attributedText.append(warning)
+            
+            noticeTextView.attributedText = attributedText
             noticeTextView.isHidden = false
         }
     }
@@ -169,12 +233,12 @@ class TIPIntroViewController: UIViewController {
         case .checkingCounter:
             setNextButtonTitleByIntent()
             nextButton.isBusy = true
-            actionDescriptionLabel.text = "正在尝试链接 TIP网络"
+            actionDescriptionLabel.text = R.string.localizable.trying_connect_tip_network()
             actionDescriptionLabel.textColor = R.color.text_desc()
         case .counterCheckingFails:
-            nextButton.setTitle("Retry", for: .normal)
+            nextButton.setTitle(R.string.localizable.retry(), for: .normal)
             nextButton.isBusy = false
-            actionDescriptionLabel.text = "无法连接 TIP 网络，请尝试切换4G、Wi-Fi 或 VPN 后重试"
+            actionDescriptionLabel.text = R.string.localizable.connect_to_tip_network_failed()
             actionDescriptionLabel.textColor = .mixinRed
         case .waitingForUser:
             switch interruption {
@@ -191,9 +255,9 @@ class TIPIntroViewController: UIViewController {
     private func setNextButtonTitleByIntent() {
         switch intent {
         case .create, .change:
-            nextButton.setTitle("Start", for: .normal)
+            nextButton.setTitle(R.string.localizable.start(), for: .normal)
         case .migrate:
-            nextButton.setTitle("Upgrade", for: .normal)
+            nextButton.setTitle(R.string.localizable.upgrade(), for: .normal)
         }
     }
     

@@ -68,7 +68,7 @@ class TIPFullscreenInputViewController: ContinueButtonViewController {
         pinField.becomeFirstResponder()
         switch action {
         case .create(.input):
-            titleLabel.text = "Set a 6 digit Wallet PIN to create your first digital wallet."
+            titleLabel.text = R.string.localizable.tip_create_pin_title()
             subtitleLabel.text = ""
         case .change(.verify):
             titleLabel.text = R.string.localizable.enter_your_pin()

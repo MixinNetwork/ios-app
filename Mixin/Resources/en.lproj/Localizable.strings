@@ -62,6 +62,7 @@
 "all" = "All";
 "all_conversations" = "All Conversations";
 "all_photos" = "All Photos";
+"all_signer_failure" = "All node failure, perhaps PIN does not match what was set when it was last terminated unexpectedly";
 "all_transactions" = "All Transactions";
 "allow" = "Allow";
 "allow_manual_report_message" = "Allow Manual Report Message";
@@ -147,6 +148,7 @@
 "change_your_app_language" = "Change your app language";
 "changed" = "Changed";
 "changed_disappearing_message_settings" = "%@ changed disappearing message settings.";
+"changing_pin_terminated_unexpectedly" = "Changing PIN terminated unexpectedly, click \"Continue\" to complete the change";
 "chat_background" = "Chat Background";
 "chat_backup" = "Chat Backup";
 "chat_bot_reception_title" = "Tap the button to interact with the bot";
@@ -189,6 +191,7 @@
 "compress_database" = "Compress Database";
 "compressed" = "Compressed";
 "confirm" = "Confirm";
+"connect_to_tip_network_failed" = "Unable to connect to TIP network. Check your connection and try again.";
 "connected" = "Connected";
 "connecting" = "Connecting";
 "connection_unstable" = "Connection unstable";
@@ -223,6 +226,7 @@
 "content_voice" = "[Voice call]";
 "content_withdrawal" = "[Withdrawal]";
 "continue" = "Continue";
+"continue_need_verify_your_pin" = "Continue need to verify your old PIN and new PIN";
 "continue_open_url" = "Continue Open URL";
 "conversation" = "Conversation";
 "conversation_has_too_many_circles" = "The conversation has too many circles";
@@ -235,7 +239,9 @@
 "copy_link" = "Copy Link";
 "copy_user_id" = "Copy User ID";
 "create" = "Create";
+"create_pin" = "Create PIN";
 "created_this_group" = "%@ created this group";
+"creating_wallet_terminated_unexpectedly" = "Creating wallet terminated unexpectedly, click \"Continue\" to complete the creation";
 "currency" = "Currency";
 "currency_code" = "Code";
 "current_language" = "English";
@@ -320,6 +326,8 @@
 "end_to_end_encryption" = "End-to-end Encrypted";
 "enter_pin_to_delete_account" = "Enter your PIN to delete your account";
 "enter_your_emergency_contact_mixin_id" = "Enter your emergency contact Mixin ID";
+"enter_your_new_pin" = "Enter your new PIN";
+"enter_your_old_pin" = "Enter your old PIN";
 "enter_your_phone_number" = "Enter your phone number";
 "enter_your_pin" = "Enter your PIN";
 "enter_your_pin_to_continue" = "Enter your PIN to continue";
@@ -354,6 +362,7 @@
 "error_used_phone" = "ERROR 20122: This phone number is already associated with another account.";
 "error_withdrawal_memo_format_incorrect" = "ERROR 20131: Withdrawal memo format incorrect.";
 "everybody" = "Everybody";
+"exchanging_data" = "Synchronization key shards in progress %@%%...";
 "exit_confirmation" = "Exit \"%@\"?";
 "exit_group" = "Exit Group";
 "exit_group_and_report_inviter" = "Exit group and report inviter";
@@ -379,6 +388,7 @@
 "fourth_pin_confirm_hint" = "Yes, there is a fourth PIN confirmation, and I promise it's the last one to ensure you have remembered your PIN. The PIN is unrecoverable if lost.";
 "from" = "From";
 "games" = "Games";
+"generating_keys" = "Generating keys...";
 "get_a_new_wallet" = "Get a new wallet";
 "got_it" = "Got it";
 "group_call" = "Group Call";
@@ -533,6 +543,8 @@
 "no_transactions" = "No transactions";
 "nobody" = "Nobody";
 "none" = "None";
+"not_all_signer_success" = "Not all node success";
+"not_enough_partials" = "Not enough nodes return key shard";
 "not_found" = "Not found";
 "not_playing" = "Not playing";
 "notification_and_confirmation" = "Notification and Confirmation";
@@ -595,6 +607,7 @@
 "pin_creation" = "PIN creation";
 "pin_incorrect" = "PIN incorrect";
 "pin_lost_hint" = "If lost, there is no way to recover your wallet.";
+"pin_not_same_as_last_time" = "PIN does not match what was set when it was last terminated unexpectedly";
 "pin_title" = "Pin";
 "pinned_a_audio" = "%@ pinned an audio";
 "pinned_a_card" = "%@ pinned a card";
@@ -611,12 +624,15 @@
 "pinned_message_title" = "%d Pinned Message";
 "pinned_message_title_count" = "%d Pinned Messages";
 "playlist" = "Playlist";
+"please_keep_app_in_foreground" = "Please keep the app in the foreground and do not force quit it during the setup process.";
+"please_use_when_network_is_connected" = "Please complete the operation under a stable network environment.";
 "post" = "Post";
 "post_sharing" = "post";
 "preparing" = "Preparing...";
 "preparing_progress" = "Preparing...(%@)";
 "privacy" = "Privacy";
 "privacy_policy" = "Privacy Policy";
+"process_can_not_be_stop" = "The process cannot be canceled when it begins. Please remember the 6-digit PIN and reenter it if the process is aborted unexpectedly.";
 "profile" = "Profile";
 "profile_photo" = "Profile Photo";
 "profile_share_bot_hint" = "If you want to share a bot, add it to your contacts first";
@@ -662,6 +678,7 @@
 "restore_chat_hint" = "Restore your\nchat history from iCloud";
 "restoring" = "Restoring...";
 "restoring_progress" = "Restoring %@";
+"retry" = "Retry";
 "revoke_access" = "Revoke access";
 "revoke_multisig_transaction" = "Revoke Multisig Transaction";
 "room_is_full" = "Room is full";
@@ -723,6 +740,7 @@
 "set_disappearing_message_time_to" = "%1$@ set disappearing message time to %2$@";
 "set_emergency_create_successfully" = "Set emergency contact successfully";
 "set_new_pin" = "Set a new PIN";
+"set_or_update_pin_failed" = "Set or update PIN failed";
 "set_pin_successfully" = "Set PIN successfully";
 "setting_appearance_language_alert_description" = "You can pick a preferred language in settings";
 "setting_auth_access" = "Approved: %1$@, Last Accessed: %2$@";
@@ -769,6 +787,7 @@
 "snapshot_not_found" = "Snapshot not found.";
 "social" = "Social";
 "sort_by" = "Sort by";
+"start" = "Start";
 "start_messaging" = "Start Messaging";
 "started_group_call" = "%@ has started a group call";
 "status" = "Status";
@@ -783,6 +802,7 @@
 "suspicious_link" = "Suspicious Link";
 "symbol" = "Symbol";
 "symbol_withdrawal" = "%@ Withdrawal";
+"syncing_and_verifying_tip" = "Please keep the app in the foreground while verifying and synchronizing shard keys to the TIP network; do not force quit the app during the setup process.";
 "syncing_progress" = "Syncing %d%%";
 "syncs_contact_hint" = "Mixin syncs your address book to Mixin servers to help you connect with other Mixin users.";
 "system_time_is_unusual" = "System time is unusual";
@@ -796,6 +816,9 @@
 "third_pin_confirm_hint" = "It's rare to see a third confirmation somewhere else, so please remember the PIN is unrecoverable if lost.";
 "this_message_was_deleted" = "This message was deleted";
 "time" = "Time";
+"tip_create_pin_title" = "Set a 6 digit PIN to create your first digital wallet";
+"tip_creation_introduction" = "Set a 6 digit Wallet PIN to create your first digital wallet, the PIN is based on the Throttled Identity Protocol, which is the decentralized key derivation protocol, read the document to learn more.";
+"tip_introduction" = "The 6-digit PIN is based on the Throttled Identity Protocol, which is the decentralized key derivation protocol, read the document to learn more.";
 "title_participants" = "%d Participant";
 "title_participants_count" = "%d Participants";
 "to" = "To";
@@ -822,6 +845,8 @@
 "transfer_to_user_or_bot" = "Transfer to user or bot";
 "trending" = "Trending";
 "try_again" = "Try Again";
+"trying_connect_tip_network" = "Connecting the TIP network";
+"trying_connect_tip_node" = "Trying connect TIP node";
 "turn_on_notifications" = "Turn On Notifications";
 "unable_to_save_photo" = "Unable to save photo.";
 "unable_to_save_video" = "Unable to save video.";
@@ -849,8 +874,13 @@
 "unrecognized_codes" = "Unrecognized codes";
 "update" = "Update";
 "update_mixin" = "Update Mixin";
+"upgrade" = "Upgrade";
 "upgrade_database" = "Upgrade Database";
+"upgrade_need_verify_your_pin" = "The upgrade requires verifying your PIN.";
+"upgrade_tip" = "Upgrade TIP";
+"upgrade_tip_successfully" = "Upgrade TIP successfully";
 "upgrading" = "Upgrading";
+"upgrading_tip_terminated_unexpectedly" = "Upgrading TIP terminated unexpectedly, click \"Continue\" to complete the upgrade";
 "upload_mobile_contacts" = "Upload Mobile Contacts";
 "uploading" = "Uploading...";
 "uploading_progress" = "Uploading: %@ of %@ (%@)";
@@ -882,7 +912,6 @@
 "wallet_enable_biometric_pay" = "Once enabled, %@ can be used to make quick transfers.";
 "wallet_hide_asset_confirmation" = "Are you sure you want to hide %@?";
 "wallet_password_not_equal" = "The PIN is not the same twice, please try again.";
-"wallet_password_set_pin_desc" = "Set a 6 digit PIN to create your first digital wallet, read the document to learn more.";
 "wallet_password_unsafe" = "The PIN is too simple and insecure.";
 "wallet_pin_pay_interval_tips" = "For the security of your assets, you need to verify your PIN for the specified interval.";
 "wallet_pin_tops_desc" = "Please remember the PIN is unrecoverable if lost. The PIN is based on the Throttled Identity Protocol, which is the decentralized key derivation protocol, read the document to learn more.";

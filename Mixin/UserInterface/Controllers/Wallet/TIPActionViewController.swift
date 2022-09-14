@@ -34,9 +34,11 @@ class TIPActionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        progressLabel.font = UIFontMetrics.default.scaledFont(for: .monospacedDigitSystemFont(ofSize: 14, weight: .regular))
+        progressLabel.adjustsFontForContentSizeCategory = true
         switch action {
         case let .create(pin):
-            titleLabel.text = "创建钱包"
+            titleLabel.text = R.string.localizable.create_pin()
 #if DEBUG
             if TIPDiagnostic.uiTestOnly {
                 emulateProgress()
@@ -51,14 +53,16 @@ class TIPActionViewController: UIViewController {
                                                 forRecover: false,
                                                 progressHandler: showProgress(step:))
                     AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
-                    await MainActor.run(body: finish)
+                    await MainActor.run {
+                        finish()
+                    }
                 } catch {
                     Logger.general.warn(category: "TIPActionViewController", message: "Failed to create: \(error)")
                     await handle(error: error)
                 }
             }
         case let .change(old, new):
-            titleLabel.text = "修改 PIN"
+            titleLabel.text = R.string.localizable.change_pin()
 #if DEBUG
             if TIPDiagnostic.uiTestOnly {
                 emulateProgress()
@@ -76,14 +80,16 @@ class TIPActionViewController: UIViewController {
                     }
                     AppGroupUserDefaults.Wallet.periodicPinVerificationInterval = PeriodicPinVerificationInterval.min
                     AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
-                    await MainActor.run(body: finish)
+                    await MainActor.run {
+                        finish()
+                    }
                 } catch {
                     Logger.general.warn(category: "TIPActionViewController", message: "Failed to change: \(error)")
                     await handle(error: error)
                 }
             }
         case let .migrate(pin):
-            titleLabel.text = "升级 TIP"
+            titleLabel.text = R.string.localizable.upgrade_tip()
 #if DEBUG
             if TIPDiagnostic.uiTestOnly {
                 emulateProgress()
@@ -98,7 +104,9 @@ class TIPActionViewController: UIViewController {
                                                 forRecover: false,
                                                 progressHandler: showProgress(step:))
                     AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
-                    await MainActor.run(body: finish)
+                    await MainActor.run {
+                        finish()
+                    }
                 } catch {
                     Logger.general.warn(category: "TIPActionViewController", message: "Failed to migrate: \(error)")
                     await handle(error: error)
@@ -107,7 +115,7 @@ class TIPActionViewController: UIViewController {
         }
     }
     
-    @MainActor @Sendable
+    @MainActor
     private func finish() {
         let title: String
         switch action {
@@ -116,7 +124,7 @@ class TIPActionViewController: UIViewController {
         case .change:
             title = R.string.localizable.change_pin_successfully()
         case .migrate:
-            title = "Migrated"
+            title = R.string.localizable.upgrade_tip_successfully()
         }
         alert(title) { (_) in
             self.tipNavigationController?.dismissToDestination(animated: true)
@@ -129,7 +137,9 @@ class TIPActionViewController: UIViewController {
                 return
             }
             guard let context = try await TIP.checkCounter(with: account) else {
-                await MainActor.run(body: finish)
+                await MainActor.run {
+                    finish()
+                }
                 return
             }
             await MainActor.run {
@@ -157,17 +167,17 @@ class TIPActionViewController: UIViewController {
         case .creating:
             activityIndicatorView.startAnimating()
             progressView.isHidden = true
-            progressLabel.text = "正在创建密钥..."
+            progressLabel.text = R.string.localizable.generating_keys()
         case .connecting:
             activityIndicatorView.startAnimating()
             progressView.isHidden = true
-            progressLabel.text = "正在连接节点..."
+            progressLabel.text = R.string.localizable.trying_connect_tip_node()
         case .synchronizing(let fractionCompleted):
             activityIndicatorView.stopAnimating()
             progressView.isHidden = false
             progressView.progress = fractionCompleted
-            let percent = Int(fractionCompleted * 100)
-            progressLabel.text = "正在同步密钥分片，进度 \(percent)%"
+            let percent = Int(ceil(fractionCompleted * 100))
+            progressLabel.text = R.string.localizable.exchanging_data("\(percent)")
         }
     }
     

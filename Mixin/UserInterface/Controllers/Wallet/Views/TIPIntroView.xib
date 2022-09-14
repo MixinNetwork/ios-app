@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina5_9" orientation="portrait" appearance="light"/>
+    <accessibilityOverrides/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -18,6 +19,7 @@
                 <outlet property="iconImageView" destination="Rvb-aN-PCV" id="0su-zL-FnF"/>
                 <outlet property="nextButton" destination="ZLz-JR-XNY" id="obD-8P-Qfu"/>
                 <outlet property="noticeTextView" destination="DMz-OM-yrL" id="bwy-OO-CHz"/>
+                <outlet property="noticeTextViewHeightConstraint" destination="gwi-52-Tcm" id="7NK-tQ-Un8"/>
                 <outlet property="titleLabel" destination="Yik-l9-RNs" id="0uB-kZ-Oss"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -28,13 +30,13 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="uBf-cN-kkd">
-                    <rect key="frame" x="30" y="120.33333333333333" width="315" height="178.66666666666669"/>
+                    <rect key="frame" x="30" y="112.66666666666667" width="315" height="195.66666666666663"/>
                     <subviews>
-                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_tip" translatesAutoresizingMaskIntoConstraints="NO" id="Rvb-aN-PCV">
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="500" image="ic_tip" translatesAutoresizingMaskIntoConstraints="NO" id="Rvb-aN-PCV">
                             <rect key="frame" x="0.0" y="0.0" width="315" height="76"/>
                         </imageView>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Create PIN" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yik-l9-RNs">
-                            <rect key="frame" x="0.0" y="92.000000000000014" width="315" height="21.666666666666671"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Create PIN" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yik-l9-RNs">
+                            <rect key="frame" x="0.0" y="91.999999999999986" width="315" height="21.666666666666671"/>
                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                             <color key="textColor" name="text"/>
                             <nil key="highlightedColor"/>
@@ -42,13 +44,16 @@
                                 <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
                             </userDefinedRuntimeAttributes>
                         </label>
-                        <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="urk-Lg-NWZ" customClass="TextLabel" customModule="Mixin" customModuleProvider="target">
+                        <view contentMode="scaleToFill" verticalCompressionResistancePriority="1000" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="urk-Lg-NWZ" customClass="TextLabel" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="129.66666666666669" width="315" height="0.0"/>
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         </view>
-                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" text=" " textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DMz-OM-yrL">
-                            <rect key="frame" x="0.0" y="145.66666666666669" width="315" height="33"/>
+                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" verticalCompressionResistancePriority="250" editable="NO" text=" " textAlignment="natural" adjustsFontForContentSizeCategory="YES" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DMz-OM-yrL">
+                            <rect key="frame" x="0.0" y="145.66666666666663" width="315" height="50"/>
                             <color key="backgroundColor" name="background_selection"/>
+                            <constraints>
+                                <constraint firstAttribute="height" priority="250" constant="50" id="gwi-52-Tcm"/>
+                            </constraints>
                             <color key="textColor" systemColor="labelColor"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -72,7 +77,7 @@
                     </connections>
                 </button>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ofI-57-AnA">
-                    <rect key="frame" x="20" y="730" width="335" height="13.333333333333371"/>
+                    <rect key="frame" x="20" y="730" width="335" height="14.333333333333371"/>
                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                     <color key="textColor" name="text_desc"/>
                     <nil key="highlightedColor"/>
@@ -83,7 +88,7 @@
             <constraints>
                 <constraint firstItem="ZLz-JR-XNY" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="1Dd-z0-8XR"/>
                 <constraint firstItem="ofI-57-AnA" firstAttribute="top" secondItem="ZLz-JR-XNY" secondAttribute="bottom" constant="8" id="3gh-bz-Wu6"/>
-                <constraint firstItem="uBf-cN-kkd" firstAttribute="centerY" secondItem="fnl-2z-Ty3" secondAttribute="centerY" multiplier="0.51" priority="750" id="99j-dV-YoZ"/>
+                <constraint firstItem="uBf-cN-kkd" firstAttribute="centerY" secondItem="fnl-2z-Ty3" secondAttribute="centerY" multiplier="0.51" priority="100" id="99j-dV-YoZ"/>
                 <constraint firstItem="ofI-57-AnA" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="20" id="W1w-Wn-bdA"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="ZLz-JR-XNY" secondAttribute="bottom" constant="56" id="X35-eu-OtJ"/>
                 <constraint firstItem="uBf-cN-kkd" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="30" id="cED-3L-jyM"/>
@@ -107,7 +112,7 @@
             <color red="0.73725490196078436" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <systemColor name="labelColor">
-            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

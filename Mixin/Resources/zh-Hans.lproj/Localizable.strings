@@ -62,6 +62,7 @@
 "all" = "全部";
 "all_conversations" = "所有会话";
 "all_photos" = "所有照片";
+"all_signer_failure" = "所有节点失败，也许 PIN 跟上次意外退出时设置的不一致";
 "all_transactions" = "所有交易记录";
 "allow" = "允许";
 "allow_manual_report_message" = "允许手动上报消息";
@@ -147,6 +148,7 @@
 "change_your_app_language" = "设置语言";
 "changed" = "已修改";
 "changed_disappearing_message_settings" = "%@修改了限时消息设置";
+"changing_pin_terminated_unexpectedly" = "更新 PIN 意外中止，点继续完成 PIN 修改";
 "chat_background" = "聊天背景";
 "chat_backup" = "聊天记录备份";
 "chat_bot_reception_title" = "点击按钮使用机器人";
@@ -189,6 +191,7 @@
 "compress_database" = "压缩数据库";
 "compressed" = "已压缩";
 "confirm" = "确认";
+"connect_to_tip_network_failed" = "连接 TIP 网络失败，请尝试切换4G、Wi-Fi 或 VPN 后重试";
 "connected" = "已连接";
 "connecting" = "正在连接";
 "connection_unstable" = "当前通话网络不佳";
@@ -223,6 +226,7 @@
 "content_voice" = "[语音电话]";
 "content_withdrawal" = "[提现]";
 "continue" = "继续";
+"continue_need_verify_your_pin" = "继续需要验证你的旧 PIN 以及新 PIN";
 "continue_open_url" = "继续访问";
 "conversation" = "会话";
 "conversation_has_too_many_circles" = "已达圈子数上限";
@@ -235,7 +239,9 @@
 "copy_link" = "复制链接";
 "copy_user_id" = "复制用户 ID";
 "create" = "创建";
+"create_pin" = "创建钱包";
 "created_this_group" = "%@创建了这个群组";
+"creating_wallet_terminated_unexpectedly" = "创建钱包意外中止，点继续完成钱包创建";
 "currency" = "货币";
 "currency_code" = "货币代码";
 "current_language" = "中文";
@@ -320,6 +326,8 @@
 "end_to_end_encryption" = "端到端加密";
 "enter_pin_to_delete_account" = "输入你的 PIN 以注销你的账户";
 "enter_your_emergency_contact_mixin_id" = "请输入紧急联系人的 Mixin ID";
+"enter_your_new_pin" = "输入你的新 PIN";
+"enter_your_old_pin" = "输入你的旧 PIN";
 "enter_your_phone_number" = "输入你的手机号码";
 "enter_your_pin" = "输入你的 PIN";
 "enter_your_pin_to_continue" = "输入你的 PIN 以继续";
@@ -354,6 +362,7 @@
 "error_used_phone" = "错误 20122：电话号码已经被占用。";
 "error_withdrawal_memo_format_incorrect" = "错误 20131：提现备注格式不正确";
 "everybody" = "任何人";
+"exchanging_data" = "正在同步密钥分片，进度 %@%%...";
 "exit_confirmation" = "退出\"%@\"？";
 "exit_group" = "退出群组";
 "exit_group_and_report_inviter" = "退出群组并举报邀请人";
@@ -379,6 +388,7 @@
 "fourth_pin_confirm_hint" = "这是最后一次确认 PIN，记住：PIN 丢失将永远无法找回！";
 "from" = "来自";
 "games" = "游戏";
+"generating_keys" = "正在创建密钥...";
 "get_a_new_wallet" = "创建钱包";
 "got_it" = "知道了";
 "group_call" = "群组语音";
@@ -533,6 +543,8 @@
 "no_transactions" = "暂无转账记录";
 "nobody" = "没有人";
 "none" = "无";
+"not_all_signer_success" = "有些节点失败了";
+"not_enough_partials" = "没有足够的节点返回密钥分片";
 "not_found" = "没有找到相应的消息";
 "not_playing" = "未在播放";
 "notification_and_confirmation" = "通知和确认";
@@ -595,6 +607,7 @@
 "pin_creation" = "创建 PIN";
 "pin_incorrect" = "PIN 错误";
 "pin_lost_hint" = "如果忘记，你的钱包将无法找回。";
+"pin_not_same_as_last_time" = "PIN 跟上次意外退出时设置的不一致";
 "pin_title" = "置顶";
 "pinned_a_audio" = "%@置顶了一个语音";
 "pinned_a_card" = "%@置顶了一张卡片";
@@ -611,12 +624,15 @@
 "pinned_message_title" = "%d 条置顶消息";
 "pinned_message_title_count" = "%d 条置顶消息";
 "playlist" = "播放列表";
+"please_keep_app_in_foreground" = "请保持应用在前台，设置过程中不要强制关闭应用";
+"please_use_when_network_is_connected" = "请在网络流畅的环境下进行此操作";
 "post" = "文章";
 "post_sharing" = "文章";
 "preparing" = "准备...";
 "preparing_progress" = "备份中...（%@）";
 "privacy" = "隐私";
 "privacy_policy" = "隐私政策";
+"process_can_not_be_stop" = "流程一旦开始无法取消，请牢记 6 位数字 PIN，意外中止流程需要再次输入";
 "profile" = "个人资料";
 "profile_photo" = "个人头像";
 "profile_share_bot_hint" = "如果您希望分享机器人，请先添加联系人。";
@@ -662,6 +678,7 @@
 "restore_chat_hint" = "从 iCloud 恢复\n您的聊天记录";
 "restoring" = "正在恢复...";
 "restoring_progress" = "正在恢复 %@";
+"retry" = "重试";
 "revoke_access" = "取消授权";
 "revoke_multisig_transaction" = "撤销多重签名交易";
 "room_is_full" = "房间已满";
@@ -723,6 +740,7 @@
 "set_disappearing_message_time_to" = "%1$@将限时消息设置为 %2$@";
 "set_emergency_create_successfully" = "设置紧急联系人成功";
 "set_new_pin" = "设置新的 PIN";
+"set_or_update_pin_failed" = "设置或更新 PIN 失败";
 "set_pin_successfully" = "PIN 设置成功";
 "setting_appearance_language_alert_description" = "前往系统设置修改语言偏好";
 "setting_auth_access" = "授权时间：%1$@, 上次访问：%2$@";
@@ -769,6 +787,7 @@
 "snapshot_not_found" = "找不到该转账记录。";
 "social" = "社交";
 "sort_by" = "顺序";
+"start" = "开始";
 "start_messaging" = "开始聊天";
 "started_group_call" = "%@ 开始了群通话";
 "status" = "交易状态";
@@ -783,6 +802,7 @@
 "suspicious_link" = "可疑链接";
 "symbol" = "符号";
 "symbol_withdrawal" = "%@ 提现";
+"syncing_and_verifying_tip" = "正在验证并同步密钥分片到 TIP 网络，请保持应用在前台，设置过程中不要强制关闭应用";
 "syncing_progress" = "正在同步 %d%%";
 "syncs_contact_hint" = "同步通讯录到 Mixin 发现更多好友。";
 "system_time_is_unusual" = "系统时间异常";
@@ -796,6 +816,9 @@
 "third_pin_confirm_hint" = "很少看到第三次确认吧！所以请牢记，PIN 丢失是无法找回的。";
 "this_message_was_deleted" = "此消息已撤回";
 "time" = "时间";
+"tip_create_pin_title" = "设置 6 位数字 PIN 创建你的第一个数字钱包";
+"tip_creation_introduction" = "设置 6 位数字 PIN 创建你的第一个加密货币钱包，PIN 基于去中心化密钥派生协议 Throttled Identity Protocol，阅读文档以了解更多。";
+"tip_introduction" = "6 位数字 PIN 基于去中心化密钥派生协议 Throttled Identity Protocol，阅读文档以了解更多。";
 "title_participants" = "%d 成员";
 "title_participants_count" = "%d 成员";
 "to" = "至";
@@ -822,6 +845,8 @@
 "transfer_to_user_or_bot" = "给用户或机器人转账";
 "trending" = "热门资产";
 "try_again" = "请重试";
+"trying_connect_tip_network" = "正在连接 TIP 网络";
+"trying_connect_tip_node" = "正在连接节点...";
 "turn_on_notifications" = "打开通知";
 "unable_to_save_photo" = "保存图片失败";
 "unable_to_save_video" = "保存视频失败";
@@ -849,8 +874,13 @@
 "unrecognized_codes" = "未识别的链接";
 "update" = "升级";
 "update_mixin" = "升级 Mixin";
+"upgrade" = "升级";
 "upgrade_database" = "数据库升级";
+"upgrade_need_verify_your_pin" = "升级需要验证你的 PIN";
+"upgrade_tip" = "升级 TIP";
+"upgrade_tip_successfully" = "TIP 升级成功";
 "upgrading" = "升级中...";
+"upgrading_tip_terminated_unexpectedly" = "升级 TIP 意外中止，点继续完成 TIP 升级";
 "upload_mobile_contacts" = "上传通讯录找好友";
 "uploading" = "备份中...";
 "uploading_progress" = "上传中：%@ / %@（%@）";
@@ -882,7 +912,6 @@
 "wallet_enable_biometric_pay" = "开启后，转账时可验证%@快速完成付款。";
 "wallet_hide_asset_confirmation" = "您确定要隐藏%@吗？";
 "wallet_password_not_equal" = "PIN 不一致, 请重新输入";
-"wallet_password_set_pin_desc" = "设置 6 位数字 PIN 创建你的第一个数字钱包，阅读文档以了解更多。";
 "wallet_password_unsafe" = "PIN 过于简单不安全";
 "wallet_pin_pay_interval_tips" = "为了您的资产安全，距离上次输入支付 PIN 的时间超过以上指定时间时，再次转账时已然需要支付 PIN";
 "wallet_pin_tops_desc" = "注意 PIN 丢失无法找回，6 位数字 PIN 是基于去中心化密钥派生协议 Throttled Identity Protocol，阅读文档以了解更多。";

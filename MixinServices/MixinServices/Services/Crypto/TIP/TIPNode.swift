@@ -21,7 +21,7 @@ public enum TIPNode {
         case decodeResponseSignature
         case decodeResponseCipher
         case decryptResponseCipher
-        case notAllSignersSucceed
+        case notAllSignersSucceed(_ numberOfSuccess: Int)
         case notEnoughPartials
         case recoverSignature(NSError?)
         case watchRetryLimited
@@ -128,7 +128,7 @@ public enum TIPNode {
         }
         
         if !forRecover && data.count < allSigners.count {
-            throw Error.notAllSignersSucceed
+            throw Error.notAllSignersSucceed(data.count)
         }
         
         let (assignor, partials) = try { () throws -> (Data, [Data]) in

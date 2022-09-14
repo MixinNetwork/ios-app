@@ -158,7 +158,7 @@ extension OggOpusRecorder: AudioSessionClient {
         .audioRecord
     }
     
-    func audioSessionDidBeganInterruption(_ audioSession: AudioSession, reason: AVAudioSession.InterruptionReason) {
+    func audioSessionDidBeganInterruption(_ audioSession: AudioSession, reason: AudioSession.InterruptionReason) {
         cancel(for: .audioSessionInterrupted)
     }
     

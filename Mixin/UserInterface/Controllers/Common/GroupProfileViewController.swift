@@ -19,7 +19,7 @@ final class GroupProfileViewController: ProfileViewController {
     private let response: ConversationResponse?
     private let codeId: String?
     private let isMember: Bool
-    private let participantsCount: Int?
+    private var participantsCount: Int?
     
     private lazy var notMemberPaddingView = NotMemberPaddingView()
     
@@ -182,6 +182,9 @@ extension GroupProfileViewController {
                     DispatchQueue.global().async {
                         ConversationDAO.shared.exitGroup(conversationId: conversationId)
                         DispatchQueue.main.async {
+                            if let count = self?.participantsCount {
+                                self?.participantsCount = count - 1
+                            }
                             self?.reloadData()
                         }
                     }

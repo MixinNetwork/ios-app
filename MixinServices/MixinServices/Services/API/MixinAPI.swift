@@ -152,7 +152,7 @@ extension MixinAPI {
         let host = MixinHost.http
         
         func handleDeauthorization(response: HTTPURLResponse?) {
-            let xServerTime = TimeInterval(response?.allHeaderFields[caseInsensitive: "x-server-time"] ?? "0") ?? 0
+            let xServerTime = TimeInterval(response?.value(forHTTPHeaderField: "x-server-time") ?? "0") ?? 0
             let serverTimeIntervalSince1970 = xServerTime / TimeInterval(NSEC_PER_SEC)
             let serverTime = Date(timeIntervalSince1970: serverTimeIntervalSince1970)
             if abs(requestTime.timeIntervalSinceNow) > secondsPerMinute {
@@ -187,8 +187,8 @@ extension MixinAPI {
             .responseData(queue: queue, completionHandler: { (response) in
                 switch response.result {
                 case .success(let data):
-                    if let requestId = response.request?.allHTTPHeaderFields?["X-Request-Id"], !requestId.isEmpty {
-                        let responseRequestId = response.response?.allHeaderFields[caseInsensitive: "x-request-id"] ?? ""
+                    if let requestId = response.request?.value(forHTTPHeaderField: "x-request-id"), !requestId.isEmpty {
+                        let responseRequestId = response.response?.value(forHTTPHeaderField: "x-request-id") ?? ""
                         if requestId != responseRequestId {
                             Logger.general.error(category: "MixinAPI", message: "Mismatched request id. Request path: \(response.request?.url?.path), id: \(requestId), responded header: \(response.response?.allHeaderFields)")
                             completion(.failure(.internalServerError))
@@ -213,7 +213,7 @@ extension MixinAPI {
                     }
                 case let .failure(error):
                     let path = response.request?.url?.path ?? "(null)"
-                    let requestId = response.request?.allHTTPHeaderFields?["X-Request-Id"] ?? "(null)"
+                    let requestId = response.request?.value(forHTTPHeaderField: "x-request-id") ?? "(null)"
                     Logger.general.error(category: "MixinAPI", message: "Request with path: \(path), id: \(requestId), failed with error: \(error)" )
                     if shouldToggleServer(for: error) {
                         MixinHost.toggle(currentHttpHost: host)
@@ -243,26 +243,6 @@ extension MixinAPI {
                 && codes.contains(nsError.code)
         } else {
             return false
-        }
-    }
-    
-}
-
-fileprivate extension Dictionary where Key == AnyHashable, Value == Any {
-    
-    subscript(caseInsensitive key: String) -> String? {
-        get {
-            if let k = keys.first(where: { ($0 as? String)?.lowercased() == key }) {
-                return self[k] as? String
-            }
-            return nil
-        }
-        set {
-            if let k = keys.first(where: { ($0 as? String)?.lowercased() == key }) {
-                self[k] = newValue
-            } else {
-                self[key] = newValue
-            }
         }
     }
     

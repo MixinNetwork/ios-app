@@ -180,7 +180,7 @@ public enum TIP {
             return seed
         } else {
             let ephemerals = try await TIPAPI.ephemerals()
-            if let newest = ephemerals.max(by: { $0.createdAt > $1.createdAt }), let decoded = Data(base64URLEncoded: newest.seed) {
+            if let newest = ephemerals.max(by: { $0.createdAt < $1.createdAt }), let decoded = Data(base64URLEncoded: newest.seed) {
                 let seed = try AESCryptor.decrypt(decoded, with: pinToken)
                 try await TIPAPI.updateEphemeral(base64URLEncoded: newest.seed)
                 AppGroupKeychain.ephemeralSeed = seed

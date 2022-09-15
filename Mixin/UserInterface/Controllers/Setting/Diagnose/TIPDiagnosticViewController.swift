@@ -9,9 +9,13 @@ class TIPDiagnosticViewController: SettingsTableViewController {
             SettingsRow(title: "Fail Last Sign Once", accessory: .switch(isOn: TIPDiagnostic.failLastSignerOnce, isEnabled: true)),
             SettingsRow(title: "Fail PIN Update Once", accessory: .switch(isOn: TIPDiagnostic.failPINUpdateOnce, isEnabled: true)),
             SettingsRow(title: "Fail Watch Once", accessory: .switch(isOn: TIPDiagnostic.failCounterWatchOnce, isEnabled: true)),
+            SettingsRow(title: "Crash After PIN Update", accessory: .switch(isOn: TIPDiagnostic.crashAfterUpdatePIN, isEnabled: true)),
         ]),
         SettingsSection(header: "UI Test", rows: [
             SettingsRow(title: "UI Test On", accessory: .switch(isOn: TIPDiagnostic.uiTestOnly, isEnabled: true)),
+        ]),
+        SettingsSection(rows: [
+            SettingsRow(title: "Remove TIP Priv", titleStyle: .destructive)
         ]),
         SettingsSection(rows: [
             SettingsRow(title: "Back to Home", titleStyle: .destructive)
@@ -36,6 +40,8 @@ class TIPDiagnosticViewController: SettingsTableViewController {
             TIPDiagnostic.failPINUpdateOnce.toggle()
         case dataSource.sections[0].rows[2]:
             TIPDiagnostic.failCounterWatchOnce.toggle()
+        case dataSource.sections[0].rows[3]:
+            TIPDiagnostic.crashAfterUpdatePIN.toggle()
         case dataSource.sections[1].rows[0]:
             TIPDiagnostic.uiTestOnly.toggle()
         default:
@@ -48,8 +54,14 @@ class TIPDiagnosticViewController: SettingsTableViewController {
 extension TIPDiagnosticViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == 2, indexPath.row == 0 {
+        switch indexPath.section {
+        case 2:
+            AppGroupKeychain.tipPriv = nil
+            showAutoHiddenHud(style: .notification, text: "Removed")
+        case 3:
             navigationController?.popToRootViewController(animated: true)
+        default:
+            break
         }
     }
     

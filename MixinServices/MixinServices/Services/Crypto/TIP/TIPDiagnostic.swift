@@ -31,6 +31,13 @@ public enum TIPDiagnostic {
         }
     }
     
+    @MainActor
+    public static var crashAfterUpdatePIN = false {
+        didSet {
+            updateDashboard()
+        }
+    }
+    
     private static let dashboardLabel: UITextView = {
         let textView = UITextView()
         textView.alpha = 0.45
@@ -64,6 +71,7 @@ public enum TIPDiagnostic {
         Fail Last Sign: \(failLastSignerOnce ? "ONCE" : " OFF")
         Fail PIN Update: \(failPINUpdateOnce ? "ONCE" : " OFF")
         Fail Watch: \(failCounterWatchOnce ? "ONCE" : " OFF")
+        Crash After PIN Update: \(crashAfterUpdatePIN ? "  ON" : " OFF")
         UI Test: \(uiTestOnly ? "  ON" : " OFF")
         """
     }

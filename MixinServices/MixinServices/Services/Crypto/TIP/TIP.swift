@@ -264,6 +264,13 @@ public enum TIP {
         }
 #endif
         let account = try await AccountAPI.updatePIN(request: request)
+#if DEBUG
+        await MainActor.run {
+            if TIPDiagnostic.crashAfterUpdatePIN {
+                abort()
+            }
+        }
+#endif
         LoginManager.shared.setAccount(account)
         
         try encryptAndSaveTIPPriv(pinData: pinData, aggSig: aggSig, aesKey: aesKey)
@@ -335,9 +342,16 @@ public enum TIP {
             }
         }
 #endif
+        AppGroupKeychain.tipPriv = nil
         let account = try await AccountAPI.updatePIN(request: request)
+#if DEBUG
+        await MainActor.run {
+            if TIPDiagnostic.crashAfterUpdatePIN {
+                abort()
+            }
+        }
+#endif
         LoginManager.shared.setAccount(account)
-        
         try encryptAndSaveTIPPriv(pinData: newPINData, aggSig: aggSig, aesKey: aesKey)
         await MainActor.run {
             NotificationCenter.default.post(name: Self.didUpdateNotification, object: self)

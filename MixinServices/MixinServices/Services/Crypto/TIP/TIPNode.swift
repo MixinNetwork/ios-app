@@ -156,7 +156,7 @@ public enum TIPNode {
         }
         
         let hexSigs = partials.map({ $0.hexEncodedString() }).joined(separator: ",")
-        let commitments = TIPConfig.current.commitments.joined(separator: ",") // TODO: Cache
+        let commitments = TIPConfig.current.commitments.joined(separator: ",")
         
         var error: NSError?
         guard let signature = CryptoRecoverSignature(hexSigs, commitments, assignor, allSigners.count, &error) else {

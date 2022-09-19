@@ -191,7 +191,7 @@
 "compress_database" = "压缩数据库";
 "compressed" = "已压缩";
 "confirm" = "确认";
-"connect_to_tip_network_failed" = "连接 TIP 网络失败，请尝试切换4G、Wi-Fi 或 VPN 后重试";
+"connect_to_tip_network_failed" = "连接 TIP 网络失败，请尝试切换网络后重试";
 "connected" = "已连接";
 "connecting" = "正在连接";
 "connection_unstable" = "当前通话网络不佳";

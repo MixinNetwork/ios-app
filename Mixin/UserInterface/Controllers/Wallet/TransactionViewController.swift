@@ -99,8 +99,8 @@ class TransactionViewController: UIViewController {
             return
         }
         becomeFirstResponder()
-        UIMenuController.shared.showMenu(from: amountLabel, rect: amountLabel.bounds)
         AppDelegate.current.mainWindow.addDismissMenuResponder()
+        UIMenuController.shared.showMenu(from: amountLabel, rect: amountLabel.bounds)
     }
     
     class func instance(asset: AssetItem, snapshot: SnapshotItem) -> UIViewController {

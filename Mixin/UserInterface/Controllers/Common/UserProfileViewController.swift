@@ -226,8 +226,8 @@ final class UserProfileViewController: ProfileViewController {
         becomeFirstResponder()
         subtitleLabel.highlightIdentityNumber = true
         if let highlightedRect = subtitleLabel.highlightedRect {
-            UIMenuController.shared.showMenu(from: subtitleLabel, rect: highlightedRect)
             AppDelegate.current.mainWindow.addDismissMenuResponder()
+            UIMenuController.shared.showMenu(from: subtitleLabel, rect: highlightedRect)
         }
     }
     

@@ -19,6 +19,7 @@ class ProfileDescriptionLabel: TextLabel {
     
     @objc private func showCopyMenu() {
         becomeFirstResponder()
+        AppDelegate.current.mainWindow.addDismissMenuResponder()
         UIMenuController.shared.showMenu(from: self, rect: bounds)
     }
     

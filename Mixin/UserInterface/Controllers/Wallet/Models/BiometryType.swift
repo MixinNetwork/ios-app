@@ -25,8 +25,11 @@ var biometryType: BiometryType {
     guard !UIDevice.isJailbreak else {
         return .none
     }
-    guard LoginManager.shared.account?.hasPIN ?? false else {
+    switch TIP.status {
+    case .needsInitialize, .unknown:
         return .none
+    case .needsMigrate, .ready:
+        break
     }
     var error: NSError?
     if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {

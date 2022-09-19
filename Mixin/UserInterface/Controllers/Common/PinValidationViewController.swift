@@ -1,5 +1,4 @@
 import UIKit
-import Alamofire
 import MixinServices
 
 class PinValidationViewController: UIViewController {

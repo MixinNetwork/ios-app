@@ -26,9 +26,9 @@ class BulletinContentView: UIView {
                 continueButton.setTitle(R.string.localizable.continue(), for: .normal)
                 closeButton.isHidden = false
             case .migrateToTIP:
-                titleLabel.text = "升级 TIP"
-                descriptionLabel.text = "PIN 基于去中心化密钥派生协议 Throttled Identity Protocol，阅读文档以了解更多。"
-                continueButton.setTitle("Upgrade", for: .normal)
+                titleLabel.text = R.string.localizable.upgrade_tip()
+                descriptionLabel.text = R.string.localizable.tip_introduction()
+                continueButton.setTitle(R.string.localizable.upgrade(), for: .normal)
                 closeButton.isHidden = true
             case .none:
                 titleLabel.text = nil

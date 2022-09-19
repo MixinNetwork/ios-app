@@ -355,16 +355,19 @@ extension UserProfileViewController {
     }
     
     @objc func changeNumber() {
-        if LoginManager.shared.account?.hasPIN ?? false {
+        switch TIP.status {
+        case .ready, .needsMigrate:
             let vc = VerifyPinNavigationController(rootViewController: ChangeNumberVerifyPinViewController())
             if parent != nil {
                 present(vc, animated: true)
             } else {
                 dismissAndPresent(vc)
             }
-        } else {
+        case .needsInitialize:
             let tip = TIPNavigationViewController(intent: .create, destination: .changePhone)
             present(tip, animated: true)
+        case .unknown:
+            break
         }
     }
     

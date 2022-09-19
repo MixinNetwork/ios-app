@@ -848,97 +848,78 @@ extension HomeViewController {
     }
     
     @objc private func updateBulletinView() {
-        func isDate(_ date: Date?, fallsInto interval: TimeInterval) -> Bool {
-            if let date = date {
-                return -date.timeIntervalSinceNow < interval
-            } else {
-                return false
-            }
-        }
-        
-        let userJustDismissedNotificationBulletin = isDate(AppGroupUserDefaults.notificationBulletinDismissalDate, fallsInto: BulletinDetectInterval.notificationAuthorization)
-        let checkNotificationSettings = !userJustDismissedNotificationBulletin
-        
-        let checkPINStatus: Bool
-        let tipStatus = TIP.status
-        let userJustDismissedInitializePINBulletin = isDate(AppGroupUserDefaults.User.initializePINBulletinDismissalDate, fallsInto: BulletinDetectInterval.initializePIN)
-        switch tipStatus {
-        case .needsInitialize:
-            checkPINStatus = !userJustDismissedInitializePINBulletin
-        case .needsMigrate, .ready, .unknown:
-            checkPINStatus = true
-        }
-        
-        let checkWalletBalanceForEmergencyContactBulletin: Bool
-        let userJustDismissedEmergencyContactBulletin = isDate(AppGroupUserDefaults.User.emergencyContactBulletinDismissalDate, fallsInto: BulletinDetectInterval.emergencyContact)
-        let justConfirmedUserHasInsufficientBalanceForEmergencyContactBulletin = isDate(insufficientBalanceForEmergencyContactBulletinConfirmedDate, fallsInto: insufficientBalanceForEmergencyContactBulletinReconfirmInterval)
-        if bulletinContent == .notification
-            || userJustDismissedEmergencyContactBulletin
-            || justConfirmedUserHasInsufficientBalanceForEmergencyContactBulletin
-            || (LoginManager.shared.account?.hasEmergencyContact ?? false)
-        {
-            checkWalletBalanceForEmergencyContactBulletin = false
-        } else {
-            checkWalletBalanceForEmergencyContactBulletin = true
-        }
-        
-        guard checkNotificationSettings || checkPINStatus || checkWalletBalanceForEmergencyContactBulletin else {
-            return
-        }
-        
-        func show(content: BulletinContent?) {
-            bulletinContentView.content = content
-            bulletinContent = content
-            if view.window != nil {
-                view.layoutIfNeeded()
-            }
-        }
-        
-        func showEmergencyContactBulletinIfNeeded() {
-            DispatchQueue.global().async {
-                let balance = AssetDAO.shared.getTotalUSDBalance()
-                DispatchQueue.main.async {
-                    if balance > self.emergencyContactAlertingUSDBalance {
-                        show(content: .emergencyContact)
-                    } else {
-                        self.insufficientBalanceForEmergencyContactBulletinConfirmedDate = Date()
-                    }
+        Task {
+            func isDate(_ date: Date?, fallsInto interval: TimeInterval) -> Bool {
+                if let date = date {
+                    return -date.timeIntervalSinceNow < interval
+                } else {
+                    return false
                 }
             }
-        }
-        
-        if checkNotificationSettings {
-            UNUserNotificationCenter.current().getNotificationSettings { (settings) in
-                DispatchQueue.main.async {
-                    if settings.authorizationStatus == .denied {
-                        show(content: .notification)
-                    } else if checkPINStatus {
-                        switch tipStatus {
-                        case .needsInitialize:
-                            show(content: .initializePIN)
-                        case .needsMigrate:
-                            show(content: .migrateToTIP)
-                        case .ready, .unknown:
-                            show(content: nil)
+            
+            var content: BulletinContent?
+            
+            let userJustDismissedNotificationBulletin = isDate(AppGroupUserDefaults.notificationBulletinDismissalDate, fallsInto: BulletinDetectInterval.notificationAuthorization)
+            if !userJustDismissedNotificationBulletin, await UNUserNotificationCenter.current().notificationSettings().authorizationStatus == .denied {
+                content = .notification
+            }
+            
+            if content == nil {
+                switch TIP.status {
+                case .needsInitialize:
+                    let userJustDismissedInitializePINBulletin = isDate(AppGroupUserDefaults.User.initializePINBulletinDismissalDate, fallsInto: BulletinDetectInterval.initializePIN)
+                    if !userJustDismissedInitializePINBulletin {
+                        content = .initializePIN
+                    }
+                case .needsMigrate:
+                    break
+                case .ready, .unknown:
+                    break
+                }
+            }
+
+            if content == nil {
+                let checkWalletBalance = await MainActor.run {
+                    if LoginManager.shared.account?.hasEmergencyContact ?? false {
+                        // User has emergency contact set
+                        return false
+                    } else if isDate(AppGroupUserDefaults.User.emergencyContactBulletinDismissalDate, fallsInto: BulletinDetectInterval.emergencyContact) {
+                        // User just dismissed the bulletin of emergency contact
+                        return false
+                    } else if isDate(insufficientBalanceForEmergencyContactBulletinConfirmedDate, fallsInto: insufficientBalanceForEmergencyContactBulletinReconfirmInterval) {
+                        // Just confirmed user doesn't have enough money
+                        return false
+                    } else {
+                        return true
+                    }
+                }
+                if checkWalletBalance {
+                    let isRichEnough: Bool = await withCheckedContinuation { continuation in
+                        DispatchQueue.global().async {
+                            let balance = AssetDAO.shared.getTotalUSDBalance()
+                            DispatchQueue.main.async {
+                                if balance > self.emergencyContactAlertingUSDBalance {
+                                    continuation.resume(returning: true)
+                                } else {
+                                    self.insufficientBalanceForEmergencyContactBulletinConfirmedDate = Date()
+                                    continuation.resume(returning: false)
+                                }
+                            }
                         }
-                    } else if checkWalletBalanceForEmergencyContactBulletin {
-                        showEmergencyContactBulletinIfNeeded()
-                    } else {
-                        show(content: nil)
+                    }
+                    if isRichEnough {
+                        content = .emergencyContact
                     }
                 }
             }
-        } else if checkPINStatus {
-            switch tipStatus {
-            case .needsInitialize:
-                show(content: .initializePIN)
-            case .needsMigrate:
-                show(content: .migrateToTIP)
-            case .ready, .unknown:
-                show(content: nil)
+            
+            await MainActor.run {
+                bulletinContentView.content = content
+                bulletinContent = content
+                if view.window != nil {
+                    view.layoutIfNeeded()
+                }
             }
-        } else if checkWalletBalanceForEmergencyContactBulletin {
-            showEmergencyContactBulletinIfNeeded()
         }
     }
     

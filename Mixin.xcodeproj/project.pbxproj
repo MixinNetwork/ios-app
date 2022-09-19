@@ -812,7 +812,6 @@
 		DF6ABB142295019C00A012B2 /* AddressWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF6ABB132295019C00A012B2 /* AddressWindow.xib */; };
 		DF6ABB162295049E00A012B2 /* AddressWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6ABB152295049E00A012B2 /* AddressWindow.swift */; };
 		DF6CF2E9221FDE5D00B65294 /* QrcodeWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6CF2E8221FDE5C00B65294 /* QrcodeWindow.swift */; };
-		DF754CB81FBC7F1200F2F2E5 /* WalletPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF754CB71FBC7F1200F2F2E5 /* WalletPasswordViewController.swift */; };
 		DF75FF4424FE61E1008A7CF3 /* UpdateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF75FF4324FE61E1008A7CF3 /* UpdateViewController.swift */; };
 		DF768563200647CC0055F3FF /* BouncingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF768562200647CC0055F3FF /* BouncingButton.swift */; };
 		DF768569200687010055F3FF /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF768568200687010055F3FF /* PreviewView.swift */; };
@@ -1827,7 +1826,6 @@
 		DF6ABB132295019C00A012B2 /* AddressWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddressWindow.xib; sourceTree = "<group>"; };
 		DF6ABB152295049E00A012B2 /* AddressWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressWindow.swift; sourceTree = "<group>"; };
 		DF6CF2E8221FDE5C00B65294 /* QrcodeWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QrcodeWindow.swift; sourceTree = "<group>"; };
-		DF754CB71FBC7F1200F2F2E5 /* WalletPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletPasswordViewController.swift; sourceTree = "<group>"; };
 		DF75FF4324FE61E1008A7CF3 /* UpdateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateViewController.swift; sourceTree = "<group>"; };
 		DF768562200647CC0055F3FF /* BouncingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BouncingButton.swift; sourceTree = "<group>"; };
 		DF768568200687010055F3FF /* PreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
@@ -3420,7 +3418,6 @@
 				DF16681D20A6F84200C45E31 /* AllTransactionsViewController.swift */,
 				DF9E66E4205B9AF300F1A0B9 /* HiddenAssetViewController.swift */,
 				DF5BF5601FBB2D490092AFB8 /* DepositViewController.swift */,
-				DF754CB71FBC7F1200F2F2E5 /* WalletPasswordViewController.swift */,
 				7B894AF2205BF8660065A1B8 /* AddressViewController.swift */,
 				DF06D91E222FAE1300FE7FBC /* TransferOutViewController.swift */,
 				7B894AF4205BFC9B0065A1B8 /* NewAddressViewController.swift */,
@@ -4944,7 +4941,6 @@
 				DF1F277C21A53585009A74C6 /* BackupViewController.swift in Sources */,
 				ABCB87DD23F18A3D00780E60 /* PermissionsViewController.swift in Sources */,
 				7C66F1BF268B3514006D8462 /* HomeAppsManager+FolderInteraction.swift in Sources */,
-				DF754CB81FBC7F1200F2F2E5 /* WalletPasswordViewController.swift in Sources */,
 				7B5281742265D7E30023616D /* RecentAppsViewController.swift in Sources */,
 				942F829825DD56E3004F913B /* opusenc_set_bitrate.c in Sources */,
 				7BA41940209AFBCD00DFCD39 /* AppCardMessageViewModel.swift in Sources */,

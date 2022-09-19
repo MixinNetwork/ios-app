@@ -5,7 +5,7 @@ class TIPFullscreenInputViewController: ContinueButtonViewController {
     
     enum Action {
         case create(InitializeStep)
-        case change(ChangeStep)
+        case change(_ fromLegacy: Bool, _ step: ChangeStep)
     }
     
     enum InitializeStep {
@@ -70,13 +70,13 @@ class TIPFullscreenInputViewController: ContinueButtonViewController {
         case .create(.input):
             titleLabel.text = R.string.localizable.tip_create_pin_title()
             subtitleLabel.text = ""
-        case .change(.verify):
+        case .change(_, .verify):
             titleLabel.text = R.string.localizable.enter_your_pin()
             subtitleLabel.text = ""
-        case .change(.input):
+        case .change(_, .input):
             titleLabel.text = R.string.localizable.set_new_pin()
             subtitleLabel.text = ""
-        case let .create(.confirmation(step, _)), let .change(.confirmation(step, _, _)):
+        case let .create(.confirmation(step, _)), let .change(_, .confirmation(step, _, _)):
             switch step {
             case 0:
                 titleLabel.text = R.string.localizable.pin_confirm_hint()
@@ -99,7 +99,7 @@ class TIPFullscreenInputViewController: ContinueButtonViewController {
         let pin = pinField.text
         
         switch action {
-        case .create(.input), .change(.input):
+        case .create(.input), .change(_, .input):
             if pin == "123456" || Set(pin).count < 3 {
                 pinField.clear()
                 alert(R.string.localizable.wallet_password_unsafe())
@@ -127,14 +127,14 @@ class TIPFullscreenInputViewController: ContinueButtonViewController {
                 next = TIPFullscreenInputViewController(action: .create(.confirmation(step: step + 1, previous: pin)))
             }
             navigationController?.pushViewController(next, animated: true)
-        case .change(.verify):
+        case let .change(fromLegacy, .verify):
             isBusy = true
             AccountAPI.verify(pin: pin) { result in
                 self.isBusy = false
                 switch result {
                 case .success:
                     AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
-                    let next = TIPFullscreenInputViewController(action: .change(.input(old: pin)))
+                    let next = TIPFullscreenInputViewController(action: .change(fromLegacy, .input(old: pin)))
                     self.navigationController?.pushViewController(next, animated: true)
                 case let .failure(error):
                     self.pinField.clear()
@@ -143,10 +143,10 @@ class TIPFullscreenInputViewController: ContinueButtonViewController {
                     }
                 }
             }
-        case let .change(.input(old)):
-            let next = TIPFullscreenInputViewController(action: .change(.confirmation(step: 0, old: old, new: pin)))
+        case let .change(fromLegacy, .input(old)):
+            let next = TIPFullscreenInputViewController(action: .change(fromLegacy, .confirmation(step: 0, old: old, new: pin)))
             navigationController?.pushViewController(next, animated: true)
-        case let .change(.confirmation(step, old, new)):
+        case let .change(fromLegacy, .confirmation(step, old, new)):
             guard pin == new else {
                 alert(R.string.localizable.wallet_password_not_equal(), cancelHandler: { _ in
                     self.tipNavigationController?.popToFirstInputPINViewController()
@@ -155,9 +155,15 @@ class TIPFullscreenInputViewController: ContinueButtonViewController {
             }
             let next: UIViewController
             if step == confirmationSteps - 1 {
-                next = TIPActionViewController(action: .change(old: old, new: new))
+                let action: TIPActionViewController.Action
+                if fromLegacy {
+                    action = .change(old: .legacy(old), new: new)
+                } else {
+                    action = .change(old: .tip(old), new: new)
+                }
+                next = TIPActionViewController(action: action)
             } else {
-                next = TIPFullscreenInputViewController(action: .change(.confirmation(step: step + 1, old: old, new: new)))
+                next = TIPFullscreenInputViewController(action: .change(fromLegacy, .confirmation(step: step + 1, old: old, new: new)))
             }
             navigationController?.pushViewController(next, animated: true)
         }

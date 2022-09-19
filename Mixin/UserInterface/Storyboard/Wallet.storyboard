@@ -2011,105 +2011,6 @@
             </objects>
             <point key="canvasLocation" x="1074" y="2848"/>
         </scene>
-        <!--Wallet Password View Controller-->
-        <scene sceneID="RZW-0e-IdW">
-            <objects>
-                <viewController storyboardIdentifier="password" id="La6-HZ-0b5" customClass="WalletPasswordViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="qxv-4M-qc8">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oAO-fR-PrC">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IJi-Z4-Yxb">
-                                        <rect key="frame" x="0.0" y="0.0" width="64" height="44"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="64" id="v99-c5-j94"/>
-                                        </constraints>
-                                        <color key="tintColor" name="icon_tint"/>
-                                        <state key="normal" image="ic_title_close"/>
-                                        <connections>
-                                            <action selector="backAction:" destination="La6-HZ-0b5" eventType="touchUpInside" id="Mdy-by-08R"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="0Ce-fD-CRK"/>
-                                    <constraint firstItem="IJi-Z4-Yxb" firstAttribute="top" secondItem="oAO-fR-PrC" secondAttribute="top" id="4Wp-SM-7sC"/>
-                                    <constraint firstItem="IJi-Z4-Yxb" firstAttribute="leading" secondItem="oAO-fR-PrC" secondAttribute="leading" id="ig3-WH-7WI"/>
-                                    <constraint firstAttribute="bottom" secondItem="IJi-Z4-Yxb" secondAttribute="bottom" id="uHG-eT-dhx"/>
-                                </constraints>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ylq-8e-5gl">
-                                <rect key="frame" x="0.0" y="44" width="414" height="186"/>
-                                <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Kw-kt-MQT" customClass="TextLabel" customModule="Mixin" customModuleProvider="target">
-                                        <rect key="frame" x="27" y="43" width="360" height="100"/>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="100" id="rtD-ec-PRl"/>
-                                        </constraints>
-                                    </view>
-                                </subviews>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstItem="5Kw-kt-MQT" firstAttribute="leading" secondItem="ylq-8e-5gl" secondAttribute="leading" constant="27" id="8Cu-gh-JCB"/>
-                                    <constraint firstItem="5Kw-kt-MQT" firstAttribute="centerY" secondItem="ylq-8e-5gl" secondAttribute="centerY" id="MW8-Ri-bAv"/>
-                                    <constraint firstAttribute="trailing" secondItem="5Kw-kt-MQT" secondAttribute="trailing" constant="27" id="p7F-pF-S2D"/>
-                                </constraints>
-                            </view>
-                            <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ToH-VW-Iy6" customClass="PinField" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="121" y="230" width="172" height="24"/>
-                                <color key="tintColor" name="text_accessory"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="172" id="3AL-F2-Ozh"/>
-                                    <constraint firstAttribute="height" constant="24" id="Yrp-Jd-KHF"/>
-                                </constraints>
-                            </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="The PIN is too simple and insecure." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ssW-jL-Bg4">
-                                <rect key="frame" x="30" y="294" width="354" height="17"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <color key="textColor" name="red"/>
-                                <nil key="highlightedColor"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="wallet_password_unsafe"/>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
-                                </userDefinedRuntimeAttributes>
-                            </label>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="Ixx-qa-WfM"/>
-                        <color key="backgroundColor" name="background"/>
-                        <constraints>
-                            <constraint firstItem="ylq-8e-5gl" firstAttribute="leading" secondItem="Ixx-qa-WfM" secondAttribute="leading" id="2tz-fO-AvR"/>
-                            <constraint firstItem="ylq-8e-5gl" firstAttribute="top" secondItem="oAO-fR-PrC" secondAttribute="bottom" id="ESU-Y4-SMn"/>
-                            <constraint firstItem="oAO-fR-PrC" firstAttribute="top" secondItem="Ixx-qa-WfM" secondAttribute="top" id="JKT-0B-usx"/>
-                            <constraint firstItem="ToH-VW-Iy6" firstAttribute="top" secondItem="oAO-fR-PrC" secondAttribute="bottom" constant="186" id="P6u-2k-WAo"/>
-                            <constraint firstItem="ToH-VW-Iy6" firstAttribute="centerX" secondItem="Ixx-qa-WfM" secondAttribute="centerX" id="aQN-or-0mi"/>
-                            <constraint firstItem="Ixx-qa-WfM" firstAttribute="trailing" secondItem="oAO-fR-PrC" secondAttribute="trailing" id="cNy-6T-75A"/>
-                            <constraint firstItem="Ixx-qa-WfM" firstAttribute="trailing" secondItem="ylq-8e-5gl" secondAttribute="trailing" id="gXv-U6-pPp"/>
-                            <constraint firstItem="Ixx-qa-WfM" firstAttribute="trailing" secondItem="ssW-jL-Bg4" secondAttribute="trailing" constant="30" id="kpa-T5-iyZ"/>
-                            <constraint firstItem="ToH-VW-Iy6" firstAttribute="top" secondItem="ylq-8e-5gl" secondAttribute="bottom" id="pOn-OK-uw3"/>
-                            <constraint firstItem="oAO-fR-PrC" firstAttribute="leading" secondItem="Ixx-qa-WfM" secondAttribute="leading" id="rnY-FD-Lcj"/>
-                            <constraint firstItem="ssW-jL-Bg4" firstAttribute="leading" secondItem="Ixx-qa-WfM" secondAttribute="leading" constant="30" id="tzD-ht-EHI"/>
-                            <constraint firstItem="ssW-jL-Bg4" firstAttribute="top" secondItem="ToH-VW-Iy6" secondAttribute="bottom" constant="40" id="uXZ-b5-tlc"/>
-                        </constraints>
-                    </view>
-                    <connections>
-                        <outlet property="backButton" destination="IJi-Z4-Yxb" id="0o6-xM-427"/>
-                        <outlet property="pinField" destination="ToH-VW-Iy6" id="7pB-na-S42"/>
-                        <outlet property="subtitleLabel" destination="ssW-jL-Bg4" id="O5e-uB-OJF"/>
-                        <outlet property="textLabel" destination="5Kw-kt-MQT" id="HTK-bs-Q9l"/>
-                        <outlet property="textLabelHeightConstraint" destination="rtD-ec-PRl" id="cga-kG-g3L"/>
-                        <outlet property="textLabelLeadingConstraint" destination="8Cu-gh-JCB" id="dfW-Uv-odB"/>
-                        <outlet property="textLabelTrailingConstraint" destination="p7F-pF-S2D" id="HQZ-AG-1O1"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="FGA-IM-Cax" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="303" y="1416"/>
-        </scene>
     </scenes>
     <resources>
         <image name="Wallet/ic_add" width="10" height="10"/>
@@ -2129,7 +2030,7 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_input">
-            <color red="0.96100002527236938" green="0.96899998188018799" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_secondary">
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -2141,10 +2042,10 @@
             <color red="0.90980392156862744" green="0.41960784313725491" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
-            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_accessory">
-            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="theme">
             <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

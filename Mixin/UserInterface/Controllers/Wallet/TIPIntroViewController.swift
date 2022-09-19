@@ -126,7 +126,17 @@ class TIPIntroViewController: UIViewController {
                 let input = TIPFullscreenInputViewController(action: .create(.input))
                 navigationController?.pushViewController(input, animated: true)
             case .change:
-                let input = TIPFullscreenInputViewController(action: .change(.verify))
+                let fromLegacy: Bool
+                switch TIP.status {
+                case .ready:
+                    fromLegacy = false
+                case .needsMigrate:
+                    fromLegacy = true
+                case .unknown, .needsInitialize:
+                    assertionFailure("Invalid TIP status")
+                    return
+                }
+                let input = TIPFullscreenInputViewController(action: .change(fromLegacy, .verify))
                 navigationController?.pushViewController(input, animated: true)
             case .migrate:
                 let validator = TIPPopupInputViewController(action: .migrate({ pin in

@@ -3,9 +3,14 @@ import MixinServices
 
 class TIPActionViewController: UIViewController {
     
+    enum PIN {
+        case legacy(String)
+        case tip(String)
+    }
+    
     enum Action {
         case create(pin: String)
-        case change(old: String?, new: String)
+        case change(old: PIN, new: String)
         case migrate(pin: String)
     }
     
@@ -71,10 +76,19 @@ class TIPActionViewController: UIViewController {
 #endif
             Task {
                 do {
-                    try await TIP.updateTIPPriv(oldPIN: old,
-                                                newPIN: new,
-                                                failedSigners: [],
-                                                progressHandler: showProgress(step:))
+                    switch old {
+                    case let .legacy(old):
+                        try await TIP.createTIPPriv(pin: new,
+                                                    failedSigners: [],
+                                                    legacyPIN: old,
+                                                    forRecover: false,
+                                                    progressHandler: showProgress(step:))
+                    case let .tip(old):
+                        try await TIP.updateTIPPriv(oldPIN: old,
+                                                    newPIN: new,
+                                                    failedSigners: [],
+                                                    progressHandler: showProgress(step:))
+                    }
                     if AppGroupUserDefaults.Wallet.payWithBiometricAuthentication {
                         Keychain.shared.storePIN(pin: new)
                     }

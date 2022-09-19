@@ -38,7 +38,7 @@ extension TransferPinAction {
     private static func pinMessage(userId: String, userName: String?, category: String, content: String) -> String {
         let userFullName = userId == myUserId ? R.string.localizable.you() : (userName ?? "")
         if category.hasSuffix("_TEXT") {
-            return R.string.localizable.chat_pin_message(userFullName, content)
+            return R.string.localizable.chat_pin_message(userFullName, "\"\(content)\"")
         } else if category.hasSuffix("_IMAGE") {
             return R.string.localizable.pinned_a_image(userFullName)
         } else if category.hasSuffix("_STICKER") {

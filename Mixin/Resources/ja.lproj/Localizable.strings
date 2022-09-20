@@ -705,6 +705,7 @@
 "search_related_message" = "%d個の関連するメッセージ";
 "search_related_message_count" = "%d個の関連するメッセージ";
 "search_result_prefix_phone" = "電話番号: ";
+"secured_by_tip" = "Secured by TIP";
 "security" = "セキュリティ";
 "select" = "選択";
 "select_a_country_or_region" = "国と地域を選択";

@@ -705,6 +705,7 @@
 "search_related_message" = "%d 条相关的消息";
 "search_related_message_count" = "%d 条相关的消息";
 "search_result_prefix_phone" = "手机号码：";
+"secured_by_tip" = "由 TIP 提供安全保障";
 "security" = "安全";
 "select" = "选择";
 "select_a_country_or_region" = "选择一个国家或地区";

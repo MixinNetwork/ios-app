@@ -705,6 +705,7 @@
 "search_related_message" = "%d 條相關的訊息";
 "search_related_message_count" = "%d 條相關的訊息";
 "search_result_prefix_phone" = "手機號碼：";
+"secured_by_tip" = "Secured by TIP";
 "security" = "安全";
 "select" = "選擇";
 "select_a_country_or_region" = "選擇一個國家或地區";

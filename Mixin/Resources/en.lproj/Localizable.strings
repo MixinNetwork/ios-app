@@ -705,6 +705,7 @@
 "search_related_message" = "%d related message";
 "search_related_message_count" = "%d related messages";
 "search_result_prefix_phone" = "Phone Number: ";
+"secured_by_tip" = "Secured by TIP";
 "security" = "Security";
 "select" = "Select";
 "select_a_country_or_region" = "Select a Country or Region";

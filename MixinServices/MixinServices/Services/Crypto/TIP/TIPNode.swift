@@ -63,6 +63,7 @@ public enum TIPNode {
         forRecover: Bool,
         progressHandler: (@MainActor (TIP.Step) -> Void)?
     ) async throws -> Data {
+        Logger.tip.info(category: "TIPNode", message: "Sign with assigneePriv: \(assigneePriv != nil), failedSigners: \(failedSigners.map(\.index)), forRecover: \(forRecover)")
         guard let suite = CryptoNewSuiteBn256() else {
             throw Error.bn256SuiteNotAvailable
         }
@@ -233,18 +234,19 @@ public enum TIPNode {
                                                             nonce: nonce,
                                                             grace: grace,
                                                             assignee: assignee)
+                            Logger.tip.info(category: "TIPNode", message: "Node \(signer.index) sign succeed")
                             return .success(sig)
                         } catch {
                             switch error {
                             case let AFError.responseValidationFailed(reason: .unacceptableStatusCode(code)):
+                                Logger.tip.error(category: "TIPNode", message: "Node \(signer.index) sign failed with status code: \(code)")
                                 if code == 429 || code == 500 {
                                     return .failure(error)
                                 } else {
-                                    Logger.general.error(category: "TIPNode", message: "Node sign responded with status code: \(code)")
                                     continue
                                 }
                             default:
-                                Logger.general.error(category: "TIPNode", message: "Node sign responded with: \(error)")
+                                Logger.tip.error(category: "TIPNode", message: "Node \(signer.index) sign failed with: \(error)")
                                 continue
                             }
                         }
@@ -262,7 +264,7 @@ public enum TIPNode {
                     let fractionCompleted = Float(sigs.count) / Float(signers.count)
                     await progressHandler?(.synchronizing(fractionCompleted))
                 case .failure(let error):
-                    Logger.general.error(category: "TIPNode", message: "Failed to sign: \(error)")
+                    Logger.tip.error(category: "TIPNode", message: "Failed to sign: \(error)")
                 }
             }
             return sigs

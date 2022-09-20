@@ -8,7 +8,7 @@ enum TIPIdentityManager {
     }
     
     static func identityPair(pinData: Data, pinToken: Data) async throws -> (priv: Data, watcher: Data) {
-        Logger.general.debug(category: "TIPIdentityManager", message: "Generating identity pair with pinData: \(pinData.hexEncodedString()), pinToken: \(pinToken.hexEncodedString())")
+        Logger.tip.info(category: "TIPIdentityManager", message: "Generating identity pair")
         let identitySeed = try await identitySeed(pinToken: pinToken)
         let identityPriv = try Argon2.hash(iterations: 4,
                                            memoryInKiB: 1024,

@@ -7,6 +7,7 @@ public enum Logger {
     case database
     case call
     case conversation(id: String)
+    case tip
     
     public static func migrate() {
         let fileManager = FileManager.default
@@ -178,6 +179,8 @@ extension Logger {
             filename = "call.log"
         case .conversation(let id):
             filename = "\(id).log"
+        case .tip:
+            filename = "tip.log"
         }
         let url = AppGroupContainer.logUrl.appendingPathComponent(filename)
         do {
@@ -192,19 +195,14 @@ extension Logger {
     private func write(level: Level, category: StaticString, message: String, userInfo: UserInfo? = nil) {
         let date = Date()
         
-        var formattedDate: String {
-            // Formatting a date may reduce the performance of caller, use a computed
-            // var to postpone this procedure to background queue
-            Self.dateFormatter.string(from: date)
-        }
-        
-        var formattedUserInfo: String {
+        lazy var formattedDate = Self.dateFormatter.string(from: date)
+        lazy var formattedUserInfo: String = {
             if let userInfo = userInfo {
                 return ", userInfo: {\(userInfo.output)}"
             } else {
                 return ""
             }
-        }
+        }()
         
         #if DEBUG
         let output = "\(formattedDate) \(level.briefOutput)[\(category)] \(message)\(formattedUserInfo)"

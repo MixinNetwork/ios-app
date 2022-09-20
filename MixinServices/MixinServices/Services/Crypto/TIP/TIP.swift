@@ -104,101 +104,6 @@ public enum TIP {
         }
     }
     
-    static func encryptPIN(key: Data, code: Data) throws -> String {
-        let pinData = code
-            + UInt64(Date().timeIntervalSince1970).data(endianness: .little)
-            + pinIterator().data(endianness: .little)
-        let based = try AESCryptor.encrypt(pinData, with: key).base64RawURLEncodedString()
-        return based
-    }
-    
-    static func encryptTIPPIN(tipPriv: Data, target: Data) throws -> String {
-        guard let pinToken = AppGroupKeychain.pinToken else {
-            throw Error.missingPINToken
-        }
-        guard let privSeed = SHA3_256.hash(data: tipPriv) else {
-            throw Error.hashTIPPrivToPrivSeed
-        }
-        guard let privateKey = Ed25519PrivateKey(rfc8032Representation: privSeed) else {
-            throw Error.invalidTIPPriv
-        }
-        guard let sig = privateKey.signature(for: target) else {
-            throw Error.unableToSignTarget
-        }
-        let pinData = sig
-            + UInt64(Date().timeIntervalSince1970).data(endianness: .little)
-            + pinIterator().data(endianness: .little)
-        let based = try AESCryptor.encrypt(pinData, with: pinToken).base64RawURLEncodedString()
-        return based
-    }
-    
-    static func encryptTIPPIN(pin: String, pinToken: Data, target: Data) async throws -> String {
-        guard let pinData = pin.data(using: .utf8) else {
-            throw Error.invalidPIN
-        }
-        let tipPriv: Data
-        if let savedTIPPriv = AppGroupKeychain.tipPriv {
-            let aesKey = try await getAESKey(pinData: pinData, pinToken: pinToken)
-            guard let tipPrivKey = SHA3_256.hash(data: aesKey + pinData) else {
-                throw Error.unableToHashTIPPrivKey
-            }
-            tipPriv = try AESCryptor.decrypt(savedTIPPriv, with: tipPrivKey)
-        } else {
-            tipPriv = try await createTIPPriv(pin: pin,
-                                              failedSigners: [],
-                                              legacyPIN: nil,
-                                              forRecover: true,
-                                              progressHandler: nil)
-        }
-        return try encryptTIPPIN(tipPriv: tipPriv, target: target)
-    }
-    
-    static func pinIterator() -> UInt64 {
-        var iterator: UInt64 = 0
-        PropertiesDAO.shared.updateValue(forKey: .iterator, type: UInt64.self) { databaseValue in
-            let userDefaultsValue = AppGroupUserDefaults.Crypto.iterator
-            if let databaseValue = databaseValue {
-                if databaseValue != userDefaultsValue {
-                    Logger.general.warn(category: "TIP", message: "database: \(databaseValue), defaults: \(userDefaultsValue)")
-                }
-                iterator = max(databaseValue, userDefaultsValue)
-            } else {
-                iterator = userDefaultsValue
-                Logger.general.info(category: "TIP", message: "Iterator initialized to \(userDefaultsValue)")
-            }
-            let nextIterator = iterator + 1
-            AppGroupUserDefaults.Crypto.iterator = nextIterator
-            return nextIterator
-        }
-        Logger.general.info(category: "TIP", message: "Encrypt with it: \(iterator)")
-        return iterator
-    }
-    
-    static func ephemeralSeed(pinToken: Data) async throws -> Data {
-        if let seed = AppGroupKeychain.ephemeralSeed {
-            Logger.general.debug(category: "TIP", message: "Using saved ephemeral: \(seed.hexEncodedString())")
-            return seed
-        } else {
-            let ephemerals = try await TIPAPI.ephemerals()
-            if let newest = ephemerals.max(by: { $0.createdAt < $1.createdAt }), let decoded = Data(base64URLEncoded: newest.seed) {
-                let seed = try AESCryptor.decrypt(decoded, with: pinToken)
-                try await TIPAPI.updateEphemeral(base64URLEncoded: newest.seed)
-                AppGroupKeychain.ephemeralSeed = seed
-                Logger.general.debug(category: "TIP", message: "Using retrieved ephemeral: \(seed.hexEncodedString())")
-                return seed
-            } else if let seed = Data(withNumberOfSecuredRandomBytes: 32) {
-                let encrypted = try AESCryptor.encrypt(seed, with: pinToken)
-                let encoded = encrypted.base64RawURLEncodedString()
-                try await TIPAPI.updateEphemeral(base64URLEncoded: encoded)
-                AppGroupKeychain.ephemeralSeed = seed
-                Logger.general.debug(category: "TIP", message: "Using updated ephemeral: \(seed.hexEncodedString())")
-                return seed
-            } else {
-                throw Error.unableToGenerateSecuredRandom
-            }
-        }
-    }
-    
     @discardableResult
     public static func createTIPPriv(
         pin: String,
@@ -207,6 +112,7 @@ public enum TIP {
         forRecover: Bool,
         progressHandler: (@MainActor (Step) -> Void)?
     ) async throws -> Data {
+        Logger.tip.info(category: "TIP", message: "createTIPPriv with failedSigners: \(failedSigners.map(\.index)), legacyPIN: \(legacyPIN != nil), forRecover: \(forRecover)")
         guard let pinData = pin.data(using: .utf8) else {
             throw Error.invalidPIN
         }
@@ -272,8 +178,10 @@ public enum TIP {
         }
 #endif
         LoginManager.shared.setAccount(account)
+        Logger.tip.info(category: "TIP", message: "Local account is updated with tip_counter: \(account.tipCounter)")
         
         try encryptAndSaveTIPPriv(pinData: pinData, aggSig: aggSig, aesKey: aesKey)
+        Logger.tip.info(category: "TIP", message: "TIP Priv is saved")
         await MainActor.run {
             NotificationCenter.default.post(name: Self.didUpdateNotification, object: self)
         }
@@ -287,7 +195,7 @@ public enum TIP {
         failedSigners: [TIPSigner],
         progressHandler: (@MainActor (Step) -> Void)?
     ) async throws -> Data {
-        Logger.general.debug(category: "TIP", message: "Update priv with failedSigners: \(failedSigners)")
+        Logger.tip.info(category: "TIP", message: "Update priv with oldPIN: \(oldPIN != nil), failedSigners: \(failedSigners.map(\.index))")
         guard let newPINData = newPIN.data(using: .utf8) else {
             throw Error.invalidPIN
         }
@@ -343,6 +251,7 @@ public enum TIP {
         }
 #endif
         AppGroupKeychain.tipPriv = nil
+        Logger.tip.info(category: "TIP", message: "TIP Priv is removed")
         let account = try await AccountAPI.updatePIN(request: request)
 #if DEBUG
         await MainActor.run {
@@ -352,7 +261,9 @@ public enum TIP {
         }
 #endif
         LoginManager.shared.setAccount(account)
+        Logger.tip.info(category: "TIP", message: "Local account is updated with tip_counter: \(account.tipCounter)")
         try encryptAndSaveTIPPriv(pinData: newPINData, aggSig: aggSig, aesKey: aesKey)
+        Logger.tip.info(category: "TIP", message: "TIP Priv is saved")
         await MainActor.run {
             NotificationCenter.default.post(name: Self.didUpdateNotification, object: self)
         }
@@ -374,10 +285,11 @@ public enum TIP {
 #endif
         let counters = try await TIPNode.watch(watcher: watcher, timeoutInterval: timeoutInterval)
         if counters.isEmpty {
+            Logger.tip.info(category: "TIP", message: "Empty counter watched")
             return nil
         }
         if counters.count != TIPConfig.current.signers.count {
-            Logger.general.warn(category: "TIP", message: "Watch count: \(counters.count), node count: \(TIPConfig.current.signers.count)")
+            Logger.tip.warn(category: "TIP", message: "Watch count: \(counters.count), node count: \(TIPConfig.current.signers.count)")
         }
         let groups = counters.reduce(into: [UInt64: [TIPNode.Counter]]()) { (result, counter) in
             var counters = result[counter.value] ?? []
@@ -405,6 +317,111 @@ public enum TIP {
             throw Error.invalidCounterGroups
         }
     }
+    
+}
+
+extension TIP {
+    
+    static func encryptPIN(key: Data, code: Data) throws -> String {
+        let pinData = code
+            + UInt64(Date().timeIntervalSince1970).data(endianness: .little)
+            + pinIterator().data(endianness: .little)
+        let based = try AESCryptor.encrypt(pinData, with: key).base64RawURLEncodedString()
+        return based
+    }
+    
+    static func encryptTIPPIN(tipPriv: Data, target: Data) throws -> String {
+        guard let pinToken = AppGroupKeychain.pinToken else {
+            throw Error.missingPINToken
+        }
+        guard let privSeed = SHA3_256.hash(data: tipPriv) else {
+            throw Error.hashTIPPrivToPrivSeed
+        }
+        guard let privateKey = Ed25519PrivateKey(rfc8032Representation: privSeed) else {
+            throw Error.invalidTIPPriv
+        }
+        guard let sig = privateKey.signature(for: target) else {
+            throw Error.unableToSignTarget
+        }
+        let pinData = sig
+            + UInt64(Date().timeIntervalSince1970).data(endianness: .little)
+            + pinIterator().data(endianness: .little)
+        let based = try AESCryptor.encrypt(pinData, with: pinToken).base64RawURLEncodedString()
+        return based
+    }
+    
+    static func encryptTIPPIN(pin: String, pinToken: Data, target: Data) async throws -> String {
+        guard let pinData = pin.data(using: .utf8) else {
+            throw Error.invalidPIN
+        }
+        let tipPriv: Data
+        if let savedTIPPriv = AppGroupKeychain.tipPriv {
+            Logger.tip.info(category: "TIP", message: "encryptTIPPIN with saved priv")
+            let aesKey = try await getAESKey(pinData: pinData, pinToken: pinToken)
+            guard let tipPrivKey = SHA3_256.hash(data: aesKey + pinData) else {
+                throw Error.unableToHashTIPPrivKey
+            }
+            tipPriv = try AESCryptor.decrypt(savedTIPPriv, with: tipPrivKey)
+        } else {
+            Logger.tip.info(category: "TIP", message: "encryptTIPPIN with new created priv")
+            tipPriv = try await createTIPPriv(pin: pin,
+                                              failedSigners: [],
+                                              legacyPIN: nil,
+                                              forRecover: true,
+                                              progressHandler: nil)
+        }
+        return try encryptTIPPIN(tipPriv: tipPriv, target: target)
+    }
+    
+    static func pinIterator() -> UInt64 {
+        var iterator: UInt64 = 0
+        PropertiesDAO.shared.updateValue(forKey: .iterator, type: UInt64.self) { databaseValue in
+            let userDefaultsValue = AppGroupUserDefaults.Crypto.iterator
+            if let databaseValue = databaseValue {
+                if databaseValue != userDefaultsValue {
+                    Logger.tip.warn(category: "TIP", message: "database: \(databaseValue), defaults: \(userDefaultsValue)")
+                }
+                iterator = max(databaseValue, userDefaultsValue)
+            } else {
+                iterator = userDefaultsValue
+                Logger.tip.info(category: "TIP", message: "Iterator initialized to \(userDefaultsValue)")
+            }
+            let nextIterator = iterator + 1
+            AppGroupUserDefaults.Crypto.iterator = nextIterator
+            return nextIterator
+        }
+        Logger.tip.info(category: "TIP", message: "Encrypt with it: \(iterator)")
+        return iterator
+    }
+    
+    static func ephemeralSeed(pinToken: Data) async throws -> Data {
+        if let seed = AppGroupKeychain.ephemeralSeed {
+            Logger.tip.info(category: "TIP", message: "Using saved ephemeral")
+            return seed
+        } else {
+            let ephemerals = try await TIPAPI.ephemerals()
+            if let newest = ephemerals.max(by: { $0.createdAt < $1.createdAt }), let decoded = Data(base64URLEncoded: newest.seed) {
+                let seed = try AESCryptor.decrypt(decoded, with: pinToken)
+                try await TIPAPI.updateEphemeral(base64URLEncoded: newest.seed)
+                AppGroupKeychain.ephemeralSeed = seed
+                Logger.tip.info(category: "TIP", message: "Using retrieved ephemeral")
+                return seed
+            } else if let seed = Data(withNumberOfSecuredRandomBytes: 32) {
+                let encrypted = try AESCryptor.encrypt(seed, with: pinToken)
+                let encoded = encrypted.base64RawURLEncodedString()
+                try await TIPAPI.updateEphemeral(base64URLEncoded: encoded)
+                AppGroupKeychain.ephemeralSeed = seed
+                Logger.tip.info(category: "TIP", message: "Using updated ephemeral")
+                return seed
+            } else {
+                throw Error.unableToGenerateSecuredRandom
+            }
+        }
+    }
+    
+}
+
+extension TIP {
     
     private static func encryptAndSaveTIPPriv(pinData: Data, aggSig: Data, aesKey: Data) throws {
         guard let key = SHA3_256.hash(data: aesKey + pinData) else {

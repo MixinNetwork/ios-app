@@ -8,10 +8,23 @@ class TIPActionViewController: UIViewController {
         case tip(String)
     }
     
-    enum Action {
+    enum Action: CustomDebugStringConvertible {
+        
         case create(pin: String)
         case change(old: PIN, new: String)
         case migrate(pin: String)
+        
+        var debugDescription: String {
+            switch self {
+            case .create:
+                return "create"
+            case .change:
+                return "change"
+            case .migrate:
+                return "migrate"
+            }
+        }
+        
     }
     
     @IBOutlet weak var iconImageView: UIImageView!
@@ -41,6 +54,15 @@ class TIPActionViewController: UIViewController {
         super.viewDidLoad()
         progressLabel.font = UIFontMetrics.default.scaledFont(for: .monospacedDigitSystemFont(ofSize: 14, weight: .regular))
         progressLabel.adjustsFontForContentSizeCategory = true
+        performAction()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        Logger.tip.info(category: "TIPAction", message: "View did appear with action: \(action.debugDescription)")
+    }
+    
+    private func performAction() {
         switch action {
         case let .create(pin):
             titleLabel.text = R.string.localizable.create_pin()
@@ -62,7 +84,6 @@ class TIPActionViewController: UIViewController {
                         finish()
                     }
                 } catch {
-                    Logger.general.warn(category: "TIPActionViewController", message: "Failed to create: \(error)")
                     await handle(error: error)
                 }
             }
@@ -98,7 +119,6 @@ class TIPActionViewController: UIViewController {
                         finish()
                     }
                 } catch {
-                    Logger.general.warn(category: "TIPActionViewController", message: "Failed to change: \(error)")
                     await handle(error: error)
                 }
             }
@@ -122,7 +142,6 @@ class TIPActionViewController: UIViewController {
                         finish()
                     }
                 } catch {
-                    Logger.general.warn(category: "TIPActionViewController", message: "Failed to migrate: \(error)")
                     await handle(error: error)
                 }
             }
@@ -131,6 +150,7 @@ class TIPActionViewController: UIViewController {
     
     @MainActor
     private func finish() {
+        Logger.tip.info(category: "TIPAction", message: "Finished successfully")
         let title: String
         switch action {
         case .create:
@@ -146,12 +166,14 @@ class TIPActionViewController: UIViewController {
     }
     
     private func handle(error: Error) async {
+        Logger.tip.error(category: "TIPAction", message: "Failed with: \(error)")
         do {
             guard let account = LoginManager.shared.account else {
                 return
             }
             guard let context = try await TIP.checkCounter(with: account) else {
                 await MainActor.run {
+                    Logger.tip.error(category: "TIPAction", message: "No interruption is detected")
                     finish()
                 }
                 return

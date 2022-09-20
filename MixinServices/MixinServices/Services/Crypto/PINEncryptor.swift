@@ -55,6 +55,7 @@ enum PINEncryptor {
                     }
                 } catch {
                     await MainActor.run {
+                        Logger.tip.error(category: "PINEncryptor", message: "Failed to encrypt: \(error)")
                         if let error = error as? MixinAPIError {
                             onFailure(.failure(error))
                         } else {

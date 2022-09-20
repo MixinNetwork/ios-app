@@ -105,6 +105,7 @@ class TIPPopupInputViewController: PinValidationViewController {
             return
         }
 #endif
+        Logger.tip.info(category: "TIPPopupInput", message: "Continue create with failed signers: \(failedSigners.map(\.index))")
         Task {
             do {
                 try await TIP.createTIPPriv(pin: pin,
@@ -115,7 +116,7 @@ class TIPPopupInputViewController: PinValidationViewController {
                 AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
                 await MainActor.run(body: onSuccess)
             } catch {
-                Logger.general.warn(category: "TIPPopupInputViewController", message: "Failed to create: \(error)")
+                Logger.tip.error(category: "TIPPopupInput", message: "Failed to create: \(error)")
                 await MainActor.run {
                     if let error = error as? MixinAPIError {
                         handle(error: error)
@@ -156,6 +157,7 @@ class TIPPopupInputViewController: PinValidationViewController {
             return
         }
 #endif
+        Logger.tip.info(category: "TIPPopupInput", message: "Continue change with failed signers: \(failedSigners.map(\.index))")
         Task {
             do {
                 try await TIP.updateTIPPriv(oldPIN: old,
@@ -167,9 +169,10 @@ class TIPPopupInputViewController: PinValidationViewController {
                 }
                 AppGroupUserDefaults.Wallet.periodicPinVerificationInterval = PeriodicPinVerificationInterval.min
                 AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
+                Logger.tip.info(category: "TIPPopupInput", message: "Changed successfully")
                 await MainActor.run(body: onSuccess)
             } catch let error as TIPNode.Error {
-                Logger.general.warn(category: "TIPActionViewController", message: "Failed to change: \(error)")
+                Logger.tip.error(category: "TIPPopupInput", message: "Failed to change: \(error)")
                 await MainActor.run {
                     loadingIndicator.stopAnimating()
                     pinField.isHidden = false
@@ -179,7 +182,7 @@ class TIPPopupInputViewController: PinValidationViewController {
                     pinField.receivesInput = true
                 }
             } catch {
-                Logger.general.warn(category: "TIPActionViewController", message: "Failed to change: \(error)")
+                Logger.tip.error(category: "TIPPopupInput", message: "Failed to change: \(error)")
                 await MainActor.run {
                     if let error = error as? MixinAPIError {
                         handle(error: error)

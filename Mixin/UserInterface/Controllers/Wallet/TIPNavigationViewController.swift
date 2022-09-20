@@ -14,11 +14,13 @@ class TIPNavigationViewController: LoneBackButtonNavigationController {
     private let dismissButton = UIButton()
     
     convenience init(intent: TIP.Action, destination: Destination?) {
+        Logger.tip.info(category: "TIPNavigation", message: "Init with intent: \(intent), destination: \(String(describing: destination))")
         let intro = TIPIntroViewController(intent: intent)
         self.init(intro: intro, destination: destination)
     }
     
     init(intro: TIPIntroViewController, destination: Destination?) {
+        Logger.tip.info(category: "TIPNavigation", message: "Init with arbitrary intro, destination: \(String(describing: destination))")
         self.destination = destination
         super.init(rootViewController: intro)
         modalPresentationStyle = .fullScreen
@@ -69,10 +71,12 @@ class TIPNavigationViewController: LoneBackButtonNavigationController {
         }
     }
     
-    func popToFirstInputPINViewController() {
+    func popToFirstFullscreenInput() {
         guard let controller = viewControllers.first(where: { $0 is TIPFullscreenInputViewController }) else {
+            Logger.tip.error(category: "TIPNavigation", message: "No fullscreen input in stack")
             return
         }
+        Logger.tip.info(category: "TIPNavigation", message: "Popped to fullscreen input")
         popToViewController(controller, animated: true)
     }
     
@@ -82,6 +86,7 @@ class TIPNavigationViewController: LoneBackButtonNavigationController {
             guard let navigationController = UIApplication.homeNavigationController else {
                 return
             }
+            Logger.tip.info(category: "TIPNavigation", message: "Dismiss to: \(String(describing: destination))")
             switch destination {
             case .wallet:
                 let wallet = R.storyboard.wallet.wallet()!

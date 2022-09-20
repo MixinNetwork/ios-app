@@ -3,20 +3,55 @@ import MixinServices
 
 class TIPFullscreenInputViewController: ContinueButtonViewController {
     
-    enum Action {
+    enum Action: CustomDebugStringConvertible {
+        
         case create(InitializeStep)
         case change(_ fromLegacy: Bool, _ step: ChangeStep)
+        
+        var debugDescription: String {
+            switch self {
+            case .create(let step):
+                return "create(\(step.debugDescription))"
+            case let .change(fromLegacy, step):
+                return "change(\(fromLegacy), \(step))"
+            }
+        }
+        
     }
     
-    enum InitializeStep {
+    enum InitializeStep: CustomDebugStringConvertible {
+        
         case input
         case confirmation(step: UInt, previous: String)
+        
+        var debugDescription: String {
+            switch self {
+            case .input:
+                return "input"
+            case let .confirmation(step, _):
+                return "confirmation step \(step)"
+            }
+        }
+        
     }
     
-    enum ChangeStep {
+    enum ChangeStep: CustomDebugStringConvertible {
+        
         case verify
         case input(old: String)
         case confirmation(step: UInt, old: String, new: String)
+        
+        var debugDescription: String {
+            switch self {
+            case .verify:
+                return "verify"
+            case .input:
+                return "input"
+            case let .confirmation(step, _, _):
+                return "confirmation step \(step)"
+            }
+        }
+        
     }
     
     @IBOutlet weak var pinField: PinField!
@@ -52,14 +87,6 @@ class TIPFullscreenInputViewController: ContinueButtonViewController {
         NotificationCenter.default.removeObserver(self)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        if !pinField.isFirstResponder {
-            pinField.becomeFirstResponder()
-        }
-        pinField.clear()
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         subtitleLabel.snp.makeConstraints { make in
@@ -92,6 +119,19 @@ class TIPFullscreenInputViewController: ContinueButtonViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if !pinField.isFirstResponder {
+            pinField.becomeFirstResponder()
+        }
+        pinField.clear()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        Logger.tip.info(category: "TIPFullscreenInput", message: "View did appear with action: \(action.debugDescription)")
+    }
+    
     @IBAction func pinFieldEditingChanged(_ field: PinField) {
         guard !isBusy, pinField.text.count == pinField.numberOfDigits else {
             return
@@ -116,7 +156,7 @@ class TIPFullscreenInputViewController: ContinueButtonViewController {
         case let .create(.confirmation(step, previous)):
             guard pin == previous else {
                 alert(R.string.localizable.wallet_password_not_equal(), cancelHandler: { _ in
-                    self.tipNavigationController?.popToFirstInputPINViewController()
+                    self.tipNavigationController?.popToFirstFullscreenInput()
                 })
                 return
             }
@@ -133,10 +173,12 @@ class TIPFullscreenInputViewController: ContinueButtonViewController {
                 self.isBusy = false
                 switch result {
                 case .success:
+                    Logger.tip.info(category: "TIPFullscreenInput", message: "PIN verified")
                     AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
                     let next = TIPFullscreenInputViewController(action: .change(fromLegacy, .input(old: pin)))
                     self.navigationController?.pushViewController(next, animated: true)
                 case let .failure(error):
+                    Logger.tip.error(category: "TIPFullscreenInput", message: "PIN verification failed: \(error)")
                     self.pinField.clear()
                     PINVerificationFailureHandler.handle(error: error) { (description) in
                         self.alert(description)
@@ -149,7 +191,7 @@ class TIPFullscreenInputViewController: ContinueButtonViewController {
         case let .change(fromLegacy, .confirmation(step, old, new)):
             guard pin == new else {
                 alert(R.string.localizable.wallet_password_not_equal(), cancelHandler: { _ in
-                    self.tipNavigationController?.popToFirstInputPINViewController()
+                    self.tipNavigationController?.popToFirstFullscreenInput()
                 })
                 return
             }

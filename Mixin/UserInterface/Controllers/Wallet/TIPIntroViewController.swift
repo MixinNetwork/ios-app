@@ -36,6 +36,7 @@ class TIPIntroViewController: UIViewController {
     }
     
     init(intent: TIP.Action) {
+        Logger.tip.info(category: "TIPIntro", message: "Init with intent: \(intent)")
         self.intent = intent
         self.interruption = .unknown
         let nib = R.nib.tipIntroView
@@ -43,6 +44,7 @@ class TIPIntroViewController: UIViewController {
     }
     
     init(context: TIP.InterruptionContext) {
+        Logger.tip.info(category: "TIPIntro", message: "Init with context: \(context)")
         self.intent = context.action
         self.interruption = .confirmed(context)
         let nib = R.nib.tipIntroView
@@ -218,10 +220,12 @@ extension TIPIntroViewController {
             return
         }
         updateNextButtonAndStatusLabel(with: .checkingCounter)
+        Logger.tip.info(category: "TIPIntro", message: "Checking counter")
         Task {
             do {
                 let context = try await TIP.checkCounter(with: account, timeoutInterval: checkCounterTimeoutInterval)
                 await MainActor.run {
+                    Logger.tip.info(category: "TIPIntro", message: "Got context: \(String(describing: context))")
                     if let context = context {
                         let intro = TIPIntroViewController(context: context)
                         navigationController?.setViewControllers([intro], animated: true)
@@ -232,6 +236,7 @@ extension TIPIntroViewController {
                 }
             } catch {
                 await MainActor.run {
+                    Logger.tip.error(category: "TIPIntro", message: "Failed to check counter: \(error)")
                     updateNextButtonAndStatusLabel(with: .counterCheckingFails)
                 }
             }

@@ -721,6 +721,7 @@
 "senders" = "交易发起人";
 "set" = "设置";
 "set_disappearing_message_time_to" = "%1$@将限时消息设置为 %2$@";
+"set_emergency_create_successfully" = "设置紧急联系人成功";
 "set_new_pin" = "设置新的 PIN";
 "set_pin_successfully" = "PIN 设置成功";
 "setting_appearance_language_alert_description" = "前往系统设置修改语言偏好";

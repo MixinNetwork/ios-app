@@ -721,6 +721,7 @@
 "senders" = "送信者";
 "set" = "設定";
 "set_disappearing_message_time_to" = "1$sは、消えるメッセージの有効時間を%@に設定しました。";
+"set_emergency_create_successfully" = "Set emergency contact successfully";
 "set_new_pin" = "新しいPINコードを設定";
 "set_pin_successfully" = "PINコードの設定が完了しました。";
 "setting_appearance_language_alert_description" = "お使いのiPhoneの設定画面から言語を変更することができます";

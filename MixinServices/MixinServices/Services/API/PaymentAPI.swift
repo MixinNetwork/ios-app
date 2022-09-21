@@ -39,6 +39,7 @@ public final class PaymentAPI: MixinAPI {
             try TIPBody.transfer(assetID: assetId, oppositeUserID: opponentId, amount: amount, traceID: traceId, memo: memo)
         }, onFailure: completion) { (encryptedPin) in
             let param = ["asset_id": assetId, "opponent_id": opponentId, "amount": amount, "memo": memo, "pin_base64": encryptedPin, "trace_id": traceId]
+            request(method: .post, path: Path.transfers, parameters: param, options: .disableRetryOnRequestSigningTimeout, completion: completion)
         }
     }
     

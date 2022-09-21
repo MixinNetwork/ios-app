@@ -20,7 +20,7 @@ target 'Mixin' do
   pod 'PhoneNumberKit'
   pod 'RSKImageCropper'
   pod 'R.swift'
-  pod 'AcknowList'
+  pod 'AcknowList', '2.1.1'
   pod 'libwebp'
   pod 'SDWebImageLottieCoder'
   mixin_services

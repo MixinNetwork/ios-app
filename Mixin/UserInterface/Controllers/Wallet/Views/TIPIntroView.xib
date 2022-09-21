@@ -48,7 +48,7 @@
                             <rect key="frame" x="0.0" y="129.66666666666669" width="315" height="0.0"/>
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         </view>
-                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" verticalCompressionResistancePriority="250" editable="NO" text=" " textAlignment="natural" adjustsFontForContentSizeCategory="YES" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DMz-OM-yrL">
+                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" verticalCompressionResistancePriority="250" editable="NO" text=" " textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DMz-OM-yrL">
                             <rect key="frame" x="0.0" y="145.66666666666663" width="315" height="50"/>
                             <color key="backgroundColor" name="background_selection"/>
                             <constraints>

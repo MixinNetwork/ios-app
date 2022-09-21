@@ -18,7 +18,7 @@ public class WebSocketService {
         return socket?.isConnected ?? false
     }
     
-    private let queue = Queue(label: "one.mixin.services.queue.websocket")
+    private let queue = Queue(label: "one.mixin.services.queue.websocket", qos: .userInitiated)
     private let messageQueue = DispatchQueue(label: "one.mixin.services.queue.websocket.message")
     
     private var host: String?

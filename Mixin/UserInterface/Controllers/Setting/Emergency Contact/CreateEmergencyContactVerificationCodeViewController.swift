@@ -62,8 +62,9 @@ class CreateEmergencyContactVerificationCodeViewController: VerificationCodeView
         EmergencyAPI.verifyContact(pin: pin, id: verificationId, code: verificationCodeField.text) { [weak self] (result) in
             switch result {
             case .success(let account):
+                let hadEmergencyContact = LoginManager.shared.account?.hasEmergencyContact ?? false
                 LoginManager.shared.setAccount(account)
-                self?.showSuccessAlert()
+                self?.showSuccessAlert(hadEmergencyContact: hadEmergencyContact)
             case .failure(let error):
                 if PINVerificationFailureHandler.canHandle(error: error) {
                     PINVerificationFailureHandler.handle(error: error) { [weak self] (description) in
@@ -77,8 +78,13 @@ class CreateEmergencyContactVerificationCodeViewController: VerificationCodeView
         }
     }
     
-    private func showSuccessAlert() {
-        let title = R.string.localizable.changed()
+    private func showSuccessAlert(hadEmergencyContact: Bool) {
+        let title: String
+        if hadEmergencyContact {
+            title = R.string.localizable.your_emergency_contact_has_been_changed()
+        } else {
+            title = R.string.localizable.set_emergency_create_successfully()
+        }
         let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: R.string.localizable.ok(), style: .default, handler: { (_) in
             self.navigationController?.dismiss(animated: true, completion: nil)

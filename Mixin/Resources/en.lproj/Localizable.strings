@@ -721,6 +721,7 @@
 "senders" = "Senders";
 "set" = "Set";
 "set_disappearing_message_time_to" = "%1$@ set disappearing message time to %2$@";
+"set_emergency_create_successfully" = "Set emergency contact successfully";
 "set_new_pin" = "Set a new PIN";
 "set_pin_successfully" = "Set PIN successfully";
 "setting_appearance_language_alert_description" = "You can pick a preferred language in settings";

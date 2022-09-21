@@ -721,6 +721,7 @@
 "senders" = "交易發起人";
 "set" = "設定";
 "set_disappearing_message_time_to" = "%1$@將限時訊息設定為 %2$@";
+"set_emergency_create_successfully" = "設置緊急聯繫人成功";
 "set_new_pin" = "設定新的 PIN";
 "set_pin_successfully" = "PIN 設定成功";
 "setting_appearance_language_alert_description" = "前往系統設定修改語言偏好";

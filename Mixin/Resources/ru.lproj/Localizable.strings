@@ -721,6 +721,7 @@
 "senders" = "Отправители";
 "set" = "Установлен";
 "set_disappearing_message_time_to" = "%1$@ установил время исчезновения сообщения на %2$@.";
+"set_emergency_create_successfully" = "Set emergency contact successfully";
 "set_new_pin" = "Установить новый PIN-код";
 "set_pin_successfully" = "ПИН-код успешно установлен";
 "setting_appearance_language_alert_description" = "Вы можете выбрать предпочитаемый язык в настройках";

@@ -371,7 +371,7 @@ public final class ConversationDAO: UserDatabaseDAO {
                                         iconUrl: nil,
                                         announcement: nil,
                                         lastMessageId: nil,
-                                        lastMessageCreatedAt: createdAt,
+                                        lastMessageCreatedAt: nil,
                                         lastReadMessageId: nil,
                                         unseenMessageCount: 0,
                                         status: ConversationStatus.START.rawValue,

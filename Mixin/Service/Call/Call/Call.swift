@@ -102,7 +102,7 @@ class Call: NSObject {
         self.uuidString = uuidString
         self.conversationId = conversationId
         self.rtcClient = WebRTCClient()
-        self.queue = Queue(label: "one.mixin.messenger.Call-" + uuidString)
+        self.queue = Queue(label: "one.mixin.messenger.Call-" + uuidString, qos: .userInitiated)
         self.isOutgoing = isOutgoing
         self.internalState = state
         self.state = state

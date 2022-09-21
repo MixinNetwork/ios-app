@@ -31,7 +31,7 @@ class WebRTCClient: NSObject {
     
     private(set) var trackDisabledUserIds: Set<String> = []
     
-    private let queue = DispatchQueue(label: "one.mixin.messenger.WebRTCClient")
+    private let queue = DispatchQueue(label: "one.mixin.messenger.WebRTCClient", qos: .userInitiated)
     
     private var session: Session? = 0
     private var peerConnection: RTCPeerConnection?

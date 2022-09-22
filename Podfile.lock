@@ -1,5 +1,4 @@
 PODS:
-  - AcknowList (2.1.1)
   - Alamofire (5.6.2)
   - AppCenter (4.4.3):
     - AppCenter/Analytics (= 4.4.3)
@@ -207,7 +206,6 @@ PODS:
   - Zip (2.1.2)
 
 DEPENDENCIES:
-  - AcknowList (= 2.1.1)
   - Firebase/Analytics
   - Firebase/Core
   - Firebase/Crashlytics
@@ -226,7 +224,6 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
-    - AcknowList
     - Alamofire
     - AppCenter
     - BoringSSL
@@ -274,7 +271,6 @@ CHECKOUT OPTIONS:
     :git: https://github.com/MixinNetwork/libsignal-protocol-c.git
 
 SPEC CHECKSUMS:
-  AcknowList: 206119961f03cfd1e15817129f6f51537707f169
   Alamofire: d368e1ff8a298e6dde360e35a3e68e6c610e7204
   AppCenter: 3fd04aa1b166e16fdb03ec81dabe488aece83fbd
   BoringSSL: e10f92a27043805c01071fe815a5cd98ae8212e7
@@ -312,6 +308,6 @@ SPEC CHECKSUMS:
   SQLCipher: f5b4857434158b571a3ed3b10b3b43cd18ef5f67
   Zip: b3fef584b147b6e582b2256a9815c897d60ddc67
 
-PODFILE CHECKSUM: 60a416d25eaa5c39693061da7cf94f7cabba0c30
+PODFILE CHECKSUM: e22dfa53db06b1dfc75598e6f3b2eaba6ea53377
 
 COCOAPODS: 1.11.3

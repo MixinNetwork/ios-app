@@ -78,11 +78,7 @@ extension CacheableAssetFileDescription {
             guard let response = response as? HTTPURLResponse else {
                 return nil
             }
-            // Before iOS 13.0 Swift treat HTTP header fields as case sensitive
-            // Refactor this after deployment targets updates to iOS 13.0
-            // https://bugs.swift.org/browse/SR-2429
-            let headers = response.allHeaderFields as NSDictionary
-            guard let contentRange = headers["Content-Range"] as? String else {
+            guard let contentRange = response.value(forHTTPHeaderField: "content-range") else {
                 return nil
             }
             guard let maxRange = contentRange.components(separatedBy: "/").last else {
@@ -98,7 +94,7 @@ extension CacheableAssetFileDescription {
                 self.contentType = nil
             }
             self.contentLength = contentLength
-            if let acceptRanges = headers["Accept-Ranges"] as? String {
+            if let acceptRanges = response.value(forHTTPHeaderField: "accept-ranges") {
                 self.isByteRangeAccessSupported = acceptRanges.contains("bytes")
             } else {
                 self.isByteRangeAccessSupported = false

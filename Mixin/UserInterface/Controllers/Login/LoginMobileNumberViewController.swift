@@ -101,7 +101,7 @@ final class LoginMobileNumberViewController: MobileNumberViewController {
                     if !error.isTransportTimedOut {
                         var userInfo = [String: Any]()
                         userInfo["error"] = "\(error)"
-                        if let requestId = weakSelf.request?.response?.allHeaderFields["x-request-id"]  {
+                        if let requestId = weakSelf.request?.response?.value(forHTTPHeaderField: "x-request-id")  {
                             userInfo["requestId"] = requestId
                         }
                         if let statusCode = weakSelf.request?.response?.statusCode {

@@ -46,7 +46,7 @@
                         </label>
                         <view contentMode="scaleToFill" verticalCompressionResistancePriority="1000" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="urk-Lg-NWZ" customClass="TextLabel" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="129.66666666666669" width="315" height="0.0"/>
-                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            <color key="backgroundColor" name="background"/>
                         </view>
                         <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" verticalCompressionResistancePriority="250" editable="NO" text=" " textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DMz-OM-yrL">
                             <rect key="frame" x="0.0" y="145.66666666666663" width="315" height="50"/>
@@ -84,7 +84,7 @@
                 </label>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
-            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <color key="backgroundColor" name="background"/>
             <constraints>
                 <constraint firstItem="ZLz-JR-XNY" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="1Dd-z0-8XR"/>
                 <constraint firstItem="ofI-57-AnA" firstAttribute="top" secondItem="ZLz-JR-XNY" secondAttribute="bottom" constant="8" id="3gh-bz-Wu6"/>
@@ -102,8 +102,11 @@
     </objects>
     <resources>
         <image name="ic_tip" width="80" height="76"/>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
         <namedColor name="background_selection">
-            <color red="0.96100002527236938" green="0.96899998188018799" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
             <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -113,9 +116,6 @@
         </namedColor>
         <systemColor name="labelColor">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
     </resources>
 </document>

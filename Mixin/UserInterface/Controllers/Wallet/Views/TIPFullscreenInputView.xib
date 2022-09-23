@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -24,7 +23,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Create PIN" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Wd-P2-eyq">
-                    <rect key="frame" x="27" y="88" width="360" height="186"/>
+                    <rect key="frame" x="27" y="92" width="360" height="186"/>
                     <constraints>
                         <constraint firstAttribute="height" priority="750" constant="186" id="iu9-1E-VmH" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                             <userDefinedRuntimeAttributes>
@@ -45,7 +44,7 @@
                     </userDefinedRuntimeAttributes>
                 </label>
                 <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="f5n-Dp-KKY" customClass="PinField" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="121" y="274" width="172" height="24"/>
+                    <rect key="frame" x="121" y="278" width="172" height="24"/>
                     <color key="tintColor" name="text_accessory"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="24" id="GP0-j0-5h3"/>
@@ -56,7 +55,7 @@
                     </connections>
                 </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="The PIN is too simple and insecure." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HbC-Vc-s1k">
-                    <rect key="frame" x="30" y="338" width="354" height="17"/>
+                    <rect key="frame" x="30" y="342" width="354" height="17"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <color key="textColor" name="red"/>
                     <nil key="highlightedColor"/>
@@ -67,7 +66,7 @@
                 </label>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
-            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <color key="backgroundColor" name="background"/>
             <constraints>
                 <constraint firstItem="0Wd-P2-eyq" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="44" id="3bc-if-CUy"/>
                 <constraint firstItem="f5n-Dp-KKY" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="Ft3-ZM-Z8z"/>
@@ -82,6 +81,9 @@
         </view>
     </objects>
     <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
         <namedColor name="red">
             <color red="0.90980392156862744" green="0.41960784313725491" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
@@ -91,8 +93,5 @@
         <namedColor name="text_accessory">
             <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
     </resources>
 </document>

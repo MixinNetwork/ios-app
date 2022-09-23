@@ -6,7 +6,6 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -58,7 +57,7 @@
                 </progressView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CtW-PJ-GQX" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
                     <rect key="frame" x="192" y="777" width="30" height="30"/>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <color key="backgroundColor" name="background"/>
                     <color key="tintColor" name="text_accessory"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="30" id="ABR-RB-43V"/>
@@ -73,7 +72,7 @@
                 </label>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
-            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <color key="backgroundColor" name="background"/>
             <constraints>
                 <constraint firstItem="AH0-xI-fqJ" firstAttribute="top" secondItem="UbE-PQ-ehO" secondAttribute="bottom" constant="20" id="138-Tt-BHJ"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="AH0-xI-fqJ" secondAttribute="trailing" constant="20" id="3Yt-Fw-LvO"/>
@@ -94,6 +93,9 @@
     </objects>
     <resources>
         <image name="ic_tip" width="80" height="76"/>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
         <namedColor name="text">
             <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
@@ -103,8 +105,5 @@
         <namedColor name="text_desc">
             <color red="0.73725490196078436" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
     </resources>
 </document>

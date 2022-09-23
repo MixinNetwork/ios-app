@@ -83,7 +83,13 @@ class TIPPopupInputViewController: PinValidationViewController {
                     if let old = oldPIN {
                         continueChange(old: old, new: pin, failedSigners: failedSigners, onSuccess: onSuccess)
                     } else {
-                        continueChangeIfVerified(oldPIN: pin)
+                        loadingIndicator.stopAnimating()
+                        titleLabel.text = R.string.localizable.enter_your_new_pin()
+                        descriptionLabel.text = nil
+                        pinField.clear()
+                        pinField.isHidden = false
+                        pinField.receivesInput = true
+                        self.oldPIN = pin
                     }
                 case .pendingUpdate:
                     continueChange(old: nil, new: pin, failedSigners: [], onSuccess: onSuccess)
@@ -128,23 +134,6 @@ class TIPPopupInputViewController: PinValidationViewController {
         }
     }
     
-    private func continueChangeIfVerified(oldPIN: String) {
-        AccountAPI.verify(pin: oldPIN) { result in
-            switch result {
-            case .success:
-                self.titleLabel.text = R.string.localizable.enter_your_new_pin()
-                self.pinField.clear()
-                self.pinField.isHidden = false
-                self.pinField.receivesInput = true
-                self.descriptionLabel.text = nil
-                self.loadingIndicator.stopAnimating()
-                self.oldPIN = oldPIN
-            case .failure(let error):
-                self.handle(error: error)
-            }
-        }
-    }
-    
     private func continueChange(
         old: String?,
         new: String,
@@ -175,11 +164,13 @@ class TIPPopupInputViewController: PinValidationViewController {
                 Logger.tip.error(category: "TIPPopupInput", message: "Failed to change: \(error)")
                 await MainActor.run {
                     loadingIndicator.stopAnimating()
-                    pinField.isHidden = false
-                    pinField.clear()
+                    titleLabel.text = R.string.localizable.enter_your_old_pin()
                     descriptionLabel.textColor = .mixinRed
                     descriptionLabel.text = error.description
+                    pinField.isHidden = false
+                    pinField.clear()
                     pinField.receivesInput = true
+                    oldPIN = nil
                 }
             } catch {
                 Logger.tip.error(category: "TIPPopupInput", message: "Failed to change: \(error)")
@@ -189,6 +180,8 @@ class TIPPopupInputViewController: PinValidationViewController {
                     } else {
                         handle(error: .pinEncryption(error))
                     }
+                    titleLabel.text = R.string.localizable.enter_your_old_pin()
+                    oldPIN = nil
                 }
             }
         }

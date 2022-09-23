@@ -135,6 +135,7 @@ class TIPIntroViewController: UIViewController {
                 case .needsMigrate:
                     fromLegacy = true
                 case .unknown, .needsInitialize:
+                    Logger.tip.error(category: "TIPIntro", message: "Invalid status: \(TIP.status)")
                     assertionFailure("Invalid TIP status")
                     return
                 }

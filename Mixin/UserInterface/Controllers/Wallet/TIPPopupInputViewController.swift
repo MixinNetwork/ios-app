@@ -15,6 +15,7 @@ class TIPPopupInputViewController: PinValidationViewController {
     init(action: Action) {
         switch action {
         case let .continue(context, _) where context.action == .migrate:
+            Logger.tip.error(category: "TIPPopupInput", message: "Invalid context")
             assertionFailure("Continue migration with `Action.migrate`")
         default:
             break
@@ -95,6 +96,7 @@ class TIPPopupInputViewController: PinValidationViewController {
                     continueChange(old: nil, new: pin, failedSigners: [], onSuccess: onSuccess)
                 }
             case .migrate:
+                Logger.tip.error(category: "TIPPopupInput", message: "Invalid context")
                 assertionFailure("Continue migration with `Action.migrate`")
             }
         }

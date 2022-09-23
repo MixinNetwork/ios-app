@@ -22,6 +22,7 @@ enum PINEncryptor {
     ) {
         switch TIP.status {
         case .unknown, .needsInitialize:
+            Logger.tip.error(category: "PINEncryptor", message: "Invalid status: \(TIP.status)")
             assertionFailure("Invalid TIP status")
         case .needsMigrate:
             queue.async {

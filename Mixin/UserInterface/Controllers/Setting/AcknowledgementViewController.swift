@@ -26,6 +26,8 @@ class AcknowledgementViewController: UIViewController {
         textView.textColor = R.color.text()
         textView.layer.cornerRadius = 6
         textView.clipsToBounds = true
+        textView.textContainerInset = UIEdgeInsets(top: 8, left: 6, bottom: 8, right: 6)
+        textView.alwaysBounceVertical = true
         textView.text = acknowledgement.content
     }
     

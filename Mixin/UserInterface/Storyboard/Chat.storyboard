@@ -1984,8 +1984,9 @@
                                     </view>
                                 </subviews>
                             </stackView>
-                            <imageView contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Conversation/ic_mic" translatesAutoresizingMaskIntoConstraints="NO" id="Zt0-eZ-yAA">
+                            <imageView contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Conversation/ic_mic" id="Zt0-eZ-yAA">
                                 <rect key="frame" x="325" y="0.0" width="50" height="50"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" name="background"/>
                                 <color key="tintColor" name="icon_tint"/>
                                 <gestureRecognizers/>

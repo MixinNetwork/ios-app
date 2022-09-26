@@ -558,6 +558,7 @@
 		7C2475C727795BC100112A30 /* DeleteAccountTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2475C627795BC100112A30 /* DeleteAccountTableHeaderView.swift */; };
 		7C2AC42928F2B384005F369A /* DepositNotSupportedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2AC42828F2B384005F369A /* DepositNotSupportedViewController.swift */; };
 		7C2ACDAE27D73F7C00E9DDB3 /* LeftAlignedCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2ACDAD27D73F7C00E9DDB3 /* LeftAlignedCollectionViewFlowLayout.swift */; };
+		7C2DE55928DD94D200C00818 /* LiveTextImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2DE55828DD94D200C00818 /* LiveTextImageView.swift */; };
 		7C2DEFF12824FCF500758208 /* ic_time_animation_dark@3x.gif in Resources */ = {isa = PBXBuildFile; fileRef = 7C2DEFF02824FCF500758208 /* ic_time_animation_dark@3x.gif */; };
 		7C2DEFF32824FF0600758208 /* ic_time_animation@3x.gif in Resources */ = {isa = PBXBuildFile; fileRef = 7C2DEFF22824FF0600758208 /* ic_time_animation@3x.gif */; };
 		7C359DCE26A6C15A001D3AE4 /* StickerStorePreviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C359DCD26A6C15A001D3AE4 /* StickerStorePreviewCell.swift */; };
@@ -1567,6 +1568,7 @@
 		7C2475C627795BC100112A30 /* DeleteAccountTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountTableHeaderView.swift; sourceTree = "<group>"; };
 		7C2AC42828F2B384005F369A /* DepositNotSupportedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositNotSupportedViewController.swift; sourceTree = "<group>"; };
 		7C2ACDAD27D73F7C00E9DDB3 /* LeftAlignedCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeftAlignedCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
+		7C2DE55828DD94D200C00818 /* LiveTextImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveTextImageView.swift; sourceTree = "<group>"; };
 		7C2DEFF02824FCF500758208 /* ic_time_animation_dark@3x.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "ic_time_animation_dark@3x.gif"; sourceTree = "<group>"; };
 		7C2DEFF22824FF0600758208 /* ic_time_animation@3x.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "ic_time_animation@3x.gif"; sourceTree = "<group>"; };
 		7C359DCD26A6C15A001D3AE4 /* StickerStorePreviewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerStorePreviewCell.swift; sourceTree = "<group>"; };
@@ -3384,6 +3386,7 @@
 				7CB0954E26CCED2E0049F4C7 /* PinMessageBannerView.swift */,
 				7C14CFC026CA35CF0094AF4A /* StaticMessagesView.xib */,
 				7C359DCF26A6C173001D3AE4 /* StickerStoreBannerView.swift */,
+				7C2DE55828DD94D200C00818 /* LiveTextImageView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -4495,6 +4498,7 @@
 				7BBC6EA81FA98D1A00DC130A /* AddPeopleViewController.swift in Sources */,
 				7CB0955926CE69250049F4C7 /* PinMessageViewModel.swift in Sources */,
 				DFD93F1E2111C0030013401A /* UIDeviceExtension.swift in Sources */,
+				7C2DE55928DD94D200C00818 /* LiveTextImageView.swift in Sources */,
 				7B35AF78228AA3BD00E8101D /* MessagesWithUserSearchResult.swift in Sources */,
 				7B61B9CA2538E1C8001F94A3 /* ScreenHeightCompatibleLayoutConstraint.swift in Sources */,
 				7B2A115F22C1ECB100AD029C /* RoundedBlurButton.swift in Sources */,

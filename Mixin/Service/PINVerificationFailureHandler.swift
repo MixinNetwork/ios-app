@@ -35,6 +35,8 @@ enum PINVerificationFailureHandler {
                     completion(R.string.localizable.pin_incorrect())
                 }
             }
+        case .pinEncryption(let error as TIPNode.Error):
+            completion(error.description)
         default:
             completion(error.localizedDescription)
         }

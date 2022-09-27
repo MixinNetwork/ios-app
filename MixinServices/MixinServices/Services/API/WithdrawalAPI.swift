@@ -47,8 +47,7 @@ public final class WithdrawalAPI: MixinAPI {
     
     public static func withdrawal(withdrawal: WithdrawalRequest, completion: @escaping (MixinAPI.Result<Snapshot>) -> Void) {
         PINEncryptor.encrypt(pin: withdrawal.pin, tipBody: {
-            // FIXME: Is it OK with a nil fee?
-            try TIPBody.createWithdrawal(addressID: withdrawal.addressId, amount: withdrawal.amount, fee: nil, traceID: withdrawal.traceId, memo: withdrawal.memo)
+            try TIPBody.createWithdrawal(addressID: withdrawal.addressId, amount: withdrawal.amount, fee: withdrawal.fee, traceID: withdrawal.traceId, memo: withdrawal.memo)
         }, onFailure: completion) { (encryptedPin) in
             var withdrawal = withdrawal
             withdrawal.pin = encryptedPin

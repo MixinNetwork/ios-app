@@ -754,6 +754,7 @@
 "setting_delete_account_tip" = "Your Mixin wallet still has some assets that can be withdrawn to other wallets or exchanges. Once the account is cancelled, these assets will be abandoned along with the wallet and cannot be recovered.";
 "setting_desktop_confirm" = "Confirm login to Mixin Messenger Desktop";
 "setting_duplicate_transfer_desc" = "Display confirmation dialog when you transfer the same amount to the same person within 6 hours.";
+"setting_emergency_change_mobile" = "Do you want to change your mobile number now?";
 "setting_emergency_content" = "The emergency contact is designed to help you log in to your account if you are lost and can not retrieve your mobile number.";
 "setting_emergency_desc" = "When your lost your mobile number, please contact your emergency contact by phone or other means to get the Mixin ID and verification code. Read our Emergency Contact to learn more.";
 "setting_emergency_pin_tip" = "Your emergency contact is protected by PIN";

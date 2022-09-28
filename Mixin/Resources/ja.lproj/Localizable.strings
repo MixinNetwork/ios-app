@@ -754,6 +754,7 @@
 "setting_delete_account_tip" = "警告：Mixinウォレット内に他のウォレットや取引所に送金可能な仮想通貨が残っています。アカウントを削除すると、仮想通貨を永遠に引き出すことができませんが、よろしいでしょうか？";
 "setting_desktop_confirm" = "デスクトップ版Mixinへのログインを確認";
 "setting_duplicate_transfer_desc" = "6時間以内に同じ人に同額の送金を実行する際、確認を行う。";
+"setting_emergency_change_mobile" = "新しい電話番号の登録をしますか？";
 "setting_emergency_content" = "緊急連絡先は、紛失等の理由でデバイスへのアクセスが出来なくなった場合、ログインする方法となります。";
 "setting_emergency_desc" = "登録した電話番号が使用できなくなった場合は、緊急連絡先として登録した友だちに連絡し、Mixin IDと認証コードを取得してください。詳しくは、こちらを確認してください。";
 "setting_emergency_pin_tip" = "あなたの緊急連絡先はPINコードにより保護されています。";

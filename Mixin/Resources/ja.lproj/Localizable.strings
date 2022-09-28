@@ -389,6 +389,7 @@
 "fourth_pin_confirm_hint" = "最終確認：PINコードを確実に記憶してください。ウォレットを失った場合、復元することはできません";
 "from" = "より";
 "games" = "ゲーム";
+"generating" = "Generating...";
 "generating_keys" = "Generating keys...";
 "get_a_new_wallet" = "新たなウォレットを作成";
 "got_it" = "確認";

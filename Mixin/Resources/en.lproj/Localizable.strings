@@ -389,6 +389,7 @@
 "fourth_pin_confirm_hint" = "Yes, there is a fourth PIN confirmation, and I promise it's the last one to ensure you have remembered your PIN. The PIN is unrecoverable if lost.";
 "from" = "From";
 "games" = "Games";
+"generating" = "Generating...";
 "generating_keys" = "Generating keys...";
 "get_a_new_wallet" = "Get a new wallet";
 "got_it" = "Got it";

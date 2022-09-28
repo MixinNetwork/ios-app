@@ -389,6 +389,7 @@
 "fourth_pin_confirm_hint" = "這是最後一次確認 PIN，記住：PIN 丟失將永遠無法找回！";
 "from" = "來自";
 "games" = "遊戲";
+"generating" = "正在生成...";
 "generating_keys" = "Generating keys...";
 "get_a_new_wallet" = "建立錢包";
 "got_it" = "知道了";

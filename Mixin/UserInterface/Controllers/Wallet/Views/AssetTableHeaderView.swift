@@ -7,7 +7,7 @@ class AssetTableHeaderView: InfiniteTopView {
     @IBOutlet weak var assetIconView: AssetIconView!
     @IBOutlet weak var amountTextView: UITextView!
     @IBOutlet weak var fiatMoneyValueLabel: UILabel!
-    @IBOutlet weak var depositButton: BusyButton!
+    @IBOutlet weak var transferActionView: TransferActionView!
     @IBOutlet weak var transactionsHeaderView: UIView!
     
     @IBOutlet weak var assetIconViewWidthConstraint: NSLayoutConstraint!
@@ -35,7 +35,6 @@ class AssetTableHeaderView: InfiniteTopView {
             amount = CurrencyFormatter.localizedString(from: asset.balance, format: .precision, sign: .never) ?? ""
             fiatMoneyValueLabel.text = asset.localizedFiatMoneyBalance
         }
-        depositButton.isBusy = asset.depositEntries.isEmpty
         let attributedAmount = attributedString(amount: amount, symbol: asset.symbol)
         amountTextView.attributedText = attributedAmount
         

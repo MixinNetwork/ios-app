@@ -52,6 +52,7 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableHeaderView.transferActionView.delegate = self
         updateTableViewContentInset()
         tableView.register(R.nib.assetCell)
         tableView.tableFooterView = UIView()
@@ -162,6 +163,7 @@ extension WalletViewController: UITableViewDataSource {
 extension WalletViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         let vc = AssetViewController.instance(asset: assets[indexPath.row])
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -172,6 +174,35 @@ extension WalletViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         true
+    }
+    
+}
+
+extension WalletViewController: TransferActionViewDelegate {
+    
+    func transferActionView(_ view: TransferActionView, didPerform action: TransferActionView.Action) {
+        let controller = TransferTypeViewController()
+        controller.delegate = self
+        controller.assets = assets
+        present(controller, animated: true, completion: nil)
+    }
+    
+}
+
+extension WalletViewController: TransferTypeViewControllerDelegate {
+    
+    func transferTypeViewController(_ viewController: TransferTypeViewController, didSelectAsset asset: AssetItem) {
+        guard let action = tableHeaderView.transferActionView.action else {
+            return
+        }
+        let controller: UIViewController
+        switch action {
+        case .send:
+            controller = AssetViewController.instance(asset: asset, shouldSendOnAppear: true)
+        case .receive:
+            controller = DepositViewController.instance(asset: asset)
+        }
+        navigationController?.pushViewController(controller, animated: true)
     }
     
 }

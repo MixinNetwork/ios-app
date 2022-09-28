@@ -619,6 +619,8 @@
 		7CBD2EFA268FF6BB00AA0847 /* HomeAppsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBD2EF9268FF6BB00AA0847 /* HomeAppsStorage.swift */; };
 		7CC3B1A026C21F7E0018B0D1 /* ScriptMessageProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC3B19F26C21F7E0018B0D1 /* ScriptMessageProxy.swift */; };
 		7CC730502745F95D002780F5 /* StickerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC7304F2745F95D002780F5 /* StickerStore.swift */; };
+		7CCE65A828D69D1D00FE944A /* TransferActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CCE65A628D69D1D00FE944A /* TransferActionView.swift */; };
+		7CCE65A928D69D1D00FE944A /* TransferActionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CCE65A728D69D1D00FE944A /* TransferActionView.xib */; };
 		7CE2DC9A28587DE100AF00AE /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7B8BB58F234F36C000991ACB /* Colors.xcassets */; };
 		7CE2DE102858B52000AF00AE /* WallpaperImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE2DE0F2858B52000AF00AE /* WallpaperImageView.swift */; };
 		7CE3A25C2771A8AB006BE765 /* DeleteAccountVerifyCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE3A25B2771A8AB006BE765 /* DeleteAccountVerifyCodeViewController.swift */; };
@@ -1623,6 +1625,8 @@
 		7CBD2EF9268FF6BB00AA0847 /* HomeAppsStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsStorage.swift; sourceTree = "<group>"; };
 		7CC3B19F26C21F7E0018B0D1 /* ScriptMessageProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptMessageProxy.swift; sourceTree = "<group>"; };
 		7CC7304F2745F95D002780F5 /* StickerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerStore.swift; sourceTree = "<group>"; };
+		7CCE65A628D69D1D00FE944A /* TransferActionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransferActionView.swift; sourceTree = "<group>"; };
+		7CCE65A728D69D1D00FE944A /* TransferActionView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TransferActionView.xib; sourceTree = "<group>"; };
 		7CE2DE0F2858B52000AF00AE /* WallpaperImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WallpaperImageView.swift; sourceTree = "<group>"; };
 		7CE3A25B2771A8AB006BE765 /* DeleteAccountVerifyCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountVerifyCodeViewController.swift; sourceTree = "<group>"; };
 		7CE5E7A6269BDA29000B7904 /* HomeAppsPinTipsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsPinTipsViewController.swift; sourceTree = "<group>"; };
@@ -2955,6 +2959,8 @@
 				948E6CB428AF95CC00DFF5DF /* TIPIntroView.xib */,
 				94C359F528B506D40010F53C /* TIPFullscreenInputView.xib */,
 				9459693828B28FF8006F5421 /* TIPActionView.xib */,
+				7CCE65A628D69D1D00FE944A /* TransferActionView.swift */,
+				7CCE65A728D69D1D00FE944A /* TransferActionView.xib */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3873,6 +3879,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7B833E9C22C4AED20063929D /* ic_app_loading@2x.webp in Resources */,
+				7CCE65A928D69D1D00FE944A /* TransferActionView.xib in Resources */,
 				7CB17B662771608400CF4C94 /* DeleteAccountConfirmWindow.xib in Resources */,
 				7B833E9D22C4AED20063929D /* ic_app_loading@3x.webp in Resources */,
 				274264A920011C79000A8808 /* mixin.caf in Resources */,
@@ -4441,6 +4448,7 @@
 				9419374525DFBE7D00F81A9C /* MinimizedPlaylistWaveView.swift in Sources */,
 				7B6351D52410F2430034D9F8 /* ImageMessageViewModel.swift in Sources */,
 				7BF196BA241209A900CC8325 /* ImageMessageCell.swift in Sources */,
+				7CCE65A828D69D1D00FE944A /* TransferActionView.swift in Sources */,
 				DFD15C701FB5ACE7004B45CE /* UICollationExtension.swift in Sources */,
 				7B95860F2369599800F1F6E1 /* ProfileViewController.swift in Sources */,
 				7BD38B6020BEA03200D06E5C /* WaveformView.swift in Sources */,

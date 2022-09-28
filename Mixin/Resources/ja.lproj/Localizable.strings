@@ -62,6 +62,7 @@
 "all" = "すべて";
 "all_conversations" = "すべてのチャットルーム";
 "all_photos" = "全ての画像";
+"all_signer_failure" = "All node failure, perhaps PIN does not match what was set when it was last terminated unexpectedly";
 "all_transactions" = "もらった・あげたコイン💰";
 "allow" = "許可";
 "allow_manual_report_message" = "メッセージ単位の報告を許可";
@@ -147,6 +148,7 @@
 "change_your_app_language" = "言語設定";
 "changed" = "変更しました";
 "changed_disappearing_message_settings" = "%@が消えるメッセージを設定しました";
+"changing_pin_terminated_unexpectedly" = "Changing PIN terminated unexpectedly, click \"Continue\" to complete the change";
 "chat_background" = "チャットの背景";
 "chat_backup" = "チャットのバックアップ";
 "chat_bot_reception_title" = "ミニアプリを使用するためにボタンをタップしてください";
@@ -189,6 +191,7 @@
 "compress_database" = "データの圧縮";
 "compressed" = "圧縮しました";
 "confirm" = "確認する";
+"connect_to_tip_network_failed" = "Unable to connect to TIP network. Check your connection and try again.";
 "connected" = "接続済";
 "connecting" = "接続中";
 "connection_unstable" = "接続が不安定です";
@@ -223,6 +226,7 @@
 "content_voice" = "[音声通話]";
 "content_withdrawal" = "[出金]";
 "continue" = "続ける";
+"continue_need_verify_your_pin" = "Continue need to verify your old PIN and new PIN";
 "continue_open_url" = "URLを開く";
 "conversation" = "チャットルーム";
 "conversation_has_too_many_circles" = "グループリスト数を減らしてください";
@@ -235,7 +239,9 @@
 "copy_link" = "リンクをコピー";
 "copy_user_id" = "ユーザーIDをコピー";
 "create" = "作成";
+"create_pin" = "Create PIN";
 "created_this_group" = "%@がグループを作成しました";
+"creating_wallet_terminated_unexpectedly" = "Creating wallet terminated unexpectedly, click \"Continue\" to complete the creation";
 "currency" = "通貨";
 "currency_code" = "コード";
 "current_language" = "日本語";
@@ -320,6 +326,8 @@
 "end_to_end_encryption" = "E2E暗号化";
 "enter_pin_to_delete_account" = "アカウントを削除するためにPINコードを入力してください";
 "enter_your_emergency_contact_mixin_id" = "あなたの緊急連絡先のMixin IDを入力してください";
+"enter_your_new_pin" = "Enter your new PIN";
+"enter_your_old_pin" = "Enter your old PIN";
 "enter_your_phone_number" = "電話番号を入力して下さい";
 "enter_your_pin" = "PINコードを入力してください";
 "enter_your_pin_to_continue" = "PINコードを入力して、続けてください";
@@ -354,6 +362,7 @@
 "error_used_phone" = "エラー20122：この電話番号はすでに他のアカウントと紐づけられています";
 "error_withdrawal_memo_format_incorrect" = "エラー20131：出金メモのフォーマットが不正確です";
 "everybody" = "全員";
+"exchanging_data" = "Synchronization key shards in progress %@%%...";
 "exit_confirmation" = "\"%@\"を退出しますか?";
 "exit_group" = "グループから退出";
 "exit_group_and_report_inviter" = "グループを退会し招待者を報告する";
@@ -379,6 +388,7 @@
 "fourth_pin_confirm_hint" = "最終確認：PINコードを確実に記憶してください。ウォレットを失った場合、復元することはできません";
 "from" = "より";
 "games" = "ゲーム";
+"generating_keys" = "Generating keys...";
 "get_a_new_wallet" = "新たなウォレットを作成";
 "got_it" = "確認";
 "group_call" = "グループ通話";
@@ -533,6 +543,8 @@
 "no_transactions" = "トランザクションはありません";
 "nobody" = "ユーザーなし";
 "none" = "なし";
+"not_all_signer_success" = "Not all node success";
+"not_enough_partials" = "Not enough nodes return key shard";
 "not_found" = "見つかりません";
 "not_playing" = "再生しません";
 "notification_and_confirmation" = "通知・送金確認";
@@ -595,6 +607,7 @@
 "pin_creation" = "PINコードの生成";
 "pin_incorrect" = "PINコードが違います";
 "pin_lost_hint" = "PINコードを忘れた場合、ウォレットを復元することは一切できません";
+"pin_not_same_as_last_time" = "PIN does not match what was set when it was last terminated unexpectedly";
 "pin_title" = "ピン留め";
 "pinned_a_audio" = "%@が音声ファイルをピン留めしました";
 "pinned_a_card" = "%@がカードをピン留めしました";
@@ -611,12 +624,15 @@
 "pinned_message_title" = "%d個のピン留めされたメッセージ";
 "pinned_message_title_count" = "%d個のピン留めされたメッセージ";
 "playlist" = "プレイリスト";
+"please_keep_app_in_foreground" = "Please keep the app in the foreground and do not force quit it during the setup process.";
+"please_use_when_network_is_connected" = "Please complete the operation under a stable network environment.";
 "post" = "投稿";
 "post_sharing" = "投稿";
 "preparing" = "準備中...";
 "preparing_progress" = "準備中...(%@)";
 "privacy" = "プライバシー";
 "privacy_policy" = "プライバシーポリシー";
+"process_can_not_be_stop" = "The process cannot be canceled when it begins. Please remember the 6-digit PIN and reenter it if the process is aborted unexpectedly.";
 "profile" = "プロフィール";
 "profile_photo" = "プロフィール画像";
 "profile_share_bot_hint" = "ミニアプリをシェアしたい場合は、まずミニアプリを連絡先に追加してください。";
@@ -662,6 +678,7 @@
 "restore_chat_hint" = "iCloudから\nチャット履歴を復元する";
 "restoring" = "...の復元を準備中";
 "restoring_progress" = "%@を復元しています";
+"retry" = "リトライ";
 "revoke_access" = "アクセスを取り消す";
 "revoke_multisig_transaction" = "マルチシグトランザクションを取り消す";
 "room_is_full" = "ルームが満員です";
@@ -688,6 +705,7 @@
 "search_related_message" = "%d個の関連するメッセージ";
 "search_related_message_count" = "%d個の関連するメッセージ";
 "search_result_prefix_phone" = "電話番号: ";
+"secured_by_tip" = "Secured by TIP";
 "security" = "セキュリティ";
 "select" = "選択";
 "select_a_country_or_region" = "国と地域を選択";
@@ -723,6 +741,7 @@
 "set_disappearing_message_time_to" = "1$sは、消えるメッセージの有効時間を%@に設定しました。";
 "set_emergency_create_successfully" = "Set emergency contact successfully";
 "set_new_pin" = "新しいPINコードを設定";
+"set_or_update_pin_failed" = "Set or update PIN failed";
 "set_pin_successfully" = "PINコードの設定が完了しました。";
 "setting_appearance_language_alert_description" = "お使いのiPhoneの設定画面から言語を変更することができます";
 "setting_auth_access" = "許可: %1$@, 最終アクセス: %2$@";
@@ -769,6 +788,7 @@
 "snapshot_not_found" = "スナップショットは見つかりません";
 "social" = "ソーシャル";
 "sort_by" = "並びかえ項目";
+"start" = "Start";
 "start_messaging" = "メッセージを開始";
 "started_group_call" = "%@がグループ通話を開始しました";
 "status" = "ステータス";
@@ -783,6 +803,7 @@
 "suspicious_link" = "不審なリンクです";
 "symbol" = "シンボル";
 "symbol_withdrawal" = "%@ 出金";
+"syncing_and_verifying_tip" = "Please keep the app in the foreground while verifying and synchronizing shard keys to the TIP network; do not force quit the app during the setup process.";
 "syncing_progress" = "同期中 %d%%";
 "syncs_contact_hint" = "あなたのアドレス帳をMixinと同期し、他のMixinユーザーと連携します。";
 "system_time_is_unusual" = "システム時刻に問題があります";
@@ -796,6 +817,9 @@
 "third_pin_confirm_hint" = "3回目の確認がされることは稀ですので、PINコードを紛失した場合は復元できないことをご留意ください";
 "this_message_was_deleted" = "このメッセージは削除されています";
 "time" = "日時";
+"tip_create_pin_title" = "6桁のPINコードを作成してください";
+"tip_creation_introduction" = "Set a 6 digit Wallet PIN to create your first digital wallet, the PIN is based on the Throttled Identity Protocol, which is the decentralized key derivation protocol, read the document to learn more.";
+"tip_introduction" = "The 6-digit PIN is based on the Throttled Identity Protocol, which is the decentralized key derivation protocol, read the document to learn more.";
 "title_participants" = "%d人の参加者";
 "title_participants_count" = "%d人の参加者";
 "to" = "宛先";
@@ -822,6 +846,8 @@
 "transfer_to_user_or_bot" = "ミニアプリまたはユーザーへ送金する";
 "trending" = "トレンド";
 "try_again" = "もう一度試す";
+"trying_connect_tip_network" = "Connecting the TIP network";
+"trying_connect_tip_node" = "Trying connect TIP node";
 "turn_on_notifications" = "通知をオンにする";
 "unable_to_save_photo" = "画像が保存できませんでした";
 "unable_to_save_video" = "動画が保存できませんでした";
@@ -849,8 +875,13 @@
 "unrecognized_codes" = "不明なコード";
 "update" = "アップデート";
 "update_mixin" = "Mixinのアップデート";
+"upgrade" = "Upgrade";
 "upgrade_database" = "データベースをアップグレード";
+"upgrade_need_verify_your_pin" = "The upgrade requires verifying your PIN.";
+"upgrade_tip" = "Upgrade TIP";
+"upgrade_tip_successfully" = "Upgrade TIP successfully";
 "upgrading" = "アップデート中";
+"upgrading_tip_terminated_unexpectedly" = "Upgrading TIP terminated unexpectedly, click \"Continue\" to complete the upgrade";
 "upload_mobile_contacts" = "連絡先をアップロードする";
 "uploading" = "アップロードしています...";
 "uploading_progress" = "アップロード: %@ / %@ (%@)";
@@ -882,7 +913,6 @@
 "wallet_enable_biometric_pay" = "一度有効にすると%@を使ってスムーズに送金できます";
 "wallet_hide_asset_confirmation" = "%@を非表示にしますか?";
 "wallet_password_not_equal" = "PINコードが一致しません、もう一度お試しください";
-"wallet_password_set_pin_desc" = "6桁のPINコードを作成してください、詳しくは、こちらをご覧ください";
 "wallet_password_unsafe" = "PINコードがシンプルすぎます";
 "wallet_pin_pay_interval_tips" = "セキュリティ保護のため、PINコードの定期的な再確認が必要です。";
 "wallet_pin_tops_desc" = "PINコードを忘れた場合、ウォレットにアクセスすることができなくなるため、必ず覚えておいてください。PINコードは、分散型キー導出プロトコルであるThrottled Identity Protocolから作成されています。詳しくは、こちらをご覧ください。";

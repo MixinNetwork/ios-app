@@ -34,6 +34,10 @@ class SignalLoadingViewController: UIViewController {
         Logger.general.info(category: "SignalLoading", message: "isPrekeyLoaded:\(AppGroupUserDefaults.Crypto.isPrekeyLoaded), isSessionSynchronized:\(AppGroupUserDefaults.Crypto.isSessionSynchronized), isCircleSynchronized:\(AppGroupUserDefaults.User.isCircleSynchronized)")
         let startTime = Date()
         DispatchQueue.global().async {
+            AppGroupKeychain.tipPriv = nil
+            AppGroupKeychain.ephemeralSeed = nil
+            Logger.tip.info(category: "SignalLoading", message: "TIP Secrets cleared")
+            
             SignalDatabase.reloadCurrent()
 
             self.syncSignalKeys()

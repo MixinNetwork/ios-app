@@ -24,6 +24,7 @@ Mixin Core Services.
   s.static_framework = true
 
   s.source_files = 'MixinServices/Foundation/**/*', 'MixinServices/Crypto/**/*', 'MixinServices/Database/**/*', 'MixinServices/Services/**/*'
+  s.vendored_frameworks = 'MixinServices/XKCP_SimpleFIPS202.xcframework', 'MixinServices/tip.xcframework'
 
   s.dependency 'AppCenter'
   s.dependency 'Alamofire'
@@ -36,6 +37,7 @@ Mixin Core Services.
   s.dependency 'SQLCipher', '~> 4.0'
   s.dependency 'BoringSSL'
   s.dependency 'Sodium'
+  s.dependency 'SignalArgon2'
 
   s.test_spec 'Tests' do |tests|
     tests.source_files = 'MixinServicesTests/**/*'

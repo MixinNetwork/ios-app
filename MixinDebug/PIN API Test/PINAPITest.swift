@@ -155,12 +155,12 @@ class PINAPITest: ObservableObject {
                 }
             }),
             Case(name: "Update PIN", work: { (onFinished) in
-                AccountAPI.updatePin(old: self.pin, new: "114514") { result in
+                AccountAPI.updatePINWithoutTIP(old: self.pin, new: "114514") { result in
                     self.validate(result: result, onFinished: onFinished)
                 }
             }),
             Case(name: "Update PIN (Revert)", work: { (onFinished) in
-                AccountAPI.updatePin(old: "114514", new: self.pin) { result in
+                AccountAPI.updatePINWithoutTIP(old: "114514", new: self.pin) { result in
                     self.validate(result: result, onFinished: onFinished)
                 }
             }),

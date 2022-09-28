@@ -40,6 +40,8 @@ public struct Account {
     public let fiatCurrency: String
     public let transferNotificationThreshold: Double
     public let transferConfirmationThreshold: Double
+    public let tipKey: Data?
+    public let tipCounter: UInt64
     
 }
 
@@ -68,6 +70,8 @@ extension Account: Codable {
         case fiatCurrency = "fiat_currency"
         case transferNotificationThreshold = "transfer_notification_threshold"
         case transferConfirmationThreshold = "transfer_confirmation_threshold"
+        case tipKey = "tip_key_base64"
+        case tipCounter = "tip_counter"
     }
     
     public init(from decoder: Decoder) throws {
@@ -94,6 +98,14 @@ extension Account: Codable {
         fiatCurrency = try container.decodeIfPresent(String.self, forKey: .fiatCurrency) ?? ""
         transferNotificationThreshold = try container.decodeIfPresent(Double.self, forKey: .transferNotificationThreshold) ?? 0
         transferConfirmationThreshold = try container.decodeIfPresent(Double.self, forKey: .transferConfirmationThreshold) ?? 0
+        if let encoded = try container.decodeIfPresent(String.self, forKey: .tipKey), let key = Data(base64URLEncoded: encoded), !key.isEmpty {
+            tipKey = key
+        } else if let key = try container.decodeIfPresent(Data.self, forKey: .tipKey), !key.isEmpty {
+            tipKey = key
+        } else {
+            tipKey = nil
+        }
+        tipCounter = try container.decodeIfPresent(UInt64.self, forKey: .tipCounter) ?? 0
     }
     
 }

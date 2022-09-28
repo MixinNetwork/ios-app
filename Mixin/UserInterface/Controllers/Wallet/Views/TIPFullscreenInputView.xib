@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TIPFullscreenInputViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="pinField" destination="f5n-Dp-KKY" id="hsp-pn-bfq"/>
+                <outlet property="subtitleLabel" destination="HbC-Vc-s1k" id="K8H-f7-H2y"/>
+                <outlet property="titleLabel" destination="0Wd-P2-eyq" id="gHp-xv-04L"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Create PIN" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Wd-P2-eyq">
+                    <rect key="frame" x="27" y="92" width="360" height="186"/>
+                    <constraints>
+                        <constraint firstAttribute="height" priority="750" constant="186" id="iu9-1E-VmH" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="mediumConstant">
+                                    <real key="value" value="160"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
+                                    <real key="value" value="140"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </constraint>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                    <color key="textColor" name="text"/>
+                    <nil key="highlightedColor"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
+                    </userDefinedRuntimeAttributes>
+                </label>
+                <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="f5n-Dp-KKY" customClass="PinField" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="121" y="278" width="172" height="24"/>
+                    <color key="tintColor" name="text_accessory"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="24" id="GP0-j0-5h3"/>
+                        <constraint firstAttribute="width" constant="172" id="SeL-Zu-kMk"/>
+                    </constraints>
+                    <connections>
+                        <action selector="pinFieldEditingChanged:" destination="-1" eventType="editingChanged" id="7Ff-fS-sNI"/>
+                    </connections>
+                </view>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="The PIN is too simple and insecure." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HbC-Vc-s1k">
+                    <rect key="frame" x="30" y="342" width="354" height="17"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <color key="textColor" name="red"/>
+                    <nil key="highlightedColor"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="wallet_password_unsafe"/>
+                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                    </userDefinedRuntimeAttributes>
+                </label>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <color key="backgroundColor" name="background"/>
+            <constraints>
+                <constraint firstItem="0Wd-P2-eyq" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="44" id="3bc-if-CUy"/>
+                <constraint firstItem="f5n-Dp-KKY" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="Ft3-ZM-Z8z"/>
+                <constraint firstItem="HbC-Vc-s1k" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="30" id="LRZ-hM-Ugo"/>
+                <constraint firstItem="0Wd-P2-eyq" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="27" id="di3-M7-QLg"/>
+                <constraint firstAttribute="trailing" secondItem="HbC-Vc-s1k" secondAttribute="trailing" constant="30" id="dmf-fn-SLH"/>
+                <constraint firstItem="f5n-Dp-KKY" firstAttribute="top" secondItem="0Wd-P2-eyq" secondAttribute="bottom" id="lc6-cr-rbb"/>
+                <constraint firstItem="HbC-Vc-s1k" firstAttribute="top" secondItem="f5n-Dp-KKY" secondAttribute="bottom" constant="40" id="uEi-1h-Jd5"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="0Wd-P2-eyq" secondAttribute="trailing" constant="27" id="zD5-KV-nsH"/>
+            </constraints>
+            <point key="canvasLocation" x="139" y="153"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="red">
+            <color red="0.90980392156862744" green="0.41960784313725491" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_accessory">
+            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

@@ -709,7 +709,8 @@ extension PayWindow: PinFieldDelegate {
         case let .withdraw(trackId, address, _, _):
             trace = Trace(traceId: trackId, assetId: assetId, amount: generalizedAmount, opponentId: nil, destination: address.destination, tag: address.tag)
             TraceDAO.shared.saveTrace(trace: trace)
-            WithdrawalAPI.withdrawal(withdrawal: WithdrawalRequest(addressId: address.addressId, amount: generalizedAmount, traceId: trackId, pin: pin, memo: memo), completion: completion)
+            let request = WithdrawalRequest(addressId: address.addressId, amount: generalizedAmount, traceId: trackId, pin: pin, memo: memo, fee: address.fee)
+            WithdrawalAPI.withdrawal(withdrawal: request, completion: completion)
         case let .multisig(multisig, _, _):
             let multisigCompletion = { [weak self] (result: MixinAPI.Result<Empty>) in
                 guard let weakSelf = self else {

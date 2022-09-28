@@ -6,6 +6,7 @@ class PinValidationViewController: UIViewController {
     typealias SuccessCallback = ((String) -> Void) // param is verified PIN
     typealias FailedCallback = (() -> Void)
     
+    @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var pinField: PinField!
     @IBOutlet weak var loadingIndicator: ActivityIndicatorView!
     @IBOutlet weak var descriptionLabel: UILabel!

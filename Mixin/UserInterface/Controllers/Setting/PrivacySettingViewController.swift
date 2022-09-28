@@ -105,10 +105,15 @@ extension PrivacySettingViewController: UITableViewDelegate {
                 vc = PhoneContactsSettingViewController.instance()
             }
         default:
-            if LoginManager.shared.account?.hasPIN ?? false {
+            switch TIP.status {
+            case .ready, .needsMigrate:
                 vc = ScreenLockSettingViewController.instance()
-            } else {
-                vc = WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil)
+            case .needsInitialize:
+                let tip = TIPNavigationViewController(intent: .create, destination: nil)
+                present(tip, animated: true)
+                return
+            case .unknown:
+                return
             }
         }
         navigationController?.pushViewController(vc, animated: true)

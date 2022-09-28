@@ -31,7 +31,7 @@ extension AccountSettingViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let viewController: UIViewController?
+        let viewController: UIViewController
         if indexPath.section == 0 {
             switch indexPath.row {
             case 0:
@@ -39,20 +39,22 @@ extension AccountSettingViewController: UITableViewDelegate {
             case 1:
                 viewController = SecuritySettingViewController.instance()
             default:
-                if LoginManager.shared.account?.hasPIN ?? false {
-                    viewController = nil
+                switch TIP.status {
+                case .ready, .needsMigrate:
                     let vc = VerifyPinNavigationController(rootViewController: ChangeNumberVerifyPinViewController())
                     present(vc, animated: true, completion: nil)
-                } else {
-                    viewController = WalletPasswordViewController.instance(dismissTarget: .changePhone)
+                case .needsInitialize:
+                    let tip = TIPNavigationViewController(intent: .create, destination: .changePhone)
+                    present(tip, animated: true)
+                case .unknown:
+                    break
                 }
+                return
             }
         } else {
             viewController = DeleteAccountSettingViewController.instance()
         }
-        if let viewController = viewController {
-            navigationController?.pushViewController(viewController, animated: true)
-        }
+        navigationController?.pushViewController(viewController, animated: true)
     }
     
 }

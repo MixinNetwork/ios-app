@@ -17,6 +17,20 @@ class RefreshAccountJob: AsynchronousJob {
                     }
                     LoginManager.shared.setAccount(account)
                 }
+                Task {
+                    do {
+                        guard let context = try await TIP.checkCounter(with: account) else {
+                            return
+                        }
+                        await MainActor.run {
+                            let intro = TIPIntroViewController(context: context)
+                            let navigation = TIPNavigationViewController(intro: intro, destination: nil)
+                            UIApplication.homeNavigationController?.present(navigation, animated: true)
+                        }
+                    } catch {
+                        Logger.general.warn(category: "RefreshAccountJob", message: "Check counter: \(error)")
+                    }
+                }
 			case .failure:
 				break
 			}

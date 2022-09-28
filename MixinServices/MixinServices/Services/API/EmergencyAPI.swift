@@ -24,7 +24,9 @@ public final class EmergencyAPI: MixinAPI {
     }
     
     public static func verifyContact(pin: String, id: String, code: String, completion: @escaping (MixinAPI.Result<Account>) -> Void) {
-        PINEncryptor.encrypt(pin: pin, onFailure: completion) { (encryptedPin) in
+        PINEncryptor.encrypt(pin: pin, tipBody: {
+            try TIPBody.createEmergencyContact(verificationID: id, code: code)
+        }, onFailure: completion) { (encryptedPin) in
             let req = EmergencyRequest(phone: nil,
                                        identityNumber: nil,
                                        pin: encryptedPin,
@@ -63,14 +65,18 @@ public final class EmergencyAPI: MixinAPI {
     }
     
     public static func show(pin: String, completion: @escaping (MixinAPI.Result<User>) -> Void) {
-        PINEncryptor.encrypt(pin: pin, onFailure: completion) { (encryptedPin) in
+        PINEncryptor.encrypt(pin: pin, tipBody: {
+            try TIPBody.readEmergencyContact()
+        }, onFailure: completion) { (encryptedPin) in
             let param = ["pin_base64": encryptedPin]
             request(method: .post, path: Path.show, parameters: param, options: .disableRetryOnRequestSigningTimeout, completion: completion)
         }
     }
     
     public static func delete(pin: String, completion: @escaping (MixinAPI.Result<Account>) -> Void) {
-        PINEncryptor.encrypt(pin: pin, onFailure: completion) { (encryptedPin) in
+        PINEncryptor.encrypt(pin: pin, tipBody: {
+            try TIPBody.removeEmergencyContact()
+        }, onFailure: completion) { (encryptedPin) in
             let param = ["pin_base64": encryptedPin]
             request(method: .post, path: Path.delete, parameters: param, options: .disableRetryOnRequestSigningTimeout, completion: completion)
         }

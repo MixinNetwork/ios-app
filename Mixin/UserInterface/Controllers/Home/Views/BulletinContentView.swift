@@ -14,14 +14,22 @@ class BulletinContentView: UIView {
                 titleLabel.text = R.string.localizable.turn_on_notifications()
                 descriptionLabel.text = R.string.localizable.notification_content()
                 continueButton.setTitle(R.string.localizable.settings(), for: .normal)
+                closeButton.isHidden = false
             case .emergencyContact:
                 titleLabel.text = R.string.localizable.emergency_contact()
                 descriptionLabel.text = R.string.localizable.setting_emergency_content()
                 continueButton.setTitle(R.string.localizable.settings(), for: .normal)
+                closeButton.isHidden = false
             case .initializePIN:
                 titleLabel.text = R.string.localizable.get_a_new_wallet()
                 descriptionLabel.text = R.string.localizable.new_wallet_hint()
                 continueButton.setTitle(R.string.localizable.continue(), for: .normal)
+                closeButton.isHidden = false
+            case .migrateToTIP:
+                titleLabel.text = R.string.localizable.upgrade_tip()
+                descriptionLabel.text = R.string.localizable.tip_introduction()
+                continueButton.setTitle(R.string.localizable.upgrade(), for: .normal)
+                closeButton.isHidden = true
             case .none:
                 titleLabel.text = nil
                 descriptionLabel.text = nil

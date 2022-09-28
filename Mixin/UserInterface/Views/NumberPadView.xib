@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait" appearance="dark"/>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="NumberPadView" customModule="Mixin" customModuleProvider="target">
             <connections>
+                <outlet property="buttonsTopConstraint" destination="nIV-51-Wok" id="OkH-QA-B9l"/>
                 <outlet property="contentViewBottomConstraint" destination="3r6-sf-cQn" id="Ame-O3-ovn"/>
+                <outlet property="tipTopConstraint" destination="0tr-ck-94C" id="8H7-Ex-epj"/>
+                <outlet property="tipView" destination="bJD-sQ-Fmk" id="tLj-uH-eXL"/>
+                <outlet property="tipViewHeightConstraint" destination="uA6-NK-OXz" id="PCt-wK-PTj"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -17,6 +22,35 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="226"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bJD-sQ-Fmk">
+                    <rect key="frame" x="0.0" y="-30" width="375" height="30"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="reU-tf-2Al">
+                            <rect key="frame" x="165" y="10" width="45" height="14.5"/>
+                            <subviews>
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Call/ic_encryption" translatesAutoresizingMaskIntoConstraints="NO" id="jOt-Cm-qvW">
+                                    <rect key="frame" x="0.0" y="0.0" width="9" height="14.5"/>
+                                    <color key="tintColor" name="text_input_accessory"/>
+                                </imageView>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uxt-tD-GtR">
+                                    <rect key="frame" x="14" y="0.0" width="31" height="14.5"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                    <color key="textColor" name="text_input_accessory"/>
+                                    <nil key="highlightedColor"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="secured_by_tip"/>
+                                    </userDefinedRuntimeAttributes>
+                                </label>
+                            </subviews>
+                        </stackView>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="reU-tf-2Al" firstAttribute="centerX" secondItem="bJD-sQ-Fmk" secondAttribute="centerX" id="hFC-T8-WnE"/>
+                        <constraint firstItem="reU-tf-2Al" firstAttribute="centerY" secondItem="bJD-sQ-Fmk" secondAttribute="centerY" multiplier="1.15" id="muj-uf-9ge"/>
+                        <constraint firstAttribute="height" constant="30" id="uA6-NK-OXz"/>
+                    </constraints>
+                </view>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="oof-pp-1JB">
                     <rect key="frame" x="6" y="6" width="363" height="218"/>
                     <subviews>
@@ -178,16 +212,24 @@
                 </stackView>
             </subviews>
             <constraints>
+                <constraint firstItem="bJD-sQ-Fmk" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" priority="750" id="0tr-ck-94C"/>
                 <constraint firstAttribute="bottom" secondItem="oof-pp-1JB" secondAttribute="bottom" constant="2" id="3r6-sf-cQn"/>
+                <constraint firstAttribute="trailing" secondItem="bJD-sQ-Fmk" secondAttribute="trailing" id="A5O-th-x72"/>
                 <constraint firstItem="oof-pp-1JB" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="6" id="DXQ-31-olw"/>
+                <constraint firstItem="oof-pp-1JB" firstAttribute="top" secondItem="bJD-sQ-Fmk" secondAttribute="bottom" constant="6" id="Zm6-L2-K20"/>
                 <constraint firstAttribute="trailing" secondItem="oof-pp-1JB" secondAttribute="trailing" constant="6" id="fMM-yg-h4S"/>
-                <constraint firstItem="oof-pp-1JB" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="6" id="nIV-51-Wok"/>
+                <constraint firstItem="bJD-sQ-Fmk" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="jhD-SP-rdO"/>
+                <constraint firstItem="oof-pp-1JB" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" priority="250" constant="6" id="nIV-51-Wok"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="34.5" y="227"/>
+            <point key="canvasLocation" x="34.399999999999999" y="226.6866566716642"/>
         </view>
     </objects>
     <resources>
+        <image name="Call/ic_encryption" width="9" height="12"/>
         <image name="ic_keyboard_delete" width="23" height="17"/>
+        <namedColor name="text_input_accessory">
+            <color red="0.0" green="0.0" blue="0.0" alpha="0.29999999999999999" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
     </resources>
 </document>

@@ -11,7 +11,8 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
     
     private var searchCenterYConstraint: NSLayoutConstraint?
     private var searchViewController: WalletSearchViewController?
-    
+    private var lastSelectedAction: TransferActionView.Action?
+
     private var isSearchViewControllerPreloaded = false
     private var assets = [AssetItem]()
     
@@ -180,7 +181,8 @@ extension WalletViewController: UITableViewDelegate {
 
 extension WalletViewController: TransferActionViewDelegate {
     
-    func transferActionView(_ view: TransferActionView, didPerform action: TransferActionView.Action) {
+    func transferActionView(_ view: TransferActionView, didSelect action: TransferActionView.Action) {
+        lastSelectedAction = action
         let controller = TransferTypeViewController()
         controller.delegate = self
         controller.assets = assets
@@ -192,13 +194,13 @@ extension WalletViewController: TransferActionViewDelegate {
 extension WalletViewController: TransferTypeViewControllerDelegate {
     
     func transferTypeViewController(_ viewController: TransferTypeViewController, didSelectAsset asset: AssetItem) {
-        guard let action = tableHeaderView.transferActionView.action else {
+        guard let action = lastSelectedAction else {
             return
         }
         let controller: UIViewController
         switch action {
         case .send:
-            controller = AssetViewController.instance(asset: asset, shouldSendOnAppear: true)
+            controller = AssetViewController.instance(asset: asset, performSendOnAppear: true)
         case .receive:
             controller = DepositViewController.instance(asset: asset)
         }

@@ -14,7 +14,7 @@ class AssetViewController: UIViewController {
     
     private(set) var asset: AssetItem!
     private var snapshotDataSource: SnapshotDataSource!
-    private var shouldSendOnAppear = false
+    private var performSendOnAppear = false
         
     private lazy var noTransactionFooterView = Bundle.main.loadNibNamed("NoTransactionFooterView", owner: self, options: nil)?.first as! UIView
     private lazy var filterController = AssetFilterViewController.instance(showFilters: true)
@@ -45,9 +45,9 @@ class AssetViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if shouldSendOnAppear {
-            shouldSendOnAppear = false
-            DispatchQueue.main.async(execute: transfer)
+        if performSendOnAppear {
+            performSendOnAppear = false
+            DispatchQueue.main.async(execute: send)
         }
     }
     
@@ -80,10 +80,10 @@ class AssetViewController: UIViewController {
         AssetInfoWindow.instance().presentWindow(asset: asset)
     }
     
-    class func instance(asset: AssetItem, shouldSendOnAppear: Bool = false) -> UIViewController {
+    class func instance(asset: AssetItem, performSendOnAppear: Bool = false) -> UIViewController {
         let vc = R.storyboard.wallet.asset()!
         vc.asset = asset
-        vc.shouldSendOnAppear = shouldSendOnAppear
+        vc.performSendOnAppear = performSendOnAppear
         vc.snapshotDataSource = SnapshotDataSource(category: .asset(id: asset.assetId))
         let container = ContainerViewController.instance(viewController: vc, title: asset.name)
         return container
@@ -93,10 +93,10 @@ class AssetViewController: UIViewController {
 
 extension AssetViewController: TransferActionViewDelegate {
     
-    func transferActionView(_ view: TransferActionView, didPerform action: TransferActionView.Action) {
+    func transferActionView(_ view: TransferActionView, didSelect action: TransferActionView.Action) {
         switch action {
         case .send:
-            transfer()
+            send()
         case .receive:
             let vc = DepositViewController.instance(asset: asset)
             navigationController?.pushViewController(vc, animated: true)
@@ -222,7 +222,7 @@ extension AssetViewController: SnapshotCellDelegate {
 
 extension AssetViewController {
     
-    private func transfer() {
+    private func send() {
         guard let asset = self.asset else {
             return
         }

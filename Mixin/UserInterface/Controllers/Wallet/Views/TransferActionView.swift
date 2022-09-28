@@ -2,7 +2,7 @@ import UIKit
 
 protocol TransferActionViewDelegate: AnyObject {
     
-    func transferActionView(_ view: TransferActionView, didPerform action: TransferActionView.Action)
+    func transferActionView(_ view: TransferActionView, didSelect action: TransferActionView.Action)
     
 }
 
@@ -10,8 +10,6 @@ class TransferActionView: UIView, XibDesignable {
     
     @IBOutlet weak var sendButton: UIButton!
     @IBOutlet weak var receiveButton: UIButton!
-    
-    var action: Action?
     
     weak var delegate: TransferActionViewDelegate?
     
@@ -26,13 +24,11 @@ class TransferActionView: UIView, XibDesignable {
     }
         
     @IBAction func sendAction(_ sender: Any) {
-        action = .send
-        delegate?.transferActionView(self, didPerform: .send)
+        delegate?.transferActionView(self, didSelect: .send)
     }
     
     @IBAction func receiveAction(_ sender: Any) {
-        action = .receive
-        delegate?.transferActionView(self, didPerform: .receive)
+        delegate?.transferActionView(self, didSelect: .receive)
     }
     
 }

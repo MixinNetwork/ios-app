@@ -12,7 +12,7 @@ class DepositViewController: UIViewController {
     @IBOutlet weak var activityIndicatorView: ActivityIndicatorView!
     
     private var asset: AssetItem!
-    private var depositTipWindowLoaded = false
+    private var hasDepositTipWindowPresented = false
     
     private lazy var depositWindow = QrcodeWindow.instance()
     
@@ -30,7 +30,7 @@ class DepositViewController: UIViewController {
         
         if let entry = asset.preferredDepositEntry {
             stopLoading()
-            updateUI(entry: entry)
+            show(entry: entry)
             showDepositTipWindowIfNeeded()
         } else {
             startLoading()
@@ -89,10 +89,6 @@ extension DepositViewController {
         guard id == asset.assetId else {
             return
         }
-        reloadAsset()
-    }
-    
-    private func reloadAsset() {
         let assetId = asset.assetId
         DispatchQueue.global().async { [weak self] in
             guard let asset = AssetDAO.shared.getAsset(assetId: assetId) else {
@@ -106,7 +102,7 @@ extension DepositViewController {
                 if let entry = asset.preferredDepositEntry {
                     self.stopLoading()
                     UIView.performWithoutAnimation {
-                        self.updateUI(entry: entry)
+                        self.show(entry: entry)
                     }
                     self.showDepositTipWindowIfNeeded()
                 }
@@ -114,7 +110,7 @@ extension DepositViewController {
         }
     }
     
-    private func updateUI(entry: Asset.DepositEntry) {
+    private func show(entry: Asset.DepositEntry) {
         upperDepositFieldView.titleLabel.text = R.string.localizable.address()
         upperDepositFieldView.contentLabel.text = entry.destination
         let nameImage = UIImage(qrcode: entry.destination, size: upperDepositFieldView.qrCodeImageView.bounds.size)
@@ -147,10 +143,10 @@ extension DepositViewController {
     }
     
     private func showDepositTipWindowIfNeeded() {
-        guard !depositTipWindowLoaded else {
+        guard !hasDepositTipWindowPresented else {
             return
         }
-        depositTipWindowLoaded = true
+        hasDepositTipWindowPresented = true
         DepositTipWindow.instance().render(asset: asset).presentPopupControllerAnimated()
     }
     

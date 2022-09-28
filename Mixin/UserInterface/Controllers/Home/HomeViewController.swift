@@ -170,7 +170,7 @@ class HomeViewController: UIViewController {
         #endif
         if HomeViewController.showChangePhoneNumberTips {
             HomeViewController.showChangePhoneNumberTips = false
-            let alert = UIAlertController(title: R.string.localizable.change_emergency_contact(), message: nil, preferredStyle: .alert)
+            let alert = UIAlertController(title: R.string.localizable.setting_emergency_change_mobile(), message: nil, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: R.string.localizable.later(), style: .cancel, handler: nil))
             alert.addAction(UIAlertAction(title: R.string.localizable.change(), style: .default, handler: { (_) in
                 let vc = VerifyPinNavigationController(rootViewController: ChangeNumberVerifyPinViewController())

@@ -754,6 +754,7 @@
 "setting_delete_account_tip" = "你的 Mixin 錢包還有一些資產，可以提現至其他錢包或交易所，賬戶一旦登出，這些資產將和錢包一起被棄用無法找回。";
 "setting_desktop_confirm" = "確認登入 Mixin Messenger 桌面端";
 "setting_duplicate_transfer_desc" = "當你在 6 個小時內給相同的人轉相同的金額時顯示確認彈窗。";
+"setting_emergency_change_mobile" = "立即修改手機號？";
 "setting_emergency_content" = "緊急聯絡人旨在幫助你在丟失且無法找回手機號的情況下登入你的賬號。";
 "setting_emergency_desc" = "請放心，即使您的手機號丟失無法找回錢包資產也很安全，請牢記您的 PIN，閱讀檔案瞭解更多。";
 "setting_emergency_pin_tip" = "緊急聯絡人受 PIN 加密保護";

@@ -101,6 +101,7 @@
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>
+		<string>fetch</string>
 		<string>audio</string>
 		<string>voip</string>
 		<string>remote-notification</string>

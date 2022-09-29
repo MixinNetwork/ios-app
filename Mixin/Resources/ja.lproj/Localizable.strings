@@ -324,6 +324,7 @@
 "enable_pay_confirmation" = "%@の支払いを有効化しますか？";
 "enable_touch_pay_hint" = "PINコードを確認して指紋認証を利用可能にしてください";
 "end_to_end_encryption" = "E2E暗号化";
+"enter_new_phone_number" = "新しい電話番号を入力してください";
 "enter_pin_to_delete_account" = "アカウントを削除するためにPINコードを入力してください";
 "enter_your_emergency_contact_mixin_id" = "あなたの緊急連絡先のMixin IDを入力してください";
 "enter_your_new_pin" = "Enter your new PIN";

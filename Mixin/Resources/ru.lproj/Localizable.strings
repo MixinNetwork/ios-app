@@ -324,6 +324,7 @@
 "enable_pay_confirmation" = "Включить %@ Pay?";
 "enable_touch_pay_hint" = "Подтвердите PIN-код, чтобы включить Touch Pay";
 "end_to_end_encryption" = "Сквозное шифрование";
+"enter_new_phone_number" = "Введите новый номер телефона";
 "enter_pin_to_delete_account" = "Введите свой PIN-код, чтобы удалить свою учетную запись";
 "enter_your_emergency_contact_mixin_id" = "Введите свой контакт для экстренной связи Mixin ID";
 "enter_your_new_pin" = "Enter your new PIN";

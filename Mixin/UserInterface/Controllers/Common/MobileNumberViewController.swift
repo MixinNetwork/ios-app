@@ -5,6 +5,7 @@ class MobileNumberViewController: ContinueButtonViewController {
     
     @IBOutlet weak var contentStackView: UIStackView!
     @IBOutlet weak var titleWrapperStackView: UIStackView!
+    @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var callingCodeButton: UIButton!
     

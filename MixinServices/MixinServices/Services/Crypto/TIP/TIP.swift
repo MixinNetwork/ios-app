@@ -52,12 +52,6 @@ public enum TIP {
         case unknown
     }
     
-    public enum NodeCounterStatus {
-        case balanced
-        case greaterThanServer(InterruptionContext)
-        case inconsistency(InterruptionContext)
-    }
-    
     public enum Step {
         case creating
         case connecting

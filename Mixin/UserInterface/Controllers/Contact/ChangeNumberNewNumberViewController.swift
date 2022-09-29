@@ -11,7 +11,7 @@ class ChangeNumberNewNumberViewController: MobileNumberViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        label.text = R.string.localizable.enter_new_phone_number()
+        titleLabel.text = R.string.localizable.enter_new_phone_number()
     }
     
     override func continueAction(_ sender: Any) {

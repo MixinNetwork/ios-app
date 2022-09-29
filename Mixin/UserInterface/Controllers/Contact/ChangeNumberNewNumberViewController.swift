@@ -9,6 +9,11 @@ class ChangeNumberNewNumberViewController: MobileNumberViewController {
         CaptchaManager.shared.clean()
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        label.text = R.string.localizable.enter_new_phone_number()
+    }
+    
     override func continueAction(_ sender: Any) {
         continueButton.isBusy = true
         context.newNumber = fullNumber(withSpacing: false)

@@ -7,6 +7,7 @@ class MobileNumberViewController: ContinueButtonViewController {
     @IBOutlet weak var titleWrapperStackView: UIStackView!
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var callingCodeButton: UIButton!
+    @IBOutlet weak var label: UILabel!
     
     private let invertedPhoneNumberCharacterSet = CharacterSet(charactersIn: "0123456789+-() ").inverted
     private let phoneNumberValidator = PhoneNumberValidator()

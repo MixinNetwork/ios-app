@@ -324,6 +324,7 @@
 "enable_pay_confirmation" = "Enable %@ Pay?";
 "enable_touch_pay_hint" = "Confirm PIN to enable Touch Pay";
 "end_to_end_encryption" = "End-to-end Encrypted";
+"enter_new_phone_number" = "Enter your new phone number";
 "enter_pin_to_delete_account" = "Enter your PIN to delete your account";
 "enter_your_emergency_contact_mixin_id" = "Enter your emergency contact Mixin ID";
 "enter_your_new_pin" = "Enter your new PIN";

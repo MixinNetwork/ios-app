@@ -324,6 +324,7 @@
 "enable_pay_confirmation" = "启用%@支付？";
 "enable_touch_pay_hint" = "输入 PIN 启用指纹支付";
 "end_to_end_encryption" = "端到端加密";
+"enter_new_phone_number" = "输入你的新手机号码";
 "enter_pin_to_delete_account" = "输入你的 PIN 以注销你的账户";
 "enter_your_emergency_contact_mixin_id" = "请输入紧急联系人的 Mixin ID";
 "enter_your_new_pin" = "输入你的新 PIN";

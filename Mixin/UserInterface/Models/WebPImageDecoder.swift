@@ -51,11 +51,13 @@ extension WebPImageDecoder: SDImageCoder {
     }
     
     func canEncode(to format: SDImageFormat) -> Bool {
-        // According to source code of SDWebImage, there're two scenarios that need encoding,
-        // one is to store a UIImage to SDImageCache, another is to transcode with UIImage+MultiFormat
-        // Just leave it false since we're not using any of them.
-        assertionFailure("Not yet needed")
-        return false
+        switch format {
+        case .webP:
+            assertionFailure("Not yet needed")
+            return false
+        default:
+            return false
+        }
     }
     
     func encodedData(with image: UIImage?, format: SDImageFormat, options: [SDImageCoderOption : Any]? = nil) -> Data? {

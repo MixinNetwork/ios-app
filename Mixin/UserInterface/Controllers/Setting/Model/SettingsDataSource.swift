@@ -86,13 +86,25 @@ class SettingsDataSource: NSObject {
     
     func replaceSection(at location: Int, with section: SettingsSection, animation: UITableView.RowAnimation) {
         sections[location] = section
-        tableView?.reloadSections(IndexSet(integer: location), with: animation)
+        if let tableView {
+            if tableView.window == nil {
+                tableView.reloadData()
+            } else {
+                tableView.reloadSections(IndexSet(integer: location), with: animation)
+            }
+        }
         reloadIndexPaths()
     }
     
     func insertSection(_ section: SettingsSection, at location: Int, animation: UITableView.RowAnimation) {
         sections.insert(section, at: location)
-        tableView?.insertSections(IndexSet(integer: location), with: animation)
+        if let tableView {
+            if tableView.window == nil {
+                tableView.reloadData()
+            } else {
+                tableView.insertSections(IndexSet(integer: location), with: animation)
+            }
+        }
         reloadIndexPaths()
     }
     
@@ -109,19 +121,37 @@ class SettingsDataSource: NSObject {
             IndexPath(row: row, section: section)
         }
         sections[section].rows.append(contentsOf: rows)
-        tableView?.insertRows(at: indexPaths, with: animation)
+        if let tableView {
+            if tableView.window == nil {
+                tableView.reloadData()
+            } else {
+                tableView.insertRows(at: indexPaths, with: animation)
+            }
+        }
         reloadIndexPaths()
     }
     
     func deleteRow(at indexPath: IndexPath, animation: UITableView.RowAnimation) {
         sections[indexPath.section].rows.remove(at: indexPath.row)
-        tableView?.deleteRows(at: [indexPath], with: animation)
+        if let tableView {
+            if tableView.window == nil {
+                tableView.reloadData()
+            } else {
+                tableView.deleteRows(at: [indexPath], with: animation)
+            }
+        }
         reloadIndexPaths()
     }
     
     func reloadRow(_ row: SettingsRow, at indexPath: IndexPath, animation: UITableView.RowAnimation) {
         sections[indexPath.section].rows[indexPath.row] = row
-        tableView?.reloadRows(at: [indexPath], with: animation)
+        if let tableView {
+            if tableView.window == nil {
+                tableView.reloadData()
+            } else {
+                tableView.reloadRows(at: [indexPath], with: animation)
+            }
+        }
         reloadIndexPaths()
     }
     
@@ -148,14 +178,21 @@ extension SettingsDataSource {
             return
         }
         cachedFooterSizes[index] = nil
-        if let tableView = tableView, let view = tableView.footerView(forSection: index) as? SettingsFooterView {
+        guard let tableView else {
+            return
+        }
+        if let view = tableView.footerView(forSection: index) as? SettingsFooterView {
             UIView.performWithoutAnimation {
                 tableView.beginUpdates()
                 view.text = section.footer
                 tableView.endUpdates()
             }
         } else if let footer = section.footer, !footer.isEmpty {
-            tableView?.reloadSections(IndexSet(integer: index), with: .automatic)
+            if tableView.window == nil {
+                tableView.reloadData()
+            } else {
+                tableView.reloadSections(IndexSet(integer: index), with: .automatic)
+            }
         }
     }
     

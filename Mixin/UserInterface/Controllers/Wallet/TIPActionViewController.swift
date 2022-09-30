@@ -78,7 +78,7 @@ class TIPActionViewController: UIViewController {
                                                 failedSigners: [],
                                                 legacyPIN: nil,
                                                 forRecover: false,
-                                                progressHandler: showProgress(step:))
+                                                progressHandler: showProgress)
                     AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
                     await MainActor.run {
                         finish()
@@ -103,12 +103,12 @@ class TIPActionViewController: UIViewController {
                                                     failedSigners: [],
                                                     legacyPIN: old,
                                                     forRecover: false,
-                                                    progressHandler: showProgress(step:))
+                                                    progressHandler: showProgress)
                     case let .tip(old):
                         try await TIP.updateTIPPriv(oldPIN: old,
                                                     newPIN: new,
                                                     failedSigners: [],
-                                                    progressHandler: showProgress(step:))
+                                                    progressHandler: showProgress)
                     }
                     if AppGroupUserDefaults.Wallet.payWithBiometricAuthentication {
                         Keychain.shared.storePIN(pin: new)
@@ -136,7 +136,7 @@ class TIPActionViewController: UIViewController {
                                                 failedSigners: [],
                                                 legacyPIN: pin,
                                                 forRecover: false,
-                                                progressHandler: showProgress(step:))
+                                                progressHandler: showProgress)
                     AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
                     await MainActor.run {
                         finish()
@@ -198,8 +198,8 @@ class TIPActionViewController: UIViewController {
         }
     }
     
-    private func showProgress(step: TIP.Step) {
-        switch step {
+    private func showProgress(_ progress: TIP.Progress) {
+        switch progress {
         case .creating:
             activityIndicatorView.startAnimating()
             progressView.isHidden = true
@@ -220,16 +220,16 @@ class TIPActionViewController: UIViewController {
 #if DEBUG
     private func emulateProgress() {
         DispatchQueue.main.async {
-            self.showProgress(step: .creating)
+            self.showProgress(.creating)
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-            self.showProgress(step: .connecting)
+            self.showProgress(.connecting)
         }
         for i in 0...6 {
             DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(i + 4)) {
                 let fractionComplete = Float(i + 1) / 7
                 if !TIPDiagnostic.failLastSignerOnce || i < 6 {
-                    self.showProgress(step: .synchronizing(fractionComplete))
+                    self.showProgress(.synchronizing(fractionComplete))
                 }
             }
         }

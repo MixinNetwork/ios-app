@@ -4,12 +4,6 @@ import Tip
 
 public enum TIP {
     
-    public enum Action {
-        case create
-        case change
-        case migrate
-    }
-    
     public struct InterruptionContext {
         
         public enum Situation {
@@ -45,6 +39,12 @@ public enum TIP {
         
     }
     
+    public enum Action {
+        case create
+        case change
+        case migrate
+    }
+    
     public enum Status {
         case ready
         case needsInitialize
@@ -52,13 +52,7 @@ public enum TIP {
         case unknown
     }
     
-    public enum NodeCounterStatus {
-        case balanced
-        case greaterThanServer(InterruptionContext)
-        case inconsistency(InterruptionContext)
-    }
-    
-    public enum Step {
+    public enum Progress {
         case creating
         case connecting
         case synchronizing(Float)
@@ -104,13 +98,17 @@ public enum TIP {
         }
     }
     
+}
+
+extension TIP {
+    
     @discardableResult
     public static func createTIPPriv(
         pin: String,
         failedSigners: [TIPSigner],
         legacyPIN: String?,
         forRecover: Bool,
-        progressHandler: (@MainActor (Step) -> Void)?
+        progressHandler: (@MainActor (Progress) -> Void)?
     ) async throws -> Data {
         Logger.tip.info(category: "TIP", message: "createTIPPriv with failedSigners: \(failedSigners.map(\.index)), legacyPIN: \(legacyPIN != nil), forRecover: \(forRecover)")
         guard let pinData = pin.data(using: .utf8) else {
@@ -193,7 +191,7 @@ public enum TIP {
         oldPIN: String?,
         newPIN: String,
         failedSigners: [TIPSigner],
-        progressHandler: (@MainActor (Step) -> Void)?
+        progressHandler: (@MainActor (Progress) -> Void)?
     ) async throws -> Data {
         Logger.tip.info(category: "TIP", message: "Update priv with oldPIN: \(oldPIN != nil), failedSigners: \(failedSigners.map(\.index))")
         guard let newPINData = newPIN.data(using: .utf8) else {

@@ -61,7 +61,7 @@ public enum TIPNode {
         assigneePriv: Data?,
         failedSigners: [TIPSigner],
         forRecover: Bool,
-        progressHandler: (@MainActor (TIP.Step) -> Void)?
+        progressHandler: (@MainActor (TIP.Progress) -> Void)?
     ) async throws -> Data {
         Logger.tip.info(category: "TIPNode", message: "Sign with assigneePriv: \(assigneePriv != nil), failedSigners: \(failedSigners.map(\.index)), forRecover: \(forRecover)")
         guard let suite = CryptoNewSuiteBn256() else {
@@ -204,7 +204,7 @@ public enum TIPNode {
         ephemeral: Data,
         watcher: Data,
         assignee: Data?,
-        progressHandler: (@MainActor (TIP.Step) -> Void)?
+        progressHandler: (@MainActor (TIP.Progress) -> Void)?
     ) async throws -> [TIPSignResponseData] {
         let nonce = UInt64(Date().timeIntervalSince1970)
         let grace = ephemeralGrace

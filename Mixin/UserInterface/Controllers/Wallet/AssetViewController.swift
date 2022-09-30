@@ -19,6 +19,13 @@ class AssetViewController: UIViewController {
     private lazy var noTransactionFooterView = Bundle.main.loadNibNamed("NoTransactionFooterView", owner: self, options: nil)?.first as! UIView
     private lazy var filterController = AssetFilterViewController.instance(showFilters: true)
     
+    private weak var job: RefreshAssetsJob?
+    
+    deinit {
+        job?.cancel()
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.layoutIfNeeded()
@@ -41,6 +48,9 @@ class AssetViewController: UIViewController {
         }
         snapshotDataSource.reloadFromLocal()
         NotificationCenter.default.addObserver(self, selector: #selector(assetsDidChange(_:)), name: AssetDAO.assetsDidChangeNotification, object: nil)
+        let job = RefreshAssetsJob(request: .asset(id: asset.assetId, untilDepositEntriesNotEmpty: false))
+        self.job = job
+        ConcurrentJobQueue.shared.addJob(job: job)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -49,10 +59,6 @@ class AssetViewController: UIViewController {
             performSendOnAppear = false
             DispatchQueue.main.async(execute: send)
         }
-    }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
     }
     
     override func viewSafeAreaInsetsDidChange() {

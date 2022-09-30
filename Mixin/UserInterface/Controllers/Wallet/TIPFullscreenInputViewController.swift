@@ -98,7 +98,7 @@ class TIPFullscreenInputViewController: ContinueButtonViewController {
             titleLabel.text = R.string.localizable.tip_create_pin_title()
             subtitleLabel.text = ""
         case .change(_, .verify):
-            titleLabel.text = R.string.localizable.enter_your_pin()
+            titleLabel.text = R.string.localizable.enter_your_old_pin()
             subtitleLabel.text = ""
         case .change(_, .input):
             titleLabel.text = R.string.localizable.set_new_pin()

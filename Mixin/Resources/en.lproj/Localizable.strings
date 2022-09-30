@@ -128,7 +128,7 @@
 "canceled" = "Cancelled";
 "canceled_by_caller" = "Cancelled by caller";
 "cant_receive_the_code" = "Can't receive the code?";
-"caption_send" = "SEND";
+"caption_send" = "Send";
 "card" = "card";
 "category_chats" = "Chats";
 "chain" = "Chain";
@@ -649,7 +649,7 @@
 "read_contacts" = "Read Contacts";
 "read_snapshots" = "Read Snapshots";
 "rebate" = "Rebate";
-"receive" = "RECEIVE";
+"receive" = "Receive";
 "receive_money" = "Receive Money";
 "receiver" = "Receiver";
 "receivers" = "Receivers";

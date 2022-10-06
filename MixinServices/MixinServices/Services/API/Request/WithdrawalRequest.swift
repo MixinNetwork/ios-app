@@ -20,7 +20,7 @@ public struct WithdrawalRequest: Codable {
     
     public init(addressId: String, amount: String, traceId: String, pin: String, memo: String, fee: String?) {
         self.addressId = addressId
-        self.amount = amount
+        self.amount = AmountFormatter.formattedAmount(amount)
         self.traceId = traceId
         self.pin = pin
         self.memo = memo

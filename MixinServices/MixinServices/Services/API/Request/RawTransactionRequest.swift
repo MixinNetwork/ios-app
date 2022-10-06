@@ -21,7 +21,7 @@ public struct RawTransactionRequest: Encodable {
     public init(assetId: String, opponentMultisig: OpponentMultisig, amount: String, pin: String, traceId: String, memo: String) {
         self.assetId = assetId
         self.opponentMultisig = opponentMultisig
-        self.amount = amount
+        self.amount = AmountFormatter.formattedAmount(amount)
         self.pin = pin
         self.traceId = traceId
         self.memo = memo

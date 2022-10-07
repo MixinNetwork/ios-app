@@ -35,10 +35,11 @@ public final class PaymentAPI: MixinAPI {
     }
     
     public static func transfer(assetId: String, opponentId: String, amount: String, memo: String, pin: String, traceId: String, completion: @escaping (MixinAPI.Result<Snapshot>) -> Void) {
+        let formattedAmount = AmountFormatter.formattedAmount(amount)
         PINEncryptor.encrypt(pin: pin, tipBody: {
-            try TIPBody.transfer(assetID: assetId, oppositeUserID: opponentId, amount: amount, traceID: traceId, memo: memo)
+            try TIPBody.transfer(assetID: assetId, oppositeUserID: opponentId, amount: formattedAmount, traceID: traceId, memo: memo)
         }, onFailure: completion) { (encryptedPin) in
-            let param = ["asset_id": assetId, "opponent_id": opponentId, "amount": amount, "memo": memo, "pin_base64": encryptedPin, "trace_id": traceId]
+            let param = ["asset_id": assetId, "opponent_id": opponentId, "amount": formattedAmount, "memo": memo, "pin_base64": encryptedPin, "trace_id": traceId]
             request(method: .post, path: Path.transfers, parameters: param, options: .disableRetryOnRequestSigningTimeout, completion: completion)
         }
     }

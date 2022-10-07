@@ -69,7 +69,7 @@ enum TIPBody {
     }
     
     static func createRawTransaction(assetID: String, opponentKey: String, opponentReceivers: [String], opponentThreshold: Int, amount: String, traceID: String?, memo: String?) throws -> Data {
-        try hashData("TIP:TRANSACTION:CREATE:", opponentKey, opponentReceivers.joined(), "\(opponentThreshold)", amount, traceID, memo)
+        try hashData("TIP:TRANSACTION:CREATE:", assetID, opponentKey, opponentReceivers.joined(), String(opponentThreshold), amount, traceID, memo)
     }
     
     @inline(__always)

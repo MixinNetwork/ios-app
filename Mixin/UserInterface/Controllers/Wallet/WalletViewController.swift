@@ -185,7 +185,12 @@ extension WalletViewController: TransferActionViewDelegate {
         lastSelectedAction = action
         let controller = TransferTypeViewController()
         controller.delegate = self
-        controller.assets = assets
+        switch action {
+        case .send:
+            controller.assets = assets.filter { $0.balance != "0" }
+        case .receive:
+            controller.assets = assets
+        }
         present(controller, animated: true, completion: nil)
     }
     

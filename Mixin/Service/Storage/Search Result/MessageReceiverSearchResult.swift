@@ -27,11 +27,10 @@ class MessageReceiverSearchResult: SearchResult {
                                             textAttributes: SearchResult.titleAttributes,
                                             keyword: keyword,
                                             keywordAttributes: SearchResult.highlightedTitleAttributes)
-        switch receiver.item {
-        case .group(_):
-            description = nil
-        case let .user(user):
-            description = SearchResult.description(user: user, keyword: keyword)
+        if let content = receiver.conversationContent {
+            description = SearchResult.description(conversationContent: content)
+        } else if case let .user(user) = receiver.item {
+            description = SearchResult.description(identityNumber: user.identityNumber, phoneNumber: user.phone, keyword: keyword)
         }
     }
     

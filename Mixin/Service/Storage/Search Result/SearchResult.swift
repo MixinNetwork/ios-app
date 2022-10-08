@@ -95,13 +95,33 @@ extension SearchResult {
                                                textAttributes: SearchResult.normalDescriptionAttributes,
                                                keyword: keyword,
                                                keywordAttributes: SearchResult.highlightedNormalDescriptionAttributes)
+        } else if let identityNumber {
+            return NSAttributedString(string: identityNumber, attributes: normalDescriptionAttributes)
         } else {
             return nil
         }
     }
     
-    static func description(user: UserItem, keyword: String) -> NSAttributedString? {
-        description(identityNumber: user.identityNumber, phoneNumber: user.phone, keyword: keyword)
+    static func description(conversationContent: String?) -> NSAttributedString? {
+        guard let conversationContent, !conversationContent.isEmpty else {
+            return nil
+        }
+        return NSAttributedString(string: conversationContent, attributes: normalDescriptionAttributes)
     }
     
+    static func description(conversationContent: String? = nil, user: UserItem, keyword: String) -> NSAttributedString? {
+        if let conversationContent, !conversationContent.isEmpty {
+            if conversationContent.contains(keyword) {
+                return SearchResult.attributedText(text: conversationContent,
+                                                   textAttributes: SearchResult.normalDescriptionAttributes,
+                                                   keyword: keyword,
+                                                   keywordAttributes: SearchResult.highlightedNormalDescriptionAttributes)
+            } else {
+                return NSAttributedString(string: conversationContent, attributes: normalDescriptionAttributes)
+            }
+        } else {
+            return SearchResult.description(identityNumber: user.identityNumber, phoneNumber: user.phone, keyword: keyword)
+        }
+    }
+        
 }

@@ -608,6 +608,7 @@
 		7C695D56285B25AB0042177C /* SpotlightManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C695D55285B25AB0042177C /* SpotlightManager.swift */; };
 		7C6AD1F526A6794F00E6C41D /* StickersStoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6AD1F426A6794F00E6C41D /* StickersStoreViewController.swift */; };
 		7C7635B826A13461006101DB /* HomeAppsConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7635B726A13461006101DB /* HomeAppsConstants.swift */; };
+		7C7A865428E6E81600D6A4FA /* ConversationItem+DisplayContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7A865328E6E81600D6A4FA /* ConversationItem+DisplayContent.swift */; };
 		7C8CC5A4280D347A00F7CBDF /* PreviewWallpaperViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8CC5A2280D347A00F7CBDF /* PreviewWallpaperViewController.swift */; };
 		7C8CC5A7280D40E900F7CBDF /* PreviewWallpaperCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8CC5A6280D40E900F7CBDF /* PreviewWallpaperCell.swift */; };
 		7C8FA78D27687D1500855AFD /* DeleteAccountSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8FA78C27687D1500855AFD /* DeleteAccountSettingViewController.swift */; };
@@ -1635,6 +1636,7 @@
 		7C695D55285B25AB0042177C /* SpotlightManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotlightManager.swift; sourceTree = "<group>"; };
 		7C6AD1F426A6794F00E6C41D /* StickersStoreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersStoreViewController.swift; sourceTree = "<group>"; };
 		7C7635B726A13461006101DB /* HomeAppsConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsConstants.swift; sourceTree = "<group>"; };
+		7C7A865328E6E81600D6A4FA /* ConversationItem+DisplayContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConversationItem+DisplayContent.swift"; sourceTree = "<group>"; };
 		7C8CC5A2280D347A00F7CBDF /* PreviewWallpaperViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewWallpaperViewController.swift; sourceTree = "<group>"; };
 		7C8CC5A6280D40E900F7CBDF /* PreviewWallpaperCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewWallpaperCell.swift; sourceTree = "<group>"; };
 		7C8FA78C27687D1500855AFD /* DeleteAccountSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountSettingViewController.swift; sourceTree = "<group>"; };
@@ -2157,15 +2159,16 @@
 			isa = PBXGroup;
 			children = (
 				7B04FAB722684242004F8F04 /* AssetSearchResult.swift */,
-				7B04FAB922684F51004F8F04 /* SearchResult.swift */,
-				7B35AF73228A948A00E8101D /* UserSearchResult.swift */,
-				7C4733A028533EB800ECD293 /* PhoneContactSearchResult.swift */,
+				7BB0F9502434DDD400BEDA97 /* CircleMemberSearchResult.swift */,
 				7B35AF75228A98EF00E8101D /* ConversationSearchResult.swift */,
+				7BAB76AB228AAE00009ECB8C /* MessageReceiverSearchResult.swift */,
+				7BAB76A9228AABEA009ECB8C /* MessageSearchResult.swift */,
+				7B35AF79228AA61400E8101D /* MessagesWithGroupSearchResult.swift */,
 				7B35AF7B228AA6CD00E8101D /* MessagesWithinConversationSearchResult.swift */,
 				7B35AF77228AA3BD00E8101D /* MessagesWithUserSearchResult.swift */,
-				7B35AF79228AA61400E8101D /* MessagesWithGroupSearchResult.swift */,
-				7BAB76A9228AABEA009ECB8C /* MessageSearchResult.swift */,
-				7BB0F9502434DDD400BEDA97 /* CircleMemberSearchResult.swift */,
+				7C4733A028533EB800ECD293 /* PhoneContactSearchResult.swift */,
+				7B04FAB922684F51004F8F04 /* SearchResult.swift */,
+				7B35AF73228A948A00E8101D /* UserSearchResult.swift */,
 			);
 			path = "Search Result";
 			sourceTree = "<group>";
@@ -2214,7 +2217,6 @@
 				7BEB97172366CF42002DB190 /* MessageFontSet.swift */,
 				7CDF316B29890FB200421808 /* ConversationFontSet.swift */,
 				7BFE47E622845DE100FC4379 /* MessageReceiver.swift */,
-				7BAB76AB228AAE00009ECB8C /* MessageReceiverSearchResult.swift */,
 				7B09E5591FD157EB002E45D3 /* MessageViewModel.swift */,
 				7B9D825722F1BFEA0099381E /* NetworkOperationIconSet.swift */,
 				7B9D825522F1BFE90099381E /* NormalNetworkOperationIconSet.swift */,
@@ -2249,6 +2251,7 @@
 				94D63DD52646C29100FD7EE8 /* MessageViewModelFactory.swift */,
 				7CC7304F2745F95D002780F5 /* StickerStore.swift */,
 				7CF7416D27DAD93000DA0004 /* SnapCenterFlowLayout.swift */,
+				7C7A865328E6E81600D6A4FA /* ConversationItem+DisplayContent.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -4847,6 +4850,7 @@
 				945278982626BCD600023A6C /* HighlightableButton.swift in Sources */,
 				7BEB5D9F22B79F5500B8B10E /* EmergencyContactLoginVerificationCodeViewController.swift in Sources */,
 				7B59535122672D3500D59DB4 /* TopResultCell.swift in Sources */,
+				7C7A865428E6E81600D6A4FA /* ConversationItem+DisplayContent.swift in Sources */,
 				94046B91272DC265007C1D4A /* GroupCallMembersDataSource.swift in Sources */,
 				7BEE5353222E21D7008D3911 /* KeyboardHeight.swift in Sources */,
 				7B95534322438ECD00CE95E6 /* TopRoundedView.swift in Sources */,

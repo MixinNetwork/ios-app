@@ -20,6 +20,7 @@ class ConversationSearchResult: SearchResult {
                                             textAttributes: SearchResult.titleAttributes,
                                             keyword: keyword,
                                             keywordAttributes: SearchResult.highlightedTitleAttributes)
+        description = SearchResult.description(conversationContent: conversation.displayContent)
     }
     
 }

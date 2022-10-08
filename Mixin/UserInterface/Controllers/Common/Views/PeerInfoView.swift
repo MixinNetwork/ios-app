@@ -36,13 +36,11 @@ class PeerInfoView: UIView, XibDesignable {
     }
     
     func render(result: SearchResult) {
-        var identityNumber: String?
         var specializedCategory: MessageSearchResult.SpecializedCategory?
         switch result {
         case let result as UserSearchResult:
             let user = result.user
             avatarImageView.setImage(with: user.avatarUrl, userId: user.userId, name: user.fullName)
-            identityNumber = user.identityNumber
         case let result as ConversationSearchResult:
             let conversation = result.conversation
             if conversation.isGroup() {
@@ -64,7 +62,6 @@ class PeerInfoView: UIView, XibDesignable {
             case .group(let conversation):
                 avatarImageView.setGroupImage(with: conversation.iconUrl)
             case .user(let user):
-                identityNumber = user.identityNumber
                 avatarImageView.setImage(with: user.avatarUrl, userId: user.userId, name: user.fullName)
             }
         case let result as CircleMemberSearchResult:
@@ -72,7 +69,6 @@ class PeerInfoView: UIView, XibDesignable {
             if member.category == ConversationCategory.GROUP.rawValue {
                 avatarImageView.setGroupImage(with: member.iconUrl)
             } else {
-                identityNumber = member.identityNumber
                 avatarImageView.setImage(with: member.iconUrl, userId: member.userId ?? "", name: member.name)
             }
         case let result as PhoneContactSearchResult:
@@ -98,9 +94,6 @@ class PeerInfoView: UIView, XibDesignable {
         if let description = result.description {
             descriptionLabel.attributedText = description
             descriptionLabel.isHidden = false
-        } else if let identityNumber {
-            descriptionLabel.isHidden = false
-            descriptionLabel.text = identityNumber
         } else {
             descriptionLabel.isHidden = true
         }
@@ -125,22 +118,28 @@ class PeerInfoView: UIView, XibDesignable {
         superscriptLabel.text = nil
         prefixIconImageView.isHidden = true
         descriptionLabel.isHidden = false
-        if userBiographyAsSubtitle {
-            descriptionLabel.text = user.biography
-        } else {
-            descriptionLabel.text = user.identityNumber
-        }
+        descriptionLabel.text = userBiographyAsSubtitle ? user.biography : user.identityNumber
     }
     
     func render(receiver: MessageReceiver) {
+        func updateDescriptionLabel(user: UserItem?) {
+            if let content = receiver.conversationContent {
+                descriptionLabel.text = content
+                descriptionLabel.isHidden = content.isEmpty
+            } else if let user {
+                descriptionLabel.text = user.identityNumber
+                descriptionLabel.isHidden = false
+            } else {
+                descriptionLabel.isHidden = true
+            }
+        }
         switch receiver.item {
         case let .group(conversation):
-            descriptionLabel.isHidden = true
             avatarImageView.setGroupImage(with: conversation.iconUrl)
+            updateDescriptionLabel(user: nil)
         case let .user(user):
-            descriptionLabel.isHidden = false
-            descriptionLabel.text = user.identityNumber
             avatarImageView.setImage(with: user.avatarUrl, userId: user.userId, name: user.fullName)
+            updateDescriptionLabel(user: user)
         }
         titleLabel.text = receiver.name
         badgeImageView.image = receiver.badgeImage
@@ -152,17 +151,19 @@ class PeerInfoView: UIView, XibDesignable {
     func render(member: CircleMember) {
         if member.category == ConversationCategory.GROUP.rawValue {
             avatarImageView.setGroupImage(with: member.iconUrl)
-            descriptionLabel.isHidden = true
         } else {
             avatarImageView.setImage(with: member.iconUrl,
                                      userId: member.userId ?? "",
                                      name: member.name)
-            if let identityNumber = member.identityNumber {
-                descriptionLabel.text = identityNumber
-                descriptionLabel.isHidden = false
-            } else {
-                descriptionLabel.isHidden = true
-            }
+        }
+        if let content = member.conversationContent {
+            descriptionLabel.text = content
+            descriptionLabel.isHidden = content.isEmpty
+        } else if let identityNumber = member.identityNumber {
+            descriptionLabel.text = identityNumber
+            descriptionLabel.isHidden = false
+        } else {
+            descriptionLabel.isHidden = true
         }
         titleLabel.text = member.name
         badgeImageView.image = member.badgeImage

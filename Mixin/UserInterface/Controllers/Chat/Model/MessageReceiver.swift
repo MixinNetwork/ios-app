@@ -12,6 +12,7 @@ class MessageReceiver {
     let name: String
     let badgeImage: UIImage?
     let item: Item
+    let conversationContent: String?
     
     init?(conversation: ConversationItem) {
         if conversation.category == ConversationCategory.CONTACT.rawValue {
@@ -30,6 +31,7 @@ class MessageReceiver {
             return nil
         }
         conversationId = conversation.conversationId
+        conversationContent = conversation.displayContent
     }
     
     init(user: UserItem) {
@@ -37,6 +39,7 @@ class MessageReceiver {
         badgeImage = SearchResult.userBadgeImage(isVerified: user.isVerified, appId: user.appId)
         item = .user(user)
         conversationId = ConversationDAO.shared.makeConversationId(userId: user.userId, ownerUserId: myUserId)
+        conversationContent = nil
     }
     
     func matches(lowercasedKeyword keyword: String) -> Bool {

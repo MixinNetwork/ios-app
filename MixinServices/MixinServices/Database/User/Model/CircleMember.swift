@@ -12,6 +12,7 @@ public final class CircleMember {
     public let phoneNumber: String?
     
     public var badgeImage: UIImage? = nil
+    public var conversationContent: String? = nil
     
     public func matches(lowercasedKeyword keyword: String) -> Bool {
         name.lowercased().contains(keyword)
@@ -19,7 +20,7 @@ public final class CircleMember {
             || (phoneNumber?.contains(keyword) ?? false)
     }
     
-    public init(conversationId: String, userId: String?, category: String, name: String, iconUrl: String, identityNumber: String?, phoneNumber: String?, badgeImage: UIImage? = nil) {
+    public init(conversationId: String, userId: String?, category: String, name: String, iconUrl: String, identityNumber: String?, phoneNumber: String?, badgeImage: UIImage? = nil, conversationContent: String? = nil) {
         self.conversationId = conversationId
         self.userId = userId
         self.category = category
@@ -28,6 +29,7 @@ public final class CircleMember {
         self.identityNumber = identityNumber
         self.phoneNumber = phoneNumber
         self.badgeImage = badgeImage
+        self.conversationContent = conversationContent
     }
     
     public init(from decoder: Decoder) throws {

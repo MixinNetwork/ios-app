@@ -25,7 +25,8 @@ extension CircleMember {
                   iconUrl: isGroup ? conversation.iconUrl : conversation.ownerAvatarUrl,
                   identityNumber: conversation.ownerIdentityNumber,
                   phoneNumber: nil,
-                  badgeImage: nil)
+                  badgeImage: nil,
+                  conversationContent: conversation.displayContent)
     }
     
 }

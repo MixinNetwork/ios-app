@@ -22,7 +22,9 @@ class UserSearchResult: SearchResult {
                                             textAttributes: SearchResult.titleAttributes,
                                             keyword: keyword,
                                             keywordAttributes: SearchResult.highlightedTitleAttributes)
-        description = SearchResult.description(user: user, keyword: keyword)
+        description = SearchResult.description(identityNumber: user.identityNumber,
+                                               phoneNumber: user.phone,
+                                               keyword: keyword)
     }
     
 }

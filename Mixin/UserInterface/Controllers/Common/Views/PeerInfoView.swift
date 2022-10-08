@@ -122,26 +122,16 @@ class PeerInfoView: UIView, XibDesignable {
     }
     
     func render(receiver: MessageReceiver) {
-        func updateDescriptionLabel(user: UserItem?) {
-            if let content = receiver.conversationContent {
-                descriptionLabel.text = content
-                descriptionLabel.isHidden = content.isEmpty
-            } else if let user {
-                descriptionLabel.text = user.identityNumber
-                descriptionLabel.isHidden = false
-            } else {
-                descriptionLabel.isHidden = true
-            }
-        }
         switch receiver.item {
         case let .group(conversation):
             avatarImageView.setGroupImage(with: conversation.iconUrl)
-            updateDescriptionLabel(user: nil)
+            descriptionLabel.text = receiver.conversationContent
         case let .user(user):
             avatarImageView.setImage(with: user.avatarUrl, userId: user.userId, name: user.fullName)
-            updateDescriptionLabel(user: user)
+            descriptionLabel.text = receiver.conversationContent ?? user.identityNumber
         }
         titleLabel.text = receiver.name
+        descriptionLabel.isHidden = descriptionLabel.text?.isEmpty ?? true
         badgeImageView.image = receiver.badgeImage
         badgeImageView.isHidden = badgeImageView.image == nil
         superscriptLabel.text = nil

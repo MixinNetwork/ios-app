@@ -109,19 +109,4 @@ extension SearchResult {
         return NSAttributedString(string: conversationContent, attributes: normalDescriptionAttributes)
     }
     
-    static func description(conversationContent: String? = nil, user: UserItem, keyword: String) -> NSAttributedString? {
-        if let conversationContent, !conversationContent.isEmpty {
-            if conversationContent.contains(keyword) {
-                return SearchResult.attributedText(text: conversationContent,
-                                                   textAttributes: SearchResult.normalDescriptionAttributes,
-                                                   keyword: keyword,
-                                                   keywordAttributes: SearchResult.highlightedNormalDescriptionAttributes)
-            } else {
-                return NSAttributedString(string: conversationContent, attributes: normalDescriptionAttributes)
-            }
-        } else {
-            return SearchResult.description(identityNumber: user.identityNumber, phoneNumber: user.phone, keyword: keyword)
-        }
-    }
-        
 }

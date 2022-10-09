@@ -124,3 +124,16 @@ extension Asset {
     }
     
 }
+
+extension Asset {
+    
+    public var isDepositSupported: Bool {
+        !Self.depositNotSupportedAssetIds.contains(assetId)
+    }
+    
+    private static let depositNotSupportedAssetIds: Set<String> = [
+        "b207bce9-c248-4b8e-b6e3-e357146f3f4c", // MGD
+        "443e1ef5-bc9b-47d3-be77-07f328876c50", // Bytom Classic
+    ]
+    
+}

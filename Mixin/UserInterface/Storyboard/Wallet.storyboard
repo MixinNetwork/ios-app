@@ -601,7 +601,7 @@
                                                                 <constraint firstAttribute="width" constant="3" id="txl-EP-N3o"/>
                                                             </constraints>
                                                         </view>
-                                                        <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="+0.00001342" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hy0-UM-G0M">
+                                                        <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="+0.00001342" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hy0-UM-G0M">
                                                             <rect key="frame" x="7" y="6" width="142.33333333333334" height="49.666666666666664"/>
                                                             <gestureRecognizers/>
                                                             <fontDescription key="fontDescription" name="MixinCondensed-Regular" family="Mixin Condensed" pointSize="34"/>
@@ -611,7 +611,7 @@
                                                                 <outletCollection property="gestureRecognizers" destination="Nol-iF-VEd" appends="YES" id="i5D-Y2-zOE"/>
                                                             </connections>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ETH" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ptc-MK-Zp1" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="ETH" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ptc-MK-Zp1" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
                                                             <rect key="frame" x="153.33333333333331" y="6" width="23.666666666666657" height="49.666666666666664"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                             <color key="textColor" name="text"/>
@@ -1160,6 +1160,8 @@
                         <outlet property="hintLabel" destination="aFl-kr-gDX" id="glf-tW-dmO"/>
                         <outlet property="loadingView" destination="h5I-qj-Bl8" id="g4z-0p-i5C"/>
                         <outlet property="lowerDepositFieldView" destination="za9-iG-3NZ" id="N0l-9T-KMR"/>
+                        <outlet property="notSupportedHintLabelLeadingConstraint" destination="6IQ-G5-dox" id="g76-XG-6HE"/>
+                        <outlet property="notSupportedHintLabelTrailingConstraint" destination="42q-v4-ro6" id="dsj-9k-B41"/>
                         <outlet property="scrollView" destination="QBi-Sl-cc1" id="1x6-kd-RUM"/>
                         <outlet property="upperDepositFieldView" destination="tB5-S1-fay" id="s4i-CM-PVg"/>
                         <outlet property="warningLabel" destination="zEy-2R-8To" id="cNw-sJ-9qw"/>
@@ -1178,6 +1180,69 @@
                 </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="302.89855072463769" y="702.71739130434787"/>
+        </scene>
+        <!--Deposit Not Supported View Controller-->
+        <scene sceneID="hyM-jR-CZa">
+            <objects>
+                <viewController storyboardIdentifier="deposit_not_supported" id="9wT-TQ-Pqj" customClass="DepositNotSupportedViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="OVZ-C8-wqc">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_hud_warning" translatesAutoresizingMaskIntoConstraints="NO" id="aLo-ha-a1L">
+                                <rect key="frame" x="174" y="44" width="66" height="66"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="66" id="AJF-Ac-edJ"/>
+                                    <constraint firstAttribute="width" secondItem="aLo-ha-a1L" secondAttribute="height" multiplier="1:1" id="j0O-V6-Cgo"/>
+                                </constraints>
+                            </imageView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ec5-EJ-qVo">
+                                <rect key="frame" x="22" y="154" width="370" height="152"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jhZ-Pc-Wdj" customClass="TextLabel" customModule="Mixin" customModuleProvider="target">
+                                        <rect key="frame" x="14" y="12" width="342" height="128"/>
+                                        <color key="backgroundColor" name="background_input"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="128" id="VgQ-jY-Xky"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" name="background_input"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="jhZ-Pc-Wdj" secondAttribute="trailing" constant="14" id="42q-v4-ro6"/>
+                                    <constraint firstItem="jhZ-Pc-Wdj" firstAttribute="leading" secondItem="Ec5-EJ-qVo" secondAttribute="leading" constant="14" id="6IQ-G5-dox"/>
+                                    <constraint firstItem="jhZ-Pc-Wdj" firstAttribute="top" secondItem="Ec5-EJ-qVo" secondAttribute="top" constant="12" id="Mee-Ye-Km2"/>
+                                    <constraint firstAttribute="bottom" secondItem="jhZ-Pc-Wdj" secondAttribute="bottom" constant="12" id="dZA-Tc-go1"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="8"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="BR3-A4-wkb"/>
+                        <color key="backgroundColor" name="background"/>
+                        <constraints>
+                            <constraint firstItem="aLo-ha-a1L" firstAttribute="centerX" secondItem="BR3-A4-wkb" secondAttribute="centerX" id="KCg-9z-vVP"/>
+                            <constraint firstItem="aLo-ha-a1L" firstAttribute="top" secondItem="BR3-A4-wkb" secondAttribute="top" constant="44" id="KWf-ZI-ogU"/>
+                            <constraint firstItem="BR3-A4-wkb" firstAttribute="trailing" secondItem="Ec5-EJ-qVo" secondAttribute="trailing" constant="22" id="MpF-34-xA2"/>
+                            <constraint firstItem="Ec5-EJ-qVo" firstAttribute="leading" secondItem="BR3-A4-wkb" secondAttribute="leading" constant="22" id="cS3-Tn-hos"/>
+                            <constraint firstItem="Ec5-EJ-qVo" firstAttribute="top" secondItem="aLo-ha-a1L" secondAttribute="bottom" constant="44" id="cbx-0H-WG2"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="label" destination="jhZ-Pc-Wdj" id="HOg-tu-Nhy"/>
+                        <outlet property="labelHeightConstraint" destination="VgQ-jY-Xky" id="sjG-ED-aQn"/>
+                        <outlet property="labelLeadingConstraint" destination="6IQ-G5-dox" id="d30-mO-AaJ"/>
+                        <outlet property="labelTrailingConstraint" destination="42q-v4-ro6" id="mh9-y4-OMg"/>
+                        <outlet property="wrapperViewLeadingConstraint" destination="cS3-Tn-hos" id="ARj-Xq-AFS"/>
+                        <outlet property="wrapperViewTrailingConstraint" destination="MpF-34-xA2" id="ki7-2X-NDD"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="jvk-7p-PfJ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1074" y="703"/>
         </scene>
         <!--Address View Controller-->
         <scene sceneID="Igl-Cs-K3x">
@@ -2038,6 +2103,7 @@
         <image name="Wallet/ic_token_indicator_right" width="19" height="25"/>
         <image name="ic_arrow_down" width="30" height="30"/>
         <image name="ic_dialog_close" width="26" height="26"/>
+        <image name="ic_hud_warning" width="30" height="30"/>
         <image name="ic_input_menu" width="11" height="6"/>
         <image name="ic_scan_address" width="18" height="18"/>
         <image name="ic_title_close" width="15" height="15"/>

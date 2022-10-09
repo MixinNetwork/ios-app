@@ -549,6 +549,7 @@
 "not_enough_partials" = "Not enough nodes return key shard";
 "not_found" = "Не найден";
 "not_playing" = "Не играет";
+"not_supported_deposit" = "Mixin Wallet does not support the deposit for %1$@. Please note that you can continue to transfer or withdraw the deposited %2$@. Read the document to learn more";
 "notification_and_confirmation" = "Уведомление и подтверждение";
 "notification_content" = "Не пропустите сообщения от друзей.";
 "notification_message_preview_description" = "Предварительный просмотр текста сообщения в уведомлениях о новых сообщениях.";

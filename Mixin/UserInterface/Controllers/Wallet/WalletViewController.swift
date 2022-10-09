@@ -207,7 +207,11 @@ extension WalletViewController: TransferTypeViewControllerDelegate {
         case .send:
             controller = AssetViewController.instance(asset: asset, performSendOnAppear: true)
         case .receive:
-            controller = DepositViewController.instance(asset: asset)
+            if asset.isDepositSupported {
+                controller = DepositViewController.instance(asset: asset)
+            } else {
+                controller = DepositNotSupportedViewController.instance(asset: asset)
+            }
         }
         navigationController?.pushViewController(controller, animated: true)
     }

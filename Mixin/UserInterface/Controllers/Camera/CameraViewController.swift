@@ -645,7 +645,7 @@ extension CameraViewController {
     
     private func handleQrCodeDetection(string: String) {
         navigationController?.popViewController(animated: true)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.55) {
             if let delegate = self.delegate, !delegate.cameraViewController(self, shouldRecognizeString: string) {
                 return
             }

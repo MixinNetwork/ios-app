@@ -33,6 +33,7 @@ public final class UserDatabase: Database {
             .init(key: .destination, constraints: "TEXT NOT NULL"),
             .init(key: .label, constraints: "TEXT NOT NULL"),
             .init(key: .tag, constraints: "TEXT"),
+            .init(key: .feeAssetId, constraints: "TEXT NOT NULL DEFAULT ''"),
             .init(key: .fee, constraints: "TEXT NOT NULL"),
             .init(key: .reserve, constraints: "TEXT"),
             .init(key: .dust, constraints: "TEXT"),
@@ -507,6 +508,13 @@ public final class UserDatabase: Database {
         migrator.registerMigration("drop_drigger") { db in
             try db.execute(sql: "DROP TRIGGER IF EXISTS conversation_last_message_update")
             try db.execute(sql: "DROP TRIGGER IF EXISTS conversation_last_message_delete")
+        }
+        
+        migrator.registerMigration("fee_asset_id") { db in
+            let addresses = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(addresses)")
+            if !addresses.map(\.name).contains("fee_asset_id") {
+                try db.execute(sql: "ALTER TABLE addresses ADD COLUMN fee_asset_id TEXT NOT NULL DEFAULT ''")
+            }
         }
         
         return migrator

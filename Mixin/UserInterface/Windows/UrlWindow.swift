@@ -425,15 +425,15 @@ class UrlWindow {
                 Logger.general.error(category: "UrlWindow", message: "Failed to sync asset for url: \(url.absoluteString)")
                 return
             }
-            guard let chainAsset = syncAsset(assetId: asset.chainId, hud: hud) else {
-                Logger.general.error(category: "UrlWindow", message: "Failed to sync chain asset for url: \(url.absoluteString)")
-                return
-            }
             guard let address = syncAddress(addressId: addressId, hud: hud) else {
                 return
             }
-
-            let action: PayWindow.PinAction = .withdraw(trackId: traceId, address: address, chainAsset: chainAsset, fromWeb: true)
+            guard let feeAsset = syncAsset(assetId: address.feeAssetId, hud: hud) else {
+                Logger.general.error(category: "UrlWindow", message: "Failed to sync fee asset for url: \(url.absoluteString)")
+                return
+            }
+            
+            let action: PayWindow.PinAction = .withdraw(trackId: traceId, address: address, feeAsset: feeAsset, fromWeb: true)
             PayWindow.checkPay(traceId: traceId, asset: asset, action: action, destination: address.destination, tag: address.tag, addressId: address.addressId, amount: amount, memo: memo ?? "", fromWeb: true) { (canPay, errorMsg) in
 
                 DispatchQueue.main.async {

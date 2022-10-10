@@ -38,7 +38,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
     private var asset: AssetItem?
     private var targetUser: UserItem?
     private var targetAddress: Address?
-    private var chainAsset: AssetItem?
+    private var feeAsset: AssetItem?
     private var isInputAssetAmount = true
     private var adjustBottomConstraintWhenKeyboardFrameChanges = true
     
@@ -188,7 +188,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         
         adjustBottomConstraintWhenKeyboardFrameChanges = false
 
-        let chainAsset = self.chainAsset
+        let feeAsset = self.feeAsset
         let traceId = self.traceId
         let payWindow = PayWindow.instance()
         payWindow.onDismiss = { [weak self] in
@@ -219,11 +219,11 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
             }
         case .address(let address):
             DispatchQueue.global().async { [weak self] in
-                guard let chainAsset = chainAsset ?? AssetDAO.shared.getAsset(assetId: asset.chainId) else {
+                guard let feeAsset = feeAsset ?? AssetDAO.shared.getAsset(assetId: address.feeAssetId) else {
                     return
                 }
 
-                let action: PayWindow.PinAction = .withdraw(trackId: traceId, address: address, chainAsset: chainAsset, fromWeb: false)
+                let action: PayWindow.PinAction = .withdraw(trackId: traceId, address: address, feeAsset: feeAsset, fromWeb: false)
                 PayWindow.checkPay(traceId: traceId, asset: asset, action: action, destination: address.destination, tag: address.tag, addressId: address.addressId, amount: amount, fiatMoneyAmount: fiatMoneyAmount, memo: memo, fromWeb: false) { (canPay, errorMsg) in
                     DispatchQueue.main.async {
                         guard let weakSelf = self else {
@@ -345,27 +345,24 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
     
     private func fillFeeHint(address: Address) {
         DispatchQueue.global().async { [weak self] in
-            guard
-                let asset = AssetDAO.shared.getAsset(assetId: address.assetId),
-                let chainAsset = AssetDAO.shared.getAsset(assetId: asset.chainId)
-            else {
+            guard let feeAsset = AssetDAO.shared.getAsset(assetId: address.feeAssetId) else {
                 self?.transactionFeeHintLabel.text = ""
                 self?.displayFeeHint(loading: false)
                 return
             }
-            self?.chainAsset = chainAsset
+            self?.feeAsset = feeAsset
             
             var hint: String
             var highlightRanges = [NSRange]()
 
-            let feeRepresentation = address.fee + " " + chainAsset.symbol
+            let feeRepresentation = address.fee + " " + feeAsset.symbol
             let feeHint = R.string.localizable.network_fee(feeRepresentation)
             hint = feeHint
             let range = (hint as NSString).range(of: feeRepresentation)
             highlightRanges.append(range)
             
             if address.dust.doubleValue > 0 {
-                let dustRepresentation = address.dust + " " + chainAsset.symbol
+                let dustRepresentation = address.dust + " " + feeAsset.symbol
                 let dustHint = R.string.localizable.withdrawal_minimum_withdrawal() + dustRepresentation
                 hint += "\n" + dustHint
                 let range = (hint as NSString).range(of: dustRepresentation, options: .backwards)
@@ -373,7 +370,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
             }
             
             if address.reserve.doubleValue > 0 {
-                let reserveRepresentation = address.reserve + " " + chainAsset.symbol
+                let reserveRepresentation = address.reserve + " " + feeAsset.symbol
                 let reserveHint = R.string.localizable.withdrawal_minimum_reserve() + reserveRepresentation
                 hint += "\n" + reserveHint
                 let range = (hint as NSString).range(of: reserveRepresentation, options: .backwards)

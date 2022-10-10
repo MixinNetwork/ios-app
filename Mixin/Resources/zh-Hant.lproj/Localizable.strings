@@ -306,6 +306,7 @@
 "disconnecting" = "正在斷開";
 "dismiss_as_admin" = "撤銷管理員身份";
 "done" = "完成";
+"dont_have_assets" = "還沒有資產？";
 "duplicate_transfer_confirmation" = "重複轉賬確認";
 "duplicate_withdraw_confirmation" = "重複提現確認";
 "edit" = "編輯";

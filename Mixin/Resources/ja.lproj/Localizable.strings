@@ -306,6 +306,7 @@
 "disconnecting" = "切断";
 "dismiss_as_admin" = "管理者権限を解除";
 "done" = "完了";
+"dont_have_assets" = "Don't have assets?";
 "duplicate_transfer_confirmation" = "二重送金の確認";
 "duplicate_withdraw_confirmation" = "二重出金の確認";
 "edit" = "編集";

@@ -2,7 +2,10 @@ import UIKit
 import MixinServices
 
 protocol TransferTypeViewControllerDelegate: AnyObject {
+    
     func transferTypeViewController(_ viewController: TransferTypeViewController, didSelectAsset asset: AssetItem)
+    func transferTypeViewControllerDidSelectDeposit(_ viewController: TransferTypeViewController)
+    
 }
 
 class TransferTypeViewController: PopupSearchableTableViewController {
@@ -11,9 +14,11 @@ class TransferTypeViewController: PopupSearchableTableViewController {
     
     var assets = [AssetItem]()
     var asset: AssetItem?
+    var showEmptyHintIfNeeded: Bool = false
     
     private var searchResults = [AssetItem]()
-    
+    private var emptyHintViewIfLoaded: UIView?
+
     convenience init() {
         self.init(nib: R.nib.popupSearchableTableView)
         transitioningDelegate = PopupPresentationManager.shared
@@ -32,7 +37,12 @@ class TransferTypeViewController: PopupSearchableTableViewController {
         tableView.register(R.nib.transferTypeCell)
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.reloadData()
+        if showEmptyHintIfNeeded && assets.isEmpty {
+            loadEmptyHintView()
+            searchBoxView.isUserInteractionEnabled = false
+        } else {
+            tableView.reloadData()
+        }
     }
     
     override func updateSearchResults(keyword: String) {
@@ -40,6 +50,13 @@ class TransferTypeViewController: PopupSearchableTableViewController {
             asset.symbol.lowercased().contains(keyword)
                 || asset.name.lowercased().contains(keyword)
         })
+    }
+    
+    func reloadAssets(_ assets: [AssetItem]) {
+        emptyHintViewIfLoaded?.removeFromSuperview()
+        searchBoxView.isUserInteractionEnabled = true
+        self.assets = assets
+        tableView.reloadData()
     }
     
 }
@@ -67,6 +84,45 @@ extension TransferTypeViewController: UITableViewDelegate {
         let asset = isSearching ? searchResults[indexPath.row] : assets[indexPath.row]
         delegate?.transferTypeViewController(self, didSelectAsset: asset)
         dismiss(animated: true, completion: nil)
+    }
+    
+}
+
+extension TransferTypeViewController {
+    
+    @objc private func deposit() {
+        delegate?.transferTypeViewControllerDidSelectDeposit(self)
+    }
+    
+    private func loadEmptyHintView() {
+        let emptyHintView = UIView()
+        let label = UILabel()
+        label.textColor = R.color.text_accessory()
+        label.font = .systemFont(ofSize: 14)
+        label.text = R.string.localizable.dont_have_assets()
+        emptyHintView.addSubview(label)
+        label.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalToSuperview()
+        }
+        let button = UIButton()
+        button.setTitle(R.string.localizable.deposit(), for: .normal)
+        button.setTitleColor(R.color.theme(), for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 14)
+        button.addTarget(self, action: #selector(deposit), for: .touchUpInside)
+        emptyHintView.addSubview(button)
+        button.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(label.snp.bottom).offset(15)
+            make.bottom.equalToSuperview()
+        }
+        view.addSubview(emptyHintView)
+        emptyHintView.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.leading.equalToSuperview()
+            make.trailing.equalToSuperview()
+        }
+        emptyHintViewIfLoaded = emptyHintView
     }
     
 }

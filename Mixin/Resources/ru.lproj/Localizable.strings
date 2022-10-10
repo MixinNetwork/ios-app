@@ -306,6 +306,7 @@
 "disconnecting" = "Отключение";
 "dismiss_as_admin" = "Закрыть как администратор";
 "done" = "Сделано";
+"dont_have_assets" = "Don't have assets?";
 "duplicate_transfer_confirmation" = "Дубликат подтверждения перевода";
 "duplicate_withdraw_confirmation" = "Дубликат подтверждения вывода средств";
 "edit" = "Редактировать";

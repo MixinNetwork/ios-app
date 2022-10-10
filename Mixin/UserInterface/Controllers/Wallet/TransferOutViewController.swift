@@ -491,7 +491,7 @@ extension TransferOutViewController: UITextFieldDelegate {
 }
 
 extension TransferOutViewController: TransferTypeViewControllerDelegate {
-    
+ 
     func transferTypeViewController(_ viewController: TransferTypeViewController, didSelectAsset asset: AssetItem) {
         self.asset = asset
         isInputAssetAmount = true
@@ -500,6 +500,10 @@ extension TransferOutViewController: TransferTypeViewControllerDelegate {
             amountEditingChanged(amountTextField)
         }
         updateAssetUI()
+    }
+    
+    func transferTypeViewControllerDidSelectDeposit(_ viewController: TransferTypeViewController) {
+        
     }
     
 }

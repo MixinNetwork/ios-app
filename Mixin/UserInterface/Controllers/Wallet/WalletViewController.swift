@@ -187,6 +187,7 @@ extension WalletViewController: TransferActionViewDelegate {
         controller.delegate = self
         switch action {
         case .send:
+            controller.showEmptyHintIfNeeded = true
             controller.assets = assets.filter { $0.balance != "0" }
         case .receive:
             controller.assets = assets
@@ -214,6 +215,11 @@ extension WalletViewController: TransferTypeViewControllerDelegate {
             }
         }
         navigationController?.pushViewController(controller, animated: true)
+    }
+    
+    func transferTypeViewControllerDidSelectDeposit(_ viewController: TransferTypeViewController) {
+        lastSelectedAction = .receive
+        viewController.reloadAssets(assets)
     }
     
 }

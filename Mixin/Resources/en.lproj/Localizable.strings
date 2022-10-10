@@ -306,6 +306,7 @@
 "disconnecting" = "Disconnecting";
 "dismiss_as_admin" = "Dismiss as Admin";
 "done" = "Done";
+"dont_have_assets" = "Don't have assets?";
 "duplicate_transfer_confirmation" = "Duplicate Transfer Confirmation";
 "duplicate_withdraw_confirmation" = "Duplicate Withdraw Confirmation";
 "edit" = "Edit";

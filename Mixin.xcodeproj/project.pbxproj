@@ -556,7 +556,6 @@
 		7C225E8827C4C5FE00154143 /* GroupInCommonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C225E8627C4C5FE00154143 /* GroupInCommonCell.swift */; };
 		7C225E8927C4C5FE00154143 /* GroupInCommonCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C225E8727C4C5FE00154143 /* GroupInCommonCell.xib */; };
 		7C2475C727795BC100112A30 /* DeleteAccountTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2475C627795BC100112A30 /* DeleteAccountTableHeaderView.swift */; };
-		7C2AC42928F2B384005F369A /* DepositNotSupportedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2AC42828F2B384005F369A /* DepositNotSupportedViewController.swift */; };
 		7C2ACDAE27D73F7C00E9DDB3 /* LeftAlignedCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2ACDAD27D73F7C00E9DDB3 /* LeftAlignedCollectionViewFlowLayout.swift */; };
 		7C2DEFF12824FCF500758208 /* ic_time_animation_dark@3x.gif in Resources */ = {isa = PBXBuildFile; fileRef = 7C2DEFF02824FCF500758208 /* ic_time_animation_dark@3x.gif */; };
 		7C2DEFF32824FF0600758208 /* ic_time_animation@3x.gif in Resources */ = {isa = PBXBuildFile; fileRef = 7C2DEFF22824FF0600758208 /* ic_time_animation@3x.gif */; };
@@ -1563,7 +1562,6 @@
 		7C225E8627C4C5FE00154143 /* GroupInCommonCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupInCommonCell.swift; sourceTree = "<group>"; };
 		7C225E8727C4C5FE00154143 /* GroupInCommonCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GroupInCommonCell.xib; sourceTree = "<group>"; };
 		7C2475C627795BC100112A30 /* DeleteAccountTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountTableHeaderView.swift; sourceTree = "<group>"; };
-		7C2AC42828F2B384005F369A /* DepositNotSupportedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositNotSupportedViewController.swift; sourceTree = "<group>"; };
 		7C2ACDAD27D73F7C00E9DDB3 /* LeftAlignedCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeftAlignedCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
 		7C2DEFF02824FCF500758208 /* ic_time_animation_dark@3x.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "ic_time_animation_dark@3x.gif"; sourceTree = "<group>"; };
 		7C2DEFF22824FF0600758208 /* ic_time_animation@3x.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "ic_time_animation@3x.gif"; sourceTree = "<group>"; };
@@ -3426,7 +3424,6 @@
 				DF16681D20A6F84200C45E31 /* AllTransactionsViewController.swift */,
 				DF9E66E4205B9AF300F1A0B9 /* HiddenAssetViewController.swift */,
 				DF5BF5601FBB2D490092AFB8 /* DepositViewController.swift */,
-				7C2AC42828F2B384005F369A /* DepositNotSupportedViewController.swift */,
 				7B894AF2205BF8660065A1B8 /* AddressViewController.swift */,
 				DF06D91E222FAE1300FE7FBC /* TransferOutViewController.swift */,
 				7B894AF4205BFC9B0065A1B8 /* NewAddressViewController.swift */,
@@ -4637,7 +4634,6 @@
 				7BFE47E22284394000FC4379 /* CheckmarkPeerCell.swift in Sources */,
 				7B369208233A43C1007321A7 /* SegmentedControl.swift in Sources */,
 				9427D51A25E0D42E00B1EF0E /* MusicInfoView.swift in Sources */,
-				7C2AC42928F2B384005F369A /* DepositNotSupportedViewController.swift in Sources */,
 				7B082D1A242CACA000C5E163 /* MultipleSelectionActionView.swift in Sources */,
 				7BFE47DB228421D100FC4379 /* UserItemPeerViewController.swift in Sources */,
 				7C4C03A128532575003DE0C0 /* AddContactViewController.swift in Sources */,

@@ -550,7 +550,6 @@
 "not_enough_partials" = "Not enough nodes return key shard";
 "not_found" = "沒有找到相應的訊息";
 "not_playing" = "未在播放";
-"not_supported_deposit" = "Mixin 錢包現已不支援 %1$@ 充值，注意已轉入的 %2$@ 資產可以繼續轉賬或提現，閱讀檔案以瞭解更多";
 "notification_and_confirmation" = "通知和確認";
 "notification_content" = "不再遺漏好友的訊息。";
 "notification_message_preview_description" = "在推送通知中顯示訊息內容。";

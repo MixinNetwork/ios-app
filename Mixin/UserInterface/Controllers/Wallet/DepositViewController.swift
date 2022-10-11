@@ -61,7 +61,7 @@ extension DepositViewController: ContainerViewControllerDelegate {
     }
     
     func barRightButtonTappedAction() {
-        UIApplication.shared.openURL(url: .deposit)
+        UIApplication.shared.openURL(url: "https://mixinmessenger.zendesk.com/hc/articles/360018789931")
     }
     
 }

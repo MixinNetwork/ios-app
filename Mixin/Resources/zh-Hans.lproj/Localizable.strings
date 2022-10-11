@@ -306,7 +306,7 @@
 "disconnecting" = "正在断开";
 "dismiss_as_admin" = "撤销管理员身份";
 "done" = "完成";
-"dont_have_assets" = "还没有资产？";
+"dont_have_assets" = "没有资产？";
 "duplicate_transfer_confirmation" = "重复转账确认";
 "duplicate_withdraw_confirmation" = "重复提现确认";
 "edit" = "编辑";

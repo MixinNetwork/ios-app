@@ -908,6 +908,10 @@ public class ReceiveMessageService: MixinService {
                     continue
                 }
                 ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob(stickerId: stickerId))
+            } else if child.category.hasSuffix("_CONTACT") {
+                if let userId = child.sharedUserId, !UserDAO.shared.isExist(userId: userId) {
+                    absentUserIds.insert(userId)
+                }
             }
         }
         if !absentUserIds.isEmpty {

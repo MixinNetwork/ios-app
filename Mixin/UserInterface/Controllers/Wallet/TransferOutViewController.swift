@@ -318,7 +318,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
     }
     
     private func reloadTransactionFeeHint(addressId: String) {
-        displayFeeHint(loading: true)
+        continueButton.isBusy = true
         WithdrawalAPI.address(addressId: addressId) { [weak self](result) in
             guard let weakSelf = self else {
                 return
@@ -337,21 +337,18 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         }
     }
     
-    private func displayFeeHint(loading: Bool) {
-        DispatchQueue.main.async { [weak self] in
-            self?.transcationFeeHintView.isHidden = loading
-        }
-    }
-    
     private func fillFeeHint(address: Address) {
         DispatchQueue.global().async { [weak self] in
             guard let feeAsset = AssetDAO.shared.getAsset(assetId: address.feeAssetId) else {
-                self?.transactionFeeHintLabel.text = ""
-                self?.displayFeeHint(loading: false)
+                DispatchQueue.main.async {
+                    guard let self = self else {
+                        return
+                    }
+                    self.transactionFeeHintLabel.text = ""
+                    self.continueButton.isBusy = false
+                }
                 return
             }
-            self?.feeAsset = feeAsset
-            
             var hint: String
             var highlightRanges = [NSRange]()
 
@@ -384,11 +381,12 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
                 attributedHint.addAttribute(.foregroundColor, value: UIColor.text, range: range)
             }
             DispatchQueue.main.async {
-                guard let weakSelf = self else {
+                guard let self = self else {
                     return
                 }
-                weakSelf.transactionFeeHintLabel.attributedText = attributedHint
-                weakSelf.displayFeeHint(loading: false)
+                self.feeAsset = feeAsset
+                self.transactionFeeHintLabel.attributedText = attributedHint
+                self.continueButton.isBusy = false
             }
         }
     }

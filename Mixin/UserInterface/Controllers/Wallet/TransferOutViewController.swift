@@ -319,34 +319,50 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
     
     private func reloadTransactionFeeHint(addressId: String) {
         continueButton.isBusy = true
+        DispatchQueue.global().async { [weak self] in
+            if let address = AddressDAO.shared.getAddress(addressId: addressId), !address.feeAssetId.isEmpty {
+                self?.fillFeeHint(address: address) {
+                    self?.reloadFeeFromRemote(addressId: address.addressId)
+                }
+            } else {
+                self?.reloadFeeFromRemote(addressId: addressId)
+            }
+        }
+    }
+    
+    private func reloadFeeFromRemote(addressId: String) {
         WithdrawalAPI.address(addressId: addressId) { [weak self](result) in
             guard let weakSelf = self else {
                 return
             }
             switch result {
             case let .success(address):
+                DispatchQueue.global().async {
+                    AddressDAO.shared.insertOrUpdateAddress(addresses: [address])
+                }
                 if case .address = weakSelf.opponent {
                     weakSelf.opponent = .address(address)
                 }
-                weakSelf.fillFeeHint(address: address)
+                weakSelf.fillFeeHint(address: address, onFinished: nil)
             case .failure:
                 DispatchQueue.global().asyncAfter(deadline: .now() + 3, execute: {
-                    self?.reloadTransactionFeeHint(addressId: addressId)
+                    self?.reloadFeeFromRemote(addressId: addressId)
                 })
             }
         }
     }
     
-    private func fillFeeHint(address: Address) {
+    private func fillFeeHint(address: Address, onFinished: (() -> Void)?) {
         DispatchQueue.global().async { [weak self] in
             guard let feeAsset = AssetDAO.shared.getAsset(assetId: address.feeAssetId) else {
                 DispatchQueue.main.async {
-                    guard let self = self else {
+                    guard let self else {
                         return
                     }
                     self.transactionFeeHintLabel.text = ""
                     self.continueButton.isBusy = false
                 }
+                onFinished?()
                 return
             }
             var hint: String
@@ -381,12 +397,12 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
                 attributedHint.addAttribute(.foregroundColor, value: UIColor.text, range: range)
             }
             DispatchQueue.main.async {
-                guard let self = self else {
-                    return
+                if let self {
+                    self.feeAsset = feeAsset
+                    self.transactionFeeHintLabel.attributedText = attributedHint
+                    self.continueButton.isBusy = false
                 }
-                self.feeAsset = feeAsset
-                self.transactionFeeHintLabel.attributedText = attributedHint
-                self.continueButton.isBusy = false
+                onFinished?()
             }
         }
     }

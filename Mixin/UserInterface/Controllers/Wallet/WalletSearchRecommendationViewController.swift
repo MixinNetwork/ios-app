@@ -39,6 +39,7 @@ class WalletSearchRecommendationViewController: WalletSearchTableViewController 
                 self.history = history
                 self.trending = trending
                 self.tableView.reloadData()
+                self.tableView.layoutIfNeeded()
             }
         }
         

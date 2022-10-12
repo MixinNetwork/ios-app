@@ -5,10 +5,10 @@ class WalletSearchResultsViewController: WalletSearchTableViewController {
     
     let activityIndicator = ActivityIndicatorView()
     
-    private let queue = OperationQueue()
+    var searchResults: [AssetItem] = []
+    var lastKeyword: String?
     
-    private var searchResults: [AssetItem] = []
-    private var lastKeyword: String?
+    private let queue = OperationQueue()
     
     override func viewDidLoad() {
         super.viewDidLoad()

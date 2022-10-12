@@ -11,7 +11,7 @@ class PopupSearchableTableViewController: UIViewController {
         return searchBoxView.textField
     }
     
-    private var keyword: String {
+    var keyword: String {
         return (keywordTextField.text ?? "")
             .lowercased()
             .trimmingCharacters(in: .whitespacesAndNewlines)

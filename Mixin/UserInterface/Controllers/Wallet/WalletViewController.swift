@@ -183,13 +183,16 @@ extension WalletViewController: TransferActionViewDelegate {
     
     func transferActionView(_ view: TransferActionView, didSelect action: TransferActionView.Action) {
         lastSelectedAction = action
-        let controller = TransferTypeViewController()
+        let controller = TransferSearchViewController()
         controller.delegate = self
         switch action {
         case .send:
             controller.showEmptyHintIfNeeded = true
+            controller.searchResultsFromServer = false
             controller.assets = assets.filter { $0.balance != "0" }
         case .receive:
+            controller.showEmptyHintIfNeeded = false
+            controller.searchResultsFromServer = true
             controller.assets = assets
         }
         present(controller, animated: true, completion: nil)
@@ -197,9 +200,9 @@ extension WalletViewController: TransferActionViewDelegate {
     
 }
 
-extension WalletViewController: TransferTypeViewControllerDelegate {
+extension WalletViewController: TransferSearchViewControllerDelegate {
     
-    func transferTypeViewController(_ viewController: TransferTypeViewController, didSelectAsset asset: AssetItem) {
+    func transferSearchViewController(_ viewController: TransferSearchViewController, didSelectAsset asset: AssetItem) {
         guard let action = lastSelectedAction else {
             return
         }
@@ -213,8 +216,9 @@ extension WalletViewController: TransferTypeViewControllerDelegate {
         navigationController?.pushViewController(controller, animated: true)
     }
     
-    func transferTypeViewControllerDidSelectDeposit(_ viewController: TransferTypeViewController) {
+    func transferSearchViewControllerDidSelectDeposit(_ viewController: TransferSearchViewController) {
         lastSelectedAction = .receive
+        viewController.searchResultsFromServer = true
         viewController.reloadAssets(assets)
     }
     

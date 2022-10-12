@@ -621,6 +621,8 @@
 		7CC730502745F95D002780F5 /* StickerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC7304F2745F95D002780F5 /* StickerStore.swift */; };
 		7CCE65A828D69D1D00FE944A /* TransferActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CCE65A628D69D1D00FE944A /* TransferActionView.swift */; };
 		7CCE65A928D69D1D00FE944A /* TransferActionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CCE65A728D69D1D00FE944A /* TransferActionView.xib */; };
+		7CDBA58A28F64E5000AC3777 /* WalletTransferSearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CDBA58928F64E5000AC3777 /* WalletTransferSearchResultsViewController.swift */; };
+		7CDBA58E28F7B6CB00AC3777 /* TransferSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CDBA58D28F7B6CB00AC3777 /* TransferSearchViewController.swift */; };
 		7CE2DC9A28587DE100AF00AE /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7B8BB58F234F36C000991ACB /* Colors.xcassets */; };
 		7CE2DE102858B52000AF00AE /* WallpaperImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE2DE0F2858B52000AF00AE /* WallpaperImageView.swift */; };
 		7CE3A25C2771A8AB006BE765 /* DeleteAccountVerifyCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE3A25B2771A8AB006BE765 /* DeleteAccountVerifyCodeViewController.swift */; };
@@ -1627,6 +1629,8 @@
 		7CC7304F2745F95D002780F5 /* StickerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerStore.swift; sourceTree = "<group>"; };
 		7CCE65A628D69D1D00FE944A /* TransferActionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransferActionView.swift; sourceTree = "<group>"; };
 		7CCE65A728D69D1D00FE944A /* TransferActionView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TransferActionView.xib; sourceTree = "<group>"; };
+		7CDBA58928F64E5000AC3777 /* WalletTransferSearchResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletTransferSearchResultsViewController.swift; sourceTree = "<group>"; };
+		7CDBA58D28F7B6CB00AC3777 /* TransferSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferSearchViewController.swift; sourceTree = "<group>"; };
 		7CE2DE0F2858B52000AF00AE /* WallpaperImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WallpaperImageView.swift; sourceTree = "<group>"; };
 		7CE3A25B2771A8AB006BE765 /* DeleteAccountVerifyCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountVerifyCodeViewController.swift; sourceTree = "<group>"; };
 		7CE5E7A6269BDA29000B7904 /* HomeAppsPinTipsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAppsPinTipsViewController.swift; sourceTree = "<group>"; };
@@ -3417,6 +3421,7 @@
 				7BDFAE8F2559008800296F8B /* WalletSearchViewController.swift */,
 				7BD00F2525597229004D8814 /* WalletSearchTableViewController.swift */,
 				7BD00F1D2559711A004D8814 /* WalletSearchResultsViewController.swift */,
+				7CDBA58928F64E5000AC3777 /* WalletTransferSearchResultsViewController.swift */,
 				7BD00F212559716C004D8814 /* WalletSearchRecommendationViewController.swift */,
 				7BFD34592285A7F000524EA0 /* TransferReceiverViewController.swift */,
 				DF5BF55E1FBB281E0092AFB8 /* AssetViewController.swift */,
@@ -3435,6 +3440,7 @@
 				94C359F428B506D40010F53C /* TIPFullscreenInputViewController.swift */,
 				9459693728B28FF8006F5421 /* TIPActionViewController.swift */,
 				943A63E228BDEC27008E0F78 /* TIPPopupInputViewController.swift */,
+				7CDBA58D28F7B6CB00AC3777 /* TransferSearchViewController.swift */,
 			);
 			path = Wallet;
 			sourceTree = "<group>";
@@ -4775,6 +4781,7 @@
 				7BA398CD242B539900DB5154 /* UIColor+Assets.swift in Sources */,
 				7B8BB588234F160C00991ACB /* SharedMediaCategorizer.swift in Sources */,
 				7B58433F2175911D0053332F /* SnapKitExtension.swift in Sources */,
+				7CDBA58A28F64E5000AC3777 /* WalletTransferSearchResultsViewController.swift in Sources */,
 				DF1ED8DB20BBED24003E10E8 /* PickerViewController.swift in Sources */,
 				DF5D9F2A1F9C79E10036D5FD /* UIViewControllerExtension.swift in Sources */,
 				7BD3860224DC55A000A3035C /* UNMutableNotificationContent+Convenience.swift in Sources */,
@@ -5116,6 +5123,7 @@
 				7BFA9B702229810A00C88625 /* PhotoInputGridCell.swift in Sources */,
 				E09C5EB6236FF1860095F729 /* ProfileRelationshipView.swift in Sources */,
 				7B2A116722C2497000AD029C /* ViewEmergencyContactViewController.swift in Sources */,
+				7CDBA58E28F7B6CB00AC3777 /* TransferSearchViewController.swift in Sources */,
 				7BF42E3922DCB132005066E6 /* GalleryItemModelController.swift in Sources */,
 				7BA8CC3A24A9C4D300455902 /* GroupCallConfirmationViewController.swift in Sources */,
 				7B8BB58A234F28A700991ACB /* SharedMediaGroupedByDateCategorizer.swift in Sources */,

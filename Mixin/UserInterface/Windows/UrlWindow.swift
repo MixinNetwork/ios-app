@@ -775,7 +775,7 @@ extension UrlWindow {
 
     private static func syncAddress(addressId: String, hud: Hud) -> Address? {
         var address = AddressDAO.shared.getAddress(addressId: addressId)
-        if address == nil {
+        if (address?.feeAssetId).isNilOrEmpty {
             switch WithdrawalAPI.address(addressId: addressId) {
             case let .success(remoteAddress):
                 AddressDAO.shared.insertOrUpdateAddress(addresses: [remoteAddress])

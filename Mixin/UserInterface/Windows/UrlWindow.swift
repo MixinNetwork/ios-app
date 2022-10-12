@@ -5,6 +5,10 @@ import MixinServices
 
 class UrlWindow {
     
+    enum SyncError: Error {
+        case invalidAddress
+    }
+    
     class func checkUrl(
         url: URL,
         webContext: MixinWebViewController.Context? = nil,
@@ -790,11 +794,12 @@ extension UrlWindow {
             }
         }
 
-        if address == nil {
+        if (address?.feeAssetId).isNilOrEmpty {
             DispatchQueue.main.async {
                 hud.set(style: .error, text: R.string.localizable.address_not_found())
                 hud.scheduleAutoHidden()
             }
+            reporter.report(error: SyncError.invalidAddress)
         }
 
         return address

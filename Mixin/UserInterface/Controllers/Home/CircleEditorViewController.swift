@@ -159,9 +159,7 @@ class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPe
         let member = circleMember(at: indexPath)
         if let index = selections.firstIndex(of: member) {
             let indexPath = IndexPath(item: index, section: 0)
-            selections.remove(at: index)
-            collectionView.deleteItems(at: [indexPath])
-            self.setCollectionViewHidden(selections.isEmpty, animated: true)
+            removeSelection(at: indexPath)
         }
     }
     
@@ -231,24 +229,28 @@ extension CircleEditorViewController: SelectedPeerCellDelegate {
         guard let indexPath = collectionView.indexPath(for: cell) else {
             return
         }
-        let deselected = selections[indexPath.row]
-        if isSearching {
-            if let item = searchResults.map({ $0.member }).firstIndex(of: deselected) {
-                let indexPath = IndexPath(item: item, section: 0)
-                tableView.deselectRow(at: indexPath, animated: true)
-                tableView(tableView, didDeselectRowAt: indexPath)
-            }
-        } else {
-            for section in 0..<models.count {
-                let members = models[section]
-                if let item = members.firstIndex(of: deselected) {
-                    let indexPath = IndexPath(item: item, section: section)
-                    tableView.deselectRow(at: indexPath, animated: true)
-                    tableView(tableView, didDeselectRowAt: indexPath)
-                    break
+        let member = selections[indexPath.row]
+        let tableViewIndexPath: IndexPath? = {
+            if isSearching {
+                if let row = searchResults.firstIndex(where: { $0.member == member }) {
+                    return IndexPath(row: row, section: 0)
+                } else {
+                    return nil
                 }
+            } else {
+                for section in 0..<models.count {
+                    let members = models[section]
+                    if let row = members.firstIndex(of: member) {
+                        return IndexPath(row: row, section: section)
+                    }
+                }
+                return nil
             }
+        }()
+        if let indexPath = tableViewIndexPath {
+            tableView.deselectRow(at: indexPath, animated: true)
         }
+        removeSelection(at: indexPath)
     }
     
 }
@@ -270,6 +272,12 @@ extension CircleEditorViewController {
         } else {
             return models[indexPath.section][indexPath.row]
         }
+    }
+    
+    private func removeSelection(at indexPath: IndexPath) {
+        selections.remove(at: indexPath.item)
+        collectionView.deleteItems(at: [indexPath])
+        setCollectionViewHidden(selections.isEmpty, animated: true)
     }
     
 }

@@ -16,7 +16,7 @@ class OneSideShadowView: UIView {
     
     private func prepare() {
         layer.addSublayer(shadowProviderLayer)
-        shadowProviderLayer.backgroundColor = UIColor.theme.cgColor
+        shadowProviderLayer.backgroundColor = UIColor.background.cgColor
         shadowProviderLayer.shadowColor = UIColor.shadow.cgColor
         shadowProviderLayer.shadowOpacity = 0.2
         shadowProviderLayer.shadowOffset = CGSize(width: 0, height: 2)

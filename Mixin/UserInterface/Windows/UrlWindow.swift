@@ -824,7 +824,13 @@ extension UrlWindow {
                 return nil
             }
         }
-
+        if let asset, asset.assetId != asset.chainId {
+            let chainAsset = syncAsset(assetId: asset.chainId, hud: hud)
+            if chainAsset == nil {
+                return nil
+            }
+        }
+        
         if asset == nil {
             DispatchQueue.main.async {
                 hud.set(style: .error, text: R.string.localizable.asset_not_found())

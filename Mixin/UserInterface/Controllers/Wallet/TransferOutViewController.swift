@@ -38,7 +38,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
     private var asset: AssetItem?
     private var targetUser: UserItem?
     private var targetAddress: Address?
-    private var chainAsset: AssetItem?
+    private var feeAsset: AssetItem?
     private var isInputAssetAmount = true
     private var adjustBottomConstraintWhenKeyboardFrameChanges = true
     
@@ -188,7 +188,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         
         adjustBottomConstraintWhenKeyboardFrameChanges = false
 
-        let chainAsset = self.chainAsset
+        let feeAsset = self.feeAsset
         let traceId = self.traceId
         let payWindow = PayWindow.instance()
         payWindow.onDismiss = { [weak self] in
@@ -219,11 +219,11 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
             }
         case .address(let address):
             DispatchQueue.global().async { [weak self] in
-                guard let chainAsset = chainAsset ?? AssetDAO.shared.getAsset(assetId: asset.chainId) else {
+                guard let feeAsset = feeAsset ?? AssetDAO.shared.getAsset(assetId: address.feeAssetId) else {
                     return
                 }
 
-                let action: PayWindow.PinAction = .withdraw(trackId: traceId, address: address, chainAsset: chainAsset, fromWeb: false)
+                let action: PayWindow.PinAction = .withdraw(trackId: traceId, address: address, feeAsset: feeAsset, fromWeb: false)
                 PayWindow.checkPay(traceId: traceId, asset: asset, action: action, destination: address.destination, tag: address.tag, addressId: address.addressId, amount: amount, fiatMoneyAmount: fiatMoneyAmount, memo: memo, fromWeb: false) { (canPay, errorMsg) in
                     DispatchQueue.main.async {
                         guard let weakSelf = self else {
@@ -318,54 +318,64 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
     }
     
     private func reloadTransactionFeeHint(addressId: String) {
-        displayFeeHint(loading: true)
+        continueButton.isBusy = true
+        DispatchQueue.global().async { [weak self] in
+            if let address = AddressDAO.shared.getAddress(addressId: addressId), !address.feeAssetId.isEmpty {
+                self?.fillFeeHint(address: address) {
+                    self?.reloadFeeFromRemote(addressId: address.addressId)
+                }
+            } else {
+                self?.reloadFeeFromRemote(addressId: addressId)
+            }
+        }
+    }
+    
+    private func reloadFeeFromRemote(addressId: String) {
         WithdrawalAPI.address(addressId: addressId) { [weak self](result) in
             guard let weakSelf = self else {
                 return
             }
             switch result {
             case let .success(address):
+                DispatchQueue.global().async {
+                    AddressDAO.shared.insertOrUpdateAddress(addresses: [address])
+                }
                 if case .address = weakSelf.opponent {
                     weakSelf.opponent = .address(address)
                 }
-                weakSelf.fillFeeHint(address: address)
+                weakSelf.fillFeeHint(address: address, onFinished: nil)
             case .failure:
                 DispatchQueue.global().asyncAfter(deadline: .now() + 3, execute: {
-                    self?.reloadTransactionFeeHint(addressId: addressId)
+                    self?.reloadFeeFromRemote(addressId: addressId)
                 })
             }
         }
     }
     
-    private func displayFeeHint(loading: Bool) {
-        DispatchQueue.main.async { [weak self] in
-            self?.transcationFeeHintView.isHidden = loading
-        }
-    }
-    
-    private func fillFeeHint(address: Address) {
+    private func fillFeeHint(address: Address, onFinished: (() -> Void)?) {
         DispatchQueue.global().async { [weak self] in
-            guard
-                let asset = AssetDAO.shared.getAsset(assetId: address.assetId),
-                let chainAsset = AssetDAO.shared.getAsset(assetId: asset.chainId)
-            else {
-                self?.transactionFeeHintLabel.text = ""
-                self?.displayFeeHint(loading: false)
+            guard let feeAsset = AssetDAO.shared.getAsset(assetId: address.feeAssetId) else {
+                DispatchQueue.main.async {
+                    guard let self else {
+                        return
+                    }
+                    self.transactionFeeHintLabel.text = ""
+                    self.continueButton.isBusy = false
+                }
+                onFinished?()
                 return
             }
-            self?.chainAsset = chainAsset
-            
             var hint: String
             var highlightRanges = [NSRange]()
 
-            let feeRepresentation = address.fee + " " + chainAsset.symbol
+            let feeRepresentation = address.fee + " " + feeAsset.symbol
             let feeHint = R.string.localizable.network_fee(feeRepresentation)
             hint = feeHint
             let range = (hint as NSString).range(of: feeRepresentation)
             highlightRanges.append(range)
             
             if address.dust.doubleValue > 0 {
-                let dustRepresentation = address.dust + " " + chainAsset.symbol
+                let dustRepresentation = address.dust + " " + feeAsset.symbol
                 let dustHint = R.string.localizable.withdrawal_minimum_withdrawal() + dustRepresentation
                 hint += "\n" + dustHint
                 let range = (hint as NSString).range(of: dustRepresentation, options: .backwards)
@@ -373,7 +383,7 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
             }
             
             if address.reserve.doubleValue > 0 {
-                let reserveRepresentation = address.reserve + " " + chainAsset.symbol
+                let reserveRepresentation = address.reserve + " " + feeAsset.symbol
                 let reserveHint = R.string.localizable.withdrawal_minimum_reserve() + reserveRepresentation
                 hint += "\n" + reserveHint
                 let range = (hint as NSString).range(of: reserveRepresentation, options: .backwards)
@@ -387,11 +397,12 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
                 attributedHint.addAttribute(.foregroundColor, value: UIColor.text, range: range)
             }
             DispatchQueue.main.async {
-                guard let weakSelf = self else {
-                    return
+                if let self {
+                    self.feeAsset = feeAsset
+                    self.transactionFeeHintLabel.attributedText = attributedHint
+                    self.continueButton.isBusy = false
                 }
-                weakSelf.transactionFeeHintLabel.attributedText = attributedHint
-                weakSelf.displayFeeHint(loading: false)
+                onFinished?()
             }
         }
     }

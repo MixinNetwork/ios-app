@@ -10,7 +10,7 @@ class PayWindow: BottomSheetView {
     enum PinAction {
         case payment(payment: PaymentCodeResponse, receivers: [UserItem])
         case transfer(trackId: String, user: UserItem, fromWeb: Bool)
-        case withdraw(trackId: String, address: Address, chainAsset: AssetItem, fromWeb: Bool)
+        case withdraw(trackId: String, address: Address, feeAsset: AssetItem, fromWeb: Bool)
         case multisig(multisig: MultisigResponse, senders: [UserItem], receivers: [UserItem])
         case collectible(collectible: CollectibleResponse, senders: [UserItem], receivers: [UserItem])
     }
@@ -165,12 +165,12 @@ class PayWindow: BottomSheetView {
                         }
                     }
                 }
-            case let .withdraw(_, address, chainAsset, _):
+            case let .withdraw(_, address, feeAsset, _):
                 multisigView.isHidden = true
                 nameLabel.text = R.string.localizable.withdrawal_to(address.label)
                 mixinIDLabel.text = address.fullAddress
-                let feeToken = CurrencyFormatter.localizedString(from: address.fee, locale: .us, format: .precision, sign: .whenNegative, symbol: .custom(chainAsset.symbol)) ?? address.fee
-                let feeExchange = CurrencyFormatter.localizedPrice(price: address.fee, priceUsd: chainAsset.priceUsd)
+                let feeToken = CurrencyFormatter.localizedString(from: address.fee, locale: .us, format: .precision, sign: .whenNegative, symbol: .custom(feeAsset.symbol)) ?? address.fee
+                let feeExchange = CurrencyFormatter.localizedPrice(price: address.fee, priceUsd: feeAsset.priceUsd)
                 if let fiatMoneyAmount = fiatMoneyAmount {
                     amountExchangeLabel.text = R.string.localizable.pay_withdrawal_memo(amountToken, "≈ " + Currency.current.symbol + fiatMoneyAmount, feeToken, feeExchange)
                 } else {

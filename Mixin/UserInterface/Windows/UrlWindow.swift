@@ -5,6 +5,10 @@ import MixinServices
 
 class UrlWindow {
     
+    enum SyncError: Error {
+        case invalidAddress
+    }
+    
     class func checkUrl(
         url: URL,
         webContext: MixinWebViewController.Context? = nil,
@@ -425,15 +429,15 @@ class UrlWindow {
                 Logger.general.error(category: "UrlWindow", message: "Failed to sync asset for url: \(url.absoluteString)")
                 return
             }
-            guard let chainAsset = syncAsset(assetId: asset.chainId, hud: hud) else {
-                Logger.general.error(category: "UrlWindow", message: "Failed to sync chain asset for url: \(url.absoluteString)")
-                return
-            }
             guard let address = syncAddress(addressId: addressId, hud: hud) else {
                 return
             }
-
-            let action: PayWindow.PinAction = .withdraw(trackId: traceId, address: address, chainAsset: chainAsset, fromWeb: true)
+            guard let feeAsset = syncAsset(assetId: address.feeAssetId, hud: hud) else {
+                Logger.general.error(category: "UrlWindow", message: "Failed to sync fee asset for url: \(url.absoluteString)")
+                return
+            }
+            
+            let action: PayWindow.PinAction = .withdraw(trackId: traceId, address: address, feeAsset: feeAsset, fromWeb: true)
             PayWindow.checkPay(traceId: traceId, asset: asset, action: action, destination: address.destination, tag: address.tag, addressId: address.addressId, amount: amount, memo: memo ?? "", fromWeb: true) { (canPay, errorMsg) in
 
                 DispatchQueue.main.async {
@@ -775,7 +779,7 @@ extension UrlWindow {
 
     private static func syncAddress(addressId: String, hud: Hud) -> Address? {
         var address = AddressDAO.shared.getAddress(addressId: addressId)
-        if address == nil {
+        if (address?.feeAssetId).isNilOrEmpty {
             switch WithdrawalAPI.address(addressId: addressId) {
             case let .success(remoteAddress):
                 AddressDAO.shared.insertOrUpdateAddress(addresses: [remoteAddress])
@@ -790,11 +794,12 @@ extension UrlWindow {
             }
         }
 
-        if address == nil {
+        if (address?.feeAssetId).isNilOrEmpty {
             DispatchQueue.main.async {
                 hud.set(style: .error, text: R.string.localizable.address_not_found())
                 hud.scheduleAutoHidden()
             }
+            reporter.report(error: SyncError.invalidAddress)
         }
 
         return address
@@ -819,7 +824,13 @@ extension UrlWindow {
                 return nil
             }
         }
-
+        if let asset, asset.assetId != asset.chainId {
+            let chainAsset = syncAsset(assetId: asset.chainId, hud: hud)
+            if chainAsset == nil {
+                return nil
+            }
+        }
+        
         if asset == nil {
             DispatchQueue.main.async {
                 hud.set(style: .error, text: R.string.localizable.asset_not_found())

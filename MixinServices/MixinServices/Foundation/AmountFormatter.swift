@@ -10,6 +10,7 @@ public enum AmountFormatter {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.locale = .enUSPOSIX
+        formatter.maximumFractionDigits = 8
         return formatter
     }()
     

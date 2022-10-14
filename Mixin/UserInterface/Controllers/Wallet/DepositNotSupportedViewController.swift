@@ -24,7 +24,7 @@ class DepositNotSupportedViewController: UIViewController {
         label.textColor = R.color.red()!
         label.linkColor = .theme
         label.detectLinks = false
-        let text = R.string.localizable.not_supported_deposit(asset.name, asset.name)
+        let text = R.string.localizable.not_supported_deposit(asset.symbol, asset.symbol)
         label.text = text
         let linkRange = (text as NSString).range(of: R.string.localizable.learn_more(), options: [.backwards, .caseInsensitive])
         if linkRange.location != NSNotFound && linkRange.length != 0 {

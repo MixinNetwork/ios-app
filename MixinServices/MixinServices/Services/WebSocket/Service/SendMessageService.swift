@@ -225,6 +225,7 @@ public class SendMessageService: MixinService {
                     try db.execute(sql: "UPDATE messages SET status = '\(MessageStatus.READ.rawValue)' WHERE conversation_id = ? AND status = ? AND user_id != ? AND ROWID <= ?",
                                    arguments: [conversationId, MessageStatus.DELIVERED.rawValue, myUserId, lastRowID])
                     try MessageDAO.shared.updateUnseenMessageCount(database: db, conversationId: conversationId)
+                    try ConversationDAO.shared.updateLastReadMessageId(lastMessageId, conversationId: conversationId, database: db)
                     let expireIns: [String: Int64] = messages.reduce(into: [:]) { result, message in
                         if message.expireAt == nil, let expireIn = message.expireIn {
                             result[message.id] = expireIn

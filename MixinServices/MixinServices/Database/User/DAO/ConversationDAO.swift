@@ -166,6 +166,12 @@ public final class ConversationDAO: UserDatabaseDAO {
         }
     }
     
+    public func updateLastReadMessageId(_ messageId: String, conversationId: String, database: GRDB.Database) throws {
+        try Conversation
+            .filter(Conversation.column(of: .conversationId) == conversationId)
+            .updateAll(database, [Conversation.column(of: .lastReadMessageId).set(to: messageId)])
+    }
+    
     public func exitGroup(conversationId: String) {
         db.write { db in
             let assignments = [
@@ -245,7 +251,8 @@ public final class ConversationDAO: UserDatabaseDAO {
             let assignments = [
                 Conversation.column(of: .unseenMessageCount).set(to: 0),
                 Conversation.column(of: .lastMessageId).set(to: nil),
-                Conversation.column(of: .lastMessageCreatedAt).set(to: nil)
+                Conversation.column(of: .lastMessageCreatedAt).set(to: nil),
+                Conversation.column(of: .lastReadMessageId).set(to: nil)
             ]
             try Conversation
                 .filter(Conversation.column(of: .conversationId) == conversationId)

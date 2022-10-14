@@ -104,8 +104,13 @@ extension AssetViewController: TransferActionViewDelegate {
         case .send:
             send()
         case .receive:
-            let vc = DepositViewController.instance(asset: asset)
-            navigationController?.pushViewController(vc, animated: true)
+            let controller: UIViewController
+            if asset.isDepositSupported {
+                controller = DepositViewController.instance(asset: asset)
+            } else {
+                controller = DepositNotSupportedViewController.instance(asset: asset)
+            }
+            navigationController?.pushViewController(controller, animated: true)
         }
     }
     

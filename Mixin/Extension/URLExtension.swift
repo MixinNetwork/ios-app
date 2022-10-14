@@ -12,7 +12,9 @@ extension URL {
     static let pinTIP = URL(string: "https://tip.id")!
     static let deleteAccount = URL(string: "https://mixinmessenger.zendesk.com/hc/articles/4414170627988")!
     static let expiredMessage = URL(string: "https://mixinmessenger.zendesk.com/hc/articles/5127869180564")!
-    
+    static let deposit = URL(string: "https://mixinmessenger.zendesk.com/hc/articles/360018789931")!
+    static let notSupportedDeposit = URL(string: "https://mixinmessenger.zendesk.com/hc/articles/9954148870676")!
+
     func getKeyVals() -> [String: String] {
         return URLComponents(url: self, resolvingAgainstBaseURL: true)?.getKeyVals() ?? [:]
     }

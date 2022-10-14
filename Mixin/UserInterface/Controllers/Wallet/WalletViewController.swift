@@ -11,7 +11,8 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
     
     private var searchCenterYConstraint: NSLayoutConstraint?
     private var searchViewController: WalletSearchViewController?
-    
+    private var lastSelectedAction: TransferActionView.Action?
+
     private var isSearchViewControllerPreloaded = false
     private var assets = [AssetItem]()
     
@@ -52,6 +53,7 @@ class WalletViewController: UIViewController, MixinNavigationAnimating {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableHeaderView.transferActionView.delegate = self
         updateTableViewContentInset()
         tableView.register(R.nib.assetCell)
         tableView.tableFooterView = UIView()
@@ -162,6 +164,7 @@ extension WalletViewController: UITableViewDataSource {
 extension WalletViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         let vc = AssetViewController.instance(asset: assets[indexPath.row])
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -172,6 +175,51 @@ extension WalletViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         true
+    }
+    
+}
+
+extension WalletViewController: TransferActionViewDelegate {
+    
+    func transferActionView(_ view: TransferActionView, didSelect action: TransferActionView.Action) {
+        lastSelectedAction = action
+        let controller = TransferSearchViewController()
+        controller.delegate = self
+        switch action {
+        case .send:
+            controller.showEmptyHintIfNeeded = true
+            controller.searchResultsFromServer = false
+            controller.assets = assets.filter { $0.balance != "0" }
+        case .receive:
+            controller.showEmptyHintIfNeeded = false
+            controller.searchResultsFromServer = true
+            controller.assets = assets
+        }
+        present(controller, animated: true, completion: nil)
+    }
+    
+}
+
+extension WalletViewController: TransferSearchViewControllerDelegate {
+    
+    func transferSearchViewController(_ viewController: TransferSearchViewController, didSelectAsset asset: AssetItem) {
+        guard let action = lastSelectedAction else {
+            return
+        }
+        let controller: UIViewController
+        switch action {
+        case .send:
+            controller = AssetViewController.instance(asset: asset, performSendOnAppear: true)
+        case .receive:
+            controller = DepositViewController.instance(asset: asset)
+        }
+        navigationController?.pushViewController(controller, animated: true)
+    }
+    
+    func transferSearchViewControllerDidSelectDeposit(_ viewController: TransferSearchViewController) {
+        lastSelectedAction = .receive
+        viewController.searchResultsFromServer = true
+        viewController.reloadAssets(assets)
     }
     
 }

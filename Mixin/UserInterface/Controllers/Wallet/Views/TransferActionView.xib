@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_0" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TransferActionView" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="receiveButton" destination="QDg-eP-7rS" id="3jT-FE-i1l"/>
+                <outlet property="sendButton" destination="k75-18-IY1" id="V1e-DE-fG8"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="390" height="44"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <stackView opaque="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" distribution="fillEqually" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="4me-wU-lkC">
+                    <rect key="frame" x="0.0" y="0.0" width="390" height="44"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k75-18-IY1">
+                            <rect key="frame" x="0.0" y="6" width="195" height="32"/>
+                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
+                            <color key="tintColor" name="title"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" title="SEND"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="caption_send"/>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="sendAction:" destination="-1" eventType="touchUpInside" id="VL7-2v-mTO"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QDg-eP-7rS">
+                            <rect key="frame" x="195" y="6" width="195" height="32"/>
+                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
+                            <color key="tintColor" name="title"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" title="RECEIVE"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="receive"/>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="receiveAction:" destination="-1" eventType="touchUpInside" id="b2Y-Ld-zoQ"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="rLV-MK-Gru"/>
+                    </constraints>
+                </stackView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9TF-Va-rul">
+                    <rect key="frame" x="194" y="12" width="2" height="20"/>
+                    <color key="backgroundColor" name="transfer_line_background"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="2" id="EYN-IF-ua2"/>
+                        <constraint firstAttribute="height" constant="20" id="GHC-L0-fBe"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" name="background_input"/>
+            <constraints>
+                <constraint firstItem="9TF-Va-rul" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="JY9-zT-BEz"/>
+                <constraint firstAttribute="trailing" secondItem="4me-wU-lkC" secondAttribute="trailing" id="Kxg-TO-wYZ"/>
+                <constraint firstItem="4me-wU-lkC" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="bEC-M0-xPh"/>
+                <constraint firstItem="9TF-Va-rul" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="gqi-O8-eWo"/>
+                <constraint firstAttribute="top" secondItem="4me-wU-lkC" secondAttribute="top" id="sDF-QY-8CN"/>
+                <constraint firstAttribute="bottom" secondItem="4me-wU-lkC" secondAttribute="bottom" id="zLc-fb-a6C"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <userDefinedRuntimeAttributes>
+                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                    <integer key="value" value="12"/>
+                </userDefinedRuntimeAttribute>
+            </userDefinedRuntimeAttributes>
+            <point key="canvasLocation" x="136.92307692307691" y="-230.68720379146919"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="background_input">
+            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="title">
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="transfer_line_background">
+            <color red="0.0" green="0.0" blue="0.0" alpha="0.05000000074505806" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

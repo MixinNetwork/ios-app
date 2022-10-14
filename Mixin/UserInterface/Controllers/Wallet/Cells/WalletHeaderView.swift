@@ -9,6 +9,7 @@ class WalletHeaderView: InfiniteTopView {
     
     @IBOutlet weak var assetChartWrapperView: UIView!
     @IBOutlet weak var assetChartView: BarChartView!
+    @IBOutlet weak var transferActionView: TransferActionView!
     
     @IBOutlet weak var leftAssetWrapperView: UIView!
     @IBOutlet weak var leftAssetSymbolLabel: UILabel!
@@ -65,7 +66,7 @@ class WalletHeaderView: InfiniteTopView {
     
     private weak var snowfallLayerIfLoaded: CAEmitterLayer?
     
-    private var contentHeight: CGFloat = 159
+    private var contentHeight: CGFloat = 232
     
     private var snowflakeColor: CGColor {
         if traitCollection.userInterfaceStyle == .dark {
@@ -122,7 +123,7 @@ class WalletHeaderView: InfiniteTopView {
             }
         }
         let usdBalanceIsMoreThanZero = usdTotalBalance > 0
-        contentHeight = usdBalanceIsMoreThanZero ? 159 : 107
+        contentHeight = usdBalanceIsMoreThanZero ? 232 : 180
         fiatMoneyValueLabel.text = fiatMoneyBalanceRepresentation(usdBalance: usdTotalBalance)
         let btcValue = CurrencyFormatter.localizedString(from: btcTotalBalance, format: .pretty, sign: .never) ?? "0.00"
         let attributedBTCValue = NSAttributedString(string: btcValue, attributes: btcValueAttributes)

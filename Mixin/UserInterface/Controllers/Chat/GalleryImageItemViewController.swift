@@ -6,7 +6,13 @@ import MixinServices
 final class GalleryImageItemViewController: GalleryItemViewController {
     
     let scrollView = UIScrollView()
-    let imageView = SDAnimatedImageView()
+    let imageView: SDAnimatedImageView = {
+        if #available(iOS 16.0, *), LiveTextImageView.isImageAnalyzerSupported {
+            return LiveTextImageView(frame: .zero)
+        } else {
+            return SDAnimatedImageView()
+        }
+    }()
     
     private(set) var detectedUrl: URL?
     
@@ -151,6 +157,7 @@ final class GalleryImageItemViewController: GalleryItemViewController {
                 }
                 self.detectQRCode(for: item, image: image)
                 self.keepDisplayWakingUpIfNeeded(image: image)
+                self.imageView.startImageLiveTextAnalysisIfNeeded()
             }
         }
         

@@ -217,14 +217,11 @@ extension TIPIntroViewController {
     }
     
     private func checkCounter() {
-        guard let account = LoginManager.shared.account else {
-            return
-        }
         updateNextButtonAndStatusLabel(with: .checkingCounter)
         Logger.tip.info(category: "TIPIntro", message: "Checking counter")
         Task {
             do {
-                let context = try await TIP.checkCounter(with: account, timeoutInterval: checkCounterTimeoutInterval)
+                let context = try await TIP.checkCounter(timeoutInterval: checkCounterTimeoutInterval)
                 await MainActor.run {
                     Logger.tip.info(category: "TIPIntro", message: "Got context: \(String(describing: context))")
                     if let context = context {

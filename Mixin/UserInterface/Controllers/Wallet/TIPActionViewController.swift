@@ -168,10 +168,7 @@ class TIPActionViewController: UIViewController {
     private func handle(error: Error) async {
         Logger.tip.error(category: "TIPAction", message: "Failed with: \(error)")
         do {
-            guard let account = LoginManager.shared.account else {
-                return
-            }
-            guard let context = try await TIP.checkCounter(with: account) else {
+            guard let context = try await TIP.checkCounter() else {
                 await MainActor.run {
                     Logger.tip.error(category: "TIPAction", message: "No interruption is detected")
                     finish()

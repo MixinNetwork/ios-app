@@ -70,6 +70,12 @@ public final class AccountAPI: MixinAPI {
         request(method: .get, path: Path.me, completion: completion)
     }
     
+    public static func me() async throws -> Account {
+        try await withCheckedThrowingContinuation { continuation in
+            me(completion: continuation.resume(with:))
+        }
+    }
+    
     @discardableResult
     public static func sendCode(to phoneNumber: String, captchaToken: CaptchaToken?, purpose: VerificationPurpose, completion: @escaping (MixinAPI.Result<VerificationResponse>) -> Void) -> Request? {
         var param = ["phone": phoneNumber,

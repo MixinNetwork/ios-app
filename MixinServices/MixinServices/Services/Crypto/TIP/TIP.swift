@@ -268,7 +268,14 @@ extension TIP {
         return aggSig
     }
     
-    public static func checkCounter(with account: Account, timeoutInterval: TimeInterval = 15) async throws -> InterruptionContext? {
+    public static func checkCounter(with freshAccount: Account? = nil, timeoutInterval: TimeInterval = 15) async throws -> InterruptionContext? {
+        let account: Account
+        if let freshAccount {
+            account = freshAccount
+        } else {
+            account = try await AccountAPI.me()
+            LoginManager.shared.setAccount(account)
+        }
         guard let pinToken = AppGroupKeychain.pinToken else {
             throw Error.missingPINToken
         }

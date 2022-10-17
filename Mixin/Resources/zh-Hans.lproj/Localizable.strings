@@ -550,6 +550,7 @@
 "not_enough_partials" = "没有足够的节点返回密钥分片";
 "not_found" = "没有找到相应的消息";
 "not_playing" = "未在播放";
+"not_supported_deposit" = "Mixin 钱包现已不支持 %1$@ 充值，注意已转入的 %2$@ 资产可以继续转账或提现，阅读文档了解更多";
 "notification_and_confirmation" = "通知和确认";
 "notification_content" = "不再遗漏好友的消息。";
 "notification_message_preview_description" = "在推送通知中显示消息内容。";

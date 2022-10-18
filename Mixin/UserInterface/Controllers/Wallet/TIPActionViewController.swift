@@ -231,7 +231,7 @@ class TIPActionViewController: UIViewController {
             }
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 13) {
-            if TIPDiagnostic.failLastSignerOnce || TIPDiagnostic.failPINUpdateOnce {
+            if TIPDiagnostic.failLastSignerOnce || TIPDiagnostic.failPINUpdateServerSideOnce {
                 let action: TIP.Action
                 switch self.action {
                 case .create:
@@ -246,8 +246,8 @@ class TIPActionViewController: UIViewController {
                 if TIPDiagnostic.failLastSignerOnce {
                     TIPDiagnostic.failLastSignerOnce = false
                     situation = .pendingSign([])
-                } else if TIPDiagnostic.failPINUpdateOnce {
-                    TIPDiagnostic.failPINUpdateOnce = false
+                } else if TIPDiagnostic.failPINUpdateServerSideOnce {
+                    TIPDiagnostic.failPINUpdateServerSideOnce = false
                     situation = .pendingUpdate
                 } else {
                     fatalError()

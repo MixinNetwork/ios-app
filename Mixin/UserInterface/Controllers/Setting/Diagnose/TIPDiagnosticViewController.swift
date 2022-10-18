@@ -7,7 +7,8 @@ class TIPDiagnosticViewController: SettingsTableViewController {
     private let dataSource = SettingsDataSource(sections: [
         SettingsSection(header: "Failure Tests", rows: [
             SettingsRow(title: "Fail Last Sign Once", accessory: .switch(isOn: TIPDiagnostic.failLastSignerOnce, isEnabled: true)),
-            SettingsRow(title: "Fail PIN Update Once", accessory: .switch(isOn: TIPDiagnostic.failPINUpdateOnce, isEnabled: true)),
+            SettingsRow(title: "Fail PIN Update Server Once", accessory: .switch(isOn: TIPDiagnostic.failPINUpdateServerSideOnce, isEnabled: true)),
+            SettingsRow(title: "Fail PIN Update Client Once", accessory: .switch(isOn: TIPDiagnostic.failPINUpdateClientSideOnce, isEnabled: true)),
             SettingsRow(title: "Fail Watch Once", accessory: .switch(isOn: TIPDiagnostic.failCounterWatchOnce, isEnabled: true)),
             SettingsRow(title: "Crash After PIN Update", accessory: .switch(isOn: TIPDiagnostic.crashAfterUpdatePIN, isEnabled: true)),
         ]),
@@ -37,10 +38,12 @@ class TIPDiagnosticViewController: SettingsTableViewController {
         case dataSource.sections[0].rows[0]:
             TIPDiagnostic.failLastSignerOnce.toggle()
         case dataSource.sections[0].rows[1]:
-            TIPDiagnostic.failPINUpdateOnce.toggle()
+            TIPDiagnostic.failPINUpdateServerSideOnce.toggle()
         case dataSource.sections[0].rows[2]:
-            TIPDiagnostic.failCounterWatchOnce.toggle()
+            TIPDiagnostic.failPINUpdateClientSideOnce.toggle()
         case dataSource.sections[0].rows[3]:
+            TIPDiagnostic.failCounterWatchOnce.toggle()
+        case dataSource.sections[0].rows[4]:
             TIPDiagnostic.crashAfterUpdatePIN.toggle()
         case dataSource.sections[1].rows[0]:
             TIPDiagnostic.uiTestOnly.toggle()

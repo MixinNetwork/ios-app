@@ -11,7 +11,14 @@ public enum TIPDiagnostic {
     }
     
     @MainActor
-    public static var failPINUpdateOnce = false {
+    public static var failPINUpdateServerSideOnce = false {
+        didSet {
+            updateDashboard()
+        }
+    }
+    
+    @MainActor
+    public static var failPINUpdateClientSideOnce = false {
         didSet {
             updateDashboard()
         }
@@ -69,7 +76,8 @@ public enum TIPDiagnostic {
     private static func updateDashboard() {
         Self.dashboardLabel.text = """
         Fail Last Sign: \(failLastSignerOnce ? "ONCE" : " OFF")
-        Fail PIN Update: \(failPINUpdateOnce ? "ONCE" : " OFF")
+        Fail PIN Update Server: \(failPINUpdateServerSideOnce ? "ONCE" : " OFF")
+        Fail PIN Update Client: \(failPINUpdateClientSideOnce ? "ONCE" : " OFF")
         Fail Watch: \(failCounterWatchOnce ? "ONCE" : " OFF")
         Crash After PIN Update: \(crashAfterUpdatePIN ? "  ON" : " OFF")
         UI Test: \(uiTestOnly ? "  ON" : " OFF")

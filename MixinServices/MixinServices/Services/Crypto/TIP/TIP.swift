@@ -284,7 +284,9 @@ extension TIP {
             account = freshAccount
         } else {
             account = try await AccountAPI.me()
-            LoginManager.shared.setAccount(account)
+            await MainActor.run {
+                LoginManager.shared.setAccount(account)
+            }
         }
         guard let pinToken = AppGroupKeychain.pinToken else {
             throw Error.missingPINToken

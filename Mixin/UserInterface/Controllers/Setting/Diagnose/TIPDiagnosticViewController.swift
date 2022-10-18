@@ -11,6 +11,7 @@ class TIPDiagnosticViewController: SettingsTableViewController {
             SettingsRow(title: "Fail PIN Update Client Once", accessory: .switch(isOn: TIPDiagnostic.failPINUpdateClientSideOnce, isEnabled: true)),
             SettingsRow(title: "Fail Watch Once", accessory: .switch(isOn: TIPDiagnostic.failCounterWatchOnce, isEnabled: true)),
             SettingsRow(title: "Crash After PIN Update", accessory: .switch(isOn: TIPDiagnostic.crashAfterUpdatePIN, isEnabled: true)),
+            SettingsRow(title: "Invalid Nonce Once", accessory: .switch(isOn: TIPDiagnostic.invalidNonceOnce, isEnabled: true)),
         ]),
         SettingsSection(header: "UI Test", rows: [
             SettingsRow(title: "UI Test On", accessory: .switch(isOn: TIPDiagnostic.uiTestOnly, isEnabled: true)),
@@ -45,6 +46,8 @@ class TIPDiagnosticViewController: SettingsTableViewController {
             TIPDiagnostic.failCounterWatchOnce.toggle()
         case dataSource.sections[0].rows[4]:
             TIPDiagnostic.crashAfterUpdatePIN.toggle()
+        case dataSource.sections[0].rows[5]:
+            TIPDiagnostic.invalidNonceOnce.toggle()
         case dataSource.sections[1].rows[0]:
             TIPDiagnostic.uiTestOnly.toggle()
         default:

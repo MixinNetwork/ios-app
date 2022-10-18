@@ -206,7 +206,18 @@ public enum TIPNode {
         assignee: Data?,
         progressHandler: (@MainActor (TIP.Progress) -> Void)?
     ) async throws -> [TIPSignResponseData] {
+#if DEBUG
+        let nonce: UInt64 = await MainActor.run {
+            if TIPDiagnostic.invalidNonceOnce {
+                TIPDiagnostic.invalidNonceOnce = false
+                return 20
+            } else {
+                return UInt64(Date().timeIntervalSince1970)
+            }
+        }
+#else
         let nonce = UInt64(Date().timeIntervalSince1970)
+#endif
         let grace = ephemeralGrace
         return await withTaskGroup(of: Result<TIPSignResponseData, Swift.Error>.self) { group in
             let retries = Accumulator(maxValue: maximumRetries)

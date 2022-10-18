@@ -32,14 +32,21 @@ public enum TIPDiagnostic {
     }
     
     @MainActor
-    public static var uiTestOnly = false {
+    public static var crashAfterUpdatePIN = false {
         didSet {
             updateDashboard()
         }
     }
     
     @MainActor
-    public static var crashAfterUpdatePIN = false {
+    public static var invalidNonceOnce = false {
+        didSet {
+            updateDashboard()
+        }
+    }
+    
+    @MainActor
+    public static var uiTestOnly = false {
         didSet {
             updateDashboard()
         }
@@ -80,6 +87,7 @@ public enum TIPDiagnostic {
         Fail PIN Update Client: \(failPINUpdateClientSideOnce ? "ONCE" : " OFF")
         Fail Watch: \(failCounterWatchOnce ? "ONCE" : " OFF")
         Crash After PIN Update: \(crashAfterUpdatePIN ? "  ON" : " OFF")
+        Invalid Nonce: \(invalidNonceOnce ? "ONCE" : " OFF")
         UI Test: \(uiTestOnly ? "  ON" : " OFF")
         """
     }

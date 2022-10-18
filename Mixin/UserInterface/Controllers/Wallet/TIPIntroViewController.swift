@@ -7,7 +7,8 @@ class TIPIntroViewController: UIViewController {
     enum Interruption {
         case unknown
         case none
-        case confirmed(TIP.InterruptionContext)
+        case inputNeeded(TIP.InterruptionContext)
+        case noInputNeeded(TIPActionViewController.Action, Error)
     }
     
     private enum Status {
@@ -44,24 +45,39 @@ class TIPIntroViewController: UIViewController {
         navigationController as? TIPNavigationViewController
     }
     
-    init(intent: TIP.Action) {
+    convenience init(intent: TIP.Action) {
         Logger.tip.info(category: "TIPIntro", message: "Init with intent: \(intent)")
-        self.intent = intent
-        self.interruption = .unknown
-        let nib = R.nib.tipIntroView
-        super.init(nibName: nib.name, bundle: nib.bundle)
+        self.init(intent: intent, interruption: .unknown)
     }
     
-    init(context: TIP.InterruptionContext) {
+    convenience init(context: TIP.InterruptionContext) {
         Logger.tip.info(category: "TIPIntro", message: "Init with context: \(context)")
-        self.intent = context.action
-        self.interruption = .confirmed(context)
-        let nib = R.nib.tipIntroView
-        super.init(nibName: nib.name, bundle: nib.bundle)
+        self.init(intent: context.action, interruption: .inputNeeded(context))
+    }
+    
+    convenience init(action: TIPActionViewController.Action, changedNothingWith error: Error) {
+        Logger.tip.info(category: "TIPIntro", message: "Init with action: \(action.debugDescription), error: \(error)")
+        let intent: TIP.Action
+        switch action {
+        case .create:
+            intent = .create
+        case .change:
+            intent = .change
+        case .migrate:
+            intent = .migrate
+        }
+        self.init(intent: intent, interruption: .noInputNeeded(action, error))
     }
     
     required init?(coder: NSCoder) {
         fatalError("Storyboard is not supported")
+    }
+    
+    private init(intent: TIP.Action, interruption: Interruption) {
+        self.intent = intent
+        self.interruption = interruption
+        let nib = R.nib.tipIntroView
+        super.init(nibName: nib.name, bundle: nib.bundle)
     }
     
     override func viewDidLoad() {
@@ -76,7 +92,7 @@ class TIPIntroViewController: UIViewController {
             switch interruption {
             case .unknown, .none:
                 description = R.string.localizable.tip_creation_introduction()
-            case .confirmed:
+            case .inputNeeded, .noInputNeeded:
                 description = R.string.localizable.creating_wallet_terminated_unexpectedly()
             }
             setNoticeHidden(false)
@@ -85,7 +101,7 @@ class TIPIntroViewController: UIViewController {
             switch interruption {
             case .unknown, .none:
                 description = R.string.localizable.tip_introduction()
-            case .confirmed:
+            case .inputNeeded, .noInputNeeded:
                 description = R.string.localizable.changing_pin_terminated_unexpectedly()
             }
             setNoticeHidden(false)
@@ -94,7 +110,7 @@ class TIPIntroViewController: UIViewController {
             switch interruption {
             case .unknown, .none:
                 description = R.string.localizable.tip_introduction()
-            case .confirmed:
+            case .inputNeeded, .noInputNeeded:
                 description = R.string.localizable.upgrading_tip_terminated_unexpectedly()
             }
             setNoticeHidden(false)
@@ -112,10 +128,10 @@ class TIPIntroViewController: UIViewController {
         case .unknown:
             checkCounter()
             descriptionTextLabel.additionalLinksMap = linksMap
-        case .confirmed:
-            updateNextButtonAndStatusLabel(with: .waitingForUser)
         case .none:
             descriptionTextLabel.additionalLinksMap = linksMap
+            updateNextButtonAndStatusLabel(with: .waitingForUser)
+        case .inputNeeded, .noInputNeeded:
             updateNextButtonAndStatusLabel(with: .waitingForUser)
         }
     }
@@ -157,7 +173,7 @@ class TIPIntroViewController: UIViewController {
                 }))
                 present(validator, animated: true)
             }
-        case .confirmed(let context):
+        case .inputNeeded(let context):
             switch context.action {
             case .migrate:
                 let validator = TIPPopupInputViewController(action: .migrate({ pin in
@@ -174,6 +190,9 @@ class TIPIntroViewController: UIViewController {
                 }))
                 present(validator, animated: true)
             }
+        case let .noInputNeeded(action, _):
+            let viewController = TIPActionViewController(action: action)
+            navigationController?.setViewControllers([viewController], animated: true)
         }
     }
     
@@ -267,11 +286,20 @@ extension TIPIntroViewController {
             switch interruption {
             case .unknown, .none:
                 setNextButtonTitleByIntent()
-            case .confirmed:
+                actionDescriptionLabel.text = nil
+            case .inputNeeded:
                 nextButton.setTitle(R.string.localizable.continue(), for: .normal)
+                actionDescriptionLabel.text = nil
+            case let .noInputNeeded(_, error):
+                nextButton.setTitle(R.string.localizable.retry(), for: .normal)
+                if let error = error as? TIPNode.Error {
+                    actionDescriptionLabel.text = error.description
+                } else {
+                    actionDescriptionLabel.text = error.localizedDescription
+                }
+                actionDescriptionLabel.textColor = .mixinRed
             }
             nextButton.isBusy = false
-            actionDescriptionLabel.text = nil
         }
     }
     

@@ -63,6 +63,9 @@ class TIPActionViewController: UIViewController {
     }
     
     private func performAction() {
+        guard let accountCounterBefore = LoginManager.shared.account?.tipCounter else {
+            return
+        }
         switch action {
         case let .create(pin):
             titleLabel.text = R.string.localizable.create_pin()
@@ -84,7 +87,7 @@ class TIPActionViewController: UIViewController {
                         finish()
                     }
                 } catch {
-                    await handle(error: error)
+                    await handle(error: error, accountCounterBefore: accountCounterBefore)
                 }
             }
         case let .change(old, new):
@@ -119,7 +122,7 @@ class TIPActionViewController: UIViewController {
                         finish()
                     }
                 } catch {
-                    await handle(error: error)
+                    await handle(error: error, accountCounterBefore: accountCounterBefore)
                 }
             }
         case let .migrate(pin):
@@ -142,7 +145,7 @@ class TIPActionViewController: UIViewController {
                         finish()
                     }
                 } catch {
-                    await handle(error: error)
+                    await handle(error: error, accountCounterBefore: accountCounterBefore)
                 }
             }
         }
@@ -165,7 +168,7 @@ class TIPActionViewController: UIViewController {
         }
     }
     
-    private func handle(error: Error) async {
+    private func handle(error: Error, accountCounterBefore: UInt64) async {
         Logger.tip.error(category: "TIPAction", message: "Failed with: \(error)")
         do {
             if let context = try await TIP.checkCounter() {
@@ -174,9 +177,18 @@ class TIPActionViewController: UIViewController {
                     navigationController?.setViewControllers([intro], animated: true)
                 }
             } else {
-                await MainActor.run {
-                    Logger.tip.warn(category: "TIPAction", message: "No interruption is detected")
-                    finish()
+                try await MainActor.run {
+                    guard let accountCounterAfter = LoginManager.shared.account?.tipCounter else {
+                        throw MixinAPIError.unauthorized
+                    }
+                    if accountCounterAfter == accountCounterBefore {
+                        Logger.tip.error(category: "TIPAction", message: "Nothing changed")
+                        let intro = TIPIntroViewController(action: action, changedNothingWith: error)
+                        tipNavigationController?.setViewControllers([intro], animated: true)
+                    } else {
+                        Logger.tip.warn(category: "TIPAction", message: "No interruption is detected")
+                        finish()
+                    }
                 }
             }
         } catch {

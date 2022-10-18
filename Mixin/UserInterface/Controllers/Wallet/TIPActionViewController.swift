@@ -168,16 +168,16 @@ class TIPActionViewController: UIViewController {
     private func handle(error: Error) async {
         Logger.tip.error(category: "TIPAction", message: "Failed with: \(error)")
         do {
-            guard let context = try await TIP.checkCounter() else {
+            if let context = try await TIP.checkCounter() {
                 await MainActor.run {
-                    Logger.tip.error(category: "TIPAction", message: "No interruption is detected")
+                    let intro = TIPIntroViewController(context: context)
+                    navigationController?.setViewControllers([intro], animated: true)
+                }
+            } else {
+                await MainActor.run {
+                    Logger.tip.warn(category: "TIPAction", message: "No interruption is detected")
                     finish()
                 }
-                return
-            }
-            await MainActor.run {
-                let intro = TIPIntroViewController(context: context)
-                navigationController?.setViewControllers([intro], animated: true)
             }
         } catch {
             await MainActor.run {

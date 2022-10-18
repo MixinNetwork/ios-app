@@ -3,7 +3,7 @@ import Tip
 import Alamofire
 
 fileprivate let ephemeralGrace = 128 * UInt64(secondsPerDay) * UInt64(NSEC_PER_SEC)
-fileprivate let maximumRetries = 2
+fileprivate let maximumRetries: UInt64 = 2
 
 public enum TIPNode {
     
@@ -39,11 +39,11 @@ public enum TIPNode {
     
     private actor Accumulator {
         
-        private let maxValue: Int
+        private let maxValue: UInt64
         
-        private var value: Int = 0
+        private(set) var value: UInt64 = 0
         
-        init(maxValue: Int) {
+        init(maxValue: UInt64) {
             self.maxValue = maxValue
         }
         
@@ -206,7 +206,18 @@ public enum TIPNode {
         assignee: Data?,
         progressHandler: (@MainActor (TIP.Progress) -> Void)?
     ) async throws -> [TIPSignResponseData] {
+#if DEBUG
+        let nonce: UInt64 = await MainActor.run {
+            if TIPDiagnostic.invalidNonceOnce {
+                TIPDiagnostic.invalidNonceOnce = false
+                return 20
+            } else {
+                return UInt64(Date().timeIntervalSince1970)
+            }
+        }
+#else
         let nonce = UInt64(Date().timeIntervalSince1970)
+#endif
         let grace = ephemeralGrace
         return await withTaskGroup(of: Result<TIPSignResponseData, Swift.Error>.self) { group in
             let retries = Accumulator(maxValue: maximumRetries)
@@ -231,7 +242,7 @@ public enum TIPNode {
                                                             signer: signer,
                                                             ephemeral: ephemeral,
                                                             watcher: watcher,
-                                                            nonce: nonce,
+                                                            nonce: nonce + retries.value,
                                                             grace: grace,
                                                             assignee: assignee)
                             Logger.tip.info(category: "TIPNode", message: "Node \(signer.index) sign succeed")

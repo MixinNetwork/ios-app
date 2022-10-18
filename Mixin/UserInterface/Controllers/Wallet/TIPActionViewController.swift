@@ -63,6 +63,9 @@ class TIPActionViewController: UIViewController {
     }
     
     private func performAction() {
+        guard let accountCounterBefore = LoginManager.shared.account?.tipCounter else {
+            return
+        }
         switch action {
         case let .create(pin):
             titleLabel.text = R.string.localizable.create_pin()
@@ -84,7 +87,7 @@ class TIPActionViewController: UIViewController {
                         finish()
                     }
                 } catch {
-                    await handle(error: error)
+                    await handle(error: error, accountCounterBefore: accountCounterBefore)
                 }
             }
         case let .change(old, new):
@@ -119,7 +122,7 @@ class TIPActionViewController: UIViewController {
                         finish()
                     }
                 } catch {
-                    await handle(error: error)
+                    await handle(error: error, accountCounterBefore: accountCounterBefore)
                 }
             }
         case let .migrate(pin):
@@ -142,7 +145,7 @@ class TIPActionViewController: UIViewController {
                         finish()
                     }
                 } catch {
-                    await handle(error: error)
+                    await handle(error: error, accountCounterBefore: accountCounterBefore)
                 }
             }
         }
@@ -165,22 +168,28 @@ class TIPActionViewController: UIViewController {
         }
     }
     
-    private func handle(error: Error) async {
+    private func handle(error: Error, accountCounterBefore: UInt64) async {
         Logger.tip.error(category: "TIPAction", message: "Failed with: \(error)")
         do {
-            guard let account = LoginManager.shared.account else {
-                return
-            }
-            guard let context = try await TIP.checkCounter(with: account) else {
+            if let context = try await TIP.checkCounter() {
                 await MainActor.run {
-                    Logger.tip.error(category: "TIPAction", message: "No interruption is detected")
-                    finish()
+                    let intro = TIPIntroViewController(context: context)
+                    navigationController?.setViewControllers([intro], animated: true)
                 }
-                return
-            }
-            await MainActor.run {
-                let intro = TIPIntroViewController(context: context)
-                navigationController?.setViewControllers([intro], animated: true)
+            } else {
+                try await MainActor.run {
+                    guard let accountCounterAfter = LoginManager.shared.account?.tipCounter else {
+                        throw MixinAPIError.unauthorized
+                    }
+                    if accountCounterAfter == accountCounterBefore {
+                        Logger.tip.error(category: "TIPAction", message: "Nothing changed")
+                        let intro = TIPIntroViewController(action: action, changedNothingWith: error)
+                        tipNavigationController?.setViewControllers([intro], animated: true)
+                    } else {
+                        Logger.tip.warn(category: "TIPAction", message: "No interruption is detected")
+                        finish()
+                    }
+                }
             }
         } catch {
             await MainActor.run {
@@ -234,7 +243,7 @@ class TIPActionViewController: UIViewController {
             }
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 13) {
-            if TIPDiagnostic.failLastSignerOnce || TIPDiagnostic.failPINUpdateOnce {
+            if TIPDiagnostic.failLastSignerOnce || TIPDiagnostic.failPINUpdateServerSideOnce {
                 let action: TIP.Action
                 switch self.action {
                 case .create:
@@ -249,8 +258,8 @@ class TIPActionViewController: UIViewController {
                 if TIPDiagnostic.failLastSignerOnce {
                     TIPDiagnostic.failLastSignerOnce = false
                     situation = .pendingSign([])
-                } else if TIPDiagnostic.failPINUpdateOnce {
-                    TIPDiagnostic.failPINUpdateOnce = false
+                } else if TIPDiagnostic.failPINUpdateServerSideOnce {
+                    TIPDiagnostic.failPINUpdateServerSideOnce = false
                     situation = .pendingUpdate
                 } else {
                     fatalError()

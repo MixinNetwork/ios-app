@@ -48,4 +48,15 @@ class ServicesTests: XCTestCase {
                                          assignee: nil)
     }
     
+    func testAmountFormatter() {
+        XCTAssertEqual(AmountFormatter.formattedAmount("100.000"),      "100")
+        XCTAssertEqual(AmountFormatter.formattedAmount("100.00100"),    "100.001")
+        XCTAssertEqual(AmountFormatter.formattedAmount("1.1E-4"),       "0.00011")
+        XCTAssertEqual(AmountFormatter.formattedAmount("-1.100E-5"),    "-0.000011")
+        XCTAssertEqual(AmountFormatter.formattedAmount("01.010"),       "1.01")
+        XCTAssertEqual(AmountFormatter.formattedAmount("0"),            "0")
+        XCTAssertEqual(AmountFormatter.formattedAmount("0.00000001"),   "0.00000001")
+        XCTAssertEqual(AmountFormatter.formattedAmount("0.00000009"),   "0.00000009")
+    }
+    
 }

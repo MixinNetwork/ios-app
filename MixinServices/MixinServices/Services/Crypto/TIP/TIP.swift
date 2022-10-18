@@ -161,15 +161,19 @@ extension TIP {
         let request = PINRequest(pin: new, oldPIN: oldEncryptedPIN, timestamp: nil)
 #if DEBUG
         try await MainActor.run {
-            if TIPDiagnostic.failPINUpdateOnce {
-                TIPDiagnostic.failPINUpdateOnce = false
+            if TIPDiagnostic.failPINUpdateServerSideOnce {
+                TIPDiagnostic.failPINUpdateServerSideOnce = false
                 throw MixinAPIError.httpTransport(.sessionTaskFailed(error: URLError(.badServerResponse)))
             }
         }
 #endif
         let account = try await AccountAPI.updatePIN(request: request)
 #if DEBUG
-        await MainActor.run {
+        try await MainActor.run {
+            if TIPDiagnostic.failPINUpdateClientSideOnce {
+                TIPDiagnostic.failPINUpdateClientSideOnce = false
+                throw MixinAPIError.httpTransport(.sessionTaskFailed(error: URLError(.badServerResponse)))
+            }
             if TIPDiagnostic.crashAfterUpdatePIN {
                 abort()
             }
@@ -240,18 +244,24 @@ extension TIP {
         let oldPIN = try encryptTIPPIN(tipPriv: aggSig, target: timestamp)
         let newEncryptPIN = try encryptPIN(key: pinToken, code: pub + (counter + 1).data(endianness: .big))
         let request = PINRequest(pin: newEncryptPIN, oldPIN: oldPIN, timestamp: nil)
+        AppGroupKeychain.tipPriv = nil
+        Logger.tip.info(category: "TIP", message: "TIP Priv is removed")
 #if DEBUG
         try await MainActor.run {
-            if TIPDiagnostic.failPINUpdateOnce {
-                TIPDiagnostic.failPINUpdateOnce = false
+            if TIPDiagnostic.failPINUpdateServerSideOnce {
+                TIPDiagnostic.failPINUpdateServerSideOnce = false
                 throw MixinAPIError.httpTransport(.sessionTaskFailed(error: URLError(.badServerResponse)))
             }
         }
 #endif
-        AppGroupKeychain.tipPriv = nil
-        Logger.tip.info(category: "TIP", message: "TIP Priv is removed")
         let account = try await AccountAPI.updatePIN(request: request)
 #if DEBUG
+        try await MainActor.run {
+            if TIPDiagnostic.failPINUpdateClientSideOnce {
+                TIPDiagnostic.failPINUpdateClientSideOnce = false
+                throw MixinAPIError.httpTransport(.sessionTaskFailed(error: URLError(.badServerResponse)))
+            }
+        }
         await MainActor.run {
             if TIPDiagnostic.crashAfterUpdatePIN {
                 abort()
@@ -268,7 +278,16 @@ extension TIP {
         return aggSig
     }
     
-    public static func checkCounter(with account: Account, timeoutInterval: TimeInterval = 15) async throws -> InterruptionContext? {
+    public static func checkCounter(with freshAccount: Account? = nil, timeoutInterval: TimeInterval = 15) async throws -> InterruptionContext? {
+        let account: Account
+        if let freshAccount {
+            account = freshAccount
+        } else {
+            account = try await AccountAPI.me()
+            await MainActor.run {
+                LoginManager.shared.setAccount(account)
+            }
+        }
         guard let pinToken = AppGroupKeychain.pinToken else {
             throw Error.missingPINToken
         }

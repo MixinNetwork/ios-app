@@ -52,9 +52,9 @@ class TIPNavigationViewController: LoneBackButtonNavigationController {
         if viewControllers.last is TIPActionViewController {
             backButtonAlpha = 0
             dismissButtonAlpha = 0
-        } else if viewControllers.last is TIPIntroViewController {
+        } else if let intro = viewControllers.last as? TIPIntroViewController {
             backButtonAlpha = 0
-            dismissButtonAlpha = 1
+            dismissButtonAlpha = intro.isDismissAllowed ? 1 : 0
         } else {
             backButtonAlpha = 1
             dismissButtonAlpha = 0

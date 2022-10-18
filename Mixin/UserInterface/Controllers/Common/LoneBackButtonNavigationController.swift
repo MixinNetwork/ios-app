@@ -52,6 +52,13 @@ class LoneBackButtonNavigationController: UINavigationController {
         return super.popToRootViewController(animated: animated)
     }
     
+    override func setViewControllers(_ viewControllers: [UIViewController], animated: Bool) {
+        defer {
+            updateBackButtonAlpha(animated: animated)
+        }
+        super.setViewControllers(viewControllers, animated: animated)
+    }
+    
     @objc func backAction(sender: Any) {
         popViewController(animated: true)
     }

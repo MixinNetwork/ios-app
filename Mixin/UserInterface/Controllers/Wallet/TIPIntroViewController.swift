@@ -26,6 +26,15 @@ class TIPIntroViewController: UIViewController {
     
     @IBOutlet weak var noticeTextViewHeightConstraint: NSLayoutConstraint!
     
+    var isDismissAllowed: Bool {
+        switch interruption {
+        case .none, .noInputNeeded:
+            return true
+        case .unknown, .inputNeeded:
+            return false
+        }
+    }
+    
     private let intent: TIP.Action
     private let checkCounterTimeoutInterval: TimeInterval = 5
     
@@ -229,6 +238,7 @@ extension TIPIntroViewController {
                         navigationController?.setViewControllers([intro], animated: true)
                     } else {
                         interruption = .none
+                        tipNavigationController?.updateBackButtonAlpha(animated: true)
                         updateNextButtonAndStatusLabel(with: .waitingForUser)
                     }
                 }

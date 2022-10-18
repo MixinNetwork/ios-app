@@ -24,4 +24,15 @@ public enum AmountFormatter {
         }
     }
     
+    public static func isValid(_ amount: String) -> Bool {
+        let parts = amount.components(separatedBy: ".")
+        if parts.count == 1 {
+            return true
+        } else if parts.count == 2 {
+            return parts[1].count <= 8
+        } else {
+            return false
+        }
+    }
+    
 }

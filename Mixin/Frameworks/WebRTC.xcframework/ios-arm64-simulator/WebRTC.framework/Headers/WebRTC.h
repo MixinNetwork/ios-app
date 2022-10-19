@@ -28,6 +28,7 @@
 #import <WebRTC/RTCVideoFrameBuffer.h>
 #import <WebRTC/RTCVideoRenderer.h>
 #import <WebRTC/RTCYUVPlanarBuffer.h>
+#import <WebRTC/RTCAudioDevice.h>
 #import <WebRTC/RTCAudioSession.h>
 #import <WebRTC/RTCAudioSessionConfiguration.h>
 #import <WebRTC/RTCCameraVideoCapturer.h>

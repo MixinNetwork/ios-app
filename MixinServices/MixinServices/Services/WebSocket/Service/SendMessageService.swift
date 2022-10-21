@@ -233,7 +233,7 @@ public class SendMessageService: MixinService {
                     }
                     try ExpiredMessageDAO.shared.updateExpireAts(expireIns: expireIns, database: db)
                     if isLastLoop {
-                        db.afterNextTransactionCommit { (_) in
+                        db.afterNextTransaction { (_) in
                             NotificationCenter.default.post(name: MixinService.messageReadStatusDidChangeNotification, object: self)
                             NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: nil)
                         }
@@ -259,7 +259,7 @@ public class SendMessageService: MixinService {
                 return
             }
             
-            db.afterNextTransactionCommit { (_) in
+            db.afterNextTransaction { (_) in
                 NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: nil)
             }
 

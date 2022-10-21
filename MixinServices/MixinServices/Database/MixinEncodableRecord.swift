@@ -12,7 +12,7 @@ extension MixinEncodableRecord {
     }
     
     public static var databaseUUIDEncodingStrategy: DatabaseUUIDEncodingStrategy {
-        .string
+        .lowercaseString
     }
     
 }

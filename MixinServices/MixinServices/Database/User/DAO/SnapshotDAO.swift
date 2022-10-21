@@ -18,7 +18,7 @@ public final class SnapshotDAO: UserDatabaseDAO {
         var snapshotItem: SnapshotItem?
         db.write { (db) in
             try snapshot.save(db)
-            db.afterNextTransactionCommit { (db) in
+            db.afterNextTransaction { (db) in
                 snapshotItem = try? SnapshotItem.fetchOne(db,
                                                           sql: SnapshotDAO.sqlQueryById,
                                                           arguments: [snapshot.snapshotId])
@@ -98,7 +98,7 @@ public final class SnapshotDAO: UserDatabaseDAO {
             try snapshots.save(db)
             
             if let snapshotId = snapshotId {
-                db.afterNextTransactionCommit { (db) in
+                db.afterNextTransaction { (db) in
                     snapshotItem = try? SnapshotItem.fetchOne(db,
                                                               sql: SnapshotDAO.sqlQueryById,
                                                               arguments: [snapshotId])

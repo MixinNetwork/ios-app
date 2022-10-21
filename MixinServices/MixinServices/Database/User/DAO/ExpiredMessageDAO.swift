@@ -19,7 +19,7 @@ public final class ExpiredMessageDAO: UserDatabaseDAO {
     public func insert(message: ExpiredMessage, conversationId: String? = nil, database: GRDB.Database) throws {
         try message.save(database)
         if message.expireAt != nil || conversationId != nil {
-            database.afterNextTransactionCommit { _ in
+            database.afterNextTransaction { _ in
                 if message.expireAt != nil {
                     NotificationCenter.default.post(onMainThread: Self.expiredAtDidUpdateNotification, object: self)
                 }
@@ -38,7 +38,7 @@ public final class ExpiredMessageDAO: UserDatabaseDAO {
             for message in messages {
                 try updateExpireAt(for: message.key, database: db, expireAt: message.value, postNotification: false)
             }
-            db.afterNextTransactionCommit { _ in
+            db.afterNextTransaction { _ in
                 NotificationCenter.default.post(onMainThread: Self.expiredAtDidUpdateNotification, object: self)
             }
         }
@@ -55,7 +55,7 @@ public final class ExpiredMessageDAO: UserDatabaseDAO {
             .filter(ExpiredMessage.column(of: .messageId) == messageId)
             .updateAll(database, [ExpiredMessage.column(of: .expireAt).set(to: expireAt)])
         if postNotification {
-            database.afterNextTransactionCommit { _ in
+            database.afterNextTransaction { _ in
                 NotificationCenter.default.post(onMainThread: Self.expiredAtDidUpdateNotification, object: self)
             }
         }
@@ -74,7 +74,7 @@ public final class ExpiredMessageDAO: UserDatabaseDAO {
             hasUpdated = hasUpdated || updateCount > 0
         }
         if hasUpdated {
-            database.afterNextTransactionCommit { _ in
+            database.afterNextTransaction { _ in
                 NotificationCenter.default.post(onMainThread: Self.expiredAtDidUpdateNotification, object: self)
             }
         }
@@ -122,7 +122,7 @@ public final class ExpiredMessageDAO: UserDatabaseDAO {
                 .filter(ExpiredMessage.column(of: .expireAt) != nil)
                 .order([ExpiredMessage.column(of: .expireAt).asc])
                 .fetchOne(db)
-            db.afterNextTransactionCommit { _ in
+            db.afterNextTransaction { _ in
                 Logger.general.info(category: "ExpiredMessageDAO", message: "Deleted \(deletedMessages.count) messages")
                 DispatchQueue.global().async {
                     for (message, childrenIds) in deletedMessages {

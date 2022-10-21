@@ -187,7 +187,7 @@ public final class ConversationDAO: UserDatabaseDAO {
             try Participant
                 .filter(Participant.column(of: .conversationId) == conversationId && Participant.column(of: .userId) == myUserId)
                 .deleteAll(db)
-            db.afterNextTransactionCommit { (_) in
+            db.afterNextTransaction { (_) in
                 NotificationCenter.default.post(onMainThread: ParticipantDAO.participantDidChangeNotification,
                                                 object: self,
                                                 userInfo: [ParticipantDAO.UserInfoKey.conversationId: conversationId])
@@ -220,7 +220,7 @@ public final class ConversationDAO: UserDatabaseDAO {
                 .deleteAll(db)
             try deleteFTSContent(with: conversationId, from: db)
             try PinMessageDAO.shared.deleteAll(conversationId: conversationId, from: db)
-            db.afterNextTransactionCommit { (_) in
+            db.afterNextTransaction { (_) in
                 let job = AttachmentCleanUpJob(conversationId: conversationId,
                                                mediaUrls: mediaUrls,
                                                transcriptIds: deletedTranscriptIds)
@@ -259,7 +259,7 @@ public final class ConversationDAO: UserDatabaseDAO {
                 .updateAll(db, assignments)
             try deleteFTSContent(with: conversationId, from: db)
             try PinMessageDAO.shared.deleteAll(conversationId: conversationId, from: db)
-            db.afterNextTransactionCommit { (_) in
+            db.afterNextTransaction { (_) in
                 let job = AttachmentCleanUpJob(conversationId: conversationId,
                                                mediaUrls: mediaUrls,
                                                transcriptIds: deletedTranscriptIds)
@@ -405,7 +405,7 @@ public final class ConversationDAO: UserDatabaseDAO {
             try db.writeAndReturnError { (db) -> Void in
                 try conversation.insert(db)
                 try participants.save(db)
-                db.afterNextTransactionCommit { (_) in
+                db.afterNextTransaction { (_) in
                     // Avoid potential deadlock
                     // TODO: Nested transactions could be auto detected, make some assertion?
                     DispatchQueue.global().async {
@@ -526,7 +526,7 @@ public final class ConversationDAO: UserDatabaseDAO {
             
             resultConversation = try ConversationItem.fetchOne(db, sql: ConversationDAO.sqlQueryConversationByCoversationId, arguments: [conversationId], adapter: nil)
             
-            db.afterNextTransactionCommit { (_) in
+            db.afterNextTransaction { (_) in
                 let change = ConversationChange(conversationId: conversationId,
                                                 action: .updateConversation(conversation: conversation))
                 NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: change)
@@ -588,7 +588,7 @@ public final class ConversationDAO: UserDatabaseDAO {
                 ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: userIds))
             }
             
-            db.afterNextTransactionCommit { (_) in
+            db.afterNextTransaction { (_) in
                 if oldConversation.status != status.rawValue {
                     let change = ConversationChange(conversationId: conversationId,
                                                     action: .updateConversationStatus(status: status))
@@ -626,7 +626,7 @@ public final class ConversationDAO: UserDatabaseDAO {
             arguments = [conversationId, conversationId]
         }
         try database.execute(sql: sql, arguments: arguments)
-        database.afterNextTransactionCommit { db in
+        database.afterNextTransaction { db in
             NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: nil)
         }
     }

@@ -83,7 +83,7 @@ public final class AlbumDAO: UserDatabaseDAO {
             try Album
                 .filter(Album.column(of: .albumId) == id)
                 .updateAll(db, assignments)
-            db.afterNextTransactionCommit { db in
+            db.afterNextTransaction { db in
                 let userInfo: [String: Any] = [
                     AlbumDAO.UserInfoKey.albumId: id,
                     AlbumDAO.UserInfoKey.isAdded: isAdded
@@ -102,7 +102,7 @@ public final class AlbumDAO: UserDatabaseDAO {
                     .filter(Album.column(of: .albumId) == albumId)
                     .updateAll(db, [Album.column(of: .orderedAt).set(to: index)])
             }
-            db.afterNextTransactionCommit { _ in
+            db.afterNextTransaction { _ in
                 NotificationCenter.default.post(onMainThread: AlbumDAO.albumsOrderDidChangeNotification,
                                                 object: self)
             }

@@ -129,8 +129,8 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (7.8.0):
     - GoogleUtilities/Logger
-  - GRDB.swift/SQLCipher (5.26.1):
-    - SQLCipher (>= 3.4.0)
+  - GRDB.swift/SQLCipher (6.1.0):
+    - SQLCipher (>= 3.4.2)
   - GzipSwift (5.1.1)
   - librlottie (0.2.1)
   - libsignal-protocol-c (2.3.2)
@@ -147,7 +147,7 @@ PODS:
     - Alamofire
     - AppCenter
     - BoringSSL
-    - GRDB.swift/SQLCipher (= 5.26.1)
+    - GRDB.swift/SQLCipher
     - GzipSwift
     - libsignal-protocol-c
     - SDWebImage
@@ -160,7 +160,7 @@ PODS:
     - Alamofire
     - AppCenter
     - BoringSSL
-    - GRDB.swift/SQLCipher (= 5.26.1)
+    - GRDB.swift/SQLCipher
     - GzipSwift
     - libsignal-protocol-c
     - SDWebImage
@@ -288,12 +288,12 @@ SPEC CHECKSUMS:
   GoogleAppMeasurement: 7e48a3249792ac35d6f18f107f63f199a7e9d0ce
   GoogleDataTransport: 1c8145da7117bd68bbbed00cf304edb6a24de00f
   GoogleUtilities: 1d20a6ad97ef46f67bbdec158ce00563a671ebb7
-  GRDB.swift: e98cd55ec99dea5da99355d588149063e4cfa0eb
+  GRDB.swift: 611778a5e113385373baeb3e2ce474887d1aadb7
   GzipSwift: 893f3e48e597a1a4f62fafcb6514220fcf8287fa
   librlottie: 31aadd1f842008260fa7387f7fcb837b2fabeeea
   libsignal-protocol-c: 2fecccb06cc14bdbd28e76a656c0c8c648a482a0
   libwebp: 60305b2e989864154bd9be3d772730f08fc6a59c
-  MixinServices: 63914ca25829b0383260bc85795746ed79f53cec
+  MixinServices: 916255faa74add66ab5e47887cc939e6a615ad1e
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   PhoneNumberKit: b2b5d8fe89a0fb925a6820779f0f1f18a8a15b75
   PromisesObjC: ab77feca74fa2823e7af4249b8326368e61014cb

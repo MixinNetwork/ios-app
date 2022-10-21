@@ -263,7 +263,7 @@ public final class MessageDAO: UserDatabaseDAO {
             }
             
             if !isAppExtension {
-                db.afterNextTransactionCommit { (_) in
+                db.afterNextTransaction { (_) in
                     for message in readMessages {
                         let change = ConversationChange(conversationId: message.conversationId, action: .updateMessageStatus(messageId: message.messageId, newStatus: .READ))
                         NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: change)
@@ -319,7 +319,7 @@ public final class MessageDAO: UserDatabaseDAO {
                 try ExpiredMessageDAO.shared.updateExpireAt(for: messageId, database: db, postNotification: true)
             }
             if let completion = completion {
-                db.afterNextTransactionCommit(completion)
+                db.afterNextTransaction(onCommit: completion)
             }
         }
     }
@@ -645,7 +645,7 @@ public final class MessageDAO: UserDatabaseDAO {
         }
         try MessageDAO.shared.updateUnseenMessageCount(database: database, conversationId: message.conversationId)
         
-        database.afterNextTransactionCommit { (_) in
+        database.afterNextTransaction { (_) in
             // Dispatch to global queue to prevent deadlock
             // Inside the block there's a request to access reading pool, embedding it inside write
             // may causes deadlock
@@ -755,7 +755,7 @@ public final class MessageDAO: UserDatabaseDAO {
         }
         
         let messageIds = quoteMessageIds + [messageId]
-        database.afterNextTransactionCommit { (_) in
+        database.afterNextTransaction { (_) in
             for messageId in messageIds {
                 let change = ConversationChange(conversationId: conversationId,
                                                 action: .recallMessage(messageId: messageId))
@@ -1000,7 +1000,7 @@ extension MessageDAO {
             }
             return pinMessageIds
         }
-        database.afterNextTransactionCommit { db in
+        database.afterNextTransaction { db in
             for id in ids {
                 let updateChange = ConversationChange(conversationId: conversationId, action: .updateMessage(messageId: id))
                 NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: updateChange)

@@ -33,7 +33,7 @@ Mixin Core Services.
   s.dependency 'Zip'
   s.dependency 'libsignal-protocol-c'
   s.dependency 'SocketRocket'
-  s.dependency 'GRDB.swift/SQLCipher', '5.26.1'
+  s.dependency 'GRDB.swift/SQLCipher'
   s.dependency 'SQLCipher', '~> 4.0'
   s.dependency 'BoringSSL'
   s.dependency 'Sodium'

@@ -22,7 +22,7 @@ public final class TopAssetsDAO: UserDatabaseDAO {
         db.write { (db) in
             try TopAsset.deleteAll(db)
             try assets.save(db)
-            db.afterNextTransactionCommit { (_) in
+            db.afterNextTransaction { (_) in
                 NotificationCenter.default.post(name: TopAssetsDAO.didChangeNotification, object: nil)
             }
         }

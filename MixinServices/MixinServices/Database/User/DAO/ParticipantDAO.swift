@@ -108,7 +108,7 @@ public final class ParticipantDAO: UserDatabaseDAO {
             if !role.isEmpty {
                 try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: source, silentNotification: silentNotification)
             }
-            db.afterNextTransactionCommit { _ in
+            db.afterNextTransaction { _ in
                 NotificationCenter.default.post(onMainThread: Self.participantDidChangeNotification,
                                                 object: self,
                                                 userInfo: [Self.UserInfoKey.conversationId: conversationId])
@@ -125,7 +125,7 @@ public final class ParticipantDAO: UserDatabaseDAO {
         return db.write { (db) in
             try participant.save(db)
             try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: source, silentNotification: silentNotification)
-            db.afterNextTransactionCommit { _ in
+            db.afterNextTransaction { _ in
                 NotificationCenter.default.post(onMainThread: Self.participantDidChangeNotification,
                                                 object: self,
                                                 userInfo: [Self.UserInfoKey.conversationId: conversationId])
@@ -145,7 +145,7 @@ public final class ParticipantDAO: UserDatabaseDAO {
                 .filter(ParticipantSession.column(of: .conversationId) == conversationId)
                 .updateAll(db, ParticipantSession.column(of: .sentToServer).set(to: nil))
             try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: source, silentNotification: silentNotification)
-            db.afterNextTransactionCommit { (_) in
+            db.afterNextTransaction { (_) in
                 NotificationCenter.default.post(name: ReceiveMessageService.senderKeyDidChangeNotification,
                                                 object: self,
                                                 userInfo: [ReceiveMessageService.UserInfoKey.conversationId: conversationId])

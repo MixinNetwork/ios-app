@@ -114,7 +114,7 @@ public final class StickerDAO: UserDatabaseDAO {
         var stickerItem: StickerItem?
         db.write { (db) in
             try insertOrUpdateSticker(into: db, with: sticker)
-            db.afterNextTransactionCommit { (db) in
+            db.afterNextTransaction { (db) in
                 stickerItem = try? StickerItem.fetchOne(db,
                                                         sql: StickerDAO.sqlQueryStickerByStickerId,
                                                         arguments: [sticker.stickerId])
@@ -131,7 +131,7 @@ public final class StickerDAO: UserDatabaseDAO {
                 try relationship.save(db)
                 try insertOrUpdateSticker(into: db, with: response)
             }
-            db.afterNextTransactionCommit { (db) in
+            db.afterNextTransaction { (db) in
                 NotificationCenter.default.post(onMainThread: Self.favoriteStickersDidChangeNotification, object: self)
                 stickerItems = (try? StickerItem.fetchAll(db,
                                                           sql: StickerDAO.sqlQueryStickersByAlbum,

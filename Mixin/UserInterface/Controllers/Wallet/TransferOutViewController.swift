@@ -81,7 +81,6 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
         }
         
         amountTextField.adjustsFontForContentSizeCategory = true
-        amountTextField.becomeFirstResponder()
         amountTextField.delegate = self
         memoTextField.delegate = self
         
@@ -92,7 +91,12 @@ class TransferOutViewController: KeyboardBasedLayoutViewController {
             self.amountTextField.becomeFirstResponder()
         }
     }
-
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        amountTextField.becomeFirstResponder()
+    }
+    
     deinit {
         NotificationCenter.default.removeObserver(self)
     }

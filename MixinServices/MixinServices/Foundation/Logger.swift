@@ -51,7 +51,7 @@ public enum Logger {
     }
     
     public static func export(conversationId: String) -> URL? {
-        let subsystems = [general, database, call, conversation(id: conversationId)]
+        let subsystems = [general, database, call, conversation(id: conversationId), tip]
         var files = subsystems.compactMap(\.fileURL)
         if FileManager.default.fileExists(atPath: AppGroupContainer.webRTCLogURL.path) {
             files.append(AppGroupContainer.webRTCLogURL)

@@ -97,6 +97,7 @@ public enum TIPNode {
             let successfulSigners = allSigners.filter { signer in
                 !failedSigners.contains(signer)
             }
+            Logger.tip.info(category: "TIPNode", message: "Successful signers: \(successfulSigners.count)")
             let successfulData = try await nodeSigs(userSk: assigneeSk, signers: successfulSigners, ephemeral: ephemeral, watcher: watcher, assignee: nil) { step in
                 switch step {
                 case .creating, .connecting:
@@ -109,6 +110,7 @@ public enum TIPNode {
             if successfulData.isEmpty || successfulData.contains(where: { $0.counter <= 1 }) {
                 throw Error.differentIdentity
             }
+            Logger.tip.info(category: "TIPNode", message: "successfulData ready")
             let failedData = try await nodeSigs(userSk: userSk, signers: failedSigners, ephemeral: ephemeral, watcher: watcher, assignee: assignee) { step in
                 switch step {
                 case .creating, .connecting:
@@ -118,6 +120,7 @@ public enum TIPNode {
                     progressHandler?(.synchronizing(overallFractionCompleted))
                 }
             }
+            Logger.tip.info(category: "TIPNode", message: "failedData ready")
             data = failedData + successfulData
         } else {
             data = try await nodeSigs(userSk: userSk,
@@ -126,6 +129,7 @@ public enum TIPNode {
                                       watcher: watcher,
                                       assignee: assignee,
                                       progressHandler: progressHandler)
+            Logger.tip.info(category: "TIPNode", message: "data ready")
         }
         
         if !forRecover && data.count < allSigners.count {
@@ -152,6 +156,7 @@ public enum TIPNode {
             }
             return (assignor, partials)
         }()
+        Logger.tip.info(category: "TIPNode", message: "Partials: \(partials.count)")
         if partials.count < TIPConfig.current.commitments.count {
             throw Error.notEnoughPartials
         }
@@ -175,11 +180,14 @@ public enum TIPNode {
                     repeat {
                         do {
                             let request = TIPWatchRequest(watcher: watcher)
+                            Logger.tip.info(category: "TIPNode", message: "Watch node: \(signer.index)")
                             let response = try await TIPAPI.watch(url: signer.api,
                                                                   request: request,
                                                                   timeoutInterval: timeoutInterval)
                             if response.counter >= 0 {
                                 return Counter(value: response.counter, signer: signer)
+                            } else {
+                                Logger.tip.info(category: "TIPNode", message: "Invalid counter: \(response.counter) from node: \(signer.index)")
                             }
                         } catch {
                             throw error

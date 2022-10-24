@@ -327,7 +327,7 @@ extension WebRTCClient: RTCPeerConnectionDelegate {
                 self.tracksUserId[trackId] = id.userId
             }
             if disableTrack {
-                DispatchQueue.main.sync {
+                DispatchQueue.main.async {
                     _ = self.trackDisabledUserIds.insert(id.userId)
                 }
             }

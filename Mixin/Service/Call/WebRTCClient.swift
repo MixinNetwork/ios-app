@@ -10,7 +10,7 @@ protocol WebRTCClientDelegate: AnyObject {
     
     // Group call only
     func webRTCClient(_ client: WebRTCClient, senderPublicKeyForUserWith userId: String, sessionId: String) -> Data?
-    func webRTCClient(_ client: WebRTCClient, didAddReceiverWith userId: String, trackDisabled: Bool)
+    func webRTCClient(_ client: WebRTCClient, didAddReceiverWith streamId: StreamId, trackDisabled: Bool)
 }
 
 class WebRTCClient: NSObject {
@@ -326,7 +326,7 @@ extension WebRTCClient: RTCPeerConnectionDelegate {
                 }
             }
         }
-        delegate?.webRTCClient(self, didAddReceiverWith: id.userId, trackDisabled: disableTrack)
+        delegate?.webRTCClient(self, didAddReceiverWith: id, trackDisabled: disableTrack)
     }
     
 }

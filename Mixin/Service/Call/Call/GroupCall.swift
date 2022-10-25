@@ -633,11 +633,15 @@ extension GroupCall: WebRTCClientDelegate {
         SignalProtocol.shared.getSenderKeyPublic(groupId: conversationId, userId: userId, sessionId: sessionId)?.dropFirst()
     }
     
-    func webRTCClient(_ client: WebRTCClient, didAddReceiverWith userId: String, trackDisabled: Bool) {
+    func webRTCClient(_ client: WebRTCClient, didAddReceiverWith streamId: StreamId, trackDisabled: Bool) {
         DispatchQueue.main.async {
-            CallService.shared.membersManager.addMember(with: userId, toConversationWith: self.conversationId)
-            self.membersDataSource.setMember(with: userId, isConnected: true)
-            self.membersDataSource.setMember(with: userId, isTrackDisabled: trackDisabled)
+            CallService.shared.membersManager.addMember(with: streamId.userId, toConversationWith: self.conversationId)
+            self.membersDataSource.setMember(with: streamId.userId, isConnected: true)
+            self.membersDataSource.setMember(with: streamId.userId, isTrackDisabled: trackDisabled)
+        }
+        if trackDisabled {
+            Logger.call.warn(category: "GroupCall", message: "[\(self.uuidString)] Request resend key for track disabled stream: \(streamId)")
+            ReceiveMessageService.shared.requestResendKey(conversationId: conversationId, recipientId: streamId.userId, messageId: nil, sessionId: streamId.sessionId)
         }
     }
     

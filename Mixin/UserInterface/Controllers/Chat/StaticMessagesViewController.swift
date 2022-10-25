@@ -71,7 +71,7 @@ class StaticMessagesViewController: UIViewController {
     }
     
     @IBAction func dismissAction(_ sender: Any) {
-        dismissAsChild(completion: nil)
+        dismissAsChild(animated: true, completion: nil)
     }
     
     func attachmentURL(withFilename filename: String) -> URL? {
@@ -132,13 +132,13 @@ class StaticMessagesViewController: UIViewController {
         })
     }
     
-    func dismissAsChild(completion: (() -> Void)?) {
+    func dismissAsChild(animated: Bool, completion: (() -> Void)?) {
         if didPlayAudioMessage {
             audioManager.stop()
         }
         showContentConstraint.priority = .defaultLow
         hideContentConstraint.priority = .defaultHigh
-        UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
+        UIView.animate(withDuration: animated ? 0.5 : 0, delay: 0, options: .overdampedCurve) {
             self.view.layoutIfNeeded()
             self.view.backgroundColor = .black.withAlphaComponent(0)
         } completion: { _ in

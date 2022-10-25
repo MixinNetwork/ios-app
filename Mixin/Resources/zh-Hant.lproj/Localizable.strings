@@ -785,6 +785,7 @@
 "shopping" = "購物";
 "show" = "顯示";
 "show_asset" = "顯示資產";
+"show_in_chat" = "在聊天中展示";
 "sign_in" = "登入";
 "sign_with_emergency_contact" = "透過緊急聯絡人登入";
 "sign_with_phone_number" = "透過手機號登入";

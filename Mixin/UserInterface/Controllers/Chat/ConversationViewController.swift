@@ -1374,6 +1374,16 @@ class ConversationViewController: UIViewController {
         }
     }
     
+    func scrollToMessage(messageId: String) {
+        if let indexPath = dataSource.indexPath(where: { $0.messageId == messageId }) {
+            scheduleCellBackgroundFlash(messageId: messageId)
+            tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
+        } else if MessageDAO.shared.hasMessage(id: messageId) {
+            messageIdToFlashAfterAnimationFinished = messageId
+            reloadWithMessageId(messageId, scrollUpwards: true)
+        }
+    }
+    
 }
 
 // MARK: - UIGestureRecognizerDelegate
@@ -1863,7 +1873,7 @@ extension ConversationViewController: PinMessageBannerViewDelegate {
               let quoteMessageId = MessageDAO.shared.quoteMessageId(messageId: id) else {
             return
         }
-        scrollToPinnedMessage(messageId: quoteMessageId)
+        scrollToMessage(messageId: quoteMessageId)
     }
     
 }
@@ -1872,8 +1882,8 @@ extension ConversationViewController: PinMessageBannerViewDelegate {
 extension ConversationViewController: PinMessagesPreviewViewControllerDelegate {
     
     func pinMessagesPreviewViewController(_ controller: PinMessagesPreviewViewController, needsShowMessage messageId: String) {
-        controller.dismissAsChild {
-            self.scrollToPinnedMessage(messageId: messageId)
+        controller.dismissAsChild(animated: true) {
+            self.scrollToMessage(messageId: messageId)
         }
     }
     
@@ -2800,16 +2810,6 @@ extension ConversationViewController {
             }
         case .delete:
             return actions.contains(.delete) ? .available : .invisible
-        }
-    }
-    
-    private func scrollToPinnedMessage(messageId: String) {
-        if let indexPath = dataSource.indexPath(where: { $0.messageId == messageId }) {
-            scheduleCellBackgroundFlash(messageId: messageId)
-            tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
-        } else if MessageDAO.shared.hasMessage(id: messageId) {
-            messageIdToFlashAfterAnimationFinished = messageId
-            reloadWithMessageId(messageId, scrollUpwards: true)
         }
     }
     

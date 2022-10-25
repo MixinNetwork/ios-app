@@ -312,6 +312,27 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         }
     }
     
+    func showInChat() {
+        guard let messageId = currentItemViewController?.item?.messageId else {
+            return
+        }
+        guard let conversationController = UIApplication.homeNavigationController?.viewControllers.first(where: { $0 is ConversationViewController }) as? ConversationViewController else {
+            return
+        }
+        let sharedMedia = UIApplication.homeNavigationController?.viewControllers
+            .compactMap({ $0 as? ContainerViewController })
+            .compactMap({ $0.viewController as? SharedMediaViewController })
+            .first
+        if let sharedMedia {
+            sharedMedia.navigationController?.popViewController(animated: false)
+        } else if let pinMessagesPreview = conversationController.children.first(where: { $0 is PinMessagesPreviewViewController }) as? PinMessagesPreviewViewController {
+            pinMessagesPreview.dismissAsChild(animated: false, completion: nil)
+        }
+        dismiss(transitionViewInitialOffsetY: 0) {
+            conversationController.scrollToMessage(messageId: messageId)
+        }
+    }
+    
     @objc func panAction(_ recognizer: UIPanGestureRecognizer) {
         let translation = recognizer.translation(in: view)
         let progress = min(1, max(0, translation.y / (view.bounds.height / 3)))
@@ -380,6 +401,11 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
                         RecognizeWindow.instance().presentWindow(text: url.absoluteString)
                     }
                 }
+            }))
+        }
+        if itemViewController.supportedActions.contains(.showInChat) {
+            alert.addAction(UIAlertAction(title: R.string.localizable.show_in_chat(), style: .default, handler: { (_) in
+                self.showInChat()
             }))
         }
         alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))

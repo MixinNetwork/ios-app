@@ -59,10 +59,27 @@ final class GalleryImageItemViewController: GalleryItemViewController {
     
     override var supportedActions: Action {
         if let item = item {
-            if item.url == nil {
-                return [.forward]
+            let isTranscriptPreviewPresented = UIApplication
+                .currentConversationViewController()?
+                .children
+                .contains(where: { $0 is TranscriptPreviewViewController }) ?? false
+            if isTranscriptPreviewPresented {
+                if item.url == nil {
+                    return [.forward]
+                } else {
+                    return [.forward, .saveToLibrary, .share]
+                }
             } else {
-                return [.forward, .saveToLibrary, .share]
+                if item.url == nil {
+                    return [.forward, .showInChat]
+                } else {
+                    let conversation = UIApplication.homeNavigationController?.viewControllers.compactMap({ $0 as? ConversationViewController }).last
+                    if let id = conversation?.conversationId, id == item.conversationId {
+                        return [.forward, .saveToLibrary, .share, .showInChat]
+                    } else {
+                        return [.forward, .saveToLibrary, .share]
+                    }
+                }
             }
         } else {
             return []

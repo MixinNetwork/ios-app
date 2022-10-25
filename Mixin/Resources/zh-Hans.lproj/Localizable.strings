@@ -785,6 +785,7 @@
 "shopping" = "购物";
 "show" = "显示";
 "show_asset" = "显示资产";
+"show_in_chat" = "在聊天中展示";
 "sign_in" = "登录";
 "sign_with_emergency_contact" = "通过紧急联系人登录";
 "sign_with_phone_number" = "通过手机号登录";

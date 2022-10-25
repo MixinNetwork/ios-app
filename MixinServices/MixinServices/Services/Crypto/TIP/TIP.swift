@@ -120,7 +120,9 @@ extension TIP {
         
         await progressHandler?(.creating)
         let ephemeralSeed = try await ephemeralSeed(pinToken: pinToken)
+        Logger.tip.info(category: "TIP", message: "Ephemeral seed ready")
         let (identityPriv, watcher) = try await TIPIdentityManager.identityPair(pinData: pinData, pinToken: pinToken)
+        Logger.tip.info(category: "TIP", message: "Identity pair ready")
         
         await progressHandler?(.connecting)
         let aggSig = try await TIPNode.sign(identityPriv: identityPriv,
@@ -130,6 +132,7 @@ extension TIP {
                                             failedSigners: failedSigners,
                                             forRecover: false,
                                             progressHandler: progressHandler)
+        Logger.tip.info(category: "TIP", message: "aggSig ready")
         guard let privSeed = SHA3_256.hash(data: aggSig) else {
             throw Error.hashAggSigToPrivSeed
         }
@@ -142,7 +145,9 @@ extension TIP {
         }
         
         let aesKey = try await generateAESKey(pinData: pinData, pinToken: pinToken)
+        Logger.tip.info(category: "TIP", message: "AES key ready")
         if forRecover {
+            Logger.tip.info(category: "TIP", message: "Recovering")
             try await encryptAndSaveTIPPriv(pinData: pinData, aggSig: aggSig, aesKey: aesKey)
             return aggSig
         }
@@ -167,6 +172,7 @@ extension TIP {
             }
         }
 #endif
+        Logger.tip.info(category: "TIP", message: "Will update PIN")
         let account = try await AccountAPI.updatePIN(request: request)
 #if DEBUG
         try await MainActor.run {
@@ -207,6 +213,7 @@ extension TIP {
         
         await progressHandler?(.creating)
         let ephemeralSeed = try await ephemeralSeed(pinToken: pinToken)
+        Logger.tip.info(category: "TIP", message: "Ephemeral seed ready")
         let identityPriv: Data
         let watcher: Data
         let assigneePriv: Data?
@@ -215,10 +222,14 @@ extension TIP {
                 throw Error.invalidPIN
             }
             (identityPriv, watcher) = try await TIPIdentityManager.identityPair(pinData: oldPINData, pinToken: pinToken)
+            Logger.tip.info(category: "TIP", message: "Identity pair ready")
             assigneePriv = try await TIPIdentityManager.identityPair(pinData: newPINData, pinToken: pinToken).priv
+            Logger.tip.info(category: "TIP", message: "assigneePriv ready")
         } else {
             (identityPriv, watcher) = try await TIPIdentityManager.identityPair(pinData: newPINData, pinToken: pinToken)
+            Logger.tip.info(category: "TIP", message: "Identity pair ready")
             assigneePriv = nil
+            Logger.tip.info(category: "TIP", message: "No assigneePriv needed")
         }
         
         await progressHandler?(.connecting)
@@ -229,7 +240,9 @@ extension TIP {
                                             failedSigners: failedSigners,
                                             forRecover: false,
                                             progressHandler: progressHandler)
+        Logger.tip.info(category: "TIP", message: "aggSig ready")
         let aesKey = try await generateAESKey(pinData: newPINData, pinToken: pinToken)
+        Logger.tip.info(category: "TIP", message: "AES key ready")
         guard let privSeed = SHA3_256.hash(data: aggSig) else {
             throw Error.hashAggSigToPrivSeed
         }
@@ -240,8 +253,8 @@ extension TIP {
         guard let counter = LoginManager.shared.account?.tipCounter else {
             throw Error.noAccount
         }
-        let timestamp = try TIPBody.verify(timestamp: counter)
-        let oldPIN = try encryptTIPPIN(tipPriv: aggSig, target: timestamp)
+        let body = try TIPBody.verify(timestamp: counter)
+        let oldPIN = try encryptTIPPIN(tipPriv: aggSig, target: body)
         let newEncryptPIN = try encryptPIN(key: pinToken, code: pub + (counter + 1).data(endianness: .big))
         let request = PINRequest(pin: newEncryptPIN, oldPIN: oldPIN, timestamp: nil)
         AppGroupKeychain.tipPriv = nil
@@ -254,6 +267,7 @@ extension TIP {
             }
         }
 #endif
+        Logger.tip.info(category: "TIP", message: "Will update PIN")
         let account = try await AccountAPI.updatePIN(request: request)
 #if DEBUG
         try await MainActor.run {
@@ -261,8 +275,6 @@ extension TIP {
                 TIPDiagnostic.failPINUpdateClientSideOnce = false
                 throw MixinAPIError.httpTransport(.sessionTaskFailed(error: URLError(.badServerResponse)))
             }
-        }
-        await MainActor.run {
             if TIPDiagnostic.crashAfterUpdatePIN {
                 abort()
             }
@@ -281,17 +293,21 @@ extension TIP {
     public static func checkCounter(with freshAccount: Account? = nil, timeoutInterval: TimeInterval = 15) async throws -> InterruptionContext? {
         let account: Account
         if let freshAccount {
+            Logger.tip.info(category: "TIP", message: "Check counter with provided account")
             account = freshAccount
         } else {
+            Logger.tip.info(category: "TIP", message: "Reloading account")
             account = try await AccountAPI.me()
             await MainActor.run {
                 LoginManager.shared.setAccount(account)
             }
+            Logger.tip.info(category: "TIP", message: "Check counter with newest account")
         }
         guard let pinToken = AppGroupKeychain.pinToken else {
             throw Error.missingPINToken
         }
         let watcher = try await TIPIdentityManager.watcher(pinToken: pinToken)
+        Logger.tip.info(category: "TIP", message: "Watcher ready")
 #if DEBUG
         try await MainActor.run {
             if TIPDiagnostic.failCounterWatchOnce {
@@ -304,6 +320,8 @@ extension TIP {
         if counters.isEmpty {
             Logger.tip.info(category: "TIP", message: "Empty counter watched")
             return nil
+        } else {
+            Logger.tip.info(category: "TIP", message: "Counters ready")
         }
         if counters.count != TIPConfig.current.signers.count {
             Logger.tip.warn(category: "TIP", message: "Watch count: \(counters.count), node count: \(TIPConfig.current.signers.count)")

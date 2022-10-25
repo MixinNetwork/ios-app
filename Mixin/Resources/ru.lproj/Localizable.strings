@@ -785,6 +785,7 @@
 "shopping" = "Покупка";
 "show" = "Показать";
 "show_asset" = "Показать актив";
+"show_in_chat" = "Показать в чате";
 "sign_in" = "Войти";
 "sign_with_emergency_contact" = "Войти через контакт для экстренных случаев";
 "sign_with_phone_number" = "Войти через номер телефона";

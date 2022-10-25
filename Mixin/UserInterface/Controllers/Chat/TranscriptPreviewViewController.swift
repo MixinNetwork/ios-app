@@ -90,7 +90,7 @@ extension TranscriptPreviewViewController {
         else {
             return
         }
-        dismissAsChild(completion: nil)
+        dismissAsChild(animated: true, completion: nil)
     }
     
     @objc private func mediaStatusDidUpdate(_ notification: Notification) {
@@ -131,7 +131,7 @@ extension TranscriptPreviewViewController {
         guard let messageId = notification.userInfo?[ExpiredMessageDAO.messageIdKey] as? String, messageId == transcriptMessage.messageId else {
             return
         }
-        dismissAsChild(completion: nil)
+        dismissAsChild(animated: true, completion: nil)
     }
     
 }

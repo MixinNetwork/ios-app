@@ -785,6 +785,7 @@
 "shopping" = "Shopping";
 "show" = "Show";
 "show_asset" = "Show asset";
+"show_in_chat" = "Show in chat";
 "sign_in" = "Sign in";
 "sign_with_emergency_contact" = "Sign in with emergency contact";
 "sign_with_phone_number" = "Sign in with phone number";

@@ -785,6 +785,7 @@
 "shopping" = "買い物";
 "show" = "表示";
 "show_asset" = "資産を表示する";
+"show_in_chat" = "チャット内で表示";
 "sign_in" = "ログイン";
 "sign_with_emergency_contact" = "緊急連絡先でログイン";
 "sign_with_phone_number" = "電話番号でログイン";

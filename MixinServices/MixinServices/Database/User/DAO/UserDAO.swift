@@ -260,7 +260,7 @@ public final class UserDAO: UserDatabaseDAO {
                             .updateAll(db, [Participant.column(of: .status).set(to: ParticipantStatus.SUCCESS.rawValue)])
                     }
                 }
-                db.afterNextTransactionCommit { (_) in
+                db.afterNextTransaction { (_) in
                     NotificationCenter.default.post(onMainThread: Self.usersDidChangeNotification,
                                                     object: self,
                                                     userInfo: [Self.UserInfoKey.users: users])
@@ -288,7 +288,7 @@ public final class UserDAO: UserDatabaseDAO {
             if let app = user.app {
                 try app.save(db)
             }
-            db.afterNextTransactionCommit { (_) in
+            db.afterNextTransaction { (_) in
                 userItem = self.getUser(userId: user.userId)
             }
         }

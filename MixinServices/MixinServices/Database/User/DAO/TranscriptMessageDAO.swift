@@ -134,7 +134,7 @@ public final class TranscriptMessageDAO: UserDatabaseDAO {
                 isTranscriptMessageFinished = changes > 0
             }
             
-            db.afterNextTransactionCommit { _ in
+            db.afterNextTransaction { _ in
                 let userInfo: [String: Any] = [
                     Self.UserInfoKey.transcriptId: transcriptId,
                     Self.UserInfoKey.messageId: messageId,
@@ -165,7 +165,7 @@ public final class TranscriptMessageDAO: UserDatabaseDAO {
                 TranscriptMessage.column(of: .mediaStatus).set(to: mediaStatus.rawValue),
             ]
             try TranscriptMessage.filter(updateCondition).updateAll(db, assignments)
-            db.afterNextTransactionCommit { _ in
+            db.afterNextTransaction { _ in
                 let userInfo: [String: Any] = [
                     Self.UserInfoKey.transcriptId: transcriptId,
                     Self.UserInfoKey.messageId: messageId,

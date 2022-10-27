@@ -343,7 +343,7 @@ extension Database {
         write { (db) in
             try record.save(db)
             if let completion = completion {
-                db.afterNextTransactionCommit(completion)
+                db.afterNextTransaction(onCommit: completion)
             }
         }
     }
@@ -359,7 +359,7 @@ extension Database {
         return write { (db) -> Void in
             try records.save(db)
             if let completion = completion {
-                db.afterNextTransactionCommit(completion)
+                db.afterNextTransaction(onCommit: completion)
             }
         }
     }
@@ -375,7 +375,7 @@ extension Database {
         write { (db) in
             try record.filter(condition).updateAll(db, assignments)
             if let completion = completion {
-                db.afterNextTransactionCommit(completion)
+                db.afterNextTransaction(onCommit: completion)
             }
         }
     }
@@ -396,7 +396,7 @@ extension Database {
             try writeAndReturnError { (db) -> Void in
                 numberOfChanges = try record.filter(condition).deleteAll(db)
                 if let completion = completion {
-                    db.afterNextTransactionCommit(completion)
+                    db.afterNextTransaction(onCommit: completion)
                 }
             }
             return numberOfChanges

@@ -48,7 +48,7 @@ public final class PinMessageDAO: UserDatabaseDAO {
         let deletedCount = try PinMessage
             .filter(messageIds.contains(PinMessage.column(of: .messageId)))
             .deleteAll(database)
-        database.afterNextTransactionCommit { db in
+        database.afterNextTransaction { db in
             if deletedCount > 0 {
                 if let id = AppGroupUserDefaults.User.pinMessageBanners[conversationId], let quoteMessageId = MessageDAO.shared.quoteMessageId(messageId: id), messageIds.contains(quoteMessageId) {
                     AppGroupUserDefaults.User.pinMessageBanners[conversationId] = nil
@@ -82,7 +82,7 @@ public final class PinMessageDAO: UserDatabaseDAO {
             try pinMessage.save(db)
             try MessageDAO.shared.insertMessage(database: db, message: message, messageSource: source, silentNotification: silentNotification)
             try mention?.save(db)
-            db.afterNextTransactionCommit { db in
+            db.afterNextTransaction { db in
                 AppGroupUserDefaults.User.pinMessageBanners[referencedItem.conversationId] = message.messageId
                 let userInfo: [String: Any] = [
                     PinMessageDAO.UserInfoKey.conversationId: referencedItem.conversationId,
@@ -100,7 +100,7 @@ public final class PinMessageDAO: UserDatabaseDAO {
         try PinMessage
             .filter(PinMessage.column(of: .conversationId) == conversationId)
             .deleteAll(database)
-        database.afterNextTransactionCommit { db in
+        database.afterNextTransaction { db in
             AppGroupUserDefaults.User.pinMessageBanners[conversationId] = nil
             NotificationCenter.default.post(onMainThread: PinMessageDAO.didDeleteNotification,
                                             object: self,

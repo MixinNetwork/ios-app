@@ -20,7 +20,7 @@ final class PermissionsViewController: UIViewController {
     
     private var isDataLoaded = false
     private var app: App?
-    private var scopes = [(scope: Scope, name: String, desc: String)]()
+    private var scopes = [Scope.ItemInfo]()
     private var dateDescription: String?
     
     override func viewDidLoad() {
@@ -107,7 +107,9 @@ final class PermissionsViewController: UIViewController {
         let accessedDate = DateFormatter.dateFull.string(from: response.accessedAt.toUTCDate())
         
         app = response.app
-        scopes = Scope.getCompleteScopeInfo(authInfo: response).0
+        scopes = Scope.getCompleteScopeInfos(authInfo: response).reduce(into: [], { result, group in
+            result.append(contentsOf: group.items)
+        })
         dateDescription = R.string.localizable.setting_auth_access(createDate, accessedDate)
         isDataLoaded = true
         tableView.reloadData()
@@ -184,7 +186,7 @@ extension PermissionsViewController: UITableViewDataSource {
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.permission, for: indexPath)!
             let scope = scopes[indexPath.row]
-            cell.render(name: scope.name, desc: scope.desc)
+            cell.render(name: scope.title, desc: scope.desc)
             roundCornersIfNeeded(cell: cell)
             return cell
         default:

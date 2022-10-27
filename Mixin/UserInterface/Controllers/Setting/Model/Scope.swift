@@ -2,6 +2,7 @@ import Foundation
 import MixinServices
 
 enum Scope: String {
+    
     case PROFILE = "PROFILE:READ"
     case PHONE = "PHONE:READ"
     case ASSETS = "ASSETS:READ"
@@ -14,71 +15,106 @@ enum Scope: String {
     case CIRCLES_WRITE = "CIRCLES:WRITE"
     case COLLECTIBLES_READ = "COLLECTIBLES:READ"
     
-    static func getCompleteScopeInfo(authInfo: AuthorizationResponse) -> ([(scope: Scope, name: String, desc: String)], [Scope.RawValue]) {
-        guard let account = LoginManager.shared.account else {
-            return ([], [Scope.PROFILE.rawValue])
+    struct GroupInfo: Equatable {
+        let icon: UIImage
+        let title: String
+        var items: [ItemInfo]
+        
+        static func == (lhs: Self, rhs: Self) -> Bool {
+            lhs.title == rhs.title
         }
-        var result = [(scope: Scope, name: String, desc: String)]()
-        var scopes = [Scope.PROFILE.rawValue]
-        result.append((.PROFILE, R.string.localizable.public_profile(), R.string.localizable.auth_profile_content(account.fullName, account.identityNumber)))
-
-        if authInfo.scopes.contains(Scope.PHONE.rawValue) {
-            result.append((.PHONE, R.string.localizable.phone_number(), account.phone))
-            scopes.append(Scope.PHONE.rawValue)
-        }
-        if authInfo.scopes.contains(Scope.MESSAGES_REPRESENT.rawValue) {
-            result.append((.MESSAGES_REPRESENT, R.string.localizable.represent_messages(), R.string.localizable.auth_messages_represent_description()))
-            scopes.append(Scope.MESSAGES_REPRESENT.rawValue)
-        }
-        if authInfo.scopes.contains(Scope.CONTACTS_READ.rawValue) {
-            result.append((.CONTACTS_READ, R.string.localizable.read_contacts(), R.string.localizable.access_your_contacts_list()))
-            scopes.append(Scope.CONTACTS_READ.rawValue)
-        }
-        if authInfo.scopes.contains(Scope.ASSETS.rawValue) {
-            result.append((.ASSETS, R.string.localizable.read_assets(), getAssetsBalanceText()))
-            scopes.append(Scope.ASSETS.rawValue)
-        }
-        if authInfo.scopes.contains(Scope.SNAPSHOTS_READ.rawValue) {
-            result.append((.SNAPSHOTS_READ, R.string.localizable.read_snapshots(), R.string.localizable.access_your_snapshots()))
-            scopes.append(Scope.SNAPSHOTS_READ.rawValue)
-        }
-        if authInfo.scopes.contains(Scope.APPS_READ.rawValue) {
-            result.append((.APPS_READ, R.string.localizable.read_bots(), R.string.localizable.access_your_bots_list()))
-            scopes.append(Scope.APPS_READ.rawValue)
-        }
-        if authInfo.scopes.contains(Scope.APPS_WRITE.rawValue) {
-            result.append((.APPS_WRITE, R.string.localizable.manage_bots(), R.string.localizable.manage_all_your_bots()))
-            scopes.append(Scope.APPS_WRITE.rawValue)
-        }
-        if authInfo.scopes.contains(Scope.CIRCLES_READ.rawValue) {
-            result.append((.CIRCLES_READ, R.string.localizable.read_circles(), R.string.localizable.access_your_circle_list()))
-            scopes.append(Scope.CIRCLES_READ.rawValue)
-        }
-        if authInfo.scopes.contains(Scope.CIRCLES_WRITE.rawValue) {
-            result.append((.CIRCLES_WRITE, R.string.localizable.write_circles(), R.string.localizable.manage_all_your_circles()))
-            scopes.append(Scope.CIRCLES_WRITE.rawValue)
-        }
-        if authInfo.scopes.contains(Scope.COLLECTIBLES_READ.rawValue) {
-            result.append((.COLLECTIBLES_READ, R.string.localizable.read_collectibles(), R.string.localizable.access_your_collectibles()))
-            scopes.append(Scope.COLLECTIBLES_READ.rawValue)
-        }
-        return (result, scopes)
     }
     
-    private static func getAssetsBalanceText() -> String {
-        let assets = AssetDAO.shared.getAssets()
-        guard assets.count > 0 else {
-            return "0"
+    struct ItemInfo: Equatable {
+        var isSelected: Bool = true
+        let title: String
+        let desc: String
+        let scope: String
+        
+        static func == (lhs: Self, rhs: Self) -> Bool {
+            lhs.scope == rhs.scope
         }
-        var result = "\(assets[0].localizedBalance) \(assets[0].symbol)"
-        if assets.count > 1 {
-            result += ", \(assets[1].localizedBalance) \(assets[1].symbol)"
-        }
-        if assets.count > 2 {
-            result = R.string.localizable.auth_assets_more(result)
-        }
-        return result
     }
+    
+    static func getCompleteScopeInfos(authInfo: AuthorizationResponse) -> [GroupInfo] {
+        var bots = [ItemInfo]()
+        var wallet = [ItemInfo]()
+        var circles = [ItemInfo]()
+        var other = [ItemInfo]()
+                
+        if authInfo.scopes.contains(Scope.ASSETS.rawValue) {
+            wallet.append(ItemInfo(title: R.string.localizable.read_your_assets(),
+                                   desc: R.string.localizable.allow_bot_access_asset(),
+                                   scope: Scope.ASSETS.rawValue))
+        }
+        if authInfo.scopes.contains(Scope.SNAPSHOTS_READ.rawValue) {
+            wallet.append(ItemInfo(title: R.string.localizable.read_your_snapshots(),
+                                   desc: R.string.localizable.allow_bot_access_snapshots(),
+                                   scope: Scope.SNAPSHOTS_READ.rawValue))
+        }
+        if authInfo.scopes.contains(Scope.COLLECTIBLES_READ.rawValue) {
+            wallet.append(ItemInfo(title: R.string.localizable.read_your_nfts(),
+                                   desc: R.string.localizable.allow_bot_access_nfts(),
+                                   scope: Scope.COLLECTIBLES_READ.rawValue))
+        }
+        
+        if authInfo.scopes.contains(Scope.APPS_READ.rawValue) {
+            bots.append(ItemInfo(title: R.string.localizable.read_your_apps(),
+                                 desc: R.string.localizable.allow_bot_access_bots(),
+                                 scope: Scope.APPS_READ.rawValue))
+        }
+        if authInfo.scopes.contains(Scope.APPS_WRITE.rawValue) {
+            bots.append(ItemInfo(title: R.string.localizable.manager_your_apps(),
+                                 desc: R.string.localizable.allow_bot_manager_bots(),
+                                 scope: Scope.APPS_WRITE.rawValue))
+        }
+        
+        if authInfo.scopes.contains(Scope.CIRCLES_READ.rawValue) {
+            circles.append(ItemInfo(title: R.string.localizable.read_your_circles(),
+                                    desc: R.string.localizable.allow_bot_access_circles(),
+                                    scope: Scope.CIRCLES_READ.rawValue))
+        }
+        if authInfo.scopes.contains(Scope.CIRCLES_WRITE.rawValue) {
+            circles.append(ItemInfo(title: R.string.localizable.read_your_circles(),
+                                    desc: R.string.localizable.allow_bot_manager_circles(),
+                                    scope: Scope.CIRCLES_WRITE.rawValue))
+        }
+        
+        if authInfo.scopes.contains(Scope.PROFILE.rawValue) {
+            other.append(ItemInfo(title: R.string.localizable.read_your_public_profile(),
+                                  desc: R.string.localizable.allow_bot_access_profile(),
+                                  scope: Scope.PROFILE.rawValue))
+        }
+        if authInfo.scopes.contains(Scope.PHONE.rawValue) {
+            other.append(ItemInfo(title: R.string.localizable.read_your_phone_number(),
+                                  desc: R.string.localizable.allow_bot_access_number(),
+                                  scope: Scope.PHONE.rawValue))
+        }
+        if authInfo.scopes.contains(Scope.CONTACTS_READ.rawValue) {
+            other.append(ItemInfo(title: R.string.localizable.read_your_contacts(),
+                                  desc: R.string.localizable.allow_bot_access_contact(),
+                                  scope: Scope.CONTACTS_READ.rawValue))
+        }
+        if authInfo.scopes.contains(Scope.MESSAGES_REPRESENT.rawValue) {
+            other.append(ItemInfo(title: R.string.localizable.represent_send_messages(),
+                                  desc: R.string.localizable.allow_bot_send_messages(),
+                                  scope: Scope.MESSAGES_REPRESENT.rawValue))
+        }
+        
+        var results = [GroupInfo]()
+        if !circles.isEmpty {
+            results.append(GroupInfo(icon: R.image.web.ic_authorization_circle()!, title: R.string.localizable.circles(), items: circles))
+        }
+        if !bots.isEmpty {
+            results.append(GroupInfo(icon: R.image.web.ic_authorization_bot()!, title: R.string.localizable.bots(), items: bots))
+        }
+        if !wallet.isEmpty {
+            results.append(GroupInfo(icon: R.image.web.ic_authorization_wallet()!, title: R.string.localizable.wallet(), items: wallet))
+        }
+        if !other.isEmpty {
+            results.append(GroupInfo(icon: R.image.web.ic_authorization_guard()!, title: R.string.localizable.other(), items: other))
+        }
+        return results
+    }
+    
 }
-
-

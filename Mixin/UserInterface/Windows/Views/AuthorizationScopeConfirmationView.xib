@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_0" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21225"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AuthorizationScopeConfirmationView" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="loadingIndicator" destination="jMz-cq-hsz" id="33v-UF-DER"/>
+                <outlet property="numberPadView" destination="MJR-L9-NlP" id="IBd-de-YkO"/>
+                <outlet property="pinField" destination="Wkx-k4-oQd" id="s8Z-1f-rBv"/>
+                <outlet property="tableView" destination="fc9-cO-ISZ" id="uvz-Ei-nlq"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="390" height="404"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fc9-cO-ISZ" customClass="AuthorizationScopeTableView" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="32" y="0.0" width="326" height="210"/>
+                    <color key="backgroundColor" name="background"/>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wkx-k4-oQd" customClass="PinField" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="109" y="230" width="172" height="24"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <color key="tintColor" name="text_accessory"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="24" id="0gG-cB-nYD"/>
+                        <constraint firstAttribute="width" constant="172" id="2j5-SC-chr"/>
+                    </constraints>
+                    <connections>
+                        <action selector="pinEditingChangedAction:" destination="-1" eventType="editingChanged" id="YrU-HV-2Um"/>
+                    </connections>
+                </view>
+                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jMz-cq-hsz" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="183" y="230" width="24" height="24"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <color key="tintColor" red="0.73725490196078436" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="24" id="1qx-UB-Wnq"/>
+                        <constraint firstAttribute="width" constant="24" id="jX4-A0-TbB"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" placeholderIntrinsicWidth="414" placeholderIntrinsicHeight="128" translatesAutoresizingMaskIntoConstraints="NO" id="MJR-L9-NlP" customClass="NumberPadView" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="276" width="390" height="128"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </view>
+            </subviews>
+            <color key="backgroundColor" name="background"/>
+            <constraints>
+                <constraint firstItem="MJR-L9-NlP" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="0hs-Uc-AZ7"/>
+                <constraint firstItem="fc9-cO-ISZ" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="JbF-S6-AVT"/>
+                <constraint firstItem="fc9-cO-ISZ" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Lup-Z9-SZm"/>
+                <constraint firstAttribute="trailing" secondItem="MJR-L9-NlP" secondAttribute="trailing" id="VIt-hJ-YTT"/>
+                <constraint firstAttribute="trailing" secondItem="fc9-cO-ISZ" secondAttribute="trailing" constant="32" id="Ygz-Fr-ucH"/>
+                <constraint firstItem="Wkx-k4-oQd" firstAttribute="top" secondItem="fc9-cO-ISZ" secondAttribute="bottom" constant="20" id="cmk-ep-KQn"/>
+                <constraint firstItem="jMz-cq-hsz" firstAttribute="centerY" secondItem="Wkx-k4-oQd" secondAttribute="centerY" id="eUs-8E-rvZ"/>
+                <constraint firstItem="MJR-L9-NlP" firstAttribute="top" secondItem="Wkx-k4-oQd" secondAttribute="bottom" constant="22" id="ig3-5e-cjg"/>
+                <constraint firstAttribute="bottom" secondItem="MJR-L9-NlP" secondAttribute="bottom" id="mLM-Pg-uVP"/>
+                <constraint firstItem="fc9-cO-ISZ" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="32" id="pLB-v5-DsN"/>
+                <constraint firstItem="jMz-cq-hsz" firstAttribute="centerX" secondItem="Wkx-k4-oQd" secondAttribute="centerX" id="sKI-FZ-wsH"/>
+                <constraint firstItem="Wkx-k4-oQd" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="sNL-rh-5Kj"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="135.38461538461539" y="-54.739336492890992"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_accessory">
+            <color red="0.72200000286102295" green="0.74099999666213989" blue="0.77999997138977051" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

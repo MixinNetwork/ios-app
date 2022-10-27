@@ -1,49 +1,22 @@
 import Foundation
 import MixinServices
+import SDWebImage
 
 class AuthorizationWindow: BottomSheetView {
-
-    @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var iconImageView: CornerImageView!
-    @IBOutlet weak var closeButton: UIButton!
-    @IBOutlet weak var authorizeButton: RoundedButton!
-    @IBOutlet weak var titleLabel: UILabel!
-
+    
+    @IBOutlet weak var descLabel: UILabel!
+    @IBOutlet weak var scopeDetailView: AuthorizationScopeDetailView!
+    @IBOutlet weak var scopeConfirmationView: AuthorizationScopeConfirmationView!
+    
+    private var scopeHandler: AuthorizationScopeHandler!
     private var authInfo: AuthorizationResponse!
-    private var assets: [AssetItem] = []
     private var loginSuccess = false
     
-    private lazy var scopes: [(scope: Scope, name: String, desc: String)] = {
-        var (result, scopeValues) = Scope.getCompleteScopeInfo(authInfo: authInfo)
-        selectedScopes = scopeValues
-        return result
-    }()
-    private var selectedScopes = [Scope.PROFILE.rawValue]
-
-    func render(authInfo: AuthorizationResponse, assets: [AssetItem]) -> AuthorizationWindow {
-        self.authInfo = authInfo
-        self.assets = assets
-
-        titleLabel.text = authInfo.app.name
-        iconImageView.sd_setImage(with: URL(string: authInfo.app.iconUrl), placeholderImage: #imageLiteral(resourceName: "ic_place_holder"))
-
-        prepareTableView()
-        tableView.reloadData()
-        DispatchQueue.main.async {
-            for idx in 0..<self.scopes.count {
-                self.tableView.selectRow(at: IndexPath(row: idx, section: 0), animated: false, scrollPosition: .none)
-            }
-        }
-        return self
-    }
-
     override func dismissPopupController(animated: Bool) {
         super.dismissPopupController(animated: animated)
-
         guard !loginSuccess else {
             return
         }
-
         let request = AuthorizationRequest(authorizationId: authInfo.authorizationId, scopes: [])
         AuthorizeAPI.authorize(authorization: request) { (result) in
             switch result {
@@ -54,106 +27,136 @@ class AuthorizationWindow: BottomSheetView {
             }
         }
     }
-
+    
+    class func instance() -> AuthorizationWindow {
+        R.nib.authorizationWindow(owner: self)!
+    }
+    
+    func render(authInfo: AuthorizationResponse) -> AuthorizationWindow {
+        self.authInfo = authInfo
+        SDWebImageManager.shared.loadImage(with: URL(string: authInfo.app.iconUrl), options: [], progress: nil, completed: { (image, _, error, _, _, _) in
+            let avatar: UIImage?
+            if error == nil, let image = image {
+                avatar = image
+            } else {
+                avatar = R.image.ic_place_holder()
+            }
+            let avatarAttachment = NSTextAttachment()
+            avatarAttachment.image = avatar
+            avatarAttachment.bounds = CGRect(x: 0, y: -3, width: 16, height: 16)
+            
+            let padding = NSTextAttachment()
+            padding.bounds = CGRect(x: 0, y: 0, width: 4, height: 0)
+            
+            let fullString = NSMutableAttributedString(string: "")
+            fullString.append(NSAttributedString(attachment: avatarAttachment))
+            fullString.append(NSAttributedString(attachment: padding))
+            fullString.append(NSAttributedString(string: "\(authInfo.app.name) (\(authInfo.app.appNumber))"))
+            
+            DispatchQueue.main.async {
+                self.descLabel.attributedText = fullString
+            }
+        })
+        scopeHandler = AuthorizationScopeHandler(scopeInfos: Scope.getCompleteScopeInfos(authInfo: authInfo))
+        scopeHandler.delegate = self
+        scopeDetailView.delegate = self
+        scopeDetailView.render(with: scopeHandler)
+        scopeConfirmationView.delegate = self
+        return self
+    }
+    
     @IBAction func backAction(_ sender: Any) {
         dismissPopupController(animated: true)
     }
+    
+}
 
-    @IBAction func authorizeAction(_ sender: Any) {
-        guard !authorizeButton.isBusy else {
-            return
-        }
-        authorizeButton.isBusy = true
-        let request = AuthorizationRequest(authorizationId: authInfo.authorizationId, scopes: selectedScopes)
-        AuthorizeAPI.authorize(authorization: request, completion: { [weak self](result) in
-            guard let weakSelf = self else {
+extension AuthorizationWindow: AuthorizationScopeHandlerDelegate {
+    
+    func authorizationScopeHandlerDeselectLastScope(_ handler: AuthorizationScopeHandler) {
+        alert(R.string.localizable.select_at_least_one_permission())
+    }
+    
+}
+
+extension AuthorizationWindow: AuthorizationScopeDetailViewDelegate {
+    
+    func authorizationScopeDetailViewDidReviewScopes(_ controller: AuthorizationScopeDetailView) {
+        scopeConfirmationView.render(with: scopeHandler)
+        UIView.transition(with: self, duration: 0.3, options: .transitionCrossDissolve, animations: {
+            self.scopeDetailView.isHidden = true
+            self.scopeConfirmationView.isHidden = false
+        })
+    }
+    
+}
+
+extension AuthorizationWindow: AuthorizationScopeConfirmationViewDelegate {
+    
+    func authorizationScopeConfirmationView(_ view: AuthorizationScopeConfirmationView, validate pin: String) {
+        AccountAPI.verify(pin: pin) { [weak self] result in
+            guard let self = self else {
                 return
             }
             switch result {
+            case .success:
+                let interval = min(PeriodicPinVerificationInterval.max, AppGroupUserDefaults.Wallet.periodicPinVerificationInterval * 2)
+                AppGroupUserDefaults.Wallet.periodicPinVerificationInterval = interval
+                AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
+                self.authoriseAction()
+            case let .failure(error):
+                view.loadingIndicator.stopAnimating()
+                view.isUserInteractionEnabled = true
+                view.pinField.clear()
+                PINVerificationFailureHandler.handle(error: error) { description in
+                    self.alert(description)
+                }
+            }
+        }
+    }
+    
+}
+
+extension AuthorizationWindow {
+    
+    private func authoriseAction() {
+        let scopes = scopeHandler.selectedItems.map(\.scope)
+        let request = AuthorizationRequest(authorizationId: authInfo.authorizationId, scopes: scopes)
+        AuthorizeAPI.authorize(authorization: request, completion: { [weak self] (result) in
+            guard let self = self else {
+                return
+            }
+            self.scopeConfirmationView.loadingIndicator.stopAnimating()
+            self.scopeConfirmationView.isUserInteractionEnabled = true
+            switch result {
             case let .success(response):
-                weakSelf.loginSuccess = true
+                self.loginSuccess = true
                 showAutoHiddenHud(style: .notification, text: R.string.localizable.authorized())
-                weakSelf.dismissPopupController(animated: true)
+                self.dismissPopupController(animated: true)
                 if UIApplication.homeNavigationController?.viewControllers.last is CameraViewController {
                     UIApplication.homeNavigationController?.popViewController(animated: true)
                 }
                 UIApplication.shared.tryOpenThirdApp(response: response)
             case let .failure(error):
-                weakSelf.authorizeButton.isBusy = false
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
             }
         })
     }
-
-    private func getAssetsBalanceText() -> String {
-        guard assets.count > 0 else {
-            return "0"
-        }
-        var result = "\(assets[0].localizedBalance) \(assets[0].symbol)"
-        if assets.count > 1 {
-            result += ", \(assets[1].localizedBalance) \(assets[1].symbol)"
-        }
-        if assets.count > 2 {
-            result = R.string.localizable.auth_assets_more(result)
-        }
-        return result
-    }
-
-    class func instance() -> AuthorizationWindow {
-        return Bundle.main.loadNibNamed("AuthorizationWindow", owner: nil, options: nil)?.first as! AuthorizationWindow
-    }
-}
-
-extension AuthorizationWindow: UITableViewDelegate, UITableViewDataSource {
-
-    private func prepareTableView() {
-        tableView.register(UINib(nibName: "AuthorizationScopeCell", bundle: nil), forCellReuseIdentifier: AuthorizationScopeCell.cellIdentifier)
-        tableView.tableFooterView = UIView()
-        tableView.dataSource = self
-        tableView.delegate = self
-    }
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return scopes.count
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: AuthorizationScopeCell.cellIdentifier) as! AuthorizationScopeCell
-        let scope = scopes[indexPath.row]
-        cell.render(name: scope.name, desc: scope.desc, forceChecked: scope.scope == .PROFILE)
-        if selectedScopes.contains(scope.scope.rawValue) {
-            cell.setSelected(true, animated: false)
-        }
-        return cell
-    }
-
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let scope = scopes[indexPath.row]
-        guard !selectedScopes.contains(scope.scope.rawValue) else {
-            return
-        }
-
-        selectedScopes.append(scope.scope.rawValue)
-    }
-
-    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        let scope = scopes[indexPath.row]
-        guard let idx = selectedScopes.firstIndex(of: scope.scope.rawValue) else {
-            return
-        }
-
-        selectedScopes.remove(at: idx)
-    }
+    
 }
 
 private extension UIApplication {
-
+    
     func tryOpenThirdApp(response: AuthorizationResponse) {
         let callback = response.app.redirectUri
-        guard !callback.isEmpty, let url = URL(string: callback), let scheme = url.scheme?.lowercased(), scheme != "http", scheme != "https", var components = URLComponents(string: callback) else {
+        guard
+            !callback.isEmpty,
+            let url = URL(string: callback),
+            let scheme = url.scheme?.lowercased(), scheme != "http", scheme != "https",
+            var components = URLComponents(string: callback)
+        else {
             return
         }
-
         if components.queryItems == nil {
             components.queryItems = []
         }
@@ -162,11 +165,10 @@ private extension UIApplication {
         } else {
             components.queryItems?.append(URLQueryItem(name: "code", value: response.authorizationCode))
         }
-
         guard let targetUrl = components.url else {
             return
         }
         UIApplication.shared.open(targetUrl, options: [:], completionHandler: nil)
     }
-
+    
 }

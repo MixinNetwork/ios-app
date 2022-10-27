@@ -1035,15 +1035,8 @@ extension UrlWindow {
             hud.hideInMainThread()
             return
         }
-        
-        DispatchQueue.global().async {
-            let assets = AssetDAO.shared.getAvailableAssets()
-
-            DispatchQueue.main.async {
-                hud.hide()
-                AuthorizationWindow.instance().render(authInfo: authorization, assets: assets).presentPopupControllerAnimated()
-            }
-        }
+        hud.hide()
+        AuthorizationWindow.instance().render(authInfo: authorization).presentPopupControllerAnimated()
     }
 
     private static func presentConversation(conversation: ConversationResponse, codeId: String, hud: Hud) {

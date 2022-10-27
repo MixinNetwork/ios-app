@@ -139,6 +139,7 @@ class TIPPopupInputViewController: PinValidationViewController {
                 AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
                 await MainActor.run(body: onSuccess)
             } catch {
+                reporter.report(error: error)
                 Logger.tip.error(category: "TIPPopupInput", message: "Failed to create: \(error)")
                 await MainActor.run {
                     if let error = error as? MixinAPIError {
@@ -187,6 +188,7 @@ class TIPPopupInputViewController: PinValidationViewController {
                 Logger.tip.info(category: "TIPPopupInput", message: "Changed successfully")
                 await MainActor.run(body: onSuccess)
             } catch let error as TIPNode.Error {
+                reporter.report(error: error)
                 Logger.tip.error(category: "TIPPopupInput", message: "Failed to change: \(error)")
                 await MainActor.run {
                     loadingIndicator.stopAnimating()
@@ -199,6 +201,7 @@ class TIPPopupInputViewController: PinValidationViewController {
                     oldPIN = nil
                 }
             } catch {
+                reporter.report(error: error)
                 Logger.tip.error(category: "TIPPopupInput", message: "Failed to change: \(error)")
                 await MainActor.run {
                     if let error = error as? MixinAPIError {

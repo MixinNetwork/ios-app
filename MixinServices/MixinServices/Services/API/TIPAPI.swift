@@ -48,7 +48,7 @@ final class TIPAPI: MixinAPI {
     }
     
     static func sign(url: URL, request: TIPSignRequest) async throws -> TIPSignResponse {
-        try await AF.request(url, method: .post, parameters: request, encoder: .json)
+        try await AF.request(url, method: .post, parameters: request, encoder: .json, headers: ["X-Request-Id": request.id])
             .validate(statusCode: 200...299)
             .serializingDecodable(TIPSignResponse.self)
             .value

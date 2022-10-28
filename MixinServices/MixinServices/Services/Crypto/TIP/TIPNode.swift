@@ -245,8 +245,10 @@ public enum TIPNode {
                     }
 #endif
                     repeat {
+                        let requestID = UUID().uuidString.lowercased()
                         do {
-                            let sig = try await signTIPNode(userSk: userSk,
+                            let sig = try await signTIPNode(requestID: requestID,
+                                                            userSk: userSk,
                                                             signer: signer,
                                                             ephemeral: ephemeral,
                                                             watcher: watcher,
@@ -258,14 +260,14 @@ public enum TIPNode {
                         } catch {
                             switch error {
                             case let AFError.responseValidationFailed(reason: .unacceptableStatusCode(code)):
-                                Logger.tip.error(category: "TIPNode", message: "Node \(signer.index) sign failed with status code: \(code)")
+                                Logger.tip.error(category: "TIPNode", message: "Node \(signer.index) sign failed with status code: \(code), id: \(requestID)")
                                 if code == 429 || code == 500 {
                                     return .failure(error)
                                 } else {
                                     continue
                                 }
                             default:
-                                Logger.tip.error(category: "TIPNode", message: "Node \(signer.index) sign failed with: \(error)")
+                                Logger.tip.error(category: "TIPNode", message: "Node \(signer.index) sign failed with: \(error), id: \(requestID)")
                                 continue
                             }
                         }
@@ -291,6 +293,7 @@ public enum TIPNode {
     }
     
     private static func signTIPNode(
+        requestID: String,
         userSk: CryptoScalar,
         signer: TIPSigner,
         ephemeral: Data,
@@ -299,7 +302,8 @@ public enum TIPNode {
         grace: UInt64,
         assignee: Data?
     ) async throws -> TIPSignResponseData {
-        let request = try TIPSignRequest(userSk: userSk,
+        let request = try TIPSignRequest(id: requestID,
+                                         userSk: userSk,
                                          signer: signer,
                                          ephemeral: ephemeral,
                                          watcher: watcher,

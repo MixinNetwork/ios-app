@@ -311,40 +311,44 @@ public enum TIPNode {
                                          grace: grace,
                                          assignee: assignee)
         let response = try await TIPAPI.sign(url: signer.api, request: request)
-        
-        var error: NSError?
-        guard let signerPk = CryptoPubKeyFromBase58(signer.identity, &error) else {
-            throw Error.signTIPNode(error)
-        }
-        let msg = try JSONEncoder.default.encode(response.data)
-        guard let responseSignature = Data(hexEncodedString: response.signature) else {
-            throw Error.decodeResponseSignature
-        }
-        try signerPk.verify(msg, sig: responseSignature)
-        
-        guard let responseCipher = Data(hexEncodedString: response.data.cipher) else {
-            throw Error.decodeResponseCipher
-        }
-        guard let plain = CryptoDecrypt(signerPk, userSk, responseCipher) else {
-            throw Error.decryptResponseCipher
-        }
-        guard plain.count == 218 else {
-            throw Error.invalidSignResponse(plain.count)
-        }
-        let partial = plain[8...8+65]
-        let assignor = plain[8+66...8+66+127]
-        let counter: UInt64 = {
-            var raw: UInt64 = 0
-            withUnsafeMutableBytes(of: &raw) { counter in
-                plain[211...].withUnsafeBytes { plain in
-                    plain.copyBytes(to: counter) // Copy bytes to avoid unaligned access
-                }
+        switch response {
+        case .failure(let response):
+            throw response.error
+        case .success(let response):
+            var error: NSError?
+            guard let signerPk = CryptoPubKeyFromBase58(signer.identity, &error) else {
+                throw Error.signTIPNode(error)
             }
-            return UInt64(bigEndian: raw)
-        }()
-        return TIPSignResponseData(partial: partial,
-                                   assignor: assignor.hexEncodedString(),
-                                   counter: counter)
+            let msg = try JSONEncoder.default.encode(response.data)
+            guard let responseSignature = Data(hexEncodedString: response.signature) else {
+                throw Error.decodeResponseSignature
+            }
+            try signerPk.verify(msg, sig: responseSignature)
+            
+            guard let responseCipher = Data(hexEncodedString: response.data.cipher) else {
+                throw Error.decodeResponseCipher
+            }
+            guard let plain = CryptoDecrypt(signerPk, userSk, responseCipher) else {
+                throw Error.decryptResponseCipher
+            }
+            guard plain.count == 218 else {
+                throw Error.invalidSignResponse(plain.count)
+            }
+            let partial = plain[8...8+65]
+            let assignor = plain[8+66...8+66+127]
+            let counter: UInt64 = {
+                var raw: UInt64 = 0
+                withUnsafeMutableBytes(of: &raw) { counter in
+                    plain[211...].withUnsafeBytes { plain in
+                        plain.copyBytes(to: counter) // Copy bytes to avoid unaligned access
+                    }
+                }
+                return UInt64(bigEndian: raw)
+            }()
+            return TIPSignResponseData(partial: partial,
+                                       assignor: assignor.hexEncodedString(),
+                                       counter: counter)
+        }
     }
     
 }

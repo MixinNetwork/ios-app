@@ -13,13 +13,6 @@ class TIPPopupInputViewController: PinValidationViewController {
     private var oldPIN: String?
     
     init(action: Action) {
-        switch action {
-        case let .continue(context, _) where context.action == .migrate:
-            Logger.tip.error(category: "TIPPopupInput", message: "Invalid context")
-            assertionFailure("Continue migration with `Action.migrate`")
-        default:
-            break
-        }
         self.action = action
         let nib = R.nib.pinValidationView
         super.init(nibName: nib.name, bundle: nib.bundle)
@@ -49,8 +42,14 @@ class TIPPopupInputViewController: PinValidationViewController {
                         titleLabel.text = R.string.localizable.enter_your_new_pin()
                     }
                 }
-            case .create, .migrate:
+            case .create:
                 titleLabel.text = R.string.localizable.enter_your_pin()
+            case .migrate:
+                if oldPIN == nil {
+                    titleLabel.text = R.string.localizable.enter_your_old_pin()
+                } else {
+                    titleLabel.text = R.string.localizable.enter_your_new_pin()
+                }
             }
         }
         descriptionLabel.text = nil
@@ -82,7 +81,7 @@ class TIPPopupInputViewController: PinValidationViewController {
                 switch context.situation {
                 case .pendingSign(let failedSigners):
                     if let old = oldPIN {
-                        continueChange(old: old, new: pin, failedSigners: failedSigners, onSuccess: onSuccess)
+                        continueChange(old: old, isOldPINLegacy: false, new: pin, failedSigners: failedSigners, onSuccess: onSuccess)
                     } else {
                         loadingIndicator.stopAnimating()
                         titleLabel.text = R.string.localizable.enter_your_new_pin()
@@ -93,11 +92,27 @@ class TIPPopupInputViewController: PinValidationViewController {
                         self.oldPIN = pin
                     }
                 case .pendingUpdate:
-                    continueChange(old: nil, new: pin, failedSigners: [], onSuccess: onSuccess)
+                    continueChange(old: nil, isOldPINLegacy: false, new: pin, failedSigners: [], onSuccess: onSuccess)
                 }
             case .migrate:
-                Logger.tip.error(category: "TIPPopupInput", message: "Invalid context")
-                assertionFailure("Continue migration with `Action.migrate`")
+                if let old = oldPIN {
+                    let failedSigners: [TIPSigner]
+                    switch context.situation {
+                    case .pendingSign(let signers):
+                        failedSigners = signers
+                    case .pendingUpdate:
+                        failedSigners = []
+                    }
+                    continueChange(old: old, isOldPINLegacy: true, new: pin, failedSigners: failedSigners, onSuccess: onSuccess)
+                } else {
+                    loadingIndicator.stopAnimating()
+                    titleLabel.text = R.string.localizable.enter_your_new_pin()
+                    descriptionLabel.text = nil
+                    pinField.clear()
+                    pinField.isHidden = false
+                    pinField.receivesInput = true
+                    self.oldPIN = pin
+                }
             }
         }
     }
@@ -124,6 +139,7 @@ class TIPPopupInputViewController: PinValidationViewController {
                 AppGroupUserDefaults.Wallet.lastPinVerifiedDate = Date()
                 await MainActor.run(body: onSuccess)
             } catch {
+                reporter.report(error: error)
                 Logger.tip.error(category: "TIPPopupInput", message: "Failed to create: \(error)")
                 await MainActor.run {
                     if let error = error as? MixinAPIError {
@@ -138,6 +154,7 @@ class TIPPopupInputViewController: PinValidationViewController {
     
     private func continueChange(
         old: String?,
+        isOldPINLegacy: Bool,
         new: String,
         failedSigners: [TIPSigner],
         onSuccess: @MainActor @Sendable @escaping () -> Void
@@ -151,10 +168,18 @@ class TIPPopupInputViewController: PinValidationViewController {
         Logger.tip.info(category: "TIPPopupInput", message: "Continue change with failed signers: \(failedSigners.map(\.index))")
         Task {
             do {
-                try await TIP.updateTIPPriv(oldPIN: old,
-                                            newPIN: new,
-                                            failedSigners: failedSigners,
-                                            progressHandler: nil)
+                if isOldPINLegacy {
+                    try await TIP.createTIPPriv(pin: new,
+                                                failedSigners: failedSigners,
+                                                legacyPIN: old,
+                                                forRecover: false,
+                                                progressHandler: nil)
+                } else {
+                    try await TIP.updateTIPPriv(oldPIN: old,
+                                                newPIN: new,
+                                                failedSigners: failedSigners,
+                                                progressHandler: nil)
+                }
                 if AppGroupUserDefaults.Wallet.payWithBiometricAuthentication {
                     Keychain.shared.storePIN(pin: new)
                 }
@@ -163,6 +188,7 @@ class TIPPopupInputViewController: PinValidationViewController {
                 Logger.tip.info(category: "TIPPopupInput", message: "Changed successfully")
                 await MainActor.run(body: onSuccess)
             } catch let error as TIPNode.Error {
+                reporter.report(error: error)
                 Logger.tip.error(category: "TIPPopupInput", message: "Failed to change: \(error)")
                 await MainActor.run {
                     loadingIndicator.stopAnimating()
@@ -175,6 +201,7 @@ class TIPPopupInputViewController: PinValidationViewController {
                     oldPIN = nil
                 }
             } catch {
+                reporter.report(error: error)
                 Logger.tip.error(category: "TIPPopupInput", message: "Failed to change: \(error)")
                 await MainActor.run {
                     if let error = error as? MixinAPIError {

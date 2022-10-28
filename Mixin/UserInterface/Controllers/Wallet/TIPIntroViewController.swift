@@ -174,22 +174,13 @@ class TIPIntroViewController: UIViewController {
                 present(validator, animated: true)
             }
         case .inputNeeded(let context):
-            switch context.action {
-            case .migrate:
-                let validator = TIPPopupInputViewController(action: .migrate({ pin in
-                    let action = TIPActionViewController(action: .migrate(pin: pin))
-                    self.navigationController?.pushViewController(action, animated: true)
-                }))
-                present(validator, animated: true)
-            case .create, .change:
-                let validator = TIPPopupInputViewController(action: .continue(context, {
-                    let tipNavigationController = self.tipNavigationController
-                    self.dismiss(animated: true) {
-                        tipNavigationController?.dismissToDestination(animated: true)
-                    }
-                }))
-                present(validator, animated: true)
-            }
+            let validator = TIPPopupInputViewController(action: .continue(context, {
+                let tipNavigationController = self.tipNavigationController
+                self.dismiss(animated: true) {
+                    tipNavigationController?.dismissToDestination(animated: true)
+                }
+            }))
+            present(validator, animated: true)
         case let .noInputNeeded(action, _):
             let viewController = TIPActionViewController(action: action)
             navigationController?.setViewControllers([viewController], animated: true)

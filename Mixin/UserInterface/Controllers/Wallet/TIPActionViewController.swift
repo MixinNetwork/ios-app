@@ -169,6 +169,7 @@ class TIPActionViewController: UIViewController {
     }
     
     private func handle(error: Error, accountCounterBefore: UInt64) async {
+        reporter.report(error: error)
         Logger.tip.error(category: "TIPAction", message: "Failed with: \(error)")
         do {
             if let context = try await TIP.checkCounter() {
